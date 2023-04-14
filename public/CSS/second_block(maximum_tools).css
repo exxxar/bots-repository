@@ -1,0 +1,6 @@
+div.content div.second div.text div.image img{width: auto;height: 150px;}
+@media (max-width: 2000px){
+    div.content div.second  .image img.relative.right{ width: 150%; right: 10%; z-index: -1;}
+    div.content div.second div.wrapper{overflow-x: hidden;}
+
+}

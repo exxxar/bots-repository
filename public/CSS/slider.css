@@ -1,0 +1,6 @@
+@media (max-width: 767px){
+    .owl-theme .owl-dots .owl-dot.active span{background-color:#FEBA53;}
+    .owl-theme .owl-dots .owl-dot span{background-color: rgba(254,186,83,0.36);}
+    .owl-carousel div.item .image{height: 200px;}
+    .owl-carousel div.item img{height: 100%;width: auto; margin: auto;}
+}

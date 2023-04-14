@@ -1,0 +1,27 @@
+
+div.content div.sixth div.col div.header{ height: 350px;}
+div.content div.sixth div.col div.button {margin-bottom: 0px;margin-top: auto;}
+div.content div.sixth div.content.wrapperbox{margin: 0 auto;box-shadow: 0 20px 30px rgb(77 68 68 / 12%);border-radius: 20px; background: white;}
+div.content div.sixth div.content.wrapperbox .box .header{border-radius: 14px;background: #003399;}
+div.content div.sixth ul li{margin-bottom: 20px;}
+div.content div.sixth  div.content ul li.donthave:before {color:#9A9A9A;}
+@media (max-width: 767px) {
+   div.content div.sixth  div.content ul li.have p{display: inline-block;margin-left: 10px;margin-bottom:0 ;}
+   div.content div.sixth  div.content ul li{margin-bottom:5px ;}
+
+   div.content div.sixth  div.content ul li.donthave:before {display: none;}
+   
+   div.content div.sixth div.col div.header{height: auto!important;}
+   
+}
+@media (max-width:992px ){
+    div.content div.sixth  div.content ul:not(#services) li:first-child h3{font-size: 12px!important;}
+    
+}
+@media (max-width: 2000px) {
+    
+    div.content div.sixth  div.content ul li p{display: none;}
+    div.content div.sixth  div.content ul:not(#services) li:not(:first-child):before{content:"\f00c";font-weight: bold;font-family: "Font Awesome 5 Free", serif;}
+    div.content div.sixth  div.content ul li.have:before{color:#FEBA53}
+
+}

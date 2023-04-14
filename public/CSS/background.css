@@ -1,0 +1,29 @@
+@media (max-width: 2000px){
+    div.first div.backgroundImage img.line{    width: 70%;top: -210px;left: 12%;z-index: -1;}
+    div.first div.backgroundImage div.dots{top: -100px;}
+
+    div.second div.backgroundImage img.line{top: -220px; width: 60%;left: 25%; z-index: -1;}
+    div.second div.backgroundImage div.dots{top: 450px;left: 60%;z-index: 2;width: 40%;transform: rotate(180deg);}
+
+    div.third div.backgroundImage img.line{top: -370px;
+    left: 19%;width: 60%;z-index: -1;}
+    div.third div.backgroundImage div.dots{top: 800px;z-index: -1;left:-10%;}
+    div.third div.backgroundImage img.left{width: 50%;top: -400px;left: -150px;z-index: -1;}
+
+    div.fourth div.backgroundImage img.line{ top: -350px; z-index: 1; left: 6%; width: 60%;}
+    div.fourth div.backgroundImage div.dots{ z-index: -1; top: -200px; left: 30%;}
+
+    div.fifth div.backgroundImage img.line{top: -200px;left: -15%; z-index: -1;}
+    div.fifth div.backgroundImage div.dots{top: -300px;left: -15%;z-index: -1;}
+
+    div.sixth div.backgroundImage img.line{top: -400px;z-index: -1;right: 0;width: 40%;}
+    div.sixth div.backgroundImage img.left{width: 26%; z-index: -1; top: -150px }
+    div.sixth div.backgroundImage img.right{ right: 0; width: 15%; top: 700px}
+
+    div.seventh div.backgroundImage img.line{ z-index: -1;top: -450px; left: 20%;}
+    div.seventh div.backgroundImage img.bottomline{z-index: -1;}
+    div.seventh div.backgroundImage div.dots.blue{z-index: -1;}
+    div.seventh div.backgroundImage div.dots.orange{right: 0;z-index: -1;}
+
+    footer div.backgroundImage img.line{left: -10%;top: -400px; z-index: -1}}
+

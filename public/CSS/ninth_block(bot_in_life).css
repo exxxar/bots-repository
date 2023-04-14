@@ -1,0 +1,14 @@
+
+div.content div.eighth img{ width: 200px;}
+div.content div.ninth div.content div.icon{background: #FEBA53;border-radius: 50%;height: 50px;width: 50px;}
+div.content div.ninth div.content div.item{
+    
+    border-radius: 8px;text-align: left;color: #262549;box-shadow: 0px 10px 30px rgb(0 0 0 / 12%);-webkit-transition: 0.5s;transition: 0.5s;}
+
+@media (min-width:991px) {div.content div.ninth div.content div.item{
+    width: calc(100vw * 0.35);}
+    div.content div.ninth div.content{
+    justify-content: center;
+    display: flex;}
+    
+    }

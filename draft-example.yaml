@@ -1,0 +1,340 @@
+models:
+  Bot:
+    company_id: id foreign:companies
+    bot_domain: unique string:190
+    bot_token: nullable string:255
+    bot_token_dev: nullable string:255
+    order_channel: nullable string:255
+    balance: double default:0
+    tax_per_day: double default:0
+    image: nullable json
+    description: nullable longtext
+    info_link: nullable string:255
+    is_active: boolean default:false
+    bot_type_id: id foreign:bot_types
+    level_1: nullable double
+    level_2: nullable double
+    level_3: nullable double
+    blocked_message: nullable longtext
+    blocked_at: nullable timestamp
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      hasMany: ImageMenu, NotificationSchedule, BotMenu, CashBackHistory, ReferralHistory, BotUser, CashBack, Events, Basket, Product, ProductCategory
+      belongsTo: Company, BotType
+
+  BotMenu:
+    template_menu_id: id foreign:template_menus
+    bot_id: id foreign:bots
+    title_key: nullable string:255
+    value: nullable string:255
+    lang: string:255 default:'ru'
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: TemplateMenu, Bot
+
+  TemplateMenu:
+    title: nullable string:255
+    command: nullable string:255
+    slug: nullable string:255
+    bot_type_id: id foreign:bot_types
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: BotType
+
+  BotType:
+    title: string:255 nullable
+    slug: unique string:190
+    is_active: boolean default:false
+    relationships:
+      hasMany: BotType, TemplateMenu, Bot
+
+  Button:
+    template_menu_id: id foreign:template_menus
+    row_sort_order: integer default:0
+    col_sort_order: integer default:0
+    action_type: string:255 nullable
+    action_value: string:255 nullable
+    title_key: string:255 nullable
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: TemplateMenu
+
+  ImageMenu:
+    title: string:255 nullable
+    description: nullable longtext
+    image: nullable json
+    info_link: string:255 nullable
+    bot_id: id foreign:bots
+    product_count: integer default:0
+    location_id: id foreign:locations
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Bot, Location
+
+  Company:
+    title: string:255 nullable
+    slug: unique string:190
+    description: longtext nullable
+    image: string:255 nullable
+    address: string:255 nullable
+    phones: json nullable
+    links: json nullable
+    email: string:255 nullable
+    schedule: nullable json
+    manager: string:255 nullable
+    is_active: boolean default:false
+    blocked_message: longtext nullable
+    blocked_at: nullable timestamp
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      hasMany: Bot, Location, Transaction
+
+  Location:
+    images: nullable json
+    lat: double default:0
+    lon: double default:0
+    address: string:255 nullable
+    description: nullable longtext
+    location_channel: string:255 nullable
+    company_id: id foreign:companies
+    is_active: boolean default:false
+    can_booking: boolean default:false
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Company
+      hasMany: ImageMenu
+
+  CashBack:
+    user_id: id foreign:users
+    bot_id: id foreign:bots
+    amount: double default:0
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Bot, User
+
+  CashBackHistory:
+    money_in_check: double default:0
+    description: string:255 nullable
+    operation_type: integer default:0
+    user_id: id foreign:users
+    bot_id: id foreign:bots
+    employee_id: id foreign:users
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Bot, User
+
+  User:
+    email: unique string:190
+    phone: nullable string:255
+    name: nullable string:255
+    password: nullable string:255
+    fio_from_telegram: nullable string:255
+    telegram_chat_id: nullable string:255
+    age: integer default:0
+    birthday: nullable string:255
+    sex: integer default:0
+    avatar_url: nullable string:255
+    city: nullable string:255
+    country: nullable string:255
+    address: nullable string:255
+    role_id: id foreign:roles
+    blocked_at: nullable timestamp
+    blocked_message: nullable string:255
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Bot, User, BotUser, ReferralHistory, Basket
+      hasOne: Role
+
+  BotUser:
+    bot_id: id foreign:bots
+    user_id: id foreign:users
+    parent_id: id foreign:users nullable
+    is_admin: boolean default:false
+    is_work: boolean default:false
+    user_in_location: boolean default:false
+    relationships:
+      belongsTo: Bot, User
+
+  Role:
+    name: string:255
+    slug: unique string:190
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: User
+
+  ReferralHistory:
+    user_sender_id: id foreign:users
+    user_recipient_id: id foreign:users
+    bot_id: id foreign:bots
+    activated: boolean default:false
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      hasOne: User, Bot
+
+  Product:
+    bot_id: id foreign:bots
+    title: string:255
+    description: longtext nullable
+    weight: double default:0
+    base_price_before_discount: double default:0
+    base_price: double default:0
+    portion_count: integer default:0
+    is_active: boolean default:false
+    images: json nullable
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Bot
+      belongsToMany: ProductCategory
+
+  ProductCategory:
+    title: string:255 nullable
+    slug: unique string:190
+    bot_id: id foreign:bots
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsToMany: Product
+
+  Basket:
+    product_id: id foreign:products
+    count: integer default:0
+    user_id: id foreign:users
+    bot_id: id foreign:bots
+    order_id:  id foreign:orders
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Bot, User,  Product, Order
+
+  Order:
+    status: integer default:0
+    need_delivery: boolean default:false
+    delivery_address: string:255 nullable
+    comment: string:255 nullable
+    summary_price: double default:0
+    payed_at: nullable timestamp
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+
+  Event:
+    bot_id: id foreign:bots
+    title: string:255 nullable
+    description: longtext nullable
+    info_link: string:255 nullable
+    start_at: nullable timestamp
+    end_at: nullable timestamp
+    image: string:255 nullable
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Bot
+
+  NotificationSchedule:
+    title: string:255 nullable
+    message: longtext nullable
+    info_link: string:255 nullable
+    image: string:255 nullable
+    start_at: nullable timestamp
+    bot_id: id foreign:bots
+    creator_id: id foreign:users
+    completed_at: nullable timestamp
+    created_at: nullable timestamp
+    updated_at: nullable timestamp
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Bot, User
+
+seeders: Company, Location, Bot, BotMenu, TemplateMenu, BotType, Button, ImageMenu, CashBack, CashBackHistory, User, BotUser, Role, ReferralHistory, Product, ProductCategory, Basket, Order, Event, NotificationSchedule
+
+
+controllers:
+  Company:
+    resource: api
+
+  Location:
+    resource: api
+
+  Bot:
+    resource: api
+
+  BotMenu:
+    resource: api
+
+  TemplateMenu:
+    resource: api
+
+  BotType:
+    resource: api
+
+  Button:
+    resource: api
+
+  ImageMenu:
+    resource: api
+
+  CashBack:
+    resource: api
+
+  CashBackHistory:
+    resource: api
+
+  User:
+    resource: api
+
+  BotUser:
+    resource: api
+
+  Role:
+    resource: api
+
+  ReferralHistory:
+    resource: api
+
+  Product:
+    resource: api
+
+  ProductCategory:
+    resource: api
+
+  Basket:
+    resource: api
+
+  Order:
+    resource: api
+
+  Event:
+    resource: api
+
+  NotificationSchedule:
+    resource: api
+

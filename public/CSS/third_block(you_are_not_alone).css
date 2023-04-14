@@ -1,0 +1,5 @@
+div.content div.third div.text div.image img{width: 150px;height: auto;}
+@media (max-width: 2000px){
+    div.content div.third  .image img.relative.left { width: 120%; left: -30%; }
+      
+}

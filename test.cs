@@ -1,0 +1,1 @@
+id company_id bot_domain (uniq) bot_token bot_token_dev order_channel balance tax_per_day image description info_link is_active bot_type_id level_1 level_2 level_3 blocked_message blocked_at created_at updated_at deleted_at

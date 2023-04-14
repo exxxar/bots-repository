@@ -1,0 +1,71 @@
+
+.svgrobot img
+{
+    width:140%;
+}
+
+div.button.social{color:white;border-radius: 8px; height: 60px;padding-left: 10%; padding-top: 1%;text-align: center;cursor: pointer;}
+
+div.button.social.telegram {background: #1DB1E2;}
+div.button.social.vk {background: #3278A6;}
+div.button.social.facebook {background: #0A5498;}
+div.button.social.talk-me {background: #e22921;}
+div.button.social.online-chat {background: #1a53c6;}
+div.button.social.viber {background: #89539D;}
+div.button.social.whatsapp {background: #128C7E;}
+div.button.social.whatsapp-business {background: #128C7E;line-height: 20px;}
+div.button.social.webim {background: #375476;}
+div.button.social.livetex {background: #3c6f82;}
+div.button.social.avito {background: #97cf26;}
+div.button.social.odnoklassniki {background: #ef7f1a;}
+div.button.social.jivosita {background: #00be57;}
+div.button.social.instagram {background: #C13584;}
+div.button.social.add {color: #052994!important; border: dashed 4px #052994;background-color: transparent;}
+
+div.button.social .logo{color:white;text-align: center; line-height: 50px;font-family: 'Font Awesome 5 Brands', serif;font-size: 30px;width: 50px;border-radius: 50%;}
+div.button.social .logo img{width: 40px;height: 40px;}
+@media (min-width: 767px){
+    div.button.social.telegram:hover {box-shadow:0px 0px 30px rgb(29 177 226 / 50%);}
+    div.button.social.vk:hover {box-shadow:0px 0px 30px rgb(50 120 166 / 50%);}
+    div.button.social.facebook:hover {box-shadow:0px 0px 30px rgb(10 84 152 / 50%);}
+    div.button.social.talk-me:hover {box-shadow:0px 0px 30px rgb(226 41 33 / 50%);}
+    div.button.social.online-chat:hover {box-shadow:0px 0px 30px rgb(26 83 198 / 50%);}
+    div.button.social.viber:hover {box-shadow:0px 0px 30px rgb(137 83 157 / 50%);}
+    div.button.social.whatsapp:hover {box-shadow:0px 0px 30px rgb(18 140 126 / 50%);}
+    div.button.social.whatsapp-business:hover {box-shadow:0px 0px 30px rgb(18 140 126 / 50%);}
+    div.button.social.webim:hover {box-shadow:0px 0px 30px rgb(55 84 118 / 50%);}
+    div.button.social.livetex:hover {box-shadow:0px 0px 30px rgb(60 111 130 / 50%)}
+    div.button.social.avito:hover {box-shadow:0px 0px 30px rgb(151 207 38 / 50%);}
+    div.button.social.odnoklassniki:hover {box-shadow:0px 0px 30px rgb(239 127 26 / 50%);}
+    div.button.social.jivosita:hover {box-shadow:0px 0px 30px rgb(0 190 87 / 50%);}
+    div.button.social.instagram:hover {box-shadow:0px 0px 30px rgb(193 53 132 / 50%);}
+    div.button.social.add:hover {box-shadow:0px 0px 30px rgb(5 41 148 / 50%);}
+}
+@media (max-width: 767px){
+    
+    div.button.social.telegram .logo{background: #1DB1E2;}
+    div.button.social.vk .logo{background: #3278A6;}
+    div.button.social.facebook .logo{background: #0A5498;}
+    div.button.social.talk-me .logo{background: #e22921;}
+    div.button.social.online-chat .logo{background: #1a53c6;}
+    div.button.social.viber .logo{background: #89539D;}
+    div.button.social.whatsapp .logo{background: #128C7E;}
+    div.button.social.whatsapp-business .logo{background: #128C7E;line-height: 20px;}
+    div.button.social.webim .logo{background: #375476;}
+    div.button.social.livetex .logo img{width: 50px; height: auto;}
+    div.button.social.avito .logo{width: 50px; height: auto;}
+    div.button.social.odnoklassniki .logo{background: #ef7f1a;}
+    div.button.social.jivosita .logo{background: #00be57;}
+    div.button.social.instagram .logo{background: #C13584;}
+    div.button.social.add .logo{color: #052994!important;border: dashed 4px #052994;background-color: transparent;}
+
+    div.button.social{background: transparent !important;border:none!important;color:#9A9A9A;margin-bottom: 20px;}
+    
+    div.button.social .logo{font-size: 25px;margin: auto;margin-bottom: 15px;}
+    div.button.social .logo img{width: 30px;height: 30px;}
+
+}
+@media (max-width: 2000px) {
+    div.content div.first .image div.relative.left{left: -40%;}
+
+}

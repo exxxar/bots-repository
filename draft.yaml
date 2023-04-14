@@ -1,0 +1,14 @@
+models:
+  ActionLog:
+    bot_id: id foreign:bots
+    user_id: id foreign:bots
+    action: nullable string:255
+    slug: nullable string:255
+    relationships:
+      belongsTo: Bot
+
+seeders: BotMenuSlug
+
+controllers:
+  BotMenuSlug:
+    resource: api

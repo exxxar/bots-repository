@@ -1,0 +1,112 @@
+.list__wrapper{
+height: 30px;
+overflow: hidden;
+position: relative;
+}
+.list__wrapper ul{
+    position: absolute;
+    animation: move_list;
+    animation-duration: 9s;
+    animation-iteration-count: infinite;
+    animation-timing-function: steps(3);
+}
+.list__wrapper ul li{
+    white-space: nowrap;
+}
+@keyframes move_list {
+    
+    from{top:0}
+    to{
+        top:-108px
+    }
+}
+
+
+
+div.content div.first div.svgrobot svg path.dot:nth-last-child(3){animation-delay: 200ms;}
+div.content div.first div.svgrobot svg path.dot:nth-last-child(4){ animation-delay: 400ms;}
+
+div.content div.first div.svgrobot svg path.dot:nth-last-child(6){animation-delay: 200ms;}
+div.content div.first div.svgrobot svg path.dot:nth-last-child(7){animation-delay: 400ms;}
+div.content div.first div.svgrobot svg path.dot:nth-last-child(8){animation-delay: 600ms;}
+div.content div.first div.svgrobot svg path.dot:nth-last-child(9){animation-delay: 800ms;}
+div.content div.first div.svgrobot svg path.dot:nth-last-child(10){
+    animation-delay: 1000ms;
+}
+div.content div.first div.svgrobot svg path.dot:nth-last-child(11){animation-delay: 1200ms;}
+
+div.content div.first div.svgrobot svg path.dot{
+    fill:"#FEBA53";
+     animation-duration: 7s;
+    animation-name: dotwork;
+     animation-iteration-count: infinite; 
+}
+
+@keyframes dotwork{
+    16%,49%,78%{opacity: 1;}
+    0%,32%,63%,98%{opacity: 0;}  
+}
+div.content  div.dots svg path{
+    animation-duration: 10s;
+   animation-name: dots;
+    animation-iteration-count: infinite;}
+@keyframes dots{
+   25%,67%{ transform: translate(-15%, -20%) scale(2)}
+   50%,90%{transform: translate(10% ,10%) scale(1)}
+   0%,100%{}
+}
+div.content  div.dots svg path:nth-last-child(2n+1){animation-delay:500ms}
+div.content   div.dots svg path:nth-last-child(3n){animation-delay: 1200ms;}
+div.content   div.dots svg path:nth-last-child(2n){animation-delay: 1600ms;}
+div.content   div.dots svg path:nth-last-child(5n){ animation-delay: 2000ms;}
+div.content   div.dots svg path:nth-last-child(7n){animation-delay: 2500ms;}
+
+div.content div.first div.svgrobot:hover svg path.arm{
+
+    animation-duration: 6s;
+   animation-name: robotarm;
+   animation-fill-mode:forwards;
+   transform-origin: 65% 52% 0;
+   
+}
+@keyframes robotarm{
+   0%,100%{}
+   40%,60%{transform:  rotate(-90deg);}
+}
+div.content div.first div.svgrobot:hover svg path.arm.a{
+  
+    animation-duration: 6s;
+   animation-name: robotarma; 
+   animation-fill-mode:forwards;
+       transform-origin: 65% 52% 0;
+}
+@keyframes robotarma{
+    0%,100%{    }
+   40%,60%{transform:  rotate(-90deg);}
+   45%{transform:  rotate(-85deg);}
+   55%{transform:  rotate(-95deg);}
+}
+
+
+div.content div.first div.svgrobot:hover svg path.eyer{
+      
+    animation-duration: 6s;
+   animation-name: eyer; 
+   animation-fill-mode:forwards;
+}
+div.content div.first div.svgrobot:hover svg path.eyel{
+     animation-duration: 6s;
+   animation-name: eyel; 
+   animation-fill-mode:forwards;
+}
+@keyframes eyer{
+   0%,100%{}
+   45%{transform: translate(-2%, 0%);}
+   55%{transform: translate(-2%, 0%);}
+   
+}
+@keyframes eyel{
+    0%,100%{}
+   45%{transform: translate(-2%, 1%);}
+   55%{transform: translate(-2%, 1%);}
+}
