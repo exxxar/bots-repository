@@ -17,6 +17,7 @@ import mitt from 'mitt'
 const eventBus = mitt()
 
 window.eventBus = eventBus;
+import Notifications from '@kyvg/vue3-notification'
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -37,6 +38,7 @@ createInertiaApp({
             .use(plugin)
             .use(store)
             .use(VueTheMask)
+            .use(Notifications)
             .use(VueSocialSharing)
             .use(ZiggyVue, Ziggy)
             .use(VueLazyLoad,

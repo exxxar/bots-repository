@@ -58,6 +58,7 @@ export default {
     methods: {
         selectCompany(company) {
             this.$emit("callback", company)
+            this.$notify("Вы выбрали компанию из спика! Все остальные действия будут производится для этой компании.");
         },
         nextCompanies(index){
           this.loadCompanies(index)

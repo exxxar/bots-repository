@@ -138,7 +138,7 @@ class BotManager extends BotCore
     public function getSelf()
     {
         return Bot::query()
-            ->with(["botUsers", "company", "imageMenus"])
+            ->with(["botUsers", "company", "imageMenus","company.locations"])
             ->where("bot_domain", $this->domain)
             ->first();
     }

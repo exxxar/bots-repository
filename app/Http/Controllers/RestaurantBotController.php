@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Classes\QRCodeHandler;
 use App\Facades\BotManager;
+use App\Facades\BotMethods;
 use App\Models\BotUser;
 use App\Models\CashBack;
+use App\Models\CashBackHistory;
 use App\Models\Company;
 use App\Models\Location;
+use App\Models\ReferralHistory;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
@@ -27,7 +31,7 @@ class RestaurantBotController extends Controller
             preg_match_all($pattern, $string, $matches);
 
             $code = $matches[1][0] ?? null;
-            $request_user_id = $matches[2][0] ?? null;
+            $request_telegram_chat_id = $matches[2][0] ?? null;
 
             //$qrCode = new QRCodeHandler($code, $request_user_id);
 
@@ -39,7 +43,7 @@ class RestaurantBotController extends Controller
                         [
                             ["text" => "\xF0\x9F\x8E\xB0Перейти в админку бота",
                                 "web_app" => [
-                                    "url" => env("APP_URL") . "/admin/$bot_domain/$request_user_id"
+                                    "url" => env("APP_URL") . "/admin/$bot_domain/$request_telegram_chat_id"
                                 ]
                             ],
                         ]
@@ -48,9 +52,34 @@ class RestaurantBotController extends Controller
             }
 
             $userBotUser = BotUser::query()
-                ->where("telegram_chat_id", $request_user_id)
+                ->where("telegram_chat_id", $request_telegram_chat_id)
                 ->where("bot_id", BotManager::bot()->getSelf()->id)
                 ->first();
+
+            $ref = ReferralHistory::query()
+                ->where("user_sender_id", $userBotUser->user_id)
+                ->where("user_recipient_id", $botUser->user_id)
+                ->where("bot_id", $botUser->bot_id)
+                ->first();
+
+            if (is_null($ref)) {
+                ReferralHistory::query()->create([
+                    'user_sender_id' => $userBotUser->user_id,
+                    'user_recipient_id' => $botUser->user_id,
+                    'bot_id' => $botUser->bot_id,
+                    'activated' => true,
+                ]);
+
+                $userName = BotMethods::prepareUserName($botUser);
+
+                BotMethods::bot()
+                    ->whereId($botUser->bot_id)
+                    ->sendMessage(
+                        $request_telegram_chat_id,
+                        "По вашей ссылке перешел пользователь $userName"
+                    );
+            }
+
 
             if (is_null($userBotUser)) {
                 BotManager::bot()->reply("Данный код не корректный!");
@@ -77,10 +106,8 @@ class RestaurantBotController extends Controller
         if ($botUser->is_admin) {
             BotManager::bot()
                 ->sendReplyMenu("Главное меню (Режим администратора)", "main_menu_restaurant_3");
-
             return;
         }
-
 
         BotManager::bot()
             ->sendReplyMenu("Главное меню",
@@ -103,12 +130,17 @@ class RestaurantBotController extends Controller
 Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой",
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
+
+        $file = InputFile::create(
+            file_exists(storage_path("app\\public") . "\\companies\\" . ($bot->image ?? 'noimage.jpg')) ?
+                storage_path("app\\public") . "\\companies\\" . $bot->image :
+                public_path() . "\\images\\cashman.jpg"
+        );
+
         \App\Facades\BotManager::bot()
             ->replyPhoto("Перешли эту ссылку друзьям:\n<a href=\"$qr\">$qr</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>",
-                InputFile::create(
-                    storage_path("app\\public") . "\\companies\\" . $botDomain . "\\" . $bot->image
-                ));
-
+                $file
+            );
 
         BotManager::bot()
             ->sendReplyMenu("Пригласить друзей",
@@ -118,10 +150,12 @@ class RestaurantBotController extends Controller
     public function location()
     {
         $bot = BotManager::bot()->getSelf();
+
         $company = Company::query()
             ->with(["locations"])
             ->where("id", $bot->company_id)
             ->first();
+
 
         if (is_null($company))
             BotManager::bot()
@@ -158,6 +192,8 @@ class RestaurantBotController extends Controller
         }
 
 
+        //BotManager::bot()->reply($companyText);
+
         $keyboard = [];
         if (!is_null($company->locations)) {
             foreach ($company->locations as $location) {
@@ -171,6 +207,11 @@ class RestaurantBotController extends Controller
 
         }
 
+        $file = InputFile::create(
+            file_exists(storage_path("app\\public") . "\\companies\\" . ($company->image ?? 'noimage.jpg')) ?
+                storage_path("app\\public") . "\\companies\\" . $company->image :
+                public_path() . "\\images\\cashman.jpg"
+        );
 
         if (is_null($company->image))
             BotManager::bot()
@@ -178,21 +219,22 @@ class RestaurantBotController extends Controller
         else
             BotManager::bot()
                 ->replyPhoto($companyText,
-                    InputFile::create(storage_path("app\\public") . "\\companies\\" . $company->slug . "\\" . $company->image),
+                    $file,
                     $keyboard
                 );
 
-      /*  \App\Facades\BotManager::bot()
-            ->sendReplyMenu("Наше расположение", "menu_level_2_restaurant_4");*/
+        \App\Facades\BotManager::bot()
+            ->sendReplyMenu("Наше расположение", "menu_level_2_restaurant_4");
     }
 
-    public function locationInfo(...$data)
+    private function printLocation($locationId)
     {
-
         $location = Location::query()
             ->with(["company"])
-            ->where("id", ($data[2] ?? null))
+            ->where("id", ($locationId ?? null))
             ->first();
+
+
 
         if (is_null($location))
             \App\Facades\BotManager::bot()
@@ -202,20 +244,28 @@ class RestaurantBotController extends Controller
             \App\Facades\BotManager::bot()
                 ->reply("К сожалению, данная локация временно недоступна");
 
+
         $locationText =
             "Мы расположены по адресу <b>" . ($location->address ?? "Не указано") . "</b>\n" .
             "<em>" . ($location->description ?? "Не задано") . "</em>\n" .
             ($location->can_booking ? "<b>Через данного бота вы можете забронировать у нас столик</b>" : "");
 
 
+
+
         if (!is_null($location->images)) {
+
+
             if (count($location->images) > 1) {
                 $media = [];
-                foreach ($location->images as $image)
+               foreach ($location->images as $image)
+                {
                     $media[] = [
-                        "media" => InputFile::create(storage_path("app\\public") . "\\companies\\" . $location->company->slug . "\\" . $image->image),
+                        "media" => env("APP_URL") . "/images/".$location->company->slug . "/" . $image,
                         "type" => "photo",
                     ];
+                }
+
                 BotManager::bot()->replyMediaGroup($media);
             } else if (count($location->images) === 1) {
                 BotManager::bot()->replyPhoto("Фотографии нашего заведения",
@@ -239,6 +289,10 @@ class RestaurantBotController extends Controller
             BotManager::bot()->replyLocation($location->lat, $location->lon);
     }
 
+    public function locationInfo(...$data)
+    {
+        $this->printLocation($data[2] ?? null);
+    }
 
     public function menu()
     {
@@ -250,16 +304,14 @@ class RestaurantBotController extends Controller
             $media = [];
             foreach ($bot->imageMenus as $image)
                 $media[] = [
-                    "media" => InputFile::create(storage_path("app\\public") . "\\companies\\" . $bot->company->slug . "\\" . $image->images),
+                    "media" => InputFile::create(storage_path("app\\public") . "\\companies\\" . $bot->company->slug . "\\" . $image->image),
                     "type" => "photo",
                     "caption" => $image->title
                 ];
             BotManager::bot()->replyMediaGroup($media);
         } else if (count($bot->imageMenus) === 1) {
             BotManager::bot()->replyPhoto($bot->imageMenus[0]->title,
-
                 InputFile::create(storage_path("app\\public") . "\\companies\\" . $bot->company->slug . "\\" . $bot->imageMenus[0]->image),
-
             );
 
         }
@@ -271,8 +323,11 @@ class RestaurantBotController extends Controller
 
     public function establishments()
     {
-        \App\Facades\BotManager::bot()
-            ->sendInlineMenu("Заведения", "cashback_buttons_1");
+        $bot = BotManager::bot()->getSelf();
+
+        $locations = $bot->company->locations;
+        foreach ($locations as $location)
+            $this->printLocation($location->id ?? null);
     }
 
     public function aboutUs()
@@ -281,6 +336,8 @@ class RestaurantBotController extends Controller
         $bot = BotManager::bot()->getSelf();
 
         $keyboard = [];
+
+
 
         if (!empty($bot->social_links)) {
             foreach ($bot->social_links as $item) {
@@ -382,8 +439,10 @@ class RestaurantBotController extends Controller
 
     public function myBudget()
     {
+
+
         \App\Facades\BotManager::bot()
-            ->sendReplyMenu("myBudget", "menu_level_3_restaurant_2");
+            ->sendReplyMenu("Операции над вашим бюджетом", "menu_level_3_restaurant_2");
     }
 
     public function requestCashBack()
@@ -408,32 +467,179 @@ class RestaurantBotController extends Controller
     public function friendsNetwork()
     {
         \App\Facades\BotManager::bot()
-            ->sendInlineMenu("friendsNetwork", "cashback_buttons_1");
+            ->replyPhoto(
+                "Раздел \"Сеть друщей\" находится в разработке!",
+                InputFile::create(public_path() . "\\images\\underconstruction.jpg")
+            );
     }
 
     public function bookTable()
     {
         \App\Facades\BotManager::bot()
-            ->sendInlineMenu("Укажите какой именно столик вы хотите забронировать", "booking_table_1");
+            ->sendInlineMenu("В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию.",
+                "booking_table_1");
     }
 
     public function charges()
     {
-        \App\Facades\BotManager::bot()
-            ->sendInlineMenu("charges", "cashback_buttons_1");
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $cashBackHistories = CashBackHistory::query()
+            ->where("bot_id", $botUser->bot_id)
+            ->where("user_id", $botUser->user_id)
+            ->where("operation_type", 1);
+
+        $tmpCount = $cashBackHistories->count();
+
+        $cashBackHistories = $cashBackHistories
+            ->take(10)
+            ->skip(0)
+            ->get();
+
+        $tmp = "<b>Начисления ($tmpCount операций):</b>\n";
+
+        foreach ($cashBackHistories as $item) {
+            $tmp .= "<b>" . $item->amount . "</b> руб уровень <em>" .
+                ($item->level ?? 1) . "</em> " .
+                (Carbon::parse($item->created_at)
+                    ->format("Y-m-d H:i:s")) . "\n";
+        }
+
+        if ($tmpCount > 10)
+            \App\Facades\BotManager::bot()
+                ->replyInlineKeyboard($tmp, [
+                    [
+                        ["text" => "Загрузить еще", "callback_data" => "/more_cashback $botUser->bot_id $botUser->user_id 1 1"]
+                    ]
+                ]);
+        else
+            \App\Facades\BotManager::bot()
+                ->reply($tmp);
+    }
+
+    public function moreCashBackHistory(...$data)
+    {
+
+        $botId = $data[2] ?? null;
+        $userId = $data[3] ?? null;
+        $type = $data[4] ?? null;
+        $page = $data[5] ?? null;
+
+        $cashBackHistories = CashBackHistory::query()
+            ->where("bot_id", $botId)
+            ->where("user_id", $userId)
+            ->where("operation_type", $type);
+
+        $tmpCount = $cashBackHistories->count() - $page * 10;
+
+        $cashBackHistories = $cashBackHistories
+            ->skip($page * 10)
+            ->take(10)
+            ->get();
+
+        $tmp = "<b>Списания ($tmpCount операций):</b>\n";
+
+        foreach ($cashBackHistories as $item) {
+            $tmp .= "<b>" . $item->amount . "</b> руб " .
+                (Carbon::parse($item->created_at)
+                    ->format("Y-m-d H:i:s")) . "\n";
+        }
+
+
+        if ($tmpCount > 10) {
+            $page++;
+            \App\Facades\BotManager::bot()
+                ->replyInlineKeyboard($tmp, [
+                    [
+                        ["text" => "Загрузить еще", "callback_data" => "/more_cashback $botId $userId $type $page"]
+                    ]
+                ]);
+        } else
+            \App\Facades\BotManager::bot()
+                ->reply($tmp);
+
+
     }
 
     public function writeOffs()
     {
-        \App\Facades\BotManager::bot()
-            ->sendInlineMenu("writeOffs", "cashback_buttons_1");
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $cashBackHistories = CashBackHistory::query()
+            ->where("bot_id", $botUser->bot_id)
+            ->where("user_id", $botUser->user_id)
+            ->where("operation_type", 0);
+
+        $tmpCount = $cashBackHistories->count();
+
+        $cashBackHistories = $cashBackHistories
+            ->take(10)
+            ->skip(0)
+            ->get();
+
+        $tmp = "<b>Списания ($tmpCount операций):</b>\n";
+
+        foreach ($cashBackHistories as $item) {
+            $tmp .= "<b>" . $item->amount . "</b> руб " .
+                (Carbon::parse($item->created_at)
+                    ->format("Y-m-d H:i:s")) . "\n";
+        }
+
+        if ($tmpCount > 10)
+            \App\Facades\BotManager::bot()
+                ->replyInlineKeyboard($tmp, [
+                    [
+                        ["text" => "Загрузить еще", "callback_data" => "/more_cashback $botUser->bot_id $botUser->user_id 0 1"]
+                    ]
+                ]);
+        else
+            \App\Facades\BotManager::bot()
+                ->reply($tmp);
     }
 
     public function myFriends()
     {
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $refs = ReferralHistory::query()
+            ->with(["recipient", "recipient.botUser"])
+            ->where("user_sender_id", $botUser->user_id)
+            ->orderBy("created_at", "DESC")
+            ->take(20)
+            ->skip(0)
+            ->get();
+
+        if (count($refs) === 0) {
+            \App\Facades\BotManager::bot()
+                ->reply("Вы ни кого не добавили в свою сеть друзей!");
+            return;
+        }
+
+        $tmp = "<b>Ваш список друзей:</b>\n";
+        foreach ($refs as $ref)
+            $tmp .= "<b>".BotMethods::prepareUserName($ref->recipient->botUser) . "</b>\n";
+
+
         \App\Facades\BotManager::bot()
-            ->sendInlineMenu("myFriends", "cashback_buttons_1");
+            ->reply($tmp);
     }
 
+    public function searchFriends()
+    {
+        \App\Facades\BotManager::bot()
+            ->replyPhoto(
+                "Раздел \"Поиск друзей\" находится в разработке!",
+                InputFile::create(public_path() . "\\images\\underconstruction.jpg")
+            );
+    }
+
+    public function charities()
+    {
+        \App\Facades\BotManager::bot()
+            ->replyPhoto(
+                "Раздел \"Благорвторительность\" находится в разработке!",
+                InputFile::create(public_path() . "\\images\\underconstruction.jpg")
+            );
+    }
 
 }

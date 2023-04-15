@@ -207,6 +207,7 @@ export default {
                     locationForm: data
                 }).then((response) => {
                     this.$emit("callback", response.data)
+                    this.$notify("Локация успешно созадана и сохранена");
                 }).catch(err => {
 
                 })
@@ -215,6 +216,7 @@ export default {
         addLocation() {
             this.locationForm.company_id = this.companyId
             this.locations.push(this.locationForm);
+            this.$notify("Локация успешно добавлена в список. Не забудьте сохранить");
             this.locationForm = {
                 lat: null,
                 lon: null,

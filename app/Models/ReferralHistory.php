@@ -39,9 +39,14 @@ class ReferralHistory extends Model
         'deleted_at' => 'timestamp',
     ];
 
-    public function user(): HasOne
+    public function sender(): HasOne
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class,"id","user_sender_id");
+    }
+
+    public function recipient(): HasOne
+    {
+        return $this->hasOne(User::class,"id","user_recipient_id");
     }
 
     public function bot(): HasOne
@@ -49,15 +54,7 @@ class ReferralHistory extends Model
         return $this->hasOne(Bot::class);
     }
 
-    public function userSender(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
-    public function userRecipient(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
 
 }

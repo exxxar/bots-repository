@@ -262,6 +262,7 @@ class BotController extends Controller
         $tmp->level_2 = $request->level_2 ?? 0;
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->bot_type_id = $botType->id;
+        $tmp->is_active = true;
 
         $tmp->social_links = json_decode($tmp->social_links??'[]');
 

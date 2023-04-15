@@ -330,8 +330,9 @@ export default {
                 companyForm: data
             }).then((response) => {
                 this.$emit("callback", response.data)
-            }).catch(err => {
 
+                this.$notify("Компания успешно создана");
+            }).catch(err => {
             })
 
         },

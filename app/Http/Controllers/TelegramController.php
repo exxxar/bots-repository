@@ -15,4 +15,9 @@ class TelegramController extends Controller
     {
         BotManager::bot()->handler($domain);
     }
+
+    public function getFiles($companySlug, $file){
+        $path = storage_path('app\\public\\companies\\'.$companySlug."\\".$file);
+        return response()->download($path);
+    }
 }

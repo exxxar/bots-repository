@@ -17,6 +17,7 @@ BotManager::bot()
     ->controller(RestaurantBotController::class)
     ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     ->route("/location ([0-9]+)", "locationInfo")
+    ->route("/more_cashback ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)", "moreCashBackHistory")
     ->route("/start", "start")
     ->slug("slug_main_menu_1", "start")
     ->slug("slug_location_1", "location")
@@ -35,7 +36,9 @@ BotManager::bot()
     ->slug("slug_charges_1", "charges")
     ->slug("slug_write_offs_1", "writeOffs")
     ->slug("slug_invite_friends_1", "inviteFriends")
-    ->slug("slug_my_friends_1", "myFriends");
+    ->slug("slug_my_friends_1", "myFriends")
+    ->slug("slug_charity_1", "charities")
+    ->slug("slug_search_friends_1", "searchFriends");
 
 BotManager::bot()
     ->controller(NewsBotController::class)

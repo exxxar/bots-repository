@@ -17,7 +17,8 @@ defineProps({
                    <div class="card-body">
                        <p>
                            Вы можете выбрать администратора из списка активных администраторов
-                           и прислать ему запрос на начисление <strong>CashBack</strong>.
+                           и прислать ему запрос <span v-if="type==0">на начисление <strong>CashBack</strong>.</span>
+                            <span v-if="type==1">на бронирование столика. Обязательно укажите свой <b>номер телефона</b> для обратной связи.</span>
                            К запросу вы можете прикрепить текстовое сообщение, которое также получит выбранный администратор.
                        </p>
                    </div>
@@ -25,10 +26,37 @@ defineProps({
            </div>
            <div class="col-12">
                <div v-if="admins.length>0">
+                   <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
+                       <input type="radio"
+                              v-model="type"
+                              class="btn-check"
+                              value="0"
+                              name="btnradio"
+                              id="btnradio1" autocomplete="off" checked>
+                       <label class="btn btn-outline-primary" for="btnradio1">Начислить CashBack</label>
+
+                       <input type="radio"
+                              class="btn-check"
+                              v-model="type"
+                              value="1"
+                              name="btnradio"
+                              id="btnradio2" autocomplete="off">
+                       <label class="btn btn-outline-primary" for="btnradio2">Забронировать столик</label>
+                   </div>
+
+                   <div class="input-group mb-3" v-if="type==1">
+                       <span class="input-group-text" id="booking-phone">Телефон</span>
+                       <input type="text" class="form-control"
+                              v-mask="'+7(###)###-##-##'"
+                              v-model="phone"
+                              placeholder="+7(000)000-00-00"
+                              aria-label="vipForm-phone" aria-describedby="booking-phone">
+                   </div>
+
                    <textarea type="text"
-                          v-model="message"
-                          placeholder="Сообщение администратору"
-                          class="form-control w-100  mb-3"/>
+                             v-model="message"
+                             placeholder="Сообщение администратору"
+                             class="form-control w-100  mb-3"/>
 
                </div>
                <div
@@ -77,6 +105,8 @@ export default {
             admins:[],
             admins_paginate_object: null,
             message:null,
+            type:0,
+            phone:null
 
         }
     },
@@ -105,7 +135,9 @@ export default {
                     bot_id: botUser.bot_id,
                     admin_telegram_chat_id: botUser.telegram_chat_id,
                     user_telegram_chat_id: this.tgUser.id,
-                    message:this.message
+                    message:this.message,
+                    type: this.type,
+                    phone: this.phone
                 },
             }).then(resp=> {
                 this.loading = false

@@ -17,11 +17,11 @@ defineProps({
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button"
                                     type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                 Что такое система CashBack?
                             </button>
                         </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show"
+                        <div id="collapseOne" class="accordion-collapse collapse"
                              aria-labelledby="headingOne" data-bs-parent="#faq">
                             <div class="accordion-body">
                                 <p>CashBack - это система, которая позволяет пользователям зарабатывать бонусы при
@@ -226,12 +226,30 @@ defineProps({
         <div class="row mt-3 mb-3">
             <div class="col-12">
                 <h4>Контактная информация</h4>
-                <p>Телефон: <strong><a href="tel:+79490000000">+7(949)000-00-00</a></strong></p>
-                <p>Почта: <strong><a href="mailto:inbox@your-cashman.com">inbox@your-cashman.com</a></strong></p>
-                <p>Мы в телеграмм: <strong><a href="https://t.me/your-cashman">https://t.me/your-cashman</a></strong>
-                </p>
-                <p>Мы в инсте: <strong><a href="">@your.cashman</a></strong></p>
-                <p>Мы в вк: <strong><a href="">your.cashman</a></strong></p>
+                <div class="list-group w-100">
+                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                        Телефон: <strong>+7(949)000-00-00</strong>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                        Почта: <strong>inbox@your-cashman.com</strong>
+
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                        Мы в телеграмм: <strong>https://t.me/your-cashman</strong>
+
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                       Мы в инсте: <strong>@your.cashman</strong>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                       Мы в вк: <strong>your.cashman</strong>
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>

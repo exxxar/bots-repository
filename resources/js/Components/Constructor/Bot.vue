@@ -241,13 +241,23 @@
                             <div class="row"
                                  :key="'social-link'+index"
                                  v-for="(item, index) in botForm.social_links">
-                                <div class="col-10">
+                                <div class="col-5">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control"
+                                               placeholder="Название ссылки"
+                                               aria-label="Название ссылки"
+                                               maxlength="255"
+                                               v-model="botForm.social_links[index].title"
+                                               :aria-describedby="'bot-social-link-'+index" required>
+                                    </div>
+                                </div>
+                                <div class="col-5">
                                     <div class="mb-3">
                                         <input type="text" class="form-control"
                                                placeholder="Ссылка на соц.сеть"
                                                aria-label="Ссылка на соц.сеть"
                                                maxlength="255"
-                                               v-model="botForm.social_links[index]"
+                                               v-model="botForm.social_links[index].url"
                                                :aria-describedby="'bot-social-link-'+index" required>
                                     </div>
                                 </div>
@@ -263,7 +273,7 @@
                                 <div class="col-12">
                                     <button
                                         type="button"
-                                        @click="addItem('social_links')"
+                                        @click="addSocialLinks()"
                                         class="btn btn-outline-success w-100">Добавить еще ссылку
                                     </button>
                                 </div>
@@ -581,6 +591,12 @@ export default {
         },
         addItem(name) {
             this.botForm[name].push("")
+        },
+        addSocialLinks(){
+            this.botForm.social_links.push({
+                title:null,
+                url:null
+            })
         },
         removeItem(name, index) {
             this.botForm[name].splice(index, 1)

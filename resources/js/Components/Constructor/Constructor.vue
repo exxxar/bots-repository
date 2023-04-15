@@ -9,7 +9,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
 
     <div class="container">
         <div class="row">
-            <div class="card mb-3 p-0">
+            <div class="card mb-3 p-0" v-if="step===0">
                 <div class="card-header">
                     <h3>Шаг 1: найдите или создайте компанию</h3>
                 </div>
@@ -26,7 +26,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                 </div>
             </div>
 
-            <div class="card mb-3 p-0">
+            <div class="card mb-3 p-0" v-if="step===1">
                 <div class="card-header">
                     <h3>Шаг 2: Добавьте локации заведений (не объязательно)</h3>
                 </div>
@@ -64,7 +64,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                 </div>
             </div>
 
-            <div class="card mb-3 p-0">
+            <div class="card mb-3 p-0" v-if="step===2">
                 <div class="card-header">
                     <h3>Шаг 3: Добавьте бота
 
@@ -99,7 +99,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                 </div>
             </div>
 
-            <div class="card mb-3 p-0">
+            <div class="card mb-3 p-0" v-if="step===3">
                 <div class="card-header">
                     <h3>Шаг 4: Добавьте в бота меню</h3>
                 </div>
@@ -129,17 +129,47 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                 </div>
             </div>
 
+            <div class="card mb-3 p-0" v-if="step===4">
+                <div class="card-header">
+                    <h3>Шаг 5: Обновите зависимости веб-хуков</h3>
+                </div>
+                <div class="card-body" v-if="step===3">
+                    <a
+                        target="_blank"
+                        class="btn btn-outline-success w-100"
+                        href="/bot/register-webhooks">Обновить</a>
+                </div>
+
+            </div>
+
         </div>
     </div>
 
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     data() {
         return {
             step: 0,
             companyId: null,
             botId: null,
+        }
+    },
+    computed: {
+        ...mapGetters(['getErrors']),
+    },
+    watch: {
+        getErrors: function (newVal, oldVal) {
+            Object.keys(newVal).forEach(key => {
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: newVal[key],
+                    type: 'warn'
+                });
+            })
+
         }
     },
     methods: {

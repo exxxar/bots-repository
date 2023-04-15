@@ -21,6 +21,10 @@ use  \App\Http\Controllers\RestaurantBotController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/images/{companySlug}/{fileName}',
+    [\App\Http\Controllers\TelegramController::class, 'getFiles']);
+
 Route::prefix("bot")->group(function () {
     Route::prefix("templates")
         ->controller(BotController::class)
@@ -63,6 +67,7 @@ Route::prefix("bot")->group(function () {
     Route::any('/register-webhooks', [\App\Http\Controllers\TelegramController::class, "registerWebhooks"]);
     Route::any('/{domain}', [\App\Http\Controllers\TelegramController::class, "handler"]);
 });
+
 
 Route::view('/', "landing");
 

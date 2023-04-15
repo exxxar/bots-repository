@@ -32,7 +32,6 @@ class DatabaseSeeder extends Seeder
             BotMenuTemplateSeeder::class,
             BotMenuSlugSeeder::class,
             BotUserSeeder::class,
-            CashBackSeeder::class,
             CashBackHistorySeeder::class,
             ImageMenuSeeder::class,
 

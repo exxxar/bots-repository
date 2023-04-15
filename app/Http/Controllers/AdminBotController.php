@@ -263,9 +263,15 @@ class AdminBotController extends Controller
         if ($adminBotUser->is_work && $adminBotUser->is_admin) {
             $name = BotMethods::prepareUserName($userBotUser);
 
+            $typeText = $request->type == 0? "начисление бонусный баллов CashBack":
+                "бронирование столика или другое действие";
+
+            $phone = $request->phone ?? null;
+
             $text =
-                ("Пользователь <b> $name</b> запросил у вас начисление бонусных баллов CashBack") .
-                (is_null($message) ? "" : "\nСообщение для вас: <b>$message</b>");
+                ("Пользователь <b> $name</b> запросил у вас $typeText") .
+                (is_null($message) ? "" : "\nСообщение для вас: <b>$message</b>\n").
+                (is_null($phone) ? "" : "\nНомер телефона для связи: <b>$phone</b>\n");
 
             BotMethods::bot()
                 ->whereId($request->bot_id)
@@ -274,7 +280,7 @@ class AdminBotController extends Controller
                     $text,
                     [
                         [
-                            ["text" => "Начислить CashBack пользователю", "url" => "$url_link"]
+                            ["text" => "Действие с пользователем", "url" => "$url_link"]
                         ]
                     ],
                 );

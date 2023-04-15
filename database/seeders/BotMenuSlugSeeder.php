@@ -26,6 +26,12 @@ class BotMenuSlugSeeder extends Seeder
 
             BotMenuSlug::query()->create([
                 'bot_id' => $bot->id,
+                'command' => ".*Благотворительность",
+                'slug' => "slug_charity_1",
+            ]);
+
+            BotMenuSlug::query()->create([
+                'bot_id' => $bot->id,
                 'command' => ".*Меню",
                 'slug' => "slug_menu_1",
             ]);

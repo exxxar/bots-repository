@@ -37,9 +37,9 @@ class CashBackHistory extends Model
         'user_id' => 'integer',
         'bot_id' => 'integer',
         'employee_id' => 'integer',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp',
-        'deleted_at' => 'timestamp',
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+        'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     public function bot(): BelongsTo

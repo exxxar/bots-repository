@@ -1,8 +1,12 @@
 <script setup>
 import Constructor from "@/Components/Constructor/Constructor.vue";
+
 </script>
 <template>
  <div class="container">
+     <div class="row">
+         <notifications position="top right"/>
+     </div>
      <div class="row">
         <div class="col-12 pt-3 pb-3">
             <Constructor/>

@@ -65,7 +65,7 @@ class User extends Authenticatable
 
     public function botUser(): BelongsTo
     {
-        return $this->belongsTo(BotUser::class);
+        return $this->belongsTo(BotUser::class,'id','user_id');
     }
 
     public function referralHistory(): BelongsTo
