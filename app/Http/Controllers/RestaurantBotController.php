@@ -208,9 +208,9 @@ class RestaurantBotController extends Controller
         }
 
         $file = InputFile::create(
-            file_exists(storage_path("app\\public") . "\\companies\\" . ($company->image ?? 'noimage.jpg')) ?
-                storage_path("app\\public") . "\\companies\\" . $company->image :
-                public_path() . "\\images\\cashman.jpg"
+            file_exists(storage_path("app/public") . "/companies/" . ($company->image ?? 'noimage.jpg')) ?
+                storage_path("app/public") . "/companies/" . $company->image :
+                public_path() . "/images/cashman.jpg"
         );
 
         if (is_null($company->image))
@@ -269,7 +269,7 @@ class RestaurantBotController extends Controller
                 BotManager::bot()->replyMediaGroup($media);
             } else if (count($location->images) === 1) {
                 BotManager::bot()->replyPhoto("Фотографии нашего заведения",
-                    InputFile::create(storage_path("app\\public") . "\\companies\\" . $location->company->slug . "\\" . $location->images[0]),
+                    InputFile::create(storage_path("app/public") . "/companies/" . $location->company->slug . "/" . $location->images[0]),
 
                 );
 
@@ -304,14 +304,14 @@ class RestaurantBotController extends Controller
             $media = [];
             foreach ($bot->imageMenus as $image)
                 $media[] = [
-                    "media" => InputFile::create(storage_path("app\\public") . "\\companies\\" . $bot->company->slug . "\\" . $image->image),
+                    "media" => env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image->image,
                     "type" => "photo",
                     "caption" => $image->title
                 ];
             BotManager::bot()->replyMediaGroup($media);
         } else if (count($bot->imageMenus) === 1) {
             BotManager::bot()->replyPhoto($bot->imageMenus[0]->title,
-                InputFile::create(storage_path("app\\public") . "\\companies\\" . $bot->company->slug . "\\" . $bot->imageMenus[0]->image),
+                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $bot->imageMenus[0]->image),
             );
 
         }
