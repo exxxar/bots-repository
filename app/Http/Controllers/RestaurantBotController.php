@@ -132,9 +132,9 @@ class RestaurantBotController extends Controller
 
 
         $file = InputFile::create(
-            file_exists(storage_path("app\\public") . "\\companies\\" . ($bot->image ?? 'noimage.jpg')) ?
-                storage_path("app\\public") . "\\companies\\" . $bot->image :
-                public_path() . "\\images\\cashman.jpg"
+            file_exists(storage_path("app/public") . "/companies/" . ($bot->image ?? 'noimage.jpg')) ?
+                storage_path("app/public") . "/companies/" . $bot->image :
+                public_path() . "/images/cashman.jpg"
         );
 
         \App\Facades\BotManager::bot()
@@ -629,7 +629,7 @@ class RestaurantBotController extends Controller
         \App\Facades\BotManager::bot()
             ->replyPhoto(
                 "Раздел \"Поиск друзей\" находится в разработке!",
-                InputFile::create(public_path() . "\\images\\underconstruction.jpg")
+                InputFile::create(public_path() . "/images/underconstruction.jpg")
             );
     }
 

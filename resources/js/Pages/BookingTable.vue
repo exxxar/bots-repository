@@ -8,8 +8,8 @@ defineProps({
 
 </script>
 <template>
-    boooking
-    <div class="container">
+
+    <div class="container pt-3 pb-3">
         <div class="row">
             <div class="col-12">
                 <div class="mb-3">

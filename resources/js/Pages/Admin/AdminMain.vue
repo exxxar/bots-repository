@@ -17,7 +17,7 @@ defineProps({
 });
 </script>
 <template>
-    <div class="container" v-if="user&&botUser">
+    <div class="container pt-3 pb-3" v-if="user&&botUser">
         <div class="row mb-2">
             <div class="col-12 d-flex justify-content-center mb-2">
 

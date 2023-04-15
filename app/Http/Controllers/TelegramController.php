@@ -17,7 +17,11 @@ class TelegramController extends Controller
     }
 
     public function getFiles($companySlug, $file){
-        $path = storage_path('app\\public\\companies\\'.$companySlug."\\".$file);
+        $path = 'app/public/companies/'.$companySlug."/".$file;
+        if (file_exists($path))
+            $path = storage_path($path);
+        else
+            $path = public_path()."/images/cashman.jpg";
         return response()->download($path);
     }
 }

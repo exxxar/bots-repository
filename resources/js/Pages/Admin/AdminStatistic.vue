@@ -13,7 +13,7 @@ defineProps({
 });
 </script>
 <template>
-    <div class="container" v-if="botUser.is_admin">
+    <div class="container pt-3 pb-3" v-if="botUser.is_admin">
         <div class="row mb-2">
             <div class="col-12">
                 <div class="card">
