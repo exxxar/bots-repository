@@ -18,6 +18,7 @@ class BotMenuSlug extends Model
     protected $fillable = [
         'bot_id',
         'command',
+        'comment',
         'slug',
     ];
 

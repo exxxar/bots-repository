@@ -235,7 +235,6 @@ class RestaurantBotController extends Controller
             ->first();
 
 
-
         if (is_null($location))
             \App\Facades\BotManager::bot()
                 ->reply("К сожалению, данная локация не содержит информации о себе");
@@ -251,17 +250,14 @@ class RestaurantBotController extends Controller
             ($location->can_booking ? "<b>Через данного бота вы можете забронировать у нас столик</b>" : "");
 
 
-
-
         if (!is_null($location->images)) {
 
 
             if (count($location->images) > 1) {
                 $media = [];
-               foreach ($location->images as $image)
-                {
+                foreach ($location->images as $image) {
                     $media[] = [
-                        "media" => env("APP_URL") . "/images/".$location->company->slug . "/" . $image,
+                        "media" => env("APP_URL") . "/images/" . $location->company->slug . "/" . $image,
                         "type" => "photo",
                     ];
                 }
@@ -296,24 +292,48 @@ class RestaurantBotController extends Controller
 
     public function menu()
     {
+        BotManager::bot()
+            ->replyInlineKeyboard("Тестовый магазин", [
+                [
+                    ["text" => "\xF0\x9F\x8E\xB2Открыть магазин", "web_app" => [
+                        "url" => env("APP_URL") . "/test-shop"
+                    ]],
+                ],
+
+            ]);
+
+        return;
 
         $bot = BotManager::bot()->getSelf();
 
 
         if (count($bot->imageMenus) > 1) {
+
             $media = [];
             foreach ($bot->imageMenus as $image)
                 $media[] = [
                     "media" => env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image->image,
                     "type" => "photo",
-                    "caption" => $image->title
+                    "caption" => $image->title . " " . env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image->image
                 ];
             BotManager::bot()->replyMediaGroup($media);
         } else if (count($bot->imageMenus) === 1) {
-            BotManager::bot()->replyPhoto($bot->imageMenus[0]->title,
-                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $bot->imageMenus[0]->image),
-            );
 
+            if (!is_null($bot->imageMenus[0]->image))
+                BotManager::bot()->replyPhoto($bot->imageMenus[0]->title,
+                    InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $bot->imageMenus[0]->image),
+                );
+            else {
+                BotManager::bot()
+                    ->replyPhoto("Откройте наше меню!",
+                        InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $bot->company->image),
+                        [
+                            [
+                                ["text" => "Меню", "url" => $bot->imageMenus[0]->info_link]
+                            ]
+                        ]);
+
+            }
         }
         BotManager::bot()
             ->sendReplyMenu("Наше меню", "menu_level_3_restaurant_1");
@@ -336,7 +356,6 @@ class RestaurantBotController extends Controller
         $bot = BotManager::bot()->getSelf();
 
         $keyboard = [];
-
 
 
         if (!empty($bot->social_links)) {
@@ -468,8 +487,8 @@ class RestaurantBotController extends Controller
     {
         \App\Facades\BotManager::bot()
             ->replyPhoto(
-                "Раздел \"Сеть друщей\" находится в разработке!",
-                InputFile::create(public_path() . "\\images\\underconstruction.jpg")
+                "Раздел \"Сеть друзей\" находится в разработке!",
+                InputFile::create(public_path() . "/images/underconstruction.jpg")
             );
     }
 
@@ -617,7 +636,7 @@ class RestaurantBotController extends Controller
 
         $tmp = "<b>Ваш список друзей:</b>\n";
         foreach ($refs as $ref)
-            $tmp .= "<b>".BotMethods::prepareUserName($ref->recipient->botUser) . "</b>\n";
+            $tmp .= "<b>" . BotMethods::prepareUserName($ref->recipient->botUser) . "</b>\n";
 
 
         \App\Facades\BotManager::bot()
@@ -638,7 +657,7 @@ class RestaurantBotController extends Controller
         \App\Facades\BotManager::bot()
             ->replyPhoto(
                 "Раздел \"Благорвторительность\" находится в разработке!",
-                InputFile::create(public_path() . "\\images\\underconstruction.jpg")
+                InputFile::create(public_path() . "/images/underconstruction.jpg")
             );
     }
 

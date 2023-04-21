@@ -1,5 +1,5 @@
 import './bootstrap';
-import '../css/app.css'
+
 
 import {createApp, h} from 'vue';
 import {createInertiaApp} from '@inertiajs/vue3';
@@ -11,9 +11,13 @@ import moment from 'moment'
 import VueTheMask from 'vue-the-mask'
 import VueSocialSharing from 'vue-social-sharing'
 
+import PerfectScrollbar from 'vue3-perfect-scrollbar'
+import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
+
 import store from './store'
 
 import mitt from 'mitt'
+import Popper from "vue3-popper";
 
 const eventBus = mitt()
 
@@ -40,7 +44,9 @@ createInertiaApp({
             .use(store)
             .use(VueTheMask)
             .use(Notifications)
+            .use(Popper)
             .use(VueSocialSharing)
+            .use(PerfectScrollbar)
             .use(ZiggyVue, Ziggy)
             .use(VueLazyLoad,
             {

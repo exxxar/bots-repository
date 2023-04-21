@@ -4,7 +4,16 @@
         <div class="row">
             <div class="col-12">
                 <div class="mb-3">
-                    <label class="form-label" id="company-title">Название компании</label>
+                    <label class="form-label" id="company-title">
+                        <Popper content="Название вашей компании">
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                        </Popper>
+                        Название компании
+
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+
+
+                    </label>
                     <input type="text" class="form-control"
                            placeholder="Название"
                            aria-label="Название"
@@ -17,7 +26,19 @@
             <div class="col-12">
                 <div class="mb-3">
                     <label class="form-label"
-                           id="company-slug">Название компании латиницей (домен компании)</label>
+                           id="company-slug">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Название компании на АНГЛИЙСКОМ<br>
+                                    без пробелов! можно использовать _<br>
+                                    Должно быть уникальным! Не отображается пользователю.
+                                </div>
+                            </template>
+                        </Popper>
+                        Название компании латиницей (домен компании)
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                    </label>
                     <input type="text" class="form-control"
                            placeholder="Мнемоническое имя"
                            aria-label="Мнемоническое имя"
@@ -29,12 +50,20 @@
 
             <div class="col-12">
                 <div class="mb-3">
-                    <label class="form-label" id="company-description">Описание компании</label>
+                    <label class="form-label" id="company-description">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Добавится в раздел "О Нас"</div>
+                            </template>
+                        </Popper>
+                        Описание компании
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                    </label>
                     <textarea type="text" class="form-control"
                               placeholder="Описание компании"
                               aria-label="Описание компании"
                               v-model="companyForm.description"
-                              maxlength="255"
                               aria-describedby="company-description" required>
                     </textarea>
                 </div>
@@ -43,7 +72,14 @@
             <div class="col-12">
                 <div class="mb-3">
                     <label class="form-label"
-                           id="company-address">Основной адрес компании</label>
+                           id="company-address">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Где находится главное заведение компании!<br>Можно не указывать, т.к. есть еще "Локации"</div>
+                            </template>
+                        </Popper>
+                        Основной адрес компании</label>
                     <input type="text" class="form-control"
                            placeholder="Адрес"
                            aria-label="Адрес"
@@ -63,7 +99,7 @@
                            aria-label="Почтовый адрес"
                            maxlength="255"
                            v-model="companyForm.email"
-                           aria-describedby="company-email" required>
+                           aria-describedby="company-email">
                 </div>
             </div>
 
@@ -196,7 +232,7 @@
                                            aria-label="День недели и время работы"
                                            maxlength="255"
                                            v-model="companyForm.schedule[index]"
-                                           :aria-describedby="'company-schedule-'+index" required>
+                                           :aria-describedby="'company-schedule-'+index">
                                 </div>
                             </div>
                             <div class="col-2">
@@ -224,7 +260,7 @@
             <div class="col-12 ">
                 <div class="card mb-3">
                     <div class="card-header">
-                        <h6>Логотип компании</h6>
+                        <h6>Логотип компании <span class="badge rounded-pill text-bg-danger m-0">Нужно</span></h6>
                     </div>
                     <div class="card-body d-flex justify-content-start">
 
@@ -245,6 +281,15 @@
                         </div>
 
 
+                        <div class="mb-2 img-preview"
+                             style="margin-right: 10px;"
+                             v-if="companyForm.image">
+                            <img v-lazy="'/images/'+companyForm.slug+'/'+companyForm.image">
+                            <div class="remove">
+                                <a @click="removeCompanyImage">Удалить</a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -254,7 +299,9 @@
         <div class="row">
             <div class="col-12">
                 <button
-                    type="submit" class="btn btn-outline-success w-100 p-3">Создать компанию
+                    type="submit" class="btn btn-outline-success w-100 p-3">
+                    <span v-if="companyForm.id===null">Создать компанию</span>
+                    <span v-else>Обновить компанию</span>
                 </button>
             </div>
         </div>
@@ -265,11 +312,14 @@
 
 <script>
 export default {
+    props: ["company"],
     data() {
         return {
             load: false,
             photo: null,
+            removedImage: null,
             companyForm: {
+                id: null,
                 title: null,
                 slug: null,
                 description: null,
@@ -282,6 +332,28 @@ export default {
             }
         }
     },
+
+    mounted() {
+
+        if (this.company)
+            this.$nextTick(() => {
+                this.companyForm = {
+                    id: this.company.id || null,
+                    title: this.company.title || null,
+                    slug: this.company.slug || null,
+                    image: this.company.image || null,
+                    description: this.company.description || null,
+                    address: this.company.address || null,
+                    phones: this.company.phones || [""],
+                    links: this.company.links || [""],
+                    email: this.company.email || null,
+                    schedule: this.company.schedule || [],
+                    manager: this.company.manager || null,
+                }
+
+            })
+
+    },
     methods: {
         getPhoto() {
             return {imageUrl: URL.createObjectURL(this.photo)}
@@ -289,7 +361,7 @@ export default {
         onChangePhotos(e) {
             const files = e.target.files
             this.photo = files[0]
-
+            this.companyForm.image = null
         },
 
         schedulePlaceholder() {
@@ -306,6 +378,10 @@ export default {
                     "Воскресенье - выходной",
                 ]
             }
+        },
+        removeCompanyImage() {
+            this.removedImage = this.companyForm.image
+            this.companyForm.image = null
         },
         addItem(name) {
             this.companyForm[name].push("")
@@ -326,9 +402,15 @@ export default {
 
             data.append('company_logo', this.photo);
 
-            this.$store.dispatch("createCompany", {
-                companyForm: data
-            }).then((response) => {
+            if (this.removedImage != null)
+                data.append('removed_image', this.removedImage);
+
+            this.$store.dispatch(this.companyForm.id === null ?
+                    "createCompany" :
+                    "updateCompany",
+                {
+                    companyForm: data
+                }).then((response) => {
                 this.$emit("callback", response.data)
 
                 this.$notify("Компания успешно создана");

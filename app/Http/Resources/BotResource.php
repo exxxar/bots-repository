@@ -16,9 +16,12 @@ class BotResource extends JsonResource
             'id' => $this->id,
             'company_id' => $this->company_id,
             'bot_domain' => $this->bot_domain,
+            'welcome_message' => $this->welcome_message,
             'bot_token' => $this->bot_token,
             'bot_token_dev' => $this->bot_token_dev,
             'order_channel' => $this->order_channel,
+            'main_channel' => $this->main_channel,
+            'maintenance_message' => $this->maintenance_message,
             'balance' => $this->balance,
             'tax_per_day' => $this->tax_per_day,
             'image' => $this->image,
@@ -35,7 +38,7 @@ class BotResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
-            'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),
+            //'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),
         ];
     }
 }

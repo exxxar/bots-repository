@@ -34,10 +34,8 @@ class DatabaseSeeder extends Seeder
             BotUserSeeder::class,
             CashBackHistorySeeder::class,
             ImageMenuSeeder::class,
-
-
-
-
+            BotProductCategorySeeder::class,
+            BotProductSeeder::class
         ]);
     }
 }

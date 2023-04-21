@@ -10,6 +10,9 @@ let state = {
 
 const getters = {
     getCompanies: state => state.companies || [],
+    getCompanyById: (state) => (id) => {
+        return state.companies.find(item => item.id === id)
+    },
     getCompaniesPaginateObject: state => state.companies_paginate_object || null,
 }
 
@@ -35,7 +38,28 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async updateCompany(context, payload= {companyForm: null}){
+        let link = `${BASE_COMPANIES_LINK}/company-update`
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.companyForm)
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async createCompany(context, payload = {companyForm: null}) {
+        let link = `${BASE_COMPANIES_LINK}/company`
 
+        let _axios = util.makeAxiosFactory(link,"POST", payload.companyForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
 }
 const mutations = {
     setCompanies(state, payload) {

@@ -1,14 +1,36 @@
 models:
-  ActionLog:
+  BotProduct:
+    title: string:255 nullable
+    slug: string:190 unique
+    description: longtext nullable
+    images: json nullable
+    base_price: double default:0
+    discount_price: double default:0
+    weight: double default:0
+    count: int default:0
+    in_stock: boolean default:true
+    specifications: json nullable
+    variants: json nullable
+    owner_id: id foreign:users
     bot_id: id foreign:bots
-    user_id: id foreign:bots
-    action: nullable string:255
-    slug: nullable string:255
     relationships:
+      belongsToMany: BotProductCategory
+      belongsTo: Bot
+      hasOne: User
+
+  BotProductCategory:
+    title: string:255 nullable
+    slug: string:190 unique
+    bot_id: id foreign:bots
+    relationships:
+      belongsToMany: BotProduct
       belongsTo: Bot
 
-seeders: BotMenuSlug
+
+seeders: BotProduct, BotProductCategory
 
 controllers:
-  BotMenuSlug:
+  BotProduct:
+    resource: api
+  BotProductCategory:
     resource: api

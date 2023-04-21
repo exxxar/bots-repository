@@ -4,6 +4,8 @@ import cashBack from './modules/cashback';
 import admins from './modules/admins';
 import templates from './modules/templates';
 import companies from './modules/companies';
+import bots from './modules/bots';
+import products from './modules/products';
 
 
 export default createStore({
@@ -25,6 +27,8 @@ export default createStore({
         cashBack,
         admins,
         templates,
-        companies
+        companies,
+        bots,
+        products
     }
 })

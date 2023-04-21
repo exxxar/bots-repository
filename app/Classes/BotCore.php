@@ -2,9 +2,11 @@
 
 namespace App\Classes;
 
+use App\Enums\BotStatusEnum;
 use App\Facades\BotManager;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -26,6 +28,8 @@ abstract class BotCore
 
     protected $next = [];
 
+    protected $webMessages = [];
+
     protected abstract function createUser($data);
 
     protected abstract function setWebhooks();
@@ -35,6 +39,8 @@ abstract class BotCore
     protected abstract function checkIsWorking();
 
     protected abstract function getSelf();
+
+    protected abstract function botStatusHandler(): BotStatusEnum;
 
     public function getCurrentChatId()
     {
@@ -79,6 +85,163 @@ abstract class BotCore
         $this->tryCall($this->inline, $query, $id);
     }
 
+    public function webHandler($domain, $data): \Illuminate\Http\JsonResponse
+    {
+        $this->setApiToken($domain);
+
+        $query = $data->message ?? $data->query ?? null;
+
+        $user = (object)$data->user;
+        $this->chatId = $user->id;
+
+        include_once base_path('routes/bot.php');
+
+        $this->createUser($user);
+
+        $botStatus = $this->botStatusHandler();
+
+        if ($botStatus != BotStatusEnum::Working)
+            return $this->webMessages;
+
+        if ($this->botSlugHandler($data, $query))
+            return response()->json($this->webMessages);
+
+        if ($this->botRouteHandler($data, $query))
+            return response()->json($this->webMessages);
+
+        if ($this->botNextHandler($data))
+            return response()->json($this->webMessages);
+
+        if ($this->botFallbackHandler($data))
+            return response()->json($this->webMessages);
+
+        $this->reply("Ошибка обработки данных!");
+        return response()->json($this->webMessages);
+    }
+
+    private function botLocationHandler($coords, $message): bool
+    {
+        if (is_null($coords))
+            return false;
+
+        foreach ($this->routes as $item) {
+
+            if (is_null($item["path"]))
+                continue;
+
+            if ($item["path"] === "location")
+                try {
+                    $item["function"]($message, (object)[
+                        "lat" => $coords->latitude,
+                        "lon" => $coords->longitude
+                    ]);
+                    return true;
+                } catch (\Exception $e) {
+                    Log::error($e->getMessage() . " " . $e->getLine());
+                }
+        }
+
+        return false;
+    }
+
+    private function botSlugHandler($message, $query): bool
+    {
+        $matches = [];
+        $arguments = [];
+
+        $find = false;
+        foreach ($this->slugs as $item) {
+            if (is_null($item["path"]) || $item["is_service"])
+                continue;
+
+            $slug = $item["path"];
+
+            $templates = BotMenuSlug::query()
+                ->where("bot_id", $this->getSelf()->id)
+                ->where("slug", $slug)
+                ->get();
+
+            if (count($templates) == 0)
+                continue;
+
+            foreach ($templates as $template) {
+                $command = $template->command;
+
+                if (!str_starts_with($command, "/"))
+                    $command = "/" . $command;
+
+                if (preg_match($command . "$/i", $query, $matches)) {
+                    foreach ($matches as $match)
+                        $arguments[] = $match;
+
+                    $find = $this->tryCall($item, $message, $arguments);
+                    break;
+                }
+            }
+
+            if ($find)
+                return true;
+
+        }
+        return $find;
+    }
+
+    private function botRouteHandler($message, $query): bool
+    {
+        $find = false;
+        $matches = [];
+        $arguments = [];
+
+        foreach ($this->routes as $item) {
+
+            if (is_null($item["path"]) || $item["is_service"])
+                continue;
+
+            $reg = $item["path"];
+
+            if (!str_starts_with($reg, "/"))
+                $reg = "/" . $reg;
+
+            if (preg_match($reg . "$/i", $query, $matches)) {
+                foreach ($matches as $match)
+                    $arguments[] = $match;
+
+                $find = $this->tryCall($item, $message, ...$arguments);
+                break;
+            }
+
+        }
+
+        return $find;
+    }
+
+    private function botNextHandler($message): bool
+    {
+        $find = false;
+        if (!empty($this->next)) {
+            foreach ($this->next as $item) {
+                $find = $this->tryCall($item, $message);
+            }
+        }
+
+        return $find;
+    }
+
+    private function botFallbackHandler($message): bool
+    {
+        $find = false;
+        foreach ($this->routes as $item) {
+
+            if (is_null($item["path"]))
+                continue;
+
+            if ($item["path"] === "fallback") {
+                $find = $this->tryCall($item, $message);
+            }
+        }
+        return $find;
+    }
+
     public function handler($domain)
     {
         $this->setApiToken($domain);
@@ -88,7 +251,6 @@ abstract class BotCore
         include_once base_path('routes/bot.php');
 
         $item = json_decode($update);
-
 
         if (isset($update["channel_post"])) {
 
@@ -103,10 +265,8 @@ abstract class BotCore
             return;
         }
 
-
         if (isset($update["inline_query"])) {
             $this->createUser($item->inline_query->from);
-
             $this->inlineHandler($update);
             return;
         }
@@ -136,126 +296,33 @@ abstract class BotCore
 
         $this->chatId = $message->chat->id;
 
-        if (!$this->checkIsWorking()) {
+        $botStatus = $this->botStatusHandler();
 
-            $message = $this->getSelf()->maintenance_message ?? 'Техническое обслуживание';
-
-            $this
-                ->replyPhoto("\xF0\x9F\x9A\xA8В данный момент сервис временно недосутепн! Обратитесь в тех. поддержку:\xF0\x9F\x9A\xA8\n\n<em><b>$message</b></em>",
-                    InputFile::create(public_path() . "/images/maintenance.png"),
-                    [
-                        [
-                            ["text" => "\xF0\x9F\x9A\xA7Написать в тех. поддержку", "url" => "https://t.me/exxxar"]
-                        ]
-                    ]
-                );
-
+        if ($botStatus != BotStatusEnum::Working)
             return;
 
-        }
+        $coords = !isset($update["message"]["location"]) ? null :
+            (object)[
+                "latitude" => $update["message"]["location"]["latitude"] ?? 0,
+                "longitude" => $update["message"]["location"]["longitude"] ?? 0
+            ];
 
-
-        $find = false;
-
-        if (isset($update["message"]["location"])) {
-            foreach ($this->routes as $item) {
-
-                if (is_null($item["path"]))
-                    continue;
-
-                if ($item["path"] === "location")
-                    try {
-                        $item["function"]($message, (object)[
-                            "lat" => $update["message"]["location"]["latitude"],
-                            "lon" => $update["message"]["location"]["longitude"]
-                        ]);
-                    } catch (\Exception $e) {
-                        Log::error($e->getMessage() . " " . $e->getLine());
-                    }
-            }
-
-
+        if ($this->botLocationHandler($coords, $message))
             return;
-        }
 
-        $matches = [];
-        $arguments = [];
+        if ($this->botSlugHandler($message, $query))
+            return;
 
+        if ($this->botRouteHandler($message, $query))
+            return;
 
-        foreach ($this->slugs as $item) {
-            if (is_null($item["path"]) || $item["is_service"])
-                continue;
+        if ($this->botNextHandler($message))
+            return;
 
-            $slug = $item["path"];
+        if ($this->botFallbackHandler($message))
+            return;
 
-            $template = BotMenuSlug::query()
-                ->where("bot_id", $this->getSelf()->id)
-                ->where("slug", $slug)
-                ->first();
-
-            if (is_null($template))
-                continue;
-
-            $command = $template->command;
-
-            if (!str_starts_with($command, "/"))
-                $command = "/" . $command;
-
-
-            if (preg_match($command . "$/i", $query, $matches)) {
-                foreach ($matches as $match)
-                    $arguments[] = $match;
-
-                $find = $this->tryCall($item, $message, $arguments);
-                break;
-            }
-
-        }
-
-        if (!$find)
-            foreach ($this->routes as $item) {
-
-                if (is_null($item["path"]) || $item["is_service"])
-                    continue;
-
-                $reg = $item["path"];
-
-                if (!str_starts_with($reg, "/"))
-                    $reg = "/" . $reg;
-
-                if (preg_match($reg . "$/i", $query, $matches)) {
-                    foreach ($matches as $match)
-                        $arguments[] = $match;
-
-                    $find = $this->tryCall($item, $message, ...$arguments);
-                    break;
-                }
-
-            }
-
-        if (!empty($this->next)) {
-            foreach ($this->next as $item) {
-                $find = $this->tryCall($item, $message);
-            }
-        }
-
-        if (!$find) {
-            $isFallbackFind = false;
-            foreach ($this->routes as $item) {
-
-                if (is_null($item["path"]))
-                    continue;
-
-                if ($item["path"] === "fallback") {
-                    $isFallbackFind = $this->tryCall($item, $message);
-                }
-            }
-
-            if (!$isFallbackFind)
-                $this->reply("Ошибка обработки данных!");
-        }
-
-
+        $this->reply("Ошибка обработки данных!");
     }
 
     public function next($name)
@@ -329,7 +396,6 @@ abstract class BotCore
 
         return $this;
     }
-
 
     public function inline($function)
     {

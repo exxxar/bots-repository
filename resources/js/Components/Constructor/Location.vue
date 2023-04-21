@@ -3,7 +3,7 @@
         <div class="card-body">
 
             <form v-on:submit.prevent="addLocation">
-                <h6>Локации к компании #{{companyId||'Не установлен'}}</h6>
+                <h6>Локации к компании #{{ companyId || 'Не установлен' }}</h6>
                 <div class="row">
                     <div class="col-12">
                         <div class="form-check">
@@ -17,7 +17,12 @@
                     </div>
                     <div class="col-12">
                         <div class="mb-3">
-                            <label class="form-label" id="location-address">Адрес заведения</label>
+                            <label class="form-label" id="location-address">
+                                Адрес заведения
+                                <span
+
+                                    class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
                             <input type="text" class="form-control"
                                    placeholder="Адрес"
                                    aria-label="Адрес"
@@ -32,7 +37,10 @@
                 <div class="row">
                     <div class="col-md-6 col-12">
                         <div class="mb-3">
-                            <label class="form-label" id="location-lat">Широта</label>
+                            <label class="form-label" id="location-lat">
+                                Широта
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
                             <input type="text" class="form-control"
                                    v-mask="'##.######'"
                                    placeholder="##.######"
@@ -44,7 +52,10 @@
                     </div>
                     <div class="col-md-6 col-12">
                         <div class="mb-3">
-                            <label class="form-label" id="location-lon">Долгота</label>
+                            <label class="form-label" id="location-lon">
+                                Долгота
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
                             <input type="text" class="form-control"
                                    v-mask="'##.######'"
                                    placeholder="##.######"
@@ -59,7 +70,10 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="mb-3">
-                            <label class="form-label" id="location-description">Описание компании</label>
+                            <label class="form-label" id="location-description">
+                                Описание локации
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
                             <textarea type="text" class="form-control"
                                       placeholder="Описание локации"
                                       aria-label="Описание локации"
@@ -72,21 +86,22 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label class="form-label" id="location-channel">Телеграм канал заведения</label>
-                            <input type="text" class="form-control"
-                                   placeholder="Номер телеграм канала"
-                                   aria-label="Номер телеграм канала"
-                                   maxlength="255"
-                                   v-model="locationForm.location_channel"
-                                   aria-describedby="location-channel" required>
-                        </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label" id="location-channel">Телеграм канал локации</label>
+                        <input type="text" class="form-control"
+                               placeholder="Номер телеграм канала"
+                               aria-label="Номер телеграм канала"
+                               maxlength="255"
+                               v-model="locationForm.location_channel"
+                               aria-describedby="location-channel" >
                     </div>
                 </div>
+            </div>
 
                 <div class="row">
                     <div class="col-12 mb-3">
+                        <h6>Фотографии локаций</h6>
                         <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
                             <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
                                 <span>+</span>
@@ -126,7 +141,8 @@
                         <div class="card-header d-flex justify-content-between">
                             <h6>Адрес локации <strong>{{ location.address || 'Не указано' }}</strong>
                                 (ш:{{ location.lat }},д:{{ location.lon }})
-                                <span class="badge bg-success" v-if="location.can_booking">Можно забронировать столик</span>
+                                <span class="badge bg-success"
+                                      v-if="location.can_booking">Можно забронировать столик</span>
                             </h6>
                             <a class="cursor-pointer"
                                @click="removeItem( index)">Удалить</a>
@@ -134,11 +150,22 @@
                         <div class="card-body">
                             <p>Канал заведения <strong>{{ location.location_channel }}</strong></p>
                             <p>{{ location.description }}</p>
-                            <div class="w-100 d-flex">
-                                <div class="mb-2 img-preview" style="margin-right: 10px;"
+                            <h6>Фотографии локаций</h6>
+                            <div class="w-100 d-flex" v-if="location.photos">
+                                <div class="mb-2 img-preview"
+                                     style="margin-right: 10px;"
                                      v-for="(img, index) in location.photos"
                                      v-if="location.photos.length>0">
                                     <img v-lazy="getPhoto(img).imageUrl">
+                                </div>
+                            </div>
+
+                            <div class="w-100 d-flex" v-if="location.images">
+                                <div class="mb-2 img-preview"
+                                     style="margin-right: 10px;"
+                                     v-for="(img, index) in location.images"
+                                     v-if="location.images.length>0">
+                                    <img v-lazy="'/images-by-company-id/'+companyId+'/'+img">
                                 </div>
                             </div>
 
@@ -151,8 +178,9 @@
                 <div class="col-12">
                     <button
                         @click="submitLocations"
-                        :disabled="locations.length===0"
-                        class="btn btn-outline-primary p-3 w-100">Сохранить локации для заведения</button>
+                        :disabled="locations.length===0&&deletedLocations.length===0"
+                        class="btn btn-outline-primary p-3 w-100">Сохранить локации для заведения
+                    </button>
                 </div>
             </div>
         </div>
@@ -160,10 +188,11 @@
 </template>
 <script>
 export default {
-    props:["companyId"],
+    props: ["companyId"],
     data() {
         return {
-            locations:[],
+            locations: [],
+            deletedLocations: [],
             locationForm: {
                 lat: null,
                 lon: null,
@@ -172,22 +201,37 @@ export default {
                 location_channel: null,
                 can_booking: false,
                 photos: [],
-                company_id:null,
+                company_id: null,
             }
         }
     },
+    mounted() {
+        this.loadLocationsByCompany();
+    },
     methods: {
-        getPhoto(imgObject){
+        loadLocationsByCompany() {
+            this.$store.dispatch("loadLocationsByCompany", {
+                companyId: this.companyId
+            }).then(resp => {
+                this.locations = resp
+                console.log("!!!!", resp)
+            }).catch(() => {
+
+            })
+        },
+        getPhoto(imgObject) {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
         removePhoto(index) {
             this.locationForm.photos.splice(index, 1)
         },
         removeItem(index) {
+            if (this.locations[index].id != null)
+                this.deletedLocations.push(this.locations[index].id)
             this.locations.splice(index, 1)
         },
-        submitLocations(){
-            this.locations.forEach(location=>{
+        submitLocations() {
+            this.locations.forEach(location => {
                 let data = new FormData();
                 Object.keys(location)
                     .forEach(key => {
@@ -198,15 +242,21 @@ export default {
                             data.append(key, item)
                     });
 
-                for (let i = 0; i < location.photos.length; i++)
-                    data.append('images[]', location.photos[i]);
+                if (location.photos) {
+                    for (let i = 0; i < location.photos.length; i++)
+                        data.append('files[]', location.photos[i]);
 
-                data.delete("photos")
+                    data.delete("photos")
+                }
+
+
+                if (this.deletedLocations.length > 0)
+                    data.append("deleted_locations", JSON.stringify(this.deletedLocations))
 
                 this.$store.dispatch("createLocation", {
                     locationForm: data
                 }).then((response) => {
-                    this.$emit("callback", response.data)
+                    this.$emit("callback")
                     this.$notify("Локация успешно созадана и сохранена");
                 }).catch(err => {
 

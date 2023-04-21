@@ -1,14 +1,25 @@
 created:
-    - app/Http/Controllers/BotMenuSlugController.php
-    - database/factories/BotMenuSlugFactory.php
-    - database/migrations/2023_04_04_203912_create_bot_menu_slugs_table.php
-    - app/Models/BotMenuSlug.php
-    - database/seeders/BotMenuSlugSeeder.php
-    - tests/Feature/Http/Controllers/BotMenuSlugControllerTest.php
-    - app/Http/Requests/BotMenuSlugStoreRequest.php
-    - app/Http/Requests/BotMenuSlugUpdateRequest.php
-    - app/Http/Resources/BotMenuSlugCollection.php
-    - app/Http/Resources/BotMenuSlugResource.php
+    - app/Http/Controllers/BotProductController.php
+    - app/Http/Controllers/BotProductCategoryController.php
+    - database/factories/BotProductFactory.php
+    - database/factories/BotProductCategoryFactory.php
+    - database/migrations/2023_04_19_085323_create_bot_products_table.php
+    - database/migrations/2023_04_19_085324_create_bot_product_categories_table.php
+    - database/migrations/2023_04_19_085325_create_bot_product_bot_product_category_table.php
+    - app/Models/BotProduct.php
+    - app/Models/BotProductCategory.php
+    - database/seeders/BotProductSeeder.php
+    - database/seeders/BotProductCategorySeeder.php
+    - tests/Feature/Http/Controllers/BotProductControllerTest.php
+    - tests/Feature/Http/Controllers/BotProductCategoryControllerTest.php
+    - app/Http/Requests/BotProductStoreRequest.php
+    - app/Http/Requests/BotProductUpdateRequest.php
+    - app/Http/Requests/BotProductCategoryStoreRequest.php
+    - app/Http/Requests/BotProductCategoryUpdateRequest.php
+    - app/Http/Resources/BotProductCollection.php
+    - app/Http/Resources/BotProductResource.php
+    - app/Http/Resources/BotProductCategoryCollection.php
+    - app/Http/Resources/BotProductCategoryResource.php
 updated:
     - routes/api.php
 models:
@@ -35,3 +46,5 @@ models:
     Transaction: { company_id: 'id foreign:companies', amount: 'double default:0', status: 'integer default:0', description: 'nullable longtext', user_id: 'id foreign:users', created_at: 'nullable timestamp', updated_at: 'nullable timestamp', deleted_at: 'nullable timestamp', relationships: { belongsTo: 'User, Company' } }
     BotMenuTemplate: { bot_id: 'id foreign:bots', type: 'integer default:0', command: 'nullable string:255', slug: 'unique string:190', menu: 'nullable json', relationships: { belongsTo: Bot } }
     BotMenuSlug: { bot_id: 'id foreign:bots', command: 'nullable string:255', slug: 'nullable string:255', relationships: { belongsTo: Bot } }
+    BotProduct: { title: 'string:255 nullable', slug: 'string:190 unique', description: 'longtext nullable', images: 'json nullable', base_price: 'double default:0', discount_price: 'double default:0', weight: 'double default:0', count: 'int default:0', in_stock: 'boolean default:true', specifications: 'json nullable', variants: 'json nullable', owner_id: 'id foreign:users', bot_id: 'id foreign:bots', relationships: { belongsToMany: BotProductCategory, belongsTo: Bot, hasOne: User } }
+    BotProductCategory: { title: 'string:255 nullable', slug: 'string:190 unique', bot_id: 'id foreign:bots', relationships: { belongsToMany: BotProduct, belongsTo: Bot } }

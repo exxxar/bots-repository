@@ -20,6 +20,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async loadDescription(context) {
+        let link = `${BASE_TEMPLATES_LINK}/description`
+
+        let _axios = util.makeAxiosFactory(link)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadKeyboards(context, payload = {botId: null}) {
         let link = `${BASE_TEMPLATES_LINK}/keyboards/${payload.botId}`
 
@@ -32,13 +44,26 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async createCompany(context, payload = {companyForm: null}) {
-        let link = `${BASE_TEMPLATES_LINK}/company`
 
-        let _axios = util.makeAxiosFactory(link,"POST", payload.companyForm)
+    async loadMenuByBotId(context, payload = {botId: null}) {
+        let link = `${BASE_TEMPLATES_LINK}/image-menu/${payload.botId}`
+
+        let _axios = util.makeAxiosFactory(link,"GET")
 
         return _axios.then((response) => {
-            return Promise.resolve(response.data);
+            return Promise.resolve(response.data.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadLocationsByCompany(context, payload = {companyId: null}) {
+        let link = `${BASE_TEMPLATES_LINK}/location/${payload.companyId}`
+
+        let _axios = util.makeAxiosFactory(link,"GET")
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data.data);
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);
@@ -80,6 +105,19 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async loadAllSlugs(context,) {
+        let link = `${BASE_TEMPLATES_LINK}/slugs`
+
+        let _axios = util.makeAxiosFactory(link)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
     async loadSlugs(context, payload = {botId: null}) {
         let link = `${BASE_TEMPLATES_LINK}/slugs/${payload.botId}`
 

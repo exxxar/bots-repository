@@ -1,13 +1,19 @@
+<script setup>
+import BotMenuList from "@/Components/Constructor/BotMenuList.vue";
+import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
+import BotUserList from "@/Components/Constructor/BotUserList.vue";
+</script>
 <template>
-    <div class="row">
+    <div class="row" v-if="companyId">
         <div class="col-12">
             <h6>Создаем бот к компании #{{ companyId || 'Не установлен' }}</h6>
         </div>
     </div>
-    <div class="row mb-3 mt-3">
+    <div class="row mb-3 mt-3" v-if="editor">
         <div class="col-12">
             <div class="btn-group w-100" role="group" aria-label="Basic outlined example">
                 <button type="button"
+
                         v-bind:class="{'btn-primary text-white':step===0}"
                         @click="step=0"
                         class="btn btn-outline-primary">Информация о боте
@@ -22,7 +28,13 @@
                         :disabled="botForm.selected_bot_template_id===null"
                         v-bind:class="{'btn-primary text-white':step===2}"
                         @click="step=2"
-                        class="btn btn-outline-primary">Команды бота
+                        class="btn btn-outline-primary">Скрипты в боте
+                </button>
+                <button type="button"
+                        :disabled="botForm.selected_bot_template_id===null"
+                        v-bind:class="{'btn-primary text-white':step===3}"
+                        @click="step=3"
+                        class="btn btn-outline-primary">Пользователи бота
                 </button>
             </div>
         </div>
@@ -31,16 +43,30 @@
         v-on:submit.prevent="addBot">
         <div v-if="step===0">
 
-            <div class="row" v-if="templates.length>0">
+            <div class="row" v-if="templates.length>0&&bot==null">
                 <div class="col-12">
                     <div class="card border-success mb-3 mt-3">
                         <div class="card-body">
-                            <label class="form-label" id="bot-level-2">Выберите шаблон!</label>
+                            <label class="form-label" id="bot-level-2">
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Ваш бот будет 1 в 1 как в шаблоне!<br>Потом можно исправить названия кнопок
+                                            в меню.
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Выберите шаблон!
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
                             <select class="form-control"
                                     aria-label="Шаблон бота"
                                     v-model="botForm.selected_bot_template_id"
-                                    aria-describedby="bot-level-2">
-                                <option :value="bot.id" v-for="(bot, index) in templates">{{ bot.bot_domain }}</option>
+                                    aria-describedby="bot-level-2" required>
+                                <option :value="bot.id"
+                                        v-for="(bot, index) in templates">
+                                    {{ bot.bot_domain }}
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -51,7 +77,16 @@
             <div class="row">
                 <div class="col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-domain">Доменное имя бота из BotFather</label>
+                        <label class="form-label" id="bot-domain">
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Строго взять из BotFather! ТО что при создании с окончанием на "bot"</div>
+                                </template>
+                            </Popper>
+                            Доменное имя бота из BotFather
+                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        </label>
                         <input type="text" class="form-control"
                                placeholder="Имя бота"
                                aria-label="Имя бота"
@@ -63,12 +98,73 @@
 
                 <div class="col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-description">Описание бота</label>
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label" id="bot-description">
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Отобразится пользователю при первом запуске</div>
+                                    </template>
+                                </Popper>
+                                Приветственное сообщение
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+
+
+                            </label>
+
+                            <div class="dropdown">
+                                <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-spell-check"></i>
+                                </button>
+                                <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                                    <li v-for="(item, index) in descriptions"><a
+                                        @click="addTextTo('welcome_message', item.text )"
+                                        class="dropdown-item">{{ item.text }}</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <textarea type="text" class="form-control"
+                                  placeholder="Текстовое приветствие при запуске бота"
+                                  aria-label="Текстовое приветствие при запуске бота"
+                                  v-model="botForm.welcome_message"
+                                  aria-describedby="bot-description" required>
+                    </textarea>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label" id="bot-description">
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Для меню "О Боте"</div>
+                                    </template>
+                                </Popper>
+                                Описание бота
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
+                            <div class="dropdown">
+                                <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-spell-check"></i>
+                                </button>
+                                <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                                    <li v-for="(item, index) in descriptions"><a
+                                        @click="addTextTo('description', item.text )"
+                                        class="dropdown-item">{{ item.text }}</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+
                         <textarea type="text" class="form-control"
                                   placeholder="Текстовое описание бота"
                                   aria-label="Текстовое описание бота"
                                   v-model="botForm.description"
-                                  maxlength="255"
                                   aria-describedby="bot-description" required>
                     </textarea>
                     </div>
@@ -76,7 +172,17 @@
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-token">Токен бота</label>
+                        <label class="form-label" id="bot-token">
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Взять из BotFater при создании бота! Длинная нечитаемая подсвеченная строка!
+                                    </div>
+                                </template>
+                            </Popper>
+                            Токен бота
+                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        </label>
                         <input type="text" class="form-control"
                                placeholder="Токен"
                                aria-label="Токен"
@@ -85,6 +191,7 @@
                                aria-describedby="bot-token" required>
                     </div>
                 </div>
+
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
@@ -100,43 +207,61 @@
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-order-channel">Канал для заказов</label>
+                        <label class="form-label" id="bot-order-channel">Канал для заказов (id)</label>
                         <input type="text" class="form-control"
-                               placeholder="Номер канала"
-                               aria-label="Номер канала"
+                               placeholder="id канала"
+                               aria-label="id канала"
                                v-model="botForm.order_channel"
                                maxlength="255"
-                               aria-describedby="bot-order-channel" required>
+                               aria-describedby="bot-order-channel">
                     </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-main-channel">Канал для постов (рекламный)</label>
+                        <label class="form-label" id="bot-main-channel">Канал для постов (id,рекламный)</label>
                         <input type="text" class="form-control"
-                               placeholder="Номер канала"
-                               aria-label="Номер канала"
+                               placeholder="id канала"
+                               aria-label="id канала"
                                v-model="botForm.main_channel"
                                maxlength="255"
-                               aria-describedby="bot-main-channel" required>
+                               aria-describedby="bot-main-channel">
                     </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-balance">Баланс бота, руб</label>
+                        <label class="form-label" id="bot-balance">
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Начальная сумма денег на счету у конкретного бота</div>
+                                </template>
+                            </Popper>
+                            Баланс бота, руб
+                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        </label>
                         <input type="number" class="form-control"
                                placeholder="Баланс"
                                aria-label="Баланс"
                                v-model="botForm.balance"
-                              min="0"
+                               min="0"
                                aria-describedby="bot-balance" required>
                     </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-tax-per-day">Списание за сутки, руб</label>
+                        <label class="form-label" id="bot-tax-per-day">
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Сумма списания денег за сутки работы бота (тариф)</div>
+                                </template>
+                            </Popper>
+                            Списание за сутки, руб
+                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        </label>
                         <input type="number" class="form-control"
                                placeholder="Списание"
                                aria-label="Списание"
@@ -148,12 +273,16 @@
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-level-1">Уровень 1 CashBack, %</label>
+                        <label class="form-label" id="bot-level-1">
+                            Уровень 1 CashBack, %
+                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        </label>
                         <input type="number" class="form-control"
                                placeholder="%"
                                aria-label="уровень CashBack"
                                v-model="botForm.level_1"
-                               maxlength="255"
+                               max="50"
+                               min="0"
                                aria-describedby="bot-level-1" required>
                     </div>
                 </div>
@@ -165,8 +294,9 @@
                                placeholder="%"
                                aria-label="уровень CashBack"
                                v-model="botForm.level_2"
-                               maxlength="255"
-                               aria-describedby="bot-level-2" required>
+                               max="50"
+                               min="0"
+                               aria-describedby="bot-level-2">
                     </div>
                 </div>
 
@@ -177,16 +307,34 @@
                                placeholder="%"
                                aria-label="уровень CashBack"
                                v-model="botForm.level_3"
-                               maxlength="255"
-                               aria-describedby="bot-level-3" required>
+                               max="50"
+                               min="0"
+                               aria-describedby="bot-level-3">
                     </div>
                 </div>
 
 
                 <div class="col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-maintenance-message">Сообщение для режима тех.
-                            работ</label>
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label" id="bot-maintenance-message">Сообщение для режима тех.
+                                работ
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
+
+                            <div class="dropdown">
+                                <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-spell-check"></i>
+                                </button>
+                                <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                                    <li v-for="(item, index) in descriptions"><a
+                                        @click="addTextTo('maintenance_message', item.text )"
+                                        class="dropdown-item">{{ item.text }}</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
                         <textarea type="text" class="form-control"
                                   placeholder="Текстовое сообщение"
                                   aria-label="Текстовое сообщение"
@@ -285,6 +433,10 @@
 
             <div class="row">
                 <div class="col-12 mb-3">
+                    <h6>Аватар для бота
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                    </h6>
+
                     <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
                         <label for="bot-photos" style="margin-right: 10px;" class="photo-loader ml-2">
                             <span>+</span>
@@ -293,12 +445,21 @@
                                    style="display:none;"/>
 
                         </label>
+
                         <div class="mb-2 img-preview" style="margin-right: 10px;"
                              v-for="(img, index) in botForm.photos"
-                             v-if="botForm.photos.length>0">
+                             v-if="botForm.photos">
                             <img v-lazy="getPhoto(img).imageUrl">
                             <div class="remove">
                                 <a @click="removePhoto(index)">Удалить</a>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 img-preview" style="margin-right: 10px;"
+                             v-else>
+                            <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+botForm.image">
+                            <div class="remove">
+                                <a @click="removePhoto()">Удалить</a>
                             </div>
                         </div>
 
@@ -311,170 +472,48 @@
         </div>
 
         <div v-if="step===1">
-
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <div class="alert alert-warning" role="alert">
-                        Если меняете текст в "Нижней клавиатуре", то найдите и поменяйте его также в разделе "Команды
-                        бота"
-                    </div>
-                </div>
-                <div class="col-12 mb-3"
-                     v-if="botForm.keyboards"
-                     v-for="(slug, index) in botForm.keyboards">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-
-                                <div class="col-md-6 col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label" id="bot-domain">Тип</label>
-                                        <select
-                                            :disabled="true"
-                                            v-model="botForm.keyboards[index].type"
-                                            class="form-control">
-                                            <option value="reply">Нижняя клавиатура</option>
-                                            <option value="inline">Встроенная клавиатура</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label" id="bot-domain">Мнемоническое имя</label>
-                                        <input type="text" class="form-control"
-                                               placeholder="Мнемоническое имя"
-                                               :disabled="true"
-                                               aria-label="Мнемоническое имя"
-                                               v-model="botForm.keyboards[index].slug"
-                                               maxlength="255"
-                                               aria-describedby="bot-domain" required>
-                                    </div>
-                                </div>
-
-                                <div class=" col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label" id="bot-domain">JSON-код клавиатуры</label>
-                                        <Vue3JsonEditor
-                                            :mode="'code'"
-                                            v-model="botForm.keyboards[index].menu"
-                                            :show-btns="false"
-                                            :expandedOnStart="true"
-                                            @click="selectMenuIndex = index"
-                                            @json-change="onJsonChange"
-                                        />
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <h6>Демонстрация меню</h6>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="row" v-for="(row, rowIndex) in botForm.keyboards[index].menu">
-                                                <div class="col" v-for="(col, colIndex) in row">
-
-                                                    <button
-                                                        type="button"
-                                                        @click="editBtn(index, rowIndex,colIndex)"
-                                                        class="btn btn-outline-primary w-100 mb-2">
-                                                        {{ col.text }}
-                                                    </button>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <BotMenuList
+                :keyboards="botForm.keyboards"
+                v-if="botForm.keyboards"
+                v-on:remove="removeKeyboard"/>
         </div>
 
         <div v-if="step===2">
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <div class="alert alert-warning" role="alert">
-                        Если вы боитесь последствий модификации команды, то продублируйте нужную и внесите коррективы!
-                        Работать будут обе команды как оригинал, так и дубль!
-                    </div>
-                </div>
-                <div class="col-12 mb-3"
-                     v-if="botForm.slugs.length>0"
-                     v-for="(slug, index) in botForm.slugs">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <button
-                                        @click="duplicateSlug(index)"
-                                        type="button"
-                                        class="btn btn-outline-success mr-2"
-                                    >
-                                        Дублировать
-                                    </button>
-                                    <button
-                                        @click="removeSlug(index)"
-                                        type="button"
-                                        class="btn btn-outline-danger"
-                                    >
-                                        Удалить
-                                    </button>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label" id="bot-domain">Команда</label>
-                                        <input type="text" class="form-control"
-                                               placeholder="Команда"
-                                               aria-label="Команда"
-                                               v-model="botForm.slugs[index].command"
-                                               maxlength="255"
-                                               aria-describedby="bot-domain" required>
-                                    </div>
-                                </div>
+            <BotSlugList
+                v-if="botForm.slugs&&!load"
+                :slugs="botForm.slugs"
+                v-on:add="addSlug"
+                v-on:remove="removeSlug"
+                v-on:duplicate="duplicateSlug"/>
+        </div>
 
-                                <div class="col-md-6 col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label" id="bot-domain">Мнемоническое имя</label>
-                                        <input type="text" class="form-control"
-                                               :disabled="true"
-                                               placeholder="Мнемоническое имя"
-                                               aria-label="Мнемоническое имя"
-                                               v-model="botForm.slugs[index].slug"
-                                               maxlength="255"
-                                               aria-describedby="bot-domain" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <div v-if="step===3">
+            <BotUserList
+                v-if="bot&&!load"
+                :bot-id="bot.id"/>
         </div>
 
         <div class="row">
             <div class="col-12">
                 <button
-                    type="submit" class="btn btn-outline-success w-100 p-3">Добавить бота
+                    type="submit" class="btn btn-outline-success w-100 p-3">
+                    <span v-if="!bot">Добавить бота</span>
+                    <span v-else>Обновить бота</span>
+
                 </button>
             </div>
         </div>
     </form>
 
+
 </template>
 <script>
-import {Vue3JsonEditor} from 'vue3-json-editor'
 
 export default {
-    props: ["companyId"],
-    components: {
-        Vue3JsonEditor
-    },
+    components: {},
+
+    props: ["companyId", "bot", "editor"],
+
     setup() {
 
     },
@@ -482,8 +521,10 @@ export default {
         return {
             step: 0,
             templates: [],
-            selectMenuIndex: null,
-
+            load: false,
+            removedSlugs: [],
+            removedKeyboards: [],
+            descriptions: [],
             botForm: {
                 bot_domain: null,
                 bot_token: null,
@@ -492,7 +533,7 @@ export default {
                 main_channel: null,
                 balance: null,
                 tax_per_day: null,
-
+                welcome_message: null,
                 image: null,
 
                 description: null,
@@ -515,14 +556,6 @@ export default {
 
                 keyboards: [],
             },
-
-            editedButton: {
-                keyboardIndex: null,
-                rowIndex: null,
-                colIndex: null,
-                button: null
-            }
-
         }
     },
     watch: {
@@ -535,31 +568,85 @@ export default {
     },
     mounted() {
         this.loadBotTemplates()
+        this.loadDescription();
+
+        if (this.bot)
+            this.$nextTick(() => {
+                this.loadMenusByBotTemplate(this.bot.id)
+                this.loadSlugsByBotTemplate(this.bot.id)
+
+                this.botForm = {
+                    id: this.bot.id || null,
+                    bot_domain: this.bot.bot_domain || null,
+                    bot_token: this.bot.bot_token || null,
+                    bot_token_dev: this.bot.bot_token_dev || null,
+                    order_channel: this.bot.order_channel || null,
+                    main_channel: this.bot.main_channel || null,
+                    balance: this.bot.balance || null,
+                    tax_per_day: this.bot.tax_per_day || null,
+
+                    image: this.bot.image || null,
+
+                    description: this.bot.description || null,
+
+                    info_link: this.bot.info_link || null,
+
+                    social_links: this.bot.social_links || [],
+
+                    maintenance_message: this.bot.maintenance_message || null,
+                    welcome_message: this.bot.welcome_message || null,
+
+                    level_1: this.bot.level_1 || 10,
+                    level_2: this.bot.level_2 || 0,
+                    level_3: this.bot.level_3 || 0,
+
+                    photos: this.bot.photos || [],
+                }
+
+            })
     },
     methods: {
+
+        addTextTo(param, text) {
+            //'welcome_message', text
+            this.botForm[param] = text;
+
+        },
         duplicateSlug(index) {
             const slug = JSON.stringify(this.botForm.slugs[index])
             this.botForm.slugs.splice(index, 0, JSON.parse(slug))
         },
+        removeKeyboard(index) {
+            if (this.bot)
+                this.removedKeyboards.push(index);
+
+            this.botForm.keyboards.splice(index, 1)
+        },
+        addSlug(item) {
+            this.botForm.slugs.push({
+                id: null,
+                bot_id: null,
+                command: item.command,
+                comment: item.comment,
+                slug: item.slug
+            })
+            console.log("slugs after add", this.botForm.slugs)
+            this.load = true
+            this.$nextTick(() => {
+                this.load = false
+            })
+        },
         removeSlug(index) {
+            if (this.bot)
+                this.removedSlugs.push(index);
+
             this.botForm.slugs.splice(index, 1)
         },
-        editBtn(keyboardIndex, rowIndex, colIndex) {
-            this.editedButton.button = this.botForm.keyboards[keyboardIndex].menu[rowIndex][colIndex]
-            this.editedButton.colIndex = colIndex
-            this.editedButton.rowIndex = rowIndex
-            this.editedButton.keyboardIndex = keyboardIndex
+        loadDescription() {
+            this.$store.dispatch("loadDescription").then((resp) => {
+                this.descriptions = resp.data
 
-            console.log(this.editedButton)
-            /*  Object
-                  .keys(this.botForm.keyboards[keyboardIndex].menu[rowIndex][colIndex])
-                  .forEach(item=>{
-                      console.log("item", this.botForm.keyboards[keyboardIndex].menu[rowIndex][colIndex][item])
-                  })*/
-            //console.log()
-        },
-        onJsonChange(value) {
-            this.botForm.keyboards[this.selectMenuIndex].menu = value
+            })
         },
         loadMenusByBotTemplate(botId) {
             this.$store.dispatch("loadKeyboards", {
@@ -581,28 +668,32 @@ export default {
 
             })
         },
-        getPhoto(img){
-          return {imageUrl: URL.createObjectURL(img)}
+        getPhoto(img) {
+            return {imageUrl: URL.createObjectURL(img)}
         },
         onChangePhotos(e) {
             const files = e.target.files
+            this.botForm.image = null
             for (let i = 0; i < files.length; i++)
                 this.botForm.photos.push(files[i])
         },
         addItem(name) {
             this.botForm[name].push("")
         },
-        addSocialLinks(){
+        addSocialLinks() {
             this.botForm.social_links.push({
-                title:null,
-                url:null
+                title: null,
+                url: null
             })
         },
         removeItem(name, index) {
             this.botForm[name].splice(index, 1)
         },
         removePhoto(index) {
-            this.botForm.photos.splice(index, 1)
+            if (index)
+                this.botForm.photos.splice(index, 1)
+            else
+                this.botForm.image = null
         },
         addBot() {
             let data = new FormData();
@@ -615,53 +706,63 @@ export default {
                         data.append(key, item)
                 });
 
+            if (this.bot) {
+                if (this.removedSlugs.length > 0)
+                    data.append("removed_slugs", JSON.stringify(this.removedSlugs))
 
-            data.append("company_id", this.companyId)
+                if (this.removedKeyboards.length > 0)
+                    data.append("removed_keyboards", JSON.stringify(this.removedKeyboards))
+            }
+
+            if (this.companyId)
+                data.append("company_id", this.companyId)
 
             for (let i = 0; i < this.botForm.photos.length; i++)
                 data.append('images[]', this.botForm.photos[i]);
 
             data.delete("photos")
 
-            this.$store.dispatch("createBot", {
+            this.$store.dispatch((this.bot == null ? "createBot" : "updateBot"), {
                 botForm: data
             }).then((response) => {
                 this.$emit("callback", response.data)
+
+                this.botForm = {
+                    bot_domain: null,
+                    bot_token: null,
+                    bot_token_dev: null,
+                    order_channel: null,
+                    main_channel: null,
+                    balance: null,
+                    tax_per_day: null,
+
+                    image: null,
+
+                    description: null,
+
+                    info_link: null,
+
+                    social_links: [],
+
+                    maintenance_message: null,
+
+                    level_1: 10,
+                    level_2: 0,
+                    level_3: 0,
+
+                    photos: [],
+
+                    selected_bot_template_id: null,
+
+                    slugs: [],
+
+                    keyboards: [],
+                }
             }).catch(err => {
 
             })
 
-            this.botForm = {
-                bot_domain: null,
-                bot_token: null,
-                bot_token_dev: null,
-                order_channel: null,
-                main_channel: null,
-                balance: null,
-                tax_per_day: null,
 
-                image: null,
-
-                description: null,
-
-                info_link: null,
-
-                social_links: [],
-
-                maintenance_message: null,
-
-                level_1: 10,
-                level_2: 0,
-                level_3: 0,
-
-                photos: [],
-
-                selected_bot_template_id: null,
-
-                slugs: [],
-
-                keyboards: [],
-            }
         },
     }
 }

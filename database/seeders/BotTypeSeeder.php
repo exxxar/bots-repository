@@ -17,5 +17,29 @@ class BotTypeSeeder extends Seeder
             'slug'=>"restaurant",
             'is_active'=>true
         ]);
+
+        BotType::query()->create([
+            'title'=>"Воронки продаж",
+            'slug'=>"sales_funnel",
+            'is_active'=>true
+        ]);
+
+        BotType::query()->create([
+            'title'=>"Магазины",
+            'slug'=>"shops",
+            'is_active'=>true
+        ]);
+
+        BotType::query()->create([
+            'title'=>"Сервис доставки (клиент доставщика)",
+            'slug'=>"delivery_service_for_deliveryman",
+            'is_active'=>true
+        ]);
+
+        BotType::query()->create([
+            'title'=>"Другое",
+            'slug'=>"other",
+            'is_active'=>true
+        ]);
     }
 }

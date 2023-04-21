@@ -3,12 +3,15 @@
         <div class="card-body">
 
             <form v-on:submit.prevent="addImageMenu">
-                <h6>Графическое Меню к боту #{{botId||'Не установлен'}}</h6>
+                <h6>Графическое Меню к боту #{{ botId || 'Не установлен' }}</h6>
                 <div class="row">
 
                     <div class="col-12">
                         <div class="mb-3">
-                            <label class="form-label" id="menu-address">Название меню</label>
+                            <label class="form-label" id="menu-address">
+                                Заголовок меню
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
                             <input type="text" class="form-control"
                                    placeholder="Название меню"
                                    aria-label="Название меню"
@@ -28,7 +31,7 @@
                                       aria-label="Описание меню"
                                       maxlength="255"
                                       v-model="menuForm.description"
-                                      aria-describedby="menu-description" required>
+                                      aria-describedby="menu-description">
                     </textarea>
                         </div>
                     </div>
@@ -38,7 +41,8 @@
 
                     <div class="col-12">
                         <div class="mb-3">
-                            <label class="form-label" id="menu-address">Ссылка на страницу в <a target="_blank" href="https://telegra.ph">telegra.ph</a></label>
+                            <label class="form-label" id="menu-address">Ссылка на страницу в <a target="_blank"
+                                                                                                href="https://telegra.ph">telegra.ph</a></label> с вашим меню
                             <input type="text" class="form-control"
                                    placeholder="Информационная ссылка"
                                    aria-label="Информационная ссылка"
@@ -51,6 +55,7 @@
 
                 <div class="row">
                     <div class="col-12 mb-3">
+                        <h5>Картинка меню с позициями <span class="badge rounded-pill text-bg-danger m-0">Нужно</span></h5>
                         <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
                             <label for="menu-photos" style="margin-right: 10px;" class="photo-loader ml-2">
                                 <span>+</span>
@@ -97,7 +102,10 @@
                             <div class="w-100 d-flex">
                                 <div class="mb-2 img-preview" style="margin-right: 10px;"
                                      v-if="menu.image">
-                                    <img v-lazy="getPhoto(menu.image).imageUrl">
+
+                                    <img v-if="typeof menu.image =='string' "
+                                         v-lazy="'/images-by-bot-id/'+botId+'/'+menu.image">
+                                    <img v-else v-lazy="getPhoto(menu.image).imageUrl">
                                 </div>
                             </div>
 
@@ -111,7 +119,8 @@
                     <button
                         @click="submitMenus"
                         :disabled="menus.length===0"
-                        class="btn btn-outline-primary p-3 w-100">Сохранить меню для заведения</button>
+                        class="btn btn-outline-primary p-3 w-100">Сохранить меню для заведения
+                    </button>
                 </div>
             </div>
         </div>
@@ -119,31 +128,48 @@
 </template>
 <script>
 export default {
-    props:["botId"],
+    props: ["botId"],
     data() {
         return {
-            menus:[],
+            menus: [],
+            deletedMenus: [],
             menuForm: {
-                title:null,
-                description:null,
-                image:null,
-                info_link:null,
-                bot_id:null,
+                title: null,
+                description: null,
+                image: null,
+                info_link: null,
+                bot_id: null,
             }
         }
     },
+    mounted() {
+        this.loadMenuByBotId()
+    },
     methods: {
-        getPhoto(imgObject){
+        loadMenuByBotId() {
+            this.$store.dispatch("loadMenuByBotId", {
+                botId: this.botId
+            }).then(resp => {
+                this.menus = resp
+            }).catch(() => {
+
+            })
+        },
+
+        getPhoto(imgObject) {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
         removePhoto() {
             this.menuForm.image = null
         },
         removeItem(index) {
+            if (this.menus[index].id) {
+                this.deletedMenus.push(this.menus[index].id)
+            }
             this.menus.splice(index, 1)
         },
-        submitMenus(){
-            this.menus.forEach(menu=>{
+        submitMenus() {
+            this.menus.forEach(menu => {
                 let data = new FormData();
                 Object.keys(menu)
                     .forEach(key => {
@@ -154,10 +180,14 @@ export default {
                             data.append(key, item)
                     });
 
+                if (this.deletedMenus.length > 0) {
+                    data.append("deleted_menus", JSON.stringify(this.deletedMenus))
+                }
 
-                data.append('preview', menu.image);
-
-                data.delete("image")
+                if (typeof menu.image != "string") {
+                    data.append('preview', menu.image);
+                    data.delete("image")
+                }
 
                 this.$store.dispatch("createImageMenu", {
                     menuForm: data
@@ -174,11 +204,11 @@ export default {
             this.menus.push(this.menuForm);
             this.$notify("Меню успешно добавлено в список");
             this.menuForm = {
-                title:null,
-                description:null,
-                image:null,
-                info_link:null,
-                bot_id:null,
+                title: null,
+                description: null,
+                image: null,
+                info_link: null,
+                bot_id: null,
             }
         },
         onChangePhotos(e) {

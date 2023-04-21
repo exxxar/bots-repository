@@ -4,9 +4,11 @@ use App\Http\Controllers\AdminBotController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProfileController;
+use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use  \App\Http\Controllers\RestaurantBotController;
@@ -22,18 +24,74 @@ use  \App\Http\Controllers\RestaurantBotController;
 |
 */
 
+Route::get("/test", function (){
+
+    $text = "Special";
+
+    $keyboards = BotMenuTemplate::query()
+        ->where("bot_id", 1)
+        ->get();
+
+    $tmp = [];
+    foreach ($keyboards as $keyboard){
+        $find = false;
+        foreach ($keyboard->menu as $row) {
+            foreach ($row as $button) {
+                $button = (object)$button;
+                if (mb_strpos($button->text, $text)!==false)
+                    $find = true;
+            }
+        }
+
+        if ($find)
+            $tmp[] = $keyboard->toArray();
+
+
+
+    }
+
+    dd($tmp);
+});
+
+Route::get('/images-by-company-id/{companyId}/{fileName}',
+    [\App\Http\Controllers\TelegramController::class, 'getFilesByCompanyId']);
+
+Route::get('/images-by-bot-id/{botId}/{fileName}',
+    [\App\Http\Controllers\TelegramController::class, 'getFilesByBotId']);
+
 Route::get('/images/{companySlug}/{fileName}',
     [\App\Http\Controllers\TelegramController::class, 'getFiles']);
 
 Route::prefix("bot")->group(function () {
+    Route::prefix("bots")
+        ->controller(BotController::class)
+        ->group(function () {
+            Route::post("/", "index");
+            Route::post("/bot-update", "updateBot");
+            Route::post("/user-status", "changeUserStatus");
+            Route::post("/users", "loadBotUsers");
+
+        });
+
+    Route::prefix("products")
+        ->controller(\App\Http\Controllers\BotProductController::class)
+        ->group(function () {
+            Route::post("/", "index");
+        });
+
     Route::prefix("templates")
         ->controller(BotController::class)
         ->group(function () {
             Route::get("/bots", "loadBotsAsTemplate");
+            Route::get("/slugs", "loadAllSlugs");
+            Route::get("/description", "loadDescriptions");
             Route::get("/keyboards/{botId}", "loadKeyboards");
+            Route::post("/keyboards/{botId}", "loadKeyboardsByText");
             Route::get("/slugs/{botId}", "loadSlugs");
-            Route::post("/company", "createCompany");
+
             Route::post("/location", "createLocation");
+            Route::get("/location/{companyId}", "loadLocations");
+            Route::get("/image-menu/{botId}", "loadImageMenu");
             Route::post("/bot", "createBot");
             Route::post("/image-menu", "createImageMenu");
         });
@@ -42,6 +100,8 @@ Route::prefix("bot")->group(function () {
         ->controller(CompanyController::class)
         ->group(function () {
             Route::post("/", "index");
+            Route::post("/company", "createCompany");
+            Route::post("/company-update", "editCompany");
         });
 
     Route::prefix("admins")
@@ -68,9 +128,20 @@ Route::prefix("bot")->group(function () {
     Route::any('/{domain}', [\App\Http\Controllers\TelegramController::class, "handler"]);
 });
 
+Route::prefix("web")
+    ->group(function(){
+        Route::get('/{domain}', [\App\Http\Controllers\TelegramController::class, "webInterface"]);
+        Route::post('/{domain}', [\App\Http\Controllers\TelegramController::class, "webHandler"]);
+    });
 
 Route::view('/', "landing");
 
+
+Route::get('/test-shop', function () {
+    Inertia::setRootView("bot");
+
+    return Inertia::render('Products');
+});
 
 Route::get('/restaurant/book-a-table/{botDomain}', function ($botDomain) {
 

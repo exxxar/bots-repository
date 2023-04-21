@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bot_id')->constrained();
             $table->string('command', 255)->nullable();
+            $table->longText('comment')->nullable();
             $table->string('slug', 255)->nullable();
             $table->timestamps();
         });

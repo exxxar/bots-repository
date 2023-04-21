@@ -10,31 +10,42 @@ trait BotBaseMethodsTrait
 {
     public function sendMessage($chatId, $message)
     {
+        $tmp = [
+            "chat_id" => $chatId,
+            "text" => $message,
+            "parse_mode" => "HTML"
+        ];
+
+        $this->webMessages[] = $tmp;
+
         try {
-            $this->bot->sendMessage([
-                "chat_id" => $chatId,
-                "text" => $message,
-                "parse_mode" => "HTML"
-            ]);
+            $this->bot->sendMessage($tmp);
         } catch (\Exception $e) {
-
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
-
         return $this;
-
     }
 
     public function sendLocation($chatId, $lat, $lon)
     {
-        try {
-            $this->bot->sendLocation([
-                "chat_id" => $chatId,
-                "latitude" => $lat,
-                "longitude" => $lon,
-                "parse_mode" => "HTML"
-            ]);
-        } catch (\Exception $e) {
 
+        $tmp = [
+            "chat_id" => $chatId,
+            "latitude" => $lat,
+            "longitude" => $lon,
+            "parse_mode" => "HTML"
+        ];
+
+        $this->webMessages[] = $tmp;
+
+        try {
+            $this->bot->sendLocation($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
         return $this;
 
@@ -42,15 +53,21 @@ trait BotBaseMethodsTrait
 
     public function sendDocument($chatId, $caption, $path)
     {
-        try {
-            $this->bot->sendDocument([
-                "chat_id" => $chatId,
-                "document" => $path,
-                "caption" => $caption,
-                "parse_mode" => "HTML"
-            ]);
-        } catch (\Exception $e) {
+        $tmp = [
+            "chat_id" => $chatId,
+            "document" => $path,
+            "caption" => $caption,
+            "parse_mode" => "HTML"
+        ];
 
+        $this->webMessages[] = $tmp;
+
+        try {
+            $this->bot->sendDocument($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
 
         return $this;
@@ -60,21 +77,26 @@ trait BotBaseMethodsTrait
     public function sendReplyKeyboard($chatId, $message, $keyboard)
     {
 
-        try {
-            $this->bot->sendMessage([
-                "chat_id" => $chatId,
-                "text" => $message,
-                "parse_mode" => "HTML",
-                'reply_markup' => json_encode([
-                    'keyboard' => $keyboard,
-                    'resize_keyboard' => true,
-                    'input_field_placeholder' => "Выбор действия"
-                ])
+        $tmp = [
+            "chat_id" => $chatId,
+            "text" => $message,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'keyboard' => $keyboard,
+                'resize_keyboard' => true,
+                'input_field_placeholder' => "Выбор действия"
+            ])
+        ];
 
-            ]);
+        $this->webMessages[] = $tmp;
+
+        try {
+            $this->bot->sendMessage($tmp);
 
         } catch (\Exception $e) {
-
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
 
         return $this;
@@ -83,18 +105,23 @@ trait BotBaseMethodsTrait
 
     public function sendInvoice($chatId, $title, $description, $prices, $data)
     {
-        try {
-            $this->bot->sendInvoice([
-                "chat_id" => $chatId,
-                "title" => $title,
-                "description" => $description,
-                "payload" => $data,
-                "provider_token" => env("PAYMENT_PROVIDER_TOKEN"),
-                "currency" => env("PAYMENT_PROVIDER_CURRENCY"),
-                "prices" => $prices,
-            ]);
-        } catch (\Exception $e) {
+        $tmp = [
+            "chat_id" => $chatId,
+            "title" => $title,
+            "description" => $description,
+            "payload" => $data,
+            "provider_token" => env("PAYMENT_PROVIDER_TOKEN"),
+            "currency" => env("PAYMENT_PROVIDER_CURRENCY"),
+            "prices" => $prices,
+        ];
 
+        $this->webMessages[] = $tmp;
+        try {
+            $this->bot->sendInvoice($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
 
         return $this;
@@ -106,18 +133,23 @@ trait BotBaseMethodsTrait
 
     public function editInlineKeyboard($chatId, $messageId, $keyboard)
     {
+        $tmp = [
+            "chat_id" => $chatId,
+            "message_id" => $messageId,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
+        ];
+
+        $this->webMessages[] = $tmp;
+
         try {
-            $this->bot->editMessageReplyMarkup([
-                "chat_id" => $chatId,
-                "message_id" => $messageId,
-                "parse_mode" => "HTML",
-                'reply_markup' => json_encode([
-                    'inline_keyboard' => $keyboard,
-                ])
-
-            ]);
+            $this->bot->editMessageReplyMarkup($tmp);
         } catch (\Exception $e) {
-
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
 
         return $this;
@@ -126,18 +158,24 @@ trait BotBaseMethodsTrait
     public function sendInlineKeyboard($chatId, $message, $keyboard)
     {
 
+        $tmp = [
+            "chat_id" => $chatId,
+            "text" => $message,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
+
+        ];
+
+        $this->webMessages[] = $tmp;
+
         try {
-            $this->bot->sendMessage([
-                "chat_id" => $chatId,
-                "text" => $message,
-                "parse_mode" => "HTML",
-                'reply_markup' => json_encode([
-                    'inline_keyboard' => $keyboard,
-                ])
-
-            ]);
+            $this->bot->sendMessage($tmp);
         } catch (\Exception $e) {
-
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
 
         return $this;
@@ -145,18 +183,24 @@ trait BotBaseMethodsTrait
 
     public function sendPhoto($chatId, $caption, $path, $keyboard = [])
     {
-        try {
-            $this->bot->sendPhoto([
-                "chat_id" => $chatId,
-                "photo" => $path,
-                "caption" => $caption,
-                "parse_mode" => "HTML",
-                'reply_markup' => json_encode([
-                    'inline_keyboard' => $keyboard,
-                ])
-            ]);
-        } catch (\Exception $e) {
+        $tmp = [
+            "chat_id" => $chatId,
+            "photo" => $path,
+            "caption" => $caption,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
+        ];
 
+        $this->webMessages[] = $tmp;
+
+        try {
+            $this->bot->sendPhoto($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
 
         return $this;
@@ -166,13 +210,19 @@ trait BotBaseMethodsTrait
     public function sendMediaGroup($chatId, $media = [])
     {
 
+        $tmp = [
+            "chat_id" => $chatId,
+            "media" => $media,
+        ];
+
+        $this->webMessages[] = $tmp;
+
         try {
-            $this->bot->sendMediaGroup([
-                "chat_id" => $chatId,
-                "media" => $media,
-            ]);
+            $this->bot->sendMediaGroup($tmp);
         } catch (\Exception $e) {
-            Log::info($e);
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
 
         return $this;
@@ -189,7 +239,9 @@ trait BotBaseMethodsTrait
                 "results" => json_encode($buttons)
             ]);
         } catch (\Exception $e) {
-            Log::info($e);
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
         }
 
         return $this;

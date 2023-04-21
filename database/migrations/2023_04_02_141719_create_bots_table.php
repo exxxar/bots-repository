@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('bots', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained();
+            $table->longText('welcome_message')->nullable();
             $table->string('bot_domain', 190)->unique();
             $table->string('bot_token', 255)->nullable();
             $table->string('bot_token_dev', 255)->nullable();
@@ -34,6 +35,7 @@ return new class extends Migration
             $table->double('level_2')->nullable();
             $table->double('level_3')->nullable();
             $table->longText('blocked_message')->nullable();
+
             $table->timestamp('blocked_at')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();

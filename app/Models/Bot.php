@@ -18,6 +18,7 @@ class Bot extends Model
      */
     protected $fillable = [
         'company_id',
+        'welcome_message',
         'bot_domain',
         'bot_token',
         'bot_token_dev',

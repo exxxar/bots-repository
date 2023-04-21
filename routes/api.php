@@ -56,3 +56,8 @@ Route::apiResource('notification-schedule', App\Http\Controllers\NotificationSch
 
 
 Route::apiResource('bot-menu-slug', App\Http\Controllers\BotMenuSlugController::class);
+
+
+Route::apiResource('bot-product', App\Http\Controllers\BotProductController::class);
+
+Route::apiResource('bot-product-category', App\Http\Controllers\BotProductCategoryController::class);

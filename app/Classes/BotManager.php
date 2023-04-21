@@ -2,6 +2,7 @@
 
 namespace App\Classes;
 
+use App\Enums\BotStatusEnum;
 use App\Models\Bot;
 use App\Models\BotUser;
 use App\Models\CashBack;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Telegram\Bot\Api;
+use Telegram\Bot\FileUpload\InputFile;
 
 class BotManager extends BotCore
 {
@@ -84,6 +86,27 @@ class BotManager extends BotCore
             }
 
         }
+    }
+
+    protected function botStatusHandler(): BotStatusEnum
+    {
+        if ($this->checkIsWorking())
+            return BotStatusEnum::Working;
+
+
+        $message = $this->getSelf()->maintenance_message ?? 'Техническое обслуживание';
+
+        $this
+            ->replyPhoto("\xF0\x9F\x9A\xA8В данный момент сервис временно недосутепн! Обратитесь в тех. поддержку:\xF0\x9F\x9A\xA8\n\n<em><b>$message</b></em>",
+                InputFile::create(public_path() . "/images/maintenance.png"),
+                [
+                    [
+                        ["text" => "\xF0\x9F\x9A\xA7Написать в тех. поддержку", "url" => "https://t.me/exxxar"]
+                    ]
+                ]
+            );
+
+        return BotStatusEnum::InMaintenance;
     }
 
     public function setWebhooks()
