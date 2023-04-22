@@ -307,17 +307,24 @@ class RestaurantBotController extends Controller
         $bot = BotManager::bot()->getSelf();
 
 
+        Log::info("count image menus".count($bot->imageMenus));
+        Log::info(print_r($bot->imageMenus, true));
         if (count($bot->imageMenus) > 1) {
 
             $media = [];
             foreach ($bot->imageMenus as $image)
+            {
+                Log::info("media=>".env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image->image);
                 $media[] = [
                     "media" => env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image->image,
                     "type" => "photo",
-                    "caption" => $image->title . " " . env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image->image
+                    "caption" => $image->title
                 ];
+            }
+
             BotManager::bot()->replyMediaGroup($media);
         } else if (count($bot->imageMenus) === 1) {
+
 
             if (!is_null($bot->imageMenus[0]->image))
                 BotManager::bot()->replyPhoto($bot->imageMenus[0]->title,
