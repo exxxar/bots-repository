@@ -25,5 +25,14 @@ class UserSeeder extends Seeder
 
             'role_id'=>$role->id,
         ]);
+
+        User::query()->create([
+            'email'=>"admin@admin.com",
+            'phone'=>"1234567",
+            'name'=>"Admin",
+            'password'=>bcrypt("password"),
+
+            'role_id'=>$role->id,
+        ]);
     }
 }

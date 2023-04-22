@@ -445,6 +445,7 @@ class BotController extends Controller
             BotMenuSlug::query()->create([
                 'bot_id' => $bot->id,
                 'command' => $slug->command,
+                'comment' => $slug->comment,
                 'slug' => $slug->slug,
             ]);
 
@@ -564,12 +565,14 @@ class BotController extends Controller
             if (!is_null($tmpSlug))
                 $tmpSlug->update([
                     'command' => $slug->command,
+                    'comment' => $slug->comment,
                     'slug' => $slug->slug,
                 ]);
             else
                 BotMenuSlug::query()->create([
                     'bot_id' => $request->id,
                     'command' => $slug->command,
+                    'comment' => $slug->comment,
                     'slug' => $slug->slug,
                 ]);
         }

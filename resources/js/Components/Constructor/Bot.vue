@@ -2,6 +2,7 @@
 import BotMenuList from "@/Components/Constructor/BotMenuList.vue";
 import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
 import BotUserList from "@/Components/Constructor/BotUserList.vue";
+import TextHelper from "@/Components/Constructor/TextHelper.vue";
 </script>
 <template>
     <div class="row" v-if="companyId">
@@ -40,6 +41,7 @@ import BotUserList from "@/Components/Constructor/BotUserList.vue";
         </div>
     </div>
     <form
+        class="pb-5 mb-5"
         v-on:submit.prevent="addBot">
         <div v-if="step===0">
 
@@ -93,6 +95,7 @@ import BotUserList from "@/Components/Constructor/BotUserList.vue";
                                v-model="botForm.bot_domain"
                                maxlength="255"
                                aria-describedby="bot-domain" required>
+                        <p v-if="botForm.bot_domain">Проверить работу бота <a  :href="'https://t.me/'+botForm.bot_domain" target="_blank">@{{botForm.bot_domain}}</a></p>
                     </div>
                 </div>
 
@@ -112,18 +115,10 @@ import BotUserList from "@/Components/Constructor/BotUserList.vue";
 
                             </label>
 
-                            <div class="dropdown">
-                                <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    <i class="fa-solid fa-spell-check"></i>
-                                </button>
-                                <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                                    <li v-for="(item, index) in descriptions"><a
-                                        @click="addTextTo('welcome_message', item.text )"
-                                        class="dropdown-item">{{ item.text }}</a></li>
-
-                                </ul>
-                            </div>
+                            <TextHelper
+                                :param="'welcome_message'"
+                                v-on:callback="addTextTo"
+                            />
                         </div>
                         <textarea type="text" class="form-control"
                                   placeholder="Текстовое приветствие при запуске бота"
@@ -147,18 +142,11 @@ import BotUserList from "@/Components/Constructor/BotUserList.vue";
                                 Описание бота
                                 <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                             </label>
-                            <div class="dropdown">
-                                <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    <i class="fa-solid fa-spell-check"></i>
-                                </button>
-                                <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                                    <li v-for="(item, index) in descriptions"><a
-                                        @click="addTextTo('description', item.text )"
-                                        class="dropdown-item">{{ item.text }}</a></li>
 
-                                </ul>
-                            </div>
+                            <TextHelper
+                                :param="'description'"
+                                v-on:callback="addTextTo"
+                            />
                         </div>
 
                         <textarea type="text" class="form-control"
@@ -321,19 +309,10 @@ import BotUserList from "@/Components/Constructor/BotUserList.vue";
                                 работ
                                 <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                             </label>
-
-                            <div class="dropdown">
-                                <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    <i class="fa-solid fa-spell-check"></i>
-                                </button>
-                                <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                                    <li v-for="(item, index) in descriptions"><a
-                                        @click="addTextTo('maintenance_message', item.text )"
-                                        class="dropdown-item">{{ item.text }}</a></li>
-
-                                </ul>
-                            </div>
+                            <TextHelper
+                                :param="'maintenance_message'"
+                                v-on:callback="addTextTo"
+                            />
                         </div>
                         <textarea type="text" class="form-control"
                                   placeholder="Текстовое сообщение"
@@ -493,16 +472,25 @@ import BotUserList from "@/Components/Constructor/BotUserList.vue";
                 :bot-id="bot.id"/>
         </div>
 
-        <div class="row">
-            <div class="col-12">
-                <button
-                    type="submit" class="btn btn-outline-success w-100 p-3">
-                    <span v-if="!bot">Добавить бота</span>
-                    <span v-else>Обновить бота</span>
+        <div class="card fixed-footer">
+            <div class="card-body">
+                <div class="container">
 
-                </button>
+                    <div class="row">
+                        <div class="col-12">
+                            <button
+                                type="submit" class="btn btn-success w-100 p-3">
+                                <span v-if="!bot">Добавить бота</span>
+                                <span v-else>Обновить бота</span>
+
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
+
     </form>
 
 
@@ -510,13 +498,7 @@ import BotUserList from "@/Components/Constructor/BotUserList.vue";
 <script>
 
 export default {
-    components: {},
-
     props: ["companyId", "bot", "editor"],
-
-    setup() {
-
-    },
     data() {
         return {
             step: 0,
@@ -524,7 +506,7 @@ export default {
             load: false,
             removedSlugs: [],
             removedKeyboards: [],
-            descriptions: [],
+
             botForm: {
                 bot_domain: null,
                 bot_token: null,
@@ -568,7 +550,6 @@ export default {
     },
     mounted() {
         this.loadBotTemplates()
-        this.loadDescription();
 
         if (this.bot)
             this.$nextTick(() => {
@@ -606,10 +587,8 @@ export default {
             })
     },
     methods: {
-
-        addTextTo(param, text) {
-            //'welcome_message', text
-            this.botForm[param] = text;
+        addTextTo(object = {param: null, text: null}) {
+            this.botForm[object.param] = object.text;
 
         },
         duplicateSlug(index) {
@@ -642,12 +621,7 @@ export default {
 
             this.botForm.slugs.splice(index, 1)
         },
-        loadDescription() {
-            this.$store.dispatch("loadDescription").then((resp) => {
-                this.descriptions = resp.data
 
-            })
-        },
         loadMenusByBotTemplate(botId) {
             this.$store.dispatch("loadKeyboards", {
                 botId: botId
@@ -726,6 +700,11 @@ export default {
                 botForm: data
             }).then((response) => {
                 this.$emit("callback", response.data)
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text:  (this.bot == null?"Бот успешно создан!":"Бот успешно обновлен!"),
+                    type: 'warn'
+                });
 
                 this.botForm = {
                     bot_domain: null,
@@ -767,3 +746,29 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+.fixed-footer
+{
+
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    min-height: 70px;
+    z-index: 1000;
+    padding: 0px;
+    box-sizing: border-box;
+
+    border: none;
+    background: transparent;
+
+    & .container {
+        background: white;
+        border: 1px #e3e3e3 solid;
+        padding: 10px;
+        box-sizing: border-box;
+        box-shadow: 0px 0px 2px 0px;
+        border-radius: 10px;
+    }
+}
+</style>

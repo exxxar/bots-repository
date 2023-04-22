@@ -7,6 +7,7 @@ import Bot from "@/Components/Constructor/Bot.vue";
     <div class="row">
         <div class="col-12">
             <BotList
+                v-if="!load"
                 :editor="true"
                 v-on:callback="botListCallback"/>
         </div>
@@ -29,11 +30,10 @@ export default {
     },
     methods:{
         botCallback(bot){
-
+            this.bot = null
         },
         botListCallback(bot){
             this.load = true
-            console.log("select", bot)
             this.bot = bot
             this.$nextTick(()=>{
                 this.load = false

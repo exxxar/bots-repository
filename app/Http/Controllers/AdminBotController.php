@@ -644,7 +644,7 @@ class AdminBotController extends Controller
             "tg" => "required",
             "form.name" => "required",
             "form.phone" => "required",
-            "form.email" => "required",
+            //"form.email" => "required",
             "form.birthday" => "required",
             "form.city" => "required",
             //"form.country" => "required",
