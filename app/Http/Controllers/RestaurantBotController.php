@@ -292,7 +292,7 @@ class RestaurantBotController extends Controller
 
     public function menu()
     {
-        BotManager::bot()
+      /*  BotManager::bot()
             ->replyInlineKeyboard("Тестовый магазин", [
                 [
                     ["text" => "\xF0\x9F\x8E\xB2Открыть магазин", "web_app" => [
@@ -302,7 +302,7 @@ class RestaurantBotController extends Controller
 
             ]);
 
-        return;
+        return;*/
 
         $bot = BotManager::bot()->getSelf();
 
