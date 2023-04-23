@@ -206,7 +206,7 @@ class BotManager extends BotCore
 
 
             $this->replyPhoto($content,
-                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $bot->imageMenus[0]->image),
+                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $page->images[0]),
                 $iMenu
             );
 
