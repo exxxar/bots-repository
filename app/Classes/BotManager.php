@@ -180,15 +180,26 @@ class BotManager extends BotCore
 
         $content = $page->content;
 
-        $content = str_replace(["<p>", "</p>"], "", $page->content);
+        //$content = str_replace(["<p>", "</p>"], "", $page->content);
 
-        $tmpContent = explode("<br>", $content);
+        //$tmpContent = explode("<br>", $content);
 
+        $tmpContent = "";
 
-        $content = "";
+        $index = 0;
+        while(true){
+            $start = strpos("<p>",$content, $end ?? 0);
+            $end = strpos("</p>", $content ,  $end ?? 0);
 
-        foreach ($tmpContent as $c)
-            $content .= $c."\n";
+            $tmpContent .= substr($content, $start, $end-$start);
+
+            $index++;
+            if ($index == strlen($content))
+                break;
+        }
+
+        $content = $tmpContent;
+
 
         $needSendReplyMenu = true;
 
