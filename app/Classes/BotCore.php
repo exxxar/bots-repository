@@ -106,7 +106,7 @@ abstract class BotCore
             return $this->webMessages;
 
         if ($this->botTemplatePageHandler($data, $query))
-            return;
+            return response()->json($this->webMessages);
 
         if ($this->botSlugHandler($data, $query))
             return response()->json($this->webMessages);
