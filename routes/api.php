@@ -61,3 +61,9 @@ Route::apiResource('bot-menu-slug', App\Http\Controllers\BotMenuSlugController::
 Route::apiResource('bot-product', App\Http\Controllers\BotProductController::class);
 
 Route::apiResource('bot-product-category', App\Http\Controllers\BotProductCategoryController::class);
+
+
+Route::apiResource('bot-text-content', App\Http\Controllers\BotTextContentController::class);
+
+
+Route::apiResource('bot-page', App\Http\Controllers\BotPageController::class);

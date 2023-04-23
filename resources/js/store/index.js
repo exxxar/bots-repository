@@ -6,6 +6,7 @@ import templates from './modules/templates';
 import companies from './modules/companies';
 import bots from './modules/bots';
 import products from './modules/products';
+import pages from './modules/pages';
 
 
 export default createStore({
@@ -29,6 +30,7 @@ export default createStore({
         templates,
         companies,
         bots,
-        products
+        products,
+        pages
     }
 })

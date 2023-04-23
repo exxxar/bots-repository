@@ -40,6 +40,8 @@ abstract class BotCore
 
     protected abstract function getSelf();
 
+    protected abstract function prepareTemplatePage($page);
+
     protected abstract function botStatusHandler(): BotStatusEnum;
 
     public function getCurrentChatId()
@@ -157,6 +159,7 @@ abstract class BotCore
             $slug = $item["path"];
 
             $templates = BotMenuSlug::query()
+                ->with(["page"])
                 ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
                 ->get();
@@ -165,6 +168,12 @@ abstract class BotCore
                 continue;
 
             foreach ($templates as $template) {
+                if (!is_null($template->page)){
+                    $find =  true;
+                    $this->prepareTemplatePage($template->page);
+                    break;
+                }
+
                 $command = $template->command;
 
                 if (!str_starts_with($command, "/"))

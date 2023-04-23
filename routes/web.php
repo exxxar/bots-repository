@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminBotController;
 use App\Http\Controllers\BotController;
+use App\Http\Controllers\BotPageController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProfileController;
 use App\Models\BotMenuTemplate;
@@ -24,34 +25,7 @@ use  \App\Http\Controllers\RestaurantBotController;
 |
 */
 
-Route::get("/test", function (){
 
-    $text = "Special";
-
-    $keyboards = BotMenuTemplate::query()
-        ->where("bot_id", 1)
-        ->get();
-
-    $tmp = [];
-    foreach ($keyboards as $keyboard){
-        $find = false;
-        foreach ($keyboard->menu as $row) {
-            foreach ($row as $button) {
-                $button = (object)$button;
-                if (mb_strpos($button->text, $text)!==false)
-                    $find = true;
-            }
-        }
-
-        if ($find)
-            $tmp[] = $keyboard->toArray();
-
-
-
-    }
-
-    dd($tmp);
-});
 
 Route::get('/images-by-company-id/{companyId}/{fileName}',
     [\App\Http\Controllers\TelegramController::class, 'getFilesByCompanyId']);
@@ -102,6 +76,15 @@ Route::prefix("bot")->group(function () {
             Route::post("/", "index");
             Route::post("/company", "createCompany");
             Route::post("/company-update", "editCompany");
+        });
+
+    Route::prefix("pages")
+        ->controller(BotPageController::class)
+        ->group(function () {
+            Route::post("/", "index");
+            Route::post("/page", "createPage");
+            Route::post("/page-update", "updatePage");
+            Route::delete("/{pageId}", "destroy");
         });
 
     Route::prefix("admins")

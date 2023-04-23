@@ -3,6 +3,8 @@
 namespace App\Classes;
 
 use App\Models\Bot;
+use App\Models\BotTextContent;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
 
 class BotMethods
@@ -48,6 +50,18 @@ class BotMethods
             $botUser->phone ??
             $botUser->email ??
             $botUser->telegram_chat_id ?? $botUser->id);
+    }
+
+    public function allText(){
+
+        if (is_null($this->bot))
+            return [];
+
+        $content = BotTextContent::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        return $content->toArray();
     }
 
 

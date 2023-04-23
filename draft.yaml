@@ -1,36 +1,17 @@
 models:
-  BotProduct:
-    title: string:255 nullable
-    slug: string:190 unique
-    description: longtext nullable
+  BotPage:
+    bot_menu_slug_id: id foreign:bot_menu_slugs
+    content: longtext nullable
     images: json nullable
-    base_price: double default:0
-    discount_price: double default:0
-    weight: double default:0
-    count: int default:0
-    in_stock: boolean default:true
-    specifications: json nullable
-    variants: json nullable
-    owner_id: id foreign:users
+    reply_keyboard_id: id foreign:bot_menu_templates nullable
+    inline_keyboard_id: id foreign:bot_menu_templates  nullable
     bot_id: id foreign:bots
     relationships:
-      belongsToMany: BotProductCategory
-      belongsTo: Bot
-      hasOne: User
+      belongsTo: BotMenuTemplate, Bot
 
-  BotProductCategory:
-    title: string:255 nullable
-    slug: string:190 unique
-    bot_id: id foreign:bots
-    relationships:
-      belongsToMany: BotProduct
-      belongsTo: Bot
-
-
-seeders: BotProduct, BotProductCategory
+seeders: BotPage
 
 controllers:
-  BotProduct:
+  BotPage:
     resource: api
-  BotProductCategory:
-    resource: api
+

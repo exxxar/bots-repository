@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class BotMenuSlug extends Model
+class BotTextContent extends Model
 {
     use HasFactory;
 
@@ -16,10 +16,9 @@ class BotMenuSlug extends Model
      * @var array
      */
     protected $fillable = [
+        'value',
+        'key',
         'bot_id',
-        'command',
-        'comment',
-        'slug',
     ];
 
     /**
@@ -36,11 +35,5 @@ class BotMenuSlug extends Model
     {
         return $this->belongsTo(Bot::class);
     }
-
-    public function page()
-    {
-        return $this->hasOne(BotPage::class,'bot_menu_slug_id','id');
-    }
-
 
 }

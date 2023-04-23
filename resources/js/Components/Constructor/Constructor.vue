@@ -1,7 +1,7 @@
 <script setup>
 import InitialStepper from "@/Components/Constructor/InitialStepper.vue";
 import BotEditor from "@/Components/Constructor/BotEditor.vue";
-
+import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue";
 </script>
 
 <template>
@@ -21,12 +21,12 @@ import BotEditor from "@/Components/Constructor/BotEditor.vue";
                        @click="tab=1"
                        href="#">Редактирование ботов</a>
                 </li>
-<!--                <li class="nav-item">
-                    <a class="nav-link disabled"
+                <li class="nav-item">
+                    <a class="nav-link"
                        v-bind:class="{'active':tab===2}"
                        @click="tab=2"
-                       href="#">Пользователи</a>
-                </li>-->
+                       href="#">Конструктор страниц</a>
+                </li>
             </ul>
         </div>
         <div class="row" v-if="tab===0">
@@ -40,7 +40,7 @@ import BotEditor from "@/Components/Constructor/BotEditor.vue";
             </div>
         </div>
         <div class="row" v-if="tab===2">
-
+            <BotPageConstructor/>
         </div>
     </div>
 
@@ -49,6 +49,7 @@ import BotEditor from "@/Components/Constructor/BotEditor.vue";
 import {mapGetters} from "vuex";
 
 export default {
+
     data() {
         return {
             tab: 0

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\QRCodeHandler;
+use App\Classes\TextTrait;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Models\BotUser;
@@ -18,10 +19,15 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class RestaurantBotController extends Controller
 {
+    use TextTrait;
 
     public function startWithParam(...$data)
     {
         $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        $message = $bot->welcome_message ?? null;
 
         if (!is_null($data[2])) {
             $pattern = "/([0-9]{3})([0-9]+)/";
@@ -89,7 +95,7 @@ class RestaurantBotController extends Controller
             $userBotUser->user_in_location = true;
             $userBotUser->save();
 
-            BotManager::bot()->reply("QR-код успешно обработан!");
+            BotManager::bot()->reply($message);
         }
 
 
@@ -100,9 +106,31 @@ class RestaurantBotController extends Controller
                     "main_menu_restaurant_2");
     }
 
+    public function firstStart()
+    {
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        $message = $bot->welcome_message ?? null;
+
+        if ($botUser->is_admin) {
+            BotManager::bot()
+                ->sendReplyMenu((is_null($message)?"":"$message \n")."Главное меню (Режим администратора)", "main_menu_restaurant_3");
+            return;
+        }
+
+        BotManager::bot()
+            ->sendReplyMenu((is_null($message)?"":"$message \n")."Главное меню",
+                !$botUser->is_vip ?
+                    "main_menu_restaurant_1" :
+                    "main_menu_restaurant_2");
+    }
+
     public function start()
     {
         $botUser = BotManager::bot()->currentBotUser();
+
         if ($botUser->is_admin) {
             BotManager::bot()
                 ->sendReplyMenu("Главное меню (Режим администратора)", "main_menu_restaurant_3");
@@ -419,7 +447,7 @@ class RestaurantBotController extends Controller
 
         \App\Facades\BotManager::bot()
             ->replyPhoto("Заполни эту анкету и получит достук к системе CashBack",
-                InputFile::create("https://phonoteka.org/uploads/posts/2022-09/1663726294_49-phonoteka-org-p-oboi-vip-persona-vkontakte-58.jpg"),
+                InputFile::create(public_path()."/images/cashman2.jpg"),
                 [
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [

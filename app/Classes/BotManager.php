@@ -161,8 +161,49 @@ class BotManager extends BotCore
     public function getSelf()
     {
         return Bot::query()
-            ->with(["botUsers", "company", "imageMenus","company.locations"])
+            ->with(["botUsers", "company", "imageMenus", "company.locations"])
             ->where("bot_domain", $this->domain)
             ->first();
+    }
+
+    protected function prepareTemplatePage($page)
+    {
+
+        $bot = $this->getSelf();
+
+        $inlineKeyboard = $page->inlineKeyboard ?? [];
+        $replyKeyboard = $page->replyKeyboard ?? [];
+
+        $content = $page->content;
+
+        if (count($page->images) > 1) {
+
+            $media = [];
+            foreach ($page->images as $image) {
+
+                $media[] = [
+                    "media" => env("APP_URL") . "/images-by-bot-id/" . $bot->id . "/" . $image,
+                    "type" => "photo",
+                    "caption" => "$image"
+                ];
+            }
+
+            $this->replyMediaGroup($media);
+
+        } else if (count($page->images) === 1) {
+
+
+            $this->replyPhoto($content,
+                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $bot->imageMenus[0]->image),
+                $inlineKeyboard
+            );
+
+        } else if (count($page->images) === 0) {
+            $this->replyKeyboard($content, $inlineKeyboard);
+        }
+
+        if (!empty($replyKeyboard))
+            $this->replyKeyboard("Меню страницы", $replyKeyboard);
+
     }
 }
