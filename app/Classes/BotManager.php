@@ -180,6 +180,8 @@ class BotManager extends BotCore
 
         $content = $page->content;
 
+        $needSendReplyMenu = true;
+
         if (count($page->images) > 1) {
 
             $media = [];
@@ -198,6 +200,8 @@ class BotManager extends BotCore
             if (!empty($replyKeyboard))
                 $this->replyKeyboard("Меню страницы", $rMenu);
 
+            $needSendReplyMenu = false;
+
         } else if (count($page->images) === 1) {
 
 
@@ -210,7 +214,7 @@ class BotManager extends BotCore
             $this->replyInlineKeyboard($content, $iMenu);
         }
 
-        if (!empty($replyKeyboard))
+        if (!empty($replyKeyboard)&&$needSendReplyMenu)
             $this->replyKeyboard("Меню страницы", $rMenu);
 
     }
