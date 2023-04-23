@@ -182,10 +182,14 @@ class BotManager extends BotCore
 
         $needSendReplyMenu = true;
 
-        if (count($page->images) > 1) {
+        $images = [];
+        if (is_array($page->images))
+            $images = $page->images;
+
+        if (count($images) > 1) {
 
             $media = [];
-            foreach ($page->images as $image) {
+            foreach ($images as $image) {
 
                 $media[] = [
                     "media" => env("APP_URL") . "/images-by-bot-id/" . $bot->id . "/" . $image,
@@ -202,15 +206,15 @@ class BotManager extends BotCore
 
             $needSendReplyMenu = false;
 
-        } else if (count($page->images) === 1) {
+        } else if (count($images) === 1) {
 
 
             $this->replyPhoto($content,
-                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $page->images[0]),
+                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0]),
                 $iMenu
             );
 
-        } else if (count($page->images) === 0) {
+        } else if (count($images) === 0) {
             $this->replyInlineKeyboard($content, $iMenu);
         }
 
