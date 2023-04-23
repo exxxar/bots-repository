@@ -125,10 +125,10 @@ class BotPageController extends Controller
         unset($tmp->photos);
         $tmp->images = count($photos) == 0 ? null : $photos;
 
-        $text = str_replace(["<p>", "</p>"], "", $tmp->content);
+       // $text = str_replace(["<p>", "</p>"], "", $tmp->content);
         // $text = str_replace(["<br>", "<br/>"], "\n", $text);
 
-        $tmp->content = $text;
+       // $tmp->content = $text;
 
         $replyKeyboard = $request->reply_keyboard ?? null;
         $inlineKeyboard = $request->inline_keyboard ?? null;
@@ -243,10 +243,10 @@ class BotPageController extends Controller
 
         $tmp->images = count($photos) == 0 ? (is_array($images) ? $images : null) : $photos;
 
-        $text = str_replace(["<p>", "</p>"], "", $tmp->content);
+        //$text = str_replace(["<p>", "</p>"], "", $tmp->content);
         //$text = str_replace(["<br>", "<br/>"], "\n", $text);
 
-        $tmp->content = $text;
+       // $tmp->content = $text;
 
         $replyKeyboard = $request->reply_keyboard ?? null;
         $inlineKeyboard = $request->inline_keyboard ?? null;

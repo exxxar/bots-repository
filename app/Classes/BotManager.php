@@ -180,6 +180,8 @@ class BotManager extends BotCore
 
         $content = $page->content;
 
+        $content = str_replace(["<p>", "</p>"], "", $page->content);
+
         $tmpContent = explode("<br>", $content);
 
 
