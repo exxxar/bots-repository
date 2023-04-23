@@ -180,7 +180,7 @@ class BotManager extends BotCore
 
         $content = $page->content;
 
-        $content = str_replace(["<br>", "<br/>"], "\n", $content);
+        $content = str_replace(["<br>", "<br/>","&nbsp;"], "\n", $content);
 
         $needSendReplyMenu = true;
 

@@ -125,8 +125,8 @@ class BotPageController extends Controller
         unset($tmp->photos);
         $tmp->images = count($photos) == 0 ? null : $photos;
 
-        $text = str_replace(["<p>", "</p>","&nbsp;"], "", $tmp->content);
-       // $text = str_replace(["<br>", "<br/>"], "\n", $text);
+        $text = str_replace(["<p>", "</p>"], "", $tmp->content);
+        // $text = str_replace(["<br>", "<br/>"], "\n", $text);
 
         $tmp->content = $text;
 
@@ -240,12 +240,10 @@ class BotPageController extends Controller
 
         $images = $tmp->images ?? null;
 
-        if (is_array($images))
-            $tmp->images = count($photos) == 0 ? ($tmp->images ?? null) : $photos;
-        else
-            $tmp->images = null;
 
-        $text = str_replace(["<p>", "</p>","&nbsp;"], "", $tmp->content);
+        $tmp->images = count($photos) == 0 ? (is_array($images) ? $images : null) : $photos;
+
+        $text = str_replace(["<p>", "</p>"], "", $tmp->content);
         //$text = str_replace(["<br>", "<br/>"], "\n", $text);
 
         $tmp->content = $text;
@@ -285,7 +283,7 @@ class BotPageController extends Controller
 
             $inline_keyboard_id = $tmp->inline_keyboard_id ?? -1;
 
-            $menu = BotMenuTemplate::query()->where("id",$inline_keyboard_id)
+            $menu = BotMenuTemplate::query()->where("id", $inline_keyboard_id)
                 ->first();
 
             if (!is_null($menu))
