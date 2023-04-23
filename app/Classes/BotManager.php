@@ -178,27 +178,7 @@ class BotManager extends BotCore
         $iMenu = is_null($inlineKeyboard) ? [] : ($inlineKeyboard->menu ?? []);
         $rMenu = is_null($replyKeyboard) ? [] : ($replyKeyboard->menu ?? []);
 
-        $content = $page->content;
-
-        //$content = str_replace(["<p>", "</p>"], "", $page->content);
-
-        //$tmpContent = explode("<br>", $content);
-
-        $tmpContent = "";
-
-        $index = 0;
-        while(true){
-            $start = strpos("<p>",$content, $end ?? 0);
-            $end = strpos("</p>", $content ,  $end ?? 0);
-
-            $tmpContent .= substr($content, $start, $end-$start);
-
-            $index++;
-            if ($index == strlen($content))
-                break;
-        }
-
-        $content = $tmpContent;
+        $content = str_replace(["<p>", "</p>"], "", $page->content);
 
 
         $needSendReplyMenu = true;
