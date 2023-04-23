@@ -126,7 +126,7 @@ class BotPageController extends Controller
         $tmp->images = count($photos) == 0 ? null : $photos;
 
         $text = str_replace(["<p>", "</p>","&nbsp;"], "", $tmp->content);
-        $text = str_replace(["<br>", "<br/>"], "\n", $text);
+       // $text = str_replace(["<br>", "<br/>"], "\n", $text);
 
         $tmp->content = $text;
 
@@ -246,7 +246,7 @@ class BotPageController extends Controller
             $tmp->images = null;
 
         $text = str_replace(["<p>", "</p>","&nbsp;"], "", $tmp->content);
-        $text = str_replace(["<br>", "<br/>"], "\n", $text);
+        //$text = str_replace(["<br>", "<br/>"], "\n", $text);
 
         $tmp->content = $text;
 
