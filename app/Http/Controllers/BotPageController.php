@@ -194,8 +194,6 @@ class BotPageController extends Controller
             "comment" => "required",
             "bot_id" => "required",
             "slug_id" => "required",
-            "reply_keyboard_id" => "required",
-            "inline_keyboard_id" => "required",
 
         ]);
 
@@ -256,7 +254,8 @@ class BotPageController extends Controller
             $keyboard = json_decode($request->reply_keyboard);
             unset($tmp->reply_keyboard);
 
-            $menu = BotMenuTemplate::query()->where("id", $tmp->reply_keyboard_id)
+            $reply_keyboard_id = $tmp->reply_keyboard_id ?? -1;
+            $menu = BotMenuTemplate::query()->where("id", $reply_keyboard_id)
                 ->first();
 
             if (!is_null($menu))
@@ -280,7 +279,9 @@ class BotPageController extends Controller
             $keyboard = json_decode($request->inline_keyboard);
             unset($tmp->inline_keyboard);
 
-            $menu = BotMenuTemplate::query()->where("id", $tmp->inline_keyboard_id)
+            $inline_keyboard_id = $tmp->inline_keyboard_id ?? -1;
+
+            $menu = BotMenuTemplate::query()->where("id",$inline_keyboard_id)
                 ->first();
 
             if (!is_null($menu))
