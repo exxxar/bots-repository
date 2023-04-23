@@ -172,12 +172,13 @@ class BotManager extends BotCore
 
         $bot = $this->getSelf();
 
-        $inlineKeyboard = $page->inlineKeyboard ?? [];
-        $replyKeyboard = $page->replyKeyboard ?? [];
+        $inlineKeyboard = $page->inlineKeyboard ?? null;
+        $replyKeyboard = $page->replyKeyboard ?? null;
+
+        $iMenu = is_null($inlineKeyboard) ? [] : ($inlineKeyboard->menu ?? []);
+        $rMenu = is_null($replyKeyboard) ? [] : ($replyKeyboard->menu ?? []);
 
         $content = $page->content;
-
-        Log::info(print_r($page, true));
 
         if (count($page->images) > 1) {
 
@@ -192,25 +193,25 @@ class BotManager extends BotCore
             }
 
             $this->replyMediaGroup($media);
-            $this->replyInlineKeyboard($content, $inlineKeyboard);
+            $this->replyInlineKeyboard($content, $iMenu);
 
             if (!empty($replyKeyboard))
-                $this->replyKeyboard("Меню страницы", $replyKeyboard);
+                $this->replyKeyboard("Меню страницы", $rMenu);
 
         } else if (count($page->images) === 1) {
 
 
             $this->replyPhoto($content,
                 InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $bot->imageMenus[0]->image),
-                $inlineKeyboard
+                $iMenu
             );
 
         } else if (count($page->images) === 0) {
-            $this->replyInlineKeyboard($content, $inlineKeyboard);
+            $this->replyInlineKeyboard($content, $iMenu);
         }
 
         if (!empty($replyKeyboard))
-            $this->replyKeyboard("Меню страницы", $replyKeyboard);
+            $this->replyKeyboard("Меню страницы", $rMenu);
 
     }
 }
