@@ -105,6 +105,9 @@ abstract class BotCore
         if ($botStatus != BotStatusEnum::Working)
             return $this->webMessages;
 
+        if ($this->botTemplatePageHandler($data, $query))
+            return;
+
         if ($this->botSlugHandler($data, $query))
             return response()->json($this->webMessages);
 
@@ -159,7 +162,6 @@ abstract class BotCore
             $slug = $item["path"];
 
             $templates = BotMenuSlug::query()
-                ->with(["page"])
                 ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
                 ->get();
@@ -168,12 +170,6 @@ abstract class BotCore
                 continue;
 
             foreach ($templates as $template) {
-                if (!is_null($template->page)){
-                    $find =  true;
-                    $this->prepareTemplatePage($template->page);
-                    break;
-                }
-
                 $command = $template->command;
 
                 if (!str_starts_with($command, "/"))
@@ -186,6 +182,38 @@ abstract class BotCore
                     $find = $this->tryCall($item, $message, $arguments);
                     break;
                 }
+            }
+
+            if ($find)
+                return true;
+
+        }
+        return $find;
+    }
+
+    private function botTemplatePageHandler($message, $query): bool
+    {
+        $matches = [];
+
+        $templates = BotMenuSlug::query()
+            ->with(["page"])
+            ->has('page')
+            ->where("bot_id", $this->getSelf()->id)
+            ->get();
+
+        $find = false;
+        foreach ($templates as $template) {
+
+            $command = $template->command;
+
+
+            if (!str_starts_with($command, "/"))
+                $command = "/" . $command;
+
+            if (preg_match($command . "$/i", $query, $matches)) {
+                $this->prepareTemplatePage($template->page);
+                $find = true;
+                break;
             }
 
             if ($find)
@@ -317,6 +345,9 @@ abstract class BotCore
             ];
 
         if ($this->botLocationHandler($coords, $message))
+            return;
+
+        if ($this->botTemplatePageHandler($message, $query))
             return;
 
         if ($this->botSlugHandler($message, $query))
