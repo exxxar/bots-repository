@@ -192,7 +192,10 @@ class BotManager extends BotCore
             }
 
             $this->replyMediaGroup($media);
-            $this->replyKeyboard($content, $inlineKeyboard);
+            $this->replyInlineKeyboard($content, $inlineKeyboard);
+
+            if (!empty($replyKeyboard))
+                $this->replyKeyboard("Меню страницы", $replyKeyboard);
 
         } else if (count($page->images) === 1) {
 
@@ -203,7 +206,7 @@ class BotManager extends BotCore
             );
 
         } else if (count($page->images) === 0) {
-            $this->replyKeyboard($content, $inlineKeyboard);
+            $this->replyInlineKeyboard($content, $inlineKeyboard);
         }
 
         if (!empty($replyKeyboard))
