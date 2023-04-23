@@ -183,8 +183,10 @@ class BotManager extends BotCore
         $needSendReplyMenu = true;
 
         $images = [];
-        if (is_array($page->images))
+        if (is_array($page->images)) {
             $images = $page->images;
+        }
+
 
         if (count($images) > 1) {
 
