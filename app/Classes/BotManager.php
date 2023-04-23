@@ -177,6 +177,8 @@ class BotManager extends BotCore
 
         $content = $page->content;
 
+        Log::info(print_r($page, true));
+
         if (count($page->images) > 1) {
 
             $media = [];
