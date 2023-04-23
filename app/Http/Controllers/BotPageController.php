@@ -238,8 +238,9 @@ class BotPageController extends Controller
         $tmp = (object)$request->all();
         unset($tmp->photos);
 
+        $images = $tmp->images ?? null;
 
-        if (is_array($tmp->images))
+        if (is_array($images))
             $tmp->images = count($photos) == 0 ? ($tmp->images ?? null) : $photos;
         else
             $tmp->images = null;
