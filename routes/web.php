@@ -26,7 +26,6 @@ use  \App\Http\Controllers\RestaurantBotController;
 */
 
 
-
 Route::get('/images-by-company-id/{companyId}/{fileName}',
     [\App\Http\Controllers\TelegramController::class, 'getFilesByCompanyId']);
 

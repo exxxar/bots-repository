@@ -169,8 +169,7 @@ class BotManager extends BotCore
     protected function prepareTemplatePage($page)
     {
 
-        Log::info(print_r($page->toArray(),true));
-        $this->reply("test");
+
         $bot = $this->getSelf();
 
         $inlineKeyboard = $page->inlineKeyboard ?? [];
@@ -191,6 +190,7 @@ class BotManager extends BotCore
             }
 
             $this->replyMediaGroup($media);
+            $this->replyKeyboard($content, $inlineKeyboard);
 
         } else if (count($page->images) === 1) {
 
