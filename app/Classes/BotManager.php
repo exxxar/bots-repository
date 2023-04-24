@@ -179,7 +179,9 @@ class BotManager extends BotCore
         $rMenu = is_null($replyKeyboard) ? [] : ($replyKeyboard->menu ?? []);
 
         $content = str_replace(["<p>", "</p>"], "", $page->content);
+        $content = str_replace(["<br>"], "\n", $content);
 
+        $content = "<pre>$content</pre>";
 
         $needSendReplyMenu = true;
 
