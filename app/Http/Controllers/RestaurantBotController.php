@@ -148,20 +148,30 @@ class RestaurantBotController extends Controller
     {
         $bot = BotManager::bot()->getSelf();
 
+        $botUser = BotManager::bot()->currentBotUser();
+
         $botDomain = $bot->bot_domain;
+
+        $companyDomain = $bot->company->slug;
 
         $qr = "https://t.me/$botDomain?start=" .
             base64_encode("001" . BotManager::bot()->getCurrentChatId());
 
+        $friendCount = ReferralHistory::query()
+            ->where("user_sender_id",$botUser->user_id)
+            ->where("bot_id", $bot->id)
+            ->count();
+
         \App\Facades\BotManager::bot()
-            ->replyPhoto("Вы пригласили <b>0 друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+            ->replyPhoto("Вы пригласили <b>$friendCount друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
 Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой",
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
 
+        $path = storage_path("app/public") . "/companies/$companyDomain/" . ($bot->image ?? 'noimage.jpg');
         $file = InputFile::create(
-            file_exists(storage_path("app/public") . "/companies/" . ($bot->image ?? 'noimage.jpg')) ?
-                storage_path("app/public") . "/companies/" . $bot->image :
+            file_exists($path) ?
+                $path :
                 public_path() . "/images/cashman.jpg"
         );
 
@@ -184,6 +194,7 @@ class RestaurantBotController extends Controller
             ->where("id", $bot->company_id)
             ->first();
 
+        $companySlug = $company->slug;
 
         if (is_null($company))
             BotManager::bot()
@@ -235,9 +246,10 @@ class RestaurantBotController extends Controller
 
         }
 
+        $path = storage_path("app/public") . "/companies/$companySlug/" . $company->image ;
         $file = InputFile::create(
-            file_exists(storage_path("app/public") . "/companies/" . ($company->image ?? 'noimage.jpg')) ?
-                storage_path("app/public") . "/companies/" . $company->image :
+            file_exists($path) ?
+                $path:
                 public_path() . "/images/cashman.jpg"
         );
 
@@ -476,9 +488,11 @@ class RestaurantBotController extends Controller
 
         $amount = is_null($cashBack) ? 0 : ($cashBack->amount ?? 0);
 
+        $companyTitle = $bot->company->title ?? 'CashMan';
+
         \App\Facades\BotManager::bot()
             ->replyPhoto("У вас <b>$amount</b> руб.!\n
-Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>AR COFFEE</b>",
+Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>",
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
         \App\Facades\BotManager::bot()
