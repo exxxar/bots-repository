@@ -205,14 +205,14 @@ class RestaurantBotController extends Controller
             "<em>" . ($company->description ?? 'Без описания') . "</em>\n\n" .
             "<b>Контактная информация</b>\n\n";
 
-        if (!is_null($company->phones)) {
+        if (!empty($company->phones)) {
             $companyText .= "<b>Телефоны для связи</b>\n";
 
             foreach ($company->phones as $phone)
                 $companyText .= "\xF0\x9F\x94\xB8 $phone\n";
         }
 
-        if (!is_null($company->links)) {
+        if (!empty($company->links)) {
             $companyText .= "<b>Интернет ресурсы</b>\n";
             foreach ($company->links as $link)
                 $companyText .= "\xF0\x9F\x94\xB8 $link\n";
@@ -223,7 +223,7 @@ class RestaurantBotController extends Controller
 
         $companyText .= "Наше расположение: <b>" . ($company->address ?? 'Не указано') . " </b>\n\n";
 
-        if (!is_null($company->schedule)) {
+        if (!empty($company->schedule)) {
             $companyText .= "<b>График работы</b>\n";
 
             foreach ($company->schedule as $item)
