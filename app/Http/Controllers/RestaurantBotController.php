@@ -393,6 +393,13 @@ class RestaurantBotController extends Controller
         $bot = BotManager::bot()->getSelf();
 
         $locations = $bot->company->locations;
+        if (empty($locationso))
+        {
+            BotManager::bot()
+                ->replyPhoto("У данного заведения нет отдельных локаций",
+                    InputFile::create(public_path() . "/images/cashman.jpg"));
+            return;
+        }
         foreach ($locations as $location)
             $this->printLocation($location->id ?? null);
     }
