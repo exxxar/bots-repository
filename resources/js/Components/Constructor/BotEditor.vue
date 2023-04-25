@@ -30,7 +30,12 @@ export default {
     },
     methods:{
         botCallback(bot){
+            this.load = true
             this.bot = null
+            this.$nextTick(()=>{
+                this.load = false
+
+            })
         },
         botListCallback(bot){
             this.load = true
