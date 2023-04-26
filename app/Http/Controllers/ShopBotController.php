@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\BotManager;
 use Illuminate\Http\Request;
 
 class ShopBotController extends Controller
@@ -18,5 +19,42 @@ class ShopBotController extends Controller
             ->sendInlineMenu("productCategories", "cashback_buttons_1");
     }
 
+
+    public function makeOrder(){
+        BotManager::bot()
+            ->reply("makeOrder");
+    }
+
+    public function basket(){
+        BotManager::bot()
+            ->reply("basket");
+    }
+
+
+    public function orderDeliverymanWatcher(){
+        BotManager::bot()
+            ->reply("orderDeliverymanWatcher");
+    }
+
+    public function specialOffers(){
+        BotManager::bot()
+            ->reply("specialOffers");
+    }
+
+    public function technicalSupport(){
+        BotManager::bot()
+            ->reply("technicalSupport");
+    }
+
+    public function orderStatusWatch(){
+        BotManager::bot()
+            ->reply("orderStatusWatch");
+    }
+
+
+    public function requestDeliverymanLocation(){
+        BotManager::bot()
+            ->reply("requestDeliverymanLocation");
+    }
 
 }

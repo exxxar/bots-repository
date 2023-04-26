@@ -67,5 +67,43 @@ class BotSeeder extends Seeder
             'level_2'=>2,
             'level_3'=>1,
         ]);
+
+        $company = Company::query()
+            ->where("slug","delivery_rocket")
+            ->first();
+
+        $botType = BotType::query()
+            ->where("slug","delivery_service_for_deliveryman")
+            ->first();
+
+        Bot::query()->create([
+            'company_id'=>$company->id,
+            'bot_domain'=>"deliveryrocketbot",
+            'bot_token'=>"6185612733:AAGjyGTQrm9jqhuxmhjftlPOCxWmYXM5860",
+            'bot_token_dev'=>"6185612733:AAGjyGTQrm9jqhuxmhjftlPOCxWmYXM5860",
+            'order_channel'=>null,
+            'balance'=>10000,
+            'tax_per_day'=>10,
+            'image'=>"d0451060e588ccb84087d.jpg",
+            'description'=>"Тестовое описание бота",
+            'info_link'=>"https://telegra.ph/O-nas-06-02-4",
+            'social_links'=>[
+                [
+                    "title"=>"Наш instagram",
+                    "url"=>"http://instagram.com/deliveryrocketbot"
+                ],
+                [
+                    "title"=>"Наш профиль в ВК",
+                    "url"=>"https://vk.com/deliveryrocketbot"
+                ]
+            ],
+            'is_active'=>true,
+            'bot_type_id'=>$botType->id,
+            'level_1'=>0,
+            'level_2'=>0,
+            'level_3'=>0,
+        ]);
+
+
     }
 }

@@ -59,5 +59,35 @@ class CompanySeeder extends Seeder
             'manager'=>"Анатолий",
             'is_active'=>true,
         ]);
+
+        Company::query()->create([
+            'title'=>"\"Delivery Rocket\" сервис доставки",
+            'slug'=>"delivery_rocket",
+            'description'=>"Добро пожаловать в систему управления доставкой Delivery Rocket от CashMan",
+            'address'=>"бул. Шевченко, 13, Донецк",
+            'phones'=>[
+                "+7(949)432-06-01",
+                "+7(949)432-06-02",
+                "+7(949)432-06-03",
+            ],
+            'image'=>"d0451060e588ccb84087d.jpg",
+            'links'=>[
+                "https://vk.com/delivery_rocket",
+                "https://t.me/delivery_rocket",
+                "https://instagram.com/delivery_rocket",
+            ],
+            'email'=>"delivery-rocket@your-cashman.ru",
+            'schedule'=>[
+                "ПН 10:00 - 20:00",
+                "ВТ 10:00 - 20:00",
+                "СР 10:00 - 20:00",
+                "ЧТ 10:00 - 20:00",
+                "ПТ 10:00 - 20:00",
+                "СБ 12:00 - 20:00",
+                "ВС 12:00 - 16:00",
+            ],
+            'manager'=>"Анатолий",
+            'is_active'=>true,
+        ]);
     }
 }
