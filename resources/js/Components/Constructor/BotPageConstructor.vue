@@ -88,16 +88,13 @@ import PagesList from "@/Components/Constructor/PagesList.vue";
 
                     <div class="card">
                         <div class="card-body">
-
-                            <MediumEditor
-                                :prefill="prefill"
-                                :editor="false"
-                                :hide-gist="true"
-                                :hide-image="true"
-                                :hide-video="true"
-                                :options="options"
-                                :onChange="onChange"
-                            />
+                            <div class="form-floating">
+                                <textarea class="form-control"
+                                          v-model="pageForm.content"
+                                          placeholder="Введите текст"
+                                          id="floatingTextarea2" style="min-height: 100px"></textarea>
+                                <label for="floatingTextarea2">Содержимое страницы</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -194,7 +191,6 @@ export default {
             bot: null,
             pages: [],
             load: false,
-            prefill: null,
             photos: [],
             pageForm: {
                 content: '',
@@ -252,7 +248,7 @@ export default {
 
                 this.$nextTick(() => {
                     this.load = false
-                    this.prefill = null
+
                     this.photos = []
                     this.pageForm = {
                         content: null,
@@ -307,7 +303,6 @@ export default {
         pageListCallback(page) {
             this.load = true
             if (page) {
-                this.prefill = page.content
 
                 console.log("pageListCallback", page)
 
@@ -326,7 +321,7 @@ export default {
                     inline_keyboard: page.inlineKeyboard || null
                 }
             } else {
-                this.prefill = null
+
                 this.photos = []
                 this.pageForm = {
                     content: null,
