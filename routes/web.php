@@ -185,7 +185,7 @@ Route::get('/welcome', function () {
 });
 
 Route::get('/dashboard', function () {
-    Inertia::setRootView("dashboard");
+    Inertia::setRootView("app");
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

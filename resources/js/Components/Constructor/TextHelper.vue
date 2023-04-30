@@ -6,7 +6,9 @@
         </button>
 
 
-        <div class="dropdown-menu item-with-text cursor-pointer   text-muted p-2">
+        <div
+
+            class="dropdown-menu item-with-text cursor-pointer text-muted p-2">
 
                 <input type="search" class="form-control" id="search-description-text"
                        v-model="search"
