@@ -5,17 +5,20 @@ namespace Database\Seeders;
 use App\Models\Bot;
 use App\Models\BotMenuTemplate;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class BotMenuTemplateSeeder extends Seeder
 {
-    protected function handlerCashBackMenu($bot){
+    protected function handlerCashBackMenu($bot)
+    {
         BotMenuTemplate::query()->create([
             'bot_id' => $bot->id,
             'type' => 'reply',
             'slug' => "main_menu_restaurant_1",
             'menu' => [
                 [
-                    ["text" => "\xF0\x9F\x93\x8DАнкета пользователя"],
+                    ["text" => "\xF0\x9F\x93\x8DАнкета пользователя"
+                    ],
                 ],
                 [
                     ["text" => "\xF0\x9F\x94\x8DНаши заведения"],
@@ -229,6 +232,7 @@ class BotMenuTemplateSeeder extends Seeder
             ],
         ]);
 
+
         BotMenuTemplate::query()->create([
             'bot_id' => $bot->id,
             'type' => 'inline',
@@ -244,14 +248,16 @@ class BotMenuTemplateSeeder extends Seeder
         ]);
     }
 
-    protected function handlerShopMenu($bot){
+    protected function handlerShopMenu($bot)
+    {
         BotMenuTemplate::query()->create([
             'bot_id' => $bot->id,
             'type' => 'reply',
             'slug' => "main_menu_shop_1",
             'menu' => [
                 [
-                    ["text" => "\xF0\x9F\x93\x8DАнкета пользователя"],
+                    ["text" => "\xF0\x9F\x93\x8DАнкета пользователя"
+                    ],
                 ],
                 [
                     ["text" => "\xF0\x9F\x94\x8DНаши заведения"],
@@ -402,7 +408,8 @@ class BotMenuTemplateSeeder extends Seeder
         ]);
     }
 
-    protected function handlerDeliveryServiceMenu($bot){
+    protected function handlerDeliveryServiceMenu($bot)
+    {
         BotMenuTemplate::query()->create([
             'bot_id' => $bot->id,
             'type' => 'reply',
@@ -425,6 +432,20 @@ class BotMenuTemplateSeeder extends Seeder
 
         BotMenuTemplate::query()->create([
             'bot_id' => $bot->id,
+            'type' => 'inline',
+            'slug' => "deliveryman_form_1",
+            'menu' => [
+                [
+                    ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                        "url" => env("APP_URL") . "/deliveryman/vip-form/$bot->bot_domain"
+                    ]],
+                ],
+
+            ],
+        ]);
+
+        BotMenuTemplate::query()->create([
+            'bot_id' => $bot->id,
             'type' => 'reply',
             'slug' => "main_menu_deliveryman_2",
             'menu' => [
@@ -433,6 +454,20 @@ class BotMenuTemplateSeeder extends Seeder
                 ],
                 [
                     ["text" => "\xF0\x9F\x94\x8DОтчет о доходах"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x91Главное меню"],
+                ],
+            ],
+        ]);
+
+        BotMenuTemplate::query()->create([
+            'bot_id' => $bot->id,
+            'type' => 'reply',
+            'slug' => "main_menu_deliveryman_4",
+            'menu' => [
+                [
+                    ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету"],
                 ],
                 [
                     ["text" => "\xF0\x9F\x93\x91Главное меню"],
@@ -457,6 +492,165 @@ class BotMenuTemplateSeeder extends Seeder
             ],
         ]);
     }
+
+    protected function handlerCashManSalesMenu($bot)
+    {
+
+        BotMenuTemplate::query()->create([
+            'bot_id' => $bot->id,
+            'type' => 'reply',
+            'slug' => "main_menu_cashman_funnel_1",
+            'menu' => [
+                [
+                    ["text" => "\xF0\x9F\x93\x8DХочу себе бот!"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DЧто такое телеграмм?"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DКакие есть типы ботов?"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DЧто такое кэшбэк?"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x91Как это работает?"],
+                ],
+            ],
+        ]);
+
+        BotMenuTemplate::query()->create([
+            'bot_id' => $bot->id,
+            'type' => 'reply',
+            'slug' => "main_menu_cashman_funnel_2",
+            'menu' => [
+                [
+                    ["text" => "\xF0\x9F\x93\x8DХочу себе бот!"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DМои компании"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DМои боты"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DТехническая поддержка"],
+                ],
+            ],
+        ]);
+
+        BotMenuTemplate::query()->create([
+            'bot_id' => $bot->id,
+            'type' => 'reply',
+            'slug' => "main_menu_cashman_funnel_3",
+            'menu' => [
+                [
+                    ["text" => "\xF0\x9F\x93\x8DЧто такое телеграмм?"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DКакие есть типы ботов?"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DЧто такое кэшбэк?"],
+                    ["text" => "\xF0\x9F\x94\x8DКак это работает?"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DСвязь с нами"],
+                    ["text" => "\xF0\x9F\x94\x8DО нас"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DГлавное меню"],
+                ],
+            ],
+        ]);
+    }
+
+    protected function handlerCashManManagerMenu($bot)
+    {
+
+        BotMenuTemplate::query()->create([
+            'bot_id' => $bot->id,
+            'type' => 'reply',
+            'slug' => "main_menu_cashman_manager_1",
+            'menu' => [
+                [
+                    ["text" => "\xF0\x9F\x93\x8DАнкета менеджера"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DНаши боты"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DО нас"],
+                    ["text" => "\xF0\x9F\x94\x8DО боте"],
+                ],
+            ],
+        ]);
+
+        BotMenuTemplate::query()->create([
+            'bot_id' => $bot->id,
+            'type' => 'reply',
+            'slug' => "main_menu_cashman_manager_2",
+            'menu' => [
+                [
+                    ["text" => "\xF0\x9F\x93\x8DПрофиль менеджера"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DНаши боты"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DОбучение менеджеров"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DО нас"],
+                    ["text" => "\xF0\x9F\x94\x8DО боте"],
+                ],
+            ],
+        ]);
+
+        BotMenuTemplate::query()->create([
+            'bot_id' => $bot->id,
+            'type' => 'reply',
+            'slug' => "main_menu_cashman_manager_3",
+            'menu' => [
+                [
+                    ["text" => "\xF0\x9F\x93\x8DБоты для заведений"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DБоты для доставки"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DБоты для управления"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DБоты для других сервисов"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DГлавное меню"],
+                ],
+            ],
+        ]);
+
+        BotMenuTemplate::query()->create([
+            'bot_id' => $bot->id,
+            'type' => 'reply',
+            'slug' => "main_menu_cashman_manager_4",
+            'menu' => [
+                [
+                    ["text" => "\xF0\x9F\x93\x8DМои заявки"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DПереходы"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x93\x8DМои продажи"],
+                ],
+                [
+                    ["text" => "\xF0\x9F\x94\x8DГлавное меню"],
+                ],
+            ],
+        ]);
+    }
+
     /**
      * Run the database seeds.
      */
@@ -466,18 +660,55 @@ class BotMenuTemplateSeeder extends Seeder
             ->where("bot_domain", "obedy_go_bot")
             ->first();
 
-        $this->handlerCashBackMenu($botCashBack);
+        $bmt = BotMenuTemplate::query()
+            ->where("bot_id", $botCashBack->id)
+            ->get();
 
-        $botShop= Bot::query()
+        if (count($bmt) == 0)
+            $this->handlerCashBackMenu($botCashBack);
+
+        $botShop = Bot::query()
             ->where("bot_domain", "isushibot")
             ->first();
 
-        $this->handlerShopMenu($botShop);
+        $bmt = BotMenuTemplate::query()
+            ->where("bot_id", $botShop->id)
+            ->get();
 
-        $botDeliverymanService= Bot::query()
+        if (count($bmt) == 0)
+            $this->handlerShopMenu($botShop);
+
+        $botDeliverymanService = Bot::query()
             ->where("bot_domain", "deliveryrocketbot")
             ->first();
 
-        $this->handlerDeliveryServiceMenu($botDeliverymanService);
+        $bmt = BotMenuTemplate::query()
+            ->where("bot_id", $botDeliverymanService->id)
+            ->get();
+
+        if (count($bmt) == 0)
+            $this->handlerDeliveryServiceMenu($botDeliverymanService);
+
+        $botSales = Bot::query()
+            ->where("bot_domain", "cashman_sales_bot")
+            ->first();
+
+        $bmt = BotMenuTemplate::query()
+            ->where("bot_id", $botSales->id)
+            ->get();
+
+        if (count($bmt) == 0)
+            $this->handlerCashManSalesMenu($botSales);
+
+        $botManager = Bot::query()
+            ->where("bot_domain", "cashman_managers_bot")
+            ->first();
+
+        $bmt = BotMenuTemplate::query()
+            ->where("bot_id", $botManager->id)
+            ->get();
+
+        if (count($bmt) == 0)
+            $this->handlerCashManManagerMenu($botManager);
     }
 }

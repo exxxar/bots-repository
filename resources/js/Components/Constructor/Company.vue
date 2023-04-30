@@ -50,7 +50,7 @@
 
             <div class="col-12">
                 <div class="mb-3">
-                    <label class="form-label" id="company-description">
+                    <label class="form-label " id="company-description">
                         <Popper>
                             <i class="fa-regular fa-circle-question mr-1"></i>
                             <template #content>
@@ -59,6 +59,8 @@
                         </Popper>
                         Описание компании
                         <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="companyForm.description">
+                            Длина текста {{ companyForm.description.length }}</small>
                     </label>
                     <textarea type="text" class="form-control"
                               placeholder="Описание компании"
@@ -76,7 +78,9 @@
                         <Popper>
                             <i class="fa-regular fa-circle-question mr-1"></i>
                             <template #content>
-                                <div>Где находится главное заведение компании!<br>Можно не указывать, т.к. есть еще "Локации"</div>
+                                <div>Где находится главное заведение компании!<br>Можно не указывать, т.к. есть еще
+                                    "Локации"
+                                </div>
                             </template>
                         </Popper>
                         Основной адрес компании</label>

@@ -20,8 +20,11 @@ class Order extends Model
         'delivery_address',
         'comment',
         'summary_price',
+        'deliveryman_id',
         'payed_at',
     ];
+
+    protected $with = ["baskets"];
 
     /**
      * The attributes that should be cast to native types.
@@ -37,4 +40,8 @@ class Order extends Model
         'updated_at' => 'timestamp',
         'deleted_at' => 'timestamp',
     ];
+
+    public function baskets(){
+        return $this->hasMany(Basket::class,"order_id","id");
+    }
 }

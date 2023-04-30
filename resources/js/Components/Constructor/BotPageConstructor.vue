@@ -86,17 +86,15 @@ import PagesList from "@/Components/Constructor/PagesList.vue";
                         <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                     </label>
 
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="form-floating">
+
+                    <div class="form-floating">
                                 <textarea class="form-control"
                                           v-model="pageForm.content"
                                           placeholder="Введите текст"
                                           id="floatingTextarea2" style="min-height: 100px"></textarea>
-                                <label for="floatingTextarea2">Содержимое страницы</label>
-                            </div>
-                        </div>
+                        <label for="floatingTextarea2">Содержимое страницы</label>
                     </div>
+
                 </div>
                 <div class="col-12 mb-2">
                     <div class="card mb-3">
@@ -238,7 +236,7 @@ export default {
                     data.append('photos[]', this.photos[i]);
                 }
 
-            if (this.pageForm.images.length ===0 || typeof this.pageForm.images == 'string')
+            if (this.pageForm.images.length === 0 || typeof this.pageForm.images == 'string')
                 data.delete("images")
 
             this.$store.dispatch((this.pageForm.id == null ? "createPage" : "updatePage"), {

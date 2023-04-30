@@ -34,6 +34,11 @@ class BotUserResource extends JsonResource
             'is_vip' => $this->is_vip,
             'is_admin' => $this->is_admin,
             'is_work' => $this->is_work,
+
+            'is_deliveryman'=> $this->is_deliveryman,
+            'current_latitude'=> $this->current_latitude ?? 0,
+            'current_longitude'=> $this->current_longitude ?? 0,
+
             'user' => $this->whenLoaded("user") ?? null,
             'user_in_location' => $this->user_in_location,
             'created_at' => $this->created_at,

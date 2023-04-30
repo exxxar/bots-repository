@@ -10,7 +10,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\BotMenuSlugController
+ * @see \App\Http\Controllers\Admin\BotMenuSlugController
  */
 class BotMenuSlugControllerTest extends TestCase
 {
@@ -36,7 +36,7 @@ class BotMenuSlugControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BotMenuSlugController::class,
+            \App\Http\Controllers\Admin\BotMenuSlugController::class,
             'store',
             \App\Http\Requests\BotMenuSlugStoreRequest::class
         );
@@ -84,7 +84,7 @@ class BotMenuSlugControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BotMenuSlugController::class,
+            \App\Http\Controllers\Admin\BotMenuSlugController::class,
             'update',
             \App\Http\Requests\BotMenuSlugUpdateRequest::class
         );

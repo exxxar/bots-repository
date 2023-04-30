@@ -10,7 +10,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\LocationController
+ * @see \App\Http\Controllers\Admin\LocationController
  */
 class LocationControllerTest extends TestCase
 {
@@ -36,7 +36,7 @@ class LocationControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\LocationController::class,
+            \App\Http\Controllers\Admin\LocationController::class,
             'store',
             \App\Http\Requests\LocationStoreRequest::class
         );
@@ -96,7 +96,7 @@ class LocationControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\LocationController::class,
+            \App\Http\Controllers\Admin\LocationController::class,
             'update',
             \App\Http\Requests\LocationUpdateRequest::class
         );

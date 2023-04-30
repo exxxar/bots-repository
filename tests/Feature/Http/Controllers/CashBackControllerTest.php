@@ -11,7 +11,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\CashBackController
+ * @see \App\Http\Controllers\Admin\CashBackController
  */
 class CashBackControllerTest extends TestCase
 {
@@ -37,7 +37,7 @@ class CashBackControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\CashBackController::class,
+            \App\Http\Controllers\Admin\CashBackController::class,
             'store',
             \App\Http\Requests\CashBackStoreRequest::class
         );
@@ -91,7 +91,7 @@ class CashBackControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\CashBackController::class,
+            \App\Http\Controllers\Admin\CashBackController::class,
             'update',
             \App\Http\Requests\CashBackUpdateRequest::class
         );

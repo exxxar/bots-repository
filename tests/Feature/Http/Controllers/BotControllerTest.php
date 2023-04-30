@@ -11,7 +11,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\BotController
+ * @see \App\Http\Controllers\Admin\BotController
  */
 class BotControllerTest extends TestCase
 {
@@ -37,7 +37,7 @@ class BotControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BotController::class,
+            \App\Http\Controllers\Admin\BotController::class,
             'store',
             \App\Http\Requests\BotStoreRequest::class
         );
@@ -100,7 +100,7 @@ class BotControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BotController::class,
+            \App\Http\Controllers\Admin\BotController::class,
             'update',
             \App\Http\Requests\BotUpdateRequest::class
         );

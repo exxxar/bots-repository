@@ -4,13 +4,14 @@ defineProps({
         type: Object,
     },
 
-    botUser: {
-        type: Object
-    },
+
 
 });
 </script>
 <template>
+    <div v-if="botUser">
+
+    </div>
     <div class="container pt-3 pb-3" v-if="!botUser.is_vip">
         <form
             v-if="step===0"
@@ -240,6 +241,7 @@ export default {
             load: false,
             confirm: false,
             step: 0,
+            botUser: null,
             vipForm: {
                 name: null,
                 phone: null,
@@ -253,6 +255,12 @@ export default {
             }
         }
     },
+    mounted() {
+        if (this.tgUser) {
+            this.loadBotUser()
+        }
+    },
+
     computed: {
         tg() {
             return window.Telegram.WebApp;
@@ -265,6 +273,20 @@ export default {
     methods: {
         nextStep(){
           this.step++;
+        },
+        loadBotUser(){
+            this.loading = true;
+            this.$store.dispatch("loadCurrentBotUser", {
+                dataObject: {
+                    bot_id: this.bot.id,
+                    tg: this.tgUser,
+                }
+            }).then((resp) => {
+                this.loading = false
+                this.botUser = resp
+            }).catch(() => {
+                this.loading = false
+            })
         },
         submit() {
             this.loading = true;

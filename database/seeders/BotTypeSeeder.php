@@ -12,34 +12,74 @@ class BotTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        BotType::query()->create([
-            'title'=>"Рестораны",
-            'slug'=>"restaurant",
-            'is_active'=>true
-        ]);
+        $botType = BotType::query()
+            ->where("slug", "cashback")
+            ->first();
 
-        BotType::query()->create([
-            'title'=>"Воронки продаж",
-            'slug'=>"sales_funnel",
-            'is_active'=>true
-        ]);
+        if (is_null($botType))
+            BotType::query()->create([
+                'title' => "Системы CashBack",
+                'slug' => "cashback",
+                'is_active' => true
+            ]);
 
-        BotType::query()->create([
-            'title'=>"Магазины",
-            'slug'=>"shops",
-            'is_active'=>true
-        ]);
 
-        BotType::query()->create([
-            'title'=>"Сервис доставки (клиент доставщика)",
-            'slug'=>"delivery_service_for_deliveryman",
-            'is_active'=>true
-        ]);
+        $botType = BotType::query()
+            ->where("slug", "sales_funnel")
+            ->first();
 
-        BotType::query()->create([
-            'title'=>"Другое",
-            'slug'=>"other",
-            'is_active'=>true
-        ]);
+        if (is_null($botType))
+            BotType::query()->create([
+                'title' => "Воронки продаж",
+                'slug' => "sales_funnel",
+                'is_active' => true
+            ]);
+
+        $botType = BotType::query()
+            ->where("slug", "shops")
+            ->first();
+
+        if (is_null($botType))
+            BotType::query()->create([
+                'title' => "Магазины",
+                'slug' => "shops",
+                'is_active' => true
+            ]);
+
+
+        $botType = BotType::query()
+            ->where("slug", "delivery_service_for_deliveryman")
+            ->first();
+
+        if (is_null($botType))
+            BotType::query()->create([
+                'title' => "Сервис доставки (клиент доставщика)",
+                'slug' => "delivery_service_for_deliveryman",
+                'is_active' => true
+            ]);
+
+
+        $botType = BotType::query()
+            ->where("slug", "manager_system")
+            ->first();
+
+        if (is_null($botType))
+            BotType::query()->create([
+                'title' => "Система менеджеров",
+                'slug' => "manager_system",
+                'is_active' => true
+            ]);
+
+
+        $botType = BotType::query()
+            ->where("slug", "other")
+            ->first();
+
+        if (is_null($botType))
+            BotType::query()->create([
+                'title' => "Другое",
+                'slug' => "other",
+                'is_active' => true
+            ]);
     }
 }

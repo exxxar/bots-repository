@@ -5,8 +5,11 @@ import Bot from "@/Components/Constructor/Bot.vue";
 </script>
 <template>
     <div class="row">
-        <div class="alert alert-warning" role="alert">
-            <strong>Важно!</strong> новые боты начнут работать только после того, как вы обновите зависимости!
+
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                <strong>Важно!</strong> новые боты начнут работать только после того, как вы обновите зависимости!
+            </div>
         </div>
 
         <div class="col-12 mb-3">

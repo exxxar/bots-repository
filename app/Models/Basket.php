@@ -16,7 +16,7 @@ class Basket extends Model
      * @var array
      */
     protected $fillable = [
-        'product_id',
+        'bot_product_id',
         'count',
         'user_id',
         'bot_id',
@@ -51,7 +51,7 @@ class Basket extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(BotProduct::class);
     }
 
     public function order(): BelongsTo

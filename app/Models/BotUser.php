@@ -22,8 +22,12 @@ class BotUser extends Model
         'is_vip',
         'is_admin',
         'is_work',
+
         'user_in_location',
         'location_comment',
+        'is_deliveryman',
+        'current_latitude',
+        'current_longitude',
 
         'name',
         'phone',

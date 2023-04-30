@@ -12,7 +12,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\ReferralHistoryController
+ * @see \App\Http\Controllers\Admin\ReferralHistoryController
  */
 class ReferralHistoryControllerTest extends TestCase
 {
@@ -38,7 +38,7 @@ class ReferralHistoryControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ReferralHistoryController::class,
+            \App\Http\Controllers\Admin\ReferralHistoryController::class,
             'store',
             \App\Http\Requests\ReferralHistoryStoreRequest::class
         );
@@ -95,7 +95,7 @@ class ReferralHistoryControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ReferralHistoryController::class,
+            \App\Http\Controllers\Admin\ReferralHistoryController::class,
             'update',
             \App\Http\Requests\ReferralHistoryUpdateRequest::class
         );

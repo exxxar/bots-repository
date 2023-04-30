@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('bot_product_categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('title', 255)->nullable();
-            $table->string('slug', 190)->unique();
-            $table->foreignId('bot_id')->constrained();
-            $table->timestamps();
+        Schema::create('bot_product_categories',
+            function (Blueprint $table) {
+                $table->id();
+                $table->string('title', 255)->nullable();
+                $table->string('slug', 190)->unique();
+                $table->foreignId('bot_id')->constrained();
+                $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();

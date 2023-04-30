@@ -11,7 +11,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\ImageMenuController
+ * @see \App\Http\Controllers\Admin\ImageMenuController
  */
 class ImageMenuControllerTest extends TestCase
 {
@@ -37,7 +37,7 @@ class ImageMenuControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ImageMenuController::class,
+            \App\Http\Controllers\Admin\ImageMenuController::class,
             'store',
             \App\Http\Requests\ImageMenuStoreRequest::class
         );
@@ -91,7 +91,7 @@ class ImageMenuControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ImageMenuController::class,
+            \App\Http\Controllers\Admin\ImageMenuController::class,
             'update',
             \App\Http\Requests\ImageMenuUpdateRequest::class
         );

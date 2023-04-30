@@ -11,7 +11,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\NotificationScheduleController
+ * @see \App\Http\Controllers\Admin\NotificationScheduleController
  */
 class NotificationScheduleControllerTest extends TestCase
 {
@@ -37,7 +37,7 @@ class NotificationScheduleControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\NotificationScheduleController::class,
+            \App\Http\Controllers\Admin\NotificationScheduleController::class,
             'store',
             \App\Http\Requests\NotificationScheduleStoreRequest::class
         );
@@ -88,7 +88,7 @@ class NotificationScheduleControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\NotificationScheduleController::class,
+            \App\Http\Controllers\Admin\NotificationScheduleController::class,
             'update',
             \App\Http\Requests\NotificationScheduleUpdateRequest::class
         );

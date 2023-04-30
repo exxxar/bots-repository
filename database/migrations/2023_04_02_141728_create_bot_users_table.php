@@ -21,9 +21,11 @@ return new class extends Migration
             $table->boolean('is_vip')->default(false);
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_work')->default(false);
+            $table->boolean('is_deliveryman')->default(false);
             $table->boolean('user_in_location')->default(false);
             $table->string('location_comment')->nullable();
-
+            $table->double('current_latitude')->nullable();
+            $table->double('current_longitude')->nullable();
             $table->string('name')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
@@ -33,10 +35,8 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('address')->nullable();
             $table->boolean('sex')->default(true);
-
             $table->string('fio_from_telegram', 255)->nullable();
             $table->string('telegram_chat_id', 255)->nullable();
-
             $table->timestamps();
         });
 

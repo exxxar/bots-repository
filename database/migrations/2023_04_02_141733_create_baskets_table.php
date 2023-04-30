@@ -15,15 +15,14 @@ return new class extends Migration
 
         Schema::create('baskets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained();
+            $table->foreignId('bot_product_id')->constrained();
             $table->integer('count')->default(0);
             $table->foreignId('user_id')->constrained();
             $table->foreignId('bot_id')->constrained();
-            $table->foreignId('order_id')->constrained();
+            $table->foreignId('order_id')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
-
         });
 
         Schema::enableForeignKeyConstraints();

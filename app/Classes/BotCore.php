@@ -158,9 +158,7 @@ abstract class BotCore
         foreach ($this->slugs as $item) {
             if (is_null($item["path"]) || $item["is_service"])
                 continue;
-
             $slug = $item["path"];
-
             $templates = BotMenuSlug::query()
                 ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
@@ -168,22 +166,17 @@ abstract class BotCore
 
             if (count($templates) == 0)
                 continue;
-
             foreach ($templates as $template) {
                 $command = $template->command;
-
                 if (!str_starts_with($command, "/"))
                     $command = "/" . $command;
-
                 if (preg_match($command . "$/i", $query, $matches)) {
                     foreach ($matches as $match)
                         $arguments[] = $match;
-
                     $find = $this->tryCall($item, $message, $arguments);
                     break;
                 }
             }
-
             if ($find)
                 return true;
 

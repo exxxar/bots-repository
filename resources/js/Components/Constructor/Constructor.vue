@@ -2,6 +2,10 @@
 import InitialStepper from "@/Components/Constructor/InitialStepper.vue";
 import BotEditor from "@/Components/Constructor/BotEditor.vue";
 import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue";
+import ImageMenuEditor from "@/Components/Constructor/ImageMenuEditor.vue";
+import CompanyEditor from "@/Components/Constructor/CompanyEditor.vue";
+import LocationEditor from "@/Components/Constructor/LocationEditor.vue";
+
 </script>
 
 <template>
@@ -13,7 +17,19 @@ import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue"
                     <a class="nav-link"
                        v-bind:class="{'active':tab===0}"
                        @click="tab=0"
-                       aria-current="page" href="#">Конструктор</a>
+                       aria-current="page" href="#">Создание нового клиента</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       v-bind:class="{'active':tab===4}"
+                       @click="tab=4"
+                       href="#">Редактирование компаний</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       v-bind:class="{'active':tab===5}"
+                       @click="tab=5"
+                       href="#">Редактирование локаций</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
@@ -23,10 +39,18 @@ import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue"
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
+                       v-bind:class="{'active':tab===3}"
+                       @click="tab=3"
+                       href="#">Редактор меню ботов</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
                        v-bind:class="{'active':tab===2}"
                        @click="tab=2"
                        href="#">Конструктор страниц</a>
                 </li>
+
+
             </ul>
         </div>
         <div class="row" v-if="tab===0">
@@ -34,9 +58,24 @@ import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue"
                 <InitialStepper/>
             </div>
         </div>
+        <div class="row" v-if="tab===4">
+            <div class="col-12 pt-2 pb-2">
+                <CompanyEditor/>
+            </div>
+        </div>
+        <div class="row" v-if="tab===5">
+            <div class="col-12 pt-2 pb-2">
+                <LocationEditor/>
+            </div>
+        </div>
         <div class="row" v-if="tab===1">
             <div class="col-12 pt-2 pb-2">
                 <BotEditor/>
+            </div>
+        </div>
+        <div class="row" v-if="tab===3">
+            <div class="col-12 pt-2 pb-2">
+                <ImageMenuEditor/>
             </div>
         </div>
         <div class="row" v-if="tab===2">

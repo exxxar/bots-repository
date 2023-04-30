@@ -1,16 +1,14 @@
 <?php
 
-use \App\Facades\BotManager;
-use App\Http\Controllers\DeliveryServiceController;
-use App\Http\Controllers\InlineBotController;
-use \App\Http\Controllers\RestaurantBotController;
-use \App\Http\Controllers\NewsBotController;
-use \App\Http\Controllers\AdminBotController;
-use \App\Http\Controllers\ShopBotController;
-use Illuminate\Support\Facades\Log;
+use App\Facades\BotManager;
+use App\Http\Controllers\Bots\DeliveryServiceBotController;
 
 BotManager::bot()
-    ->controller(DeliveryServiceController::class)
+    ->controller(DeliveryServiceBotController::class)
+    ->route("/take_order ([0-9]+)", "takeOrder")
+    ->route("/order_success ([0-9]+)", "orderSuccess")
+    ->route("/watch_order ([0-9]+)", "watchOrder")
+    ->slug("slug_toggle_work_1", "toggleWork")
     ->slug("slug_deliveryman_main_menu_1", "main")
     ->slug("slug_deliveryman_orders_1", "orders")
     ->slug("slug_deliveryman_profile_1", "profile")

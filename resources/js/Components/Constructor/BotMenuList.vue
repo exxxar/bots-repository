@@ -20,7 +20,7 @@ import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue"
                     <button
                         @click="removeKeyboard(index)"
                         type="button"
-                        class="btn btn-outline-danger"
+                        class="btn btn-outline-danger mr-2"
                     >
                         Удалить
                     </button>

@@ -98,6 +98,19 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async loadCurrentBotUser(context, payload = { dataObject: {botId: null} }) {
+        let link = `${BASE_BOTS_LINK}/current-bot-user`
+
+        let _axios = util.makeAxiosFactory(link,'POST', payload.dataObject )
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            return Promise.resolve(dataObject.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
 }
 const mutations = {
     setBots(state, payload) {

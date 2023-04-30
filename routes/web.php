@@ -1,18 +1,15 @@
 <?php
 
-use App\Http\Controllers\AdminBotController;
-use App\Http\Controllers\BotController;
-use App\Http\Controllers\BotPageController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\ProfileController;
-use App\Models\BotMenuTemplate;
-use App\Models\BotUser;
-use App\Models\User;
+use App\Http\Controllers\Admin\BotController;
+use App\Http\Controllers\Admin\BotPageController;
+use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Bots\AdminBotController;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use  \App\Http\Controllers\RestaurantBotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,15 +22,14 @@ use  \App\Http\Controllers\RestaurantBotController;
 |
 */
 
-
 Route::get('/images-by-company-id/{companyId}/{fileName}',
-    [\App\Http\Controllers\TelegramController::class, 'getFilesByCompanyId']);
+    [\App\Http\Controllers\Admin\TelegramController::class, 'getFilesByCompanyId']);
 
 Route::get('/images-by-bot-id/{botId}/{fileName}',
-    [\App\Http\Controllers\TelegramController::class, 'getFilesByBotId']);
+    [\App\Http\Controllers\Admin\TelegramController::class, 'getFilesByBotId']);
 
 Route::get('/images/{companySlug}/{fileName}',
-    [\App\Http\Controllers\TelegramController::class, 'getFiles']);
+    [\App\Http\Controllers\Admin\TelegramController::class, 'getFiles']);
 
 Route::prefix("bot")->group(function () {
     Route::prefix("bots")
@@ -43,11 +39,12 @@ Route::prefix("bot")->group(function () {
             Route::post("/bot-update", "updateBot");
             Route::post("/user-status", "changeUserStatus");
             Route::post("/users", "loadBotUsers");
+            Route::post("/current-bot-user", "getCurrentBotUser");
 
         });
 
     Route::prefix("products")
-        ->controller(\App\Http\Controllers\BotProductController::class)
+        ->controller(\App\Http\Controllers\Admin\BotProductController::class)
         ->group(function () {
             Route::post("/", "index");
         });
@@ -99,21 +96,22 @@ Route::prefix("bot")->group(function () {
 
     Route::prefix("cashback")
         ->group(function () {
-            Route::post('/history', [\App\Http\Controllers\CashBackHistoryController::class, "index"]);
-            Route::post('/add', [\App\Http\Controllers\AdminBotController::class, "addCashBack"]);
-            Route::post('/remove', [\App\Http\Controllers\AdminBotController::class, "removeCashBack"]);
-            Route::post('/vip', [\App\Http\Controllers\AdminBotController::class, "vipStore"]);
-            Route::post('/user-in-location', [\App\Http\Controllers\AdminBotController::class, "acceptUserInLocation"]);
+            Route::post('/history', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "index"]);
+            Route::post('/add', [\App\Http\Controllers\Bots\AdminBotController::class, "addCashBack"]);
+            Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"]);
+            Route::post('/vip', [\App\Http\Controllers\Bots\AdminBotController::class, "vipStore"]);
+            Route::post('/deliveryman', [\App\Http\Controllers\Bots\AdminBotController::class, "deliverymanStore"]);
+            Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"]);
         });
 
-    Route::any('/register-webhooks', [\App\Http\Controllers\TelegramController::class, "registerWebhooks"]);
-    Route::any('/{domain}', [\App\Http\Controllers\TelegramController::class, "handler"]);
+    Route::any('/register-webhooks', [\App\Http\Controllers\Admin\TelegramController::class, "registerWebhooks"]);
+    Route::any('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "handler"]);
 });
 
 Route::prefix("web")
     ->group(function(){
-        Route::get('/{domain}', [\App\Http\Controllers\TelegramController::class, "webInterface"]);
-        Route::post('/{domain}', [\App\Http\Controllers\TelegramController::class, "webHandler"]);
+        Route::get('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webInterface"]);
+        Route::post('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webHandler"]);
     });
 
 Route::view('/', "landing");
@@ -172,7 +170,8 @@ Route::get('/admin/{botDomain}/{userId}', [AdminBotController::class, 'adminMenu
 Route::get('/admin/work-day/{botDomain}/{userId}', [AdminBotController::class, "workDay"]);
 Route::get('/statistic/{botDomain}/{userId}', [AdminBotController::class, "statistic"]);
 Route::get('/promotion/{botDomain}/{userId}', [AdminBotController::class, "promotion"]);
-Route::get('/restaurant/vip-form/{botDomain}/{userId}', [AdminBotController::class, "vipForm"]);
+Route::get('/restaurant/vip-form/{botDomain}', [AdminBotController::class, "vipForm"]);
+Route::get('/deliveryman/vip-form/{botDomain}', [AdminBotController::class, "vipFormDeliveryman"]);
 
 
 Route::get('/welcome', function () {
@@ -186,9 +185,15 @@ Route::get('/welcome', function () {
 });
 
 Route::get('/dashboard', function () {
-    Inertia::setRootView("app");
+    Inertia::setRootView("dashboard");
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('logout', function (){
+    Auth::logout();
+    return redirect()->back();
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

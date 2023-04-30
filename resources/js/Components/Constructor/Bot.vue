@@ -3,6 +3,7 @@ import BotMenuList from "@/Components/Constructor/BotMenuList.vue";
 import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
 import BotUserList from "@/Components/Constructor/BotUserList.vue";
 import TextHelper from "@/Components/Constructor/TextHelper.vue";
+
 </script>
 <template>
     <div class="row" v-if="companyId">
@@ -95,7 +96,9 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
                                v-model="botForm.bot_domain"
                                maxlength="255"
                                aria-describedby="bot-domain" required>
-                        <p v-if="botForm.bot_domain">Проверить работу бота <a  :href="'https://t.me/'+botForm.bot_domain" target="_blank">@{{botForm.bot_domain}}</a></p>
+                        <p v-if="botForm.bot_domain">Проверить работу бота <a :href="'https://t.me/'+botForm.bot_domain"
+                                                                              target="_blank">@{{ botForm.bot_domain }}</a>
+                        </p>
                     </div>
                 </div>
 
@@ -113,6 +116,9 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
                                 <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
 
 
+                                <small class="text-gray-400 ml-3" style="font-size:10px;"
+                                       v-if="botForm.welcome_message">
+                                    Длина текста {{ botForm.welcome_message.length }}</small>
                             </label>
 
                             <TextHelper
@@ -141,6 +147,9 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
                                 </Popper>
                                 Описание бота
                                 <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+
+                                <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="botForm.description">
+                                    Длина текста {{ botForm.description.length }}</small>
                             </label>
 
                             <TextHelper
@@ -308,6 +317,10 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
                             <label class="form-label" id="bot-maintenance-message">Сообщение для режима тех.
                                 работ
                                 <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+
+                                <small class="text-gray-400 ml-3" style="font-size:10px;"
+                                       v-if="botForm.maintenance_message">
+                                    Длина текста {{ botForm.maintenance_message.length }}</small>
                             </label>
                             <TextHelper
                                 :param="'maintenance_message'"
@@ -472,24 +485,20 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
                 :bot-id="bot.id"/>
         </div>
 
-        <div class="card fixed-footer">
-            <div class="card-body">
-                <div class="container">
 
-                    <div class="row">
-                        <div class="col-12">
-                            <button
-                                type="submit" class="btn btn-success w-100 p-3">
-                                <span v-if="!bot">Добавить бота</span>
-                                <span v-else>Обновить бота</span>
+            <div class="row">
+                <div class="col-12">
+                    <button
+                        type="submit" class="btn btn-success w-100 p-3">
+                        <span v-if="!bot">Добавить бота</span>
+                        <span v-else>Обновить бота</span>
 
-                            </button>
-                        </div>
-                    </div>
+                    </button>
                 </div>
+
             </div>
 
-        </div>
+
 
     </form>
 
@@ -702,7 +711,7 @@ export default {
                 this.$emit("callback", response.data)
                 this.$notify({
                     title: "Конструктор ботов",
-                    text:  (this.bot == null?"Бот успешно создан!":"Бот успешно обновлен!"),
+                    text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
                     type: 'warn'
                 });
 
@@ -747,8 +756,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.fixed-footer
-{
+.fixed-footer {
 
     position: fixed;
     bottom: 0px;

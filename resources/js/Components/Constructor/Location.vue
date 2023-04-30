@@ -73,6 +73,8 @@
                             <label class="form-label" id="location-description">
                                 Описание локации
                                 <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="locationForm.description">
+                                    Длина текста {{ locationForm.description.length }}</small>
                             </label>
                             <textarea type="text" class="form-control"
                                       placeholder="Описание локации"

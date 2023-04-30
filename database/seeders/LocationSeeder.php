@@ -14,7 +14,7 @@ class LocationSeeder extends Seeder
     public function run(): void
     {
         $company = Company::query()
-            ->where('slug',"obedygo")
+            ->where('slug',"cashman")
             ->first();
 
         Location::query()->create([

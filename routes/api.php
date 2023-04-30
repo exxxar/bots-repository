@@ -18,52 +18,52 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('company', App\Http\Controllers\CompanyController::class);
+Route::apiResource('company', \App\Http\Controllers\Admin\CompanyController::class);
 
-Route::apiResource('location', App\Http\Controllers\LocationController::class);
+Route::apiResource('location', \App\Http\Controllers\Admin\LocationController::class);
 
-Route::apiResource('bot', App\Http\Controllers\BotController::class);
+Route::apiResource('bot', \App\Http\Controllers\Admin\BotController::class);
 
-Route::apiResource('bot-menu-template', App\Http\Controllers\BotMenuTemplateController::class);
+Route::apiResource('bot-menu-template', \App\Http\Controllers\Admin\BotMenuTemplateController::class);
 
-Route::apiResource('bot-type', App\Http\Controllers\BotTypeController::class);
+Route::apiResource('bot-type', \App\Http\Controllers\Admin\BotTypeController::class);
 
-Route::apiResource('image-menu', App\Http\Controllers\ImageMenuController::class);
+Route::apiResource('image-menu', \App\Http\Controllers\Admin\ImageMenuController::class);
 
-Route::apiResource('cash-back', App\Http\Controllers\CashBackController::class);
+Route::apiResource('cash-back', \App\Http\Controllers\Admin\CashBackController::class);
 
-Route::apiResource('cash-back-history', App\Http\Controllers\CashBackHistoryController::class);
+Route::apiResource('cash-back-history', \App\Http\Controllers\Admin\CashBackHistoryController::class);
 
-Route::apiResource('user', App\Http\Controllers\UserController::class);
+Route::apiResource('user', \App\Http\Controllers\Admin\UserController::class);
 
-Route::apiResource('bot-user', App\Http\Controllers\BotUserController::class);
+Route::apiResource('bot-user', \App\Http\Controllers\Admin\BotUserController::class);
 
-Route::apiResource('role', App\Http\Controllers\RoleController::class);
+Route::apiResource('role', \App\Http\Controllers\Admin\RoleController::class);
 
-Route::apiResource('referral-history', App\Http\Controllers\ReferralHistoryController::class);
+Route::apiResource('referral-history', \App\Http\Controllers\Admin\ReferralHistoryController::class);
 
-Route::apiResource('product', App\Http\Controllers\ProductController::class);
+Route::apiResource('product', \App\Http\Controllers\Admin\ProductController::class);
 
-Route::apiResource('product-category', App\Http\Controllers\ProductCategoryController::class);
+Route::apiResource('product-category', \App\Http\Controllers\Admin\ProductCategoryController::class);
 
-Route::apiResource('basket', App\Http\Controllers\BasketController::class);
+Route::apiResource('basket', \App\Http\Controllers\Admin\BasketController::class);
 
-Route::apiResource('order', App\Http\Controllers\OrderController::class);
+Route::apiResource('order', \App\Http\Controllers\Admin\OrderController::class);
 
-Route::apiResource('event', App\Http\Controllers\EventController::class);
+Route::apiResource('event', \App\Http\Controllers\Admin\EventController::class);
 
-Route::apiResource('notification-schedule', App\Http\Controllers\NotificationScheduleController::class);
-
-
-Route::apiResource('bot-menu-slug', App\Http\Controllers\BotMenuSlugController::class);
+Route::apiResource('notification-schedule', \App\Http\Controllers\Admin\NotificationScheduleController::class);
 
 
-Route::apiResource('bot-product', App\Http\Controllers\BotProductController::class);
-
-Route::apiResource('bot-product-category', App\Http\Controllers\BotProductCategoryController::class);
+Route::apiResource('bot-menu-slug', \App\Http\Controllers\Admin\BotMenuSlugController::class);
 
 
-Route::apiResource('bot-text-content', App\Http\Controllers\BotTextContentController::class);
+Route::apiResource('bot-product', \App\Http\Controllers\Admin\BotProductController::class);
+
+Route::apiResource('bot-product-category', \App\Http\Controllers\Admin\BotProductCategoryController::class);
 
 
-Route::apiResource('bot-page', App\Http\Controllers\BotPageController::class);
+Route::apiResource('bot-text-content', \App\Http\Controllers\Admin\BotTextContentController::class);
+
+
+Route::apiResource('bot-page', \App\Http\Controllers\Admin\BotPageController::class);

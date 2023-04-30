@@ -10,7 +10,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\ProductController
+ * @see \App\Http\Controllers\Admin\ProductController
  */
 class ProductControllerTest extends TestCase
 {
@@ -36,7 +36,7 @@ class ProductControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ProductController::class,
+            \App\Http\Controllers\Admin\ProductController::class,
             'store',
             \App\Http\Requests\ProductStoreRequest::class
         );
@@ -102,7 +102,7 @@ class ProductControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ProductController::class,
+            \App\Http\Controllers\Admin\ProductController::class,
             'update',
             \App\Http\Requests\ProductUpdateRequest::class
         );

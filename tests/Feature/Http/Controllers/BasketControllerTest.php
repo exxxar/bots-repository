@@ -13,7 +13,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\BasketController
+ * @see \App\Http\Controllers\Admin\BasketController
  */
 class BasketControllerTest extends TestCase
 {
@@ -39,7 +39,7 @@ class BasketControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BasketController::class,
+            \App\Http\Controllers\Admin\BasketController::class,
             'store',
             \App\Http\Requests\BasketStoreRequest::class
         );
@@ -99,7 +99,7 @@ class BasketControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BasketController::class,
+            \App\Http\Controllers\Admin\BasketController::class,
             'update',
             \App\Http\Requests\BasketUpdateRequest::class
         );

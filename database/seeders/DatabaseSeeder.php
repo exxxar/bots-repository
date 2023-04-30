@@ -22,19 +22,20 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            RoleSeeder::class,
-            UserSeeder::class,
-            CompanySeeder::class,
-            LocationSeeder::class,
+           // RoleSeeder::class,
+           // UserSeeder::class,
+            //CompanySeeder::class,
+           // LocationSeeder::class,
             BotTypeSeeder::class,
             BotSeeder::class,
             BotMenuTemplateSeeder::class,
             BotMenuSlugSeeder::class,
             BotUserSeeder::class,
-            CashBackHistorySeeder::class,
-            ImageMenuSeeder::class,
-            BotProductCategorySeeder::class,
-            BotProductSeeder::class
+           // CashBackHistorySeeder::class,
+           // ImageMenuSeeder::class,
+           // BotProductCategorySeeder::class,
+           // BotProductSeeder::class,
+           // OrderSeeder::class
         ]);
     }
 }

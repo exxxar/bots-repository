@@ -25,7 +25,13 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="mb-3">
-                            <label class="form-label" id="menu-description">Описание меню</label>
+                            <label class="form-label" id="menu-description">
+                                Описание меню
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+
+                                <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="menuForm.description">
+                                    Длина текста {{ menuForm.description.length }}</small>
+                            </label>
                             <textarea type="text" class="form-control"
                                       placeholder="Описание меню"
                                       aria-label="Описание меню"
@@ -55,7 +61,7 @@
 
                 <div class="row">
                     <div class="col-12 mb-3">
-                        <h5>Картинка меню с позициями <span class="badge rounded-pill text-bg-danger m-0">Нужно</span></h5>
+                        <h5>Картинка меню с позициями</h5>
                         <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
                             <label for="menu-photos" style="margin-right: 10px;" class="photo-loader ml-2">
                                 <span>+</span>

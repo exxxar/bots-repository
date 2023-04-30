@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('delivery_address', 255)->nullable();
             $table->string('comment', 255)->nullable();
             $table->double('summary_price')->default('0');
+            $table->unsignedInteger('deliveryman_id')->nullable();
             $table->timestamp('payed_at')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();

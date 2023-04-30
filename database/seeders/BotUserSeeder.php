@@ -21,17 +21,27 @@ class BotUserSeeder extends Seeder
             ->where('email', "exxxar@gmail.com")
             ->first();
 
-        foreach ($bots as $bot)
-            BotUser::query()->create([
-                'bot_id' => $bot->id,
-                'user_id' => $user->id,
-                'parent_id' => null,
-                'is_vip' => true,
-                'is_admin' => true,
-                'is_work' => true,
-                'user_in_location' => false,
-                'fio_from_telegram'=>"Admin",
-                'telegram_chat_id'=>"484698703",
-            ]);
+        foreach ($bots as $bot) {
+
+            $bu = BotUser::query()
+                ->where("bot_id", $bot->id)
+                ->where("user_id", $user->id)
+                ->first();
+
+            if (is_null($bu))
+                BotUser::query()->create([
+                    'bot_id' => $bot->id,
+                    'user_id' => $user->id,
+                    'parent_id' => null,
+                    'is_vip' => true,
+                    'is_admin' => true,
+                    'is_work' => true,
+                    'user_in_location' => false,
+                    'fio_from_telegram' => "Admin",
+                    'telegram_chat_id' => "484698703",
+                ]);
+
+        }
+
     }
 }
