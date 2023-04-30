@@ -5,9 +5,7 @@
             <i class="fa-solid fa-spell-check"></i>
         </button>
 
-
         <div
-
             class="dropdown-menu item-with-text cursor-pointer text-muted p-2">
 
                 <input type="search" class="form-control" id="search-description-text"
@@ -57,7 +55,7 @@ export default {
     }
 }
 </script>
-<style>
+<style lang="scss">
 .item-with-text {
     max-height: 300px;
     max-width: 500px;
