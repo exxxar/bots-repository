@@ -10,11 +10,14 @@ import LocationEditor from "@/Components/Constructor/LocationEditor.vue";
 </script>
 <template>
 
+    <notifications position="top right"/>
+
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">CashMan</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed"
                 type="button"
-                data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu"
+                aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-nav d-none d-md-block">
@@ -53,7 +56,7 @@ import LocationEditor from "@/Components/Constructor/LocationEditor.vue";
                                v-bind:class="{'active':tab===2}"
                                aria-current="page" @click="tab=2">
                                 <i class="fa-solid fa-map-location-dot"></i>
-                                   Редактирование локаций
+                                Редактирование локаций
                             </a>
                         </li>
                         <li class="nav-item">
@@ -180,6 +183,7 @@ export default {
 .bg-dots-darker {
     background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E");
 }
+
 @media (prefers-color-scheme: dark) {
     .dark\:bg-dots-lighter {
         background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
@@ -281,14 +285,14 @@ body {
 }
 
 .cursor-pointer {
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .ml-2 {
-    margin-left:10px;
+    margin-left: 10px;
 }
 
 .mr-2 {
-    margin-right:10px;
+    margin-right: 10px;
 }
 </style>
