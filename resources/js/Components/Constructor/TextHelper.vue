@@ -59,7 +59,7 @@ export default {
 .item-with-text {
     max-height: 300px;
     max-width: 500px;
-    min-width: 500px;
+    min-width: 500px !important;
     overflow-y: auto;
 }
 </style>

@@ -7,8 +7,15 @@ import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue"
 import ImageMenuEditor from "@/Components/Constructor/ImageMenuEditor.vue";
 import CompanyEditor from "@/Components/Constructor/CompanyEditor.vue";
 import LocationEditor from "@/Components/Constructor/LocationEditor.vue";
+
+import { Head } from '@inertiajs/vue3'
 </script>
 <template>
+
+    <Head>
+        <title>Административная панель</title>
+        <meta name="description" content="Административная панель<">
+    </Head>
 
     <notifications position="top right"/>
 
