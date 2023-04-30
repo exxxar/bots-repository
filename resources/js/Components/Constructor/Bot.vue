@@ -11,7 +11,7 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
             <h6>Создаем бот к компании #{{ companyId || 'Не установлен' }}</h6>
         </div>
     </div>
-    <div class="row mb-3 mt-3" v-if="editor">
+    <div class="row mb-3 mt-3 bot-sub-menu" v-if="editor">
         <div class="col-12">
             <div class="btn-group w-100" role="group" aria-label="Basic outlined example">
                 <button type="button"
@@ -97,7 +97,9 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
                                maxlength="255"
                                aria-describedby="bot-domain" required>
                         <p v-if="botForm.bot_domain">Проверить работу бота <a :href="'https://t.me/'+botForm.bot_domain"
-                                                                              target="_blank">@{{ botForm.bot_domain }}</a>
+                                                                              target="_blank">@{{
+                                botForm.bot_domain
+                            }}</a>
                         </p>
                     </div>
                 </div>
@@ -486,18 +488,17 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
         </div>
 
 
-            <div class="row">
-                <div class="col-12">
-                    <button
-                        type="submit" class="btn btn-success w-100 p-3">
-                        <span v-if="!bot">Добавить бота</span>
-                        <span v-else>Обновить бота</span>
+        <div class="row bot-footer-menu">
+            <div class="col-12">
+                <button
+                    type="submit" class="btn btn-success w-100 p-3">
+                    <span v-if="!bot">Добавить бота</span>
+                    <span v-else>Обновить бота</span>
 
-                    </button>
-                </div>
-
+                </button>
             </div>
 
+        </div>
 
 
     </form>
@@ -603,6 +604,12 @@ export default {
         duplicateSlug(index) {
             const slug = JSON.stringify(this.botForm.slugs[index])
             this.botForm.slugs.splice(index, 0, JSON.parse(slug))
+
+            this.$notify({
+                title: "Конструктор ботов",
+                text: "Скрипт успешно продублирован!",
+                type: 'success'
+            });
         },
         removeKeyboard(index) {
             if (this.bot)
@@ -618,7 +625,7 @@ export default {
                 comment: item.comment,
                 slug: item.slug
             })
-            console.log("slugs after add", this.botForm.slugs)
+
             this.load = true
             this.$nextTick(() => {
                 this.load = false
@@ -712,7 +719,7 @@ export default {
                 this.$notify({
                     title: "Конструктор ботов",
                     text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
-                    type: 'warn'
+                    type: 'success'
                 });
 
                 this.botForm = {
@@ -778,5 +785,19 @@ export default {
         box-shadow: 0px 0px 2px 0px;
         border-radius: 10px;
     }
+}
+
+.bot-sub-menu {
+    position: sticky;
+    top: 47px;
+    background: white;
+    z-index: 1000;
+}
+
+.bot-footer-menu {
+    position: sticky;
+    bottom: 20px;
+    background: white;
+    z-index: 1000;
 }
 </style>
