@@ -16,9 +16,6 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <link rel="stylesheet" href="/assets/css/main/app.css">
-    <link rel="stylesheet" href="/assets/css/main/app-dark.css">
-    <link rel="stylesheet" href="/assets/css/shared/iconly.css">
     <!-- Scripts -->
     @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
