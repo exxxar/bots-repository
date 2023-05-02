@@ -81,7 +81,7 @@ import { Head } from '@inertiajs/vue3'
                                v-bind:class="{'active':tab===4}"
                                aria-current="page" @click="tab=4">
                                 <i class="fa-regular fa-images"></i>
-                                Редактор меню ботов
+                                Редактор "предложения и услуги" для ботов
                             </a>
                         </li>
                         <li class="nav-item">

@@ -22,12 +22,26 @@ use App\Models\ImageMenu;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use function App\Http\Controllers\mb_strpos;
 
 class BotController extends Controller
 {
 
+    public function requestTelegramChannel(Request $request){
+        $request->validate([
+            "token"=>"required",
+            "channel"=>"required",
+        ]);
+
+        $token = $request->token;
+        $channel = $request->channel;
+
+        $res = Http::get("https://api.telegram.org/bot$token/sendMessage?chat_id=$channel&text=test");
+
+        return \response()->json($res->json());
+    }
     public function getCurrentBotUser(Request $request){
         $request->validate([
             "tg"=>"required",
@@ -436,7 +450,7 @@ class BotController extends Controller
             }
         }
 
-        $botType = BotType::query()->where("slug", "restaurant")->first();
+        $botType = BotType::query()->where("slug", "cashback")->first();
 
         $tmp = (object)$request->all();
 
@@ -548,7 +562,7 @@ class BotController extends Controller
             }
         }
 
-        $botType = BotType::query()->where("slug", "restaurant")->first();
+        $botType = BotType::query()->where("slug", "cashback")->first();
 
         $tmp = (object)$request->all();
 

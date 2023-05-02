@@ -1,7 +1,7 @@
 <script setup>
 import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue";
 
-
+import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
 </script>
 <template>
     <div class="row">
@@ -71,6 +71,7 @@ import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue"
 
                                             <button
                                                 type="button"
+                                                data-bs-toggle="modal" data-bs-target="#open-add-script"
                                                 @click="editBtn(index, rowIndex,colIndex)"
                                                 class="btn btn-outline-primary w-100 mb-2">
                                                 {{ col.text }}
@@ -108,6 +109,8 @@ import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue"
             </div>
         </div>
     </div>
+
+
 </template>
 <script>
 
@@ -130,18 +133,19 @@ export default {
             }
         }
     },
+
     methods: {
         saveKeyboard(keyboard) {
             this.keyboards[this.selectMenuIndex].menu = keyboard
 
-           // this.selectMenuIndex = null
-           // this.editedKeyboard = null
+            // this.selectMenuIndex = null
+            // this.editedKeyboard = null
 
 
         },
         editKeyboard(keyboard, index) {
             this.load = true
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.selectMenuIndex = index
                 this.editedKeyboard = keyboard
                 this.load = false
@@ -152,12 +156,15 @@ export default {
             this.$emit("remove", index)
         },
         editBtn(keyboardIndex, rowIndex, colIndex) {
-            this.editedButton.oldTextVal = this.keyboards[keyboardIndex].menu[rowIndex][colIndex]
+            this.editedButton.oldTextVal = this.keyboards[keyboardIndex].menu[rowIndex][colIndex].text
             this.editedButton.colIndex = colIndex
             this.editedButton.rowIndex = rowIndex
             this.editedButton.keyboardIndex = keyboardIndex
 
-            console.log(this.editedButton)
+            this.$emit("edit", {
+                command: this.editedButton.oldTextVal
+            })
+
             /*  Object
                   .keys(this.keyboards[keyboardIndex].menu[rowIndex][colIndex])
                   .forEach(item=>{

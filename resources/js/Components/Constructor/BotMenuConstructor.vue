@@ -1,3 +1,6 @@
+<script setup>
+import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
+</script>
 <template>
     <div class="row">
         <div class="col-12">
@@ -19,6 +22,7 @@
                 v-if="selectedRow!=null"
                 @click="addRowBelow">Добавить строку ниже
             </button>
+
         </div>
         <div class="col-12">
             <div class="row" v-for="(row, rowIndex) in keyboard">
@@ -39,7 +43,7 @@
                     <div class="btn-group dropdown-center w-100 m-1 " v-for="(col, colIndex) in row">
                         <input
                             type="text"
-                            @click="selectedRow = rowIndex"
+                            @click="selectIndex(rowIndex, colIndex)"
                             class="btn btn-outline-primary w-100"
                             v-model="keyboard[rowIndex][colIndex].text"
                         />
@@ -52,8 +56,10 @@
                         <ul class="dropdown-menu w-100" style="min-width:350px;">
                             <form class="px-4 py-3">
                                 <div class="alert alert-danger" role="alert">
-                                   Возможно выбрать только 1 тип действия
+                                    Возможно выбрать только 1 тип действия
                                 </div>
+
+
                                 <div class="mb-3">
                                     <label :for="'command-row-'+rowIndex+'-col-'+colIndex"
                                            class="form-label">Команда (для меню в сообщении)</label>
@@ -72,6 +78,15 @@
                                            v-model="keyboard[rowIndex][colIndex].url"
                                            :id="'url-row-'+rowIndex+'-col-'+colIndex"
                                            placeholder="https://t.me/example">
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio"
+                                           @change="needRemoveField( null,rowIndex, colIndex)"
+                                           name="request-radio"
+                                           class="form-check-input" :id="'no-action-row-'+rowIndex+'-col-'+colIndex">
+                                    <label class="form-check-label" :for="'no-action-row-'+rowIndex+'-col-'+colIndex">
+                                        Без действий
+                                    </label>
                                 </div>
                                 <div class="form-check">
                                     <input type="radio"
@@ -117,6 +132,8 @@
 
         </div>
     </div>
+
+
 </template>
 <script>
 import {Vue3JsonEditor} from 'vue3-json-editor'
@@ -139,9 +156,14 @@ export default {
             selectedRow: null,
             load: false,
             rowCount: 1,
-            keyboard: []
+            keyboard: [],
+            select: {
+                row: 0,
+                col: 0,
+            }
         }
     },
+
     mounted() {
         if (this.editedKeyboard) {
             this.$nextTick(() => {
@@ -154,8 +176,8 @@ export default {
     methods: {
         needRemoveField(param, rowIndex, colIndex) {
             Object.keys(this.keyboard[rowIndex][colIndex])
-                .forEach(item=>{
-                    if (item!=='text'&&item!==param)
+                .forEach(item => {
+                    if (item !== 'text' && item !== param)
                         delete this.keyboard[rowIndex][colIndex][item]
                 })
 
@@ -212,6 +234,7 @@ export default {
 
             this.save();
         },
+
         addColToRow(index) {
             this.keyboard[index].push({
                 text: "No Text"
@@ -220,6 +243,14 @@ export default {
 
             this.save();
         },
+        selectIndex(row, col) {
+
+            this.selectedRow = row
+
+            this.select.row = row
+            this.select.col = col
+        },
+
         removeCol(rowIndex, colIndex) {
             if (this.keyboard[rowIndex].length > 1)
                 this.keyboard[rowIndex].splice(colIndex, 1)

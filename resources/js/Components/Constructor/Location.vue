@@ -87,10 +87,11 @@
                     </div>
                 </div>
 
-                <div class="row">
+<!--                <div class="row">
                 <div class="col-12">
                     <div class="mb-3">
                         <label class="form-label" id="location-channel">Телеграм канал локации</label>
+
                         <input type="text" class="form-control"
                                placeholder="Номер телеграм канала"
                                aria-label="Номер телеграм канала"
@@ -99,7 +100,7 @@
                                aria-describedby="location-channel" >
                     </div>
                 </div>
-            </div>
+            </div>-->
 
                 <div class="row">
                     <div class="col-12 mb-3">
@@ -150,8 +151,8 @@
                                @click="removeItem( index)">Удалить</a>
                         </div>
                         <div class="card-body">
-                            <p>Канал заведения <strong>{{ location.location_channel }}</strong></p>
-                            <p>{{ location.description }}</p>
+                            <p v-if="location.location_channel">Канал заведения <strong>{{ location.location_channel }}</strong></p>
+                            <p>{{ location.description || 'Не указано' }}</p>
                             <h6>Фотографии локаций</h6>
                             <div class="w-100 d-flex" v-if="location.photos">
                                 <div class="mb-2 img-preview"

@@ -3,7 +3,7 @@ import BotMenuList from "@/Components/Constructor/BotMenuList.vue";
 import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
 import BotUserList from "@/Components/Constructor/BotUserList.vue";
 import TextHelper from "@/Components/Constructor/TextHelper.vue";
-
+import TelegramChannelHelper from "@/Components/Constructor/TelegramChannelHelper.vue";
 </script>
 <template>
     <div class="row" v-if="companyId">
@@ -206,7 +206,17 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-order-channel">Канал для заказов (id)</label>
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label" id="bot-order-channel">Канал для заказов (id)
+
+                            </label>
+
+                            <TelegramChannelHelper
+                                :token="botForm.bot_token"
+                                :param="'order_channel'"
+                                v-on:callback="addTextTo"
+                            />
+                        </div>
                         <input type="text" class="form-control"
                                placeholder="id канала"
                                aria-label="id канала"
@@ -218,7 +228,15 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-main-channel">Канал для постов (id,рекламный)</label>
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label" id="bot-main-channel">Канал для постов (id,рекламный)</label>
+
+                            <TelegramChannelHelper
+                                :token="botForm.bot_token"
+                                :param="'main_channel'"
+                                v-on:callback="addTextTo"
+                            />
+                        </div>
                         <input type="text" class="form-control"
                                placeholder="id канала"
                                aria-label="id канала"
@@ -469,6 +487,7 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
             <BotMenuList
                 :keyboards="botForm.keyboards"
                 v-if="botForm.keyboards"
+                v-on:edit="editBtnScript"
                 v-on:remove="removeKeyboard"/>
         </div>
 
@@ -503,7 +522,27 @@ import TextHelper from "@/Components/Constructor/TextHelper.vue";
 
     </form>
 
+    <div class="modal fade"
 
+         id="open-add-script" tabindex="-1" aria-labelledby="open-add-script-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="open-construct-label">Добавление скрипта к кнопке</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <BotSlugList
+                        v-on:add="addSlug"
+                        v-if="command!=null&&!load"
+                        :command="command"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 
@@ -516,6 +555,8 @@ export default {
             load: false,
             removedSlugs: [],
             removedKeyboards: [],
+
+            command: null,
 
             botForm: {
                 bot_domain: null,
@@ -611,6 +652,14 @@ export default {
                 type: 'success'
             });
         },
+        editBtnScript(edit) {
+            this.command = edit.command
+            this.load = true
+
+            this.$nextTick(()=>{
+                this.load=false
+            })
+        },
         removeKeyboard(index) {
             if (this.bot)
                 this.removedKeyboards.push(index);
@@ -630,6 +679,20 @@ export default {
             this.$nextTick(() => {
                 this.load = false
             })
+
+            let btns = document.querySelectorAll(`button[data-bs-dismiss="modal"]`)
+
+            btns.forEach(btn => {
+                btn.click();
+            })
+
+            this.$notify({
+                title: "Конструктор ботов",
+                text: "Команда успешно связана со скриптом ",
+                type: 'success'
+            });
+
+            this.command = null
         },
         removeSlug(index) {
             if (this.bot)
@@ -789,14 +852,14 @@ export default {
 
 .bot-sub-menu {
     position: sticky;
-    top: 47px;
+    top: 55px;
     background: white;
     z-index: 1000;
 }
 
 .bot-footer-menu {
     position: sticky;
-    bottom: 20px;
+    bottom: 10px;
     background: white;
     z-index: 1000;
 }

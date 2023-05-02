@@ -349,7 +349,7 @@ class BotMenuSlugSeeder extends Seeder
 
         BotMenuSlug::query()->create([
             'bot_id' => $bot->id,
-            'command' => ".*Хочу себе бот!",
+            'command' => ".*Хочу себе бот.*",
             'slug' => "slug_funnel_form_1",
             'comment' => null,
         ]);
@@ -357,28 +357,28 @@ class BotMenuSlugSeeder extends Seeder
 
         BotMenuSlug::query()->create([
             'bot_id' => $bot->id,
-            'command' => ".*Что такое телеграмм?!",
+            'command' => ".*Что такое телеграмм.*",
             'slug' => "slug_funnel_t_1_1",
             'comment' => null,
         ]);
 
         BotMenuSlug::query()->create([
             'bot_id' => $bot->id,
-            'command' => ".*Какие есть типы ботов?",
+            'command' => ".*Какие есть типы ботов.*",
             'slug' => "slug_funnel_t_2_1",
             'comment' => null,
         ]);
 
         BotMenuSlug::query()->create([
             'bot_id' => $bot->id,
-            'command' => ".*Что такое кэшбэк?",
+            'command' => ".*Что такое кэшбэк.*",
             'slug' => "slug_funnel_t_3_1",
             'comment' => null,
         ]);
 
         BotMenuSlug::query()->create([
             'bot_id' => $bot->id,
-            'command' => ".*Как это работает?",
+            'command' => ".*Как это работает.*",
             'slug' => "slug_funnel_t_4_1",
             'comment' => null,
         ]);

@@ -22,8 +22,8 @@
                             v-bind:class="{'active':slugForm.slug === item.slug}"
                             @click="selectSlug(item)"
                             v-for="(item, index) in allSlugs">
-                            <p>  {{item.command}} (<strong>{{item.slug}}</strong>)</p>
-                            <p>{{item.comment || 'Пояснение не указано'}}</p>
+                            <p> {{ item.command }} (<strong>{{ item.slug }}</strong>)</p>
+                            <p>{{ item.comment || 'Пояснение не указано' }}</p>
                         </li>
 
                     </ul>
@@ -38,7 +38,8 @@
                                             <div>Измените только текст команды,<br>
                                                 если хотите чтоб скрипт вызывался по кнопке из меню. <br>
                                                 Или оставьте как есть. <br>
-                                                Текст скрипта нужно также указать в качестве пункта меню.</div>
+                                                Текст скрипта нужно также указать в качестве пункта меню.
+                                            </div>
                                         </template>
                                     </Popper>
                                     Команда
@@ -55,16 +56,16 @@
                         </div>
 
 
-
                     </div>
                     <button
-                        class="btn btn-outline-success mt-2 mb-2 w-100">Добавить скрипт в бота</button>
+                        class="btn btn-outline-success mt-2 mb-2 w-100">Добавить скрипт в бота
+                    </button>
                 </div>
 
             </form>
         </div>
         <div class="col-12 mb-3"
-             v-if="slugs.length>0"
+             v-if="slugs"
              v-for="(slug, index) in slugs">
             <div class="card">
                 <div class="card-body">
@@ -122,25 +123,31 @@
 </template>
 <script>
 export default {
-    props: ["slugs"],
-    data(){
-      return {
-          allSlugs:[],
-          slugForm:{
-              command:null,
-              comment:null,
-              slug:null,
-          }
-      }
+    props: ["slugs", "command"],
+    data() {
+        return {
+            allSlugs: [],
+            slugForm: {
+                command: null,
+                comment: null,
+                slug: null,
+            }
+        }
     },
     mounted() {
         this.loadAllSlugs()
+
+        if (this.command) {
+            this.$nextTick(() => {
+                this.slugForm.command = this.command
+            })
+        }
     },
     methods: {
-        selectSlug(item){
+        selectSlug(item) {
             this.slugForm.slug = item.slug
             this.slugForm.comment = item.comment
-            this.slugForm.command = item.command
+            this.slugForm.command = this.command || item.command
         },
         duplicateSlug(index) {
             this.$emit("duplicate", index)
@@ -148,15 +155,16 @@ export default {
         removeSlug(index) {
             this.$emit("remove", index)
         },
-        loadAllSlugs(){
-            this.$store.dispatch("loadAllSlugs").then(resp=>{
+        loadAllSlugs() {
+            this.$store.dispatch("loadAllSlugs").then(resp => {
                 console.log(resp)
                 this.allSlugs = resp.data
             })
         },
-        addSlug(){
+        addSlug() {
             const slug = this.slugForm
-          this.$emit("add",slug)
+
+            this.$emit("add", slug)
 
             this.slugForm.slug = null
             this.slugForm.comment = null
