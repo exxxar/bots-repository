@@ -175,7 +175,7 @@ abstract class BotCore
                     foreach ($matches as $match)
                         $arguments[] = $match;
                     $find = $this->tryCall($item, $message, $arguments);
-                    //break;
+                    break;
                 }
             }
             if ($find)

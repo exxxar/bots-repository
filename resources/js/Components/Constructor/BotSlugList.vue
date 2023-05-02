@@ -13,6 +13,12 @@
 
                 <div class="card-body">
                     <h6>Добавление нового скрипта в бота</h6>
+                    <div>
+                        <input type="text"
+                               class="form-control mt-1 mb-1"
+                               v-model="search"
+                               placeholder="Поиск нужного скрипта по описанию">
+                    </div>
                     <label class="form-label" id="bot-level-2">
                         Выберите скрипт
                         <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
@@ -21,7 +27,7 @@
                         <li class="list-group-item cursor-pointer"
                             v-bind:class="{'active':slugForm.slug === item.slug}"
                             @click="selectSlug(item)"
-                            v-for="(item, index) in allSlugs">
+                            v-for="(item, index) in filteredAllSlugs">
                             <p> {{ item.command }} (<strong>{{ item.slug }}</strong>)</p>
                             <p>{{ item.comment || 'Пояснение не указано' }}</p>
                         </li>
@@ -126,6 +132,7 @@ export default {
     props: ["slugs", "command"],
     data() {
         return {
+            search:null,
             allSlugs: [],
             slugForm: {
                 command: null,
@@ -133,6 +140,27 @@ export default {
                 slug: null,
             }
         }
+    },
+    computed:{
+      filteredAllSlugs(){
+          if (this.allSlugs.length===0)
+              return [];
+
+          if (this.search==null)
+              return this.allSlugs
+
+          return this.allSlugs.filter(item=>{
+              let slug = item.slug || ''
+              let command = item.command || ''
+              let comment = item.comment || ''
+
+              return command.toLowerCase().indexOf(this.search.toLowerCase())!==-1||
+                  comment.toLowerCase().indexOf(this.search.toLowerCase())!==-1 ||
+                  slug.toLowerCase().indexOf(this.search.toLowerCase())!==-1
+              })
+
+      }
+
     },
     mounted() {
         this.loadAllSlugs()

@@ -223,6 +223,7 @@ class BotController extends Controller
     {
         $slugs = BotMenuSlug::query()
             ->where("bot_id", $botId)
+            ->orderBy("created_at","desc")
             ->get();
 
         return response()->json(BotMenuSlugResource::collection($slugs));

@@ -3,41 +3,45 @@ import Pagination from '@/Components/Pagination.vue';
 </script>
 <template>
 
-        <div class="row">
-            <div class="input-group mb-3">
-                <input type="search" class="form-control"
-                       placeholder="Поиск бота"
-                       aria-label="Поиск бота"
-                       v-model="search"
-                       aria-describedby="button-addon2">
-                <button class="btn btn-outline-secondary"
-                        @click="loadBots"
-                        type="button"
-                        id="button-addon2">Найти</button>
-            </div>
+    <div class="row">
+        <div class="input-group mb-3">
+            <input type="search" class="form-control"
+                   placeholder="Поиск бота"
+                   aria-label="Поиск бота"
+                   v-model="search"
+                   aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary"
+                    @click="loadBots"
+                    type="button"
+                    id="button-addon2">Найти
+            </button>
         </div>
-        <div class="row" v-if="bots.length>0">
-            <div class="col-12 mb-3">
-                <ul class="list-group w-100">
-                    <li class="list-group-item active cursor-pointer"
-                        v-if="!editor"
-                        @click="selectBot(null)">Создать нового бота</li>
-                    <li class="list-group-item cursor-pointer"
-                        v-for="(bot, index) in bots"
-                        @click="selectBot(bot)">Выбрать для редактирования <strong>{{ bot.bot_domain || 'Не указано' }}</strong></li>
-                </ul>
-
-            </div>
-
-            <div class="col-12">
-                <Pagination
-
-                    v-on:pagination_page="nextBots"
-                    v-if="bots_paginate_object"
-                    :pagination="bots_paginate_object"/>
-            </div>
+    </div>
+    <div class="row" v-if="bots.length>0">
+        <div class="col-12 mb-3">
+            <ul class="list-group w-100">
+                <li class="list-group-item active cursor-pointer"
+                    v-if="!editor"
+                    @click="selectBot(null)">Создать нового бота
+                </li>
+                <li class="list-group-item cursor-pointer"
+                    v-for="(bot, index) in bots"
+                    @click="selectBot(bot)">Выбрать для редактирования <strong>{{
+                        bot.bot_domain || 'Не указано'
+                    }}</strong></li>
+            </ul>
 
         </div>
+
+        <div class="col-12">
+            <Pagination
+
+                v-on:pagination_page="nextBots"
+                v-if="bots_paginate_object"
+                :pagination="bots_paginate_object"/>
+        </div>
+
+    </div>
     <div class="row" v-else>
         <div class="col-12">
             <div class="alert alert-warning" role="alert">
@@ -51,13 +55,13 @@ import Pagination from '@/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props:["companyId", "editor"],
+    props: ["companyId", "editor"],
     data() {
         return {
             loading: true,
-            bots:[],
+            bots: [],
             search: null,
-            bots_paginate_object:null,
+            bots_paginate_object: null,
         }
     },
     computed: {
@@ -71,8 +75,8 @@ export default {
             this.$emit("callback", bot)
             this.$notify("Вы выбрали бота из списка! Все остальные действия будут производится для этого бота.");
         },
-        nextBots(index){
-          this.loadBots(index)
+        nextBots(index) {
+            this.loadBots(index)
         },
         loadBots(page = 0) {
             this.loading = true
