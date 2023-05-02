@@ -29,6 +29,7 @@
                             @click="selectSlug(item)"
                             v-for="(item, index) in filteredAllSlugs">
                             <p> {{ item.command }} (<strong>{{ item.slug }}</strong>)</p>
+                            <p v-if="item.page"><span class="badge bg-success">Привязано к странице</span></p>
                             <p>{{ item.comment || 'Пояснение не указано' }}</p>
                         </li>
 
