@@ -95,7 +95,9 @@
                         </div>
                         <div class="col-md-6 col-12">
                             <div class="mb-3">
-                                <label class="form-label" id="bot-domain">Команда</label>
+                                <label class="form-label" id="bot-domain">Команда   <span
+                                    v-if="slugs[index].page"
+                                    class="badge bg-success">Привязано к странице</span></label>
                                 <input type="text" class="form-control"
                                        placeholder="Команда"
                                        aria-label="Команда"
