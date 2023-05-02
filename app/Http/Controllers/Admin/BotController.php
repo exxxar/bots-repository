@@ -29,10 +29,11 @@ use function App\Http\Controllers\mb_strpos;
 class BotController extends Controller
 {
 
-    public function requestTelegramChannel(Request $request){
+    public function requestTelegramChannel(Request $request)
+    {
         $request->validate([
-            "token"=>"required",
-            "channel"=>"required",
+            "token" => "required",
+            "channel" => "required",
         ]);
 
         $token = $request->token;
@@ -42,10 +43,12 @@ class BotController extends Controller
 
         return \response()->json($res->json());
     }
-    public function getCurrentBotUser(Request $request){
+
+    public function getCurrentBotUser(Request $request)
+    {
         $request->validate([
-            "tg"=>"required",
-            "bot_id"=>"required"
+            "tg" => "required",
+            "bot_id" => "required"
         ]);
 
 
@@ -72,20 +75,20 @@ class BotController extends Controller
         foreach ($bots as $bot) {
             if (!empty($bot->welcome_message))
                 $tmp[] = (object)[
-                    "text"=> $bot->welcome_message
+                    "text" => $bot->welcome_message
                 ];
             if (!empty($bot->maintenance_message))
-                $tmp[] =(object)[
-                    "text"=> $bot->maintenance_message
+                $tmp[] = (object)[
+                    "text" => $bot->maintenance_message
                 ];
             if (!empty($bot->description))
                 $tmp[] = (object)[
-                    "text"=> $bot->description
+                    "text" => $bot->description
                 ];
         }
 
         return response()->json([
-            "data"=>$tmp
+            "data" => $tmp
         ]);
     }
 
@@ -223,7 +226,7 @@ class BotController extends Controller
     {
         $slugs = BotMenuSlug::query()
             ->where("bot_id", $botId)
-            ->orderBy("created_at","desc")
+            ->orderBy("created_at", "desc")
             ->get();
 
         return response()->json(BotMenuSlugResource::collection($slugs));
@@ -541,9 +544,17 @@ class BotController extends Controller
             $tmpSlugs = json_decode($request->removed_slugs);
 
             foreach ($tmpSlugs as $id) {
-                $slug = BotMenuSlug::query()->find($id);
-                if (!is_null($slug))
-                    $slug->delete();
+                $slug = BotMenuSlug::query()
+                    ->with(["page"])
+                    ->find($id);
+                if (!is_null($slug)) {
+                    if (!is_null($slug->page)) {
+                        $slug->page->delete();
+                        $slug->delete();
+                    } else
+                        $slug->delete();
+                }
+
             }
 
         }
