@@ -18,7 +18,7 @@ class BotMenuSlugResource extends JsonResource
             'command' => $this->command,
             'comment' => $this->comment,
             'slug' => $this->slug,
-            'page'=>$this->whenLoaded("page")
+            'page' => !is_null($this->page)
         ];
     }
 }
