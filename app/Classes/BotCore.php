@@ -162,6 +162,7 @@ abstract class BotCore
             $templates = BotMenuSlug::query()
                 ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
+                ->orderBy("updated_at", "DESC")
                 ->get();
 
             if (count($templates) == 0)
