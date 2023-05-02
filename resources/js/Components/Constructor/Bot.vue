@@ -662,7 +662,7 @@ export default {
         },
         removeKeyboard(index) {
             if (this.bot)
-                this.removedKeyboards.push(index);
+                this.removedKeyboards.push(this.botForm.keyboards[index].id);
 
             this.botForm.keyboards.splice(index, 1)
         },
@@ -696,7 +696,7 @@ export default {
         },
         removeSlug(index) {
             if (this.bot)
-                this.removedSlugs.push(index);
+                this.removedSlugs.push(  this.botForm.slugs[index].id);
 
             this.botForm.slugs.splice(index, 1)
         },
