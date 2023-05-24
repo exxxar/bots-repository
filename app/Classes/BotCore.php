@@ -180,17 +180,20 @@ abstract class BotCore
             foreach ($templates as $template) {
                 $command = $template->command;
 
-                if (!is_null($template->bot_dialog_command_id)){
-                    $this->startBotDialog($template->bot_dialog_command_id);
-                    $find = true;
-                    break;
-                }
+
 
                 if (!str_starts_with($command, "/"))
                     $command = "/" . $command;
                 if (preg_match($command . "$/i", $query, $matches)) {
                     foreach ($matches as $match)
                         $arguments[] = $match;
+
+                    if (!is_null($template->bot_dialog_command_id)){
+                        $this->startBotDialog($template->bot_dialog_command_id);
+                        $find = true;
+                        break;
+                    }
+
                     $find = $this->tryCall($item, $message, $arguments);
                     break;
                 }
