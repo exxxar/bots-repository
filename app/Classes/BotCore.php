@@ -180,6 +180,8 @@ abstract class BotCore
             foreach ($templates as $template) {
                 $command = $template->command;
 
+                Log::info("command => $command query=>$query");
+
                 if (!str_starts_with($command, "/"))
                     $command = "/" . $command;
                 if (preg_match($command . "$/i", $query, $matches)) {
