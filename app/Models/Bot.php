@@ -38,6 +38,8 @@ class Bot extends Model
         'level_3',
         'blocked_message',
         'blocked_at',
+        'is_template',
+        'template_description',
     ];
 
     /**

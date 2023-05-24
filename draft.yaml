@@ -1,17 +1,17 @@
 models:
-  BotPage:
-    bot_menu_slug_id: id foreign:bot_menu_slugs
-    content: longtext nullable
-    images: json nullable
-    reply_keyboard_id: id foreign:bot_menu_templates nullable
-    inline_keyboard_id: id foreign:bot_menu_templates  nullable
+  BotDialogGroup:
+    slug: string:255
+    title: string:255
     bot_id: id foreign:bots
     relationships:
-      belongsTo: BotMenuTemplate, Bot
+      belongsTo: Bot
+      hasMany: BotDialogCommand
 
-seeders: BotPage
+
+seeders:   BotDialogGroup
 
 controllers:
-  BotPage:
+  BotDialogGroup:
     resource: api
+
 

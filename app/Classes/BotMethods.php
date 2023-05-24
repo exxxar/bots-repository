@@ -24,8 +24,14 @@ class BotMethods
     public function whereId($value)
     {
         $bot = Bot::query()->where("id", $value)->first();
-        $this->bot = new Api(env("APP_DEBUG") ?
-            $bot->bot_token_dev : $bot->bot_token);
+
+        if (is_null($bot))
+            return $this;
+
+        $token = env("APP_DEBUG") ?
+            $bot->bot_token_dev : $bot->bot_token;
+
+        $this->bot = new Api($token);
 
         $this->domain = $bot->bot_domain;
 

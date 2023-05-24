@@ -1,12 +1,24 @@
+<script setup>
+import BotDialogGroupListSimple from "@/Components/Constructor/BotDialogGroupListSimple.vue";
+</script>
 <template>
     <div class="row">
-        <div class="col-12 mb-3">
+        <div class="col-12 mb-2">
             <div class="alert alert-warning" role="alert">
                 Если вы боитесь последствий модификации команды, то продублируйте нужную и внесите коррективы!
                 Работать будут обе команды как оригинал, так и дубль!
             </div>
         </div>
-        <div class="col-12">
+
+        <div class="col-12 mb-2">
+            <button type="button"
+                    @click="show=!show"
+                    class="btn btn-outline-success p-3 w-100">
+                <span v-if="!show"><i class="fa-solid fa-scroll"></i> Добавить новый скрипт</span>
+                <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть форму добавления</span>
+            </button>
+        </div>
+        <div class="col-12" v-if="show">
             <form v-on:submit.prevent="addSlug"
                   class="card mb-3"
                   v-if="allSlugs.length>0">
@@ -71,13 +83,30 @@
 
             </form>
         </div>
-        <div class="col-12 mb-3"
+
+        <div class="col-12 mb-3">
+            <input type="checkbox"
+                   v-model="simple"
+                   class="btn-check" id="btn-check-2" autocomplete="off">
+            <label class="btn"
+                   v-bind:class="{'btn-outline-primary':!simple,'btn-primary':simple}"
+                   for="btn-check-2">
+
+                <span v-if="simple">Расширенный вид</span>
+                <span v-else>Упрощенный вид</span>
+            </label>
+        </div>
+
+        <div class="mb-3"
+             v-bind:class="{'col-12':!simple,'col-md-6':simple}"
              v-if="slugs"
              v-for="(slug, index) in slugs">
-            <div class="card">
+            <div class="card" @click="selectSlug(slug)">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12">
+                        <div
+                            v-if="!simple"
+                            class="col-12">
                             <button
                                 @click="duplicateSlug(index)"
                                 type="button"
@@ -92,10 +121,19 @@
                             >
                                 Удалить
                             </button>
+
+                            <button
+                                type="button"
+                                data-bs-toggle="modal" data-bs-target="#attach-command"
+                                class="btn btn-outline-primary ml-2">Привязать диалог
+                            </button>
+
                         </div>
-                        <div class="col-md-6 col-12">
+                        <div
+                            v-bind:class="{'col-md-6':!simple}"
+                            class="col-12">
                             <div class="mb-3">
-                                <label class="form-label" id="bot-domain">Команда   <span
+                                <label class="form-label" id="bot-domain">Команда <span
                                     v-if="slugs[index].page"
                                     class="badge bg-success">Привязано к странице</span></label>
                                 <input type="text" class="form-control"
@@ -108,7 +146,9 @@
 
                         </div>
 
-                        <div class="col-md-6 col-12">
+                        <div
+                            v-if="!simple"
+                            class="col-md-6 col-12">
                             <div class="mb-3">
                                 <label class="form-label" id="bot-domain">Мнемоническое имя</label>
                                 <input type="text" class="form-control"
@@ -120,7 +160,15 @@
                                        aria-describedby="bot-domain" required>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div
+                            v-if="!simple"
+                            class="col-12">
+                            <p v-if="slugs[index].bot_dialog_command_id">Данная команда начинает диалог
+                                #{{ slugs[index].bot_dialog_command_id }}</p>
+                        </div>
+                        <div
+                            v-if="!simple"
+                            class="col-12">
                             <p>{{ slugs[index].comment || 'Пояснение не указано' }}</p>
                         </div>
                     </div>
@@ -129,13 +177,36 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="attach-command" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Привязываем старт диалога к команде</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <BotDialogGroupListSimple
+                        v-on:select-dialog="selectDialog"
+                        :bot-id="bot.id"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 export default {
-    props: ["slugs", "command"],
+    props: ["slugs", "command", "bot"],
     data() {
         return {
-            search:null,
+            show: false,
+            simple: true,
+            search: null,
             allSlugs: [],
             slugForm: {
                 command: null,
@@ -144,25 +215,25 @@ export default {
             }
         }
     },
-    computed:{
-      filteredAllSlugs(){
-          if (this.allSlugs.length===0)
-              return [];
+    computed: {
+        filteredAllSlugs() {
+            if (this.allSlugs.length === 0)
+                return [];
 
-          if (this.search==null)
-              return this.allSlugs
+            if (this.search == null)
+                return this.allSlugs
 
-          return this.allSlugs.filter(item=>{
-              let slug = item.slug || ''
-              let command = item.command || ''
-              let comment = item.comment || ''
+            return this.allSlugs.filter(item => {
+                let slug = item.slug || ''
+                let command = item.command || ''
+                let comment = item.comment || ''
 
-              return command.toLowerCase().indexOf(this.search.toLowerCase())!==-1||
-                  comment.toLowerCase().indexOf(this.search.toLowerCase())!==-1 ||
-                  slug.toLowerCase().indexOf(this.search.toLowerCase())!==-1
-              })
+                return command.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 ||
+                    comment.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 ||
+                    slug.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
+            })
 
-      }
+        }
 
     },
     mounted() {
@@ -175,10 +246,45 @@ export default {
         }
     },
     methods: {
+        selectDialog(command) {
+
+            this.$store.dispatch("attachDialogCommandToSlug", {
+                dataObject: {
+                    dialogCommandId: command.id,
+                    slugId: this.slugForm.id
+                }
+            }).then((response) => {
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Диалоговая команда успешно связана!",
+                    type: 'success'
+                });
+
+                this.slugs.forEach(item => {
+                    if (item.id === this.slugForm.id)
+                        item.bot_dialog_command_id = command.id
+                })
+
+                this.slugForm = {
+                    id:null,
+                    command: null,
+                    comment: null,
+                    slug: null,
+                    bot_dialog_command_id:null
+                }
+
+            }).catch(err => {
+
+            })
+
+        },
         selectSlug(item) {
+            this.slugForm.id = item.id || null
             this.slugForm.slug = item.slug
             this.slugForm.comment = item.comment
             this.slugForm.command = this.command || item.command
+            this.slugForm.bot_dialog_command_id = item.bot_dialog_command_id
         },
         duplicateSlug(index) {
             this.$emit("duplicate", index)
@@ -200,6 +306,7 @@ export default {
             this.slugForm.slug = null
             this.slugForm.comment = null
             this.slugForm.command = null
+            this.slugForm.bot_dialog_command_id = null
         }
     }
 }

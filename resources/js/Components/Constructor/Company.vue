@@ -1,5 +1,12 @@
 <template>
-
+    <hr>
+    <div class="row mb-2">
+        <div class="col-12">
+            <button
+                @click="resetForm"
+                class="btn btn-outline-success">Новая компания \ очистка формы</button>
+        </div>
+    </div>
     <form v-on:submit.prevent="submitForm">
         <div class="row">
             <div class="col-12">
@@ -359,6 +366,23 @@ export default {
 
     },
     methods: {
+        resetForm() {
+            this.photo = null
+            this.removedImage = null
+            this.companyForm = {
+                id: null,
+                title: null,
+                slug: null,
+                description: null,
+                address: null,
+                phones: [""],
+                links: [""],
+                email: null,
+                schedule: [],
+                manager: null,
+            }
+
+        },
         getPhoto() {
             return {imageUrl: URL.createObjectURL(this.photo)}
         },

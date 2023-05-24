@@ -67,3 +67,11 @@ Route::apiResource('bot-text-content', \App\Http\Controllers\Admin\BotTextConten
 
 
 Route::apiResource('bot-page', \App\Http\Controllers\Admin\BotPageController::class);
+
+
+Route::apiResource('bot-dialog-command', \App\Http\Controllers\Admin\BotDialogCommandController::class);
+
+Route::apiResource('bot-dialog-result', \App\Http\Controllers\Admin\BotDialogResultController::class);
+
+
+Route::apiResource('bot-dialog-group', \App\Http\Controllers\Admin\BotDialogGroupController::class);

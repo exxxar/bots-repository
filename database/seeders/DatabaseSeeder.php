@@ -22,15 +22,16 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
+            BusinessCardSeeder::class
            // RoleSeeder::class,
            // UserSeeder::class,
-            CompanySeeder::class,
+            //CompanySeeder::class,
            // LocationSeeder::class,
-            BotTypeSeeder::class,
-            BotSeeder::class,
-            BotMenuTemplateSeeder::class,
-            BotMenuSlugSeeder::class,
-            BotUserSeeder::class,
+            //BotTypeSeeder::class,
+          //  BotSeeder::class,
+            //BotMenuTemplateSeeder::class,
+           // BotMenuSlugSeeder::class,
+          //  BotUserSeeder::class,
            // CashBackHistorySeeder::class,
            // ImageMenuSeeder::class,
            // BotProductCategorySeeder::class,

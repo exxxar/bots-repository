@@ -157,6 +157,7 @@ class BotController extends Controller
     public function loadBotsAsTemplate(Request $request)
     {
         $bots = Bot::query()
+            ->where("is_template", true)
             ->select("bot_domain", "id")
             ->get();
 

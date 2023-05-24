@@ -46,11 +46,10 @@ class CashBackListener
             ->first();
 
         $botUserUser = BotUser::query()
-            ->with(["user"])
+            ->with(["user", "parent"])
             ->where("bot_id", $event->botId)
             ->where("user_id", $event->userId)
             ->first();
-
 
 
         if (is_null($botUserUser) || is_null($botUserAdmin))
@@ -82,13 +81,20 @@ class CashBackListener
             $admin = $botUserAdmin->user;
             $index = 1;
             foreach ($levels as $level) {
-                $nextUser = $this->prepareLevel($nextUser,
+                $this->prepareLevel($nextUser,
                     $admin,
                     $bot->id,
                     $event->amount,
                     $level,
                     $index
                 );
+
+                $nextBotUser = BotUser::query()
+                    ->with(["user", "parent"])
+                    ->where("bot_id", $event->botId)
+                    ->where("id", $nextUser->parent_id)
+                    ->first();
+                $nextUser = $nextBotUser->user;
                 $index++;
             }
             return;
@@ -178,7 +184,6 @@ class CashBackListener
             'employee_id' => $admin->id,
         ]);
 
-        return $user;
 
     }
 

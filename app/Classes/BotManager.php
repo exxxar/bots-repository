@@ -16,7 +16,7 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class BotManager extends BotCore
 {
-    use BotMethodsTrait;
+    use BotMethodsTrait, BotDialogTrait;
 
     private $botUser;
 

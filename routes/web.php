@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\BotPageController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Bots\AdminBotController;
+use App\Models\BotDialogCommand;
+use App\Models\BotDialogGroup;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -21,6 +23,7 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get('/images-by-company-id/{companyId}/{fileName}',
     [\App\Http\Controllers\Admin\TelegramController::class, 'getFilesByCompanyId']);
@@ -41,6 +44,24 @@ Route::prefix("bot")->group(function () {
             Route::post("/users", "loadBotUsers");
             Route::post("/current-bot-user", "getCurrentBotUser");
 
+        });
+
+    Route::prefix("dialog-groups")
+        ->controller(\App\Http\Controllers\Admin\BotDialogGroupController::class)
+        ->group(function () {
+            Route::post("/", "index");
+            Route::post("/swap-group", "swapGroup");
+            Route::post("/swap-dialog", "swapDialog");
+            Route::post("/attach-dialog-to-slug", "attachDialogToSlug");
+            Route::post("/unlink-dialog", "unlinkDialog");
+            Route::post("/add-group", "addGroup");
+            Route::post("/add-dialog", "addDialog");
+            Route::post("/duplicate-dialog", "duplicateDialog");
+            Route::post("/stop-dialogs", "stopDialogs");
+            Route::post("/update-group", "updateGroup");
+            Route::post("/update-dialog", "updateDialog");
+            Route::delete("/remove-group/{groupId}", "removeGroup");
+            Route::delete("/remove-dialog/{dialogId}", "removeDialog");
         });
 
     Route::prefix("products")

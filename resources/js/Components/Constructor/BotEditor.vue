@@ -6,17 +6,7 @@ import Bot from "@/Components/Constructor/Bot.vue";
 <template>
     <div class="row">
 
-        <div class="col-12">
-            <div class="alert alert-warning" role="alert">
-                <strong>Важно!</strong> новые боты начнут работать только после того, как вы обновите зависимости!
-            </div>
-        </div>
 
-        <div class="col-12 mb-3">
-            <a
-                class="btn btn-outline-success w-100"
-                @click="reloadWebhooks">Обновить зависимости</a>
-        </div>
         <div class="col-12">
             <BotList
                 v-if="!load"
@@ -41,15 +31,7 @@ export default {
         }
     },
     methods:{
-        reloadWebhooks(){
-            axios.get("/bot/register-webhooks").then(()=>{
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Зависимости успешно обновлены!",
-                    type: 'success'
-                });
-            })
-        },
+
         botCallback(bot){
             this.load = true
             this.bot = null

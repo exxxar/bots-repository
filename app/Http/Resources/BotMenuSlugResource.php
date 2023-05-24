@@ -17,6 +17,8 @@ class BotMenuSlugResource extends JsonResource
             'bot_id' => $this->bot_id,
             'command' => $this->command,
             'comment' => $this->comment,
+            'bot_dialog_command_id' => $this->bot_dialog_command_id,
+            'bot_dialog_command' => $this->whenLoaded("botDialogCommand"),
             'slug' => $this->slug,
             'page' => !is_null($this->page)
         ];

@@ -7,7 +7,8 @@ import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue"
 import ImageMenuEditor from "@/Components/Constructor/ImageMenuEditor.vue";
 import CompanyEditor from "@/Components/Constructor/CompanyEditor.vue";
 import LocationEditor from "@/Components/Constructor/LocationEditor.vue";
-
+import BotDialogGroupEditor from "@/Components/Constructor/BotDialogGroupEditor.vue";
+import BotCreator from "@/Components/Constructor/BotCreator.vue";
 import { Head } from '@inertiajs/vue3'
 </script>
 <template>
@@ -46,6 +47,15 @@ import { Head } from '@inertiajs/vue3'
                                aria-current="page" @click="tab=0">
                                 <i class="fa-solid fa-mug-hot"></i>
                                 Создание нового клиента
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link "
+                               v-bind:class="{'active':tab===7}"
+                               href="#new-bot"
+                               aria-current="page" @click="tab=7">
+                                <i class="fa-brands fa-android"></i>
+                                Создание нового бота
                             </a>
                         </li>
                         <li class="nav-item">
@@ -93,6 +103,36 @@ import { Head } from '@inertiajs/vue3'
                                 Конструктор страниц
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               href="#dialog-editor"
+                               v-bind:class="{'active':tab===6}"
+                               aria-current="page" @click="tab=6">
+                                <i class="fa-regular fa-comment-dots"></i>
+                                Конструктор диалогов
+                            </a>
+                        </li>
+
+                        <li class="nav-item p-2">
+                            <div class="alert alert-warning" role="alert">
+                                <strong>Важно!</strong> новые боты начнут работать только после того, как вы обновите зависимости!
+                            </div>
+
+                            <button
+                                type="button"
+                                :disabled="load"
+                                class="nav-lin btn btn-outline-success w-100"
+                                @click="reloadWebhooks">Обновить зависимости</button>
+                        </li>
+
+                        <li class="nav-item p-2">
+                            <button
+                                type="button"
+                                :disabled="load"
+                                class="nav-lin btn btn-outline-success w-100"
+                                @click="stopAllDialogs">Остановить все диалоги</button>
+                        </li>
+
                     </ul>
                 </div>
             </nav>
@@ -107,7 +147,7 @@ import { Head } from '@inertiajs/vue3'
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-if="tab===1">
                 <div class="pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="mb-3 mt-3">Редактор компаний</h1>
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-success mb-2" role="alert">
                         Выберите компанию из списка!
                     </div>
                     <CompanyEditor/>
@@ -117,7 +157,7 @@ import { Head } from '@inertiajs/vue3'
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-if="tab===2">
                 <div class="pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="mb-3 mt-3">Редактор локаций</h1>
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-success mb-2" role="alert">
                         Выберите компанию из списка!
                     </div>
                     <LocationEditor/>
@@ -127,17 +167,28 @@ import { Head } from '@inertiajs/vue3'
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-if="tab===3">
                 <div class="pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="mb-3 mt-3">Редактор ботов</h1>
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-success mb-2" role="alert">
                         Выберите бота из списка!
                     </div>
                     <BotEditor/>
                 </div>
             </main>
 
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-if="tab===7">
+                <div class="pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="mb-3 mt-3">Создание бота</h1>
+                    <div class="alert alert-success mb-2" role="alert">
+                        Выберите компанию из списка!
+                    </div>
+                    <BotCreator/>
+                </div>
+            </main>
+
+
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-if="tab===4">
                 <div class="pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="mb-3 mt-3">Редактор меню</h1>
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-success mb-2" role="alert">
                         Выберите бота из списка!
                     </div>
                     <ImageMenuEditor/>
@@ -147,10 +198,20 @@ import { Head } from '@inertiajs/vue3'
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-if="tab===5">
                 <div class="pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="mb-3 mt-3">Конструктор страниц</h1>
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-success mb-2" role="alert">
                         Выберите бота из списка!
                     </div>
                     <BotPageConstructor/>
+                </div>
+            </main>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" v-if="tab===6">
+                <div class="pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="mb-3 mt-3">Конструктор диалогов</h1>
+                    <div class="alert alert-success mb-2" role="alert">
+                        Выберите бота из списка!
+                    </div>
+                    <BotDialogGroupEditor/>
                 </div>
             </main>
         </div>
@@ -164,7 +225,8 @@ export default {
 
     data() {
         return {
-            tab: 0
+            tab: 0,
+            load: false
         }
     },
     computed: {
@@ -182,7 +244,45 @@ export default {
 
         }
     },
-    methods: {}
+    methods: {
+        stopAllDialogs(){
+            this.$store.dispatch("stopDialogs").then((response) => {
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Все диалоги остановлены",
+                    type: 'success'
+                });
+
+
+            }).catch(err => {
+
+            })
+        },
+        reloadWebhooks(){
+            this.load = true
+            this.$notify({
+                title: "Конструктор ботов",
+                text: "Процедура обновления зависимостей началась",
+            });
+            axios.get("/bot/register-webhooks").then(()=>{
+                this.load = false
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Зависимости успешно обновлены!",
+                    type: 'success'
+                });
+            }).catch(()=>{
+                this.load = false
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Неудалось обновить зависимости",
+                    type: 'error'
+                });
+            })
+        },
+    }
 }
 </script>
 

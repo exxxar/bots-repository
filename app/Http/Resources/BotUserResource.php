@@ -30,14 +30,15 @@ class BotUserResource extends JsonResource
             'fio_from_telegram' => $this->fio_from_telegram,
             'telegram_chat_id' => $this->telegram_chat_id,
 
-            'parent_id' => $this->parent_id,
-            'is_vip' => $this->is_vip,
-            'is_admin' => $this->is_admin,
-            'is_work' => $this->is_work,
+            'parent_id' => $this->parent_id ?? null,
+            'is_vip' => $this->is_vip ?? false,
+            'is_admin' => $this->is_admin ?? false,
+            'is_work' => $this->is_work ?? false,
+            'in_dialog_mode' => $this->in_dialog_mode ?? false,
 
-            'is_deliveryman'=> $this->is_deliveryman,
-            'current_latitude'=> $this->current_latitude ?? 0,
-            'current_longitude'=> $this->current_longitude ?? 0,
+            'is_deliveryman' => $this->is_deliveryman ?? false,
+            'current_latitude' => $this->current_latitude ?? 0,
+            'current_longitude' => $this->current_longitude ?? 0,
 
             'user' => $this->whenLoaded("user") ?? null,
             'user_in_location' => $this->user_in_location,

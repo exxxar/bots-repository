@@ -44,6 +44,14 @@ abstract class BotCore
 
     protected abstract function botStatusHandler(): BotStatusEnum;
 
+    protected abstract function nextBotDialog($text): void;
+
+    protected abstract function startBotDialog($dialogCommandId): void;
+
+    protected abstract function currentBotUserInDialog(): bool;
+
+    protected abstract function stopBotDialog(): void;
+
     public function getCurrentChatId()
     {
         return $this->chatId;
@@ -167,8 +175,17 @@ abstract class BotCore
 
             if (count($templates) == 0)
                 continue;
+
+
             foreach ($templates as $template) {
                 $command = $template->command;
+
+                if (!is_null($template->bot_dialog_command_id)){
+                    $this->startBotDialog($template->bot_dialog_command_id);
+                    $find = true;
+                    break;
+                }
+
                 if (!str_starts_with($command, "/"))
                     $command = "/" . $command;
                 if (preg_match($command . "$/i", $query, $matches)) {
@@ -331,6 +348,11 @@ abstract class BotCore
 
         if ($botStatus != BotStatusEnum::Working)
             return;
+
+        if (  $this->currentBotUserInDialog() ){
+            $this->nextBotDialog($query);
+            return;
+        }
 
         $coords = !isset($update["message"]["location"]) ? null :
             (object)[

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BotMenuSlug extends Model
 {
@@ -20,6 +21,7 @@ class BotMenuSlug extends Model
         'command',
         'comment',
         'slug',
+        'bot_dialog_command_id',
     ];
 
     /**
@@ -37,10 +39,16 @@ class BotMenuSlug extends Model
         return $this->belongsTo(Bot::class);
     }
 
-    public function page()
+    public function page(): HasOne
     {
         return $this->hasOne(BotPage::class,'bot_menu_slug_id','id');
     }
+
+    public function botDialogCommand(): HasOne
+    {
+        return $this->hasOne(BotDialogCommand::class,'id','bot_dialog_command_id');
+    }
+
 
 
 }

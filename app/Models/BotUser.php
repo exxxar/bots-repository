@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BotUser extends Model
 {
@@ -22,6 +23,7 @@ class BotUser extends Model
         'is_vip',
         'is_admin',
         'is_work',
+        'in_dialog_mode',
 
         'user_in_location',
         'location_comment',
@@ -69,8 +71,8 @@ class BotUser extends Model
     }
 
 
-    public function parent(): BelongsTo
+    public function parent(): HasOne
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(BotUser::class,'id','parent_id');
     }
 }

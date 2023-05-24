@@ -25,8 +25,7 @@ class User extends Authenticatable
         'phone',
         'name',
         'password',
-        'fio_from_telegram',
-        'telegram_chat_id',
+
         'avatar_url',
         'role_id',
         'blocked_at',

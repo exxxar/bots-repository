@@ -7,6 +7,7 @@ import companies from './modules/companies';
 import bots from './modules/bots';
 import products from './modules/products';
 import pages from './modules/pages';
+import dialogGroups from './modules/dialog_groups';
 
 
 export default createStore({
@@ -31,6 +32,7 @@ export default createStore({
         companies,
         bots,
         products,
-        pages
+        pages,
+        dialogGroups
     }
 })

@@ -22,6 +22,8 @@ class RestaurantBotController extends Controller
 
     public function startWithParam(...$data)
     {
+        BotManager::bot()->stopBotDialog();
+
         $botUser = BotManager::bot()->currentBotUser();
 
         $bot = BotManager::bot()->getSelf();
@@ -107,6 +109,8 @@ class RestaurantBotController extends Controller
 
     public function firstStart()
     {
+        BotManager::bot()->stopBotDialog();
+
         $botUser = BotManager::bot()->currentBotUser();
 
         $bot = BotManager::bot()->getSelf();

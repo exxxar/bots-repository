@@ -68,12 +68,50 @@ import TelegramChannelHelper from "@/Components/Constructor/TelegramChannelHelpe
                                     aria-describedby="bot-level-2" required>
                                 <option :value="bot.id"
                                         v-for="(bot, index) in templates">
-                                    {{ bot.bot_domain }}
+                                    {{ bot.template_description || bot.bot_domain || 'Не указано' }}
                                 </option>
                             </select>
                         </div>
                     </div>
 
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-12">
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox"
+                                   v-model="botForm.is_template" id="bot-is-template">
+                            <label class="form-check-label" for="bot-is-template">
+                                Сделать шаблоном
+                            </label>
+                        </div>
+
+                </div>
+
+                <div
+                    v-if="botForm.is_template"
+                    class="col-md-12 col-12">
+                    <div class="mb-3">
+                        <label class="form-label" id="bot-template-description">
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Если вы создаете шаблон, а не реального бота
+                                    </div>
+                                </template>
+                            </Popper>
+                            Название шаблона бота
+                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        </label>
+                        <input type="text" class="form-control"
+                               placeholder="Название \ описание шаблона"
+                               aria-label="Описание шаблона"
+                               v-model="botForm.template_description"
+                               maxlength="255"
+                               aria-describedby="bot-template-description" required>
+                    </div>
                 </div>
             </div>
 
@@ -495,6 +533,7 @@ import TelegramChannelHelper from "@/Components/Constructor/TelegramChannelHelpe
             <BotSlugList
                 v-if="botForm.slugs&&!load"
                 :slugs="botForm.slugs"
+                :bot="bot"
                 v-on:add="addSlug"
                 v-on:remove="removeSlug"
                 v-on:duplicate="duplicateSlug"/>
@@ -559,6 +598,8 @@ export default {
             command: null,
 
             botForm: {
+                is_template:false,
+                template_description:null,
                 bot_domain: null,
                 bot_token: null,
                 bot_token_dev: null,
@@ -609,6 +650,8 @@ export default {
 
                 this.botForm = {
                     id: this.bot.id || null,
+                    is_template: this.bot.is_template || false,
+                    template_description: this.bot.template_description || null,
                     bot_domain: this.bot.bot_domain || null,
                     bot_token: this.bot.bot_token || null,
                     bot_token_dev: this.bot.bot_token_dev || null,
@@ -786,6 +829,8 @@ export default {
                 });
 
                 this.botForm = {
+                    is_template: false,
+                    template_description: null,
                     bot_domain: null,
                     bot_token: null,
                     bot_token_dev: null,
