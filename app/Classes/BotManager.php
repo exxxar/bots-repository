@@ -112,7 +112,7 @@ class BotManager extends BotCore
     public function setWebhooks()
     {
         $bots = Bot::query()
-            //->where("is_active", true)
+            //->where("is_template", false)
             ->get();
 
         $result = [];

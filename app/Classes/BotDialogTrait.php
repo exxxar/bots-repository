@@ -66,7 +66,7 @@ trait BotDialogTrait
 
         $botUser = $this->currentBotUser();
 
-        $botUser->is_dialog_mode = true;
+        $botUser->in_dialog_mode = true;
         $botUser->save();
 
         BotDialogResult::query()->create([
@@ -130,7 +130,7 @@ trait BotDialogTrait
                 ->find($botDialogCommand->next_bot_dialog_command_id);
             $this->sendDialogData($nextBotDialogCommand ?? null);
         } else {
-            $botUser->is_dialog_mode = false;
+            $botUser->in_dialog_mode = false;
             $botUser->save();
 
             $tmp = $dialog->summary_input_data ?? [];
@@ -144,14 +144,14 @@ trait BotDialogTrait
     {
         $botUser = $this->currentBotUser();
 
-        return $botUser->is_dialog_mode ?? false;
+        return $botUser->in_dialog_mode ?? false;
     }
 
     public function stopBotDialog(): void
     {
         $botUser = $this->currentBotUser();
 
-        $botUser->is_dialog_mode = false;
+        $botUser->in_dialog_mode = false;
         $botUser->save();
 
         $dialogs = BotDialogResult::query()
