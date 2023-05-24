@@ -190,8 +190,7 @@ abstract class BotCore
 
                     if (!is_null($template->bot_dialog_command_id)){
                         $this->startBotDialog($template->bot_dialog_command_id);
-                        $find = true;
-                        break;
+                        return true;
                     }
 
                     $find = $this->tryCall($item, $message, $arguments);
