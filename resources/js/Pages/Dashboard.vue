@@ -10,6 +10,7 @@ import LocationEditor from "@/Components/Constructor/LocationEditor.vue";
 import BotDialogGroupEditor from "@/Components/Constructor/BotDialogGroupEditor.vue";
 import BotCreator from "@/Components/Constructor/BotCreator.vue";
 import { Head } from '@inertiajs/vue3'
+import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
 </script>
 <template>
 
@@ -40,6 +41,8 @@ import { Head } from '@inertiajs/vue3'
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar" style="">
                 <div class="position-sticky pt-3 sidebar-sticky">
                     <ul class="nav flex-column">
+
+
                         <li class="nav-item">
                             <a class="nav-link "
                                v-bind:class="{'active':tab===0}"
@@ -49,6 +52,17 @@ import { Head } from '@inertiajs/vue3'
                                 Создание нового клиента
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               href="#company-editor"
+                               v-bind:class="{'active':tab===1}"
+                               aria-current="page" @click="tab=1">
+                                <i class="fa-regular fa-building"></i>
+                                Создание \ редактирование компаний
+                            </a>
+                        </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link "
                                v-bind:class="{'active':tab===7}"
@@ -60,24 +74,6 @@ import { Head } from '@inertiajs/vue3'
                         </li>
                         <li class="nav-item">
                             <a class="nav-link"
-                               href="#company-editor"
-                               v-bind:class="{'active':tab===1}"
-                               aria-current="page" @click="tab=1">
-                                <i class="fa-regular fa-building"></i>
-                                Редактирование компаний
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               href="#location-editor"
-                               v-bind:class="{'active':tab===2}"
-                               aria-current="page" @click="tab=2">
-                                <i class="fa-solid fa-map-location-dot"></i>
-                                Редактирование локаций
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"
                                href="#bot-editor"
                                v-bind:class="{'active':tab===3}"
                                aria-current="page" @click="tab=3">
@@ -85,6 +81,17 @@ import { Head } from '@inertiajs/vue3'
                                 Редактирование ботов
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               href="#location-editor"
+                               v-bind:class="{'active':tab===2}"
+                               aria-current="page" @click="tab=2">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                                Создание \ редактирование локаций
+                            </a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link"
                                href="#menu-editor"
@@ -214,6 +221,8 @@ import { Head } from '@inertiajs/vue3'
                     <BotDialogGroupEditor/>
                 </div>
             </main>
+
+
         </div>
     </div>
 

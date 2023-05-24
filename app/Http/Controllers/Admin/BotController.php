@@ -158,7 +158,7 @@ class BotController extends Controller
     {
         $bots = Bot::query()
             ->where("is_template", true)
-            ->select("bot_domain", "id")
+            ->select("bot_domain", "id", "template_description")
             ->get();
 
         return response()->json($bots->toArray());
@@ -428,7 +428,7 @@ class BotController extends Controller
             "maintenance_message" => "required",
             "welcome_message" => "required",
             "level_1" => "required",
-            "selected_bot_template_id" => "required",
+            // "selected_bot_template_id" => "required",
             "slugs" => "required",
             "keyboards" => "required",
             "company_id" => "required",
@@ -472,26 +472,30 @@ class BotController extends Controller
         unset($tmp->keyboards);
         $slugs = json_decode($request->slugs);
         unset($tmp->slugs);
-        unset($tmp->selected_bot_template_id);
+
+        if (!is_null($tmp->selected_bot_template_id))
+            unset($tmp->selected_bot_template_id);
 
         //dd($tmp);
         $bot = Bot::query()->create((array)$tmp);
 
-        foreach ($slugs as $slug)
-            BotMenuSlug::query()->create([
-                'bot_id' => $bot->id,
-                'command' => $slug->command,
-                'comment' => $slug->comment,
-                'slug' => $slug->slug,
-            ]);
+        if (!empty($slugs))
+            foreach ($slugs as $slug)
+                BotMenuSlug::query()->create([
+                    'bot_id' => $bot->id,
+                    'command' => $slug->command,
+                    'comment' => $slug->comment,
+                    'slug' => $slug->slug,
+                ]);
 
-        foreach ($keyboards as $keyboard)
-            BotMenuTemplate::query()->create([
-                'bot_id' => $bot->id,
-                'type' => $keyboard->type,
-                'slug' => $keyboard->slug,
-                'menu' => $keyboard->menu,
-            ]);
+        if (!empty($keyboards))
+            foreach ($keyboards as $keyboard)
+                BotMenuTemplate::query()->create([
+                    'bot_id' => $bot->id,
+                    'type' => $keyboard->type,
+                    'slug' => $keyboard->slug,
+                    'menu' => $keyboard->menu,
+                ]);
 
         return new BotResource($bot);
     }

@@ -16,11 +16,15 @@ import Pagination from '@/Components/Pagination.vue';
                         id="button-addon2">Найти</button>
             </div>
         </div>
+
         <div class="row" v-if="pages.length>0">
+<!--            <div class="col-12 mb-3">
+                <button type="button" class="btn btn-outline-success w-100"
+                        @click="selectPage(null)">Создать новую страницу</button>
+            </div>-->
             <div class="col-12 mb-3">
                 <ul class="list-group w-100">
-                    <li class="list-group-item active cursor-pointer"
-                        @click="selectPage(null)">Создать новую страницу</li>
+
                     <li class="list-group-item cursor-pointer d-flex justify-content-between"
                         v-for="(page, index) in pages"
                        >
@@ -61,6 +65,7 @@ export default {
             pages:[],
             search: null,
             pages_paginate_object:null,
+            need_new_page:false,
         }
     },
     watch:{

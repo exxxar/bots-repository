@@ -1,10 +1,10 @@
 <template>
     <hr>
-    <div class="row mb-2">
+    <div class="row mb-2" v-if="need_reset">
         <div class="col-12">
             <button
                 @click="resetForm"
-                class="btn btn-outline-success">Новая компания \ очистка формы</button>
+                class="btn btn-outline-danger p-3 w-100">Новая компания \ очистка формы</button>
         </div>
     </div>
     <form v-on:submit.prevent="submitForm">
@@ -329,6 +329,7 @@ export default {
             load: false,
             photo: null,
             removedImage: null,
+            need_reset:false,
             companyForm: {
                 id: null,
                 title: null,
@@ -343,7 +344,14 @@ export default {
             }
         }
     },
-
+    watch:{
+        companyForm: {
+            handler(val){
+                this.need_reset = true
+            },
+            deep: true
+        }
+    },
     mounted() {
 
         if (this.company)
@@ -381,6 +389,9 @@ export default {
                 schedule: [],
                 manager: null,
             }
+            this.$nextTick(()=>{
+                this.need_reset = false
+            })
 
         },
         getPhoto() {

@@ -26,19 +26,19 @@ import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
         </div>
         <div class="col-12">
             <div class="row" v-for="(row, rowIndex) in keyboard">
-                <div class="col-1 d-flex justify-content-around p-1">
+                <div class="col-2 d-flex justify-content-around p-2">
                     <button
                         type="button"
-                        class="btn btn-info"
-                        @click="addColToRow(rowIndex)">+
+                        class="btn btn-link w-100"
+                        @click="addColToRow(rowIndex)"><i class="fa-solid fa-plus"></i>
                     </button>
                     <button
                         type="button"
-                        class="btn btn-danger"
-                        @click="removeColFromRow(rowIndex)">-
+                        class="btn btn-link w-100"
+                        @click="removeColFromRow(rowIndex)"><i class="fa-solid fa-minus"></i>
                     </button>
                 </div>
-                <div class="col-11 d-flex justify-content-center p-1">
+                <div class="col-10 d-flex justify-content-center p-1">
 
                     <div class="btn-group dropdown-center w-100 m-1 " v-for="(col, colIndex) in row">
                         <input

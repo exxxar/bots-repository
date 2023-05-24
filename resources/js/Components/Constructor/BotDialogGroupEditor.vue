@@ -15,7 +15,7 @@ import BotList from "@/Components/Constructor/BotList.vue";
 
         <div class="col-12" v-if="bot">
             <BotDialogGroupList
-                :bot-id="bot.id"
+                :bot="bot"
                 v-if="!load"
                 v-on:callback="dialogGroupListCallback"/>
 

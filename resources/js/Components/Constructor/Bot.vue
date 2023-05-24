@@ -4,6 +4,10 @@ import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
 import BotUserList from "@/Components/Constructor/BotUserList.vue";
 import TextHelper from "@/Components/Constructor/TextHelper.vue";
 import TelegramChannelHelper from "@/Components/Constructor/TelegramChannelHelper.vue";
+
+import PagesList from "@/Components/Constructor/PagesList.vue";
+import Page from "@/Components/Constructor/Page.vue"
+
 </script>
 <template>
     <div class="row" v-if="companyId">
@@ -22,21 +26,27 @@ import TelegramChannelHelper from "@/Components/Constructor/TelegramChannelHelpe
                 </button>
                 <button type="button"
                         :disabled="botForm.selected_bot_template_id===null"
+                        v-bind:class="{'btn-primary text-white':step===4}"
+                        @click="step=4"
+                        class="btn btn-outline-primary">Страницы
+                </button>
+                <button type="button"
+                        :disabled="botForm.selected_bot_template_id===null"
                         v-bind:class="{'btn-primary text-white':step===1}"
                         @click="step=1"
-                        class="btn btn-outline-primary">Меню бота
+                        class="btn btn-outline-primary">Меню
                 </button>
                 <button type="button"
                         :disabled="botForm.selected_bot_template_id===null"
                         v-bind:class="{'btn-primary text-white':step===2}"
                         @click="step=2"
-                        class="btn btn-outline-primary">Скрипты в боте
+                        class="btn btn-outline-primary">Скрипты
                 </button>
                 <button type="button"
                         :disabled="botForm.selected_bot_template_id===null"
                         v-bind:class="{'btn-primary text-white':step===3}"
                         @click="step=3"
-                        class="btn btn-outline-primary">Пользователи бота
+                        class="btn btn-outline-primary">Пользователи
                 </button>
             </div>
         </div>
@@ -546,6 +556,27 @@ import TelegramChannelHelper from "@/Components/Constructor/TelegramChannelHelpe
         </div>
 
 
+
+
+            <div class="row" v-if="step===4">
+                <div class="col-12 col-md-8" v-if="bot&&!load">
+                    <Page
+                        :page="page"
+                        :bot="bot"
+                        v-on:callback="pageCallback"/>
+                </div>
+
+                <div class="col-12 col-md-4" v-if="!load&&bot">
+                    <PagesList
+                        :bot-id="bot.id"
+                        :editor="true"
+                        v-on:callback="pageListCallback"/>
+
+                </div>
+            </div>
+
+
+
         <div class="row bot-footer-menu">
             <div class="col-12">
                 <button
@@ -589,6 +620,7 @@ export default {
     props: ["companyId", "bot", "editor"],
     data() {
         return {
+            page:null,
             step: 0,
             templates: [],
             load: false,
@@ -867,6 +899,20 @@ export default {
 
 
         },
+
+        pageListCallback(page) {
+            this.load = true
+            this.page = page
+            this.$nextTick(() => {
+                this.load = false
+            });
+        },
+        pageCallback(page) {
+            this.load = true
+            this.$nextTick(() => {
+                this.load = false
+            });
+        }
     }
 }
 </script>

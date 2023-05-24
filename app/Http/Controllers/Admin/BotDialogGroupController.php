@@ -190,7 +190,7 @@ class BotDialogGroupController extends Controller
             'inline_keyboard_id' => "",
             'images' => "",
             'next_bot_dialog_command_id' => "",
-            'bot_dialog_group_id' => "required",
+
             'result_channel' => ""
         ]);
 
@@ -215,6 +215,25 @@ class BotDialogGroupController extends Controller
         }
 
 
+        $baseGroup = BotDialogGroup::query()
+            ->where("slug", "default_bot_group_slug")
+            ->where("bot_id", $request->bot_id)
+            ->first();
+
+        $groupId = $request->bot_dialog_group_id ?? $baseGroup->id ?? null;
+
+        if (is_null($groupId)) {
+            $baseGroup = BotDialogGroup::query()->create([
+                'slug' => "default_bot_group_slug",
+                'title' => "Группа по умолчанию",
+                'bot_id' => $request->bot_id
+            ]);
+
+            $groupId = $baseGroup->id;
+        }
+
+
+
         $command = BotDialogCommand::query()->create([
             'slug' => $request->slug,
             'pre_text' => $request->pre_text,
@@ -225,7 +244,7 @@ class BotDialogGroupController extends Controller
             'inline_keyboard_id' => $request->inline_keyboard_id ?? null,
             'images' => $photos ?? [],
             'next_bot_dialog_command_id' => $request->next_bot_dialog_command_id ?? null,
-            'bot_dialog_group_id' => $request->bot_dialog_group_id,
+            'bot_dialog_group_id' => $groupId,
             'result_channel' => $request->result_channel ?? null,
         ]);
 

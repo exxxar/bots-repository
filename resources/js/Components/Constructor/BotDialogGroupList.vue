@@ -2,6 +2,8 @@
 import Pagination from '@/Components/Pagination.vue';
 import DialogCommandCard from "@/Components/Constructor/DialogCommandCard.vue";
 import BotList from "@/Components/Constructor/BotList.vue";
+import BotDialogCommandForm from "@/Components/Constructor/BotDialogCommandForm.vue";
+
 </script>
 <template>
 
@@ -20,14 +22,27 @@ import BotList from "@/Components/Constructor/BotList.vue";
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-6 col-12">
             <button type="button"
                     data-bs-toggle="modal" data-bs-target="#group-create-modal"
-                    class="btn btn-outline-success mt-2 w-100 p-3 mb-2">Создать новую группу
+                    class="btn btn-outline-success mt-2 w-100 p-3 mb-2">
+                <i class="fa-solid fa-layer-group" style="margin-right:10px;"></i>Создать новую группу
             </button>
 
         </div>
+
+        <div class="col-12 col-md-6">
+            <button
+                type="button"
+                data-bs-toggle="modal" data-bs-target="#dialog-create-modal"
+                class="btn btn-outline-success mt-2 w-100 p-3 mb-2">
+                <i class="fa-regular fa-comment-dots" style="margin-right:10px;"></i>Создать новый диалоговый скрипт
+            </button>
+        </div>
     </div>
+
+
+
     <div class="row" v-if="dialog_groups.length>0">
         <div class="col-12 mb-3">
             <div class="card mb-2" v-for="(group, index) in dialog_groups">
@@ -39,8 +54,8 @@ import BotList from "@/Components/Constructor/BotList.vue";
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </h6>
-                    <button type="button" class="btn btn-outline-primary mt-2 w-100">Создать новый диалоговый скрипт
-                    </button>
+
+
 
                 </div>
                 <div class="card-body">
@@ -51,7 +66,7 @@ import BotList from "@/Components/Constructor/BotList.vue";
                                 v-on:callback="loadGroups"
                                 v-on:select="selectDialog"
                                 v-on:swap="swapGroupInit"
-                                v-on:share="shareToBot"
+
                                 v-on:link="tryLink"
                                 :item="command"/>
                         </div>
@@ -195,12 +210,32 @@ import BotList from "@/Components/Constructor/BotList.vue";
     </div>
 
 
+    <div class="modal fade" id="dialog-create-modal"
+         tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                        Создание диалогового сообщения
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <BotDialogCommandForm :bot="bot"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["botId"],
+    props: ["bot"],
 
     data() {
         return {
@@ -252,7 +287,7 @@ export default {
         },
         addGroup() {
             this.loading = true
-            this.groupForm.bot_id = this.botId
+            this.groupForm.bot_id = this.bot.id
 
             let data = new FormData();
             Object.keys(this.groupForm)
@@ -357,7 +392,7 @@ export default {
             this.loading = true
             this.$store.dispatch("loadDialogGroups", {
                 dataObject: {
-                    botId: this.botId || null,
+                    botId: this.bot.id || null,
                     search: this.search
                 },
                 page: page

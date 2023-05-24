@@ -2,33 +2,34 @@
 import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue";
 import TelegramChannelHelper from "@/Components/Constructor/TelegramChannelHelper.vue";
 import RegularExpressionHelper from "@/Components/Constructor/RegularExpressionHelper.vue";
+
 </script>
 <template>
     <form v-on:submit.prevent="submit">
         <div class="form-floating mb-2">
             <input type="text" class="form-control" :id="'commandForm-slug-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.slug">
+                   placeholder="Начни с малого..." v-model="commandForm.slug" required>
             <label :for="'commandForm-slug-'+commandForm.id">Идентификатор команды (на англ)</label>
         </div>
 
 
         <div class="form-floating mb-2">
             <input type="text" class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.pre_text">
+                   placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
             <label :for="'commandForm-pre-text-'+commandForm.id">Текст диалога</label>
         </div>
 
         <div class="form-floating mb-2">
             <input type="text" class="form-control"
                    :id="'commandForm-post-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.post_text">
+                   placeholder="Начни с малого..." v-model="commandForm.post_text" required>
             <label :for="'commandForm-post-text-'+commandForm.id">Текст после успешного завершения
                 диалога</label>
         </div>
 
         <div class="form-floating mb-2">
             <input type="text" class="form-control" :id="'commandForm-error-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.error_text">
+                   placeholder="Начни с малого..." v-model="commandForm.error_text" required>
             <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
                 данных</label>
         </div>
@@ -36,7 +37,8 @@ import RegularExpressionHelper from "@/Components/Constructor/RegularExpressionH
 
         <div class="mb-2">
             <div class="d-flex justify-content-between">
-                <label class="form-label" :for="'commandForm-result-channel-'+commandForm.id">Регулярное выражение для валидации данных
+                <label class="form-label" :for="'commandForm-result-channel-'+commandForm.id">Регулярное выражение для
+                    валидации данных
 
                 </label>
 
@@ -62,23 +64,39 @@ import RegularExpressionHelper from "@/Components/Constructor/RegularExpressionH
                 </label>
 
                 <TelegramChannelHelper
-                    v-if="item.bot"
-                    :token="item.bot.bot_token"
+                    v-if="bot"
+                    :token="bot.bot_token"
                     :param="'result_channel'"
                     v-on:callback="addTextTo"
                 />
             </div>
-            <input type="text" class="form-control"
+            <input type="number" class="form-control"
                    placeholder="id канала"
                    aria-label="id канала"
                    v-model="commandForm.result_channel"
-                   maxlength="255"
                    :id="'commandForm-result-channel-'+commandForm.id"
                    aria-describedby="bot-order-channel">
         </div>
 
+        <div class="mb-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                       v-model="need_images"
+                       id="need-dialog-image" checked>
+                <label class="form-check-label" for="need-dialog-image">
+                  В диалоге нужно изображение
+                </label>
+            </div>
 
-        <div class="card mb-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" v-model="need_keyboard" id="need-dialog-menu" checked>
+                <label class="form-check-label" for="need-dialog-menu">
+                    В диалоге нужно меню
+                </label>
+            </div>
+        </div>
+
+        <div class="card mb-2" v-if="need_images">
             <div class="card-body">
                 <h6>Фотографии к диалогу</h6>
                 <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
@@ -103,7 +121,7 @@ import RegularExpressionHelper from "@/Components/Constructor/RegularExpressionH
             </div>
         </div>
 
-        <div class="card mb-2">
+        <div class="card mb-2" v-if="need_keyboard">
             <div class="card-header">
                 <h6>Кнопки к вопросу</h6>
             </div>
@@ -124,12 +142,16 @@ import RegularExpressionHelper from "@/Components/Constructor/RegularExpressionH
     </form>
 </template>
 <script>
+
+
 export default {
-    props: ["item"],
+    props: ["item","bot"],
     data() {
         return {
+            need_images:false,
+            need_keyboard:false,
             commandForm: {
-                id:null,
+                id: null,
                 slug: null,
                 pre_text: null,
                 post_text: null,
@@ -143,77 +165,88 @@ export default {
                 result_channel: null,
                 inline_keyboard: null,
             },
-            photos:[]
+            photos: []
         }
     },
+
     mounted() {
-        this.$nextTick(() => {
-            this.commandForm = {
-                id: this.item.id || null,
-                slug: this.item.slug || null,
-                pre_text: this.item.pre_text || null,
-                post_text: this.item.post_text || null,
-                error_text: this.item.error_text || null,
-                bot_id: this.item.bot_id || null,
-                input_pattern: this.item.input_pattern || null,
-                inline_keyboard_id: this.item.inline_keyboard_id || null,
-                images: this.item.images || null,
-                next_bot_dialog_command_id: this.item.next_bot_dialog_command_id || null,
-                bot_dialog_group_id: this.item.bot_dialog_group_id || null,
-                result_channel: this.item.result_channel || null,
-                inline_keyboard: this.item.inline_keyboard || null,
-            }
-        })
-    }, methods:{
-        submit(){
+        if (this.item) {
+            this.$nextTick(() => {
+                this.commandForm = {
+                    id: this.item.id || null,
+                    slug: this.item.slug || null,
+                    pre_text: this.item.pre_text || null,
+                    post_text: this.item.post_text || null,
+                    error_text: this.item.error_text || null,
+                    bot_id: this.item.bot.id || null,
+                    input_pattern: this.item.input_pattern || null,
+                    inline_keyboard_id: this.item.inline_keyboard_id || null,
+                    images: this.item.images || null,
+                    next_bot_dialog_command_id: this.item.next_bot_dialog_command_id || null,
+                    bot_dialog_group_id: this.item.bot_dialog_group_id || null,
+                    result_channel: this.item.result_channel || null,
+                    inline_keyboard: this.item.inline_keyboard || null,
+                }
+            })
+        }
+
+        if (this.bot)
+            this.$nextTick(() => {
+                this.commandForm = {
+                    bot_id: this.bot.id,
+                }
+            })
+
+    }, methods: {
+        submit() {
             this.loading = true
 
             let data = new FormData();
             Object.keys(this.commandForm)
                 .forEach(key => {
-                    const item = this.groupForm[key] || ''
+                    const item = this.commandForm[key] || ''
                     if (typeof item === 'object')
                         data.append(key, JSON.stringify(item))
                     else
                         data.append(key, item)
                 });
 
-            if (location.photos) {
-                for (let i = 0; i < location.photos.length; i++)
-                    data.append('files[]', location.photos[i]);
+            if (this.photos) {
+                for (let i = 0; i < this.photos.length; i++)
+                    data.append('files[]', this.photos[i]);
 
                 data.delete("photos")
             }
 
-            this.$store.dispatch( (this.commandForm.id?
-                    "updateDialogCommand":
+            this.$store.dispatch((this.commandForm.id ?
+                    "updateDialogCommand" :
                     "createDialogCommand")
                 , {
                     dialogCommandForm: data
-            }).then((response) => {
+                }).then((response) => {
 
                 this.loading = false
 
                 this.$notify({
                     title: "Конструктор ботов",
-                    text: (this.commandForm.id?"Диалоговая команда успешно обновлена!":"Диалоговая команда успешно создана!"),
+                    text:  "Успешная обработка диалоговой команды" ,
                     type: 'success'
                 });
 
                 this.commandForm = {
-                        id:null,
-                        slug: null,
-                        pre_text: null,
-                        post_text: null,
-                        error_text: null,
-                        bot_id: null,
-                        input_pattern: null,
-                        inline_keyboard_id: null,
-                        images: null,
-                        next_bot_dialog_command_id: null,
-                        bot_dialog_group_id: null,
-                        result_channel: null,
-                        inline_keyboard: null,
+                    id: null,
+                    slug: null,
+                    pre_text: null,
+                    post_text: null,
+                    error_text: null,
+                    bot_id: null,
+                    input_pattern: null,
+                    inline_keyboard_id: null,
+                    images: null,
+                    next_bot_dialog_command_id: null,
+                    bot_dialog_group_id: null,
+                    result_channel: null,
+                    inline_keyboard: null,
                 }
 
                 this.photos = []
@@ -241,6 +274,7 @@ export default {
             this.commandForm[object.param] = object.text;
 
         },
+
 
     }
 }
