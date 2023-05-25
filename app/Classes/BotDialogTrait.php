@@ -7,6 +7,7 @@ use App\Models\BotDialogCommand;
 use App\Models\BotDialogResult;
 use App\Models\BotMenuTemplate;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
 trait BotDialogTrait
@@ -86,7 +87,15 @@ trait BotDialogTrait
         if (is_null($pattern))
             return true;
 
-        return preg_match($pattern, $text)==1;
+        $matches = [];
+
+        preg_match($pattern, $text, $matches);
+
+        Log::info(print_r($pattern, true));
+        Log::info(print_r($text, true));
+        Log::info(print_r($matches, true));
+
+        return count($matches)>0;
     }
 
     public function nextBotDialog($text): void
