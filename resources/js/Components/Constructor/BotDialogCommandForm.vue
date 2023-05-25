@@ -231,23 +231,26 @@ export default {
                     type: 'success'
                 });
 
-                this.commandForm = {
-                    id: null,
-                    slug: null,
-                    pre_text: null,
-                    post_text: null,
-                    error_text: null,
-                    bot_id: null,
-                    input_pattern: null,
-                    inline_keyboard_id: null,
-                    images: null,
-                    next_bot_dialog_command_id: null,
-                    bot_dialog_group_id: null,
-                    result_channel: null,
-                    inline_keyboard: null,
-                }
+                if (this.commandForm.id ==null ) {
+                    this.commandForm = {
+                        id: null,
+                        slug: null,
+                        pre_text: null,
+                        post_text: null,
+                        error_text: null,
+                        bot_id: null,
+                        input_pattern: null,
+                        inline_keyboard_id: null,
+                        images: null,
+                        next_bot_dialog_command_id: null,
+                        bot_dialog_group_id: null,
+                        result_channel: null,
+                        inline_keyboard: null,
+                    }
 
-                this.photos = []
+                    this.photos = []
+
+                }
 
                 this.$emit("callback")
             }).catch(err => {
