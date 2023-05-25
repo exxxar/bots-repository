@@ -72,7 +72,9 @@ import BotDialogCommandForm from "@/Components/Constructor/BotDialogCommandForm.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <BotDialogCommandForm :item="item"/>
+                    <BotDialogCommandForm
+                        :bot="bot"
+                        :item="item"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -84,7 +86,7 @@ import BotDialogCommandForm from "@/Components/Constructor/BotDialogCommandForm.
 </template>
 <script>
 export default {
-    props: ["item", "simple"],
+    props: ["item", "simple","bot"],
     data() {
         return {
             loading: false

@@ -63,6 +63,7 @@ import BotDialogCommandForm from "@/Components/Constructor/BotDialogCommandForm.
                         <div class="col-md-12 col-lg-4 col-12 col-sm-12 mb-2"
                              v-for="(command, index) in group.bot_dialog_commands">
                             <DialogCommandCard
+                                :bot="bot"
                                 v-on:callback="loadGroups"
                                 v-on:select="selectDialog"
                                 v-on:swap="swapGroupInit"
