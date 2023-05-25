@@ -133,6 +133,15 @@ trait BotDialogTrait
         if (!is_null($botDialogCommand->next_bot_dialog_command_id)) {
             $nextBotDialogCommand = BotDialogCommand::query()
                 ->find($botDialogCommand->next_bot_dialog_command_id);
+
+            BotDialogResult::query()->create([
+                'bot_user_id' => $botUser->id,
+                'bot_dialog_command_id' => $nextBotDialogCommand->id,
+                'current_input_data' => null,
+                'summary_input_data' => [],
+                'completed_at' => null,
+            ]);
+
             $this->sendDialogData($nextBotDialogCommand ?? null);
         } else {
             $botUser->in_dialog_mode = false;
