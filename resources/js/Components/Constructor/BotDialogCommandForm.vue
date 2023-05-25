@@ -181,12 +181,18 @@ export default {
                     bot_id: this.item.bot.id || null,
                     input_pattern: this.item.input_pattern || null,
                     inline_keyboard_id: this.item.inline_keyboard_id || null,
-                    images: this.item.images || null,
+                    images: this.item.images || [],
                     next_bot_dialog_command_id: this.item.next_bot_dialog_command_id || null,
                     bot_dialog_group_id: this.item.bot_dialog_group_id || null,
                     result_channel: this.item.result_channel || null,
                     inline_keyboard: this.item.inline_keyboard || null,
                 }
+
+                if (this.commandForm.inline_keyboard_id!=null)
+                    this.need_keyboard = true
+
+                if (this.commandForm.images.length>0)
+                    this.need_images = true
             })
         }
 
@@ -238,7 +244,6 @@ export default {
                         pre_text: null,
                         post_text: null,
                         error_text: null,
-                        bot_id: null,
                         input_pattern: null,
                         inline_keyboard_id: null,
                         images: null,

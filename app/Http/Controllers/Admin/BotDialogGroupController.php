@@ -209,7 +209,7 @@ class BotDialogGroupController extends Controller
 
                 $imageName = Str::uuid() . "." . $ext;
 
-                $file->storeAs("/public/companies/$bot->company->slug/$imageName");
+                $file->storeAs("/public/companies/".$bot->company->slug."/$imageName");
                 array_push($photos, $imageName);
             }
         }
@@ -283,7 +283,7 @@ class BotDialogGroupController extends Controller
 
                 $imageName = Str::uuid() . "." . $ext;
 
-                $file->storeAs("/public/companies/$bot->company->slug/$imageName");
+                $file->storeAs("/public/companies/".$bot->company->slug."/$imageName");
                 array_push($photos, $imageName);
             }
         }
