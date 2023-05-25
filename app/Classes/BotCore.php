@@ -176,24 +176,15 @@ abstract class BotCore
             if (count($templates) == 0)
                 continue;
 
-
             foreach ($templates as $template) {
                 $command = $template->command;
-
-                Log::info("command => $command query=>$query");
 
                 if (!str_starts_with($command, "/"))
                     $command = "/" . $command;
                 if (preg_match($command . "$/i", $query, $matches)) {
                     foreach ($matches as $match)
                         $arguments[] = $match;
-                    Log::info("test 1");
-                    if (!is_null($template->bot_dialog_command_id)){
-                        Log::info("test 2");
-                        Log::info(print_r($template, true));
-                        $this->startBotDialog($template->bot_dialog_command_id);
-                        return true;
-                    }
+
 
                     $find = $this->tryCall($item, $message, $arguments);
                     break;
@@ -227,6 +218,12 @@ abstract class BotCore
 
             if (preg_match($command . "$/i", $query, $matches)) {
                 $this->prepareTemplatePage($template->page);
+
+                /*if (!is_null($template->bot_dialog_command_id)){
+                    $this->startBotDialog($template->bot_dialog_command_id);
+                    return true;
+                }*/
+
                 $find = true;
                 break;
             }
@@ -236,6 +233,34 @@ abstract class BotCore
 
         }
         return $find;
+    }
+
+    private function botDialogStartHandler($message, $query): bool
+    {
+        $matches = [];
+
+        $templates = BotMenuSlug::query()
+            ->with(["page"])
+            ->whereNotNull("bot_dialog_command_id")
+            ->where("bot_id", $this->getSelf()->id)
+            ->get();
+
+
+        foreach ($templates as $template) {
+
+            $command = $template->command;
+
+            if (!str_starts_with($command, "/"))
+                $command = "/" . $command;
+
+            if (preg_match($command . "$/i", $query, $matches)) {
+
+                $this->startBotDialog($template->bot_dialog_command_id);
+              return true;
+            }
+
+        }
+        return false;
     }
 
     private function botRouteHandler($message, $query): bool
@@ -353,7 +378,7 @@ abstract class BotCore
         if ($botStatus != BotStatusEnum::Working)
             return;
 
-        if (  $this->currentBotUserInDialog() ){
+        if ($this->currentBotUserInDialog()) {
             $this->nextBotDialog($query);
             return;
         }
@@ -368,6 +393,9 @@ abstract class BotCore
             return;
 
         if ($this->botTemplatePageHandler($message, $query))
+            return;
+
+        if ($this->botDialogStartHandler($message, $query))
             return;
 
         if ($this->botSlugHandler($message, $query))
