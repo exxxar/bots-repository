@@ -40,8 +40,6 @@ class BotController extends Controller
         $token = $request->token;
         $channel = $request->channel;
 
-        Log::info("toke=>$token @channel=>$channel");
-
         $res = Http::get("https://api.telegram.org/bot$token/sendMessage?chat_id=$channel&text=channelId");
 
         return \response()->json($res->json());

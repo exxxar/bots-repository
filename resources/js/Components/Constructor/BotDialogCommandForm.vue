@@ -192,9 +192,7 @@ export default {
 
         if (this.bot)
             this.$nextTick(() => {
-                this.commandForm = {
-                    bot_id: this.bot.id,
-                }
+                this.commandForm.bot_id = this.bot.id
             })
 
     }, methods: {
