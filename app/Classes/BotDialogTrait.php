@@ -86,7 +86,7 @@ trait BotDialogTrait
         if (is_null($pattern))
             return true;
 
-        return preg_match($pattern, $text);
+        return preg_match($pattern, $text)==1;
     }
 
     public function nextBotDialog($text): void
