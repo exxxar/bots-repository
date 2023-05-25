@@ -191,7 +191,7 @@ trait BotDialogTrait
 
     private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void{
         if (!is_null($botDialogCommand->result_channel)){
-            $tmpMessage = "Ответы пользователя #$botUser->id на диалог: #$botDialogCommand->id \n";
+            $tmpMessage = "Ответы пользователя <b>#$botUser->id</b> на диалог <b>#$botDialogCommand->id</b>: \n";
 
             $step = 1;
             foreach ($dialogData as $data) {
