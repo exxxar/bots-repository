@@ -221,7 +221,9 @@ import BotDialogCommandForm from "@/Components/Constructor/BotDialogCommandForm.
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <BotDialogCommandForm :bot="bot"/>
+                    <BotDialogCommandForm
+                        v-on:callback="loadGroups"
+                        :bot="bot"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
