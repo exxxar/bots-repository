@@ -149,17 +149,7 @@ trait BotDialogTrait
 
             $tmp = $dialog->summary_input_data ?? [];
 
-            if (!is_null($botDialogCommand->result_channel)){
-                $tmpMessage = "Ответы пользователя на диалог: #$botDialogCommand->id";
-
-                $step = 1;
-                foreach ($tmp as $data) {
-                    $tmpMessage .="Шаг $step: $data \n";
-                    $step++;
-                }
-
-                $this->sendMessage($botDialogCommand->result_channel, $tmpMessage);
-            }
+            $this->dialogResponse($botUser, $botDialogCommand, $tmp);
         }
 
     }
@@ -192,22 +182,24 @@ trait BotDialogTrait
         }
 
 
-        $dialog = $dialogs[count($dialogs) - 1];
+        $botDialogCommand = $dialogs[count($dialogs) - 1]->botDialogCommand;
 
-        $tmp =$dialog->summary_input_data ?? [];
+        $tmp = $dialog->summary_input_data ?? [];
 
-        if (!is_null($dialog->result_channel)){
-            $tmpMessage = "Ответы пользователя на диалог: #".($dialog->id);
+        $this->dialogResponse($botUser, $botDialogCommand, $tmp);
+    }
+
+    private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void{
+        if (!is_null($botDialogCommand->result_channel)){
+            $tmpMessage = "Ответы пользователя #$botUser->id на диалог: #$botDialogCommand->id \n";
 
             $step = 1;
-            foreach ($tmp as $data) {
+            foreach ($dialogData as $data) {
                 $tmpMessage .="Шаг $step: $data \n";
                 $step++;
             }
 
-            $this->sendMessage($dialog->result_channel, $tmpMessage);
+            $this->sendMessage($botDialogCommand->result_channel, $tmpMessage);
         }
-
-
     }
 }
