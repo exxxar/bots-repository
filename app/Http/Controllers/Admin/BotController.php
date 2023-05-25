@@ -23,6 +23,7 @@ use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use function App\Http\Controllers\mb_strpos;
 
@@ -39,7 +40,9 @@ class BotController extends Controller
         $token = $request->token;
         $channel = $request->channel;
 
-        $res = Http::get("https://api.telegram.org/bot$token/sendMessage?chat_id=$channel&text=test");
+        Log::info("toke=>$token @channel=>$channel");
+
+        $res = Http::get("https://api.telegram.org/bot$token/sendMessage?chat_id=$channel&text=channelId");
 
         return \response()->json($res->json());
     }
