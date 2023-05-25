@@ -91,10 +91,6 @@ trait BotDialogTrait
 
         preg_match($pattern, $text, $matches);
 
-        Log::info(print_r($pattern, true));
-        Log::info(print_r($text, true));
-        Log::info(print_r($matches, true));
-
         return count($matches)>0;
     }
 
