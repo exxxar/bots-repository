@@ -110,7 +110,7 @@ trait BotDialogTrait
             return;
 
         $botDialogCommand = $dialog->botDialogCommand;
-        if (!$this->validateInput($text, $botDialogCommand->pattern ?? null)) {
+        if (!$this->validateInput($text, $botDialogCommand->input_pattern ?? null)) {
             $this->reply($botDialogCommand->error_text ?? 'Ошибка ввода');
             return;
         }
