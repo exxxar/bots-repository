@@ -149,7 +149,17 @@ trait BotDialogTrait
 
             $tmp = $dialog->summary_input_data ?? [];
 
-            $this->reply(print_r($tmp, true));
+            if (!is_null($botDialogCommand->result_channel)){
+                $tmpMessage = "Ответы пользователя на диалог: #$botDialogCommand->id";
+
+                $step = 1;
+                foreach ($tmp as $data) {
+                    $tmpMessage .="Шаг $step: $data \n";
+                    $step++;
+                }
+
+                $this->sendMessage($botDialogCommand->result_channel, $tmpMessage);
+            }
         }
 
     }
@@ -181,9 +191,22 @@ trait BotDialogTrait
             $dialog->save();
         }
 
-        $tmp = $dialogs[count($dialogs) - 1]->summary_input_data ?? [];
 
-        $this->reply(print_r($tmp, true));
+        $dialog = $dialogs[count($dialogs) - 1];
+
+        $tmp =$dialog->summary_input_data ?? [];
+
+        if (!is_null($dialog->result_channel)){
+            $tmpMessage = "Ответы пользователя на диалог: #".($dialog->id);
+
+            $step = 1;
+            foreach ($tmp as $data) {
+                $tmpMessage .="Шаг $step: $data \n";
+                $step++;
+            }
+
+            $this->sendMessage($dialog->result_channel, $tmpMessage);
+        }
 
 
     }

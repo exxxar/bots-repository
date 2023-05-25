@@ -26,15 +26,15 @@ export default {
                     description:'Нет проверки'
                 },
                 {
-                    expression:'/^[a-z0-9]+$/i',
+                    expression:'/([a-z0-9]+)/i',
                     description:'Проверка набора из латинских букв и цифр'
                 },
                 {
-                    expression:'/^[а-яё0-9]+$/iu',
+                    expression:'/([а-яё0-9]+)/iu',
                     description:'Проверка на кириллицу и цифры'
                 },
                 {
-                    expression: '/^\d+$/',
+                    expression: '/(?P<digit>\\d+)/',
                     description:'Проверка на число'
                 },
                 {
