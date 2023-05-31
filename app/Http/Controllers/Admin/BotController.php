@@ -611,6 +611,8 @@ class BotController extends Controller
 
             $tmpSlug = !is_null($slugId) ? BotMenuSlug::query()
                 ->where("id", $slug->id)
+                ->where("command", $slug->command)
+                ->where("slug", $slug->slug)
                 ->first() : null;
 
             if (!is_null($tmpSlug))
