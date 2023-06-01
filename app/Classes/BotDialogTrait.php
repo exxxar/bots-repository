@@ -91,7 +91,7 @@ trait BotDialogTrait
 
         preg_match($pattern, $text, $matches);
 
-        return count($matches)>0;
+        return count($matches) > 0;
     }
 
     public function nextBotDialog($text): void
@@ -138,7 +138,7 @@ trait BotDialogTrait
                 'bot_user_id' => $botUser->id,
                 'bot_dialog_command_id' => $nextBotDialogCommand->id,
                 'current_input_data' => null,
-                'summary_input_data' =>  $dialog->summary_input_data ?? [],
+                'summary_input_data' => $dialog->summary_input_data ?? [],
                 'completed_at' => null,
             ]);
 
@@ -176,26 +176,29 @@ trait BotDialogTrait
             ->get();
 
 
-        foreach ($dialogs as $dialog) {
-            $dialog->completed_at = Carbon::now();
-            $dialog->save();
+        if (count($dialogs) > 0) {
+            foreach ($dialogs as $dialog) {
+                $dialog->completed_at = Carbon::now();
+                $dialog->save();
+            }
+
+            $botDialogCommand = $dialogs[count($dialogs) - 1]->botDialogCommand;
+
+            $tmp = $dialog->summary_input_data ?? [];
+
+            $this->dialogResponse($botUser, $botDialogCommand, $tmp);
         }
 
-
-        $botDialogCommand = $dialogs[count($dialogs) - 1]->botDialogCommand;
-
-        $tmp = $dialog->summary_input_data ?? [];
-
-        $this->dialogResponse($botUser, $botDialogCommand, $tmp);
     }
 
-    private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void{
-        if (!is_null($botDialogCommand->result_channel)){
+    private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void
+    {
+        if (!is_null($botDialogCommand->result_channel)) {
             $tmpMessage = "Ответы пользователя <b>#$botUser->id</b> на диалог <b>#$botDialogCommand->id</b>: \n";
 
             $step = 1;
             foreach ($dialogData as $data) {
-                $tmpMessage .="Шаг $step: $data \n";
+                $tmpMessage .= "Шаг $step: $data \n";
                 $step++;
             }
 
