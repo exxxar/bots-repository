@@ -1,28 +1,50 @@
 <script setup>
 import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
+
+import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.vue";
 </script>
 <template>
     <div class="row">
-        <div class="col-12">
-            <button
-                type="button"
-                class="btn btn-primary mb-2"
-                v-if="selectedRow==null"
-                @click="addRow">Добавить строку
-            </button>
-            <button
-                type="button"
-                class="btn btn-primary mb-2"
-                v-if="selectedRow!=null"
-                @click="addRowAbove">Добавить строку выше
-            </button>
-            <button
-                type="button"
-                class="btn btn-primary mb-2 ml-2"
-                v-if="selectedRow!=null"
-                @click="addRowBelow">Добавить строку ниже
-            </button>
+        <div class="col-12 d-flex justify-content-between">
+            <div>
+                <button
+                    type="button"
+                    class="btn btn-primary mb-2"
+                    v-if="selectedRow==null"
+                    @click="addRow">Добавить строку
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary mb-2"
+                    v-if="selectedRow!=null"
+                    @click="addRowAbove">Добавить строку выше
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary mb-2 ml-2"
+                    v-if="selectedRow!=null"
+                    @click="addRowBelow">Добавить строку ниже
+                </button>
 
+                <button
+                    type="button"
+                    class="btn btn-outline-danger mb-2 ml-2"
+                    v-if="selectedRow!=null"
+                    @click="selectedRow=null"><i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+
+
+            <div class="form-check">
+                <input class="form-check-input"
+                       type="checkbox"
+                       v-model="showCode"
+                       id="showCode">
+                <label class="form-check-label" for="showCode">
+                   Отобразить код
+                </label>
+            </div>
         </div>
         <div class="col-12">
             <div class="row" v-for="(row, rowIndex) in keyboard">
@@ -108,6 +130,7 @@ import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
                                         Запросить локацию (для нижнего меню)
                                     </label>
                                 </div>
+
                             </form>
                         </ul>
                     </div>
@@ -116,8 +139,13 @@ import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
                 </div>
             </div>
         </div>
+        <div class="col-12">
+            <MenuFunctionSwitcher
+                :data="selectedRow"
+                v-if="selectedRow!=null"/>
+        </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="showCode">
         <div class="col-12">
 
             <label class="form-label" id="bot-domain">JSON-код клавиатуры</label>
@@ -153,6 +181,7 @@ export default {
     },
     data() {
         return {
+            showCode:false,
             selectedRow: null,
             load: false,
             rowCount: 1,

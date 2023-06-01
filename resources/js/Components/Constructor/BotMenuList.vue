@@ -1,6 +1,6 @@
 <script setup>
 import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue";
-
+import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.vue";
 import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
 </script>
 <template>
@@ -71,7 +71,7 @@ import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
 
                                             <button
                                                 type="button"
-                                                data-bs-toggle="modal" data-bs-target="#open-add-script"
+
                                                 @click="editBtn(index, rowIndex,colIndex)"
                                                 class="btn btn-outline-primary w-100 mb-2">
                                                 {{ col.text }}
@@ -109,6 +109,8 @@ import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
             </div>
         </div>
     </div>
+
+
 
 
 </template>
@@ -161,9 +163,11 @@ export default {
             this.editedButton.rowIndex = rowIndex
             this.editedButton.keyboardIndex = keyboardIndex
 
+
             this.$emit("edit", {
                 command: this.editedButton.oldTextVal
             })
+
 
             /*  Object
                   .keys(this.keyboards[keyboardIndex].menu[rowIndex][colIndex])

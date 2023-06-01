@@ -94,7 +94,10 @@ class CashBackListener
                     ->where("bot_id", $event->botId)
                     ->where("id", $nextUser->parent_id)
                     ->first();
-                $nextUser = $nextBotUser->user;
+
+                $nextUser = is_null($nextBotUser) ? null : $nextBotUser->user;
+                if (is_null($nextUser))
+                    return;
                 $index++;
             }
             return;

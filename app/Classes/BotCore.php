@@ -216,16 +216,20 @@ abstract class BotCore
             if (!str_starts_with($command, "/"))
                 $command = "/" . $command;
 
-            if (preg_match($command . "$/i", $query, $matches)) {
-                $this->prepareTemplatePage($template->page);
+            try {
+                if (preg_match($command . "$/i", $query, $matches)) {
+                    $this->prepareTemplatePage($template->page);
 
-                /*if (!is_null($template->bot_dialog_command_id)){
-                    $this->startBotDialog($template->bot_dialog_command_id);
-                    return true;
-                }*/
+                    /*if (!is_null($template->bot_dialog_command_id)){
+                        $this->startBotDialog($template->bot_dialog_command_id);
+                        return true;
+                    }*/
 
-                $find = true;
-                break;
+                    $find = true;
+                    break;
+                }
+            } catch (\Exception $e) {
+                return $find;
             }
 
             if ($find)
@@ -256,7 +260,7 @@ abstract class BotCore
             if (preg_match($command . "$/i", $query, $matches)) {
 
                 $this->startBotDialog($template->bot_dialog_command_id);
-              return true;
+                return true;
             }
 
         }
