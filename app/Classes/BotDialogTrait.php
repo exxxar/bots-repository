@@ -176,18 +176,20 @@ trait BotDialogTrait
             ->get();
 
 
-        if (count($dialogs) > 0) {
-            foreach ($dialogs as $dialog) {
-                $dialog->completed_at = Carbon::now();
-                $dialog->save();
-            }
+        if (count($dialogs) == 0)
+            return;
 
-            $botDialogCommand = $dialogs[count($dialogs) - 1]->botDialogCommand;
-
-            $tmp = $dialog->summary_input_data ?? [];
-
-            $this->dialogResponse($botUser, $botDialogCommand, $tmp);
+        foreach ($dialogs as $dialog) {
+            $dialog->completed_at = Carbon::now();
+            $dialog->save();
         }
+
+        $botDialogCommand = $dialogs[count($dialogs) - 1]->botDialogCommand;
+
+        $tmp = $dialog->summary_input_data ?? [];
+
+        $this->dialogResponse($botUser, $botDialogCommand, $tmp);
+
 
     }
 
