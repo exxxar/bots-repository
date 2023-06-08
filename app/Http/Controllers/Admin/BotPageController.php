@@ -349,6 +349,8 @@ class BotPageController extends Controller
             $keyboard = json_decode($request->reply_keyboard);
             unset($tmp->reply_keyboard);
 
+            $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+
             $reply_keyboard_id = $tmp->reply_keyboard_id ?? -1;
             $menu = BotMenuTemplate::query()->where("id", $reply_keyboard_id)
                 ->first();
@@ -372,7 +374,10 @@ class BotPageController extends Controller
 
         if (!is_null($inlineKeyboard)) {
             $keyboard = json_decode($request->inline_keyboard);
+
             unset($tmp->inline_keyboard);
+
+            $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             $inline_keyboard_id = $tmp->inline_keyboard_id ?? -1;
 
