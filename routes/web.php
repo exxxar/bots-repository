@@ -102,6 +102,7 @@ Route::prefix("bot")->group(function () {
             Route::post("/", "index");
             Route::post("/page", "createPage");
             Route::post("/page-update", "updatePage");
+            Route::post("/duplicate/{pageId}", "duplicate");
             Route::delete("/{pageId}", "destroy");
         });
 

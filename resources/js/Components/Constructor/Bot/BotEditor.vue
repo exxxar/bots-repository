@@ -1,12 +1,10 @@
 <script setup>
 import BotList from "@/Components/Constructor/Bot/BotList.vue";
-import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
-
+import Bot from "@/Components/Constructor/Bot/Bot.vue";
 
 </script>
 <template>
     <div class="row">
-
         <div class="col-12">
             <BotList
                 v-if="!load"
@@ -14,24 +12,41 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                 v-on:callback="botListCallback"/>
         </div>
         <div class="col-12">
-            <ImageMenu
-                v-if="bot&&!load"
-                :bot-id="bot.id"
-                v-on:callback="imageMenuCallback"/>
+            <Bot v-if="bot&&!load"
+                 :bot="bot"
+                 :editor="true"
+                 v-on:callback="botCallback"
+            />
         </div>
     </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     data(){
         return {
             load:false,
-            bot:null
+            bot:null,
         }
     },
+    computed: {
+        ...mapGetters(['getCurrentBot']),
+    },
+    mounted() {
+        this.loadCurrentBot()
+    },
     methods:{
-        imageMenuCallback(menus){
+        loadCurrentBot(bot = null){
+            this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(()=>{
+                this.bot = this.getCurrentBot
+            })
+        },
+        botCallback(bot){
             this.load = true
+            this.bot = null
             this.$nextTick(()=>{
                 this.load = false
 
@@ -39,10 +54,11 @@ export default {
         },
         botListCallback(bot){
             this.load = true
-            this.bot = bot
+
+            this.loadCurrentBot(bot)
+
             this.$nextTick(()=>{
                 this.load = false
-
             })
         }
     }

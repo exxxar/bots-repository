@@ -2,13 +2,13 @@
 import Constructor from "@/Components/Constructor/Constructor.vue";
 
 import InitialStepper from "@/Components/Constructor/InitialStepper.vue";
-import BotEditor from "@/Components/Constructor/BotEditor.vue";
+import BotEditor from "@/Components/Constructor/Bot/BotEditor.vue";
 import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue";
 import ImageMenuEditor from "@/Components/Constructor/ImageMenuEditor.vue";
-import CompanyEditor from "@/Components/Constructor/CompanyEditor.vue";
-import LocationEditor from "@/Components/Constructor/LocationEditor.vue";
-import BotDialogGroupEditor from "@/Components/Constructor/BotDialogGroupEditor.vue";
-import BotCreator from "@/Components/Constructor/BotCreator.vue";
+import CompanyEditor from "@/Components/Constructor/Company/CompanyEditor.vue";
+import LocationEditor from "@/Components/Constructor/Location/LocationEditor.vue";
+import BotDialogGroupEditor from "@/Components/Constructor/Dialogs/BotDialogGroupEditor.vue";
+import BotCreator from "@/Components/Constructor/Bot/BotCreator.vue";
 import { Head } from '@inertiajs/vue3'
 import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
 </script>
@@ -62,7 +62,7 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                                 Создание \ редактирование компаний
                             </a>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a class="nav-link "
                                v-bind:class="{'active':tab===7}"

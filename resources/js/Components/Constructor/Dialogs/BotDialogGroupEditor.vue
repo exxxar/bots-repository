@@ -1,7 +1,6 @@
 <script setup>
+import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import BotList from "@/Components/Constructor/Bot/BotList.vue";
-import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
-
 
 </script>
 <template>
@@ -13,11 +12,17 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                 :editor="true"
                 v-on:callback="botListCallback"/>
         </div>
+
+        <div class="col-12" v-if="bot">
+            <BotDialogGroupList
+                :bot="bot"
+                v-if="!load"
+                v-on:callback="dialogGroupListCallback"/>
+
+
+        </div>
         <div class="col-12">
-            <ImageMenu
-                v-if="bot&&!load"
-                :bot-id="bot.id"
-                v-on:callback="imageMenuCallback"/>
+
         </div>
     </div>
 </template>
@@ -30,12 +35,13 @@ export default {
         }
     },
     methods:{
-        imageMenuCallback(menus){
+        dialogGroupListCallback(company){
             this.load = true
+            this.company = company
             this.$nextTick(()=>{
                 this.load = false
-
             })
+
         },
         botListCallback(bot){
             this.load = true
@@ -45,6 +51,12 @@ export default {
 
             })
         }
+     /*   locationCallback() {
+            this.step++;
+            this.load = false
+
+            document.documentElement.scrollTop = 0;
+        },*/
     }
 }
 </script>

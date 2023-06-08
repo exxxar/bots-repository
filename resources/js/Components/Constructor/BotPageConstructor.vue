@@ -1,8 +1,8 @@
 <script setup>
 
-import BotList from "@/Components/Constructor/BotList.vue";
-import Page from "@/Components/Constructor/Page.vue";
-import PagesList from "@/Components/Constructor/PagesList.vue";
+import BotList from "@/Components/Constructor/Bot/BotList.vue";
+import Page from "@/Components/Constructor/Pages/Page.vue";
+import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
 
 </script>
 <template>

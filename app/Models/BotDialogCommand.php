@@ -27,6 +27,7 @@ class BotDialogCommand extends Model
         'next_bot_dialog_command_id',
         'bot_dialog_group_id',
         'result_channel',
+
     ];
 
     /**

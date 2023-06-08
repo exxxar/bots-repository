@@ -1,5 +1,5 @@
 <script setup>
-import BotDialogGroupListSimple from "@/Components/Constructor/BotDialogGroupListSimple.vue";
+import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
 </script>
 <template>
     <div class="row">

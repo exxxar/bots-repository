@@ -62,6 +62,29 @@ class BotPageController extends Controller
         return new BotPageResource($botPage);
     }
 
+    public function duplicate(Request $request, $pageId): Response
+    {
+        $botPage = BotPage::query()
+            ->with(["slug"])
+            ->where("id", $pageId)
+            ->first();
+
+        if (is_null($botPage))
+            return \response()->noContent(404);
+
+
+        $newBotPage = $botPage->replicate();
+
+        $slug = $newBotPage->slug->replicate();
+        $slug->slug = Str::uuid();
+        $slug->save();
+
+        $newBotPage->bot_menu_slug_id = $slug->id;
+        $newBotPage->save();
+
+        return response()->noContent();
+    }
+
     public function destroy(Request $request, $pageId): Response
     {
         $botPage = BotPage::query()->where("id", $pageId)
@@ -73,6 +96,71 @@ class BotPageController extends Controller
         $botPage->delete();
 
         return response()->noContent();
+    }
+
+    private function keyboardAssign($keyboard, $botId)
+    {
+     /*   foreach ($keyboard as $rowIndex => $row)
+            foreach ($row as $colIndex => $col) {
+
+                $tmpPageId = $keyboard[$rowIndex][$colIndex]->page_id ?? null;
+                $tmpDialogId = $keyboard[$rowIndex][$colIndex]->dialog_id ?? null;
+                $tmpSlugId = $keyboard[$rowIndex][$colIndex]->slug_id ?? null;
+                $tmpType = $keyboard[$rowIndex][$colIndex]->type;
+                $tmpText = $keyboard[$rowIndex][$colIndex]->text;
+
+                unset($keyboard[$rowIndex][$colIndex]->page_id);
+                unset($keyboard[$rowIndex][$colIndex]->dialog_id);
+                unset($keyboard[$rowIndex][$colIndex]->slug_id);
+                unset($keyboard[$rowIndex][$colIndex]->type);
+
+
+                $strSlug = Str::uuid();
+
+                if ($tmpType == "inline")
+                    $keyboard[$rowIndex][$colIndex]->callback_data = $strSlug;
+
+
+
+
+                if (is_null($tmpSlugId))
+                    $slug = BotMenuSlug::query()
+                        ->where("command", $tmpText)
+                        ->where("bot_id", $botId)
+                        ->first();
+                else
+                    $slug = BotMenuSlug::query()
+                        ->where("id", $tmpSlugId)
+                        ->first();
+
+                if (is_null($slug))
+                    $slug = BotMenuSlug::query()->create([
+                        'bot_id' => $botId,
+                        'command' => $tmpText,
+                        'comment' => "Ассоциация скрипта с кнопкой меню",
+                        'slug' => $strSlug,
+                        'bot_dialog_command_id' => $tmpDialogId
+                    ]);
+                else {
+                    $slug = $slug->replicate();
+                    $slug->bot_dialog_command_id = $tmpDialogId;
+                    $slug->slug = $strSlug;
+                    $slug->save();
+                }
+
+                if (is_null($tmpPageId)) {
+                    $page = BotPage::query()->find($tmpDialogId);
+
+                    $page = $page->replicate();
+
+                    $page->bot_menu_slug_id = $slug->id;
+                    $page->save();
+
+                }
+
+            }*/
+
+        return $keyboard;
     }
 
     public function createPage(Request $request)
@@ -124,10 +212,10 @@ class BotPageController extends Controller
         unset($tmp->photos);
         $tmp->images = count($photos) == 0 ? null : $photos;
 
-       // $text = str_replace(["<p>", "</p>"], "", $tmp->content);
+        // $text = str_replace(["<p>", "</p>"], "", $tmp->content);
         // $text = str_replace(["<br>", "<br/>"], "\n", $text);
 
-       // $tmp->content = $text;
+        // $tmp->content = $text;
 
         $replyKeyboard = $request->reply_keyboard ?? null;
         $inlineKeyboard = $request->inline_keyboard ?? null;
@@ -137,6 +225,9 @@ class BotPageController extends Controller
 
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($request->reply_keyboard);
+
+            $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+
             unset($tmp->reply_keyboard);
 
             $strSlug = Str::uuid();
@@ -152,6 +243,9 @@ class BotPageController extends Controller
 
         if (!is_null($inlineKeyboard)) {
             $keyboard = json_decode($request->inline_keyboard);
+
+            $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+
             unset($tmp->inline_keyboard);
 
             $strSlug = Str::uuid();
@@ -245,7 +339,7 @@ class BotPageController extends Controller
         //$text = str_replace(["<p>", "</p>"], "", $tmp->content);
         //$text = str_replace(["<br>", "<br/>"], "\n", $text);
 
-       // $tmp->content = $text;
+        // $tmp->content = $text;
 
         $replyKeyboard = $request->reply_keyboard ?? null;
         $inlineKeyboard = $request->inline_keyboard ?? null;

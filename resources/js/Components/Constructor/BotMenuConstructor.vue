@@ -1,5 +1,5 @@
 <script setup>
-import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
+
 
 import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.vue";
 </script>
@@ -35,16 +35,29 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
             </div>
 
 
+            <div class="d-flex flex-column">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           v-model="showCode"
+                           id="showCode">
+                    <label class="form-check-label" for="showCode">
+                        Отобразить код
+                    </label>
+                </div>
 
-            <div class="form-check">
-                <input class="form-check-input"
-                       type="checkbox"
-                       v-model="showCode"
-                       id="showCode">
-                <label class="form-check-label" for="showCode">
-                   Отобразить код
-                </label>
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           v-model="showAssign"
+                           id="showAssign">
+                    <label class="form-check-label" for="showAssign">
+                        Меню связывания
+                    </label>
+                </div>
             </div>
+
+
         </div>
         <div class="col-12">
             <div class="row" v-for="(row, rowIndex) in keyboard">
@@ -67,6 +80,7 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
                             type="text"
                             @click="selectIndex(rowIndex, colIndex)"
                             class="btn btn-outline-primary w-100"
+                            v-bind:class="{'has-script':hasScript(rowIndex, colIndex)}"
                             v-model="keyboard[rowIndex][colIndex].text"
                         />
                         <button type="button"
@@ -139,10 +153,11 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
                 </div>
             </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" v-if="showAssign">
             <MenuFunctionSwitcher
-                :data="selectedRow"
-                v-if="selectedRow!=null"/>
+                v-on:change-associate="assignAssociateForm"
+                :selected-data="select"
+                v-if="selectedRow!=null&!load"/>
         </div>
     </div>
     <div class="row" v-if="showCode">
@@ -160,14 +175,12 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
 
         </div>
     </div>
-
-
 </template>
 <script>
 import {Vue3JsonEditor} from 'vue3-json-editor'
 
 export default {
-    props: ["editedKeyboard"],
+    props: ["editedKeyboard", "type"],
     components: {
         Vue3JsonEditor
     },
@@ -181,7 +194,8 @@ export default {
     },
     data() {
         return {
-            showCode:false,
+            showCode: false,
+            showAssign: false,
             selectedRow: null,
             load: false,
             rowCount: 1,
@@ -189,6 +203,7 @@ export default {
             select: {
                 row: 0,
                 col: 0,
+                type: this.type || 'reply'
             }
         }
     },
@@ -203,6 +218,12 @@ export default {
         }
     },
     methods: {
+        assignAssociateForm(form) {
+            this.keyboard[form.row][form.col].page_id = form.page_id || null
+            this.keyboard[form.row][form.col].slug_id = form.slug_id || null
+            this.keyboard[form.row][form.col].dialog_id = form.dialog_id || null
+            this.keyboard[form.row][form.col].type = form.type || 'reply'
+        },
         needRemoveField(param, rowIndex, colIndex) {
             Object.keys(this.keyboard[rowIndex][colIndex])
                 .forEach(item => {
@@ -241,6 +262,11 @@ export default {
         addRowBelow() {
             this.addRow(false)
         },
+        hasScript(row, col) {
+            return this.keyboard[row][col].page_id ||
+                this.keyboard[row][col].slug_id ||
+                this.keyboard[row][col].dialog_id
+        },
         addRow(above = false) {
 
             if (this.selectedRow == null) {
@@ -272,12 +298,18 @@ export default {
 
             this.save();
         },
-        selectIndex(row, col) {
+        selectIndex(rowIndex, colIndex) {
 
-            this.selectedRow = row
+            this.selectedRow = rowIndex
 
-            this.select.row = row
-            this.select.col = col
+            this.select.row = rowIndex
+            this.select.col = colIndex
+            this.select.text = this.keyboard[rowIndex][colIndex].text
+
+            this.load = true
+            this.$nextTick(() => {
+                this.load = false
+            })
         },
 
         removeCol(rowIndex, colIndex) {
@@ -292,3 +324,12 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+
+.has-script{
+
+    background-color: rgba(173, 216, 230, 0.30);
+
+}
+
+</style>

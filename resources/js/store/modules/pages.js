@@ -48,6 +48,16 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async duplicatePage(context, payload= {dataObject: {pageId: null}}){
+        let link = `${BASE_PAGES_LINK}/duplicate/${payload.dataObject.pageId}`
+        let _axios = util.makeAxiosFactory(link, 'POST')
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async removePage(context, payload= {dataObject: {pageId: null}}){
         let link = `${BASE_PAGES_LINK}/${payload.dataObject.pageId}`
         let _axios = util.makeAxiosFactory(link, 'DELETE')

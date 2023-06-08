@@ -1,10 +1,10 @@
 <script setup>
 import InitialStepper from "@/Components/Constructor/InitialStepper.vue";
-import BotEditor from "@/Components/Constructor/BotEditor.vue";
+import BotEditor from "@/Components/Constructor/Bot/BotEditor.vue";
 import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue";
 import ImageMenuEditor from "@/Components/Constructor/ImageMenuEditor.vue";
-import CompanyEditor from "@/Components/Constructor/CompanyEditor.vue";
-import LocationEditor from "@/Components/Constructor/LocationEditor.vue";
+import CompanyEditor from "@/Components/Constructor/Company/CompanyEditor.vue";
+import LocationEditor from "@/Components/Constructor/Location/LocationEditor.vue";
 
 </script>
 
