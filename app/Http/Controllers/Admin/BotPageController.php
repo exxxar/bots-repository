@@ -100,7 +100,7 @@ class BotPageController extends Controller
 
     private function keyboardAssign($keyboard, $botId)
     {
-     /*   foreach ($keyboard as $rowIndex => $row)
+        foreach ($keyboard as $rowIndex => $row)
             foreach ($row as $colIndex => $col) {
 
                 $tmpPageId = $keyboard[$rowIndex][$colIndex]->page_id ?? null;
@@ -158,7 +158,7 @@ class BotPageController extends Controller
 
                 }
 
-            }*/
+            }
 
         return $keyboard;
     }
