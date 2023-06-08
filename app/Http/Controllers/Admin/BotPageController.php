@@ -106,21 +106,26 @@ class BotPageController extends Controller
                 $tmpPageId = $keyboard[$rowIndex][$colIndex]->page_id ?? null;
                 $tmpDialogId = $keyboard[$rowIndex][$colIndex]->dialog_id ?? null;
                 $tmpSlugId = $keyboard[$rowIndex][$colIndex]->slug_id ?? null;
-                $tmpType = $keyboard[$rowIndex][$colIndex]->type;
-                $tmpText = $keyboard[$rowIndex][$colIndex]->text;
+                $tmpType = $keyboard[$rowIndex][$colIndex]->type ?? null;
+                $tmpText = $keyboard[$rowIndex][$colIndex]->text ?? null;
 
-                unset($keyboard[$rowIndex][$colIndex]->page_id);
-                unset($keyboard[$rowIndex][$colIndex]->dialog_id);
-                unset($keyboard[$rowIndex][$colIndex]->slug_id);
-                unset($keyboard[$rowIndex][$colIndex]->type);
+                if (isset($keyboard[$rowIndex][$colIndex]->page_id))
+                    unset($keyboard[$rowIndex][$colIndex]->page_id);
+
+                if (isset($keyboard[$rowIndex][$colIndex]->dialog_id))
+                    unset($keyboard[$rowIndex][$colIndex]->dialog_id);
+
+                if (isset($keyboard[$rowIndex][$colIndex]->slug_id))
+                    unset($keyboard[$rowIndex][$colIndex]->slug_id);
+
+                if (isset($keyboard[$rowIndex][$colIndex]->type))
+                    unset($keyboard[$rowIndex][$colIndex]->type);
 
 
                 $strSlug = Str::uuid();
 
                 if ($tmpType == "inline")
                     $keyboard[$rowIndex][$colIndex]->callback_data = $strSlug;
-
-
 
 
                 if (is_null($tmpSlugId))
