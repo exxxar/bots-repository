@@ -156,10 +156,13 @@ class BotPageController extends Controller
                 if (is_null($tmpPageId)) {
                     $page = BotPage::query()->find($tmpDialogId);
 
-                    $page = $page->replicate();
+                    if (!is_null($page)) {
+                        $page = $page->replicate();
 
-                    $page->bot_menu_slug_id = $slug->id;
-                    $page->save();
+                        $page->bot_menu_slug_id = $slug->id;
+                        $page->save();
+                    }
+
 
                 }
 
