@@ -89,24 +89,10 @@ import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue"
                 </label>
             </div>
 
-            <div class="form-check">
-                <input class="form-check-input"
-                       v-model="need_reply_menu"
-                       type="checkbox" id="need-reply-menu">
-                <label class="form-check-label" for="need-reply-menu">
-                    Нужно нижнее меню
-                </label>
-            </div>
 
 
-            <div class="form-check">
-                <input class="form-check-input"
-                       v-model="need_inline_menu"
-                       type="checkbox" id="need-inline-menu">
-                <label class="form-check-label" for="need-inline-menu">
-                    Нужно меню к тексту сообщения
-                </label>
-            </div>
+
+
         </div>
         <div class="col-12 mb-2" v-if="need_page_images">
             <div class="card mb-3">
@@ -152,6 +138,45 @@ import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue"
                 </div>
             </div>
         </div>
+
+        <div class="col-12 mb-2">
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="need_reply_menu"
+                       type="checkbox" id="need-reply-menu">
+                <label class="form-check-label" for="need-reply-menu">
+                    Нужно нижнее меню
+                </label>
+            </div>
+        </div>
+        <div class="col-12 mb-2" v-if="need_reply_menu">
+            <div class="card">
+                <div class="card-header d-flex justify-between align-items-center">
+                    <h6>Конструктор нижнего меню</h6>
+                    <button class="btn btn-link">Выбрать из шаблонов</button>
+                </div>
+
+                <div class="card-body">
+                    <BotMenuConstructor
+                        :type="'reply'"
+                        v-on:save="saveReplyKeyboard"
+                        :edited-keyboard="pageForm.reply_keyboard"/>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col-12 mb-2">
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="need_inline_menu"
+                       type="checkbox" id="need-inline-menu">
+                <label class="form-check-label" for="need-inline-menu">
+                    Нужно меню к тексту сообщения
+                </label>
+            </div>
+        </div>
         <div class="col-12 mb-2" v-if="need_inline_menu">
             <div class="card">
 
@@ -174,29 +199,15 @@ import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue"
 
 
         </div>
-        <div class="col-12 mb-2" v-if="need_reply_menu">
-            <div class="card">
-                <div class="card-header d-flex justify-between align-items-center">
-                    <h6>Конструктор нижнего меню</h6>
-                    <button class="btn btn-link">Выбрать из шаблонов</button>
-                </div>
 
-                <div class="card-body">
-                    <BotMenuConstructor
-                        :type="'reply'"
-                        v-on:save="saveReplyKeyboard"
-                        :edited-keyboard="pageForm.reply_keyboard"/>
-                </div>
-            </div>
-
-
-        </div>
         <div class="col-12 mb-2">
             <button class="btn btn-outline-primary w-100 p-3">Сохранить страницу</button>
         </div>
     </form>
 </template>
 <script>
+
+import {mapGetters} from "vuex";
 
 export default {
     props: ["page", "bot"],
@@ -258,8 +269,11 @@ export default {
             this.clearForm()
 
 
+
     },
-    methods: {
+
+    methods:{
+
         clearForm() {
             this.photos = []
             this.pageForm = {

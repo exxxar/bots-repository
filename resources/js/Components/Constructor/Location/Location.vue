@@ -3,7 +3,7 @@
         <div class="card-body">
 
             <form v-on:submit.prevent="addLocation">
-                <h6>Локации к компании #{{ companyId || 'Не установлен' }}</h6>
+                <h6>Локации к компании #{{ company.title || 'Не установлен' }}</h6>
                 <div class="row">
                     <div class="col-12">
                         <div class="form-check">
@@ -191,7 +191,7 @@
 </template>
 <script>
 export default {
-    props: ["companyId"],
+    props: ["company"],
     data() {
         return {
             locations: [],

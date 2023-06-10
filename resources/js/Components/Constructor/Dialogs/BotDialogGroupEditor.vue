@@ -27,6 +27,8 @@ import BotList from "@/Components/Constructor/Bot/BotList.vue";
     </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     data(){
         return {
@@ -34,7 +36,20 @@ export default {
             bot:null
         }
     },
+    mounted() {
+        this.loadCurrentBot()
+    },
+    computed: {
+        ...mapGetters(['getCurrentBot']),
+    },
     methods:{
+        loadCurrentBot(bot = null){
+            this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(()=>{
+                this.bot = this.getCurrentBot
+            })
+        },
         dialogGroupListCallback(company){
             this.load = true
             this.company = company

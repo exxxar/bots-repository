@@ -16,13 +16,15 @@ import CompanyList from "@/Components/Constructor/Company/CompanyList.vue";
         </div>
         <div class="col-12">
             <Location v-if="company&&!load"
-                      :company-id="company.id"
+                      :company="company"
                       v-on:callback="locationCallback"
             />
         </div>
     </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     data(){
         return {
@@ -30,7 +32,20 @@ export default {
             company:null
         }
     },
-    methods:{
+    computed: {
+        ...mapGetters(['getCurrentCompany']),
+    },
+    mounted() {
+        this.loadCurrentCompany()
+    },
+    methods: {
+        loadCurrentCompany(company = null){
+            this.$store.dispatch("updateCurrentCompany", {
+                company: company
+            }).then(()=>{
+                this.company = this.getCurrentCompany
+            })
+        },
         companyListCallback(company){
             this.load = true
             this.company = company

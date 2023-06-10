@@ -127,6 +127,9 @@ import Page from "@/Components/Constructor/Pages/Page.vue"
 
             <div class="row">
                 <div class="col-12">
+                    <p>Для создания бота в Телеграм воспользуйтесь <a href="" target="_blank">инструкцией</a></p>
+                </div>
+                <div class="col-12">
                     <div class="mb-3">
                         <label class="form-label" id="bot-domain">
                             <Popper>
@@ -155,16 +158,21 @@ import Page from "@/Components/Constructor/Pages/Page.vue"
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
-                        <label class="form-label" id="bot-token">
-                            <Popper>
-                                <i class="fa-regular fa-circle-question mr-1"></i>
-                                <template #content>
-                                    <div>Взять из BotFater при создании бота! Длинная нечитаемая подсвеченная строка!
-                                    </div>
-                                </template>
-                            </Popper>
-                            Токен бота
-                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        <label class="form-label d-flex justify-content-between" id="bot-token">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Взять из BotFater при создании бота! Длинная нечитаемая подсвеченная строка!
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Токен бота
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </div>
+
+
+                            <a href="https://t.me/botfather" target="_blank">Создать нового бота в ТГ</a>
                         </label>
                         <input type="text" class="form-control"
                                placeholder="Токен"
@@ -188,7 +196,8 @@ import Page from "@/Components/Constructor/Pages/Page.vue"
                     </div>
                 </div>
 
-                <div class="col-md-6 col-12">
+                <div
+                    class="col-md-6 col-12">
                     <div class="mb-3">
                         <div class="d-flex justify-content-between">
                             <label class="form-label" id="bot-order-channel">Канал для заказов (id)
@@ -229,6 +238,12 @@ import Page from "@/Components/Constructor/Pages/Page.vue"
                                aria-describedby="bot-main-channel">
                     </div>
                 </div>
+
+            </div>
+
+            <div class="row" v-if="botForm.bot_token">
+
+
 
                 <div class="col-12">
                     <div class="mb-3">
@@ -493,9 +508,7 @@ import Page from "@/Components/Constructor/Pages/Page.vue"
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
                 <div class="col-12 mb-3">
                     <h6>Аватар для бота
                         <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
@@ -531,6 +544,9 @@ import Page from "@/Components/Constructor/Pages/Page.vue"
 
                 </div>
             </div>
+
+
+
 
 
         </div>
@@ -928,7 +944,7 @@ export default {
     left: 0px;
     width: 100%;
     min-height: 70px;
-    z-index: 1000;
+    z-index: 990;
     padding: 0px;
     box-sizing: border-box;
 
@@ -956,6 +972,6 @@ export default {
     position: sticky;
     bottom: 10px;
     background: white;
-    z-index: 1000;
+    z-index: 990;
 }
 </style>

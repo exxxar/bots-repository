@@ -35,6 +35,8 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
 </template>
 <script>
 
+import {mapGetters} from "vuex";
+
 export default {
 
     data() {
@@ -45,8 +47,20 @@ export default {
 
         }
     },
-
-    methods: {
+    mounted() {
+        this.loadCurrentBot()
+    },
+    computed: {
+        ...mapGetters(['getCurrentBot']),
+    },
+    methods:{
+        loadCurrentBot(bot = null){
+            this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(()=>{
+                this.bot = this.getCurrentBot
+            })
+        },
         botListCallback(bot) {
             this.load = true
             this.bot = bot

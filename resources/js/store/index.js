@@ -42,6 +42,9 @@ export default createStore({
 
             context.commit("setCurrentCompany", currentCompany)
         },
+        resetCurrentBot(context, payload = {bot: null}) {
+            context.commit("setCurrentBot", null)
+        },
         updateCurrentBot(context, payload = {bot: null}) {
             let currentBot = !localStorage.getItem('store_current_bot') ?
                 null : JSON.parse(localStorage.getItem('store_current_bot'))
@@ -59,6 +62,8 @@ export default createStore({
         setCurrentBot(state, payload) {
             state.current_bot = payload || null;
             localStorage.setItem('store_current_bot', JSON.stringify(payload));
+
+            window.dispatchEvent(new CustomEvent('store_current_bot-change-event'));
         },
         setErrors(state, payload) {
             state.errors = payload || [];

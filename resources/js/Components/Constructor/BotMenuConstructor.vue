@@ -40,8 +40,8 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
                     <input class="form-check-input"
                            type="checkbox"
                            v-model="showCode"
-                           id="showCode">
-                    <label class="form-check-label" for="showCode">
+                           :id="'showCode'+uuid">
+                    <label class="form-check-label" :for="'showCode'+uuid">
                         Отобразить код
                     </label>
                 </div>
@@ -50,8 +50,8 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
                     <input class="form-check-input"
                            type="checkbox"
                            v-model="showAssign"
-                           id="showAssign">
-                    <label class="form-check-label" for="showAssign">
+                           :id="'showAssign'+uuid">
+                    <label class="form-check-label" :for="'showAssign'+uuid">
                         Меню связывания
                     </label>
                 </div>
@@ -178,11 +178,16 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
 </template>
 <script>
 import {Vue3JsonEditor} from 'vue3-json-editor'
-
+import { v4 as uuidv4 } from "uuid";
 export default {
     props: ["editedKeyboard", "type"],
     components: {
         Vue3JsonEditor
+    },
+    computed:{
+      uuid(){
+          return uuidv4();
+      }
     },
     watch: {
         keyboard: {

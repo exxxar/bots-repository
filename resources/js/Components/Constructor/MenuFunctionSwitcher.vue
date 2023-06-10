@@ -95,6 +95,7 @@ import BotSlugListSimple from "@/Components/Constructor/BotSlugListSimple.vue";
 <script>
 import {mapGetters} from "vuex";
 
+
 export default {
     components: {},
 
