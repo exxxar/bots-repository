@@ -81,8 +81,8 @@ class CashBackListener
             $admin = $botUserAdmin->user;
             $index = 1;
             foreach ($levels as $level) {
-                $this->prepareLevel($nextUser,
-                    $admin,
+                $this->prepareLevel($botUserUser,
+                    $botUserAdmin,
                     $bot->id,
                     $event->amount,
                     $level,
@@ -119,7 +119,7 @@ class CashBackListener
                 return;
             }
 
-            $cashBack->amount += $event->amount;
+            $cashBack->amount -= $event->amount;
             $cashBack->save();
 
             $tmpUser = BotMethods::prepareUserName($botUserUser);
@@ -152,8 +152,11 @@ class CashBackListener
 
     }
 
-    private function prepareLevel($user, $admin, $botId, $moneyAmount, $levelPercent, $levelIndex)
+    private function prepareLevel($userBotUser, $adminBotUser, $botId, $moneyAmount, $levelPercent, $levelIndex)
     {
+        $user = $userBotUser->user;
+        $admin = $adminBotUser->user;
+
         if (is_null($user))
             return null;
 
@@ -167,11 +170,11 @@ class CashBackListener
         BotMethods::bot()
             ->whereId($botId)
             ->sendMessage(
-                $user->telegram_chat_id,
+                $userBotUser->telegram_chat_id,
                 "Вам начислили <b>$tmpAmount руб.</b> CashBack $levelIndex уровня",
             )
             ->sendMessage(
-                $admin->telegram_chat_id,
+                $adminBotUser->telegram_chat_id,
                 "Вы начислили <b>$tmpAmount руб.</b> CashBack пользователю $name $levelIndex уровня",
             );
 
