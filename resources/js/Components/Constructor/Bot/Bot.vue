@@ -985,7 +985,7 @@ export default {
 }
 
 .custom-group-dropdown-btn {
-    border-radius: 0px 5px 5px 0px;
-    border-left: none;
+    border-radius: 0px 5px 5px 0px !important;
+    border-left: none !important;
 }
 </style>
