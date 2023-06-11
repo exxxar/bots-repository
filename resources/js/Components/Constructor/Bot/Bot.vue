@@ -699,6 +699,7 @@ export default {
             this.$nextTick(() => {
                 this.loadMenusByBotTemplate(this.bot.id)
                 this.loadSlugsByBotTemplate(this.bot.id)
+                this.loadPagesByBotTemplate(this.bot.id)
 
                 this.botForm = {
                     id: this.bot.id || null,
