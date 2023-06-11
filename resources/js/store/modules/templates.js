@@ -44,18 +44,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadKeyboards(context, payload = {botId: null}) {
-        let link = `${BASE_TEMPLATES_LINK}/keyboards/${payload.botId}`
 
-        let _axios = util.makeAxiosFactory(link)
-
-        return _axios.then((response) => {
-            return Promise.resolve(response);
-        }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
-            return Promise.reject(err);
-        })
-    },
 
     async loadMenuByBotId(context, payload = {botId: null}) {
         let link = `${BASE_TEMPLATES_LINK}/image-menu/${payload.botId}`
@@ -129,25 +118,38 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadPages(context, payload = {botId: null}) {
-        let link = `${BASE_TEMPLATES_LINK}/pages/${payload.botId}`
+    async loadBotKeyboards(context, payload = {botId: null}) {
+        let link = `${BASE_TEMPLATES_LINK}/keyboards/${payload.botId}`
 
         let _axios = util.makeAxiosFactory(link)
 
         return _axios.then((response) => {
-            return Promise.resolve(response);
+            return Promise.resolve(response.data);
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);
         })
     },
-    async loadSlugs(context, payload = {botId: null}) {
+    async loadBotPages(context, payload = {botId: null}) {
+        let link = `${BASE_TEMPLATES_LINK}/pages/${payload.botId}`
+
+        let _axios = util.makeAxiosFactory(link)
+
+        return _axios.then((response) => {
+            const pages = response.data
+            return Promise.resolve(pages)
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadBotSlugs(context, payload = {botId: null}) {
         let link = `${BASE_TEMPLATES_LINK}/slugs/${payload.botId}`
 
         let _axios = util.makeAxiosFactory(link)
 
         return _axios.then((response) => {
-            return Promise.resolve(response);
+            return Promise.resolve(response.data);
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);

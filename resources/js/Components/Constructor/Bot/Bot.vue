@@ -798,24 +798,24 @@ export default {
         },
 
         loadMenusByBotTemplate(botId) {
-            this.$store.dispatch("loadKeyboards", {
+            this.$store.dispatch("loadBotKeyboards", {
                 botId: botId
             }).then((resp) => {
-                this.botForm.keyboards = resp.data
+                this.botForm.keyboards = resp
             })
         },
         loadSlugsByBotTemplate(botId) {
-            this.$store.dispatch("loadSlugs", {
+            this.$store.dispatch("loadBotSlugs", {
                 botId: botId
             }).then((resp) => {
-                this.botForm.slugs = resp.data
+                this.botForm.slugs = resp
             })
         },
         loadPagesByBotTemplate(botId) {
-            this.$store.dispatch("loadPages", {
+            this.$store.dispatch("loadBotPages", {
                 botId: botId
             }).then((resp) => {
-                this.botForm.pages = resp.data
+                this.botForm.pages = resp
             })
         },
         loadBotTemplates() {
