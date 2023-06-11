@@ -30,24 +30,21 @@ import Page from "@/Components/Constructor/Pages/Page.vue"
                         @click="step=4"
                         class="btn btn-outline-primary">Страницы
                 </button>
-                <button type="button"
+
+                <div class="dropdown">
+                    <button
+                        type="button"
                         :disabled="botForm.selected_bot_template_id===null"
-                        v-bind:class="{'btn-primary text-white':step===1}"
-                        @click="step=1"
-                        class="btn btn-outline-primary">Меню
-                </button>
-                <button type="button"
-                        :disabled="botForm.selected_bot_template_id===null"
-                        v-bind:class="{'btn-primary text-white':step===2}"
-                        @click="step=2"
-                        class="btn btn-outline-primary">Скрипты
-                </button>
-                <button type="button"
-                        :disabled="botForm.selected_bot_template_id===null"
-                        v-bind:class="{'btn-primary text-white':step===3}"
-                        @click="step=3"
-                        class="btn btn-outline-primary">Пользователи
-                </button>
+                        class="btn btn-outline-primary dropdown-toggle custom-group-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item" href="#bot-menu-template" @click="step=1">Меню</a></li>
+                        <li><a class="dropdown-item" href="#bot-slugs" @click="step=2">Скрипты</a></li>
+                        <li><a class="dropdown-item" href="#bot-users" @click="step=3">Пользователи</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -680,6 +677,8 @@ export default {
 
                 slugs: [],
 
+                pages: [],
+
                 keyboards: [],
             },
         }
@@ -689,6 +688,7 @@ export default {
             if (this.botForm.selected_bot_template_id != null) {
                 this.loadMenusByBotTemplate(this.botForm.selected_bot_template_id)
                 this.loadSlugsByBotTemplate(this.botForm.selected_bot_template_id)
+                this.loadPagesByBotTemplate(this.botForm.selected_bot_template_id)
             }
         }
     },
@@ -810,6 +810,13 @@ export default {
                 this.botForm.slugs = resp.data
             })
         },
+        loadPagesByBotTemplate(botId) {
+            this.$store.dispatch("loadPages", {
+                botId: botId
+            }).then((resp) => {
+                this.botForm.pages = resp.data
+            })
+        },
         loadBotTemplates() {
             this.$store.dispatch("loadTemplates").then((resp) => {
                 this.templates = resp.data
@@ -911,6 +918,8 @@ export default {
 
                     slugs: [],
 
+                    pages: [],
+
                     keyboards: [],
                 }
             }).catch(err => {
@@ -973,5 +982,10 @@ export default {
     bottom: 10px;
     background: white;
     z-index: 990;
+}
+
+.custom-group-dropdown-btn {
+    border-radius: 0px 5px 5px 0px;
+    border-left: none;
 }
 </style>

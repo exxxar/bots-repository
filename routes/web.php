@@ -80,6 +80,7 @@ Route::prefix("bot")->group(function () {
             Route::get("/keyboards/{botId}", "loadKeyboards");
             Route::post("/keyboards/{botId}", "loadKeyboardsByText");
             Route::get("/slugs/{botId}", "loadSlugs");
+            Route::get("/pages/{botId}", "loadPages");
 
             Route::post("/location", "createLocation");
             Route::get("/location/{companyId}", "loadLocations");

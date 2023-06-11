@@ -28,10 +28,7 @@ export default {
     data() {
         return {
             company: null,
-
             load: false,
-
-
         }
     },
     computed: {

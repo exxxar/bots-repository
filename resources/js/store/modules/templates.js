@@ -129,7 +129,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async loadPages(context, payload = {botId: null}) {
+        let link = `${BASE_TEMPLATES_LINK}/pages/${payload.botId}`
 
+        let _axios = util.makeAxiosFactory(link)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadSlugs(context, payload = {botId: null}) {
         let link = `${BASE_TEMPLATES_LINK}/slugs/${payload.botId}`
 

@@ -8,6 +8,7 @@ use App\Http\Requests\BotStoreRequest;
 use App\Http\Requests\BotUpdateRequest;
 use App\Http\Resources\BotMenuSlugResource;
 use App\Http\Resources\BotMenuTemplateResource;
+use App\Http\Resources\BotPageResource;
 use App\Http\Resources\BotResource;
 use App\Http\Resources\BotUserResource;
 use App\Http\Resources\ImageMenuResource;
@@ -15,6 +16,7 @@ use App\Http\Resources\LocationResource;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
+use App\Models\BotPage;
 use App\Models\BotType;
 use App\Models\BotUser;
 use App\Models\Company;
@@ -224,10 +226,19 @@ class BotController extends Controller
         return response()->json(BotMenuTemplateResource::collection($keyboards));
     }
 
+    public function loadPages(Request $request, $botId) {
+        $pages = BotPage::query()
+            ->where("bot_id", $botId)
+            ->orderBy("created_at", "desc")
+            ->get();
+
+        return response()->json(BotPageResource::collection($pages));
+    }
+
     public function loadSlugs(Request $request, $botId)
     {
         $slugs = BotMenuSlug::query()
-            ->with(["page"])
+            //->with(["page"])
             ->where("bot_id", $botId)
             ->orderBy("created_at", "desc")
             ->get();
@@ -431,6 +442,7 @@ class BotController extends Controller
             "level_1" => "required",
             // "selected_bot_template_id" => "required",
             "slugs" => "required",
+            "pages" => "required",
             "keyboards" => "required",
             "company_id" => "required",
         ]);
@@ -474,12 +486,38 @@ class BotController extends Controller
         unset($tmp->keyboards);
         $slugs = json_decode($request->slugs);
         unset($tmp->slugs);
+        $pages = json_decode($request->pages);
+        unset($tmp->pages);
 
         if (!is_null($tmp->selected_bot_template_id))
             unset($tmp->selected_bot_template_id);
 
         //dd($tmp);
         $bot = Bot::query()->create((array)$tmp);
+
+        if (!empty($pages))
+            foreach ($pages as $page) {
+                $page = (object)$page;
+
+               $tmpSlug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
+
+               if (!is_null($tmpSlug)){
+                   $tmpSlug = $tmpSlug->replicate();
+                   $tmpSlug->bot_id = $bot->id;
+                   $tmpSlug->save();
+
+                   BotPage::query()->create([
+                       'bot_menu_slug_id'=>$tmpSlug->id,
+                       'content'=>$page->content,
+                       'images'=>$page->images,
+                       'reply_keyboard_id'=>$page->reply_keyboard_id,
+                       'inline_keyboard_id'=>$page->inline_keyboard_id,
+                       'bot_id'=>$bot->id,
+                   ]);
+               }
+            }
+
+
 
         if (!empty($slugs))
             foreach ($slugs as $slug)
@@ -578,7 +616,7 @@ class BotController extends Controller
                 $imageName = Str::uuid() . "." . $ext;
 
                 $file->storeAs("/public/companies/$company->slug/$imageName");
-                array_push($photos, $imageName);
+                $photos[] = $imageName;
             }
         }
 
