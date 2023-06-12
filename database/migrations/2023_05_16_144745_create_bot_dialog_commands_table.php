@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('input_pattern', 255)->nullable();
             $table->foreignId('inline_keyboard_id')->nullable()->constrained('bot_menu_templates');
             $table->json('images')->nullable();
+
             $table->foreignId('next_bot_dialog_command_id')
                 ->nullable()
                 ->constrained('bot_dialog_commands');

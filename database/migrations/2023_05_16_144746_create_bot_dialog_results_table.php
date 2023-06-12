@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('bot_dialog_results', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bot_user_id')->nullable()->constrained();
-            $table->foreignId('bot_dialog_command_id')->nullable()->constrained('bots');
+            $table->foreignId('bot_dialog_command_id')->nullable()->constrained('bot_dialog_commands');
             $table->json('current_input_data')->nullable();
             $table->json('summary_input_data')->nullable();
             $table->timestamp('completed_at')->nullable();
