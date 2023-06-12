@@ -153,7 +153,7 @@
                         <div class="card-body">
                             <p v-if="location.location_channel">Канал заведения <strong>{{ location.location_channel }}</strong></p>
                             <p>{{ location.description || 'Не указано' }}</p>
-                            <h6>Фотографии локаций</h6>
+                            <h6 v-if="location.photos.length>0">Фотографии локаций</h6>
                             <div class="w-100 d-flex" v-if="location.photos">
                                 <div class="mb-2 img-preview"
                                      style="margin-right: 10px;"

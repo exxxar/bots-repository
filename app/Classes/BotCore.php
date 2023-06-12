@@ -259,7 +259,7 @@ abstract class BotCore
 
             if (preg_match($command . "$/i", $query, $matches)) {
 
-                $this->startBotDialog($template->bot_dialog_command_id);
+                $this->startBotDialog($template->bot_dialog_command_id ?? null);
                 return true;
             }
 

@@ -292,16 +292,13 @@ export default {
         },
         stopAllDialogs(){
             this.$store.dispatch("stopDialogs").then((response) => {
-
                 this.$notify({
                     title: "Конструктор ботов",
                     text: "Все диалоги остановлены",
                     type: 'success'
                 });
 
-
             }).catch(err => {
-
             })
         },
         reloadWebhooks(){

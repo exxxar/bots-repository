@@ -47,7 +47,7 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
         <div class="col-12 mb-3">
             <div class="card mb-2" v-for="(group, index) in dialog_groups">
                 <div class="card-header">
-                    <h6> #{{ group.id }} - {{ group.title || 'Не указано ' }} ({{ group.slug || 'Не указано' }})
+                    <h6> #{{ group.id }} - {{ group.title || 'Не указано ' }}
                         <button
                             @click="removeGroup(group.id)"
                             type="button" class="btn btn-outline-danger">
@@ -121,7 +121,7 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
                             <button type="button"
                                     @click="doCommandLink(command.id)"
                                     v-bind:class="{'btn-primary text-white':link.current_next_id == command.id}"
-                                    class="btn btn-outline-primary w-100">#{{ command.id }}
+                                    class="btn btn-outline-primary w-100">#{{command.id }} {{ command.pre_text || 'Без текста' }}
                             </button>
                         </div>
                     </div>
@@ -148,11 +148,11 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
                     <p>Вы выбрали диалоговую команду #{{ group.command_id }}</p>
                     <h6>Переместить её в группу</h6>
                     <div class="row" v-if="!loading">
-                        <div class="col-md-2 mb-1" v-for="(item, index) in dialog_groups">
+                        <div class="col-md-6 mb-1" v-for="(item, index) in dialog_groups">
                             <button type="button"
                                     @click="doSwapGroup(item.id )"
                                     v-bind:class="{'btn-primary text-white':item.id == group.group_id}"
-                                    class="btn btn-outline-primary w-100">#{{ item.id }}
+                                    class="btn btn-outline-primary w-100">#{{ item.id }} {{item.title || 'Без названия'}}
                             </button>
                         </div>
                     </div>

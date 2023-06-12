@@ -97,7 +97,7 @@ import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue"
         <div class="col-12 mb-2" v-if="need_page_images">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h6>Изобаржения на странице</h6>
+                    <h6>Изображения на странице</h6>
                 </div>
                 <div class="card-body d-flex justify-content-start">
 

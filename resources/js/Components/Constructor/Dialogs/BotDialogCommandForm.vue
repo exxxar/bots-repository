@@ -84,7 +84,7 @@ import RegularExpressionHelper from "@/Components/Constructor/Helpers/RegularExp
                        v-model="need_images"
                        id="need-dialog-image" checked>
                 <label class="form-check-label" for="need-dialog-image">
-                  В диалоге нужно изображение
+                    В диалоге нужно изображение
                 </label>
             </div>
 
@@ -112,7 +112,16 @@ import RegularExpressionHelper from "@/Components/Constructor/Helpers/RegularExp
                          v-if="photos.length>0">
                         <img v-lazy="getPhoto(img).imageUrl">
                         <div class="remove">
-                            <a @click="removePhoto(index)">Удалить</a>
+                            <a @click="removePhoto('photos',index)">Удалить</a>
+                        </div>
+                    </div>
+                    <div class="mb-2 img-preview"
+                         v-if="commandForm.images"
+                         style="margin-right: 10px;"
+                         v-for="(img, index) in commandForm.images">
+                        <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
+                        <div class="remove">
+                            <a @click="removePhoto('images',index)">Удалить</a>
                         </div>
                     </div>
 
@@ -145,11 +154,11 @@ import RegularExpressionHelper from "@/Components/Constructor/Helpers/RegularExp
 
 
 export default {
-    props: ["item","bot"],
+    props: ["item", "bot"],
     data() {
         return {
-            need_images:false,
-            need_keyboard:false,
+            need_images: false,
+            need_keyboard: false,
             commandForm: {
                 id: null,
                 slug: null,
@@ -188,10 +197,10 @@ export default {
                     inline_keyboard: this.item.inline_keyboard || null,
                 }
 
-                if (this.commandForm.inline_keyboard_id!=null)
+                if (this.commandForm.inline_keyboard_id != null)
                     this.need_keyboard = true
 
-                if (this.commandForm.images.length>0)
+                if (this.commandForm.images.length > 0)
                     this.need_images = true
             })
         }
@@ -233,11 +242,11 @@ export default {
 
                 this.$notify({
                     title: "Конструктор ботов",
-                    text:  "Успешная обработка диалоговой команды" ,
+                    text: "Успешная обработка диалоговой команды",
                     type: 'success'
                 });
 
-                if (this.commandForm.id ==null ) {
+                if (this.commandForm.id == null) {
                     this.commandForm = {
                         id: null,
                         slug: null,
@@ -265,8 +274,8 @@ export default {
         getPhoto(imgObject) {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
-        removePhoto(index) {
-            this.photos.splice(index, 1)
+        removePhoto(name, index) {
+            this[name].splice(index, 1)
         },
         onChangePhotos(e) {
             const files = e.target.files

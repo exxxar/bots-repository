@@ -25,6 +25,9 @@ class AdminBotController extends Controller
             ->where("bot_domain", $botDomain)
             ->first();
 
+        if (is_null($bot))
+            return Inertia::render('Error');
+
         $botUser = BotUser::query()
             ->with(["user"])
             ->where("bot_id", $bot->id)

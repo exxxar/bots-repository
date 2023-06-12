@@ -18,25 +18,30 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
         <div class="w-100 d-flex justify-between" v-if="!simple">
             <div>
                 <button type="button"
+                        title="Редактирование параметров карточки"
                         :disabled="loading"
                         data-bs-toggle="modal" :data-bs-target="'#dialog-command-modal-'+item.id"
                         class="btn btn-outline-primary"><i class="fa-solid fa-sliders"></i></button>
                 <button type="button"
                         @click="linkEvent"
+                        title="Диалог связывания с другой командой"
                         :disabled="loading"
                         class="btn btn-outline-primary ml-1"><i class="fa-solid fa-arrows-turn-to-dots"></i></button>
                 <button type="button"
                         @click="changeGroup"
+                        title="Диалог смены группы команды"
                         :disabled="loading"
                         class="btn btn-outline-primary ml-1">   <i class="fa-solid fa-arrows-up-down"></i></button>
 
                 <button type="button"
+                        title="Дублирование команды"
                         @click="duplicate"
                         :disabled="loading"
                         class="btn btn-outline-primary ml-1"> <i class="fa-solid fa-clone"></i></button>
 
                 <button type="button"
                         @click="unlinkCommand"
+                        title="Убирает связь команды с другой командой по цепочке"
                         :disabled="loading"
                         class="btn btn-outline-danger ml-1"> <i class="fa-solid fa-link-slash"></i></button>
 
@@ -46,6 +51,7 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
 
             <button type="button"
                     @click="removeCommand"
+                    title="Удаление команды"
                     :disabled="loading"
                     class="btn btn-outline-danger ml-1">   <i class="fa-solid fa-trash-can"></i></button>
 

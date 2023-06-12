@@ -67,6 +67,9 @@ trait BotDialogTrait
 
         $botUser = $this->currentBotUser();
 
+        if (is_null($botUser))
+            return;
+
         $botUser->in_dialog_mode = true;
         $botUser->save();
 
@@ -130,7 +133,8 @@ trait BotDialogTrait
 
         $this->reply($botDialogCommand->post_text ?? 'Данные успешно сохранены');
 
-        if (!is_null($botDialogCommand->next_bot_dialog_command_id)) {
+        if (!is_null($botDialogCommand) &&
+            !is_null($botDialogCommand->next_bot_dialog_command_id ?? null)) {
             $nextBotDialogCommand = BotDialogCommand::query()
                 ->find($botDialogCommand->next_bot_dialog_command_id);
 
@@ -143,6 +147,7 @@ trait BotDialogTrait
             ]);
 
             $this->sendDialogData($nextBotDialogCommand ?? null);
+
         } else {
             $botUser->in_dialog_mode = false;
             $botUser->save();

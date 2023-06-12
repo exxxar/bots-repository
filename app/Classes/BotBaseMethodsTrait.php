@@ -94,6 +94,9 @@ trait BotBaseMethodsTrait
             $this->bot->sendMessage($tmp);
 
         } catch (\Exception $e) {
+            unset($tmp['reply_markup']);
+            $this->bot->sendMessage($tmp);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -147,6 +150,7 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->editMessageReplyMarkup($tmp);
         } catch (\Exception $e) {
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -173,6 +177,10 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendMessage($tmp);
         } catch (\Exception $e) {
+
+            unset($tmp['reply_markup']);
+            $this->bot->sendMessage($tmp);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -198,6 +206,10 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendPhoto($tmp);
         } catch (\Exception $e) {
+
+            unset($tmp['reply_markup']);
+            $this->bot->sendPhoto($tmp);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
