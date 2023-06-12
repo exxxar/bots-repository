@@ -92,7 +92,12 @@ trait BotDialogTrait
 
         $matches = [];
 
-        preg_match($pattern, $text, $matches);
+        try {
+            preg_match($pattern, $text, $matches);
+        }catch (\Exception $e){
+
+        }
+
 
         return count($matches) > 0;
     }
