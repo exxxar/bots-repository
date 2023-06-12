@@ -70,6 +70,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async createKeyboardTemplate(context, payload = {keyboardForm: null}) {
+        let link = `${BASE_TEMPLATES_LINK}/keyboard-template`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload.keyboardForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async createLocation(context, payload = {locationForm: null}) {
         let link = `${BASE_TEMPLATES_LINK}/location`
 

@@ -124,7 +124,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
             </div>
             <div class="row">
                 <div class="col-12">
-                    <p>Для создания бота в Телеграм воспользуйтесь <a href="" target="_blank">инструкцией</a></p>
+                    <p>Для создания бота в Телеграм воспользуйтесь <a href="https://telegra.ph/Sozdanie-telegram-bota-06-12" target="_blank">инструкцией</a></p>
                 </div>
                 <div class="col-12">
                     <div class="mb-3">
@@ -496,7 +496,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                                     <button
                                         type="button"
                                         @click="removeItem('social_links', index)"
-                                        class="btn btn-outline-danger w-100">Удалить
+                                        class="btn btn-outline-danger w-100"><i class="fa-regular fa-trash-can"></i>
                                     </button>
                                 </div>
                             </div>
@@ -532,7 +532,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                              v-if="botForm.photos">
                             <img v-lazy="getPhoto(img).imageUrl">
                             <div class="remove">
-                                <a @click="removePhoto(index)">Удалить</a>
+                                <a @click="removePhoto(index)"><i class="fa-regular fa-trash-can"></i></a>
                             </div>
                         </div>
 
@@ -540,7 +540,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                              v-else>
                             <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+botForm.image">
                             <div class="remove">
-                                <a @click="removePhoto()">Удалить</a>
+                                <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
                             </div>
                         </div>
 
@@ -579,6 +579,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                 :keyboards="botForm.keyboards"
                 v-if="botForm.keyboards"
                 v-on:edit="editBtnScript"
+                v-on:update="requestUpdateKeyboards"
                 v-on:remove="removeKeyboard"/>
         </div>
 
@@ -757,6 +758,9 @@ export default {
                 type: 'success'
             });
         },
+        requestUpdateKeyboards(){
+            this.loadMenusByBotTemplate(this.bot.id)
+        },
         editBtnScript(edit) {
             this.command = edit.command
             this.load = true
@@ -770,6 +774,7 @@ export default {
                 this.removedKeyboards.push(this.botForm.keyboards[index].id);
 
             this.botForm.keyboards.splice(index, 1)
+
         },
         addSlug(item) {
             this.botForm.slugs.push({
@@ -956,6 +961,45 @@ export default {
 }
 </script>
 <style lang="scss">
+
+.img-preview, .photo-loader {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 42px;
+    background: white;
+    border-radius: 10px;
+    border: 1px lightgray solid;
+    position: relative;
+}
+.img-preview img, .photo-loader img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+.img-preview .remove {
+    display: none;
+    position: absolute;
+    z-index: 2;
+    a {
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+}
+
+.img-preview:hover .remove {
+    display: flex;
+}
+
 .fixed-footer {
 
     position: fixed;

@@ -1,16 +1,7 @@
 <script setup>
-import Constructor from "@/Components/Constructor/Constructor.vue";
 
-import InitialStepper from "@/Components/Constructor/InitialStepper.vue";
-import BotEditor from "@/Components/Constructor/Bot/BotEditor.vue";
-import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue";
-import ImageMenuEditor from "@/Components/Constructor/ImageMenuEditor.vue";
-import CompanyEditor from "@/Components/Constructor/Deprecated/CompanyEditor.vue";
-import LocationEditor from "@/Components/Constructor/Deprecated/LocationEditor.vue";
-import BotDialogGroupEditor from "@/Components/Constructor/Dialogs/BotDialogGroupEditor.vue";
-import BotCreator from "@/Components/Constructor/Deprecated/BotCreator.vue";
 import { Head } from '@inertiajs/vue3'
-import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
+
 </script>
 <template>
 
@@ -71,13 +62,22 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                         </li>
 
 
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               v-bind:class="{'active':active==3}"
+                               href="/dashboard"
+                               aria-current="page">
+                                <i class="fa-solid fa-house"></i>
+                                Главная страница
+                            </a>
+                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link"
                                v-bind:class="{'active':active==0}"
                                href="/company-page"
                                aria-current="page">
-                                <i class="fa-regular fa-building"></i>
+                                <i class="fa-solid fa-mug-hot"></i>
                                 Клиенты
                             </a>
                         </li>
@@ -88,7 +88,7 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                                v-bind:class="{'active':active==1}"
                                href="/bot-page"
                                aria-current="page">
-                                <i class="fa-regular fa-building"></i>
+                                <i class="fa-solid fa-robot"></i>
                                 Боты
                             </a>
                         </li>
@@ -97,10 +97,20 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                         <li class="nav-item active">
                             <a class="nav-link"
                                v-bind:class="{'active':active==2}"
-                               href="#company-editor"
+                               href="/user-page"
                                aria-current="page">
-                                <i class="fa-regular fa-building"></i>
+                                <i class="fa-solid fa-users"></i>
                                 Пользователи
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               v-bind:class="{'active':active==4}"
+                               href="/mail-page"
+                               aria-current="page">
+                                <i class="fa-regular fa-paper-plane"></i>
+                                Рассылки сообщений
                             </a>
                         </li>
 

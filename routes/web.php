@@ -30,6 +30,18 @@ Route::get('/company-page', function () {
     return Inertia::render('CompanyPage');
 });
 
+Route::get('/user-page', function () {
+    Inertia::setRootView("app");
+
+    return Inertia::render('UserPage');
+});
+
+Route::get('/mail-page', function () {
+    Inertia::setRootView("app");
+
+    return Inertia::render('MailPage');
+});
+
 Route::get('/bot-page', function () {
     Inertia::setRootView("app");
 
@@ -90,6 +102,7 @@ Route::prefix("bot")->group(function () {
             Route::post("/telegram-channel-id", "requestTelegramChannel");
             Route::get("/keyboards/{botId}", "loadKeyboards");
             Route::post("/keyboards/{botId}", "loadKeyboardsByText");
+            Route::post("/keyboard-template", "createKeyboardTemplate");
             Route::get("/slugs/{botId}", "loadSlugs");
             Route::get("/pages/{botId}", "loadPages");
 
@@ -221,7 +234,7 @@ Route::get('/welcome', function () {
 
 Route::get('/dashboard', function () {
     Inertia::setRootView("app");
-    return Inertia::render('Dashboard');
+    return Inertia::render('MainPage');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('logout', function (){

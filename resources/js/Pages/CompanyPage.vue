@@ -15,16 +15,16 @@ import CompanyList from "@/Components/Constructor/Company/CompanyList.vue";
                             <button type="button"
                                     @click="step=0"
                                     v-bind:class="{'btn-primary':step===0,'btn-outline-primary':step!==0}"
-                                    class="btn">Создание клиента</button>
+                                    class="btn">Создание клиента в системе</button>
                             <button type="button"
                                     @click="step=1"
                                     v-bind:class="{'btn-primary':step===1,'btn-outline-primary':step!==1}"
-                                    class="btn">Поиск клиента</button>
+                                    class="btn">Поиск существующего в системе клиента</button>
                             <button type="button"
                                     :disabled="!company"
                                     @click="step=2"
                                     v-bind:class="{'btn-primary':step===2,'btn-outline-primary':step!==2}"
-                                    class="btn">Редактирование клиента</button>
+                                    class="btn">Редактирование выбранного клиента</button>
                         </div>
                     </div>
                 </div>

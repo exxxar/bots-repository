@@ -295,16 +295,28 @@ class BotController extends Controller
         return response()->noContent();
     }
 
+    public function createKeyboardTemplate(Request $request){
+        $request->validate([
+            "slug" => "required",
+            "menu" => "required",
+            "type" => "required",
+            "bot_id" => "required",
+        ]);
+
+        $botMenuTemplate = BotMenuTemplate::query()
+            ->create([
+                "slug" => $request->slug ?? Str::uuid(),
+                "menu" => json_decode($request->menu) ,
+                "type" => $request->type ,
+                "bot_id" => $request->bot_id ,
+            ]);
+
+        return \response()->json(new BotMenuTemplateResource($botMenuTemplate));
+    }
 
     public function createLocation(Request $request): Response
     {
-        $request->validate([
-            "lat" => "required",
-            "lon" => "required",
-            "address" => "required",
-            "description" => "required",
-            "company_id" => "required"
-        ]);
+
 
 
         $company = Company::query()->where("id", $request->company_id)
