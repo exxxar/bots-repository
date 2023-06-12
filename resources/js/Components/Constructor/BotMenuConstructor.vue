@@ -240,10 +240,10 @@ export default {
         save() {
             this.$emit("save", this.keyboard)
 
-            this.load = true
+           /* this.load = true
             this.$nextTick(() => {
                 this.load = false
-            })
+            })*/
 
         },
         onJsonChange(value) {

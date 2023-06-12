@@ -13,7 +13,9 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
                                placeholder="Поиск нужного скрипта по описанию">
                     </div>
 
-                    <ul class="list-group" style="overflow-y: auto; height: 300px;">
+                    <ul class="list-group"
+                        v-if="filteredSlugs.length>0"
+                        style="overflow-y: auto; height: 300px;">
                         <li class="list-group-item cursor-pointer"
                             @click="selectSlug(item)"
                             v-for="(item, index) in filteredSlugs">
@@ -44,6 +46,9 @@ export default {
     },
     computed: {
         filteredSlugs() {
+            if (!this.slugs)
+                return [];
+
             if (this.slugs.length === 0)
                 return [];
 
@@ -79,10 +84,10 @@ export default {
             this.$notify("Вы выбрали скрипт из списка!");
         },
         loadSlugs() {
-            this.$store.dispatch("loadSlugs", {
+            this.$store.dispatch("loadBotSlugs", {
                 botId:this.botId
             }).then(resp => {
-                this.slugs = resp.data
+                this.slugs = resp
             })
         },
 

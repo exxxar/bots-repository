@@ -116,7 +116,7 @@ import RegularExpressionHelper from "@/Components/Constructor/Helpers/RegularExp
                         </div>
                     </div>
                     <div class="mb-2 img-preview"
-                         v-if="commandForm.images"
+                         v-if="commandForm.images&&bot"
                          style="margin-right: 10px;"
                          v-for="(img, index) in commandForm.images">
                         <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">

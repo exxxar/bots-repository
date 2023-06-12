@@ -3,8 +3,8 @@ import InitialStepper from "@/Components/Constructor/InitialStepper.vue";
 import BotEditor from "@/Components/Constructor/Bot/BotEditor.vue";
 import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue";
 import ImageMenuEditor from "@/Components/Constructor/ImageMenuEditor.vue";
-import CompanyEditor from "@/Components/Constructor/Company/CompanyEditor.vue";
-import LocationEditor from "@/Components/Constructor/Location/LocationEditor.vue";
+import CompanyEditor from "@/Components/Constructor/Deprecated/CompanyEditor.vue";
+import LocationEditor from "@/Components/Constructor/Deprecated/LocationEditor.vue";
 
 </script>
 

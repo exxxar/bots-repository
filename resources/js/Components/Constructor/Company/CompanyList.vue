@@ -3,16 +3,16 @@ import Pagination from '@/Components/Pagination.vue';
 </script>
 <template>
 
-    <div class="row mb-2">
-        <div class="col-md-12 col-12">
-            <button type="button"
-                    @click="show=!show"
-                    class="btn btn-outline-success p-3 w-100">
-                <span v-if="!show"><i class="fa-regular fa-building"></i> Открыть список компаний</span>
-                <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть список компаний</span>
-            </button>
-        </div>
-    </div>
+    <!--    <div class="row mb-2">
+            <div class="col-md-2 col-12">
+                <button type="button"
+                        @click="show=!show"
+                        class="btn btn-outline-success p-3 w-100">
+                    <span v-if="!show"><i class="fa-regular fa-building"></i></span>
+                    <span v-else><i class="fa-regular fa-square-minus"></i> </span>
+                </button>
+            </div>
+        </div>-->
 
     <div v-if="show">
         <div class="row">
@@ -60,7 +60,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-            show: false,
+            show: true,
             loading: true,
             companies: [],
             search: null,
@@ -75,8 +75,15 @@ export default {
     },
     methods: {
         selectCompany(company) {
+
+            this.$store.dispatch("updateCurrentCompany", {
+                company: company
+            })
+
             this.$emit("callback", company)
+
             this.show = false
+
             this.$notify("Вы выбрали компанию из спика! Все остальные действия будут производится для этой компании.");
         },
         nextCompanies(index) {

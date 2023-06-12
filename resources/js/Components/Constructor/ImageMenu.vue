@@ -1,9 +1,9 @@
 <template>
-    <div class="card">
+    <div class="card" v-if="bot">
         <div class="card-body">
 
             <form v-on:submit.prevent="addImageMenu">
-                <h6>Графическое Меню к боту #{{ botId || 'Не установлен' }}</h6>
+                <h6>Графическое Меню к боту #{{ bot.id || 'Не установлен' }}</h6>
                 <div class="row">
 
                     <div class="col-12">
@@ -110,7 +110,7 @@
                                      v-if="menu.image">
 
                                     <img v-if="typeof menu.image =='string' "
-                                         v-lazy="'/images-by-bot-id/'+botId+'/'+menu.image">
+                                         v-lazy="'/images-by-bot-id/'+bot.id+'/'+menu.image">
                                     <img v-else v-lazy="getPhoto(menu.image).imageUrl">
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
 </template>
 <script>
 export default {
-    props: ["botId"],
+    props: ["bot"],
     data() {
         return {
             menus: [],
@@ -154,7 +154,7 @@ export default {
     methods: {
         loadMenuByBotId() {
             this.$store.dispatch("loadMenuByBotId", {
-                botId: this.botId
+                botId: this.bot.id
             }).then(resp => {
                 this.menus = resp
             }).catch(() => {
@@ -206,7 +206,7 @@ export default {
             })
         },
         addImageMenu() {
-            this.menuForm.bot_id = this.botId
+            this.menuForm.bot_id = this.bot.id
             this.menus.push(this.menuForm);
             this.$notify("Меню успешно добавлено в список");
             this.menuForm = {

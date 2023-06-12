@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BotStoreRequest;
@@ -537,6 +538,8 @@ class BotController extends Controller
                     'menu' => $keyboard->menu,
                 ]);
 
+        BotManager::bot()->setWebhooks();
+
         return new BotResource($bot);
     }
 
@@ -690,6 +693,9 @@ class BotController extends Controller
                 ]);
         }
         $bot = Bot::query()->find($request->id);
+
+        BotManager::bot()->setWebhooks();
+
         return new BotResource($bot);
     }
 

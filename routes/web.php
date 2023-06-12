@@ -24,6 +24,17 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('/company-page', function () {
+    Inertia::setRootView("app");
+
+    return Inertia::render('CompanyPage');
+});
+
+Route::get('/bot-page', function () {
+    Inertia::setRootView("app");
+
+    return Inertia::render('BotPage');
+});
 
 Route::get('/images-by-company-id/{companyId}/{fileName}',
     [\App\Http\Controllers\Admin\TelegramController::class, 'getFilesByCompanyId']);

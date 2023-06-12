@@ -93,7 +93,7 @@ trait BotDialogTrait
         $matches = [];
 
         try {
-            preg_match($pattern, $text, $matches);
+            preg_match_all($pattern, $text, $matches);
         }catch (\Exception $e){
 
         }

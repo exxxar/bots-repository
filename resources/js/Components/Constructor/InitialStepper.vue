@@ -1,9 +1,9 @@
 <script setup>
-import Company from "@/Components/Constructor/Company/Company.vue";
+import Company from "@/Components/Constructor/Company/CompanyForm.vue";
 import CompanyList from "@/Components/Constructor/Company/CompanyList.vue";
 import BotList from "@/Components/Constructor/Bot/BotList.vue";
 import Location from "@/Components/Constructor/Location/Location.vue";
-import Bot from "@/Components/Constructor/Bot/Bot.vue";
+import Bot from "@/Components/Constructor/Bot/BotForm.vue";
 import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
 </script>
 

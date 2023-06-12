@@ -2,145 +2,151 @@
     <div class="card">
         <div class="card-body">
 
-            <form v-on:submit.prevent="addLocation">
-                <h6>Локации к компании #{{ company.title || 'Не установлен' }}</h6>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input class="form-check-input"
-                                   v-model="locationForm.can_booking"
-                                   type="checkbox" value="false" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Можно бронировать столик
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label class="form-label" id="location-address">
-                                Адрес заведения
-                                <span
-
-                                    class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                            </label>
-                            <input type="text" class="form-control"
-                                   placeholder="Адрес"
-                                   aria-label="Адрес"
-                                   maxlength="255"
-                                   v-model="locationForm.address"
-                                   aria-describedby="location-address" required>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    <div class="col-md-6 col-12">
-                        <div class="mb-3">
-                            <label class="form-label" id="location-lat">
-                                Широта
-                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                            </label>
-                            <input type="text" class="form-control"
-                                   v-mask="'##.######'"
-                                   placeholder="##.######"
-                                   aria-label="Широта"
-                                   maxlength="255"
-                                   v-model="locationForm.lat"
-                                   aria-describedby="location-lat" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-12">
-                        <div class="mb-3">
-                            <label class="form-label" id="location-lon">
-                                Долгота
-                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                            </label>
-                            <input type="text" class="form-control"
-                                   v-mask="'##.######'"
-                                   placeholder="##.######"
-                                   aria-label="Долгота"
-                                   maxlength="255"
-                                   v-model="locationForm.lon"
-                                   aria-describedby="location-lon" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label class="form-label" id="location-description">
-                                Описание локации
-                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                                <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="locationForm.description">
-                                    Длина текста {{ locationForm.description.length }}</small>
-                            </label>
-                            <textarea type="text" class="form-control"
-                                      placeholder="Описание локации"
-                                      aria-label="Описание локации"
-                                      maxlength="255"
-                                      v-model="locationForm.description"
-                                      aria-describedby="location-description" required>
-                    </textarea>
-                        </div>
-                    </div>
-                </div>
-
-<!--                <div class="row">
-                <div class="col-12">
-                    <div class="mb-3">
-                        <label class="form-label" id="location-channel">Телеграм канал локации</label>
-
-                        <input type="text" class="form-control"
-                               placeholder="Номер телеграм канала"
-                               aria-label="Номер телеграм канала"
-                               maxlength="255"
-                               v-model="locationForm.location_channel"
-                               aria-describedby="location-channel" >
-                    </div>
-                </div>
-            </div>-->
-
-                <div class="row">
-                    <div class="col-12 mb-3">
-                        <h6>Фотографии локаций</h6>
-                        <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
-                            <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
-                                <span>+</span>
-                                <input type="file" id="location-photos" multiple accept="image/*"
-                                       @change="onChangePhotos"
-                                       style="display:none;"/>
-
-                            </label>
-                            <div class="mb-2 img-preview" style="margin-right: 10px;"
-                                 v-for="(img, index) in locationForm.photos"
-                                 v-if="locationForm.photos.length>0">
-                                <img v-lazy="getPhoto(img).imageUrl">
-                                <div class="remove">
-                                    <a @click="removePhoto(index)">Удалить</a>
+            <div class="row">
+                <div class="col-md-8">
+                    <form v-on:submit.prevent="submitLocation">
+                        <h6>Локации к компании #{{ company.title || 'Не установлен' }}</h6>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           v-model="locationForm.can_booking"
+                                           type="checkbox" value="false" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Можно бронировать столик
+                                    </label>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label" id="location-address">
+                                        Адрес заведения
+                                        <span
 
+                                            class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                    </label>
+                                    <input type="text" class="form-control"
+                                           placeholder="Адрес"
+                                           aria-label="Адрес"
+                                           maxlength="255"
+                                           v-model="locationForm.address"
+                                           aria-describedby="location-address" required>
+                                </div>
+                            </div>
                         </div>
 
-                    </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="mb-3">
+                                    <label class="form-label" id="location-lat">
+                                        Широта
+                                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                    </label>
+                                    <input type="text" class="form-control"
+                                           v-mask="'##.######'"
+                                           placeholder="##.######"
+                                           aria-label="Широта"
+                                           maxlength="255"
+                                           v-model="locationForm.lat"
+                                           aria-describedby="location-lat" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="mb-3">
+                                    <label class="form-label" id="location-lon">
+                                        Долгота
+                                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                    </label>
+                                    <input type="text" class="form-control"
+                                           v-mask="'##.######'"
+                                           placeholder="##.######"
+                                           aria-label="Долгота"
+                                           maxlength="255"
+                                           v-model="locationForm.lon"
+                                           aria-describedby="location-lon" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label" id="location-description">
+                                        Описание локации
+                                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                        <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="locationForm.description">
+                                            Длина текста {{ locationForm.description.length }}</small>
+                                    </label>
+                                    <textarea type="text" class="form-control"
+                                              placeholder="Описание локации"
+                                              aria-label="Описание локации"
+                                              maxlength="255"
+                                              v-model="locationForm.description"
+                                              aria-describedby="location-description" required>
+                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--                <div class="row">
+                                        <div class="col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" id="location-channel">Телеграм канал локации</label>
+
+                                                <input type="text" class="form-control"
+                                                       placeholder="Номер телеграм канала"
+                                                       aria-label="Номер телеграм канала"
+                                                       maxlength="255"
+                                                       v-model="locationForm.location_channel"
+                                                       aria-describedby="location-channel" >
+                                            </div>
+                                        </div>
+                                    </div>-->
+
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <h6>Фотографии локаций</h6>
+                                <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
+                                    <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                                        <span>+</span>
+                                        <input type="file" id="location-photos" multiple accept="image/*"
+                                               @change="onChangePhotos"
+                                               style="display:none;"/>
+
+                                    </label>
+                                    <div class="mb-2 img-preview" style="margin-right: 10px;"
+                                         v-for="(img, index) in locationForm.photos"
+                                         v-if="locationForm.photos">
+                                        <img v-lazy="getPhoto(img).imageUrl">
+                                        <div class="remove">
+                                            <a @click="removePhoto(index)">Удалить</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <button class="btn btn-outline-success w-100"
+                                        type="submit">
+                                    <span v-if="locationForm.id">Обновить расположение</span>
+                                    <span v-else>Добавить расположение</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+
                 </div>
 
-                <div class="row">
-                    <div class="col-12">
-                        <button class="btn btn-outline-success w-100"
-                                type="submit">Добавить локацию
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <div class="row">
-                <div class="col-12 mt-3"
-                     v-if="locations.length>0"
+                <div class="col-md-4 mt-3"
+                     v-if="locations"
                      v-for="(location, index) in locations">
-                    <div class="card">
+                    <div class="card" @click="selectLocation(location)">
                         <div class="card-header d-flex justify-content-between">
                             <h6>Адрес локации <strong>{{ location.address || 'Не указано' }}</strong>
                                 (ш:{{ location.lat }},д:{{ location.lon }})
@@ -153,7 +159,7 @@
                         <div class="card-body">
                             <p v-if="location.location_channel">Канал заведения <strong>{{ location.location_channel }}</strong></p>
                             <p>{{ location.description || 'Не указано' }}</p>
-                            <h6 v-if="location.photos.length>0">Фотографии локаций</h6>
+                            <h6 v-if="location.photos">Фотографии локаций</h6>
                             <div class="w-100 d-flex" v-if="location.photos">
                                 <div class="mb-2 img-preview"
                                      style="margin-right: 10px;"
@@ -168,7 +174,7 @@
                                      style="margin-right: 10px;"
                                      v-for="(img, index) in location.images"
                                      v-if="location.images.length>0">
-                                    <img v-lazy="'/images-by-company-id/'+companyId+'/'+img">
+                                    <img v-lazy="'/images-by-company-id/'+company.id+'/'+img">
                                 </div>
                             </div>
 
@@ -177,15 +183,21 @@
                 </div>
             </div>
 
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-12">
                     <button
                         @click="submitLocations"
                         :disabled="locations.length===0&&deletedLocations.length===0"
-                        class="btn btn-outline-primary p-3 w-100">Сохранить локации для заведения
+                        class="btn btn-success p-3 w-100">
+                        Сохранить локации клиента
                     </button>
                 </div>
             </div>
+
+
+
+
+
         </div>
     </div>
 </template>
@@ -197,6 +209,7 @@ export default {
             locations: [],
             deletedLocations: [],
             locationForm: {
+                id:null,
                 lat: null,
                 lon: null,
                 address: null,
@@ -214,10 +227,9 @@ export default {
     methods: {
         loadLocationsByCompany() {
             this.$store.dispatch("loadLocationsByCompany", {
-                companyId: this.companyId
-            }).then(resp => {
-                this.locations = resp
-                console.log("!!!!", resp)
+                companyId: this.company.id
+            }).then((resp) => {
+                this.locations = resp || []
             }).catch(() => {
 
             })
@@ -266,11 +278,15 @@ export default {
                 })
             })
         },
-        addLocation() {
-            this.locationForm.company_id = this.companyId
+        selectLocation(item){
+            this.locationForm = item
+        },
+        submitLocation() {
+            this.locationForm.company_id = this.company.id
             this.locations.push(this.locationForm);
             this.$notify("Локация успешно добавлена в список. Не забудьте сохранить");
             this.locationForm = {
+                id:null,
                 lat: null,
                 lon: null,
                 address: null,

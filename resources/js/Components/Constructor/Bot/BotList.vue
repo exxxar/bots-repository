@@ -2,7 +2,7 @@
 import Pagination from '@/Components/Pagination.vue';
 </script>
 <template>
-    <div class="row mb-2">
+<!--    <div class="row mb-2">
         <div class="col-12">
             <button type="button"
                     @click="show=!show"
@@ -11,7 +11,7 @@ import Pagination from '@/Components/Pagination.vue';
                 <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть список ботов</span>
             </button>
         </div>
-    </div>
+    </div>-->
 
     <div v-if="show">
         <div class="row">
@@ -69,7 +69,7 @@ export default {
     props: ["companyId", "editor"],
     data() {
         return {
-            show:false,
+            show:true,
             loading: true,
             bots: [],
             search: null,

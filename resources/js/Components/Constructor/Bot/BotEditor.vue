@@ -1,6 +1,6 @@
 <script setup>
 import BotList from "@/Components/Constructor/Bot/BotList.vue";
-import Bot from "@/Components/Constructor/Bot/Bot.vue";
+import Bot from "@/Components/Constructor/Bot/BotForm.vue";
 
 </script>
 <template>

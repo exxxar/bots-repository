@@ -16,7 +16,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
         <div class="col-12">
             <ImageMenu
                 v-if="bot&&!load"
-                :bot-id="bot.id"
+                :bot="bot"
                 v-on:callback="imageMenuCallback"/>
         </div>
     </div>

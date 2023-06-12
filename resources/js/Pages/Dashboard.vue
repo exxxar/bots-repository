@@ -5,10 +5,10 @@ import InitialStepper from "@/Components/Constructor/InitialStepper.vue";
 import BotEditor from "@/Components/Constructor/Bot/BotEditor.vue";
 import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue";
 import ImageMenuEditor from "@/Components/Constructor/ImageMenuEditor.vue";
-import CompanyEditor from "@/Components/Constructor/Company/CompanyEditor.vue";
-import LocationEditor from "@/Components/Constructor/Location/LocationEditor.vue";
+import CompanyEditor from "@/Components/Constructor/Deprecated/CompanyEditor.vue";
+import LocationEditor from "@/Components/Constructor/Deprecated/LocationEditor.vue";
 import BotDialogGroupEditor from "@/Components/Constructor/Dialogs/BotDialogGroupEditor.vue";
-import BotCreator from "@/Components/Constructor/Bot/BotCreator.vue";
+import BotCreator from "@/Components/Constructor/Deprecated/BotCreator.vue";
 import { Head } from '@inertiajs/vue3'
 import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
 </script>
@@ -58,7 +58,7 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                     <ul class="nav flex-column">
 
 
-                        <li class="nav-item">
+<!--                        <li class="nav-item">
                             <a class="nav-link "
                                v-bind:class="{'active':tab===0}"
                                href="#new-client"
@@ -66,7 +66,7 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                                 <i class="fa-solid fa-mug-hot"></i>
                                 Создание нового клиента
                             </a>
-                        </li>
+                        </li>-->
 
                         <li class="nav-item">
                             <a class="nav-link"
@@ -74,7 +74,17 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                                v-bind:class="{'active':tab===1}"
                                aria-current="page" @click="tab=1">
                                 <i class="fa-regular fa-building"></i>
-                                Создание \ редактирование компаний
+                                Создание компании
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               href="#company-editor"
+                               v-bind:class="{'active':tab===8}"
+                               aria-current="page" @click="tab=8">
+                                <i class="fa-regular fa-building"></i>
+                                Создание редактирование компании
                             </a>
                         </li>
 
@@ -97,7 +107,7 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                             </a>
                         </li>
 
-                        <li class="nav-item">
+<!--                        <li class="nav-item">
                             <a class="nav-link"
                                href="#location-editor"
                                v-bind:class="{'active':tab===2}"
@@ -115,7 +125,8 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                                 <i class="fa-regular fa-images"></i>
                                 Редактор "предложения и услуги" для ботов
                             </a>
-                        </li>
+                        </li>-->
+<!--
                         <li class="nav-item">
                             <a class="nav-link"
                                href="#page-construct"
@@ -146,6 +157,7 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                                 class="nav-lin btn btn-outline-success w-100"
                                 @click="reloadWebhooks">Обновить зависимости</button>
                         </li>
+-->
 
                         <li class="nav-item p-2">
                             <button
