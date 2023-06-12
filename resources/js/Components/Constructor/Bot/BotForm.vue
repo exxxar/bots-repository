@@ -42,7 +42,8 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <li><a class="dropdown-item" href="#bot-image-menu" @click="step=5">Меню заведения</a></li>
-                        <li><a class="dropdown-item" href="#bot-menu-template" @click="step=1">Шаблон клавитатур бота</a></li>
+                        <li><a class="dropdown-item" href="#bot-menu-template" @click="step=1">Шаблон клавитатур
+                            бота</a></li>
                         <li><a class="dropdown-item" href="#bot-slugs" @click="step=2">Скрипты</a></li>
                         <li><a class="dropdown-item" href="#bot-users" @click="step=3">Пользователи</a></li>
                     </ul>
@@ -124,7 +125,8 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
             </div>
             <div class="row">
                 <div class="col-12">
-                    <p>Для создания бота в Телеграм воспользуйтесь <a href="https://telegra.ph/Sozdanie-telegram-bota-06-12" target="_blank">инструкцией</a></p>
+                    <p>Для создания бота в Телеграм воспользуйтесь <a
+                        href="https://telegra.ph/Sozdanie-telegram-bota-06-12" target="_blank">инструкцией</a></p>
                 </div>
                 <div class="col-12">
                     <div class="mb-3">
@@ -549,9 +551,6 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                 </div>
 
 
-
-
-
             </div>
 
             <div class="row">
@@ -570,7 +569,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
             <ImageMenu
                 v-if="bot&&!load"
                 :bot="bot"
-                />
+            />
         </div>
 
 
@@ -758,7 +757,7 @@ export default {
                 type: 'success'
             });
         },
-        requestUpdateKeyboards(){
+        requestUpdateKeyboards() {
             this.loadMenusByBotTemplate(this.bot.id)
         },
         editBtnScript(edit) {
@@ -774,6 +773,30 @@ export default {
                 this.removedKeyboards.push(this.botForm.keyboards[index].id);
 
             this.botForm.keyboards.splice(index, 1)
+
+            let data = new FormData();
+            Object.keys(this.botForm)
+                .forEach(key => {
+                    const item = this.botForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+
+            if (this.removedKeyboards.length > 0)
+                data.append("removed_keyboards", JSON.stringify(this.removedKeyboards))
+
+
+            this.$store.dispatch("updateBot", {
+                botForm: data
+            }).then((response) => {
+
+            }).catch(err => {
+
+            })
+
 
         },
         addSlug(item) {
@@ -974,6 +997,7 @@ export default {
     border: 1px lightgray solid;
     position: relative;
 }
+
 .img-preview img, .photo-loader img {
     position: absolute;
     top: 0;
@@ -989,6 +1013,7 @@ export default {
     display: none;
     position: absolute;
     z-index: 2;
+
     a {
         font-size: 16px;
         font-weight: 600;

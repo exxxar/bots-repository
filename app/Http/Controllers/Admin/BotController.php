@@ -594,8 +594,28 @@ class BotController extends Controller
 
             foreach ($tmpKeyboards as $id) {
                 $keyboard = BotMenuTemplate::query()->find($id);
-                if (!is_null($keyboard))
+                if (!is_null($keyboard)) {
+
+                    $tmpPages = BotPage::query()
+                        ->where("reply_keyboard_id", $keyboard->id)
+                        ->orWhere('inline_keyboard_id', $keyboard->id)
+                        ->get();
+
+                    if (!empty($tmpPages))
+                        foreach ($tmpPages as $tmpPage){
+                            if ($tmpPage->reply_keyboard_id == $keyboard->id)
+                                $tmpPage->reply_keyboard_id = null;
+
+                            if ($tmpPage->inline_keyboard_id == $keyboard->id)
+                                $tmpPage->inline_keyboard_id = null;
+
+                            $tmpPage->save();
+
+                        }
                     $keyboard->delete();
+
+                }
+
             }
 
         }
