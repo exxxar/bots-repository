@@ -31,15 +31,17 @@ import Pagination from '@/Components/Pagination.vue';
         <div class="row" v-if="bots.length>0">
             <div class="col-12 mb-3">
                 <ul class="list-group w-100">
-                    <li class="list-group-item active cursor-pointer"
+                    <li class="list-group-item active cursor-pointer  btn btn-outline-info"
                         v-if="!editor"
                         @click="selectBot(null)">Создать нового бота
                     </li>
-                    <li class="list-group-item cursor-pointer"
+                    <li class="list-group-item cursor-pointer btn btn-outline-info mb-1 d-flex align-items-center justify-between"
                         v-for="(bot, index) in bots"
-                        @click="selectBot(bot)">Выбрать для редактирования <strong style="    word-wrap: break-word;">{{
+                        @click="selectBot(bot)"><strong style="    word-wrap: break-word;"><i class="fa-solid fa-robot mr-2"></i>{{
                             bot.bot_domain || 'Не указано'
-                        }}</strong></li>
+                        }}</strong>
+                    <span class="badge bg-info" v-if="bot.is_template">{{bot.template_description || 'Шаблон без названия'}}</span>
+                    </li>
                 </ul>
 
             </div>

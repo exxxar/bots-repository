@@ -25,10 +25,11 @@ import Pagination from '@/Components/Pagination.vue';
             <div class="col-12 mb-3">
                 <ul class="list-group w-100">
 
-                    <li class="list-group-item cursor-pointer d-flex justify-content-between"
+                    <li class="list-group-item cursor-pointer btn btn-outline-info mb-1 d-flex justify-content-between"
+                        @click="selectPage(page)"
                         v-for="(page, index) in pages"
                        >
-                        <strong  @click="selectPage(page)">#{{ page.id || 'Не указано' }} {{ page.slug.command || 'Не указано' }}</strong>
+                        <strong>#{{ page.id || 'Не указано' }} {{ page.slug.command || 'Не указано' }}</strong>
 
                         <div>
                             <button type="button"

@@ -1,7 +1,6 @@
 <script setup>
 import Pagination from '@/Components/Pagination.vue';
 import DialogCommandCard from "@/Components/Constructor/Cards/DialogCommandCard.vue";
-import BotList from "@/Components/Constructor/Bot/BotList.vue";
 import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogCommandForm.vue";
 
 </script>

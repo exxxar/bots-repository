@@ -1,13 +1,13 @@
 <script setup>
 import Constructor from "@/Components/Constructor/Constructor.vue";
 
-import InitialStepper from "@/Components/Constructor/InitialStepper.vue";
-import BotEditor from "@/Components/Constructor/Bot/BotEditor.vue";
+import InitialStepper from "@/Components/Constructor/Deprecated/InitialStepper.vue";
+import BotEditor from "@/Components/Constructor/Deprecated/BotEditor.vue";
 import BotPageConstructor from "@/Components/Constructor/BotPageConstructor.vue";
-import ImageMenuEditor from "@/Components/Constructor/ImageMenuEditor.vue";
+import ImageMenuEditor from "@/Components/Constructor/Deprecated/ImageMenuEditor.vue";
 import CompanyEditor from "@/Components/Constructor/Deprecated/CompanyEditor.vue";
 import LocationEditor from "@/Components/Constructor/Deprecated/LocationEditor.vue";
-import BotDialogGroupEditor from "@/Components/Constructor/Dialogs/BotDialogGroupEditor.vue";
+import BotDialogGroupEditor from "@/Components/Constructor/Deprecated/BotDialogGroupEditor.vue";
 import BotCreator from "@/Components/Constructor/Deprecated/BotCreator.vue";
 import { Head } from '@inertiajs/vue3'
 import BotDashboard from "@/Components/Constructor/BotDashboard.vue";

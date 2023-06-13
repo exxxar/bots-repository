@@ -32,7 +32,7 @@ import Pagination from '@/Components/Pagination.vue';
         <div class="row" v-if="companies.length>0">
             <div class="col-12 mb-3">
                 <ul class="list-group w-100">
-                    <li class="list-group-item"
+                    <li class="list-group-item btn btn-outline-info mb-1 d-flex justify-between"
                         v-for="(company, index) in companies"
                         @click="selectCompany(company)">{{ company.title || 'Не указано' }}
                         ({{ company.slug || 'Не указано' }})

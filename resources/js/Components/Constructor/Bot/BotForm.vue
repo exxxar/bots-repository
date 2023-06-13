@@ -8,7 +8,7 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
 import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
 import Page from "@/Components/Constructor/Pages/Page.vue"
 import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
-
+import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 </script>
 <template>
     <div class="row" v-if="company">
@@ -45,6 +45,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                         <li><a class="dropdown-item" href="#bot-menu-template" @click="step=1">Шаблон клавитатур
                             бота</a></li>
                         <li><a class="dropdown-item" href="#bot-slugs" @click="step=2">Скрипты</a></li>
+                        <li><a class="dropdown-item" href="#bot-dialogs" @click="step=6">Диалоги</a></li>
                         <li><a class="dropdown-item" href="#bot-users" @click="step=3">Пользователи</a></li>
                     </ul>
                 </div>
@@ -582,6 +583,12 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
                 v-on:remove="removeKeyboard"/>
         </div>
 
+        <div v-if="step===6">
+            <BotDialogGroupList
+                :bot="bot"
+                v-if="!load"/>
+        </div>
+
         <div v-if="step===2">
             <BotSlugList
                 v-if="botForm.slugs&&!load"
@@ -601,6 +608,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
         <div class="row" v-if="step===4">
             <div class="col-12 col-md-8" v-if="bot&&!load">
                 <Page
+                    v-if="!loadPage"
                     :page="page"
                     :bot="bot"
                     v-on:callback="pageCallback"/>
@@ -608,6 +616,7 @@ import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
 
             <div class="col-12 col-md-4" v-if="!load&&bot">
                 <PagesList
+                    v-if="!loadPageList"
                     :bot-id="bot.id"
                     :editor="true"
                     v-on:callback="pageListCallback"/>
@@ -650,6 +659,8 @@ export default {
             step: 0,
             templates: [],
             load: false,
+            loadPage:false,
+            loadPageList:false,
             removedSlugs: [],
             removedKeyboards: [],
 
@@ -968,16 +979,17 @@ export default {
         },
 
         pageListCallback(page) {
-            this.load = true
+            this.loadPage = true
             this.page = page
             this.$nextTick(() => {
-                this.load = false
+                this.loadPage = false
+
             });
         },
         pageCallback(page) {
-            this.load = true
+            this.loadPageList = true
             this.$nextTick(() => {
-                this.load = false
+                this.loadPageList = false
             });
         }
     }
