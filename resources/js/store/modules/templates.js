@@ -70,6 +70,31 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async removeKeyboardTemplate(context, payload = {templateId: null}) {
+        let link = `${BASE_TEMPLATES_LINK}/remove-keyboard-template/${payload.templateId}`
+
+        let _axios = util.makeAxiosFactory(link,"DELETE")
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async editKeyboardTemplate(context, payload = {keyboardForm: null}) {
+        let link = `${BASE_TEMPLATES_LINK}/edit-keyboard-template`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload.keyboardForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async createKeyboardTemplate(context, payload = {keyboardForm: null}) {
         let link = `${BASE_TEMPLATES_LINK}/keyboard-template`
 

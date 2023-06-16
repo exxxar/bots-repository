@@ -103,6 +103,8 @@ Route::prefix("bot")->group(function () {
             Route::get("/keyboards/{botId}", "loadKeyboards");
             Route::post("/keyboards/{botId}", "loadKeyboardsByText");
             Route::post("/keyboard-template", "createKeyboardTemplate");
+            Route::post("/edit-keyboard-template", "editKeyboardTemplate");
+            Route::delete("/remove-keyboard-template/{templateId}", "removeKeyboardTemplate");
             Route::get("/slugs/{botId}", "loadSlugs");
             Route::get("/pages/{botId}", "loadPages");
 

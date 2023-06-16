@@ -227,7 +227,8 @@ class BotController extends Controller
         return response()->json(BotMenuTemplateResource::collection($keyboards));
     }
 
-    public function loadPages(Request $request, $botId) {
+    public function loadPages(Request $request, $botId)
+    {
         $pages = BotPage::query()
             ->where("bot_id", $botId)
             ->orderBy("created_at", "desc")
@@ -295,7 +296,8 @@ class BotController extends Controller
         return response()->noContent();
     }
 
-    public function createKeyboardTemplate(Request $request){
+    public function createKeyboardTemplate(Request $request)
+    {
         $request->validate([
             "slug" => "required",
             "menu" => "required",
@@ -306,9 +308,37 @@ class BotController extends Controller
         $botMenuTemplate = BotMenuTemplate::query()
             ->create([
                 "slug" => $request->slug ?? Str::uuid(),
-                "menu" => json_decode($request->menu) ,
-                "type" => $request->type ,
-                "bot_id" => $request->bot_id ,
+                "menu" => json_decode($request->menu),
+                "type" => $request->type,
+                "bot_id" => $request->bot_id,
+            ]);
+
+        return \response()->json(new BotMenuTemplateResource($botMenuTemplate));
+    }
+
+    public function editKeyboardTemplate(Request $request)
+    {
+        $request->validate([
+            "id" => "required",
+            "slug" => "required",
+            "menu" => "required",
+            "type" => "required",
+            "bot_id" => "required",
+        ]);
+
+
+        $botMenuTemplate = BotMenuTemplate::query()->find($request->id);
+
+        if (is_null($botMenuTemplate))
+            return response()->noContent(404);
+
+
+        $botMenuTemplate
+            ->update([
+                "slug" => $request->slug ?? Str::uuid(),
+                "menu" => json_decode($request->menu),
+                "type" => $request->type,
+                "bot_id" => $request->bot_id,
             ]);
 
         return \response()->json(new BotMenuTemplateResource($botMenuTemplate));
@@ -316,7 +346,6 @@ class BotController extends Controller
 
     public function createLocation(Request $request): Response
     {
-
 
 
         $company = Company::query()->where("id", $request->company_id)
@@ -491,7 +520,7 @@ class BotController extends Controller
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
-        $tmp->is_template =$request->is_template ?? true;
+        $tmp->is_template = $request->is_template ?? true;
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
@@ -512,24 +541,23 @@ class BotController extends Controller
             foreach ($pages as $page) {
                 $page = (object)$page;
 
-               $tmpSlug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
+                $tmpSlug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
 
-               if (!is_null($tmpSlug)){
-                   $tmpSlug = $tmpSlug->replicate();
-                   $tmpSlug->bot_id = $bot->id;
-                   $tmpSlug->save();
+                if (!is_null($tmpSlug)) {
+                    $tmpSlug = $tmpSlug->replicate();
+                    $tmpSlug->bot_id = $bot->id;
+                    $tmpSlug->save();
 
-                   BotPage::query()->create([
-                       'bot_menu_slug_id'=>$tmpSlug->id,
-                       'content'=>$page->content,
-                       'images'=>$page->images,
-                       'reply_keyboard_id'=>$page->reply_keyboard_id,
-                       'inline_keyboard_id'=>$page->inline_keyboard_id,
-                       'bot_id'=>$bot->id,
-                   ]);
-               }
+                    BotPage::query()->create([
+                        'bot_menu_slug_id' => $tmpSlug->id,
+                        'content' => $page->content,
+                        'images' => $page->images,
+                        'reply_keyboard_id' => $page->reply_keyboard_id,
+                        'inline_keyboard_id' => $page->inline_keyboard_id,
+                        'bot_id' => $bot->id,
+                    ]);
+                }
             }
-
 
 
         if (!empty($slugs))
@@ -570,7 +598,7 @@ class BotController extends Controller
             "welcome_message" => "required",
             "level_1" => "required",
             "slugs" => "required",
-            "keyboards" => "required",
+
 
         ]);
 
@@ -602,7 +630,7 @@ class BotController extends Controller
                         ->get();
 
                     if (!empty($tmpPages))
-                        foreach ($tmpPages as $tmpPage){
+                        foreach ($tmpPages as $tmpPage) {
                             if ($tmpPage->reply_keyboard_id == $keyboard->id)
                                 $tmpPage->reply_keyboard_id = null;
 
@@ -665,12 +693,16 @@ class BotController extends Controller
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
-        $tmp->is_template =$request->is_template ?? true;
+        $tmp->is_template = $request->is_template ?? true;
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
-        $keyboards = json_decode($request->keyboards);
-        unset($tmp->keyboards);
+        $keyboards = null;
+        if (isset($request->keyboards)) {
+            $keyboards = json_decode($request->keyboards);
+            unset($tmp->keyboards);
+        }
+
         $slugs = json_decode($request->slugs);
         unset($tmp->slugs);
         unset($tmp->selected_bot_template_id);
@@ -704,31 +736,58 @@ class BotController extends Controller
         }
 
 
-        foreach ($keyboards as $keyboard) {
+        if (!is_null($keyboards))
+            foreach ($keyboards as $keyboard) {
+                $tmpKeyboard = BotMenuTemplate::query()
+                    ->where("id", $keyboard->id)
+                    ->first();
 
-            $tmpKeyboard = BotMenuTemplate::query()
-                ->where("id", $keyboard->id)
-                ->first();
+                if (!is_null($tmpKeyboard))
+                    $tmpKeyboard->update([
+                        'type' => $keyboard->type,
+                        'slug' => $keyboard->slug,
+                        'menu' => $keyboard->menu,
+                    ]);
+                else
+                    BotMenuTemplate::query()->create([
+                        'bot_id' => $request->id,
+                        'type' => $keyboard->type,
+                        'slug' => $keyboard->slug,
+                        'menu' => $keyboard->menu,
+                    ]);
+            }
 
-            if (!is_null($tmpKeyboard))
-                $tmpKeyboard->update([
-                    'type' => $keyboard->type,
-                    'slug' => $keyboard->slug,
-                    'menu' => $keyboard->menu,
-                ]);
-            else
-                BotMenuTemplate::query()->create([
-                    'bot_id' => $request->id,
-                    'type' => $keyboard->type,
-                    'slug' => $keyboard->slug,
-                    'menu' => $keyboard->menu,
-                ]);
-        }
         $bot = Bot::query()->find($request->id);
 
         BotManager::bot()->setWebhooks();
 
         return new BotResource($bot);
+    }
+
+    public function removeKeyboardTemplate(Request $request, $templateId)
+    {
+        $botMenuTemplate = BotMenuTemplate::query()->find($templateId);
+
+        if (is_null($botMenuTemplate))
+            return response()->noContent(404);
+
+        $pages = BotPage::query()
+            ->where('reply_keyboard_id', $templateId)
+            ->orWhere('inline_keyboard_id', $templateId)
+            ->get();
+
+
+        foreach ($pages as $page) {
+            if ($page->reply_keyboard_id == $templateId)
+                $page->reply_keyboard_id = null;
+            if ($page->inline_keyboard_id == $templateId)
+                $page->inline_keyboard_id = null;
+            $page->save();
+        }
+
+        $botMenuTemplate->delete();
+
+        return \response()->noContent();
     }
 
 }

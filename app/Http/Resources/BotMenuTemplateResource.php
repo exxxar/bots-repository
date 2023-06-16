@@ -19,6 +19,7 @@ class BotMenuTemplateResource extends JsonResource
             'command' => $this->command,
             'slug' => $this->slug,
             'menu' => $this->menu,
+            'deleted_at' => $this->deleted_at ?? null,
         ];
     }
 }

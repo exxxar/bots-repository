@@ -1,5 +1,5 @@
 <script setup>
-import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue";
+import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue";
 import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChannelHelper.vue";
 import RegularExpressionHelper from "@/Components/Constructor/Helpers/RegularExpressionHelper.vue";
 

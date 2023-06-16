@@ -1,5 +1,5 @@
 <script setup>
-import BotMenuList from "@/Components/Constructor/BotMenuList.vue";
+import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
 import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
 import BotUserList from "@/Components/Constructor/BotUserList.vue";
 import TextHelper from "@/Components/Constructor/Helpers/TextHelper.vue";
@@ -575,12 +575,9 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
 
 
         <div v-if="step===1">
-            <BotMenuList
-                :keyboards="botForm.keyboards"
-                v-if="botForm.keyboards"
-                v-on:edit="editBtnScript"
-                v-on:update="requestUpdateKeyboards"
-                v-on:remove="removeKeyboard"/>
+            <KeyboardList
+                :select-mode="true"
+                v-if="!load"/>
         </div>
 
         <div v-if="step===6">
@@ -659,8 +656,8 @@ export default {
             step: 0,
             templates: [],
             load: false,
-            loadPage:false,
-            loadPageList:false,
+            loadPage: false,
+            loadPageList: false,
             removedSlugs: [],
             removedKeyboards: [],
 
@@ -699,14 +696,13 @@ export default {
 
                 pages: [],
 
-                keyboards: [],
+
             },
         }
     },
     watch: {
         'botForm.selected_bot_template_id': function (oVal, nVal) {
             if (this.botForm.selected_bot_template_id != null) {
-                this.loadMenusByBotTemplate(this.botForm.selected_bot_template_id)
                 this.loadSlugsByBotTemplate(this.botForm.selected_bot_template_id)
                 this.loadPagesByBotTemplate(this.botForm.selected_bot_template_id)
             }
@@ -717,7 +713,6 @@ export default {
 
         if (this.bot)
             this.$nextTick(() => {
-                this.loadMenusByBotTemplate(this.bot.id)
                 this.loadSlugsByBotTemplate(this.bot.id)
                 this.loadPagesByBotTemplate(this.bot.id)
 
@@ -768,48 +763,7 @@ export default {
                 type: 'success'
             });
         },
-        requestUpdateKeyboards() {
-            this.loadMenusByBotTemplate(this.bot.id)
-        },
-        editBtnScript(edit) {
-            this.command = edit.command
-            this.load = true
 
-            this.$nextTick(() => {
-                this.load = false
-            })
-        },
-        removeKeyboard(index) {
-            if (this.bot)
-                this.removedKeyboards.push(this.botForm.keyboards[index].id);
-
-            this.botForm.keyboards.splice(index, 1)
-
-            let data = new FormData();
-            Object.keys(this.botForm)
-                .forEach(key => {
-                    const item = this.botForm[key] || ''
-                    if (typeof item === 'object')
-                        data.append(key, JSON.stringify(item))
-                    else
-                        data.append(key, item)
-                });
-
-
-            if (this.removedKeyboards.length > 0)
-                data.append("removed_keyboards", JSON.stringify(this.removedKeyboards))
-
-
-            this.$store.dispatch("updateBot", {
-                botForm: data
-            }).then((response) => {
-
-            }).catch(err => {
-
-            })
-
-
-        },
         addSlug(item) {
             this.botForm.slugs.push({
                 id: null,
@@ -845,13 +799,7 @@ export default {
             this.botForm.slugs.splice(index, 1)
         },
 
-        loadMenusByBotTemplate(botId) {
-            this.$store.dispatch("loadBotKeyboards", {
-                botId: botId
-            }).then((resp) => {
-                this.botForm.keyboards = resp
-            })
-        },
+
         loadSlugsByBotTemplate(botId) {
             this.$store.dispatch("loadBotSlugs", {
                 botId: botId
@@ -900,6 +848,7 @@ export default {
                 this.botForm.image = null
         },
         addBot() {
+
             let data = new FormData();
             Object.keys(this.botForm)
                 .forEach(key => {
@@ -929,48 +878,51 @@ export default {
             this.$store.dispatch((this.bot == null ? "createBot" : "updateBot"), {
                 botForm: data
             }).then((response) => {
+
                 this.$emit("callback", response.data)
+
                 this.$notify({
                     title: "Конструктор ботов",
                     text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
                     type: 'success'
                 });
 
-                this.botForm = {
-                    is_template: false,
-                    template_description: null,
-                    bot_domain: null,
-                    bot_token: null,
-                    bot_token_dev: null,
-                    order_channel: null,
-                    main_channel: null,
-                    balance: null,
-                    tax_per_day: null,
+                if (this.bot != null)
+                    this.botForm = {
+                        is_template: false,
+                        template_description: null,
+                        bot_domain: null,
+                        bot_token: null,
+                        bot_token_dev: null,
+                        order_channel: null,
+                        main_channel: null,
+                        balance: null,
+                        tax_per_day: null,
 
-                    image: null,
+                        image: null,
 
-                    description: null,
+                        description: null,
 
-                    info_link: null,
+                        info_link: null,
 
-                    social_links: [],
+                        social_links: [],
 
-                    maintenance_message: null,
+                        maintenance_message: null,
 
-                    level_1: 10,
-                    level_2: 0,
-                    level_3: 0,
+                        level_1: 10,
+                        level_2: 0,
+                        level_3: 0,
 
-                    photos: [],
+                        photos: [],
 
-                    selected_bot_template_id: null,
+                        selected_bot_template_id: null,
 
-                    slugs: [],
+                        slugs: [],
 
-                    pages: [],
+                        pages: [],
 
-                    keyboards: [],
-                }
+
+                    }
             }).catch(err => {
 
             })

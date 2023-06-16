@@ -1,5 +1,6 @@
 <script setup>
-import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue";
+import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue";
+import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
 </script>
 <template>
     <form v-on:submit.prevent="submitPage">
@@ -153,11 +154,31 @@ import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue"
             <div class="card">
                 <div class="card-header d-flex justify-between align-items-center">
                     <h6>Конструктор нижнего меню</h6>
-                    <button class="btn btn-link">Выбрать из шаблонов</button>
+
+                    <button class="btn btn-primary" type="button"
+                        @click="showReplyTemplateSelector = !showReplyTemplateSelector"
+                    >
+                        Выбрать из шаблонов
+                    </button>
+
+
+
                 </div>
 
+
+
                 <div class="card-body">
+
+
+                    <KeyboardList
+                        class="mb-2"
+                        :type="'reply'"
+                        v-if="showReplyTemplateSelector"
+                        v-on:select="selectReplyKeyboard"
+                        :select-mode="true"/>
+
                     <BotMenuConstructor
+                        v-else
                         :type="'reply'"
                         v-on:save="saveReplyKeyboard"
                         :edited-keyboard="pageForm.reply_keyboard"/>
@@ -183,13 +204,25 @@ import BotMenuConstructor from "@/Components/Constructor/BotMenuConstructor.vue"
 
                     <div class="card-header d-flex justify-between align-items-center">
                         <h6>Конструктор меню в сообщении</h6>
-                        <button class="btn btn-link">Выбрать из шаблонов</button>
+                        <button class="btn btn-primary" type="button"
+                                @click="showInlineTemplateSelector = !showInlineTemplateSelector"
+                        >
+                            Выбрать из шаблонов
+                        </button>
                     </div>
 
 
                 <div class="card-body">
+                    <KeyboardList
+                        class="mb-2"
+                        :type="'inline'"
+                        v-if="showInlineTemplateSelector"
+                        v-on:select="selectInlineKeyboard"
+                        :select-mode="true"/>
+
                     <BotMenuConstructor
                         :type="'inline'"
+                        v-else
                         v-on:save="saveInlineKeyboard"
                         :edited-keyboard="pageForm.inline_keyboard"/>
 
@@ -215,6 +248,8 @@ export default {
         return {
             load: false,
             photos: [],
+            showReplyTemplateSelector:false,
+            showInlineTemplateSelector:false,
             need_page_images: false,
             need_inline_menu: false,
             need_reply_menu: false,
@@ -351,7 +386,18 @@ export default {
         saveInlineKeyboard(keyboard) {
             this.pageForm.inline_keyboard = keyboard
         },
+        selectReplyKeyboard(keyboard){
+            this.pageForm.reply_keyboard = keyboard
 
+            this.showReplyTemplateSelector = false;
+        },
+        selectInlineKeyboard(keyboard){
+            this.pageForm.inline_keyboard = keyboard
+
+            console.log(keyboard)
+
+            this.showInlineTemplateSelector = false;
+        },
         saveReplyKeyboard(keyboard) {
             this.pageForm.reply_keyboard = keyboard
         },
