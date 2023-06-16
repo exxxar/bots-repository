@@ -576,7 +576,7 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
 
         <div v-if="step===1">
             <KeyboardList
-                :select-mode="true"
+                :select-mode="false"
                 v-if="!load"/>
         </div>
 
