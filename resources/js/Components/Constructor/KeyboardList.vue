@@ -62,6 +62,11 @@ import KeyboardCard from "@/Components/Constructor/Cards/KeyboardCard.vue";
     </div>
 
     <div class="row">
+        <div
+            v-if="keyboards&&bot"
+            class="col-12">
+            <p>В списке клавиатур <span class="badge bg-warning">{{keyboards.length}}  ед.</span></p>
+        </div>
         <div class="col-12 mb-3"
              v-if="keyboards&&bot"
              v-for="(keyboard, index) in filteredKeyboard">
@@ -69,6 +74,7 @@ import KeyboardCard from "@/Components/Constructor/Cards/KeyboardCard.vue";
                 :select-mode="selectMode"
                 v-if="!keyboard.deleted_at"
                 v-on:select="selectCard"
+                v-on:reload="loadMenusByBotTemplate"
                 v-on:callback="keyboardCallbackAction"
                 :keyboard="keyboard"/>
             <div class="card" v-else>

@@ -2,7 +2,9 @@
 import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
 </script>
 <template>
-    <div class="row">
+    <div
+        v-if="bot"
+        class="row">
         <div class="col-12 mb-2">
             <div class="alert alert-warning" role="alert">
                 Если вы боитесь последствий модификации команды, то продублируйте нужную и внесите коррективы!
@@ -188,6 +190,7 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
                 </div>
                 <div class="modal-body">
                     <BotDialogGroupListSimple
+                        v-if="bot"
                         v-on:select-dialog="selectDialog"
                         :bot-id="bot.id"/>
                 </div>
@@ -200,10 +203,13 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
 
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
-    props: ["slugs", "command", "bot"],
+    props: ["slugs", "command"],
     data() {
         return {
+            bot:null,
             show: false,
             simple: true,
             search: null,
@@ -216,6 +222,9 @@ export default {
         }
     },
     computed: {
+
+        ...mapGetters(['getCurrentBot']),
+
         filteredAllSlugs() {
             if (this.allSlugs.length === 0)
                 return [];
@@ -237,15 +246,25 @@ export default {
 
     },
     mounted() {
-        this.loadAllSlugs()
+        this.loadCurrentBot().then(() => {
+            this.loadAllSlugs()
 
-        if (this.command) {
-            this.$nextTick(() => {
-                this.slugForm.command = this.command
-            })
-        }
+            if (this.command) {
+                this.$nextTick(() => {
+                    this.slugForm.command = this.command
+                })
+            }
+        })
+
     },
     methods: {
+        loadCurrentBot(bot = null) {
+            return this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(() => {
+                this.bot = this.getCurrentBot
+            })
+        },
         selectDialog(command) {
 
             this.$store.dispatch("attachDialogCommandToSlug", {
@@ -267,11 +286,11 @@ export default {
                 })
 
                 this.slugForm = {
-                    id:null,
+                    id: null,
                     command: null,
                     comment: null,
                     slug: null,
-                    bot_dialog_command_id:null
+                    bot_dialog_command_id: null
                 }
 
             }).catch(err => {

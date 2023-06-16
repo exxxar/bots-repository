@@ -71,9 +71,9 @@ import Pagination from '@/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["botId"],
     data() {
         return {
+            bot:null,
             loading: true,
             bot_users: [],
             search: null,
@@ -81,12 +81,22 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getBotUsers', 'getBotUsersPaginateObject']),
+        ...mapGetters(['getBotUsers', 'getBotUsersPaginateObject','getCurrentBot']),
     },
     mounted() {
-        this.loadUsers();
+        this.loadCurrentBot().then(()=>{
+            this.loadUsers();
+        })
+
     },
     methods: {
+        loadCurrentBot(bot = null) {
+            return this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(() => {
+                this.bot = this.getCurrentBot
+            })
+        },
         changeUserStatus(id, status) {
             this.$store.dispatch("changeUserStatus", {
                 dataObject: {
@@ -116,7 +126,7 @@ export default {
             this.loading = true
             this.$store.dispatch("loadBotUsers", {
                 dataObject: {
-                    botId: this.botId || null,
+                    botId: this.bot.id|| null,
                     search: this.search
                 },
                 page: page

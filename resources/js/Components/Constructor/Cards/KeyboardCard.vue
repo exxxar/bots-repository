@@ -17,17 +17,29 @@ import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue
         <div v-if="!selectMode" class="card-header d-flex justify-content-between align-items-center">
 
             <div>
+                <strong class="mr-2">#{{keyboard.id}}</strong>
                 <button
                     data-bs-toggle="modal" :data-bs-target="'#open-construct-'+uuid"
                     :disabled="load"
                     type="button"
+                    title="Редактировать клавиатуру"
                     class="btn btn-outline-success mr-2"
                 >
                     <i class="fa-regular fa-pen-to-square"></i>
                 </button>
                 <button
+                    @click="duplicateKeyboard"
+                    type="button"
+                    title="Дублировать клавиатуру"
+                    :disabled="load"
+                    class="btn btn-outline-primary mr-2"
+                >
+                    <i class="fa-regular fa-clone"></i>
+                </button>
+                <button
                     @click="updateKeyboard"
                     type="button"
+                    title="Обновить клавиатуру"
                     :disabled="load||!is_edited"
                     class="btn btn-outline-primary mr-2"
                     v-bind:class="{'have-change':is_edited}"
@@ -41,6 +53,7 @@ import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue
                 @click="removeKeyboard"
                 type="button"
                 :disabled="load"
+                title="Удалить клавиатуру"
                 class="btn btn-outline-danger mr-2"
             >
                 <i class="fa-solid fa-trash-can"></i>
@@ -177,6 +190,38 @@ export default {
 
         selectCard() {
             this.$emit("select", this.keyboardForm)
+        },
+        duplicateKeyboard(){
+
+            let data = new FormData();
+            Object.keys(this.keyboardForm)
+                .forEach(key => {
+                    const item = this.keyboardForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+
+            this.$store.dispatch("createKeyboardTemplate", {
+                keyboardForm: data
+            }).then((resp) => {
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Меню успешно продублировано!",
+                    type: 'success'
+                });
+
+                this.load = true
+                this.$nextTick(() => {
+                    this.load = false
+
+                })
+
+                this.$emit("reload")
+            })
         },
         updateKeyboard() {
 

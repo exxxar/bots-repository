@@ -568,8 +568,7 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
 
         <div v-if="step===5">
             <ImageMenu
-                v-if="bot&&!load"
-                :bot="bot"
+                v-if="!load"
             />
         </div>
 
@@ -582,7 +581,6 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
 
         <div v-if="step===6">
             <BotDialogGroupList
-                :bot="bot"
                 v-if="!load"/>
         </div>
 
@@ -590,7 +588,6 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
             <BotSlugList
                 v-if="botForm.slugs&&!load"
                 :slugs="botForm.slugs"
-                :bot="bot"
                 v-on:add="addSlug"
                 v-on:remove="removeSlug"
                 v-on:duplicate="duplicateSlug"/>
@@ -598,23 +595,20 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
 
         <div v-if="step===3">
             <BotUserList
-                v-if="bot&&!load"
-                :bot-id="bot.id"/>
+                v-if="!load"/>
         </div>
 
         <div class="row" v-if="step===4">
-            <div class="col-12 col-md-8" v-if="bot&&!load">
+            <div class="col-12 col-md-8" v-if="!load">
                 <Page
                     v-if="!loadPage"
                     :page="page"
-                    :bot="bot"
                     v-on:callback="pageCallback"/>
             </div>
 
-            <div class="col-12 col-md-4" v-if="!load&&bot">
+            <div class="col-12 col-md-4" v-if="!load">
                 <PagesList
                     v-if="!loadPageList"
-                    :bot-id="bot.id"
                     :editor="true"
                     v-on:callback="pageListCallback"/>
 
@@ -647,6 +641,8 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
     </div>
 </template>
 <script>
+
+import {mapGetters} from "vuex";
 
 export default {
     props: ["company", "bot", "editor"],
@@ -699,6 +695,9 @@ export default {
 
             },
         }
+    },
+    computed: {
+        ...mapGetters(['getCurrentBot']),
     },
     watch: {
         'botForm.selected_bot_template_id': function (oVal, nVal) {

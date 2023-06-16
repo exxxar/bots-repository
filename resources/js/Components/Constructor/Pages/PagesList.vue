@@ -67,9 +67,10 @@ import Pagination from '@/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props:["botId", "editor"],
+    props:[ "editor"],
     data() {
         return {
+            bot:null,
             loading: true,
             pages:[],
             search: null,
@@ -83,12 +84,22 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getPages', 'getPagesPaginateObject']),
+        ...mapGetters(['getPages', 'getCurrentBot','getPagesPaginateObject']),
     },
     mounted() {
-        this.loadPages();
+        this.loadCurrentBot().then(()=>{
+            this.loadPages();
+        })
+
     },
     methods: {
+        loadCurrentBot(bot = null) {
+            return this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(() => {
+                this.bot = this.getCurrentBot
+            })
+        },
         selectPage(page) {
             this.$emit("callback", page)
             this.$notify("Вы выбрали страницу из списка! Все остальные действия будут производится для этой страницы");
@@ -126,7 +137,7 @@ export default {
             this.loading = true
             this.$store.dispatch("loadPages", {
                 dataObject: {
-                    botId: this.botId || null,
+                    botId: this.bot.id || null,
                     search: this.search
                 },
                 page: pageIndex

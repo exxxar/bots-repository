@@ -3,7 +3,9 @@ import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue
 import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
 </script>
 <template>
-    <form v-on:submit.prevent="submitPage">
+    <form
+        v-if="bot"
+        v-on:submit.prevent="submitPage">
         <div class="col-12 mb-2 ">
             <h6 class="d-flex justify-between">
                 <span>Вы создаете страницу для {{ bot.bot_domain }}</span>
@@ -243,7 +245,7 @@ import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["page", "bot"],
+    props: ["page"],
     data() {
         return {
             load: false,
@@ -253,6 +255,7 @@ export default {
             need_page_images: false,
             need_inline_menu: false,
             need_reply_menu: false,
+            bot:null,
             pageForm: {
                 content: '',
                 command: null,
@@ -282,6 +285,9 @@ export default {
             deep: true
         }
     },
+    computed: {
+        ...mapGetters(['getCurrentBot']),
+    },
     mounted() {
         if (this.page) {
             let page = this.page
@@ -304,10 +310,19 @@ export default {
             this.clearForm()
 
 
+        this.loadCurrentBot().then(()=>{
 
+        })
     },
 
-    methods:{
+    methods: {
+        loadCurrentBot(bot = null) {
+            return this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(() => {
+                this.bot = this.getCurrentBot
+            })
+        },
 
         clearForm() {
             this.photos = []

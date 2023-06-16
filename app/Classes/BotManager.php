@@ -181,7 +181,7 @@ class BotManager extends BotCore
         $content = str_replace(["<p>", "</p>"], "", $page->content);
         $content = str_replace(["<br>"], "\n", $content);
 
-        $content = sprintf($content);
+        //$content = sprintf($content);
 
         $needSendReplyMenu = true;
 

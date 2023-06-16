@@ -237,10 +237,11 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["bot"],
+
 
     data() {
         return {
+            bot:null,
             groupForm: {
                 slug: null,
                 title: null,
@@ -256,7 +257,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getDialogGroups', 'getDialogGroupsPaginateObject']),
+        ...mapGetters(['getDialogGroups','getCurrentBot','getDialogGroupsPaginateObject']),
         filteredCommands() {
             if (!this.link)
                 return [];
@@ -268,9 +269,19 @@ export default {
         }
     },
     mounted() {
-        this.loadGroups();
+
+        this.loadCurrentBot().then(()=>{
+            this.loadGroups();
+        })
     },
     methods: {
+        loadCurrentBot(bot = null) {
+            return this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(() => {
+                this.bot = this.getCurrentBot
+            })
+        },
         removeGroup(dialogGroupId){
             this.loading = true
 

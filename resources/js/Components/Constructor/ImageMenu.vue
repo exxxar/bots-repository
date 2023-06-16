@@ -145,10 +145,13 @@
     </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
-    props: ["bot"],
+
     data() {
         return {
+            bot:null,
             menus: [],
             deletedMenus: [],
             menuForm: {
@@ -160,10 +163,23 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapGetters(['getCurrentBot']),
+    },
     mounted() {
-        this.loadMenuByBotId()
+        this.loadCurrentBot().then(()=>{
+            this.loadMenuByBotId()
+        })
+
     },
     methods: {
+        loadCurrentBot(bot = null) {
+            return this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(() => {
+                this.bot = this.getCurrentBot
+            })
+        },
         loadMenuByBotId() {
             this.$store.dispatch("loadMenuByBotId", {
                 botId: this.bot.id
