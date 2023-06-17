@@ -483,8 +483,8 @@ class BotController extends Controller
             "welcome_message" => "required",
             "level_1" => "required",
             // "selected_bot_template_id" => "required",
-            "slugs" => "required",
-            "pages" => "required",
+            //"slugs" => "required",
+            //"pages" => "required",
             //"keyboards" => "required",
             "company_id" => "required",
         ]);
@@ -529,10 +529,19 @@ class BotController extends Controller
             $keyboards = json_decode($request->keyboards);
             unset($tmp->keyboards);
         }
-        $slugs = json_decode($request->slugs);
-        unset($tmp->slugs);
-        $pages = json_decode($request->pages);
-        unset($tmp->pages);
+        $slugs = [];
+
+        if (isset($request->slugs)) {
+            $slugs = json_decode($request->slugs);
+            unset($tmp->slugs);
+        }
+
+        $pages = [];
+
+        if (isset($request->$pages)) {
+            $pages = json_decode($request->pages);
+            unset($tmp->pages);
+        }
 
         if (!is_null($tmp->selected_bot_template_id))
             unset($tmp->selected_bot_template_id);
