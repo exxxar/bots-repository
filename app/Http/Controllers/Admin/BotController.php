@@ -485,7 +485,7 @@ class BotController extends Controller
             // "selected_bot_template_id" => "required",
             "slugs" => "required",
             "pages" => "required",
-            "keyboards" => "required",
+            //"keyboards" => "required",
             "company_id" => "required",
         ]);
 
@@ -524,8 +524,11 @@ class BotController extends Controller
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
-        $keyboards = json_decode($request->keyboards);
-        unset($tmp->keyboards);
+        $keyboards = [];
+        if (isset($request->keyboards)) {
+            $keyboards = json_decode($request->keyboards);
+            unset($tmp->keyboards);
+        }
         $slugs = json_decode($request->slugs);
         unset($tmp->slugs);
         $pages = json_decode($request->pages);
