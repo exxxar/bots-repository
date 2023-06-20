@@ -709,13 +709,13 @@ class BotController extends Controller
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
-        $keyboards = [];
+        $keyboards = null;
         if (isset($request->keyboards)) {
             $keyboards = json_decode($request->keyboards);
             unset($tmp->keyboards);
         }
 
-        $slugs = [];
+        $slugs = null;
 
         if (isset($request->slugs)) {
             $slugs = json_decode($request->slugs);
@@ -727,7 +727,7 @@ class BotController extends Controller
 
         $bot->update((array)$tmp);
 
-        if (!empty($slugs))
+        if (!is_null($slugs))
         foreach ($slugs as $slug) {
             $slugId = $slug->id ?? null;
 
@@ -753,7 +753,7 @@ class BotController extends Controller
         }
 
 
-        if (!empty($keyboards))
+        if (!is_null($keyboards))
             foreach ($keyboards as $keyboard) {
                 $tmpKeyboard = BotMenuTemplate::query()
                     ->where("id", $keyboard->id)
