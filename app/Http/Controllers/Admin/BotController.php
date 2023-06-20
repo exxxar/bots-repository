@@ -524,21 +524,21 @@ class BotController extends Controller
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
-        $keyboards = [];
+        $keyboards = null;
         if (isset($request->keyboards)) {
             $keyboards = json_decode($request->keyboards);
             unset($tmp->keyboards);
         }
-        $slugs = [];
+        $slugs = null;
 
         if (isset($request->slugs)) {
             $slugs = json_decode($request->slugs);
             unset($tmp->slugs);
         }
 
-        $pages = [];
+        $pages = null;
 
-        if (isset($request->$pages)) {
+        if (isset($request->pages)) {
             $pages = json_decode($request->pages);
             unset($tmp->pages);
         }
@@ -549,7 +549,7 @@ class BotController extends Controller
         //dd($tmp);
         $bot = Bot::query()->create((array)$tmp);
 
-        if (!empty($pages))
+        if (!is_null($pages))
             foreach ($pages as $page) {
                 $page = (object)$page;
 
@@ -572,7 +572,7 @@ class BotController extends Controller
             }
 
 
-        if (!empty($slugs))
+        if (!is_null($slugs))
             foreach ($slugs as $slug)
                 BotMenuSlug::query()->create([
                     'bot_id' => $bot->id,
@@ -581,7 +581,7 @@ class BotController extends Controller
                     'slug' => $slug->slug,
                 ]);
 
-        if (!empty($keyboards))
+        if (!is_null($keyboards))
             foreach ($keyboards as $keyboard)
                 BotMenuTemplate::query()->create([
                     'bot_id' => $bot->id,
