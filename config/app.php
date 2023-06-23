@@ -16,7 +16,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-    'results_per_page' => env('APP_RESULT_PER_PAGE', 10),
+    'results_per_page' => env('APP_RESULT_PER_PAGE', 100),
 
     /*
     |--------------------------------------------------------------------------
