@@ -2,30 +2,58 @@
 import Pagination from '@/Components/Pagination.vue';
 </script>
 <template>
-<!--    <div class="row mb-2">
-        <div class="col-12">
-            <button type="button"
-                    @click="show=!show"
-                    class="btn btn-outline-success p-3 w-100">
-                <span v-if="!show"><i class="fa-solid fa-robot"></i> Открыть список ботов</span>
-                <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть список ботов</span>
-            </button>
-        </div>
-    </div>-->
+    <!--    <div class="row mb-2">
+            <div class="col-12">
+                <button type="button"
+                        @click="show=!show"
+                        class="btn btn-outline-success p-3 w-100">
+                    <span v-if="!show"><i class="fa-solid fa-robot"></i> Открыть список ботов</span>
+                    <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть список ботов</span>
+                </button>
+            </div>
+        </div>-->
 
     <div v-if="show">
-        <div class="row">
-            <div class="input-group mb-3">
-                <input type="search" class="form-control"
-                       placeholder="Поиск бота"
-                       aria-label="Поиск бота"
-                       v-model="search"
-                       aria-describedby="button-addon2">
-                <button class="btn btn-outline-secondary"
-                        @click="loadBots"
-                        type="button"
-                        id="button-addon2">Найти
-                </button>
+        <div class="row">>
+            <div class="col-md-12 d-flex flex-column">
+
+                <div class="d-flex">
+                    <div class="dropdown mr-2">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Фильтры
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li v-for="item in filters"><a class="dropdown-item"
+                                                           @click="selectFilter(item.slug)"
+                                                           href="#filter"><i
+                                v-bind:class="item.icon"
+                                class="mr-2"></i> {{ item.name || 'Не указано' }}</a></li>
+
+                        </ul>
+                    </div>
+
+
+                    <div class="input-group mb-3">
+                        <input type="search" class="form-control "
+                               placeholder="Поиск бота"
+                               aria-label="Поиск бота"
+                               v-model="search"
+                               aria-describedby="button-addon2">
+                        <button class="btn btn-outline-secondary "
+                                @click="loadBots"
+                                type="button"
+                                id="button-addon2">Найти
+                        </button>
+                    </div>
+                </div>
+                <p v-if="selectedFilters.length>0" class="mt-2">
+                    <span class="badge bg-info mr-1" v-for="filter in selectedFilters">{{ filter.name || 'не указан' }}
+                     <a
+                         @click="removeSelectedFilter(filter.slug)"
+                         class="ml-1 text-white" href="#filter"><i class="fa-solid fa-xmark"></i></a>
+                    </span>
+                </p>
             </div>
         </div>
         <div class="row" v-if="bots.length>0">
@@ -36,11 +64,33 @@ import Pagination from '@/Components/Pagination.vue';
                         @click="selectBot(null)">Создать нового бота
                     </li>
                     <li class="list-group-item cursor-pointer btn btn-outline-info mb-1 d-flex align-items-center justify-between"
-                        v-for="(bot, index) in bots"
-                        @click="selectBot(bot)"><strong style="    word-wrap: break-word;"><i class="fa-solid fa-robot mr-2"></i>{{
+                        v-for="(bot, index) in filteredBots"
+                        ><strong
+                        @click="selectBot(bot)"
+                        style="    word-wrap: break-word;"><i
+                        class="fa-solid fa-robot mr-2"></i>{{
                             bot.bot_domain || 'Не указано'
-                        }}</strong>
-                    <span class="badge bg-info" v-if="bot.is_template">{{bot.template_description || 'Шаблон без названия'}}</span>
+                        }}
+
+
+                    </strong>
+
+
+                        <span class="badge bg-info"
+                              v-if="bot.is_template">{{ bot.template_description || 'Шаблон без названия' }}
+                    </span>
+
+
+                        <button class="btn btn-outline-info"
+                                type="button"
+                                @click="addToArchive(bot.id)"
+                                title="В архив" v-if="bot.deleted_at==null"><i
+                            class="fa-solid fa-boxes-packing"></i></button>
+                        <button class="btn btn-outline-info"
+                                @click="extractFromArchive(bot.id)"
+                                title="Из архива" v-if="bot.deleted_at!=null"><i
+                            class="fa-solid fa-box-open"></i></button>
+
                     </li>
                 </ul>
 
@@ -71,7 +121,20 @@ export default {
     props: ["companyId", "editor"],
     data() {
         return {
-            show:true,
+            filters: [
+                {
+                    name: 'Активные',
+                    icon: 'fa-brands fa-telegram',
+                    slug: 'active'
+                },
+                {
+                    name: 'Архивные',
+                    icon: 'fa-solid fa-box-archive',
+                    slug: 'archive'
+                }
+            ],
+            selectedFilters: [],
+            show: true,
             loading: true,
             bots: [],
             search: null,
@@ -80,11 +143,66 @@ export default {
     },
     computed: {
         ...mapGetters(['getBots', 'getBotsPaginateObject']),
+        filteredBots() {
+            if (!this.bots)
+                return [];
+
+
+            if (this.selectedFilters.length === 0)
+                return this.bots
+            let tmpBots = [];
+            this.selectedFilters.forEach(filter => {
+                switch (filter.slug) {
+                    case 'active':
+                        this.bots.filter(item => item.deleted_at == null).forEach(item => {
+                            tmpBots.push(item)
+                        })
+                        break;
+                    case 'archive':
+                        this.bots.filter(item => item.deleted_at != null).forEach(item => {
+                            tmpBots.push(item)
+                        })
+                        break;
+                }
+            })
+
+            return tmpBots
+
+
+        }
     },
     mounted() {
         this.loadBots();
+        this.selectFilter('active')
     },
     methods: {
+        addToArchive(id){
+            this.$store.dispatch("removeBot", {
+                botId: id
+            }).then(resp => {
+                this.loadBots()
+                this.$notify("Указанный бот успешно перемещен в архив");
+            })
+        },
+        extractFromArchive(id){
+            this.$store.dispatch("restoreBot", {
+                botId: id
+            }).then(resp => {
+                this.loadBots()
+                this.$notify("Указанный бот успешно перемещен из архива");
+            })
+        },
+        selectFilter(slug) {
+            let tmpFilter = this.filters.find(item => item.slug === slug)
+
+            if (tmpFilter && this.selectedFilters.filter(item => item.slug === slug).length === 0)
+                this.selectedFilters.push(tmpFilter)
+
+        },
+        removeSelectedFilter(slug) {
+            let index = this.selectedFilters.findIndex(item => item.slug === slug)
+            this.selectedFilters.splice(index, 1)
+        },
         selectBot(bot) {
             this.$emit("callback", bot)
             this.show = false

@@ -66,7 +66,8 @@ Route::prefix("bot")->group(function () {
             Route::post("/user-status", "changeUserStatus");
             Route::post("/users", "loadBotUsers");
             Route::post("/current-bot-user", "getCurrentBotUser");
-
+            Route::delete("/{botId}", "destroy");
+            Route::get("/restore/{botId}", "restore");
         });
 
     Route::prefix("dialog-groups")
@@ -97,6 +98,7 @@ Route::prefix("bot")->group(function () {
         ->controller(BotController::class)
         ->group(function () {
             Route::get("/bots", "loadBotsAsTemplate");
+
             Route::get("/slugs", "loadAllSlugs");
             Route::get("/description", "loadDescriptions");
             Route::post("/telegram-channel-id", "requestTelegramChannel");

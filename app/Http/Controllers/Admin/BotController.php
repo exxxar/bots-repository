@@ -23,6 +23,7 @@ use App\Models\BotUser;
 use App\Models\Company;
 use App\Models\ImageMenu;
 use App\Models\Location;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
@@ -161,6 +162,7 @@ class BotController extends Controller
     public function loadBotsAsTemplate(Request $request)
     {
         $bots = Bot::query()
+
             ->where("is_template", true)
             ->select("bot_domain", "id", "template_description")
             ->get();
@@ -255,7 +257,8 @@ class BotController extends Controller
         $size = $request->get("size") ?? config('app.results_per_page');
         $search = $request->search ?? null;
 
-        $bots = Bot::query();
+        $bots = Bot::query()
+            ->withTrashed();
 
         if (!is_null($companyId))
             $bots = $bots->where("company_id", $request->companyId);
@@ -264,6 +267,7 @@ class BotController extends Controller
             $bots = $bots->where("bot_domain", 'like', "%$search%");
 
         $bots = $bots
+            ->orderBy("updated_at", 'DESC')
             ->paginate($size);
 
 
@@ -289,9 +293,30 @@ class BotController extends Controller
         return new BotResource($bot);
     }
 
-    public function destroy(Request $request, Bot $bot): Response
+    public function destroy(Request $request, $botId)
     {
-        $bot->delete();
+        $bot = Bot::query()->find($botId);
+
+        if (is_null($bot))
+            return response()->noContent(404);
+
+        $bot->deleted_at = Carbon::now();
+        $bot->save();
+
+        return response()->noContent();
+    }
+
+    public function restore(Request $request, $botId)
+    {
+        $bot = Bot::query()
+            ->withTrashed()
+            ->find($botId);
+
+        if (is_null($bot))
+            return response()->noContent(404);
+
+        $bot->deleted_at = null;
+        $bot->save();
 
         return response()->noContent();
     }

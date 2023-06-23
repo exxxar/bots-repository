@@ -66,6 +66,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async restoreBot(context, payload= {botId: null}){
+        let link = `${BASE_BOTS_LINK}/restore/${payload.botId}`
+
+        let _axios = util.makeAxiosFactory(link, 'GET')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async changeUserStatus(context, payload= { dataObject: {botUserId: null, status: 0}}){
         let link = `${BASE_BOTS_LINK}/user-status`
 
