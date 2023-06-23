@@ -180,7 +180,8 @@ export default {
             this.$store.dispatch("removeBot", {
                 botId: id
             }).then(resp => {
-                this.loadBots()
+                let currentPage = this.bots_paginate_object.meta.current_page || 0
+                this.loadBots(currentPage)
                 this.$notify("Указанный бот успешно перемещен в архив");
             })
         },
@@ -188,7 +189,8 @@ export default {
             this.$store.dispatch("restoreBot", {
                 botId: id
             }).then(resp => {
-                this.loadBots()
+                let currentPage = this.bots_paginate_object.meta.current_page || 0
+                this.loadBots(currentPage)
                 this.$notify("Указанный бот успешно перемещен из архива");
             })
         },

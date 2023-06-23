@@ -21,7 +21,7 @@ const getters = {
 }
 
 const actions = {
-    async loadBots(context, payload = {dataObject: null, page: 0, size: 12}) {
+    async loadBots(context, payload = {dataObject: null, page: 0, size: 50}) {
         let page = payload.page || 0
         let size = 12
 
