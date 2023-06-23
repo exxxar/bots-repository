@@ -23,7 +23,7 @@ const getters = {
 const actions = {
     async loadBots(context, payload = {dataObject: null, page: 0, size: 50}) {
         let page = payload.page || 0
-        let size = 12
+        let size = payload.size || 50
 
         let link = `${BASE_BOTS_LINK}?page=${page}&size=${size}`
         let method = 'POST'
