@@ -63,11 +63,12 @@ import Pagination from '@/Components/Pagination.vue';
                         v-if="!editor"
                         @click="selectBot(null)">Создать нового бота
                     </li>
-                    <li class="list-group-item cursor-pointer btn btn-outline-info mb-1 d-flex align-items-center justify-between"
+                    <li class="list-group-item cursor-pointer btn mb-1 d-flex align-items-center justify-between"
+                        v-bind:class="{'btn-outline-info':bot.deleted_at==null,'btn-outline-danger':bot.deleted_at!=null}"
                         v-for="(bot, index) in filteredBots"
                         ><strong
                         @click="selectBot(bot)"
-                        style="    word-wrap: break-word;"><i
+                        style="word-wrap: break-word;"><i
                         class="fa-solid fa-robot mr-2"></i>{{
                             bot.bot_domain || 'Не указано'
                         }}
