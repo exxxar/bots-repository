@@ -124,7 +124,7 @@ class RestaurantBotController extends Controller
             return;
         }
 
-       BotManager::bot()->reply("test");
+    /*   BotManager::bot()->reply("test");
 
 
         BotManager::bot()->replyInlineKeyboard("TESSSST1",[
@@ -165,13 +165,13 @@ class RestaurantBotController extends Controller
                 ["text"=>"Action 1"],
                 ["text"=>"Action 2"],
             ],
-        ]);
+        ]);*/
 
-     /*   BotManager::bot()
+        BotManager::bot()
             ->sendReplyMenu((is_null($message) ? "" : $message),
                 !$botUser->is_vip ?
                     "main_menu_restaurant_1" :
-                    "main_menu_restaurant_2");*/
+                    "main_menu_restaurant_2");
     }
 
     public function start()

@@ -255,7 +255,7 @@ import VisitCardConstructor from "@/Components/Constructor/VisitCardConstructor.
                                     <div class="device" data-device="iPhoneX" data-orientation="portrait"
                                          data-color="black">
                                         <div class="screen bg-black">
-                                            <iframe src="http://localhost:8000/web/obedy_go_bot"
+                                            <iframe src="https://your-cashman.com/web/vape888bot"
                                                     style="height:100%;width:100%;"
                                             ></iframe>
                                         </div>
