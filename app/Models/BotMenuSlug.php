@@ -21,6 +21,8 @@ class BotMenuSlug extends Model
         'command',
         'comment',
         'slug',
+        'config',
+        'is_global',
         'bot_dialog_command_id',
     ];
 
@@ -32,6 +34,7 @@ class BotMenuSlug extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
+        'config' => 'array',
     ];
 
     public function bot(): BelongsTo

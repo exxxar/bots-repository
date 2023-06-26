@@ -35,7 +35,8 @@ class BotManager extends BotCore
     protected function checkIsWorking()
     {
         return $this->getSelf()->is_active &&
-            $this->getSelf()->balance > 0;
+            $this->getSelf()->balance > 0 &&
+            is_null($this->getSelf()->deleted_at);
     }
 
     protected function createUser($from)
@@ -112,6 +113,7 @@ class BotManager extends BotCore
     public function setWebhooks()
     {
         $bots = Bot::query()
+            ->withTrashed()
             //->where("is_template", false)
             ->get();
 
@@ -144,6 +146,7 @@ class BotManager extends BotCore
     protected function setApiToken($domain)
     {
         $bot = Bot::query()
+            ->withTrashed()
             ->where("bot_domain", $domain)->first();
 
         if (is_null($bot))
@@ -161,6 +164,7 @@ class BotManager extends BotCore
     public function getSelf()
     {
         return Bot::query()
+            ->withTrashed()
             ->with(["botUsers", "company", "imageMenus", "company.locations"])
             ->where("bot_domain", $this->domain)
             ->first();

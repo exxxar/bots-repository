@@ -127,7 +127,7 @@ defineProps({
                 <p class="mb-3"><em>Для того, чтобы я мог поздравлять тебя с днем рождения и сделать тебе приятно, мне нужно знать, когда он у тебя</em></p>
                 <h6 class="text-center">Введи свой день рождения</h6>
                 <div class="input-group mb-3">
-                    <input type="date" class="form-control p-3"
+                    <input type="text" class="form-control p-3"
                            v-model="vipForm.birthday"
                            aria-label="vipForm-birthday" aria-describedby="vipForm-birthday" required>
                 </div>
@@ -192,7 +192,7 @@ defineProps({
 
                 <div class="card border-success mb-3">
                     <div class="card-body">
-                        <p>Перед отправкой данных ознакомься с <a href="#">правилами нашего сервиса</a> и с <a
+                        <p>Перед отправкой данных ознакомься с <a
                             href="#">политикой конфиденциальности</a>.</p>
                         <div class="form-check form-switch ">
                             <input class="form-check-input"

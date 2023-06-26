@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyStoreRequest;
 use App\Http\Requests\CompanyUpdateRequest;
 use App\Http\Resources\CompanyResource;
+use App\Models\Bot;
 use App\Models\Company;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -20,12 +22,15 @@ class CompanyController extends Controller
 
         $search = $request->search ?? null;
 
-        $companies = Company::query();
+        $companies = Company::query()
+            ->withTrashed();
+
         if (!is_null($search))
             $companies = $companies->where("title", 'like', "%$search%")
                 ->orWhere("slug", "like", "%$search%");
 
         $companies = $companies
+            ->orderBy("updated_at","DESC")
             ->paginate($size);
 
         return CompanyResource::collection($companies);
@@ -50,9 +55,30 @@ class CompanyController extends Controller
         return new CompanyResource($company);
     }
 
-    public function destroy(Request $request, Company $company): Response
+    public function destroy(Request $request, $companyId)
     {
-        $company->delete();
+        $company = Company::query()->find($companyId);
+
+        if (is_null($company))
+            return response()->noContent(404);
+
+        $company->deleted_at = Carbon::now();
+        $company->save();
+
+        return response()->noContent();
+    }
+
+    public function restore(Request $request, $companyId)
+    {
+        $company = Company::query()
+            ->withTrashed()
+            ->find($companyId);
+
+        if (is_null($company))
+            return response()->noContent(404);
+
+        $company->deleted_at = null;
+        $company->save();
 
         return response()->noContent();
     }

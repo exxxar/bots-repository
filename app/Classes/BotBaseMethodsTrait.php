@@ -16,7 +16,7 @@ trait BotBaseMethodsTrait
             "parse_mode" => "HTML"
         ];
 
-        $this->webMessages[] = $tmp;
+        $this->pushWebMessage($tmp);
 
         try {
             $this->bot->sendMessage($tmp);
@@ -38,7 +38,7 @@ trait BotBaseMethodsTrait
             "parse_mode" => "HTML"
         ];
 
-        $this->webMessages[] = $tmp;
+        $this->pushWebMessage($tmp);
 
         try {
             $this->bot->sendLocation($tmp);
@@ -60,7 +60,7 @@ trait BotBaseMethodsTrait
             "parse_mode" => "HTML"
         ];
 
-        $this->webMessages[] = $tmp;
+        $this->pushWebMessage($tmp);
 
         try {
             $this->bot->sendDocument($tmp);
@@ -77,6 +77,7 @@ trait BotBaseMethodsTrait
     public function sendReplyKeyboard($chatId, $message, $keyboard)
     {
 
+
         $tmp = [
             "chat_id" => $chatId,
             "text" => $message,
@@ -88,7 +89,7 @@ trait BotBaseMethodsTrait
             ])
         ];
 
-        $this->webMessages[] = $tmp;
+        $this->pushWebMessage($tmp);
 
         try {
             $this->bot->sendMessage($tmp);
@@ -97,9 +98,6 @@ trait BotBaseMethodsTrait
             unset($tmp['reply_markup']);
             $this->bot->sendMessage($tmp);
 
-            Log::error($e->getMessage() . " " .
-                $e->getFile() . " " .
-                $e->getLine());
         }
 
         return $this;
@@ -118,7 +116,7 @@ trait BotBaseMethodsTrait
             "prices" => $prices,
         ];
 
-        $this->webMessages[] = $tmp;
+        $this->pushWebMessage($tmp);
         try {
             $this->bot->sendInvoice($tmp);
         } catch (\Exception $e) {
@@ -145,7 +143,7 @@ trait BotBaseMethodsTrait
             ])
         ];
 
-        $this->webMessages[] = $tmp;
+        $this->pushWebMessage($tmp);
 
         try {
             $this->bot->editMessageReplyMarkup($tmp);
@@ -172,7 +170,7 @@ trait BotBaseMethodsTrait
 
         ];
 
-        $this->webMessages[] = $tmp;
+        $this->pushWebMessage($tmp);
 
         try {
             $this->bot->sendMessage($tmp);
@@ -201,7 +199,7 @@ trait BotBaseMethodsTrait
             ])
         ];
 
-        $this->webMessages[] = $tmp;
+        $this->pushWebMessage($tmp);
 
         try {
             $this->bot->sendPhoto($tmp);
@@ -227,7 +225,7 @@ trait BotBaseMethodsTrait
             "media" => $media,
         ];
 
-        $this->webMessages[] = $tmp;
+        $this->pushWebMessage($tmp);
 
         try {
             $this->bot->sendMediaGroup($tmp);

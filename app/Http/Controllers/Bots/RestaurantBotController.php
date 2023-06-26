@@ -124,11 +124,54 @@ class RestaurantBotController extends Controller
             return;
         }
 
-        BotManager::bot()
+       BotManager::bot()->reply("test");
+
+
+        BotManager::bot()->replyInlineKeyboard("TESSSST1",[
+            [
+                ["text"=>"Action 1","callback_data"=>"/action"],
+                ["text"=>"Action 2","callback_data"=>"/action"],
+                ["text"=>"Action 3","callback_data"=>"/action"],
+            ],
+            [
+                ["text"=>"Action 3","callback_data"=>"/action"],
+                ["text"=>"Action 4","callback_data"=>"/action"],
+            ],
+
+        ]);
+
+        BotManager::bot()->replyKeyboard("TESSSST2",[
+           [
+               ["text"=>"Action 1"],
+               ["text"=>"Action 2"],
+           ],
+            [
+                ["text"=>"Action 1"],
+                ["text"=>"Action 2"],
+            ],
+            [
+                ["text"=>"Action 1"],
+                ["text"=>"Action 2"],
+            ],
+            [
+                ["text"=>"Action 1"],
+                ["text"=>"Action 2"],
+            ],
+            [
+                ["text"=>"Action 1"],
+                ["text"=>"Action 2"],
+            ],
+            [
+                ["text"=>"Action 1"],
+                ["text"=>"Action 2"],
+            ],
+        ]);
+
+     /*   BotManager::bot()
             ->sendReplyMenu((is_null($message) ? "" : $message),
                 !$botUser->is_vip ?
                     "main_menu_restaurant_1" :
-                    "main_menu_restaurant_2");
+                    "main_menu_restaurant_2");*/
     }
 
     public function start()

@@ -44,6 +44,8 @@ class TelegramController extends Controller
             "user.username" => "required"
         ]);
 
+
+
         return BotManager::bot()
             ->webHandler($domain,
                 (object)$request->all());

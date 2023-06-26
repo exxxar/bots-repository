@@ -13,13 +13,11 @@ defineProps({
 });
 </script>
 <template>
-    <div class="container-fluid pt-3 pb-3" v-if="bot">
-       <div class="row">
-           <div class="col-12">
-                <Chat :domain="bot.bot_domain"/>
-           </div>
-       </div>
+
+    <div  v-if="bot">
+        <Chat :domain="bot.bot_domain"/>
     </div>
+
 </template>
 <script>
 export default {

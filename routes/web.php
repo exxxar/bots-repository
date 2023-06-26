@@ -48,6 +48,18 @@ Route::get('/bot-page', function () {
     return Inertia::render('BotPage');
 });
 
+Route::get('/visit-card-page', function () {
+    Inertia::setRootView("app");
+
+    return Inertia::render('BotVisitCardConstructorPage');
+});
+
+Route::get('/', function () {
+    Inertia::setRootView("client");
+
+    return Inertia::render('LandingPage');
+});
+
 Route::get('/images-by-company-id/{companyId}/{fileName}',
     [\App\Http\Controllers\Admin\TelegramController::class, 'getFilesByCompanyId']);
 
@@ -123,6 +135,8 @@ Route::prefix("bot")->group(function () {
             Route::post("/", "index");
             Route::post("/company", "createCompany");
             Route::post("/company-update", "editCompany");
+            Route::delete("/{companyId}", "destroy");
+            Route::get("/restore/{companyId}", "restore");
         });
 
     Route::prefix("pages")
@@ -166,7 +180,7 @@ Route::prefix("web")
         Route::post('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webHandler"]);
     });
 
-Route::view('/', "landing");
+//Route::view('/', "landing");
 
 
 Route::get('/test-shop', function () {

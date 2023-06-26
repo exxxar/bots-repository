@@ -17,9 +17,9 @@ const getters = {
 }
 
 const actions = {
-    async loadCompanies(context, payload = {dataObject: null, page: 0, size: 12}) {
+    async loadCompanies(context, payload = {dataObject: null, page: 0, size: 50}) {
         let page = payload.page || 0
-        let size = 12
+        let size = payload.size || 50
 
         let link = `${BASE_COMPANIES_LINK}?page=${page}&size=${size}`
         let method = 'POST'
@@ -52,6 +52,30 @@ const actions = {
         let link = `${BASE_COMPANIES_LINK}/company`
 
         let _axios = util.makeAxiosFactory(link,"POST", payload.companyForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async removeCompany(context, payload= {companyId: null}){
+        let link = `${BASE_COMPANIES_LINK}/${payload.companyId}`
+
+        let _axios = util.makeAxiosFactory(link, 'DELETE')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async restoreCompany(context, payload= {companyId: null}){
+        let link = `${BASE_COMPANIES_LINK}/restore/${payload.companyId}`
+
+        let _axios = util.makeAxiosFactory(link, 'GET')
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

@@ -66,15 +66,15 @@ import Pagination from '@/Components/Pagination.vue';
                     <li class="list-group-item cursor-pointer btn mb-1 d-flex  align-items-center justify-between"
                         v-bind:class="{'btn-outline-info':bot.deleted_at==null,'btn-outline-danger border-danger':bot.deleted_at!=null}"
                         v-for="(bot, index) in filteredBots"
-                        >
+                    >
                         <strong
-                        @click="selectBot(bot)"
-                        style="word-wrap: break-word;"><i
+                            @click="selectBot(bot)"
+                            style="word-wrap: break-word;"><i
                             v-bind:class="{'text-danger':bot.deleted_at!=null}"
-                        class="fa-solid fa-robot mr-2"></i>{{
-                            bot.bot_domain || 'Не указано'
-                        }}
-                    </strong>
+                            class="fa-solid fa-robot mr-2"></i>{{
+                                bot.bot_domain || 'Не указано'
+                            }}
+                        </strong>
 
                         <span class="badge bg-info"
                               v-if="bot.is_template">{{ bot.template_description || 'Шаблон без названия' }}
@@ -148,8 +148,17 @@ export default {
                 return [];
 
 
-            if (this.selectedFilters.length === 0)
+            if (this.selectedFilters.length === 0 && this.search == null)
                 return this.bots
+
+            if (this.selectedFilters.length === 0 && this.search != null)
+                return this.bots.filter(item => (item.bot_domain||'')
+                    .trim()
+                    .toLowerCase()
+                    .indexOf(this.search
+                        .trim()
+                        .toLowerCase()) !== -1)
+
             let tmpBots = [];
             this.selectedFilters.forEach(filter => {
                 switch (filter.slug) {
@@ -166,7 +175,15 @@ export default {
                 }
             })
 
-            return tmpBots
+            if (this.search == null)
+                return tmpBots
+
+            return tmpBots.filter(item=>(item.bot_domain||'')
+                .trim()
+                .toLowerCase()
+                .indexOf(this.search
+                    .trim()
+                    .toLowerCase())!==-1)
 
 
         }
@@ -176,7 +193,7 @@ export default {
         this.selectFilter('active')
     },
     methods: {
-        addToArchive(id){
+        addToArchive(id) {
             this.$store.dispatch("removeBot", {
                 botId: id
             }).then(resp => {
@@ -185,7 +202,7 @@ export default {
                 this.$notify("Указанный бот успешно перемещен в архив");
             })
         },
-        extractFromArchive(id){
+        extractFromArchive(id) {
             this.$store.dispatch("restoreBot", {
                 botId: id
             }).then(resp => {

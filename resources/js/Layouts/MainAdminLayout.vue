@@ -92,6 +92,17 @@ import { Head } from '@inertiajs/vue3'
                                 Боты
                             </a>
                         </li>
+                        <hr>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               v-bind:class="{'active':active==5}"
+                               href="/visit-card-page"
+                               aria-current="page">
+                                <i class="fa-solid fa-file-contract"></i>
+                                Бриф для Визиток
+                            </a>
+                        </li>
+                        <hr>
 
 
                         <li class="nav-item active">

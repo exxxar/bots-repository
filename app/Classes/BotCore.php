@@ -6,6 +6,7 @@ use App\Enums\BotStatusEnum;
 use App\Facades\BotManager;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
@@ -52,6 +53,13 @@ abstract class BotCore
 
     protected abstract function stopBotDialog(): void;
 
+    public function pushWebMessage($message){
+
+        $message["created_at"] = Carbon::now()
+            ->format('Y-m-d H:i:s');
+
+        $this->webMessages[] = $message;
+    }
     public function getCurrentChatId()
     {
         return $this->chatId;
@@ -112,6 +120,9 @@ abstract class BotCore
 
         if ($botStatus != BotStatusEnum::Working)
             return $this->webMessages;
+
+        if ($this->botDialogStartHandler($data, $query))
+            return response()->json($this->webMessages);
 
         if ($this->botTemplatePageHandler($data, $query))
             return response()->json($this->webMessages);

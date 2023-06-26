@@ -11,6 +11,7 @@ import BotDialogGroupEditor from "@/Components/Constructor/Deprecated/BotDialogG
 import BotCreator from "@/Components/Constructor/Deprecated/BotCreator.vue";
 import { Head } from '@inertiajs/vue3'
 import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
+
 </script>
 <template>
 
@@ -30,8 +31,6 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-
 
         <div class="navbar-nav" v-if="bot">
             <div class="nav-item text-nowrap">
@@ -106,6 +105,7 @@ import BotDashboard from "@/Components/Constructor/BotDashboard.vue";
                                 Редактирование ботов
                             </a>
                         </li>
+
 
 <!--                        <li class="nav-item">
                             <a class="nav-link"
