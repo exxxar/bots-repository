@@ -9,8 +9,10 @@
                  v-bind:class="{'incoming':message.direction === 'incoming', 'outgoing':message.direction === 'outgoing' }"
             >
                 <div class="message-card-body">
-                    <p v-html="message.text"></p>
+                    <p v-html="message.text" v-if="message.text"></p>
+                    <p v-html="message.caption" v-if="message.caption"></p>
                     <p v-if="message.created_at">{{ message.created_at }}</p>
+                    <img v-lazy="message.photo" v-if="message.photo" class="w-100 mb-1 mt-1" alt="">
                     <div class="inline-keyboard w-100 " v-if="message.keyboard">
 
                         <div v-for="row in message.keyboard" class="d-flex justify-content-between flex-wrap">
@@ -61,7 +63,7 @@
                             <div v-for="row in buttons" class="d-flex justify-content-between flex-wrap">
 
                                 <div class="d-flex justify-content-between w-100">
-                                    <div class="chat-inline-btn w-100" v-for="col in row">
+                                    <div class="chat-reply-btn w-100" v-for="col in row">
                                         <button
                                             @click="send( col.text || col)"
                                             class="btn btn-outline-light w-100">{{ col.text || col || '-' }}
@@ -336,6 +338,7 @@ export default {
 
 }
 
+.chat-reply-btn,
 .chat-inline-btn {
 
     padding: 1px;
@@ -350,6 +353,12 @@ export default {
 
     button {
         font-size: 8px;
+    }
+}
+
+.chat-reply-btn {
+    button {
+        font-size: 10px;
     }
 }
 
