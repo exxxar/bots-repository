@@ -18,7 +18,7 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
-        if (!$this->isWebMode)
+        if ($this->isWebMode)
             return $this;
 
         try {
@@ -43,7 +43,7 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
-        if (!$this->isWebMode)
+        if ($this->isWebMode)
             return $this;
 
         try {
@@ -68,7 +68,7 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
-        if (!$this->isWebMode)
+        if ($this->isWebMode)
             return $this;
 
         try {
@@ -100,7 +100,7 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
-        if (!$this->isWebMode)
+        if ($this->isWebMode)
             return $this;
 
         try {
@@ -130,7 +130,7 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
-        if (!$this->isWebMode)
+        if ($this->isWebMode)
             return $this;
 
         try {
@@ -161,7 +161,7 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
-        if (!$this->isWebMode)
+        if ($this->isWebMode)
             return $this;
 
         try {
@@ -191,7 +191,7 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
-        if (!$this->isWebMode)
+        if ($this->isWebMode)
             return $this;
 
         try {
@@ -223,7 +223,7 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
-        if (!$this->isWebMode)
+        if ($this->isWebMode)
             return $this;
 
         try {
@@ -252,7 +252,7 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
-        if (!$this->isWebMode)
+        if ($this->isWebMode)
             return $this;
 
         try {
