@@ -18,6 +18,9 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
+        if (!$this->isWebMode)
+            return $this;
+
         try {
             $this->bot->sendMessage($tmp);
         } catch (\Exception $e) {
@@ -40,6 +43,9 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
+        if (!$this->isWebMode)
+            return $this;
+
         try {
             $this->bot->sendLocation($tmp);
         } catch (\Exception $e) {
@@ -61,6 +67,9 @@ trait BotBaseMethodsTrait
         ];
 
         $this->pushWebMessage($tmp);
+
+        if (!$this->isWebMode)
+            return $this;
 
         try {
             $this->bot->sendDocument($tmp);
@@ -91,6 +100,9 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
+        if (!$this->isWebMode)
+            return $this;
+
         try {
             $this->bot->sendMessage($tmp);
 
@@ -117,6 +129,10 @@ trait BotBaseMethodsTrait
         ];
 
         $this->pushWebMessage($tmp);
+
+        if (!$this->isWebMode)
+            return $this;
+
         try {
             $this->bot->sendInvoice($tmp);
         } catch (\Exception $e) {
@@ -145,6 +161,9 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
+        if (!$this->isWebMode)
+            return $this;
+
         try {
             $this->bot->editMessageReplyMarkup($tmp);
         } catch (\Exception $e) {
@@ -171,6 +190,9 @@ trait BotBaseMethodsTrait
         ];
 
         $this->pushWebMessage($tmp);
+
+        if (!$this->isWebMode)
+            return $this;
 
         try {
             $this->bot->sendMessage($tmp);
@@ -201,6 +223,9 @@ trait BotBaseMethodsTrait
 
         $this->pushWebMessage($tmp);
 
+        if (!$this->isWebMode)
+            return $this;
+
         try {
             $this->bot->sendPhoto($tmp);
         } catch (\Exception $e) {
@@ -226,6 +251,9 @@ trait BotBaseMethodsTrait
         ];
 
         $this->pushWebMessage($tmp);
+
+        if (!$this->isWebMode)
+            return $this;
 
         try {
             $this->bot->sendMediaGroup($tmp);

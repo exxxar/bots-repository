@@ -31,6 +31,8 @@ abstract class BotCore
 
     protected $webMessages = [];
 
+    protected $isWebMode = false;
+
     protected abstract function createUser($data);
 
     protected abstract function setWebhooks();
@@ -105,6 +107,8 @@ abstract class BotCore
 
     public function webHandler($domain, $data): \Illuminate\Http\JsonResponse
     {
+        $this->isWebMode = true;
+
         $this->setApiToken($domain);
 
         $query = $data->message ?? $data->query ?? null;
