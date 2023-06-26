@@ -27,6 +27,13 @@
 
                                     <a
                                         class="btn btn-outline-light w-100"
+                                        v-if="col.web_app"
+                                        :href="'https://t.me/'+domain"
+                                        target="_blank">Только в Telegram</a>
+
+
+                                    <a
+                                        class="btn btn-outline-light w-100"
                                         v-if="col.url"
                                         :href="col.url" target="_blank">{{ col.text || col || '-' }}</a>
                                 </div>
