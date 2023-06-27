@@ -16,26 +16,25 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
             <h6>Создаем бот к компании {{ company.title || 'Не установлен' }}</h6>
         </div>
     </div>
-    <div class="row mb-3 mt-3 bot-sub-menu" v-if="editor">
+    <div class="row mb-3 bot-sub-menu" v-if="editor">
         <div class="col-12">
-            <div class="btn-group w-100" role="group" aria-label="Basic outlined example">
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
                 <button type="button"
-
-                        v-bind:class="{'btn-primary text-white':step===0}"
+                        v-bind:class="{'btn-info text-white':step===0}"
                         @click="step=0"
-                        class="btn btn-outline-primary">Информация о боте
+                        class="btn btn-outline-info"><i class="fa-solid fa-info mr-1"></i> Информация о боте
                 </button>
                 <button type="button"
                         :disabled="botForm.selected_bot_template_id===null"
-                        v-bind:class="{'btn-primary text-white':step===4}"
+                        v-bind:class="{'btn-info text-white':step===4}"
                         @click="step=4"
-                        class="btn btn-outline-primary">Страницы
+                        class="btn btn-outline-info"><i class="fa-solid fa-file mr-2"></i> Страницы
                 </button>
                 <div class="dropdown">
                     <button
                         type="button"
                         :disabled="botForm.selected_bot_template_id===null"
-                        class="btn btn-outline-primary dropdown-toggle custom-group-dropdown-btn" href="#" role="button"
+                        class="btn btn-outline-info dropdown-toggle custom-group-dropdown-btn" href="#" role="button"
                         id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-bars"></i>
                     </button>
@@ -671,28 +670,17 @@ export default {
                 tax_per_day: null,
                 welcome_message: null,
                 image: null,
-
                 description: null,
-
                 info_link: null,
-
                 social_links: [],
-
                 maintenance_message: null,
-
                 level_1: 10,
                 level_2: 0,
                 level_3: 0,
-
                 photos: [],
-
                 selected_bot_template_id: null,
-
                 slugs: [],
-
                 pages: [],
-
-
             },
         }
     },

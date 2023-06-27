@@ -100,39 +100,45 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
         </div>
 
         <div class="mb-3"
-             v-bind:class="{'col-12':!simple,'col-md-6':simple}"
+             v-bind:class="{'col-12 col-md-6':!simple,'col-md-6':simple}"
              v-if="slugs"
              v-for="(slug, index) in slugs">
             <div class="card" @click="selectSlug(slug)">
+                <div class="card-header"  v-if="!simple">
+                    <button
+                        @click="duplicateSlug(index)"
+                        type="button"
+                        class="btn btn-outline-success mr-2"
+                    >
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </button>
+
+                    <button
+                        @click="duplicateSlug(index)"
+                        type="button"
+                        class="btn btn-outline-success mr-2"
+                    >
+                        <i class="fa-solid fa-clone"></i>
+                    </button>
+                    <button
+                        @click="removeSlug(index)"
+                        type="button"
+                        class="btn btn-outline-danger"
+                    >
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        data-bs-toggle="modal" data-bs-target="#attach-command"
+                        class="btn btn-outline-primary ml-2">
+                        <i class="fa-solid fa-link"></i>
+                    </button>
+                </div>
                 <div class="card-body">
                     <div class="row">
-                        <div
-                            v-if="!simple"
-                            class="col-12">
-                            <button
-                                @click="duplicateSlug(index)"
-                                type="button"
-                                class="btn btn-outline-success mr-2"
-                            >
-                                Дублировать
-                            </button>
-                            <button
-                                @click="removeSlug(index)"
-                                type="button"
-                                class="btn btn-outline-danger"
-                            >
-                                Удалить
-                            </button>
 
-                            <button
-                                type="button"
-                                data-bs-toggle="modal" data-bs-target="#attach-command"
-                                class="btn btn-outline-primary ml-2">Привязать диалог
-                            </button>
-
-                        </div>
                         <div
-                            v-bind:class="{'col-md-6':!simple}"
                             class="col-12">
                             <div class="mb-3">
                                 <label class="form-label" id="bot-domain">Команда <span
@@ -150,7 +156,7 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
 
                         <div
                             v-if="!simple"
-                            class="col-md-6 col-12">
+                            class="col-12">
                             <div class="mb-3">
                                 <label class="form-label" id="bot-domain">Мнемоническое имя</label>
                                 <input type="text" class="form-control"
@@ -218,6 +224,7 @@ export default {
                 command: null,
                 comment: null,
                 slug: null,
+
             }
         }
     },

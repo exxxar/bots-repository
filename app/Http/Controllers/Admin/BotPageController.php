@@ -149,7 +149,7 @@ class BotPageController extends Controller
                 else {
                     $slug = $slug->replicate();
                     $slug->bot_dialog_command_id = $tmpDialogId;
-                    $slug->slug =  $tmpType == "inline" ? $strSlug : $tmpText;
+                    $slug->slug =  $strSlug;//$tmpType == "inline" ? $strSlug : $tmpText;
                     $slug->save();
                 }
 
@@ -342,8 +342,12 @@ class BotPageController extends Controller
 
         $images = $tmp->images ?? null;
 
+        if (!is_null($images))
+            $images = json_decode($images);
 
-        $tmp->images = count($photos) == 0 ? (is_array($images) ? $images : null) : $photos;
+
+        $tmp->images = count($photos) == 0 ? (is_array($images) ? $images : null) : [...$photos,...$images];
+
 
         //$text = str_replace(["<p>", "</p>"], "", $tmp->content);
         //$text = str_replace(["<br>", "<br/>"], "\n", $text);
@@ -361,7 +365,9 @@ class BotPageController extends Controller
             $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             $reply_keyboard_id = $tmp->reply_keyboard_id ?? -1;
-            $menu = BotMenuTemplate::query()->where("id", $reply_keyboard_id)
+            $menu = BotMenuTemplate::query()
+                ->where("bot_id", $bot->id)
+                ->where("id", $reply_keyboard_id)
                 ->first();
 
             if (!is_null($menu))

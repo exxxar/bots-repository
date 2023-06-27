@@ -94,7 +94,7 @@
             </div>
 
         </div>
-        <div class="p-1" v-if="!canEnter">
+        <div class=" w-100" v-if="!canEnter">
             <form v-on:submit.prevent="login" class="pt-2 pb-2 ">
                 <div class="form-floating mb-3">
                     <input type="text"

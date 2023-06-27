@@ -113,7 +113,7 @@ import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
 
                     </label>
                     <div class="row">
-                        <div class="col-12 d-flex" v-if="photos.length>0">
+                        <div class="col-12 d-flex flex-wrap" v-if="photos.length>0">
                             <div class="mb-2 img-preview" style="margin-right: 10px;"
                                  v-for="(img, index) in photos">
                                 <img v-lazy="getPhoto(img).imageUrl"/>
@@ -124,7 +124,7 @@ import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
                             </div>
                         </div>
                         <h6 v-if="pageForm.images.length>0">Ранее загруженные фотографии</h6>
-                        <div class="col-12 d-flex " v-if="pageForm.images.length>0">
+                        <div class="col-12 d-flex flex-wrap" v-if="pageForm.images.length>0">
 
                             <div class="mb-2 img-preview" style="margin-right: 10px;"
                                  v-for="(img, index) in pageForm.images">
@@ -364,8 +364,8 @@ export default {
                     data.append('photos[]', this.photos[i]);
                 }
 
-            if (this.pageForm.images.length === 0 || typeof this.pageForm.images == 'string')
-                data.delete("images")
+         /*   if (this.pageForm.images.length === 0 || typeof this.pageForm.images == 'string')
+                data.delete("images")*/
 
             this.$store.dispatch((this.pageForm.id == null ? "createPage" : "updatePage"), {
                 pageForm: data

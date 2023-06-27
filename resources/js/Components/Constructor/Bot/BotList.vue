@@ -14,7 +14,7 @@ import Pagination from '@/Components/Pagination.vue';
         </div>-->
 
     <div v-if="show">
-        <div class="row">>
+        <div class="row">
             <div class="col-md-12 d-flex flex-column">
 
                 <div class="d-flex">
