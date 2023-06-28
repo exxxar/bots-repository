@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Enums\BotStatusEnum;
 use App\Models\Bot;
+use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\Role;
@@ -173,6 +174,8 @@ class BotManager extends BotCore
     protected function prepareTemplatePage($page)
     {
 
+        if (is_null($page))
+            return;
 
         $bot = $this->getSelf();
 
@@ -229,6 +232,12 @@ class BotManager extends BotCore
 
         if (!empty($replyKeyboard)&&$needSendReplyMenu)
             $this->replyKeyboard("Меню страницы", $rMenu);
+
+        if (!is_null($page->next_page_id)){
+            $next = BotPage::query()->find($page->next_page_id);
+
+            $this->prepareTemplatePage($next);
+        }
 
     }
 }

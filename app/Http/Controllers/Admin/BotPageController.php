@@ -274,6 +274,7 @@ class BotPageController extends Controller
             'command' => $request->command,
             'comment' => $request->comment,
             'slug' => $strSlug,
+            'next_page_id' => $request->next_page_id,
         ]);
 
         $tmp->bot_menu_slug_id = $slug->id;
@@ -425,6 +426,7 @@ class BotPageController extends Controller
             $slug->update([
                 'command' => $request->command,
                 'comment' => $request->comment,
+                'next_page_id' => $request->next_page_id ?? null,
             ]);
 
         unset($tmp->slug);

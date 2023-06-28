@@ -100,7 +100,9 @@ class BotController extends Controller
     public function loadAllSlugs(Request $request)
     {
         $slugs = BotMenuSlug::query()
-            ->get()->unique("slug");
+            ->where("is_global", true)
+            ->get()
+            ->unique("slug");
 
         return BotMenuSlugResource::collection($slugs);
     }

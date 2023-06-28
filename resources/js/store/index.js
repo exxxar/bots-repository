@@ -8,6 +8,7 @@ import bots from './modules/bots';
 import products from './modules/products';
 import pages from './modules/pages';
 import dialogGroups from './modules/dialog_groups';
+import slugs from './modules/slugs';
 import util from "@/store/modules/utilites";
 
 
@@ -82,6 +83,7 @@ export default createStore({
         bots,
         products,
         pages,
-        dialogGroups
+        dialogGroups,
+        slugs
     }
 })

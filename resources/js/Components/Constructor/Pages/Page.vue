@@ -1,6 +1,7 @@
 <script setup>
 import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue";
 import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
+import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
 </script>
 <template>
     <form
@@ -92,10 +93,6 @@ import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
                 </label>
             </div>
 
-
-
-
-
         </div>
         <div class="col-12 mb-2" v-if="need_page_images">
             <div class="card mb-3">
@@ -158,15 +155,13 @@ import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
                     <h6>Конструктор нижнего меню</h6>
 
                     <button class="btn btn-primary" type="button"
-                        @click="showReplyTemplateSelector = !showReplyTemplateSelector"
+                            @click="showReplyTemplateSelector = !showReplyTemplateSelector"
                     >
                         Выбрать из шаблонов
                     </button>
 
 
-
                 </div>
-
 
 
                 <div class="card-body">
@@ -204,14 +199,14 @@ import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
             <div class="card">
 
 
-                    <div class="card-header d-flex justify-between align-items-center">
-                        <h6>Конструктор меню в сообщении</h6>
-                        <button class="btn btn-primary" type="button"
-                                @click="showInlineTemplateSelector = !showInlineTemplateSelector"
-                        >
-                            Выбрать из шаблонов
-                        </button>
-                    </div>
+                <div class="card-header d-flex justify-between align-items-center">
+                    <h6>Конструктор меню в сообщении</h6>
+                    <button class="btn btn-primary" type="button"
+                            @click="showInlineTemplateSelector = !showInlineTemplateSelector"
+                    >
+                        Выбрать из шаблонов
+                    </button>
+                </div>
 
 
                 <div class="card-body">
@@ -236,6 +231,28 @@ import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
         </div>
 
         <div class="col-12 mb-2">
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="need_attach_page"
+                       type="checkbox"
+                       id="need-page-attach">
+                <label class="form-check-label" for="need-page-attach">
+                    Связать с другой страницей
+                </label>
+            </div>
+        </div>
+
+        <div class="col-12 mb-2" v-if="need_attach_page">
+            <p v-if="pageForm.next_page_id">Связано со страницей #{{ pageForm.next_page_id }} <a
+                class="btn btn-link"
+                @click="pageForm.next_page_id = null">Очистить</a></p>
+            <PagesList
+                :current="pageForm.id"
+                v-on:callback="attachPage"
+                :editor="false"/>
+        </div>
+
+        <div class="col-12 mb-2">
             <button class="btn btn-outline-primary w-100 p-3">Сохранить страницу</button>
         </div>
     </form>
@@ -250,13 +267,15 @@ export default {
         return {
             load: false,
             photos: [],
-            showReplyTemplateSelector:false,
-            showInlineTemplateSelector:false,
+            showReplyTemplateSelector: false,
+            showInlineTemplateSelector: false,
             need_page_images: false,
             need_inline_menu: false,
             need_reply_menu: false,
-            bot:null,
+            need_attach_page: false,
+            bot: null,
             pageForm: {
+                id: null,
                 content: '',
                 command: null,
                 slug: null,
@@ -265,6 +284,8 @@ export default {
                 images: [],
                 reply_keyboard: null,
                 inline_keyboard: null,
+
+                next_page_id: null,
 
 
             },
@@ -304,13 +325,14 @@ export default {
                 inline_keyboard_id: page.inline_keyboard_id || null,
                 reply_keyboard: page.replyKeyboard || null,
                 inline_keyboard: page.inlineKeyboard || null,
+                next_page_id: page.next_page_id || null,
 
             }
         } else
             this.clearForm()
 
 
-        this.loadCurrentBot().then(()=>{
+        this.loadCurrentBot().then(() => {
 
         })
     },
@@ -323,10 +345,21 @@ export default {
                 this.bot = this.getCurrentBot
             })
         },
+        attachPage(item) {
 
+            if (item.id != this.pageForm.id)
+                this.pageForm.next_page_id = item.id
+            else
+                this.$notify({
+                    title: "Конструктор страниц",
+                    text: "Вы не можете связать данную страницу с собой",
+                    type: 'error'
+                });
+        },
         clearForm() {
             this.photos = []
             this.pageForm = {
+                id:null,
                 content: null,
                 command: null,
                 slug: null,
@@ -339,7 +372,7 @@ export default {
             this.photos = []
 
             this.$notify({
-                title: "Конструктор ботов",
+                title: "Конструктор страниц",
                 text: "Форма успешно очищена",
                 type: 'success'
             });
@@ -364,8 +397,8 @@ export default {
                     data.append('photos[]', this.photos[i]);
                 }
 
-         /*   if (this.pageForm.images.length === 0 || typeof this.pageForm.images == 'string')
-                data.delete("images")*/
+            /*   if (this.pageForm.images.length === 0 || typeof this.pageForm.images == 'string')
+                   data.delete("images")*/
 
             this.$store.dispatch((this.pageForm.id == null ? "createPage" : "updatePage"), {
                 pageForm: data
@@ -377,6 +410,7 @@ export default {
 
                     this.photos = []
                     this.pageForm = {
+                        id:null,
                         content: null,
                         command: null,
                         slug: null,
@@ -401,12 +435,12 @@ export default {
         saveInlineKeyboard(keyboard) {
             this.pageForm.inline_keyboard = keyboard
         },
-        selectReplyKeyboard(keyboard){
+        selectReplyKeyboard(keyboard) {
             this.pageForm.reply_keyboard = keyboard
 
             this.showReplyTemplateSelector = false;
         },
-        selectInlineKeyboard(keyboard){
+        selectInlineKeyboard(keyboard) {
             this.pageForm.inline_keyboard = keyboard
 
             console.log(keyboard)

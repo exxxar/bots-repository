@@ -23,6 +23,7 @@ class BotPageResource extends JsonResource
             'inline_keyboard_id' => $this->inline_keyboard_id,
             'inlineKeyboard' => $this->whenLoaded('inlineKeyboard'),
             'bot_id' => $this->bot_id,
+            'next_page_id' => $this->next_page_id ?? null,
         ];
     }
 }

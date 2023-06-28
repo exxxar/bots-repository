@@ -22,6 +22,7 @@ class BotPage extends Model
         'reply_keyboard_id',
         'inline_keyboard_id',
         'bot_id',
+        'next_page_id',
     ];
 
     /**
@@ -36,6 +37,7 @@ class BotPage extends Model
         'reply_keyboard_id' => 'integer',
         'inline_keyboard_id' => 'integer',
         'bot_id' => 'integer',
+        'next_page_id' => 'integer',
     ];
 
     protected $with = ['slug','replyKeyboard','inlineKeyboard'];
@@ -60,5 +62,9 @@ class BotPage extends Model
         return $this->belongsTo(BotMenuTemplate::class,'inline_keyboard_id','id');
     }
 
+    public function nextPage(): BelongsTo
+    {
+        return $this->belongsTo(BotPage::class,'next_page_id','id');
+    }
 
 }

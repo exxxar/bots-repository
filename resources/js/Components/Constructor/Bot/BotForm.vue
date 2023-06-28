@@ -1,6 +1,6 @@
 <script setup>
 import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
-import BotSlugList from "@/Components/Constructor/BotSlugList.vue";
+import BotSlugList from "@/Components/Constructor/Slugs/BotSlugList.vue";
 import BotUserList from "@/Components/Constructor/BotUserList.vue";
 import TextHelper from "@/Components/Constructor/Helpers/TextHelper.vue";
 import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChannelHelper.vue";
@@ -587,9 +587,8 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
             <BotSlugList
                 v-if="botForm.slugs&&!load"
                 :slugs="botForm.slugs"
-                v-on:add="addSlug"
-                v-on:remove="removeSlug"
-                v-on:duplicate="duplicateSlug"/>
+                v-on:callback="callbackSlugs"
+              />
         </div>
 
         <div v-if="step===3">
@@ -653,8 +652,7 @@ export default {
             load: false,
             loadPage: false,
             loadPageList: false,
-            removedSlugs: [],
-            removedKeyboards: [],
+
 
             command: null,
 
@@ -679,7 +677,6 @@ export default {
                 level_3: 0,
                 photos: [],
                 selected_bot_template_id: null,
-                slugs: [],
                 pages: [],
             },
         }
@@ -740,52 +737,6 @@ export default {
             this.botForm[object.param] = object.text;
 
         },
-        duplicateSlug(index) {
-            const slug = JSON.stringify(this.botForm.slugs[index])
-            this.botForm.slugs.splice(index, 0, JSON.parse(slug))
-
-            this.$notify({
-                title: "Конструктор ботов",
-                text: "Скрипт успешно продублирован!",
-                type: 'success'
-            });
-        },
-
-        addSlug(item) {
-            this.botForm.slugs.push({
-                id: null,
-                bot_id: null,
-                command: item.command,
-                comment: item.comment,
-                slug: item.slug
-            })
-
-            this.load = true
-            this.$nextTick(() => {
-                this.load = false
-            })
-
-            let btns = document.querySelectorAll(`button[data-bs-dismiss="modal"]`)
-
-            btns.forEach(btn => {
-                btn.click();
-            })
-
-            this.$notify({
-                title: "Конструктор ботов",
-                text: "Команда успешно связана со скриптом ",
-                type: 'success'
-            });
-
-            this.command = null
-        },
-        removeSlug(index) {
-            if (this.bot)
-                this.removedSlugs.push(this.botForm.slugs[index].id);
-
-            this.botForm.slugs.splice(index, 1)
-        },
-
 
         loadSlugsByBotTemplate(botId) {
             this.$store.dispatch("loadBotSlugs", {
@@ -846,13 +797,6 @@ export default {
                         data.append(key, item)
                 });
 
-            if (this.bot) {
-                if (this.removedSlugs.length > 0)
-                    data.append("removed_slugs", JSON.stringify(this.removedSlugs))
-
-                if (this.removedKeyboards.length > 0)
-                    data.append("removed_keyboards", JSON.stringify(this.removedKeyboards))
-            }
 
             if (this.company)
                 data.append("company_id", this.company.id)
@@ -904,8 +848,6 @@ export default {
 
                         selected_bot_template_id: null,
 
-                        slugs: [],
-
                         pages: [],
 
 
@@ -924,6 +866,9 @@ export default {
                 this.loadPage = false
 
             });
+        },
+        callbackSlugs(){
+          this.loadSlugsByBotTemplate(this.bot.id)
         },
         pageCallback(page) {
             this.loadPageList = true

@@ -7,14 +7,38 @@
                 <div
                     class="w-100 d-flex justify-content-center align-items-center flex-column"
                     v-if="step===0">
-                    <img
-                        style="width: 200px; height: 200px; object-fit:cover;"
-                        src="/images/cashman.jpg" alt="">
                     <h2>Создадим Вашего бота вместе!</h2>
-                    <h6>И так давайте же начнем!</h6>
-                    <button class="btn mt-3 btn-primary rounded-pill px-3"
+                    <h6>Первым делом необходимо имя бота (на русском - для пользователей, на английском - как ссылка на вашего бота)</h6>
+
+                    <div class="form-floating mb-2 w-100">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="floatingTextarea"/>
+                        <label for="floatingTextarea" class="text-primary">Название вашего бота (на русском)</label>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        <ul>
+                            <li> Ссылка должна быть длинной (от 7 символов) и, по возможности, уникальной.</li>
+                            <li> Ссылка должна заканчиваться словом "bot"</li>
+                            <li> Ссылка должна состоть только из английских символов и символов нижнего подчеркивания</li>
+                            <li> В ссылке нельзя ставить пробелы</li>
+                        </ul>
+
+                    </div>
+
+                    <div class="form-floating mb-2 w-100">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="floatingTextarea"/>
+                        <label for="floatingTextarea" class="text-primary">Имя ссылки на вашего бота</label>
+                    </div>
+
+                    <button class="btn mt-3 bg-primary text-white rounded-pill px-3 shadow"
                             @click="step++">
-                        Поехали создавать
+                        Следующий шаг
                     </button>
                 </div>
                 <!--Шаг 1-->

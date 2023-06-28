@@ -1,7 +1,7 @@
 <script setup>
 import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
 import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
-import BotSlugListSimple from "@/Components/Constructor/BotSlugListSimple.vue";
+import BotSlugListSimple from "@/Components/Constructor/Slugs/BotSlugListSimple.vue";
 </script>
 
 <template>

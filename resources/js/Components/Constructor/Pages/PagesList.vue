@@ -29,9 +29,11 @@ import Pagination from '@/Components/Pagination.vue';
                         @click="selectPage(page)"
                         v-for="(page, index) in pages"
                        >
-                        <strong>#{{ page.id || 'Не указано' }} {{ page.slug.command || 'Не указано' }}</strong>
+                        <strong>#{{ page.id || 'Не указано' }} {{ page.slug.command || 'Не указано' }}
+                        <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
+                        </strong>
 
-                        <div>
+                        <div v-if="editor">
                             <button type="button"
                                     @click="duplicatePage(page.id)"
                                     class="btn btn-outline-success mr-2"><i class="fa-solid fa-copy"></i></button>
@@ -67,7 +69,7 @@ import Pagination from '@/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props:[ "editor"],
+    props:[ "editor", "current"],
     data() {
         return {
             bot:null,

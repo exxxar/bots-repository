@@ -139,6 +139,16 @@ Route::prefix("bot")->group(function () {
             Route::get("/restore/{companyId}", "restore");
         });
 
+    Route::prefix("slugs")
+        ->controller(\App\Http\Controllers\Admin\BotMenuSlugController::class)
+        ->group(function () {
+            Route::post("/", "index");
+            Route::post("/slug", "createSlug");
+            Route::post("/slug-update", "updateSlug");
+            Route::post("/duplicate/{slugId}", "duplicate");
+            Route::delete("/{slugId}", "destroy");
+        });
+
     Route::prefix("pages")
         ->controller(BotPageController::class)
         ->group(function () {

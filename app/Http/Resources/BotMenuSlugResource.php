@@ -23,6 +23,7 @@ class BotMenuSlugResource extends JsonResource
             'bot_dialog_command' => $this->whenLoaded("botDialogCommand"),
             'slug' => $this->slug,
             'page' => !is_null($this->page),
+            'deprecated_at' => $this->deprecated_at ?? null,
 
         ];
     }
