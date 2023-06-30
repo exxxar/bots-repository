@@ -23,7 +23,7 @@ class GlobalScriptsController extends Controller
         return Inertia::render('BotPages/WheelOfFortune');
     }
 
-    public function wheelOfFortune($config) {
+    public function wheelOfFortune(...$config) {
 
         Log::info("script".print_r($config, true));
         $bot = BotManager::bot()->getSelf();
