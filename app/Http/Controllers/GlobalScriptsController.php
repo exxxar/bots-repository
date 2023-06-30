@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facades\BotManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -22,7 +23,9 @@ class GlobalScriptsController extends Controller
         return Inertia::render('BotPages/WheelOfFortune');
     }
 
-    public function wheelOfFortune($config = null) {
+    public function wheelOfFortune($config) {
+
+        Log::info(print_r($config, true));
         $bot = BotManager::bot()->getSelf();
 
         $mainText = (Collection::make($config)
