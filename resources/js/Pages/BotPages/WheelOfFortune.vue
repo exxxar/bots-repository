@@ -28,7 +28,13 @@ defineProps({
                 <div>Поехали</div>
             </template>
         </Roulette>
-        <p v-if="win">Вы выиграли - {{win.htmlContent}}</p>
+
+    </div>
+
+    <div class="col-12 p-5">
+        <div v-if="win" class="alert alert-success" role="alert">
+            Вы выиграли - {{win.htmlContent}}
+        </div>
     </div>
 </div>
 <!--
@@ -157,5 +163,10 @@ export default {
 <style>
 .wheel-base-container .wheel-base-indicator {
     left: 45px !important;
+}
+
+.wheel .content {
+    font-size: 20px;
+    font-weight: 900;
 }
 </style>

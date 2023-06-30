@@ -31,7 +31,7 @@ class GlobalScriptsController extends Controller
         Inertia::setRootView("bot");
 
         return Inertia::render('BotPages/WheelOfFortune',[
-            "text"=>array_values($wheels)
+            "wheels"=>array_values($wheels)
         ]);
     }
 
