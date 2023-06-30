@@ -72,10 +72,13 @@ abstract class BotCore
     public function tryCall($item, $message, $config = null, ...$arguments)
     {
 
+        $config = is_null($config) ? null : json_decode($config);
+
+        Log::info("tryCall" . print_r($config, true));
         $find = false;
         try {
             if (is_callable($item["function"])) {
-                app()->call($item["function"], [$message, ... $arguments]);
+                app()->call($item["function"], [$message, $config, ... $arguments]);
             } else {
                 app()->call((!is_null($item["controller"]) ?
                     $item["controller"] . "@" . $item["function"] :
