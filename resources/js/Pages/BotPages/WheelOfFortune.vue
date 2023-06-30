@@ -10,7 +10,7 @@ defineProps({
 </script>
 <template>
 <div class="row">
-    <div class="col-12 d-flex justify-content-center align-items-center">
+    <div class="col-12 d-flex justify-content-center align-items-center " style="padding-top: 100px;">
         <Roulette
             ref="wheel"
             size="300"
@@ -33,6 +33,7 @@ defineProps({
                 <div>Поехали</div>
             </template>
         </Roulette>
+        <p v-if="win">Вы выиграли - {{win.htmlContent}}</p>
     </div>
 </div>
 <!--
@@ -51,6 +52,7 @@ export default {
     data() {
         return {
             rouletteKey: 0,
+            win:null,
             items: [
                 {
                     id: 1,
@@ -128,6 +130,19 @@ export default {
     mounted() {
         //
         console.log(this.texts)
+        let index = 1;
+        this.items = []
+        this.texts.forEach(item=>{
+            this.items.push(  {
+                id: index,
+                name: item.value,
+                htmlContent:  item.value,
+                textColor: "",
+                background: "",
+            })
+
+            index++;
+        })
     },
     methods: {
         launchWheel() {
@@ -139,8 +154,13 @@ export default {
         },
         wheelEndedCallback(evt) {
             console.log(evt);
+            this.win = evt
         },
     },
 };
 </script>
-
+<style>
+.wheel-base-container .wheel-base-indicator {
+    left: 45px !important;
+}
+</style>
