@@ -1,11 +1,6 @@
 <script setup>
 defineProps({
-    texts: {
-        type: Array,
-    },
-
-
-
+    texts: Array,
 });
 </script>
 <template>
