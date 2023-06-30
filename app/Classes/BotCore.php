@@ -72,7 +72,7 @@ abstract class BotCore
     public function tryCall($item, $message, $config = null, ...$arguments)
     {
 
-        $config = is_null($config) ? null : json_decode($config);
+        //$config = is_null($config) ? null : json_decode($config);
 
         Log::info("tryCall" . print_r($config, true));
         $find = false;
