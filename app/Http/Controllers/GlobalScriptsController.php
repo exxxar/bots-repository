@@ -25,14 +25,13 @@ class GlobalScriptsController extends Controller
 
     public function wheelOfFortune(...$config) {
 
-        Log::info("script".print_r($config, true));
         $bot = BotManager::bot()->getSelf();
 
-        $mainText = (Collection::make($config)
+        $mainText = (Collection::make($config[1])
             ->where("key","main_text")
             ->first())->value ?? "Начни розыгрыш и получи свои призы!";
 
-        $btnText = (Collection::make($config)
+        $btnText = (Collection::make($config[1])
             ->where("key","btn_text")
             ->first())->value ?? "\xF0\x9F\x8E\xB2Заполнить анкету";
 
