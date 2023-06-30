@@ -27,14 +27,13 @@ class GlobalScriptsController extends Controller
 
         $bot = BotManager::bot()->getSelf();
 
-        Log::info(print_r($config[1], true));
         $mainText = (Collection::make($config[1])
             ->where("key","main_text")
-            ->first())->value ?? "Начни розыгрыш и получи свои призы!";
+            ->first())["value"] ?? "Начни розыгрыш и получи свои призы!";
 
         $btnText = (Collection::make($config[1])
             ->where("key","btn_text")
-            ->first())->value ?? "\xF0\x9F\x8E\xB2Заполнить анкету";
+            ->first())["value"] ?? "\xF0\x9F\x8E\xB2Заполнить анкету";
 
 
         \App\Facades\BotManager::bot()
