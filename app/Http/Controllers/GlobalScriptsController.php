@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\BotManager;
+use App\Models\BotMenuSlug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -18,9 +19,21 @@ class GlobalScriptsController extends Controller
             ->where("bot_domain", $botDomain)
             ->first();
 
+        $slug = BotMenuSlug::query()
+            ->where("bot_id",$bot->id)
+            ->where("slug","global_wheel_of_fortune")
+            ->orderBy("updated_at", "desc")
+            ->first();
+
+        $wheelTexts = Collection::make($slug->config)
+            ->where("key","wheel_text")
+            ->all();
+
         Inertia::setRootView("bot");
 
-        return Inertia::render('BotPages/WheelOfFortune');
+        return Inertia::render('BotPages/WheelOfFortune',[
+            "texts"=>$wheelTexts
+        ]);
     }
 
     public function wheelOfFortune(...$config) {

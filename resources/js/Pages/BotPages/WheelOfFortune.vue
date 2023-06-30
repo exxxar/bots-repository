@@ -1,28 +1,44 @@
+<script setup>
+defineProps({
+    texts: {
+        type: Array,
+    },
+
+
+
+});
+</script>
 <template>
-<Roulette
-    ref="wheel"
-    size="300"
-    :key="rouletteKey"
-    :items="items"
-    centered-indicator
-    indicator-position="top"
-    display-shadow
-    display-border
-    base-display
-    base-display-indicator
-    base-background="orange"
-    base-display-shadow
-    easing="bounce"
-    @wheel-start="wheelStartedCallback"
-    @wheel-end="wheelEndedCallback"
-    @click="launchWheel"
->
-    <template #baseContent>
-        <div>Поехали</div>
-    </template>
-</Roulette>
+<div class="row">
+    <div class="col-12 d-flex justify-content-center align-items-center">
+        <Roulette
+            ref="wheel"
+            size="300"
+            :key="rouletteKey"
+            :items="items"
+            centered-indicator
+            indicator-position="top"
+            display-shadow
+            display-border
+            base-display
+            base-display-indicator
+            base-background="orange"
+            base-display-shadow
+            easing="bounce"
+            @wheel-start="wheelStartedCallback"
+            @wheel-end="wheelEndedCallback"
+            @click="launchWheel"
+        >
+            <template #baseContent>
+                <div>Поехали</div>
+            </template>
+        </Roulette>
+    </div>
+</div>
+<!--
 <button @click="$refs.wheel.reset">reset</button>
 <button @click="rouletteKey += 1">hard reset</button>
+-->
 
 </template>
 <script>
@@ -108,6 +124,10 @@ export default {
                 },
             ],
         };
+    },
+    mounted() {
+        //
+        console.log(this.texts)
     },
     methods: {
         launchWheel() {
