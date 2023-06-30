@@ -27,7 +27,7 @@ class GlobalScriptsController extends Controller
 
         $wheelTexts = Collection::make($slug->config)
             ->where("key","wheel_text")
-            ->all();
+            ->toArray();
 
         Inertia::setRootView("bot");
 
