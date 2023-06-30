@@ -111,6 +111,7 @@ export default {
                 command: null,
                 comment: null,
                 slug: null,
+                config:[],
                 is_global: true,
                 bot_id: null,
             }
@@ -177,6 +178,7 @@ export default {
             this.slugForm.slug = item.slug
             this.slugForm.comment = item.comment
             this.slugForm.command = this.command || item.command
+            this.slugForm.config =  item.config || []
             this.slugForm.is_global = item.is_global || false
             this.slugForm.bot_dialog_command_id = item.bot_dialog_command_id
 
