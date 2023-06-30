@@ -26,21 +26,25 @@ import Pagination from '@/Components/Pagination.vue';
                 <ul class="list-group w-100">
 
                     <li class="list-group-item cursor-pointer page-menu-item btn btn-outline-info mb-1 d-flex justify-content-between"
-                        @click="selectPage(page)"
+
                         v-for="(page, index) in pages"
                        >
-                        <strong>#{{ page.id || 'Не указано' }} {{ page.slug.command || 'Не указано' }}
+                        <strong  @click="selectPage(page)">#{{ page.id || 'Не указано' }} {{ page.slug.command || 'Не указано' }}
                         <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
                         </strong>
 
                         <div v-if="editor">
-                            <button type="button"
-                                    @click="duplicatePage(page.id)"
-                                    class="btn btn-outline-success mr-2"><i class="fa-solid fa-copy"></i></button>
 
-                            <button type="button"
-                                    @click="removePage(page.id)"
-                                    class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item"  @click="duplicatePage(page.id)"><i class="fa-solid fa-copy mr-1"></i>Дублировать</a></li>
+                                    <li><a class="dropdown-item"  @click="removePage(page.id)"><i class="fa-solid fa-trash mr-1"></i>Удалить</a></li>
+                                </ul>
+                            </div>
+
                         </div>
 
                     </li>

@@ -37,6 +37,7 @@ class BotMenuSlug extends Model
         'id' => 'integer',
         'bot_id' => 'integer',
         'config' => 'array',
+        'is_global' => 'boolean',
     ];
 
     public function bot(): BelongsTo

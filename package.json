@@ -37,6 +37,7 @@
         "vue3-perfect-scrollbar": "^1.6.1",
         "vue3-popper": "^1.5.0",
         "vue3-quill": "^0.3.0",
+        "vue3-roulette": "^0.3.3",
         "vuejs-medium-editor": "^3.0.2",
         "vuex": "^4.1.0"
     }

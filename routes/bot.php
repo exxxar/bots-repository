@@ -9,6 +9,7 @@ include_once "bots/delivery.php";
 include_once "bots/funnel.php";
 include_once "bots/manages.php";
 include_once "bots/admin.php";
+include_once "bots/global.php";
 
 BotManager::bot()
     ->route("/.*Мой id|.*мой id", function (...$data){

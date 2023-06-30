@@ -131,6 +131,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async createBotLazy(context, payload = {botForm: null}) {
+        let link = `${BASE_TEMPLATES_LINK}/bot-lazy`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload.botForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async createBot(context, payload = {botForm: null}) {
         let link = `${BASE_TEMPLATES_LINK}/bot`
 
@@ -143,18 +155,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadAllSlugs(context,) {
-        let link = `${BASE_TEMPLATES_LINK}/slugs`
 
-        let _axios = util.makeAxiosFactory(link)
-
-        return _axios.then((response) => {
-            return Promise.resolve(response.data);
-        }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
-            return Promise.reject(err);
-        })
-    },
     async loadBotKeyboards(context, payload = {botId: null}) {
         let link = `${BASE_TEMPLATES_LINK}/keyboards/${payload.botId}`
 

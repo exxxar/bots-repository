@@ -12,6 +12,7 @@ use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotPage;
 use App\Models\Company;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
@@ -268,6 +269,19 @@ class BotPageController extends Controller
             $tmp->inline_keyboard_id = $menu->id;
         }
 
+        $oldSlugs = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where("command",$request->command)
+            ->whereNull("deprecated_at")
+            ->get();
+
+        if (!empty($oldSlugs)) {
+            foreach ($oldSlugs as $oldSlug)
+            {
+                $oldSlug->deprecated_at = Carbon::now();
+                $oldSlug->save();
+            }
+        }
         $strSlug = Str::uuid();
         $slug = BotMenuSlug::query()->create([
             'bot_id' => $bot->id,

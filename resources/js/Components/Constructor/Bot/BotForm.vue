@@ -585,9 +585,7 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
 
         <div v-if="step===2">
             <BotSlugList
-                v-if="botForm.slugs&&!load"
-                :slugs="botForm.slugs"
-                v-on:callback="callbackSlugs"
+                v-if="!load"
               />
         </div>
 
@@ -739,10 +737,18 @@ export default {
         },
 
         loadSlugsByBotTemplate(botId) {
+
+            this.load = true
+
             this.$store.dispatch("loadBotSlugs", {
                 botId: botId
             }).then((resp) => {
                 this.botForm.slugs = resp
+
+                this.$nextTick(() => {
+                    this.load = false
+
+                });
             })
         },
         loadPagesByBotTemplate(botId) {
@@ -867,9 +873,7 @@ export default {
 
             });
         },
-        callbackSlugs(){
-          this.loadSlugsByBotTemplate(this.bot.id)
-        },
+
         pageCallback(page) {
             this.loadPageList = true
             this.$nextTick(() => {

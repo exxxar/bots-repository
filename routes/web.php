@@ -48,6 +48,13 @@ Route::get('/bot-page', function () {
     return Inertia::render('BotPage');
 });
 
+
+Route::get('/script-page', function () {
+    Inertia::setRootView("app");
+
+    return Inertia::render('ScriptPage');
+});
+
 Route::get('/visit-card-page', function () {
     Inertia::setRootView("app");
 
@@ -126,6 +133,7 @@ Route::prefix("bot")->group(function () {
             Route::get("/location/{companyId}", "loadLocations");
             Route::get("/image-menu/{botId}", "loadImageMenu");
             Route::post("/bot", "createBot");
+            Route::post("/bot-lazy", "createBotLazy");
             Route::post("/image-menu", "createImageMenu");
         });
 
@@ -248,6 +256,9 @@ Route::get('/statistic/{botDomain}/{userId}', [AdminBotController::class, "stati
 Route::get('/promotion/{botDomain}/{userId}', [AdminBotController::class, "promotion"]);
 Route::get('/restaurant/vip-form/{botDomain}', [AdminBotController::class, "vipForm"]);
 Route::get('/deliveryman/vip-form/{botDomain}', [AdminBotController::class, "vipFormDeliveryman"]);
+
+
+Route::get('/global-scripts/wheel-of-fortune/{botDomain}', [\App\Http\Controllers\GlobalScriptsController::class, "formWheelOfFortune"]);
 
 
 Route::get('/welcome', function () {

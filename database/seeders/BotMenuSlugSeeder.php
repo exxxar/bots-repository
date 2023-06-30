@@ -14,6 +14,7 @@ class BotMenuSlugSeeder extends Seeder
             'bot_id' => $bot->id,
             'command' => ".*Наши заведения",
             'slug' => "slug_location_1",
+            'is_global' => true,
             'comment' => "Скрипт выводит информацию о заведении и список его дочерних заведений в виде кнопок"
         ]);
 
@@ -21,6 +22,7 @@ class BotMenuSlugSeeder extends Seeder
             'bot_id' => $bot->id,
             'command' => ".*Благотворительность",
             'slug' => "slug_charity_1",
+            'is_global' => true,
             'comment' => "Скрипт позволяет отобразить меню Благотоврительность"
         ]);
 
@@ -28,6 +30,7 @@ class BotMenuSlugSeeder extends Seeder
             'bot_id' => $bot->id,
             'command' => ".*Меню",
             'slug' => "slug_menu_1",
+            'is_global' => true,
             'comment' => "Скрипт отображает меню заведения в виде набора картинок или же информационных файлов"
         ]);
 
@@ -35,6 +38,7 @@ class BotMenuSlugSeeder extends Seeder
             'bot_id' => $bot->id,
             'command' => ".*О нас",
             'slug' => "slug_about_us_1",
+            'is_global' => true,
             'comment' => "Скрипт выводит информацию о сервисе CashBack"
         ]);
 
@@ -42,6 +46,7 @@ class BotMenuSlugSeeder extends Seeder
             'bot_id' => $bot->id,
             'command' => ".*О боте",
             'slug' => "slug_about_bot_1",
+            'is_global' => true,
             'comment' => "Скрипт выводит информацию о данном боте"
         ]);
 
@@ -49,6 +54,7 @@ class BotMenuSlugSeeder extends Seeder
             'bot_id' => $bot->id,
             'command' => ".*Анкета пользователя",
             'slug' => "slug_vip_form_1",
+            'is_global' => true,
             'comment' => "Скрипт выдает ссылку на анкету пользователя"
         ]);
 
@@ -56,6 +62,7 @@ class BotMenuSlugSeeder extends Seeder
             'bot_id' => $bot->id,
             'command' => ".*Главное меню",
             'slug' => "slug_main_menu_1",
+            'is_global' => true,
             'comment' => "Скрипт отображения главного меню системы"
         ]);
 

@@ -1,5 +1,5 @@
 <script setup>
-import Chat from "@/Components/Chat/Chat.vue";
+import Chat from "@/Components/Chat/ChatMini.vue";
 
 defineProps({
     bot: {

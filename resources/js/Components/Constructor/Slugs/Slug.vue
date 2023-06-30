@@ -1,36 +1,29 @@
+<script setup>
+import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
+</script>
 <template>
-    <div class="card" @click="selectSlug">
+    <div class="card"
+         v-bind:class="{'deprecated-slug':item.deprecated_at!=null,'global-slug':item.is_global}"
+         @click="selectSlug">
         <div class="card-header d-flex justify-content-between">
-            <div>
-                <button
-                    data-bs-toggle="modal" :data-bs-target="'#edit-slug-'+item.id"
-                    type="button"
-                    class="btn btn-outline-success mr-2"
-                >
-                    <i class="fa-regular fa-pen-to-square"></i>
-                </button>
 
-                <button
-                    @click="duplicateSlug"
-                    type="button"
-                    class="btn btn-outline-success mr-2"
-                >
-                    <i class="fa-solid fa-clone"></i>
-                </button>
-                <button
-                    @click="removeSlug"
-                    type="button"
-                    class="btn btn-outline-danger"
-                >
-                    <i class="fa-regular fa-trash-can"></i>
-                </button>
 
-                <button
-                    type="button"
-                    data-bs-toggle="modal" :data-bs-target="'#attach-command-'+item.id"
-                    class="btn btn-outline-primary ml-2">
-                    <i class="fa-solid fa-link"></i>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-ellipsis"></i>
                 </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal"
+                           :data-bs-target="'#edit-slug-'+item.id"> <i class="fa-regular fa-pen-to-square mr-1"></i>
+                        Редактировать</a></li>
+                    <li><a class="dropdown-item cursor-pointer" @click="duplicateSlug"><i
+                        class="fa-solid fa-clone mr-1"></i> Дублировать</a></li>
+                    <li><a class="dropdown-item cursor-pointer" @click="removeSlug"> <i
+                        class="fa-regular fa-trash-can text-danger mr-1"></i> Удалить</a></li>
+                    <li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal"
+                           :data-bs-target="'#attach-command-'+item.id"> <i class="fa-solid fa-link mr-1"></i> Связать с
+                        командой</a></li>
+                </ul>
             </div>
 
 
@@ -54,6 +47,12 @@
                     class="col-12">
                     <p v-if="simple"> {{ item.command || 'Нет команды' }}</p>
                     <ol v-else class="list-group list-group-numbered">
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">Идентификатор</div>
+                                №{{ item.id || 'Нет идентификатора' }}
+                            </div>
+                        </li>
                         <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold">Команда</div>
@@ -148,120 +147,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form v-on:submit.prevent="submit">
-                        <div class="form-floating mb-3">
-                            <input type="text"
-                                   v-model="slugForm.command"
-                                   class="form-control" id="floatingInput" placeholder="name@example.com" required>
-                            <label for="floatingInput">Команда</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="text"
-                                   v-model="slugForm.slug"
-                                   class="form-control" id="floatingInput" placeholder="name@example.com" required>
-                            <label for="floatingInput">Мнемоническое имя</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="text"
-                                   v-model="slugForm.comment"
-                                   class="form-control" id="floatingInput" placeholder="name@example.com" required>
-                            <label for="floatingInput">Описание скрипта</label>
-                        </div>
-
-
-                        <div class="form-check" v-if="item.is_global">
-                            <input class="form-check-input"
-                                   v-model="slugForm.is_global"
-                                   type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Является глобальным
-                            </label>
-                        </div>
-
-                        <div class="card" v-if="!item.is_global">
-                            <div class="card-header">
-                                Параметры скрипта
-                            </div>
-                            <div class="card-body">
-
-                                <div class="alert alert-info" role="alert">
-                                    Данные параметры используются для настройки скриптов на стороне сервера
-                                </div>
-
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-info w-100 dropdown-toggle mb-2" type="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                        Добавить
-                                    </button>
-                                    <ul class="dropdown-menu w-100">
-                                        <li v-for="(item, index) in configTypes">
-                                            <a class="dropdown-item"
-                                               @click="addConfig(item.type)">{{ item.title || 'Не установлен' }}</a>
-                                        </li>
-
-                                    </ul>
-                                </div>
-
-                                <div class="row"
-                                     v-if="slugForm.config.length>0"
-                                     v-for="(item, index) in slugForm.config">
-                                    <div class="col-md-5">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control"
-                                                   v-model="slugForm.config[index].key"
-                                                   id="floatingInput"
-                                                   placeholder="name@example.com" required>
-                                            <label for="floatingInput">Ключ</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5" v-if="slugForm.config[index].type==='text'">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="floatingInput"
-                                                   v-model="slugForm.config[index].value"
-                                                   placeholder="name@example.com" required>
-                                            <label for="floatingInput">Значение</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5" v-if="slugForm.config[index].type==='coords'">
-                                        <p>Координаты</p>
-                                    </div>
-                                    <div class="col-md-5" v-if="slugForm.config[index].type==='image'">
-                                        <label :for="'param-photo-'+index+'-item-'+item.id" style="margin-right: 10px;"
-                                               class="photo-loader ml-2">
-                                            <span>+ </span>
-                                            <span
-                                                v-if="slugForm.config[index].value">{{
-                                                    slugForm.config[index].value
-                                                }}</span>
-                                            <input type="file" :id="'param-photo-'+index+'-item-'+item.id"
-                                                   accept="image/*"
-                                                   @change="onChangePhotos($event, index)"
-                                                   style="display:none;"/>
-
-                                        </label>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button
-                                            @click="removeConfigItem(index)"
-                                            class="btn btn-outline-info w-100 p-3" type="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row" v-else>
-                                    <div class="col-12">
-                                        <p>Параметры скрипта еще не добавлены</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-outline-primary w-100 mt-2 p-3">Сохранить команду</button>
-
-                    </form>
+                    <SlugForm :item="item"
+                            v-on:callback="slugFormCallback"
+                    />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -279,82 +167,16 @@ export default {
     data() {
         return {
             simple: true,
-            configTypes: [
-                {
-                    title: 'Текстовый или числовой параметр',
-                    type: 'text',
-                },
-                /*  {
-                      title: 'Изображение',
-                      type: 'image',
-                  },
-                  {
-                      title: 'Координаты',
-                      type: 'coords',
-                  }*/
-            ],
-            slugForm: {
-                bot_id: null,
-                id: null,
-                command: null,
-                comment: null,
-                slug: null,
-                config: [],
-                is_global: false,
-                bot_dialog_command_id: null,
-            }
         }
     },
 
     mounted() {
-        this.slugForm.bot_id = this.bot.id
-        this.slugForm.id = this.item.id ?? null
-        this.slugForm.command = this.item.command
-        this.slugForm.comment = this.item.comment
-        this.slugForm.slug = this.item.slug
-        this.slugForm.config = this.item.config ?? []
-        this.slugForm.is_global = this.item.is_global ?? false
-        this.slugForm.bot_dialog_command_id = this.item.bot_dialog_command_id
+
     },
 
     methods: {
-        onChangePhotos(e, index) {
-            const files = e.target.files
-            this.slugForm.config[index].value = files[0]
-        },
-        submit() {
-            let data = new FormData();
-            Object.keys(this.slugForm)
-                .forEach(key => {
-                    const item = this.slugForm[key] || ''
-                    if (typeof item === 'object')
-                        data.append(key, JSON.stringify(item))
-                    else
-                        data.append(key, item)
-                });
-
-
-            this.$store.dispatch("updateSlug", {
-                slugForm: data
-            }).then((response) => {
-
-                this.$notify({
-                    title: "Конструктор команд",
-                    text: "Команда успешно обновлена",
-                    type: 'success'
-                });
-
-            }).catch(err => {
-
-            })
-
-        },
-        addConfig(type) {
-            this.slugForm.config.push({
-                key: null,
-                value: null,
-                type: type || 'text'
-            })
+        slugFormCallback(){
+          this.$emit("callback")
         },
         selectDialog(command) {
             this.$store.dispatch("attachDialogCommandToSlug", {
@@ -388,9 +210,6 @@ export default {
             })
 
         },
-        editSlug() {
-
-        },
         selectSlug() {
             this.$emit("select", this.item)
         },
@@ -398,7 +217,7 @@ export default {
             // this.$emit("duplicate", index)
             this.$store.dispatch("duplicateSlug", {
                 dataObject: {
-                    slugId: this.slugForm.id
+                    slugId: this.item.id
                 }
             }).then((response) => {
 
@@ -407,40 +226,42 @@ export default {
                     text: "Команда успешно продублирована",
                     type: 'success'
                 });
-                this.$emit("callback")
+
             }).catch(err => {
 
             })
 
+            this.$emit("callback")
         },
         removeSlug() {
-            //
-
             this.$store.dispatch("removeSlug", {
                 dataObject: {
-                    slugId: this.slugForm.id
+                    slugId: this.item.id
                 }
             }).then((response) => {
-
                 this.$notify({
                     title: "Конструктор команд",
                     text: "Команда успешно удалена",
                     type: 'success'
                 });
                 this.$emit("callback")
-            }).catch(err => {
 
+            }).catch(err => {
+                this.$emit("callback")
             })
         },
-        removeConfigItem(index) {
-            try {
-                this.slugForm.config.splice(index, 1)
-            } catch (e) {
-                this.slugForm.config = []
-            }
 
-        },
 
     }
 }
 </script>
+
+<style lang="scss">
+.deprecated-slug {
+    border: 1px red solid !important;
+}
+
+.global-slug {
+    border: 1px green solid !important;
+}
+</style>

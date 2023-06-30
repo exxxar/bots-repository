@@ -55,19 +55,21 @@ abstract class BotCore
 
     protected abstract function stopBotDialog(): void;
 
-    public function pushWebMessage($message){
+    public function pushWebMessage($message)
+    {
 
         $message["created_at"] = Carbon::now()
             ->format('Y-m-d H:i:s');
 
         $this->webMessages[] = $message;
     }
+
     public function getCurrentChatId()
     {
         return $this->chatId;
     }
 
-    public function tryCall($item, $message, ...$arguments)
+    public function tryCall($item, $message, $config = null, ...$arguments)
     {
 
         $find = false;
@@ -78,7 +80,7 @@ abstract class BotCore
                 app()->call((!is_null($item["controller"]) ?
                     $item["controller"] . "@" . $item["function"] :
                     $item["function"]),
-                    [$message, ... $arguments]);
+                    [$message, $config, ... $arguments]);
             }
 
 
@@ -102,7 +104,7 @@ abstract class BotCore
         $this->chatId = $data["inline_query"]["from"]["id"] ?? null;
 
 
-        $this->tryCall($this->inline, $query, $id);
+        $this->tryCall($this->inline, $query, null, $id);
     }
 
     public function webHandler($domain, $data): \Illuminate\Http\JsonResponse
@@ -201,7 +203,7 @@ abstract class BotCore
                         $arguments[] = $match;
 
 
-                    $find = $this->tryCall($item, $message, $arguments);
+                    $find = $this->tryCall($item, $message, $template->config ?? null, ...$arguments);
                     break;
                 }
             }
@@ -302,7 +304,7 @@ abstract class BotCore
                 foreach ($matches as $match)
                     $arguments[] = $match;
 
-                $find = $this->tryCall($item, $message, ...$arguments);
+                $find = $this->tryCall($item, $message, null, ...$arguments);
                 break;
             }
 

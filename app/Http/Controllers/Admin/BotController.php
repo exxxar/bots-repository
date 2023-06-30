@@ -26,6 +26,7 @@ use App\Models\Location;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -101,6 +102,7 @@ class BotController extends Controller
     {
         $slugs = BotMenuSlug::query()
             ->where("is_global", true)
+            ->whereNull("bot_id")
             ->get()
             ->unique("slug");
 
@@ -164,7 +166,6 @@ class BotController extends Controller
     public function loadBotsAsTemplate(Request $request)
     {
         $bots = Bot::query()
-
             ->where("is_template", true)
             ->select("bot_domain", "id", "template_description")
             ->get();
@@ -276,24 +277,6 @@ class BotController extends Controller
         return BotResource::collection($bots);
     }
 
-    public function store(BotStoreRequest $request): Response
-    {
-        $bot = Bot::create($request->validated());
-
-        return new BotResource($bot);
-    }
-
-    public function show(Request $request, Bot $bot): Response
-    {
-        return new BotResource($bot);
-    }
-
-    public function update(BotUpdateRequest $request, Bot $bot): Response
-    {
-        $bot->update($request->validated());
-
-        return new BotResource($bot);
-    }
 
     public function destroy(Request $request, $botId)
     {
@@ -496,6 +479,123 @@ class BotController extends Controller
 
     }
 
+    public function createBotLazy(Request $request)
+    {
+
+        $services = [
+            "investors"=>[""],
+            "franchise"=>[""],
+            "cashback"=>["","",""],
+            "agent-cabinet"=>[""],
+            "referral-bonus"=>[""],
+            "event-form"=>[""],
+            "attached-documents"=>[""],
+            "lead-magnet"=>[""],
+            "sales-funnel"=>[""],
+            "reviews"=>[""],
+            "ask-a-question"=>[""],
+            "online-consultation"=>[""],
+            "location"=>[""],
+            "promotions"=>[""],
+            "our-clients"=>[""],
+            "cost-of-services"=>[""],
+            "custom-shop"=>[""],
+            "buy-or-try"=>[""],
+            "delivery"=>[""],
+            "booking"=>[""],
+            "atmosphere"=>[""],
+            "courses"=>[""],
+            "individual-button"=>[""],
+        ];
+
+        $name = $request->name;
+        $token = $request->token ?? null;
+        $botDomain = $request->botDomain;
+
+        $greeting = json_decode($request->greeting);
+        $contacts = json_decode($request->contacts);
+        $selfInfo = json_decode($request->selfInfo);
+        $businessInfo = json_decode($request->businessInfo);
+        $functions = json_decode($request->functions ?? '[]');
+
+        $tmpLinks = Collection::make($contacts->links)
+            ->where("slug", "social-link")
+            ->all();
+
+        $links = [];
+
+        foreach ($tmpLinks as $link)
+            $links[] = (object)[
+                "title" => $link->description,
+                "url" => $link->value,
+            ];
+
+        $phones = Collection::make($contacts->links)
+            ->where("slug", "phone-number")
+            ->pluck("value")
+            ->all();
+
+        $email = Collection::make($contacts->links)
+            ->where("slug", "email")
+            ->first();
+
+        $address = Collection::make($contacts->links)
+            ->where("slug", "address")
+            ->first();
+
+
+        dd($phones);
+
+        $company = Company::query()->create([
+            'title' => $businessInfo->name,
+            'slug' => $botDomain,
+            'description' => $businessInfo->text,
+            'image',
+            'address' => $address->value,
+            'phones' => $phones,
+            'links' => $links,
+            'email' => $email->value ?? null,
+            'schedule' => [],
+            'manager' => $selfInfo->name,
+            'is_active' => true,
+            'creator_id' => null,
+            'owner_id' => null,
+            'blocked_message' => null,
+            'blocked_at' => null,
+        ]);
+
+        $botType = BotType::query()->where("slug", "business_card")->first();
+
+        $bot = Bot::query()->create([
+            'company_id' => $company->id,
+            'welcome_message' => $greeting->text,
+            'bot_domain' => $botDomain,
+            'bot_token' => $token ?? "test_replacement_token",
+            'bot_token_dev' => $token ?? "test_replacement_token",
+            'order_channel' => -1,
+            'main_channel' => -1,
+            'balance' => 3000,
+            'tax_per_day' => 10,
+            'image',
+            'description' => $businessInfo->text,
+            'info_link' => null,
+            'social_links' => $links,
+            'is_active' => true,
+            'maintenance_message' => "Техническое обслуживание",
+            'bot_type_id' => $botType->id,
+            'level_1' => 7,
+            'level_2' => 3,
+            'level_3' => 1,
+            'is_template' => false,
+            'template_description' => "Не является шаблоном",
+        ]);
+
+        if (!is_null($token))
+            BotManager::bot()->setWebhooks();
+
+        return new BotResource($bot);
+    }
+
     public function createBot(Request $request)
     {
         $request->validate([
@@ -636,7 +736,7 @@ class BotController extends Controller
             "maintenance_message" => "required",
             "welcome_message" => "required",
             "level_1" => "required",
-           // "slugs" => "required",
+            // "slugs" => "required",
 
 
         ]);
@@ -755,29 +855,29 @@ class BotController extends Controller
         $bot->update((array)$tmp);
 
         if (!is_null($slugs))
-        foreach ($slugs as $slug) {
-            $slugId = $slug->id ?? null;
+            foreach ($slugs as $slug) {
+                $slugId = $slug->id ?? null;
 
-            $tmpSlug = !is_null($slugId) ? BotMenuSlug::query()
-                ->where("id", $slug->id)
-                ->where("command", $slug->command)
-                ->where("slug", $slug->slug)
-                ->first() : null;
+                $tmpSlug = !is_null($slugId) ? BotMenuSlug::query()
+                    ->where("id", $slug->id)
+                    ->where("command", $slug->command)
+                    ->where("slug", $slug->slug)
+                    ->first() : null;
 
-            if (!is_null($tmpSlug))
-                $tmpSlug->update([
-                    'command' => $slug->command,
-                    'comment' => $slug->comment,
-                    'slug' => $slug->slug,
-                ]);
-            else
-                BotMenuSlug::query()->create([
-                    'bot_id' => $request->id,
-                    'command' => $slug->command,
-                    'comment' => $slug->comment,
-                    'slug' => $slug->slug,
-                ]);
-        }
+                if (!is_null($tmpSlug))
+                    $tmpSlug->update([
+                        'command' => $slug->command,
+                        'comment' => $slug->comment,
+                        'slug' => $slug->slug,
+                    ]);
+                else
+                    BotMenuSlug::query()->create([
+                        'bot_id' => $request->id,
+                        'command' => $slug->command,
+                        'comment' => $slug->comment,
+                        'slug' => $slug->slug,
+                    ]);
+            }
 
 
         if (!is_null($keyboards))

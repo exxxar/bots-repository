@@ -14,38 +14,60 @@ use Illuminate\Http\Response;
 
 class BotMenuSlugController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
-        $botMenuSlugs = BotMenuSlug::all();
+        $needGlobal = $request->needGlobal ?? false;
+        $search = $request->search ?? null;
+
+        $botId = $request->bot_id ?? null;
+
+        $size = $request->get("size") ?? config('app.results_per_page');
+
+        if ($needGlobal) {
+
+            $botMenuSlugs = BotMenuSlug::query()
+                ->where("is_global", true)
+                ->whereNull("bot_id");
+
+            if (!is_null($search))
+                $botMenuSlugs = $botMenuSlugs
+                    ->where(function ($q) use ($search) {
+                        $q->where("command", "like", "%$search%")
+                            ->orWhere("comment", "like", "%$search%");
+                    });
+
+            $botMenuSlugs = $botMenuSlugs
+                ->orderBy("created_at","desc")
+                ->paginate($size);
+
+            return new BotMenuSlugCollection($botMenuSlugs);
+        }
+
+        $botMenuSlugs = BotMenuSlug::query()
+            ->where("bot_id", $botId);
+
+        if (!is_null($search))
+            $botMenuSlugs = $botMenuSlugs
+                ->where(function ($q) use ($search) {
+                    $q->where("command", "like", "%$search%")
+                        ->orWhere("comment", "like", "%$search%");
+                });
+
+        $botMenuSlugs = $botMenuSlugs
+            ->orderBy("created_at","desc")
+            ->paginate($size);
+
 
         return new BotMenuSlugCollection($botMenuSlugs);
     }
 
-    public function store(BotMenuSlugStoreRequest $request): Response
-    {
-        $botMenuSlug = BotMenuSlug::create($request->validated());
-
-        return new BotMenuSlugResource($botMenuSlug);
-    }
-
-    public function show(Request $request, BotMenuSlug $botMenuSlug): Response
-    {
-        return new BotMenuSlugResource($botMenuSlug);
-    }
-
-    public function update(BotMenuSlugUpdateRequest $request, BotMenuSlug $botMenuSlug): Response
-    {
-        $botMenuSlug->update($request->validated());
-
-        return new BotMenuSlugResource($botMenuSlug);
-    }
 
     public function destroy(Request $request, $slugId): Response
     {
 
         $botMenuSlug = BotMenuSlug::query()->find($slugId);
         if (is_null($botMenuSlug))
-            return response()->noContent();
+            return response()->noContent(404);
 
         $botMenuSlug->deleted_at = Carbon::now();
         $botMenuSlug->save();
@@ -53,7 +75,8 @@ class BotMenuSlugController extends Controller
         return response()->noContent();
     }
 
-    public function duplicate(Request $request, $slugId){
+    public function duplicate(Request $request, $slugId)
+    {
         $botMenuSlug = BotMenuSlug::query()->find($slugId);
         if (is_null($botMenuSlug))
             return response()->noContent();
@@ -68,12 +91,17 @@ class BotMenuSlugController extends Controller
     public function createSlug(Request $request)
     {
         $request->validate([
-            "bot_id" => "required",
             "command" => "required",
             "slug" => "required",
         ]);
 
-        BotMenuSlug::query()->create($request->all());
+        $tmp = (object)$request->all();
+
+        $tmp->config = json_decode($tmp->config ?? '[]');
+        $tmp->is_global = $tmp->is_global == "true";
+
+        //      dd($tmp);
+        BotMenuSlug::query()->create((array)$tmp);
 
         return response()->noContent();
     }
@@ -83,7 +111,6 @@ class BotMenuSlugController extends Controller
 
         $request->validate([
             "id" => "required",
-            "bot_id" => "required",
         ]);
 
         $slug = BotMenuSlug::query()->find($request->id);

@@ -368,6 +368,11 @@ export default {
                 reply_keyboard: null,
                 inline_keyboard: null,
 
+                reply_keyboard_id:  null,
+                inline_keyboard_id:  null,
+
+                next_page_id:  null,
+
             }
             this.photos = []
 

@@ -34,9 +34,20 @@ import {Head} from '@inertiajs/vue3'
                 <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
 
 
+
+
                     <li class="nav-item"><a class="nav-link me-lg-3" href="#constructor">Конструктор</a></li>
                     <li class="nav-item"><a class="nav-link me-lg-3" href="#prices">Тарифы</a></li>
                     <li class="nav-item"><a class="nav-link me-lg-3" href="#employes">Сотрудничество</a></li>
+
+                    <li class="nav-item" style="border-left:2px #efefef solid">
+                        <a class="nav-link me-lg-3 text-gradient ml-2" href="#!"><i class="fa-brands fa-vk"></i></a>
+                    </li>
+
+                    <li class="nav-item" style="border-right:2px #efefef solid">
+                        <a class="nav-link me-lg-3 text-gradient" href="#!"><i class="fa-brands fa-instagram"></i></a>
+
+                    </li>
                 </ul>
                 <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modal"
                         data-bs-target="#feedbackModal">

@@ -1,6 +1,7 @@
 <script setup>
 import Layout from "@/Layouts/ClientLayout.vue";
 import VisitCardConstructor from "@/Components/Constructor/VisitCardConstructor.vue";
+import ChatWindow from "@/Components/Chat/ChatWindow.vue";
 
 </script>
 
@@ -146,10 +147,32 @@ import VisitCardConstructor from "@/Components/Constructor/VisitCardConstructor.
                                     </div>
                                 </div>
                             </div>
+
+
+<!--
+                            <div class="w-100 d-flex justify-content-center mt-5">
+                                <button class="btn btn-outline-primary p-3">Хочу попробовать вживую</button>
+                            </div>
+-->
+
+
                         </div>
                     </div>
                 </div>
             </section>
+
+<!--            <section id="cases">
+                <div class="container px-5">
+
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-12">
+                            <ChatWindow></ChatWindow>
+                        </div>
+                    </div>
+
+
+                </div>
+            </section>-->
 
             <section class="py-5 bg-gradient-primary-to-secondary text-white" v-if="!need_start">
                 <div class="container px-5 my-5">
@@ -166,7 +189,7 @@ import VisitCardConstructor from "@/Components/Constructor/VisitCardConstructor.
             <!-- App constructor section-->
             <section id="constructor" class="py-5 bg-gradient-primary-to-secondary text-white" v-if="need_start">
                 <div class="container px-5 my-5">
-                    <VisitCardConstructor :start="1"/>
+                    <VisitCardConstructor :start="0"/>
 
                     <div class="w-100 d-flex justify-content-center mt-5">
                         <button
@@ -255,7 +278,7 @@ import VisitCardConstructor from "@/Components/Constructor/VisitCardConstructor.
                                     <div class="device" data-device="iPhoneX" data-orientation="portrait"
                                          data-color="black">
                                         <div class="screen bg-black">
-                                            <iframe src="https://your-cashman.com/web/vape888bot"
+                                            <iframe src="/web/vape888bot"
                                                     style="height:100%;width:100%;"
                                             ></iframe>
                                         </div>
@@ -302,19 +325,19 @@ import VisitCardConstructor from "@/Components/Constructor/VisitCardConstructor.
             <section id="prices">
                 <div class="container px-5">
 
-                        <div class="row gx-5 justify-content-center">
-                            <div class="col-xxl-8">
-                                <div class="text-center my-5"><h2 class="display-5 fw-bolder"><span
-                                    class="text-gradient d-inline">Наши тарифы</span></h2>
-                                    <p class="lead fw-light mb-4">My name is Start Bootstrap and I help brands grow.</p>
-                                    <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                        Fugit dolorum itaque qui unde quisquam consequatur autem. Eveniet quasi nobis
-                                        aliquid cumque officiis sed rem iure ipsa! Praesentium ratione atque
-                                        dolorem?</p>
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-xxl-8">
+                            <div class="text-center my-5"><h2 class="display-5 fw-bolder"><span
+                                class="text-gradient d-inline">Наши тарифы</span></h2>
+                                <p class="lead fw-light mb-4">My name is Start Bootstrap and I help brands grow.</p>
+                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                    Fugit dolorum itaque qui unde quisquam consequatur autem. Eveniet quasi nobis
+                                    aliquid cumque officiis sed rem iure ipsa! Praesentium ratione atque
+                                    dolorem?</p>
 
-                                </div>
                             </div>
                         </div>
+                    </div>
 
 
                     <div class="row">
@@ -562,6 +585,8 @@ import VisitCardConstructor from "@/Components/Constructor/VisitCardConstructor.
                     </div>
                 </div>
             </section>
+
+
             <!-- Footer-->
             <footer class="bg-black text-center py-5">
                 <div class="container px-5">

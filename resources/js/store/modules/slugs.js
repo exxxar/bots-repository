@@ -17,7 +17,8 @@ const getters = {
 }
 
 const actions = {
-    async loadSlugs(context, payload = {dataObject: {botId: null, search:null}, page: 0, size: 12}) {
+
+    async loadSlugs(context, payload = {dataObject: {botId: null, search:null, needGlobal:false}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12
 
@@ -69,7 +70,7 @@ const actions = {
         })
     },
     async createSlug(context, payload = {slugForm: null}) {
-        let link = `${BASE_SLUGS_LINK}/page`
+        let link = `${BASE_SLUGS_LINK}/slug`
 
         let _axios = util.makeAxiosFactory(link,"POST", payload.slugForm)
 

@@ -1,7 +1,5 @@
 <script setup>
 import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue";
-import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.vue";
-import BotSlugList from "@/Components/Constructor/Slugs/BotSlugList.vue";
 import KeyboardCard from "@/Components/Constructor/Cards/KeyboardCard.vue";
 </script>
 <template>

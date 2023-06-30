@@ -92,6 +92,16 @@ import { Head } from '@inertiajs/vue3'
                                 Боты
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               v-bind:class="{'active':active==6}"
+                               href="/script-page"
+                               aria-current="page">
+                                <i class="fa-solid fa-scroll"></i>
+                                Глобальные скрипты
+                            </a>
+                        </li>
                         <hr>
                         <li class="nav-item">
                             <a class="nav-link"
@@ -130,7 +140,7 @@ import { Head } from '@inertiajs/vue3'
             </nav>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" >
-                <div class="pt-3 pb-2 mb-3 border-bottom">
+                <div class="pt-3 pb-2 mb-3">
                     <slot/>
                 </div>
             </main>
