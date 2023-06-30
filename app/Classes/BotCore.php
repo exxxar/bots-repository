@@ -74,7 +74,6 @@ abstract class BotCore
 
         //$config = is_null($config) ? null : json_decode($config);
 
-        Log::info("tryCall" . print_r($config, true));
         $find = false;
         try {
             if (is_callable($item["function"])) {
@@ -205,7 +204,6 @@ abstract class BotCore
                     foreach ($matches as $match)
                         $arguments[] = $match;
 
-                    Log::info("slug handler".print_r($template->toArray(),true));
 
                     $find = $this->tryCall($item, $message, $template->config ?? null, ...$arguments);
                     break;
