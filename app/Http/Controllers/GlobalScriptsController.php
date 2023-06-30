@@ -27,6 +27,7 @@ class GlobalScriptsController extends Controller
 
         $bot = BotManager::bot()->getSelf();
 
+        Log::info(print_r($config[1], true));
         $mainText = (Collection::make($config[1])
             ->where("key","main_text")
             ->first())->value ?? "Начни розыгрыш и получи свои призы!";
