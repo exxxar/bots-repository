@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-    texts: Array,
+    text: String,
 });
 </script>
 <template>
@@ -124,10 +124,14 @@ export default {
     },
     mounted() {
         //
-        console.log(this.texts)
+
+
+        let tmp = JSON.parse(this.text)
         let index = 1;
+
+        console.log(tmp)
         this.items = []
-        this.texts.forEach(item=>{
+        tmp.forEach(item=>{
             this.items.push(  {
                 id: index,
                 name: item.value,

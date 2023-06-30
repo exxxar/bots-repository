@@ -25,15 +25,13 @@ class GlobalScriptsController extends Controller
             ->orderBy("updated_at", "desc")
             ->first();
 
-        $wheelTexts = Collection::make($slug->config)
+        $wheelText = Collection::make($slug->config)
             ->where("key","wheel_text")
             ->toArray();
-
-        Log::info(print_r($wheelTexts, true));
         Inertia::setRootView("bot");
 
         return Inertia::render('BotPages/WheelOfFortune',[
-            "texts"=>$wheelTexts
+            "text"=>json_encode($wheelText)
         ]);
     }
 
