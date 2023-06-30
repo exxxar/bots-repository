@@ -30,8 +30,6 @@ class GlobalScriptsController extends Controller
             ->toArray();
         Inertia::setRootView("bot");
 
-        Log::info(print_r(array_values($wheels),true));
-
         return Inertia::render('BotPages/WheelOfFortune',[
             "text"=>array_values($wheels)
         ]);

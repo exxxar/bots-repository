@@ -123,12 +123,9 @@ export default {
         };
     },
     mounted() {
-        //
-
 
         let index = 1;
 
-        console.log(tmp)
         this.items = []
         this.wheels.forEach(item=>{
             this.items.push(  {
