@@ -205,7 +205,7 @@ abstract class BotCore
                     foreach ($matches as $match)
                         $arguments[] = $match;
 
-                    Log::info("slug handler",print_r($template->toArray(),true));
+                    Log::info("slug handler".print_r($template->toArray(),true));
 
                     $find = $this->tryCall($item, $message, $template->config ?? null, ...$arguments);
                     break;
