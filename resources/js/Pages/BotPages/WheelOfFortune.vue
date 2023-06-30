@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-    text: String,
+    wheels: Array,
 });
 </script>
 <template>
@@ -126,12 +126,11 @@ export default {
         //
 
 
-        let tmp = JSON.parse(this.text)
         let index = 1;
 
         console.log(tmp)
         this.items = []
-        tmp.forEach(item=>{
+        this.wheels.forEach(item=>{
             this.items.push(  {
                 id: index,
                 name: item.value,
