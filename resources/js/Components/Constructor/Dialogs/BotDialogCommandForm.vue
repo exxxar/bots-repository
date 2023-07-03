@@ -187,7 +187,7 @@ export default {
                     pre_text: this.item.pre_text || null,
                     post_text: this.item.post_text || null,
                     error_text: this.item.error_text || null,
-                    bot_id: this.item.bot.id || this.bot.id || null,
+                    bot_id: this.bot.id || null,
                     input_pattern: this.item.input_pattern || null,
                     inline_keyboard_id: this.item.inline_keyboard_id || null,
                     images: this.item.images || [],
