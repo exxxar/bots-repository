@@ -28,6 +28,7 @@ class GlobalScriptsController extends Controller
         $wheels = Collection::make($slug->config)
             ->where("key","wheel_text")
             ->toArray();
+
         Inertia::setRootView("bot");
 
         return Inertia::render('BotPages/WheelOfFortune',[

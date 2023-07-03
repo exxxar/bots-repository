@@ -147,6 +147,14 @@ export default {
                     {
                       title: 'Условие',
                       type: 'condition',
+                  },
+                   {
+                      title: 'Логический оператор',
+                      type: 'boolean',
+                  },
+                  {
+                      title: 'JSON',
+                      type: 'json',
                   }
                   */
             ],

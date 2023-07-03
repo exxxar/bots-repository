@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Classes\SystemUtilitiesTrait;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
@@ -34,6 +35,8 @@ use function App\Http\Controllers\mb_strpos;
 
 class BotController extends Controller
 {
+
+    use SystemUtilitiesTrait;
 
     public function requestTelegramChannel(Request $request)
     {
@@ -483,29 +486,29 @@ class BotController extends Controller
     {
 
         $services = [
-            "investors"=>[""],
-            "franchise"=>[""],
-            "cashback"=>["","",""],
-            "agent-cabinet"=>[""],
-            "referral-bonus"=>[""],
-            "event-form"=>[""],
-            "attached-documents"=>[""],
-            "lead-magnet"=>[""],
-            "sales-funnel"=>[""],
-            "reviews"=>[""],
-            "ask-a-question"=>[""],
-            "online-consultation"=>[""],
-            "location"=>[""],
-            "promotions"=>[""],
-            "our-clients"=>[""],
-            "cost-of-services"=>[""],
-            "custom-shop"=>[""],
-            "buy-or-try"=>[""],
-            "delivery"=>[""],
-            "booking"=>[""],
-            "atmosphere"=>[""],
-            "courses"=>[""],
-            "individual-button"=>[""],
+            "investors" => [""],
+            "franchise" => [""],
+            "cashback" => ["", "", ""],
+            "agent-cabinet" => [""],
+            "referral-bonus" => [""],
+            "event-form" => [""],
+            "attached-documents" => [""],
+            "lead-magnet" => [""],
+            "sales-funnel" => [""],
+            "reviews" => [""],
+            "ask-a-question" => [""],
+            "online-consultation" => [""],
+            "location" => [""],
+            "promotions" => [""],
+            "our-clients" => [""],
+            "cost-of-services" => [""],
+            "custom-shop" => [""],
+            "buy-or-try" => [""],
+            "delivery" => [""],
+            "booking" => [""],
+            "atmosphere" => [""],
+            "courses" => [""],
+            "individual-button" => [""],
         ];
 
         $name = $request->name;
@@ -543,6 +546,8 @@ class BotController extends Controller
             ->where("slug", "address")
             ->first();
 
+        $photos = [];
+
 
         dd($phones);
 
@@ -550,7 +555,7 @@ class BotController extends Controller
             'title' => $businessInfo->name,
             'slug' => $botDomain,
             'description' => $businessInfo->text,
-            'image',
+            'image'=>null,
             'address' => $address->value,
             'phones' => $phones,
             'links' => $links,
@@ -564,6 +569,30 @@ class BotController extends Controller
             'blocked_at' => null,
         ]);
 
+
+        $greeting_image_avatar = $greeting->need_photo ?
+            $this->file($request, $company->slug, "greeting_image_avatar") :
+            ($greeting->avatar ?? null);
+
+        $greeting_image_profile = $greeting->need_photo ?
+            $this->file($request, $company->slug, "greeting_image_profile") :
+            ($greeting->profile ?? null);
+
+        $company->image = $greeting_image_profile;
+        $company->save();
+
+        $contacts_image = $contacts->need_photo?
+            $this->file($request, $company->slug, "contacts_image"):
+            ($contacts->image ?? null);
+
+        $self_info_image = $selfInfo->need_photo?
+            $this->file($request, $company->slug, "self_info_image"):
+            ($selfInfo->image ?? null);
+
+        $business_info_image = $businessInfo->need_photo?
+            $this->file($request, $company->slug, "business_info_image"):
+            ($businessInfo->image ?? null);
+
         $botType = BotType::query()->where("slug", "business_card")->first();
 
         $bot = Bot::query()->create([
@@ -576,7 +605,7 @@ class BotController extends Controller
             'main_channel' => -1,
             'balance' => 3000,
             'tax_per_day' => 10,
-            'image',
+            'image'=>$greeting_image_avatar,
             'description' => $businessInfo->text,
             'info_link' => null,
             'social_links' => $links,

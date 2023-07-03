@@ -16,10 +16,10 @@ trait BotBaseMethodsTrait
             "parse_mode" => "HTML"
         ];
 
-        $this->pushWebMessage($tmp);
-
-        if ($this->isWebMode)
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
             return $this;
+        }
 
         try {
             $this->bot->sendMessage($tmp);
@@ -41,10 +41,10 @@ trait BotBaseMethodsTrait
             "parse_mode" => "HTML"
         ];
 
-        $this->pushWebMessage($tmp);
-
-        if ($this->isWebMode)
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
             return $this;
+        }
 
         try {
             $this->bot->sendLocation($tmp);
@@ -66,10 +66,10 @@ trait BotBaseMethodsTrait
             "parse_mode" => "HTML"
         ];
 
-        $this->pushWebMessage($tmp);
-
-        if ($this->isWebMode)
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
             return $this;
+        }
 
         try {
             $this->bot->sendDocument($tmp);
@@ -98,10 +98,10 @@ trait BotBaseMethodsTrait
             ])
         ];
 
-        $this->pushWebMessage($tmp);
-
-        if ($this->isWebMode)
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
             return $this;
+        }
 
         try {
             $this->bot->sendMessage($tmp);
@@ -128,10 +128,10 @@ trait BotBaseMethodsTrait
             "prices" => $prices,
         ];
 
-        $this->pushWebMessage($tmp);
-
-        if ($this->isWebMode)
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
             return $this;
+        }
 
         try {
             $this->bot->sendInvoice($tmp);
@@ -159,10 +159,10 @@ trait BotBaseMethodsTrait
             ])
         ];
 
-        $this->pushWebMessage($tmp);
-
-        if ($this->isWebMode)
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
             return $this;
+        }
 
         try {
             $this->bot->editMessageReplyMarkup($tmp);
@@ -189,10 +189,10 @@ trait BotBaseMethodsTrait
 
         ];
 
-        $this->pushWebMessage($tmp);
-
-        if ($this->isWebMode)
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
             return $this;
+        }
 
         try {
             $this->bot->sendMessage($tmp);
@@ -221,10 +221,10 @@ trait BotBaseMethodsTrait
             ])
         ];
 
-        $this->pushWebMessage($tmp);
-
-        if ($this->isWebMode)
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
             return $this;
+        }
 
         try {
             $this->bot->sendPhoto($tmp);
@@ -250,10 +250,10 @@ trait BotBaseMethodsTrait
             "media" => $media,
         ];
 
-        $this->pushWebMessage($tmp);
-
-        if ($this->isWebMode)
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
             return $this;
+        }
 
         try {
             $this->bot->sendMediaGroup($tmp);
