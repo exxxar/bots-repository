@@ -160,7 +160,7 @@ class BotPageController extends Controller
                     if (!is_null($page)) {
                         $page = $page->replicate();
 
-                        $page->command = $tmpType == "inline" ? $strSlug : $tmpText;
+                       // $page->command = $tmpType == "inline" ? $strSlug : $tmpText;
                         $page->bot_menu_slug_id = $slug->id;
                         $page->save();
                     }
