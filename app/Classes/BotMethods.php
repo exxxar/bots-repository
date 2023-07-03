@@ -10,7 +10,7 @@ use Telegram\Bot\Api;
 class BotMethods
 {
 
-    use BotBaseMethodsTrait;
+    use BotWebInterfaceTrait, BotBaseMethodsTrait;
 
     private $bot;
 
