@@ -13,6 +13,8 @@ use Telegram\Bot\FileUpload\InputFile;
 
 abstract class BotCore
 {
+    use BotMethodsTrait, BotDialogTrait, BotWebInterfaceTrait;
+
     protected $domain;
 
     protected $controller = null;
@@ -28,10 +30,6 @@ abstract class BotCore
     protected $slugs = [];
 
     protected $next = [];
-
-    protected $webMessages = [];
-
-    protected $isWebMode = false;
 
     protected abstract function createUser($data);
 
@@ -55,14 +53,7 @@ abstract class BotCore
 
     protected abstract function stopBotDialog(): void;
 
-    public function pushWebMessage($message)
-    {
 
-        $message["created_at"] = Carbon::now()
-            ->format('Y-m-d H:i:s');
-
-        $this->webMessages[] = $message;
-    }
 
     public function getCurrentChatId()
     {
