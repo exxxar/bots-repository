@@ -13,7 +13,7 @@ use Telegram\Bot\FileUpload\InputFile;
 
 abstract class BotCore
 {
-    use BotMethodsTrait, BotDialogTrait, BotWebInterfaceTrait;
+    use  BotWebInterfaceTrait;
 
     protected $domain;
 
