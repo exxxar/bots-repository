@@ -58,18 +58,19 @@ trait BotDialogTrait
         if (is_null($dialogCommandId))
             return;
 
+        Log::info("dialog step 1");
         $botDialogCommand = BotDialogCommand::query()
             ->where("id", $dialogCommandId)
             ->first();
 
         if (is_null($botDialogCommand))
             return;
-
+        Log::info("dialog step 2");
         $botUser = $this->currentBotUser();
 
         if (is_null($botUser))
             return;
-
+        Log::info("dialog step 3");
         $botUser->in_dialog_mode = true;
         $botUser->save();
 
@@ -80,7 +81,7 @@ trait BotDialogTrait
             'summary_input_data' => [],
             'completed_at' => null,
         ]);
-
+        Log::info("dialog step 4");
         $this->sendDialogData($botDialogCommand);
     }
 

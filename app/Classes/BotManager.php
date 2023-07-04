@@ -236,6 +236,7 @@ class BotManager extends BotCore
             $this->replyKeyboard("Меню страницы", $rMenu);
 
         if (!is_null($page->next_bot_dialog_id)){
+            Log::info("dialog_id=>".$page->next_bot_dialog_id);
             $this->startBotDialog($page->next_bot_dialog_id );
             return;
         }

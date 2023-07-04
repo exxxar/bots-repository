@@ -230,7 +230,7 @@ abstract class BotCore
                 if (preg_match($command . "$/i", $query, $matches)) {
                     $this->prepareTemplatePage($template->page);
 
-                    Log::info(print_r($template->page, true));
+                    Log::info(print_r($template->page->toArray(), true));
                     if (!is_null($template->page->next_bot_menu_slug_id)) {
                         $slug = BotMenuSlug::query()
                             ->where("id", $template
