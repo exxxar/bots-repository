@@ -120,8 +120,8 @@ abstract class BotCore
         if ($botStatus != BotStatusEnum::Working)
             return $this->webMessages;
 
-        if ($this->botDialogStartHandler($data, $query))
-            return response()->json($this->webMessages);
+    /*    if ($this->botDialogStartHandler($data, $query))
+            return response()->json($this->webMessages);*/
 
         if ($this->botTemplatePageHandler($data, $query))
             return response()->json($this->webMessages);
@@ -230,6 +230,7 @@ abstract class BotCore
                 if (preg_match($command . "$/i", $query, $matches)) {
                     $this->prepareTemplatePage($template->page);
 
+                    Log::info(print_r($template->page, true));
                     if (!is_null($template->page->next_bot_menu_slug_id)) {
                         $slug = BotMenuSlug::query()
                             ->where("id", $template
