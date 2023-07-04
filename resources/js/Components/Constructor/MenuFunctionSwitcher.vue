@@ -52,7 +52,7 @@ import BotSlugListSimple from "@/Components/Constructor/Slugs/BotSlugListSimple.
 
             <BotSlugListSimple v-if="bot"
                                v-on:callback="associateSlug"
-                               :bot-id="bot.id"></BotSlugListSimple>
+                               :bot="bot"></BotSlugListSimple>
         </div>
 
         <div class="col-12 mt-2" v-if="part===1">
@@ -88,7 +88,7 @@ import BotSlugListSimple from "@/Components/Constructor/Slugs/BotSlugListSimple.
 
             <BotDialogGroupListSimple  v-if="bot"
                                        v-on:select-dialog="associateDialog"
-                                       :bot-id="bot.id"/>
+                                       :bot="bot"/>
         </div>
     </div>
 </template>

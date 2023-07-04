@@ -8,6 +8,7 @@ use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -52,7 +53,6 @@ abstract class BotCore
     protected abstract function currentBotUserInDialog(): bool;
 
     protected abstract function stopBotDialog(): void;
-
 
 
     public function getCurrentChatId()
@@ -230,10 +230,24 @@ abstract class BotCore
                 if (preg_match($command . "$/i", $query, $matches)) {
                     $this->prepareTemplatePage($template->page);
 
-                    /*if (!is_null($template->bot_dialog_command_id)){
-                        $this->startBotDialog($template->bot_dialog_command_id);
-                        return true;
-                    }*/
+                    if (!is_null($template->page->next_bot_menu_slug_id)) {
+                        $slug = BotMenuSlug::query()
+                            ->where("id", $template
+                                ->page
+                                ->next_bot_menu_slug_id)
+                            ->first();
+
+                        $item = Collection::make($this->slugs)
+                            ->where("path", $slug->slug)
+                            ->first();
+
+                        if (!is_null($item)) {
+                            $this->tryCall($item, $message,
+                                $template->config ?? null, []);
+
+                        }
+
+                    }
 
                     $find = true;
                     break;
@@ -249,33 +263,33 @@ abstract class BotCore
         return $find;
     }
 
-    private function botDialogStartHandler($message, $query): bool
-    {
-        $matches = [];
+    /*  private function botDialogStartHandler($message, $query): bool
+      {
+          $matches = [];
 
-        $templates = BotMenuSlug::query()
-            ->with(["page"])
-            ->whereNotNull("bot_dialog_command_id")
-            ->where("bot_id", $this->getSelf()->id)
-            ->get();
+          $templates = BotMenuSlug::query()
+              ->with(["page"])
+              ->whereNotNull("bot_dialog_command_id")
+              ->where("bot_id", $this->getSelf()->id)
+              ->get();
 
 
-        foreach ($templates as $template) {
+          foreach ($templates as $template) {
 
-            $command = $template->command;
+              $command = $template->command;
 
-            if (!str_starts_with($command, "/"))
-                $command = "/" . $command;
+              if (!str_starts_with($command, "/"))
+                  $command = "/" . $command;
 
-            if (preg_match($command . "$/i", $query, $matches)) {
+              if (preg_match($command . "$/i", $query, $matches)) {
 
-                $this->startBotDialog($template->bot_dialog_command_id ?? null);
-                return true;
-            }
+                  $this->startBotDialog($template->bot_dialog_command_id ?? null);
+                  return true;
+              }
 
-        }
-        return false;
-    }
+          }
+          return false;
+      }*/
 
     private function botRouteHandler($message, $query): bool
     {
@@ -409,8 +423,8 @@ abstract class BotCore
         if ($this->botTemplatePageHandler($message, $query))
             return;
 
-        if ($this->botDialogStartHandler($message, $query))
-            return;
+        /*   if ($this->botDialogStartHandler($message, $query))
+               return;*/
 
         if ($this->botSlugHandler($message, $query))
             return;

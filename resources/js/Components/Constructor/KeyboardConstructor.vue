@@ -1,8 +1,4 @@
-<script setup>
 
-
-import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.vue";
-</script>
 <template>
     <div class="container">
         <div class="row">
@@ -47,15 +43,7 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
                         </label>
                     </div>
 
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               type="checkbox"
-                               v-model="showAssign"
-                               :id="'showAssign'+uuid">
-                        <label class="form-check-label" :for="'showAssign'+uuid">
-                            Меню связывания
-                        </label>
-                    </div>
+
                 </div>
 
 
@@ -81,7 +69,6 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
                                 type="text"
                                 @click="selectIndex(rowIndex, colIndex)"
                                 class="btn btn-outline-primary w-100"
-                                v-bind:class="{'has-script':hasScript(rowIndex, colIndex)}"
                                 v-model="keyboard[rowIndex][colIndex].text"
                             />
                             <button type="button"
@@ -157,12 +144,7 @@ import MenuFunctionSwitcher from "@/Components/Constructor/MenuFunctionSwitcher.
                     </div>
                 </div>
             </div>
-            <div class="col-12" v-if="showAssign">
-                <MenuFunctionSwitcher
-                    v-on:change-associate="assignAssociateForm"
-                    :selected-data="select"
-                    v-if="selectedRow!=null&!load"/>
-            </div>
+
         </div>
         <div class="row" v-if="showCode">
             <div class="col-12">
@@ -227,12 +209,7 @@ export default {
         }
     },
     methods: {
-        assignAssociateForm(form) {
-            this.keyboard[form.row][form.col].page_id = form.page_id || null
-            this.keyboard[form.row][form.col].slug_id = form.slug_id || null
-            this.keyboard[form.row][form.col].dialog_id = form.dialog_id || null
-            this.keyboard[form.row][form.col].type = form.type || 'reply'
-        },
+
         needRemoveField(param, rowIndex, colIndex) {
             Object.keys(this.keyboard[rowIndex][colIndex])
                 .forEach(item => {
@@ -271,11 +248,7 @@ export default {
         addRowBelow() {
             this.addRow(false)
         },
-        hasScript(row, col) {
-            return this.keyboard[row][col].page_id ||
-                this.keyboard[row][col].slug_id ||
-                this.keyboard[row][col].dialog_id
-        },
+
         addRow(above = false) {
 
             if (this.selectedRow == null) {

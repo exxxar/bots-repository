@@ -166,7 +166,7 @@ export default {
                 slug: null,
                 config: [],
                 is_global: true,
-                bot_dialog_command_id: null,
+
             }
         }
     },
@@ -180,7 +180,7 @@ export default {
             this.slugForm.slug = this.item.slug
             this.slugForm.config = this.item.config || []
             this.slugForm.is_global = this.item.is_global || false
-            this.slugForm.bot_dialog_command_id = this.item.bot_dialog_command_id
+
         }
 
     },
@@ -222,7 +222,7 @@ export default {
                     this.slugForm.slug = null
                     this.slugForm.config = []
                     this.slugForm.is_global = true
-                    this.slugForm.bot_dialog_command_id = null
+
                 }
 
                 this.$emit("callback")

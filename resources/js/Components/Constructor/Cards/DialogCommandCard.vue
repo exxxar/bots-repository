@@ -3,7 +3,7 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
 </script>
 <template>
     <div
-        @click="selectDialog"
+
         class="p-2 dialog-command-card">
         <p>
             <span class="badge bg-success">#{{ item.id }}</span>
@@ -16,45 +16,46 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
         <h6>Текст диалога:</h6>
         <p>{{ item.pre_text || '-' }}</p>
         <div class="w-100 d-flex justify-between" v-if="!simple">
-            <div>
-                <button type="button"
-                        title="Редактирование параметров карточки"
-                        :disabled="loading"
+
+            <div class="dropdown">
+                <button
+                    :disabled="loading"
+                    class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a
+                        @click="selectDialog"
+                        title="Выбрать диалог"
+                        class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i> Выбрать диалог </a></li>
+                    <hr>
+                    <li><a
                         data-bs-toggle="modal" :data-bs-target="'#dialog-command-modal-'+item.id"
-                        class="btn btn-outline-primary"><i class="fa-solid fa-sliders"></i></button>
-                <button type="button"
+                        title="Редактирование параметров карточки"
+                        class="dropdown-item cursor-pointer"> <i class="fa-solid fa-sliders mr-1"></i> Настройка диалога </a></li>
+                    <li><a
                         @click="linkEvent"
                         title="Диалог связывания с другой командой"
-                        :disabled="loading"
-                        class="btn btn-outline-primary ml-1"><i class="fa-solid fa-arrows-turn-to-dots"></i></button>
-                <button type="button"
+                        class="dropdown-item cursor-pointer"> <i class="fa-solid fa-arrows-turn-to-dots mr-1"></i> Редактирование связей </a></li>
+                    <li><a
                         @click="changeGroup"
                         title="Диалог смены группы команды"
-                        :disabled="loading"
-                        class="btn btn-outline-primary ml-1">   <i class="fa-solid fa-arrows-up-down"></i></button>
-
-                <button type="button"
+                        class="dropdown-item cursor-pointer">  <i class="fa-solid fa-arrows-up-down mr-1"></i> Смена диалоговой группы </a></li>
+                    <li><a
                         title="Дублирование команды"
                         @click="duplicate"
-                        :disabled="loading"
-                        class="btn btn-outline-primary ml-1"> <i class="fa-solid fa-clone"></i></button>
-
-                <button type="button"
+                        class="dropdown-item cursor-pointer"> <i class="fa-solid fa-clone mr-1"></i> Дублирование диалога </a></li>
+                    <li><a
                         @click="unlinkCommand"
                         title="Убирает связь команды с другой командой по цепочке"
-                        :disabled="loading"
-                        class="btn btn-outline-danger ml-1"> <i class="fa-solid fa-link-slash"></i></button>
+                        class="dropdown-item cursor-pointer"> <i class="fa-solid fa-link-slash mr-1"></i> Удаление связей диалога </a></li>
 
-
-
+                    <li><a
+                        @click="removeCommand"
+                        title="Удаление команды"
+                        class="dropdown-item cursor-pointer"> <i class="fa-solid fa-trash-can mr-1"></i> Удаление диалога </a></li>
+                </ul>
             </div>
-
-            <button type="button"
-                    @click="removeCommand"
-                    title="Удаление команды"
-                    :disabled="loading"
-                    class="btn btn-outline-danger ml-1">   <i class="fa-solid fa-trash-can"></i></button>
-
 
 
         </div>
@@ -65,7 +66,7 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
     <div class="modal fade" :id="'dialog-command-modal-'+item.id"
          data-bs-backdrop="static"
          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">

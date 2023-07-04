@@ -24,7 +24,6 @@ class BotMenuSlug extends Model
         'slug',
         'config',
         'is_global',
-        'bot_dialog_command_id',
         'deprecated_at',
     ];
 
@@ -50,10 +49,16 @@ class BotMenuSlug extends Model
         return $this->hasOne(BotPage::class,'bot_menu_slug_id','id');
     }
 
-    public function botDialogCommand(): HasOne
+    public function dialog(): HasOne
     {
-        return $this->hasOne(BotDialogCommand::class,'id','bot_dialog_command_id');
+        return $this->hasOne(BotDialogCommand::class,'next_bot_dialog_command_id','id');
     }
+
+    public function menuSlug(): HasOne
+    {
+        return $this->hasOne(Bot::class,'next_bot_menu_slug_id','id');
+    }
+
 
 
 

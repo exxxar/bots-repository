@@ -11,19 +11,19 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('bot_menu_slugs', function (Blueprint $table) {
-          /*  $table->json('config')->nullable();
+            $table->json('config')->nullable();
             $table->boolean('is_global')->default(false);
             $table->timestamp('deprecated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();*/
+            $table->timestamp('deleted_at')->nullable();
             $table->foreignId('bot_id')
                 ->nullable()
                 ->change();
         });
 
         Schema::table('bot_pages', function (Blueprint $table) {
-        /*    $table->foreignId('next_page_id')
+            $table->foreignId('next_page_id')
                 ->nullable()
-                ->constrained('bot_pages');*/
+                ->constrained('bot_pages');
 
         });
 
@@ -35,7 +35,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-       /* Schema::disableForeignKeyConstraints();
+        Schema::disableForeignKeyConstraints();
         Schema::table('bot_menu_slugs', function (Blueprint $table) {
             $table->dropColumn('config');
             $table->dropColumn('is_global');
@@ -44,9 +44,9 @@ return new class extends Migration {
         });
 
         Schema::table('bot_pages', function (Blueprint $table) {
-          //  $table->dropColumn('next_page_id');
+            $table->dropColumn('next_page_id');
         });
 
-        Schema::enableForeignKeyConstraints();*/
+        Schema::enableForeignKeyConstraints();
     }
 };

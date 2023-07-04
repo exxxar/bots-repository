@@ -32,10 +32,13 @@ class BotDialogGroupController extends Controller
 
         $search = $request->search ?? null;
 
+
+
         $botDialogGroups = BotDialogGroup::query();
 
         if (!is_null($botId))
             $botDialogGroups = $botDialogGroups->where("bot_id", $botId);
+
 
         if (!is_null($search))
             $botDialogGroups = $botDialogGroups
@@ -101,7 +104,7 @@ class BotDialogGroupController extends Controller
 
     public function attachDialogToSlug(Request $request)
     {
-        $request->validate([
+      /*  $request->validate([
             "dialogCommandId" => "required",
             "slugId" => "required",
         ]);
@@ -117,9 +120,9 @@ class BotDialogGroupController extends Controller
             return response()->noContent(404);
 
         $slug->bot_dialog_command_id = $command->id;
-        $slug->save();
+        $slug->save();*/
 
-        return response()->noContent();
+        return response()->noContent(400);
     }
 
     public function unlinkDialog(Request $request)
@@ -181,7 +184,6 @@ class BotDialogGroupController extends Controller
     public function addDialog(Request $request)
     {
         $request->validate([
-            'slug' => "required",
             'pre_text' => "required",
             'post_text' => "required",
             'error_text' => "required",
@@ -190,7 +192,6 @@ class BotDialogGroupController extends Controller
             'inline_keyboard_id' => "",
             'images' => "",
             'next_bot_dialog_command_id' => "",
-
             'result_channel' => ""
         ]);
 
@@ -235,7 +236,7 @@ class BotDialogGroupController extends Controller
 
 
         $command = BotDialogCommand::query()->create([
-            'slug' => $request->slug,
+            'slug' => Str::uuid(),
             'pre_text' => $request->pre_text,
             'post_text' => $request->post_text,
             'error_text' => $request->error_text,

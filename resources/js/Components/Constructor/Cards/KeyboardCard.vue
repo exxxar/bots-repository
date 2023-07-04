@@ -5,14 +5,38 @@ import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue
     <div class="card">
 
         <div v-if="selectMode" class="card-header d-flex justify-content-between align-items-center">
-            <button
-                @click="selectCard"
-                :disabled="load"
-                type="button"
-                class="btn btn-outline-success mr-2"
-            >
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
+          <div>
+              <button
+                  @click="selectCard"
+                  :disabled="load"
+                  type="button"
+                  class="btn btn-outline-success mr-2"
+              >
+                  <i class="fa-solid fa-arrow-left"></i>
+              </button>
+
+              <button
+                  data-bs-toggle="modal" :data-bs-target="'#open-construct-'+uuid"
+                  :disabled="load"
+                  type="button"
+                  title="Редактировать клавиатуру"
+                  class="btn btn-outline-success mr-2"
+              >
+                  <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+
+              <button
+                  @click="updateKeyboard"
+                  type="button"
+                  title="Обновить клавиатуру"
+                  :disabled="load||!is_edited"
+                  class="btn btn-outline-primary mr-2"
+                  v-bind:class="{'have-change':is_edited}"
+              >
+                  <i class="fa-regular fa-floppy-disk"></i>
+              </button>
+          </div>
+
         </div>
         <div v-if="!selectMode" class="card-header d-flex justify-content-between align-items-center">
 
@@ -60,7 +84,7 @@ import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue
             </button>
         </div>
         <div class="card-body">
-            <div class="row">
+            <div class="row" v-if="!selectMode">
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
@@ -88,6 +112,10 @@ import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue
                     </div>
                 </div>
 
+
+            </div>
+
+            <div class="row">
                 <div class=" col-12">
                     <div class="row">
                         <div class="col-12">

@@ -60,15 +60,6 @@ import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
                             </div>
                         </li>
 
-
-                        <li
-                            v-if="item.bot_dialog_command_id"
-                            class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">Данная команда начинает диалог</div>
-                            </div>
-                            <span class="badge bg-primary rounded-pill"> #{{ item.bot_dialog_command_id }}</span>
-                        </li>
                         <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold">Мнемоническое имя</div>
@@ -129,7 +120,7 @@ import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
                     <BotDialogGroupListSimple
                         v-if="bot"
                         v-on:select-dialog="selectDialog"
-                        :bot-id="bot.id"/>
+                        :bot="bot"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -148,7 +139,7 @@ import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
                 </div>
                 <div class="modal-body">
                     <SlugForm :item="item"
-                            v-on:callback="slugFormCallback"
+                              v-on:callback="slugFormCallback"
                     />
                 </div>
                 <div class="modal-footer">
@@ -163,7 +154,7 @@ import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["item", "bot"],
+    props: ["item", "bot", "selectMode"],
     data() {
         return {
             simple: true,
@@ -175,8 +166,11 @@ export default {
     },
 
     methods: {
-        slugFormCallback(){
-          this.$emit("callback")
+        selectCard() {
+            this.$emit("select", this.item)
+        },
+        slugFormCallback() {
+            this.$emit("callback")
         },
         selectDialog(command) {
             this.$store.dispatch("attachDialogCommandToSlug", {
@@ -192,17 +186,13 @@ export default {
                     type: 'success'
                 });
 
-                this.slugs.forEach(item => {
-                    if (item.id === this.slugForm.id)
-                        item.bot_dialog_command_id = command.id
-                })
 
                 this.slugForm = {
                     id: null,
                     command: null,
                     comment: null,
                     slug: null,
-                    bot_dialog_command_id: null
+
                 }
 
             }).catch(err => {

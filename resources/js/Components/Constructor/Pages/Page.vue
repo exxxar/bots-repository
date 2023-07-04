@@ -2,6 +2,8 @@
 import BotMenuConstructor from "@/Components/Constructor/KeyboardConstructor.vue";
 import KeyboardList from "@/Components/Constructor/KeyboardList.vue";
 import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
+import BotSlugListSimple from "@/Components/Constructor/Slugs/BotSlugListSimple.vue";
+import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
 </script>
 <template>
     <form
@@ -11,8 +13,8 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
             <h6 class="d-flex justify-between">
                 <span>Вы создаете страницу для {{ bot.bot_domain }}</span>
                 <a href="#clear-form"
-                   @click="clearForm"
-                   class="btn btn-link">очистить форму</a>
+                   v-if="pageForm.id||need_clean"
+                   @click="clearForm">очистить форму</a>
             </h6>
         </div>
         <div class="col-12 mb-2">
@@ -89,7 +91,7 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
                        type="checkbox"
                        id="need-page-images">
                 <label class="form-check-label" for="need-page-images">
-                    Нужны изображения на странице
+                    Изображения на странице (максимум 10)
                 </label>
             </div>
 
@@ -145,7 +147,7 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
                        v-model="need_reply_menu"
                        type="checkbox" id="need-reply-menu">
                 <label class="form-check-label" for="need-reply-menu">
-                    Нужно нижнее меню
+                    Нижнее меню страницы
                 </label>
             </div>
         </div>
@@ -154,10 +156,13 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
                 <div class="card-header d-flex justify-between align-items-center">
                     <h6>Конструктор нижнего меню</h6>
 
-                    <button class="btn btn-primary" type="button"
+                    <button class="btn " type="button"
+                            v-bind:class="{'btn-outline-primary':!showReplyTemplateSelector,'btn-primary':showReplyTemplateSelector}"
                             @click="showReplyTemplateSelector = !showReplyTemplateSelector"
                     >
-                        Выбрать из шаблонов
+
+                        <span v-if="!showReplyTemplateSelector">  Открыть шаблоны меню</span>
+                        <span v-else> Скрыть шаблоны меню</span>
                     </button>
 
 
@@ -191,7 +196,7 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
                        v-model="need_inline_menu"
                        type="checkbox" id="need-inline-menu">
                 <label class="form-check-label" for="need-inline-menu">
-                    Нужно меню к тексту сообщения
+                    Меню под текстом страницы
                 </label>
             </div>
         </div>
@@ -201,10 +206,13 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
 
                 <div class="card-header d-flex justify-between align-items-center">
                     <h6>Конструктор меню в сообщении</h6>
-                    <button class="btn btn-primary" type="button"
+                    <button class="btn " type="button"
+                            v-bind:class="{'btn-outline-primary':!showInlineTemplateSelector,'btn-primary':showInlineTemplateSelector}"
                             @click="showInlineTemplateSelector = !showInlineTemplateSelector"
                     >
-                        Выбрать из шаблонов
+
+                        <span v-if="!showInlineTemplateSelector">  Открыть шаблоны меню</span>
+                        <span v-else> Скрыть шаблоны меню</span>
                     </button>
                 </div>
 
@@ -242,6 +250,7 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
             </div>
         </div>
 
+
         <div class="col-12 mb-2" v-if="need_attach_page">
             <p v-if="pageForm.next_page_id">Связано со страницей #{{ pageForm.next_page_id }} <a
                 class="btn btn-link"
@@ -250,6 +259,52 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
                 :current="pageForm.id"
                 v-on:callback="attachPage"
                 :editor="false"/>
+        </div>
+
+        <div class="col-12 mb-2">
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="need_attach_slug"
+                       type="checkbox"
+                       id="need-slug-attach">
+                <label class="form-check-label" for="need-slug-attach">
+                    Привязать скрипт
+                </label>
+            </div>
+        </div>
+
+
+        <div class="col-12 mb-2" v-if="need_attach_slug">
+            <p v-if="pageForm.next_bot_menu_slug_id">Связано со скриптом #{{ pageForm.next_bot_menu_slug_id }} <a
+                class="btn btn-link"
+                @click="pageForm.next_bot_menu_slug_id = null">Очистить</a></p>
+            <BotSlugListSimple v-if="bot"
+                               :global="true"
+                               v-on:callback="associateSlug"
+                               :bot="bot"/>
+        </div>
+
+        <div class="col-12 mb-2">
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="need_attach_dialog"
+                       type="checkbox"
+                       id="need-dialog-attach">
+                <label class="form-check-label" for="need-dialog-attach">
+                    Привязать начало диалога
+                </label>
+            </div>
+        </div>
+
+
+        <div class="col-12 mb-2" v-if="need_attach_dialog">
+            <p v-if="pageForm.next_bot_dialog_command_id">Связано с диалогом #{{ pageForm.next_bot_dialog_command_id }}
+                <a
+                    class="btn btn-link"
+                    @click="pageForm.next_bot_dialog_command_id = null">Очистить</a></p>
+            <BotDialogGroupListSimple v-if="bot"
+                                      v-on:select-dialog="associateDialog"
+                                      :bot="bot"/>
         </div>
 
         <div class="col-12 mb-2">
@@ -265,14 +320,20 @@ export default {
     props: ["page"],
     data() {
         return {
+            need_clean: false,
             load: false,
             photos: [],
             showReplyTemplateSelector: false,
             showInlineTemplateSelector: false,
+
+
             need_page_images: false,
             need_inline_menu: false,
             need_reply_menu: false,
             need_attach_page: false,
+            need_attach_dialog: false,
+            need_attach_slug: false,
+
             bot: null,
             pageForm: {
                 id: null,
@@ -286,12 +347,53 @@ export default {
                 inline_keyboard: null,
 
                 next_page_id: null,
-
-
+                next_bot_dialog_command_id: null,
+                next_bot_menu_slug_id: null,
             },
         }
     },
     watch: {
+
+        'need_page_images': function (newVal, oldVal) {
+            if (!this.need_page_images) {
+                this.photos = []
+                this.pageForm.images = []
+            }
+
+        },
+        'need_inline_menu': function (newVal, oldVal) {
+
+            if (!this.need_inline_menu) {
+                this.pageForm.inline_keyboard = null
+                this.pageForm.inline_keyboard_id = null
+            }
+
+        },
+        'need_reply_menu': function (newVal, oldVal) {
+            if (!this.need_reply_menu) {
+                this.pageForm.reply_keyboard = null
+                this.pageForm.reply_keyboard_id = null
+            }
+        },
+        'need_attach_page': function (newVal, oldVal) {
+            if (!this.need_attach_page) {
+                this.pageForm.next_page_id = null
+
+            }
+        },
+        'need_attach_dialog': function (newVal, oldVal) {
+            if (!this.need_attach_dialog) {
+                this.pageForm.next_bot_dialog_command_id = null
+
+            }
+        },
+        'need_attach_slug': function (newVal, oldVal) {
+            if (!this.need_attach_slug) {
+                this.pageForm.next_bot_menu_slug_id = null
+
+            }
+        },
+
         pageForm: {
             handler: function (newValue) {
                 if (this.pageForm.reply_keyboard != null)
@@ -302,6 +404,14 @@ export default {
 
                 if (this.pageForm.images.length > 0)
                     this.need_page_images = true
+
+                if (this.pageForm.next_bot_dialog_command_id != null)
+                    this.need_attach_dialog = true
+
+                if (this.pageForm.next_bot_menu_slug_id != null)
+                    this.need_attach_slug = true
+
+                this.need_clean = true
             },
             deep: true
         }
@@ -326,7 +436,8 @@ export default {
                 reply_keyboard: page.replyKeyboard || null,
                 inline_keyboard: page.inlineKeyboard || null,
                 next_page_id: page.next_page_id || null,
-
+                next_bot_dialog_command_id: page.next_bot_dialog_command_id || null,
+                next_bot_menu_slug_id: page.next_bot_menu_slug_id || null,
             }
         } else
             this.clearForm()
@@ -338,6 +449,12 @@ export default {
     },
 
     methods: {
+        associateDialog(item) {
+            this.pageForm.next_bot_dialog_command_id = item.id
+        },
+        associateSlug(item) {
+            this.pageForm.next_bot_menu_slug_id = item.id
+        },
         loadCurrentBot(bot = null) {
             return this.$store.dispatch("updateCurrentBot", {
                 bot: bot
@@ -359,7 +476,7 @@ export default {
         clearForm() {
             this.photos = []
             this.pageForm = {
-                id:null,
+                id: null,
                 content: null,
                 command: null,
                 slug: null,
@@ -368,19 +485,33 @@ export default {
                 reply_keyboard: null,
                 inline_keyboard: null,
 
-                reply_keyboard_id:  null,
-                inline_keyboard_id:  null,
+                reply_keyboard_id: null,
+                inline_keyboard_id: null,
 
-                next_page_id:  null,
+                next_page_id: null,
+
+                next_bot_dialog_command_id: null,
+                next_bot_menu_slug_id: null,
 
             }
             this.photos = []
 
-            this.$notify({
-                title: "Конструктор страниц",
-                text: "Форма успешно очищена",
-                type: 'success'
-            });
+            this.showReplyTemplateSelector = false
+            this.showInlineTemplateSelector = false
+
+
+            this.need_page_images = false
+            this.need_inline_menu = false
+            this.need_reply_menu = false
+            this.need_attach_page = false
+            this.need_attach_dialog = false
+            this.need_attach_slug = false
+
+            this.$nextTick(() => {
+                this.need_clean = false
+
+
+            })
         },
         submitPage() {
             let data = new FormData();
@@ -413,17 +544,7 @@ export default {
                 this.$nextTick(() => {
                     this.load = false
 
-                    this.photos = []
-                    this.pageForm = {
-                        id:null,
-                        content: null,
-                        command: null,
-                        slug: null,
-                        comment: null,
-                        images: [],
-                        reply_keyboard: null,
-                        inline_keyboard: null
-                    }
+                    this.clearForm()
                 })
 
                 this.$emit("callback", response.data)

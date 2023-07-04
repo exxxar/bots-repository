@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BotPage extends Model
 {
@@ -23,6 +24,9 @@ class BotPage extends Model
         'inline_keyboard_id',
         'bot_id',
         'next_page_id',
+        'next_bot_dialog_command_id',
+        'next_bot_menu_slug_id',
+
     ];
 
     /**
@@ -38,6 +42,8 @@ class BotPage extends Model
         'inline_keyboard_id' => 'integer',
         'bot_id' => 'integer',
         'next_page_id' => 'integer',
+        'next_bot_dialog_command_id'=> 'integer',
+        'next_bot_menu_slug_id'=> 'integer',
     ];
 
     protected $with = ['slug','replyKeyboard','inlineKeyboard'];
@@ -65,6 +71,16 @@ class BotPage extends Model
     public function nextPage(): BelongsTo
     {
         return $this->belongsTo(BotPage::class,'next_page_id','id');
+    }
+
+    public function nextDialogCommand(): BelongsTo
+    {
+        return $this->belongsTo(BotDialogCommand::class,'next_bot_dialog_command_id','id');
+    }
+
+    public function nextMenuSlug(): BelongsTo
+    {
+        return $this->belongsTo(BotMenuSlug::class,'next_bot_menu_slug_id','id');
     }
 
 }

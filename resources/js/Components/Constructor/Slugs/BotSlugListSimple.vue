@@ -1,5 +1,5 @@
 <script setup>
-import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
+import Slug from '@/Components/Constructor/Slugs/Slug.vue'
 </script>
 <template>
     <div class="row">
@@ -13,17 +13,18 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
                                placeholder="Поиск нужного скрипта по описанию">
                     </div>
 
-                    <ul class="list-group"
+                    <div
                         v-if="filteredSlugs.length>0"
-                        style="overflow-y: auto; height: 300px;">
-                        <li class="list-group-item cursor-pointer"
-                            @click="selectSlug(item)"
-                            v-for="(item, index) in filteredSlugs">
-                            <p> #{{item.id}} {{ item.command }} (<strong>{{ item.slug }}</strong>)  <span v-if="item.page" class="badge bg-success">Привязано к странице</span></p>
-                            <p> <strong>пояснение:</strong>{{ item.comment || 'Пояснение не указано' }}</p>
-                        </li>
-
-                    </ul>
+                        class="row">
+                        <div class="col-md-6">
+                            <Slug
+                                v-for="(item, index) in filteredSlugs"
+                                :item="item"
+                                :bot="bot"
+                                v-on:callback="callbackSlugs"
+                                v-on:select="selectSlug"/>
+                        </div>
+                    </div>
 
 
                 </div>
@@ -36,7 +37,7 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
 </template>
 <script>
 export default {
-    props: ["botId"],
+    props: ["bot","global"],
     data() {
         return {
             load: false,
@@ -78,14 +79,15 @@ export default {
                 slug: item.slug,
                 comment: item.comment,
                 command: item.command,
-                bot_dialog_command_id: item.bot_dialog_command_id,
+
             })
 
             this.$notify("Вы выбрали скрипт из списка!");
         },
         loadSlugs() {
             this.$store.dispatch("loadBotSlugs", {
-                botId:this.botId
+                botId:this.bot.id,
+                isGlobal: this.global || false
             }).then(resp => {
                 this.slugs = resp
             })

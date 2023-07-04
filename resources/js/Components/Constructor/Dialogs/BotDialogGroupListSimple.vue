@@ -13,13 +13,9 @@ import DialogCommandCard from "@/Components/Constructor/Cards/DialogCommandCard.
                     <div class="row" v-if="group.bot_dialog_commands.length>0">
                         <div class="col-md-6 col-lg-4 col-12 col-sm-6 mb-2 "
                              v-for="(command, index) in group.bot_dialog_commands">
-                            <div v-bind:class="{'select-dialog':selected_dialog_id==command.id}">
-                                <DialogCommandCard
-                                    :simple="true"
-                                    v-on:select="selectDialog"
-                                    :item="command"/>
-                            </div>
-
+                            <DialogCommandCard
+                                v-on:select="selectDialog"
+                                :item="command"/>
                         </div>
                     </div>
                     <div class="row" v-else>
@@ -57,7 +53,7 @@ import DialogCommandCard from "@/Components/Constructor/Cards/DialogCommandCard.
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["botId"],
+    props: ["bot"],
 
     data() {
         return {
@@ -94,8 +90,8 @@ export default {
             this.loading = true
             this.$store.dispatch("loadDialogGroups", {
                 dataObject: {
-                    botId: this.botId || null,
-                    search: this.search
+                    botId: this.bot.id || null,
+                    search: this.search,
                 },
                 page: page
             }).then(resp => {

@@ -6,11 +6,7 @@ import RegularExpressionHelper from "@/Components/Constructor/Helpers/RegularExp
 </script>
 <template>
     <form v-on:submit.prevent="submit">
-        <div class="form-floating mb-2">
-            <input type="text" class="form-control" :id="'commandForm-slug-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.slug" required>
-            <label :for="'commandForm-slug-'+commandForm.id">Идентификатор команды (на англ)</label>
-        </div>
+
 
 
         <div class="form-floating mb-2">
@@ -179,7 +175,11 @@ export default {
     },
 
     mounted() {
+
+        console.log("item dialog=>", this.item)
         if (this.item) {
+
+
             this.$nextTick(() => {
                 this.commandForm = {
                     id: this.item.id || null,
@@ -187,7 +187,7 @@ export default {
                     pre_text: this.item.pre_text || null,
                     post_text: this.item.post_text || null,
                     error_text: this.item.error_text || null,
-                    bot_id: this.bot.id || null,
+
                     input_pattern: this.item.input_pattern || null,
                     inline_keyboard_id: this.item.inline_keyboard_id || null,
                     images: this.item.images || [],
@@ -196,6 +196,9 @@ export default {
                     result_channel: this.item.result_channel || null,
                     inline_keyboard: this.item.inline_keyboard || null,
                 }
+
+                if (this.bot)
+                    this.commandForm.bot_id = this.bot.id || null
 
                 if (this.commandForm.inline_keyboard_id != null)
                     this.need_keyboard = true

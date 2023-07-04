@@ -180,7 +180,6 @@ export default {
             this.slugForm.command = this.command || item.command
             this.slugForm.config =  item.config || []
             this.slugForm.is_global = item.is_global || false
-            this.slugForm.bot_dialog_command_id = item.bot_dialog_command_id
 
             this.$emit("select", item)
         },
@@ -221,7 +220,7 @@ export default {
                 this.slugForm.slug = null
                 this.slugForm.config = []
                 this.slugForm.is_global = true
-                this.slugForm.bot_dialog_command_id = null
+
 
                 this.$emit("callback")
             }).catch(err => {

@@ -181,8 +181,8 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadBotSlugs(context, payload = {botId: null}) {
-        let link = `${BASE_TEMPLATES_LINK}/slugs/${payload.botId}`
+    async loadBotSlugs(context, payload = {botId: null, isGlobal:false}) {
+        let link = `${BASE_TEMPLATES_LINK}/slugs/${payload.botId}?isGlobal=${payload.isGlobal}`
 
         let _axios = util.makeAxiosFactory(link)
 

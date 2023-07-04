@@ -101,7 +101,7 @@ class BotPageController extends Controller
 
     private function keyboardAssign($keyboard, $botId)
     {
-        foreach ($keyboard as $rowIndex => $row)
+     /*   foreach ($keyboard as $rowIndex => $row)
             foreach ($row as $colIndex => $col) {
 
                 $tmpPageId = $keyboard[$rowIndex][$colIndex]->page_id ?? null;
@@ -170,7 +170,7 @@ class BotPageController extends Controller
 
             }
 
-        return $keyboard;
+        return $keyboard;*/
     }
 
     public function createPage(Request $request)
@@ -236,7 +236,7 @@ class BotPageController extends Controller
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($request->reply_keyboard);
 
-            $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+          //  $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             unset($tmp->reply_keyboard);
 
@@ -254,7 +254,7 @@ class BotPageController extends Controller
         if (!is_null($inlineKeyboard)) {
             $keyboard = json_decode($request->inline_keyboard);
 
-            $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+           // $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             unset($tmp->inline_keyboard);
 
@@ -377,7 +377,7 @@ class BotPageController extends Controller
             $keyboard = json_decode($request->reply_keyboard);
             unset($tmp->reply_keyboard);
 
-            $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+          //  $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             $reply_keyboard_id = $tmp->reply_keyboard_id ?? -1;
             $menu = BotMenuTemplate::query()
@@ -407,7 +407,7 @@ class BotPageController extends Controller
 
             unset($tmp->inline_keyboard);
 
-            $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+           // $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             $inline_keyboard_id = $tmp->inline_keyboard_id ?? -1;
 

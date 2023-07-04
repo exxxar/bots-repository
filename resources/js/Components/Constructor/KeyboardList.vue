@@ -63,7 +63,7 @@ import KeyboardCard from "@/Components/Constructor/Cards/KeyboardCard.vue";
         <div
             v-if="keyboards&&bot"
             class="col-12">
-            <p>В списке клавиатур <span class="badge bg-warning">{{keyboards.length}}  ед.</span></p>
+            <p>В списке клавиатур <span class="badge bg-warning">{{filteredKeyboard.length}}  ед.</span></p>
         </div>
         <div class="col-12 mb-3"
              v-if="keyboards&&bot"

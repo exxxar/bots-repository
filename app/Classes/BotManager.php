@@ -4,11 +4,13 @@ namespace App\Classes;
 
 use App\Enums\BotStatusEnum;
 use App\Models\Bot;
+use App\Models\BotMenuSlug;
 use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -232,6 +234,11 @@ class BotManager extends BotCore
 
         if (!empty($replyKeyboard)&&$needSendReplyMenu)
             $this->replyKeyboard("Меню страницы", $rMenu);
+
+        if (!is_null($page->next_bot_dialog_id)){
+            $this->startBotDialog($page->next_bot_dialog_id );
+            return;
+        }
 
         if (!is_null($page->next_page_id)){
             $next = BotPage::query()->find($page->next_page_id);
