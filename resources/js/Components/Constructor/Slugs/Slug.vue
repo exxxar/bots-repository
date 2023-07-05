@@ -1,5 +1,6 @@
 <script setup>
 import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
+import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
 </script>
 <template>
     <div class="card"
