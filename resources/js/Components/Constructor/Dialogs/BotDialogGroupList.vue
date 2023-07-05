@@ -21,16 +21,14 @@ import BotDialogCommandForm from "@/Components/Constructor/Dialogs/BotDialogComm
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 col-12">
+        <div class="col-md-12 col-12">
             <button type="button"
+                    title="Создать новую группу"
                     data-bs-toggle="modal" data-bs-target="#group-create-modal"
-                    class="btn btn-outline-success mt-2 w-100 p-3 mb-2">
-                <i class="fa-solid fa-layer-group" style="margin-right:10px;"></i>Создать новую группу
+                    class="btn btn-outline-success mt-2 w-100 p-3 mb-2 mr-2">
+                <i class="fa-solid fa-layer-group" style="margin-right:10px;"></i>
             </button>
 
-        </div>
-
-        <div class="col-12 col-md-6">
             <button
                 type="button"
                 data-bs-toggle="modal" data-bs-target="#dialog-create-modal"
