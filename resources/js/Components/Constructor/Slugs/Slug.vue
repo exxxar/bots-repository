@@ -1,6 +1,6 @@
 <script setup>
 import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
-import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
+
 </script>
 <template>
     <div class="card"
@@ -25,9 +25,7 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
                         class="fa-solid fa-clone mr-1"></i> Дублировать</a></li>
                     <li><a class="dropdown-item cursor-pointer" @click="removeSlug"> <i
                         class="fa-regular fa-trash-can text-danger mr-1"></i> Удалить</a></li>
-                    <li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal"
-                           :data-bs-target="'#attach-command-'+item.id"> <i class="fa-solid fa-link mr-1"></i> Связать с
-                        командой</a></li>
+
                 </ul>
             </div>
 
@@ -113,26 +111,6 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" :id="'attach-command-'+item.id" tabindex="-1">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Привязываем старт диалога к команде</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <BotDialogGroupListSimple
-                        v-if="bot"
-                        v-on:select-dialog="selectDialog"
-                        :bot="bot"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="modal fade" :id="'edit-slug-'+item.id" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -177,34 +155,7 @@ export default {
         slugFormCallback() {
             this.$emit("callback")
         },
-        selectDialog(command) {
-            this.$store.dispatch("attachDialogCommandToSlug", {
-                dataObject: {
-                    dialogCommandId: command.id,
-                    slugId: this.slugForm.id
-                }
-            }).then((response) => {
 
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Диалоговая команда успешно связана!",
-                    type: 'success'
-                });
-
-
-                this.slugForm = {
-                    id: null,
-                    command: null,
-                    comment: null,
-                    slug: null,
-
-                }
-
-            }).catch(err => {
-
-            })
-
-        },
         selectSlug() {
             this.$emit("select", this.item)
         },
