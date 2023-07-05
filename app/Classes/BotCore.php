@@ -6,6 +6,7 @@ use App\Enums\BotStatusEnum;
 use App\Facades\BotManager;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
+use App\Models\BotPage;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -120,8 +121,8 @@ abstract class BotCore
         if ($botStatus != BotStatusEnum::Working)
             return $this->webMessages;
 
-    /*    if ($this->botDialogStartHandler($data, $query))
-            return response()->json($this->webMessages);*/
+        /*    if ($this->botDialogStartHandler($data, $query))
+                return response()->json($this->webMessages);*/
 
         if ($this->botTemplatePageHandler($data, $query))
             return response()->json($this->webMessages);
@@ -230,7 +231,7 @@ abstract class BotCore
                 if (preg_match($command . "$/i", $query, $matches)) {
                     $this->prepareTemplatePage($template->page);
 
-                    Log::info(print_r($template->page->toArray(), true));
+
                     if (!is_null($template->page->next_bot_menu_slug_id)) {
                         $slug = BotMenuSlug::query()
                             ->where("id", $template
@@ -247,7 +248,18 @@ abstract class BotCore
                                 $template->config ?? null, []);
 
                         }
+                    }
 
+                    if (!is_null($template->page->next_bot_dialog_command_id)) {
+                        $this->startBotDialog($template->page->next_bot_dialog_command_id);
+                        return true;
+                    }
+
+                    if (!is_null($template->page->next_page_id)) {
+                        $next = BotPage::query()
+                            ->find($template->page->next_page_id);
+
+                        $this->prepareTemplatePage($next);
                     }
 
                     $find = true;

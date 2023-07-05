@@ -16,9 +16,9 @@ import Slug from '@/Components/Constructor/Slugs/Slug.vue'
                     <div
                         v-if="filteredSlugs.length>0"
                         class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6" v-for="(item, index) in filteredSlugs">
                             <Slug
-                                v-for="(item, index) in filteredSlugs"
+
                                 :item="item"
                                 :bot="bot"
                                 v-on:callback="callbackSlugs"

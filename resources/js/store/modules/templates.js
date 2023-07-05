@@ -182,7 +182,7 @@ const actions = {
         })
     },
     async loadBotSlugs(context, payload = {botId: null, isGlobal:false}) {
-        let link = `${BASE_TEMPLATES_LINK}/slugs/${payload.botId}?isGlobal=${payload.isGlobal}`
+        let link = `${BASE_TEMPLATES_LINK}/slugs/${payload.botId}?isGlobal=${payload.isGlobal || false}`
 
         let _axios = util.makeAxiosFactory(link)
 

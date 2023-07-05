@@ -3,8 +3,7 @@ import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
 </script>
 <template>
     <div class="card"
-         v-bind:class="{'deprecated-slug':item.deprecated_at!=null,'global-slug':item.is_global}"
-         @click="selectSlug">
+         v-bind:class="{'deprecated-slug':item.deprecated_at!=null,'global-slug':item.is_global}">
         <div class="card-header d-flex justify-content-between">
 
 
@@ -13,6 +12,11 @@ import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
                     <i class="fa-solid fa-ellipsis"></i>
                 </button>
                 <ul class="dropdown-menu">
+                    <li><a
+                        @click="selectSlug"
+                        title="Выбрать команду"
+                        class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i> Выбрать команду </a></li>
+                    <hr>
                     <li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal"
                            :data-bs-target="'#edit-slug-'+item.id"> <i class="fa-regular fa-pen-to-square mr-1"></i>
                         Редактировать</a></li>
@@ -79,7 +83,7 @@ import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
                             class="list-group-item d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold">Набор параметров скрипта</div>
-                                {{ item.config }}
+                                <p v-if="item.config" v-for="param in item.config"><strong>{{param.key || 'Ключ не найден'}}:</strong>{{param.value||'Не указано'}}</p>
                             </div>
                         </li>
                         <li
