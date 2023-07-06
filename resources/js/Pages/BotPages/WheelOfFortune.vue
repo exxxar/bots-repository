@@ -7,7 +7,7 @@ defineProps({
 </script>
 <template>
     <div class="row" v-if="action">
-        <div class="col-12 mb-2" v-if="rules">
+        <div class="col-12 mb-2 mt-2" v-if="rules">
             <div class="card">
                 <div class="card-body">
                     <p v-html="rules"></p>
@@ -15,8 +15,8 @@ defineProps({
             </div>
         </div>
 
-        <div class="col-12 mb-2">
-            <p>Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
+        <div class="col-12 mb-2 mt-2">
+            <p style="text-align: center;font-size: larger;">Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
                     action.max_attempts || 1
                 }}</strong></p>
         </div>
@@ -50,9 +50,9 @@ defineProps({
 
         </div>
 
-        <div class="col-12 p-5" v-if="!played">
+        <div class="col-12 p-5" v-if="!played&&winForm.win">
 
-            <div v-if="winForm.win" class="alert alert-success mb-2" role="alert">
+            <div  class="alert alert-success mb-2" role="alert">
                 <p>Вы выиграли - {{ winForm.win.htmlContent }}.</p>
             </div>
             <form v-on:submit="submit">
