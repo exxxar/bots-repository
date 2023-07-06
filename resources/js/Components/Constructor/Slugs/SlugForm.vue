@@ -84,9 +84,8 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li
-                                        @click="slugForm.config[index].type = item.type"
-                                        v-for="(item, index) in configTypes"><a class="dropdown-item"
-                                                                                href="#">{{ item.title || item.type }}</a>
+                                        v-for="(item, index) in configTypes">
+                                        <a class="dropdown-item"  @click="slugForm.config[index].type = item.type">{{ item.title || item.type }}</a>
                                     </li>
                                 </ul>
                             </div>
