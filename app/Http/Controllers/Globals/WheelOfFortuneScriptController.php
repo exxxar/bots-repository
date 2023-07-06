@@ -32,7 +32,7 @@ class WheelOfFortuneScriptController extends Controller
     public function formWheelOfFortuneCallback(Request $request, $botDomain)
     {
         $request->validate([
-            "tg" => "required",
+            "telegram_chat_id" => "required",
             "name" => "required",
             "phone" => "required",
             "win" => "required"
@@ -44,7 +44,7 @@ class WheelOfFortuneScriptController extends Controller
 
         $botUser = BotUser::query()
             ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->tg["id"])
+            ->where("telegram_chat_id", $request->telegram_chat_id)
             ->first();
 
         $slug = BotMenuSlug::query()
@@ -105,7 +105,7 @@ class WheelOfFortuneScriptController extends Controller
     public function formWheelOfFortunePrepare(Request $request, $botDomain)
     {
         $request->validate([
-            "tg" => "required",
+            "telegram_chat_id" => "required",
         ]);
 
         $bot = \App\Models\Bot::query()
@@ -114,7 +114,7 @@ class WheelOfFortuneScriptController extends Controller
 
         $botUser = BotUser::query()
             ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->tg["id"])
+            ->where("telegram_chat_id", $request->telegram_chat_id)
             ->first();;
 
         $slug = BotMenuSlug::query()

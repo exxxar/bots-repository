@@ -7,21 +7,24 @@ defineProps({
 </script>
 <template>
     <div class="row" v-if="action">
-        <div class="col-12 mb-2">
+        <div class="col-12 mb-2" v-if="rules">
             <div class="card">
                 <div class="card-body">
-                    <p v-if="rules" v-html="rules"></p>
+                    <p v-html="rules"></p>
                 </div>
             </div>
+        </div>
 
+        <div class="col-12 mb-2">
+            <p>Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
+                    action.max_attempts || 1
+                }}</strong></p>
         </div>
         <div class="col-12 d-flex justify-content-center align-items-center "
              v-if="!played"
              style="padding-top: 100px;">
-            <p>Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
-                    action.max_attempts || 1
-                }}</strong></p>
-            <hr>
+
+
             <Roulette
                 ref="wheel"
                 size="300"
@@ -49,39 +52,39 @@ defineProps({
 
         <div class="col-12 p-5" v-if="!played">
 
-            <div v-if="winForm.win" class="alert alert-success" role="alert">
+            <div v-if="winForm.win" class="alert alert-success mb-2" role="alert">
                 <p>Вы выиграли - {{ winForm.win.htmlContent }}.</p>
-                <hr>
-                <form v-on:submit="submit">
-                    <h6 class="text-center">Укажите своё имя, как к Вам может обращаться менеджер?</h6>
-                    <div class="input-group mb-3">
-
-                        <input type="text" class="form-control text-center p-3"
-                               placeholder="Петров Петр Семенович"
-                               aria-label="winForm-name"
-                               v-model="winForm.name"
-                               aria-describedby="winForm-name" required>
-                    </div>
-
-                    <div class="col-12">
-                        <h6 class="text-center">Введите свой номер телефона чтобы наш менеджер мог связаться с
-                            Вами!</h6>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control p-3 text-center"
-                                   v-mask="'+7(###)###-##-##'"
-                                   v-model="winForm.phone"
-                                   placeholder="+7(000)000-00-00"
-                                   aria-label="winForm-phone" aria-describedby="vipForm-phone" required>
-
-                        </div>
-
-                        <button class="btn btn-outline-primary p-3 w-100">
-                            Получить выигрышь
-                        </button>
-
-                    </div>
-                </form>
             </div>
+            <form v-on:submit="submit">
+                <h6 class="text-center">Укажите своё имя, как к Вам может обращаться менеджер?</h6>
+                <div class="input-group mb-3">
+
+                    <input type="text" class="form-control text-center p-3"
+                           placeholder="Петров Петр Семенович"
+                           aria-label="winForm-name"
+                           v-model="winForm.name"
+                           aria-describedby="winForm-name" required>
+                </div>
+
+                <div class="col-12">
+                    <h6 class="text-center">Введите свой номер телефона чтобы наш менеджер мог связаться с
+                        Вами!</h6>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control p-3 text-center"
+                               v-mask="'+7(###)###-##-##'"
+                               v-model="winForm.phone"
+                               placeholder="+7(000)000-00-00"
+                               aria-label="winForm-phone" aria-describedby="vipForm-phone" required>
+
+                    </div>
+
+                    <button class="btn btn-outline-primary p-3 w-100">
+                        Получить выигрышь
+                    </button>
+
+                </div>
+            </form>
+
         </div>
 
         <div class="col-12 p-5 mt-2">
@@ -128,9 +131,8 @@ export default {
         tg() {
             return window.Telegram.WebApp;
         },
-        tgUser() {
-            const urlParams = new URLSearchParams(this.tg.initData);
-            return JSON.parse(urlParams.get('user'));
+        tgUserId() {
+            return JSON.parse(new URLSearchParams(window.Telegram.WebApp.initData).get("user")).id || null
         }
     },
     mounted() {
@@ -159,7 +161,7 @@ export default {
         prepare() {
             return this.$store.dispatch("wheelOfFortunePrepare", {
                 prepareForm: {
-                    tg: this.tgUser
+                    telegram_chat_id: this.tgUserId
                 },
                 bodDomain: this.bot.bot_domain
             }).then((response) => {
@@ -177,7 +179,7 @@ export default {
                         data.append(key, item)
                 });
 
-            data.append("tg", this.tgUser)
+            data.append("telegram_chat_id", this.tgUserId)
 
             this.$store.dispatch("wheelOfFortuneWin", {
                 winForm: data,
