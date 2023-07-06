@@ -84,6 +84,9 @@ abstract class BotCore
                 $slugActualKeyCollection[] = $config->key;
             }
 
+            Log::info("slugActualKeyCollection=>".print_r($slugActualKeyCollection, true));
+            Log::info("classKeyCollection=>".print_r($classKeyCollection, true));
+
             $diff = array_diff($slugActualKeyCollection, $classKeyCollection);
 
             if (count($diff) > 0)
@@ -234,7 +237,7 @@ abstract class BotCore
                         $arguments[] = $match;
 
 
-                    //$this->selfScriptDiagnostic($template);
+                    $this->selfScriptDiagnostic($template);
 
                     $find = $this->tryCall($item, $message, $template->config ?? null, ...$arguments);
                     break;
@@ -284,7 +287,7 @@ abstract class BotCore
 
                         if (!is_null($item)) {
 
-                            //$this->selfScriptDiagnostic($slug);
+                            $this->selfScriptDiagnostic($slug);
 
                             $this->tryCall($item, $message,
                                 $slug->config ?? null, []);
