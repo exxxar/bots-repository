@@ -3,11 +3,10 @@ defineProps({
     bot: Object,
     wheels: Array,
     rules: String,
-    action: Object
 });
 </script>
 <template>
-    <div class="row">
+    <div class="row" v-if="action">
         <div class="col-12 mb-2">
             <div class="card">
                 <div class="card-body">
@@ -19,7 +18,9 @@ defineProps({
         <div class="col-12 d-flex justify-content-center align-items-center "
              v-if="!played"
              style="padding-top: 100px;">
-            <p>Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из  <strong>{{ action.max_attempts || 1 }}</strong></p>
+            <p>Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
+                    action.max_attempts || 1
+                }}</strong></p>
             <hr>
             <Roulette
                 ref="wheel"
@@ -91,6 +92,11 @@ defineProps({
             </button>
         </div>
     </div>
+    <div class="row" v-else>
+        <div class="col-12">
+            <img v-lazy="'/images/load.gif'" alt="">
+        </div>
+    </div>
     <!--
     <button @click="$refs.wheel.reset">reset</button>
     <button @click="rouletteKey += 1">hard reset</button>
@@ -109,6 +115,7 @@ export default {
         return {
             rouletteKey: 0,
             played: false,
+            action: null,
             winForm: {
                 win: null,
                 name: null,
@@ -128,24 +135,37 @@ export default {
     },
     mounted() {
 
-        this.played = this.action.completed_at != null
+        this.prepare().then(() => {
 
-        let index = 1;
+            this.played = this.action.completed_at != null
 
-        this.items = []
-        this.wheels.forEach(item => {
-            this.items.push({
-                id: index,
-                name: item.value,
-                htmlContent: item.value,
-                textColor: "",
-                background: "",
+            let index = 1;
+
+            this.items = []
+            this.wheels.forEach(item => {
+                this.items.push({
+                    id: index,
+                    name: item.value,
+                    htmlContent: item.value,
+                    textColor: "",
+                    background: "",
+                })
+
+                index++;
             })
-
-            index++;
         })
     },
     methods: {
+        prepare() {
+            return this.$store.dispatch("wheelOfFortunePrepare", {
+                prepareForm: {
+                    tg: this.tgUser
+                },
+                bodDomain: this.bot.bot_domain
+            }).then((response) => {
+                this.action = response
+            })
+        },
         submit() {
             let data = new FormData();
             Object.keys(this.winForm)
@@ -157,7 +177,7 @@ export default {
                         data.append(key, item)
                 });
 
-            data.append("tg_user", this.tgUser)
+            data.append("tg", this.tgUser)
 
             this.$store.dispatch("wheelOfFortuneWin", {
                 winForm: data,

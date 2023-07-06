@@ -8,12 +8,6 @@ import Slug from '@/Components/Constructor/Slugs/Slug.vue'
     <div
         v-if="bot"
         class="row">
-        <div class="col-12 mb-2">
-            <div class="alert alert-warning" role="alert">
-                Если вы боитесь последствий модификации команды, то продублируйте нужную и внесите коррективы!
-                Работать будут обе команды как оригинал, так и дубль!
-            </div>
-        </div>
 
         <div class="col-12 mb-2">
             <button type="button"
@@ -45,6 +39,14 @@ import Slug from '@/Components/Constructor/Slugs/Slug.vue'
                   :bot="bot"
                   v-on:callback="callbackSlugs"
                   v-on:select="selectSlug"/>
+        </div>
+
+        <div class="mb-3 col-md-12" v-if="filteredSlugs.length===0">
+
+                <div class="alert alert-danger" role="alert">
+                    У вас еще нет добавленных скриптов!
+                </div>
+
         </div>
     </div>
 

@@ -9,6 +9,7 @@ import products from './modules/products';
 import pages from './modules/pages';
 import dialogGroups from './modules/dialog_groups';
 import slugs from './modules/slugs';
+import wheelOfFortune from "@/store/modules/globals/wheelOfFortune";
 import util from "@/store/modules/utilites";
 
 
@@ -34,19 +35,7 @@ export default createStore({
         },
     },
     actions: {
-        wheelOfFortuneWin(context, payload = {winForm: null, bodDomain:null}) {
-            let link = `/global-scripts/wheel-of-fortune/{bodDomain}`
 
-            let _axios = util.makeAxiosFactory(link, 'POST', payload.winForm)
-
-            return _axios.then((response) => {
-                return Promise.resolve(response.data);
-            }).catch(err => {
-                context.commit("setErrors", err.response.data.errors || [])
-                return Promise.reject(err);
-            })
-
-        },
         updateCurrentCompany(context, payload = {company: null}) {
 
             let currentCompany = !localStorage.getItem('store_current_company') ?
@@ -97,6 +86,7 @@ export default createStore({
         products,
         pages,
         dialogGroups,
-        slugs
+        slugs,
+        wheelOfFortune
     }
 })

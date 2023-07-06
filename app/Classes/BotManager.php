@@ -29,7 +29,6 @@ class BotManager extends BotCore
         return $this;
     }
 
-
     public function currentBotUser()
     {
         return $this->botUser;
@@ -239,4 +238,5 @@ class BotManager extends BotCore
 
 
     }
+
 }

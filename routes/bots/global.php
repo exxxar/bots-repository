@@ -2,11 +2,10 @@
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Bots\NewsBotController;
-use App\Http\Controllers\Bots\RestaurantBotController;
 
 
 BotManager::bot()
-    ->controller(\App\Http\Controllers\GlobalScriptsController::class)
+    ->controller(\App\Http\Controllers\Globals\WheelOfFortuneScriptController::class)
     ->slug("global_wheel_of_fortune", "wheelOfFortune") //колесо фортуны
     ->slug("global_instagram_quest", "instagramQuest") //квест Instagram
     ->slug("global_cashback_module_client", "cashbackClient") //модуль кэшбэка для клиента

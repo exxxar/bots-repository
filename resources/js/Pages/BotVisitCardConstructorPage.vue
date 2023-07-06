@@ -5,7 +5,7 @@ import VisitCardConstructor from "@/Components/Constructor/VisitCardConstructor.
 </script>
 
 <template>
-    <Layout :active="2">
+    <Layout :active="5">
         <template #default>
             <VisitCardConstructor/>
         </template>

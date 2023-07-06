@@ -1,17 +1,17 @@
 <?php
 
+use App\Facades\BotManager;
 use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Admin\BotPageController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Bots\AdminBotController;
-use App\Models\BotDialogCommand;
-use App\Models\BotDialogGroup;
+use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,15 +25,18 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get("/test-reflection", function () {
+    return response()->json(BotManager::bot()->getSlugKeys("global_wheel_of_fortune"));
+});
 
-Route::get("/test-amo", function (){
-$amo = new \App\Integrations\AmoCRMIntegration();
-$amo->nextOAuth();
+Route::get("/test-amo", function () {
+    $amo = new \App\Integrations\AmoCRMIntegration();
+    $amo->nextOAuth();
 
 });
 
-Route::any('/crm/amo/flera_hus_bot', function (Request $request){
-    Log::info(print_r($request->all(),true));
+Route::any('/crm/amo/flera_hus_bot', function (Request $request) {
+    Log::info(print_r($request->all(), true));
 });
 
 Route::get('/company-page', function () {
@@ -205,7 +208,7 @@ Route::prefix("bot")->group(function () {
 });
 
 Route::prefix("web")
-    ->group(function(){
+    ->group(function () {
         Route::get('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webInterface"]);
         Route::post('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webHandler"]);
     });
@@ -262,6 +265,8 @@ Route::post("/admin/cashback-add", function () {
     return "ok";
 });
 
+Route::post('/get-bot-user', [AdminBotController::class, 'getBotUser']);
+
 Route::get('/admin/{botDomain}/{userId}', [AdminBotController::class, 'adminMenu']);
 Route::get('/admin/work-day/{botDomain}/{userId}', [AdminBotController::class, "workDay"]);
 Route::get('/statistic/{botDomain}/{userId}', [AdminBotController::class, "statistic"]);
@@ -270,8 +275,16 @@ Route::get('/restaurant/vip-form/{botDomain}', [AdminBotController::class, "vipF
 Route::get('/deliveryman/vip-form/{botDomain}', [AdminBotController::class, "vipFormDeliveryman"]);
 
 
-Route::get('/global-scripts/wheel-of-fortune/{botDomain}', [\App\Http\Controllers\GlobalScriptsController::class, "formWheelOfFortune"]);
-Route::post('/global-scripts/wheel-of-fortune/{botDomain}', [\App\Http\Controllers\GlobalScriptsController::class, "formWheelOfFortuneCallback"]);
+Route::prefix("global-scripts")
+    ->group(function () {
+        Route::prefix("wheel-of-fortune")
+            ->controller(WheelOfFortuneScriptController::class)
+            ->group(function () {
+                Route::post('/{botDomain}/prepare', "formWheelOfFortunePrepare");
+                Route::get('/{botDomain}', "formWheelOfFortune");
+                Route::post('/{botDomain}', "formWheelOfFortuneCallback");
+            });
+    });
 
 
 Route::get('/welcome', function () {
@@ -289,7 +302,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('MainPage');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('logout', function (){
+Route::get('logout', function () {
     Auth::logout();
     return redirect()->back();
 });

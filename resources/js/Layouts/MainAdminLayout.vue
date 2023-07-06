@@ -114,7 +114,6 @@ import { Head } from '@inertiajs/vue3'
                         </li>
                         <hr>
 
-
                         <li class="nav-item active">
                             <a class="nav-link"
                                v-bind:class="{'active':active==2}"

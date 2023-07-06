@@ -18,11 +18,17 @@ import Slug from '@/Components/Constructor/Slugs/Slug.vue'
                         class="row">
                         <div class="col-md-6" v-for="(item, index) in filteredSlugs">
                             <Slug
-
                                 :item="item"
                                 :bot="bot"
                                 v-on:callback="callbackSlugs"
                                 v-on:select="selectSlug"/>
+                        </div>
+                    </div>
+                    <div class="row" v-else>
+                        <div class="col-12">
+                            <div class="alert alert-danger" role="alert">
+                               У вас еще нет добавленных скриптов! Воспользуйтесь разделом "Скрипты" для добавления.
+                            </div>
                         </div>
                     </div>
 

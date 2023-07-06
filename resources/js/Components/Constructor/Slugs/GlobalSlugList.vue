@@ -86,7 +86,7 @@ import Pagination from '@/Components/Pagination.vue';
 
             <button
                 :disabled="slugForm.slug==null"
-                class="btn btn-outline-success mt-2 mb-2 w-100">Добавить скрипт в бота
+                class="btn btn-outline-success mt-2 mb-2 w-100 p-3">Добавить скрипт в бота
             </button>
 
         </div>

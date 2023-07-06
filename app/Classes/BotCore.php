@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use ReflectionClass;
 use Telegram\Bot\FileUpload\InputFile;
 
 abstract class BotCore
@@ -55,6 +56,42 @@ abstract class BotCore
 
     protected abstract function stopBotDialog(): void;
 
+    protected function selfScriptDiagnostic($item): void
+    {
+        try {
+            $tmp = Collection::make($this->slugs)
+                ->where("path", $item->slug)
+                ->first();
+
+            if (is_null($tmp)) {
+                Log::warning("Script $item->slug not found in system");
+                return;
+            }
+
+            $refl = new ReflectionClass($tmp->controller);
+            $classKeyCollection = [];
+
+            foreach ($refl->getConstants() as $key => $const) {
+                if (str_starts_with($key, "KEY_"))
+                    $classKeyCollection[] = $const;
+            }
+
+            $slugActualKeyCollection = [];
+
+
+            foreach ($item->config as $config) {
+                $config = (object)$config;
+                $slugActualKeyCollection[] = $config->key;
+            }
+
+            $diff = array_diff($slugActualKeyCollection, $classKeyCollection);
+
+            if (count($diff) > 0)
+                Log::warning("We can't find some keys in script $item->slug:" . print_r($diff, true));
+        } catch (\Exception $e) {
+            Log::error("Diagnostic module fail:" . $e->getMessage());
+        }
+    }
 
     public function getCurrentChatId()
     {
@@ -197,6 +234,8 @@ abstract class BotCore
                         $arguments[] = $match;
 
 
+                    $this->selfScriptDiagnostic($template);
+
                     $find = $this->tryCall($item, $message, $template->config ?? null, ...$arguments);
                     break;
                 }
@@ -244,8 +283,11 @@ abstract class BotCore
                             ->first();
 
                         if (!is_null($item)) {
+
+                            $this->selfScriptDiagnostic($slug);
+
                             $this->tryCall($item, $message,
-                                $template->config ?? null, []);
+                                $slug->config ?? null, []);
 
                         }
                     }

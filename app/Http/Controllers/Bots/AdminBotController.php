@@ -18,6 +18,8 @@ use Inertia\Inertia;
 
 class AdminBotController extends Controller
 {
+
+
     public function adminMenu($botDomain, $userId)
     {
 
