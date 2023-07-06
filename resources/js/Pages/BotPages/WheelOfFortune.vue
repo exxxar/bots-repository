@@ -168,6 +168,7 @@ export default {
         },
         submit() {
             let data = new FormData();
+
             Object.keys(this.winForm)
                 .forEach(key => {
                     const item = this.winForm[key] || ''
@@ -196,6 +197,8 @@ export default {
                     type: 'success'
                 });
 
+                this.prepare()
+
             }).catch(err => {
 
             })
@@ -212,8 +215,7 @@ export default {
             console.log("wheelStartedCallback");
         },
         wheelEndedCallback(evt) {
-            console.log(evt);
-            this.winForm.win = evt
+            this.winForm.win = evt.id
         },
     },
 };

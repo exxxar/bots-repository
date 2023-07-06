@@ -82,7 +82,7 @@ class WheelOfFortuneScriptController extends Controller
                 ]);
 
         $action->current_attempts++;
-        if ($action->current_attempts === $maxAttempts)
+        if ($action->current_attempts >= $maxAttempts)
             $action->completed_at = Carbon::now();
 
         $action->save();
@@ -95,7 +95,7 @@ class WheelOfFortuneScriptController extends Controller
             ->whereDomain($botDomain)
             ->sendMessage($botUser
                 ->telegram_chat_id,
-                printf($winMessage, $winNumber))
+                sprintf($winMessage, $winNumber))
             ->sendMessage($callbackChannel,
                 "Участника $winnerPhone ($winnerName) принял участие в розыгрыше и выиграл приз №$winNumber - свяжитесь с ним для дальнейших указаний");
 
@@ -174,7 +174,7 @@ class WheelOfFortuneScriptController extends Controller
         return Inertia::render('BotPages/WheelOfFortune', [
             'bot' => json_decode($bot->toJson()),
             "wheels" => array_values($wheels),
-            'rules' => $rules->value ?? null,
+            'rules' => $rules["value"] ?? null,
         ]);
 
     }
