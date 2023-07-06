@@ -25,9 +25,6 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get("/test-reflection", function () {
-    return response()->json(BotManager::bot()->getSlugKeys("global_wheel_of_fortune"));
-});
 
 Route::get("/test-amo", function () {
     $amo = new \App\Integrations\AmoCRMIntegration();

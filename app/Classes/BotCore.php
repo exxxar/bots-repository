@@ -75,7 +75,6 @@ abstract class BotCore
                 ->pluck("key")
                 ->toArray();
 
-            Log::info(print_r($slugActualKeyCollection,true));
             $tmp = $item->config ?? [];
 
             foreach ($refl->getConstants() as $key => $const) {
@@ -89,13 +88,9 @@ abstract class BotCore
 
             }
 
-            Log::info("tmp=>".print_r($tmp, true));
-
             if (count($tmp)>count($item->config ?? [])) {
                 $item->config = $tmp;
                 $item->save();
-
-
             }
 
         } catch (\Exception $e) {

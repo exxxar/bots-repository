@@ -76,9 +76,21 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                             v-on:callback="addTextTo(index,$event)"
                         />
                         <div>
-                              <span class="badge bg-info">
-                            {{ slugForm.config[index].type }}
-                        </span>
+
+                            <div class="dropdown">
+                                <button class="btn btn-outline-info dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ slugForm.config[index].type }}
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li
+                                        @click="slugForm.config[index].type = item.type"
+                                        v-for="(item, index) in configTypes"><a class="dropdown-item"
+                                                                                href="#">{{ item.title || item.type }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+
                         </div>
 
 
