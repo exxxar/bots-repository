@@ -94,7 +94,7 @@ defineProps({
     </div>
     <div class="row" v-else>
         <div class="col-12">
-            <img v-lazy="'/images/load.gif'" alt="">
+            <img v-lazy="'/images/load.gif'" class="w-100" style="object-fit:cover;" alt="">
         </div>
     </div>
     <!--

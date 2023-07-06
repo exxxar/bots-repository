@@ -280,7 +280,7 @@ Route::prefix("global-scripts")
         Route::prefix("wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)
             ->group(function () {
-                Route::post('/{botDomain}/prepare', "formWheelOfFortunePrepare");
+                Route::post('/prepare/{botDomain}', "formWheelOfFortunePrepare");
                 Route::get('/{botDomain}', "formWheelOfFortune");
                 Route::post('/{botDomain}', "formWheelOfFortuneCallback");
             });
