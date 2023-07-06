@@ -92,6 +92,9 @@ abstract class BotCore
 
             $diff = array_diff($slugActualKeyCollection, $classKeyCollection);
 
+
+            Log::info("diff=>".print_r($diff, true));
+
             if (count($diff) > 0)
                 Log::warning("We can't find some keys in script $item->slug:" . print_r($diff, true));
         } catch (\Exception $e) {
