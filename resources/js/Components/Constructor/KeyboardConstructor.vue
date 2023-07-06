@@ -95,14 +95,36 @@
                                                placeholder="/start">
                                     </div>
                                     <div class="mb-3">
+                                        <label :for="'switch-inline-query-row-'+rowIndex+'-col-'+colIndex"
+                                               class="form-label">Ссылка на аккаунт в ТЕЛЕГРАММ</label>
+                                        <input type="text" class="form-control"
+                                               @change="needRemoveField( 'switch_inline_query',rowIndex, colIndex)"
+                                               v-model="keyboard[rowIndex][colIndex].switch_inline_query"
+                                               :id="'switch-inline-query-row-'+rowIndex+'-col-'+colIndex"
+                                               placeholder="@YourAccountLink">
+                                    </div>
+                                    <div class="mb-3">
                                         <label :for="'url-row-'+rowIndex+'-col-'+colIndex"
-                                               class="form-label">Ссылка (для меню в сообщении)</label>
+                                               class="form-label">Внешняя URL-ссылка</label>
                                         <input type="text" class="form-control"
                                                @change="needRemoveField( 'url',rowIndex, colIndex)"
                                                v-model="keyboard[rowIndex][colIndex].url"
                                                :id="'url-row-'+rowIndex+'-col-'+colIndex"
                                                placeholder="https://t.me/example">
                                     </div>
+
+                                    <div class="mb-3">
+                                        <label :for="'switch-inline-query-current-chat-row-'+rowIndex+'-col-'+colIndex"
+                                               class="form-label">Команда всплывающего меню бота</label>
+                                        <input type="text" class="form-control"
+                                               @change="needRemoveField( 'switch_inline_query_current_chat',rowIndex, colIndex)"
+                                               v-model="keyboard[rowIndex][colIndex].switch_inline_query_current_chat"
+                                               :id="'witch-inline-query-current-chat-row-'+rowIndex+'-col-'+colIndex"
+                                               placeholder="команда">
+                                    </div>
+
+
+
                                     <div class="form-check">
                                         <input type="radio"
                                                @change="needRemoveField( null,rowIndex, colIndex)"
@@ -112,6 +134,18 @@
                                         <label class="form-check-label"
                                                :for="'no-action-row-'+rowIndex+'-col-'+colIndex">
                                             Без действий
+                                        </label>
+                                    </div>
+                                    <div class="form-check" v-if="rowIndex===0">
+                                        <input type="radio"
+                                               @change="needRemoveField( 'pay',rowIndex, colIndex)"
+                                               @click="keyboard[rowIndex][colIndex].pay = true"
+                                               name="request-radio"
+                                               class="form-check-input"
+                                               :id="'pay-action-row-'+rowIndex+'-col-'+colIndex">
+                                        <label class="form-check-label"
+                                               :for="'pay-action-row-'+rowIndex+'-col-'+colIndex">
+                                            Кнопка оплаты
                                         </label>
                                     </div>
                                     <div class="form-check">

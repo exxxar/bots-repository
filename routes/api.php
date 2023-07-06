@@ -75,3 +75,9 @@ Route::apiResource('bot-dialog-result', \App\Http\Controllers\Admin\BotDialogRes
 
 
 Route::apiResource('bot-dialog-group', \App\Http\Controllers\Admin\BotDialogGroupController::class);
+
+
+Route::apiResource('action-status', App\Http\Controllers\ActionStatusController::class);
+
+
+Route::apiResource('amo-crm', App\Http\Controllers\AmoCrmController::class);

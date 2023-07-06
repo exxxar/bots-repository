@@ -9,6 +9,8 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
 import Page from "@/Components/Constructor/Pages/Page.vue"
 import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
 import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupList.vue";
+
+import AmoForm from "@/Components/Constructor/Amo/AmoForm.vue";
 </script>
 <template>
     <div class="row" v-if="company">
@@ -29,6 +31,16 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
                         v-bind:class="{'btn-info text-white':step===4}"
                         @click="step=4"
                         class="btn btn-outline-info"><i class="fa-solid fa-file mr-2"></i> Страницы
+                </button>
+                <button type="button"
+                        v-bind:class="{'btn-info text-white':step===7}"
+                        @click="step=7"
+                        class="btn btn-outline-info"><i class="fa-solid fa-file mr-2"></i> AMO CRM
+                </button>
+                <button type="button"
+                        v-bind:class="{'btn-info text-white':step===8}"
+                        @click="step=8"
+                        class="btn btn-outline-info"><i class="fa-brands fa-shopify mr-2"></i> Магазин
                 </button>
                 <div class="dropdown">
                     <button
@@ -429,6 +441,45 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
                     </div>
                 </div>
 
+                <div class="col-12 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_payments"
+                               type="checkbox"
+                               id="need-payments">
+                        <label class="form-check-label" for="need-payments">
+                            Необходимо подключить платежную систему
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12 col-12" v-if="need_payments">
+                    <div class="mb-3">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Если в боте планируется оплата, то необходимо через BotFather привязать нужную
+                                    платежную систему и указать в данном поле полученный токен
+                                </div>
+                            </template>
+                        </Popper>
+                        <label class="form-label" id="bot-level-3">Токен платежной системы
+                            <a href="https://t.me/botfather" target="_blank">Подключить</a>
+                        </label>
+
+
+                        <input type="number" class="form-control"
+                               placeholder="Токен"
+                               aria-label="уровень CashBack"
+                               v-model="botForm.payment_provider_token"
+                               max="50"
+                               min="0"
+                               aria-describedby="bot-level-3">
+                    </div>
+                </div>
+
+
 
                 <div class="col-12 ">
                     <div class="card mb-3">
@@ -565,6 +616,15 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
             </div>
         </div>
 
+        <div v-if="step===7">
+            <AmoForm
+                :bot="bot"
+                :data="botForm.amo"
+                v-if="!load"
+            />
+        </div>
+
+
         <div v-if="step===5">
             <ImageMenu
                 v-if="!load"
@@ -586,7 +646,7 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
         <div v-if="step===2">
             <BotSlugList
                 v-if="!load"
-              />
+            />
         </div>
 
         <div v-if="step===3">
@@ -610,31 +670,7 @@ import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupL
 
             </div>
         </div>
-
-
     </form>
-
-    <div class="modal fade"
-
-         id="open-add-script" tabindex="-1" aria-labelledby="open-add-script-label" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="open-construct-label">Добавление скрипта к кнопке</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <BotSlugList
-                        v-on:add="addSlug"
-                        v-if="command!=null&&!load"
-                        :command="command"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </template>
 <script>
 
@@ -650,8 +686,7 @@ export default {
             load: false,
             loadPage: false,
             loadPageList: false,
-
-
+            need_payments: false,
             command: null,
 
             botForm: {
@@ -670,12 +705,14 @@ export default {
                 info_link: null,
                 social_links: [],
                 maintenance_message: null,
+                payment_provider_token: null,
                 level_1: 10,
                 level_2: 0,
                 level_3: 0,
                 photos: [],
                 selected_bot_template_id: null,
                 pages: [],
+                amo:null
             },
         }
     },
@@ -720,12 +757,15 @@ export default {
 
                     maintenance_message: this.bot.maintenance_message || null,
                     welcome_message: this.bot.welcome_message || null,
+                    payment_provider_token: this.bot.payment_provider_token || null,
 
                     level_1: this.bot.level_1 || 10,
                     level_2: this.bot.level_2 || 0,
                     level_3: this.bot.level_3 || 0,
 
                     photos: this.bot.photos || [],
+
+                    amo: this.bot.amo || null,
                 }
 
             })
@@ -845,6 +885,7 @@ export default {
                         social_links: [],
 
                         maintenance_message: null,
+                        payment_provider_token: null,
 
                         level_1: 10,
                         level_2: 0,
@@ -884,6 +925,13 @@ export default {
 }
 </script>
 <style lang="scss">
+.popper {
+    background: #06135f !important;
+    color: white !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+}
+
 
 .img-preview, .photo-loader {
     width: 100px;

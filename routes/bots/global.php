@@ -7,7 +7,12 @@ use App\Http\Controllers\Bots\RestaurantBotController;
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\GlobalScriptsController::class)
-    ->slug("global_wheel_of_fortune", "wheelOfFortune"); //колесо фортуны
+    ->slug("global_wheel_of_fortune", "wheelOfFortune") //колесо фортуны
+    ->slug("global_instagram_quest", "instagramQuest") //квест Instagram
+    ->slug("global_cashback_module_client", "cashbackClient") //модуль кэшбэка для клиента
+    ->slug("global_cashback_module_admin", "cashbackAdmin") //модуль кэшбэка для админа
+    ->slug("global_shop_module_client", "shopClient") //модуль кэшбэка для админа
+    ->slug("global_shop_module_admin", "shopAdmin"); //модуль кэшбэка для админа
 
     /*->slug("global_about_us", "start") //о нас
     ->slug("global_about_bot", "start") //о нас

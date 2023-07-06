@@ -754,7 +754,7 @@ class AdminBotController extends Controller
 
         Inertia::setRootView("bot");
 
-        return Inertia::render('VipForm', [
+        return Inertia::render('BotPages/VipForm', [
             'bot' => json_decode($bot->toJson()),
         ]);
 

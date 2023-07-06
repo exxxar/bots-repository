@@ -1,0 +1,19 @@
+models:
+  ActionStatus:
+    user_id: id foreign:users
+    bot_id: id foreign:bots
+    script: string:255
+    max_attempts: integer default:0
+    current_attempts: integer default:0
+    completed_at: timestamp nullable
+    data: json nullable
+    relationships:
+      belongsTo: Bot, User
+
+seeders:  ActionStatus
+
+controllers:
+  ActionStatus:
+    resource: api
+
+

@@ -8,7 +8,9 @@ use App\Http\Controllers\Bots\AdminBotController;
 use App\Models\BotDialogCommand;
 use App\Models\BotDialogGroup;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,6 +25,16 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get("/test-amo", function (){
+$amo = new \App\Integrations\AmoCRMIntegration();
+$amo->nextOAuth();
+
+});
+
+Route::any('/crm/amo/flera_hus_bot', function (Request $request){
+    Log::info(print_r($request->all(),true));
+});
 
 Route::get('/company-page', function () {
     Inertia::setRootView("app");
@@ -259,6 +271,7 @@ Route::get('/deliveryman/vip-form/{botDomain}', [AdminBotController::class, "vip
 
 
 Route::get('/global-scripts/wheel-of-fortune/{botDomain}', [\App\Http\Controllers\GlobalScriptsController::class, "formWheelOfFortune"]);
+Route::post('/global-scripts/wheel-of-fortune/{botDomain}', [\App\Http\Controllers\GlobalScriptsController::class, "formWheelOfFortuneCallback"]);
 
 
 Route::get('/welcome', function () {

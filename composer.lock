@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a28d1293073c58e003719e937d2b7a9",
+    "content-hash": "102e79cfb5eaa5fc5f0e1ea621476939",
     "packages": [
+        {
+            "name": "andrey-tech/amocrm-api-php",
+            "version": "2.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/andrey-tech/amocrm-api-php.git",
+                "reference": "877526feb1b80f53a5d27804f823a63945e10bb3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/andrey-tech/amocrm-api-php/zipball/877526feb1b80f53a5d27804f823a63945e10bb3",
+                "reference": "877526feb1b80f53a5d27804f823a63945e10bb3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AmoCRM\\": "src/AmoCRM"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "andrey-tech",
+                    "homepage": "https://github.com/andrey-tech/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Обертка для работы с API v2 amoCRM с авторизацией по протоколу oAuth 2.0 или по API-ключу пользователя, троттлингом запросов, блокировкой одновременного обновления одной сущности и логированием в файл",
+            "homepage": "https://github.com/andrey-tech/amocrm-api-php",
+            "keywords": [
+                "amoCRM",
+                "api",
+                "crm",
+                "logging",
+                "oauth2",
+                "throttling"
+            ],
+            "support": {
+                "issues": "https://github.com/andrey-tech/amocrm-api-php/issues",
+                "source": "https://github.com/andrey-tech/amocrm-api-php/tree/2.7.0"
+            },
+            "time": "2020-06-14T05:43:58+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.10.2",

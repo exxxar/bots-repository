@@ -1,50 +1,105 @@
 <script setup>
 defineProps({
+    bot: Object,
     wheels: Array,
+    rules: String,
+    action: Object
 });
 </script>
 <template>
-<div class="row">
-    <div class="col-12 d-flex justify-content-center align-items-center " style="padding-top: 100px;">
-        <Roulette
-            ref="wheel"
-            size="300"
-            :key="rouletteKey"
-            :items="items"
-            centered-indicator
-            indicator-position="top"
-            display-shadow
-            display-border
-            base-display
-            base-display-indicator
-            base-background="orange"
-            base-display-shadow
-            easing="bounce"
-            @wheel-start="wheelStartedCallback"
-            @wheel-end="wheelEndedCallback"
-            @click="launchWheel"
-        >
-            <template #baseContent>
-                <div>Поехали</div>
-            </template>
-        </Roulette>
+    <div class="row">
+        <div class="col-12 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <p v-if="rules" v-html="rules"></p>
+                </div>
+            </div>
 
-    </div>
+        </div>
+        <div class="col-12 d-flex justify-content-center align-items-center "
+             v-if="!played"
+             style="padding-top: 100px;">
+            <p>Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из  <strong>{{ action.max_attempts || 1 }}</strong></p>
+            <hr>
+            <Roulette
+                ref="wheel"
+                size="300"
+                :key="rouletteKey"
+                :items="items"
+                centered-indicator
+                indicator-position="top"
+                display-shadow
+                display-border
+                base-display
+                base-display-indicator
+                base-background="orange"
+                base-display-shadow
+                easing="bounce"
+                @wheel-start="wheelStartedCallback"
+                @wheel-end="wheelEndedCallback"
+                @click="launchWheel"
+            >
+                <template #baseContent>
+                    <div>Поехали</div>
+                </template>
+            </Roulette>
 
-    <div class="col-12 p-5">
-        <div v-if="win" class="alert alert-success" role="alert">
-            Вы выиграли - {{win.htmlContent}}
+        </div>
+
+        <div class="col-12 p-5" v-if="!played">
+
+            <div v-if="winForm.win" class="alert alert-success" role="alert">
+                <p>Вы выиграли - {{ winForm.win.htmlContent }}.</p>
+                <hr>
+                <form v-on:submit="submit">
+                    <h6 class="text-center">Укажите своё имя, как к Вам может обращаться менеджер?</h6>
+                    <div class="input-group mb-3">
+
+                        <input type="text" class="form-control text-center p-3"
+                               placeholder="Петров Петр Семенович"
+                               aria-label="winForm-name"
+                               v-model="winForm.name"
+                               aria-describedby="winForm-name" required>
+                    </div>
+
+                    <div class="col-12">
+                        <h6 class="text-center">Введите свой номер телефона чтобы наш менеджер мог связаться с
+                            Вами!</h6>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control p-3 text-center"
+                                   v-mask="'+7(###)###-##-##'"
+                                   v-model="winForm.phone"
+                                   placeholder="+7(000)000-00-00"
+                                   aria-label="winForm-phone" aria-describedby="vipForm-phone" required>
+
+                        </div>
+
+                        <button class="btn btn-outline-primary p-3 w-100">
+                            Получить выигрышь
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-12 p-5 mt-2">
+            <button
+                @click="closeWheel"
+                type="button" class="btn btn-outline-info p-2">
+                Вернуться в бота
+            </button>
         </div>
     </div>
-</div>
-<!--
-<button @click="$refs.wheel.reset">reset</button>
-<button @click="rouletteKey += 1">hard reset</button>
--->
+    <!--
+    <button @click="$refs.wheel.reset">reset</button>
+    <button @click="rouletteKey += 1">hard reset</button>
+    -->
 
 </template>
 <script>
-import { Roulette } from "vue3-roulette";
+import {Roulette} from "vue3-roulette";
+
 export default {
     name: "App",
     components: {
@@ -53,91 +108,36 @@ export default {
     data() {
         return {
             rouletteKey: 0,
-            win:null,
-            items: [
-                {
-                    id: 1,
-                    name: "1",
-                    htmlContent: "жопа бобра<br>с кусочками<br>лайма",
-                    textColor: "",
-                    background: "",
-                },
-                {
-                    id: 2,
-                    name: "10",
-                    htmlContent: "<i class='fa-brands fa-instagram'></i>",
-                    textColor: "",
-                    background: "",
-                },
-                {
-                    id: 3,
-                    name: "Banana",
-                    htmlContent:
-                        "<img src='https://prv3.lori-images.net/koleso-ruletki-na-belom-fone-0004118371-preview.jpg' style='width:50px;'>",
-                    textColor: "",
-                    background: "white",
-                },
-                {
-                    id: 4,
-                    name: "1000",
-                    htmlContent: "1000",
-                    textColor: "",
-                    background: "",
-                },
-                {
-                    id: 7,
-                    name: "1000",
-                    htmlContent: "1000",
-                    textColor: "",
-                    background: "",
-                },
-                {
-                    id: 4,
-                    name: "1000",
-                    htmlContent: "1000",
-                    textColor: "",
-                    background: "",
-                },
-                {
-                    id: 4,
-                    name: "1000",
-                    htmlContent: "1000",
-                    textColor: "",
-                    background: "",
-                },
-                {
-                    id: 41,
-                    name: "10000",
-                    htmlContent: "10000",
-                },
-                {
-                    id: 5,
-                    name: "1000000",
-                    htmlContent: "1000000",
-                },
-                {
-                    id: 6,
-                    name: "10000000",
-                    htmlContent: "10 000 000",
-                },
-                {
-                    id: 7,
-                    name: "0",
-                    htmlContent: "0",
-                },
-            ],
+            played: false,
+            winForm: {
+                win: null,
+                name: null,
+                phone: null,
+            },
+            items: [],
         };
     },
+    computed: {
+        tg() {
+            return window.Telegram.WebApp;
+        },
+        tgUser() {
+            const urlParams = new URLSearchParams(this.tg.initData);
+            return JSON.parse(urlParams.get('user'));
+        }
+    },
     mounted() {
+
+        this.played = this.action.completed_at != null
 
         let index = 1;
 
         this.items = []
-        this.wheels.forEach(item=>{
-            this.items.push(  {
+        this.wheels.forEach(item => {
+            this.items.push({
                 id: index,
                 name: item.value,
-                htmlContent:  item.value,
+                htmlContent: item.value,
                 textColor: "",
                 background: "",
             })
@@ -146,6 +146,44 @@ export default {
         })
     },
     methods: {
+        submit() {
+            let data = new FormData();
+            Object.keys(this.winForm)
+                .forEach(key => {
+                    const item = this.winForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+            data.append("tg_user", this.tgUser)
+
+            this.$store.dispatch("wheelOfFortuneWin", {
+                winForm: data,
+                bodDomain: this.bot.bot_domain
+            }).then((response) => {
+
+                this.winForm = {
+                    win: null,
+                    name: null,
+                    phone: null,
+                }
+
+                this.$notify({
+                    title: "Колесо фортуны",
+                    text: "Вы успешно приняли участие в розыгрыше! Наш менеджер свяжется с вами для дальнейших инструкций.",
+                    type: 'success'
+                });
+
+            }).catch(err => {
+
+            })
+
+        },
+        closeWheel() {
+            this.tg.close()
+        },
         launchWheel() {
             this.rouletteKey += 1;
             setTimeout(() => this.$refs.wheel.launchWheel(), 0);
@@ -155,7 +193,7 @@ export default {
         },
         wheelEndedCallback(evt) {
             console.log(evt);
-            this.win = evt
+            this.winForm.win = evt
         },
     },
 };

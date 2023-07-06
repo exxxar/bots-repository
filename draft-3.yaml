@@ -1,0 +1,17 @@
+models:
+  BotDialogGroup:
+    slug: string:255
+    title: string:255
+    bot_id: id foreign:bots
+    relationships:
+      belongsTo: Bot
+      hasMany: BotDialogCommand
+
+
+seeders:   BotDialogGroup
+
+controllers:
+  BotDialogGroup:
+    resource: api
+
+

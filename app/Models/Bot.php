@@ -38,6 +38,7 @@ class Bot extends Model
         'level_2',
         'level_3',
         'blocked_message',
+        'payment_provider_token',
         'blocked_at',
         'is_template',
         'template_description',
@@ -118,6 +119,11 @@ class Bot extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function amo(): BelongsTo
+    {
+        return $this->belongsTo(AmoCrm::class);
     }
 
     public function botType(): BelongsTo

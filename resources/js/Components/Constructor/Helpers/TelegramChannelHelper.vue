@@ -55,7 +55,7 @@ export default {
             }).then((resp) => {
                 if (resp.ok)
                     this.$emit("callback", {
-                        param: this.param,
+                        param: this.param || null,
                         text: resp.result.chat.id
                     })
 
@@ -67,7 +67,7 @@ export default {
                     });
 
                     this.$emit("callback", {
-                        param: this.param,
+                        param: this.param || null,
                         text: null
                     })
                 }

@@ -34,6 +34,19 @@ export default createStore({
         },
     },
     actions: {
+        wheelOfFortuneWin(context, payload = {winForm: null, bodDomain:null}) {
+            let link = `/global-scripts/wheel-of-fortune/{bodDomain}`
+
+            let _axios = util.makeAxiosFactory(link, 'POST', payload.winForm)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+
+        },
         updateCurrentCompany(context, payload = {company: null}) {
 
             let currentCompany = !localStorage.getItem('store_current_company') ?

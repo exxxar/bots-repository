@@ -36,10 +36,13 @@ class BotResource extends JsonResource
             'level_2' => $this->level_2,
             'level_3' => $this->level_3,
             'blocked_message' => $this->blocked_message,
+            'payment_provider_token' => $this->payment_provider_token ?? null,
+            'amo' => new AmoCrmResource($this->whenLoaded("amo")),
             'blocked_at' => $this->blocked_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
+
             //'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),
         ];
     }
