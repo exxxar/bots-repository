@@ -60,8 +60,6 @@ abstract class BotCore
     {
         try {
 
-            Log::info("selfScriptDiagnostic");
-
             $tmp = Collection::make($this->slugs)
                 ->where("path", $item->slug)
                 ->first();
@@ -72,31 +70,31 @@ abstract class BotCore
             }
 
             $refl = new ReflectionClass($tmp["controller"]);
-            $classKeyCollection = [];
+
+            $slugActualKeyCollection = Collection::make($item->config)
+                ->pluck("key")
+                ->toArray();
+
+            $tmp = $item->config ?? [];
 
             foreach ($refl->getConstants() as $key => $const) {
-                if (str_starts_with($key, "KEY_"))
-                    $classKeyCollection[] = $const;
+                if (str_starts_with($key, "KEY_") && !in_array($const, $slugActualKeyCollection)) {
+                    $tmp[]= (object)[
+                        "key"=>$const,
+                        "value"=>"",
+                        "type"=>'text',
+                    ];
+                }
+
             }
 
-            $slugActualKeyCollection = [];
+            if (count($tmp)>count($item->config ?? [])) {
+                $item->config = $tmp;
+                $item->save();
 
-
-            foreach ($item->config as $config) {
-                $config = (object)$config;
-                $slugActualKeyCollection[] = $config->key;
+                Log::info("tmp=>".print_r($tmp, true));
             }
 
-            Log::info("slugActualKeyCollection=>".print_r($slugActualKeyCollection, true));
-            Log::info("classKeyCollection=>".print_r($classKeyCollection, true));
-
-            $diff = array_diff($slugActualKeyCollection, $classKeyCollection);
-
-
-            Log::info("diff=>".print_r($diff, true));
-
-            if (count($diff) > 0)
-                Log::warning("We can't find some keys in script $item->slug:" . print_r($diff, true));
         } catch (\Exception $e) {
             Log::error("Diagnostic module fail:" . $e->getMessage());
         }
