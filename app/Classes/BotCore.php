@@ -59,6 +59,9 @@ abstract class BotCore
     protected function selfScriptDiagnostic($item): void
     {
         try {
+
+            Log::info("selfScriptDiagnostic");
+
             $tmp = Collection::make($this->slugs)
                 ->where("path", $item->slug)
                 ->first();
@@ -68,7 +71,7 @@ abstract class BotCore
                 return;
             }
 
-            $refl = new ReflectionClass($tmp->controller);
+            $refl = new ReflectionClass($tmp["controller"]);
             $classKeyCollection = [];
 
             foreach ($refl->getConstants() as $key => $const) {

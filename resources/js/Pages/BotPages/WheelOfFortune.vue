@@ -21,9 +21,7 @@ defineProps({
                 }}</strong></p>
         </div>
         <div class="col-12 d-flex justify-content-center align-items-center "
-             v-if="!played"
-             style="padding-top: 100px;">
-
+             v-if="!played">
 
             <Roulette
                 ref="wheel"
@@ -90,7 +88,7 @@ defineProps({
         <div class="col-12 p-5 mt-2">
             <button
                 @click="closeWheel"
-                type="button" class="btn btn-outline-info p-2">
+                type="button" class="btn btn-outline-primary p-3 w-100">
                 Вернуться в бота
             </button>
         </div>
