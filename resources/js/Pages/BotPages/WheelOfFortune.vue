@@ -6,19 +6,23 @@ defineProps({
 });
 </script>
 <template>
-    <div class="row" v-if="action">
+    <div class="row p-2" v-if="action">
         <div class="col-12 mb-2 mt-2" v-if="rules">
             <div class="card">
                 <div class="card-body">
-                    <p v-html="rules"></p>
+                    <p>{{rules}}</p>
                 </div>
             </div>
         </div>
 
         <div class="col-12 mb-2 mt-2">
-            <p style="text-align: center;font-size: larger;">Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
+            <p
+                v-if=" action.current_attempts<action.max_attempts"
+                style="text-align: center;font-size: larger;">Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
                     action.max_attempts || 1
                 }}</strong></p>
+
+            <p  style="text-align: center;font-size: larger;" v-else>Вы израсходовали все ваши попытки</p>
         </div>
         <div class="col-12 d-flex justify-content-center align-items-center "
              v-if="!played">
@@ -48,7 +52,7 @@ defineProps({
 
         </div>
 
-        <div class="col-12 p-5" v-if="!played&&winForm.win">
+        <div class="col-12 p-2" v-if="!played&&winForm.win">
 
             <div  class="alert alert-success mb-2" role="alert">
                 <p>Вы выиграли - {{ winForm.win.htmlContent }}.</p>
@@ -85,7 +89,7 @@ defineProps({
 
         </div>
 
-        <div class="col-12 p-5 mt-2">
+        <div class="col-12 p-2 mt-2">
             <button
                 @click="closeWheel"
                 type="button" class="btn btn-outline-primary p-3 w-100">
