@@ -18,7 +18,7 @@ class ActionStatus extends Model
     protected $fillable = [
         'user_id',
         'bot_id',
-        'script',
+        'slug_id',
         'max_attempts',
         'current_attempts',
         'completed_at',
@@ -34,6 +34,7 @@ class ActionStatus extends Model
         'id' => 'integer',
         'user_id' => 'integer',
         'bot_id' => 'integer',
+        'slug_id' => 'integer',
         'completed_at' => 'timestamp',
         'data' => 'array',
     ];

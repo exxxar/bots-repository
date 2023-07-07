@@ -281,6 +281,14 @@ Route::prefix("global-scripts")
                 Route::get('/{botDomain}', "formWheelOfFortune");
                 Route::post('/{botDomain}', "formWheelOfFortuneCallback");
             });
+
+        Route::prefix("instagram-quest")
+            ->controller(WheelOfFortuneScriptController::class)
+            ->group(function () {
+                Route::post('/prepare/{botDomain}', "formWheelOfFortunePrepare");
+                Route::get('/{botDomain}', "formWheelOfFortune");
+                Route::post('/{botDomain}', "formWheelOfFortuneCallback");
+            });
     });
 
 

@@ -68,7 +68,7 @@ class WheelOfFortuneScriptController extends Controller
         $action = ActionStatus::query()
             ->where("user_id", $botUser->user_id)
             ->where("bot_id", $bot->id)
-            ->where("script", $slug->slug)
+            ->where("slug_id", $slug->id)
             ->first();
 
         if (is_null($action))
@@ -76,7 +76,7 @@ class WheelOfFortuneScriptController extends Controller
                 ->create([
                     'user_id' => $botUser->user_id,
                     'bot_id' => $bot->id,
-                    'script' => $slug->slug,
+                    'slug_id' => $slug->id,
                     'max_attempts' => $maxAttempts,
                     'current_attempts' => 0
                 ]);
@@ -130,7 +130,7 @@ class WheelOfFortuneScriptController extends Controller
         $action = ActionStatus::query()
             ->where("user_id", $botUser->user_id)
             ->where("bot_id", $bot->id)
-            ->where("script", self::SCRIPT)
+            ->where("slug_id", $slug->id)
             ->first();
 
         if (is_null($action))
@@ -138,7 +138,7 @@ class WheelOfFortuneScriptController extends Controller
                 ->create([
                     'user_id' => $botUser->user_id,
                     'bot_id' => $bot->id,
-                    'script' => self::SCRIPT,
+                    'slug_id' => $slug->id,
                     'max_attempts' => $maxAttempts,
                     'current_attempts' => 0
                 ]);

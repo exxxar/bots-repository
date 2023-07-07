@@ -26,11 +26,11 @@ class InstagramQuestScriptController extends Controller
 
         $mainText = (Collection::make($config[1])
             ->where("key", self::KEY_MAIN_TEXT)
-            ->first())["value"] ?? "Начни розыгрыш и получи свои призы!";
+            ->first())["value"] ?? "Участвуй в квесте и получай призы";
 
         $btnText = (Collection::make($config[1])
             ->where("key", self::KEY_BTN_TEXT)
-            ->first())["value"] ?? "\xF0\x9F\x8E\xB2Заполнить анкету";
+            ->first())["value"] ?? "\xF0\x9F\x8E\xB2Перейти к заданию";
 
         \App\Facades\BotManager::bot()
             ->replyPhoto($mainText,
@@ -38,7 +38,7 @@ class InstagramQuestScriptController extends Controller
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/insta-quest/$bot->bot_domain"
+                            "url" => env("APP_URL") . "/global-scripts/instagram-quest/$bot->bot_domain"
                         ]],
                     ],
 
