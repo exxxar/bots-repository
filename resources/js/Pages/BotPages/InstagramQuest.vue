@@ -165,6 +165,7 @@ export default {
         onChangePhotos(e) {
             const files = e.target.files
             this.photo = files[0]
+            this.success = true
         },
         prepare() {
             return this.$store.dispatch("instagramQuestPrepare", {
@@ -226,12 +227,59 @@ export default {
 };
 </script>
 <style>
-.wheel-base-container .wheel-base-indicator {
-    left: 45px !important;
+
+.img-preview,
+.photo-loader {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 42px;
+    background: white;
+    border-radius: 10px;
+    border: 1px lightgray solid;
+
+    position: relative;
+
 }
 
-.wheel .content {
-    font-size: 20px;
-    font-weight: 900;
+.img-preview img,
+.photo-loader img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lime {
+    color: lime;
+}
+
+.img-preview .remove {
+    display: none;
+}
+
+.img-preview:hover .remove {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.img-preview:hover .remove a {
+    font-size: 12px;
+    color: white;
 }
 </style>
