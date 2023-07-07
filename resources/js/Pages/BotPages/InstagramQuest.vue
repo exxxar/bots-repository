@@ -26,7 +26,7 @@ defineProps({
 
                 <p style="text-align: center;font-size: larger;" v-else>Вы израсходовали все ваши попытки</p>
             </div>
-            <div class="col-12">
+            <div class="col-12" v-if="canPlay">
                 <h6 class="text-center">Выберите фотографию согласно задания квеста</h6>
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center "
@@ -58,7 +58,7 @@ defineProps({
                 <div class="alert alert-info mb-2" role="alert">
                     <p>Вы успешно прошли квест</p>
                 </div>
-                <form v-on:submit="submit">
+                <form v-on:submit.prevent="submit">
                     <h6 class="text-center">Укажите своё имя, как к Вам может обращаться менеджер?</h6>
                     <div class="input-group mb-2">
 

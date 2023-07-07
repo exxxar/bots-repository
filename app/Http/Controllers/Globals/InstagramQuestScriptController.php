@@ -23,7 +23,7 @@ class InstagramQuestScriptController extends Controller
     const KEY_MAX_ATTEMPTS = "max_attempts";
     const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";
     const KEY_RULES_TEXT = "rules_text";
-    const KEY_RESULT_MESSAGE = "win_message";
+    const KEY_RESULT_MESSAGE = "result_message";
     const KEY_MAIN_TEXT = "main_text";
     const KEY_BTN_TEXT = "btn_text";
 

@@ -58,7 +58,7 @@ defineProps({
                 <div  class="alert alert-info mb-2" role="alert">
                     <p>Вы выиграли - {{ winForm.win }}.</p>
                 </div>
-                <form v-on:submit="submit">
+                <form v-on:submit.prevent="submit">
                     <h6 class="text-center">Укажите своё имя, как к Вам может обращаться менеджер?</h6>
                     <div class="input-group mb-2">
 
