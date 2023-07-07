@@ -54,14 +54,14 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                           v-bind:class="{'bg-info': filters.indexOf(item.type)>=0}"
                           v-for="(item, index) in configTypes"> {{ item.type }}</span>
                 </p>
+
             </div>
         </div>
         <div class="row"
-             v-if="slugForm.config.length>0"
+             v-if="filteredConfigs.length>0"
         >
             <div class="col-md-6 mb-1"
-                 v-if="filteredConfig.length>0"
-                 v-for="(item, index) in filteredConfig">
+                 v-for="(item, index) in filteredConfigs" >
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <button
@@ -71,7 +71,7 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                         <TelegramChannelHelper
-                            v-if="bot&&slugForm.config[index].type==='channel'"
+                            v-if="bot&&filteredConfigs[index].type==='channel'"
                             :token="bot.bot_token"
                             v-on:callback="addTextTo(index,$event)"
                         />
@@ -80,12 +80,14 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                             <div class="dropdown">
                                 <button class="btn btn-outline-info dropdown-toggle" type="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                    {{ slugForm.config[index].type }}
+                                    {{ filteredConfigs[index].type }}
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li
                                         v-for="config in configTypes">
-                                        <a class="dropdown-item"  @click="slugForm.config[index].type = config.type">{{ config.title || item.type }}</a>
+                                        <a class="dropdown-item" @click="filteredConfigs[index].type = config.type">{{
+                                                config.title || item.type
+                                            }}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -97,23 +99,23 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                     <div class="card-body">
                         <div class="form-floating mb-1">
                             <input type="text" class="form-control"
-                                   v-model="slugForm.config[index].key"
+                                   v-model="filteredConfigs[index].key"
                                    id="floatingInput"
                                    placeholder="name@example.com" required>
                             <label for="floatingInput">Ключ</label>
                         </div>
 
                         <div class="form-floating mb-1"
-                             v-if="slugForm.config[index].type==='text' || slugForm.config[index].type==='channel'">
+                             v-if="filteredConfigs[index].type==='text' || filteredConfigs[index].type==='channel'">
                             <input type="text" class="form-control" id="floatingInput"
-                                   v-model="slugForm.config[index].value"
+                                   v-model="filteredConfigs[index].value"
                                    placeholder="name@example.com" required>
                             <label for="floatingInput">Значение</label>
                         </div>
 
-                        <div class="form-floating mb-3" v-if="slugForm.config[index].type==='large-text'">
+                        <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='large-text'">
                             <textarea class="form-control" id="floatingInput"
-                                      v-model="slugForm.config[index].value"
+                                      v-model="filteredConfigs[index].value"
                                       placeholder="name@example.com" required>
                             </textarea>
                             <label for="floatingInput">Значение</label>
@@ -123,9 +125,7 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 mb-1" v-else>
-                <p>По вашим фильтрам ничего не найдено</p>
-            </div>
+
 
             <!--                    <div class="col-md-5" v-if="slugForm.config[index].type==='image'">
                                     <label :for="'param-photo-'+index+'-item-'+item.id" style="margin-right: 10px;"
@@ -224,12 +224,11 @@ export default {
     },
     computed: {
         ...mapGetters(['getCurrentBot']),
-        filteredConfig() {
-            if (this.filters.length === 0)
+        filteredConfigs(){
+            if (this.filters.length==0)
                 return this.slugForm.config
 
-            return this.slugForm.config.filter(item => this.filters.indexOf(item.type) >= 0)
-
+            return this.slugForm.config.filter(item=>this.filters.indexOf(item.type)>=0)
         }
     },
 

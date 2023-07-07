@@ -35,7 +35,7 @@ import AmoForm from "@/Components/Constructor/Amo/AmoForm.vue";
                 <button type="button"
                         v-bind:class="{'btn-info text-white':step===7}"
                         @click="step=7"
-                        class="btn btn-outline-info"><i class="fa-solid fa-file mr-2"></i> AMO CRM
+                        class="btn btn-outline-info"><i class="fa-solid fa-list-check mr-2"></i> AMO CRM
                 </button>
                 <button type="button"
                         v-bind:class="{'btn-info text-white':step===8}"
