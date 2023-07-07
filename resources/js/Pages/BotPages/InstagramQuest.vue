@@ -34,14 +34,15 @@ defineProps({
 
                 <div class="card mb-3">
                     <div class="card-body d-flex justify-content-start">
-                        <label for="photos" style="margin-right: 10px;" class="photo-loader ml-2">
-                            +
+                        <label for="photos"  class="photo-loader ml-2">
+                            <i class="fa-brands fa-instagram"></i>
                             <input type="file" id="photos"
                                    accept="image/*" @change="onChangePhotos"
                                    style="display:none;"/>
 
                         </label>
                         <div class="img-preview"
+                             style="margin-left: 10px;"
                              v-if="photo">
                             <img v-lazy="getPhoto().imageUrl">
                             <div class="remove">
