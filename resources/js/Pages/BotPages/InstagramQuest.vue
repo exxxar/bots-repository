@@ -27,7 +27,7 @@ defineProps({
                 <p style="text-align: center;font-size: larger;" v-else>Вы израсходовали все ваши попытки</p>
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center "
-                 v-if="canPlay&&!success">
+                 v-if="canPlay">
 
                 <div class="card mb-3">
                     <div class="card-header">
@@ -71,7 +71,7 @@ defineProps({
                                placeholder="Петров Петр Семенович"
                                aria-label="winForm-name"
                                v-model="instaForm.name"
-                               aria-describedby="winForm-name" required>
+                               aria-describedby="instaForm-name" required>
                     </div>
 
 
@@ -82,15 +82,16 @@ defineProps({
                                v-mask="'+7(###)###-##-##'"
                                v-model="instaForm.phone"
                                placeholder="+7(000)000-00-00"
-                               aria-label="winForm-phone" aria-describedby="vipForm-phone" required>
+                               aria-label="winForm-phone" aria-describedby="instaForm-phone" required>
 
                     </div>
 
                     <h6 class="text-center">Оставьте свой комментарий</h6>
                     <div class="input-group mb-2">
-                        <textarea type="text" class="form-control p-3 text-center"
+                        <textarea type="text" class="form-control p-3"
+                                  placeholder="Текст вашего комментария"
                                v-model="instaForm.comment"
-                               aria-label="winForm-phone" aria-describedby="vipForm-phone" required>
+                               aria-label="winForm-phone" aria-describedby="instaForm-comment" required>
                         </textarea>
 
                     </div>
