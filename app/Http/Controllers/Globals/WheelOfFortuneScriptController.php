@@ -190,11 +190,11 @@ class WheelOfFortuneScriptController extends Controller
 
         $btnText = (Collection::make($config[1])
             ->where("key", self::KEY_BTN_TEXT)
-            ->first())["value"] ?? "\xF0\x9F\x8E\xB2Заполнить анкету";
+            ->first())["value"] ?? "\xF0\x9F\x8E\xB2Начать розыгрыш";
 
         \App\Facades\BotManager::bot()
             ->replyPhoto($mainText,
-                InputFile::create(public_path() . "/images/cashman2.jpg"),
+                InputFile::create(public_path() . "/images/cashman-wheel-of-fortune.png"),
                 [
                     [
                         ["text" => $btnText, "web_app" => [

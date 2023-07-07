@@ -187,6 +187,10 @@ export default {
                       title: 'Изображение',
                       type: 'image',
                   },
+                   {
+                      title: 'Цвет',
+                      type: 'color',
+                  },
                   {
                       title: 'Координаты',
                       type: 'coords',
