@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::table('action_statuses', function (Blueprint $table) {
-            $table->foreignId('slug_id')->constrained();
+            $table->foreignId('slug_id')
+                ->nullable()
+                ->constrained("bot_menu_slugs");
             $table->dropColumn('script');
         });
 
