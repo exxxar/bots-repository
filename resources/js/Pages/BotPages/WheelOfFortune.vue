@@ -69,7 +69,7 @@ defineProps({
                                aria-describedby="winForm-name" required>
                     </div>
 
-                    <div class="col-12">
+
                         <h6 class="text-center">Введите свой номер телефона чтобы наш менеджер мог связаться с
                             Вами!</h6>
                         <div class="input-group mb-2">
@@ -85,7 +85,7 @@ defineProps({
                             Получить выигрышь
                         </button>
 
-                    </div>
+
                 </form>
 
             </div>
@@ -164,7 +164,7 @@ export default {
                 prepareForm: {
                     telegram_chat_id: this.tgUserId
                 },
-                bodDomain: this.bot.bot_domain
+                botDomain: this.bot.bot_domain
             }).then((response) => {
                 this.action = response
             })
@@ -185,7 +185,7 @@ export default {
 
             this.$store.dispatch("wheelOfFortuneWin", {
                 winForm: data,
-                bodDomain: this.bot.bot_domain
+                botDomain: this.bot.bot_domain
             }).then((response) => {
 
                 this.winForm = {

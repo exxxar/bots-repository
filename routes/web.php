@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BotPageController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Bots\AdminBotController;
+use App\Http\Controllers\Globals\InstagramQuestScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -283,11 +284,11 @@ Route::prefix("global-scripts")
             });
 
         Route::prefix("instagram-quest")
-            ->controller(WheelOfFortuneScriptController::class)
+            ->controller(InstagramQuestScriptController::class)
             ->group(function () {
-                Route::post('/prepare/{botDomain}', "formWheelOfFortunePrepare");
-                Route::get('/{botDomain}', "formWheelOfFortune");
-                Route::post('/{botDomain}', "formWheelOfFortuneCallback");
+                Route::post('/prepare/{botDomain}', "instagramQuestPrepare");
+                Route::get('/{botDomain}', "instagramQuestForm");
+                Route::post('/{botDomain}', "instagramQuestCallback");
             });
     });
 

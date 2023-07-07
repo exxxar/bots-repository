@@ -1,15 +1,15 @@
 import util from '../utilites';
 import axios from "axios";
 
-const BASE_WHEEL_OF_FORTUNE_LINK = '/global-scripts/wheel-of-fortune'
+const BASE_INSTAGRAM_QUEST_LINK = '/global-scripts/instagram-quest'
 
 let state = {}
 
 const getters = {}
 
 const actions = {
-    async wheelOfFortunePrepare(context, payload = {prepareForm: null, botDomain:null}) {
-        let link = `${BASE_WHEEL_OF_FORTUNE_LINK}/prepare/${payload.botDomain}`
+    async instagramQuestPrepare(context, payload = {prepareForm: null, botDomain:null}) {
+        let link = `${BASE_INSTAGRAM_QUEST_LINK}/prepare/${payload.botDomain}`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.prepareForm)
 
@@ -20,10 +20,10 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async wheelOfFortuneWin(context, payload = {winForm: null, botDomain:null}) {
-        let link = `${BASE_WHEEL_OF_FORTUNE_LINK}/${payload.botDomain}`
+    async instagramQuestResult(context, payload = {instaForm: null, botDomain:null}) {
+        let link = `${BASE_INSTAGRAM_QUEST_LINK}/${payload.botDomain}`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.winForm)
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.instaForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -35,10 +35,10 @@ const actions = {
 }
 const mutations = {}
 
-const wheelOfFortuneModule = {
+const instagramQuestModule = {
     state,
     mutations,
     actions,
     getters
 }
-export default wheelOfFortuneModule;
+export default instagramQuestModule;

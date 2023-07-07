@@ -10,6 +10,7 @@ import pages from './modules/pages';
 import dialogGroups from './modules/dialog_groups';
 import slugs from './modules/slugs';
 import wheelOfFortune from "@/store/modules/globals/wheelOfFortune";
+import instagramQuest from "@/store/modules/globals/instagramQuest";
 import util from "@/store/modules/utilites";
 
 
@@ -87,6 +88,7 @@ export default createStore({
         pages,
         dialogGroups,
         slugs,
-        wheelOfFortune
+        wheelOfFortune,
+        instagramQuest,
     }
 })
