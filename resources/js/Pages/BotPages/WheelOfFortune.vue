@@ -17,7 +17,7 @@ defineProps({
 
         <div class="col-12 mb-2 mt-2">
             <p
-                v-if=" action.current_attempts<action.max_attempts"
+                v-if="canPlay"
                 style="text-align: center;font-size: larger;">Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
                     action.max_attempts || 1
                 }}</strong></p>
@@ -25,7 +25,7 @@ defineProps({
             <p  style="text-align: center;font-size: larger;" v-else>Вы израсходовали все ваши попытки</p>
         </div>
         <div class="col-12 d-flex justify-content-center align-items-center "
-             v-if="!played">
+             v-if="canPlay">
 
             <Roulette
                 ref="wheel"
@@ -52,7 +52,7 @@ defineProps({
 
         </div>
 
-        <div class="col-12 p-2" v-if="!played&&winForm.win">
+        <div class="col-12 p-2" v-if="canPlay&&winForm.win">
 
             <div  class="alert alert-success mb-2" role="alert">
                 <p>Вы выиграли - {{ winForm.win.htmlContent }}.</p>
@@ -119,7 +119,6 @@ export default {
     data() {
         return {
             rouletteKey: 0,
-            played: false,
             action: null,
             winForm: {
                 win: null,
@@ -130,6 +129,9 @@ export default {
         };
     },
     computed: {
+        canPlay(){
+          return this.action.current_attempts<this.action.max_attempts
+        },
         tg() {
             return window.Telegram.WebApp;
         },
@@ -140,8 +142,6 @@ export default {
     mounted() {
 
         this.prepare().then(() => {
-
-            this.played = this.action.completed_at != null
 
             let index = 1;
 
