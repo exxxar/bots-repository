@@ -6,106 +6,105 @@ defineProps({
 });
 </script>
 <template>
-    <div class="row p-2" v-if="action">
-        <div class="col-12 mb-2 mt-2" v-if="rules">
-            <div class="card">
-                <div class="card-body">
-                    <p>{{rules}}</p>
+    <div class="container">
+        <div class="row" v-if="action">
+            <div class="col-12 mb-2 mt-2" v-if="rules">
+                <div class="card">
+                    <div class="card-body">
+                        <p>{{rules}}</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-12 mb-2 mt-2">
-            <p
-                v-if="canPlay"
-                style="text-align: center;font-size: larger;">Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
-                    action.max_attempts || 1
-                }}</strong></p>
+            <div class="col-12 mb-2 mt-2">
+                <p
+                    v-if="canPlay"
+                    style="text-align: center;font-size: larger;">Ваши попытки: <strong>{{ action.current_attempts || 0 }}</strong> из <strong>{{
+                        action.max_attempts || 1
+                    }}</strong></p>
 
-            <p  style="text-align: center;font-size: larger;" v-else>Вы израсходовали все ваши попытки</p>
-        </div>
-        <div class="col-12 d-flex justify-content-center align-items-center "
-             v-if="canPlay">
-
-            <Roulette
-                ref="wheel"
-                size="300"
-                :key="rouletteKey"
-                :items="items"
-                centered-indicator
-                indicator-position="top"
-                display-shadow
-                display-border
-                base-display
-                base-display-indicator
-                base-background="orange"
-                base-display-shadow
-                easing="bounce"
-                @wheel-start="wheelStartedCallback"
-                @wheel-end="wheelEndedCallback"
-                @click="launchWheel"
-            >
-                <template #baseContent>
-                    <div>Поехали</div>
-                </template>
-            </Roulette>
-
-        </div>
-
-        <div class="col-12 p-2" v-if="canPlay&&winForm.win">
-
-            <div  class="alert alert-success mb-2" role="alert">
-                <p>Вы выиграли - {{ winForm.win.htmlContent }}.</p>
+                <p  style="text-align: center;font-size: larger;" v-else>Вы израсходовали все ваши попытки</p>
             </div>
-            <form v-on:submit="submit">
-                <h6 class="text-center">Укажите своё имя, как к Вам может обращаться менеджер?</h6>
-                <div class="input-group mb-3">
+            <div class="col-12 d-flex justify-content-center align-items-center "
+                 v-if="canPlay&&winForm.win==null">
 
-                    <input type="text" class="form-control text-center p-3"
-                           placeholder="Петров Петр Семенович"
-                           aria-label="winForm-name"
-                           v-model="winForm.name"
-                           aria-describedby="winForm-name" required>
+                <Roulette
+                    ref="wheel"
+                    size="300"
+                    :key="rouletteKey"
+                    :items="items"
+                    centered-indicator
+                    indicator-position="top"
+                    display-shadow
+                    display-border
+                    base-display
+                    base-display-indicator
+                    base-background="orange"
+                    base-display-shadow
+                    easing="bounce"
+                    @wheel-start="wheelStartedCallback"
+                    @wheel-end="wheelEndedCallback"
+                    @click="launchWheel"
+                >
+                    <template #baseContent>
+                        <div>Поехали</div>
+                    </template>
+                </Roulette>
+
+            </div>
+
+            <div class="col-12 p-2" v-if="canPlay&&winForm.win">
+
+                <div  class="alert alert-info mb-2" role="alert">
+                    <p>Вы выиграли - {{ winForm.win }}.</p>
                 </div>
+                <form v-on:submit="submit">
+                    <h6 class="text-center">Укажите своё имя, как к Вам может обращаться менеджер?</h6>
+                    <div class="input-group mb-2">
 
-                <div class="col-12">
-                    <h6 class="text-center">Введите свой номер телефона чтобы наш менеджер мог связаться с
-                        Вами!</h6>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control p-3 text-center"
-                               v-mask="'+7(###)###-##-##'"
-                               v-model="winForm.phone"
-                               placeholder="+7(000)000-00-00"
-                               aria-label="winForm-phone" aria-describedby="vipForm-phone" required>
-
+                        <input type="text" class="form-control text-center p-3"
+                               placeholder="Петров Петр Семенович"
+                               aria-label="winForm-name"
+                               v-model="winForm.name"
+                               aria-describedby="winForm-name" required>
                     </div>
 
-                    <button class="btn btn-outline-primary p-3 w-100">
-                        Получить выигрышь
-                    </button>
+                    <div class="col-12">
+                        <h6 class="text-center">Введите свой номер телефона чтобы наш менеджер мог связаться с
+                            Вами!</h6>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control p-3 text-center"
+                                   v-mask="'+7(###)###-##-##'"
+                                   v-model="winForm.phone"
+                                   placeholder="+7(000)000-00-00"
+                                   aria-label="winForm-phone" aria-describedby="vipForm-phone" required>
 
-                </div>
-            </form>
+                        </div>
 
+                        <button class="btn btn-outline-primary p-3 w-100">
+                            Получить выигрышь
+                        </button>
+
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="col-12 p-2">
+                <button
+                    @click="closeWheel"
+                    type="button" class="btn btn-outline-success p-3 w-100">
+                    Вернуться в бота
+                </button>
+            </div>
+        </div>
+        <div class="row" v-else>
+            <div class="col-12">
+                <img v-lazy="'/images/load.gif'" class="w-100" style="object-fit:cover;" alt="">
+            </div>
         </div>
 
-        <div class="col-12 p-2 mt-2">
-            <button
-                @click="closeWheel"
-                type="button" class="btn btn-outline-primary p-3 w-100">
-                Вернуться в бота
-            </button>
-        </div>
     </div>
-    <div class="row" v-else>
-        <div class="col-12">
-            <img v-lazy="'/images/load.gif'" class="w-100" style="object-fit:cover;" alt="">
-        </div>
-    </div>
-    <!--
-    <button @click="$refs.wheel.reset">reset</button>
-    <button @click="rouletteKey += 1">hard reset</button>
-    -->
 
 </template>
 <script>
