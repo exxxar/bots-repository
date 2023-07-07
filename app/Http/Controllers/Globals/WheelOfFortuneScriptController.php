@@ -63,7 +63,7 @@ class WheelOfFortuneScriptController extends Controller
 
         $winMessage = (Collection::make($slug->config)
             ->where("key", self::KEY_WIN_MESSAGE)
-            ->first())["value"] ?? "Вы приняли участие в розыгрыше и выиграли приз под номером %s. Наш менеджер свяжется с вами в ближайшее время!";
+            ->first())["value"] ?? "%s, вы приняли участие в розыгрыше и выиграли приз под номером %s. Наш менеджер свяжется с вами в ближайшее время!";
 
         $action = ActionStatus::query()
             ->where("user_id", $botUser->user_id)
@@ -95,7 +95,7 @@ class WheelOfFortuneScriptController extends Controller
             ->whereDomain($botDomain)
             ->sendMessage($botUser
                 ->telegram_chat_id,
-                sprintf($winMessage, $winNumber))
+                sprintf($winMessage, $winnerName, $winNumber))
             ->sendMessage($callbackChannel,
                 "Участника $winnerPhone ($winnerName) принял участие в розыгрыше и выиграл приз №$winNumber - свяжитесь с ним для дальнейших указаний");
 
