@@ -1,0 +1,19 @@
+models:
+  AmoCrm:
+    bot_id: id foreign:bots
+    client_id: string:255
+    client_secret: string:255
+    auth_code: string:1000
+    redirect_uri: string:255
+    subdomain: string:255
+
+    relationships:
+      belongsTo: Bot
+
+seeders:    AmoCrm
+
+controllers:
+  AmoCrm:
+    resource: api
+
+

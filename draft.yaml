@@ -1,19 +1,22 @@
 models:
-  AmoCrm:
+  Shop:
     bot_id: id foreign:bots
-    client_id: string:255
-    client_secret: string:255
-    auth_code: string:1000
-    redirect_uri: string:255
-    subdomain: string:255
-
+    title: string:255
+    client_id: string:255 nullable
+    client_secret: string:255 nullable
+    auth_code: string:1000 nullable
+    redirect_uri: string:255 nullable
+    config: json nullable
+    template: string:255
     relationships:
       belongsTo: Bot
 
-seeders:    AmoCrm
+
+
+seeders: Shop
 
 controllers:
-  AmoCrm:
+  Shop:
     resource: api
 
 
