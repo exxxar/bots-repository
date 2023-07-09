@@ -1,4 +1,5 @@
 import './bootstrap';
+import router from './router'
 
 import {createApp, h} from 'vue';
 import {createInertiaApp} from '@inertiajs/vue3';
@@ -45,6 +46,7 @@ createInertiaApp({
             .use(VueTheMask)
             .use(Notifications)
             .use(Popper)
+            .use(router)
             .use(VueSocialSharing)
             .use(PerfectScrollbar)
             .use(ZiggyVue, Ziggy)

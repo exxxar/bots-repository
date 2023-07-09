@@ -363,7 +363,11 @@ import Layout from "@/Layouts/ShopLayout.vue";
     </Layout>
 </template>
 <script>
-$.card_extender();
 
-export default {}
+
+export default {
+    mounted() {
+        $.card_extender();
+    }
+}
 </script>

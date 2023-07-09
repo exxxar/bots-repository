@@ -1,0 +1,1 @@
+import{_ as o}from"./app-6b1c3c55.js";import{_ as t}from"./_plugin-vue_export-helper-c27b6911.js";const a={name:"App",components:{"shop-layout":o},data(){return{layout:"shop-layout"}}};function n(p,r,s,e,_,c){return null}const m=t(a,[["render",n]]);export{m as default};

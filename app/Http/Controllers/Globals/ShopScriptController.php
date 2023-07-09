@@ -41,9 +41,9 @@ class ShopScriptController extends Controller
 
     }
 
-    public function shopHomepage($botDomain)
+    public function shopHomepage( $botDomain)
     {
-        $bot = \App\Models\Bot::query()
+      /*  $bot = \App\Models\Bot::query()
             ->where("bot_domain", $botDomain)
             ->first();
 
@@ -52,13 +52,11 @@ class ShopScriptController extends Controller
             ->where("bot_id", $bot->id)
             ->where("slug", self::SCRIPT)
             ->orderBy("updated_at", "desc")
-            ->first();
+            ->first();*/
 
         Inertia::setRootView("shop");
 
-        return Inertia::render('Shop/Home', [
-            'bot' => json_decode($bot->toJson()),
-        ]);
+        return Inertia::render('Shop/Main');
 
     }
 
@@ -81,7 +79,7 @@ class ShopScriptController extends Controller
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/shop/home/$bot->bot_domain"
+                            "url" => env("APP_URL") . "/global-scripts/shop/$bot->bot_domain"
                         ]],
                     ],
 
