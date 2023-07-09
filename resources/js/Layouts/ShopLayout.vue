@@ -28,13 +28,13 @@ import {Head} from '@inertiajs/vue3'
             <a href="#" data-menu="menu-main" class="header-icon header-icon-4"><i class="fas fa-bars"></i></a>
         </div>
         <div id="footer-bar" class="footer-bar-5">
-            <a href="/global-scripts/shop/products/isushibot">
+            <a @click="openLink('/global-scripts/shop/products/isushibot')">
                 <i data-feather="heart" data-feather-line="1"
                    data-feather-size="21" data-feather-color="red2-dark" data-feather-bg="red2-fade-light"></i><span>Продукты</span></a>
             <a href="index-media.html">
                 <i data-feather="image" data-feather-line="1" data-feather-size="21"
                    data-feather-color="green1-dark" data-feather-bg="green1-fade-light"></i><span>Media</span></a>
-            <a href="/global-scripts/shop/home/isushibot">
+            <a @click="openLink('/global-scripts/shop/home/isushibot')">
                 <i data-feather="home" data-feather-line="1" data-feather-size="21"
                    data-feather-color="blue2-dark" data-feather-bg="blue2-fade-light"></i><span>Домой</span></a>
             <a href="index-pages.html" class="active-nav"><i data-feather="file" data-feather-line="1" data-feather-size="21" data-feather-color="brown1-dark" data-feather-bg="brown1-fade-light"></i><span>Pages</span></a>
@@ -76,107 +76,24 @@ import {Head} from '@inertiajs/vue3'
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["active"],
-    data() {
-        return {
-            load: false,
-            bot: null,
-            company: null
-        }
-    },
     computed: {
-        ...mapGetters(['getErrors', 'getCurrentBot', 'getCurrentCompany']),
-    },
-    watch: {
-        getErrors: function (newVal, oldVal) {
-            Object.keys(newVal).forEach(key => {
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: newVal[key],
-                    type: 'warn'
-                });
-            })
-
+        tg() {
+            return window.Telegram.WebApp;
+        },
+        tgUser() {
+            const urlParams = new URLSearchParams(this.tg.initData);
+            return JSON.parse(urlParams.get('user'));
         }
     },
-    mounted() {
-        this.loadCurrentCompany()
-        this.loadCurrentBot()
-
-
-        window.addEventListener('store_current_bot-change-event', (event) => {
-            this.bot = this.getCurrentBot
-        });
-
-        window.addEventListener('store_current_company-change-event', (event) => {
-            this.company = this.getCurrentCompany
-        });
+    methods: {
+        openLink(url){
+            this.tg.openLink(url,{
+                try_instant_view:true
+            })
+        }
     },
 
-    methods: {
-        loadCurrentCompany(company = null) {
-            this.$store.dispatch("updateCurrentCompany", {
-                company: company
-            }).then(() => {
-                this.company = this.getCurrentCompany
-            })
-        },
-        loadCurrentBot(bot = null) {
-            this.$store.dispatch("updateCurrentBot", {
-                bot: bot
-            }).then(() => {
-                this.bot = this.getCurrentBot
-            })
-        },
-        resetCompany() {
-            this.$store.dispatch("resetCurrentCompany").then(() => {
-                this.company = null
 
-                window.dispatchEvent(new CustomEvent('store_current_company-change-event'));
-            })
-        },
-        resetBot() {
-            this.$store.dispatch("resetCurrentBot").then(() => {
-                this.bot = null
-
-                window.dispatchEvent(new CustomEvent('store_current_bot-change-event'));
-            })
-        },
-        stopAllDialogs() {
-            this.$store.dispatch("stopDialogs").then((response) => {
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Все диалоги остановлены",
-                    type: 'success'
-                });
-
-            }).catch(err => {
-            })
-        },
-        reloadWebhooks() {
-            this.load = true
-            this.$notify({
-                title: "Конструктор ботов",
-                text: "Процедура обновления зависимостей началась",
-            });
-            axios.get("/bot/register-webhooks").then(() => {
-                this.load = false
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Зависимости успешно обновлены!",
-                    type: 'success'
-                });
-            }).catch(() => {
-                this.load = false
-
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Неудалось обновить зависимости",
-                    type: 'error'
-                });
-            })
-        },
-    }
 }
 </script>
 
