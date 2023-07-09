@@ -1,36 +1,36 @@
 //Loading the Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('_service-worker.js', {scope: ''});
+    navigator.serviceWorker.register('/shop/scripts/_service-worker.js', {scope: ''});
   });
 }
 
 
-$(document).ready(function(){      
-    'use strict'	
-    
+$(document).ready(function(){
+    'use strict'
+
     var pwaVersion = '2.1'; //must be identical to _manifest.json version. If not it will create update window loop
     var pwaCookie = true; // if set to false, the PWA prompt will appear even if the user selects "maybe later"
     var pwaNoCache = true; // always keep the cache clear to serve the freshest possible content
-    
-    
+
+
     $('[data-pwa-version]').data('pwa-version', pwaVersion);
 
-        
+
     //Creating Cookie System for PWA Hide
     function createCookie(e, t, n) {if (n) {var o = new Date;o.setTime(o.getTime() + 48 * n * 60 * 60 * 1e3);var r = "; expires=" + o.toGMTString()} else var r = "";document.cookie = e + "=" + t + r + "; path=/"}
     function readCookie(e) {for (var t = e + "=", n = document.cookie.split(";"), o = 0; o < n.length; o++) {for (var r = n[o];" " == r.charAt(0);) r = r.substring(1, r.length);if (0 == r.indexOf(t)) return r.substring(t.length, r.length)}return null}
     function eraseCookie(e) {createCookie(e, "", -1)}
-    
+
     //Enabling dismiss button
     setTimeout(function(){
         $('.pwa-dismiss').on('click',function(){
             console.log('User Closed Add to Home / PWA Prompt')
             createCookie('Azures_pwa_rejected_install', true, 1);
-            $('body').find('#menu-install-pwa-android, #menu-install-pwa-ios, .menu-hider').removeClass('menu-active'); 
+            $('body').find('#menu-install-pwa-android, #menu-install-pwa-ios, .menu-hider').removeClass('menu-active');
         });
     },1500);
-            
+
     //Detecting Mobile Operating Systems
     var isMobile = {
         Android: function() {return navigator.userAgent.match(/Android/i);},
@@ -39,8 +39,8 @@ $(document).ready(function(){
     };
     var isInWebAppiOS = (window.navigator.standalone == true);
     var isInWebAppChrome = (window.matchMedia('(display-mode: standalone)').matches);
-    
-    //Firing PWA prompts for specific versions and when not on home screen.    
+
+    //Firing PWA prompts for specific versions and when not on home screen.
     if (isMobile.Android()) {
         console.log('Android Detected');
         function showInstallPromotion(){
@@ -80,8 +80,8 @@ $(document).ready(function(){
         window.addEventListener('appinstalled', (evt) => {
             $('#menu-install-pwa-android, .menu-hider').removeClass('menu-active')
         });
-    }  
-    
+    }
+
     if (isMobile.iOS()) {
         if(!isInWebAppiOS){
             console.log('iOS Detected');
@@ -97,8 +97,8 @@ $(document).ready(function(){
                 console.log('The div #menu-install-pwa-ios was not found. Please add this div to show the install window')
             }
         }
-    }    
-    
+    }
+
     //Creating Update Modal
     function updateModal(){
         var body = $('body');
@@ -108,12 +108,12 @@ $(document).ready(function(){
         if(!updateModal.length){
            body.append('<div id="menu-update"></div>');
            setTimeout(function(){
-               body.find('#menu-update').load('menu-update.html?ver='+menuUpdate);   
+               body.find('#menu-update').load('menu-update.html?ver='+menuUpdate);
            },250);
         }
     };
-    
-    
+
+
     //Update Version in 5 Seconds After New Version Detected
     function updateButton(){
         var counter = 3;
@@ -126,8 +126,8 @@ $(document).ready(function(){
                 window.location.reload(true)
             }
         }, 1000);
-        caches.delete('workbox-runtime').then(function() { 
-          console.log('Content Updated - Cache Removed!'); 
+        caches.delete('workbox-runtime').then(function() {
+          console.log('Content Updated - Cache Removed!');
         });
         localStorage.clear();
         sessionStorage.clear()
@@ -137,17 +137,17 @@ $(document).ready(function(){
           });
         });
     };
-        
-    //Check Version    
+
+    //Check Version
     function check_version(){
         if($('link[data-pwa-version]').length){
-            function versionCheck(){        
+            function versionCheck(){
                 var dt = new Date();
                 var maniTimeVersion = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
                 var localVersionNumber = $('link[rel="manifest"]').data('pwa-version');
                 var onlineVersionJSON = "_manifest.json?ver=" + maniTimeVersion;
                 var onlineVersionNumber = "Connection Offline. Waiting to Reconect";
-                $.getJSON(onlineVersionJSON, function(onlineData) {onlineVersionNumber = onlineData.version;}); 
+                $.getJSON(onlineVersionJSON, function(onlineData) {onlineVersionNumber = onlineData.version;});
                 setTimeout(function(){
                     //console.log(' Checking PWA Content for updates...\n PWA Server Version: ' + onlineVersionNumber + '\n' + ' PWA Cached Version: ' + localVersionNumber);
                     if(onlineVersionNumber != localVersionNumber && onlineVersionNumber != "Connection Offline. Waiting to Reconect"){
@@ -155,16 +155,16 @@ $(document).ready(function(){
                         console.log('New Version of Content Available. Refreshing. On Desktop Browsers a manual refresh maybe required.')
                         setTimeout(function(){
                             $('body').find('#menu-update').addClass('menu-active');
-                            $('.menu-hider').addClass('menu-active-no-click');    
+                            $('.menu-hider').addClass('menu-active-no-click');
                             updateButton();
                         },500);
-                    }     
-                    if(onlineVersionNumber == localVersionNumber){/*No update required. Versions Identical*/}    
-                    if(onlineVersionNumber === "undefined"){/*Error Checking for Updates*/}    
+                    }
+                    if(onlineVersionNumber == localVersionNumber){/*No update required. Versions Identical*/}
+                    if(onlineVersionNumber === "undefined"){/*Error Checking for Updates*/}
                     if(onlineVersionNumber === "Finding Online Version..."){
-                        $('.reloadme').addClass('disabled'); 
+                        $('.reloadme').addClass('disabled');
                         $('body').find('#menu-update').removeClass('menu-active');
-                        $('.menu-hider').removeClass('menu-active-no-click');                
+                        $('.menu-hider').removeClass('menu-active-no-click');
                     }
                 },3000);
             }
@@ -178,15 +178,15 @@ $(document).ready(function(){
     if(pwaCookie == false){
         eraseCookie('Azures_pwa_rejected_install');
     }
-    
-    //Reload To Clear Button    
+
+    //Reload To Clear Button
     $('body').on('click', '.page-update, .reloadme', function() {
         location.reload();
     });
-    
+
     //Check for Version Change if Online If not Kill the Function
     if (navigator.onLine) {check_version();} else {function check_version(){}}
-    
+
     //Adding Offline Alerts
     var offlineAlerts = $('.offline-message');
 
@@ -194,24 +194,24 @@ $(document).ready(function(){
         $('body').append('<p class="offline-message bg-red2-dark color-white center-text uppercase ultrabold">No internet connection detected</p> ');
         $('body').append('<p class="online-message bg-green1-dark color-white center-text uppercase ultrabold">You are back online</p>');
     }
-    
+
     //Offline Function Show
     function isOffline(){
         $('.offline-message').addClass('offline-message-active');
         $('.online-message').removeClass('online-message-active');
         setTimeout(function(){$('.offline-message').removeClass('offline-message-active');},2000);
     }
-    
+
     //Online Function Show
     function isOnline(){
         $('.online-message').addClass('online-message-active');
         $('.offline-message').removeClass('offline-message-active');
         setTimeout(function(){$('.online-message').removeClass('online-message-active');},2000);
-    }    
-    
+    }
+
     $('.simulate-offline').on('click',function(){isOffline();})
     $('.simulate-online').on('click',function(){isOnline();})
-        
+
     //Disable links to other pages if offline.
     //Warning! Enabling offline for iOS can cause issues
     //To allow offline functionality delete the next 7 lines
@@ -220,9 +220,9 @@ $(document).ready(function(){
         if(detectHREF.match(/.html/)){
             isOffline();
             return false;
-        }  
-    }  
-    
+        }
+    }
+
     //Check if Online / Offline
     function updateOnlineStatus(event) {
     var condition = navigator.onLine ? "online" : "offline";
@@ -237,10 +237,10 @@ $(document).ready(function(){
     }
     window.addEventListener('online',  updateOnlineStatus);
     window.addEventListener('offline', updateOfflineStatus);
-    
- 
+
+
     if(pwaNoCache == true){
-        caches.delete('workbox-runtime').then(function() { 
+        caches.delete('workbox-runtime').then(function() {
         });
         localStorage.clear();
         sessionStorage.clear()
@@ -250,6 +250,6 @@ $(document).ready(function(){
           });
         });
     }
-    
- 
-}); 
+
+
+});

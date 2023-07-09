@@ -296,7 +296,8 @@ Route::prefix("global-scripts")
             ->controller(ShopScriptController::class)
             ->group(function () {
                 Route::post('/prepare/{botDomain}', "instagramQuestPrepare");
-                Route::get('/{botDomain}', "shopHomepage");
+                Route::get('/products/{botDomain}', "shopProducts");
+                Route::get('/home/{botDomain}', "shopHomepage");
                 Route::post('/{botDomain}', "instagramQuestCallback");
             });
     });

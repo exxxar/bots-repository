@@ -20,6 +20,27 @@ class ShopScriptController extends Controller
     const KEY_MAIN_TEXT = "main_text";
     const KEY_BTN_TEXT = "btn_text";
 
+    public function shopProducts($botDomain)
+    {
+        $bot = \App\Models\Bot::query()
+            ->where("bot_domain", $botDomain)
+            ->first();
+
+
+        $slug = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where("slug", self::SCRIPT)
+            ->orderBy("updated_at", "desc")
+            ->first();
+
+        Inertia::setRootView("shop");
+
+        return Inertia::render('Shop/Products', [
+            'bot' => json_decode($bot->toJson()),
+        ]);
+
+    }
+
     public function shopHomepage($botDomain)
     {
         $bot = \App\Models\Bot::query()
@@ -35,7 +56,7 @@ class ShopScriptController extends Controller
 
         Inertia::setRootView("shop");
 
-        return Inertia::render('BotPages/Shop', [
+        return Inertia::render('Shop/Home', [
             'bot' => json_decode($bot->toJson()),
         ]);
 
@@ -60,7 +81,7 @@ class ShopScriptController extends Controller
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/shop/$bot->bot_domain"
+                            "url" => env("APP_URL") . "/global-scripts/shop/home/$bot->bot_domain"
                         ]],
                     ],
 

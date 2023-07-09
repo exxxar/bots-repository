@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-c27b6911.js";import{c as t,o}from"./app-273ab9a7.js";const r={};function s(c,a,n,p,_,f){return o(),t("h1",null,"test categories")}const m=e(r,[["render",s]]);export{m as default};

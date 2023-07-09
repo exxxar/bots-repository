@@ -4,6 +4,7 @@ defineProps({
 });
 </script>
 <template>
+    <h6>РОУТЕР</h6>
 
 </template>
 <script>
