@@ -115,11 +115,12 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
+import baseJS from '../custom.js'
 
 export default {
     watch: {
         $route(newRouteValue) {
-            console.log(newRouteValue); // {name: "About", meta: {…}, path: "/about", hash: "", query: {…}, …}
+            baseJS.handler()
         },
     },
     computed: {

@@ -284,13 +284,12 @@
 
 </template>
 <script>
-import test from '../../custom.js'
+
 
 export default {
 
     mounted() {
-        test.handler()
-        console.log("2")
+
     }
 }
 </script>
