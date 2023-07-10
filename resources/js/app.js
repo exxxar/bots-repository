@@ -1,6 +1,6 @@
 import './bootstrap';
 
-
+import BotNotification from './modules/notifications.js'
 
 import router from './router'
 
@@ -42,6 +42,8 @@ createInertiaApp({
                 return moment(date).fromNow()
             },
         }
+
+        app.config.globalProperties.$botNotification = BotNotification
 
         app
             .use(plugin)

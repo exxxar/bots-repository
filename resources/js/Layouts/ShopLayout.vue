@@ -2,6 +2,7 @@
 
 import {Head} from '@inertiajs/vue3'
 
+import Notifications from "@/Components/Shop/Notifications.vue";
 
 import SideBar from "@/Components/Shop/SideBar.vue";
 import ShareMenuBar from "@/Components/Shop/ShareMenuBar.vue";
@@ -14,11 +15,13 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
         <meta name="description" content="CashMan - система твоего бизнеса внутри"/>
     </Head>
 
-    <notifications position="top right"/>
 
-<!--
-    <div id="preloader"><div class="spinner-border color-highlight" role="status"></div></div>
--->
+    <Notifications/>
+
+
+    <div id="preloader">
+        <div class="spinner-border color-highlight" role="status"></div>
+    </div>
 
     <div id="page">
 
@@ -26,8 +29,10 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
         <div class="header header-fixed header-auto-show header-logo-app">
             <a @click="closeShop" class="header-title header-subtitle">Вернуться в бота</a>
             <a href="#" data-back-button class="header-icon header-icon-1"><i class="fas fa-arrow-left"></i></a>
-            <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-dark"><i class="fas fa-sun"></i></a>
-            <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-light"><i class="fas fa-moon"></i></a>
+            <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-dark"><i
+                class="fas fa-sun"></i></a>
+            <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-light"><i
+                class="fas fa-moon"></i></a>
             <a href="#" data-menu="menu-highlights" class="header-icon header-icon-3"><i class="fas fa-brush"></i></a>
             <a href="#" data-menu="menu-main" class="header-icon header-icon-4"><i class="fas fa-bars"></i></a>
         </div>
@@ -46,7 +51,7 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/products'">
                 <i class="fa fa-star"></i><span class="color-white">Продукты</span>
-                    <strong v-if="$route.path==prefix+'/products'"></strong>
+                <strong v-if="$route.path==prefix+'/products'"></strong>
             </router-link>
 
             <router-link
@@ -59,7 +64,8 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
             <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/basket'">
-                <i class="fa fa-heart"></i><span class="color-white">Корзина</span><em class="badge bg-green1-dark">3</em>
+                <i class="fa fa-heart"></i><span class="color-white">Корзина</span><em
+                class="badge bg-green1-dark">3</em>
                 <strong v-if="$route.path==prefix+'/basket'"></strong>
             </router-link>
 
@@ -71,37 +77,6 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
             </router-link>
 
         </div>
-
-<!--        <div id="footer-bar" class="footer-bar-5">
-            <router-link
-                :tag="'a'" to="/favorites">
-                <i data-feather="heart"
-                   data-feather-line="1"
-                   data-feather-size="21"
-                   data-feather-color="red2-dark"
-                   data-feather-bg="red2-fade-light"></i><span>Понравилось</span>
-            </router-link>
-            <router-link :tag="'a'"
-                         to="/products">
-                <i data-feather="image" data-feather-line="1" data-feather-size="21" data-feather-color="green1-dark" data-feather-bg="green1-fade-light"></i><span>Продукты</span>
-            </router-link>
-
-            <router-link
-                :tag="'a'" to="/home">
-                <i data-feather="home" data-feather-line="1" data-feather-size="21" data-feather-color="blue2-dark" data-feather-bg="blue2-fade-light"></i><span>Домой</span>
-            </router-link>
-
-            <a href="index-media.html">
-                <i data-feather="image" data-feather-line="1" data-feather-size="21"
-                   data-feather-color="green1-dark" data-feather-bg="green1-fade-light"></i><span>Media</span></a>
-&lt;!&ndash;            <a @click="openLink('/global-scripts/shop/home/isushibot')">
-                <i data-feather="home" data-feather-line="1" data-feather-size="21"
-                   data-feather-color="blue2-dark" data-feather-bg="blue2-fade-light"></i><span>Домой</span></a>&ndash;&gt;
-            <a href="index-pages.html" class="active-nav">
-                <i data-feather="file" data-feather-line="1"
-                   data-feather-size="21" data-feather-color="brown1-dark" data-feather-bg="brown1-fade-light"></i><span>Pages</span></a>
-            <a href="/settings"><i data-feather="settings" data-feather-line="1" data-feather-size="21" data-feather-color="gray2-dark" data-feather-bg="gray2-fade-light"></i><span>Settings</span></a>
-        </div>-->
 
 
         <slot/>
@@ -115,7 +90,7 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
-import baseJS from '../custom.js'
+import baseJS from '../modules/custom.js'
 
 export default {
     watch: {
@@ -124,8 +99,8 @@ export default {
         },
     },
     computed: {
-        prefix(){
-          return window.currentPath || ''
+        prefix() {
+            return window.currentPath || ''
         },
         tg() {
             return window.Telegram.WebApp;
@@ -139,14 +114,15 @@ export default {
 
     },
     methods: {
-        openLink(url){
-            this.tg.openLink(url,{
-                try_instant_view:true
+        openLink(url) {
+            this.tg.openLink(url, {
+                try_instant_view: true
             })
         },
-        closeShop(){
+        closeShop() {
             this.tg.close()
-        }
+        },
+
     },
 
 

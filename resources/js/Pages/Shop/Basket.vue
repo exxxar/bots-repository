@@ -169,7 +169,7 @@
 
 export default {
     mounted() {
-        $.card_extender();
+        this.$botNotification.successBox("Test","teeeeeeeeeees")
     }
 }
 </script>

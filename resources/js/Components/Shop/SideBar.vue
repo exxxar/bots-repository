@@ -1,9 +1,9 @@
 <template>
     <div id="menu-main"
          class="menu menu-box-right menu-box-detached rounded-m "
-         v-bind:class="{'menu-active':isActive}"
-         @click="isActive = !isActive"
-         style="display: block; width: 260px;">
+         data-menu-width="260"
+         data-menu-active="nav-features"
+         data-menu-effect="menu-over">
 
 
         <div class="menu-header">
@@ -14,7 +14,7 @@
         <a href="#" data-menu="menu-share" class="border-right-0">
             <i class="fa font-12 color-red2-dark fa-share-alt"></i></a>
         <a href="#" class="border-right-0"><i class="fa font-12 color-blue2-dark fa-cog"></i></a>
-        <a @click="isActive = false" class="border-right-0"><i class="fa font-12 color-red2-dark fa-times"></i></a>
+        <a class="border-right-0"><i class="fa font-12 color-red2-dark fa-times"></i></a>
     </div>
 
         <div class="menu-logo text-center">

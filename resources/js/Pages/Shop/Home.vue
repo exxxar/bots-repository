@@ -484,7 +484,12 @@
 
 export default {
     mounted() {
-        $.card_extender();
+
+
+        this.$botNotification.notification("Test","teeeeeeeeeees")
+
+      //  this.$notify({ type: "success", text: "The operation completed" });
+
     }
 }
 </script>
