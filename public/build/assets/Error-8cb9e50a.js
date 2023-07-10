@@ -1,1 +1,0 @@
-import{_ as t,c as o,o as s,a as e}from"./app-2700d8b1.js";const r={data(){return{}},computed:{},mounted(){},methods:{}},a={class:"container"},c=e("div",{class:"row"},[e("div",{class:"alert alert-danger",role:"alert"}," Ошибка работы с ботом ")],-1),n=[c];function d(_,i,l,p,m,u){return s(),o("div",a,n)}const h=t(r,[["render",d]]);export{h as default};

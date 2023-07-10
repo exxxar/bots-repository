@@ -28,16 +28,9 @@
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
 </head>
-
-
 <body class="theme-light" data-highlight="orange">
-
-
-
-        @inertia
-
-        <script type="text/javascript" src="/shop/scripts/jquery.js"></script>
-        <script type="text/javascript" src="/shop/scripts/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/shop/scripts/custom.js"></script>
+@inertia
+<script type="text/javascript" src="/shop/scripts/jquery.js"></script>
+<script type="text/javascript" src="/shop/scripts/bootstrap.min.js"></script>
 </body>
 </html>

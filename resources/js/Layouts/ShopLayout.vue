@@ -33,40 +33,40 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
         </div>
 
 
-        <div id="footer-bar" class="footer-bar-2 mb-2 ml-2 mr-2 rounded-m">
+        <div id="footer-bar" class="footer-bar-5 bg-dark2-dark mb-2 ml-2 mr-2 rounded-m">
 
             <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/favorites'">
-                <i class="fa fa-heart"></i><span>Избранное</span>
+                <i class="fa fa-heart"></i><span class="color-white">Избранное</span>
                 <strong v-if="$route.path==prefix+'/favorites'"></strong>
             </router-link>
 
             <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/products'">
-                <i class="fa fa-star"></i><span>Продукты</span>
+                <i class="fa fa-star"></i><span class="color-white">Продукты</span>
                     <strong v-if="$route.path==prefix+'/products'"></strong>
             </router-link>
 
             <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/home'">
-                <i class="fa fa-home"></i><span>Домой</span>
+                <i class="fa fa-home"></i><span class="color-white">Домой</span>
                 <strong v-if="$route.path==prefix+'/home'"></strong>
             </router-link>
 
             <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/basket'">
-                <i class="fa fa-heart"></i><span>Корзина</span><em class="badge bg-green1-dark">3</em>
+                <i class="fa fa-heart"></i><span class="color-white">Корзина</span><em class="badge bg-green1-dark">3</em>
                 <strong v-if="$route.path==prefix+'/basket'"></strong>
             </router-link>
 
             <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/settings'">
-                <i class="fa fa-cog"></i><span>Настройки</span>
+                <i class="fa fa-cog"></i><span class="color-white">Настройки</span>
                 <strong v-if="$route.path==prefix+'/settings'"></strong>
             </router-link>
 
