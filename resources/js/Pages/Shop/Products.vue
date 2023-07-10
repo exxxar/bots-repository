@@ -3,7 +3,7 @@
 
 
         <div class="page-title page-title-small">
-            <h2><a href="#" data-back-button=""><i class="fa fa-arrow-left"></i></a>Store Product 1</h2>
+            <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i></a>Store Product 1</h2>
             <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img"
                data-src="/shop/images/avatars/5s.png"
                style="background-image: url(&quot;images/avatars/5s.png&quot;);"></a>
@@ -444,7 +444,7 @@
 
 </template>
 <script>
-
+import '@/custom.js'
 
 export default {
     mounted() {

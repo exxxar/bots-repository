@@ -2,7 +2,7 @@
 
 
         <div class="page-title page-title-small">
-            <h2><a href="#" data-back-button=""><i class="fa fa-arrow-left"></i></a>Cart 1</h2>
+            <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i></a>Cart 1</h2>
             <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img" data-src="images/avatars/5s.png" style="background-image: url(&quot;images/avatars/5s.png&quot;);"></a>
         </div>
         <div class="card header-card shape-rounded" data-card-height="150" style="height: 150px;">
@@ -165,7 +165,7 @@
 
 </template>
 <script>
-
+import '@/custom.js'
 
 export default {
     mounted() {
