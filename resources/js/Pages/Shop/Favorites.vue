@@ -98,7 +98,7 @@
 
 </template>
 <script>
-import '@/custom.js'
+
 
 export default {
     mounted() {
