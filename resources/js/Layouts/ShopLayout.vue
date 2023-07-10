@@ -18,10 +18,10 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
 
     <Notifications/>
 
-
+<!--
     <div id="preloader">
         <div class="spinner-border color-highlight" role="status"></div>
-    </div>
+    </div>-->
 
     <div id="page">
 
