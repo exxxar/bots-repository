@@ -43,7 +43,7 @@ class ShopScriptController extends Controller
 
     public function shopHomepage( $botDomain)
     {
-      /*  $bot = \App\Models\Bot::query()
+        $bot = \App\Models\Bot::query()
             ->where("bot_domain", $botDomain)
             ->first();
 
@@ -52,11 +52,13 @@ class ShopScriptController extends Controller
             ->where("bot_id", $bot->id)
             ->where("slug", self::SCRIPT)
             ->orderBy("updated_at", "desc")
-            ->first();*/
+            ->first();
 
         Inertia::setRootView("shop");
 
-        return Inertia::render('Shop/Main');
+        return Inertia::render('Shop/Main', [
+            'bot' => json_decode($bot->toJson()),
+        ]);
 
     }
 

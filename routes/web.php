@@ -297,7 +297,7 @@ Route::prefix("global-scripts")
             ->group(function () {
                 Route::post('/prepare/{botDomain}', "instagramQuestPrepare");
              //   Route::get('/products/{botDomain}', "shopProducts");
-                Route::get('/{botDomain}', "shopHomepage");
+                Route::get('/{botDomain}/{path?}', "shopHomepage");
                 Route::post('/{botDomain}', "instagramQuestCallback");
             });
     });

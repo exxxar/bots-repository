@@ -2,6 +2,10 @@
 
 import {Head} from '@inertiajs/vue3'
 
+
+import SideBar from "@/Components/Shop/SideBar.vue";
+import ShareMenuBar from "@/Components/Shop/ShareMenuBar.vue";
+import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
 </script>
 <template>
 
@@ -27,48 +31,85 @@ import {Head} from '@inertiajs/vue3'
             <a href="#" data-menu="menu-highlights" class="header-icon header-icon-3"><i class="fas fa-brush"></i></a>
             <a href="#" data-menu="menu-main" class="header-icon header-icon-4"><i class="fas fa-bars"></i></a>
         </div>
-        <div id="footer-bar" class="footer-bar-5">
-            <a @click="openLink('/global-scripts/shop/products/isushibot')">
-                <i data-feather="heart" data-feather-line="1"
-                   data-feather-size="21" data-feather-color="red2-dark" data-feather-bg="red2-fade-light"></i><span>Продукты</span></a>
+
+
+        <div id="footer-bar" class="footer-bar-2 mb-2 ml-2 mr-2 rounded-m">
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="prefix+'/favorites'">
+                <i class="fa fa-heart"></i><span>Избранное</span>
+                <strong v-if="$route.path==prefix+'/favorites'"></strong>
+            </router-link>
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="prefix+'/products'">
+                <i class="fa fa-star"></i><span>Продукты</span>
+                    <strong v-if="$route.path==prefix+'/products'"></strong>
+            </router-link>
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="prefix+'/home'">
+                <i class="fa fa-home"></i><span>Домой</span>
+                <strong v-if="$route.path==prefix+'/home'"></strong>
+            </router-link>
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="prefix+'/basket'">
+                <i class="fa fa-heart"></i><span>Корзина</span><em class="badge bg-green1-dark">3</em>
+                <strong v-if="$route.path==prefix+'/basket'"></strong>
+            </router-link>
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="prefix+'/settings'">
+                <i class="fa fa-cog"></i><span>Настройки</span>
+                <strong v-if="$route.path==prefix+'/settings'"></strong>
+            </router-link>
+
+        </div>
+
+<!--        <div id="footer-bar" class="footer-bar-5">
+            <router-link
+                :tag="'a'" to="/favorites">
+                <i data-feather="heart"
+                   data-feather-line="1"
+                   data-feather-size="21"
+                   data-feather-color="red2-dark"
+                   data-feather-bg="red2-fade-light"></i><span>Понравилось</span>
+            </router-link>
+            <router-link :tag="'a'"
+                         to="/products">
+                <i data-feather="image" data-feather-line="1" data-feather-size="21" data-feather-color="green1-dark" data-feather-bg="green1-fade-light"></i><span>Продукты</span>
+            </router-link>
+
+            <router-link
+                :tag="'a'" to="/home">
+                <i data-feather="home" data-feather-line="1" data-feather-size="21" data-feather-color="blue2-dark" data-feather-bg="blue2-fade-light"></i><span>Домой</span>
+            </router-link>
+
             <a href="index-media.html">
                 <i data-feather="image" data-feather-line="1" data-feather-size="21"
                    data-feather-color="green1-dark" data-feather-bg="green1-fade-light"></i><span>Media</span></a>
-            <a @click="openLink('/global-scripts/shop/home/isushibot')">
+&lt;!&ndash;            <a @click="openLink('/global-scripts/shop/home/isushibot')">
                 <i data-feather="home" data-feather-line="1" data-feather-size="21"
-                   data-feather-color="blue2-dark" data-feather-bg="blue2-fade-light"></i><span>Домой</span></a>
-            <a href="index-pages.html" class="active-nav"><i data-feather="file" data-feather-line="1" data-feather-size="21" data-feather-color="brown1-dark" data-feather-bg="brown1-fade-light"></i><span>Pages</span></a>
-            <a href="index-settings.html"><i data-feather="settings" data-feather-line="1" data-feather-size="21" data-feather-color="gray2-dark" data-feather-bg="gray2-fade-light"></i><span>Settings</span></a>
-        </div>
+                   data-feather-color="blue2-dark" data-feather-bg="blue2-fade-light"></i><span>Домой</span></a>&ndash;&gt;
+            <a href="index-pages.html" class="active-nav">
+                <i data-feather="file" data-feather-line="1"
+                   data-feather-size="21" data-feather-color="brown1-dark" data-feather-bg="brown1-fade-light"></i><span>Pages</span></a>
+            <a href="/settings"><i data-feather="settings" data-feather-line="1" data-feather-size="21" data-feather-color="gray2-dark" data-feather-bg="gray2-fade-light"></i><span>Settings</span></a>
+        </div>-->
+
 
         <slot/>
 
         <!-- end of page content-->
-
-        <div id="menu-share"
-             class="menu menu-box-bottom menu-box-detached rounded-m"
-             data-menu-load="menu-share.html"
-             data-menu-height="420"
-             data-menu-effect="menu-over">
-        </div>
-
-        <div id="menu-highlights"
-             class="menu menu-box-bottom menu-box-detached rounded-m"
-             data-menu-load="menu-colors.html"
-             data-menu-height="510"
-             data-menu-effect="menu-over">
-        </div>
-
-        <div id="menu-main"
-             class="menu menu-box-right menu-box-detached rounded-m"
-             data-menu-width="260"
-             data-menu-load="menu-main.html"
-             data-menu-active="nav-pages"
-             data-menu-effect="menu-over">
-        </div>
-
-
-
+        <ShareMenuBar/>
+        <HighlightsMenuBar/>
+        <SideBar/>
     </div>
 
 </template>
@@ -76,7 +117,15 @@ import {Head} from '@inertiajs/vue3'
 import {mapGetters} from "vuex";
 
 export default {
+    watch: {
+        $route(newRouteValue) {
+            console.log(newRouteValue); // {name: "About", meta: {…}, path: "/about", hash: "", query: {…}, …}
+        },
+    },
     computed: {
+        prefix(){
+          return window.currentPath
+        },
         tg() {
             return window.Telegram.WebApp;
         },
@@ -84,6 +133,9 @@ export default {
             const urlParams = new URLSearchParams(this.tg.initData);
             return JSON.parse(urlParams.get('user'));
         }
+    },
+    mounted() {
+
     },
     methods: {
         openLink(url){
