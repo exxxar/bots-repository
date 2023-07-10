@@ -124,7 +124,7 @@ export default {
     },
     computed: {
         prefix(){
-          return window.currentPath
+          return window.currentPath || ''
         },
         tg() {
             return window.Telegram.WebApp;

@@ -6,9 +6,9 @@ import Favorites from '@/Pages/Shop/Favorites.vue';
 import Basket from '@/Pages/Shop/Basket.vue';
 import Settings from '@/Pages/Shop/Settings.vue';
 
-window.currentPath = window.location.pathname
+window.currentPath = ''//window.location.pathname
 
-const prefix = window.currentPath
+const prefix = window.currentPath || ''
 
 export const routes = [
   {
