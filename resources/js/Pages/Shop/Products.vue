@@ -444,10 +444,25 @@
 
 </template>
 <script>
-
-
+import test from '../../custom.js'
+import {onActivated, onDeactivated} from "vue"
 export default {
+    setup() {
+        onActivated(() => {
+            test.handler()
+            console.log("0")
+        })
+        onDeactivated(() => {
+            // ...
+        })
+    },
+    activated() {
+        console.log("1")
+        test.handler()
+    },
     mounted() {
+        test.handler()
+        console.log("2")
         $.card_extender();
     }
 }
