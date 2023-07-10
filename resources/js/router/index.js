@@ -11,10 +11,7 @@ window.currentPath = ''//window.location.pathname
 const prefix = window.currentPath || ''
 
 export const routes = [
-  {
-        path: '/global-scripts/shop/:subPath*',
-        redirect: prefix+'/home'
-    },
+
     {
         name: 'home',
         path: prefix+'/home',

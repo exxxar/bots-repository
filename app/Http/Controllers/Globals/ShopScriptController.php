@@ -81,7 +81,7 @@ class ShopScriptController extends Controller
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/shop/$bot->bot_domain"
+                            "url" => env("APP_URL") . "/global-scripts/shop/$bot->bot_domain#home"
                         ]],
                     ],
 
