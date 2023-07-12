@@ -1,8 +1,13 @@
+<script setup>
+import ProductItemMini from "@/Components/Shop/Products/ProductItemMini.vue";
+</script>
+
 <template>
 
     <div class="page-title page-title-large">
         <h2 data-username="Enabled!" class="greeting-text"></h2>
-        <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img" data-src="images/avatars/5s.png"></a>
+        <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img"
+           data-src="images/avatars/5s.png"></a>
     </div>
     <div class="card header-card shape-rounded" data-card-height="140">
         <div class="card-overlay bg-highlight opacity-95"></div>
@@ -68,8 +73,12 @@
         <div class="content">
             <div class="card rounded-l shadow-xl bg-18 mb-3" data-card-height="320">
                 <div class="card-top mt-3 mr-3">
-                    <a href="#" class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i class="fa fa-heart"></i></a>
-                    <a href="#" data-menu="menu-share" class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="#"
+                       class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i
+                        class="fa fa-heart"></i></a>
+                    <a href="#" data-menu="menu-share"
+                       class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i
+                        class="fa fa-shopping-cart"></i></a>
                 </div>
                 <div class="card-bottom mb-3">
                     <div class="content mb-0">
@@ -92,8 +101,12 @@
         <div class="content">
             <div class="card rounded-l shadow-xl bg-12 mb-3" data-card-height="320">
                 <div class="card-top mt-3 mr-3">
-                    <a href="#" class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i class="fa fa-heart"></i></a>
-                    <a href="#" data-menu="menu-share" class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="#"
+                       class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i
+                        class="fa fa-heart"></i></a>
+                    <a href="#" data-menu="menu-share"
+                       class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i
+                        class="fa fa-shopping-cart"></i></a>
                 </div>
                 <div class="card-bottom mb-3">
                     <div class="content mb-0">
@@ -116,8 +129,12 @@
         <div class="content">
             <div class="card rounded-l shadow-xl bg-12 mb-3" data-card-height="320">
                 <div class="card-top mt-3 mr-3">
-                    <a href="#" class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i class="fa fa-heart"></i></a>
-                    <a href="#" data-menu="menu-share" class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="#"
+                       class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i
+                        class="fa fa-heart"></i></a>
+                    <a href="#" data-menu="menu-share"
+                       class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i
+                        class="fa fa-shopping-cart"></i></a>
                 </div>
                 <div class="card-bottom mb-3">
                     <div class="content mb-0">
@@ -140,101 +157,15 @@
     </div>
 
     <div class="content mb-3">
-        <h5 class="float-left font-16 font-500">Products we Love</h5>
-        <a class="float-right font-12 color-highlight mt-n1" href="#">View All</a>
+        <h5 class="float-left font-16 font-500">Случайные 20 товаров</h5>
+        <a class="float-right font-12 color-highlight mt-n1" href="#/products">Посмотреть все</a>
         <div class="clearfix"></div>
     </div>
 
     <div class="double-slider owl-carousel owl-no-dots">
-        <div class="item bg-theme pb-3 rounded-m shadow-l">
-            <div data-card-height="200" class="card mb-3 bg-11">
-                <div class="card-bottom">
-                    <h5 class="color-white text-center pr-2 pb-2">Sticky Mobile</h5>
-                </div>
-                <div class="card-overlay bg-gradient"></div>
-            </div>
-            <div class="d-flex px-3">
-                <div>
-                    <h3 class="mb-n1">$24.99</h3>
-                    <span class="opacity-60">was $49.99</span>
-                    <p class="mb-0">
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                    </p>
-                    <p class="color-green1-dark mb-0 font-11">Available In stock</p>
-                </div>
-            </div>
-        </div>
-        <div class="item bg-theme pb-3 rounded-m shadow-l">
-            <div data-card-height="200" class="card mb-3 bg-12">
-                <div class="card-bottom">
-                    <h5 class="color-white text-center pr-2 pb-2">Appkit</h5>
-                </div>
-                <div class="card-overlay bg-gradient"></div>
-            </div>
-            <div class="d-flex px-3">
-                <div>
-                    <h3 class="mb-n1">$34.99</h3>
-                    <span class="opacity-60">was $59.99</span>
-                    <p class="mb-0">
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                    </p>
-                    <p class="color-yellow1-dark mb-0 font-11">Limited Stock</p>
-                </div>
-            </div>
-        </div>
-        <div class="item bg-theme pb-3 rounded-m shadow-l">
-            <div data-card-height="200" class="card mb-3 bg-13">
-                <div class="card-bottom">
-                    <h5 class="color-white text-center pr-2 pb-2">DuoDrawer</h5>
-                </div>
-                <div class="card-overlay bg-gradient"></div>
-            </div>
-            <div class="d-flex px-3">
-                <div>
-                    <h3 class="mb-n1">$144.99</h3>
-                    <span class="opacity-60">was $99.99</span>
-                    <p class="mb-0">
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                    </p>
-                    <p class="color-red2-dark mb-0 font-11">Out of Stock</p>
-                </div>
-            </div>
-        </div>
-        <div class="item bg-theme pb-3 rounded-m shadow-l">
-            <div data-card-height="200" class="card mb-3 bg-14">
-                <div class="card-bottom">
-                    <h5 class="color-white text-center pr-2 pb-2">EazyMobile</h5>
-                </div>
-                <div class="card-overlay bg-gradient"></div>
-            </div>
-            <div class="d-flex px-3">
-                <div>
-                    <h3 class="mb-n1">$154.99</h3>
-                    <span class="opacity-60">was $299.99</span>
-                    <p class="mb-0">
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                        <i class="fa fa-star color-yellow1-dark"></i>
-                    </p>
-                    <p class="color-blue2-dark mb-0 font-11">Coming Soon</p>
-                </div>
-            </div>
-        </div>
+        <ProductItemMini :item="item" v-for="(item, index) in randomProducts"/>
     </div>
+
 
     <div class="divider divider-margins mt-4"></div>
 
@@ -254,7 +185,8 @@
                            data-feather-color="blue2-dark"
                            data-feather-bg="blue2-fade-light">
                         </i>
-                        <h5 class="color-black float-left font-13 font-500 line-height-s pb-3 mb-3">Global<br>Shipping</h5>
+                        <h5 class="color-black float-left font-13 font-500 line-height-s pb-3 mb-3">Global<br>Shipping
+                        </h5>
                     </div>
                     <div class="col-6 pl-0">
                         <i class="float-left ml-3 mr-3"
@@ -421,8 +353,10 @@
 
                     <div class="d-flex pb-2">
                         <div class="pr-3">
-                            <h5 class="font-14 font-600 opacity-80 pb-2">6 Months Hands on Support Included in Pack. </h5>
-                            <h1 class="font-24 font-700 color-green1-dark">$0<sup class="font-15 opacity-50">.00</sup></h1>
+                            <h5 class="font-14 font-600 opacity-80 pb-2">6 Months Hands on Support Included in
+                                Pack. </h5>
+                            <h1 class="font-24 font-700 color-green1-dark">$0<sup class="font-15 opacity-50">.00</sup>
+                            </h1>
                         </div>
                         <div class="ml-auto">
                             <img src="images/pictures/3s.jpg" class="rounded-m shadow-xl" width="90">
@@ -431,7 +365,8 @@
 
                     <div class="divider mb-4"></div>
 
-                    <a href="#" class="btn btn-full btn-m bg-highlight font-700 text-uppercase rounded-m shadow-xl"> Add to Cart</a>
+                    <a href="#" class="btn btn-full btn-m bg-highlight font-700 text-uppercase rounded-m shadow-xl"> Add
+                        to Cart</a>
 
                 </div>
             </div>
@@ -482,14 +417,34 @@
 <script>
 
 
+import {mapGetters} from "vuex";
+
 export default {
+    data() {
+        return {
+            randomProducts: []
+        }
+    },
+    computed: {
+        ...mapGetters(['getProducts']),
+        currentBot() {
+            return window.currentBot;
+        }
+    },
     mounted() {
-
-
-        this.$botNotification.notification("Test","teeeeeeeeeees")
-
-      //  this.$notify({ type: "success", text: "The operation completed" });
-
+        //this.$botNotification.notification("Test", "teeeeeeeeeees")
+        this.loadRandomProducts()
+    },
+    methods: {
+        loadRandomProducts() {
+            return this.$store.dispatch("loadRandomProducts", {
+                dataObject: {
+                    bot_id: this.currentBot.id
+                }
+            }).then(() => {
+                this.randomProducts = this.getProducts
+            })
+        }
     }
 }
 </script>

@@ -7,12 +7,7 @@ export default {
             }
         }));
     },
-    successBox(title, text){
-        window.dispatchEvent(new CustomEvent('success_box', {
-            detail:{
-                title: title,
-                text: text
-            }
-        }));
-    }
+
+
+
 }

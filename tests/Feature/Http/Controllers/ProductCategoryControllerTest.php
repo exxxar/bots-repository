@@ -47,16 +47,16 @@ class ProductCategoryControllerTest extends TestCase
      */
     public function store_saves(): void
     {
-        $slug = $this->faker->slug;
+        $title = $this->faker->sentence(4);
         $bot = Bot::factory()->create();
 
         $response = $this->post(route('product-category.store'), [
-            'slug' => $slug,
+            'title' => $title,
             'bot_id' => $bot->id,
         ]);
 
         $productCategories = ProductCategory::query()
-            ->where('slug', $slug)
+            ->where('title', $title)
             ->where('bot_id', $bot->id)
             ->get();
         $this->assertCount(1, $productCategories);
@@ -99,11 +99,11 @@ class ProductCategoryControllerTest extends TestCase
     public function update_behaves_as_expected(): void
     {
         $productCategory = ProductCategory::factory()->create();
-        $slug = $this->faker->slug;
+        $title = $this->faker->sentence(4);
         $bot = Bot::factory()->create();
 
         $response = $this->put(route('product-category.update', $productCategory), [
-            'slug' => $slug,
+            'title' => $title,
             'bot_id' => $bot->id,
         ]);
 
@@ -112,7 +112,7 @@ class ProductCategoryControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure([]);
 
-        $this->assertEquals($slug, $productCategory->slug);
+        $this->assertEquals($title, $productCategory->title);
         $this->assertEquals($bot->id, $productCategory->bot_id);
     }
 

@@ -1,6 +1,5 @@
 <?php
 
-use App\Facades\BotManager;
 use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Admin\BotPageController;
 use App\Http\Controllers\Admin\CompanyController;
@@ -11,7 +10,6 @@ use App\Http\Controllers\Globals\ShopScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +25,7 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get("/test-amo", function () {
     $amo = new \App\Integrations\AmoCRMIntegration();
@@ -121,11 +120,6 @@ Route::prefix("bot")->group(function () {
             Route::delete("/remove-dialog/{dialogId}", "removeDialog");
         });
 
-    Route::prefix("products")
-        ->controller(\App\Http\Controllers\Admin\BotProductController::class)
-        ->group(function () {
-            Route::post("/", "index");
-        });
 
     Route::prefix("templates")
         ->controller(BotController::class)
@@ -212,14 +206,7 @@ Route::prefix("web")
         Route::post('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webHandler"]);
     });
 
-//Route::view('/', "landing");
 
-
-Route::get('/test-shop', function () {
-    Inertia::setRootView("bot");
-
-    return Inertia::render('Products');
-});
 
 Route::get('/restaurant/book-a-table/{botDomain}', function ($botDomain) {
 
@@ -293,12 +280,21 @@ Route::prefix("global-scripts")
             });
 
         Route::prefix("shop")
-            ->controller(ShopScriptController::class)
             ->group(function () {
-                Route::post('/prepare/{botDomain}', "instagramQuestPrepare");
-             //   Route::get('/products/{botDomain}', "shopProducts");
-                Route::get('/{botDomain}/{path?}', "shopHomepage");
-                Route::post('/{botDomain}', "instagramQuestCallback");
+                Route::get("/vk-auth-link/{botDomain}", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
+                Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
+
+
+
+
+                Route::post("/products",[\App\Http\Controllers\Admin\ProductController::class,"index"]);
+                Route::post("/random-products",[\App\Http\Controllers\Admin\ProductController::class,"randomProducts"]);
+
+                        //Продукты, избранное, корзина,
+
+
+                Route::get('/{botDomain}/{path?}', [ShopScriptController::class, "shopHomepage"]);
+
             });
     });
 

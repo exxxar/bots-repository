@@ -2,7 +2,10 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Bot;
 use App\Models\Order;
+use App\Models\ReceiverGet;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use JMac\Testing\Traits\AdditionalAssertions;
@@ -46,20 +49,44 @@ class OrderControllerTest extends TestCase
      */
     public function store_saves(): void
     {
-        $status = $this->faker->numberBetween(-10000, 10000);
-        $need_delivery = $this->faker->boolean;
+        $bot = Bot::factory()->create();
+        $user = User::factory()->create();
+        $product_count = $this->faker->numberBetween(-10000, 10000);
         $summary_price = $this->faker->randomFloat(/** double_attributes **/);
+        $delivery_price = $this->faker->randomFloat(/** double_attributes **/);
+        $delivery_range = $this->faker->randomFloat(/** double_attributes **/);
+        $deliveryman_latitude = $this->faker->randomFloat(/** double_attributes **/);
+        $deliveryman_longitude = $this->faker->randomFloat(/** double_attributes **/);
+        $receiver_get = ReceiverGet::factory()->create();
+        $status = $this->faker->numberBetween(-10000, 10000);
+        $order_type = $this->faker->numberBetween(-10000, 10000);
 
         $response = $this->post(route('order.store'), [
-            'status' => $status,
-            'need_delivery' => $need_delivery,
+            'bot_id' => $bot->id,
+            'user_id' => $user->id,
+            'product_count' => $product_count,
             'summary_price' => $summary_price,
+            'delivery_price' => $delivery_price,
+            'delivery_range' => $delivery_range,
+            'deliveryman_latitude' => $deliveryman_latitude,
+            'deliveryman_longitude' => $deliveryman_longitude,
+            'receiver_get_id' => $receiver_get->id,
+            'status' => $status,
+            'order_type' => $order_type,
         ]);
 
         $orders = Order::query()
-            ->where('status', $status)
-            ->where('need_delivery', $need_delivery)
+            ->where('bot_id', $bot->id)
+            ->where('user_id', $user->id)
+            ->where('product_count', $product_count)
             ->where('summary_price', $summary_price)
+            ->where('delivery_price', $delivery_price)
+            ->where('delivery_range', $delivery_range)
+            ->where('deliveryman_latitude', $deliveryman_latitude)
+            ->where('deliveryman_longitude', $deliveryman_longitude)
+            ->where('receiver_get_id', $receiver_get->id)
+            ->where('status', $status)
+            ->where('order_type', $order_type)
             ->get();
         $this->assertCount(1, $orders);
         $order = $orders->first();
@@ -101,14 +128,30 @@ class OrderControllerTest extends TestCase
     public function update_behaves_as_expected(): void
     {
         $order = Order::factory()->create();
-        $status = $this->faker->numberBetween(-10000, 10000);
-        $need_delivery = $this->faker->boolean;
+        $bot = Bot::factory()->create();
+        $user = User::factory()->create();
+        $product_count = $this->faker->numberBetween(-10000, 10000);
         $summary_price = $this->faker->randomFloat(/** double_attributes **/);
+        $delivery_price = $this->faker->randomFloat(/** double_attributes **/);
+        $delivery_range = $this->faker->randomFloat(/** double_attributes **/);
+        $deliveryman_latitude = $this->faker->randomFloat(/** double_attributes **/);
+        $deliveryman_longitude = $this->faker->randomFloat(/** double_attributes **/);
+        $receiver_get = ReceiverGet::factory()->create();
+        $status = $this->faker->numberBetween(-10000, 10000);
+        $order_type = $this->faker->numberBetween(-10000, 10000);
 
         $response = $this->put(route('order.update', $order), [
-            'status' => $status,
-            'need_delivery' => $need_delivery,
+            'bot_id' => $bot->id,
+            'user_id' => $user->id,
+            'product_count' => $product_count,
             'summary_price' => $summary_price,
+            'delivery_price' => $delivery_price,
+            'delivery_range' => $delivery_range,
+            'deliveryman_latitude' => $deliveryman_latitude,
+            'deliveryman_longitude' => $deliveryman_longitude,
+            'receiver_get_id' => $receiver_get->id,
+            'status' => $status,
+            'order_type' => $order_type,
         ]);
 
         $order->refresh();
@@ -116,9 +159,17 @@ class OrderControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure([]);
 
-        $this->assertEquals($status, $order->status);
-        $this->assertEquals($need_delivery, $order->need_delivery);
+        $this->assertEquals($bot->id, $order->bot_id);
+        $this->assertEquals($user->id, $order->user_id);
+        $this->assertEquals($product_count, $order->product_count);
         $this->assertEquals($summary_price, $order->summary_price);
+        $this->assertEquals($delivery_price, $order->delivery_price);
+        $this->assertEquals($delivery_range, $order->delivery_range);
+        $this->assertEquals($deliveryman_latitude, $order->deliveryman_latitude);
+        $this->assertEquals($deliveryman_longitude, $order->deliveryman_longitude);
+        $this->assertEquals($receiver_get->id, $order->receiver_get_id);
+        $this->assertEquals($status, $order->status);
+        $this->assertEquals($order_type, $order->order_type);
     }
 
 

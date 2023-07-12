@@ -169,7 +169,7 @@
 
 export default {
     mounted() {
-        this.$botNotification.successBox("Test","teeeeeeeeeees")
+
     }
 }
 </script>

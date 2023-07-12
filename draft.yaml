@@ -1,22 +1,124 @@
 models:
-  Shop:
+  Geo: #записываем расположение клиентов и компаний
+    region: string:255 nullable comment:'Регион'
+    city: string:255 nullable comment:'Город'
+    district: string:255 nullable comment:'Район'
+    address: string:255 nullable comment:'Адрес'
+    landmark: string:255 nullable comment:'Ориентир'
+    latitude: string:50 nullable comment:'Широта'
+    longitude: string:50 nullable comment:'Долгота'
+    user_id: id foreign:users
     bot_id: id foreign:bots
+    deleted_at: timestamp nullable
+    relationships:
+      belongsTo: Bot, User
+
+  ProductCategory:
     title: string:255
-    client_id: string:255 nullable
-    client_secret: string:255 nullable
-    auth_code: string:1000 nullable
-    redirect_uri: string:255 nullable
-    config: json nullable
-    template: string:255
+    bot_id: id foreign:bots
     relationships:
       belongsTo: Bot
+      belongsToMany: Product
+
+  ProductOption: #например, время приготовления, вес товара, каллории, бжу и т.д.
+    key: string:255 nullable
+    title: string:255 nullable
+    value: string:255 nullable
+    section: string:255 nullable
+    product_id: id foreign:products
+    relationships:
+      belongsTo: Product
+
+  Product:
+    article: string:255 nullable
+    vk_product_id: string:255 nullable
+    title: string:255 nullable
+    description: longtext nullable
+    images: json nullable #изображения к продукту
+    type: integer default:0 #готовое блюдо, конструктор (и номер конструктора), товар на вес
+    old_price: double default:0
+    current_price: double default:0
+    variants: json nullable
+    in_stop_list_at: timestamp nullable #availability
+    bot_id: id foreign:bots
+    relationships:
+      belongsTo: Bot
+      belongsToMany: ProductCategory
+
+  Favorite:
+    product_id: id foreign:products
+    user_id: id foreign:users
+    bot_id: id foreign:bots
+    relationships:
+      belongsTo: Product, User, Bot
+
+  Review:
+    text: longtext nullable
+    images: json nullable
+    rating: integer default:0
+    user_id: id foreign:users #???
+    product_id: id foreign:products
+    bot_id: id foreign:bots
+    deleted_at: nullable timestamp
+    relationships:
+      belongsTo: Product, Bot, User
+
+  Order:
+    bot_id: id foreign:companies
+    user_id: id foreign:users
+    delivery_service_info: json nullable comment:'Информация о сервисе доставки'
+    deliveryman_info: json nullable comment:'Берется из внешнего доверенного сервиса'
+    product_details: json nullable comment:'Дамп заказанных продуктов'
+    product_count: integer default:0
+    summary_price: double default:0
+    delivery_price: double default:0 #?
+    delivery_range: double default:0 #?
+    deliveryman_latitude: double default:0 #?
+    deliveryman_longitude: double default:0 #?
+    delivery_note: longtext nullable
+    receiver_name: string:255 nullable
+    receiver_phone: string:255 nullable
+    receiver_get_id: id foreign:geos
+    status: integer default:0
+    order_type: integer default:0
+    payed_at: timestamp nullable
+    relationships:
+      belongsTo: User, Geo, Bot
+
+  PaymentHistory:
+    amount: double default:0
+    user_id: id foreign:users
+    order_id: id foreign:orders
 
 
+seeders: Geo,  ProductCategory,  ProductOption,  Product, Favorite, Review, Order, PaymentHistory
 
-seeders: Shop
 
 controllers:
-  Shop:
+  Geo:
     resource: api
+
+  ProductCategory:
+    resource: api
+
+  ProductOption:
+    resource: api
+
+  Product:
+    resource: api
+
+  Favorite:
+    resource: api
+
+  Review:
+    resource: api
+
+  Order:
+    resource: api
+
+  PaymentHistory:
+    resource: api
+
+
 
 

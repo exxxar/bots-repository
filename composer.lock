@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "102e79cfb5eaa5fc5f0e1ea621476939",
+    "content-hash": "827cd3a30706cc4ea438b8ec2ec31832",
     "packages": [
         {
             "name": "andrey-tech/amocrm-api-php",
@@ -5522,6 +5522,46 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.6"
             },
             "time": "2023-01-03T09:29:04+00:00"
+        },
+        {
+            "name": "vkcom/vk-php-sdk",
+            "version": "5.131.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/VKCOM/vk-php-sdk.git",
+                "reference": "3e12d4b3d18d1079673103b6f0cd05a99c8e9b2b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/VKCOM/vk-php-sdk/zipball/3e12d4b3d18d1079673103b6f0cd05a99c8e9b2b",
+                "reference": "3e12d4b3d18d1079673103b6f0cd05a99c8e9b2b",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.5",
+                "php": "^8.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "VK\\": "src/VK"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "VK PHP SDK",
+            "homepage": "https://github.com/VKCOM/vk-php-sdk",
+            "keywords": [
+                "sdk",
+                "vk"
+            ],
+            "support": {
+                "issues": "https://github.com/VKCOM/vk-php-sdk/issues",
+                "source": "https://github.com/VKCOM/vk-php-sdk/tree/5.131.0"
+            },
+            "time": "2023-05-15T20:30:42+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

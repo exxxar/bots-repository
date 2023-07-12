@@ -3,6 +3,12 @@ defineProps({
     bot: {
         type: Object,
     },
+    title: {
+        type: String,
+    },
+    description: {
+        type: String,
+    },
 });
 import Layout from "@/Layouts/ShopLayout.vue";
 </script>
@@ -18,12 +24,12 @@ import Layout from "@/Layouts/ShopLayout.vue";
 
                 <div class="footer">
                     <div class="card card-style mb-0">
-                        <a href="#" class="footer-title pt-4">AZURES</a>
+                        <a href="#" class="footer-title pt-4">{{ title||'CashMan:Shopify' }}</a>
                         <p class="text-center font-12 mt-n1 mb-3 opacity-70">
-                            Put a little <span class="color-highlight">color</span> in your life
+                           Добавь <span class="color-highlight">красок</span> в свою жизнь
                         </p>
                         <p class="boxed-text-l">
-                            Built to match the design trends and give your page the awesome facelift it deserves.
+                            {{description||'Описание вашего магазина'}}
                         </p>
                         <div class="text-center mb-3">
                             <a href="#" class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook"><i
@@ -38,9 +44,9 @@ import Layout from "@/Layouts/ShopLayout.vue";
                             <a href="#" class="back-to-top icon icon-xs rounded-sm shadow-l bg-highlight color-white"><i
                                 class="fa fa-arrow-up"></i></a>
                         </div>
-                        <p class="footer-copyright pb-3 mb-1">Copyright © Enabled <span id="copyright-year">2017</span>.
-                            All
-                            Rights Reserved.</p>
+                        <p class="footer-copyright pb-3 mb-1">© CashMan <span id="copyright-year">2023</span>.
+                            Все
+                            Права защищены.</p>
                     </div>
                     <div class="footer-card card shape-rounded" data-card-height="230" style="height: 230px;">
                         <div class="card-overlay bg-highlight opacity-95"></div>

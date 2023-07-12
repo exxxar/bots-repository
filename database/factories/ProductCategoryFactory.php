@@ -23,11 +23,7 @@ class ProductCategoryFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(4),
-            'slug' => $this->faker->slug,
             'bot_id' => Bot::factory(),
-            'created_at' => $this->faker->dateTime(),
-            'updated_at' => $this->faker->dateTime(),
-            'deleted_at' => $this->faker->dateTime(),
         ];
     }
 }

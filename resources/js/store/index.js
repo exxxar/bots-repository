@@ -5,12 +5,13 @@ import admins from './modules/admins';
 import templates from './modules/templates';
 import companies from './modules/companies';
 import bots from './modules/bots';
-import products from './modules/products';
+import products from './modules/shop/products';
 import pages from './modules/pages';
 import dialogGroups from './modules/dialog_groups';
 import slugs from './modules/slugs';
 import wheelOfFortune from "@/store/modules/globals/wheelOfFortune";
 import instagramQuest from "@/store/modules/globals/instagramQuest";
+import cart from "@/store/modules/shop/cart";
 import util from "@/store/modules/utilites";
 
 
@@ -90,5 +91,6 @@ export default createStore({
         slugs,
         wheelOfFortune,
         instagramQuest,
+        cart
     }
 })

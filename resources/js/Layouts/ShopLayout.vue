@@ -2,11 +2,12 @@
 
 import {Head} from '@inertiajs/vue3'
 
-import Notifications from "@/Components/Shop/Notifications.vue";
+import Notifications from "@/Components/Shop/Modals/Notifications.vue";
+import AddToCartModal from "@/Components/Shop/Modals/AddToCartModal.vue";
 
-import SideBar from "@/Components/Shop/SideBar.vue";
-import ShareMenuBar from "@/Components/Shop/ShareMenuBar.vue";
-import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
+import SideBar from "@/Components/Shop/Modals/SideBar.vue";
+import ShareMenuBar from "@/Components/Shop/Modals/ShareMenuBar.vue";
+import HighlightsMenuBar from "@/Components/Shop/Modals/HighlightsMenuBar.vue";
 </script>
 <template>
 
@@ -15,7 +16,7 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
         <meta name="description" content="CashMan - система твоего бизнеса внутри"/>
     </Head>
 
-
+    <AddToCartModal/>
     <Notifications/>
 
 <!--
@@ -65,7 +66,7 @@ import HighlightsMenuBar from "@/Components/Shop/HighlightsMenuBar.vue";
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/basket'">
                 <i class="fa fa-heart"></i><span class="color-white">Корзина</span><em
-                class="badge bg-green1-dark">3</em>
+                class="badge bg-green1-dark" v-if="cartTotalCount>0">{{cartTotalCount}}</em>
                 <strong v-if="$route.path==prefix+'/basket'"></strong>
             </router-link>
 
@@ -99,6 +100,7 @@ export default {
         },
     },
     computed: {
+        ...mapGetters([ 'cartTotalCount']),
         prefix() {
             return window.currentPath || ''
         },

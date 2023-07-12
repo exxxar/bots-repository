@@ -13,6 +13,9 @@ class ShopScriptController extends Controller
 {
     const SCRIPT = "global_shop_main";
 
+    const KEY_SHOP_TITLE = "shop_title";
+    const KEY_OWNER_ID = "owner_id"; //-197151608
+
 /*    const KEY_MAX_ATTEMPTS = "max_attempts";
     const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";
     const KEY_RULES_TEXT = "rules_text";
@@ -20,26 +23,6 @@ class ShopScriptController extends Controller
     const KEY_MAIN_TEXT = "main_text";
     const KEY_BTN_TEXT = "btn_text";
 
-    public function shopProducts($botDomain)
-    {
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-
-        $slug = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("slug", self::SCRIPT)
-            ->orderBy("updated_at", "desc")
-            ->first();
-
-        Inertia::setRootView("shop");
-
-        return Inertia::render('Shop/Products', [
-            'bot' => json_decode($bot->toJson()),
-        ]);
-
-    }
 
     public function shopHomepage( $botDomain)
     {

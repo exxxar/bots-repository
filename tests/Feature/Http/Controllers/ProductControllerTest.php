@@ -47,32 +47,23 @@ class ProductControllerTest extends TestCase
      */
     public function store_saves(): void
     {
+        $type = $this->faker->numberBetween(-10000, 10000);
+        $old_price = $this->faker->randomFloat(/** double_attributes **/);
+        $current_price = $this->faker->randomFloat(/** double_attributes **/);
         $bot = Bot::factory()->create();
-        $title = $this->faker->sentence(4);
-        $weight = $this->faker->randomFloat(/** double_attributes **/);
-        $base_price_before_discount = $this->faker->randomFloat(/** double_attributes **/);
-        $base_price = $this->faker->randomFloat(/** double_attributes **/);
-        $portion_count = $this->faker->numberBetween(-10000, 10000);
-        $is_active = $this->faker->boolean;
 
         $response = $this->post(route('product.store'), [
+            'type' => $type,
+            'old_price' => $old_price,
+            'current_price' => $current_price,
             'bot_id' => $bot->id,
-            'title' => $title,
-            'weight' => $weight,
-            'base_price_before_discount' => $base_price_before_discount,
-            'base_price' => $base_price,
-            'portion_count' => $portion_count,
-            'is_active' => $is_active,
         ]);
 
         $products = Product::query()
+            ->where('type', $type)
+            ->where('old_price', $old_price)
+            ->where('current_price', $current_price)
             ->where('bot_id', $bot->id)
-            ->where('title', $title)
-            ->where('weight', $weight)
-            ->where('base_price_before_discount', $base_price_before_discount)
-            ->where('base_price', $base_price)
-            ->where('portion_count', $portion_count)
-            ->where('is_active', $is_active)
             ->get();
         $this->assertCount(1, $products);
         $product = $products->first();
@@ -114,22 +105,16 @@ class ProductControllerTest extends TestCase
     public function update_behaves_as_expected(): void
     {
         $product = Product::factory()->create();
+        $type = $this->faker->numberBetween(-10000, 10000);
+        $old_price = $this->faker->randomFloat(/** double_attributes **/);
+        $current_price = $this->faker->randomFloat(/** double_attributes **/);
         $bot = Bot::factory()->create();
-        $title = $this->faker->sentence(4);
-        $weight = $this->faker->randomFloat(/** double_attributes **/);
-        $base_price_before_discount = $this->faker->randomFloat(/** double_attributes **/);
-        $base_price = $this->faker->randomFloat(/** double_attributes **/);
-        $portion_count = $this->faker->numberBetween(-10000, 10000);
-        $is_active = $this->faker->boolean;
 
         $response = $this->put(route('product.update', $product), [
+            'type' => $type,
+            'old_price' => $old_price,
+            'current_price' => $current_price,
             'bot_id' => $bot->id,
-            'title' => $title,
-            'weight' => $weight,
-            'base_price_before_discount' => $base_price_before_discount,
-            'base_price' => $base_price,
-            'portion_count' => $portion_count,
-            'is_active' => $is_active,
         ]);
 
         $product->refresh();
@@ -137,13 +122,10 @@ class ProductControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure([]);
 
+        $this->assertEquals($type, $product->type);
+        $this->assertEquals($old_price, $product->old_price);
+        $this->assertEquals($current_price, $product->current_price);
         $this->assertEquals($bot->id, $product->bot_id);
-        $this->assertEquals($title, $product->title);
-        $this->assertEquals($weight, $product->weight);
-        $this->assertEquals($base_price_before_discount, $product->base_price_before_discount);
-        $this->assertEquals($base_price, $product->base_price);
-        $this->assertEquals($portion_count, $product->portion_count);
-        $this->assertEquals($is_active, $product->is_active);
     }
 
 

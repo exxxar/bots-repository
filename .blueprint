@@ -1,19 +1,90 @@
 created:
-    - app/Http/Controllers/AmoCrmController.php
-    - database/factories/AmoCrmFactory.php
-    - database/migrations/2023_07_06_133256_create_amo_crms_table.php
-    - app/Models/AmoCrm.php
-    - database/seeders/AmoCrmSeeder.php
-    - tests/Feature/Http/Controllers/AmoCrmControllerTest.php
-    - app/Http/Requests/AmoCrmStoreRequest.php
-    - app/Http/Requests/AmoCrmUpdateRequest.php
-    - app/Http/Resources/AmoCrmCollection.php
-    - app/Http/Resources/AmoCrmResource.php
+    - app/Http/Controllers/GeoController.php
+    - app/Http/Controllers/ProductCategoryController.php
+    - app/Http/Controllers/ProductOptionController.php
+    - app/Http/Controllers/ProductController.php
+    - app/Http/Controllers/FavoriteController.php
+    - app/Http/Controllers/ReviewController.php
+    - app/Http/Controllers/OrderController.php
+    - app/Http/Controllers/PaymentHistoryController.php
+    - database/factories/GeoFactory.php
+    - database/factories/ProductCategoryFactory.php
+    - database/factories/ProductOptionFactory.php
+    - database/factories/ProductFactory.php
+    - database/factories/FavoriteFactory.php
+    - database/factories/ReviewFactory.php
+    - database/factories/OrderFactory.php
+    - database/factories/PaymentHistoryFactory.php
+    - database/migrations/2023_07_11_203112_create_geos_table.php
+    - database/migrations/2023_07_11_203113_create_product_categories_table.php
+    - database/migrations/2023_07_11_203114_create_product_options_table.php
+    - database/migrations/2023_07_11_203115_create_products_table.php
+    - database/migrations/2023_07_11_203116_create_favorites_table.php
+    - database/migrations/2023_07_11_203117_create_reviews_table.php
+    - database/migrations/2023_07_11_203118_create_orders_table.php
+    - database/migrations/2023_07_11_203119_create_payment_histories_table.php
+    - database/migrations/2023_07_11_203120_create_product_product_category_table.php
+    - app/Models/Geo.php
+    - app/Models/ProductCategory.php
+    - app/Models/ProductOption.php
+    - app/Models/Product.php
+    - app/Models/Favorite.php
+    - app/Models/Review.php
+    - app/Models/Order.php
+    - app/Models/PaymentHistory.php
+    - database/seeders/GeoSeeder.php
+    - database/seeders/ProductCategorySeeder.php
+    - database/seeders/ProductOptionSeeder.php
+    - database/seeders/ProductSeeder.php
+    - database/seeders/FavoriteSeeder.php
+    - database/seeders/ReviewSeeder.php
+    - database/seeders/OrderSeeder.php
+    - database/seeders/PaymentHistorySeeder.php
+    - tests/Feature/Http/Controllers/GeoControllerTest.php
+    - tests/Feature/Http/Controllers/ProductCategoryControllerTest.php
+    - tests/Feature/Http/Controllers/ProductOptionControllerTest.php
+    - tests/Feature/Http/Controllers/ProductControllerTest.php
+    - tests/Feature/Http/Controllers/FavoriteControllerTest.php
+    - tests/Feature/Http/Controllers/ReviewControllerTest.php
+    - tests/Feature/Http/Controllers/OrderControllerTest.php
+    - tests/Feature/Http/Controllers/PaymentHistoryControllerTest.php
+    - app/Http/Requests/GeoStoreRequest.php
+    - app/Http/Requests/GeoUpdateRequest.php
+    - app/Http/Requests/ProductCategoryStoreRequest.php
+    - app/Http/Requests/ProductCategoryUpdateRequest.php
+    - app/Http/Requests/ProductOptionStoreRequest.php
+    - app/Http/Requests/ProductOptionUpdateRequest.php
+    - app/Http/Requests/ProductStoreRequest.php
+    - app/Http/Requests/ProductUpdateRequest.php
+    - app/Http/Requests/FavoriteStoreRequest.php
+    - app/Http/Requests/FavoriteUpdateRequest.php
+    - app/Http/Requests/ReviewStoreRequest.php
+    - app/Http/Requests/ReviewUpdateRequest.php
+    - app/Http/Requests/OrderStoreRequest.php
+    - app/Http/Requests/OrderUpdateRequest.php
+    - app/Http/Requests/PaymentHistoryStoreRequest.php
+    - app/Http/Requests/PaymentHistoryUpdateRequest.php
+    - app/Http/Resources/GeoCollection.php
+    - app/Http/Resources/GeoResource.php
+    - app/Http/Resources/ProductCategoryCollection.php
+    - app/Http/Resources/ProductCategoryResource.php
+    - app/Http/Resources/ProductOptionCollection.php
+    - app/Http/Resources/ProductOptionResource.php
+    - app/Http/Resources/ProductCollection.php
+    - app/Http/Resources/ProductResource.php
+    - app/Http/Resources/FavoriteCollection.php
+    - app/Http/Resources/FavoriteResource.php
+    - app/Http/Resources/ReviewCollection.php
+    - app/Http/Resources/ReviewResource.php
+    - app/Http/Resources/OrderCollection.php
+    - app/Http/Resources/OrderResource.php
+    - app/Http/Resources/PaymentHistoryCollection.php
+    - app/Http/Resources/PaymentHistoryResource.php
 updated:
     - routes/api.php
 models:
-    ActionStatus: {  }
-    Basket: { product_id: 'biginteger unsigned', count: 'integer default:0', user_id: 'biginteger unsigned', bot_id: 'biginteger unsigned', order_id: 'biginteger unsigned' }
+    ActionStatus: { user_id: 'biginteger unsigned', bot_id: 'biginteger unsigned', max_attempts: 'integer default:0', current_attempts: 'integer default:0', completed_at: 'datetime nullable', data: 'text nullable', slug_id: 'biginteger unsigned' }
+    AmoCrm: { bot_id: 'biginteger unsigned', client_id: string, client_secret: string, auth_code: 'string:1000', redirect_uri: string, subdomain: string }
     Bot: { company_id: 'biginteger unsigned', welcome_message: 'text nullable', bot_domain: 'string:190', bot_token: 'string nullable', bot_token_dev: 'string nullable', order_channel: 'string nullable', main_channel: 'string nullable', balance: 'float:10 default:0', tax_per_day: 'float:10 default:0', image: 'string nullable', description: 'text nullable', info_link: 'string nullable', social_links: 'text nullable', is_active: 'boolean default:0', maintenance_message: 'string nullable', bot_type_id: 'biginteger unsigned', level_1: 'float:10 nullable', level_2: 'float:10 nullable', level_3: 'float:10 nullable', blocked_message: 'text nullable', blocked_at: 'datetime nullable', is_template: 'boolean default:0', template_description: 'string nullable' }
     BotDialogCommand: { slug: string, pre_text: 'text nullable', post_text: 'text nullable', error_text: 'text nullable', bot_id: 'biginteger unsigned', input_pattern: 'string nullable', inline_keyboard_id: 'biginteger unsigned nullable', images: 'text nullable', next_bot_dialog_command_id: 'biginteger unsigned nullable', bot_dialog_group_id: 'biginteger unsigned nullable', result_channel: 'string nullable' }
     BotDialogGroup: { slug: string, title: string, bot_id: 'biginteger unsigned' }
@@ -21,9 +92,6 @@ models:
     BotMenuSlug: { bot_id: 'biginteger unsigned nullable', command: 'string nullable', comment: 'text nullable', slug: 'string nullable', config: 'text nullable', is_global: 'boolean default:0', deprecated_at: 'datetime nullable' }
     BotMenuTemplate: { bot_id: 'biginteger unsigned', type: 'string:20 default:reply', slug: 'string:190', menu: 'text nullable' }
     BotPage: { bot_menu_slug_id: 'biginteger unsigned', content: 'text nullable', images: 'text nullable', reply_keyboard_id: 'biginteger unsigned nullable', inline_keyboard_id: 'biginteger unsigned nullable', bot_id: 'biginteger unsigned', next_page_id: 'biginteger unsigned nullable', next_bot_dialog_command_id: 'biginteger unsigned nullable', next_bot_menu_slug_id: 'biginteger unsigned nullable' }
-    BotProduct: { title: 'string nullable', slug: 'string:190', description: 'text nullable', images: 'text nullable', base_price: 'float:10 default:0', discount_price: 'float:10 default:0', weight: 'float:10 default:0', count: 'string default:0', in_stock: 'boolean default:1', specifications: 'text nullable', variants: 'text nullable', owner_id: 'biginteger unsigned', bot_id: 'biginteger unsigned' }
-    BotProductCategory: { title: 'string nullable', slug: 'string:190', bot_id: 'biginteger unsigned' }
-    BotTextContent: { value: 'text nullable', '`key`': string, bot_id: 'biginteger unsigned' }
     BotType: { title: 'string nullable', slug: 'string:190', is_active: 'boolean default:0' }
     BotUser: { bot_id: 'biginteger unsigned', user_id: 'biginteger unsigned', parent_id: 'biginteger unsigned nullable', is_vip: 'boolean default:0', is_admin: 'boolean default:0', is_work: 'boolean default:0', user_in_location: 'boolean default:0', location_comment: 'string nullable', name: 'string nullable', phone: 'string nullable', email: 'string nullable', birthday: 'date nullable', age: 'integer nullable', city: 'string nullable', country: 'string nullable', address: 'string nullable', sex: 'boolean default:1', fio_from_telegram: 'string nullable', telegram_chat_id: 'string nullable', in_dialog_mode: 'boolean default:0' }
     CashBack: { user_id: 'biginteger unsigned', bot_id: 'biginteger unsigned', amount: 'float:10 default:0' }
@@ -31,11 +99,17 @@ models:
     Company: { title: 'string nullable', slug: 'string:190', description: 'text nullable', image: 'string nullable', address: 'string nullable', phones: 'text nullable', links: 'text nullable', email: 'string nullable', schedule: 'text nullable', manager: 'string nullable', is_active: 'boolean default:0', blocked_message: 'text nullable', creator_id: 'integer unsigned nullable', owner_id: 'integer unsigned nullable', blocked_at: 'datetime nullable' }
     Event: { bot_id: 'biginteger unsigned', title: 'string nullable', description: 'text nullable', info_link: 'string nullable', start_at: 'datetime nullable', end_at: 'datetime nullable', image: 'string nullable' }
     ImageMenu: { title: 'string nullable', description: 'text nullable', image: 'text nullable', info_link: 'string nullable', bot_id: 'biginteger unsigned', product_count: 'integer default:0', location_id: 'biginteger unsigned nullable' }
-    Location: { images: 'text nullable', lat: 'float:10 default:0', lon: 'float:10 default:0', address: 'string nullable', description: 'text nullable', location_channel: 'string nullable', company_id: 'biginteger unsigned', is_active: 'boolean default:0', can_booking: 'boolean default:0' }
     NotificationSchedule: { title: 'string nullable', message: 'text nullable', info_link: 'string nullable', image: 'string nullable', start_at: 'datetime nullable', bot_id: 'biginteger unsigned', creator_id: 'biginteger unsigned', completed_at: 'datetime nullable' }
-    Order: { status: 'integer default:0', need_delivery: 'boolean default:0', delivery_address: 'string nullable', comment: 'string nullable', summary_price: 'float:10 default:0', payed_at: 'datetime nullable' }
     ReferralHistory: { user_sender_id: 'biginteger unsigned', user_recipient_id: 'biginteger unsigned', bot_id: 'biginteger unsigned', activated: 'boolean default:0' }
     Role: { name: string, slug: 'string:190' }
     Transaction: { company_id: 'biginteger unsigned', amount: 'float:10 default:0', status: 'integer default:0', description: 'text nullable', user_id: 'biginteger unsigned' }
     User: { email: 'string:190', email_verified_at: 'datetime nullable', remember_token: 'string:100 nullable', phone: 'string nullable', name: 'string nullable', password: 'string nullable', avatar_url: 'string nullable', role_id: 'biginteger unsigned', blocked_at: 'datetime nullable', blocked_message: 'string nullable' }
-    AmoCrm: { bot_id: 'id foreign:bots', client_id: 'string:255', client_secret: 'string:255', auth_code: 'string:1000', redirect_uri: 'string:255', subdomain: 'string:255', relationships: { belongsTo: Bot } }
+    Location: { region: "string:255 nullable comment:'Регион'", city: "string:255 nullable comment:'Город'", district: "string:255 nullable comment:'Район'", address: "string:255 nullable comment:'Адрес'", landmark: "string:255 nullable comment:'Ориентир'", latitude: "string:50 nullable comment:'Широта'", longitude: "string:50 nullable comment:'Долгота'", user_id: 'id foreign:users', bot_id: 'id foreign:bots', deleted_at: 'timestamp nullable', relationships: { belongsTo: 'Bot, User' } }
+    ProductCategory: { title: 'string:255', bot_id: 'id foreign:bots', relationships: { belongsTo: Bot, belongsToMany: Product } }
+    ProductOption: { key: 'string:255 nullable', title: 'string:255 nullable', value: 'string:255 nullable', section: 'string:255 nullable', product_id: 'id foreign:products', relationships: { belongsTo: Product } }
+    Product: { article: 'string:255 nullable', vk_product_id: 'string:255 nullable', title: 'string:255 nullable', description: 'longtext nullable', images: 'json nullable', type: 'integer default:0', old_price: 'double default:0', current_price: 'double default:0', variants: 'json nullable', in_stop_list_at: 'timestamp nullable', bot_id: 'id foreign:bots', relationships: { belongsTo: Bot, belongsToMany: ProductCategory } }
+    Favorite: { product_id: 'id foreign:products', user_id: 'id foreign:users', bot_id: 'id foreign:bots', relationships: { belongsTo: 'Product, User, Bot' } }
+    Review: { text: 'longtext nullable', images: 'json nullable', rating: 'integer default:0', user_id: 'id foreign:users', product_id: 'id foreign:products', bot_id: 'id foreign:bots', deleted_at: 'nullable timestamp', relationships: { belongsTo: 'Product, Bot, User' } }
+    Order: { bot_id: 'id foreign:companies', user_id: 'id foreign:users', delivery_service_info: "json nullable comment:'Информация о сервисе доставки'", deliveryman_info: "json nullable comment:'Берется из внешнего доверенного сервиса'", product_details: "json nullable comment:'Дамп заказанных продуктов'", product_count: 'integer default:0', summary_price: 'double default:0', delivery_price: 'double default:0', delivery_range: 'double default:0', deliveryman_latitude: 'double default:0', deliveryman_longitude: 'double default:0', delivery_note: 'longtext nullable', receiver_name: 'string:255 nullable', receiver_phone: 'string:255 nullable', receiver_get_id: 'id foreign:geos', status: 'integer default:0', order_type: 'integer default:0', payed_at: 'timestamp nullable', relationships: { belongsTo: 'User, Geo, Bot' } }
+    PaymentHistory: { amount: 'double default:0', user_id: 'id foreign:users', order_id: 'id foreign:orders' }
+    Geo: { region: "string:255 nullable comment:'Регион'", city: "string:255 nullable comment:'Город'", district: "string:255 nullable comment:'Район'", address: "string:255 nullable comment:'Адрес'", landmark: "string:255 nullable comment:'Ориентир'", latitude: "string:50 nullable comment:'Широта'", longitude: "string:50 nullable comment:'Долгота'", user_id: 'id foreign:users', bot_id: 'id foreign:bots', deleted_at: 'timestamp nullable', relationships: { belongsTo: 'Bot, User' } }

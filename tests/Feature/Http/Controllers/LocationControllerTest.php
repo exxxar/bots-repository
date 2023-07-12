@@ -2,15 +2,16 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Company;
+use App\Models\Bot;
 use App\Models\Location;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\Admin\LocationController
+ * @see \App\Http\Controllers\LocationController
  */
 class LocationControllerTest extends TestCase
 {
@@ -36,7 +37,7 @@ class LocationControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Admin\LocationController::class,
+            \App\Http\Controllers\LocationController::class,
             'store',
             \App\Http\Requests\LocationStoreRequest::class
         );
@@ -47,26 +48,17 @@ class LocationControllerTest extends TestCase
      */
     public function store_saves(): void
     {
-        $lat = $this->faker->latitude;
-        $lon = $this->faker->randomFloat(/** double_attributes **/);
-        $company = Company::factory()->create();
-        $is_active = $this->faker->boolean;
-        $can_booking = $this->faker->boolean;
+        $user = User::factory()->create();
+        $bot = Bot::factory()->create();
 
         $response = $this->post(route('location.store'), [
-            'lat' => $lat,
-            'lon' => $lon,
-            'company_id' => $company->id,
-            'is_active' => $is_active,
-            'can_booking' => $can_booking,
+            'user_id' => $user->id,
+            'bot_id' => $bot->id,
         ]);
 
         $locations = Location::query()
-            ->where('lat', $lat)
-            ->where('lon', $lon)
-            ->where('company_id', $company->id)
-            ->where('is_active', $is_active)
-            ->where('can_booking', $can_booking)
+            ->where('user_id', $user->id)
+            ->where('bot_id', $bot->id)
             ->get();
         $this->assertCount(1, $locations);
         $location = $locations->first();
@@ -96,7 +88,7 @@ class LocationControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Admin\LocationController::class,
+            \App\Http\Controllers\LocationController::class,
             'update',
             \App\Http\Requests\LocationUpdateRequest::class
         );
@@ -108,18 +100,12 @@ class LocationControllerTest extends TestCase
     public function update_behaves_as_expected(): void
     {
         $location = Location::factory()->create();
-        $lat = $this->faker->latitude;
-        $lon = $this->faker->randomFloat(/** double_attributes **/);
-        $company = Company::factory()->create();
-        $is_active = $this->faker->boolean;
-        $can_booking = $this->faker->boolean;
+        $user = User::factory()->create();
+        $bot = Bot::factory()->create();
 
         $response = $this->put(route('location.update', $location), [
-            'lat' => $lat,
-            'lon' => $lon,
-            'company_id' => $company->id,
-            'is_active' => $is_active,
-            'can_booking' => $can_booking,
+            'user_id' => $user->id,
+            'bot_id' => $bot->id,
         ]);
 
         $location->refresh();
@@ -127,11 +113,8 @@ class LocationControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure([]);
 
-        $this->assertEquals($lat, $location->lat);
-        $this->assertEquals($lon, $location->lon);
-        $this->assertEquals($company->id, $location->company_id);
-        $this->assertEquals($is_active, $location->is_active);
-        $this->assertEquals($can_booking, $location->can_booking);
+        $this->assertEquals($user->id, $location->user_id);
+        $this->assertEquals($bot->id, $location->bot_id);
     }
 
 
