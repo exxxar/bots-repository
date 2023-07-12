@@ -1,6 +1,6 @@
 <template>
-    <div id="menu-share" class="menu menu-box-bottom menu-box-detached rounded-m"
-         style="display: block; height: 420px;">
+    <div id="menu-share" class="menu menu-box-bottom menu-box-detached rounded-m d-block"
+         style="height: 420px;">
 
         <h1 class="text-center font-700 font-26 mt-3 pt-2">Share Azures</h1>
         <p class="boxed-text-xl under-heading">

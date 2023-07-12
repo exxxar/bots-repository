@@ -1,8 +1,8 @@
 <template>
 
     <div id="menu-share-thumbs"
-         class="menu menu-box-modal menu-box-detached rounded-m"
-         data-menu-height="500"
+         class="menu menu-box-modal menu-box-detached rounded-m d-block"
+         data-menu-height="320"
          data-menu-width="320">
 
         <div v-if="product" class="w-100">
@@ -63,6 +63,17 @@
                             class="btn p-3 bg-blue2-dark rounded-s shadow-l w-100">
                         <i class="fa-solid fa-share-from-square font-12"></i>
                         К товару
+                    </button>
+                </div>
+            </div>
+            <div class="row text-center mr-2 ml-2 mb-3">
+                <div class="col-12 mb-n2">
+                    <button type="button"
+                            @click="goToProduct"
+                            class="btn p-3 bg-red2-dark rounded-s shadow-l w-100">
+                        <i v-if="!product.in_favorite" class="fa-regular fa-star font-12"></i>
+                        <i v-if="product.in_favorite" class="fa-solid fa-star font-12"></i>
+                        В избранное
                     </button>
                 </div>
             </div>
@@ -148,3 +159,6 @@ export default {
     }
 }
 </script>
+<style>
+
+</style>
