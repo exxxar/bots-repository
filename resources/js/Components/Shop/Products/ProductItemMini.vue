@@ -40,7 +40,16 @@ export default {
         return {
             showCart:false
         }
-    }, methods:{
+    },
+    computed:{
+      currentPrice(){
+          return this.item.current_price / 100
+      },
+        oldPrice(){
+            return this.item.old_price / 100
+        }
+    },
+    methods:{
         addToCart(){
             this.$cart.add(this.item)
         },

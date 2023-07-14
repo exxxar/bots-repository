@@ -1,5 +1,6 @@
 <script setup>
 import ProductItemMini from "@/Components/Shop/Products/ProductItemMini.vue";
+import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
 </script>
 
 <template>
@@ -69,91 +70,8 @@ import ProductItemMini from "@/Components/Shop/Products/ProductItemMini.vue";
     </div>
 
 
-    <div class="single-slider owl-no-dots owl-carousel mt-n4">
-        <div class="content">
-            <div class="card rounded-l shadow-xl bg-18 mb-3" data-card-height="320">
-                <div class="card-top mt-3 mr-3">
-                    <a href="#"
-                       class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i
-                        class="fa fa-heart"></i></a>
-                    <a href="#" data-menu="menu-share"
-                       class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i
-                        class="fa fa-shopping-cart"></i></a>
-                </div>
-                <div class="card-bottom mb-3">
-                    <div class="content mb-0">
-                        <div class="d-flex">
-                            <div>
-                                <p class="mb-n1 font-600 color-highlight">Mobile Template and PWA</p>
-                                <h1 class="font-700">Azures Mobile</h1>
-                            </div>
-                            <div class="ml-auto">
-                                <h1>$23<sup class="font-300 opacity-30">.99</sup></h1>
-                                <span class="badge bg-highlight color-white px-3 py-1 mt-n1 text-uppercase d-block">On Sale</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-overlay bg-gradient-fade rounded-l"></div>
-                <div class="card-overlay"></div>
-            </div>
-        </div>
-        <div class="content">
-            <div class="card rounded-l shadow-xl bg-12 mb-3" data-card-height="320">
-                <div class="card-top mt-3 mr-3">
-                    <a href="#"
-                       class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i
-                        class="fa fa-heart"></i></a>
-                    <a href="#" data-menu="menu-share"
-                       class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i
-                        class="fa fa-shopping-cart"></i></a>
-                </div>
-                <div class="card-bottom mb-3">
-                    <div class="content mb-0">
-                        <div class="d-flex">
-                            <div>
-                                <p class="mb-n1 font-600 color-highlight">Mobile Template and PWA</p>
-                                <h1 class="font-700">Sticky Mobile</h1>
-                            </div>
-                            <div class="ml-auto">
-                                <h1>$35<sup class="font-300 opacity-30">.99</sup></h1>
-                                <span class="badge bg-highlight color-white px-3 py-1 mt-n1 text-uppercase d-block">On Sale</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-overlay bg-gradient-fade rounded-l"></div>
-                <div class="card-overlay"></div>
-            </div>
-        </div>
-        <div class="content">
-            <div class="card rounded-l shadow-xl bg-12 mb-3" data-card-height="320">
-                <div class="card-top mt-3 mr-3">
-                    <a href="#"
-                       class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i
-                        class="fa fa-heart"></i></a>
-                    <a href="#" data-menu="menu-share"
-                       class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i
-                        class="fa fa-shopping-cart"></i></a>
-                </div>
-                <div class="card-bottom mb-3">
-                    <div class="content mb-0">
-                        <div class="d-flex">
-                            <div>
-                                <p class="mb-n1 font-600 color-highlight">Mobile Template and PWA</p>
-                                <h1 class="font-700">AppKit Mobile</h1>
-                            </div>
-                            <div class="ml-auto">
-                                <h1>$93<sup class="font-300 opacity-30">.99</sup></h1>
-                                <span class="badge bg-highlight color-white px-3 py-1 mt-n1 text-uppercase d-block">On Sale</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-overlay bg-gradient-fade rounded-l"></div>
-                <div class="card-overlay"></div>
-            </div>
-        </div>
+    <div v-if="randomProducts" class="single-slider owl-no-dots owl-carousel mt-n4 owl-loaded owl-drag">
+        <ProductItemLarge :item="item" v-for="(item, index) in randomProducts"/>
     </div>
 
     <div class="content mb-3">
@@ -162,7 +80,7 @@ import ProductItemMini from "@/Components/Shop/Products/ProductItemMini.vue";
         <div class="clearfix"></div>
     </div>
 
-    <div class="double-slider owl-carousel owl-no-dots">
+    <div v-if="randomProducts" class="double-slider owl-carousel owl-no-dots">
         <ProductItemMini :item="item" v-for="(item, index) in randomProducts"/>
     </div>
 
@@ -422,7 +340,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-            randomProducts: []
+            randomProducts: null
         }
     },
     computed: {
@@ -434,6 +352,7 @@ export default {
     mounted() {
         //this.$botNotification.notification("Test", "teeeeeeeeeees")
         this.loadRandomProducts()
+
     },
     methods: {
         loadRandomProducts() {
@@ -443,6 +362,21 @@ export default {
                 }
             }).then(() => {
                 this.randomProducts = this.getProducts
+
+                this.$nextTick(() => {
+
+                    $('.single-slider').owlCarousel({
+                        loop: true,
+                        margin: 20,
+                        nav: false,
+                        lazyLoad: true,
+                        items: 1,
+                        autoplay: true,
+                        autoplayTimeout: 4000
+                    });
+
+                })
+
             })
         }
     }

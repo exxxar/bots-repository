@@ -17,6 +17,19 @@ const getters = {
 }
 
 const actions = {
+    async loadProduct(context, payload = {dataObject: { productId: null}}) {
+
+        let link = `${BASE_PRODUCTS_LINK}/${payload.dataObject.productId}`
+        let method = 'GET'
+        let _axios = util.makeAxiosFactory(link, method)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadProducts(context, payload = {dataObject: {bot_id: null}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12

@@ -31,7 +31,7 @@
                 <div class="clearfix"></div>
             </div>
         </div>
-        <a href="#" class="close-menu btn btn-full btn-margins rounded-sm shadow-l bg-highlight btn-m font-900 text-uppercase mb-0">Close color Menu</a>
+        <a href="#" class="close-menu btn btn-full btn-margins rounded-sm shadow-l bg-highlight btn-m font-900 text-uppercase mb-0">Закрыть смену цвета</a>
     </div>
 </template>
 <script>

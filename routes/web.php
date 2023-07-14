@@ -287,9 +287,14 @@ Route::prefix("global-scripts")
 
 
 
-                Route::post("/products",[\App\Http\Controllers\Admin\ProductController::class,"index"]);
-                Route::post("/random-products",[\App\Http\Controllers\Admin\ProductController::class,"randomProducts"]);
+               // Route::get("/info/{botDomain}",[\App\Http\Controllers\Admin\BotController::class,"self"]);
 
+                Route::post("/products",[\App\Http\Controllers\Admin\ProductController::class,"index"]);
+                Route::get("/products/{productId}",[\App\Http\Controllers\Admin\ProductController::class,"getProduct"]);
+                Route::post("/random-products",[\App\Http\Controllers\Admin\ProductController::class,"randomProducts"]);
+                Route::post("/favorites",[\App\Http\Controllers\Admin\FavoriteController::class,"index"]);
+                Route::post("/favorites/add",[\App\Http\Controllers\Admin\FavoriteController::class,"store"]);
+                Route::post("/favorites/remove",[\App\Http\Controllers\Admin\FavoriteController::class,"remove"]);
                         //Продукты, избранное, корзина,
 
 

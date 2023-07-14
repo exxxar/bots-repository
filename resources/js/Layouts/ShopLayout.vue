@@ -8,6 +8,7 @@ import AddToCartModal from "@/Components/Shop/Modals/AddToCartModal.vue";
 import SideBar from "@/Components/Shop/Modals/SideBar.vue";
 import ShareMenuBar from "@/Components/Shop/Modals/ShareMenuBar.vue";
 import HighlightsMenuBar from "@/Components/Shop/Modals/HighlightsMenuBar.vue";
+import Preloader from "@/Components/Shop/Helpers/Preloader.vue";
 </script>
 <template>
 
@@ -15,14 +16,11 @@ import HighlightsMenuBar from "@/Components/Shop/Modals/HighlightsMenuBar.vue";
         <title>CashMan - система твоего бизнеса внутри</title>
         <meta name="description" content="CashMan - система твоего бизнеса внутри"/>
     </Head>
-
+    <Preloader/>
     <AddToCartModal/>
     <Notifications/>
 
-<!--
-    <div id="preloader">
-        <div class="spinner-border color-highlight" role="status"></div>
-    </div>-->
+
 
     <div id="page">
 
@@ -51,7 +49,7 @@ import HighlightsMenuBar from "@/Components/Shop/Modals/HighlightsMenuBar.vue";
             <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/products'">
-                <i class="fa fa-star"></i><span class="color-white">Продукты</span>
+                <i class="fa-brands fa-shopify"></i><span class="color-white">Продукты</span>
                 <strong v-if="$route.path==prefix+'/products'"></strong>
             </router-link>
 
@@ -65,7 +63,7 @@ import HighlightsMenuBar from "@/Components/Shop/Modals/HighlightsMenuBar.vue";
             <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/basket'">
-                <i class="fa fa-heart"></i><span class="color-white">Корзина</span><em
+                <i class="fa-solid fa-basket-shopping"></i><span class="color-white">Корзина</span><em
                 class="badge bg-green1-dark" v-if="cartTotalCount>0">{{cartTotalCount}}</em>
                 <strong v-if="$route.path==prefix+'/basket'"></strong>
             </router-link>
@@ -96,7 +94,11 @@ import baseJS from '../modules/custom.js'
 export default {
     watch: {
         $route(newRouteValue) {
-            baseJS.handler()
+            this.$preloader.show();
+            this.$nextTick(()=>{
+                baseJS.handler()
+
+            })
         },
     },
     computed: {

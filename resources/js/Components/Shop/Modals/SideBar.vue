@@ -1,7 +1,7 @@
 <template>
     <div id="menu-main"
          class="menu menu-box-right menu-box-detached rounded-m "
-         data-menu-width="260"
+         style="width: 260px;display:block;"
          data-menu-active="nav-features"
          data-menu-effect="menu-over">
 
@@ -9,13 +9,15 @@
         <div class="menu-header">
 
 
-        <a href="#" data-toggle-theme="" class="border-right-0"><i class="fa font-12 color-yellow1-dark fa-lightbulb"></i></a>
-        <a href="#" data-menu="menu-highlights" class="border-right-0"><i class="fa font-12 color-green1-dark fa-brush"></i></a>
-        <a href="#" data-menu="menu-share" class="border-right-0">
-            <i class="fa font-12 color-red2-dark fa-share-alt"></i></a>
-        <a href="#" class="border-right-0"><i class="fa font-12 color-blue2-dark fa-cog"></i></a>
-        <a class="border-right-0"><i class="fa font-12 color-red2-dark fa-times"></i></a>
-    </div>
+            <a href="#" data-toggle-theme="" class="border-right-0"><i
+                class="fa font-12 color-yellow1-dark fa-lightbulb"></i></a>
+            <a href="#" data-menu="menu-highlights" class="border-right-0"><i
+                class="fa font-12 color-green1-dark fa-brush"></i></a>
+            <a href="#" data-menu="menu-share" class="border-right-0">
+                <i class="fa font-12 color-red2-dark fa-share-alt"></i></a>
+            <a href="#" class="border-right-0"><i class="fa font-12 color-blue2-dark fa-cog"></i></a>
+            <a class="border-right-0"><i class="fa font-12 color-red2-dark fa-times"></i></a>
+        </div>
 
         <div class="menu-logo text-center">
             <a href="#"><img class="rounded-circle bg-highlight" width="80" src="images/avatars/5s.png"></a>
@@ -24,52 +26,92 @@
         </div>
 
         <div class="menu-items">
-            <h5 class="text-uppercase opacity-20 font-12 pl-3">Menu</h5>
-            <a id="nav-welcome" href="index.html">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home" data-feather-line="1" data-feather-size="16" data-feather-color="blue2-dark" data-feather-bg="blue2-fade-dark" style="width: 16px; height: 16px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                <span>Welcome</span>
-                <em class="badge bg-highlight color-white">HOT</em>
+            <h5 class="text-uppercase opacity-20 font-12 pl-3">Главное меню</h5>
+
+            <router-link
+                id="nav-home"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/home'">
+                <i class="fa-solid fa-house-chimney" style="color:lightblue;"></i>
+                <span>Главная</span>
                 <i class="fa fa-circle"></i>
-            </a>
-            <a id="nav-starters" href="pages-starters-list.html">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star" data-feather-line="1" data-feather-size="18" data-feather-color="yellow1-dark" data-feather-bg="yellow1-fade-dark" style="width: 18px; height: 18px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                <span>Starters</span>
+            </router-link>
+
+            <router-link
+                id="nav-basket"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/basket'">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span>Корзина</span>
+                <strong class="badge bg-highlight color-white" v-if="cartTotalCount>0">{{ cartTotalCount }}</strong>
                 <i class="fa fa-circle"></i>
-            </a>
-            <a id="nav-features" href="components.html">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart" data-feather-line="1" data-feather-size="16" data-feather-color="red2-dark" data-feather-bg="red2-fade-dark" style="width: 16px; height: 16px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                <span>Features</span>
+            </router-link>
+
+            <router-link
+                id="nav-products"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/products'">
+                <i class="fa-solid fa-pizza-slice" style="color:orangered;"></i>
+                <span>Продукция</span>
                 <i class="fa fa-circle"></i>
-            </a>
-            <a id="nav-pages" href="pages.html" class="nav-item-active">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file" data-feather-line="1" data-feather-size="16" data-feather-color="brown1-dark" data-feather-bg="brown1-fade-dark" style="width: 16px; height: 16px;"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                <span>Pages</span>
-                <i class="fa fa-circle"></i>
-            </a>
-            <a id="nav-media" href="media.html">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image" data-feather-line="1" data-feather-size="16" data-feather-color="green1-dark" data-feather-bg="green1-fade-dark" style="width: 16px; height: 16px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                <span>Media</span>
-                <i class="fa fa-circle"></i>
-            </a>
-            <a href="#" data-submenu="sub-contact">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail" data-feather-line="1" data-feather-size="16" data-feather-color="blue2-dark" data-feather-bg="blue2-fade-dark" style="width: 16px; height: 16px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <span>Contact</span>
+            </router-link>
+
+            <router-link
+                id="nav-favorites"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/favorites'">
+                <i class="fa-solid fa-star" style="color:orange;"></i>
+                <span>Избранное</span>
                 <strong class="badge bg-highlight color-white">3</strong>
                 <i class="fa fa-circle"></i>
-            </a>
-            <div id="sub-contact" class="submenu">
-                <a href="contact.html" id="nav-contact"><i class="fa fa-envelope color-blue2-dark font-16 opacity-30"></i><span>Email</span><i class="fa fa-circle"></i></a>
-                <a href="#"><i class="fa fa-phone color-green1-dark font-16 opacity-50"></i><span>Phone</span><i class="fa fa-circle"></i></a>
-                <a href="#"><i class="fab fa-whatsapp color-whatsapp font-16 opacity-30"></i><span>WhatsApp</span><i class="fa fa-circle"></i></a>
-            </div>
-            <a id="nav-settings" href="settings.html">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings" data-feather-line="1" data-feather-size="16" data-feather-color="gray2-dark" data-feather-bg="gray2-fade-dark" style="width: 16px; height: 16px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                <span>Settings</span>
+            </router-link>
+
+            <router-link
+                id="nav-out-team"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/history'">
+                <i class="fa-regular fa-clock" style="color:#842029;"></i>
+                <span>История заказов</span>
+                <strong class="badge bg-highlight color-white">3</strong>
                 <i class="fa fa-circle"></i>
-            </a>
+            </router-link>
+
+            <router-link
+                id="nav-out-team"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/our-team'">
+                <i class="fa-solid fa-people-group" style="color:#6f42c1;"></i>
+                <span>Наша команда</span>
+                <i class="fa fa-circle"></i>
+            </router-link>
+
+            <router-link
+                id="nav-contact-us"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/contact-us'">
+                <i class="fa-solid fa-star" style="color:orange;"></i>
+                <span>О нас</span>
+                <i class="fa fa-circle"></i>
+            </router-link>
+
+            <router-link
+                id="nav-terms"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/terms'">
+                <i class="fa-regular fa-circle-question" style="color:green;"></i>
+                <span>Правила сервиса</span>
+                <i class="fa fa-circle"></i>
+            </router-link>
+
             <a href="#" class="close-menu">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x" data-feather-line="3" data-feather-size="16" data-feather-color="red2-dark" data-feather-bg="red2-fade-dark" style="width: 16px; height: 16px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                <span>Close</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-x" data-feather-line="3" data-feather-size="16"
+                     data-feather-color="red2-dark" data-feather-bg="red2-fade-dark" style="width: 16px; height: 16px;">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                <span>Закрыть</span>
                 <i class="fa fa-circle"></i>
             </a>
         </div>
@@ -80,16 +122,22 @@
             <a href="#" class="icon icon-xs mr-1 rounded-s bg-instagram"><i class="fab fa-instagram"></i></a>
             <a href="#" class="icon icon-xs mr-1 rounded-s bg-linkedin"><i class="fab fa-linkedin-in"></i></a>
             <a href="#" class="icon icon-xs rounded-s bg-whatsapp"><i class="fab fa-whatsapp"></i></a>
-            <p class="mb-0 pt-3 font-10 opacity-30">Copyright <span class="copyright-year"></span> Enabled. All rights reserved</p>
+            <p class="mb-0 pt-3 font-10 opacity-30">Copyright <span class="copyright-year"></span> Enabled. All rights
+                reserved</p>
         </div>
     </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
-    data(){
+    data() {
         return {
-            isActive:false,
+            isActive: false,
         }
+    },
+    computed: {
+        ...mapGetters(['cartTotalCount']),
     }
 }
 </script>

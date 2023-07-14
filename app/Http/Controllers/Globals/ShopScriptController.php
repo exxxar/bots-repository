@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Globals;
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BotResource;
+use App\Http\Resources\BotSecurityResource;
+use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
@@ -26,9 +29,13 @@ class ShopScriptController extends Controller
 
     public function shopHomepage( $botDomain)
     {
-        $bot = \App\Models\Bot::query()
+        $bot = Bot::query()
+            ->with(["company","imageMenus"])
             ->where("bot_domain", $botDomain)
             ->first();
+
+
+
 
 
         $slug = BotMenuSlug::query()
@@ -39,8 +46,10 @@ class ShopScriptController extends Controller
 
         Inertia::setRootView("shop");
 
+
+
         return Inertia::render('Shop/Main', [
-            'bot' => json_decode($bot->toJson()),
+            'bot' =>BotSecurityResource::make($bot),
         ]);
 
     }

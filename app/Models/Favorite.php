@@ -33,6 +33,8 @@ class Favorite extends Model
         'bot_id' => 'integer',
     ];
 
+    protected $with = ["product"];
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

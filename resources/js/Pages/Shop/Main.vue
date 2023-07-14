@@ -62,7 +62,7 @@ import Layout from "@/Layouts/ShopLayout.vue";
 <script>
 export default {
     created() {
-        window.currentBot = this.bot
+        window.currentBot = this.bot.data
         this.$notify({ type: "success", text: "The operation completed" });
     }
 }

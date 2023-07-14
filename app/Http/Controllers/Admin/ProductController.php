@@ -15,10 +15,34 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $products = Product::query()
-            ->paginate(100);
+        $search = $request->search ?? null;
+
+        $products = Product::query();
+
+        if (!is_null($search))
+            $products = $products
+                ->where("title", "like", "%$search%")
+                ->orWhere("description", "like", "%$search%");
+
+
+        $products = $products
+            ->orderBy("created_at","DESC")
+            ->paginate(20);
 
         return new ProductCollection($products);
+    }
+
+    public function getProduct(Request $request, $productId)
+    {
+
+        $product = Product::query()
+            ->where("id", $productId)
+            ->first();
+
+        if (is_null($product))
+            return response()->noContent(404);
+
+        return new ProductResource($product);
     }
 
     public function randomProducts(Request $request)
@@ -31,33 +55,8 @@ class ProductController extends Controller
             ->where("bot_id", $request->bot_id)
             ->get();
 
-        return new ProductCollection($products->random(20));
+        return new ProductCollection($products->random(10));
 
     }
 
-    public function store(ProductStoreRequest $request): Response
-    {
-        $product = Product::create($request->validated());
-
-        return new ProductResource($product);
-    }
-
-    public function show(Request $request, Product $product): Response
-    {
-        return new ProductResource($product);
-    }
-
-    public function update(ProductUpdateRequest $request, Product $product): Response
-    {
-        $product->update($request->validated());
-
-        return new ProductResource($product);
-    }
-
-    public function destroy(Request $request, Product $product): Response
-    {
-        $product->delete();
-
-        return response()->noContent();
-    }
 }

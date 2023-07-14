@@ -1,6 +1,7 @@
 import './bootstrap';
 
 import BotNotification from './modules/notifications.js'
+import BotPreloader from './modules/preloader.js'
 import Cart from './modules/cart.js'
 
 import router from './router'
@@ -46,6 +47,7 @@ createInertiaApp({
 
         app.config.globalProperties.$botNotification = BotNotification
         app.config.globalProperties.$cart = Cart
+        app.config.globalProperties.$preloader = BotPreloader
 
         app
             .use(plugin)

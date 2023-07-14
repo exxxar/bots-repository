@@ -17,7 +17,7 @@ defineProps({
 
             <div class="col-12 mb-2 mt-2">
                 <p
-                    v-if="canPlay"
+                    v-if="canPlay&&!success"
                     style="text-align: center;font-size: larger;">Ваши попытки: <strong>{{
                         action.current_attempts || 0
                     }}</strong> из <strong>{{
@@ -26,11 +26,11 @@ defineProps({
 
                 <p style="text-align: center;font-size: larger;" v-else>Вы израсходовали все ваши попытки</p>
             </div>
-            <div class="col-12" v-if="canPlay">
+            <div class="col-12" v-if="canPlay&&!success">
                 <h6 class="text-center">Выберите фотографию согласно задания квеста</h6>
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center "
-                 v-if="canPlay">
+                 v-if="canPlay&&!success">
 
                 <div class="card mb-3">
                     <div class="card-body d-flex justify-content-start">
@@ -111,6 +111,7 @@ defineProps({
         </div>
         <div class="row" v-else>
             <div class="col-12">
+                <h4 class="text-center mt-5">К сожалению, на текущий момент нет возможности сдать текущее задание. Попробуйте позже!</h4>
                 <img v-lazy="'/images/load.gif'" class="w-100" style="object-fit:cover;" alt="">
             </div>
         </div>
@@ -148,6 +149,8 @@ export default {
             return window.Telegram.WebApp;
         },
         tgUserId() {
+            if (!window.Telegram.WebApp.initData)
+                return null;
             return JSON.parse(new URLSearchParams(window.Telegram.WebApp.initData).get("user")).id || null
         }
     },
@@ -168,6 +171,9 @@ export default {
             this.success = true
         },
         prepare() {
+            if (!this.tgUserId)
+                return;
+
             return this.$store.dispatch("instagramQuestPrepare", {
                 prepareForm: {
                     telegram_chat_id: this.tgUserId
@@ -198,7 +204,7 @@ export default {
                 botDomain: this.bot.bot_domain
             }).then((response) => {
 
-                this.winForm = {
+                this.instaForm = {
                     comment: null,
                     name: null,
                     phone: null,

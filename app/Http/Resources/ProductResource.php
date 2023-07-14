@@ -28,7 +28,7 @@ class ProductResource extends JsonResource
             'rating' => $this->rating ?? 0,
             'in_favorite' => $this->in_favorite ?? false,
             "options"=> ProductOptionResource::collection($this->whenLoaded('productOptions')),
-            'categories' => ProductOptionResource::collection($this->whenLoaded('productCategories')),
+            'categories' => ProductCategoryResource::collection($this->whenLoaded('productCategories')),
         ];
     }
 }

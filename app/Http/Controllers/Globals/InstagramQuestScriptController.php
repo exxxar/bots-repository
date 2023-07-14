@@ -184,9 +184,9 @@ class InstagramQuestScriptController extends Controller
             ->first();
 
 
-        $rules = Collection::make($slug->config)
+        $rules = Collection::make($slug->config ?? [])
             ->where("key", self::KEY_RULES_TEXT)
-            ->first();
+            ->first() ?? null;
 
         Inertia::setRootView("bot");
 

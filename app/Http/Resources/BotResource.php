@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,8 +20,8 @@ class BotResource extends JsonResource
             'company_id' => $this->company_id,
             'bot_domain' => $this->bot_domain,
             'welcome_message' => $this->welcome_message,
-            'bot_token' => $this->bot_token,
-            'bot_token_dev' => $this->bot_token_dev,
+            'bot_token' => $this->bot_token ?? null,
+            'bot_token_dev' => $this->bot_token_dev?? null,
             'order_channel' => $this->order_channel,
             'main_channel' => $this->main_channel,
             'maintenance_message' => $this->maintenance_message,
@@ -42,7 +43,8 @@ class BotResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
-
+            'company' => new CompanyResource($this->whenLoaded('company')),
+            'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
             //'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),
         ];
     }

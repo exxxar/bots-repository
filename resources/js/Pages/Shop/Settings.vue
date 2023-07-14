@@ -151,7 +151,7 @@
 
 export default {
     mounted() {
-        $.card_extender();
+
     }
 }
 </script>
