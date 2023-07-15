@@ -20,7 +20,8 @@
                 <a
                     href="#/products"
                     v-if="index!==0&&index!==filteredLinks.length-1"
-                    class="page-link rounded-xs color-black bg-theme shadow-xl border-0">{{ item.label }}
+                    v-bind:class="{'bg-highlight':index===pagination.meta.current_page }"
+                    class="page-link rounded-xs color-black shadow-xl border-0">{{ item.label }}
 
                     <span class="sr-only" v-if="index===pagination.meta.current_page">(current)</span>
                 </a>
@@ -79,7 +80,7 @@ export default {
                 return;*/
 
             window.scrollTo({
-                top: 500,
+                top: 10,
                 behavior: "smooth"
             })
 

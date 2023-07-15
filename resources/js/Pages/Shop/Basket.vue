@@ -1,175 +1,95 @@
+<script setup>
+import ProductItemSimple from "@/Components/Shop/Products/ProductItemSimple.vue";
+</script>
 <template>
 
 
-        <div class="page-title page-title-small">
-            <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i></a>Cart 1</h2>
-            <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img" data-src="images/avatars/5s.png" style="background-image: url(&quot;images/avatars/5s.png&quot;);"></a>
-        </div>
-        <div class="card header-card shape-rounded" data-card-height="150" style="height: 150px;">
-            <div class="card-overlay bg-highlight opacity-95"></div>
-            <div class="card-overlay dark-mode-tint"></div>
-            <div class="card-bg preload-img" data-src="images/pictures/20s.jpg" style="background-image: url(&quot;images/pictures/20s.jpg&quot;);"></div>
-        </div>
+    <div class="page-title page-title-small">
+        <h2><a @click="$router.back()" data-back-button=""><i class="fa fa-arrow-left"></i></a>Корзина</h2>
+        <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img"
+           data-src="/shop/images/avatars/5s.png" style="background-image: url(&quot;images/avatars/5s.png&quot;);"></a>
+    </div>
+    <div class="card header-card shape-rounded" data-card-height="150" style="height: 150px;">
+        <div class="card-overlay bg-highlight opacity-95"></div>
+        <div class="card-overlay dark-mode-tint"></div>
+        <div class="card-bg preload-img" data-src="/shop/images/pictures/20s.jpg"
+             style="background-image: url(&quot;images/pictures/20s.jpg&quot;);"></div>
+    </div>
 
-        <div class="card card-style">
-            <div class="content">
-                <div class="d-flex pb-2">
-                    <div class="pr-3">
-                        <h5 class="font-14 font-600 opacity-80 pb-2">Your awesome product description long or short. </h5>
-                        <h1 class="font-24 font-700 ">$199<sup class="font-15 opacity-50">.99</sup></h1>
-                    </div>
-                    <div class="ml-auto">
-                        <img src="images/pictures/2s.jpg" class="rounded-m shadow-xl" width="90">
-                        <a href="#" class="color-white mt-n4 pl-3 d-block font-10"><i class="fa fa-times pr-2"></i> Remove</a>
-                    </div>
-                </div>
-                <div class="row mb-0 mt-4">
-                    <div class="col-8">
-                        <div class="input-style input-style-2">
-                            <span class="input-style-1-active">Options</span>
-                            <em><i class="fa fa-angle-down"></i></em>
-                            <select class="form-control">
-                                <option value="1" disabled="" selected="">Green Color</option>
-                                <option value="2">Red Color</option>
-                                <option value="3">Blue Color</option>
-                                <option value="4">Orange Color</option>
-                                <option value="5">Yellow Color</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="input-style input-style-2">
-                            <span class="input-style-1-active">Qty</span>
-                            <input type="number" min="1" max="999" style="border-width:1px;" placeholder="1">
-                        </div>
-                    </div>
+    <div class="card card-style" v-if="cartProducts.length>0">
+        <div class="content">
+
+
+            <ProductItemSimple :item="item.product" v-for="(item, index) in cartProducts"/>
+
+            <div class="divider mt-3"></div>
+
+            <h4>Итого</h4>
+            <p>
+                Ниже приведена итоговая цена заказа без учета стоимости доставки. Цена доставки расчитывается отдельно и
+                зависит от расстояния.
+            </p>
+            <div class="row mb-0" v-for="(item, index) in cartProducts">
+
+                <div class="col-6 text-left"><h6 class="font-600">{{ item.product.title }}</h6></div>
+                <div class="col-2 text-center"><h6 class="font-600">x{{ item.quantity || 1 }}</h6></div>
+                <div class="col-4 text-right"><h6 class="font-600">{{ item.product.current_price }} <sup>.00</sup>₽</h6>
                 </div>
 
-                <div class="divider mt-3"></div>
-
-                <div class="d-flex pb-2">
-                    <div class="pr-3">
-                        <h5 class="font-14 font-600 opacity-80 pb-2">Designer Style Eyeglasses with UV protection and stylish rim. </h5>
-                        <h1 class="font-24 font-700 ">$1299<sup class="font-15 opacity-50">.99</sup></h1>
-                    </div>
-                    <div class="ml-auto">
-                        <img src="images/pictures/20s.jpg" class="rounded-m shadow-xl" width="90">
-                        <a href="#" class="color-white mt-n4 pl-3 d-block font-10"><i class="fa fa-times pr-2"></i> Remove</a>
-                    </div>
-                </div>
-                <div class="row mb-0 mt-4">
-                    <div class="col-3">
-                        <div class="input-style input-style-2">
-                            <span class="input-style-1-active">Size</span>
-                            <em><i class="fa fa-angle-down"></i></em>
-                            <select class="form-control">
-                                <option value="1" disabled="" selected="">S</option>
-                                <option value="2">XS</option>
-                                <option value="3">M</option>
-                                <option value="4">L</option>
-                                <option value="5">XL</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="input-style input-style-2">
-                            <span class="input-style-1-active">Warranty</span>
-                            <em><i class="fa fa-angle-down"></i></em>
-                            <select class="form-control">
-                                <option value="1" selected="">2 Years - Default</option>
-                                <option value="2">4 Years (+ $99.99)</option>
-                                <option value="2">8 Years (+ $199.99)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="input-style input-style-2">
-                            <span class="input-style-1-active">Qty</span>
-                            <input type="number" min="1" max="999" style="border-width:1px;" placeholder="1">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="divider mt-3"></div>
-
-                <div class="d-flex pb-2">
-                    <div class="pr-3">
-                        <h5 class="font-14 font-600 opacity-80 pb-2">Retro Camera with 24 rolls of film included. </h5>
-                        <h1 class="font-24 font-700 ">$499<sup class="font-15 opacity-50">.99</sup></h1>
-                    </div>
-                    <div class="ml-auto">
-                        <img src="images/pictures/6s.jpg" class="rounded-m shadow-xl" width="90">
-                        <a href="#" class="color-white mt-n4 pl-3 d-block font-10"><i class="fa fa-times pr-2"></i> Remove</a>
-                    </div>
-                </div>
-                <div class="row mb-0 mt-4">
-                    <div class="col-6">
-                        <div class="input-style input-style-2">
-                            <span class="input-style-1-active">Film</span>
-                            <em><i class="fa fa-angle-down"></i></em>
-                            <select class="form-control">
-                                <option value="1" selected="">24 Rolls</option>
-                                <option value="2">48 Rolls (+ $99.99)</option>
-                                <option value="2">96 Rolls (+ $199.99)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="input-style input-style-2">
-                            <span class="input-style-1-active">Size</span>
-                            <em><i class="fa fa-angle-down"></i></em>
-                            <select class="form-control">
-                                <option value="1" disabled="" selected="">S</option>
-                                <option value="2">XS</option>
-                                <option value="3">M</option>
-                                <option value="4">L</option>
-                                <option value="5">XL</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="input-style input-style-2">
-                            <span class="input-style-1-active">Qty</span>
-                            <input type="number" min="1" max="999" style="border-width:1px;" placeholder="1">
-                        </div>
-                    </div>
-                </div>
 
             </div>
-        </div>
+            <div class="divider mt-4"></div>
+            <div class="row mb-0">
+                <div class="col-6 text-left"><h4>Суммарно, ед.</h4></div>
+                <div class="col-6 text-right"><h4>{{ cartTotalCount }} шт.</h4></div>
+                <div class="col-6 text-left"><h4>Суммарно, цена</h4></div>
+                <div class="col-6 text-right"><h4>{{ cartTotalPrice }}<sup>.00</sup>₽</h4></div>
 
-        <div class="card mt-4 preload-img" data-src="images/pictures/20s.jpg">
-            <div class="card-body py-4">
-                <h2 class="color-white text-center">Cart Sumary</h2>
-                <p class="color-white boxed-text-l">
-                    Taxes and Shipping will be adde din the Checkout Page
-                </p>
-                <div class="card card-style mx-0">
-                    <div class="content">
-                        <div class="row mb-0">
-                            <div class="col-6 text-left"><h4>Total</h4></div>
-                            <div class="col-6 text-right"><h4>$2133<sup>.98</sup></h4></div>
-                        </div>
-                        <div class="divider mt-4"></div>
-                        <a href="#" class="btn btn-full btn-m rounded-sm bg-highlight font-800 text-uppercase">Proceed to Checkout</a>
-                    </div>
+            </div>
+
+
+            <div class="divider mt-4"></div>
+
+            <a href="#" class="btn btn-full btn-sm rounded-sm bg-highlight font-800 text-uppercase">Перейти к
+                оформлению</a>
+        </div>
+    </div>
+
+
+    <div class="card bg-20 mt-4 content rounded-m shadowl" v-else>
+        <div class="card-body">
+            <h4 class="color-white">Товар отсутствует</h4>
+            <p class="color-white">
+                На текущий момент товар на страницах сайта отсуствтует
+            </p>
+            <div class="card card-style ml-0 mr-0 mb-3 bg-white">
+                <div class="content">
+                    Вы можете перейти в раздел товаров и попробовать добавить что-то в корзину или избранное
                 </div>
             </div>
-            <div class="card-overlay bg-highlight opacity-95"></div>
-            <div class="card-overlay dark-mode-tint"></div>
         </div>
-
-        <div class="divider divider-margins"></div>
-
-
+        <div class="card-overlay bg-gradient-blue1 opacity-95 rounded-m shadow-l"></div>
+        <div class="card-overlay dark-mode-tint rounded-m shadow-l"></div>
+    </div>
 
 </template>
 <script>
 
 
-export default {
-    mounted() {
+import {mapGetters} from "vuex";
 
+export default {
+    computed: {
+        ...mapGetters(['cartProducts', 'cartTotalCount', 'cartTotalPrice']),
+    },
+    mounted() {
+        if (this.cartProducts.length > 0)
+            this.loadActualProducts()
+    },
+    methods: {
+        loadActualProducts() {
+            this.$store.dispatch("loadActualPriceInCart")
+        }
     }
 }
 </script>

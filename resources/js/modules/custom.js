@@ -1776,9 +1776,9 @@ export default  {
                     var greetingTime = new Date().getHours();
                     var greetingMessage;
                     var greetingUser = $('.greeting-text').data('username')
-                    var greetingMorning = ('Good morning');
-                    var greetingAfternoon = ('Good afternoon');
-                    var greetingEvening = ('Good evening');
+                    var greetingMorning = ('Доброе утро');
+                    var greetingAfternoon = ('Добрый день');
+                    var greetingEvening = ('Добрый вечер');
 
                     if (greetingTime >= 0 && greetingTime < 12) {
                         greetingMessage = greetingMorning;

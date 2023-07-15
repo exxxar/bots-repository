@@ -41,11 +41,18 @@
             <div class="row text-center mr-2 ml-2 mb-3">
                 <div class="col-12 mb-n2">
                     <button type="button"
-                            @click="goToProduct"
+                            v-if="!product.in_favorite"
+                            @click="addToFavorite"
                             class="btn p-3 bg-red2-dark rounded-s shadow-l w-100">
-                        <i v-if="!product.in_favorite" class="fa-regular fa-heart font-12"></i>
-                        <i v-if="product.in_favorite" class="fa-solid fa-heart font-12"></i>
+                        <i  class="fa-regular fa-heart font-12"></i>
                         В избранное
+                    </button>
+                    <button type="button"
+                            v-else
+                            @click="removeFromFavorites"
+                            class="btn p-3 bg-highlight rounded-s shadow-l w-100">
+                        <i class="fa-solid fa-heart font-12"></i>
+                        Убрать из избранного
                     </button>
                 </div>
             </div>
@@ -64,9 +71,12 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['inCart', 'cartTotalCount']),
+        ...mapGetters(['inCart', 'cartTotalCount','inFav']),
         currentBot() {
             return window.currentBot
+        },
+        self(){
+          return window.self
         },
         currentPrice() {
             return this.product.current_price
@@ -79,7 +89,7 @@ export default {
         window.addEventListener("add-to-cart", (e) => {
             this.product = e.detail.product || null
 
-            console.log("test 1", this.product)
+            this.product.in_favorite = this.inFav(this.product.id)
             this.$nextTick(() => {
 
                 $('#menu-product-info').showMenu();
@@ -89,6 +99,19 @@ export default {
 
     },
     methods: {
+        removeFromFavorites(){
+            this.product.in_favorite = false
+            this.$store.dispatch("removeFromFavorites", this.product.id).then(()=>{
+                this.$botNotification.notification("Избранное","Успешно удалено из избранного!")
+            })
+        },
+        addToFavorite(){
+            this.product.in_favorite = true
+            this.$store.dispatch("addToFavorites", this.product).then(()=>{
+                this.$botNotification.notification("Избранное","Успешно добавлено в избранное!")
+
+            })
+        },
         goToProduct(){
             this.$router.push({ name: 'product', params: { productId: this.product.id } })
             $('#menu-product-info').hideMenu();

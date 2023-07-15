@@ -3,12 +3,7 @@ defineProps({
     bot: {
         type: Object,
     },
-    title: {
-        type: String,
-    },
-    description: {
-        type: String,
-    },
+
 });
 import Layout from "@/Layouts/ShopLayout.vue";
 </script>
@@ -24,12 +19,12 @@ import Layout from "@/Layouts/ShopLayout.vue";
 
                 <div class="footer">
                     <div class="card card-style mb-0">
-                        <a href="#" class="footer-title pt-4">{{ title||'CashMan:Shopify' }}</a>
+                        <a href="#" class="footer-title p-4">{{ currentBot.company.title || 'CashMan:Shopify' }}</a>
                         <p class="text-center font-12 mt-n1 mb-3 opacity-70">
-                           Добавь <span class="color-highlight">красок</span> в свою жизнь
+                            Добавь <span class="color-highlight">красок</span> в свою жизнь
                         </p>
                         <p class="boxed-text-l">
-                            {{description||'Описание вашего магазина'}}
+                            {{ currentBot.company.description || 'Описание вашего магазина' }}
                         </p>
                         <div class="text-center mb-3">
                             <a href="#" class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook"><i
@@ -60,11 +55,39 @@ import Layout from "@/Layouts/ShopLayout.vue";
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+import baseJS from "@/modules/custom";
+
 export default {
+    computed: {
+        ...mapGetters(['getSelf']),
+        tg() {
+            return window.Telegram.WebApp;
+        },
+        tgUser() {
+            const urlParams = new URLSearchParams(this.tg.initData);
+            return JSON.parse(urlParams.get('user'));
+        },
+        currentBot() {
+            return window.currentBot
+        }
+    },
     created() {
         window.currentBot = this.bot.data
-        this.$notify({ type: "success", text: "The operation completed" });
-    }
+        let tgUser = this.tgUser || null
+        this.$store.dispatch("loadSelf", {
+            dataObject: {
+                telegram_chat_id: tgUser ? tgUser.id : 484698703,
+                bot_id: window.currentBot.id
+            }
+        }).then(() => {
+            window.self = this.getSelf
+
+        })
+        this.$notify({type: "success", text: "The operation completed"});
+    },
+
+
 }
 </script>
 

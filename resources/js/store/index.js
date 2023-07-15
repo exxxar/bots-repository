@@ -12,6 +12,8 @@ import slugs from './modules/slugs';
 import wheelOfFortune from "@/store/modules/globals/wheelOfFortune";
 import instagramQuest from "@/store/modules/globals/instagramQuest";
 import cart from "@/store/modules/shop/cart";
+import self from "@/store/modules/self";
+import favorites from "@/store/modules/shop/favorites";
 import util from "@/store/modules/utilites";
 
 
@@ -91,6 +93,8 @@ export default createStore({
         slugs,
         wheelOfFortune,
         instagramQuest,
-        cart
+        cart,
+        self,
+        favorites
     }
 })

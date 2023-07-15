@@ -263,6 +263,9 @@ Route::get('/deliveryman/vip-form/{botDomain}', [AdminBotController::class, "vip
 
 Route::prefix("global-scripts")
     ->group(function () {
+
+        Route::post('/self', [BotController::class,"getSelf"]);
+
         Route::prefix("wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)
             ->group(function () {
@@ -284,23 +287,23 @@ Route::prefix("global-scripts")
                 Route::get("/vk-auth-link/{botDomain}", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
                 Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
 
-
-
-
                // Route::get("/info/{botDomain}",[\App\Http\Controllers\Admin\BotController::class,"self"]);
-
                 Route::post("/products",[\App\Http\Controllers\Admin\ProductController::class,"index"]);
+                Route::post("/products-by-ids",[\App\Http\Controllers\Admin\ProductController::class,"getProductsByIds"]);
                 Route::get("/products/{productId}",[\App\Http\Controllers\Admin\ProductController::class,"getProduct"]);
                 Route::post("/random-products",[\App\Http\Controllers\Admin\ProductController::class,"randomProducts"]);
-                Route::post("/favorites",[\App\Http\Controllers\Admin\FavoriteController::class,"index"]);
-                Route::post("/favorites/add",[\App\Http\Controllers\Admin\FavoriteController::class,"store"]);
-                Route::post("/favorites/remove",[\App\Http\Controllers\Admin\FavoriteController::class,"remove"]);
-                        //Продукты, избранное, корзина,
+
+                Route::prefix("admin")
+                    ->group(function () {
+                        Route::get('/{botDomain}', [ShopScriptController::class, "shopAdminPage"]);
+                    });
 
 
-                Route::get('/{botDomain}/{path?}', [ShopScriptController::class, "shopHomepage"]);
+                Route::get('/{botDomain}/{path?}', [ShopScriptController::class, "shopHomePage"]);
 
             });
+
+
     });
 
 

@@ -15,13 +15,4 @@ export default {
 
 };
 </script>
-<style>
-.wheel-base-container .wheel-base-indicator {
-    left: 45px !important;
-}
 
-.wheel .content {
-    font-size: 20px;
-    font-weight: 900;
-}
-</style>

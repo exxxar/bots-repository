@@ -1,108 +1,107 @@
+<script setup>
+import ProductItemSimple from "@/Components/Shop/Products/ProductItemSimple.vue";
+import Pagination from "@/Components/Shop/Helpers/Pagination.vue";
+</script>
+
 <template>
 
 
-        <div class="page-title page-title-small">
-            <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i></a>Categories</h2>
-            <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img" data-src="images/avatars/5s.png" style="background-image: url(&quot;images/avatars/5s.png&quot;);"></a>
-        </div>
-        <div class="card header-card shape-rounded" data-card-height="150" style="height: 150px;">
-            <div class="card-overlay bg-highlight opacity-95"></div>
-            <div class="card-overlay dark-mode-tint"></div>
-            <div class="card-bg preload-img" data-src="images/pictures/20s.jpg" style="background-image: url(&quot;images/pictures/20s.jpg&quot;);"></div>
-        </div>
+    <div class="page-title page-title-small">
+        <h2><a @click="$router.back()" data-back-button><i class="fa fa-arrow-left"></i></a>Избранное</h2>
+        <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img"
+           data-src="images/avatars/5s.png"></a>
+    </div>
+    <div class="card header-card shape-rounded" data-card-height="150">
+        <div class="card-overlay bg-highlight opacity-95"></div>
+        <div class="card-overlay dark-mode-tint"></div>
+        <div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
+    </div>
+    <div class="card card-style" v-if="getFavorites.length>0">
+        <div class="content">
+            <h3>Наши товары</h3>
 
-        <div class="content mb-0">
-            <div class="row mb-0">
-                <div class="col-12">
-                    <a href="#" data-card-height="120" class="card card-style mb-4 mx-0" style="height: 120px;">
-                        <div class="card-center pl-2 ml-2">
-                            <i class="fa fa-mobile-alt font-40 pl-3"></i>
-                        </div>
-                        <div class="card-center pl-4 ml-5">
-                            <h4 class="pl-2">Mobile Devices</h4>
-                            <p class="pl-2 mt-n2 font-12 color-highlight mb-0">Best selling Category </p>
-                        </div>
-                        <div class="card-center opacity-30">
-                            <i class="fa fa-arrow-right opacity-50 float-right color-theme pr-3"></i>
-                        </div>
-                    </a>
+
+            <div class="collapse" id="collapse-8" style="">
+
+                <div class="input-style input-style-2 has-icon input-required">
+                    <i class="input-icon fa-solid fa-magnifying-glass" @click="loadFavorites(0)"></i>
+                    <input class="form-control" v-model="search" type="name" placeholder="Найди товар на странице">
                 </div>
-                <div class="col-6">
-                    <a href="#" data-card-height="125" class="card card-style mb-4 mx-0" style="height: 125px;">
-                        <div class="card-center text-center">
-                            <i class="fa fa-laptop font-30 pt-3 color-red2-dark"></i>
-                            <h5 class="pt-2">Laptops</h5>
-                            <span class="font-10 opacity-30 color-theme pt-2 d-block">Tap to View</span>
+                <p class="mb-0 pb-1">
+                    Цена:
+                </p>
+                <div class="row mb-0">
+                    <div class="col-6">
+                        <div class="input-style input-style-2 input-required">
+                            <span class="color-highlight">От, ₽</span>
+                            <input class="form-control" type="email" placeholder="0 ₽">
                         </div>
-                    </a>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-style input-style-2 input-required">
+                            <span class="color-highlight">До, ₽</span>
+                            <input class="form-control" type="email" placeholder="100 ₽">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-6">
-                    <a href="#" data-card-height="125" class="card card-style mb-4 mx-0" style="height: 125px;">
-                        <div class="card-center text-center">
-                            <i class="fa fa-desktop font-30 pt-3 color-green1-dark"></i>
-                            <h5 class="pt-2">Desktops</h5>
-                            <span class="font-10 opacity-30 color-theme pt-2 d-block">Tap to View</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6">
-                    <a href="#" data-card-height="125" class="card card-style mb-4 mx-0" style="height: 125px;">
-                        <div class="card-center text-center">
-                            <i class="fa fa-tablet-alt font-30 pt-3 color-magenta1-dark"></i>
-                            <h5 class="pt-2">Tablets</h5>
-                            <span class="font-10 opacity-30 color-theme pt-2 d-block">Tap to View</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6">
-                    <a href="#" data-card-height="125" class="card card-style mb-4 mx-0" style="height: 125px;">
-                        <div class="card-center text-center">
-                            <i class="fa fa-tv font-30 pt-3 color-orange-dark"></i>
-                            <h5 class="pt-2">4k TV's</h5>
-                            <span class="font-10 opacity-30 color-theme pt-2 d-block">Tap to View</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-4">
-                    <a href="#" data-card-height="125" class="card card-style mb-4 mx-0" style="height: 125px;">
-                        <div class="card-center text-center">
-                            <i class="fa fa-credit-card pt-3 font-30 color-gray2-dark"></i>
-                            <h6 class="pt-2">Cards</h6>
-                            <span class="font-10 opacity-30 color-theme pt-2 d-block">Tap to View</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-4">
-                    <a href="#" data-card-height="125" class="card card-style mb-4 mx-0" style="height: 125px;">
-                        <div class="card-center text-center">
-                            <i class="fa fa-cog font-30 pt-3 color-blue2-dark"></i>
-                            <h5 class="pt-2">Service</h5>
-                            <span class="font-10 opacity-30 color-theme pt-2 d-block">Tap to View</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-4">
-                    <a href="#" data-card-height="125" class="card card-style mb-4 mx-0" style="height: 125px;">
-                        <div class="card-center text-center">
-                            <i class="fab fa-usb font-30 pt-3 color-dark2-dark"></i>
-                            <h5 class="pt-2">Storage</h5>
-                            <span class="font-10 opacity-30 color-theme pt-2 d-block">Tap to View</span>
-                        </div>
-                    </a>
+            </div>
+            <a data-toggle="collapse" href="#collapse-8"
+               class="btn btn-m btn-full rounded-sm font-900 shadow-xl text-uppercase mb-3" aria-expanded="true">
+                <i class="fa-solid fa-filter  mr-2"></i>
+                <span class="font-14">Фильтры избранного товара</span>
+            </a>
+
+            <ProductItemSimple
+                v-if="getFavorites.length>0"
+                :item="fav" v-for="(fav, index) in getFavorites"/>
+
+        </div>
+    </div>
+    <div class="card bg-20 mt-4 content rounded-m shadowl" v-else>
+        <div class="card-body">
+            <h4 class="color-white">Товар отсутствует</h4>
+            <p class="color-white">
+                На текущий момент товар на страницах сайта отсуствтует
+            </p>
+            <div class="card card-style ml-0 mr-0 mb-3 bg-white">
+                <div class="content">
+                    Вы можете перейти в раздел товаров и попробовать добавить что-то в корзину или избранное
                 </div>
             </div>
         </div>
-
-        <div class="divider divider-margins"></div>
-
-
+        <div class="card-overlay bg-gradient-green1 opacity-95 rounded-m shadow-l"></div>
+        <div class="card-overlay dark-mode-tint rounded-m shadow-l"></div>
+    </div>
 </template>
 <script>
 
+import baseJS from '@/modules/custom.js'
+import {mapGetters} from "vuex";
 
 export default {
+    data() {
+        return {
+            search: null,
+        }
+    },
+    computed: {
+        ...mapGetters(['getSelf', 'getFavorites']),
+
+        currentBot() {
+            return window.currentBot
+        },
+        self() {
+            return this.getSelf
+        }
+    },
     mounted() {
-        $.card_extender();
+        if (this.getFavorites.length > 0)
+            this.loadActualPriceInFav()
+    },
+    methods: {
+        loadActualPriceInFav() {
+            this.$store.dispatch("loadActualPriceInFav")
+        }
     }
 }
 </script>

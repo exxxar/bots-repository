@@ -7,7 +7,7 @@ import Pagination from "@/Components/Shop/Helpers/Pagination.vue";
 
 
     <div class="page-title page-title-small">
-        <h2><a href="#" data-back-button><i class="fa fa-arrow-left"></i></a>Продукция</h2>
+        <h2><a @click="$router.back()" data-back-button><i class="fa fa-arrow-left"></i></a>Продукция</h2>
         <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img"
            data-src="images/avatars/5s.png"></a>
     </div>

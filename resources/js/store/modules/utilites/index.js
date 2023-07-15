@@ -20,5 +20,21 @@ export default {
         }
 
         return result;
-    }
+    },
+    async loadActualProducts(ids = []) {
+
+        let link = `/global-scripts/shop/products-by-ids`
+        let method = 'POST'
+
+        let _axios = this.makeAxiosFactory(link, method, {
+            ids: ids
+        })
+
+        return _axios.then((response) => {
+            const products = response.data.data;
+            return Promise.resolve(products);
+        }).catch(err => {
+            return Promise.reject(err);
+        })
+    },
 }

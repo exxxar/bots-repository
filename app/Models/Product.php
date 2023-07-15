@@ -47,7 +47,7 @@ class Product extends Model
     ];
 
     protected $with = ["productCategories", "productOptions"];
-    protected $appends = ['rating','in_favorite'];
+    protected $appends = ['rating'];
 
     public function bot(): BelongsTo
     {
@@ -70,8 +70,5 @@ class Product extends Model
         return "3.0";
     }
 
-    public function getInFavoriteAttribute()
-    {
-        return true;
-    }
+
 }

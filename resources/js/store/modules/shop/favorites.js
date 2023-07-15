@@ -1,84 +1,99 @@
-import util from '../utilites';
-import axios from "axios";
+import util from "@/store/modules/utilites";
 
-const BASE_FAVORITES_LINK = '/global-scripts/shop/favorites'
-
-let state = {
-    favorites: [],
-    favorites_paginate_object: null,
+const state = {
+    favorites: localStorage.getItem('cashman_favorites') == null ? [] : JSON.parse(localStorage.getItem('cashman_favorites')),
 }
 
+// getters
 const getters = {
-    getFavorites: state => state.favorites || [],
-    getProductById: (state) => (id) => {
-        return state.favorites.find(item => item.id === id)
+    inFav: (state) => (id) => {
+        let item = state.favorites.find(item => item.id === id)
+
+        return item != null
     },
-    getFavoritesPaginateObject: state => state.favorites_paginate_object || null,
+    getFavorites: (state, getters, rootState) => {
+        return state.favorites;
+    },
+    favoritesCount: (state, getters) => {
+        return state.favorites.length || 0
+    },
 }
 
+// actions
 const actions = {
-    async loadFavorites(context, payload = {dataObject: {bot_id: null}, page: 0, size: 12}) {
-        let page = payload.page || 0
-        let size = 12
+    async loadActualPriceInFav({state, commit}) {
 
-        let link = `${BASE_FAVORITES_LINK}?page=${page}&size=${size}`
-        let method = 'POST'
-        let data = payload.dataObject
+        let ids = []
+        state.favorites.forEach(item => {
+            ids.push(item.id)
+        })
 
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let data = util.loadActualProducts(ids)
 
-        return _axios.then((response) => {
-            let dataObject = response.data
-            context.commit("setFavorites", dataObject.data)
-            delete dataObject.data
-            context.commit('setFavoritesPaginateObject', dataObject)
-            return Promise.resolve();
+        return data.then((response) => {
+            let products = response;
+
+            let tmp = []
+
+            const favorites = state.favorites
+
+            favorites.forEach(fav => {
+                tmp.push(products.find(sub => sub.id === fav.id))
+            })
+
+            commit("setFavoritesItems", tmp)
         }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
+            commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);
         })
     },
-    async addToFavorites(context, payload= {dataObject: {bot_id: null, tg_id:null, product_id:null}}){
-        let link = `${BASE_FAVORITES_LINK}/add`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
-
-        return _axios.then((response) => {
-            return Promise.resolve(response.data);
-        }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
-            return Promise.reject(err);
-        })
+    addToFavorites({state, commit}, product) {
+        commit('pushProductToFav', product);
     },
-    async removeFromFavorites(context, payload= {dataObject: {bot_id: null, tg_id:null, product_id:null}}){
-        let link = `${BASE_FAVORITES_LINK}/remove`
-
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
-
-        return _axios.then((response) => {
-            return Promise.resolve(response.data);
-        }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
-            return Promise.reject(err);
-        })
+    removeFromFavorites({state, commit}, id) {
+        commit('removeProductFromFav', id);
     },
-}
-
-const mutations = {
-    setFavorites(state, payload) {
-        state.favorites = payload || [];
-        localStorage.setItem('cashman_favorites', JSON.stringify(payload));
-    },
-    setFavoritesPaginateObject(state, payload) {
-        state.favorites_paginate_object = payload || [];
-        localStorage.setItem('cashman_favorites_paginate_object', JSON.stringify(payload));
+    clearFavorites({state, commit}) {
+        commit('clearAllFavorites');
     }
 }
 
-const favoritesModule = {
+// mutations
+const mutations = {
+
+    pushProductToFav(state, product) {
+        const fatItem = state.favorites.find(item => item.id === product.id)
+        if (!fatItem)
+            state.favorites.push(product)
+
+        localStorage.setItem('cashman_favorites', JSON.stringify(state.favorites));
+    },
+    removeProductFromFav(state, id) {
+        let tmp = state.favorites.filter((item) => item.id !== id);
+        state.favorites = tmp
+
+        localStorage.setItem('cashman_favorites', JSON.stringify(state.favorites));
+    },
+
+    clearAllFavorites(state) {
+        state.favorites = []
+        localStorage.setItem('cashman_favorites', JSON.stringify(state.favorites));
+    },
+    setFavoritesItems(state, favorites) {
+        state.favorites = favorites
+
+        localStorage.setItem('cashman_favorites', JSON.stringify(state.favorites));
+    },
+
+}
+
+
+const cardModule = {
     state,
     mutations,
     actions,
     getters
 }
-export default favoritesModule;
+export default cardModule;
+

@@ -1,3 +1,5 @@
+import util from "@/store/modules/utilites";
+
 const state = {
     items: localStorage.getItem('cashman_basket') == null ? [] : JSON.parse(localStorage.getItem('cashman_basket')),
 }
@@ -44,14 +46,33 @@ const getters = {
 
 // actions
 const actions = {
+    async loadActualPriceInCart(context) {
+
+        let ids = []
+        context.state.items.forEach(item => {
+            ids.push(item.product.id)
+        })
+
+        let data = util.loadActualProducts(ids)
+
+        return data.then((response) => {
+            let products = response;
+
+            context.state.items.forEach(item => {
+                item.product = products.find(sub => sub.id === item.product.id)
+            })
+
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     getProductList({state, commit}) {
         state.items = localStorage.getItem('vuejs__store') == null ? [] : JSON.parse(localStorage.getItem('vuejs__store'))
         return state.items
     },
-
     addProductToCart({state, commit}, product) {
         commit('pushProductToCart', product);
-
     },
     setQuantity({state, commit}, prod) {
         commit('setItemQuantity', prod);
@@ -117,7 +138,7 @@ const mutations = {
         state.items = []
         localStorage.setItem('cashman_basket', JSON.stringify(state.items));
     },
-    setCartItems(state, {items}) {
+    setCartItems(state, items) {
         state.items = items
 
         localStorage.setItem('cashman_basket', JSON.stringify(state.items));

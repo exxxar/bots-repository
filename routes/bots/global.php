@@ -14,7 +14,8 @@ BotManager::bot()
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\ShopScriptController::class)
-    ->slug("global_shop_main", "shopMain"); //старт магазина
+    ->slug("global_shop_main", "shopMain")
+    ->slug("global_shop_admin", "shopAdmin");
 
    /* ->slug("global_instagram_quest", "instagramQuest") //квест Instagram
     ->slug("global_cashback_module_client", "cashbackClient") //модуль кэшбэка для клиента

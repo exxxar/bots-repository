@@ -38,6 +38,24 @@ class BotController extends Controller
 
     use SystemUtilitiesTrait;
 
+    public function getSelf(Request $request)
+    {
+        $request->validate([
+            "telegram_chat_id" => "required",
+            "bot_id" => "required"
+        ]);
+
+        $botUser = BotUser::query()
+            ->where("telegram_chat_id", $request->telegram_chat_id)
+            ->where("bot_id", $request->bot_id)
+            ->first();
+
+        if (is_null($botUser))
+            return response()->noContent(404);
+
+        return new BotUserResource($botUser);
+    }
+
     public function requestTelegramChannel(Request $request)
     {
         $request->validate([
@@ -561,7 +579,7 @@ class BotController extends Controller
             'title' => $businessInfo->name,
             'slug' => $botDomain,
             'description' => $businessInfo->text,
-            'image'=>null,
+            'image' => null,
             'address' => $address->value,
             'phones' => $phones,
             'links' => $links,
@@ -587,16 +605,16 @@ class BotController extends Controller
         $company->image = $greeting_image_profile;
         $company->save();
 
-        $contacts_image = $contacts->need_photo?
-            $this->file($request, $company->slug, "contacts_image"):
+        $contacts_image = $contacts->need_photo ?
+            $this->file($request, $company->slug, "contacts_image") :
             ($contacts->image ?? null);
 
-        $self_info_image = $selfInfo->need_photo?
-            $this->file($request, $company->slug, "self_info_image"):
+        $self_info_image = $selfInfo->need_photo ?
+            $this->file($request, $company->slug, "self_info_image") :
             ($selfInfo->image ?? null);
 
-        $business_info_image = $businessInfo->need_photo?
-            $this->file($request, $company->slug, "business_info_image"):
+        $business_info_image = $businessInfo->need_photo ?
+            $this->file($request, $company->slug, "business_info_image") :
             ($businessInfo->image ?? null);
 
         $botType = BotType::query()->where("slug", "business_card")->first();
@@ -611,7 +629,7 @@ class BotController extends Controller
             'main_channel' => -1,
             'balance' => 3000,
             'tax_per_day' => 10,
-            'image'=>$greeting_image_avatar,
+            'image' => $greeting_image_avatar,
             'description' => $businessInfo->text,
             'info_link' => null,
             'social_links' => $links,
@@ -968,7 +986,6 @@ class BotController extends Controller
 
         return \response()->noContent();
     }
-
 
 
 }

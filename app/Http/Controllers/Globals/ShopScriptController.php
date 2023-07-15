@@ -27,7 +27,7 @@ class ShopScriptController extends Controller
     const KEY_BTN_TEXT = "btn_text";
 
 
-    public function shopHomepage( $botDomain)
+    public function shopHomePage( $botDomain)
     {
         $bot = Bot::query()
             ->with(["company","imageMenus"])
@@ -54,10 +54,33 @@ class ShopScriptController extends Controller
 
     }
 
+    public function shopAdminPage( $botDomain)
+    {
+        $bot = Bot::query()
+            ->with(["company","imageMenus"])
+            ->where("bot_domain", $botDomain)
+            ->first();
+
+
+        $slug = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where("slug", self::SCRIPT)
+            ->orderBy("updated_at", "desc")
+            ->first();
+
+        Inertia::setRootView("bot");
+
+
+        return Inertia::render('Shop/Admin/Main', [
+            'bot' =>BotSecurityResource::make($bot),
+        ]);
+
+    }
+
     public function shopMain(...$config)
     {
-
         $bot = BotManager::bot()->getSelf();
+
 
         $mainText = (Collection::make($config[1])
             ->where("key", self::KEY_MAIN_TEXT)
@@ -74,6 +97,41 @@ class ShopScriptController extends Controller
                     [
                         ["text" => $btnText, "web_app" => [
                             "url" => env("APP_URL") . "/global-scripts/shop/$bot->bot_domain#home"
+                        ]],
+                    ],
+
+                ]);
+    }
+
+    public function shopAdmin(...$config)
+    {
+
+        $bot = BotManager::bot()->getSelf();
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        if (!$botUser->is_admin){
+            \App\Facades\BotManager::bot()
+                ->reply("К сожалению, вы не являетесь администратором данного бота!");
+            return;
+        }
+
+
+        $mainText = (Collection::make($config[1])
+            ->where("key", self::KEY_MAIN_TEXT)
+            ->first())["value"] ?? "Покупай товары в нашем сервисе";
+
+        $btnText = (Collection::make($config[1])
+            ->where("key", self::KEY_BTN_TEXT)
+            ->first())["value"] ?? "\xF0\x9F\x8E\xB2Перейти в магазин";
+
+        \App\Facades\BotManager::bot()
+            ->replyPhoto($mainText,
+                InputFile::create(public_path() . "/images/shopify.png"),
+                [
+                    [
+                        ["text" => $btnText, "web_app" => [
+                            "url" => env("APP_URL") . "/global-scripts/shop/admin/$bot->bot_domain"
                         ]],
                     ],
 

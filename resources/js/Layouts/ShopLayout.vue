@@ -41,10 +41,12 @@ import Preloader from "@/Components/Shop/Helpers/Preloader.vue";
 
             <router-link
                 :active-class="'active-nav'"
-                :tag="'a'" :to="prefix+'/favorites'">
-                <i class="fa fa-heart"></i><span class="color-white">Избранное</span>
-                <strong v-if="$route.path==prefix+'/favorites'"></strong>
+                :tag="'a'" :to="prefix+'/basket'">
+                <i class="fa-solid fa-basket-shopping"></i><span class="color-white">Корзина</span><em
+                class="badge bg-green1-dark" v-if="cartTotalCount>0">{{cartTotalCount}}</em>
+                <strong v-if="$route.path==prefix+'/basket'"></strong>
             </router-link>
+
 
             <router-link
                 :active-class="'active-nav'"
@@ -62,18 +64,25 @@ import Preloader from "@/Components/Shop/Helpers/Preloader.vue";
 
             <router-link
                 :active-class="'active-nav'"
-                :tag="'a'" :to="prefix+'/basket'">
-                <i class="fa-solid fa-basket-shopping"></i><span class="color-white">Корзина</span><em
-                class="badge bg-green1-dark" v-if="cartTotalCount>0">{{cartTotalCount}}</em>
-                <strong v-if="$route.path==prefix+'/basket'"></strong>
+                :tag="'a'" :to="prefix+'/favorites'">
+                <i class="fa fa-heart"></i><span class="color-white">Избранное</span><em
+                class="badge bg-green1-dark" v-if="favoritesCount>0">{{favoritesCount}}</em>
+                <strong v-if="$route.path==prefix+'/favorites'"></strong>
             </router-link>
 
+
+<!--
             <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="prefix+'/settings'">
                 <i class="fa fa-cog"></i><span class="color-white">Настройки</span>
                 <strong v-if="$route.path==prefix+'/settings'"></strong>
             </router-link>
+-->
+
+            <a data-menu="menu-main">
+                <i class="fa-solid fa-bars"></i><span class="color-white">Меню</span>
+            </a>
 
         </div>
 
@@ -97,12 +106,12 @@ export default {
             this.$preloader.show();
             this.$nextTick(()=>{
                 baseJS.handler()
-
+                document.body.scrollTop = document.documentElement.scrollTop = 0;
             })
         },
     },
     computed: {
-        ...mapGetters([ 'cartTotalCount']),
+        ...mapGetters([ 'cartTotalCount' ,'favoritesCount']),
         prefix() {
             return window.currentPath || ''
         },

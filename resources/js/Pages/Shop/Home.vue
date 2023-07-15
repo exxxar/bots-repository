@@ -6,14 +6,13 @@ import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
 <template>
 
     <div class="page-title page-title-large">
-        <h2 data-username="Enabled!" class="greeting-text"></h2>
-        <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img"
-           data-src="images/avatars/5s.png"></a>
+        <h2 data-username="Пользователь!'" class="greeting-text"></h2>
+        <a data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl d-flex justify-content-center align-items-center font-18"><i class="fa-solid fa-bars text-white"></i></a>
     </div>
     <div class="card header-card shape-rounded" data-card-height="140">
         <div class="card-overlay bg-highlight opacity-95"></div>
         <div class="card-overlay dark-mode-tint"></div>
-        <div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
+        <div class="card-bg preload-img" data-src="/shop/images/pictures/20s.jpg"></div>
     </div>
 
     <div class="content">
@@ -334,12 +333,13 @@ import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
 </template>
 <script>
 
-
+import baseJS from '@/modules/custom.js'
 import {mapGetters} from "vuex";
 
 export default {
     data() {
         return {
+            self:null,
             randomProducts: null
         }
     },
@@ -347,14 +347,29 @@ export default {
         ...mapGetters(['getProducts']),
         currentBot() {
             return window.currentBot;
-        }
+        },
+        logo(){
+            return `/images-by-bot-id/${this.currentBot.id}/${this.currentBot.image}`
+        },
+
     },
     mounted() {
+
+        this.watchStore();
         //this.$botNotification.notification("Test", "teeeeeeeeeees")
         this.loadRandomProducts()
 
     },
     methods: {
+        watchStore(){
+            this.$store.watch(
+                () => this.$store.getters.getSelf,
+                data => {
+                    this.self = this.$store.getters.getSelf
+                    baseJS.handler()
+                }
+            )
+        },
         loadRandomProducts() {
             return this.$store.dispatch("loadRandomProducts", {
                 dataObject: {

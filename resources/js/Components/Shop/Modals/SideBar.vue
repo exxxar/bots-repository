@@ -15,14 +15,21 @@
                 class="fa font-12 color-green1-dark fa-brush"></i></a>
             <a href="#" data-menu="menu-share" class="border-right-0">
                 <i class="fa font-12 color-red2-dark fa-share-alt"></i></a>
-            <a href="#" class="border-right-0"><i class="fa font-12 color-blue2-dark fa-cog"></i></a>
-            <a class="border-right-0"><i class="fa font-12 color-red2-dark fa-times"></i></a>
+
+            <router-link
+                class="close-menu"
+                :tag="'a'" :to="'/settings'">
+                <i class="fa  color-blue2-dark fa-cog  font-12" ></i>
+            </router-link>
+
+            <a class="border-right-0 close-menu" ><i class="fa font-12 color-red2-dark fa-times"></i></a>
         </div>
 
         <div class="menu-logo text-center">
-            <a href="#"><img class="rounded-circle bg-highlight" width="80" src="images/avatars/5s.png"></a>
-            <h1 class="pt-3 font-800 font-28 text-uppercase">Azures</h1>
-            <p class="font-11 mt-n2">Put a little <span class="color-highlight">color</span> in your life.</p>
+            <a href="#"><img class="rounded-circle bg-highlight" width="80" v-lazy="logo"></a>
+            <h1 class="p-3 font-800 font-24 text-uppercase">{{currentBot.company.title || currentBot.bot_domain || 'CashMan:Shopify'}}</h1>
+            <p class="font-11 mt-n2"><i class="fa-solid fa-location-dot mr-2 text-danger"></i>{{currentBot.company.address || 'Без описания'}}</p>
+
         </div>
 
         <div class="menu-items">
@@ -138,6 +145,12 @@ export default {
     },
     computed: {
         ...mapGetters(['cartTotalCount']),
+        logo(){
+            return `/images-by-bot-id/${this.currentBot.id}/${this.currentBot.image}`
+        },
+        currentBot(){
+            return window.currentBot
+        }
     }
 }
 </script>

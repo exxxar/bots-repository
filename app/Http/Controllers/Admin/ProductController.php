@@ -13,6 +13,18 @@ use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
+    public function getProductsByIds(Request $request){
+        $request->validate([
+            "ids"=>"required|array"
+        ]);
+
+        $products = Product::query()
+            ->whereIn("id", $request->ids)
+            ->get();
+
+        return new ProductCollection($products);
+    }
+
     public function index(Request $request)
     {
         $search = $request->search ?? null;

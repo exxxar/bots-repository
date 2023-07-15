@@ -17,7 +17,9 @@
                         v-for="(item, index) in filteredLinks"
                         @click="page(index)"
                         v-bind:class="{'active':index===pagination.meta.current_page }">
-                        <a class="page-link" v-if="index!==0&&index!==filteredLinks.length-1"
+                        <a class="page-link"
+
+                           v-if="index!==0&&index!==filteredLinks.length-1"
                            href="#">{{item.label}}</a>
                     </li>
 
@@ -80,6 +82,8 @@ export default {
                 top: 500,
                 behavior: "smooth"
             })
+
+            console.log("Test")
 
             this.$emit('pagination_page', index)
         },
