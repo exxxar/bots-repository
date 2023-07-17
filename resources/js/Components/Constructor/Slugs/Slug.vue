@@ -18,7 +18,9 @@ import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
                         title="Выбрать команду"
                         class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i> Выбрать команду </a></li>
                     <hr>
-                    <li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal"
+                    <li><a class="dropdown-item cursor-pointer"
+                           @click="editSlug"
+                           data-bs-toggle="modal"
                            :data-bs-target="'#edit-slug-'+item.id"> <i class="fa-regular fa-pen-to-square mr-1"></i>
                         Редактировать</a></li>
                     <li><a class="dropdown-item cursor-pointer" @click="duplicateSlug"><i
@@ -162,6 +164,12 @@ export default {
             })
         },
 
+        editSlug(){
+            this.load = true
+            this.$nextTick(()=>{
+                this.load = false
+            })
+        },
         selectSlug() {
             this.load = true
             this.$emit("select", this.item)
