@@ -469,12 +469,10 @@ import AmoForm from "@/Components/Constructor/Amo/AmoForm.vue";
                         </label>
 
 
-                        <input type="number" class="form-control"
+                        <input type="text" class="form-control"
                                placeholder="Токен"
                                aria-label="уровень CashBack"
                                v-model="botForm.payment_provider_token"
-                               max="50"
-                               min="0"
                                aria-describedby="bot-level-3">
                     </div>
                 </div>

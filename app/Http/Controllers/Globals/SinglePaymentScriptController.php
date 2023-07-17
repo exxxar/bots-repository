@@ -47,7 +47,7 @@ class SinglePaymentScriptController extends Controller
                 "amount"=>$price
             ]
         ];
-        $payload = Str::uuid();
+        $payload = "1234";
 
         $providerToken = $bot->payment_provider_token;
         $currency = "RUB";
