@@ -17,6 +17,10 @@ BotManager::bot()
     ->slug("global_shop_main", "shopMain")
     ->slug("global_shop_admin", "shopAdmin");
 
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\SinglePaymentScriptController::class)
+    ->slug("global_single_payment_main", "singlePaymentMain");
+
    /* ->slug("global_instagram_quest", "instagramQuest") //квест Instagram
     ->slug("global_cashback_module_client", "cashbackClient") //модуль кэшбэка для клиента
     ->slug("global_cashback_module_admin", "cashbackAdmin") //модуль кэшбэка для админа

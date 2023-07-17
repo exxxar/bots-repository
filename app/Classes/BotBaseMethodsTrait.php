@@ -116,16 +116,20 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendInvoice($chatId, $title, $description, $prices, $data)
+    public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard)
     {
         $tmp = [
             "chat_id" => $chatId,
             "title" => $title,
             "description" => $description,
-            "payload" => $data,
-            "provider_token" => env("PAYMENT_PROVIDER_TOKEN"),
-            "currency" => env("PAYMENT_PROVIDER_CURRENCY"),
+            "payload" => $payload,
+            "provider_token" => $providerToken ?? env("PAYMENT_PROVIDER_TOKEN"),
+            "currency" => $currency ?? env("PAYMENT_PROVIDER_CURRENCY"),
             "prices" => $prices,
+            ...$needs,
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
         ];
 
         if ($this->isWebMode) {

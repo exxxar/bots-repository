@@ -1,6 +1,7 @@
 <script setup>
 import ProductItemSimple from "@/Components/Shop/Products/ProductItemSimple.vue";
 import Pagination from "@/Components/Shop/Helpers/Pagination.vue";
+import EmptyCard from "@/Components/Shop/Helpers/EmptyCard.vue";
 </script>
 
 <template>
@@ -57,21 +58,19 @@ import Pagination from "@/Components/Shop/Helpers/Pagination.vue";
 
         </div>
     </div>
-    <div class="card bg-20 mt-4 content rounded-m shadowl" v-else>
-        <div class="card-body">
-            <h4 class="color-white">Товар отсутствует</h4>
-            <p class="color-white">
-                На текущий момент товар на страницах сайта отсуствтует
-            </p>
-            <div class="card card-style ml-0 mr-0 mb-3 bg-white">
-                <div class="content">
-                    Вы можете перейти в раздел товаров и попробовать добавить что-то в корзину или избранное
-                </div>
-            </div>
-        </div>
-        <div class="card-overlay bg-gradient-green1 opacity-95 rounded-m shadow-l"></div>
-        <div class="card-overlay dark-mode-tint rounded-m shadow-l"></div>
-    </div>
+
+    <EmptyCard v-else>
+        <template v-slot:title>
+            Товар отсутствует
+        </template>
+        <template v-slot:head>
+            На текущий момент товар на страницах сайта отсуствтует
+        </template>
+        <template v-slot:body>
+            Вы можете перейти в раздел товаров и попробовать добавить что-то в корзину или избранное
+        </template>
+    </EmptyCard>
+
 </template>
 <script>
 

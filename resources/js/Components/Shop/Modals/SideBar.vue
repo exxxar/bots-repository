@@ -136,6 +136,7 @@
 </template>
 <script>
 import {mapGetters} from "vuex";
+import baseJS from '@/modules/custom.js'
 
 export default {
     data() {
@@ -151,6 +152,10 @@ export default {
         currentBot(){
             return window.currentBot
         }
+    },
+    mounted() {
+        console.log("side bar mounted")
+        baseJS.handler()
     }
 }
 </script>

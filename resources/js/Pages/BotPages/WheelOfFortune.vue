@@ -135,7 +135,8 @@ export default {
             return window.Telegram.WebApp;
         },
         tgUserId() {
-            return JSON.parse(new URLSearchParams(window.Telegram.WebApp.initData).get("user")).id || null
+            let user = JSON.parse(new URLSearchParams(window.Telegram.WebApp.initData).get("user"))
+            return user ? user.id : null
         }
     },
     mounted() {

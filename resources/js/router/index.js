@@ -5,12 +5,15 @@ import Products from '@/Pages/Shop/Products.vue';
 import Product from '@/Pages/Shop/Product.vue';
 import Favorites from '@/Pages/Shop/Favorites.vue';
 import Basket from '@/Pages/Shop/Basket.vue';
+import CheckOut from '@/Pages/Shop/CheckOut.vue';
 import Settings from '@/Pages/Shop/Settings.vue';
+
 //support pages
 import Terms from '@/Pages/Shop/Terms.vue';
 import OurTeam from '@/Pages/Shop/OurTeam.vue';
 import ContactUs from '@/Pages/Shop/ContactUs.vue';
 import Help from '@/Pages/Shop/Help.vue';
+
 
 window.currentPath = ''//window.location.pathname
 
@@ -27,6 +30,11 @@ export const routes = [
         name: 'products',
         path: prefix+'/products',
         component: Products
+    },
+    {
+        name: 'checkout',
+        path: prefix+'/checkout',
+        component: CheckOut
     },
     {
         name: 'help',

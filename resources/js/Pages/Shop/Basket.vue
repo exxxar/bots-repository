@@ -1,5 +1,6 @@
 <script setup>
 import ProductItemSimple from "@/Components/Shop/Products/ProductItemSimple.vue";
+import EmptyCard from "@/Components/Shop/Helpers/EmptyCard.vue";
 </script>
 <template>
 
@@ -50,27 +51,30 @@ import ProductItemSimple from "@/Components/Shop/Products/ProductItemSimple.vue"
 
             <div class="divider mt-4"></div>
 
-            <a href="#" class="btn btn-full btn-sm rounded-sm bg-highlight font-800 text-uppercase">Перейти к
-                оформлению</a>
+            <router-link
+                class="btn btn-full btn-sm rounded-sm bg-highlight font-800 text-uppercase"
+                :tag="'a'" :to="'/checkout'">
+                <i class="fa-solid fa-file-invoice mr-2"></i><span class="color-white">Перейти к
+                оформлению</span>
+            </router-link>
+
         </div>
     </div>
 
 
-    <div class="card bg-20 mt-4 content rounded-m shadowl" v-else>
-        <div class="card-body">
-            <h4 class="color-white">Товар отсутствует</h4>
-            <p class="color-white">
-                На текущий момент товар на страницах сайта отсуствтует
-            </p>
-            <div class="card card-style ml-0 mr-0 mb-3 bg-white">
-                <div class="content">
-                    Вы можете перейти в раздел товаров и попробовать добавить что-то в корзину или избранное
-                </div>
-            </div>
-        </div>
-        <div class="card-overlay bg-gradient-blue1 opacity-95 rounded-m shadow-l"></div>
-        <div class="card-overlay dark-mode-tint rounded-m shadow-l"></div>
-    </div>
+    <EmptyCard v-else>
+        <template v-slot:title>
+            Товар отсутствует
+        </template>
+        <template v-slot:head>
+            На текущий момент товар на страницах сайта отсуствтует
+        </template>
+        <template v-slot:body>
+            Вы можете перейти в раздел товаров и попробовать добавить что-то в корзину или избранное
+        </template>
+    </EmptyCard>
+
+
 
 </template>
 <script>
