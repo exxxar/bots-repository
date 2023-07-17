@@ -116,7 +116,7 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
 
                         <div
                             v-if="filteredConfigs[index].type==='boolean'"
-                            class="form-check mb-1">
+                            class="form-check mb-1 mt-2">
                             <input class="form-check-input"
                                    v-model="filteredConfigs[index].value"
                                    type="checkbox" value="false" :id="'filtered-config-'+index+'-checkbox'">

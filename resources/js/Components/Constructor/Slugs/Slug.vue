@@ -122,6 +122,7 @@ import SlugForm from '@/Components/Constructor/Slugs/SlugForm.vue'
                 </div>
                 <div class="modal-body">
                     <SlugForm :item="item"
+                              v-if="!load"
                               v-on:callback="slugFormCallback"
                     />
                 </div>
@@ -140,6 +141,7 @@ export default {
     props: ["item", "bot", "selectMode"],
     data() {
         return {
+            load:false,
             simple: true,
         }
     },
@@ -153,13 +155,22 @@ export default {
             this.$emit("select", this.item)
         },
         slugFormCallback() {
+            this.load = true
             this.$emit("callback")
+            this.$nextTick(()=>{
+                this.load = false
+            })
         },
 
         selectSlug() {
+            this.load = true
             this.$emit("select", this.item)
+            this.$nextTick(()=>{
+                this.load = false
+            })
         },
         duplicateSlug() {
+            this.load = true
             // this.$emit("duplicate", index)
             this.$store.dispatch("duplicateSlug", {
                 dataObject: {
@@ -178,8 +189,14 @@ export default {
             })
 
             this.$emit("callback")
+
+            this.$nextTick(()=>{
+                this.load = false
+            })
         },
         removeSlug() {
+
+            this.load = true
             this.$store.dispatch("removeSlug", {
                 dataObject: {
                     slugId: this.item.id
@@ -192,8 +209,16 @@ export default {
                 });
                 this.$emit("callback")
 
+                this.$nextTick(()=>{
+                    this.load = false
+                })
+
             }).catch(err => {
                 this.$emit("callback")
+
+                this.$nextTick(()=>{
+                    this.load = false
+                })
             })
         },
 

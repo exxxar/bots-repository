@@ -79,16 +79,21 @@ abstract class BotCore
 
             foreach ($refl->getConstants() as $key => $const) {
                 if (str_starts_with($key, "KEY_") && !in_array($const, $slugActualKeyCollection)) {
-                    $tmp[]= (object)[
-                        "key"=>$const,
-                        "value"=>"",
-                        "type"=>'text',
+
+
+                    $type = (str_starts_with($const, "need_") || str_starts_with($const, "is_")) ?
+                        "boolean" : "text";
+
+                    $tmp[] = (object)[
+                        "key" => $const,
+                        "value" => "",
+                        "type" => $type,
                     ];
                 }
 
             }
 
-            if (count($tmp)>count($item->config ?? [])) {
+            if (count($tmp) > count($item->config ?? [])) {
                 $item->config = $tmp;
                 $item->save();
             }
