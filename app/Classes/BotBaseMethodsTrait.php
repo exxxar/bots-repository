@@ -140,9 +140,7 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendInvoice($tmp);
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . " " .
-                $e->getFile() . " " .
-                $e->getLine());
+           $this->reply("Ошибка конфигурации платежной системы:".$e->getMessage());
         }
 
         return $this;

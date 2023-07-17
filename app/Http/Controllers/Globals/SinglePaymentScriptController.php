@@ -51,7 +51,7 @@ class SinglePaymentScriptController extends Controller
             ->first())["value"] ?? 10000;
 
 
-        if ($price < 1000) {
+        if ($price < 10000) {
             \App\Facades\BotManager::bot()
                 ->reply("Вы неверно указали цену товара для осуществления оплаты!");
 
