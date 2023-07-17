@@ -61,7 +61,7 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
              v-if="filteredConfigs.length>0"
         >
             <div class="col-md-6 mb-1"
-                 v-for="(item, index) in filteredConfigs" >
+                 v-for="(item, index) in filteredConfigs">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <button
@@ -111,6 +111,18 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                                    v-model="filteredConfigs[index].value"
                                    placeholder="name@example.com" required>
                             <label for="floatingInput">Значение</label>
+                        </div>
+
+
+                        <div
+                            v-if="filteredConfigs[index].type==='boolean'"
+                            class="form-check mb-1">
+                            <input class="form-check-input"
+                                   v-model="filteredConfigs[index].value"
+                                   type="checkbox" value="false" :id="'filtered-config-'+index+'-checkbox'">
+                            <label class="form-check-label" :for="'filtered-config-'+index+'-checkbox'">
+                                {{ filteredConfigs[index].value ? 'Истина' : 'Ложь' }}
+                            </label>
                         </div>
 
                         <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='large-text'">
@@ -183,6 +195,10 @@ export default {
                     title: 'Канал обратной связи',
                     type: 'channel',
                 },
+                {
+                    title: 'Логический оператор',
+                    type: 'boolean',
+                },
                 /*  {
                       title: 'Изображение',
                       type: 'image',
@@ -203,10 +219,7 @@ export default {
                       title: 'Нижнее меню',
                       type: 'reply_menu',
                   },
-                   {
-                      title: 'Логический оператор',
-                      type: 'boolean',
-                  },
+
                   {
                       title: 'JSON',
                       type: 'json',
@@ -228,11 +241,11 @@ export default {
     },
     computed: {
         ...mapGetters(['getCurrentBot']),
-        filteredConfigs(){
-            if (this.filters.length==0)
+        filteredConfigs() {
+            if (this.filters.length == 0)
                 return this.slugForm.config
 
-            return this.slugForm.config.filter(item=>this.filters.indexOf(item.type)>=0)
+            return this.slugForm.config.filter(item => this.filters.indexOf(item.type) >= 0)
         }
     },
 

@@ -12,8 +12,8 @@ class SinglePaymentScriptController extends Controller
 {
     const SCRIPT = "global_single_payment_main";
 
-/*    const KEY_MAX_ATTEMPTS = "max_attempts";
-    const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";*/
+    /*    const KEY_MAX_ATTEMPTS = "max_attempts";
+        const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";*/
     const KEY_PRODUCT_PRICE = "product_price";
     const KEY_PRODUCT_DESCRIPTION = "product_description";
     const KEY_PRODUCT_TITLE = "product_title";
@@ -41,10 +41,17 @@ class SinglePaymentScriptController extends Controller
             ->where("key", self::KEY_PRODUCT_PRICE)
             ->first())["value"] ?? 10000;
 
+        if ($price < 1000) {
+            \App\Facades\BotManager::bot()
+                ->reply("Вы неверно указали цену товара для осуществления оплаты!");
+
+            return;
+        }
+
         $prices = [
             [
-                "label"=>$title,
-                "amount"=>$price
+                "label" => $title,
+                "amount" => $price
             ]
         ];
         $payload = "1234";
@@ -53,17 +60,17 @@ class SinglePaymentScriptController extends Controller
         $currency = "RUB";
 
         $needs = [
-            "need_name"=>true,
-            "need_phone_number"=>true,
-            "need_email"=>false,
-            "need_shipping_address"=>false,
-            "send_phone_number_to_provider"=>false,
-            "send_email_to_provider"=>false,
-            "is_flexible"=>true,
-            "disable_notification"=>true,
-            "protect_content"=>true,
+            "need_name" => true,
+            "need_phone_number" => true,
+            "need_email" => false,
+            "need_shipping_address" => false,
+            "send_phone_number_to_provider" => false,
+            "send_email_to_provider" => false,
+            "is_flexible" => true,
+            "disable_notification" => true,
+            "protect_content" => true,
         ];
-        $keyboard =  [
+        $keyboard = [
             [
                 ["text" => $btnText, "pay" => true],
             ],
