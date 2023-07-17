@@ -22,11 +22,11 @@ class SinglePaymentScriptController extends Controller
     const KEY_NEED_PHONE_NUMBER = "need_phone_number";
     const KEY_NEED_EMAIL = "need_email";
     const KEY_NEED_SHIPPING_ADDRESS = "need_shipping_address";
-    const KEY_NEED_SEND_EMAIL_TO_PROVIDER = "send_email_to_provider";
+    const KEY_NEED_SEND_EMAIL_TO_PROVIDER = "need_send_email_to_provider";
     const KEY_NEED_SEND_PHONE_NUMBER_TO_PROVIDER = "need_send_phone_number_to_provider";
     const KEY_IS_FLEXIBLE = "is_flexible";
-    const KEY_DISABLE_NOTIFICATION = "disable_notification";
-    const KEY_PROTECT_CONTENT = "protect_content";
+    const KEY_DISABLE_NOTIFICATION = "need_disable_notification";
+    const KEY_PROTECT_CONTENT = "need_protect_content";
 
     public function singlePaymentMain(...$config)
     {
