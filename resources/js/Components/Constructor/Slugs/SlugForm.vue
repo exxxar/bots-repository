@@ -32,6 +32,7 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
             Данные параметры используются для настройки скриптов на стороне сервера
         </div>
 
+
         <div class="dropdown">
             <button class="btn btn-outline-info w-100 dropdown-toggle mb-2" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -45,6 +46,7 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
 
             </ul>
         </div>
+
 
         <div class="row">
             <div class="col-12">
@@ -267,6 +269,7 @@ export default {
     },
 
     methods: {
+
         toggleFilter(type) {
             let index = this.filters.indexOf(type)
             if (index >= 0)

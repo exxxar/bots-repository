@@ -69,6 +69,16 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async refreshSlugParams(context, payload= {dataObject: {slugId: null}}){
+        let link = `${BASE_SLUGS_LINK}/reload-params/${payload.dataObject.slugId}`
+        let _axios = util.makeAxiosFactory(link, 'GET')
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async createSlug(context, payload = {slugForm: null}) {
         let link = `${BASE_SLUGS_LINK}/slug`
 

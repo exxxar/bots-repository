@@ -11,6 +11,8 @@ use App\Models\BotMenuSlug;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class BotMenuSlugController extends Controller
 {
@@ -86,6 +88,7 @@ class BotMenuSlugController extends Controller
 
         return response()->noContent();
     }
+
 
 
     public function createSlug(Request $request)

@@ -162,6 +162,7 @@ Route::prefix("bot")->group(function () {
             Route::post("/slug", "createSlug");
             Route::post("/slug-update", "updateSlug");
             Route::post("/duplicate/{slugId}", "duplicate");
+            Route::get("/reload-params/{slugId}", "reloadParams");
             Route::delete("/{slugId}", "destroy");
         });
 
