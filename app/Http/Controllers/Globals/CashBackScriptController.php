@@ -17,7 +17,28 @@ class CashBackScriptController extends Controller
     {
         $bot = BotManager::bot()->getSelf();
 
+
         $botDomain = $bot->bot_domain;
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        if (!$botUser->is_vip) {
+            $bot = BotManager::bot()->getSelf();
+
+            \App\Facades\BotManager::bot()
+                ->replyPhoto("Заполни эту анкету и получит достук к системе CashBack",
+                    InputFile::create(public_path() . "/images/cashman2.jpg"),
+                    [
+                        [
+                            ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                                "url" => env("APP_URL") . "/restaurant/vip-form/$botDomain"
+                            ]],
+                        ],
+
+                    ]);
+
+            return;
+        }
 
 
         $qr = "https://t.me/$botDomain?start=" .
