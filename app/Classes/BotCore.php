@@ -421,7 +421,7 @@ abstract class BotCore
         $payload = $data->invoice_payload;
         $currency = $data->currency;
         $orderInfo = $data->order_info;
-        $shippingOptionId = $data->shipping_option_id;
+       // $shippingOptionId = $data->shipping_option_id ?? null;
 
         $transaction = Transaction::query()->where("payload", $payload)
             ->first();
