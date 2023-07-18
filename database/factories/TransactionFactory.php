@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Company;
+use App\Models\Bot;
 use App\Models\Transaction;
 use App\Models\User;
 
@@ -23,14 +23,18 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
-            'amount' => $this->faker->randomFloat(0, 0, 9999999999.),
-            'status' => $this->faker->numberBetween(-10000, 10000),
-            'description' => $this->faker->text,
             'user_id' => User::factory(),
-            'created_at' => $this->faker->dateTime(),
-            'updated_at' => $this->faker->dateTime(),
-            'deleted_at' => $this->faker->dateTime(),
+            'bot_id' => Bot::factory(),
+            'payload' => $this->faker->regexify('[A-Za-z0-9]{128}'),
+            'currency' => $this->faker->regexify('[A-Za-z0-9]{5}'),
+            'total_amount' => $this->faker->numberBetween(-10000, 10000),
+            'status' => $this->faker->numberBetween(-10000, 10000),
+            'order_info' => '{}',
+            'products_info' => '{}',
+            'shipping_address' => '{}',
+            'telegram_payment_charge_id' => $this->faker->regexify('[A-Za-z0-9]{255}'),
+            'provider_payment_charge_id' => $this->faker->regexify('[A-Za-z0-9]{255}'),
+            'completed_at' => $this->faker->dateTime(),
         ];
     }
 }

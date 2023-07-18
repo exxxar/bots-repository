@@ -7,6 +7,7 @@ use App\Facades\BotManager;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotPage;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -412,6 +413,68 @@ abstract class BotCore
         return $find;
     }
 
+    public function preCheckoutQueryHandler($data){
+
+        $preCheckoutQueryId = $data->id;
+        $telegramChatId =$data->from->id;
+        $totalAmount = $data->total_amount;
+        $payload = $data->invoice_payload;
+        $currency = $data->currency;
+        $orderInfo = $data->order_info;
+        $shippingOptionId = $data->shipping_option_id;
+
+        $transaction = Transaction::query()->where("payload", $payload)
+            ->first();
+
+        if (is_null($transaction)) {
+            $this->answerPreCheckoutQuery($preCheckoutQueryId, false,'Транзакция не надена!');
+            return;
+        }
+
+        $transaction->update([
+            'status'=>1,
+            'order_info'=>$orderInfo,
+        ]);
+
+        $this->answerPreCheckoutQuery($preCheckoutQueryId, true);
+    }
+
+    public function successfulPaymentHandler($data){
+        $totalAmount = $data->total_amount;
+        $currency = $data->currency;
+        $payload = $data->invoice_payload;
+        $orderInfo = $data->order_info;
+        $telegramPaymentChargeId = $data->telegram_payment_charge_id;
+        $providerPaymentChargeId = $data->provider_payment_charge_id;
+
+        $transaction = Transaction::query()->where("payload", $payload)
+            ->first();
+
+        $transaction->update([
+            'status'=>2,
+            'order_info'=>$orderInfo,
+            'telegram_payment_charge_id'=>$telegramPaymentChargeId,
+            'provider_payment_charge_id'=>$providerPaymentChargeId,
+        ]);
+    }
+    public function shippingQueryHandler($data){
+
+        $answerShippingQuery = $data->id;
+        $telegramChatId =$data->from->id;
+        $payload = $data->invoice_payload;
+        $shippingAddress = $data->shipping_address;
+
+        $transaction = Transaction::query()->where("payload", $payload)
+            ->first();
+
+        $transaction->update([
+            'shipping_address'=>$shippingAddress,
+        ]);
+
+        $this->answerShippingQuery($answerShippingQuery, true);
+    }
+
+
     public function handler($domain)
     {
         $this->setApiToken($domain);
@@ -444,16 +507,12 @@ abstract class BotCore
         }
 
         if (isset($update["pre_checkout_query"])){
+            $this->preCheckoutQueryHandler($item->pre_checkout_query);
+            return;
+        }
 
-            Log::info("pre_checkout_query=>before".print_r($update["pre_checkout_query"], true));
-            $preCheckoutQueryId = $item->pre_checkout_query->id;
-            $telegramChatId = $item->pre_checkout_query->from->id;
-            $totalAmount = $item->pre_checkout_query->total_amount;
-            $botName = $item->pre_checkout_query->invoice_payload;
-
-            $this->answerPreCheckoutQuery($preCheckoutQueryId, true);
-
-            Log::info("pre_checkout_query=>after");
+        if (isset($update["shipping_query"])){
+            $this->shippingQueryHandler($item->shipping_query);
             return;
         }
 
@@ -478,6 +537,10 @@ abstract class BotCore
             $this->createUser($message->from);
 
 
+        if (isset($update["message"]["successful_payment"])){
+            $this->successfulPaymentHandler($item->message->successful_payment);
+            return;
+        }
 
         $query = $item->message->text ??
             $item->callback_query->data ?? '';

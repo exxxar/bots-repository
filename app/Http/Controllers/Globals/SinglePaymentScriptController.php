@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Globals;
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Telegram\Bot\FileUpload\InputFile;
@@ -27,11 +28,13 @@ class SinglePaymentScriptController extends Controller
     const KEY_IS_FLEXIBLE = "is_flexible";
     const KEY_DISABLE_NOTIFICATION = "need_disable_notification";
     const KEY_PROTECT_CONTENT = "need_protect_content";
+    const KEY_PAYLOAD_DATA = "payload_data";
 
     public function singlePaymentMain(...$config)
     {
 
         $bot = BotManager::bot()->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
 
 
         $btnText = (Collection::make($config[1])
@@ -40,6 +43,10 @@ class SinglePaymentScriptController extends Controller
 
         $title = (Collection::make($config[1])
             ->where("key", self::KEY_PRODUCT_TITLE)
+            ->first())["value"] ?? "Товар";
+
+        $payloadData = (Collection::make($config[1])
+            ->where("key", self::KEY_PAYLOAD_DATA)
             ->first())["value"] ?? "Товар";
 
         $description = (Collection::make($config[1])
@@ -64,10 +71,24 @@ class SinglePaymentScriptController extends Controller
                 "amount" => $price
             ]
         ];
-        $payload = $bot->bot_domain ?? "test";
+        $payload = Str::uuid();
+
 
         $providerToken = $bot->payment_provider_token;
         $currency = "RUB";
+
+        Transaction::query()->create([
+            'user_id'=>$botUser->user_id,
+            'bot_id'=>$bot->id,
+            'payload'=>$payload,
+            'currency'=>$currency,
+            'total_amount'=>$price,
+            'status'=>0,
+            'products_info'=>(object)[
+                "payload"=>$payloadData ?? null,
+                "prices"=>$prices
+            ],
+        ]);
 
         $needs = [
             "need_name" => (Collection::make($config[1])

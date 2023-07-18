@@ -16,11 +16,18 @@ class Transaction extends Model
      * @var array
      */
     protected $fillable = [
-        'company_id',
-        'amount',
-        'status',
-        'description',
         'user_id',
+        'bot_id',
+        'payload',
+        'currency',
+        'total_amount',
+        'status',
+        'order_info',
+        'products_info',
+        'shipping_address',
+        'telegram_payment_charge_id',
+        'provider_payment_charge_id',
+        'completed_at',
     ];
 
     /**
@@ -30,22 +37,22 @@ class Transaction extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'company_id' => 'integer',
-        'amount' => 'double',
         'user_id' => 'integer',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp',
-        'deleted_at' => 'timestamp',
+        'bot_id' => 'integer',
+        'order_info' => 'array',
+        'products_info' => 'array',
+        'shipping_address' => 'array',
+        'completed_at' => 'timestamp',
     ];
+
+    public function bot(): BelongsTo
+    {
+        return $this->belongsTo(Bot::class);
+    }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class);
     }
 
 

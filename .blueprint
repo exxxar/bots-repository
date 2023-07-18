@@ -1,85 +1,14 @@
 created:
-    - app/Http/Controllers/GeoController.php
-    - app/Http/Controllers/ProductCategoryController.php
-    - app/Http/Controllers/ProductOptionController.php
-    - app/Http/Controllers/ProductController.php
-    - app/Http/Controllers/FavoriteController.php
-    - app/Http/Controllers/ReviewController.php
-    - app/Http/Controllers/OrderController.php
-    - app/Http/Controllers/PaymentHistoryController.php
-    - database/factories/GeoFactory.php
-    - database/factories/ProductCategoryFactory.php
-    - database/factories/ProductOptionFactory.php
-    - database/factories/ProductFactory.php
-    - database/factories/FavoriteFactory.php
-    - database/factories/ReviewFactory.php
-    - database/factories/OrderFactory.php
-    - database/factories/PaymentHistoryFactory.php
-    - database/migrations/2023_07_11_203112_create_geos_table.php
-    - database/migrations/2023_07_11_203113_create_product_categories_table.php
-    - database/migrations/2023_07_11_203114_create_product_options_table.php
-    - database/migrations/2023_07_11_203115_create_products_table.php
-    - database/migrations/2023_07_11_203116_create_favorites_table.php
-    - database/migrations/2023_07_11_203117_create_reviews_table.php
-    - database/migrations/2023_07_11_203118_create_orders_table.php
-    - database/migrations/2023_07_11_203119_create_payment_histories_table.php
-    - database/migrations/2023_07_11_203120_create_product_product_category_table.php
-    - app/Models/Geo.php
-    - app/Models/ProductCategory.php
-    - app/Models/ProductOption.php
-    - app/Models/Product.php
-    - app/Models/Favorite.php
-    - app/Models/Review.php
-    - app/Models/Order.php
-    - app/Models/PaymentHistory.php
-    - database/seeders/GeoSeeder.php
-    - database/seeders/ProductCategorySeeder.php
-    - database/seeders/ProductOptionSeeder.php
-    - database/seeders/ProductSeeder.php
-    - database/seeders/FavoriteSeeder.php
-    - database/seeders/ReviewSeeder.php
-    - database/seeders/OrderSeeder.php
-    - database/seeders/PaymentHistorySeeder.php
-    - tests/Feature/Http/Controllers/GeoControllerTest.php
-    - tests/Feature/Http/Controllers/ProductCategoryControllerTest.php
-    - tests/Feature/Http/Controllers/ProductOptionControllerTest.php
-    - tests/Feature/Http/Controllers/ProductControllerTest.php
-    - tests/Feature/Http/Controllers/FavoriteControllerTest.php
-    - tests/Feature/Http/Controllers/ReviewControllerTest.php
-    - tests/Feature/Http/Controllers/OrderControllerTest.php
-    - tests/Feature/Http/Controllers/PaymentHistoryControllerTest.php
-    - app/Http/Requests/GeoStoreRequest.php
-    - app/Http/Requests/GeoUpdateRequest.php
-    - app/Http/Requests/ProductCategoryStoreRequest.php
-    - app/Http/Requests/ProductCategoryUpdateRequest.php
-    - app/Http/Requests/ProductOptionStoreRequest.php
-    - app/Http/Requests/ProductOptionUpdateRequest.php
-    - app/Http/Requests/ProductStoreRequest.php
-    - app/Http/Requests/ProductUpdateRequest.php
-    - app/Http/Requests/FavoriteStoreRequest.php
-    - app/Http/Requests/FavoriteUpdateRequest.php
-    - app/Http/Requests/ReviewStoreRequest.php
-    - app/Http/Requests/ReviewUpdateRequest.php
-    - app/Http/Requests/OrderStoreRequest.php
-    - app/Http/Requests/OrderUpdateRequest.php
-    - app/Http/Requests/PaymentHistoryStoreRequest.php
-    - app/Http/Requests/PaymentHistoryUpdateRequest.php
-    - app/Http/Resources/GeoCollection.php
-    - app/Http/Resources/GeoResource.php
-    - app/Http/Resources/ProductCategoryCollection.php
-    - app/Http/Resources/ProductCategoryResource.php
-    - app/Http/Resources/ProductOptionCollection.php
-    - app/Http/Resources/ProductOptionResource.php
-    - app/Http/Resources/ProductCollection.php
-    - app/Http/Resources/ProductResource.php
-    - app/Http/Resources/FavoriteCollection.php
-    - app/Http/Resources/FavoriteResource.php
-    - app/Http/Resources/ReviewCollection.php
-    - app/Http/Resources/ReviewResource.php
-    - app/Http/Resources/OrderCollection.php
-    - app/Http/Resources/OrderResource.php
-    - app/Http/Resources/PaymentHistoryCollection.php
-    - app/Http/Resources/PaymentHistoryResource.php
+    - app/Http/Controllers/TransactionController.php
+    - database/factories/TransactionFactory.php
+    - database/migrations/2023_07_18_232807_create_transactions_table.php
+    - app/Models/Transaction.php
+    - database/seeders/TransactionSeeder.php
+    - tests/Feature/Http/Controllers/TransactionControllerTest.php
+    - app/Http/Requests/TransactionStoreRequest.php
+    - app/Http/Requests/TransactionUpdateRequest.php
+    - app/Http/Resources/TransactionCollection.php
+    - app/Http/Resources/TransactionResource.php
 updated:
     - routes/api.php
 models:
@@ -102,7 +31,7 @@ models:
     NotificationSchedule: { title: 'string nullable', message: 'text nullable', info_link: 'string nullable', image: 'string nullable', start_at: 'datetime nullable', bot_id: 'biginteger unsigned', creator_id: 'biginteger unsigned', completed_at: 'datetime nullable' }
     ReferralHistory: { user_sender_id: 'biginteger unsigned', user_recipient_id: 'biginteger unsigned', bot_id: 'biginteger unsigned', activated: 'boolean default:0' }
     Role: { name: string, slug: 'string:190' }
-    Transaction: { company_id: 'biginteger unsigned', amount: 'float:10 default:0', status: 'integer default:0', description: 'text nullable', user_id: 'biginteger unsigned' }
+    Transaction: { user_id: 'id foreign:users', bot_id: 'id foreign:bots', payload: 'string:128 unique', currency: "string:5 default:'RUB'", total_amount: 'integer default:0', status: 'integer default:0', order_info: 'json nullable', products_info: 'json nullable', shipping_address: 'json nullable', telegram_payment_charge_id: 'string:255 nullable', provider_payment_charge_id: 'string:255 nullable', completed_at: 'timestamp nullable', relationships: { belongsTo: 'Bot, User' } }
     User: { email: 'string:190', email_verified_at: 'datetime nullable', remember_token: 'string:100 nullable', phone: 'string nullable', name: 'string nullable', password: 'string nullable', avatar_url: 'string nullable', role_id: 'biginteger unsigned', blocked_at: 'datetime nullable', blocked_message: 'string nullable' }
     Location: { region: "string:255 nullable comment:'Регион'", city: "string:255 nullable comment:'Город'", district: "string:255 nullable comment:'Район'", address: "string:255 nullable comment:'Адрес'", landmark: "string:255 nullable comment:'Ориентир'", latitude: "string:50 nullable comment:'Широта'", longitude: "string:50 nullable comment:'Долгота'", user_id: 'id foreign:users', bot_id: 'id foreign:bots', deleted_at: 'timestamp nullable', relationships: { belongsTo: 'Bot, User' } }
     ProductCategory: { title: 'string:255', bot_id: 'id foreign:bots', relationships: { belongsTo: Bot, belongsToMany: Product } }

@@ -140,7 +140,7 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendInvoice($tmp);
         } catch (\Exception $e) {
-           $this->reply("Ошибка конфигурации платежной системы:".$e->getMessage());
+            $this->reply("Ошибка конфигурации платежной системы:" . $e->getMessage());
         }
 
         return $this;
@@ -254,6 +254,30 @@ trait BotBaseMethodsTrait
 
         try {
             $this->bot->answerPreCheckoutQuery($tmp);
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+
+    }
+
+    public function answerShippingQuery($shippingQueryId, $ok = true, $shippingOptions = null, $errorMessage = '')
+    {
+        $tmp = [
+            "shipping_query_id" => $shippingQueryId,
+            "ok" => $ok,
+            "error_message" => $errorMessage,
+        ];
+
+        if (!is_null($shippingOptions))
+            $tmp["shipping_options"] = $shippingOptions;
+
+        try {
+            $this->bot->answerShippingQuery($tmp);
         } catch (\Exception $e) {
 
             Log::error($e->getMessage() . " " .
