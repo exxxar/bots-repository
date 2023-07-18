@@ -244,6 +244,27 @@ trait BotBaseMethodsTrait
 
     }
 
+    public function answerPreCheckoutQuery($preCheckoutQueryId, $ok = true, $errorMessage = '')
+    {
+        $tmp = [
+            "pre_checkout_query_id" => $preCheckoutQueryId,
+            "ok" => $ok,
+            "error_message" => $errorMessage,
+        ];
+
+        try {
+            $this->bot->answerPreCheckoutQuery($tmp);
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+
+    }
+
     public function sendMediaGroup($chatId, $media = [])
     {
 

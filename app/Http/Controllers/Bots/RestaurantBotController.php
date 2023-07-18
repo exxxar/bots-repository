@@ -377,7 +377,6 @@ class RestaurantBotController extends Controller
         $this->printLocation($data[2] ?? null);
     }
 
-
     public function menu()
     {
 

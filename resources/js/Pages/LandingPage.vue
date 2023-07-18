@@ -2,6 +2,7 @@
 import Layout from "@/Layouts/ClientLayout.vue";
 import VisitCardConstructor from "@/Components/Constructor/VisitCardConstructor.vue";
 import ChatWindow from "@/Components/Chat/ChatWindow.vue";
+import ChatDialog from "@/Components/Chat/ChatDialog.vue";
 
 </script>
 
@@ -161,18 +162,18 @@ import ChatWindow from "@/Components/Chat/ChatWindow.vue";
                 </div>
             </section>
 
-<!--            <section id="cases">
+            <section id="cases">
                 <div class="container px-5">
 
                     <div class="row gx-5 justify-content-center">
                         <div class="col-12">
-                            <ChatWindow></ChatWindow>
+                            <ChatDialog :domain="'isushibot'"></ChatDialog>
                         </div>
                     </div>
 
 
                 </div>
-            </section>-->
+            </section>-
 
             <section class="py-5 bg-gradient-primary-to-secondary text-white" v-if="!need_start">
                 <div class="container px-5 my-5">
@@ -275,14 +276,20 @@ import ChatWindow from "@/Components/Chat/ChatWindow.vue";
                                     <circle cx="50" cy="50" r="50"></circle>
                                 </svg>
                                 <div class="device-wrapper">
-                                    <div class="device" data-device="iPhoneX" data-orientation="portrait"
+<!--                                    <div class="device" data-device="iPhoneX" data-orientation="portrait"
                                          data-color="black">
                                         <div class="screen bg-black">
                                             <iframe src="/web/vape888bot"
                                                     style="height:100%;width:100%;"
                                             ></iframe>
                                         </div>
+                                    </div>-->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <ChatDialog :domain="'isushibot'"></ChatDialog>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>

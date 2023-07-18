@@ -418,7 +418,7 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-        Log::info(print_r($update, true));
+       // Log::info(print_r($update, true));
 
         include_once base_path('routes/bot.php');
 
@@ -443,6 +443,20 @@ abstract class BotCore
             return;
         }
 
+        if (isset($update["pre_checkout_query"])){
+
+            Log::info("pre_checkout_query=>before".print_r($update["pre_checkout_query"], true));
+            $preCheckoutQueryId = $item->pre_checkout_query->id;
+            $telegramChatId = $item->pre_checkout_query->from->id;
+            $totalAmount = $item->pre_checkout_query->total_amount;
+            $botName = $item->pre_checkout_query->invoice_payload;
+
+            $this->answerPreCheckoutQuery($preCheckoutQueryId, true);
+
+            Log::info("pre_checkout_query=>after");
+            return;
+        }
+
         //формируем сообщение из возможных вариантов входных данных
         $message = $item->message ??
             $item->edited_message ??
@@ -462,6 +476,8 @@ abstract class BotCore
             $this->createUser($item->callback_query->from);
         else
             $this->createUser($message->from);
+
+
 
         $query = $item->message->text ??
             $item->callback_query->data ?? '';

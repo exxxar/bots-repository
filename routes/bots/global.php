@@ -25,6 +25,14 @@ BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\CashBackScriptController::class)
     ->slug("global_cashback_main", "specialCashBackSystem");
 
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\FriendsScriptController::class)
+    ->slug("global_friends_main", "inviteFriends");
+
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\AboutBotScriptController::class)
+    ->slug("global_about_bot_main", "aboutBot");
+
 
    /* ->slug("global_instagram_quest", "instagramQuest") //квест Instagram
     ->slug("global_cashback_module_client", "cashbackClient") //модуль кэшбэка для клиента

@@ -64,7 +64,7 @@ class SinglePaymentScriptController extends Controller
                 "amount" => $price
             ]
         ];
-        $payload = "1234";
+        $payload = $bot->bot_domain ?? "test";
 
         $providerToken = $bot->payment_provider_token;
         $currency = "RUB";

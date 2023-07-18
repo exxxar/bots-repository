@@ -237,17 +237,6 @@ Route::get("/restaurant/active-admins/{botDomain}", function ($botDomain) {
 });
 
 
-Route::get('/callback-form/{botDomain}', function ($botDomain) {
-
-    Inertia::setRootView("bot");
-
-    $bot = \App\Models\Bot::query()
-        ->where("bot_domain", $botDomain)
-        ->first();
-    return Inertia::render('CallBackForm', [
-        'bot' => $bot,
-    ]);
-});
 Route::post("/admin/cashback-add", function () {
     return "ok";
 });
@@ -273,6 +262,13 @@ Route::prefix("global-scripts")
                 Route::post('/prepare/{botDomain}', "formWheelOfFortunePrepare");
                 Route::get('/{botDomain}', "formWheelOfFortune");
                 Route::post('/{botDomain}', "formWheelOfFortuneCallback");
+            });
+
+        Route::prefix("about-bot")
+            ->controller(\App\Http\Controllers\Globals\AboutBotScriptController::class)
+            ->group(function () {
+                Route::get('/callback/{botDomain}', "callbackFormGet");
+                Route::post('/callback/{botDomain}', "callbackFormPost");
             });
 
         Route::prefix("instagram-quest")
