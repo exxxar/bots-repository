@@ -72,7 +72,7 @@ class SinglePaymentScriptController extends Controller
                 "amount" => $price
             ]
         ];
-        $payload = Str::uuid();
+        $payload = bin2hex(Str::uuid());
 
         Log::info("payload->".$payload);
         Log::info("payload length->".strlen($payload));
