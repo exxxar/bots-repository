@@ -413,33 +413,35 @@ abstract class BotCore
         return $find;
     }
 
-    public function preCheckoutQueryHandler($data){
+    public function preCheckoutQueryHandler($data)
+    {
 
         $preCheckoutQueryId = $data->id;
-        $telegramChatId =$data->from->id;
+        $telegramChatId = $data->from->id;
         $totalAmount = $data->total_amount;
         $payload = $data->invoice_payload;
         $currency = $data->currency;
         $orderInfo = $data->order_info;
-       // $shippingOptionId = $data->shipping_option_id ?? null;
+        // $shippingOptionId = $data->shipping_option_id ?? null;
 
         $transaction = Transaction::query()->where("payload", $payload)
             ->first();
 
         if (is_null($transaction)) {
-            $this->answerPreCheckoutQuery($preCheckoutQueryId, false,'Транзакция не надена!');
+            $this->answerPreCheckoutQuery($preCheckoutQueryId, false, 'Транзакция не надена!');
             return;
         }
 
         $transaction->update([
-            'status'=>1,
-            'order_info'=>$orderInfo,
+            'status' => 1,
+            'order_info' => $orderInfo,
         ]);
 
         $this->answerPreCheckoutQuery($preCheckoutQueryId, true);
     }
 
-    public function successfulPaymentHandler($data){
+    public function successfulPaymentHandler($data)
+    {
         $totalAmount = $data->total_amount;
         $currency = $data->currency;
         $payload = $data->invoice_payload;
@@ -447,20 +449,29 @@ abstract class BotCore
         $telegramPaymentChargeId = $data->telegram_payment_charge_id;
         $providerPaymentChargeId = $data->provider_payment_charge_id;
 
-        $transaction = Transaction::query()->where("payload", $payload)
+        $transaction = Transaction::query()
+            ->with(["bot"])
+            ->where("payload", $payload)
             ->first();
 
+        $channel = $transaction->bot->order_channel ?? $transaction->bot->main_channel ?? null;
+
+        if (!is_null($channel))
+            $this->sendMessage($channel, "Пользователь " . print_r($orderInfo, true) . "соврешил оплату $totalAmount за продукт " . print_r($transaction->products_info, true));
+
         $transaction->update([
-            'status'=>2,
-            'order_info'=>$orderInfo,
-            'telegram_payment_charge_id'=>$telegramPaymentChargeId,
-            'provider_payment_charge_id'=>$providerPaymentChargeId,
+            'status' => 2,
+            'order_info' => $orderInfo,
+            'telegram_payment_charge_id' => $telegramPaymentChargeId,
+            'provider_payment_charge_id' => $providerPaymentChargeId,
         ]);
     }
-    public function shippingQueryHandler($data){
+
+    public function shippingQueryHandler($data)
+    {
 
         $answerShippingQuery = $data->id;
-        $telegramChatId =$data->from->id;
+        $telegramChatId = $data->from->id;
         $payload = $data->invoice_payload;
         $shippingAddress = $data->shipping_address;
 
@@ -468,7 +479,7 @@ abstract class BotCore
             ->first();
 
         $transaction->update([
-            'shipping_address'=>$shippingAddress,
+            'shipping_address' => $shippingAddress,
         ]);
 
         $this->answerShippingQuery($answerShippingQuery, true);
@@ -481,7 +492,7 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-       Log::info(print_r($update, true));
+        Log::info(print_r($update, true));
 
         include_once base_path('routes/bot.php');
 
@@ -506,12 +517,12 @@ abstract class BotCore
             return;
         }
 
-        if (isset($update["pre_checkout_query"])){
+        if (isset($update["pre_checkout_query"])) {
             $this->preCheckoutQueryHandler($item->pre_checkout_query);
             return;
         }
 
-        if (isset($update["shipping_query"])){
+        if (isset($update["shipping_query"])) {
             $this->shippingQueryHandler($item->shipping_query);
             return;
         }
@@ -537,7 +548,7 @@ abstract class BotCore
             $this->createUser($message->from);
 
 
-        if (isset($update["message"]["successful_payment"])){
+        if (isset($update["message"]["successful_payment"])) {
             $this->successfulPaymentHandler($item->message->successful_payment);
             return;
         }

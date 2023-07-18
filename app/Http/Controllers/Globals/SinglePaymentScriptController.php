@@ -74,9 +74,6 @@ class SinglePaymentScriptController extends Controller
         ];
         $payload = bin2hex(Str::uuid());
 
-        Log::info("payload->".$payload);
-        Log::info("payload length->".strlen($payload));
-
         $providerToken = $bot->payment_provider_token;
         $currency = "RUB";
 
@@ -89,7 +86,7 @@ class SinglePaymentScriptController extends Controller
             'status'=>0,
             'products_info'=>(object)[
                 "payload"=>$payloadData ?? null,
-                "prices"=>$prices
+                "prices"=>$prices,
             ],
         ]);
 
