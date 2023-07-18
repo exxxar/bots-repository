@@ -432,6 +432,11 @@ abstract class BotCore
             return;
         }
 
+        if (!is_null($transaction->completed_at)) {
+            $this->answerPreCheckoutQuery($preCheckoutQueryId, false, 'Данный товар был уже куплен вами!');
+            return;
+        }
+
         $transaction->update([
             'status' => 1,
             'order_info' => $orderInfo,
@@ -464,6 +469,7 @@ abstract class BotCore
             'order_info' => $orderInfo,
             'telegram_payment_charge_id' => $telegramPaymentChargeId,
             'provider_payment_charge_id' => $providerPaymentChargeId,
+            'completed_at'=>Carbon::now()
         ]);
     }
 
