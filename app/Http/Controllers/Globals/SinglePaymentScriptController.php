@@ -6,6 +6,7 @@ use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -73,6 +74,8 @@ class SinglePaymentScriptController extends Controller
         ];
         $payload = Str::uuid();
 
+        Log::info("payload->".$payload);
+        Log::info("payload length->".strlen($payload));
 
         $providerToken = $bot->payment_provider_token;
         $currency = "RUB";
