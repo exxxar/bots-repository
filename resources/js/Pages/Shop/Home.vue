@@ -86,7 +86,7 @@ import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
 
     <div class="divider divider-margins mt-4"></div>
 
-    <div class="card preload-img" data-src="images/pictures/20s.jpg">
+    <div class="card preload-img" data-src="/shop/images/pictures/20s.jpg">
         <div class="card-body">
             <h4 class="color-white font-600">Why our Store?</h4>
             <p class="color-white opacity-80">
@@ -247,7 +247,7 @@ import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
     <div class="divider divider-margins mt-4"></div>
 
 
-    <div class="card mt-4 preload-img" data-src="images/pictures/20s.jpg">
+    <div class="card mt-4 preload-img" data-src="/shop/images/pictures/20s.jpg">
         <div class="card-body">
             <h3 class="color-white font-600">Best Priced Pack</h3>
             <p class="color-white opacity-80">
@@ -262,7 +262,7 @@ import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
                             <h1 class="font-24 font-700 ">$21<sup class="font-15 opacity-50">.99</sup></h1>
                         </div>
                         <div class="ml-auto">
-                            <img src="images/pictures/2s.jpg" class="rounded-m shadow-xl" width="90">
+                            <img src="/shop/images/pictures/2s.jpg" class="rounded-m shadow-xl" width="90">
                         </div>
                     </div>
 
@@ -276,7 +276,7 @@ import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
                             </h1>
                         </div>
                         <div class="ml-auto">
-                            <img src="images/pictures/3s.jpg" class="rounded-m shadow-xl" width="90">
+                            <img src="/shop/images/pictures/3s.jpg" class="rounded-m shadow-xl" width="90">
                         </div>
                     </div>
 
@@ -354,7 +354,7 @@ export default {
 
     },
     mounted() {
-
+        baseJS.handler()
         this.watchStore();
         //this.$botNotification.notification("Test", "teeeeeeeeeees")
         this.loadRandomProducts()
@@ -378,19 +378,7 @@ export default {
             }).then(() => {
                 this.randomProducts = this.getProducts
 
-                this.$nextTick(() => {
-
-                    $('.single-slider').owlCarousel({
-                        loop: true,
-                        margin: 20,
-                        nav: false,
-                        lazyLoad: true,
-                        items: 1,
-                        autoplay: true,
-                        autoplayTimeout: 4000
-                    });
-
-                })
+                baseJS.handler()
 
             })
         }

@@ -607,6 +607,23 @@
                     </div>
                 </div>
 
+                <div class="row" v-if="form.functions.indexOf('individual-button')>=0">
+                    <div class="col-12">
+                        <p>Опишите ваши индивидуальные потребности и наши разработчики неприменно реализуют данную фичу для Вас!</p>
+                        <div class="form-floating mt-1">
+                                        <textarea class="form-control"
+                                                  v-model="form.individual"
+                                                  placeholder="Leave a comment here"
+                                                  id="individual-description-textarea" required>
+
+                                        </textarea>
+                            <label
+                                class="text-primary"
+                                for="individual-description-textarea">Описание фичи</label>
+                        </div>
+                    </div>
+                </div>
+
                 <div>
                     <button
                         type="button"
@@ -684,7 +701,8 @@ export default {
                     image: null,
                     need_photo: true
                 },
-                functions: []
+                functions: [],
+                individual: null
             },
             contactTypes: [
                 {
