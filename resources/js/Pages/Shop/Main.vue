@@ -15,16 +15,27 @@ import Layout from "@/Layouts/ShopLayout.vue";
         <template #default>
             <div class="page-content" style="min-height: 667px;">
 
+<!--
                 <div class="page-title page-title-small">
                     <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i></a>
                     {{$route.meta.title || 'Меню'}}
                     </h2>
                     <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img" data-src="images/avatars/5s.png" style="background-image: url(&quot;images/avatars/5s.png&quot;);"></a>
                 </div>
-                <div class="card header-card shape-rounded" data-card-height="150" style="height: 150px;">
+-->
+
+                <div class="page-title page-title-small">
+                    <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i> {{$route.meta.title || 'Меню'}}</a></h2>
+                    <a data-menu="menu-main"
+                       class="bg-fade-gray1-dark shadow-xl d-flex justify-content-center align-items-center font-18">
+                        <i class="fa-solid fa-bars text-white"></i></a>
+                </div>
+
+
+                <div class="card header-card shape-rounded" style="height: 115px;">
                     <div class="card-overlay bg-highlight opacity-95"></div>
                     <div class="card-overlay dark-mode-tint"></div>
-                    <div class="card-bg preload-img" data-src="images/pictures/20s.jpg" style="background-image: url(&quot;images/pictures/20s.jpg&quot;);"></div>
+                    <div class="card-bg preload-img" data-src="/shop/images/pictures/20s.jpg"></div>
                 </div>
 
                 <router-view

@@ -15,7 +15,7 @@ import EmptyCard from "@/Components/Shop/Helpers/EmptyCard.vue";
             <div class="collapse" id="collapse-8" style="">
 
                 <div class="input-style input-style-2 has-icon input-required">
-                    <i class="input-icon fa-solid fa-magnifying-glass" @click="loadFavorites(0)"></i>
+                    <i class="input-icon fa-solid fa-magnifying-glass"></i>
                     <input class="form-control" v-model="search" type="name" placeholder="Найди товар на странице">
                 </div>
                 <p class="mb-0 pb-1">

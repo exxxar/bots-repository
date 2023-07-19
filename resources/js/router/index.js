@@ -25,67 +25,67 @@ export const routes = [
         name: 'home',
         path: prefix+'/home',
         component: Home,
-        meta: (route) => ({ title: 'Главная страница' })
+        meta: { title: 'Главная страница' }
     },
     {
         name: 'products',
         path: prefix+'/products',
         component: Products,
-        meta: (route) => ({ title: 'Продукты' })
+        meta: { title: 'Продукты' }
     },
     {
         name: 'checkout',
         path: prefix+'/checkout',
         component: CheckOut,
-        meta: (route) => ({ title: 'Корзина' })
+        meta: { title: 'Корзина' }
     },
     {
         name: 'help',
         path: prefix+'/help',
         component: Help,
-        meta: (route) => ({ title: 'Помощь' })
+        meta: { title: 'Помощь' }
     },
     {
         name: 'contactus',
         path: prefix+'/contact-us',
         component: ContactUs,
-        meta: (route) => ({ title: 'Наши контакты' })
+        meta: { title: 'Наши контакты' }
     },
     {
         name: 'ourteam',
         path: prefix+'/our-team',
         component: OurTeam,
-        meta: (route) => ({ title: 'Наша команда' })
+        meta: { title: 'Наша команда' }
     },
     {
         name: 'terms',
         path: prefix+'/terms',
         component: Terms,
-        meta: (route) => ({ title: 'Условия использования' })
+        meta: { title: 'Условия использования' }
     },
     {
         name: 'product',
         path: prefix+'/products/:productId',
         component: Product,
-        meta: (route) => ({ title: 'Продукт #'+route.params.productId })
+        meta: { title: 'Продукт' }
     },
     {
         name: 'settings',
         path: prefix+'/settings',
         component: Settings,
-        meta: (route) => ({ title: 'Настройки' })
+        meta: { title: 'Настройки' }
     },
     {
         name: 'basket',
         path: prefix+'/basket',
         component: Basket,
-        meta: (route) => ({ title: 'Корзина' })
+        meta: { title: 'Корзина' }
     },
     {
         name: 'favorites',
         path: prefix+'/favorites',
         component: Favorites,
-        meta: (route) => ({ title: 'Избранное' })
+        meta: { title: 'Избранное' }
     },
 ];
 

@@ -106,9 +106,13 @@ export default {
             this.$preloader.show();
             this.$nextTick(()=>{
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
-                baseJS.handler()
+
                 console.log("on route change")
             })
+
+            setTimeout(()=>{
+                baseJS.handler()
+            },500)
         },
     },
     computed: {
