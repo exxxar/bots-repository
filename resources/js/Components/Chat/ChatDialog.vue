@@ -12,7 +12,7 @@
                 <perfect-scrollbar
                     v-if="canEnter"
                     id="scroll-area"
-                    class="card-body ps-container py-5 px-3" data-mdb-perfect-scrollbar="true"
+                    class="card-body ps-container py-5 px-3"
                     style="position: relative; height: 400px">
 
                     <div

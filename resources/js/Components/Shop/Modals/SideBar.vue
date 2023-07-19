@@ -5,8 +5,9 @@
          data-menu-active="nav-features"
          data-menu-effect="menu-over">
 
+        <perfect-scrollbar  class="ps-container" style="position: relative; height: 100vh;">
 
-        <div class="menu-header">
+        <div class="menu-header" style="position: sticky;top: 0px;">
 
 
             <a href="#" data-toggle-theme="" class="border-right-0"><i
@@ -123,7 +124,7 @@
             </a>
         </div>
 
-        <div class="text-center pt-2">
+        <div class="text-center pt-2" style="position: sticky;bottom: 0px;">
             <a href="#" class="icon icon-xs mr-1 rounded-s bg-facebook"><i class="fab fa-facebook"></i></a>
             <a href="#" class="icon icon-xs mr-1 rounded-s bg-twitter"><i class="fab fa-twitter"></i></a>
             <a href="#" class="icon icon-xs mr-1 rounded-s bg-instagram"><i class="fab fa-instagram"></i></a>
@@ -132,6 +133,7 @@
             <p class="mb-0 pt-3 font-10 opacity-30">Copyright <span class="copyright-year"></span> Enabled. All rights
                 reserved</p>
         </div>
+        </perfect-scrollbar>
     </div>
 </template>
 <script>
@@ -156,6 +158,15 @@ export default {
     mounted() {
         console.log("side bar mounted")
         baseJS.handler()
-    }
+    },
+
 }
 </script>
+<style>
+.ps-container {
+    position: relative;
+    height: 100%;
+    max-height: inherit;
+    padding: 0px 3px;
+}
+</style>
