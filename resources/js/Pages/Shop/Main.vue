@@ -6,7 +6,7 @@ defineProps({
 
 });
 
-import SideBar from "@/Components/Shop/Modals/SideBar.vue";
+
 import Layout from "@/Layouts/ShopLayout.vue";
 </script>
 <template>
@@ -15,20 +15,11 @@ import Layout from "@/Layouts/ShopLayout.vue";
         <template #default>
             <div class="page-content" style="min-height: 667px;">
 
-<!--
-                <div class="page-title page-title-small">
-                    <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i></a>
-                    {{$route.meta.title || 'Меню'}}
-                    </h2>
-                    <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img" data-src="images/avatars/5s.png" style="background-image: url(&quot;images/avatars/5s.png&quot;);"></a>
-                </div>
--->
-
                 <div class="page-title page-title-small">
                     <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i> {{$route.meta.title || 'Меню'}}</a></h2>
-                    <a data-menu="menu-main"
-                       class="bg-fade-gray1-dark shadow-xl d-flex justify-content-center align-items-center font-18">
-                        <i class="fa-solid fa-bars text-white"></i></a>
+                    <a href="#/contact-us"
+                       class="bg-fade-gray1-dark shadow-xl d-flex justify-content-center align-items-center font-18 bot-avatar">
+                        <img v-lazy="logo" style="width:50px;object-fit: cover; border-radius: 50%;" alt=""></a>
                 </div>
 
 
@@ -76,7 +67,6 @@ import Layout from "@/Layouts/ShopLayout.vue";
                 </div>
             </div>
 
-            <SideBar/>
         </template>
 
     </Layout>
@@ -89,6 +79,9 @@ import baseJS from "@/modules/custom";
 export default {
     computed: {
         ...mapGetters(['getSelf']),
+        logo(){
+            return `/images-by-bot-id/${this.currentBot.id}/${this.currentBot.image}`
+        },
         tg() {
             return window.Telegram.WebApp;
         },
@@ -118,4 +111,13 @@ export default {
 
 }
 </script>
+
+<style>
+.bot-avatar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border-radius: 50%;
+}
+</style>
 

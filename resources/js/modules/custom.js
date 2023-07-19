@@ -120,7 +120,7 @@ export default  {
                         var menuHeight = $(this).data('menu-height');
                         var menuWidth = $(this).data('menu-width');
                         var menuActive = $(this).data('menu-active');
-                      /*  if ($(this).hasClass('menu-box-right')) {
+                        if ($(this).hasClass('menu-box-right')) {
                             $(this).css("width", menuWidth);
                         }
                         if ($(this).hasClass('menu-box-left')) {
@@ -134,7 +134,7 @@ export default  {
                         }
                         if ($(this).hasClass('menu-box-modal')) {
                             $(this).css({"height": menuHeight, "width": menuWidth});
-                        }*/
+                        }
                     });
 
                     //Menu Deploy Click
@@ -148,9 +148,9 @@ export default  {
                         var menuWidth = menuID.data('menu-width');
                         var menuHeight = menuID.data('menu-height');
                         $('body').addClass('modal-open');
-                     /*   if (menuID.hasClass('menu-header-clear')) {
+                        if (menuID.hasClass('menu-header-clear')) {
                             menuHider.addClass('menu-active-clear');
-                        }*/
+                        }
 
                         function menuActivate() {
                             menuID = 'menu-active' ? menuID.addClass('menu-active') : menuID.removeClass('menu-active');
@@ -159,7 +159,7 @@ export default  {
                         if (menuID.hasClass('menu-box-bottom')) {
                             $('#footer-bar').addClass('footer-menu-hidden');
                         }
-                    /*    if (menuEffect === "menu-parallax") {
+                        if (menuEffect === "menu-parallax") {
                             if (menuID.hasClass('menu-box-bottom')) {
                                 headerAndContent.css("transform", "translateY(" + (menuHeight / 5) * (-1) + "px)");
                             }
@@ -194,7 +194,7 @@ export default  {
                             if (menuID.hasClass('menu-box-right')) {
                                 headerAndContent.css("transform", "translateX(-100%)");
                             }
-                        }*/
+                        }
                         menuActivate();
                         return false;
                     });

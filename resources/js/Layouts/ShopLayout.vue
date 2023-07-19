@@ -9,6 +9,7 @@ import AddToCartModal from "@/Components/Shop/Modals/AddToCartModal.vue";
 import ShareMenuBar from "@/Components/Shop/Modals/ShareMenuBar.vue";
 import HighlightsMenuBar from "@/Components/Shop/Modals/HighlightsMenuBar.vue";
 import Preloader from "@/Components/Shop/Helpers/Preloader.vue";
+import SideBar from "@/Components/Shop/Modals/SideBar.vue";
 </script>
 <template>
 
@@ -93,6 +94,7 @@ import Preloader from "@/Components/Shop/Helpers/Preloader.vue";
         <ShareMenuBar/>
         <HighlightsMenuBar/>
 
+        <SideBar/>
     </div>
 
 </template>
@@ -104,15 +106,15 @@ export default {
     watch: {
         $route(newRouteValue) {
             this.$preloader.show();
+            baseJS.handler()
             this.$nextTick(()=>{
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
 
                 console.log("on route change")
+
             })
 
-            setTimeout(()=>{
-                baseJS.handler()
-            },500)
+
         },
     },
     computed: {
