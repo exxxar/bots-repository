@@ -477,7 +477,7 @@ abstract class BotCore
 
             foreach ($productInfo->prices as $item){
                 $item = (object)$item;
-                $price = $item->price / 100;
+                $price = $item->amount / 100;
                 $data .="$item->label по цене $price руб.,";
             }
 
