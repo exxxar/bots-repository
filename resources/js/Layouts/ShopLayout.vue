@@ -80,7 +80,7 @@ import Preloader from "@/Components/Shop/Helpers/Preloader.vue";
             </router-link>
 -->
 
-            <a data-menu="menu-main">
+            <a href="#" data-menu="menu-main">
                 <i class="fa-solid fa-bars"></i><span class="color-white">Меню</span>
             </a>
 
@@ -105,8 +105,9 @@ export default {
         $route(newRouteValue) {
             this.$preloader.show();
             this.$nextTick(()=>{
-                baseJS.handler()
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
+                baseJS.handler()
+                console.log("on route change")
             })
         },
     },

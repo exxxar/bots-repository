@@ -354,14 +354,12 @@ export default {
 
     },
     mounted() {
-        baseJS.handler()
-        this.watchStore();
-        //this.$botNotification.notification("Test", "teeeeeeeeeees")
+
         this.loadRandomProducts()
 
     },
     methods: {
-        watchStore(){
+    /*    watchStore(){
             this.$store.watch(
                 () => this.$store.getters.getSelf,
                 data => {
@@ -369,7 +367,7 @@ export default {
                     baseJS.handler()
                 }
             )
-        },
+        },*/
         loadRandomProducts() {
             return this.$store.dispatch("loadRandomProducts", {
                 dataObject: {
@@ -378,7 +376,7 @@ export default {
             }).then(() => {
                 this.randomProducts = this.getProducts
 
-                baseJS.handler()
+               // baseJS.handler()
 
             })
         }

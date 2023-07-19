@@ -9,6 +9,7 @@ import Layout from "@/Layouts/ShopLayout.vue";
 </script>
 <template>
     <Layout>
+
         <template #default>
             <div class="page-content" style="min-height: 667px;">
 
