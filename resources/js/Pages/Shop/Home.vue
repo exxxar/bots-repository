@@ -1,6 +1,7 @@
 <script setup>
 import ProductItemMini from "@/Components/Shop/Products/ProductItemMini.vue";
 import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
+
 </script>
 
 <template>
@@ -329,6 +330,7 @@ import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
     </a>
 
     <div class="divider divider-margins"></div>
+
 
 </template>
 <script>

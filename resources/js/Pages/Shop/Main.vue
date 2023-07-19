@@ -5,6 +5,8 @@ defineProps({
     },
 
 });
+
+import SideBar from "@/Components/Shop/Modals/SideBar.vue";
 import Layout from "@/Layouts/ShopLayout.vue";
 </script>
 <template>
@@ -50,6 +52,8 @@ import Layout from "@/Layouts/ShopLayout.vue";
                     </div>
                 </div>
             </div>
+
+            <SideBar/>
         </template>
 
     </Layout>

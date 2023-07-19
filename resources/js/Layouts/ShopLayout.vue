@@ -5,7 +5,7 @@ import {Head} from '@inertiajs/vue3'
 import Notifications from "@/Components/Shop/Modals/Notifications.vue";
 import AddToCartModal from "@/Components/Shop/Modals/AddToCartModal.vue";
 
-import SideBar from "@/Components/Shop/Modals/SideBar.vue";
+
 import ShareMenuBar from "@/Components/Shop/Modals/ShareMenuBar.vue";
 import HighlightsMenuBar from "@/Components/Shop/Modals/HighlightsMenuBar.vue";
 import Preloader from "@/Components/Shop/Helpers/Preloader.vue";
@@ -92,7 +92,7 @@ import Preloader from "@/Components/Shop/Helpers/Preloader.vue";
         <!-- end of page content-->
         <ShareMenuBar/>
         <HighlightsMenuBar/>
-        <SideBar/>
+
     </div>
 
 </template>
