@@ -473,7 +473,15 @@ abstract class BotCore
 
             $payload = $productInfo->payload ?? 'Артикул товара не указан администратором';
 
-            $this->sendMessage($channel, "Пользователь  $name ($phoneNumber , $email) соврешил оплату $totalAmount руб. за продукт '$payload'");
+            $data = "";
+
+            foreach ($productInfo->prices as $item){
+                $item = (object)$item;
+                $price = $item->price / 100;
+                $data .="$item->label по цене $price руб.,";
+            }
+
+            $this->sendMessage($channel, "Пользователь  $name ($phoneNumber , $email) соврешил оплату $totalAmount руб. за продукт $data ('$payload')");
 
         }
 
