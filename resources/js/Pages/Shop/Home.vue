@@ -6,15 +6,7 @@ import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
 
 <template>
 
-    <div class="page-title page-title-large">
-        <h2 data-username="Пользователь!'" class="greeting-text"></h2>
-        <a data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl d-flex justify-content-center align-items-center font-18"><i class="fa-solid fa-bars text-white"></i></a>
-    </div>
-    <div class="card header-card shape-rounded" data-card-height="140">
-        <div class="card-overlay bg-highlight opacity-95"></div>
-        <div class="card-overlay dark-mode-tint"></div>
-        <div class="card-bg preload-img" data-src="/shop/images/pictures/20s.jpg"></div>
-    </div>
+
 
     <div class="content">
         <div class="search-box bg-theme rounded-m shadow-xl bottom-0">

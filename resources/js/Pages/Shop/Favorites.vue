@@ -7,16 +7,6 @@ import EmptyCard from "@/Components/Shop/Helpers/EmptyCard.vue";
 <template>
 
 
-    <div class="page-title page-title-small">
-        <h2><a @click="$router.back()" data-back-button><i class="fa fa-arrow-left"></i></a>Избранное</h2>
-        <a href="#" data-menu="menu-main" class="bg-fade-gray1-dark shadow-xl preload-img"
-           data-src="images/avatars/5s.png"></a>
-    </div>
-    <div class="card header-card shape-rounded" data-card-height="150">
-        <div class="card-overlay bg-highlight opacity-95"></div>
-        <div class="card-overlay dark-mode-tint"></div>
-        <div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
-    </div>
     <div class="card card-style" v-if="getFavorites.length>0">
         <div class="content">
             <h3>Наши товары</h3>
