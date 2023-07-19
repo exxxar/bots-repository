@@ -461,15 +461,28 @@ abstract class BotCore
 
         $channel = $transaction->bot->order_channel ?? $transaction->bot->main_channel ?? null;
 
-        if (!is_null($channel))
-            $this->sendMessage($channel, "Пользователь " . print_r($orderInfo, true) . "соврешил оплату $totalAmount за продукт " . print_r($transaction->products_info, true));
+        if (!is_null($channel)) {
+
+            $name = $orderInfo->name ?? 'Без имени';
+            $phoneNumber = $orderInfo->phone_number ?? 'Без телефона';
+            $email = $orderInfo->email ?? 'Без почты';
+
+            $productInfo = (object)$transaction->products_info;
+
+            $totalAmount = $totalAmount / 100;
+
+            $payload = $productInfo->payload ?? 'Артикул товара не указан администратором';
+
+            $this->sendMessage($channel, "Пользователь  $name ($phoneNumber , $email) соврешил оплату $totalAmount руб. за продукт '$payload'");
+
+        }
 
         $transaction->update([
             'status' => 2,
             'order_info' => $orderInfo,
             'telegram_payment_charge_id' => $telegramPaymentChargeId,
             'provider_payment_charge_id' => $providerPaymentChargeId,
-            'completed_at'=>Carbon::now()
+            'completed_at' => Carbon::now()
         ]);
     }
 
