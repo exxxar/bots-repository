@@ -20,8 +20,13 @@ class AdminBotController extends Controller
 {
 
 
-    public function adminMenu($botDomain, $userId)
+    public function adminMenu($botDomain, $userId = null)
     {
+
+        Inertia::setRootView("bot");
+
+        if (is_null($userId))
+            return Inertia::render('Error');
 
         $bot = \App\Models\Bot::query()
             ->where("bot_domain", $botDomain)
@@ -36,6 +41,9 @@ class AdminBotController extends Controller
             ->where("telegram_chat_id", $userId)
             ->first();
 
+        if (is_null($botUser))
+            return Inertia::render('Error');
+
         $cashBack = \App\Models\CashBack::query()
             ->where("bot_id", $bot->id)
             ->where("user_id", $botUser->user_id)
@@ -45,7 +53,7 @@ class AdminBotController extends Controller
         $botUser = new \App\Http\Resources\BotUserResource($botUser);
         $cashBack = new \App\Http\Resources\CashBackResource($cashBack);
 
-        Inertia::setRootView("bot");
+
 
         return Inertia::render('Admin/AdminMain', [
             'user' => json_decode($user->toJson()),
