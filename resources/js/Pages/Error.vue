@@ -12,7 +12,16 @@
 
         <div class="row">
             <div class="col-12">
-                <img v-lazy="'images/cashman2.jpg'" alt="">
+                <img v-lazy="'/images/cashman.jpg'" class="w-100" style="object-fit: cover;" alt="">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <button type="button"
+                        @click="tg.close()"
+                        class="btn btn-outline-success w-100 p-3">Вернуться в бота
+                </button>
             </div>
         </div>
     </div>
@@ -26,7 +35,13 @@ export default {
         return {}
     },
     computed: {
-
+        tg() {
+            return window.Telegram.WebApp;
+        },
+        tgUser() {
+            const urlParams = new URLSearchParams(this.tg.initData);
+            return JSON.parse(urlParams.get('user'));
+        }
     },
     mounted() {
 

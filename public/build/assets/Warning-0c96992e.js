@@ -1,1 +1,0 @@
-import{c as t,t as s,o as a}from"./app-26c16c6f.js";const r={class:"alert alert-info",role:"alert"},n={},l=Object.assign(n,{__name:"Warning",props:{message:String},setup(e){return(o,c)=>(a(),t("div",r,s(e.message||"Вы уже использовали данный сервис. У вас не осталось попыток"),1))}});export{l as default};
