@@ -543,16 +543,21 @@ abstract class BotCore
             $this->inlineHandler($update);
             return;
         }
+        try {
+            if (isset($update["pre_checkout_query"])) {
+                $this->preCheckoutQueryHandler($item->pre_checkout_query);
+                return;
+            }
 
-        if (isset($update["pre_checkout_query"])) {
-            $this->preCheckoutQueryHandler($item->pre_checkout_query);
-            return;
+            if (isset($update["shipping_query"])) {
+                $this->shippingQueryHandler($item->shipping_query);
+                return;
+            }
+        }catch (\Exception $exception){
+            Log::info($exception->getMessage());
         }
 
-        if (isset($update["shipping_query"])) {
-            $this->shippingQueryHandler($item->shipping_query);
-            return;
-        }
+
 
         //формируем сообщение из возможных вариантов входных данных
         $message = $item->message ??

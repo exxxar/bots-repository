@@ -9,7 +9,7 @@ import PagesList from "@/Components/Constructor/Pages/PagesList.vue";
 import Page from "@/Components/Constructor/Pages/Page.vue"
 import ImageMenu from "@/Components/Constructor/ImageMenu.vue";
 import BotDialogGroupList from "@/Components/Constructor/Dialogs/BotDialogGroupList.vue";
-
+import Shop from "@/Components/Constructor/Shop/Shop.vue";
 import AmoForm from "@/Components/Constructor/Amo/AmoForm.vue";
 </script>
 <template>
@@ -620,6 +620,10 @@ import AmoForm from "@/Components/Constructor/Amo/AmoForm.vue";
                 :data="botForm.amo"
                 v-if="!load"
             />
+        </div>
+
+        <div v-if="step===8">
+            <Shop :bot="bot" v-if="!load"/>
         </div>
 
 

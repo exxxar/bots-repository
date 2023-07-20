@@ -17,11 +17,15 @@ use VK\OAuth\VKOAuthResponseType;
 
 class VKProductController extends Controller
 {
-    public function getVKAuthLink($botDomain)
+    protected string $vkUrl;
+
+    public function getVKAuthLink(Request $request, $botDomain)
     {
+        $this->vkUrl = $request->vk_url ?? null;
+
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");
-        $redirect_uri = env("APP_URL").'/global-scripts/shop/vk-callback';
+        $redirect_uri = env("APP_URL") . '/global-scripts/shop/vk-callback';
         $display = VKOAuthDisplay::PAGE;
         $scope = [VKOAuthUserScope::MARKET];
         $state = $botDomain ?? 'secret_state_code';
@@ -44,7 +48,7 @@ class VKProductController extends Controller
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");
         $client_secret = env('VK_CLIENT_SECRET');
-        $redirect_uri = env("APP_URL").'/global-scripts/shop/vk-callback';
+        $redirect_uri = env("APP_URL") . '/global-scripts/shop/vk-callback';
         $code = $request->code;
         $state = $request->state; //bot domain
 
@@ -53,8 +57,21 @@ class VKProductController extends Controller
 
 
         $vk = new VKApiClient();
+
+        $response = $vk->utils()->resolveScreenName($access_token, [
+            'screen_name' => $this->vkUrl,
+        ]);
+
+        $data = ((object)$response)->response ?? null;
+
+        if (is_null($data))
+            return response()->noContent(400);
+
+        if ($data->type!="group")
+            return response()->noContent(400);
+
         $response = $vk->market()->get($access_token, [
-            'owner_id' => -106641010,
+            'owner_id' => "-$data->object_id",
             'need_variants' => 1,
             'extended' => 1
         ]);

@@ -25,7 +25,7 @@ defineProps({
 
             </div>
             <div class="col-12">
-                <p class="mb-3"><em>Приветствую тебя, <strong>Дорогой друг!</strong> Я хочу поздавить тебя и дать возможность получать неограниченные преимушества нашего сервиса! Для начала нам нужно с тобой познакомится - это поможет сделать использование сервиса более кофортным и взаимовыгодным!</em>
+                <p class="mb-3"><em>Приветствую вас, <strong>Дорогой друг!</strong> Я хочу поздавить тебя и дать возможность получать неограниченные преимушества нашего сервиса! Для начала нам нужно с тобой познакомится - это поможет сделать использование сервиса более кофортным и взаимовыгодным!</em>
                 </p>
                 <h6 class="text-center">Как мне к тебе обращаться?</h6>
                 <div class="input-group mb-3">
@@ -56,9 +56,9 @@ defineProps({
 
             </div>
             <div class="col-12">
-                <p class="mb-3"><em>- Отлично, <strong>{{vipForm.name}}</strong>! А теперь, чтобы ты мог пользоваться всеми моими функциями, мне нужен твой номер телефона. Можешь ввести его?</em>
+                <p class="mb-3"><em>- Отлично, <strong>{{vipForm.name}}</strong>! А теперь, чтобы Вы могли пользоваться всеми моими функциями, мне нужен Ваш номер телефона. Можете ввести его?</em>
                 </p>
-                <h6 class="text-center">Введи свой номер телефона</h6>
+                <h6 class="text-center">Введите свой номер телефона</h6>
                 <div class="input-group mb-3">
                         <input type="text" class="form-control p-3 text-center"
                                v-mask="'+7(###)###-##-##'"
@@ -87,8 +87,8 @@ defineProps({
 
             </div>
             <div class="col-12">
-                <p class="mb-3"><em>Чтобы я мог обращаться к тебе правильно, скажи мне, какого ты пола?</em></p>
-                <h6 class="text-center">Ты парень или девушка?</h6>
+                <p class="mb-3"><em>Чтобы я мог обращаться к Вам правильно, скажи мне, какого Вы пол?</em></p>
+                <h6 class="text-center">Ты мужчина или женщина?</h6>
                 <div class="input-group mb-3 mt-3 w-100 d-flex justify-content-center">
                     <div class="btn-group w-100" role="group" aria-label="vipForm-sex">
                         <input
@@ -96,13 +96,13 @@ defineProps({
                             :value="true"
                             v-model="vipForm.sex"
                             class="btn-check" name="sex-radio-btn" id="sex-radio-btn-1" autocomplete="off" required>
-                        <label class="btn btn-outline-primary p-3" for="sex-radio-btn-1">Мужской</label>
+                        <label class="btn btn-outline-primary p-3" for="sex-radio-btn-1">Мужчина</label>
 
                         <input type="radio"
                                v-model="vipForm.sex"
                                :value="false"
                                class="btn-check" name="sex-radio-btn" id="sex-radio-btn-2" autocomplete="off" required>
-                        <label class="btn btn-outline-primary p-3" for="sex-radio-btn-2">Женский</label>
+                        <label class="btn btn-outline-primary p-3" for="sex-radio-btn-2">Женщина</label>
 
                     </div>
                 </div>
@@ -126,8 +126,8 @@ defineProps({
 
             </div>
             <div class="col-12">
-                <p class="mb-3"><em>Для того, чтобы я мог поздравлять тебя с днем рождения и сделать тебе приятно, мне нужно знать, когда он у тебя</em></p>
-                <h6 class="text-center">Введи свой день рождения</h6>
+                <p class="mb-3"><em>Для того, чтобы я мог поздравлять Вас с днем рождения и сделать Вам приятно, мне нужно знать, когда он у Вас</em></p>
+                <h6 class="text-center">Введите свой день рождения</h6>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control p-3"
                            v-model="vipForm.birthday"
@@ -153,8 +153,8 @@ defineProps({
 
             </div>
             <div class="col-12">
-                <p class="mb-3"><em>Чтобы я мог показывать тебе информацию, актуальную для твоего города, мне нужно знать, где ты живешь.</em></p>
-                <h6 class="text-center">Какой у тебя город?</h6>
+                <p class="mb-3"><em>Чтобы я мог показывать Вам информацию, актуальную для Вашего города, мне нужно знать город Вашего проживания.</em></p>
+                <h6 class="text-center">Какой у Вас город?</h6>
                 <div class="input-group mb-3">
                     <input type="text"
                            v-model="vipForm.city"
@@ -189,12 +189,12 @@ defineProps({
 
             </div>
             <div class="col-12">
-                <p class="mb-3"><em>Отлично! Теперь, прежде чем продолжить, пожалуйста, прочти мои условия использования и дай свое согласие на их принятие.</em> </p>
+                <p class="mb-3"><em>Отлично! Теперь, прежде чем продолжить, пожалуйста, прочитайте мои условия использования и дайте свое согласие на их принятие.</em> </p>
                 <h6 class="text-center">Последний шаг</h6>
 
                 <div class="card border-success mb-3">
                     <div class="card-body">
-                        <p>Перед отправкой данных ознакомься с <a
+                        <p>Перед отправкой данных нужно ознакомиться с <a
                             href="#">политикой конфиденциальности</a>.</p>
                         <div class="form-check form-switch ">
                             <input class="form-check-input"
@@ -230,6 +230,11 @@ defineProps({
                             <li>Оплата товаров через CashBak</li>
                             <li>Реферальная программа</li>
                         </ul>
+
+                        <button type="button"
+                               @click="tg.close()"
+                                class="btn btn-outline-success w-100 p-3">Вернуться в бота
+                        </button>
                     </div>
                 </div>
             </div>

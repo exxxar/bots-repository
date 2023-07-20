@@ -28,7 +28,7 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
         <!-- header and footer bar go here-->
         <div class="header header-fixed header-auto-show header-logo-app">
             <a @click="closeShop" class="header-title header-subtitle">Вернуться в бота</a>
-            <a href="#" data-back-button class="header-icon header-icon-1"><i class="fas fa-arrow-left"></i></a>
+            <a @click="$router.back()" data-back-button class="header-icon header-icon-1"><i class="fas fa-arrow-left"></i></a>
             <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-dark"><i
                 class="fas fa-sun"></i></a>
             <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-light"><i

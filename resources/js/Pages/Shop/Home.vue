@@ -6,9 +6,7 @@ import ProductItemLarge from "@/Components/Shop/Products/ProductItemLarge.vue";
 
 <template>
 
-
-
-    <div class="content">
+    <div class="content mb-4">
         <div class="search-box bg-theme rounded-m shadow-xl bottom-0">
             <i class="fa fa-search"></i>
             <input type="text" class="border-0" placeholder="What are you looking for? (try all) " data-search>
@@ -349,11 +347,12 @@ export default {
     },
     mounted() {
 
+        this.watchStore()
         this.loadRandomProducts()
 
     },
     methods: {
-    /*    watchStore(){
+        watchStore(){
             this.$store.watch(
                 () => this.$store.getters.getSelf,
                 data => {
@@ -361,7 +360,7 @@ export default {
                     baseJS.handler()
                 }
             )
-        },*/
+        },
         loadRandomProducts() {
             return this.$store.dispatch("loadRandomProducts", {
                 dataObject: {

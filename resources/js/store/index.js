@@ -14,6 +14,7 @@ import instagramQuest from "@/store/modules/globals/instagramQuest";
 import cart from "@/store/modules/shop/cart";
 import self from "@/store/modules/self";
 import favorites from "@/store/modules/shop/favorites";
+import shopAdmin from "@/store/modules/shop/admin";
 import util from "@/store/modules/utilites";
 
 
@@ -95,6 +96,7 @@ export default createStore({
         instagramQuest,
         cart,
         self,
-        favorites
+        favorites,
+        shopAdmin
     }
 })

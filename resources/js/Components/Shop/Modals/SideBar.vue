@@ -1,9 +1,7 @@
 <template>
     <div id="menu-main"
          class="menu menu-box-right menu-box-detached rounded-m "
-         style="width: 260px;display:block;height: 100vh;overflow-y: scroll;"
-         data-menu-active="nav-features"
-         data-menu-effect="menu-over">
+         style="width: 260px;display:block;height: 100vh;overflow-y: scroll;">
 
 
         <div class="menu-header">
@@ -69,7 +67,7 @@
                 :tag="'a'" :to="'/favorites'">
                 <i class="fa-solid fa-star" style="color:orange;"></i>
                 <span>Избранное</span>
-                <strong class="badge bg-highlight color-white">3</strong>
+                <strong class="badge bg-highlight color-white" v-if="favoritesCount>0">{{favoritesCount}}</strong>
                 <i class="fa fa-circle"></i>
             </router-link>
 
@@ -145,7 +143,8 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['cartTotalCount']),
+        ...mapGetters([ 'cartTotalCount' ,'favoritesCount']),
+
         logo(){
             return `/images-by-bot-id/${this.currentBot.id}/${this.currentBot.image}`
         },

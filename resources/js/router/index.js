@@ -15,75 +15,71 @@ import ContactUs from '@/Pages/Shop/ContactUs.vue';
 import Help from '@/Pages/Shop/Help.vue';
 
 
-window.currentPath = ''//window.location.pathname
-
-const prefix = window.currentPath || ''
-
 export const routes = [
 
     {
         name: 'home',
-        path: prefix+'/home',
+        path: '/home',
         component: Home,
         meta: { title: 'Главная страница' }
     },
     {
         name: 'products',
-        path: prefix+'/products',
+        path: '/products',
         component: Products,
         meta: { title: 'Продукты' }
     },
     {
         name: 'checkout',
-        path: prefix+'/checkout',
+        path: '/checkout',
         component: CheckOut,
         meta: { title: 'Корзина' }
     },
     {
         name: 'help',
-        path: prefix+'/help',
+        path: '/help',
         component: Help,
         meta: { title: 'Помощь' }
     },
     {
         name: 'contactus',
-        path: prefix+'/contact-us',
+        path: '/contact-us',
         component: ContactUs,
         meta: { title: 'Наши контакты' }
     },
     {
         name: 'ourteam',
-        path: prefix+'/our-team',
+        path: '/our-team',
         component: OurTeam,
         meta: { title: 'Наша команда' }
     },
     {
         name: 'terms',
-        path: prefix+'/terms',
+        path: '/terms',
         component: Terms,
         meta: { title: 'Условия использования' }
     },
     {
         name: 'product',
-        path: prefix+'/products/:productId',
+        path: '/products/:productId',
         component: Product,
         meta: { title: 'Продукт' }
     },
     {
         name: 'settings',
-        path: prefix+'/settings',
+        path: '/settings',
         component: Settings,
         meta: { title: 'Настройки' }
     },
     {
         name: 'basket',
-        path: prefix+'/basket',
+        path: '/basket',
         component: Basket,
         meta: { title: 'Корзина' }
     },
     {
         name: 'favorites',
-        path: prefix+'/favorites',
+        path: '/favorites',
         component: Favorites,
         meta: { title: 'Избранное' }
     },

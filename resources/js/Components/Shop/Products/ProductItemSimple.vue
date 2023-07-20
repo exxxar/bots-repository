@@ -12,12 +12,17 @@
             <div class="float-right">
                 <button
                     @click="addToCart"
-                    class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark"><i class="fa-solid fa-cart-plus"></i></button>
+                    class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark position-relative">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    <span class="in-cart-count" v-if="inCart(item.id)>0">{{inCart(item.id)}}</span>
+                </button>
             </div>
         </div>
     </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     props: ["item"],
     data(){
@@ -26,6 +31,7 @@ export default {
         }
     },
     computed:{
+        ...mapGetters(['inCart']),
         currentPrice(){
             return this.item.current_price / 100
         },
@@ -43,3 +49,17 @@ export default {
     }
 }
 </script>
+<style>
+.in-cart-count {
+    padding: 4px;
+    display: block;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+}
+</style>
