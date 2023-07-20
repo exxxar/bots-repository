@@ -580,10 +580,15 @@ abstract class BotCore
             $this->createUser($message->from);
 
 
-        if (isset($update["message"]["successful_payment"])) {
-            $this->successfulPaymentHandler($item->message->successful_payment);
-            return;
+        try {
+            if (isset($update["message"]["successful_payment"])) {
+                $this->successfulPaymentHandler($item->message->successful_payment);
+                return;
+            }
+        }catch (\Exception $exception){
+            Log::info($exception->getMessage());
         }
+
 
         $query = $item->message->text ??
             $item->callback_query->data ?? '';
