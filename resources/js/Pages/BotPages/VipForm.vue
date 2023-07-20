@@ -129,7 +129,7 @@ defineProps({
                 <p class="mb-3"><em>Для того, чтобы я мог поздравлять Вас с днем рождения и сделать Вам приятно, мне нужно знать, когда он у Вас</em></p>
                 <h6 class="text-center">Введите свой день рождения</h6>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control p-3"
+                    <input type="date" class="form-control p-3"
                            v-model="vipForm.birthday"
                            aria-label="vipForm-birthday" aria-describedby="vipForm-birthday" required>
                 </div>
