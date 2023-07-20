@@ -1,0 +1,1 @@
+import{_ as t}from"./MainAdminLayout-a21da5c0.js";import{V as a}from"./VisitCardConstructor-7629686d.js";import{e as o,l as r,o as e,b as s}from"./app-26c16c6f.js";const _={},u=Object.assign(_,{__name:"BotVisitCardConstructorPage",setup(c){return(i,n)=>(e(),o(t,{active:5},{default:r(()=>[s(a)]),_:1}))}});export{u as default};

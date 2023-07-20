@@ -40,7 +40,7 @@ class RestaurantBotController extends Controller
             $code = $matches[1][0] ?? null;
             $request_telegram_chat_id = $matches[2][0] ?? null;
 
-            Log::info("request_telegram_chat_id".print_r($matches, true));
+           // Log::info("request_telegram_chat_id".print_r($matches, true));
 
             //$qrCode = new QRCodeHandler($code, $request_user_id);
 

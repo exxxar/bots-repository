@@ -1,1 +1,0 @@
-import{c as t,o as e}from"./app-40c76fc6.js";const o={class:"alert alert-info",role:"alert"},a={created(){window.currentBot=this.bot.data}},_=Object.assign(a,{__name:"Main",props:{bot:{type:Object}},setup(r){return(c,s)=>(e(),t("div",o," Данная страница Админ Панели магазина всё еще в разработке "))}});export{_ as default};
