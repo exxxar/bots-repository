@@ -243,7 +243,7 @@ Route::post("/admin/cashback-add", function () {
 
 Route::post('/get-bot-user', [AdminBotController::class, 'getBotUser']);
 
-Route::get('/admin/{botDomain}/{userId}', [AdminBotController::class, 'adminMenu']);
+Route::get('/admin/{botDomain}/{userId?}', [AdminBotController::class, 'adminMenu']);
 Route::get('/admin/work-day/{botDomain}/{userId}', [AdminBotController::class, "workDay"]);
 Route::get('/statistic/{botDomain}/{userId}', [AdminBotController::class, "statistic"]);
 Route::get('/promotion/{botDomain}/{userId}', [AdminBotController::class, "promotion"]);
