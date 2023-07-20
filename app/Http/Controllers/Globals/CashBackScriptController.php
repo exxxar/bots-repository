@@ -6,6 +6,7 @@ use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
 use App\Models\CashBack;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
 class CashBackScriptController extends Controller
@@ -40,11 +41,14 @@ class CashBackScriptController extends Controller
             return;
         }
 
-
-        $qr = "https://t.me/$botDomain?start=" .
-            base64_encode("001" . BotManager::bot()->getCurrentChatId());
-
         $botUser = BotManager::bot()->currentBotUser();
+
+        $data = "001" . $botUser->telegram_chat_id;
+        Log::info($data);
+        $qr = "https://t.me/$botDomain?start=" .
+            base64_encode($data);
+
+
 
         $cashBack = CashBack::query()
             ->where("bot_id", $bot->id)
