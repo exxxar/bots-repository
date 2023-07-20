@@ -30,7 +30,7 @@ class RestaurantBotController extends Controller
 
         $message = $bot->welcome_message ?? null;
 
-        if (!is_null($data[2])) {
+        if (!is_null($data[3])) {
             $pattern = "/([0-9]{3})([0-9]+)/";
 
             $string = base64_decode($data[2]);
