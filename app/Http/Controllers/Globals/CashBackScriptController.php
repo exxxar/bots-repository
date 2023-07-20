@@ -60,7 +60,7 @@ class CashBackScriptController extends Controller
         $companyTitle = $bot->company->title ?? 'CashMan';
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto("У вас <b>$amount</b> руб.!\n
+            ->replyPhoto("Тест: У вас <b>$amount</b> руб.!\n
 Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>",
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
