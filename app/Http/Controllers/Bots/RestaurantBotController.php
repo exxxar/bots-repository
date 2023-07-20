@@ -30,7 +30,7 @@ class RestaurantBotController extends Controller
 
         $message = $bot->welcome_message ?? null;
 
-        Log::info("data=>".print_r($data,ture));
+        Log::info("data=>".print_r($data,true));
         if (!is_null($data[3])) {
             $pattern = "/([0-9]{3})([0-9]+)/";
 
