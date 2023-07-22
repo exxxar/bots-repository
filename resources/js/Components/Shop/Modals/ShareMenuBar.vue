@@ -15,7 +15,7 @@
                 <p class="font-11 opacity-70">Facebook</p>
             </div>
             <div class="col-3 mb-n2">
-                <a target="_blank"    @click="open('https://twitter.com/home?status='+link)" class="shareToTwitter icon icon-l bg-twitter rounded-s shadow-l"><i class="fab fa-twitter font-22"></i><br></a>
+                <a @click="open('https://twitter.com/home?status='+link)" class="shareToTwitter icon icon-l bg-twitter rounded-s shadow-l"><i class="fab fa-twitter font-22"></i><br></a>
                 <p class="font-11 opacity-70">Twitter</p>
             </div>
             <div class="col-3 mb-n2">
