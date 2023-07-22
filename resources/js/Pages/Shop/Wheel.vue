@@ -156,9 +156,7 @@ export default {
                     phone: null,
                 }
 
-                this.$botNotification.success("Вы выиграли!",
-                    "Наш менеджер свяжется с вами для дальнейших инструкций.",
-                );
+                this.$botNotification.success("Вы выиграли!", "Наш менеджер свяжется с вами для дальнейших инструкций.")
 
 
                 this.prepareUserData()

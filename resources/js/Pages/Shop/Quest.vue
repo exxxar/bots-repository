@@ -166,7 +166,7 @@ export default {
                 this.photo = null
                 this.hasProfileData = false
 
-                this.$botNotification.success("Instagram Quest", "Вы успешно приняли участие в квесте! Наш менеджер свяжется с вами для дальнейших инструкций.")
+                this.$botNotification.success("Вы выиграли!", "Наш менеджер свяжется с вами для дальнейших инструкций.")
 
                 setTimeout(()=>{
                     this.prepareUserData()

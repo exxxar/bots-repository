@@ -71,8 +71,8 @@ class FriendsScriptController extends Controller
                 InputFile::create($imgPath)
             );
 
-        BotManager::bot()
+    /*    BotManager::bot()
             ->sendReplyMenu("Пригласить друзей",
-                "menu_level_2_restaurant_5");
+                "menu_level_2_restaurant_5");*/
     }
 }
