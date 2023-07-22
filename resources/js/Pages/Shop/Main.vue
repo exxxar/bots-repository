@@ -54,7 +54,7 @@ import Layout from "@/Layouts/ShopLayout.vue";
                             <a v-if="currentBot.company.email" @click="open('mailTo:'+currentBot.company.email)"
                                class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook"><i
                                 class="fa-solid fa-at"></i></a>
-                            <a v-if="currentBot.company.links[0]" @click="open(currentBot.company.links[0])" target="_blank"
+                            <a v-if="currentBot.company.links[0]" @click="open(currentBot.company.links[0])"
                                class="icon icon-xs rounded-sm shadow-l mr-1 bg-vk">
                                 <i class="fa-brands fa-vk"></i></a>
                             <a v-if="currentBot.company.phones[0]" @click="open('tel:'+currentBot.company.phones[0])"

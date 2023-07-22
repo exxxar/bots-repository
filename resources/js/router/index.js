@@ -20,6 +20,10 @@ import Quest from '@/Pages/Shop/Quest.vue';
 export const routes = [
 
     {
+        path: '/',
+        redirect: '/home'
+    },
+    {
         name: 'home',
         path: '/home',
         component: Home,

@@ -21,17 +21,17 @@
             <div class="col-3 mb-n2">
                 <a
                    @click="open('https://vk.com/share.php?url='+link)"
-                   class="shareToLinkedIn icon icon-l bg-linkedin rounded-s shadow-l">
+                   class=" icon icon-l bg-linkedin rounded-s shadow-l">
                     <i class="fa-brands fa-vk font-22"></i><br>
                 </a>
                 <p class="font-11 opacity-70">VK</p>
             </div>
             <div class="col-3 mb-n2">
-                <a    @click="open('mailto:?body='+link)" class="shareToMail icon icon-l bg-mail rounded-s shadow-l"><i class="fa fa-envelope font-22"></i><br></a>
+                <a    @click="open('mailto:?body='+link)" class=" icon icon-l bg-mail rounded-s shadow-l"><i class="fa fa-envelope font-22"></i><br></a>
                 <p class="font-11 opacity-70">Email</p>
             </div>
             <div class="col-3 mb-n2">
-                <a     @click="open('whatsapp://send?text='+link)" class="shareToWhatsApp icon icon-l bg-whatsapp rounded-s shadow-l"><i class="fab fa-whatsapp font-22"></i><br></a>
+                <a     @click="open('whatsapp://send?text='+link)" class=" icon icon-l bg-whatsapp rounded-s shadow-l"><i class="fab fa-whatsapp font-22"></i><br></a>
                 <p class="font-11 opacity-70">WhatsApp</p>
             </div>
             <div class="col-3 mb-n2">
@@ -42,7 +42,7 @@
             </div>
             <div class="col-3 mb-n2">
                 <a
-                    @click="open('https://pinterest.com/pin/create/button/?url='+link)" class="shareToPinterest icon icon-l bg-pinterest rounded-s shadow-l"><i class="fab fa-pinterest-p font-22"></i><br></a>
+                    @click="open('https://pinterest.com/pin/create/button/?url='+link)" class="icon icon-l bg-pinterest rounded-s shadow-l"><i class="fab fa-pinterest-p font-22"></i><br></a>
                 <p class="font-11 opacity-70">Pinterest</p>
             </div>
             <div class="col-3 mb-n2">
