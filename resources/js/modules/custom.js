@@ -1346,12 +1346,12 @@ export default  {
                     $('.shareToMail').prop("href", "mailto:?body=" + share_link);
                     //Copy Link
                     $('.shareToCopyLink').on('click', function (element) {
-                        $(this).parent().find('p').html('Link Copied');
+                        $(this).parent().find('p').html('Скопировано');
                         $(this).removeClass('bg-blue2-dark').addClass('bg-green1-dark');
                         $(this).find('i').attr('class', '');
                         $(this).find('i').attr('class', 'fa fa-check font-22');
                         setTimeout(function () {
-                            $('.shareToCopyLink').parent().find('p').html('Copy Link');
+                            $('.shareToCopyLink').parent().find('p').html('Копировать');
                             $('.shareToCopyLink').removeClass('bg-green1-dark').addClass('bg-blue2-dark');
                             $('.shareToCopyLink').find('i').attr('class', '');
                             $('.shareToCopyLink').find('i').attr('class', 'fa fa-link font-22');

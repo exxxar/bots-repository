@@ -12,7 +12,7 @@
         <div class="row text-center mr-4 ml-4 mb-0">
             <div class="col-3 mb-n2">
                 <a @click="open('https://www.facebook.com/sharer/sharer.php?u='+link)"
-                   class="shareToFacebook icon icon-l bg-facebook rounded-s shadow-l text-white">
+                   class="icon icon-l bg-facebook rounded-s shadow-l text-white">
                     <i class="fab fa-facebook-f font-22"></i><br>
                 </a>
                 <p class="font-11 opacity-70">Facebook</p>
@@ -21,7 +21,7 @@
                 <a
                     href="#"
                     @click="open('https://twitter.com/home?status='+link)"
-                    class="shareToTwitter icon icon-l bg-twitter rounded-s shadow-l text-white">
+                    class="icon icon-l bg-twitter rounded-s shadow-l text-white">
                     <i class="fab fa-twitter font-22"></i><br>
                 </a>
                 <p class="font-11 opacity-70">Twitter</p>
@@ -51,8 +51,7 @@
                 <p class="font-11 opacity-70">WhatsApp</p>
             </div>
             <div class="col-3 mb-n2">
-                <a href="#"
-                   @click="copy"
+                <a :href="link"
                    class="shareToCopyLink icon icon-l bg-blue2-dark rounded-s shadow-l text-white">
                     <i class="fa fa-link font-22"></i><br>
                 </a>
@@ -104,9 +103,7 @@ export default {
         open(url) {
             this.tg.openLink(url)
         },
-        copy() {
-            navigator.clipboard.writeText("https://t.me/" + this.currentBot.bot_domain)
-        }
+
     }
 }
 </script>
