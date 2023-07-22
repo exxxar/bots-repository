@@ -115,11 +115,10 @@ export default {
 
             var $temp = $("<input>");
             $("body").append($temp);
-            $temp.val("https://t.me/" + this.currentBot.bot_domain).select();
+            $temp.val(this.link).select();
             document.execCommand("copy");
             $temp.remove();
 
-            this.$botNotification.success("Копирование", "Ссылка скопирована в буфер")
         }
     }
 }

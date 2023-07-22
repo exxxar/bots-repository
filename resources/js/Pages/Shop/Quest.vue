@@ -16,7 +16,9 @@ import PlayerForm from "@/Components/Shop/PlayerForm.vue";
                 }}</strong> из <strong>{{
                     action.max_attempts || 1
                 }}</strong></p>
-            <p style="font-weight:900; color:red;" v-else>Вы израсходовали все ваши попытки</p>
+            <p
+                @click="lose"
+                style="font-weight:900; color:red;" v-else>Вы израсходовали все ваши попытки</p>
         </div>
     </div>
 
@@ -103,6 +105,9 @@ export default {
     }
     ,
     methods: {
+        lose() {
+            this.$botNotification.warning("Упс!", "Вы израсходовали все попытки!")
+        },
         prepareUserData() {
             return this.$store.dispatch("instagramQuestPrepare").then((response) => {
                 this.action = response.action

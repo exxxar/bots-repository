@@ -62,16 +62,15 @@ class FriendsScriptController extends Controller
 
 
 
-        $file = InputFile::create(
-            $imgPath
-            /*file_exists($imgPath) ?
+       /* $file = InputFile::create(
+            file_exists($imgPath) ?
                 $imgPath :
-                public_path() . "/images/cashman.jpg"*/
-        );
+                public_path() . "/images/cashman.jpg"
+        );*/
 
         \App\Facades\BotManager::bot()
             ->replyPhoto(sprintf($referralText, $qr, $qr),
-                $file
+                $imgPath
             );
 
         BotManager::bot()
