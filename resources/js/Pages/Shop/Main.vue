@@ -25,7 +25,7 @@ import Layout from "@/Layouts/ShopLayout.vue";
                     <a
 
                         :href=" !$route.meta.hide_menu?'#/contact-us':'#'"
-                       class="bg-fade-gray1-dark shadow-xl d-flex justify-content-center align-items-center font-18 bot-avatar">
+                        class="bg-fade-gray1-dark shadow-xl d-flex justify-content-center align-items-center font-18 bot-avatar">
                         <img v-lazy="logo" style="width:50px;object-fit: cover; border-radius: 50%;" alt=""></a>
                 </div>
 
@@ -51,11 +51,14 @@ import Layout from "@/Layouts/ShopLayout.vue";
                             {{ currentBot.company.description || 'Описание вашего магазина' }}
                         </p>
                         <div class="text-center mb-3">
-                            <a :href="'mailTo:'+currentBot.company.email" class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook"><i
+                            <a @click="open('mailTo:'+currentBot.company.email)"
+                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook"><i
                                 class="fa-solid fa-at"></i></a>
-                            <a :href="currentBot.company.links[0]" target="_blank" class="icon icon-xs rounded-sm shadow-l mr-1 bg-vk">
+                            <a @click="open(currentBot.company.links[0])" target="_blank"
+                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-vk">
                                 <i class="fa-brands fa-vk"></i></a>
-                            <a :href="'tel:'+currentBot.company.phones[0]" class="icon icon-xs rounded-sm shadow-l mr-1 bg-phone"><i
+                            <a @click="open('tel:'+currentBot.company.phones[0])"
+                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-phone"><i
                                 class="fa fa-phone"></i></a>
                             <a href="#" data-menu="menu-share"
                                class="icon icon-xs rounded-sm mr-1 shadow-l bg-red2-dark"><i
@@ -99,14 +102,14 @@ export default {
             const urlParams = new URLSearchParams(this.tg.initData);
             return JSON.parse(urlParams.get('user'));
         },
-        currentBot(){
+        currentBot() {
             return window.currentBot
         },
-        qr(){
-            return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data="+this.link
+        qr() {
+            return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.link
         },
-        link(){
-            return "https://t.me/"+this.currentBot.bot_domain+"?start="+btoa("001"+this.self.telegram_chat_id);
+        link() {
+            return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa("001" + this.self.telegram_chat_id);
         }
     },
     created() {
@@ -124,7 +127,11 @@ export default {
         })
         this.$notify({type: "success", text: "The operation completed"});
     },
-
+    methods: {
+        open(url) {
+            this.tg.openLink(url)
+        },
+    }
 
 }
 </script>
@@ -139,7 +146,7 @@ export default {
 
 .bg-vk {
     background-color: #007bff;
-    color:white;
+    color: white;
 }
 </style>
 

@@ -11,27 +11,27 @@
 
         <div class="row text-center mr-4 ml-4 mb-0">
             <div class="col-3 mb-n2">
-                <a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u='+link" class="shareToFacebook icon icon-l bg-facebook rounded-s shadow-l"><i class="fab fa-facebook-f font-22"></i><br></a>
+                <a @click="open('https://www.facebook.com/sharer/sharer.php?u='+link)" class="shareToFacebook icon icon-l bg-facebook rounded-s shadow-l"><i class="fab fa-facebook-f font-22"></i><br></a>
                 <p class="font-11 opacity-70">Facebook</p>
             </div>
             <div class="col-3 mb-n2">
-                <a target="_blank"  :href="'https://twitter.com/home?status='+link" class="shareToTwitter icon icon-l bg-twitter rounded-s shadow-l"><i class="fab fa-twitter font-22"></i><br></a>
+                <a target="_blank"    @click="open('https://twitter.com/home?status='+link)" class="shareToTwitter icon icon-l bg-twitter rounded-s shadow-l"><i class="fab fa-twitter font-22"></i><br></a>
                 <p class="font-11 opacity-70">Twitter</p>
             </div>
             <div class="col-3 mb-n2">
-                <a target="_blank"
-                   :href="'https://vk.com/share.php?url='+link"
+                <a
+                   @click="open('https://vk.com/share.php?url='+link)"
                    class="shareToLinkedIn icon icon-l bg-linkedin rounded-s shadow-l">
                     <i class="fa-brands fa-vk font-22"></i><br>
                 </a>
                 <p class="font-11 opacity-70">VK</p>
             </div>
             <div class="col-3 mb-n2">
-                <a target="_blank"  :href="'mailto:?body='+link" class="shareToMail icon icon-l bg-mail rounded-s shadow-l"><i class="fa fa-envelope font-22"></i><br></a>
+                <a    @click="open('mailto:?body='+link)" class="shareToMail icon icon-l bg-mail rounded-s shadow-l"><i class="fa fa-envelope font-22"></i><br></a>
                 <p class="font-11 opacity-70">Email</p>
             </div>
             <div class="col-3 mb-n2">
-                <a target="_blank"  :href="'whatsapp://send?text='+link" class="shareToWhatsApp icon icon-l bg-whatsapp rounded-s shadow-l"><i class="fab fa-whatsapp font-22"></i><br></a>
+                <a     @click="open('whatsapp://send?text='+link)" class="shareToWhatsApp icon icon-l bg-whatsapp rounded-s shadow-l"><i class="fab fa-whatsapp font-22"></i><br></a>
                 <p class="font-11 opacity-70">WhatsApp</p>
             </div>
             <div class="col-3 mb-n2">
@@ -41,7 +41,8 @@
                 <p class="font-11 opacity-70">Копировать</p>
             </div>
             <div class="col-3 mb-n2">
-                <a target="_blank"  :href="'https://pinterest.com/pin/create/button/?url='+link" class="shareToPinterest icon icon-l bg-pinterest rounded-s shadow-l"><i class="fab fa-pinterest-p font-22"></i><br></a>
+                <a
+                    @click="open('https://pinterest.com/pin/create/button/?url='+link)" class="shareToPinterest icon icon-l bg-pinterest rounded-s shadow-l"><i class="fab fa-pinterest-p font-22"></i><br></a>
                 <p class="font-11 opacity-70">Pinterest</p>
             </div>
             <div class="col-3 mb-n2">
@@ -62,6 +63,9 @@ export default {
         self(){
           return window.self
         },
+        tg() {
+            return window.Telegram.WebApp;
+        },
         currentBot(){
             return window.currentBot
         },
@@ -73,6 +77,9 @@ export default {
         }
     },
     methods:{
+        open(url){
+            this.tg.openLink(url)
+        },
         copy(){
             navigator.clipboard.writeText("https://t.me/"+this.currentBot.bot_domain)
         }
