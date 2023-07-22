@@ -148,5 +148,9 @@ export default {
     background-color: #007bff;
     color: white;
 }
+
+.footer-card {
+bottom:-80px;
+}
 </style>
 

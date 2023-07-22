@@ -16,7 +16,9 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
                 }}</strong> из <strong>{{
                     action.max_attempts || 1
                 }}</strong></p>
-            <p style="font-weight:900; color:red;" v-else>Вы израсходовали все ваши попытки</p>
+            <p
+                @click="lose"
+                style="font-weight:900; color:red;" v-else>Вы израсходовали все ваши попытки</p>
         </div>
     </div>
 
@@ -97,12 +99,12 @@ export default {
     }
     ,
     methods: {
+        lose(){
+            this.$botNotification.warning("Упс!", "Вы израсходовали все попытки!")
+        },
         prepareUserData() {
             return this.$store.dispatch("wheelOfFortunePrepare").then((response) => {
                 this.action = response.action
-
-                if (!this.canPlay)
-                    this.$botNotification.warning("Упс!", "Вы израсходовали все попытки!")
 
             })
         },
@@ -158,9 +160,9 @@ export default {
                     "Вы успешно приняли участие в розыгрыше! Наш менеджер свяжется с вами для дальнейших инструкций.",
                 );
 
-                setTimeout(()=>{
+
                     this.prepareUserData()
-                }, 5000)
+
 
             }).catch(err => {
 

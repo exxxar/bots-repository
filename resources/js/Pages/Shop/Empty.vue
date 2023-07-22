@@ -5,11 +5,7 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
 <template>
 
 
-    <div class="card card-style">
-        <div class="content mb-2">
-            <CallbackForm/>
-        </div>
-    </div>
+    <CallbackForm/>
 
 
 </template>
