@@ -158,7 +158,9 @@ export default {
                     "Вы успешно приняли участие в розыгрыше! Наш менеджер свяжется с вами для дальнейших инструкций.",
                 );
 
-                this.prepareUserData()
+                setTimeout(()=>{
+                    this.prepareUserData()
+                }, 5000)
 
             }).catch(err => {
 

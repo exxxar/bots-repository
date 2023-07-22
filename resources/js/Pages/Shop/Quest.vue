@@ -163,7 +163,9 @@ export default {
 
                 this.$botNotification.success("Instagram Quest", "Вы успешно приняли участие в квесте! Наш менеджер свяжется с вами для дальнейших инструкций.")
 
-                this.prepareUserData()
+                setTimeout(()=>{
+                    this.prepareUserData()
+                }, 5000)
 
             }).catch(err => {
 

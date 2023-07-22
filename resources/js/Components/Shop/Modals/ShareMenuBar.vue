@@ -19,7 +19,11 @@
                 <p class="font-11 opacity-70">Twitter</p>
             </div>
             <div class="col-3 mb-n2">
-                <a target="_blank"  :href="'https://vk.com/share.php?url='+link" class="shareToLinkedIn icon icon-l bg-linkedin rounded-s shadow-l"><i class="fa-brands fa-vk font-22"></i><br></a>
+                <a target="_blank"
+                   :href="'https://vk.com/share.php?url='+link"
+                   class="shareToLinkedIn icon icon-l bg-linkedin rounded-s shadow-l">
+                    <i class="fa-brands fa-vk font-22"></i><br>
+                </a>
                 <p class="font-11 opacity-70">VK</p>
             </div>
             <div class="col-3 mb-n2">
