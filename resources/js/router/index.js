@@ -15,13 +15,20 @@ import ContactUs from '@/Pages/Shop/ContactUs.vue';
 import Help from '@/Pages/Shop/Help.vue';
 import Wheel from '@/Pages/Shop/Wheel.vue';
 import Quest from '@/Pages/Shop/Quest.vue';
+import Empty from '@/Pages/Shop/Empty.vue';
 
 
 export const routes = [
 
     {
         path: '/',
-        redirect: '/home'
+        redirect: '/empty'
+    },
+    {
+        name: 'empty',
+        path: '/empty',
+        component: Empty,
+        meta: { title: 'Ничего не найдено', hide_menu:true }
     },
     {
         name: 'home',
