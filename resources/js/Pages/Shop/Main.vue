@@ -52,18 +52,18 @@ import Layout from "@/Layouts/ShopLayout.vue";
                         </p>
                         <div class="text-center mb-3">
                             <a href="#" v-if="currentBot.company.email" @click="open('mailTo:'+currentBot.company.email)"
-                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook"><i
+                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook text-white"><i
                                 class="fa-solid fa-at"></i></a>
                             <a href="#" v-if="currentBot.company.links[0]" @click="open(currentBot.company.links[0])"
-                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-vk">
+                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-vk text-white">
                                 <i class="fa-brands fa-vk"></i></a>
                             <a href="#" v-if="currentBot.company.phones[0]" @click="open('tel:'+currentBot.company.phones[0])"
-                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-phone"><i
+                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-phone text-white"><i
                                 class="fa fa-phone"></i></a>
                             <a href="#" data-menu="menu-share"
-                               class="icon icon-xs rounded-sm mr-1 shadow-l bg-red2-dark"><i
+                               class="icon icon-xs rounded-sm mr-1 shadow-l bg-red2-dark text-white"><i
                                 class="fa fa-share-alt"></i></a>
-                            <a href="#" class="back-to-top icon icon-xs rounded-sm shadow-l bg-highlight color-white"><i
+                            <a href="#" class="back-to-top icon icon-xs rounded-sm shadow-l bg-highlight text-white "><i
                                 class="fa fa-arrow-up"></i></a>
                         </div>
                         <p class="footer-copyright pb-3 mb-1">© CashMan <span id="copyright-year">2023</span>.

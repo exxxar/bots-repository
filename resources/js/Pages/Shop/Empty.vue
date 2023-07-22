@@ -1,5 +1,5 @@
 <script setup>
-
+import CallbackForm from "@/Components/Shop/CallbackForm.vue";
 import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
 <template>
@@ -7,7 +7,7 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
 
     <div class="card card-style">
         <div class="content mb-2">
-            <ReturnToBot/>
+            <CallbackForm/>
         </div>
     </div>
 
