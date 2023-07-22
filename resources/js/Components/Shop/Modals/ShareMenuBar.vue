@@ -6,12 +6,14 @@
         <p class="boxed-text-xl under-heading m-0 p-0">
             Делитесь ссылкой с друзьями
         </p>
-        <img v-lazy="qr" class="w-100 p-3 object-fit-cover my-0 " alt="">
+
         <div class="divider divider-margins"></div>
 
         <div class="row text-center mr-4 ml-4 mb-0">
             <div class="col-3 mb-n2">
-                <a @click="open('https://www.facebook.com/sharer/sharer.php?u='+link)"
+                <a
+                    href="#"
+                    @click="open('https://www.facebook.com/sharer/sharer.php?u='+link)"
                    class="icon icon-l bg-facebook rounded-s shadow-l text-white">
                     <i class="fab fa-facebook-f font-22"></i><br>
                 </a>
@@ -51,7 +53,8 @@
                 <p class="font-11 opacity-70">WhatsApp</p>
             </div>
             <div class="col-3 mb-n2">
-                <a :href="link"
+                <a href="#"
+                   @click="copy"
                    class="shareToCopyLink icon icon-l bg-blue2-dark rounded-s shadow-l text-white">
                     <i class="fa fa-link font-22"></i><br>
                 </a>
@@ -75,6 +78,11 @@
         </div>
 
         <div class="divider divider-margins mt-n1 mb-3"></div>
+
+        <img v-lazy="qr" class="w-100 p-3 object-fit-cover my-0 " alt="">
+
+        <div class="divider divider-margins mt-n1 mb-3"></div>
+
         <p class="footer-copyright font-10 text-center pb-3 mb-1">© CashMan <span id="copyright-year">2023</span>.
             Все
             Права защищены.</p>
@@ -103,7 +111,9 @@ export default {
         open(url) {
             this.tg.openLink(url)
         },
-
+        copy() {
+            navigator.clipboard.writeText("https://t.me/" + this.currentBot.bot_domain)
+        }
     }
 }
 </script>

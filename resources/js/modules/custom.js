@@ -1356,11 +1356,11 @@ export default  {
                             $('.shareToCopyLink').find('i').attr('class', '');
                             $('.shareToCopyLink').find('i').attr('class', 'fa fa-link font-22');
                         }, 1000);
-                        var $temp = $("<input>");
+                       /* var $temp = $("<input>");
                         $("body").append($temp);
                         $temp.val(share_link).select();
                         document.execCommand("copy");
-                        $temp.remove();
+                        $temp.remove();*/
                     });
 
                 };
