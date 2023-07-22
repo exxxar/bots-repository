@@ -38,6 +38,50 @@ class BotController extends Controller
 
     use SystemUtilitiesTrait;
 
+    public function sendCallback(Request $request)
+    {
+        $request->validate([
+            "bot_domain" => "required",
+            "slug_id" => "required",
+            "telegram_chat_id" => "required",
+            "name" => "required",
+            "phone" => "required",
+            "message" => "required",
+        ]);
+
+        $bot = \App\Models\Bot::query()
+            ->with(["company"])
+            ->where("bot_domain", $request->bot_domain)
+            ->first();
+
+        $botUser = BotUser::query()
+            ->where("bot_id", $bot->id)
+            ->where("telegram_chat_id", $request->telegram_chat_id)
+            ->first();
+
+        $slug = BotMenuSlug::query()
+            ->where("id", $request->slug_id)
+            ->first();
+
+        $callbackChannel = env("BASE_ADMIN_CHANNEL");
+
+        $adminMessage = "#обратнаясвязь\nБот: %s\nСкрипт: #%s (название скрипта: %s) \nПользователь: \n -%s \n -%s \n -телефон: %s)\nСообщение: %s\n";
+        BotMethods::bot()
+            ->whereDomain($bot->bot_domain)
+            ->sendMessage($callbackChannel,
+                sprintf($adminMessage,
+                    $bot->bot_domain,
+                    $slug->id,
+                    $slug->slug,
+                    $request->telegram_chat_id ?? '-',
+                    $request->name ?? '-',
+                    $request->phone ?? '-',
+                    $request->message ?? '-'
+                ));
+
+        return response()->noContent();
+    }
+
     public function getSelf(Request $request)
     {
         $request->validate([

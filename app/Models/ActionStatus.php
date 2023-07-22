@@ -49,5 +49,10 @@ class ActionStatus extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function slug(): BelongsTo
+    {
+        return $this->belongsTo(BotMenuSlug::class);
+    }
+
 
 }

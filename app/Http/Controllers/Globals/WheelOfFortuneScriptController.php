@@ -6,6 +6,7 @@ use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ActionStatusResource;
+use App\Http\Resources\BotSecurityResource;
 use App\Models\ActionStatus;
 use App\Models\BotMenuSlug;
 use App\Models\BotUser;
@@ -29,7 +30,7 @@ class WheelOfFortuneScriptController extends Controller
     const KEY_BTN_TEXT = "btn_text";
 
 
-    public function formWheelOfFortuneCallback(Request $request, $botDomain)
+    public function formWheelOfFortuneCallback(Request $request, $scriptId, $botDomain)
     {
         $request->validate([
             "telegram_chat_id" => "required",
@@ -50,8 +51,11 @@ class WheelOfFortuneScriptController extends Controller
         $slug = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
             ->where("slug", self::SCRIPT)
-            ->orderBy("updated_at", "desc")
+            ->where("id", $scriptId)
             ->first();
+
+        if (is_null($slug))
+            return response()->noContent(404);
 
         $maxAttempts = (Collection::make($slug->config)
             ->where("key", self::KEY_MAX_ATTEMPTS)
@@ -102,7 +106,42 @@ class WheelOfFortuneScriptController extends Controller
         return response()->noContent();
     }
 
-    public function formWheelOfFortunePrepare(Request $request, $botDomain)
+    public function loadData(Request $request, $scriptId, $botDomain)
+    {
+
+        $bot = \App\Models\Bot::query()
+            ->where("bot_domain", $botDomain)
+            ->first();
+
+
+        $slug = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where("id", $scriptId)
+            ->where("slug", self::SCRIPT)
+            ->first();
+
+
+        if (is_null($slug))
+            return response()->noContent(404);
+
+        $wheels = Collection::make($slug->config)
+            ->where("key", self::KEY_WHEEL_TEXT)
+            ->toArray();
+
+        $rules = Collection::make($slug->config)
+            ->where("key", self::KEY_RULES_TEXT)
+            ->first();
+
+        return response()->json(
+            [
+                "wheels" => array_values($wheels),
+                'rules' => $rules["value"] ?? null,
+            ]
+
+        );
+    }
+
+    public function formWheelOfFortunePrepare(Request $request, $scriptId, $botDomain)
     {
         $request->validate([
             "telegram_chat_id" => "required",
@@ -118,10 +157,11 @@ class WheelOfFortuneScriptController extends Controller
             ->first();;
 
         $slug = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("slug", self::SCRIPT)
-            ->orderBy("updated_at", "desc")
+            ->where("id", $scriptId)
             ->first();
+
+        if (is_null($slug))
+            return response()->noContent(404);
 
         $maxAttempts = (Collection::make($slug->config)
             ->where("key", self::KEY_MAX_ATTEMPTS)
@@ -143,41 +183,41 @@ class WheelOfFortuneScriptController extends Controller
                     'current_attempts' => 0
                 ]);
 
-        return new ActionStatusResource($action);
+        return response()->json([
+            "action" => new ActionStatusResource($action),
+
+        ]);
     }
 
-    public function formWheelOfFortune($botDomain)
+   /* public function formWheelOfFortune(Request $request, $scriptId, $botDomain)
     {
+
         $bot = \App\Models\Bot::query()
+            ->with(["company", "imageMenus"])
             ->where("bot_domain", $botDomain)
             ->first();
 
 
         $slug = BotMenuSlug::query()
+            ->where("id", $scriptId)
             ->where("bot_id", $bot->id)
             ->where("slug", self::SCRIPT)
-            ->orderBy("updated_at", "desc")
             ->first();
 
-
-        $wheels = Collection::make($slug->config)
-            ->where("key", self::KEY_WHEEL_TEXT)
-            ->toArray();
-
-        $rules = Collection::make($slug->config)
-            ->where("key", self::KEY_RULES_TEXT)
-            ->first();
-
-        Inertia::setRootView("bot");
+        if (is_null($slug)) {
+            Inertia::setRootView("bot");
+            return Inertia::render('Error');
+        }
 
 
-        return Inertia::render('BotPages/WheelOfFortune', [
-            'bot' => json_decode($bot->toJson()),
-            "wheels" => array_values($wheels),
-            'rules' => $rules["value"] ?? null,
+        Inertia::setRootView("shop");
+
+        return Inertia::render('Shop/Main', [
+            'bot' => BotSecurityResource::make($bot),
+            'slug_id' => $slug->id,
         ]);
 
-    }
+    }*/
 
     public function wheelOfFortune(...$config)
     {
@@ -192,13 +232,17 @@ class WheelOfFortuneScriptController extends Controller
             ->where("key", self::KEY_BTN_TEXT)
             ->first())["value"] ?? "\xF0\x9F\x8E\xB2Начать розыгрыш";
 
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
         \App\Facades\BotManager::bot()
             ->replyPhoto($mainText,
                 InputFile::create(public_path() . "/images/cashman-wheel-of-fortune.png"),
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/wheel-of-fortune/$bot->bot_domain"
+                            "url" => env("APP_URL") . "/global-scripts/$slugId/interface/$bot->bot_domain#wheel-of-fortune"
                         ]],
                     ],
 

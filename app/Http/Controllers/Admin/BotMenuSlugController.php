@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class BotMenuSlugController extends Controller
 {
@@ -98,12 +99,12 @@ class BotMenuSlugController extends Controller
             "slug" => "required",
         ]);
 
+
         $tmp = (object)$request->all();
 
         $tmp->config = json_decode($tmp->config ?? '[]');
         $tmp->is_global = $tmp->is_global == "true";
 
-        //      dd($tmp);
         BotMenuSlug::query()->create((array)$tmp);
 
         return response()->noContent();
@@ -119,9 +120,11 @@ class BotMenuSlugController extends Controller
         $slug = BotMenuSlug::query()->find($request->id);
         if (is_null($slug))
             return response()->noContent(404);
-
+        
         $tmp = (object)$request->all();
+
         $tmp->is_global = $tmp->is_global ?? false;
+
         $tmp->config = json_decode($tmp->config);
 
         $slug->update((array)$tmp);

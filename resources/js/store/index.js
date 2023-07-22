@@ -30,7 +30,7 @@ export default createStore({
             let currentCompany = !localStorage.getItem('store_current_company') ?
                 null : JSON.parse(localStorage.getItem('store_current_company'))
 
-            return state.current_company || currentCompany|| null
+            return state.current_company || currentCompany || null
         },
         getCurrentBot: state => {
             let currentBot = !localStorage.getItem('store_current_bot') ?
@@ -63,6 +63,30 @@ export default createStore({
             currentBot = payload.bot || currentBot || null;
 
             context.commit("setCurrentBot", currentBot)
+        },
+        async callbackForm(context, payload = {callbackForm: null}) {
+
+            let botDomain = window.currentBot.bot_domain || null
+            let slugId = window.currentScript || null
+            let telegramChatId = window.self.telegram_chat_id || null
+
+            let callbackForm = payload.callbackForm
+
+            callbackForm.append("telegram_chat_id", telegramChatId)
+            callbackForm.append("slug_id", slugId)
+            callbackForm.append("bot_domain", botDomain)
+
+            let link = `/global-scripts/callback`
+                .replace('{scriptId}', slugId)
+
+            let _axios = util.makeAxiosFactory(link, 'POST', callbackForm)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
         }
     },
     mutations: {

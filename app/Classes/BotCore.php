@@ -82,12 +82,18 @@ abstract class BotCore
                 if (str_starts_with($key, "KEY_") && !in_array($const, $slugActualKeyCollection)) {
 
 
-                    $type = (str_starts_with($const, "need_") || str_starts_with($const, "is_")) ?
-                        "boolean" : "text";
+                    $type = "text";
+
+                    if (str_starts_with($const, "need_") || str_starts_with($const, "is_"))
+                        $type = "boolean";
+
+                    if (str_starts_with($const, "image_"))
+                        $type = "image";
+
 
                     $tmp[] = (object)[
                         "key" => $const,
-                        "value" => "",
+                        "value" => null,
                         "type" => $type,
                     ];
                 }
@@ -244,10 +250,17 @@ abstract class BotCore
                     foreach ($matches as $match)
                         $arguments[] = $match;
 
+                    $config = $template->config ?? [];
+
+                    $config[] = [
+                      "key"=>"slug_id",
+                      "value"=>$template->id,
+                    ];
+
 
                     $this->selfScriptDiagnostic($template);
 
-                    $find = $this->tryCall($item, $message, $template->config ?? null, ...$arguments);
+                    $find = $this->tryCall($item, $message, $config, ...$arguments);
                     break;
                 }
             }
@@ -295,10 +308,17 @@ abstract class BotCore
 
                         if (!is_null($item)) {
 
+                            $config = $slug->config ?? [];
+
+                            $config[] = [
+                                "key"=>"slug_id",
+                                "value"=>$slug->id,
+                            ];
+
                             $this->selfScriptDiagnostic($slug);
 
                             $this->tryCall($item, $message,
-                                $slug->config ?? null, []);
+                                $config, []);
 
                         }
                     }
@@ -475,10 +495,10 @@ abstract class BotCore
 
             $data = "";
 
-            foreach ($productInfo->prices as $item){
+            foreach ($productInfo->prices as $item) {
                 $item = (object)$item;
                 $price = $item->amount / 100;
-                $data .="$item->label по цене $price руб.,";
+                $data .= "$item->label по цене $price руб.,";
             }
 
             $this->sendMessage($channel, "Пользователь  $name ($phoneNumber , $email) соврешил оплату $totalAmount руб. за продукт $data ('$payload')");
@@ -519,7 +539,7 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-       // Log::info(print_r($update, true));
+        // Log::info(print_r($update, true));
 
         include_once base_path('routes/bot.php');
 
@@ -553,10 +573,9 @@ abstract class BotCore
                 $this->shippingQueryHandler($item->shipping_query);
                 return;
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::info($exception->getMessage());
         }
-
 
 
         //формируем сообщение из возможных вариантов входных данных
@@ -585,7 +604,7 @@ abstract class BotCore
                 $this->successfulPaymentHandler($item->message->successful_payment);
                 return;
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::info($exception->getMessage());
         }
 

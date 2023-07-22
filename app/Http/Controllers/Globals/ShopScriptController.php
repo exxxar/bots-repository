@@ -8,6 +8,7 @@ use App\Http\Resources\BotResource;
 use App\Http\Resources\BotSecurityResource;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Telegram\Bot\FileUpload\InputFile;
@@ -27,30 +28,33 @@ class ShopScriptController extends Controller
     const KEY_BTN_TEXT = "btn_text";
 
 
-    public function shopHomePage( $botDomain)
+    public function shopHomePage(Request $request, $scriptId, $botDomain)
     {
-        $bot = Bot::query()
-            ->with(["company","imageMenus"])
+        $bot = \App\Models\Bot::query()
+            ->with(["company", "imageMenus"])
             ->where("bot_domain", $botDomain)
             ->first();
 
 
-
-
-
         $slug = BotMenuSlug::query()
+            ->where("id", $scriptId)
             ->where("bot_id", $bot->id)
-            ->where("slug", self::SCRIPT)
-            ->orderBy("updated_at", "desc")
+           // ->where("slug", self::SCRIPT)
             ->first();
+
+        if (is_null($slug)) {
+            Inertia::setRootView("bot");
+            return Inertia::render('Error');
+        }
+
 
         Inertia::setRootView("shop");
 
-
-
         return Inertia::render('Shop/Main', [
-            'bot' =>BotSecurityResource::make($bot),
+            'bot' => BotSecurityResource::make($bot),
+            'slug_id' => $slug->id,
         ]);
+
 
     }
 
@@ -90,13 +94,17 @@ class ShopScriptController extends Controller
             ->where("key", self::KEY_BTN_TEXT)
             ->first())["value"] ?? "\xF0\x9F\x8E\xB2Перейти в магазин";
 
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
         \App\Facades\BotManager::bot()
             ->replyPhoto($mainText,
                 InputFile::create(public_path() . "/images/shopify.png"),
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/shop/$bot->bot_domain#home"
+                            "url" => env("APP_URL") . "/global-scripts/$slugId/interface/$bot->bot_domain#home"
                         ]],
                     ],
 

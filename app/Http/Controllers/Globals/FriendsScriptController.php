@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Globals;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
 use App\Models\ReferralHistory;
+use Illuminate\Support\Collection;
 use Telegram\Bot\FileUpload\InputFile;
 
 class FriendsScriptController extends Controller
@@ -15,8 +16,11 @@ class FriendsScriptController extends Controller
     const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";
     const KEY_RULES_TEXT = "rules_text";
     const KEY_RESULT_MESSAGE = "result_message";
-    const KEY_MAIN_TEXT = "main_text";
+
     const KEY_BTN_TEXT = "btn_text";*/
+    const KEY_MAIN_TEXT = "main_text";
+    const KEY_REFERRAL_TEXT = "referral_text";
+    const KEY_IMAGE_MAIN = "image_main";
 
     public function inviteFriends(...$config)
     {
@@ -28,6 +32,22 @@ class FriendsScriptController extends Controller
 
         $companyDomain = $bot->company->slug;
 
+        $mainText = (Collection::make($config[1])
+            ->where("key", self::KEY_MAIN_TEXT)
+            ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой";
+
+        $referralText = (Collection::make($config[1])
+            ->where("key", self::KEY_REFERRAL_TEXT)
+            ->first())["value"] ?? "Перешли эту ссылку друзьям:\n<a href=\"%s\">%s</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>";
+
+        $imgPath = (Collection::make($config[1])
+            ->where("key", self::KEY_IMAGE_MAIN)
+            ->first())["value"] ??  null;
+
+        $imgPath = is_null($imgPath)? storage_path("app/public") . "/companies/$companyDomain/" . ($bot->image ?? 'noimage.jpg') :
+            $imgPath;
+
         $qr = "https://t.me/$botDomain?start=" .
             base64_encode("001" . BotManager::bot()->getCurrentChatId());
 
@@ -37,20 +57,20 @@ class FriendsScriptController extends Controller
             ->count();
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto("Вы пригласили <b>$friendCount друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой",
+            ->replyPhoto( sprintf($mainText,$friendCount),
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
 
-        $path = storage_path("app/public") . "/companies/$companyDomain/" . ($bot->image ?? 'noimage.jpg');
+
         $file = InputFile::create(
-            file_exists($path) ?
-                $path :
-                public_path() . "/images/cashman.jpg"
+            $imgPath
+            /*file_exists($imgPath) ?
+                $imgPath :
+                public_path() . "/images/cashman.jpg"*/
         );
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto("Перешли эту ссылку друзьям:\n<a href=\"$qr\">$qr</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>",
+            ->replyPhoto(sprintf($referralText, $qr, $qr),
                 $file
             );
 

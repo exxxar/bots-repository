@@ -1,7 +1,6 @@
 <template>
 
 
-
         <div class="card card-style">
             <div class="content">
                 <h2 class="">1. Terms</h2>

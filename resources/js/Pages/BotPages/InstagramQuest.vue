@@ -3,6 +3,8 @@ defineProps({
     bot: Object,
     rules: String,
 });
+
+
 </script>
 <template>
     <div class="container">
@@ -120,13 +122,10 @@ defineProps({
 
 </template>
 <script>
-import {Roulette} from "vue3-roulette";
 
 export default {
     name: "App",
-    components: {
-        Roulette,
-    },
+
     data() {
         return {
             rouletteKey: 0,

@@ -102,17 +102,17 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                         <div class="form-floating mb-1">
                             <input type="text" class="form-control"
                                    v-model="filteredConfigs[index].key"
-                                   id="floatingInput"
+                                   :id="'field-input-key-'+index"
                                    placeholder="name@example.com" required>
-                            <label for="floatingInput">Ключ</label>
+                            <label :for="'field-input-key-'+index">Ключ</label>
                         </div>
 
                         <div class="form-floating mb-1"
                              v-if="filteredConfigs[index].type==='text' || filteredConfigs[index].type==='channel'">
-                            <input type="text" class="form-control" id="floatingInput"
+                            <input type="text" class="form-control" :id="'field-input-'+index"
                                    v-model="filteredConfigs[index].value"
                                    placeholder="name@example.com" required>
-                            <label for="floatingInput">Значение</label>
+                            <label :for="'field-input-'+index">Значение</label>
                         </div>
 
 
@@ -128,34 +128,28 @@ import TelegramChannelHelper from "@/Components/Constructor/Helpers/TelegramChan
                         </div>
 
                         <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='large-text'">
-                            <textarea class="form-control" id="floatingInput"
+                            <textarea class="form-control" :id="'field-input-'+index"
                                       v-model="filteredConfigs[index].value"
                                       placeholder="name@example.com" required>
                             </textarea>
-                            <label for="floatingInput">Значение</label>
+                            <label :for="'field-input-'+index">Значение</label>
                         </div>
+
+                        <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='image'">
+                            <input class="form-control" :id="'field-input-'+index"
+                                   type="url"
+                                   pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+                                   v-model="filteredConfigs[index].value"
+                                   placeholder="name@example.com" required>
+                            <label :for="'field-input-'+index">URL ссылка на изображение</label>
+                        </div>
+
 
 
                     </div>
                 </div>
             </div>
 
-
-            <!--                    <div class="col-md-5" v-if="slugForm.config[index].type==='image'">
-                                    <label :for="'param-photo-'+index+'-item-'+item.id" style="margin-right: 10px;"
-                                           class="photo-loader ml-2">
-                                        <span>+ </span>
-                                        <span
-                                            v-if="slugForm.config[index].value">{{
-                                                slugForm.config[index].value
-                                            }}</span>
-                                        <input type="file" :id="'param-photo-'+index+'-item-'+item.id"
-                                               accept="image/*"
-                                               @change="onChangePhotos($event, index)"
-                                               style="display:none;"/>
-
-                                    </label>
-                                </div>-->
 
         </div>
         <div class="row" v-else>
@@ -184,6 +178,7 @@ export default {
         return {
             filters: [],
             simple: true,
+
             configTypes: [
                 {
                     title: 'Текстовый или числовой параметр',
@@ -201,10 +196,11 @@ export default {
                     title: 'Логический оператор',
                     type: 'boolean',
                 },
-                /*  {
-                      title: 'Изображение',
-                      type: 'image',
-                  },
+                {
+                    title: 'Ссылка на изображение',
+                    type: 'image',
+                },
+                /*
                    {
                       title: 'Цвет',
                       type: 'color',
@@ -229,6 +225,8 @@ export default {
                   */
             ],
             bot: null,
+
+            photos:[],
             slugForm: {
                 bot_id: null,
                 id: null,
@@ -288,10 +286,6 @@ export default {
                 this.bot = this.getCurrentBot
             })
         },
-        onChangePhotos(e, index) {
-            const files = e.target.files
-            this.slugForm.config[index].value = files[0]
-        },
         submit() {
             let data = new FormData();
             Object.keys(this.slugForm)
@@ -302,7 +296,6 @@ export default {
                     else
                         data.append(key, item)
                 });
-
 
             this.$store.dispatch(this.slugForm.id === null ? "createSlug" : "updateSlug", {
                 slugForm: data

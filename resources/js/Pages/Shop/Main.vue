@@ -3,7 +3,9 @@ defineProps({
     bot: {
         type: Object,
     },
-
+    slug_id: {
+        type: String,
+    },
 });
 
 
@@ -13,11 +15,16 @@ import Layout from "@/Layouts/ShopLayout.vue";
     <Layout>
 
         <template #default>
-            <div class="page-content" style="min-height: 667px;">
+            <div
+                v-if="self"
+                class="page-content" style="min-height: 667px;">
 
                 <div class="page-title page-title-small">
-                    <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i> {{$route.meta.title || 'Меню'}}</a></h2>
-                    <a href="#/contact-us"
+                    <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i>
+                        {{ $route.meta.title || 'Меню' }}</a></h2>
+                    <a
+
+                        :href=" !$route.meta.hide_menu?'#/contact-us':'#'"
                        class="bg-fade-gray1-dark shadow-xl d-flex justify-content-center align-items-center font-18 bot-avatar">
                         <img v-lazy="logo" style="width:50px;object-fit: cover; border-radius: 50%;" alt=""></a>
                 </div>
@@ -44,11 +51,11 @@ import Layout from "@/Layouts/ShopLayout.vue";
                             {{ currentBot.company.description || 'Описание вашего магазина' }}
                         </p>
                         <div class="text-center mb-3">
-                            <a href="#" class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook"><i
-                                class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="icon icon-xs rounded-sm shadow-l mr-1 bg-twitter"><i
-                                class="fab fa-twitter"></i></a>
-                            <a href="#" class="icon icon-xs rounded-sm shadow-l mr-1 bg-phone"><i
+                            <a :href="'mailTo:'+currentBot.company.email" class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook"><i
+                                class="fa-solid fa-at"></i></a>
+                            <a :href="currentBot.company.links[0]" target="_blank" class="icon icon-xs rounded-sm shadow-l mr-1 bg-vk">
+                                <i class="fa-brands fa-vk"></i></a>
+                            <a :href="'tel:'+currentBot.company.phones[0]" class="icon icon-xs rounded-sm shadow-l mr-1 bg-phone"><i
                                 class="fa fa-phone"></i></a>
                             <a href="#" data-menu="menu-share"
                                class="icon icon-xs rounded-sm mr-1 shadow-l bg-red2-dark"><i
@@ -79,8 +86,11 @@ import baseJS from "@/modules/custom";
 export default {
     computed: {
         ...mapGetters(['getSelf']),
-        logo(){
+        logo() {
             return `/images-by-bot-id/${this.currentBot.id}/${this.currentBot.image}`
+        },
+        self() {
+            return window.self || null
         },
         tg() {
             return window.Telegram.WebApp;
@@ -89,12 +99,19 @@ export default {
             const urlParams = new URLSearchParams(this.tg.initData);
             return JSON.parse(urlParams.get('user'));
         },
-        currentBot() {
+        currentBot(){
             return window.currentBot
+        },
+        qr(){
+            return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data="+this.link
+        },
+        link(){
+            return "https://t.me/"+this.currentBot.bot_domain+"?start="+btoa("001"+this.self.telegram_chat_id);
         }
     },
     created() {
         window.currentBot = this.bot.data
+        window.currentScript = this.slug_id
         let tgUser = this.tgUser || null
         this.$store.dispatch("loadSelf", {
             dataObject: {
@@ -118,6 +135,11 @@ export default {
     top: 20px;
     right: 20px;
     border-radius: 50%;
+}
+
+.bg-vk {
+    background-color: #007bff;
+    color:white;
 }
 </style>
 

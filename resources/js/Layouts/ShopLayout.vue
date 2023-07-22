@@ -34,11 +34,15 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
             <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-light"><i
                 class="fas fa-moon"></i></a>
             <a href="#" data-menu="menu-highlights" class="header-icon header-icon-3"><i class="fas fa-brush"></i></a>
-            <a href="#" data-menu="menu-main" class="header-icon header-icon-4"><i class="fas fa-bars"></i></a>
+            <a href="#"
+               v-if="!$route.meta.hide_menu"
+               data-menu="menu-main" class="header-icon header-icon-4"><i class="fas fa-bars"></i></a>
         </div>
 
 
-        <div id="footer-bar" class="footer-bar-5 bg-dark2-dark mb-2 ml-2 mr-2 rounded-m">
+        <div id="footer-bar"
+             v-if="!$route.meta.hide_menu"
+             class="footer-bar-5 bg-dark2-dark mb-2 ml-2 mr-2 rounded-m">
 
             <router-link
                 :active-class="'active-nav'"

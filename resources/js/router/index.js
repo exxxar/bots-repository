@@ -13,6 +13,8 @@ import Terms from '@/Pages/Shop/Terms.vue';
 import OurTeam from '@/Pages/Shop/OurTeam.vue';
 import ContactUs from '@/Pages/Shop/ContactUs.vue';
 import Help from '@/Pages/Shop/Help.vue';
+import Wheel from '@/Pages/Shop/Wheel.vue';
+import Quest from '@/Pages/Shop/Quest.vue';
 
 
 export const routes = [
@@ -34,6 +36,18 @@ export const routes = [
         path: '/checkout',
         component: CheckOut,
         meta: { title: 'Корзина' }
+    },
+    {
+        name: 'wheel',
+        path: '/wheel-of-fortune',
+        component: Wheel,
+        meta: { title: 'Колесо фортуны', hide_menu:true }
+    },
+    {
+        name: 'instagram',
+        path: '/instagram-quest',
+        component: Quest,
+        meta: { title: 'Инста-квест', hide_menu:true }
     },
     {
         name: 'help',

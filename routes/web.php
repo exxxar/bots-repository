@@ -208,7 +208,6 @@ Route::prefix("web")
     });
 
 
-
 Route::get('/restaurant/book-a-table/{botDomain}', function ($botDomain) {
 
     Inertia::setRootView("bot");
@@ -254,13 +253,15 @@ Route::get('/deliveryman/vip-form/{botDomain}', [AdminBotController::class, "vip
 Route::prefix("global-scripts")
     ->group(function () {
 
-        Route::post('/self', [BotController::class,"getSelf"]);
+        Route::post('/self', [BotController::class, "getSelf"]);
+        Route::post('/callback', [BotController::class, "sendCallback"]);
 
-        Route::prefix("wheel-of-fortune")
+        Route::prefix("{scriptId}/wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)
             ->group(function () {
                 Route::post('/prepare/{botDomain}', "formWheelOfFortunePrepare");
-                Route::get('/{botDomain}', "formWheelOfFortune");
+                Route::get('/load-data/{botDomain}', "loadData");
+                //  Route::get('/{botDomain}/{path?}', "formWheelOfFortune");
                 Route::post('/{botDomain}', "formWheelOfFortuneCallback");
             });
 
@@ -271,11 +272,12 @@ Route::prefix("global-scripts")
                 Route::post('/callback/{botDomain}', "callbackFormPost");
             });
 
-        Route::prefix("instagram-quest")
+        Route::prefix("{scriptId}/instagram-quest")
             ->controller(InstagramQuestScriptController::class)
             ->group(function () {
+                Route::get('/load-data/{botDomain}', "loadData");
                 Route::post('/prepare/{botDomain}', "instagramQuestPrepare");
-                Route::get('/{botDomain}', "instagramQuestForm");
+                //Route::get('/{botDomain}/{path?}', "instagramQuestForm");
                 Route::post('/{botDomain}', "instagramQuestCallback");
             });
 
@@ -284,21 +286,18 @@ Route::prefix("global-scripts")
                 Route::get("/vk-auth-link/{botDomain}", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
                 Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
 
-               // Route::get("/info/{botDomain}",[\App\Http\Controllers\Admin\BotController::class,"self"]);
-                Route::post("/products",[\App\Http\Controllers\Admin\ProductController::class,"index"]);
-                Route::post("/products-by-ids",[\App\Http\Controllers\Admin\ProductController::class,"getProductsByIds"]);
-                Route::get("/products/{productId}",[\App\Http\Controllers\Admin\ProductController::class,"getProduct"]);
-                Route::post("/random-products",[\App\Http\Controllers\Admin\ProductController::class,"randomProducts"]);
+                Route::post("/products", [\App\Http\Controllers\Admin\ProductController::class, "index"]);
+                Route::post("/products-by-ids", [\App\Http\Controllers\Admin\ProductController::class, "getProductsByIds"]);
+                Route::get("/products/{productId}", [\App\Http\Controllers\Admin\ProductController::class, "getProduct"]);
+                Route::post("/random-products", [\App\Http\Controllers\Admin\ProductController::class, "randomProducts"]);
 
                 Route::prefix("admin")
                     ->group(function () {
                         Route::get('/{botDomain}', [ShopScriptController::class, "shopAdminPage"]);
                     });
-
-
-                Route::get('/{botDomain}/{path?}', [ShopScriptController::class, "shopHomePage"]);
-
             });
+
+        Route::get("{scriptId}/interface/{botDomain}/{path?}", [ShopScriptController::class, "shopHomePage"]);
 
 
     });

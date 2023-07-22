@@ -4,20 +4,20 @@ import axios from "axios";
 const BASE_PRODUCTS_LINK = '/global-scripts/shop/products'
 
 let state = {
-    products: [],
-    products_paginate_object: null,
+  /*  products: [],
+    products_paginate_object: null,*/
 }
 
 const getters = {
-    getProducts: state => state.products || [],
+   /* getProducts: state => state.products || [],
     getProductById: (state) => (id) => {
         return state.products.find(item => item.id === id)
     },
-    getProductsPaginateObject: state => state.products_paginate_object || null,
+    getProductsPaginateObject: state => state.products_paginate_object || null,*/
 }
 
 const actions = {
-    async loadProduct(context, payload = {dataObject: { productId: null}}) {
+    /*async loadProduct(context, payload = {dataObject: { productId: null}}) {
 
         let link = `${BASE_PRODUCTS_LINK}/${payload.dataObject.productId}`
         let method = 'GET'
@@ -69,18 +69,18 @@ const actions = {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);
         })
-    },
+    },*/
 }
 
 const mutations = {
-    setProducts(state, payload) {
+   /* setProducts(state, payload) {
         state.products = payload || [];
         localStorage.setItem('cashman_products', JSON.stringify(payload));
     },
     setProductsPaginateObject(state, payload) {
         state.products_paginate_object = payload || [];
         localStorage.setItem('cashman_products_paginate_object', JSON.stringify(payload));
-    }
+    }*/
 }
 
 const productsModule = {
