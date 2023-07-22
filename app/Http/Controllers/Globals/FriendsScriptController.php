@@ -19,7 +19,7 @@ class FriendsScriptController extends Controller
 
     const KEY_BTN_TEXT = "btn_text";*/
     const KEY_MAIN_TEXT = "main_text";
-    const KEY_REFERRAL_TEXT = "referral_text";
+  //  const KEY_REFERRAL_TEXT = "referral_text";
     const KEY_IMAGE_MAIN = "image_main";
 
     public function inviteFriends(...$config)
@@ -37,16 +37,14 @@ class FriendsScriptController extends Controller
             ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
 Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой";
 
-        $referralText = (Collection::make($config[1])
-            ->where("key", self::KEY_REFERRAL_TEXT)
-            ->first())["value"] ?? "Перешли эту ссылку друзьям:\n<a href=\"%s\">%s</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>";
+        $referralText =  "Перешли эту ссылку друзьям:\n<a href=\"%s\">%s</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>";
 
         $imgPath = (Collection::make($config[1])
             ->where("key", self::KEY_IMAGE_MAIN)
             ->first())["value"] ??  null;
 
-        $imgPath = is_null($imgPath)? storage_path("app/public") . "/companies/$companyDomain/" . ($bot->image ?? 'noimage.jpg') :
-            $imgPath;
+       /* $imgPath = is_null($imgPath)? storage_path("app/public") . "/companies/$companyDomain/" . ($bot->image ?? 'noimage.jpg') :
+            $imgPath;*/
 
         $qr = "https://t.me/$botDomain?start=" .
             base64_encode("001" . BotManager::bot()->getCurrentChatId());
@@ -70,7 +68,7 @@ class FriendsScriptController extends Controller
 
         \App\Facades\BotManager::bot()
             ->replyPhoto(sprintf($referralText, $qr, $qr),
-                $imgPath
+                InputFile::create($imgPath)
             );
 
         BotManager::bot()
