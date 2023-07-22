@@ -112,7 +112,14 @@ export default {
             this.tg.openLink(url)
         },
         copy() {
-            navigator.clipboard.writeText("https://t.me/" + this.currentBot.bot_domain)
+
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val("https://t.me/" + this.currentBot.bot_domain).select();
+            document.execCommand("copy");
+            $temp.remove();
+
+            this.$botNotification.success("Копирование", "Ссылка скопирована в буфер")
         }
     }
 }

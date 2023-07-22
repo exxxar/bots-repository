@@ -99,7 +99,7 @@ export default {
     }
     ,
     methods: {
-        lose(){
+        lose() {
             this.$botNotification.warning("Упс!", "Вы израсходовали все попытки!")
         },
         prepareUserData() {
@@ -156,12 +156,12 @@ export default {
                     phone: null,
                 }
 
-                this.$botNotification.success("Колесо фортуны",
-                    "Вы успешно приняли участие в розыгрыше! Наш менеджер свяжется с вами для дальнейших инструкций.",
+                this.$botNotification.success("Вы выиграли!",
+                    "Наш менеджер свяжется с вами для дальнейших инструкций.",
                 );
 
 
-                    this.prepareUserData()
+                this.prepareUserData()
 
 
             }).catch(err => {
@@ -177,7 +177,7 @@ export default {
         wheelStartedCallback() {
 
         },
-        callbackPlayerForm(form){
+        callbackPlayerForm(form) {
             this.winForm = {...this.winForm, ...form}
             this.hasProfileData = true
         },
