@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 abstract class SlugController extends Controller
 {
@@ -11,12 +12,11 @@ abstract class SlugController extends Controller
 
     public function __construct()
     {
+
         $this->bot = BotManager::bot()->getSelf();
+        Log::info("bot=>".print_r($this->bot, true));
     }
 
     protected abstract function handler();
 
-    protected function getClassName(){
-        return static::class;
-    }
 }
