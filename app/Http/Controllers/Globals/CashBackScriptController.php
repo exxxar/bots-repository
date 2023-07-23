@@ -67,6 +67,50 @@ class CashBackScriptController extends SlugController
             [
                 'config' => null,
             ]);
+
+        BotMenuSlug::query()->updateOrCreate(
+            [
+                'bot_id' => $bot->id,
+                'command' => ".*Забронировать столик",
+                'comment' => "Бронирование столика",
+                'slug' => "global_cashback_book_table",
+                'is_global' => true,
+            ],
+            [
+                'config' => null,
+            ]);
+
+    }
+
+    public function bookTable(...$config)
+    {
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
+        $bot = BotManager::bot()->getSelf();
+
+        $menu = BotMenuTemplate::query()
+            ->updateOrCreate(
+                [
+                    'bot_id' => $bot->id,
+                    'type' => 'inline',
+                    'slug' => "menu_booking_table_$slugId",
+
+                ],
+                [
+                    'menu' => [
+                        [
+                            ["text" => "\xF0\x9F\x8E\xB2Указать столик для бронирования", "web_app" => [
+                                "url" => env("APP_URL") . "/restaurant/active-admins/$bot->bot_domain"
+                            ]],
+                        ],
+                    ],
+                ]);
+
+        \App\Facades\BotManager::bot()
+            ->replyInlineKeyboard("В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию.",
+                $menu->menu);
     }
 
     public function charges(...$config)
@@ -150,30 +194,29 @@ class CashBackScriptController extends SlugController
 
         $bot = BotManager::bot()->getSelf();
 
-        $menu = BotMenuTemplate::query()
-            ->where("slug", "menu_cashback_budget_$slugId")
-            ->where('bot_id', $bot->id)
-            ->where('type', 'reply')
-            ->first();
 
-        if (is_null($menu))
-            $menu = BotMenuTemplate::query()->create([
-                'bot_id' => $bot->id,
-                'type' => 'reply',
-                'slug' => "menu_cashback_budget_$slugId",
-                'menu' => [
-                    [
-                        ["text" => "\xF0\x9F\x93\x8DНачисления"],
-                        ["text" => "\xF0\x9F\x93\x8DСписания"],
-                    ],
-                    [
-                        ["text" => "\xF0\x9F\x93\x8DSpecial CashBack System"],
-                    ],
-                    [
-                        ["text" => "\xF0\x9F\x93\x8DГлавное меню"],
-                    ],
+        $menu = BotMenuTemplate::query()
+            ->updateOrCreate(
+                [
+                    'bot_id' => $bot->id,
+                    'type' => 'reply',
+                    'slug' => "menu_cashback_budget_$slugId",
+
                 ],
-            ]);
+                [
+                    'menu' => [
+                        [
+                            ["text" => "\xF0\x9F\x93\x8DНачисления"],
+                            ["text" => "\xF0\x9F\x93\x8DСписания"],
+                        ],
+                        [
+                            ["text" => "\xF0\x9F\x93\x8DSpecial CashBack System"],
+                        ],
+                        [
+                            ["text" => "\xF0\x9F\x93\x8DГлавное меню"],
+                        ],
+                    ],
+                ]);
 
         BotManager::bot()
             ->replyKeyboard("Операции над вашим бюджетом", $menu->menu);
@@ -200,16 +243,13 @@ class CashBackScriptController extends SlugController
         }
 
         $menu = BotMenuTemplate::query()
-            ->where("slug", "menu_cashback_request_$slugId")
-            ->where('bot_id', $bot->id)
-            ->where('type', 'reply')
-            ->first();
+            ->updateOrCreate(
+                [
+                    'bot_id' => $bot->id,
+                    'type' => 'inline',
+                    'slug' => "menu_cashback_request_$slugId",
 
-        if (is_null($menu))
-            $menu = BotMenuTemplate::query()->create([
-                'bot_id' => $bot->id,
-                'type' => 'inline',
-                'slug' => "menu_cashback_request_$slugId",
+                ], [
                 'menu' => [
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Пригласить администратора", "web_app" => [
@@ -218,7 +258,6 @@ class CashBackScriptController extends SlugController
                     ],
                 ],
             ]);
-
 
         BotManager::bot()
             ->replyInlineKeyboard("Меню вызова администратора", $menu->menu);
@@ -277,16 +316,13 @@ class CashBackScriptController extends SlugController
             ->first())["value"];
 
         $menu = BotMenuTemplate::query()
-            ->where("slug", "menu_cashback_$slugId")
-            ->where('bot_id', $bot->id)
-            ->where('type', 'reply')
-            ->first();
+            ->updateOrCreate(
+                [
+                    'bot_id' => $bot->id,
+                    'type' => 'reply',
+                    'slug' => "menu_cashback_$slugId",
 
-        if (is_null($menu))
-            $menu = BotMenuTemplate::query()->create([
-                'bot_id' => $bot->id,
-                'type' => 'reply',
-                'slug' => "menu_cashback_$slugId",
+                ], [
                 'menu' => [
                     [
                         ["text" => "\xF0\x9F\x93\x8DМой бюджет"],

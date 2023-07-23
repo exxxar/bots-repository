@@ -570,8 +570,6 @@ class RestaurantBotController extends Controller
 
     public function myBudget()
     {
-
-
         \App\Facades\BotManager::bot()
             ->sendReplyMenu("Операции над вашим бюджетом", "menu_level_3_restaurant_2");
     }

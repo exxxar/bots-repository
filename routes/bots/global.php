@@ -27,7 +27,8 @@ BotManager::bot()
     ->slug("global_cashback_budget", "myBudget")
     ->slug("global_cashback_request", "requestCashBack")
     ->slug("global_cashback_write_offs", "writeOffs")
-    ->slug("global_cashback_charges", "charges");
+    ->slug("global_cashback_charges", "charges")
+    ->slug("global_cashback_book_table", "bookTable");
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\FriendsScriptController::class)
