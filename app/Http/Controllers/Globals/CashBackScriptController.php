@@ -10,6 +10,8 @@ use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\CashBack;
+use App\Models\CashBackHistory;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
@@ -49,6 +51,107 @@ class CashBackScriptController extends SlugController
                 'is_global' => true,
             ]);
 
+        $slug = BotMenuSlug::query()
+            ->where("slug", "global_cashback_write_offs")
+            ->where("bot_id", $bot->id)
+            ->first();
+
+        if (is_null($slug))
+            BotMenuSlug::query()->create([
+                'bot_id' => $bot->id,
+                'command' => ".*Списания",
+                'comment' => "Списания КэшБэка",
+                'slug' => "global_cashback_write_offs",
+                'is_global' => true,
+            ]);
+
+        $slug = BotMenuSlug::query()
+            ->where("slug", "global_cashback_charges")
+            ->where("bot_id", $bot->id)
+            ->first();
+
+        if (is_null($slug))
+            BotMenuSlug::query()->create([
+                'bot_id' => $bot->id,
+                'command' => ".*Начисления",
+                'comment' => "Начисления КэшБэка",
+                'slug' => "global_cashback_charges",
+                'is_global' => true,
+            ]);
+
+    }
+
+    public function charges(...$config)
+    {
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $cashBackHistories = CashBackHistory::query()
+            ->where("bot_id", $botUser->bot_id)
+            ->where("user_id", $botUser->user_id)
+            ->where("operation_type", 1);
+
+        $tmpCount = $cashBackHistories->count();
+
+        $cashBackHistories = $cashBackHistories
+            ->take(10)
+            ->skip(0)
+            ->get();
+
+        $tmp = "<b>Начисления ($tmpCount операций):</b>\n";
+
+        foreach ($cashBackHistories as $item) {
+            $tmp .= "<b>" . $item->amount . "</b> руб уровень <em>" .
+                ($item->level ?? 1) . "</em> " .
+                (Carbon::parse($item->created_at)
+                    ->format("Y-m-d H:i:s")) . "\n";
+        }
+
+        if ($tmpCount > 10)
+            \App\Facades\BotManager::bot()
+                ->replyInlineKeyboard($tmp, [
+                    [
+                        ["text" => "Загрузить еще", "callback_data" => "/more_cashback $botUser->bot_id $botUser->user_id 1 1"]
+                    ]
+                ]);
+        else
+            \App\Facades\BotManager::bot()
+                ->reply($tmp);
+    }
+
+    public function writeOffs(...$config)
+    {
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $cashBackHistories = CashBackHistory::query()
+            ->where("bot_id", $botUser->bot_id)
+            ->where("user_id", $botUser->user_id)
+            ->where("operation_type", 0);
+
+        $tmpCount = $cashBackHistories->count();
+
+        $cashBackHistories = $cashBackHistories
+            ->take(10)
+            ->skip(0)
+            ->get();
+
+        $tmp = "<b>Списания ($tmpCount операций):</b>\n";
+
+        foreach ($cashBackHistories as $item) {
+            $tmp .= "<b>" . $item->amount . "</b> руб " .
+                (Carbon::parse($item->created_at)
+                    ->format("Y-m-d H:i:s")) . "\n";
+        }
+
+        if ($tmpCount > 10)
+            \App\Facades\BotManager::bot()
+                ->replyInlineKeyboard($tmp, [
+                    [
+                        ["text" => "Загрузить еще", "callback_data" => "/more_cashback $botUser->bot_id $botUser->user_id 0 1"]
+                    ]
+                ]);
+        else
+            \App\Facades\BotManager::bot()
+                ->reply($tmp);
     }
 
     public function myBudget(...$config)
