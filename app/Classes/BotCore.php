@@ -675,17 +675,6 @@ abstract class BotCore
     {
         $this->controller = $controller;
 
-        try {
-
-            if (is_subclass_of($controller, SlugController::class)) {
-                app($controller)->handler();
-            }
-
-        } catch (\Exception $exception) {
-
-        }
-
-
         return $this;
     }
 
