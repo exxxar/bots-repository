@@ -14,7 +14,7 @@ abstract class SlugController extends Controller
     {
 
         $this->bot = BotManager::bot()->getSelf();
-        Log::info("bot=>".print_r($this->bot, true));
+
     }
 
     protected abstract function handler();
