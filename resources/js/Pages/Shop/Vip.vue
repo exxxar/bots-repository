@@ -294,7 +294,7 @@ export default {
                 }
             }).then((resp) => {
                 this.loading = false
-                window.location.reload()
+                this.self.is_vip = true
             }).catch(() => {
                 this.loading = false
             })
