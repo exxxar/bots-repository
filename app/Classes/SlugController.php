@@ -17,6 +17,6 @@ abstract class SlugController extends Controller
 
     }
 
-    protected abstract function config(...$data);
+    protected abstract function config($bot);
 
 }
