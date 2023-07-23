@@ -17,8 +17,9 @@ class CashBackScriptController extends SlugController
 {
     const SCRIPT = "global_cashback_main";
 
-    public function config()
+    public function config(...$data)
     {
+        Log::info(print_r($data, true));
        /* $bot = BotManager::bot()->getSelf();
 
         Log::info("TEST config");
