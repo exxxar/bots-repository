@@ -231,8 +231,9 @@ class AdminBotController extends Controller
         $botUsers = BotUser::query()
             ->with(["user"])
             ->where("bot_id", $bot->id)
-            ->where("is_work", true)
+            //->where("is_work", true)
             ->where("is_admin", true)
+            ->orderBy("is_work","DESC")
             ->paginate($size);
 
 
@@ -268,19 +269,14 @@ class AdminBotController extends Controller
             ->where("bot_id", $bot->id)
             ->first();
 
-        $message = $request->message ?? null;
 
         if ($adminBotUser->is_work && $adminBotUser->is_admin) {
             $name = BotMethods::prepareUserName($userBotUser);
 
-            $typeText = $request->type == 0? "начисление бонусный баллов CashBack":
-                "бронирование столика или другое действие";
-
-            $phone = $request->phone ?? null;
+            $phone = $userBotUser->phone ?? null;
 
             $text =
-                ("Пользователь <b> $name</b> запросил у вас $typeText") .
-                (is_null($message) ? "" : "\nСообщение для вас: <b>$message</b>\n").
+                ("Пользователь <b> $name</b> запросил у вас начисление\списание кэшбэка") .
                 (is_null($phone) ? "" : "\nНомер телефона для связи: <b>$phone</b>\n");
 
             BotMethods::bot()
@@ -697,7 +693,7 @@ class AdminBotController extends Controller
 
         $request->validate([
             "bot_id" => "required",
-            "tg" => "required",
+            "telegram_chat_id" => "required",
             "form.name" => "required",
             "form.phone" => "required",
             //"form.email" => "required",
@@ -716,7 +712,7 @@ class AdminBotController extends Controller
 
         $botUser = BotUser::query()
             ->where("bot_id", $request->bot_id)
-            ->where("telegram_chat_id", $request->tg["id"])
+            ->where("telegram_chat_id", $request->telegram_chat_id)
             ->first();
 
         if (is_null($botUser))

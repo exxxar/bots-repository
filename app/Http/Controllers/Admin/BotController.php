@@ -49,15 +49,16 @@ class BotController extends Controller
             "message" => "required",
         ]);
 
+        $type = $request->type ?? null;
         $bot = \App\Models\Bot::query()
             ->with(["company"])
             ->where("bot_domain", $request->bot_domain)
             ->first();
 
-  /*      $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->telegram_chat_id)
-            ->first();*/
+        /*      $botUser = BotUser::query()
+                  ->where("bot_id", $bot->id)
+                  ->where("telegram_chat_id", $request->telegram_chat_id)
+                  ->first();*/
 
         $slug = BotMenuSlug::query()
             ->where("id", $request->slug_id)
@@ -65,7 +66,12 @@ class BotController extends Controller
 
         $callbackChannel = $bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
 
-        $adminMessage = "#обратнаясвязь\nБот: %s\nСкрипт: #%s (название скрипта: %s) \nПользователь: \n -%s \n -%s \n -телефон: %s)\nСообщение: %s\n";
+        $typeText = match ($type) {
+            'booking' => "#бронированиестолика",
+            default => "#обратнаясвязь",
+        };
+
+        $adminMessage = "$typeText\nБот: %s\nСкрипт: #%s (название скрипта: %s) \nПользователь: \n -tg id: %s \n -имя: %s \n -телефон: %s)\nСообщение: %s\n";
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
             ->sendMessage($callbackChannel,

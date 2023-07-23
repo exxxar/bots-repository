@@ -17,6 +17,7 @@ import Wheel from '@/Pages/Shop/Wheel.vue';
 import Quest from '@/Pages/Shop/Quest.vue';
 import Empty from '@/Pages/Shop/Empty.vue';
 import Booking from '@/Pages/Shop/Booking.vue';
+import Vip from '@/Pages/Shop/Vip.vue';
 
 
 export const routes = [
@@ -30,6 +31,12 @@ export const routes = [
         path: '/empty',
         component: Empty,
         meta: { title: 'Ничего не найдено', hide_menu:true }
+    },
+    {
+        name: 'vip',
+        path: '/vip',
+        component: Vip,
+        meta: { title: 'VIP-анкета', hide_menu:true }
     },
     {
         name: 'home',

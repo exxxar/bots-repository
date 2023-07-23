@@ -69,8 +69,6 @@ import PlayerForm from "@/Components/Shop/PlayerForm.vue";
 </template>
 <script>
 
-import baseJS from '@/modules/custom.js'
-
 export default {
     name: "App",
     data() {

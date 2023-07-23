@@ -2,7 +2,7 @@
     <button
         @click="close"
         type="button"
-        class="btn btn-m btn-full rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100 mt-3">
+        class="btn btn-m btn-full rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">
         Вернуться в бота
     </button>
 </template>

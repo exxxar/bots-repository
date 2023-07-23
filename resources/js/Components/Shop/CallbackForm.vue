@@ -1,4 +1,3 @@
-
 <script setup>
 
 import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
@@ -6,14 +5,20 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
 <template>
     <div class="card card-style">
         <div class="content mb-0">
-            <h3>Обратная связь</h3>
+            <h3 v-if="!type">Обратная связь</h3>
+            <h3 v-if="type==='booking'">Бронирование столика</h3>
 
-            <p>
+            <p v-if="!type">
                 Вы можете оставить нам сообщение с пожеланиями по улучшению сервиса!
             </p>
 
+
+            <p v-if="type==='booking'">
+                Укажите в текстовом сообщение критерии бронирования столика, или же оставьте сообщение без изменений!
+            </p>
+
             <form v-on:submit.prevent="submitCallback">
-                <div class="input-style input-style-2 has-icon input-required">
+                <div class="input-style input-style-2 has-icon">
                     <i class="input-icon fa fa-user"></i>
                     <span class="color-highlight">Ф.И.О.</span>
                     <em>(нужно)</em>
@@ -22,7 +27,7 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
                            type="text" placeholder="Иванов Иван Иванович" required>
                 </div>
 
-                <div class="input-style input-style-2 has-icon input-required">
+                <div class="input-style input-style-2 has-icon">
                     <i class="input-icon fa-solid fa-phone"></i>
                     <span class="color-highlight">Телефон</span>
                     <em>(нужно)</em>
@@ -34,23 +39,23 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
                            required>
                 </div>
 
-                <div class="input-style input-style-2 has-icon input-required">
+                <div class="input-style input-style-2 has-icon">
                     <span class="input-style-1-active input-style-1-inactive">Ваше сообщение</span>
                     <i class="input-icon fa-solid fa-envelope-open-text"></i>
                     <em>(нужно)</em>
                     <textarea class="form-control"
-                              style="height:200px;line-height:250%;padding:35px;"
+                              style="height:200px;line-height:150%;padding:35px;"
                               v-model="callbackForm.message"
                               type="text" placeholder="" required></textarea>
                 </div>
 
                 <button type="submit"
                         :disabled="sending"
-                        class="btn btn-full btn-m shadow-l rounded-s text-uppercase font-900 bg-green1-dark my-4 w-100">
+                        class="btn btn-full btn-m shadow-l rounded-s text-uppercase font-900 bg-green1-dark my-2 w-100">
                     Отправить сообщение
                 </button>
 
-                <ReturnToBot class="mb-3"/>
+                <ReturnToBot class="my-2"/>
             </form>
 
 
@@ -58,10 +63,13 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
     </div>
 </template>
 <script>
+import baseJS from '@/modules/custom.js'
+
 export default {
-    data(){
+    props: ["type"],
+    data() {
         return {
-            sending:false,
+            sending: false,
             callbackForm: {
                 name: null,
                 phone: null,
@@ -69,7 +77,13 @@ export default {
             },
         }
     },
-    methods:{
+    mounted() {
+        baseJS.handler();
+
+        if (this.type === 'booking')
+            this.callbackForm.message = 'Добрый день! Я хочу забронировать столик! Перезвоните мне.'
+    },
+    methods: {
         submitCallback() {
             let data = new FormData();
 
@@ -82,6 +96,9 @@ export default {
                     else
                         data.append(key, item)
                 });
+
+            if (this.type)
+                data.append("type", this.type)
 
             this.$store.dispatch("callbackForm", {
                 callbackForm: data

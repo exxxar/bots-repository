@@ -293,6 +293,10 @@ class CashBackScriptController extends SlugController
 
     public function specialCashBackSystem(...$config)
     {
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
         $bot = BotManager::bot()->getSelf();
 
         $botDomain = $bot->bot_domain;
@@ -308,7 +312,8 @@ class CashBackScriptController extends SlugController
                     [
                         [
                             ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                                "url" => env("APP_URL") . "/restaurant/vip-form/$botDomain"
+                                "url" => env("APP_URL") . "/global-scripts/$slugId/interface/$bot->bot_domain#/vip"//"/restaurant/active-admins/$bot->bot_domain"
+
                             ]],
                         ],
 
