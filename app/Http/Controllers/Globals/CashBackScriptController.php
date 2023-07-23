@@ -123,7 +123,7 @@ class CashBackScriptController extends SlugController
                     'menu' => [
                         [
                             ["text" => $btnText, "web_app" => [
-                                "url" => env("APP_URL") . "/restaurant/active-admins/$bot->bot_domain"
+                                "url" => env("APP_URL") . "/global-scripts/$slugId/interface/$bot->bot_domain#/book-a-table"//"/restaurant/active-admins/$bot->bot_domain"
                             ]],
                         ],
                     ],

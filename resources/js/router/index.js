@@ -16,6 +16,7 @@ import Help from '@/Pages/Shop/Help.vue';
 import Wheel from '@/Pages/Shop/Wheel.vue';
 import Quest from '@/Pages/Shop/Quest.vue';
 import Empty from '@/Pages/Shop/Empty.vue';
+import Booking from '@/Pages/Shop/Booking.vue';
 
 
 export const routes = [
@@ -35,6 +36,12 @@ export const routes = [
         path: '/home',
         component: Home,
         meta: { title: 'Главная страница' }
+    },
+    {
+        name: 'booking',
+        path: '/booking-a-table',
+        component: Booking,
+        meta: { title: 'Бронирование столика', hide_menu:true }
     },
     {
         name: 'products',
