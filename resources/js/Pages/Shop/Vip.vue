@@ -289,7 +289,7 @@ export default {
             this.$store.dispatch("saveVip", {
                 dataObject: {
                     bot_id: this.currentBot.id,
-                    telegram_chat_id: this.self.telegram_chat_id,
+                    telegram_chat_id: window.self.telegram_chat_id,
                     form: this.vipForm
                 }
             }).then((resp) => {
