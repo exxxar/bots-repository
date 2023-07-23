@@ -253,8 +253,8 @@ abstract class BotCore
                     $config = $template->config ?? [];
 
                     $config[] = [
-                      "key"=>"slug_id",
-                      "value"=>$template->id,
+                        "key" => "slug_id",
+                        "value" => $template->id,
                     ];
 
 
@@ -311,8 +311,8 @@ abstract class BotCore
                             $config = $slug->config ?? [];
 
                             $config[] = [
-                                "key"=>"slug_id",
-                                "value"=>$slug->id,
+                                "key" => "slug_id",
+                                "value" => $slug->id,
                             ];
 
                             $this->selfScriptDiagnostic($slug);
@@ -673,6 +673,11 @@ abstract class BotCore
     public function controller($controller)
     {
         $this->controller = $controller;
+
+        Log::info("controller".print_r($controller, true));
+        if (is_subclass_of($controller, SlugController::class)) {
+            app()->call($controller . "@handler");
+        }
 
         return $this;
     }

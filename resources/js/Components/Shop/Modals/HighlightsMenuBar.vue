@@ -5,13 +5,13 @@
         <div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
     </div>
 
-        <h1 class="text-center color-white mt-4 font-35 font-800">AZURES</h1>
-        <p class="text-center color-white font-12 mt-n1 pb-2 mb-3">Put a little color in your life</p>
+        <h1 class="text-center color-white mt-4 font-35 font-800">CashMan</h1>
+        <p class="text-center color-white font-12 mt-n1 pb-2 mb-3">Добавь красок в свою жизнь</p>
 
         <div class="card card-style">
             <div class="highlight-changer pt-3 pb-2">
                 <p class="text-center">
-                    Azures is packed with a beautiful color scheme.<br>Tap on your favorite! The page will adapt!
+                   Доступные цветовые схемы для использования в приложении. Нажми на кружочек и цветовая схема автоматически будет применена.
                 </p>
                 <a href="#" data-change-highlight="blue2"><i class="fa fa-circle color-blue2-dark"></i><span class="color-blue2-light">Default</span></a>
                 <a href="#" data-change-highlight="red2"><i class="fa fa-circle color-red1-dark"></i><span class="color-red2-light">Red</span></a>

@@ -23,7 +23,9 @@ BotManager::bot()
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\CashBackScriptController::class)
-    ->slug("global_cashback_main", "specialCashBackSystem");
+    ->slug("global_cashback_main", "specialCashBackSystem")
+    ->slug("global_cashback_budget", "myBudget")
+    ->slug("global_cashback_request", "requestCashBack");
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\FriendsScriptController::class)
