@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use ReflectionClass;
+use ReflectionMethod;
 use Telegram\Bot\FileUpload\InputFile;
 
 abstract class BotCore
@@ -678,8 +679,14 @@ abstract class BotCore
 
         try {
 
-            if (is_subclass_of($controller, SlugController::class))
-                app()->call($controller . "@handler");
+            if (is_subclass_of($controller, SlugController::class)) {
+                $class = new ReflectionClass($controller);
+                $methods = $class->getMethods(ReflectionMethod::IS_PROTECTED);
+
+                Log::info(print_r($methods, true));
+                //   app()->call($controller . "@handler");
+            }
+
         } catch (\Exception $exception) {
             Log::info($exception);
         }

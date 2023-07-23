@@ -17,7 +17,7 @@ class CashBackScriptController extends SlugController
 {
     const SCRIPT = "global_cashback_main";
 
-    public function handler()
+    protected function handler()
     {
         $slug = BotMenuSlug::query()
             ->where("slug", "global_cashback_budget")
