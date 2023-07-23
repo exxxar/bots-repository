@@ -58,7 +58,7 @@ abstract class BotCore
 
     protected abstract function stopBotDialog(): void;
 
-    protected function selfScriptDiagnostic($item): void
+    /*protected function selfScriptDiagnostic($item): void
     {
         try {
 
@@ -109,7 +109,7 @@ abstract class BotCore
         } catch (\Exception $e) {
             Log::error("Diagnostic module fail:" . $e->getMessage());
         }
-    }
+    }*/
 
     public function getCurrentChatId()
     {
@@ -259,7 +259,7 @@ abstract class BotCore
                     ];
 
 
-                    $this->selfScriptDiagnostic($template);
+                   // $this->selfScriptDiagnostic($template);
 
                     $find = $this->tryCall($item, $message, $config, ...$arguments);
                     break;
@@ -316,7 +316,7 @@ abstract class BotCore
                                 "value" => $slug->id,
                             ];
 
-                            $this->selfScriptDiagnostic($slug);
+                          //  $this->selfScriptDiagnostic($slug);
 
                             $this->tryCall($item, $message,
                                 $config, []);

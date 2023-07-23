@@ -18,67 +18,55 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class CashBackScriptController extends SlugController
 {
-    const SCRIPT = "global_cashback_main";
-
     public function config(Bot $bot)
     {
-
-        $slug = BotMenuSlug::query()
-            ->where("slug", "global_cashback_budget")
-            ->where("bot_id", $bot->id)
-            ->first();
-
-        if (is_null($slug))
-            BotMenuSlug::query()->create([
-                'bot_id' => $bot->id,
+        BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_cashback_budget",
+                "bot_id" => $bot->id,
+                'is_global' => true,
                 'command' => ".*Мой бюджет",
                 'comment' => "Бюджет пользователя системой КэшБэк",
-                'slug' => "global_cashback_budget",
-                'is_global' => true,
+            ],
+            [
+                'config' => null,
             ]);
 
-        $slug = BotMenuSlug::query()
-            ->where("slug", "global_cashback_request")
-            ->where("bot_id", $bot->id)
-            ->first();
-
-        if (is_null($slug))
-            BotMenuSlug::query()->create([
+        BotMenuSlug::query()->updateOrCreate(
+            [
                 'bot_id' => $bot->id,
                 'command' => ".*Запросить CashBack",
                 'comment' => "Механизм вызова администратора",
                 'slug' => "global_cashback_request",
                 'is_global' => true,
+            ],
+            [
+                'config' => null,
             ]);
 
-        $slug = BotMenuSlug::query()
-            ->where("slug", "global_cashback_write_offs")
-            ->where("bot_id", $bot->id)
-            ->first();
-
-        if (is_null($slug))
-            BotMenuSlug::query()->create([
+        BotMenuSlug::query()->updateOrCreate(
+            [
                 'bot_id' => $bot->id,
                 'command' => ".*Списания",
                 'comment' => "Списания КэшБэка",
                 'slug' => "global_cashback_write_offs",
                 'is_global' => true,
+            ],
+            [
+                'config' => null,
             ]);
 
-        $slug = BotMenuSlug::query()
-            ->where("slug", "global_cashback_charges")
-            ->where("bot_id", $bot->id)
-            ->first();
-
-        if (is_null($slug))
-            BotMenuSlug::query()->create([
+        BotMenuSlug::query()->updateOrCreate(
+            [
                 'bot_id' => $bot->id,
                 'command' => ".*Начисления",
                 'comment' => "Начисления КэшБэка",
                 'slug' => "global_cashback_charges",
                 'is_global' => true,
+            ],
+            [
+                'config' => null,
             ]);
-
     }
 
     public function charges(...$config)
