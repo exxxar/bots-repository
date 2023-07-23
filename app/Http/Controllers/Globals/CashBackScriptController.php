@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Globals;
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Models\BotMenuTemplate;
 use App\Models\CashBack;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +18,6 @@ class CashBackScriptController extends Controller
     public function specialCashBackSystem(...$config)
     {
         $bot = BotManager::bot()->getSelf();
-
 
         $botDomain = $bot->bot_domain;
 
@@ -48,7 +48,6 @@ class CashBackScriptController extends Controller
         $qr = "https://t.me/$botDomain?start=" .
             base64_encode($data);
 
-        Log::info(base64_encode($data));
 
         $cashBack = CashBack::query()
             ->where("bot_id", $bot->id)
@@ -64,7 +63,36 @@ class CashBackScriptController extends Controller
 Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>",
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
-        \App\Facades\BotManager::bot()
-            ->sendReplyMenu("Меню управления CashBack-ом", "menu_level_2_restaurant_1");
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
+        $menu = BotMenuTemplate::query()
+            ->where("slug", "menu_cashback_$slugId")
+            ->where('bot_id', $bot->id)
+            ->where('type', 'reply')
+            ->first();
+
+        if (is_null($menu))
+            $menu = BotMenuTemplate::query()->create([
+                'bot_id' => $bot->id,
+                'type' => 'reply',
+                'slug' => "menu_cashback_$slugId",
+                'menu' => [
+                    [
+                        ["text" => "\xF0\x9F\x93\x8DМой бюджет"],
+                    ],
+                    [
+                        ["text" => "\xF0\x9F\x93\x8DЗапросить CashBack"],
+                    ],
+                    [
+                        ["text" => "\xF0\x9F\x93\x8DГлавное меню"],
+                    ],
+                ],
+            ]);
+
+        BotManager::bot()
+            ->replyKeyboard("Меню управления CashBack-ом", $menu->menu);
+
     }
 }

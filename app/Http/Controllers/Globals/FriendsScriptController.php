@@ -63,29 +63,7 @@ class FriendsScriptController extends Controller
             ->replyPhoto( sprintf($mainText,$friendCount),
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
-        $menu = BotMenuTemplate::query()
-            ->where("slug", "menu_friends_$slugId")
-            ->where('bot_id',$bot->id)
-            ->where('type','reply')
-            ->first();
 
-        if (is_null($menu))
-            $menu = BotMenuTemplate::query()->create([
-                'bot_id' => $bot->id,
-                'type' => 'reply',
-                'slug' => "menu_friends_$slugId",
-                'menu' => [
-                    [
-                        ["text" => "\xE2\x98\x95Найти друзей!"],
-                    ],
-                    [
-                        ["text" => "\xF0\x9F\x93\x8DМои друзья"],
-                    ],
-                    [
-                        ["text" => "\xF0\x9F\x93\x8DГлавное меню"],
-                    ],
-                ],
-            ]);
 
 
        /* $file = InputFile::create(
@@ -99,8 +77,7 @@ class FriendsScriptController extends Controller
                 InputFile::create($imgPath)
             );
 
-        BotManager::bot()
-            ->replyKeyboard("Пригласить друзей", $menu->menu);
+
 
     }
 }
