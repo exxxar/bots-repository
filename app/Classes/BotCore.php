@@ -678,9 +678,9 @@ abstract class BotCore
         try {
 
             if (is_subclass_of($controller, SlugController::class)) {
-                Log::info("test 1". print_r($this->getSelf()));
-                Log::info("test 2". print_r($this->bot));
-                Log::info("test 3". print_r($this->domain));
+                Log::info("test 1". print_r($this->getSelf(), true));
+                Log::info("test 2". print_r($this->bot, true));
+                Log::info("test 3". print_r($this->domain, true));
                 app($controller)->config();
             }
 
