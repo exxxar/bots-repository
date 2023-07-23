@@ -674,7 +674,7 @@ abstract class BotCore
     {
         $this->controller = $controller;
 
-        Log::info("controller".print_r($controller, true));
+       // Log::info("controller".print_r($controller, true));
         if (is_subclass_of($controller, SlugController::class)) {
             app()->call($controller . "@handler");
         }
