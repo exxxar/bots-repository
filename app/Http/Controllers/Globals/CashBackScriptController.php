@@ -77,7 +77,9 @@ class CashBackScriptController extends SlugController
                 'is_global' => true,
             ],
             [
-                'config' => null,
+                'config' => [
+                    "book_table_message" => "В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию."
+                ],
             ]);
 
     }
@@ -87,6 +89,11 @@ class CashBackScriptController extends SlugController
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
             ->first())["value"];
+
+
+        $bookTableMessage = (Collection::make($config[1])
+            ->where("key", "book_table_message")
+            ->first())["value"] ?? "Забронировать столик";
 
         $bot = BotManager::bot()->getSelf();
 
@@ -109,8 +116,7 @@ class CashBackScriptController extends SlugController
                 ]);
 
         \App\Facades\BotManager::bot()
-            ->replyInlineKeyboard("В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию.",
-                $menu->menu);
+            ->replyInlineKeyboard($bookTableMessage, $menu->menu);
     }
 
     public function charges(...$config)
