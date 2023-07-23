@@ -15,4 +15,8 @@ abstract class SlugController extends Controller
     }
 
     protected abstract function handler();
+
+    protected function getClassName(){
+        return static::class;
+    }
 }
