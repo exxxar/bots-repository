@@ -683,8 +683,11 @@ abstract class BotCore
                 $class = new ReflectionClass($controller);
                 $methods = $class->getMethods(ReflectionMethod::IS_PROTECTED);
 
+                $reflectionMethod = new ReflectionMethod($controller, 'handler');
+                $reflectionMethod->invoke(null);
+
                 Log::info(print_r($methods, true));
-                //   app()->call($controller . "@handler");
+
             }
 
         } catch (\Exception $exception) {
