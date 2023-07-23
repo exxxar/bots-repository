@@ -82,6 +82,12 @@ class CashBackScriptController extends SlugController
                         "type" => "text",
                         "key" => "book_table_message",
                         "value" => "В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию."
+                    ],
+                    [
+                        "type" => "text",
+                        "key" => "btn_text",
+                        "value" => "\xF0\x9F\x8E\xB2Выбрать столик для бронирования",
+
                     ]
                 ],
             ]);
@@ -99,6 +105,10 @@ class CashBackScriptController extends SlugController
             ->where("key", "book_table_message")
             ->first())["value"] ?? "Забронировать столик";
 
+        $btnText = (Collection::make($config[1])
+            ->where("key", "btn_text")
+            ->first())["value"] ?? "Выбрать столик";
+
         $bot = BotManager::bot()->getSelf();
 
         $menu = BotMenuTemplate::query()
@@ -112,7 +122,7 @@ class CashBackScriptController extends SlugController
                 [
                     'menu' => [
                         [
-                            ["text" => "\xF0\x9F\x8E\xB2Указать столик для бронирования", "web_app" => [
+                            ["text" => $btnText, "web_app" => [
                                 "url" => env("APP_URL") . "/restaurant/active-admins/$bot->bot_domain"
                             ]],
                         ],
