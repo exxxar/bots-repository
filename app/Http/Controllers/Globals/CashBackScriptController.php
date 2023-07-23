@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Globals;
 use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
@@ -17,9 +18,9 @@ class CashBackScriptController extends SlugController
 {
     const SCRIPT = "global_cashback_main";
 
-    public function config($bot)
+    public function config(Bot $bot)
     {
-        Log::info(print_r($bot, true));
+        Log::info(print_r($bot->toArray(), true));
        /* $bot = BotManager::bot()->getSelf();
 
         Log::info("TEST config");
