@@ -79,6 +79,7 @@ class CashBackScriptController extends SlugController
             [
                 'config' => [
                     [
+                        "type" => "text",
                         "key" => "book_table_message",
                         "value" => "В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию."
                     ]
