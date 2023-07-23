@@ -77,7 +77,6 @@ export default createStore({
             callbackForm.append("bot_domain", botDomain)
 
             let link = `/global-scripts/callback`
-                .replace('{scriptId}', slugId)
 
             let _axios = util.makeAxiosFactory(link, 'POST', callbackForm)
 

@@ -221,7 +221,7 @@ Route::get('/restaurant/book-a-table/{botDomain}', function ($botDomain) {
     ]);
 });
 
-
+/*
 Route::get("/restaurant/active-admins/{botDomain}", function ($botDomain) {
 
     Inertia::setRootView("bot");
@@ -233,12 +233,12 @@ Route::get("/restaurant/active-admins/{botDomain}", function ($botDomain) {
     return Inertia::render('AdminList', [
         'bot' => $bot,
     ]);
-});
+});*/
 
 
-Route::post("/admin/cashback-add", function () {
+/*Route::post("/admin/cashback-add", function () {
     return "ok";
-});
+});*/
 
 Route::post('/get-bot-user', [AdminBotController::class, 'getBotUser']);
 

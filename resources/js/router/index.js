@@ -39,7 +39,7 @@ export const routes = [
     },
     {
         name: 'booking',
-        path: '/booking-a-table',
+        path: '/book-a-table',
         component: Booking,
         meta: { title: 'Бронирование столика', hide_menu:true }
     },

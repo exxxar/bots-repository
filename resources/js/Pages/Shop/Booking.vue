@@ -22,7 +22,7 @@ import Pagination from '@/Components/Shop/Helpers/Pagination.vue'
                         </div>
                     </div>
                     <div class="col-12">
-                        <div v-if="admins.length>0">
+                        <div  >
                             <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
                                 <input type="radio"
                                        v-model="type"
@@ -122,6 +122,9 @@ export default {
         tgUser(){
             const urlParams = new URLSearchParams(this.tg.initData);
             return JSON.parse(urlParams.get('user'));
+        },
+        currentBot(){
+            return window.currentBot
         }
     },
     mounted() {
@@ -135,7 +138,7 @@ export default {
             this.loading = true
             this.$store.dispatch("requestAdmin", {
                 dataObject: {
-                    bot_id: botUser.bot_id,
+                    bot_id: this.currentBot.id,
                     admin_telegram_chat_id: botUser.telegram_chat_id,
                     user_telegram_chat_id: this.tgUser.id,
                     message:this.message,
@@ -154,7 +157,7 @@ export default {
             this.loading = true
             this.$store.dispatch("loadAdmins", {
                 dataObject: {
-                    bot_domain: this.bot.bot_domain
+                    bot_domain: this.currentBot.bot_domain
                 },
                 page:page
             }).then(resp=> {

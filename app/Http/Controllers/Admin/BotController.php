@@ -54,16 +54,16 @@ class BotController extends Controller
             ->where("bot_domain", $request->bot_domain)
             ->first();
 
-        $botUser = BotUser::query()
+  /*      $botUser = BotUser::query()
             ->where("bot_id", $bot->id)
             ->where("telegram_chat_id", $request->telegram_chat_id)
-            ->first();
+            ->first();*/
 
         $slug = BotMenuSlug::query()
             ->where("id", $request->slug_id)
             ->first();
 
-        $callbackChannel = env("BASE_ADMIN_CHANNEL");
+        $callbackChannel = $bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
 
         $adminMessage = "#обратнаясвязь\nБот: %s\nСкрипт: #%s (название скрипта: %s) \nПользователь: \n -%s \n -%s \n -телефон: %s)\nСообщение: %s\n";
         BotMethods::bot()
