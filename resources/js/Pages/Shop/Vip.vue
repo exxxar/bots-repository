@@ -5,8 +5,8 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
 import ProjectInfoCard from "@/Components/Shop/Helpers/ProjectInfoCard.vue";
 </script>
 <template>
-    <div v-if="self">
-        <div class="card card-style p-3" v-if="!self.is_vip">
+    <div v-if="botUser">
+        <div class="card card-style p-3" v-if="!botUser.is_vip">
             <form
                 v-if="step===0"
                 v-on:submit.prevent="nextStep" class="row mb-0">
@@ -243,7 +243,7 @@ import ProjectInfoCard from "@/Components/Shop/Helpers/ProjectInfoCard.vue";
             </form>
         </div>
 
-        <div class="card card-style p-3" v-if="self.is_vip">
+        <div class="card card-style p-3" v-if="botUser.is_vip">
             Поздравляем! Вы являетесь нашим VIP-пользователеме! Вам доступны следующие возможности:
             <ul>
                 <li>Накопление CashBack за покупки</li>
@@ -266,6 +266,7 @@ export default {
             load: false,
             confirm: false,
             step: 0,
+            botUser: null,
             vipForm: {
                 name: null,
                 phone: null,
@@ -279,6 +280,11 @@ export default {
             }
         }
     },
+    mounted() {
+        if (this.tgUser) {
+            this.loadBotUser()
+        }
+    },
 
     computed: {
         self() {
@@ -286,6 +292,10 @@ export default {
         },
         tg() {
             return window.Telegram.WebApp;
+        },
+        tgUser() {
+            const urlParams = new URLSearchParams(this.tg.initData);
+            return JSON.parse(urlParams.get('user'));
         },
         currentBot() {
             return window.currentBot
@@ -295,16 +305,28 @@ export default {
         nextStep() {
             this.step++;
         },
-
+        loadBotUser(){
+            this.loading = true;
+            this.$store.dispatch("loadCurrentBotUser", {
+                dataObject: {
+                    bot_id: this.bot.id,
+                    tg: this.tgUser,
+                }
+            }).then((resp) => {
+                this.loading = false
+                this.botUser = resp
+            }).catch(() => {
+                this.loading = false
+            })
+        },
         submit() {
             this.loading = true;
 
-            let self = window.self
 
             this.$store.dispatch("saveVip", {
                 dataObject: {
                     bot_id: this.currentBot.id,
-                    telegram_chat_id: self.telegram_chat_id,
+                    telegram_chat_id: this.botUser.telegram_chat_id,
                     form: this.vipForm
                 }
             }).then((resp) => {
