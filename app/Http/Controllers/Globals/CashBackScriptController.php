@@ -19,7 +19,7 @@ class CashBackScriptController extends SlugController
 
     public function config()
     {
-        $bot = BotManager::bot()->getSelf();
+       /* $bot = BotManager::bot()->getSelf();
 
         Log::info("TEST config");
         $slug = BotMenuSlug::query()
@@ -48,7 +48,7 @@ class CashBackScriptController extends SlugController
                 'comment' => "Механизм вызова администратора",
                 'slug' => "global_cashback_request",
                 'is_global' => true,
-            ]);
+            ]);*/
 
     }
 
