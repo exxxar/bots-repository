@@ -33,7 +33,8 @@ import ProjectInfoCard from "@/Components/Shop/Helpers/ProjectInfoCard.vue";
                                aria-describedby="vipForm-name" required>
                     </div>
 
-                    <button class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
+                    <button
+                        class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
                         Следующий шаг
                     </button>
 
@@ -65,7 +66,8 @@ import ProjectInfoCard from "@/Components/Shop/Helpers/ProjectInfoCard.vue";
 
                     </div>
 
-                    <button class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
+                    <button
+                        class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
                         Следующий шаг
                     </button>
 
@@ -109,7 +111,8 @@ import ProjectInfoCard from "@/Components/Shop/Helpers/ProjectInfoCard.vue";
                     </div>
 
 
-                    <button class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
+                    <button
+                        class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
                         Следующий шаг
                     </button>
 
@@ -137,7 +140,8 @@ import ProjectInfoCard from "@/Components/Shop/Helpers/ProjectInfoCard.vue";
                                aria-label="vipForm-birthday" aria-describedby="vipForm-birthday" required>
                     </div>
 
-                    <button class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
+                    <button
+                        class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
                         Следующий шаг
                     </button>
 
@@ -156,14 +160,16 @@ import ProjectInfoCard from "@/Components/Shop/Helpers/ProjectInfoCard.vue";
 
                 </div>
                 <div class="col-12">
-                    <p class="mb-3"><em>Чтобы я мог показывать Вам информацию, актуальную для Вашего города, мне нужно знать
+                    <p class="mb-3"><em>Чтобы я мог показывать Вам информацию, актуальную для Вашего города, мне нужно
+                        знать
                         город Вашего проживания.</em></p>
                     <h6 class="text-center">Какой у Вас город?</h6>
                     <div class="input-style input-style-2">
                         <input type="text"
                                v-model="vipForm.city"
                                list="datalistCityOptions"
-                               class="form-control text-center font-14 p-3 rounded-s border-theme" placeholder="Краснодар"
+                               class="form-control text-center font-14 p-3 rounded-s border-theme"
+                               placeholder="Краснодар"
                                aria-label="vipForm-city" aria-describedby="vipForm-city" required>
                         <datalist id="datalistCityOptions">
                             <option value="Краснодар"/>
@@ -174,7 +180,8 @@ import ProjectInfoCard from "@/Components/Shop/Helpers/ProjectInfoCard.vue";
                         </datalist>
                     </div>
 
-                    <button class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
+                    <button
+                        class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
                         Следующий шаг
                     </button>
 
@@ -222,12 +229,14 @@ import ProjectInfoCard from "@/Components/Shop/Helpers/ProjectInfoCard.vue";
 
                     <button type="submit"
                             :disabled="!confirm||load"
-                            class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">Отправить анкету
+                            class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
+                        Отправить анкету
                     </button>
 
                     <button type="button"
                             @click="step=0"
-                            class="btn btn-m btn-full rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100 mb-2">Исправить ошибки
+                            class="btn btn-m btn-full rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100 mb-2">
+                        Исправить ошибки
                     </button>
 
                 </div>
@@ -270,15 +279,13 @@ export default {
             }
         }
     },
-    mounted() {
 
-    },
     computed: {
-        tg() {
-            return window.Telegram.WebApp;
-        },
         self() {
             return window.self || null
+        },
+        tg() {
+            return window.Telegram.WebApp;
         },
         currentBot() {
             return window.currentBot
@@ -292,10 +299,12 @@ export default {
         submit() {
             this.loading = true;
 
+            let self = window.self
+
             this.$store.dispatch("saveVip", {
                 dataObject: {
                     bot_id: this.currentBot.id,
-                    telegram_chat_id: this.self.telegram_chat_id,
+                    telegram_chat_id: self.telegram_chat_id,
                     form: this.vipForm
                 }
             }).then((resp) => {
@@ -323,7 +332,7 @@ export default {
 
 .theme-dark {
     input {
-        border-color:white;
+        border-color: white;
     }
 }
 </style>
