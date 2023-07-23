@@ -309,7 +309,7 @@ export default {
             this.loading = true;
             this.$store.dispatch("loadCurrentBotUser", {
                 dataObject: {
-                    bot_id: this.bot.id,
+                    bot_id: this.currentBot.id,
                     tg: this.tgUser,
                 }
             }).then((resp) => {
