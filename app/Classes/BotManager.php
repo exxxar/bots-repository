@@ -167,7 +167,7 @@ class BotManager extends BotCore
     {
         return Bot::query()
             ->withTrashed()
-            ->with(["botUsers", "company", "imageMenus", "company.locations"])
+            ->with([/*"botUsers",*/ "company", "imageMenus", "company.locations"])
             ->where("bot_domain", $this->domain)
             ->first();
     }
