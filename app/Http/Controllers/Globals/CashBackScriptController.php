@@ -19,15 +19,17 @@ class CashBackScriptController extends SlugController
 
     public function config()
     {
+        $bot = BotManager::bot()->getSelf();
+
         Log::info("TEST config");
-       /* $slug = BotMenuSlug::query()
+        $slug = BotMenuSlug::query()
             ->where("slug", "global_cashback_budget")
-            ->where("bot_id", $this->bot->id)
+            ->where("bot_id", $bot->id)
             ->first();
 
         if (is_null($slug))
             BotMenuSlug::query()->create([
-                'bot_id' =>  $this->bot->id,
+                'bot_id' =>  $bot->id,
                 'command' => ".*Мой бюджет",
                 'comment' => "Бюджет пользователя системой КэшБэк",
                 'slug' => "global_cashback_budget",
@@ -36,17 +38,17 @@ class CashBackScriptController extends SlugController
 
         $slug = BotMenuSlug::query()
             ->where("slug", "global_cashback_request")
-            ->where("bot_id", $this->bot->id)
+            ->where("bot_id", $bot->id)
             ->first();
 
         if (is_null($slug))
             BotMenuSlug::query()->create([
-                'bot_id' => $this->bot->id,
+                'bot_id' => $bot->id,
                 'command' => ".*Запросить CashBack",
                 'comment' => "Механизм вызова администратора",
                 'slug' => "global_cashback_request",
                 'is_global' => true,
-            ]);*/
+            ]);
 
     }
 
