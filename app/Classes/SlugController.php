@@ -8,15 +8,15 @@ use Illuminate\Support\Facades\Log;
 
 abstract class SlugController extends Controller
 {
-    protected $bot;
+    //protected $bot;
 
     public function __construct()
     {
 
-        $this->bot = BotManager::bot()->getSelf();
+        //$this->bot = BotManager::bot()->getSelf();
 
     }
 
-    protected abstract function handler();
+    protected abstract function config();
 
 }

@@ -17,9 +17,10 @@ class CashBackScriptController extends SlugController
 {
     const SCRIPT = "global_cashback_main";
 
-    public function handler()
+    public function config()
     {
-        $slug = BotMenuSlug::query()
+        Log::info("TEST config");
+       /* $slug = BotMenuSlug::query()
             ->where("slug", "global_cashback_budget")
             ->where("bot_id", $this->bot->id)
             ->first();
@@ -45,7 +46,7 @@ class CashBackScriptController extends SlugController
                 'comment' => "Механизм вызова администратора",
                 'slug' => "global_cashback_request",
                 'is_global' => true,
-            ]);
+            ]);*/
 
     }
 
