@@ -99,7 +99,7 @@ class WheelOfFortuneScriptController extends Controller
             ->whereDomain($botDomain)
             ->sendMessage($botUser
                 ->telegram_chat_id,
-                sprintf($winMessage, $winnerName, $winNumber))
+                sprintf("%s, вы приняли участие в розыгрыше и выиграли приз под номером %s. Наш менеджер свяжется с вами в ближайшее время!", $winnerName, $winNumber))
             ->sendMessage($callbackChannel,
                 "Участника $winnerPhone ($winnerName) принял участие в розыгрыше и выиграл приз №$winNumber - свяжитесь с ним для дальнейших указаний");
 
