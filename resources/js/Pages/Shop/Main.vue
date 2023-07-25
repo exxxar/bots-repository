@@ -114,7 +114,7 @@ export default {
     },
     created() {
         window.currentBot = this.bot.data
-        window.currentScript = this.slug_id
+        window.currentScript = this.slug_id || null
         let tgUser = this.tgUser || null
         this.$store.dispatch("loadSelf", {
             dataObject: {

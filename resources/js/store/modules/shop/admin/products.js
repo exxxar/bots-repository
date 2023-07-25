@@ -17,6 +17,7 @@ const getters = {
 }
 
 const actions = {
+
     /*async loadProduct(context, payload = {dataObject: { productId: null}}) {
 
         let link = `${BASE_PRODUCTS_LINK}/${payload.dataObject.productId}`

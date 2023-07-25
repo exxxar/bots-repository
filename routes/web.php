@@ -283,7 +283,7 @@ Route::prefix("global-scripts")
 
         Route::prefix("shop")
             ->group(function () {
-                Route::get("/vk-auth-link/{botDomain}", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
+                Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
                 Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
 
                 Route::post("/products", [\App\Http\Controllers\Admin\ProductController::class, "index"]);
@@ -297,7 +297,8 @@ Route::prefix("global-scripts")
                     });
             });
 
-        Route::get("{scriptId}/interface/{botDomain}/{path?}", [ShopScriptController::class, "shopHomePage"]);
+        Route::get("{scriptId}/interface/{botDomain}/{path?}", [ShopScriptController::class, "shopHomePage"])
+            ->where("scriptId","[0-9]+|route");
 
 
     });

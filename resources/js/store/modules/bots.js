@@ -5,7 +5,7 @@ const BASE_BOTS_LINK = '/bot/bots'
 
 let state = {
     bots: [],
-    bot_users:[],
+    bot_users: [],
     bots_paginate_object: null,
     bot_users_paginate_object: null,
 }
@@ -42,7 +42,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async updateBot(context, payload= {botForm: null}){
+    async updateBot(context, payload = {botForm: null}) {
         let link = `${BASE_BOTS_LINK}/bot-update`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.botForm)
@@ -54,7 +54,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async removeBot(context, payload= {botId: null}){
+    async removeBot(context, payload = {botId: null}) {
         let link = `${BASE_BOTS_LINK}/${payload.botId}`
 
         let _axios = util.makeAxiosFactory(link, 'DELETE')
@@ -66,7 +66,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async restoreBot(context, payload= {botId: null}){
+    async restoreBot(context, payload = {botId: null}) {
         let link = `${BASE_BOTS_LINK}/restore/${payload.botId}`
 
         let _axios = util.makeAxiosFactory(link, 'GET')
@@ -78,7 +78,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async changeUserStatus(context, payload= { dataObject: {botUserId: null, status: 0}}){
+    async changeUserStatus(context, payload = {dataObject: {botUserId: null, status: 0}}) {
         let link = `${BASE_BOTS_LINK}/user-status`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
@@ -90,14 +90,14 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadBotUsers(context, payload = { dataObject: {botId: null, search:null} , page: 0, size: 12}) {
+    async loadBotUsers(context, payload = {dataObject: {botId: null, search: null}, page: 0, size: 12}) {
 
         let page = payload.page || 0
         let size = 12
 
         let link = `${BASE_BOTS_LINK}/users?page=${page}&size=${size}`
 
-        let _axios = util.makeAxiosFactory(link,'POST', payload.dataObject )
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 
         return _axios.then((response) => {
             let dataObject = response.data
@@ -110,10 +110,10 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadCurrentBotUser(context, payload = { dataObject: {botId: null} }) {
+    async loadCurrentBotUser(context, payload = {dataObject: {botId: null}}) {
         let link = `${BASE_BOTS_LINK}/current-bot-user`
 
-        let _axios = util.makeAxiosFactory(link,'POST', payload.dataObject )
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 
         return _axios.then((response) => {
             let dataObject = response.data
@@ -123,6 +123,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
 }
 const mutations = {
     setBots(state, payload) {

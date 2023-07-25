@@ -102,6 +102,40 @@ class CashBackScriptController extends SlugController
 
     }
 
+    public function adminsBotQuery(){
+
+    }
+
+    public function admins()
+    {
+        /*$slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];*/
+
+        $bot = BotManager::bot()->getSelf();
+
+        $menu = BotMenuTemplate::query()
+            ->updateOrCreate(
+                [
+                    'bot_id' => $bot->id,
+                    'type' => 'inline',
+                    'slug' => "menu_admins_list_route",
+
+                ],
+                [
+                    'menu' => [
+                        [
+                            ["text" => "Пригласить администратора", "web_app" => [
+                                "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admins"//"/restaurant/active-admins/$bot->bot_domain"
+                            ]],
+                        ],
+                    ],
+                ]);
+
+        \App\Facades\BotManager::bot()
+            ->replyInlineKeyboard("CashBack-запрос", $menu->menu);
+    }
+
     public function bookTable(...$config)
     {
         $slugId = (Collection::make($config[1])

@@ -48,10 +48,20 @@ class BotManager extends BotCore
         $last_name = $from->last_name ?? null; //фамилия пользователя из телеграм
         $username = $from->username ?? null; //псевдоним пользователя
 
+        $anyBotUser = BotUser::query()
+            ->where("telegram_chat_id", $telegram_chat_id)
+            ->first();
+
+        $existUserId = null;
+
+        if (!is_null($anyBotUser))
+            $existUserId = $anyBotUser->user_id;
+
         $this->botUser = BotUser::query()
             ->where("bot_id", $this->getSelf()->id)
             ->where("telegram_chat_id", $telegram_chat_id)
             ->first();
+
 
         if (is_null($this->botUser)) {
             try {
@@ -61,16 +71,17 @@ class BotManager extends BotCore
                     ->where("slug", "owner")
                     ->first();
 
-                $user = User::query()->create([
-                    'name' => $username ?? $telegram_chat_id ?? "unknown",
-                    'email' => "$uuid@your-cashman.ru",
-                    'password' => bcrypt($telegram_chat_id),
-                    'role_id' => $role->id,
-                ]);
+                if (is_null($existUserId))
+                    $user = User::query()->create([
+                        'name' => $username ?? $telegram_chat_id ?? "unknown",
+                        'email' => "$uuid@your-cashman.ru",
+                        'password' => bcrypt($telegram_chat_id),
+                        'role_id' => $role->id,
+                    ]);
 
                 $this->botUser = BotUser::query()->create([
                     'bot_id' => $this->getSelf()->id,
-                    'user_id' => $user->id,
+                    'user_id' => $existUserId ?? $user->id ?? null,
                     'is_vip' => false,
                     'is_admin' => false,
                     'is_work' => false,
@@ -231,10 +242,8 @@ class BotManager extends BotCore
             $this->replyInlineKeyboard($content, $iMenu);
         }
 
-        if (!empty($replyKeyboard)&&$needSendReplyMenu)
+        if (!empty($replyKeyboard) && $needSendReplyMenu)
             $this->replyKeyboard("Меню страницы", $rMenu);
-
-
 
 
     }

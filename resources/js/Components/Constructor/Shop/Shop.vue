@@ -13,7 +13,6 @@ import ProductForm from "@/Components/Constructor/Shop/ProductForm.vue";
                         <div class="input-group mb-3">
                             <input type="url" class="form-control"
                                    v-model="url"
-                                   pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
                                    placeholder="Ссылка на группу в VK"
                                    aria-label="Recipient's username"
                                    aria-describedby="button-addon2" required>
@@ -78,6 +77,8 @@ import ProductForm from "@/Components/Constructor/Shop/ProductForm.vue";
     </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     data() {
         return {
@@ -89,17 +90,21 @@ export default {
         }
     },
     computed: {
-        currentBot() {
-            return window.currentBot
-        }
+        ...mapGetters(['getCurrentBot']),
+
     },
     methods: {
         updateProducts() {
+
             this.load = true
             this.$store.dispatch("updateProductsFromVk", {
-                url: this.url,
-                bot_domain: this.currentBot.bot_domain
+                dataObject:{
+                    url: this.url,
+                    botDomain: this.getCurrentBot.bot_domain
+                }
             }).then((resp) => {
+
+                console.log(resp)
                 this.link = resp.data.url
                 this.load = false
                 this.url = null

@@ -17,11 +17,18 @@ use VK\OAuth\VKOAuthResponseType;
 
 class VKProductController extends Controller
 {
-    protected string $vkUrl;
+    //protected string $vkUrl;
 
-    public function getVKAuthLink(Request $request, $botDomain)
+    public function getVKAuthLink(Request $request)
     {
-        $this->vkUrl = $request->vk_url ?? null;
+        $request->validate([
+            //"url"=>"required",
+            "botDomain"=>"required",
+        ]);
+
+
+       // $this->vkUrl = $request->url ?? null;
+        $botDomain = $request->botDomain ?? null;
 
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");
@@ -59,10 +66,11 @@ class VKProductController extends Controller
         $vk = new VKApiClient();
 
         $response = $vk->utils()->resolveScreenName($access_token, [
-            'screen_name' => $this->vkUrl,
+            'screen_name' => "butchathepub",
         ]);
 
-        $data = ((object)$response)->response ?? null;
+        $data = ((object)$response);
+
 
         if (is_null($data))
             return response()->noContent(400);
@@ -240,7 +248,7 @@ class VKProductController extends Controller
             }
         }
 
-        return response()->noContent();
+        return "ok";
         // dd($response);
     }
 }

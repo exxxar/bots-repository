@@ -36,6 +36,15 @@ class ShopScriptController extends Controller
             ->first();
 
 
+        if ($scriptId =="route")
+        {
+            Inertia::setRootView("shop");
+
+            return Inertia::render('Shop/Main', [
+                'bot' => BotSecurityResource::make($bot),
+            ]);
+        }
+
         $slug = BotMenuSlug::query()
             ->where("id", $scriptId)
             ->where("bot_id", $bot->id)

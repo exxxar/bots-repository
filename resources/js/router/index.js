@@ -17,6 +17,7 @@ import Wheel from '@/Pages/Shop/Wheel.vue';
 import Quest from '@/Pages/Shop/Quest.vue';
 import Empty from '@/Pages/Shop/Empty.vue';
 import Booking from '@/Pages/Shop/Booking.vue';
+import Admins from '@/Pages/Shop/Admins.vue';
 import Vip from '@/Pages/Shop/Vip.vue';
 
 
@@ -37,6 +38,12 @@ export const routes = [
         path: '/vip',
         component: Vip,
         meta: { title: 'VIP-анкета', hide_menu:true }
+    },
+    {
+        name: 'admin',
+        path: '/admins',
+        component: Admins,
+        meta: { title: 'Активные администраторы', hide_menu:true }
     },
     {
         name: 'home',
