@@ -319,7 +319,8 @@ trait BotBaseMethodsTrait
 
         try {
             $this->bot->answerInlineQuery([
-                'cache_time' => 0,
+                'cache_time' => 300,
+                'is_personal' => true,
                 "inline_query_id" => $inlineQueryId,
                 "results" => json_encode($buttons)
             ]);

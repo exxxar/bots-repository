@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bots;
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class InlineBotController extends Controller
 {
@@ -28,8 +29,11 @@ class InlineBotController extends Controller
                 ->skip(0)
                 ->get();
 
+        Log::info("step 1");
+
         if (!empty($botUsers))
             foreach ($botUsers as $botUser) {
+                Log::info("step 2=>".$botUser->id);
 
                 $tmp_user_id = (string)$botUser->telegram_chat_id;
 
@@ -56,7 +60,7 @@ class InlineBotController extends Controller
                         ]
                     ],
                     'thumb_url' => env("APP_URL")
-                        ."/images/".$bot->bot_domain."/".$bot->image,
+                        ."/images/".$bot->company->slug."/".$bot->image,
                     //'url' => env("APP_URL"),
                     'description' => sprintf("Администратор #%s %s (%s)",
                         $botUser->id,
@@ -69,6 +73,25 @@ class InlineBotController extends Controller
 
 
             }
+
+        if (empty($button_list)){
+            Log::info("step 3");
+            $button_list[] =  [
+                'type' => 'article',
+                'id' => uniqid(),
+                'title' => "УПС!",
+                'input_message_content' => [
+                    'message_text' => "На текущий момент все администраторы офлайн!:(",
+                ],
+
+                'thumb_url' => env("APP_URL")
+                    ."/images/".$bot->company->slug."/".$bot->image,
+                //'url' => env("APP_URL"),
+                'description' => "Сожалеем, но на текущий момент ни один администратор не вышел на работу. Возможно еще рано...",
+                'hide_url' => false
+            ];
+
+        }
 
 
         BotManager::bot()
