@@ -201,6 +201,11 @@ Route::prefix("bot")->group(function () {
     Route::any('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "handler"]);
 });
 
+Route::prefix("web")
+    ->group(function () {
+        Route::get('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webInterface"]);
+        Route::post('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webHandler"]);
+    });
 
 
 Route::get('/restaurant/book-a-table/{botDomain}', function ($botDomain) {
@@ -216,7 +221,7 @@ Route::get('/restaurant/book-a-table/{botDomain}', function ($botDomain) {
     ]);
 });
 
-/*
+
 Route::get("/restaurant/active-admins/{botDomain}", function ($botDomain) {
 
     Inertia::setRootView("bot");
@@ -228,7 +233,7 @@ Route::get("/restaurant/active-admins/{botDomain}", function ($botDomain) {
     return Inertia::render('AdminList', [
         'bot' => $bot,
     ]);
-});*/
+});
 
 
 /*Route::post("/admin/cashback-add", function () {
@@ -325,12 +330,5 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-Route::prefix("web")
-    ->group(function () {
-        Route::get('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webInterface"]);
-        Route::post('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "webHandler"]);
-    });
-
 
 require __DIR__ . '/auth.php';
