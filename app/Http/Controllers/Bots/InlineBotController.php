@@ -85,9 +85,7 @@ class InlineBotController extends Controller
                 'reply_markup' => [
                     'inline_keyboard' => [
                         [
-                            ["text" => "Следить за админками", "web_app" => [
-                                "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admins"//"/restaurant/active-admins/$bot->bot_domain"
-                            ]],
+                            ["text" => "Следить за админами", "callback_data" => "/admins"],
                         ],
 
                     ]
