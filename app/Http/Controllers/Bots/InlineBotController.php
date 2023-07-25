@@ -21,7 +21,7 @@ class InlineBotController extends Controller
             \App\Models\BotUser::query()
                 ->with(["user"])
                 ->where("is_admin", true)
-                ->where("is_work", true)
+               // ->where("is_work", true)
                 ->where("bot_id", $bot->id)
                 ->orderBy("id", "DESC")
                 ->take(8)
