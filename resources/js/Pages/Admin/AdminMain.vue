@@ -18,7 +18,7 @@ defineProps({
 </script>
 <template>
     <div class="container pt-3 pb-3"
-         style="padding-bottom:300px;"
+
          v-if="user&&botUser">
         <div class="row mb-2">
             <div class="col-12 d-flex justify-content-center mb-2">
@@ -216,6 +216,9 @@ defineProps({
             </form>
         </div>
 
+        <div class="row"   style="padding-bottom:300px;">
+
+        </div>
     </div>
     <div class="container" v-else>
         <div class="row">
