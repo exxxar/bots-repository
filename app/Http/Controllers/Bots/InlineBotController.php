@@ -80,16 +80,9 @@ class InlineBotController extends Controller
                 'id' => uniqid(),
                 'title' => "УПС!",
                 'input_message_content' => [
-                    'message_text' => "На текущий момент все администраторы офлайн!:(",
+                    'message_text' => "На текущий момент все администраторы офлайн!:(\nНо вы можете отслеживать их в /admins",
                 ],
-                'reply_markup' => [
-                    'inline_keyboard' => [
-                        [
-                            ["text" => "Следить за админами", "callback_data" => "/admins"],
-                        ],
 
-                    ]
-                ],
 
                 'thumb_url' => env("APP_URL")
                     ."/images/".$bot->company->slug."/".$bot->image,
