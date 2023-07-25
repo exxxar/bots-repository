@@ -82,6 +82,16 @@ class InlineBotController extends Controller
                 'input_message_content' => [
                     'message_text' => "На текущий момент все администраторы офлайн!:(",
                 ],
+                'reply_markup' => [
+                    'inline_keyboard' => [
+                        [
+                            ["text" => "Следить за админками", "web_app" => [
+                                "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admins"//"/restaurant/active-admins/$bot->bot_domain"
+                            ]],
+                        ],
+
+                    ]
+                ],
 
                 'thumb_url' => env("APP_URL")
                     ."/images/".$bot->company->slug."/".$bot->image,
