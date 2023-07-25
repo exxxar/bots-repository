@@ -102,9 +102,6 @@ class CashBackScriptController extends SlugController
 
     }
 
-    public function adminsBotQuery(){
-
-    }
 
     public function admins()
     {

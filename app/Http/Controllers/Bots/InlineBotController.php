@@ -31,7 +31,7 @@ class InlineBotController extends Controller
         if (!empty($botUsers))
             foreach ($botUsers as $botUser) {
 
-                $tmp_user_id = (string)$botUser->user->telegram_chat_id;
+                $tmp_user_id = (string)$botUser->telegram_chat_id;
 
                 $code = base64_encode("001" . $tmp_user_id );
                 $url_link = "https://t.me/" . $bot->bot_domain . "?start=$code";
@@ -42,9 +42,9 @@ class InlineBotController extends Controller
                     'title' => "Запрос на CashBack",
                     'input_message_content' => [
                         'message_text' => sprintf("Администратор #%s %s (%s)",
-                            $botUser->user->id,
-                            ($botUser->user->fio_from_telegram ?? $botUser->user->name),
-                            ($botUser->user->phone ?? 'Без телефона')),
+                            $botUser->id,
+                            ($botUser->fio_from_telegram ?? $botUser->name),
+                            ($botUser->phone ?? 'Без телефона')),
                     ],
                     'reply_markup' => [
                         'inline_keyboard' => [
@@ -59,9 +59,9 @@ class InlineBotController extends Controller
                         ."/images/".$bot->bot_domain."/".$bot->image,
                     //'url' => env("APP_URL"),
                     'description' => sprintf("Администратор #%s %s (%s)",
-                        $botUser->user->id,
-                        ($botUser->user->fio_from_telegram ?? $botUser->user->name),
-                        ($botUser->user->phone ?? 'Без телефона')),
+                        $botUser->id,
+                        ($botUser->fio_from_telegram ?? $botUser->name),
+                        ($botUser->phone ?? 'Без телефона')),
                     'hide_url' => false
                 ];
 
