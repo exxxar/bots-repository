@@ -11,7 +11,6 @@ class InlineBotController extends Controller
     public function inlineHandler(...$data) {
         $inlineQueryId = $data[2] ?? null;
 
-        Log::info(print_r($data, true));
 
         if (is_null($inlineQueryId))
             return;
@@ -24,18 +23,16 @@ class InlineBotController extends Controller
             \App\Models\BotUser::query()
                 ->with(["user"])
                 ->where("is_admin", true)
-               // ->where("is_work", true)
+                ->where("is_work", true)
                 ->where("bot_id", $bot->id)
                 ->orderBy("id", "DESC")
                 ->take(8)
                 ->skip(0)
                 ->get();
 
-        Log::info("step 1");
 
         if (!empty($botUsers))
             foreach ($botUsers as $botUser) {
-                Log::info("step 2=>".$botUser->id);
 
                 $tmp_user_id = (string)$botUser->telegram_chat_id;
 
@@ -77,7 +74,7 @@ class InlineBotController extends Controller
             }
 
         if (empty($button_list)){
-            Log::info("step 3");
+
             $button_list[] =  [
                 'type' => 'article',
                 'id' => uniqid(),
