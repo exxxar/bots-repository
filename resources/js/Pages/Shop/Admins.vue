@@ -137,7 +137,7 @@ export default {
             }).then(resp => {
                 this.$botNotification.success("Отлично!", "Выбранный Администратор оповещен!")
                 this.startTimer();
-
+                this.is_requested = true
             }).catch(() => {
 
             })
