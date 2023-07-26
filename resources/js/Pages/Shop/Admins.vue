@@ -99,7 +99,7 @@ export default {
     },
     methods: {
             startTimer(time) {
-            this.spent_time_counter = time != null ? Math.min(time, 5*60) : 5*60;
+            this.spent_time_counter = time != null ? Math.min(time, 30) : 30;
 
             let counterId = setInterval(() => {
                     if (this.spent_time_counter > 0)
