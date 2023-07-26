@@ -98,7 +98,7 @@ export default {
 
     },
     methods: {
-        startTimer(time) {
+            startTimer(time) {
             this.spent_time_counter = time != null ? Math.min(time, 5*60) : 5*60;
 
             let counterId = setInterval(() => {
@@ -136,6 +136,7 @@ export default {
                 },
             }).then(resp => {
                 this.$botNotification.success("Отлично!", "Выбранный Администратор оповещен!")
+                this.startTimer();
 
             }).catch(() => {
 
