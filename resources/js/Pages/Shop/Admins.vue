@@ -70,6 +70,8 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
+            spent_time_counter:0,
+            is_requested:false,
             admins: [],
             admins_paginate_object: null,
             type: 0,
@@ -88,15 +90,41 @@ export default {
     },
     mounted() {
         this.loadAdmins()
+
+        if (localStorage.getItem("cashman_admin_request_counter") != null) {
+            this.is_requested = true;
+            this.startTimer(localStorage.getItem("cashman_admin_request_counter"))
+        }
+
     },
     methods: {
+        startTimer(time) {
+            this.spent_time_counter = time != null ? Math.min(time, 5*60) : 5*60;
+
+            let counterId = setInterval(() => {
+                    if (this.spent_time_counter > 0)
+                        this.spent_time_counter--
+                    else {
+                        clearInterval(counterId)
+                        this.is_requested = false
+                        this.spent_time_counter = null
+                    }
+                    localStorage.setItem("cashman_admin_request_counter", this.spent_time_counter)
+                }, 1000
+            )
+        },
         nextAdminPage(index) {
             this.loadAdmins(index)
         },
         sendRequest(admin, index) {
-
             if (!admin.is_work){
                 this.$botNotification.warning("Упс!", "Администратор офлайн!")
+                return;
+            }
+
+            if (this.is_requested)
+            {
+                this.$botNotification.warning("Упс!", `Вызвать администратора можно через <strong>${this.spent_time_counter} сек.</strong>`)
                 return;
             }
 

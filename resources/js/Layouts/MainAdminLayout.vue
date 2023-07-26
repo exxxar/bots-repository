@@ -102,6 +102,17 @@ import { Head } from '@inertiajs/vue3'
                                 Глобальные скрипты
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               v-bind:class="{'active':active==7}"
+                               href="/media-page"
+                               aria-current="page">
+                                <i class="fa-solid fa-photo-film"></i>
+                                Медиа файлы ботов
+                            </a>
+                        </li>
+
                         <hr>
                         <li class="nav-item">
                             <a class="nav-link"
