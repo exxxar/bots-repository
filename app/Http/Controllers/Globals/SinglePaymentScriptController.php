@@ -218,6 +218,7 @@ class SinglePaymentScriptController extends SlugController
                     ->first())["value"] ?? false,
         ];
 
+        Log::info("needs=>".print_r($needs,true));
         $keyboard = [
             [
                 ["text" => $btnText, "pay" => true],
