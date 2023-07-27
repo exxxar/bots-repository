@@ -102,7 +102,7 @@ class SinglePaymentScriptController extends SlugController
                 [
                     "type" => "boolean",
                     "key" => "is_flexible",
-                    "value" => true,
+                    "value" => false,
 
                 ],
                 [

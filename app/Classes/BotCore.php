@@ -525,6 +525,8 @@ abstract class BotCore
         $payload = $data->invoice_payload;
         $shippingAddress = $data->shipping_address;
 
+        Log::info("shippingQueryHandler".print_r($data, true));
+
         $transaction = Transaction::query()->where("payload", $payload)
             ->first();
 
