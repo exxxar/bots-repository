@@ -35,7 +35,7 @@ class AboutBotScriptController extends SlugController
                 'comment' => "Инфорамция о текущем боте",
             ]);
 
-        if (is_null($model->config)) {
+        if (empty($model->config ?? [])) {
             $model->config = null;
             $model->save();
         }

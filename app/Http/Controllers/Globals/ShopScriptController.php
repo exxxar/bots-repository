@@ -38,7 +38,7 @@ class ShopScriptController extends SlugController
                 'comment' => "Модуль магазина",
             ]);
 
-        if (is_null($model->config)) {
+        if (empty($model->config ?? [])) {
             $model->config = [
                 [
                     "type" => "text",

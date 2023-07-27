@@ -86,7 +86,7 @@ class CashBackScriptController extends SlugController
                 'comment' => "Бронирование столика",
             ]);
 
-        if (is_null($model->config)){
+        if (empty($model->config ?? [])){
             $model->config = [
                 [
                     "type" => "text",

@@ -43,7 +43,7 @@ class WheelOfFortuneScriptController extends SlugController
                 'comment' => "Игровой модуль",
             ]);
 
-        if (is_null($model->config)) {
+        if (empty($model->config ?? [])) {
             $model->config = [
                 [
                     "type" => "text",

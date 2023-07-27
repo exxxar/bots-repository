@@ -36,7 +36,7 @@ class FriendsScriptController extends SlugController
                 'comment' => "Реферальная программа",
             ]);
 
-        if (is_null($model->config)) {
+        if (empty($model->config ?? [])) {
             $model->config = [
                 [
                     "type" => "text",

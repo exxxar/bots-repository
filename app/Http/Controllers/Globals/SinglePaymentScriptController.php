@@ -37,7 +37,7 @@ class SinglePaymentScriptController extends SlugController
                 'comment' => "Модуль оплаты одной услуги или товара",
             ]);
 
-        if (is_null($model->config)) {
+        if ( empty($model->config ?? [])) {
             $model->config = [
                 [
                     "type" => "text",
@@ -176,15 +176,15 @@ class SinglePaymentScriptController extends SlugController
         $currency = "RUB";
 
         Transaction::query()->create([
-            'user_id'=>$botUser->user_id,
-            'bot_id'=>$bot->id,
-            'payload'=>$payload,
-            'currency'=>$currency,
-            'total_amount'=>$price,
-            'status'=>0,
-            'products_info'=>(object)[
-                "payload"=>$payloadData ?? null,
-                "prices"=>$prices,
+            'user_id' => $botUser->user_id,
+            'bot_id' => $bot->id,
+            'payload' => $payload,
+            'currency' => $currency,
+            'total_amount' => $price,
+            'status' => 0,
+            'products_info' => (object)[
+                "payload" => $payloadData ?? null,
+                "prices" => $prices,
             ],
         ]);
 

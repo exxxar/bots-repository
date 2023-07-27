@@ -43,7 +43,7 @@ class InstagramQuestScriptController extends SlugController
                 'comment' => "Модуль создания задания для инстаграм",
             ]);
 
-        if (is_null($model->config)) {
+        if (empty($model->config ?? [])) {
             $model->config = [
                 [
                     "type" => "text",

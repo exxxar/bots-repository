@@ -480,7 +480,9 @@ abstract class BotCore
             ->where("payload", $payload)
             ->first();
 
-        $channel = $transaction->bot->order_channel ?? $transaction->bot->main_channel ?? null;
+        $channel = $transaction->bot->order_channel
+            ??
+            $transaction->bot->main_channel ?? null;
 
         if (!is_null($channel)) {
 
