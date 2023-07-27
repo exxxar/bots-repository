@@ -93,13 +93,17 @@ class WheelOfFortuneScriptController extends Controller
         $winnerName = $request->name ?? 'Имя не указано';
         $winnerPhone = $request->phone ?? 'Телефон не указан';
 
-        $action->data[] = (object)[
+        $tmp = $action->data ?? [];
+
+        $tmp[] = (object)[
             "name"=>$winnerName,
             "win"=>$winNumber,
             "phone"=>$winnerPhone,
             "answered_at"=>null,
             "answered_by"=>null,
         ];
+
+        $action->data = $tmp;
 
         $action->save();
 

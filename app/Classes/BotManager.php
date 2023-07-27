@@ -10,6 +10,7 @@ use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -99,6 +100,9 @@ class BotManager extends BotCore
                 Log::info("Error TBH " . $e->getMessage() . " " . $e->getLine());
             }
 
+        } else {
+            $this->botUser->updated_at = Carbon::now();
+            $this->botUser->save();
         }
     }
 

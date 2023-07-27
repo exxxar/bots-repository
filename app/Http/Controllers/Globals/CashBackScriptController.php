@@ -28,80 +28,82 @@ class CashBackScriptController extends SlugController
         if (is_null($hasMainScript))
             return;
 
-        BotMenuSlug::query()->updateOrCreate(
+        $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_cashback_budget",
                 "bot_id" => $bot->id,
                 'is_global' => true,
-                'command' => ".*Мой бюджет",
-                'comment' => "Бюджет пользователя системой КэшБэк",
             ],
             [
-                'config' => null,
+                'command' => ".*Мой бюджет",
+                'comment' => "Бюджет пользователя системой КэшБэк",
             ]);
+
 
         BotMenuSlug::query()->updateOrCreate(
             [
                 'bot_id' => $bot->id,
-                'command' => ".*Запросить CashBack",
-                'comment' => "Механизм вызова администратора",
                 'slug' => "global_cashback_request",
                 'is_global' => true,
             ],
             [
-                'config' => null,
+                'command' => ".*Запросить CashBack",
+                'comment' => "Механизм вызова администратора",
             ]);
 
         BotMenuSlug::query()->updateOrCreate(
             [
                 'bot_id' => $bot->id,
-                'command' => ".*Списания",
-                'comment' => "Списания КэшБэка",
+
                 'slug' => "global_cashback_write_offs",
                 'is_global' => true,
             ],
             [
-                'config' => null,
+                'command' => ".*Списания",
+                'comment' => "Списания КэшБэка",
             ]);
 
         BotMenuSlug::query()->updateOrCreate(
             [
                 'bot_id' => $bot->id,
-                'command' => ".*Начисления",
-                'comment' => "Начисления КэшБэка",
                 'slug' => "global_cashback_charges",
                 'is_global' => true,
             ],
             [
-                'config' => null,
+                'command' => ".*Начисления",
+                'comment' => "Начисления КэшБэка",
             ]);
 
-        BotMenuSlug::query()->updateOrCreate(
+        $model = BotMenuSlug::query()->updateOrCreate(
             [
                 'bot_id' => $bot->id,
-                'command' => ".*Забронировать столик",
-                'comment' => "Бронирование столика",
+
                 'slug' => "global_cashback_book_table",
                 'is_global' => true,
             ],
             [
-                'config' => [
-                    [
-                        "type" => "text",
-                        "key" => "book_table_message",
-                        "value" => "В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию."
-                    ],
-                    [
-                        "type" => "text",
-                        "key" => "btn_text",
-                        "value" => "\xF0\x9F\x8E\xB2Выбрать столик для бронирования",
-
-                    ]
-                ],
+                'command' => ".*Забронировать столик",
+                'comment' => "Бронирование столика",
             ]);
 
-    }
+        if (is_null($model->config)){
+            $model->config = [
+                [
+                    "type" => "text",
+                    "key" => "book_table_message",
+                    "value" => "В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию."
+                ],
+                [
+                    "type" => "text",
+                    "key" => "btn_text",
+                    "value" => "\xF0\x9F\x8E\xB2Выбрать столик для бронирования",
 
+                ]
+            ];
+            $model->save();
+        }
+
+    }
 
     public function admins()
     {
