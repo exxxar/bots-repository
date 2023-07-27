@@ -66,6 +66,9 @@ class VKProductController extends Controller
         if (is_null($bot))
             return response()->noContent(404);
 
+        if (is_null($bot->vk_shop_link))
+            return response()->noContent(404);
+
 
         $tmpScreenName = substr($bot->vk_shop_link, strpos($bot->vk_shop_link,"https://vk.com/")+strlen("https://vk.com/"));
 
@@ -75,12 +78,16 @@ class VKProductController extends Controller
 
         $vk = new VKApiClient();
 
-        $response = $vk->utils()->resolveScreenName($access_token, [
-            'screen_name' => $tmpScreenName ?? null,
-        ]);
+        try {
+            $response = $vk->utils()->resolveScreenName($access_token, [
+                'screen_name' => $tmpScreenName ?? null,
+            ]);
+        }catch (\Exception $e){
+            return response()->noContent(404);
+
+        }
 
         $data = ((object)$response);
-
 
         if (is_null($data))
             return response()->noContent(400);
