@@ -5,6 +5,7 @@ namespace App\Classes;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
 use App\Models\Bot;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 abstract class SlugController extends Controller
@@ -19,5 +20,7 @@ abstract class SlugController extends Controller
     }
 
     protected abstract function config(Bot $bot);
+
+
 
 }

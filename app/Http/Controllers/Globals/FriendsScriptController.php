@@ -21,39 +21,44 @@ class FriendsScriptController extends SlugController
             ->where("slug","global_friends_main")
             ->first();
 
+
         if (is_null($hasMainScript))
             return;
 
-        BotMenuSlug::query()->updateOrCreate(
+        $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_friends_main",
                 "bot_id" => $bot->id,
                 'is_global' => true,
-                'command' => ".*Мои друзья",
-                'comment' => "Реферальная программа",
             ],
             [
-                'config' => [
-                    [
-                        "type" => "text",
-                        "key" => "main_text",
-                        "value" => "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой"
-                    ],
-                    [
-                        "type" => "image",
-                        "key" => "image_main",
-                        "value" => null,
-
-                    ],
-                    [
-                        "type" => "text",
-                        "key" => "referral_text",
-                        "value" => "Перешли эту ссылку друзьям:\n<a href=\"%s\">%s</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>",
-
-                    ]
-                ],
+                'command' => ".*Мои друзья",
+                'comment' => "Реферальная программа",
             ]);
+
+        if (is_null($model->config)){
+            $model->config = [
+                [
+                    "type" => "text",
+                    "key" => "main_text",
+                    "value" => "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой"
+                ],
+                [
+                    "type" => "image",
+                    "key" => "image_main",
+                    "value" => null,
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "referral_text",
+                    "value" => "Перешли эту ссылку друзьям:\n<a href=\"%s\">%s</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>",
+
+                ]
+            ];
+            $model->save();
+        }
 
     }
 

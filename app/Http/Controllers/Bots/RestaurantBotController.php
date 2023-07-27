@@ -103,10 +103,13 @@ class RestaurantBotController extends Controller
 
 
         BotManager::bot()
-            ->sendReplyMenu("Главное меню",
-                !$botUser->is_vip ?
-                    "main_menu_restaurant_1" :
-                    "main_menu_restaurant_2");
+            ->replyInlineKeyboard("Отлично! Вы перешли по ссылке друга и теперь готовы к большому CashBack-путешествию:)",
+                [
+                    [
+                        ["text" => "Поехали! ЖМИ:)", "callback_data"=>"/start"],
+                    ],
+
+                ],);
     }
 
     public function firstStart()
