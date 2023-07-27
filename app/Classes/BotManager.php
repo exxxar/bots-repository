@@ -66,7 +66,7 @@ class BotManager extends BotCore
 
         if (is_null($this->botUser)) {
             try {
-                $uuid = Str::uuid();
+               // $uuid = Str::uuid();
 
                 $role = Role::query()
                     ->where("slug", "owner")
@@ -75,7 +75,7 @@ class BotManager extends BotCore
                 if (is_null($existUserId))
                     $user = User::query()->create([
                         'name' => $username ?? $telegram_chat_id ?? "unknown",
-                        'email' => "$uuid@your-cashman.ru",
+                        'email' => "$telegram_chat_id@your-cashman.ru",
                         'password' => bcrypt($telegram_chat_id),
                         'role_id' => $role->id,
                     ]);
@@ -90,6 +90,8 @@ class BotManager extends BotCore
                     'telegram_chat_id' => $telegram_chat_id,
                     'fio_from_telegram' => "$first_name $last_name" ?? null,
                 ]);
+
+
 
                 CashBack::query()->create([
                     'user_id' => $user->id,

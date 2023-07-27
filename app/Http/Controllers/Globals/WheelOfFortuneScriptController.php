@@ -63,7 +63,10 @@ class WheelOfFortuneScriptController extends Controller
 
         $callbackChannel = (Collection::make($slug->config)
             ->where("key", self::KEY_CALLBACK_CHANNEL_ID)
-            ->first())["value"] ?? -1;
+            ->first())["value"] ??
+            $bot->order_channel ??
+            $bot->main_channel ??
+            env("BASE_ADMIN_CHANNEL");
 
         $winMessage = (Collection::make($slug->config)
             ->where("key", self::KEY_WIN_MESSAGE)
@@ -96,11 +99,11 @@ class WheelOfFortuneScriptController extends Controller
         $tmp = $action->data ?? [];
 
         $tmp[] = (object)[
-            "name"=>$winnerName,
-            "win"=>$winNumber,
-            "phone"=>$winnerPhone,
-            "answered_at"=>null,
-            "answered_by"=>null,
+            "name" => $winnerName,
+            "win" => $winNumber,
+            "phone" => $winnerPhone,
+            "answered_at" => null,
+            "answered_by" => null,
         ];
 
         $action->data = $tmp;
@@ -201,35 +204,35 @@ class WheelOfFortuneScriptController extends Controller
         ]);
     }
 
-   /* public function formWheelOfFortune(Request $request, $scriptId, $botDomain)
-    {
+    /* public function formWheelOfFortune(Request $request, $scriptId, $botDomain)
+     {
 
-        $bot = \App\Models\Bot::query()
-            ->with(["company", "imageMenus"])
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-
-        $slug = BotMenuSlug::query()
-            ->where("id", $scriptId)
-            ->where("bot_id", $bot->id)
-            ->where("slug", self::SCRIPT)
-            ->first();
-
-        if (is_null($slug)) {
-            Inertia::setRootView("bot");
-            return Inertia::render('Error');
-        }
+         $bot = \App\Models\Bot::query()
+             ->with(["company", "imageMenus"])
+             ->where("bot_domain", $botDomain)
+             ->first();
 
 
-        Inertia::setRootView("shop");
+         $slug = BotMenuSlug::query()
+             ->where("id", $scriptId)
+             ->where("bot_id", $bot->id)
+             ->where("slug", self::SCRIPT)
+             ->first();
 
-        return Inertia::render('Shop/Main', [
-            'bot' => BotSecurityResource::make($bot),
-            'slug_id' => $slug->id,
-        ]);
+         if (is_null($slug)) {
+             Inertia::setRootView("bot");
+             return Inertia::render('Error');
+         }
 
-    }*/
+
+         Inertia::setRootView("shop");
+
+         return Inertia::render('Shop/Main', [
+             'bot' => BotSecurityResource::make($bot),
+             'slug_id' => $slug->id,
+         ]);
+
+     }*/
 
     public function wheelOfFortune(...$config)
     {

@@ -76,7 +76,10 @@ class InstagramQuestScriptController extends Controller
 
         $callbackChannel = (Collection::make($slug->config)
             ->where("key", self::KEY_CALLBACK_CHANNEL_ID)
-            ->first())["value"] ?? -1;
+            ->first())["value"] ??
+            $bot->order_channel ??
+            $bot->main_channel ??
+            env("BASE_ADMIN_CHANNEL");
 
         $winMessage = (Collection::make($slug->config)
             ->where("key", self::KEY_RESULT_MESSAGE)
