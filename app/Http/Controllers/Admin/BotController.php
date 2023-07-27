@@ -317,15 +317,15 @@ class BotController extends Controller
     {
         $isGlobal = $request->isGlobal ?? false;
 
+        $bot = Bot::query()->find($botId);
+
         $slugs = BotMenuSlug::query()
             ->where("bot_id", $botId)
-            ->orderBy("created_at", "desc");
+            ->where("is_global", $isGlobal)
+            ->orderBy("created_at", "desc")
+            ->get();
 
-        if ($isGlobal)
-            $slugs = $slugs->where("is_global", true);
-
-        $slugs = $slugs->get();
-
+        //dd($slugs->toArray());
 
         return response()->json(BotMenuSlugResource::collection($slugs));
     }

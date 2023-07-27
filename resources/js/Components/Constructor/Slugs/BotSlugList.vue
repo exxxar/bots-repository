@@ -32,6 +32,21 @@ import Slug from '@/Components/Constructor/Slugs/Slug.vue'
                 <label for="floatingInput">Быстрый поиск команды</label>
             </div>
         </div>
+
+        <div class="col-12 mb-2">
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="need_global"
+                       type="checkbox"
+                       id="need_global">
+                <label class="form-check-label" for="need_global">
+                    <span v-if="need_global">Глобальные</span>
+                    <span v-else>Локальные</span>
+                </label>
+            </div>
+
+        </div>
+
         <div class="mb-3 col-12 col-lg-4 col-md-6 col-sm-12"
              v-if="slugs&&bot"
              v-for="(slug, index) in filteredSlugs">
@@ -60,6 +75,7 @@ export default {
     data() {
         return {
             bot: null,
+            need_global:true,
             show: false,
             slugs:[],
             ownSearch: null,
@@ -70,6 +86,12 @@ export default {
 
             }
         }
+    },
+    watch:{
+      'need_global':function (oldV, newV){
+          this.loadSlugs()
+
+      }
     },
     computed: {
 
@@ -110,7 +132,8 @@ export default {
     methods: {
         loadSlugs() {
             this.$store.dispatch("loadBotSlugs", {
-                botId: this.bot.id
+                botId: this.bot.id,
+                isGlobal: this.need_global
             }).then((resp) => {
                 this.slugs = resp
             })
@@ -136,14 +159,7 @@ export default {
             })
         },
         addSlug(slug) {
-          /*  const slug = this.slugForm
 
-            this.$emit("add", slug)
-
-            this.slugForm.slug = null
-            this.slugForm.comment = null
-            this.slugForm.command = null
-            this.slugForm.bot_dialog_command_id = null*/
         }
     }
 }
