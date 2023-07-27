@@ -312,7 +312,7 @@ class CashBackScriptController extends SlugController
                 'menu' => [
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Пригласить администратора", "web_app" => [
-                            "url" => env("APP_URL") . "/restaurant/active-admins/$bot->bot_domain"
+                            "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admins"
                         ]],
                     ],
                 ],
