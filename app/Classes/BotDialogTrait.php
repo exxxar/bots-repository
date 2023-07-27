@@ -211,17 +211,19 @@ trait BotDialogTrait
             $step = 1;
             foreach ($dialogData as $data) {
                 $tmpMessage .= "Шаг $step: $data \n";
-                $tmpMessage .= "Пользователь:\n"
-                    ."-ТГ id: ".($botUser->telegram_chat_id ?? '-')."\n"
-                    ."-имя из ТГ: ".($botUser->fio_from_telegram ?? 'Имя из телеграм не указано')."\n"
-                    ."-введенное имя: ".($botUser->name ?? 'Введенное имя не указано')."\n"
-                    ."-телефон: ".($botUser->phone ?? 'Номер телефона не указан')."\n"
-                    ."-email: ".($botUser->email ?? 'Почта не указана')."\n";
+
                 $step++;
             }
 
 
-            $this->sendMessage($botDialogCommand->result_channel, $tmpMessage);
+            $tmpMessage .= "Пользователь:\n"
+                ."-ТГ id: ".($botUser->telegram_chat_id ?? '-')."\n"
+                ."-имя из ТГ: ".($botUser->fio_from_telegram ?? 'Имя из телеграм не указано')."\n"
+                ."-введенное имя: ".($botUser->name ?? 'Введенное имя не указано')."\n"
+                ."-телефон: ".($botUser->phone ?? 'Номер телефона не указан')."\n"
+                ."-email: ".($botUser->email ?? 'Почта не указана')."\n";
+
+            $this->sendMessage($botDialogCommand->result_channel  , $tmpMessage);
         }
     }
 }
