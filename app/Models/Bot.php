@@ -25,6 +25,7 @@ class Bot extends Model
         'bot_token_dev',
         'order_channel',
         'main_channel',
+        'vk_shop_link',
         'balance',
         'tax_per_day',
         'image',

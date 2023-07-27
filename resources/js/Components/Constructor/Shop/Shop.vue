@@ -11,11 +11,6 @@ import ProductForm from "@/Components/Constructor/Shop/ProductForm.vue";
                 <div class="col-12">
                     <form v-on:submit.prevent="updateProducts">
                         <div class="input-group mb-3">
-                            <input type="url" class="form-control"
-                                   v-model="url"
-                                   placeholder="Ссылка на группу в VK"
-                                   aria-label="Recipient's username"
-                                   aria-describedby="button-addon2" required>
                             <button
                                 :disabled="load"
                                 class="btn btn-outline-secondary"
@@ -99,7 +94,6 @@ export default {
             this.load = true
             this.$store.dispatch("updateProductsFromVk", {
                 dataObject:{
-                    url: this.url,
                     botDomain: this.getCurrentBot.bot_domain
                 }
             }).then((resp) => {

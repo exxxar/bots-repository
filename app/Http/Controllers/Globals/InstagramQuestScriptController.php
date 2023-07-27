@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Globals;
 
+use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ActionStatusResource;
 use App\Http\Resources\BotSecurityResource;
 use App\Models\ActionStatus;
+use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotUser;
 use Carbon\Carbon;
@@ -17,16 +19,74 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Telegram\Bot\FileUpload\InputFile;
 
-class InstagramQuestScriptController extends Controller
+class InstagramQuestScriptController extends SlugController
 {
-    const SCRIPT = "global_instagram_quest";
+    public function config(Bot $bot)
+    {
+        $hasMainScript = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where("slug", "global_instagram_quest")
+            ->first();
 
-    const KEY_MAX_ATTEMPTS = "max_attempts";
-    const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";
-    const KEY_RULES_TEXT = "rules_text";
-    const KEY_RESULT_MESSAGE = "result_message";
-    const KEY_MAIN_TEXT = "main_text";
-    const KEY_BTN_TEXT = "btn_text";
+
+        if (is_null($hasMainScript))
+            return;
+
+        $model = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_instagram_quest",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Insta-квест",
+                'comment' => "Модуль создания задания для инстаграм",
+            ]);
+
+        if (is_null($model->config)) {
+            $model->config = [
+                [
+                    "type" => "text",
+                    "key" => "max_attempts",
+                    "value" => 2,
+
+                ],
+                [
+                    "type" => "channel",
+                    "key" => "callback_channel_id",
+                    "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "rules_text",
+                    "value" => "Всё гениальное просто - делай фото по заданию и загружай их!",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "main_text",
+                    "value" => "Принимай участие в наших квестах и получай ценные призы!",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "result_message",
+                    "value" => "%s, вы приняли участие в квесте и скоро получите награду. Наш менеджер свяжется с вами в ближайшее время!",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "btn_text",
+                    "value" => "К заданию",
+
+                ],
+
+            ];
+            $model->save();
+        }
+
+    }
 
     public function instagramQuestCallback(Request $request, $scriptId, $botDomain)
     {
@@ -48,7 +108,6 @@ class InstagramQuestScriptController extends Controller
 
         $slug = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
-            ->where("slug", self::SCRIPT)
             ->where("id", $scriptId)
             ->first();
 
@@ -71,18 +130,18 @@ class InstagramQuestScriptController extends Controller
         }
 
         $maxAttempts = (Collection::make($slug->config)
-            ->where("key", self::KEY_MAX_ATTEMPTS)
+            ->where("key", "max_attempts")
             ->first())["value"] ?? 1;
 
         $callbackChannel = (Collection::make($slug->config)
-            ->where("key", self::KEY_CALLBACK_CHANNEL_ID)
+            ->where("key", "callback_channel_id")
             ->first())["value"] ??
             $bot->order_channel ??
             $bot->main_channel ??
             env("BASE_ADMIN_CHANNEL");
 
         $winMessage = (Collection::make($slug->config)
-            ->where("key", self::KEY_RESULT_MESSAGE)
+            ->where("key", "result_message")
             ->first())["value"] ?? "%s, вы приняли участие в квесте и скоро получите награду. Наш менеджер свяжется с вами в ближайшее время!";
 
         $action = ActionStatus::query()
@@ -105,11 +164,19 @@ class InstagramQuestScriptController extends Controller
         if ($action->current_attempts >= $maxAttempts)
             $action->completed_at = Carbon::now();
 
-        $action->save();
-
         $winnerName = $request->name ?? 'Имя не указано';
         $winnerPhone = $request->phone ?? 'Телефон не указан';
-        $winnerComment = $request->comment ?? 'Комментарий не указан';
+
+        $tmp[] = (object)[
+            "name" => $winnerName,
+            "phone" => $winnerPhone,
+            "answered_at" => null,
+            "answered_by" => null,
+        ];
+
+        $action->data = $tmp;
+
+        $action->save();
 
         $path = storage_path("app/public") . "/companies/$companySlug/" . ($imageName ?? 'noimage.jpg');
         $file = InputFile::create(
@@ -142,14 +209,13 @@ class InstagramQuestScriptController extends Controller
         $slug = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
             ->where("id", $scriptId)
-            ->where("slug", self::SCRIPT)
             ->first();
 
         if (is_null($slug))
             return response()->noContent(404);
 
         $rules = Collection::make($slug->config ?? [])
-            ->where("key", self::KEY_RULES_TEXT)
+            ->where("key", "rules_text")
             ->first() ?? null;
 
         return response()->json(
@@ -178,14 +244,13 @@ class InstagramQuestScriptController extends Controller
         $slug = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
             ->where("id", $scriptId)
-            ->where("slug", self::SCRIPT)
             ->first();
 
         if (is_null($slug))
             return response()->noContent(404);
 
         $maxAttempts = (Collection::make($slug->config)
-            ->where("key", self::KEY_MAX_ATTEMPTS)
+            ->where("key", "max_attempts")
             ->first())["value"] ?? 1;
 
         $action = ActionStatus::query()
@@ -209,46 +274,17 @@ class InstagramQuestScriptController extends Controller
         ]);
     }
 
-/*    public function instagramQuestForm(Request $request, $scriptId, $botDomain)
-    {
-        $bot = \App\Models\Bot::query()
-            ->with(["company", "imageMenus"])
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-
-        $slug = BotMenuSlug::query()
-            ->where("id", $scriptId)
-            ->where("bot_id", $bot->id)
-            ->where("slug", self::SCRIPT)
-            ->first();
-
-        if (is_null($slug)) {
-            Inertia::setRootView("bot");
-            return Inertia::render('Error');
-        }
-
-
-        Inertia::setRootView("shop");
-
-        return Inertia::render('Shop/Main', [
-            'bot' => BotSecurityResource::make($bot),
-            'slug_id' => $slug->id,
-        ]);
-
-    }*/
-
     public function instagramQuest(...$config)
     {
 
         $bot = BotManager::bot()->getSelf();
 
         $mainText = (Collection::make($config[1])
-            ->where("key", self::KEY_MAIN_TEXT)
+            ->where("key", "main_text")
             ->first())["value"] ?? "Участвуй в квесте и получай призы";
 
         $btnText = (Collection::make($config[1])
-            ->where("key", self::KEY_BTN_TEXT)
+            ->where("key", "btn_text")
             ->first())["value"] ?? "\xF0\x9F\x8E\xB2Перейти к выполнению задания";
 
         $slugId = (Collection::make($config[1])

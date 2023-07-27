@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Globals;
 
+use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BotResource;
@@ -13,20 +14,51 @@ use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Telegram\Bot\FileUpload\InputFile;
 
-class ShopScriptController extends Controller
+class ShopScriptController extends SlugController
 {
-    const SCRIPT = "global_shop_main";
+    public function config(Bot $bot)
+    {
+        $hasMainScript = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where("slug", "global_shop_main")
+            ->first();
 
-    const KEY_SHOP_TITLE = "shop_title";
-    const KEY_OWNER_ID = "owner_id"; //-197151608
 
-/*    const KEY_MAX_ATTEMPTS = "max_attempts";
-    const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";
-    const KEY_RULES_TEXT = "rules_text";
-    const KEY_RESULT_MESSAGE = "result_message";*/
-    const KEY_MAIN_TEXT = "main_text";
-    const KEY_BTN_TEXT = "btn_text";
+        if (is_null($hasMainScript))
+            return;
 
+        $model = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_shop_main",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Магазин",
+                'comment' => "Модуль магазина",
+            ]);
+
+        if (is_null($model->config)) {
+            $model->config = [
+                [
+                    "type" => "text",
+                    "key" => "main_text",
+                    "value" => "Наш магазин товаров",
+
+                ],
+
+                [
+                    "type" => "text",
+                    "key" => "btn_text",
+                    "value" => "В магазин",
+
+                ],
+
+            ];
+            $model->save();
+        }
+
+    }
 
     public function shopHomePage(Request $request, $scriptId, $botDomain)
     {
@@ -67,40 +99,17 @@ class ShopScriptController extends Controller
 
     }
 
-    public function shopAdminPage( $botDomain)
-    {
-        $bot = Bot::query()
-            ->with(["company","imageMenus"])
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-
-        $slug = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("slug", self::SCRIPT)
-            ->orderBy("updated_at", "desc")
-            ->first();
-
-        Inertia::setRootView("bot");
-
-
-        return Inertia::render('Shop/Admin/Main', [
-            'bot' =>BotSecurityResource::make($bot),
-        ]);
-
-    }
-
     public function shopMain(...$config)
     {
         $bot = BotManager::bot()->getSelf();
 
 
         $mainText = (Collection::make($config[1])
-            ->where("key", self::KEY_MAIN_TEXT)
+            ->where("key", "main_text")
             ->first())["value"] ?? "Покупай товары в нашем сервисе";
 
         $btnText = (Collection::make($config[1])
-            ->where("key", self::KEY_BTN_TEXT)
+            ->where("key", "btn_text")
             ->first())["value"] ?? "\xF0\x9F\x8E\xB2Перейти в магазин";
 
         $slugId = (Collection::make($config[1])
@@ -114,41 +123,6 @@ class ShopScriptController extends Controller
                     [
                         ["text" => $btnText, "web_app" => [
                             "url" => env("APP_URL") . "/global-scripts/$slugId/interface/$bot->bot_domain#home"
-                        ]],
-                    ],
-
-                ]);
-    }
-
-    public function shopAdmin(...$config)
-    {
-
-        $bot = BotManager::bot()->getSelf();
-
-        $botUser = BotManager::bot()->currentBotUser();
-
-        if (!$botUser->is_admin){
-            \App\Facades\BotManager::bot()
-                ->reply("К сожалению, вы не являетесь администратором данного бота!");
-            return;
-        }
-
-
-        $mainText = (Collection::make($config[1])
-            ->where("key", self::KEY_MAIN_TEXT)
-            ->first())["value"] ?? "Покупай товары в нашем сервисе";
-
-        $btnText = (Collection::make($config[1])
-            ->where("key", self::KEY_BTN_TEXT)
-            ->first())["value"] ?? "\xF0\x9F\x8E\xB2Перейти в магазин";
-
-        \App\Facades\BotManager::bot()
-            ->replyPhoto($mainText,
-                InputFile::create(public_path() . "/images/shopify.png"),
-                [
-                    [
-                        ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/shop/admin/$bot->bot_domain"
                         ]],
                     ],
 

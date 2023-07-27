@@ -2,34 +2,133 @@
 
 namespace App\Http\Controllers\Globals;
 
+use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Models\Bot;
+use App\Models\BotMenuSlug;
 use App\Models\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Telegram\Bot\FileUpload\InputFile;
 
-class SinglePaymentScriptController extends Controller
+class SinglePaymentScriptController extends SlugController
 {
-    const SCRIPT = "global_single_payment_main";
+    public function config(Bot $bot)
+    {
+        $hasMainScript = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where("slug", "global_single_payment_main")
+            ->first();
 
-    /*    const KEY_MAX_ATTEMPTS = "max_attempts";
-        const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";*/
-    const KEY_PRODUCT_PRICE = "product_price";
-    const KEY_PRODUCT_DESCRIPTION = "product_description";
-    const KEY_PRODUCT_TITLE = "product_title";
-    const KEY_BTN_TEXT = "btn_text";
-    const KEY_NEED_NAME = "need_name";
-    const KEY_NEED_PHONE_NUMBER = "need_phone_number";
-    const KEY_NEED_EMAIL = "need_email";
-    const KEY_NEED_SHIPPING_ADDRESS = "need_shipping_address";
-    const KEY_NEED_SEND_EMAIL_TO_PROVIDER = "need_send_email_to_provider";
-    const KEY_NEED_SEND_PHONE_NUMBER_TO_PROVIDER = "need_send_phone_number_to_provider";
-    const KEY_IS_FLEXIBLE = "is_flexible";
-    const KEY_DISABLE_NOTIFICATION = "need_disable_notification";
-    const KEY_PROTECT_CONTENT = "need_protect_content";
-    const KEY_PAYLOAD_DATA = "payload_data";
+
+        if (is_null($hasMainScript))
+            return;
+
+        $model = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_single_payment_main",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Оплата услуг",
+                'comment' => "Модуль оплаты одной услуги или товара",
+            ]);
+
+        if (is_null($model->config)) {
+            $model->config = [
+                [
+                    "type" => "text",
+                    "key" => "product_price",
+                    "value" => 10000,
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "product_description",
+                    "value" => "Описание товара",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "product_title",
+                    "value" => "Товар",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "btn_text",
+                    "value" => "Оплатить",
+
+                ],
+                [
+                    "type" => "boolean",
+                    "key" => "need_name",
+                    "value" => true,
+
+                ],
+                [
+                    "type" => "boolean",
+                    "key" => "need_phone_number",
+                    "value" => true,
+
+                ],
+                [
+                    "type" => "boolean",
+                    "key" => "need_email",
+                    "value" => false,
+
+                ],
+                [
+                    "type" => "boolean",
+                    "key" => "need_shipping_address",
+                    "value" => false,
+
+                ],
+                [
+                    "type" => "boolean",
+                    "key" => "need_send_email_to_provider",
+                    "value" => false,
+
+                ],
+                [
+                    "type" => "boolean",
+                    "key" => "need_send_phone_number_to_provider",
+                    "value" => false,
+
+                ],
+                [
+                    "type" => "boolean",
+                    "key" => "is_flexible",
+                    "value" => true,
+
+                ],
+                [
+                    "type" => "boolean",
+                    "key" => "need_disable_notification",
+                    "value" => false,
+
+                ],
+                [
+                    "type" => "boolean",
+                    "key" => "need_protect_content",
+                    "value" => false,
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "payload_data",
+                    "value" => "Товар",
+
+                ]
+            ];
+            $model->save();
+        }
+
+    }
+
 
     public function singlePaymentMain(...$config)
     {
@@ -37,25 +136,24 @@ class SinglePaymentScriptController extends Controller
         $bot = BotManager::bot()->getSelf();
         $botUser = BotManager::bot()->currentBotUser();
 
-
         $btnText = (Collection::make($config[1])
-            ->where("key", self::KEY_BTN_TEXT)
+            ->where("key", "btn_text")
             ->first())["value"] ?? "\xF0\x9F\x8E\xB2Оплатить";
 
         $title = (Collection::make($config[1])
-            ->where("key", self::KEY_PRODUCT_TITLE)
+            ->where("key", "product_title")
             ->first())["value"] ?? "Товар";
 
         $payloadData = (Collection::make($config[1])
-            ->where("key", self::KEY_PAYLOAD_DATA)
+            ->where("key", "payload_data")
             ->first())["value"] ?? "Товар";
 
         $description = (Collection::make($config[1])
-            ->where("key", self::KEY_PRODUCT_DESCRIPTION)
-            ->first())["value"] ?? "Товар";
+            ->where("key", "product_description")
+            ->first())["value"] ?? "Описание товара";
 
         $price = (Collection::make($config[1])
-            ->where("key", self::KEY_PRODUCT_PRICE)
+            ->where("key", "product_price")
             ->first())["value"] ?? 10000;
 
 
@@ -92,31 +190,31 @@ class SinglePaymentScriptController extends Controller
 
         $needs = [
             "need_name" => (Collection::make($config[1])
-                    ->where("key", self::KEY_NEED_NAME)
+                    ->where("key", "need_name")
                     ->first())["value"] ?? false,
             "need_phone_number" => (Collection::make($config[1])
-                    ->where("key", self::KEY_NEED_PHONE_NUMBER)
+                    ->where("key", "need_phone_number")
                     ->first())["value"] ?? false,
             "need_email" => (Collection::make($config[1])
-                    ->where("key", self::KEY_NEED_EMAIL)
+                    ->where("key", "need_email")
                     ->first())["value"] ?? false,
             "need_shipping_address" => (Collection::make($config[1])
-                    ->where("key", self::KEY_NEED_SHIPPING_ADDRESS)
+                    ->where("key", "need_shipping_address")
                     ->first())["value"] ?? false,
             "send_phone_number_to_provider" => (Collection::make($config[1])
-                    ->where("key", self::KEY_NEED_SEND_PHONE_NUMBER_TO_PROVIDER)
+                    ->where("key", "need_send_phone_number_to_provider")
                     ->first())["value"] ?? false,
             "send_email_to_provider" => (Collection::make($config[1])
-                    ->where("key", self::KEY_NEED_SEND_EMAIL_TO_PROVIDER)
+                    ->where("key", "need_send_email_to_provider")
                     ->first())["value"] ?? false,
             "is_flexible" => (Collection::make($config[1])
-                    ->where("key", self::KEY_IS_FLEXIBLE)
+                    ->where("key", "is_flexible")
                     ->first())["value"] ?? false,
             "disable_notification" => (Collection::make($config[1])
-                    ->where("key", self::KEY_DISABLE_NOTIFICATION)
+                    ->where("key", "disable_notification")
                     ->first())["value"] ?? false,
             "protect_content" => (Collection::make($config[1])
-                    ->where("key", self::KEY_PROTECT_CONTENT)
+                    ->where("key", "protect_content")
                     ->first())["value"] ?? false,
         ];
 

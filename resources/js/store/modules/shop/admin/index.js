@@ -19,8 +19,7 @@ const actions = {
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 
         return _axios.then((response) => {
-            let dataObject = response
-            return Promise.resolve(dataObject);
+            return Promise.resolve(response);
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);

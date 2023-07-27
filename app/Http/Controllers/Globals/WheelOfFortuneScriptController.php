@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Globals;
 
+use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ActionStatusResource;
 use App\Http\Resources\BotSecurityResource;
 use App\Models\ActionStatus;
+use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotUser;
 use Carbon\Carbon;
@@ -17,17 +19,127 @@ use Inertia\Inertia;
 use ReflectionClass;
 use Telegram\Bot\FileUpload\InputFile;
 
-class WheelOfFortuneScriptController extends Controller
+class WheelOfFortuneScriptController extends SlugController
 {
-    const SCRIPT = "global_wheel_of_fortune";
+    public function config(Bot $bot)
+    {
+        $hasMainScript = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where("slug", "global_wheel_of_fortune")
+            ->first();
 
-    const KEY_MAX_ATTEMPTS = "max_attempts";
-    const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";
-    const KEY_RULES_TEXT = "rules_text";
-    const KEY_WIN_MESSAGE = "win_message";
-    const KEY_WHEEL_TEXT = "wheel_text";
-    const KEY_MAIN_TEXT = "main_text";
-    const KEY_BTN_TEXT = "btn_text";
+
+        if (is_null($hasMainScript))
+            return;
+
+        $model = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_wheel_of_fortune",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Колесо фортуны",
+                'comment' => "Игровой модуль",
+            ]);
+
+        if (is_null($model->config)) {
+            $model->config = [
+                [
+                    "type" => "text",
+                    "key" => "max_attempts",
+                    "value" => 2,
+
+                ],
+                [
+                    "type" => "channel",
+                    "key" => "callback_channel_id",
+                    "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "rules_text",
+                    "value" => "Всё гениальное просто - делай фото по заданию и загружай их!",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "main_text",
+                    "value" => "Принимай участие в наших квестах и получай ценные призы!",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "win_message",
+                    "value" => "%s, вы приняли участие в квесте и скоро получите награду. Наш менеджер свяжется с вами в ближайшее время!",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "btn_text",
+                    "value" => "К заданию",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "wheel_text",
+                    "value" => "№1",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "wheel_text",
+                    "value" => "№2",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "wheel_text",
+                    "value" => "№3",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "wheel_text",
+                    "value" => "№4",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "wheel_text",
+                    "value" => "№5",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "wheel_text",
+                    "value" => "№6",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "wheel_text",
+                    "value" => "№7",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "wheel_text",
+                    "value" => "№8",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "wheel_text",
+                    "value" => "№9",
+
+                ],
+            ];
+            $model->save();
+        }
+
+    }
 
 
     public function formWheelOfFortuneCallback(Request $request, $scriptId, $botDomain)
@@ -50,7 +162,6 @@ class WheelOfFortuneScriptController extends Controller
 
         $slug = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
-            ->where("slug", self::SCRIPT)
             ->where("id", $scriptId)
             ->first();
 
@@ -58,18 +169,18 @@ class WheelOfFortuneScriptController extends Controller
             return response()->noContent(404);
 
         $maxAttempts = (Collection::make($slug->config)
-            ->where("key", self::KEY_MAX_ATTEMPTS)
+            ->where("key", "max_attempts")
             ->first())["value"] ?? 1;
 
         $callbackChannel = (Collection::make($slug->config)
-            ->where("key", self::KEY_CALLBACK_CHANNEL_ID)
+            ->where("key", "callback_channel_id")
             ->first())["value"] ??
             $bot->order_channel ??
             $bot->main_channel ??
             env("BASE_ADMIN_CHANNEL");
 
         $winMessage = (Collection::make($slug->config)
-            ->where("key", self::KEY_WIN_MESSAGE)
+            ->where("key", "win_message")
             ->first())["value"] ?? "%s, вы приняли участие в розыгрыше и выиграли приз под номером %s. Наш менеджер свяжется с вами в ближайшее время!";
 
         $action = ActionStatus::query()
@@ -132,7 +243,6 @@ class WheelOfFortuneScriptController extends Controller
         $slug = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
             ->where("id", $scriptId)
-            ->where("slug", self::SCRIPT)
             ->first();
 
 
@@ -140,11 +250,11 @@ class WheelOfFortuneScriptController extends Controller
             return response()->noContent(404);
 
         $wheels = Collection::make($slug->config)
-            ->where("key", self::KEY_WHEEL_TEXT)
+            ->where("key", "wheel_text")
             ->toArray();
 
         $rules = Collection::make($slug->config)
-            ->where("key", self::KEY_RULES_TEXT)
+            ->where("key", "rules_text")
             ->first();
 
         return response()->json(
@@ -179,7 +289,7 @@ class WheelOfFortuneScriptController extends Controller
             return response()->noContent(404);
 
         $maxAttempts = (Collection::make($slug->config)
-            ->where("key", self::KEY_MAX_ATTEMPTS)
+            ->where("key", "max_attempts")
             ->first())["value"] ?? 1;
 
         $action = ActionStatus::query()
@@ -204,47 +314,17 @@ class WheelOfFortuneScriptController extends Controller
         ]);
     }
 
-    /* public function formWheelOfFortune(Request $request, $scriptId, $botDomain)
-     {
-
-         $bot = \App\Models\Bot::query()
-             ->with(["company", "imageMenus"])
-             ->where("bot_domain", $botDomain)
-             ->first();
-
-
-         $slug = BotMenuSlug::query()
-             ->where("id", $scriptId)
-             ->where("bot_id", $bot->id)
-             ->where("slug", self::SCRIPT)
-             ->first();
-
-         if (is_null($slug)) {
-             Inertia::setRootView("bot");
-             return Inertia::render('Error');
-         }
-
-
-         Inertia::setRootView("shop");
-
-         return Inertia::render('Shop/Main', [
-             'bot' => BotSecurityResource::make($bot),
-             'slug_id' => $slug->id,
-         ]);
-
-     }*/
-
     public function wheelOfFortune(...$config)
     {
 
         $bot = BotManager::bot()->getSelf();
 
         $mainText = (Collection::make($config[1])
-            ->where("key", self::KEY_MAIN_TEXT)
+            ->where("key", "main_text")
             ->first())["value"] ?? "Начни розыгрыш и получи свои призы!";
 
         $btnText = (Collection::make($config[1])
-            ->where("key", self::KEY_BTN_TEXT)
+            ->where("key", "btn_text")
             ->first())["value"] ?? "\xF0\x9F\x8E\xB2Начать розыгрыш";
 
         $slugId = (Collection::make($config[1])

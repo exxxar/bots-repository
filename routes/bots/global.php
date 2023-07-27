@@ -14,8 +14,7 @@ BotManager::bot()
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\ShopScriptController::class)
-    ->slug("global_shop_main", "shopMain")
-    ->slug("global_shop_admin", "shopAdmin");
+    ->slug("global_shop_main", "shopMain");
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\SinglePaymentScriptController::class)

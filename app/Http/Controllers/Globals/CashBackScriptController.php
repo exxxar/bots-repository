@@ -107,9 +107,6 @@ class CashBackScriptController extends SlugController
 
     public function admins()
     {
-        /*$slugId = (Collection::make($config[1])
-            ->where("key", "slug_id")
-            ->first())["value"];*/
 
         $bot = BotManager::bot()->getSelf();
 

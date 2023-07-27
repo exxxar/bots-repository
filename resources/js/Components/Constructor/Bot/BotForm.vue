@@ -477,6 +477,41 @@ import AmoForm from "@/Components/Constructor/Amo/AmoForm.vue";
                     </div>
                 </div>
 
+                <div class="col-12 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_shop"
+                               type="checkbox"
+                               id="need-shop">
+                        <label class="form-check-label" for="need-shop">
+                            Необходимо интегрировать магазин в бота
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12 col-12" v-if="need_shop">
+                    <div class="mb-3">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Ссылка на страницу ВК с товарами для вашего магазина в боте
+                                </div>
+                            </template>
+                        </Popper>
+                        <label class="form-label" id="bot-level-3">Ссылка на группу ВК с товарами
+                            <a href="https://vk.com/groups?w=groups_create" target="_blank">Создать</a>
+                        </label>
+
+
+                        <input type="url" class="form-control"
+                               placeholder="Ссылка на группу ВК"
+                               aria-label="ссылка на группу ВК"
+                               v-model="botForm.vk_shop_link"
+                               aria-describedby="vk_shop_link">
+                    </div>
+                </div>
+
 
 
                 <div class="col-12 ">
@@ -689,6 +724,7 @@ export default {
             loadPage: false,
             loadPageList: false,
             need_payments: false,
+            need_shop: false,
             command: null,
 
             botForm: {
@@ -699,6 +735,7 @@ export default {
                 bot_token_dev: null,
                 order_channel: null,
                 main_channel: null,
+                vk_shop_link: null,
                 balance: null,
                 tax_per_day: null,
                 welcome_message: null,
@@ -748,6 +785,7 @@ export default {
                     main_channel: this.bot.main_channel || null,
                     balance: this.bot.balance || null,
                     tax_per_day: this.bot.tax_per_day || null,
+                    vk_shop_link: this.bot.vk_shop_link || null,
 
                     image: this.bot.image || null,
 

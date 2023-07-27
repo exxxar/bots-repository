@@ -206,13 +206,20 @@ trait BotDialogTrait
     private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void
     {
         if (!is_null($botDialogCommand->result_channel)) {
-            $tmpMessage = "Ответы пользователя <b>#$botUser->id</b> на диалог <b>#$botDialogCommand->id</b>: \n";
+            $tmpMessage = "Диалог с пользователем <b>#$botUser->id</b> [<b>#$botDialogCommand->id</b>]: \n";
 
             $step = 1;
             foreach ($dialogData as $data) {
                 $tmpMessage .= "Шаг $step: $data \n";
+                $tmpMessage .= "Пользователь:\n"
+                    ."-ТГ id: ".($botUser->telegram_chat_id ?? '-')."\n"
+                    ."-имя из ТГ: ".($botUser->fio_from_telegram ?? 'Имя из телеграм не указано')."\n"
+                    ."-введенное имя: ".($botUser->name ?? 'Введенное имя не указано')."\n"
+                    ."-телефон: ".($botUser->phone ?? 'Номер телефона не указан')."\n"
+                    ."-email: ".($botUser->email ?? 'Почта не указана')."\n";
                 $step++;
             }
+
 
             $this->sendMessage($botDialogCommand->result_channel, $tmpMessage);
         }

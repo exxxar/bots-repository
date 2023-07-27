@@ -18,7 +18,7 @@ class FriendsScriptController extends SlugController
     {
         $hasMainScript = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
-            ->where("slug","global_friends_main")
+            ->where("slug", "global_friends_main")
             ->first();
 
 
@@ -36,7 +36,7 @@ class FriendsScriptController extends SlugController
                 'comment' => "Реферальная программа",
             ]);
 
-        if (is_null($model->config)){
+        if (is_null($model->config)) {
             $model->config = [
                 [
                     "type" => "text",
@@ -70,12 +70,6 @@ class FriendsScriptController extends SlugController
 
         $botDomain = $bot->bot_domain;
 
-        $slugId = (Collection::make($config[1])
-            ->where("key", "slug_id")
-            ->first())["value"];
-
-        $companyDomain = $bot->company->slug;
-
         $mainText = (Collection::make($config[1])
             ->where("key", "main_text")
             ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
@@ -89,9 +83,9 @@ class FriendsScriptController extends SlugController
 
         $imgPath = (Collection::make($config[1])
             ->where("key", "image_main")
-            ->first())["value"] ??  null;
+            ->first())["value"] ?? null;
 
-        $imgPath = is_null($imgPath)? env("APP_URL")."/images/cashman.jpg" :
+        $imgPath = is_null($imgPath) ? env("APP_URL") . "/images/cashman.jpg" :
             $imgPath;
 
         $qr = "https://t.me/$botDomain?start=" .
@@ -103,7 +97,7 @@ class FriendsScriptController extends SlugController
             ->count();
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto( sprintf($mainText,$friendCount),
+            ->replyPhoto(sprintf($mainText, $friendCount),
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
 
@@ -111,7 +105,6 @@ class FriendsScriptController extends SlugController
             ->replyPhoto(sprintf($referralText, $qr, $qr),
                 InputFile::create($imgPath)
             );
-
 
 
     }

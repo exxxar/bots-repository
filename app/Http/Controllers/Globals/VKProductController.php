@@ -26,7 +26,6 @@ class VKProductController extends Controller
             "botDomain"=>"required",
         ]);
 
-
        // $this->vkUrl = $request->url ?? null;
         $botDomain = $request->botDomain ?? null;
 
@@ -59,6 +58,17 @@ class VKProductController extends Controller
         $code = $request->code;
         $state = $request->state; //bot domain
 
+
+        $bot = Bot::query()
+            ->where("bot_domain", $state)
+            ->first();
+
+        if (is_null($bot))
+            return response()->noContent(404);
+
+
+        $tmpScreenName = substr($bot->vk_shop_link, strpos($bot->vk_shop_link,"https://vk.com/")+strlen("https://vk.com/"));
+
         $response = $oauth->getAccessToken($client_id, $client_secret, $redirect_uri, $code);
         $access_token = $response['access_token'];
 
@@ -66,7 +76,7 @@ class VKProductController extends Controller
         $vk = new VKApiClient();
 
         $response = $vk->utils()->resolveScreenName($access_token, [
-            'screen_name' => "butchathepub",
+            'screen_name' => $tmpScreenName ?? null,
         ]);
 
         $data = ((object)$response);
@@ -86,12 +96,15 @@ class VKProductController extends Controller
 
         $vkProducts = ((object)$response)->items;
 
-        $bot = Bot::query()
-            ->where("bot_domain", $state)
-            ->first();
+        $results = (object)[
+          "total_product_count"=>0,
+          "created_product_count"=>0,
+          "updated_product_count"=>0,
 
-        if (is_null($bot))
-            return response()->noContent(404);
+
+        ];
+
+       // $results->total_product_count =
 
         foreach ($vkProducts as $vkProduct) {
 
