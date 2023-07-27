@@ -89,11 +89,19 @@ class WheelOfFortuneScriptController extends Controller
         if ($action->current_attempts >= $maxAttempts)
             $action->completed_at = Carbon::now();
 
-        $action->save();
-
         $winNumber = $request->win ?? 0;
         $winnerName = $request->name ?? 'Имя не указано';
         $winnerPhone = $request->phone ?? 'Телефон не указан';
+
+        $action->data[] = (object)[
+            "name"=>$winnerName,
+            "win"=>$winNumber,
+            "phone"=>$winnerPhone,
+            "answered_at"=>null,
+            "answered_by"=>null,
+        ];
+
+        $action->save();
 
         BotMethods::bot()
             ->whereDomain($botDomain)

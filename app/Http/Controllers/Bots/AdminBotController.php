@@ -9,6 +9,7 @@ use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BotUserResource;
 use App\Models\Bot;
+use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
@@ -639,6 +640,41 @@ class AdminBotController extends Controller
             ]
         ]);
 
+
+    }
+
+    public function getBotAdminMenuDemo()
+    {
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        if (!$botUser->is_admin) {
+            BotManager::bot()->reply("Вы не являетесь администратором данного бота!");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $menu = BotMenuTemplate::query()
+            ->updateOrCreate(
+                [
+                    'bot_id' => $bot->id,
+                    'type' => 'inline',
+                    'slug' => "menu_admin_main",
+
+                ],
+                [
+                    'menu' => [
+                        [
+                            ["text" => "Открыть", "web_app" => [
+                                "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admin-main"//"/restaurant/active-admins/$bot->bot_domain"
+                            ]],
+                        ],
+                    ],
+                ]);
+
+        \App\Facades\BotManager::bot()
+            ->replyInlineKeyboard("Административная панель", $menu->menu);
 
     }
 

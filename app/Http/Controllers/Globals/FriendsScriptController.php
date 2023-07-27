@@ -2,26 +2,60 @@
 
 namespace App\Http\Controllers\Globals;
 
+use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Models\Bot;
+use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\ReferralHistory;
 use Illuminate\Support\Collection;
 use Telegram\Bot\FileUpload\InputFile;
 
-class FriendsScriptController extends Controller
+class FriendsScriptController extends SlugController
 {
-    const SCRIPT = "global_friends_main";
-/*
-    const KEY_MAX_ATTEMPTS = "max_attempts";
-    const KEY_CALLBACK_CHANNEL_ID = "callback_channel_id";
-    const KEY_RULES_TEXT = "rules_text";
-    const KEY_RESULT_MESSAGE = "result_message";
+    public function config(Bot $bot)
+    {
+        $hasMainScript = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where("slug","global_friends_main")
+            ->first();
 
-    const KEY_BTN_TEXT = "btn_text";*/
-    const KEY_MAIN_TEXT = "main_text";
-  //  const KEY_REFERRAL_TEXT = "referral_text";
-    const KEY_IMAGE_MAIN = "image_main";
+        if (is_null($hasMainScript))
+            return;
+
+        BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_friends_main",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+                'command' => ".*Мои друзья",
+                'comment' => "Реферальная программа",
+            ],
+            [
+                'config' => [
+                    [
+                        "type" => "text",
+                        "key" => "main_text",
+                        "value" => "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой"
+                    ],
+                    [
+                        "type" => "image",
+                        "key" => "image_main",
+                        "value" => null,
+
+                    ],
+                    [
+                        "type" => "text",
+                        "key" => "referral_text",
+                        "value" => "Перешли эту ссылку друзьям:\n<a href=\"%s\">%s</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>",
+
+                    ]
+                ],
+            ]);
+
+    }
 
     public function inviteFriends(...$config)
     {
@@ -38,18 +72,22 @@ class FriendsScriptController extends Controller
         $companyDomain = $bot->company->slug;
 
         $mainText = (Collection::make($config[1])
-            ->where("key", self::KEY_MAIN_TEXT)
+            ->where("key", "main_text")
             ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
 Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой";
 
-        $referralText =  "Перешли эту ссылку друзьям:\n<a href=\"%s\">%s</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>";
+        $referralText = (Collection::make($config[1])
+            ->where("key", "referral_text")
+            ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой";
+
 
         $imgPath = (Collection::make($config[1])
-            ->where("key", self::KEY_IMAGE_MAIN)
+            ->where("key", "image_main")
             ->first())["value"] ??  null;
 
-       /* $imgPath = is_null($imgPath)? storage_path("app/public") . "/companies/$companyDomain/" . ($bot->image ?? 'noimage.jpg') :
-            $imgPath;*/
+        $imgPath = is_null($imgPath)? env("APP_URL")."/images/cashman.jpg" :
+            $imgPath;
 
         $qr = "https://t.me/$botDomain?start=" .
             base64_encode("001" . BotManager::bot()->getCurrentChatId());
@@ -63,14 +101,6 @@ class FriendsScriptController extends Controller
             ->replyPhoto( sprintf($mainText,$friendCount),
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
-
-
-
-       /* $file = InputFile::create(
-            file_exists($imgPath) ?
-                $imgPath :
-                public_path() . "/images/cashman.jpg"
-        );*/
 
         \App\Facades\BotManager::bot()
             ->replyPhoto(sprintf($referralText, $qr, $qr),

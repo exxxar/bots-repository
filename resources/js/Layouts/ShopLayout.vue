@@ -22,13 +22,13 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
     <Notifications/>
 
 
-
     <div id="page">
 
         <!-- header and footer bar go here-->
         <div class="header header-fixed header-auto-show header-logo-app">
             <a @click="closeShop" class="header-title header-subtitle">Вернуться в бота</a>
-            <a @click="$router.back()" data-back-button class="header-icon header-icon-1"><i class="fas fa-arrow-left"></i></a>
+            <a @click="$router.back()" data-back-button class="header-icon header-icon-1"><i
+                class="fas fa-arrow-left"></i></a>
             <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-dark"><i
                 class="fas fa-sun"></i></a>
             <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-light"><i
@@ -46,44 +46,44 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
 
             <router-link
                 :active-class="'active-nav'"
-                :tag="'a'" :to="prefix+'/basket'">
+                :tag="'a'" :to="'/basket'">
                 <i class="fa-solid fa-basket-shopping"></i><span class="color-white">Корзина</span><em
-                class="badge bg-green1-dark" v-if="cartTotalCount>0">{{cartTotalCount}}</em>
-                <strong v-if="$route.path==prefix+'/basket'"></strong>
+                class="badge bg-green1-dark" v-if="cartTotalCount>0">{{ cartTotalCount }}</em>
+                <strong v-if="$route.path=='/basket'"></strong>
             </router-link>
 
 
             <router-link
                 :active-class="'active-nav'"
-                :tag="'a'" :to="prefix+'/products'">
+                :tag="'a'" :to="'/products'">
                 <i class="fa-brands fa-shopify"></i><span class="color-white">Продукты</span>
-                <strong v-if="$route.path==prefix+'/products'"></strong>
+                <strong v-if="$route.path=='/products'"></strong>
             </router-link>
 
             <router-link
                 :active-class="'active-nav'"
-                :tag="'a'" :to="prefix+'/home'">
+                :tag="'a'" :to="'/home'">
                 <i class="fa fa-home"></i><span class="color-white">Домой</span>
-                <strong v-if="$route.path==prefix+'/home'"></strong>
+                <strong v-if="$route.path=='/home'"></strong>
             </router-link>
 
             <router-link
                 :active-class="'active-nav'"
-                :tag="'a'" :to="prefix+'/favorites'">
+                :tag="'a'" :to="'/favorites'">
                 <i class="fa fa-heart"></i><span class="color-white">Избранное</span><em
-                class="badge bg-green1-dark" v-if="favoritesCount>0">{{favoritesCount}}</em>
-                <strong v-if="$route.path==prefix+'/favorites'"></strong>
+                class="badge bg-green1-dark" v-if="favoritesCount>0">{{ favoritesCount }}</em>
+                <strong v-if="$route.path=='/favorites'"></strong>
             </router-link>
 
 
-<!--
-            <router-link
-                :active-class="'active-nav'"
-                :tag="'a'" :to="prefix+'/settings'">
-                <i class="fa fa-cog"></i><span class="color-white">Настройки</span>
-                <strong v-if="$route.path==prefix+'/settings'"></strong>
-            </router-link>
--->
+            <!--
+                        <router-link
+                            :active-class="'active-nav'"
+                            :tag="'a'" :to="'/settings'">
+                            <i class="fa fa-cog"></i><span class="color-white">Настройки</span>
+                            <strong v-if="$route.path=='/settings'"></strong>
+                        </router-link>
+            -->
 
             <a href="#" data-menu="menu-main">
                 <i class="fa-solid fa-bars"></i><span class="color-white">Меню</span>
@@ -91,6 +91,56 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
 
         </div>
 
+
+        <div id="footer-bar"
+             v-if="$route.meta.need_admin_menu"
+             class="footer-bar-5 bg-dark2-dark mb-2 ml-2 mr-2 rounded-m">
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="'/admin-orders'">
+                <i class="fa-solid fa-basket-shopping"></i><span class="color-white">Зазказы</span><em
+                class="badge bg-green1-dark">0</em>
+                <strong v-if="$route.path=='/admin-orders'"></strong>
+            </router-link>
+
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="'/admin-statistic'">
+                <i class="fa-solid fa-ranking-star"></i><span class="color-white">Статистика</span>
+                <strong v-if="$route.path=='/admin-statistic'"></strong>
+            </router-link>
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="'/admin-main'">
+                <i class="fa fa-home"></i><span class="color-white">Главная</span>
+                <strong v-if="$route.path=='/admin-main'"></strong>
+            </router-link>
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="'/admin-work-status'">
+                <i class="fa-solid fa-briefcase"></i><span class="color-white">Работа</span>
+
+                <strong v-if="$route.path=='/admin-work-status'"></strong>
+            </router-link>
+
+
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="'/admin-users'">
+                <i class="fa-solid fa-users"></i><span class="color-white">Пользователи</span>
+                <strong v-if="$route.path=='/admin-users'"></strong>
+            </router-link>
+
+            <!--
+                        <a href="#" data-menu="menu-main">
+                            <i class="fa-solid fa-bars"></i><span class="color-white">Меню</span>
+                        </a>-->
+
+        </div>
 
         <slot/>
 
@@ -111,7 +161,7 @@ export default {
         $route(newRouteValue) {
             this.$preloader.show();
             baseJS.handler()
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
 
                 console.log("on route change")
@@ -122,7 +172,7 @@ export default {
         },
     },
     computed: {
-        ...mapGetters([ 'cartTotalCount' ,'favoritesCount']),
+        ...mapGetters(['cartTotalCount', 'favoritesCount']),
         prefix() {
             return window.currentPath || ''
         },
