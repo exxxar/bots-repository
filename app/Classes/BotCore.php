@@ -442,7 +442,7 @@ abstract class BotCore
         $totalAmount = $data->total_amount;
         $payload = $data->invoice_payload;
         $currency = $data->currency;
-        $orderInfo = $data->order_info;
+        $orderInfo = $data->order_info ?? null;
         // $shippingOptionId = $data->shipping_option_id ?? null;
 
         $transaction = Transaction::query()->where("payload", $payload)
@@ -471,7 +471,7 @@ abstract class BotCore
         $totalAmount = $data->total_amount;
         $currency = $data->currency;
         $payload = $data->invoice_payload;
-        $orderInfo = $data->order_info;
+        $orderInfo = $data->order_info ?? null;
         $telegramPaymentChargeId = $data->telegram_payment_charge_id;
         $providerPaymentChargeId = $data->provider_payment_charge_id;
 
