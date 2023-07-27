@@ -9,6 +9,7 @@ use App\Models\ProductCategory;
 use App\Models\ProductOption;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use VK\Client\VKApiClient;
 use VK\OAuth\Scopes\VKOAuthUserScope;
 use VK\OAuth\VKOAuth;
@@ -79,6 +80,8 @@ class VKProductController extends Controller
         $vk = new VKApiClient();
 
         try {
+
+            Log::info("tmpScreenName $tmpScreenName");
             $response = $vk->utils()->resolveScreenName($access_token, [
                 'screen_name' => $tmpScreenName ?? null,
             ]);

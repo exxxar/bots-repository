@@ -102,7 +102,7 @@ import AmoForm from "@/Components/Constructor/Amo/AmoForm.vue";
 
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox"
-                               :checked="botForm.is_template"
+                               :value="botForm.is_template"
                                v-model="botForm.is_template" id="bot-is-template">
                         <label class="form-check-label" for="bot-is-template">
                             Сделать шаблоном
