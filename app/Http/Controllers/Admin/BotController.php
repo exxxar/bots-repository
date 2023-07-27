@@ -315,9 +315,8 @@ class BotController extends Controller
 
     public function loadSlugs(Request $request, $botId)
     {
-        $isGlobal = $request->isGlobal ?? false;
+        $isGlobal = $request->isGlobal == "true" ? true : false;
 
-        $bot = Bot::query()->find($botId);
 
         $slugs = BotMenuSlug::query()
             ->where("bot_id", $botId)
