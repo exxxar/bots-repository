@@ -20,12 +20,12 @@ import Booking from '@/Pages/Shop/Booking.vue';
 import Admins from '@/Pages/Shop/Admins.vue';
 import Vip from '@/Pages/Shop/Vip.vue';
 
-import AdminMain from '@/Pages/Admin/AdminMain.vue';
+/*import AdminMain from '@/Pages/Admin/AdminMain.vue';
 import AdminPromotion from '@/Pages/Admin/AdminPromotion.vue';
 import AdminStatistic from '@/Pages/Admin/AdminStatistic.vue';
 import AdminWorkStatus from '@/Pages/Admin/AdminWorkStatus.vue';
 import AdminOrders from '@/Pages/Admin/AdminOrders.vue';
-import AdminUsers from '@/Pages/Admin/AdminUsers.vue';
+import AdminUsers from '@/Pages/Admin/AdminUsers.vue';*/
 
 export const routes = [
 
@@ -137,7 +137,7 @@ export const routes = [
     },
 ];
 
-export const adminRoutes = [
+/*export const adminRoutes = [
     {
         name: 'adminmain',
         path: '/admin-main',
@@ -174,11 +174,11 @@ export const adminRoutes = [
         component: AdminOrders,
         meta: { title: 'Админ панель: Заказы', hide_menu:true, need_admin_menu:true }
     },
-]
+]*/
 
 const router = createRouter({
    history: createWebHashHistory(),
-    routes: [...routes, ...adminRoutes],
+    routes: [...routes/*, ...adminRoutes*/],
 });
 
 export default router;

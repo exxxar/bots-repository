@@ -1,0 +1,1 @@
+import{_ as e,m as r}from"./app-1391603c.js";const a={data(){return{}},computed:{...r(["getCashBack","getCashBackPaginateObject"]),tg(){return window.Telegram.WebApp},tgUser(){const t=new URLSearchParams(this.tg.initData);return JSON.parse(t.get("user"))}},mounted(){},methods:{}};function s(t,n,c,o,m,p){return null}const d=e(a,[["render",s]]);export{d as default};
