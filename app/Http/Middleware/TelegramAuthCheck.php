@@ -53,6 +53,7 @@ class TelegramAuthCheck
         $hash = hash_hmac('sha256', $data_str, $secret);
 
         if( strcmp($hash, $check_hash) === 0 ){
+            Log::info("CHECK SUCCESS");
             return $next($request);
         }else{
             return \response()->json(["error"=>"some error"]);
