@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\TelegramAdminCheck;
 use App\Http\Middleware\TelegramAuthCheck;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -66,6 +67,7 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'tgAuth' => TelegramAuthCheck::class,
+        'tgAuth:any' => TelegramAuthCheck::class,
+        'tgAuth:admin' => TelegramAdminCheck::class,
     ];
 }

@@ -16,20 +16,12 @@ const actions = {
     ...products.actions,
     async testCallback(context) {
         let tgData = window.Telegram.WebApp.initData
-
-        console.log("tgData", tgData)
-
-        const urlParams = new URLSearchParams(tgData);
-        const hash = urlParams.get('hash');
-
-
         let botDomain = window.currentBot.bot_domain || null
 
         let link = `/test-auth/${botDomain}`
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            hash: hash
+            tgData: tgData
         })
 
         return _axios.then((response) => {
