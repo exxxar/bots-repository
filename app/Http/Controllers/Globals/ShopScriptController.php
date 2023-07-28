@@ -78,10 +78,10 @@ class ShopScriptController extends SlugController
 
         Log::info("data_check_string=$data_check_string");
         Log::info("secret_key=$secret_key");
-        Log::info("hash generate=" . hash_hmac("sha256", $data_check_string, $secret_key, true));
+        Log::info("hash generate=" . hash_hmac("sha256", $data_check_string, $secret_key));
         Log::info("hash from tg=" . $hash);
 
-        if (hash_hmac("sha256", $data_check_string, $secret_key, true) == $hash) {
+        if (hash_hmac("sha256", $data_check_string, $secret_key) == $hash) {
             Log::info("hash success");
         }
 
