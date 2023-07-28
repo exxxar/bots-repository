@@ -291,6 +291,7 @@ export default {
 
         if (this.$route.query.user) {
             this.request_telegram_chat_id = this.$route.query.user
+
             this.loadReceiverUserData()
             this.loadCashBack()
         }
