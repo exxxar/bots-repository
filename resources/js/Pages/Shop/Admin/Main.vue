@@ -249,7 +249,7 @@ export default {
             section: 0,
             cashback: [],
             referrals: [],
-
+            request_telegram_chat_id: null,
             cashback_paginate_object: null,
             referrals_paginate_object: null,
 
@@ -290,6 +290,7 @@ export default {
         }
 
         if (this.$route.query.user) {
+            this.request_telegram_chat_id = this.$route.query.user
             this.loadReceiverUserData()
             this.loadCashBack()
         }
@@ -311,7 +312,7 @@ export default {
             this.loading = true
             this.$store.dispatch("loadReceiverUserData", {
                 dataObject: {
-                    user_telegram_chat_id: this.$route.query.user,
+                    user_telegram_chat_id:   this.request_telegram_chat_id
                 },
             }).then(resp => {
                 this.botUser = resp.data
@@ -323,7 +324,7 @@ export default {
         loadCashBack(page = 0) {
             this.$store.dispatch("loadCashBack", {
                 dataObject: {
-                    user_telegram_chat_id: this.$route.query.user,
+                    user_telegram_chat_id:  this.request_telegram_chat_id
                 },
                 page: page
             }).then(resp => {
@@ -353,10 +354,15 @@ export default {
             })
         },
         removeCashBack() {
+            if ( this.request_telegram_chat_id)
+            {
+                this.$botNotification.warning("Упс!","Вы должны выбрать пользователя!")
+                return
+            }
             this.loading = true;
             this.$store.dispatch("removeCashBack", {
                 dataObject: {
-                    user_telegram_chat_id: this.$route.query.user,
+                    user_telegram_chat_id:  this.request_telegram_chat_id,
                     ...this.cashbackForm
                 }
             }).then((resp) => {
@@ -369,10 +375,15 @@ export default {
             })
         },
         addCashBack() {
+            if ( this.request_telegram_chat_id)
+            {
+                this.$botNotification.warning("Упс!","Вы должны выбрать пользователя!")
+                return
+            }
             this.loading = true;
             this.$store.dispatch("addCashBack", {
                 dataObject: {
-                    user_telegram_chat_id: this.$route.query.user,
+                    user_telegram_chat_id: this.request_telegram_chat_id,
                     ...this.cashbackForm
                 }
             }).then((resp) => {
