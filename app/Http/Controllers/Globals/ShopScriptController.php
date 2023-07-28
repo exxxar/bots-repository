@@ -69,29 +69,32 @@ class ShopScriptController extends SlugController
         $bot = Bot::query()->where("bot_domain", $botDomain)
             ->first();
 
-        $data_check_string = $request->tgData;
+        //$data_check_string = $request->tgData;
 
        // $data_check_string = str_replace("&", "\n", $request->tgData);
 
-        $check_hash = $request->hash;
-       // $secret_key = hash_hmac("sha256", $bot->bot_token, "WebAppData");
+        //$check_hash = $request->hash;
 
+        $bot_secret = $bot->bot_token;
 
-        $secret_key = hash_hmac( 'sha256', $bot->bot_token, "WebAppData", TRUE );
-        $hash =  hash_hmac( 'sha256', $data_check_string, $secret_key ) ;
+        $in =  $request->tgData;
 
-        Log::info("data_check_string=$data_check_string");
-        Log::info("secret_key=$secret_key");
-        Log::info("hash generate=" . $hash);
-        Log::info("hash from tg=" . $check_hash);
+        parse_str($in, $arr);
 
-        if( strcmp($hash, $check_hash) === 0 ){
-            // validation success
-            Log::info("succees");
-        }else {
-            // validation failed
-            Log::info("failed");
+        Log::info($arr['hash']);
+
+        unset($arr['hash']);
+        ksort($arr);
+
+        foreach($arr as $k=>$v) {
+            $data_str .= $k."=".$v."\x0A";
         }
+        $data_str = trim($data_str);
+
+        $secret = hash_hmac('sha256', $bot_secret, 'WebAppData', true);
+        $hash = hash_hmac('sha256', $data_str, $secret);
+
+        Log::info($hash);
 
 
 
