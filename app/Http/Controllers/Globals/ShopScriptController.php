@@ -81,8 +81,9 @@ class ShopScriptController extends SlugController
 
         parse_str($in, $arr);
 
-        Log::info($arr['hash']);
+        Log::info("first=>".$arr['hash']);
 
+        $check_hash = $arr['hash'];
         unset($arr['hash']);
         ksort($arr);
         $data_str = "";
@@ -94,8 +95,13 @@ class ShopScriptController extends SlugController
         $secret = hash_hmac('sha256', $bot_secret, 'WebAppData', true);
         $hash = hash_hmac('sha256', $data_str, $secret);
 
-        Log::info($hash);
+        Log::info("second=>".$hash);
 
+        if( strcmp($hash, $check_hash) === 0 ){
+            Log::info("success");
+        }else{
+            Log::info("errror");
+        }
 
 
     }
