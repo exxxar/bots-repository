@@ -54,6 +54,7 @@ class CashBackHistory extends Model
 
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(BotUser::class, "employee_id","user_id")
+            ->where("bot_id", $this->bot_id);
     }
 }

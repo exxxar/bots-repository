@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -66,7 +67,7 @@ class BotManager extends BotCore
 
         if (is_null($this->botUser)) {
             try {
-               // $uuid = Str::uuid();
+                // $uuid = Str::uuid();
 
                 $role = Role::query()
                     ->where("slug", "owner")
@@ -92,7 +93,6 @@ class BotManager extends BotCore
                 ]);
 
 
-
                 CashBack::query()->create([
                     'user_id' => $user->id,
                     'bot_id' => $this->getSelf()->id,
@@ -106,6 +106,18 @@ class BotManager extends BotCore
             $this->botUser->updated_at = Carbon::now();
             $this->botUser->save();
         }
+
+
+        $credentials = [
+            'email' => "admin@admin.com",
+            'password' => 'password',
+        ];
+
+        if (Auth::attempt($credentials)) {
+            Auth::getSession()->regenerate();
+            Log::info("auth success");
+        } else
+            Log::info("auth faild");
     }
 
     protected function botStatusHandler(): BotStatusEnum

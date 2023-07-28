@@ -57,6 +57,9 @@ class BotUser extends Model
         'parent_id' => 'integer',
         'is_admin' => 'boolean',
         'is_work' => 'boolean',
+        'is_vip' => 'boolean',
+        'in_dialog_mode' => 'boolean',
+        'sex' => 'boolean',
         'user_in_location' => 'boolean',
     ];
 

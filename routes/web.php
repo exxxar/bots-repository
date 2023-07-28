@@ -27,6 +27,14 @@ use Inertia\Inertia;
 */
 
 
+Route::get("/test-auth", function () {
+
+   dd(Auth::user());
+
+});
+
+
+
 Route::get("/test-amo", function () {
     $amo = new \App\Integrations\AmoCRMIntegration();
     $amo->nextOAuth();
@@ -189,7 +197,7 @@ Route::prefix("bot")->group(function () {
 
     Route::prefix("cashback")
         ->group(function () {
-            Route::post('/history', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "index"]);
+            Route::post('/history/{botDomain}', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "index"]);
             Route::post('/add', [\App\Http\Controllers\Bots\AdminBotController::class, "addCashBack"]);
             Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"]);
             Route::post('/vip', [\App\Http\Controllers\Bots\AdminBotController::class, "vipStore"]);
@@ -255,6 +263,13 @@ Route::prefix("global-scripts")
 
         Route::post('/self', [BotController::class, "getSelf"]);
         Route::post('/callback', [BotController::class, "sendCallback"]);
+
+        Route::prefix("admin")
+            ->controller(AdminBotController::class)
+            ->group(function () {
+                Route::post('/load-statistic/{botDomain}', "statistic");
+
+            });
 
         Route::prefix("{scriptId}/wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)

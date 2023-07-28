@@ -67,6 +67,10 @@ class ShopScriptController extends SlugController
             ->where("bot_domain", $botDomain)
             ->first();
 
+        if (is_null($bot)){
+            Inertia::setRootView("bot");
+            return Inertia::render('Error');
+        }
 
         if ($scriptId =="route")
         {

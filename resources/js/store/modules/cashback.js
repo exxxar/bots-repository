@@ -14,11 +14,12 @@ const getters = {
 }
 
 const actions = {
-    async loadCashBack(context, payload = {dataObject: null, page: 0, size: 12}) {
+    async loadCashBack(context, payload = {dataObject: {telegram_chat_id: null}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12
 
-        let link = `${BASE_CASHBACK_LINK}/history?page=${page}&size=${size}`
+        let botDomain = window.currentBot.bot_domain || null
+        let link = `${BASE_CASHBACK_LINK}/history/${botDomain}?page=${page}&size=${size}`
         let method = 'POST'
         let data = payload.dataObject
 

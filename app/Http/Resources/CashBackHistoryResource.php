@@ -20,6 +20,7 @@ class CashBackHistoryResource extends JsonResource
             'user_id' => $this->user_id,
             'bot_id' => $this->bot_id,
             'employee_id' => $this->employee_id,
+            'employee' => $this->employee ?? null,
             'amount' => $this->amount,
             'level' => $this->level,
             'created_at' => $this->created_at,

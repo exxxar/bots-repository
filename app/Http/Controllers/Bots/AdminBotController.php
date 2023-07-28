@@ -21,87 +21,26 @@ class AdminBotController extends Controller
 {
 
 
-    public function adminMenu($botDomain, $userId = null)
+    public function statistic(Request $request, $botDomain)
     {
-
-        Inertia::setRootView("bot");
-
-        if (is_null($userId))
-            return Inertia::render('Error');
+        $request->validate([
+            "telegram_chat_id" => "required"
+        ]);
 
         $bot = \App\Models\Bot::query()
             ->where("bot_domain", $botDomain)
             ->first();
 
-        if (is_null($bot))
-            return Inertia::render('Error');
-
         $botUser = BotUser::query()
-            ->with(["user"])
             ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $userId)
+            ->where("telegram_chat_id", $request->telegram_chat_id)
             ->first();
 
         if (is_null($botUser))
-            return Inertia::render('Error');
+            return response()->noContent(404);
 
-        $cashBack = \App\Models\CashBack::query()
-            ->where("bot_id", $bot->id)
-            ->where("user_id", $botUser->user_id)
-            ->first();
-
-        $user = new \App\Http\Resources\UserResource($botUser->user);
-        $botUser = new \App\Http\Resources\BotUserResource($botUser);
-        $cashBack = new \App\Http\Resources\CashBackResource($cashBack);
-
-
-
-        return Inertia::render('Admin/AdminMain', [
-            'user' => json_decode($user->toJson()),
-            'botUser' => json_decode($botUser->toJson()),
-            'cashBack' => json_decode($cashBack->toJson()),
-        ]);
-
-    }
-
-    public function workDay($botDomain, $userId)
-    {
-
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-        $botUser = BotUser::query()
-            ->with(["user"])
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $userId)
-            ->first();
-
-        $user = new \App\Http\Resources\UserResource($botUser->user);
-        $botUser = new \App\Http\Resources\BotUserResource($botUser);
-
-        Inertia::setRootView("bot");
-
-        return Inertia::render('Admin/AdminWorkStatus', [
-            'user' => json_decode($user->toJson()),
-            'botUser' => json_decode($botUser->toJson()),
-        ]);
-    }
-
-    public function statistic($botDomain, $userId)
-    {
-
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-        $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $userId)
-            ->first();
-
-        $bot = new \App\Http\Resources\BotResource($bot);
-        $botUser = new \App\Http\Resources\BotUserResource($botUser);
+        if (!$botUser->is_admin)
+            return response()->noContent(400);
 
         $statistics = [
             "users_in_bd" => BotUser::query()
@@ -185,34 +124,17 @@ class AdminBotController extends Controller
                 ->sum("amount")
         ];
 
-        Inertia::setRootView("bot");
 
-        return Inertia::render('Admin/AdminStatistic', [
-            'bot' => json_decode($bot->toJson()),
-            'botUser' => json_decode($botUser->toJson()),
-            'statistic' => $statistics,
+        return response()->json([
+            'statistic' => $statistics
         ]);
+
     }
 
     public function promotion($botDomain, $userId)
     {
 
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
 
-        $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $userId)
-            ->first();
-
-        $bot = new \App\Http\Resources\BotResource($bot);
-        $botUser = new \App\Http\Resources\BotUserResource($botUser);
-
-        return Inertia::render('Admin/AdminPromotion', [
-            'bot' => json_decode($bot->toJson()),
-            'botUser' => json_decode($botUser->toJson()),
-        ]);
     }
 
     public function loadActiveAdminList(Request $request)
@@ -234,7 +156,7 @@ class AdminBotController extends Controller
             ->where("bot_id", $bot->id)
             //->where("is_work", true)
             ->where("is_admin", true)
-            ->orderBy("is_work","DESC")
+            ->orderBy("is_work", "DESC")
             ->paginate($size);
 
 
@@ -592,58 +514,14 @@ class AdminBotController extends Controller
             ->whereId($request->bot_id)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
-                "Вы изменили свой рабочий статус на <b>" . ($adminBotUser->is_work ? "Работаю" : "Не работаю") . "</b>.".
-                ($adminBotUser->is_work ? "Теперь вас МОГУТ выбирать для работы с CashBack":"Теперь вас НЕ могут выбирать для работы с CashBack"),
+                "Вы изменили свой рабочий статус на <b>" . ($adminBotUser->is_work ? "Работаю" : "Не работаю") . "</b>." .
+                ($adminBotUser->is_work ? "Теперь вас МОГУТ выбирать для работы с CashBack" : "Теперь вас НЕ могут выбирать для работы с CashBack"),
             );
 
         return response()->noContent();
     }
 
     public function getBotAdminMenu()
-    {
-
-        $botUser = BotManager::bot()->currentBotUser();
-
-        if (!$botUser->is_admin) {
-            BotManager::bot()->reply("Вы не являетесь администратором данного бота!");
-            return;
-        }
-
-        $bot_domain = BotManager::bot()->getSelf()->bot_domain;
-        $selfId = BotManager::bot()->getCurrentChatId();
-
-        BotManager::bot()->replyInlineKeyboard("Меню администратора", [
-            [
-                ["text" => "\xF0\x9F\x94\xB8Управление рабочим днем",
-                    "web_app" => [
-                        "url" => env("APP_URL") . "/admin/work-day/$bot_domain/$selfId"
-                    ]
-                ],
-            ],
-            [
-                ["text" => "\xF0\x9F\x94\xB8Перейти в админку бота",
-                    "web_app" => [
-                        "url" => env("APP_URL") . "/admin/$bot_domain/$selfId"
-                    ]
-                ],
-            ],
-
-            [
-                ["text" => "\xF0\x9F\x94\xB8Реклама в боте", "web_app" => [
-                    "url" => env("APP_URL") . "/promotion/$bot_domain/$selfId"
-                ]],
-            ],
-            [
-                ["text" => "\xF0\x9F\x94\xB8Статистика", "web_app" => [
-                    "url" => env("APP_URL") . "/statistic/$bot_domain/$selfId"
-                ]],
-            ]
-        ]);
-
-
-    }
-
-    public function getBotAdminMenuDemo()
     {
 
         $botUser = BotManager::bot()->currentBotUser();
@@ -678,7 +556,8 @@ class AdminBotController extends Controller
 
     }
 
-    public function deliverymanStore(Request $request){
+    public function deliverymanStore(Request $request)
+    {
         $request->validate([
             "bot_id" => "required",
             "tg" => "required",
@@ -772,7 +651,8 @@ class AdminBotController extends Controller
 
     }
 
-    public function vipFormDeliveryman($botDomain) {
+    public function vipFormDeliveryman($botDomain)
+    {
         $bot = \App\Models\Bot::query()
             ->where("bot_domain", $botDomain)
             ->first();
@@ -802,7 +682,8 @@ class AdminBotController extends Controller
 
     }
 
-    public function acceptUserInLocation(Request $request){
+    public function acceptUserInLocation(Request $request)
+    {
         $request->validate([
             "user_telegram_chat_id" => "required",
             "bot_id" => "required",

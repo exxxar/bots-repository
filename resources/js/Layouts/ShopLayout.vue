@@ -4,6 +4,7 @@ import {Head} from '@inertiajs/vue3'
 
 import Notifications from "@/Components/Shop/Modals/Notifications.vue";
 import AddToCartModal from "@/Components/Shop/Modals/AddToCartModal.vue";
+import CashBackItemInfoModal from "@/Components/Shop/Modals/CashBackItemInfoModal.vue";
 
 
 import ShareMenuBar from "@/Components/Shop/Modals/ShareMenuBar.vue";
@@ -19,6 +20,7 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
     </Head>
     <Preloader/>
     <AddToCartModal/>
+    <CashBackItemInfoModal/>
     <Notifications/>
 
 

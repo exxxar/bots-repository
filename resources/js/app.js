@@ -3,6 +3,7 @@ import './bootstrap';
 import BotNotification from './modules/notifications.js'
 import BotPreloader from './modules/preloader.js'
 import Cart from './modules/cart.js'
+import CashBack from './modules/cashback.js'
 
 import router from './router'
 
@@ -43,11 +44,15 @@ createInertiaApp({
             timeAgo(date) {
                 return moment(date).fromNow()
             },
+            current(date) {
+                return moment(date).format("YYYY-MM-DD")
+            },
         }
 
         app.config.globalProperties.$botNotification = BotNotification
         app.config.globalProperties.$cart = Cart
         app.config.globalProperties.$preloader = BotPreloader
+        app.config.globalProperties.$cashback = CashBack
 
         app
             .use(plugin)
