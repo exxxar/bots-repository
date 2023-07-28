@@ -5,7 +5,7 @@ const BASE_SHOP_LINK = '/global-scripts/shop'
 const BASE_CASHMAN_ADMIN_LINK = '/global-scripts/admin'
 
 let state = {
-...products.state
+    ...products.state
 }
 
 const getters = {
@@ -14,7 +14,32 @@ const getters = {
 
 const actions = {
     ...products.actions,
-    async cashmanAdminStatisticPrepare(context, payload = {telegram_chat_id:null}) {
+    async testCallback(context) {
+        let tgData = window.Telegram.WebApp.initData
+
+        console.log("tgData", tgData)
+
+        const urlParams = new URLSearchParams(tgData);
+        const hash = urlParams.get('hash');
+
+        let botDomain = window.currentBot.bot_domain || null
+
+        let link = `/test-auth/${botDomain}`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            hash: hash
+        })
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+
+    },
+    async cashmanAdminStatisticPrepare(context, payload = {telegram_chat_id: null}) {
 
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
@@ -22,8 +47,8 @@ const actions = {
         let link = `${BASE_CASHMAN_ADMIN_LINK}/load-statistic/${botDomain}`
             .replace('{scriptId}', slugId)
 
-        let _axios = util.makeAxiosFactory(link, 'POST',{
-            telegram_chat_id:payload.telegram_chat_id
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            telegram_chat_id: payload.telegram_chat_id
         })
 
         return _axios.then((response) => {
@@ -38,7 +63,7 @@ const actions = {
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 
-        let link = `${ BASE_CASHMAN_ADMIN_LINK}/load-data/${botDomain}`
+        let link = `${BASE_CASHMAN_ADMIN_LINK}/load-data/${botDomain}`
             .replace('{scriptId}', slugId)
 
         let _axios = util.makeAxiosFactory(link, 'GET')
@@ -56,7 +81,7 @@ const actions = {
         let slugId = window.currentScript || null
         let telegramChatId = window.self.telegram_chat_id || null
 
-        let link = `${ BASE_CASHMAN_ADMIN_LINK}/prepare/${botDomain}`
+        let link = `${BASE_CASHMAN_ADMIN_LINK}/prepare/${botDomain}`
             .replace('{scriptId}', slugId)
 
         let _axios = util.makeAxiosFactory(link, 'POST', {

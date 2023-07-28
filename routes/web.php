@@ -27,11 +27,7 @@ use Inertia\Inertia;
 */
 
 
-Route::get("/test-auth", function () {
-
-   dd(Auth::user());
-
-});
+Route::post("/test-auth/{botDomain}", [ShopScriptController::class,"shopTestCallback"]);
 
 
 

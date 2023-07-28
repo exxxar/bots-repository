@@ -346,7 +346,7 @@ export default {
 
     },
     mounted() {
-
+        this.$store.dispatch("testCallback")
         this.watchStore()
         this.loadRandomProducts()
 

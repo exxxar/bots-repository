@@ -107,17 +107,7 @@ class BotManager extends BotCore
             $this->botUser->save();
         }
 
-
-        $credentials = [
-            'email' => "admin@admin.com",
-            'password' => 'password',
-        ];
-
-        if (Auth::attempt($credentials)) {
-            Auth::getSession()->regenerate();
-            Log::info("auth success");
-        } else
-            Log::info("auth faild");
+        
     }
 
     protected function botStatusHandler(): BotStatusEnum

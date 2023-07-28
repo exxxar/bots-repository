@@ -62,6 +62,28 @@ class ShopScriptController extends SlugController
 
     }
 
+
+    public function shopTestCallback(Request $request, $botDomain)
+    {
+
+        $bot = Bot::query()->where("bot_domain", $botDomain)
+            ->first();
+
+        $data_check_string = $request->tgData;
+        $hash = $request->hash;
+        $secret_key = hash_hmac("sha256", $bot->bot_token, "WebAppData");
+
+        Log::info("data_check_string=$data_check_string");
+        Log::info("secret_key=$secret_key");
+        Log::info("hash generate=" . hash_hmac("sha256", $data_check_string, $secret_key));
+        Log::info("hash from tg=" . $hash);
+
+        if (hash_hmac("sha256", $data_check_string, $secret_key) == $hash) {
+            Log::info("hash success");
+        }
+
+    }
+
     public function shopHomePage(Request $request, $scriptId, $botDomain)
     {
         $bot = \App\Models\Bot::query()
@@ -69,13 +91,12 @@ class ShopScriptController extends SlugController
             ->where("bot_domain", $botDomain)
             ->first();
 
-        if (is_null($bot)){
+        if (is_null($bot)) {
             Inertia::setRootView("bot");
             return Inertia::render('Error');
         }
 
-        if ($scriptId =="route")
-        {
+        if ($scriptId == "route") {
             Inertia::setRootView("shop");
 
             return Inertia::render('Shop/Main', [
@@ -86,7 +107,7 @@ class ShopScriptController extends SlugController
         $slug = BotMenuSlug::query()
             ->where("id", $scriptId)
             ->where("bot_id", $bot->id)
-           // ->where("slug", self::SCRIPT)
+            // ->where("slug", self::SCRIPT)
             ->first();
 
         if (is_null($slug)) {
@@ -94,7 +115,6 @@ class ShopScriptController extends SlugController
             return Inertia::render('Error');
         }
 
-        Log::info(print_r(Auth::user(),true));
 
         Inertia::setRootView("shop");
 
