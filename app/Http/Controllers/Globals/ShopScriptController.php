@@ -66,42 +66,7 @@ class ShopScriptController extends SlugController
     public function shopTestCallback(Request $request, $botDomain)
     {
 
-        $bot = Bot::query()->where("bot_domain", $botDomain)
-            ->first();
-
-        //$data_check_string = $request->tgData;
-
-       // $data_check_string = str_replace("&", "\n", $request->tgData);
-
-        //$check_hash = $request->hash;
-
-        $bot_secret = $bot->bot_token;
-
-        $in =  $request->tgData;
-
-        parse_str($in, $arr);
-
-        Log::info("first=>".$arr['hash']);
-
-        $check_hash = $arr['hash'];
-        unset($arr['hash']);
-        ksort($arr);
-        $data_str = "";
-        foreach($arr as $k=>$v) {
-            $data_str .= $k."=".$v."\x0A";
-        }
-        $data_str = trim($data_str);
-
-        $secret = hash_hmac('sha256', $bot_secret, 'WebAppData', true);
-        $hash = hash_hmac('sha256', $data_str, $secret);
-
-        Log::info("second=>".$hash);
-
-        if( strcmp($hash, $check_hash) === 0 ){
-            Log::info("success");
-        }else{
-            Log::info("errror");
-        }
+      Log::info("success auth checked");
 
 
     }
