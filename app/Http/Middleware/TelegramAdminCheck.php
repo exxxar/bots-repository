@@ -50,6 +50,9 @@ class TelegramAdminCheck
             return \response()->json(["error" => "User is not admin"], 400);
 
         if ($this->validateTGData($bot->bot_token, $request->tgData)) {
+            $request->botUser = $botUser;
+            $request->bot = $bot;
+
             return $next($request);
         } else {
             return \response()->json(["error" => "some error"], 400);

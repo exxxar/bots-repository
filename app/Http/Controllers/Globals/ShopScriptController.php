@@ -66,7 +66,10 @@ class ShopScriptController extends SlugController
     public function shopTestCallback(Request $request, $botDomain)
     {
 
+
       Log::info("success auth checked");
+      Log::info("1".(   print_r($request->botUser ?? 'нет юзера',true)));
+      Log::info("2".(   print_r($request->bot ?? 'нет бота',true) ));
 
 
     }
