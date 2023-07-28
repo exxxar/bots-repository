@@ -36,7 +36,12 @@ class TelegramAdminCheck
 
         parse_str($request->tgData, $arr);
 
-        $tgUser= json_decode($arr['user']);
+        $tgUser = $arr['user'] ?? null;
+
+        if (is_null($tgUser))
+            return \response()->json(["error" => "TG user not found"], 404);
+
+        $tgUser = json_decode($tgUser);
 
         $botUser = BotUser::query()
             ->where("bot_id", $bot->id)

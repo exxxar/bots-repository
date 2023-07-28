@@ -27,9 +27,8 @@ use Inertia\Inertia;
 */
 
 
-Route::post("/test-auth", [ShopScriptController::class,"shopTestCallback"])
+Route::post("/test-auth", [ShopScriptController::class, "shopTestCallback"])
     ->middleware(["tgAuth.admin"]);
-
 
 
 Route::get("/test-amo", function () {
@@ -194,9 +193,15 @@ Route::prefix("bot")->group(function () {
 
     Route::prefix("cashback")
         ->group(function () {
-            Route::post('/history/{botDomain}', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "index"]);
-            Route::post('/add', [\App\Http\Controllers\Bots\AdminBotController::class, "addCashBack"]);
-            Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"]);
+            Route::post('/receiver', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "receiver"])
+                ->middleware(["tgAuth.any"]);
+
+            Route::post('/history', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "index"])
+                ->middleware(["tgAuth.any"]);
+            Route::post('/add', [\App\Http\Controllers\Bots\AdminBotController::class, "addCashBack"])
+                ->middleware(["tgAuth.any"]);
+            Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"])
+                ->middleware(["tgAuth.any"]);
             Route::post('/vip', [\App\Http\Controllers\Bots\AdminBotController::class, "vipStore"]);
             Route::post('/deliveryman', [\App\Http\Controllers\Bots\AdminBotController::class, "deliverymanStore"]);
             Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"]);
@@ -310,7 +315,7 @@ Route::prefix("global-scripts")
             });
 
         Route::get("{scriptId}/interface/{botDomain}/{path?}", [ShopScriptController::class, "shopHomePage"])
-            ->where("scriptId","[0-9]+|route");
+            ->where("scriptId", "[0-9]+|route");
 
 
     });

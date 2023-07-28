@@ -243,32 +243,26 @@ class AdminBotController extends Controller
     {
         $request->validate([
             "user_telegram_chat_id" => "required",
-            "bot_id" => "required",
-            "cashback" => "required",
+            "amount" => "required",
             "info" => "required",
-            "tg" => "required",
         ]);
 
         $userBotUser = BotUser::query()
-            ->with(["user"])
             ->where("telegram_chat_id", $request->user_telegram_chat_id)
             ->where("bot_id", $request->bot_id)
             ->first();
 
-        $adminBotUser = BotUser::query()
-            ->with(["user"])
-            ->where("telegram_chat_id", $request->tg["id"])
-            ->where("bot_id", $request->bot_id)
-            ->first();
+        $adminBotUser = $request->botUser ?? null;
+        $bot = $request->bot ?? null;
 
         if (is_null($userBotUser) || is_null($adminBotUser))
             return \response()->noContent(404);
 
         event(new CashBackEvent(
-            (int)$request->bot_id,
-            (int)$userBotUser->user->id,
-            (int)$adminBotUser->user->id,
-            ((float)$request->cashback ?? 0),
+            (int)$bot->id,
+            (int)$userBotUser->user_id,
+            (int)$adminBotUser->user_id,
+            ((float)$request->amount ?? 0),
             $request->info,
             CashBackDirectionEnum::Crediting
         ));
@@ -280,32 +274,26 @@ class AdminBotController extends Controller
     {
         $request->validate([
             "user_telegram_chat_id" => "required",
-            "bot_id" => "required",
-            "cashback" => "required",
+            "amount" => "required",
             "info" => "required",
-            "tg" => "required",
         ]);
 
         $userBotUser = BotUser::query()
-            ->with(["user"])
             ->where("telegram_chat_id", $request->user_telegram_chat_id)
             ->where("bot_id", $request->bot_id)
             ->first();
 
-        $adminBotUser = BotUser::query()
-            ->with(["user"])
-            ->where("telegram_chat_id", $request->tg["id"])
-            ->where("bot_id", $request->bot_id)
-            ->first();
+        $adminBotUser = $request->botUser ?? null;
+        $bot = $request->bot ?? null;
 
         if (is_null($userBotUser) || is_null($adminBotUser))
             return \response()->noContent(404);
 
         event(new CashBackEvent(
-            (int)$request->bot_id,
-            (int)$userBotUser->user->id,
-            (int)$adminBotUser->user->id,
-            ((float)$request->cashback ?? 0),
+            (int)$bot->id,
+            (int)$userBotUser->user_id,
+            (int)$adminBotUser->user_id,
+            ((float)$request->amount ?? 0),
             $request->info,
             CashBackDirectionEnum::Debiting
         ));

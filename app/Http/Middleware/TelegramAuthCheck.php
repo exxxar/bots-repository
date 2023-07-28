@@ -32,21 +32,24 @@ class TelegramAuthCheck
             ->first();
 
         if (is_null($bot)) {
-            Log::info("bot not found");
-            return \response()->json(["error" => "bot not found"], 400);
+            return \response()->json(["error" => "bot not found"], 404);
         }
 
         parse_str($request->tgData, $arr);
 
-        $tgUser= json_decode($arr['user']);
+        $tgUser = $arr['user'] ?? null;
 
+        if (is_null($tgUser))
+            return \response()->json(["error" => "TG user not found"], 404);
+
+        $tgUser = json_decode($tgUser);
         $botUser = BotUser::query()
             ->where("bot_id", $bot->id)
             ->where("telegram_chat_id", $tgUser->id)
             ->first();
 
         if (is_null($botUser))
-            return \response()->json(["error" => "Bot User not found"], 400);
+            return \response()->json(["error" => "Bot User not found"], 404);
 
         if ($this->validateTGData($bot->bot_token, $request->tgData)) {
 

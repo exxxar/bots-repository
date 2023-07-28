@@ -35,6 +35,7 @@ class BotUserResource extends JsonResource
             'is_admin' => $this->is_admin ?? false,
             'is_work' => $this->is_work ?? false,
             'in_dialog_mode' => $this->in_dialog_mode ?? false,
+            'cashBack' => $this->cashBack ?? null,
 
             'is_deliveryman' => $this->is_deliveryman ?? false,
             'current_latitude' => $this->current_latitude ?? 0,

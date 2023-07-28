@@ -15,10 +15,10 @@ const getters = {
 const actions = {
     ...products.actions,
     async testCallback(context) {
+        let link = `/test-auth`
+
         let tgData = window.Telegram.WebApp.initData
         let botDomain = window.currentBot.bot_domain || null
-
-        let link = `/test-auth`
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
             tgData: tgData,

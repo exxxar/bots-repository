@@ -14,16 +14,40 @@ const getters = {
 }
 
 const actions = {
-    async loadCashBack(context, payload = {dataObject: {telegram_chat_id: null}, page: 0, size: 12}) {
+    async loadReceiverUserData(context, payload = { dataObject:{ user_telegram_chat_id:null } }) {
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let link = `${BASE_CASHBACK_LINK}/receiver`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            return Promise.resolve(dataObject);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadCashBack(context, payload = { dataObject:{ user_telegram_chat_id:null } ,page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12
 
+        let tgData = window.Telegram.WebApp.initData
         let botDomain = window.currentBot.bot_domain || null
-        let link = `${BASE_CASHBACK_LINK}/history/${botDomain}?page=${page}&size=${size}`
-        let method = 'POST'
-        let data = payload.dataObject
 
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let link = `${BASE_CASHBACK_LINK}/history?page=${page}&size=${size}`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
 
         return _axios.then((response) => {
             let dataObject = response.data
@@ -36,10 +60,17 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async removeCashBack(context, payload){
+    async removeCashBack(context, payload = {dataObject: null}) {
         let link = `${BASE_CASHBACK_LINK}/remove`
 
-        let _axios = util.makeAxiosFactory(link, 'POST',  payload.dataObject)
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -48,10 +79,17 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async addCashBack(context, payload){
+    async addCashBack(context, payload = {dataObject: null}) {
         let link = `${BASE_CASHBACK_LINK}/add`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -61,7 +99,7 @@ const actions = {
         })
     },
 
-    async acceptUserInLocation(context, payload){
+    async acceptUserInLocation(context, payload) {
         let link = `${BASE_CASHBACK_LINK}/user-in-location`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
@@ -73,7 +111,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async saveDeliveryman(context, payload){
+    async saveDeliveryman(context, payload) {
         let link = `${BASE_CASHBACK_LINK}/deliveryman`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
@@ -85,7 +123,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async saveVip(context, payload){
+    async saveVip(context, payload) {
         let link = `${BASE_CASHBACK_LINK}/vip`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
