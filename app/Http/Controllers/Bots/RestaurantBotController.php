@@ -52,7 +52,7 @@ class RestaurantBotController extends Controller
                         [
                             ["text" => "\xF0\x9F\x8E\xB0Перейти в админку бота",
                                 "web_app" => [
-                                    "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admin-menu?user=$request_telegram_chat_id"
+                                    "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admin-main?user=$request_telegram_chat_id"
                                 ]
                             ],
                         ]
