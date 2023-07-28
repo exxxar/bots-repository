@@ -77,8 +77,8 @@ class ShopScriptController extends SlugController
        // $secret_key = hash_hmac("sha256", $bot->bot_token, "WebAppData");
 
 
-        $secret_key = bin2hex(hash_hmac( 'sha256', $bot->bot_token, "WebAppData", TRUE ));
-        $hash = bin2hex( hash_hmac( 'sha256', $data_check_string, $secret_key, TRUE ) );
+        $secret_key = hash_hmac( 'sha256', $bot->bot_token, "WebAppData", TRUE );
+        $hash =  hash_hmac( 'sha256', $data_check_string, $secret_key ) ;
 
         Log::info("data_check_string=$data_check_string");
         Log::info("secret_key=$secret_key");
