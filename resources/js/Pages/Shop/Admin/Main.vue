@@ -355,7 +355,7 @@ export default {
             })
         },
         removeCashBack() {
-            if ( this.request_telegram_chat_id)
+            if ( !this.request_telegram_chat_id)
             {
                 this.$botNotification.warning("Упс!","Вы должны выбрать пользователя!")
                 return
@@ -376,7 +376,7 @@ export default {
             })
         },
         addCashBack() {
-            if ( this.request_telegram_chat_id)
+            if ( !this.request_telegram_chat_id)
             {
                 this.$botNotification.warning("Упс!","Вы должны выбрать пользователя!")
                 return
