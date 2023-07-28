@@ -28,7 +28,7 @@ const actions = {
         let link = `/test-auth/${botDomain}`
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
+            tgData: tgData.replaceAll("&","\n"),
             hash: hash
         })
 

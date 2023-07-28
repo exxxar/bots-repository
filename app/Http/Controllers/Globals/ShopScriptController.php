@@ -69,9 +69,9 @@ class ShopScriptController extends SlugController
         $bot = Bot::query()->where("bot_domain", $botDomain)
             ->first();
 
-        //$data_check_string = $request->tgData;
+        $data_check_string = $request->tgData;
 
-        $data_check_string = str_replace("&", "\n", $request->tgData);
+       // $data_check_string = str_replace("&", "\n", $request->tgData);
 
         $hash = $request->hash;
         $secret_key = hash_hmac("sha256", $bot->bot_token, "WebAppData");
