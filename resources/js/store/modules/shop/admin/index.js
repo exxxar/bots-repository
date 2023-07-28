@@ -18,10 +18,11 @@ const actions = {
         let tgData = window.Telegram.WebApp.initData
         let botDomain = window.currentBot.bot_domain || null
 
-        let link = `/test-auth/${botDomain}`
+        let link = `/test-auth`
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData
+            tgData: tgData,
+            botDomain: botDomain
         })
 
         return _axios.then((response) => {

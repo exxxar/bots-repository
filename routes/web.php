@@ -27,7 +27,7 @@ use Inertia\Inertia;
 */
 
 
-Route::post("/test-auth/{botDomain}", [ShopScriptController::class,"shopTestCallback"])
+Route::post("/test-auth", [ShopScriptController::class,"shopTestCallback"])
     ->middleware(["tgAuth.admin"]);
 
 

@@ -21,7 +21,7 @@ class TelegramAdminCheck
     public function handle(Request $request, Closure $next): Response
     {
 
-        $botDomain = $request->route('botDomain') ?? null;
+        $botDomain = $request->botDomain ?? null;
 
         if (is_null($botDomain))
             return \response()->json(["error" => "bot domain not found"], 400);
