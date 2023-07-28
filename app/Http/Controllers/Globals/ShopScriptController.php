@@ -73,17 +73,27 @@ class ShopScriptController extends SlugController
 
        // $data_check_string = str_replace("&", "\n", $request->tgData);
 
-        $hash = $request->hash;
-        $secret_key = hash_hmac("sha256", $bot->bot_token, "WebAppData");
+        $check_hash = $request->hash;
+       // $secret_key = hash_hmac("sha256", $bot->bot_token, "WebAppData");
+
+
+        $secret_key = hash_hmac( 'sha256', $bot->bot_token, "WebAppData", TRUE );
+        $hash = bin2hex( hash_hmac( 'sha256', $data_check_string, $secret_key, TRUE ) );
 
         Log::info("data_check_string=$data_check_string");
         Log::info("secret_key=$secret_key");
-        Log::info("hash generate=" . hash_hmac("sha256", $data_check_string, $secret_key));
-        Log::info("hash from tg=" . $hash);
+        Log::info("hash generate=" . $hash);
+        Log::info("hash from tg=" . $check_hash);
 
-        if (hash_hmac("sha256", $data_check_string, $secret_key) == $hash) {
-            Log::info("hash success");
+        if( strcmp($hash, $check_hash) === 0 ){
+            // validation success
+            Log::info("succees");
+        }else {
+            // validation failed
+            Log::info("failed");
         }
+
+
 
     }
 
