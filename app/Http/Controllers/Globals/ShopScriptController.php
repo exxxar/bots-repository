@@ -69,16 +69,19 @@ class ShopScriptController extends SlugController
         $bot = Bot::query()->where("bot_domain", $botDomain)
             ->first();
 
-        $data_check_string = $request->tgData;
+        //$data_check_string = $request->tgData;
+
+        $data_check_string = str_replace("&", "\n", $request->tgData);
+
         $hash = $request->hash;
         $secret_key = hash_hmac("sha256", $bot->bot_token, "WebAppData");
 
         Log::info("data_check_string=$data_check_string");
         Log::info("secret_key=$secret_key");
-        Log::info("hash generate=" . hash_hmac("sha256", $data_check_string, $secret_key));
+        Log::info("hash generate=" . hash_hmac("sha256", $data_check_string, $secret_key, true));
         Log::info("hash from tg=" . $hash);
 
-        if (hash_hmac("sha256", $data_check_string, $secret_key) == $hash) {
+        if (hash_hmac("sha256", $data_check_string, $secret_key, true) == $hash) {
             Log::info("hash success");
         }
 

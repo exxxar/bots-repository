@@ -22,6 +22,7 @@ const actions = {
         const urlParams = new URLSearchParams(tgData);
         const hash = urlParams.get('hash');
 
+
         let botDomain = window.currentBot.bot_domain || null
 
         let link = `/test-auth/${botDomain}`
