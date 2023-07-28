@@ -249,7 +249,7 @@ class AdminBotController extends Controller
 
         $userBotUser = BotUser::query()
             ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot_id)
+            ->where("bot_id", $request->bot->id)
             ->first();
 
         $adminBotUser = $request->botUser ?? null;
@@ -280,11 +280,12 @@ class AdminBotController extends Controller
 
         $userBotUser = BotUser::query()
             ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot_id)
+            ->where("bot_id", $request->bot->id)
             ->first();
 
         $adminBotUser = $request->botUser ?? null;
         $bot = $request->bot ?? null;
+
 
         if (is_null($userBotUser) || is_null($adminBotUser))
             return \response()->noContent(404);

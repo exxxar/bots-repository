@@ -23,6 +23,23 @@ class TelegramAuthCheck
     {
         $botDomain = $request->botDomain ?? null;
 
+        $isDebug = env("APP_DEBUG");
+
+        if ($isDebug){
+            $bot = Bot::query()->where("bot_domain", $botDomain)
+                ->first();
+
+            $botUser = BotUser::query()
+                ->where("bot_id", $bot->id)
+                ->where("telegram_chat_id", "484698703")
+                ->first();
+
+            $request->botUser = $botUser;
+            $request->bot = $bot;
+
+            return $next($request);
+        }
+
         if (is_null($botDomain)) {
             Log::info("bot domain not found");
             return \response()->json(["error" => "bot domain not found"], 400);
