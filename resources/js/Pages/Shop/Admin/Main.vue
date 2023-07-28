@@ -370,9 +370,10 @@ export default {
                 this.loading = false
                 this.cashbackForm.amount = 0
                 this.cashbackForm.info = null
-                window.location.reload()
+                this.$botNotification.success("Отлично!","Вы успешно списали кэшбэк")
             }).catch(() => {
                 this.loading = false
+                this.$botNotification.warning("Упс!","Что-то пошло не так")
             })
         },
         addCashBack() {
@@ -391,9 +392,10 @@ export default {
                 this.loading = false
                 this.cashbackForm.amount = 0
                 this.cashbackForm.info = null
-                window.location.reload()
+                this.$botNotification.success("Отлично!","Вы успешно зачислили кэшбэк")
             }).catch(() => {
                 this.loading = false
+                this.$botNotification.warning("Упс!","Что-то пошло не так")
             })
         },
         addAdmin() {
