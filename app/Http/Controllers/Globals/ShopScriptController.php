@@ -11,6 +11,8 @@ use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -92,6 +94,7 @@ class ShopScriptController extends SlugController
             return Inertia::render('Error');
         }
 
+        Log::info(print_r(Auth::user(),true));
 
         Inertia::setRootView("shop");
 
