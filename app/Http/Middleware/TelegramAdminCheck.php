@@ -39,7 +39,8 @@ class TelegramAdminCheck
 
         $user= $arr['user'];
 
-        Log::info("USER=>".print_r($user, true));
+        Log::info("full=>".print_r($request->tgData, true));
+        Log::info("USER=>".print_r(json_decode($user), true));
 
         if ($this->validateTGData($bot->bot_token, $request->tgData)) {
             return $next($request);
