@@ -63,7 +63,7 @@ class ShopScriptController extends SlugController
     }
 
 
-    public function shopTestCallback(Request $request, $botDomain)
+    public function shopTestCallback(Request $request)
     {
 
 
