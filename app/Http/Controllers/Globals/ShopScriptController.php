@@ -85,7 +85,7 @@ class ShopScriptController extends SlugController
 
         unset($arr['hash']);
         ksort($arr);
-
+        $data_str = "";
         foreach($arr as $k=>$v) {
             $data_str .= $k."=".$v."\x0A";
         }
