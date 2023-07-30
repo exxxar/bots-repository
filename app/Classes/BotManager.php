@@ -99,7 +99,7 @@ class BotManager extends BotCore
                     'amount' => 0,
                 ]);
             } catch (\Exception $e) {
-                Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+                Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
             }
 
         } else {
@@ -240,8 +240,10 @@ class BotManager extends BotCore
 
         } else if (count($images) === 1) {
 
+            if (mb_strlen($content) >= 1024)
+                $this->reply($content);
 
-            $this->replyPhoto($content,
+            $this->replyPhoto(mb_strlen($content) >= 1024 ? "Изображения к странице" : $content,
                 InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0]),
                 $iMenu
             );
