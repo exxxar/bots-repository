@@ -196,12 +196,12 @@ class BotManager extends BotCore
     protected function prepareTemplatePage($page)
     {
 
-      /*  $this->recursivePages = ($this->recursivePages ?? []);
+        $this->recursivePages = ($this->recursivePages ?? []);
 
-        if (in_array($page->id, $this->recursivePages)) {
+        if (!in_array($page->id, $this->recursivePages))
             $this->recursivePages[] = $page->id;
+        else
             return;
-        }*/
 
         if (is_null($page))
             return;
@@ -264,12 +264,12 @@ class BotManager extends BotCore
         if (!empty($replyKeyboard) && $needSendReplyMenu)
             $this->replyKeyboard("Меню страницы", $rMenu);
 
-      /*  if (!is_null($page->next_page_id)) {
+        if (!is_null($page->next_page_id)) {
             $next = BotPage::query()
                 ->find($page->next_page_id);
 
             $this->prepareTemplatePage($next);
-        }*/
+        }
 
     }
 
