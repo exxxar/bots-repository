@@ -80,7 +80,7 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
                                           maxlength="4096"
                                           placeholder="Введите текст"
                                           id="floatingTextarea2" style="min-height: 100px"></textarea>
-                <label for="floatingTextarea2">Содержимое страницы <span v-if="pageForm.content.length>0">{{pageForm.content.length}}/4096 </span></label>
+                <label for="floatingTextarea2">Содержимое страницы <span v-if="pageForm.content">{{pageForm.content.length}}/4096 </span></label>
             </div>
 
         </div>
