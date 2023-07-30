@@ -12,6 +12,7 @@ import ShareMenuBar from "@/Components/Shop/Modals/ShareMenuBar.vue";
 import HighlightsMenuBar from "@/Components/Shop/Modals/HighlightsMenuBar.vue";
 import Preloader from "@/Components/Shop/Helpers/Preloader.vue";
 import SideBar from "@/Components/Shop/Modals/SideBar.vue";
+import SideBarAdmin from "@/Components/Shop/Modals/SideBarAdmin.vue";
 </script>
 <template>
 
@@ -138,12 +139,10 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
             </router-link>
 
 
-            <router-link
-                :active-class="'active-nav'"
-                :tag="'a'" :to="'/admin-users'">
-                <i class="fa-solid fa-users"></i><span class="color-white">Пользователи</span>
-                <strong v-if="$route.path=='/admin-users'"></strong>
-            </router-link>
+            <a href="#" data-menu="menu-admin-main">
+                <i class="fa-solid fa-bars"></i><span class="color-white">Меню</span>
+            </a>
+
 
             <!--
                         <a href="#" data-menu="menu-main">
@@ -159,6 +158,7 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
         <HighlightsMenuBar/>
 
         <SideBar/>
+        <SideBarAdmin/>
     </div>
 
 </template>
