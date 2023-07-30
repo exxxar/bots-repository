@@ -14,6 +14,8 @@ const getters = {
 }
 
 const actions = {
+
+
     async loadReceiverUserData(context, payload = { dataObject:{ user_telegram_chat_id:null } }) {
         let tgData = window.Telegram.WebApp.initData
         let botDomain = window.currentBot.bot_domain || null
@@ -102,7 +104,14 @@ const actions = {
     async acceptUserInLocation(context, payload) {
         let link = `${BASE_CASHBACK_LINK}/user-in-location`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

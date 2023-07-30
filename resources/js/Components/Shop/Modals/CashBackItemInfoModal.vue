@@ -1,6 +1,6 @@
 <template>
     <div id="cashback-item-info" class="menu menu-box-bottom menu-box-detached rounded-m d-block"
-         style="height:220px; display:block;"
+         style="height:50vh; display:block;"
          data-menu-effect="menu-over">
 
         <div class="w-100" v-if="item">
@@ -84,7 +84,6 @@ export default {
         window.addEventListener("show-chashback-info", (e) => {
             this.item = e.detail.item || null
 
-            console.log("tesst")
 
             this.$nextTick(() => {
 

@@ -7,4 +7,12 @@ export default {
         }));
     },
 
+    eventInfo(item = null){
+        window.dispatchEvent(new CustomEvent('show-event-info', {
+            detail:{
+                item: item,
+            }
+        }));
+    },
+
 }

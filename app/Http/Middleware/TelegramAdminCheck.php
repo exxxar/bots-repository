@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Facades\BotMethods;
 use App\Http\Middleware\Service\Utilities;
 use App\Models\Bot;
 use App\Models\BotUser;
@@ -68,8 +69,17 @@ class TelegramAdminCheck
         if (is_null($botUser))
             return \response()->json(["error" => "Bot User not found"], 400);
 
-        if (!$botUser->is_admin)
+        if (!$botUser->is_admin) {
+            BotMethods::bot()
+                ->whereId($bot->id)
+                ->sendMessage(
+                    $botUser->telegram_chat_id,
+                    "Вы не являетесь администратором данного бота! Данное действие недоступно!"
+                );
+
             return \response()->json(["error" => "User is not admin"], 400);
+        }
+
 
         if ($this->validateTGData($bot->bot_token, $request->tgData)) {
             $request->botUser = $botUser;

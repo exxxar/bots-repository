@@ -185,10 +185,33 @@ Route::prefix("bot")->group(function () {
         ->group(function () {
             Route::post('/', "loadActiveAdminList");
             Route::post('/request', "requestCashBack");
-            Route::post('/add', "addAdmin");
-            Route::post('/remove', "removeAdmin");
-            Route::post('/self-remove', "selfRemoveAdmin");
-            Route::post('/work-status', "workStatus");
+            Route::post('/add', "addAdmin")
+                ->middleware(["tgAuth.admin"]);
+            Route::post('/send-approve', "sendApprove")
+                ->middleware(["tgAuth.admin"]);
+
+            Route::post('/remove', "removeAdmin")
+                ->middleware(["tgAuth.admin"]);
+            Route::post('/self-remove', "selfRemoveAdmin")
+                ->middleware(["tgAuth.admin"]);
+            Route::post('/work-status', "workStatus")
+                ->middleware(["tgAuth.admin"]);
+        });
+
+    Route::prefix("users")
+        ->controller(\App\Http\Controllers\Admin\BotUsersController::class)
+        ->group(function () {
+            Route::post("/search", "loadBotUsers")
+                ->middleware(["tgAuth.admin"]);
+
+        });
+
+    Route::prefix("actions")
+        ->controller(\App\Http\Controllers\Admin\BotUsersController::class)
+        ->group(function () {
+            Route::post("/history", "loadActionStatusHistories")
+                ->middleware(["tgAuth.admin"]);
+
         });
 
     Route::prefix("cashback")
@@ -204,7 +227,8 @@ Route::prefix("bot")->group(function () {
                 ->middleware(["tgAuth.any"]);
             Route::post('/vip', [\App\Http\Controllers\Bots\AdminBotController::class, "vipStore"]);
             Route::post('/deliveryman', [\App\Http\Controllers\Bots\AdminBotController::class, "deliverymanStore"]);
-            Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"]);
+            Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"])
+                ->middleware(["tgAuth.admin"]);
         });
 
     Route::any('/register-webhooks', [\App\Http\Controllers\Admin\TelegramController::class, "registerWebhooks"]);

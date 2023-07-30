@@ -49,10 +49,36 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async sendApproveToUser(context, payload){
+        let link = `${BASE_ADMINS_LINK}/send-approve`
+
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async addAdmin(context, payload){
         let link = `${BASE_ADMINS_LINK}/add`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -64,7 +90,14 @@ const actions = {
     async removeAdmin(context, payload){
         let link = `${BASE_ADMINS_LINK}/remove`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -77,7 +110,14 @@ const actions = {
 
         let link = `${BASE_ADMINS_LINK}/self-remove`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -92,7 +132,14 @@ const actions = {
 
         let link = `${BASE_ADMINS_LINK}/work-status`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

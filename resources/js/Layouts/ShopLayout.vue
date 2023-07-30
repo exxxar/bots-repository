@@ -5,6 +5,7 @@ import {Head} from '@inertiajs/vue3'
 import Notifications from "@/Components/Shop/Modals/Notifications.vue";
 import AddToCartModal from "@/Components/Shop/Modals/AddToCartModal.vue";
 import CashBackItemInfoModal from "@/Components/Shop/Modals/CashBackItemInfoModal.vue";
+import EventCallbackForm from "@/Components/Shop/Modals/EventCallbackForm.vue";
 
 
 import ShareMenuBar from "@/Components/Shop/Modals/ShareMenuBar.vue";
@@ -21,6 +22,7 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
     <Preloader/>
     <AddToCartModal/>
     <CashBackItemInfoModal/>
+    <EventCallbackForm/>
     <Notifications/>
 
 
@@ -98,14 +100,20 @@ import SideBar from "@/Components/Shop/Modals/SideBar.vue";
              v-if="$route.meta.need_admin_menu"
              class="footer-bar-5 bg-dark2-dark mb-2 ml-2 mr-2 rounded-m">
 
-            <router-link
+<!--            <router-link
                 :active-class="'active-nav'"
                 :tag="'a'" :to="'/admin-orders'">
                 <i class="fa-solid fa-basket-shopping"></i><span class="color-white">Зазказы</span><em
                 class="badge bg-green1-dark">0</em>
                 <strong v-if="$route.path=='/admin-orders'"></strong>
-            </router-link>
+            </router-link>-->
 
+            <router-link
+                :active-class="'active-nav'"
+                :tag="'a'" :to="'/admin-actions'">
+                <i class="fa-solid fa-bolt"></i><span class="color-white">События</span>
+                <strong v-if="$route.path=='/admin-actions'"></strong>
+            </router-link>
 
             <router-link
                 :active-class="'active-nav'"

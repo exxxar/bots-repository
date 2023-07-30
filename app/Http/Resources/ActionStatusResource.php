@@ -17,6 +17,8 @@ class ActionStatusResource extends JsonResource
             'user_id' => $this->user_id,
             'bot_id' => $this->bot_id,
             'slug_id' => $this->slug_id,
+            'slug'=>$this->whenLoaded("slug"),
+            'bot_user'=>$this->bot_user?? null,
             'max_attempts' => $this->max_attempts,
             'current_attempts' => $this->current_attempts,
             'completed_at' => $this->completed_at,

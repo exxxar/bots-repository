@@ -1,19 +1,27 @@
 import products from './products'
+import users from './users'
+import events from './actions'
 import util from "@/store/modules/utilites";
 
 const BASE_SHOP_LINK = '/global-scripts/shop'
 const BASE_CASHMAN_ADMIN_LINK = '/global-scripts/admin'
 
 let state = {
-    ...products.state
+    ...products.state,
+    ...users.state,
+    ...events.state,
 }
 
 const getters = {
-    ...products.getters
+    ...products.getters,
+    ...users.getters,
+    ...events.getters,
 }
 
 const actions = {
     ...products.actions,
+    ...users.actions,
+    ...events.actions,
     async testCallback(context) {
         let link = `/test-auth`
 
@@ -105,7 +113,9 @@ const actions = {
 }
 
 const mutations = {
-    ...products.mutations
+    ...products.mutations,
+    ...users.mutations,
+    ...events.mutations,
 }
 
 const shopAdminModule = {

@@ -8,6 +8,7 @@ use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BotUserResource;
+use App\Models\ActionStatus;
 use App\Models\Bot;
 use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
@@ -302,58 +303,99 @@ class AdminBotController extends Controller
         return response()->noContent();
     }
 
-    public function addAdmin(Request $request)
+    public function sendApprove(Request $request)
     {
         $request->validate([
             "user_telegram_chat_id" => "required",
-            "bot_id" => "required",
             "info" => "required",
-            "tg" => "required",
+            "action_id" => "required",
         ]);
 
+        $info = $request->info ?? '-';
+
+
         $userBotUser = BotUser::query()
-            ->with(["user"])
             ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot_id)
+            ->where("bot_id", $request->bot->id)
             ->first();
 
-        $adminBotUser = BotUser::query()
-            ->with(["user"])
-            ->where("telegram_chat_id", $request->tg["id"])
-            ->where("bot_id", $request->bot_id)
-            ->first();
+        $adminBotUser = $request->botUser;
 
-        if (is_null($userBotUser) || is_null($adminBotUser))
+
+        if (is_null($userBotUser))
             return response()->noContent(404);
-
-
-        if (!$adminBotUser->is_admin) {
-            BotMethods::bot()
-                ->whereId($request->bot_id)
-                ->sendMessage(
-                    $adminBotUser->telegram_chat_id,
-                    "Вы не являетесь администратором данного бота! Данное действие недоступно!"
-                );
-
-            return response()->noContent(400);
-        }
 
         $userBotUser->is_admin = true;
         $userBotUser->save();
 
+        $action = ActionStatus::query()->find($request->action_id);
+        $data = $action->data;
+
+        $tmp = [];
+        foreach ($data as $item) {
+            $item["answered_at"] = Carbon::now();
+            $item["answered_by"] = BotMethods::prepareUserName($adminBotUser);
+
+            $tmp[] = $item;
+        }
+        $action->data = $tmp;
+        $action->save();
+
+
         BotMethods::bot()
-            ->whereId($request->bot_id)
-            ->sendSlugKeyboard(
+            ->whereId($request->bot->id)
+            ->sendMessage(
                 $userBotUser->telegram_chat_id,
-                "Вас назначили администратором данного бота!Повторно запустите команду /start",
-                "main_menu_restaurant_3"
+                "Информация от администратора:\n$info"
             );
 
 
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($request->bot_id)
+            ->whereId($request->bot->id)
+            ->sendMessage(
+                $adminBotUser->telegram_chat_id,
+                "Вы успешно отправили сообщение для <b>$name</b>",
+            );
+
+        return response()->noContent();
+    }
+
+    public function addAdmin(Request $request)
+    {
+        $request->validate([
+            "user_telegram_chat_id" => "required",
+            "info" => "required",
+        ]);
+
+        $info = $request->info ?? '-';
+
+        $userBotUser = BotUser::query()
+            ->where("telegram_chat_id", $request->user_telegram_chat_id)
+            ->where("bot_id", $request->bot->id)
+            ->first();
+
+        $adminBotUser = $request->botUser;
+
+        if (is_null($userBotUser))
+            return response()->noContent(404);
+
+        $userBotUser->is_admin = true;
+        $userBotUser->save();
+
+        BotMethods::bot()
+            ->whereId($request->bot->id)
+            ->sendMessage(
+                $userBotUser->telegram_chat_id,
+                "Вас назначили администратором данного бота!Повторно запустите команду /start:\n$info"
+            );
+
+
+        $name = BotMethods::prepareUserName($userBotUser);
+
+        BotMethods::bot()
+            ->whereId($request->bot->id)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы успешно назанчили администратором <b>$name</b>",
@@ -366,54 +408,35 @@ class AdminBotController extends Controller
     {
         $request->validate([
             "user_telegram_chat_id" => "required",
-            "bot_id" => "required",
             "info" => "required",
-            "tg" => "required",
         ]);
 
+        $info = $request->info ?? '-';
+
         $userBotUser = BotUser::query()
-            ->with(["user"])
             ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot_id)
+            ->where("bot_id", $request->bot->id)
             ->first();
 
-        $adminBotUser = BotUser::query()
-            ->with(["user"])
-            ->where("telegram_chat_id", $request->tg["id"])
-            ->where("bot_id", $request->bot_id)
-            ->first();
+        $adminBotUser = $request->botUser;
 
-        if (is_null($userBotUser) || is_null($adminBotUser))
+        if (is_null($userBotUser))
             return response()->noContent(404);
-
-
-        if (!$adminBotUser->is_admin) {
-            BotMethods::bot()
-                ->whereId($request->bot_id)
-                ->sendMessage(
-                    $adminBotUser->telegram_chat_id,
-                    "Вы не являетесь администратором данного бота! Данное действие недоступно!",
-                );
-            return response()->noContent(400);
-        }
 
         $userBotUser->is_admin = false;
         $userBotUser->save();
 
         BotMethods::bot()
-            ->whereId($request->bot_id)
-            ->sendSlugKeyboard(
+            ->whereId($request->bot->id)
+            ->sendMessage(
                 $userBotUser->telegram_chat_id,
-                "Вас разжаловали с должности администратора, теперь вам недоступны административные возможности",
-                (!$userBotUser->is_vip ?
-                    "main_menu_restaurant_1" :
-                    "main_menu_restaurant_2")
+                "Вас разжаловали с должности администратора, теперь вам недоступны административные возможности:\n$info"
             );
 
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($request->bot_id)
+            ->whereId($request->bot->id)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы успешно убрали статус администратора у пользовтеля <b>$name</b>",
@@ -424,45 +447,16 @@ class AdminBotController extends Controller
 
     public function selfRemoveAdmin(Request $request)
     {
-        $request->validate([
-            "bot_id" => "required",
-            "tg" => "required",
-        ]);
 
-
-        $adminBotUser = BotUser::query()
-            ->with(["bot"])
-            ->where("telegram_chat_id", $request->tg["id"])
-            ->where("bot_id", $request->bot_id)
-            ->first();
-
-
-        if (is_null($adminBotUser))
-            return response()->noContent(404);
-
-
-        if (!$adminBotUser->is_admin) {
-            BotMethods::bot()
-                ->whereId($request->bot_id)
-                ->sendMessage(
-                    $adminBotUser->telegram_chat_id,
-                    "Вы не являетесь администратором данного бота! Данное действие недоступно!"
-                );
-
-            return response()->noContent(400);
-        }
-
+        $adminBotUser = $request->botUser;
         $adminBotUser->is_admin = false;
         $adminBotUser->save();
 
         BotMethods::bot()
-            ->whereId($request->bot_id)
-            ->sendSlugKeyboard(
+            ->whereId($request->bot->id)
+            ->sendMessage(
                 $adminBotUser->telegram_chat_id,
-                "Вас разжаловали с должности администратора, теперь вам недоступны административные возможности",
-                (!$adminBotUser->is_vip ?
-                    "main_menu_restaurant_1" :
-                    "main_menu_restaurant_2")
+                "Вас разжаловали с должности администратора, теперь вам недоступны административные возможности"
             );
 
         return response()->noContent();
@@ -470,37 +464,13 @@ class AdminBotController extends Controller
 
     public function workStatus(Request $request)
     {
-        $request->validate([
-            "bot_id" => "required",
-            "tg" => "required",
-        ]);
 
-
-        $adminBotUser = BotUser::query()
-            ->with(["bot"])
-            ->where("telegram_chat_id", $request->tg["id"])
-            ->where("bot_id", $request->bot_id)
-            ->first();
-
-        if (is_null($adminBotUser))
-            return response()->noContent(404);
-
-        if (!$adminBotUser->is_admin) {
-            BotMethods::bot()
-                ->whereId($request->bot_id)
-                ->sendMessage(
-                    $adminBotUser->telegram_chat_id,
-                    "Вы не являетесь администратором данного бота! Данное действие недоступно!"
-                );
-
-            return response()->noContent(400);
-        }
-
+        $adminBotUser = $request->botUser;
         $adminBotUser->is_work = !$adminBotUser->is_work;
         $adminBotUser->save();
 
         BotMethods::bot()
-            ->whereId($request->bot_id)
+            ->whereId($request->bot->id)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы изменили свой рабочий статус на <b>" . ($adminBotUser->is_work ? "Работаю" : "Не работаю") . "</b>." .
@@ -675,40 +645,38 @@ class AdminBotController extends Controller
     {
         $request->validate([
             "user_telegram_chat_id" => "required",
-            "bot_id" => "required",
             "info" => "required",
-            "tg" => "required",
         ]);
+
+        $info = $request->info ?? '-';
 
         $userBotUser = BotUser::query()
             ->with(["user"])
             ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot_id)
+            ->where("bot_id", $request->bot->id)
             ->first();
 
-        $adminBotUser = BotUser::query()
-            ->with(["user"])
-            ->where("telegram_chat_id", $request->tg["id"])
-            ->where("bot_id", $request->bot_id)
-            ->first();
+        $adminBotUser = $request->botUser;
 
-        if (is_null($userBotUser) || is_null($adminBotUser))
+        if (is_null($userBotUser))
             return response()->noContent(404);
-
-
-        if (!$adminBotUser->is_admin) {
-            BotMethods::bot()
-                ->whereId($request->bot_id)
-                ->sendMessage(
-                    $adminBotUser->telegram_chat_id,
-                    "Вы не являетесь администратором данного бота! Данное действие недоступно!",
-                );
-            return response()->noContent(400);
-        }
 
         $userBotUser->user_in_location = true;
         $userBotUser->location_comment = $request->info ?? null;
         $userBotUser->save();
+
+        $name = BotMethods::prepareUserName($userBotUser);
+
+        BotMethods::bot()
+            ->whereId($request->bot->id)
+            ->sendMessage(
+                $userBotUser->telegram_chat_id,
+                "Вас отметили в заведении с сообщением:\n$info"
+            )
+            ->sendMessage(
+                $adminBotUser->telegram_chat_id,
+                "Вы отметили пользователя $name в заведении."
+            );
 
         return response()->noContent();
     }

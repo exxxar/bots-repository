@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ActionStatus extends Model
 {
@@ -35,9 +37,11 @@ class ActionStatus extends Model
         'user_id' => 'integer',
         'bot_id' => 'integer',
         'slug_id' => 'integer',
-        'completed_at' => 'timestamp',
+        'completed_at' => 'datetime:Y-m-d',
         'data' => 'array',
     ];
+
+    protected $appends = ["bot_user"];
 
     public function bot(): BelongsTo
     {
@@ -52,6 +56,15 @@ class ActionStatus extends Model
     public function slug(): BelongsTo
     {
         return $this->belongsTo(BotMenuSlug::class);
+    }
+
+    public function getBotUserAttribute()
+    {
+        return BotUser::query()
+            ->where("user_id", $this->user_id)
+            ->where("bot_id", $this->bot_id)
+            ->first();
+
     }
 
 

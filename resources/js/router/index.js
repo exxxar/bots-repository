@@ -26,6 +26,7 @@ import AdminStatistic from '@/Pages/Shop/Admin/Statistic.vue';
 import AdminWorkStatus from '@/Pages/Shop/Admin/WorkStatus.vue';
 import AdminOrders from '@/Pages/Shop/Admin/Orders.vue';
 import AdminUsers from '@/Pages/Shop/Admin/Users.vue';
+import AdminActions from '@/Pages/Shop/Admin/Actions.vue';
 
 export const routes = [
 
@@ -167,6 +168,12 @@ export const adminRoutes = [
         path: '/admin-users',
         component: AdminUsers,
         meta: { title: 'Админ панель: Пользователи', hide_menu:true, need_admin_menu:true }
+    },
+    {
+        name: 'adminactions',
+        path: '/admin-actions',
+        component: AdminActions,
+        meta: { title: 'Админ панель: События', hide_menu:true, need_admin_menu:true }
     },
     {
         name: 'adminorders',

@@ -62,7 +62,7 @@ export default {
             if (!this.pagination)
                 return [];
 
-            let index = parseInt(this.pagination.meta.links.find(item=>item.active===true).label)
+            let index = parseInt(this.pagination.meta.current_page)
 
             return this.pagination.meta.links
         }

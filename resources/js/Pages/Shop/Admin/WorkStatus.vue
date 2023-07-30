@@ -18,8 +18,8 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
                 <button
                     type="button"
                     :disabled="loading"
-                   @click="workStateChange"
-                   class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-green2-light w-100">
+                    @click="workStateChange"
+                    class="btn btn-m btn-full mb-1 rounded-s text-uppercase font-900 shadow-s bg-green2-light w-100">
                     <span v-if="botUser.is_work">Завершить рабочую смену</span>
                     <span v-if="!botUser.is_work">Начать рабочую смены</span>
                 </button>
@@ -27,8 +27,8 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
                 <button
                     type="button"
                     :disabled="loading||!botUser.is_admin"
-                    @click="botUserRemove"
-                    class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
+                    @click="selfRemove"
+                    class="btn btn-m btn-full mb-1 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">
                     Разжаловать себя из администраторов
                 </button>
             </div>
@@ -38,7 +38,7 @@ import ReturnToBot from "@/Components/Shop/Helpers/ReturnToBot.vue";
             <div class="content">
                 <h4 class="color-white">Внимание!</h4>
                 <p class="color-white">
-                  Данная страница доступа только администраторам заведения!
+                    Данная страница доступа только администраторам заведения!
                 </p>
             </div>
         </div>
@@ -56,6 +56,9 @@ export default {
     },
     computed: {
         ...mapGetters(['getSelf']),
+        tg() {
+            return window.Telegram.WebApp;
+        },
     },
     watch: {
         'getSelf': function () {
@@ -63,53 +66,48 @@ export default {
         }
     },
     mounted() {
-        if (this.getSelf)
-        {
+        if (this.getSelf) {
             this.botUser = this.getSelf
         }
     },
     methods: {
-        prepareUserData() {
-            return this.$store.dispatch("cashmanAdminUserDataPrepare")
-                .then((response) => {
-                    this.action = response.action
-
-                })
-        },
-
-        loadServiceData() {
-            return this.$store.dispatch("cashmanAdminLoadData")
-                .then((response) => {
-                })
-        },
-        botUserRemove() {
-            this.loading = true;
-            this.$store.dispatch("botUserRemove", {
+        loadReceiverUserData() {
+            this.loading = true
+            this.$store.dispatch("loadReceiverUserData", {
                 dataObject: {
-                    bot_id: this.botUser.bot_id,
-                    tg: this.tgUser ///????
-                }
-            }).then((resp) => {
+                    user_telegram_chat_id: this.botUser.telegram_chat_id
+                },
+            }).then(resp => {
+                this.botUser = resp.data
                 this.loading = false
-                window.location.reload()
             }).catch(() => {
                 this.loading = false
+            })
+        },
+        selfRemove() {
+            this.loading = true;
+            this.$store.dispatch("selfRemove").then((resp) => {
+                this.loading = false
+                this.loadReceiverUserData()
+                this.$botNotification.success("Отлично!", "Вы больше не являетесь администратором")
+                setTimeout(() => {
+                    this.tg.close();
+                }, 1000)
+            }).catch(() => {
+                this.loading = false
+                this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
         },
 
         workStateChange() {
             this.loading = true;
-            this.$store.dispatch("workStateChange", {
-                dataObject: {
-                    bot_id: this.botUser.bot_id,
-                    tg: this.tgUser ///??
-                }
-
-            }).then((resp) => {
+            this.$store.dispatch("workStateChange").then((resp) => {
                 this.loading = false
-                window.location.reload()
+                this.loadReceiverUserData()
+                this.$botNotification.success("Отлично!", "Вы успешно изменили свой рабочий статус")
             }).catch(() => {
                 this.loading = false
+                this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
         },
     }
