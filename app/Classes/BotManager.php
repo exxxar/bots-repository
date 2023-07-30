@@ -23,7 +23,7 @@ class BotManager extends BotCore
 {
     use BotMethodsTrait, BotDialogTrait;
 
-    private $botPageDepth;
+    private $recursivePages;
 
     private $botUser;
 
@@ -196,10 +196,12 @@ class BotManager extends BotCore
     protected function prepareTemplatePage($page)
     {
 
-        $this->botPageDepth = ($this->botPageDepth ?? 0) + 1;
+        $this->recursivePages = ($this->recursivePages ?? []);
 
-        if ($this->botPageDepth>=5)
+        if (in_array($page->id, $this->recursivePages)) {
+            $this->recursivePages[] = $page->id;
             return;
+        }
 
         if (is_null($page))
             return;
