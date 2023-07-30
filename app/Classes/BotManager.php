@@ -196,12 +196,12 @@ class BotManager extends BotCore
     protected function prepareTemplatePage($page)
     {
 
-        $this->recursivePages = ($this->recursivePages ?? []);
+      /*  $this->recursivePages = ($this->recursivePages ?? []);
 
         if (in_array($page->id, $this->recursivePages)) {
             $this->recursivePages[] = $page->id;
             return;
-        }
+        }*/
 
         if (is_null($page))
             return;
