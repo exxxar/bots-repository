@@ -255,12 +255,12 @@ class BotManager extends BotCore
         if (!empty($replyKeyboard) && $needSendReplyMenu)
             $this->replyKeyboard("Меню страницы", $rMenu);
 
-        if (!is_null($page->next_page_id)) {
+     /*   if (!is_null($page->next_page_id)) {
             $next = BotPage::query()
                 ->find($page->next_page_id);
 
             $this->prepareTemplatePage($next);
-        }
+        }*/
 
     }
 
