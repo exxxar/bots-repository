@@ -99,7 +99,7 @@ class BotManager extends BotCore
                     'amount' => 0,
                 ]);
             } catch (\Exception $e) {
-                Log::info("Error TBH " . $e->getMessage() . " " . $e->getLine());
+                Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
             }
 
         } else {
@@ -107,7 +107,7 @@ class BotManager extends BotCore
             $this->botUser->save();
         }
 
-        
+
     }
 
     protected function botStatusHandler(): BotStatusEnum

@@ -58,58 +58,6 @@ abstract class BotCore
 
     protected abstract function stopBotDialog(): void;
 
-    /*protected function selfScriptDiagnostic($item): void
-    {
-        try {
-
-            $tmp = Collection::make($this->slugs)
-                ->where("path", $item->slug)
-                ->first();
-
-            if (is_null($tmp)) {
-                Log::warning("Script $item->slug not found in system");
-                return;
-            }
-
-            $refl = new ReflectionClass($tmp["controller"]);
-
-            $slugActualKeyCollection = Collection::make($item->config)
-                ->pluck("key")
-                ->toArray();
-
-            $tmp = $item->config ?? [];
-
-            foreach ($refl->getConstants() as $key => $const) {
-                if (str_starts_with($key, "KEY_") && !in_array($const, $slugActualKeyCollection)) {
-
-
-                    $type = "text";
-
-                    if (str_starts_with($const, "need_") || str_starts_with($const, "is_"))
-                        $type = "boolean";
-
-                    if (str_starts_with($const, "image_"))
-                        $type = "image";
-
-
-                    $tmp[] = (object)[
-                        "key" => $const,
-                        "value" => null,
-                        "type" => $type,
-                    ];
-                }
-
-            }
-
-            if (count($tmp) > count($item->config ?? [])) {
-                $item->config = $tmp;
-                $item->save();
-            }
-
-        } catch (\Exception $e) {
-            Log::error("Diagnostic module fail:" . $e->getMessage());
-        }
-    }*/
 
     public function getCurrentChatId()
     {
@@ -135,7 +83,7 @@ abstract class BotCore
 
             $find = true;
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . " " . $e->getLine());
+            Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
         }
 
         return $find;
@@ -216,7 +164,7 @@ abstract class BotCore
                     ]);
                     return true;
                 } catch (\Exception $e) {
-                    Log::error($e->getMessage() . " " . $e->getLine());
+                    Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
                 }
         }
 
@@ -316,7 +264,6 @@ abstract class BotCore
                                 "value" => $slug->id,
                             ];
 
-                          //  $this->selfScriptDiagnostic($slug);
 
                             $this->tryCall($item, $message,
                                 $config, []);
@@ -340,6 +287,7 @@ abstract class BotCore
                     break;
                 }
             } catch (\Exception $e) {
+                Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
                 return $find;
             }
 
@@ -578,8 +526,8 @@ abstract class BotCore
                 $this->shippingQueryHandler($item->shipping_query);
                 return;
             }
-        } catch (\Exception $exception) {
-            Log::info($exception->getMessage());
+        } catch (\Exception $e) {
+            Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
         }
 
 
@@ -609,8 +557,8 @@ abstract class BotCore
                 $this->successfulPaymentHandler($item->message->successful_payment);
                 return;
             }
-        } catch (\Exception $exception) {
-            Log::info($exception->getMessage());
+        } catch (\Exception $e) {
+            Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
         }
 
 
@@ -685,8 +633,8 @@ abstract class BotCore
                 app($controller)->config($this->getSelf());
             }
 
-        } catch (\Exception $exception) {
-            Log::info($exception->getMessage());
+        } catch (\Exception $e) {
+            Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
         }
         return $this;
     }
