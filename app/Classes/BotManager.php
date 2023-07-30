@@ -23,6 +23,8 @@ class BotManager extends BotCore
 {
     use BotMethodsTrait, BotDialogTrait;
 
+    private $botPageDepth;
+
     private $botUser;
 
     public function bot()
@@ -194,6 +196,11 @@ class BotManager extends BotCore
     protected function prepareTemplatePage($page)
     {
 
+        $this->botPageDepth = ($this->botPageDepth ?? 0) + 1;
+
+        if ($this->botPageDepth>=5)
+            return;
+
         if (is_null($page))
             return;
 
@@ -255,12 +262,12 @@ class BotManager extends BotCore
         if (!empty($replyKeyboard) && $needSendReplyMenu)
             $this->replyKeyboard("Меню страницы", $rMenu);
 
-     /*   if (!is_null($page->next_page_id)) {
+        if (!is_null($page->next_page_id)) {
             $next = BotPage::query()
                 ->find($page->next_page_id);
 
             $this->prepareTemplatePage($next);
-        }*/
+        }
 
     }
 
