@@ -276,12 +276,7 @@ abstract class BotCore
                         return true;
                     }
 
-                    if (!is_null($template->page->next_page_id)) {
-                        $next = BotPage::query()
-                            ->find($template->page->next_page_id);
 
-                        $this->prepareTemplatePage($next);
-                    }
 
                     $find = true;
                     break;

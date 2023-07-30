@@ -412,7 +412,7 @@ export default {
                 if (this.pageForm.next_bot_menu_slug_id != null)
                     this.need_attach_slug = true
 
-                if (this.pageForm.need_attach_page != null)
+                if (this.pageForm.next_page_id != null)
                     this.need_attach_page = true
 
                 this.need_clean = true
