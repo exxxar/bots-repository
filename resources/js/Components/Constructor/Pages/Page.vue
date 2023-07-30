@@ -77,9 +77,10 @@ import BotDialogGroupListSimple from "@/Components/Constructor/Dialogs/BotDialog
             <div class="form-floating">
                                 <textarea class="form-control"
                                           v-model="pageForm.content"
+                                          maxlength="4096"
                                           placeholder="Введите текст"
                                           id="floatingTextarea2" style="min-height: 100px"></textarea>
-                <label for="floatingTextarea2">Содержимое страницы</label>
+                <label for="floatingTextarea2">Содержимое страницы <span v-if="pageForm.content.length>0">{{pageForm.content.length}}/4096 </span></label>
             </div>
 
         </div>
@@ -410,6 +411,9 @@ export default {
 
                 if (this.pageForm.next_bot_menu_slug_id != null)
                     this.need_attach_slug = true
+
+                if (this.pageForm.need_attach_page != null)
+                    this.need_attach_page = true
 
                 this.need_clean = true
             },
