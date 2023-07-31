@@ -68,6 +68,25 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async sendInvoice(context, payload){
+        let link = `${BASE_ADMINS_LINK}/send-invoice`
+
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async addAdmin(context, payload){
         let link = `${BASE_ADMINS_LINK}/add`
 

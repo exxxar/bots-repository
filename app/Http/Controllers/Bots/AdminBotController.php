@@ -14,8 +14,12 @@ use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class AdminBotController extends Controller
@@ -256,6 +260,8 @@ class AdminBotController extends Controller
         $adminBotUser = $request->botUser ?? null;
         $bot = $request->bot ?? null;
 
+        $percent = $request->percent ?? null;
+
         if (is_null($userBotUser) || is_null($adminBotUser))
             return \response()->noContent(404);
 
@@ -265,7 +271,8 @@ class AdminBotController extends Controller
             (int)$adminBotUser->user_id,
             ((float)$request->amount ?? 0),
             $request->info,
-            CashBackDirectionEnum::Crediting
+            CashBackDirectionEnum::Crediting,
+            $percent
         ));
 
         return \response()->noContent();
@@ -303,6 +310,89 @@ class AdminBotController extends Controller
         return response()->noContent();
     }
 
+
+    public function sendInvoice(Request $request)
+    {
+        $request->validate([
+            "user_telegram_chat_id" => "required",
+            "info" => "required",
+            "amount" => "required|integer",
+        ]);
+
+        $info = $request->info ?? '-';
+        $amount = ($request->amount ?? 100) * 100;
+        $bot = $request->bot;
+
+        $userBotUser = BotUser::query()
+            ->where("telegram_chat_id", $request->user_telegram_chat_id)
+            ->where("bot_id", $request->bot->id)
+            ->first();
+
+        $adminBotUser = $request->botUser;
+
+        if (is_null($userBotUser))
+            return response()->noContent(404);
+
+
+        $prices = [
+            [
+                "label" => "Счет на оплату",
+                "amount" => $amount
+            ]
+        ];
+        $payload = bin2hex(Str::uuid());
+
+        $providerToken = $bot->payment_provider_token;
+        $currency = "RUB";
+
+        Transaction::query()->create([
+            'user_id' => $userBotUser->user_id,
+            'bot_id' => $bot->id,
+            'payload' => $payload,
+            'currency' => $currency,
+            'total_amount' => $amount,
+            'status' => 0,
+            'products_info' => (object)[
+                "payload" => $payloadData ?? null,
+                "prices" => $prices,
+            ],
+        ]);
+
+        $needs = [
+            "need_name" => true,
+            "need_phone_number" => true,
+            "need_email" => false,
+            "need_shipping_address" => false,
+            "send_phone_number_to_provider" => false,
+            "send_email_to_provider" => false,
+            "is_flexible" => false,
+            "disable_notification" => false,
+            "protect_content" => false,
+        ];
+
+
+        $keyboard = [
+            [
+                ["text" => "Оплатить", "pay" => true],
+            ],
+
+        ];
+
+        $name = BotMethods::prepareUserName($userBotUser);
+
+        BotMethods::bot()
+            ->whereId($request->bot->id)
+            ->sendInvoice(
+                $userBotUser->telegram_chat_id,
+                "Счет на оплату", $info, $prices, $payload, $providerToken, $currency, $needs, $keyboard)
+            ->sendMessage(
+                $adminBotUser->telegram_chat_id,
+                "Вы отправили счет на оплату пользователю $name:\n".($request->amount ?? 100)."руб\n$info"
+            );
+
+        return response()->noContent();
+    }
+
     public function sendApprove(Request $request)
     {
         $request->validate([
@@ -324,9 +414,6 @@ class AdminBotController extends Controller
 
         if (is_null($userBotUser))
             return response()->noContent(404);
-
-        $userBotUser->is_admin = true;
-        $userBotUser->save();
 
         $action = ActionStatus::query()->find($request->action_id);
         $data = $action->data;

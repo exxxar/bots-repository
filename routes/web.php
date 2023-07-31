@@ -185,6 +185,8 @@ Route::prefix("bot")->group(function () {
         ->group(function () {
             Route::post('/', "loadActiveAdminList");
             Route::post('/request', "requestCashBack");
+            Route::post('/send-invoice', "sendInvoice")
+                ->middleware(["tgAuth.admin"]);
             Route::post('/add', "addAdmin")
                 ->middleware(["tgAuth.admin"]);
             Route::post('/send-approve', "sendApprove")

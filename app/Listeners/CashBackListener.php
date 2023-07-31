@@ -73,9 +73,13 @@ class CashBackListener
 
         if ($event->directionEnum == CashBackDirectionEnum::Crediting) {
 
-            $levels[] = $bot->level_1 ?? env("BASE_CASHBACK_LEVEL_1") ?? 0;
-            $levels[] = $bot->level_2 ?? env("BASE_CASHBACK_LEVEL_2") ?? 0;
-            $levels[] = $bot->level_3 ?? env("BASE_CASHBACK_LEVEL_3") ?? 0;
+            if (is_null($event->percent)) {
+                $levels[] = $bot->level_1 ?? env("BASE_CASHBACK_LEVEL_1") ?? 0;
+                $levels[] = $bot->level_2 ?? env("BASE_CASHBACK_LEVEL_2") ?? 0;
+                $levels[] = $bot->level_3 ?? env("BASE_CASHBACK_LEVEL_3") ?? 0;
+            } else
+                $levels[] = $event->percent;
+
 
             $nextUser = $botUserUser->user;
             $admin = $botUserAdmin->user;

@@ -104,6 +104,41 @@ import UserSearchForm from "@/Components/Shop/Users/UserSearchForm.vue";
 
                 <a
                     href="#"
+                    @click.prevent="openSection(6)"
+                    v-bind:class="{'bg-blue2-dark text-white':section===6, 'color-blue2-dark':section!==6}"
+                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Запрос на оплату</a>
+
+                <form v-on:submit.prevent="sendInvoice" v-if="section===6">
+                    <div class="mb-3">
+                        <label for="bill-amount" class="form-label">Значение на оплату, руб</label>
+                        <input class="form-control"
+                               type="number"
+                               min="100"
+                               step="50"
+                                  placeholder="100"
+                                  v-model="invoiceForm.amount"
+                                  id="bill-amount"  required/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bill-info" class="form-label">Введите сообщение для пользователя</label>
+                        <textarea class="form-control"
+                                  placeholder="Текст запроса"
+                                  v-model="invoiceForm.info"
+                                  id="bill-info" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <button
+                            :disabled="loading"
+                            type="submit"
+                            class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
+                            Отправить запрос
+                        </button>
+                    </div>
+                </form>
+
+                <a
+                    href="#"
                     @click.prevent="openSection(1)"
                     v-bind:class="{'bg-blue2-dark text-white':section===1, 'color-blue2-dark':section!==1}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark  ">Списать
@@ -148,6 +183,24 @@ import UserSearchForm from "@/Components/Shop/Users/UserSearchForm.vue";
 
                 <form v-on:submit.prevent="addCashBack" v-if="section===2">
                     <p>У пользователя <strong>{{ botUser.cashBack.amount || 0 }} руб</strong> CashBack</p>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input"
+                               v-model="cashbackForm.need_custom_percents"
+                               type="checkbox" value="" id="need_custom_cashback_amount">
+                        <label class="form-check-label" for="need_custom_cashback_amount">
+                            Нужен нестандартный % CashBack
+                        </label>
+                    </div>
+
+                    <div class="mb-3" v-if="cashbackForm.need_custom_percents">
+                        <label for="bill-percent" class="form-label">% CashBack-а</label>
+                        <input type="number" min="0" class="form-control"
+                               id="bill-percent"
+                               v-model="cashbackForm.percent"
+                               placeholder="Значите %" required>
+                    </div>
+
                     <div class="mb-3">
                         <label for="bill-amount" class="form-label">Сумма в чеке, руб</label>
                         <input type="number" min="0" class="form-control"
@@ -260,6 +313,10 @@ export default {
             cashback_paginate_object: null,
             referrals_paginate_object: null,
 
+            invoiceForm:{
+              amount:100,
+              info: null,
+            },
             locationForm: {
                 info: null,
             },
@@ -269,6 +326,8 @@ export default {
             },
 
             cashbackForm: {
+                percent: null,
+                need_custom_percents:false,
                 amount: null,
                 info: null
             }
@@ -432,6 +491,23 @@ export default {
                 this.loadReceiverUserData()
                 this.loadCashBack()
                 this.$botNotification.success("Отлично!", "Вы успешно зачислили кэшбэк")
+            }).catch(() => {
+                this.loading = false
+                this.$botNotification.warning("Упс!", "Что-то пошло не так")
+            })
+        },
+        sendInvoice(){
+            this.loading = true;
+            this.$store.dispatch("sendInvoice", {
+                dataObject: {
+                    user_telegram_chat_id: this.request_telegram_chat_id,
+                    ...this.invoiceForm
+                }
+            }).then((resp) => {
+                this.loading = false
+                this.invoiceForm.info = null
+                this.loadReceiverUserData()
+                this.$botNotification.success("Отлично!", "Вы успешно отправили пользователю запрос на оплату")
             }).catch(() => {
                 this.loading = false
                 this.$botNotification.warning("Упс!", "Что-то пошло не так")
