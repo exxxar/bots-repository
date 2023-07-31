@@ -58,7 +58,6 @@
                 :tag="'a'" :to="'/admin-shop-manager'">
                 <i class="fa-solid fa-basket-shopping"></i>
                 <span>Менеджер магазина</span>
-                <strong class="badge bg-highlight color-white" v-if="cartTotalCount>0">{{ cartTotalCount }}</strong>
                 <i class="fa fa-circle"></i>
             </router-link>
 
@@ -77,7 +76,6 @@
                 :tag="'a'" :to="'/admin-promotion'">
                 <i class="fa-brands fa-adversal" style="color:orange;"></i>
                 <span>Реклама</span>
-                <strong class="badge bg-highlight color-white" v-if="favoritesCount>0">{{favoritesCount}}</strong>
                 <i class="fa fa-circle"></i>
             </router-link>
 

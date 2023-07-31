@@ -513,7 +513,6 @@ import AmoForm from "@/Components/Constructor/Amo/AmoForm.vue";
                 </div>
 
 
-
                 <div class="col-12 ">
                     <div class="card mb-3">
                         <div class="card-header">
@@ -751,7 +750,7 @@ export default {
                 photos: [],
                 selected_bot_template_id: null,
                 pages: [],
-                amo:null
+                amo: null
             },
         }
     },
@@ -808,6 +807,8 @@ export default {
                     amo: this.bot.amo || null,
                 }
 
+                if (this.botForm.payment_provider_token)
+                    this.need_payments = true
             })
     },
     methods: {

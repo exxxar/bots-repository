@@ -29,23 +29,27 @@ import Pagination from '@/Components/Pagination.vue';
 
                         v-for="(page, index) in pages"
                        >
-                        <strong  @click="selectPage(page)">#{{ page.id || 'Не указано' }} {{ page.slug.command || 'Не указано' }}
-                        <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
-                        </strong>
+                        <div  v-if="page.slug">
+                            <strong  @click="selectPage(page)">#{{ page.id || 'Не указано' }} {{ page.slug.command || 'Не указано' }}
+                                <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
+                            </strong>
 
-                        <div v-if="editor">
+                            <div v-if="editor">
 
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-ellipsis"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item"  @click="duplicatePage(page.id)"><i class="fa-solid fa-copy mr-1"></i>Дублировать</a></li>
-                                    <li><a class="dropdown-item"  @click="removePage(page.id)"><i class="fa-solid fa-trash mr-1"></i>Удалить</a></li>
-                                </ul>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-ellipsis"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item"  @click="duplicatePage(page.id)"><i class="fa-solid fa-copy mr-1"></i>Дублировать</a></li>
+                                        <li><a class="dropdown-item"  @click="removePage(page.id)"><i class="fa-solid fa-trash mr-1"></i>Удалить</a></li>
+                                    </ul>
+                                </div>
+
                             </div>
 
                         </div>
+
 
                     </li>
                 </ul>
