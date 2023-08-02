@@ -361,15 +361,16 @@ class AdminBotController extends Controller
         $needs = [
             "need_name" => true,
             "need_phone_number" => true,
-            "need_email" => false,
+            "need_email" => true,
             "need_shipping_address" => false,
-            "send_phone_number_to_provider" => false,
-            "send_email_to_provider" => false,
+            "send_phone_number_to_provider" => true,
+            "send_email_to_provider" => true,
             "is_flexible" => false,
             "disable_notification" => false,
             "protect_content" => false,
         ];
 
+        $taxSystemCode = $bot->company->vat_code ?? 1;
 
         $keyboard = [
             [
@@ -378,13 +379,27 @@ class AdminBotController extends Controller
 
         ];
 
+        $providerData = (object)[
+            "receipt" => [
+                (object)[
+                    "description"=>"Счет на оплату",
+                    "quantity"=>"1.00",
+                    "amount"=>(object)[
+                        "value"=>$amount/100,
+                        "currency"=>$currency
+                    ],
+                    "vat_code"=>$taxSystemCode
+                ]
+            ]
+        ];
+
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
             ->whereId($request->bot->id)
             ->sendInvoice(
                 $userBotUser->telegram_chat_id,
-                "Счет на оплату", $info, $prices, $payload, $providerToken, $currency, $needs, $keyboard)
+                "Счет на оплату", $info, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы отправили счет на оплату пользователю $name:\n".($request->amount ?? 100)."руб\n$info"
@@ -591,7 +606,7 @@ class AdminBotController extends Controller
                     'menu' => [
                         [
                             ["text" => "Открыть", "web_app" => [
-                                "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admin-main"//"/restaurant/active-admins/$bot->bot_domain"
+                                "url" => env("APP_URL") . "/bot-client/route/interface/$bot->bot_domain#/admin-main"//"/restaurant/active-admins/$bot->bot_domain"
                             ]],
                         ],
                     ],

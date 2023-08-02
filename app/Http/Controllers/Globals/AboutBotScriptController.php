@@ -71,7 +71,7 @@ class AboutBotScriptController extends SlugController
                         [
                             "text" => "\xF0\x9F\x8D\x80Написать в тех. поддержку",
                             "web_app" => [
-                                "url" => env("APP_URL") . "/global-scripts/about-bot/callback/" . $bot->bot_domain
+                                "url" => env("APP_URL") . "/bot-client/about-bot/callback/" . $bot->bot_domain
                             ]
                         ],
                     ],

@@ -27,7 +27,9 @@ class TelegramAdminCheck
         $isDebug = env("APP_DEBUG");
 
         if ($isDebug){
-            $bot = Bot::query()->where("bot_domain", $botDomain)
+            $bot = Bot::query()
+                ->with(["company"])
+                ->where("bot_domain", $botDomain)
                 ->first();
 
             $botUser = BotUser::query()
@@ -45,7 +47,9 @@ class TelegramAdminCheck
             return \response()->json(["error" => "bot domain not found"], 400);
 
 
-        $bot = Bot::query()->where("bot_domain", $botDomain)
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("bot_domain", $botDomain)
             ->first();
 
         if (is_null($bot))

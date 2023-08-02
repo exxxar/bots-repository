@@ -91,6 +91,7 @@ class CompanyController extends Controller
             'description' => "required|string:255",
             'address' => "required|string:255",
             'email' => "required|string:255",
+            'vat_code' => "required|integer",
         ]);
 
         $creatorId = Auth::user()->id ?? null;
@@ -131,6 +132,7 @@ class CompanyController extends Controller
             'description' => "required|string:255",
             'address' => "required|string:255",
             'email' => "required|string:255",
+            'vat_code' => "required|integer",
         ]);
 
         $creatorId = Auth::user()->id ?? null;

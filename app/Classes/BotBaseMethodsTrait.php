@@ -116,7 +116,7 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard)
+    public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken,  $currency, $needs, $keyboard, $providerData = null)
     {
         $tmp = [
             "chat_id" => $chatId,
@@ -124,6 +124,7 @@ trait BotBaseMethodsTrait
             "description" => $description,
             "payload" => $payload,
             "provider_token" => $providerToken ?? env("PAYMENT_PROVIDER_TOKEN"),
+            "provider_data" => $providerData,
             "currency" => $currency ?? env("PAYMENT_PROVIDER_CURRENCY"),
             "prices" => $prices,
             ...$needs,

@@ -37,7 +37,7 @@ class SinglePaymentScriptController extends SlugController
                 'comment' => "Модуль оплаты одной услуги или товара",
             ]);
 
-        if ( empty($model->config ?? [])) {
+        if (empty($model->config ?? [])) {
             $model->config = [
                 [
                     "type" => "text",
@@ -90,19 +90,25 @@ class SinglePaymentScriptController extends SlugController
                 [
                     "type" => "boolean",
                     "key" => "need_send_email_to_provider",
-                    "value" => false,
+                    "value" => true,
 
                 ],
                 [
                     "type" => "boolean",
                     "key" => "need_send_phone_number_to_provider",
-                    "value" => false,
+                    "value" => true,
 
                 ],
                 [
                     "type" => "boolean",
                     "key" => "is_flexible",
                     "value" => false,
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "tax_system_code",
+                    "value" => 1,
 
                 ],
                 [
@@ -156,6 +162,10 @@ class SinglePaymentScriptController extends SlugController
             ->where("key", "product_price")
             ->first())["value"] ?? 10000;
 
+        $taxSystemCode = (Collection::make($config[1])
+            ->where("key", "tax_system_code")
+            ->first())["value"] ?? $bot->company->vat_code ?? 1;
+
 
         if ($price < 10000) {
             \App\Facades\BotManager::bot()
@@ -201,7 +211,7 @@ class SinglePaymentScriptController extends SlugController
             "need_shipping_address" => (Collection::make($config[1])
                     ->where("key", "need_shipping_address")
                     ->first())["value"] ?? false,
-            "send_phone_number_to_provider" => (Collection::make($config[1])
+                "send_phone_number_to_provider" => (Collection::make($config[1])
                     ->where("key", "need_send_phone_number_to_provider")
                     ->first())["value"] ?? false,
             "send_email_to_provider" => (Collection::make($config[1])
@@ -226,9 +236,24 @@ class SinglePaymentScriptController extends SlugController
 
         ];
 
+        $providerData = (object)[
+            "receipt" => [
+                (object)[
+                    "description"=>"$title $description",
+                    "quantity"=>"1.00",
+                    "amount"=>(object)[
+                        "value"=>$price/100,
+                        "currency"=>$currency
+                    ],
+                    "vat_code"=>$taxSystemCode
+                ]
+            ]
+        ];
+
         \App\Facades\BotManager::bot()
             ->replyInvoice(
-                $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard
+                $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard,
+                $providerData
             );
     }
 }

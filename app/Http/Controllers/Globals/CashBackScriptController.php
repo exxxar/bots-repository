@@ -22,7 +22,7 @@ class CashBackScriptController extends SlugController
     {
         $hasMainScript = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
-            ->where("slug","global_cashback_main")
+            ->where("slug", "global_cashback_main")
             ->first();
 
         if (is_null($hasMainScript))
@@ -86,7 +86,7 @@ class CashBackScriptController extends SlugController
                 'comment' => "Бронирование столика",
             ]);
 
-        if (empty($model->config ?? [])){
+        if (empty($model->config ?? [])) {
             $model->config = [
                 [
                     "type" => "text",
@@ -122,7 +122,7 @@ class CashBackScriptController extends SlugController
                     'menu' => [
                         [
                             ["text" => "Пригласить администратора", "web_app" => [
-                                "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admins"//"/restaurant/active-admins/$bot->bot_domain"
+                                "url" => env("APP_URL") . "/bot-client/route/interface/$bot->bot_domain#/admins"//"/restaurant/active-admins/$bot->bot_domain"
                             ]],
                         ],
                     ],
@@ -161,7 +161,7 @@ class CashBackScriptController extends SlugController
                     'menu' => [
                         [
                             ["text" => $btnText, "web_app" => [
-                                "url" => env("APP_URL") . "/global-scripts/$slugId/interface/$bot->bot_domain#/book-a-table"//"/restaurant/active-admins/$bot->bot_domain"
+                                "url" => env("APP_URL") . "/bot-client/$slugId/interface/$bot->bot_domain#/book-a-table"//"/restaurant/active-admins/$bot->bot_domain"
                             ]],
                         ],
                     ],
@@ -285,7 +285,7 @@ class CashBackScriptController extends SlugController
     {
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
-            ->first())["value"];
+            ->first())["value"] ?? 'cashback';
 
         $bot = BotManager::bot()->getSelf();
 
@@ -300,6 +300,7 @@ class CashBackScriptController extends SlugController
             return;
         }
 
+
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
@@ -307,18 +308,21 @@ class CashBackScriptController extends SlugController
                     'type' => 'inline',
                     'slug' => "menu_cashback_request_$slugId",
 
-                ], [
-                'menu' => [
-                    [
-                        ["text" => "\xF0\x9F\x8E\xB2Пригласить администратора", "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/route/interface/$bot->bot_domain#/admins"
-                        ]],
-                    ],
                 ],
-            ]);
+                [
+                    'menu' => [
+                        [
+                            ["text" => "\xF0\x9F\x8E\xB2Пригласить администратора", "web_app" => [
+                                "url" => env("APP_URL") . "/bot-client/route/interface/$bot->bot_domain#/admins"
+                            ]],
+                        ],
+                    ],
+                ]);
 
         BotManager::bot()
             ->replyInlineKeyboard("Меню вызова администратора", $menu->menu);
+
+
     }
 
     public function specialCashBackSystem(...$config)
@@ -342,7 +346,7 @@ class CashBackScriptController extends SlugController
                     [
                         [
                             ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                                "url" => env("APP_URL") . "/global-scripts/$slugId/interface/$bot->bot_domain#/vip"//"/restaurant/active-admins/$bot->bot_domain"
+                                "url" => env("APP_URL") . "/bot-client/$slugId/interface/$bot->bot_domain#/vip"//"/restaurant/active-admins/$bot->bot_domain"
 
                             ]],
                         ],

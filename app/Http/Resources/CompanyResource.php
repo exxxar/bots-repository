@@ -20,19 +20,20 @@ class CompanyResource extends JsonResource
             'image' => $this->image,
             'address' => $this->address,
             'phones' => $this->phones,
+            'vat_code' => $this->vat_code ?? 1,
             'links' => $this->links,
             'email' => $this->email,
             'schedule' => $this->schedule,
             'manager' => $this->manager,
             'is_active' => $this->is_active,
-            'creator_id' => $this->creator_id??null,
-            'owner_id' => $this->owner_id??null,
+            'creator_id' => $this->creator_id ?? null,
+            'owner_id' => $this->owner_id ?? null,
             'blocked_message' => $this->blocked_message,
             'blocked_at' => $this->blocked_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
-           // 'transactions' => TransactionCollection::make($this->whenLoaded('transactions')),
+            // 'transactions' => TransactionCollection::make($this->whenLoaded('transactions')),
         ];
     }
 }

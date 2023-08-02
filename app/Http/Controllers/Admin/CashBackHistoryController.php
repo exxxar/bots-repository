@@ -58,32 +58,4 @@ class CashBackHistoryController extends Controller
 
         return new BotUserResource($botUser);
     }
-
-
-
-    public function store(CashBackHistoryStoreRequest $request): Response
-    {
-        $cashBackHistory = CashBackHistory::create($request->validated());
-
-        return new CashBackHistoryResource($cashBackHistory);
-    }
-
-    public function show(Request $request, CashBackHistory $cashBackHistory): Response
-    {
-        return new CashBackHistoryResource($cashBackHistory);
-    }
-
-    public function update(CashBackHistoryUpdateRequest $request, CashBackHistory $cashBackHistory): Response
-    {
-        $cashBackHistory->update($request->validated());
-
-        return new CashBackHistoryResource($cashBackHistory);
-    }
-
-    public function destroy(Request $request, CashBackHistory $cashBackHistory): Response
-    {
-        $cashBackHistory->delete();
-
-        return response()->noContent();
-    }
 }

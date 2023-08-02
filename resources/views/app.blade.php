@@ -18,7 +18,7 @@
 
     <!-- Scripts -->
     @routes
-    @vite(['resources/js/app.js','resources/css/app.css', "resources/js/Pages/{$page['component']}.vue"])
+    @vite(['resources/js/AdminPanel/app.js','resources/css/AdminPanel/app.css', "resources/js/AdminPanel/Pages/{$page['component']}.vue"])
     @inertiaHead
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"

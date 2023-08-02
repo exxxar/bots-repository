@@ -7,7 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Bot;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Psy\Util\Str;
 
 class TelegramController extends Controller
 {
@@ -21,8 +24,9 @@ class TelegramController extends Controller
         BotManager::bot()->handler($domain);
     }
 
-    public function webInterface(Request $request, $domain){
-        Inertia::setRootView("bot");
+    public function webInterface(Request $request, $domain)
+    {
+        Inertia::setRootView("landing");
 
         $bot = \App\Models\Bot::query()
             ->where("bot_domain", $domain)
@@ -84,6 +88,20 @@ class TelegramController extends Controller
         return response()->download($path);
     }
 
+    public function getStorageFile($company, $file)
+    {
+
+        $path = Storage::disk('public')->get("/companies/" . $company . "/" . $file);
+
+
+        if (!file_exists($path))
+            $path = public_path() . "/images/cashman.jpg";
+
+        return (new Response($path, 200))
+            ->header('Content-Type', 'image/jpeg');
+
+    }
+
     public function getFilesByCompanyId($companyId, $file)
     {
 
@@ -103,6 +121,17 @@ class TelegramController extends Controller
         if (!file_exists($path))
             $path = public_path() . "/images/cashman.jpg";
         return response()->download($path);
+    }
+
+    public function removeFile(Request $request)
+    {
+        $request->validate([
+            "file_path" => "required"
+        ]);
+
+        Storage::disk('public')->delete($request->file_path);
+
+        return response()->noContent();
     }
 
 

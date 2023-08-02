@@ -33,6 +33,7 @@ class BotResource extends JsonResource
             'info_link' => $this->info_link,
             'social_links' => $this->social_links,
             'is_active' => $this->is_active,
+            'auto_cashback_on_payments' => $this->auto_cashback_on_payments ?? false,
             'bot_type_id' => $this->bot_type_id,
             'level_1' => $this->level_1,
             'level_2' => $this->level_2,

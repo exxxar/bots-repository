@@ -5,6 +5,7 @@ namespace App\Integrations;
 use AmoCRM\AmoAPI;
 use AmoCRM\AmoAPIException;
 use AmoCRM\AmoContact;
+use App\Models\AmoCrm;
 use Illuminate\Support\Facades\Log;
 
 class AmoCRMIntegration
@@ -17,13 +18,13 @@ class AmoCRMIntegration
     private $subdomain;
 
 
-    public function __construct()
+    public function __construct(object $config)
     {
-        $this->clientId = '8b6ca8e7-5ead-4242-85ab-63fe8b26ebcc';
-        $this->clientSecret = '0WTh7SwhAS42jzPhN1ZEc0ERF7f7YtmmCRB0FwhzPKgOjYdqauPA5hC8mdKXyFFK';
-        $this->authCode = 'def50200799145fedf78acdc05574029ddf9872724a71734fc046e016d6e67cd6c7df2f30ae6715db0f4ca8093fac0fa40d47f7efdb22dafc4a726e7dda492baff38774c945a9a03f2aec4b25fa87cacb7751385a72f7b7cc2b14e410bd3b7e23f42966f59d5d8a62ef7b721bdaaa72fd35b0f2043002c7d97bd137c1be8ae1e41c9f27d91db3d885e0a5bc8a8c5a922c9ae4f78194788826e7a88429c45878332532f511efbe7e2ef21ef591b635d8f2d86294c624404b41fe2a0af5245667f08b34cd1dc7f6a5dd43f410cff750306c157cea22a5a7eb094b4796dc056afad4f4048e017bc920a4300937bf46960008660c375c68c902f92f4c57ff2d80f89bef855bbec434933508a2b93a74976f6fb62cffa5ecf6b0d28fc7f6d0d9aaaa7ba0512f2ea0bcc576860515b4ea977a396c709f28ccfcdfe1147388240d047aa02369799129b88a5350f8308637e685d2413f72f94b8bdc43b12e5b032de1603df033bb4d8da4eb20f19f3029d28174e253fa12984f38c356f51295a4af93172dac049822c50b9b697aeac55a6b9fcde7b44913f39dca777eff6f3e24cbc3b17959f3e1756ef92689d38b3d0beb892acc81bd263c81a38f91f9aefa77151d38cb586fc228d5b385e8ed21191022b7ca08b106fa29a5ac07c0386c95ec8209fe66d0bce95f7bf047f3c5d';
-        $this->redirectUri = 'https://your-cashman.com/crm/amo/flera_hus_bot';
-        $this->subdomain = 'aonktcrmgmailcom';
+        $this->clientId = $config->clientId ?? '8b6ca8e7-5ead-4242-85ab-63fe8b26ebcc';
+        $this->clientSecret = $config->clientSecret ?? '0WTh7SwhAS42jzPhN1ZEc0ERF7f7YtmmCRB0FwhzPKgOjYdqauPA5hC8mdKXyFFK';
+        $this->authCode = $config->authCode ?? 'def50200f7f4efb23557badf4f28bf597b5a818557edc3ec43eb9ccfe7082396e42f394c63ab6488e7921aa84f61ba59165e6cefad71db55574ed2753b5b9058bdb53ad05d86296c4445f40cc9d61b340676e5a7204ec2a686b3a45153c6bb6d92c50b483893015f78b263390026a7523ec1263540946de72ec49650d23563443c1460cc73a03e1b79a196d4b5cc515daf9a4892ced0a5b3097321739837a928d80f2f7f7823c69f762df87934662116b589ac299796754d67eef274b56205f82182cca9d49233a121694042ab384549a7ed85fa7776f27bb1911a91384e2f3e997f6099fafe9d9586367e182654690083161585079317438208281dde19f62bb1af8d1532d56f493d74b6461cca1be6e1b934c0b7ebb6d27fd139bf5cc08163e597b0baea83829883cd18f244bf59ba3d560b06fb66e586120c5d414a1b1b0593ca0a08275a5e490b9f47273f4401f5b48a0a1261b10484a3e0e3bc2023aa897329e3cbf9af88ad2a0059a4f9818ad8fc6540b096b3e3adfe3d3d31e8a2f1d1b9a6da0b716610314bcaf4e1f1c57be0958246f80856a0ad9ec983b2cbc427109b4852e8480584e5596fa2e0b621b841c23d90edab760ad33c988bc74d85887b13735639355806274bdb9bd84dc936e12d16ef155885f880a584d49d4dfcb2aa5babc29b2c805f13cf66';
+        $this->redirectUri = 'https://your-cashman.com/crm/amo/' . ($config->domain ?? 'flera_hus_bot');
+        $this->subdomain = $config->subdomain ?? 'aonktcrmgmailcom';
 
     }
 
@@ -48,11 +49,12 @@ class AmoCRMIntegration
 
             AmoAPI::oAuth2($this->subdomain);
 
+            //371656 - воронка продаж, в которую нужно слать
             // Получение информации об аккаунте
             Log::info(print_r(AmoAPI::getAccount(), true));
 
             $contact1 = new AmoContact([
-                'name'                => 'Тест CashMAN Contact',
+                'name' => 'Тест CashMAN Contact',
                 'responsible_user_id' => 6437674
             ]);
 
@@ -61,16 +63,15 @@ class AmoCRMIntegration
                 '6532343' => 41,
                 '123456' => [[
                     'value' => '+79494320661',
-                    'enum'  => 'WORK'
+                    'enum' => 'WORK'
                 ]],
                 '123467' => [[
                     'value' => 'hans@example.com',
-                    'enum'  => 'WORK'
+                    'enum' => 'WORK'
                 ]]
             ]);
 
             $contact1Id = $contact1->save();
-
 
 
         } catch (AmoAPIException $e) {

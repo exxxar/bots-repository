@@ -46,6 +46,8 @@ class BotUsersController extends Controller
 
         $search = $request->search ?? null;
 
+        $event = $request->event ?? 'event';
+
         $size = $request->get("size") ?? config('app.results_per_page');
 
         $actions = ActionStatus::query()
@@ -54,23 +56,52 @@ class BotUsersController extends Controller
             ->where("bot_id", $request->bot->id);
 
 
-        if (!is_null($search))
-            $actions = $actions
-                ->whereHas("slug", function ($q) use ($search) {
-                    $q->where("command", "like", "%$search%");
-                });
+        if (!is_null($search)) {
+
+
+            if ($event == "event")
+                $actions = $actions
+                    ->whereHas("slug", function ($q) use ($search) {
+                        $q->where("command", "like", "%$search%");
+                    });
+
+            if ($event == "users")
+            {
+                $userIds = BotUser::query()
+                    ->where("name", "like", "%$search%")
+                    ->where("fio_from_telegram", "like", "%$search%")
+                    ->get()
+                    ->pluck("user_id")->toArray();
+
+                $actions = $actions
+                    ->whereIn("user_id", $userIds);
+            }
+
+            if ($event == "phone")
+            {
+                $userIds = BotUser::query()
+                    ->where("phone", "like", "%$search%")
+                    ->get()
+                    ->pluck("user_id")->toArray();
+
+                $actions = $actions
+                    ->whereIn("user_id", $userIds);
+            }
+
+        }
+
 
         $actions = $actions
-            ->orderBy("updated_at","asc")
+            ->orderBy("updated_at", "asc")
             ->paginate($size);
 
 
         return new ActionStatusCollection($actions);
-/*
-            response()
-            ->json([
-                "actions"=> new ActionStatusCollection($actions),
-                "categories"=>  new ActionStatusCategoryCollection($categories)
-            ]);*/
+        /*
+                    response()
+                    ->json([
+                        "actions"=> new ActionStatusCollection($actions),
+                        "categories"=>  new ActionStatusCategoryCollection($categories)
+                    ]);*/
     }
 }

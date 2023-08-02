@@ -3,10 +3,13 @@
 namespace App\Classes;
 
 use App\Enums\BotStatusEnum;
+use App\Enums\CashBackDirectionEnum;
+use App\Events\CashBackEvent;
 use App\Facades\BotManager;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotPage;
+use App\Models\BotUser;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -83,7 +86,7 @@ abstract class BotCore
 
             $find = true;
         } catch (\Exception $e) {
-            Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+            Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
         }
 
         return $find;
@@ -164,7 +167,7 @@ abstract class BotCore
                     ]);
                     return true;
                 } catch (\Exception $e) {
-                    Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+                    Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
                 }
         }
 
@@ -207,7 +210,7 @@ abstract class BotCore
                     ];
 
 
-                   // $this->selfScriptDiagnostic($template);
+                    // $this->selfScriptDiagnostic($template);
 
                     $find = $this->tryCall($item, $message, $config, ...$arguments);
                     break;
@@ -277,12 +280,11 @@ abstract class BotCore
                     }
 
 
-
                     $find = true;
                     break;
                 }
             } catch (\Exception $e) {
-                Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+                Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
                 return $find;
             }
 
@@ -423,8 +425,30 @@ abstract class BotCore
             ->where("payload", $payload)
             ->first();
 
-        $channel = $transaction->bot->order_channel ??
-            $transaction->bot->main_channel ?? null;
+        $bot = $transaction->bot;
+        $channel = $bot->order_channel ??
+            $bot->main_channel ?? null;
+
+        if ($bot->auto_cashback_on_payments) {
+            $tmpTotalAmount = $totalAmount / 100;
+
+            $adminBotUser = BotUser::query()
+                ->where("bot_id", $bot->id)
+                ->where("is_admin", true)
+                ->first();
+
+            $userId = $transaction->user_id;
+
+            if (!is_null($adminBotUser))
+                event(new CashBackEvent(
+                    (int)$bot->id,
+                    (int)$userId,
+                    (int)$adminBotUser->user_id,
+                    ((float)$tmpTotalAmount ?? 0),
+                    "Автоматическое начисление CashBack",
+                    CashBackDirectionEnum::Crediting
+                ));
+        }
 
         if (!is_null($channel)) {
 
@@ -434,7 +458,7 @@ abstract class BotCore
 
             $productInfo = (object)$transaction->products_info;
 
-            $totalAmount = $totalAmount / 100;
+            $tmpTotalAmount = $totalAmount / 100;
 
             $payload = $productInfo->payload ?? 'Артикул товара не указан администратором';
 
@@ -446,9 +470,10 @@ abstract class BotCore
                 $data .= "$item->label по цене $price руб.,";
             }
 
-            $this->sendMessage($channel, "Пользователь  $name ($phoneNumber , $email) соврешил оплату $totalAmount руб. за продукт $data ('$payload')");
+            $this->sendMessage($channel, "Пользователь  $name ($phoneNumber , $email) соврешил оплату $tmpTotalAmount руб. за продукт $data ('$payload')");
 
         }
+
 
         $transaction->update([
             'status' => 2,
@@ -467,7 +492,7 @@ abstract class BotCore
         $payload = $data->invoice_payload;
         $shippingAddress = $data->shipping_address;
 
-        Log::info("shippingQueryHandler".print_r($data, true));
+        Log::info("shippingQueryHandler" . print_r($data, true));
 
         $transaction = Transaction::query()->where("payload", $payload)
             ->first();
@@ -521,7 +546,7 @@ abstract class BotCore
                 return;
             }
         } catch (\Exception $e) {
-            Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+            Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
         }
 
 
@@ -552,7 +577,7 @@ abstract class BotCore
                 return;
             }
         } catch (\Exception $e) {
-            Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+            Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
         }
 
 
@@ -628,7 +653,7 @@ abstract class BotCore
             }
 
         } catch (\Exception $e) {
-            Log::info($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+            Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
         }
         return $this;
     }

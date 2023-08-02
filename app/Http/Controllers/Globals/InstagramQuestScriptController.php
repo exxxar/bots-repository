@@ -167,6 +167,10 @@ class InstagramQuestScriptController extends SlugController
         $winnerName = $request->name ?? 'Имя не указано';
         $winnerPhone = $request->phone ?? 'Телефон не указан';
 
+        $botUser->name = $botUser->name ?? $winnerName;
+        $botUser->phone = $botUser->phone ?? $winnerPhone;
+        $botUser->save();
+
         $tmp[] = (object)[
             "name" => $winnerName,
             "phone" => $winnerPhone,
@@ -297,7 +301,7 @@ class InstagramQuestScriptController extends SlugController
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/$slugId/interface/$bot->bot_domain#/instagram-quest"
+                            "url" => env("APP_URL") . "/bot-client/$slugId/interface/$bot->bot_domain#/instagram-quest"
                         ]],
                     ],
 

@@ -63,16 +63,6 @@ class ShopScriptController extends SlugController
     }
 
 
-    public function shopTestCallback(Request $request)
-    {
-
-
-      Log::info("success auth checked");
-      Log::info("1".(   print_r($request->botUser ?? 'нет юзера',true)));
-      Log::info("2".(   print_r($request->bot ?? 'нет бота',true) ));
-
-
-    }
 
     public function shopHomePage(Request $request, $scriptId, $botDomain)
     {
@@ -139,7 +129,7 @@ class ShopScriptController extends SlugController
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/global-scripts/$slugId/interface/$bot->bot_domain#home"
+                            "url" => env("APP_URL") . "/bot-client/$slugId/interface/$bot->bot_domain#home"
                         ]],
                     ],
 

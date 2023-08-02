@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bot extends Model
@@ -33,6 +34,7 @@ class Bot extends Model
         'info_link',
         'social_links',
         'is_active',
+        'auto_cashback_on_payments',
         'maintenance_message',
         'bot_type_id',
         'level_1',
@@ -57,6 +59,7 @@ class Bot extends Model
         'tax_per_day' => 'double',
         'social_links' => 'array',
         'is_active' => 'boolean',
+        'auto_cashback_on_payments' => 'boolean',
         'bot_type_id' => 'integer',
         'level_1' => 'double',
         'level_2' => 'double',
@@ -122,9 +125,9 @@ class Bot extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function amo(): BelongsTo
+    public function amo(): HasOne
     {
-        return $this->belongsTo(AmoCrm::class);
+        return $this->hasOne(AmoCrm::class);
     }
 
     public function botType(): BelongsTo

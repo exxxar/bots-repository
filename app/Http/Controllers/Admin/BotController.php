@@ -334,6 +334,7 @@ class BotController extends Controller
         $search = $request->search ?? null;
 
         $bots = Bot::query()
+            ->with(["amo"])
             ->withTrashed();
 
         if (!is_null($companyId))

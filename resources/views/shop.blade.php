@@ -25,7 +25,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Scripts -->
     @routes
-    @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+    @vite(['resources/js/ClientTg/app.js', "resources/js/ClientTg/Pages/{$page['component']}.vue"])
     @inertiaHead
 </head>
 <body class="theme-light" data-highlight="orange">

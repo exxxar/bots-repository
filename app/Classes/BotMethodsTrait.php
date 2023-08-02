@@ -81,9 +81,9 @@ trait BotMethodsTrait
         return $this->sendLocation($this->chatId, $lat, $lon);
     }
 
-    public function replyInvoice($title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard)
+    public function replyInvoice($title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData = null)
     {
-        return $this->sendInvoice($this->chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard);
+        return $this->sendInvoice($this->chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard,$providerData);
     }
 
     public function replyKeyboard($message, $keyboard = [])

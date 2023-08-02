@@ -27,6 +27,7 @@ class Company extends Model
         'email',
         'schedule',
         'manager',
+        'vat_code',
         'is_active',
         'creator_id',
         'owner_id',
