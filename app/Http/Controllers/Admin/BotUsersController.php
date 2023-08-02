@@ -69,7 +69,7 @@ class BotUsersController extends Controller
             {
                 $userIds = BotUser::query()
                     ->where("name", "like", "%$search%")
-                    ->where("fio_from_telegram", "like", "%$search%")
+                    ->orWhere("fio_from_telegram", "like", "%$search%")
                     ->get()
                     ->pluck("user_id")->toArray();
 
