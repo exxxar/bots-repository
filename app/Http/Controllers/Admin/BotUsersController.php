@@ -74,7 +74,7 @@ class BotUsersController extends Controller
                     ->pluck("user_id")->toArray();
 
                 $actions = $actions
-                    ->whereIn("user_id", $userIds);
+                    ->orWhereIn("user_id", $userIds);
             }
 
             if ($event == "phone")
@@ -85,7 +85,7 @@ class BotUsersController extends Controller
                     ->pluck("user_id")->toArray();
 
                 $actions = $actions
-                    ->whereIn("user_id", $userIds);
+                    ->orWhereIn("user_id", $userIds);
             }
 
         }
