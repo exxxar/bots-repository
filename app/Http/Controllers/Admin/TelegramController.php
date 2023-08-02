@@ -8,6 +8,7 @@ use App\Models\Bot;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Psy\Util\Str;
@@ -21,6 +22,7 @@ class TelegramController extends Controller
 
     public function handler(Request $request, $domain)
     {
+        Log::info("test".$domain);
         BotManager::bot()->handler($domain);
     }
 

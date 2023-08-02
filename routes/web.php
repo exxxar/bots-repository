@@ -73,6 +73,11 @@ Route::get('/images-by-bot-id/{botId}/{fileName}',
 Route::get('/images/{companySlug}/{fileName}',
     [TelegramController::class, 'getFiles']);
 
+Route::prefix("bot")
+    ->group(function(){
+        Route::any('/register-webhooks', [\App\Http\Controllers\Admin\TelegramController::class, "registerWebhooks"]);
+        Route::any('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "handler"]);
+    });
 
 Route::prefix("web")
     ->group(function () {
