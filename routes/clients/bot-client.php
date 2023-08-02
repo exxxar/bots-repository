@@ -47,18 +47,10 @@ Route::prefix("bot-client")
 
         Route::prefix("shop")
             ->group(function () {
-                Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
-                Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
-
                 Route::post("/products", [\App\Http\Controllers\Admin\ProductController::class, "index"]);
                 Route::post("/products-by-ids", [\App\Http\Controllers\Admin\ProductController::class, "getProductsByIds"]);
                 Route::get("/products/{productId}", [\App\Http\Controllers\Admin\ProductController::class, "getProduct"]);
                 Route::post("/random-products", [\App\Http\Controllers\Admin\ProductController::class, "randomProducts"]);
-
-                Route::prefix("admin")
-                    ->group(function () {
-                        Route::get('/{botDomain}', [ShopScriptController::class, "shopAdminPage"]);
-                    });
             });
 
         Route::prefix("admins")

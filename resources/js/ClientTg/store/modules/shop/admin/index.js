@@ -99,7 +99,7 @@ const actions = {
     },
 
     async updateProductsFromVk(context, payload = {dataObject: {botDomain: null, url: null}}) {
-        let link = `${BASE_SHOP_LINK}/vk-auth-link`
+        let link = `/vk-auth-link`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 

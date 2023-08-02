@@ -70,7 +70,7 @@ import Pagination from "ClientTg@/Components/Shop/Helpers/Pagination.vue";
 </template>
 <script>
 
-import baseJS from 'ClientTg@/modules/custom.js'
+import baseJS from '@/ClientTg/modules/custom.js'
 import {mapGetters} from "vuex";
 
 export default {

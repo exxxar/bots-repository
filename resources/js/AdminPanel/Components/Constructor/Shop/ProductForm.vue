@@ -29,9 +29,7 @@ import "@vueform/multiselect/themes/default.css"
     </ul>
 
     <div v-if="tab===0">
-        <div
-
-            class="row">
+        <div class="row">
             <div class="col-md-12">
                 <div class="form-check">
                     <input class="form-check-input"
@@ -212,7 +210,7 @@ import "@vueform/multiselect/themes/default.css"
                                                    v-model="productForm.options[index].title"
                                                    class="form-control" :id="'option-title-'+index"
                                                    placeholder="name@example.com">
-                                            <label :for="'option-title-'+index">Значение</label>
+                                            <label :for="'option-title-'+index">Название характеристики</label>
                                         </div>
 
                                         <div class="form-floating mb-3">
@@ -220,7 +218,7 @@ import "@vueform/multiselect/themes/default.css"
                                                    v-model="productForm.options[index].value"
                                                    class="form-control" :id="'option-value-'+index"
                                                    placeholder="name@example.com">
-                                            <label :for="'option-value-'+index">Значение</label>
+                                            <label :for="'option-value-'+index">Значение характеристики</label>
 
                                         </div>
 
@@ -256,7 +254,7 @@ import "@vueform/multiselect/themes/default.css"
                 </div>
             </div>
 
-            <div class="col-md-12 mb-3">
+<!--            <div class="col-md-12 mb-3">
                 <h6>Фотографии товара</h6>
                 <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
                     <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
@@ -277,14 +275,16 @@ import "@vueform/multiselect/themes/default.css"
 
                 </div>
 
-            </div>
+            </div>-->
 
         </div>
+
     </div>
 
     <div v-if="tab===1">
         Отзывы
     </div>
+
 
 </template>
 <script>

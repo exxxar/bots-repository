@@ -14,61 +14,60 @@ Route::middleware(['auth', 'verified'])
         Route::get('/dashboard', function () {
             Inertia::setRootView("app");
             return Inertia::render('MainPage');
-        })->name('dashboard');
+        })
+            ->name('dashboard');
 
         Route::get('/company-page', function () {
             Inertia::setRootView("app");
 
             return Inertia::render('CompanyPage');
-        })
-            ->name('company-page');
+        })->name('company-page');
 
         Route::get('/media-page', function () {
             Inertia::setRootView("app");
 
             $files = Storage::disk('public')->allFiles("/companies");
 
-            return Inertia::render('MediaPage',[
-                "files"=>$files
+            return Inertia::render('MediaPage', [
+                "files" => $files
             ]);
-        })
-            ->name('media-page');
-
+        })->name('media-page');
 
 
         Route::get('/user-page', function () {
             Inertia::setRootView("app");
 
             return Inertia::render('UserPage');
-        })
-            ->name('user-page');
+        })->name('user-page');
 
         Route::get('/mail-page', function () {
             Inertia::setRootView("app");
 
             return Inertia::render('MailPage');
-        })
-            ->name('mail-page');
+        })->name('mail-page');
 
         Route::get('/bot-page', function () {
             Inertia::setRootView("app");
 
             return Inertia::render('BotPage');
-        })
-            ->name('bot-page');
+        })->name('bot-page');
 
         Route::get('/script-page', function () {
             Inertia::setRootView("app");
             return Inertia::render('ScriptPage');
-        })
-            ->name('script-page');
+        })->name('script-page');
 
         Route::get('/visit-card-page', function () {
             Inertia::setRootView("app");
             return Inertia::render('BotVisitCardConstructorPage');
-        })
-            ->name('visit-card-page');
+        })->name('visit-card-page');
+
+
+        Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
+        Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
+
     });
+
 
 Route::prefix("admin")
     ->middleware(['auth', 'verified'])
@@ -78,7 +77,7 @@ Route::prefix("admin")
             ->controller(BotController::class)
             ->group(function () {
                 Route::post("/", "index");
-                Route::post("/save-amo", [AmoCrmController::class,"saveAmoCrm"]);
+                Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
                 Route::post("/bot-update", "updateBot");
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");
@@ -162,15 +161,18 @@ Route::prefix("admin")
             });
 
 
-
         Route::prefix("users")
             ->controller(\App\Http\Controllers\Admin\BotUsersController::class)
             ->group(function () {
-                Route::post("/search", "loadBotUsers")
-                    ->middleware(["tgAuth.admin"]);
+                Route::post("/search", "loadBotUsers");
 
             });
 
+        Route::prefix("shop")
+            ->group(function () {
+
+                Route::post("/products", [\App\Http\Controllers\Admin\ProductController::class, "index"]);
+            });
 
         Route::any('/register-webhooks', [\App\Http\Controllers\Admin\TelegramController::class, "registerWebhooks"]);
         Route::any('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "handler"]);

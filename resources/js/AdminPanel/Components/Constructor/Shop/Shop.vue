@@ -1,5 +1,6 @@
 <script setup>
 import ProductForm from "@/AdminPanel/Components/Constructor/Shop/ProductForm.vue";
+import ProductList from "@/AdminPanel/Components/Constructor/Shop/ProductList.vue";
 </script>
 <template>
     <div class="card mb-2">
@@ -67,7 +68,14 @@ import ProductForm from "@/AdminPanel/Components/Constructor/Shop/ProductForm.vu
             <h6>Работа с товаром</h6>
         </div>
         <div class="card-body">
-            <ProductForm></ProductForm>
+            <ProductForm :bot="bot" :item="selectedProduct" v-if="bot&&!load"/>
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="card-body">
+            <ProductList :bot="bot"
+                         v-on:select="selectProduct"
+                         v-if="bot"/>
         </div>
     </div>
 </template>
@@ -82,6 +90,7 @@ export default {
             url: null,
             link: null,
             bot: null,
+            selectedProduct: null,
         }
     },
     computed: {
@@ -92,6 +101,15 @@ export default {
         this.bot = this.getCurrentBot
     },
     methods: {
+        selectProduct(product){
+            this.load = true
+            this.$nextTick(()=>{
+                this.selectedProduct = product
+                this.load = false
+            })
+
+            console.log(product)
+        },
         updateProducts() {
 
             this.load = true

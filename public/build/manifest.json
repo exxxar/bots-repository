@@ -4,8 +4,8 @@
     "src": "BotList.css"
   },
   "CompanyForm.css": {
-    "file": "assets/InstagramQuest-28f51984.css",
-    "src": "CompanyForm.css"
+    "file": "assets/CompanyForm-28f51984.css",
+    "src": "resources/js/ClientTg/Pages/BotPages/InstagramQuest.css"
   },
   "MainAdminLayout.css": {
     "file": "assets/MainAdminLayout-5ac8cdc0.css",
@@ -19,11 +19,11 @@
     "file": "assets/SlugForm-5ad24a6a.css",
     "src": "SlugForm.css"
   },
-  "_BotList-3c4f3951.js": {
+  "_BotList-5938b917.js": {
     "css": [
       "assets/BotList-7d8c6c46.css"
     ],
-    "file": "assets/BotList-3c4f3951.js",
+    "file": "assets/BotList-5938b917.js",
     "imports": [
       "_index.es-065e5c55.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -34,11 +34,11 @@
       "_default-bad7f299.js"
     ]
   },
-  "_CompanyForm-73172b52.js": {
+  "_CompanyForm-f2dc2763.js": {
     "css": [
-      "assets/InstagramQuest-28f51984.css"
+      "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/CompanyForm-73172b52.js",
+    "file": "assets/CompanyForm-f2dc2763.js",
     "imports": [
       "_index.es-065e5c55.js",
       "__plugin-vue_export-helper-c27b6911.js"
@@ -137,17 +137,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-a50fd8e9.js",
@@ -215,10 +215,10 @@
     "src": "resources/js/AdminPanel/Pages/Auth/VerifyEmail.vue"
   },
   "resources/js/AdminPanel/Pages/BotPage.vue": {
-    "file": "assets/BotPage-44da92a8.js",
+    "file": "assets/BotPage-c0954123.js",
     "imports": [
       "_MainAdminLayout-888747da.js",
-      "_BotList-3c4f3951.js",
+      "_BotList-5938b917.js",
       "_CompanyList-dbb4b229.js",
       "_index-f4e1173c.js",
       "_index.es-065e5c55.js",
@@ -251,7 +251,7 @@
   },
   "resources/js/AdminPanel/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/Landing/Pages/ChatWindow.css"
+    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
   },
   "resources/js/AdminPanel/Pages/ChatWindow.vue": {
     "css": [
@@ -268,12 +268,12 @@
   },
   "resources/js/AdminPanel/Pages/CompanyPage.vue": {
     "css": [
-      "assets/InstagramQuest-28f51984.css"
+      "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/CompanyPage-2f82c5fd.js",
+    "file": "assets/CompanyPage-e39e12f4.js",
     "imports": [
       "_MainAdminLayout-888747da.js",
-      "_CompanyForm-73172b52.js",
+      "_CompanyForm-f2dc2763.js",
       "_CompanyList-dbb4b229.js",
       "_index-f4e1173c.js",
       "_index.es-065e5c55.js",
@@ -290,16 +290,16 @@
   "resources/js/AdminPanel/Pages/Dashboard.vue": {
     "css": [
       "assets/Dashboard-db3e581c.css",
-      "assets/InstagramQuest-28f51984.css"
+      "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/Dashboard-8a773604.js",
+    "file": "assets/Dashboard-5f533cd1.js",
     "imports": [
       "_CompanyList-dbb4b229.js",
-      "_BotList-3c4f3951.js",
+      "_BotList-5938b917.js",
       "_SlugForm-2eafaa9e.js",
       "_index-f4e1173c.js",
       "_index.es-065e5c55.js",
-      "_CompanyForm-73172b52.js",
+      "_CompanyForm-f2dc2763.js",
       "_Pagination-28bcf227.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_v4-a960c1f4.js",
@@ -319,9 +319,9 @@
   },
   "resources/js/AdminPanel/Pages/MailPage.vue": {
     "css": [
-      "assets/InstagramQuest-28f51984.css"
+      "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/MailPage-8f4fbb02.js",
+    "file": "assets/MailPage-400af1e1.js",
     "imports": [
       "_MainAdminLayout-888747da.js",
       "_CompanyList-dbb4b229.js",
@@ -335,9 +335,9 @@
   },
   "resources/js/AdminPanel/Pages/MainPage.vue": {
     "css": [
-      "assets/InstagramQuest-28f51984.css"
+      "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/MainPage-b3cd1faf.js",
+    "file": "assets/MainPage-0e56f269.js",
     "imports": [
       "_MainAdminLayout-888747da.js",
       "_CompanyList-dbb4b229.js",
@@ -374,9 +374,9 @@
   },
   "resources/js/AdminPanel/Pages/UserPage.vue": {
     "css": [
-      "assets/InstagramQuest-28f51984.css"
+      "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/UserPage-8c617217.js",
+    "file": "assets/UserPage-b79ceafb.js",
     "imports": [
       "_MainAdminLayout-888747da.js",
       "_CompanyList-dbb4b229.js",
@@ -408,7 +408,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-e0926bff.js",
+    "file": "assets/app-e7eb3aec.js",
     "imports": [
       "_index.es-065e5c55.js",
       "_index-f4e1173c.js"
@@ -425,14 +425,14 @@
     "src": "resources/js/ClientTg/Pages/BotPages/CallBackForm.vue"
   },
   "resources/js/ClientTg/Pages/BotPages/InstagramQuest.css": {
-    "file": "assets/InstagramQuest-28f51984.css",
-    "src": "CompanyForm.css"
+    "file": "assets/CompanyForm-28f51984.css",
+    "src": "resources/js/ClientTg/Pages/BotPages/InstagramQuest.css"
   },
   "resources/js/ClientTg/Pages/BotPages/InstagramQuest.vue": {
     "css": [
-      "assets/InstagramQuest-28f51984.css"
+      "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/InstagramQuest-004e3b4c.js",
+    "file": "assets/InstagramQuest-da3f27ff.js",
     "imports": [
       "_index.es-065e5c55.js"
     ],
@@ -470,7 +470,7 @@
     "css": [
       "assets/WheelOfFortune-b050e0a8.css"
     ],
-    "file": "assets/WheelOfFortune-e4c451e9.js",
+    "file": "assets/WheelOfFortune-a4606e36.js",
     "imports": [
       "_index.es-065e5c55.js",
       "resources/js/ClientTg/app.js",
@@ -523,7 +523,7 @@
     "css": [
       "assets/Main-ed5ad4d6.css"
     ],
-    "file": "assets/Main-9dca49d2.js",
+    "file": "assets/Main-87941892.js",
     "imports": [
       "_index.es-065e5c55.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -554,7 +554,7 @@
       "resources/js/ClientTg/Pages/Shop/Categories.vue",
       "resources/js/ClientTg/Pages/Shop/Main.vue"
     ],
-    "file": "assets/app-b8d5a0b8.js",
+    "file": "assets/app-f350c130.js",
     "imports": [
       "_index.es-065e5c55.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -567,7 +567,7 @@
   },
   "resources/js/Landing/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/Landing/Pages/ChatWindow.css"
+    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
   },
   "resources/js/Landing/Pages/ChatWindow.vue": {
     "css": [
