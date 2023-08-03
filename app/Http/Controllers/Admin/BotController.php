@@ -747,6 +747,7 @@ class BotController extends Controller
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
+        $tmp->auto_cashback_on_payments = $request->auto_cashback_on_payments == "true";
         $tmp->is_template = $request->is_template ?? true;
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
@@ -932,6 +933,7 @@ class BotController extends Controller
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
+        $tmp->auto_cashback_on_payments = $request->auto_cashback_on_payments == "true";
         $tmp->is_template = $request->is_template ?? true;
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
