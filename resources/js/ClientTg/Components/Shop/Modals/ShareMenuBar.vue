@@ -1,3 +1,6 @@
+<script setup>
+import QrCode from "@/ClientTg/Components/Shop/Helpers/QrCode.vue";
+</script>
 <template>
     <div id="menu-share" class="menu menu-box-bottom menu-box-detached rounded-m d-block"
          style="height: 420px;">
@@ -79,7 +82,7 @@
 
         <div class="divider divider-margins mt-n1 mb-3"></div>
 
-        <img v-lazy="qr" class="w-100 p-3 object-fit-cover my-0 " alt="">
+        <QrCode code="001"/>
 
         <div class="divider divider-margins mt-n1 mb-3"></div>
 

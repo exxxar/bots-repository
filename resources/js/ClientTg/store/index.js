@@ -6,6 +6,7 @@ import admins from './modules/admins';
 import products from './modules/shop/products';
 
 import wheelOfFortune from "./modules/globals/wheelOfFortune";
+import bonusProduct from "./modules/globals/bonusProduct";
 import instagramQuest from "./modules/globals/instagramQuest";
 import cart from "./modules/shop/cart";
 import self from "./modules/self";
@@ -13,6 +14,7 @@ import favorites from "./modules/shop/favorites";
 import shopAdmin from "./modules/shop/admin";
 
 import util from "./modules/utilites";
+
 
 
 export default createStore({
@@ -61,6 +63,7 @@ export default createStore({
         cart,
         self,
         favorites,
-        shopAdmin
+        shopAdmin,
+        bonusProduct
     }
 })

@@ -21,7 +21,7 @@ class TelegramAuthCheck
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $botDomain = $request->botDomain ?? null;
+        $botDomain = $request->botDomain ?? $request->bot_domain ?? null;
 
         $isDebug = env("APP_DEBUG");
 

@@ -44,24 +44,6 @@ class BotPageController extends Controller
         return new BotPageCollection($botPages);
     }
 
-    public function store(BotPageStoreRequest $request): Response
-    {
-        $botPage = BotPage::create($request->validated());
-
-        return new BotPageResource($botPage);
-    }
-
-    public function show(Request $request, BotPage $botPage): Response
-    {
-        return new BotPageResource($botPage);
-    }
-
-    public function update(BotPageUpdateRequest $request, BotPage $botPage): Response
-    {
-        $botPage->update($request->validated());
-
-        return new BotPageResource($botPage);
-    }
 
     public function duplicate(Request $request, $pageId): Response
     {
@@ -97,80 +79,6 @@ class BotPageController extends Controller
         $botPage->delete();
 
         return response()->noContent();
-    }
-
-    private function keyboardAssign($keyboard, $botId)
-    {
-     /*   foreach ($keyboard as $rowIndex => $row)
-            foreach ($row as $colIndex => $col) {
-
-                $tmpPageId = $keyboard[$rowIndex][$colIndex]->page_id ?? null;
-                $tmpDialogId = $keyboard[$rowIndex][$colIndex]->dialog_id ?? null;
-                $tmpSlugId = $keyboard[$rowIndex][$colIndex]->slug_id ?? null;
-                $tmpType = $keyboard[$rowIndex][$colIndex]->type ?? null;
-                $tmpText = $keyboard[$rowIndex][$colIndex]->text ?? null;
-
-                if (isset($keyboard[$rowIndex][$colIndex]->page_id))
-                    unset($keyboard[$rowIndex][$colIndex]->page_id);
-
-                if (isset($keyboard[$rowIndex][$colIndex]->dialog_id))
-                    unset($keyboard[$rowIndex][$colIndex]->dialog_id);
-
-                if (isset($keyboard[$rowIndex][$colIndex]->slug_id))
-                    unset($keyboard[$rowIndex][$colIndex]->slug_id);
-
-                if (isset($keyboard[$rowIndex][$colIndex]->type))
-                    unset($keyboard[$rowIndex][$colIndex]->type);
-
-
-                $strSlug = Str::uuid();
-
-                if ($tmpType == "inline")
-                    $keyboard[$rowIndex][$colIndex]->callback_data = $strSlug;
-
-
-                if (is_null($tmpSlugId))
-                    $slug = BotMenuSlug::query()
-                        ->where("command", $tmpText)
-                        ->where("bot_id", $botId)
-                        ->first();
-                else
-                    $slug = BotMenuSlug::query()
-                        ->where("id", $tmpSlugId)
-                        ->first();
-
-                if (is_null($slug))
-                    $slug = BotMenuSlug::query()->create([
-                        'bot_id' => $botId,
-                        'command' => $tmpText,
-                        'comment' => "Ассоциация скрипта с кнопкой меню",
-                        'slug' => $strSlug,
-                        'bot_dialog_command_id' => $tmpDialogId
-                    ]);
-                else {
-                    $slug = $slug->replicate();
-                    $slug->bot_dialog_command_id = $tmpDialogId;
-                    $slug->slug =  $strSlug;//$tmpType == "inline" ? $strSlug : $tmpText;
-                    $slug->save();
-                }
-
-                if (is_null($tmpPageId)) {
-                    $page = BotPage::query()->find($tmpDialogId);
-
-                    if (!is_null($page)) {
-                        $page = $page->replicate();
-
-                       // $page->command = $tmpType == "inline" ? $strSlug : $tmpText;
-                        $page->bot_menu_slug_id = $slug->id;
-                        $page->save();
-                    }
-
-
-                }
-
-            }
-
-        return $keyboard;*/
     }
 
     public function createPage(Request $request)

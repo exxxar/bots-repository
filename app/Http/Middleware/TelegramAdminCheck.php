@@ -14,19 +14,20 @@ use Symfony\Component\HttpFoundation\Response;
 class TelegramAdminCheck
 {
     use Utilities;
+
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
 
-        $botDomain = $request->botDomain ?? null;
+        $botDomain = $request->botDomain ?? $request->bot_domain ?? null;
 
         $isDebug = env("APP_DEBUG");
 
-        if ($isDebug){
+        if ($isDebug) {
             $bot = Bot::query()
                 ->with(["company"])
                 ->where("bot_domain", $botDomain)

@@ -1,33 +1,35 @@
 import {createWebHashHistory , createRouter} from "vue-router";
 
-import Home from 'ClientTg@/Pages/Shop/Home.vue';
-import Products from 'ClientTg@/Pages/Shop/Products.vue';
-import Product from 'ClientTg@/Pages/Shop/Product.vue';
-import Favorites from 'ClientTg@/Pages/Shop/Favorites.vue';
-import Basket from 'ClientTg@/Pages/Shop/Basket.vue';
-import CheckOut from 'ClientTg@/Pages/Shop/CheckOut.vue';
-import Settings from 'ClientTg@/Pages/Shop/Settings.vue';
+import Home from '@/ClientTg/Pages/Shop/Home.vue';
+import Products from '@/ClientTg/Pages/Shop/Products.vue';
+import Product from '@/ClientTg/Pages/Shop/Product.vue';
+import Favorites from '@/ClientTg/Pages/Shop/Favorites.vue';
+import Basket from '@/ClientTg/Pages/Shop/Basket.vue';
+import CheckOut from '@/ClientTg/Pages/Shop/CheckOut.vue';
+import Settings from '@/ClientTg/Pages/Shop/Settings.vue';
 
 //support pages
-import Terms from 'ClientTg@/Pages/Shop/Terms.vue';
-import OurTeam from 'ClientTg@/Pages/Shop/OurTeam.vue';
-import ContactUs from 'ClientTg@/Pages/Shop/ContactUs.vue';
-import Help from 'ClientTg@/Pages/Shop/Help.vue';
-import Wheel from 'ClientTg@/Pages/Shop/Wheel.vue';
-import Quest from 'ClientTg@/Pages/Shop/Quest.vue';
-import Empty from 'ClientTg@/Pages/Shop/Empty.vue';
-import Booking from 'ClientTg@/Pages/Shop/Booking.vue';
-import Admins from 'ClientTg@/Pages/Shop/Admins.vue';
-import Vip from 'ClientTg@/Pages/Shop/Vip.vue';
+import Terms from '@/ClientTg/Pages/Shop/Terms.vue';
+import OurTeam from '@/ClientTg/Pages/Shop/OurTeam.vue';
+import ContactUs from '@/ClientTg/Pages/Shop/ContactUs.vue';
+import Help from '@/ClientTg/Pages/Shop/Help.vue';
+import Wheel from '@/ClientTg/Pages/Shop/Wheel.vue';
+import SaveUp from '@/ClientTg/Pages/Shop/SaveUp.vue';
+import Quest from '@/ClientTg/Pages/Shop/Quest.vue';
+import Empty from '@/ClientTg/Pages/Shop/Empty.vue';
+import Booking from '@/ClientTg/Pages/Shop/Booking.vue';
+import Admins from '@/ClientTg/Pages/Shop/Admins.vue';
+import Vip from '@/ClientTg/Pages/Shop/Vip.vue';
 
-import AdminMain from 'ClientTg@/Pages/Admin/Main.vue';
-import AdminPromotion from 'ClientTg@/Pages/Admin/Promotion.vue';
-import AdminStatistic from 'ClientTg@/Pages/Admin/Statistic.vue';
-import AdminWorkStatus from 'ClientTg@/Pages/Admin/WorkStatus.vue';
-import AdminOrders from 'ClientTg@/Pages/Admin/Orders.vue';
-import AdminUsers from 'ClientTg@/Pages/Admin/Users.vue';
-import AdminActions from 'ClientTg@/Pages/Admin/Actions.vue';
-import AdminShopManager from 'ClientTg@/Pages/Admin/ShopManager.vue';
+import AdminMain from '@/ClientTg/Pages/Admin/Main.vue';
+import AdminPromotion from '@/ClientTg/Pages/Admin/Promotion.vue';
+import AdminStatistic from '@/ClientTg/Pages/Admin/Statistic.vue';
+import AdminWorkStatus from '@/ClientTg/Pages/Admin/WorkStatus.vue';
+import AdminOrders from '@/ClientTg/Pages/Admin/Orders.vue';
+import AdminUsers from '@/ClientTg/Pages/Admin/Users.vue';
+import AdminActions from '@/ClientTg/Pages/Admin/Actions.vue';
+import AdminShopManager from '@/ClientTg/Pages/Admin/ShopManager.vue';
+import AdminBonusProduct from '@/ClientTg/Pages/Admin/BonusProduct.vue';
 
 export const routes = [
 
@@ -82,6 +84,12 @@ export const routes = [
         path: '/wheel-of-fortune',
         component: Wheel,
         meta: { title: 'Колесо фортуны', hide_menu:true }
+    },
+    {
+        name: 'saveup',
+        path: '/save-up',
+        component: SaveUp,
+        meta: { title: 'Накопительная карта', hide_menu:true }
     },
     {
         name: 'instagram',
@@ -187,6 +195,13 @@ export const adminRoutes = [
         path: '/admin-orders',
         component: AdminOrders,
         meta: { title: 'Админ панель: Заказы', hide_menu:true, need_admin_menu:true }
+    },
+
+    {
+        name: 'adminbonusproduct',
+        path: '/admin-bonus-product',
+        component: AdminBonusProduct,
+        meta: { title: 'Админ панель: Бонусы', hide_menu:true, need_admin_menu:true }
     },
 ]
 

@@ -9,6 +9,10 @@ BotManager::bot()
     ->slug("global_wheel_of_fortune", "wheelOfFortune"); //колесо фортуны
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\BonusProductScriptController::class)
+    ->slug("global_bonus_product", "bonusProduct");
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\InstagramQuestScriptController::class)
     ->slug("global_instagram_quest", "instagramQuest"); //колесо фортуны
 

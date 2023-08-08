@@ -142,31 +142,18 @@ class WheelOfFortuneScriptController extends SlugController
     }
 
 
-    public function formWheelOfFortuneCallback(Request $request, $scriptId, $botDomain)
+    public function formWheelOfFortuneCallback(Request $request)
     {
         $request->validate([
-            "telegram_chat_id" => "required",
             "name" => "required",
             "phone" => "required",
             "win" => "required"
         ]);
 
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
+        $bot = $request->bot;
+        $botUser = $request->botUser;
+        $slug = $request->slug;
 
-        $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->telegram_chat_id)
-            ->first();
-
-        $slug = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("id", $scriptId)
-            ->first();
-
-        if (is_null($slug))
-            return response()->noContent(404);
 
         $maxAttempts = (Collection::make($slug->config)
             ->where("key", "max_attempts")
@@ -226,7 +213,7 @@ class WheelOfFortuneScriptController extends SlugController
         $action->save();
 
         BotMethods::bot()
-            ->whereDomain($botDomain)
+            ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
                 ->telegram_chat_id,
                 sprintf("%s, вы приняли участие в розыгрыше и выиграли приз под номером %s. Наш менеджер свяжется с вами в ближайшее время!", $winnerName, $winNumber))
@@ -236,22 +223,13 @@ class WheelOfFortuneScriptController extends SlugController
         return response()->noContent();
     }
 
-    public function loadData(Request $request, $scriptId, $botDomain)
+    public function loadData(Request $request)
     {
 
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
+        $bot = $request->bot;
+        $botUser = $request->botUser;
+        $slug = $request->slug;
 
-
-        $slug = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("id", $scriptId)
-            ->first();
-
-
-        if (is_null($slug))
-            return response()->noContent(404);
 
         $wheels = Collection::make($slug->config)
             ->where("key", "wheel_text")
@@ -270,27 +248,12 @@ class WheelOfFortuneScriptController extends SlugController
         );
     }
 
-    public function formWheelOfFortunePrepare(Request $request, $scriptId, $botDomain)
+    public function formWheelOfFortunePrepare(Request $request)
     {
-        $request->validate([
-            "telegram_chat_id" => "required",
-        ]);
 
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-        $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->telegram_chat_id)
-            ->first();;
-
-        $slug = BotMenuSlug::query()
-            ->where("id", $scriptId)
-            ->first();
-
-        if (is_null($slug))
-            return response()->noContent(404);
+        $bot = $request->bot;
+        $botUser = $request->botUser;
+        $slug = $request->slug;
 
         $maxAttempts = (Collection::make($slug->config)
             ->where("key", "max_attempts")
@@ -341,7 +304,7 @@ class WheelOfFortuneScriptController extends SlugController
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$slugId/interface/$bot->bot_domain#wheel-of-fortune"
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#wheel-of-fortune"
                         ]],
                     ],
 

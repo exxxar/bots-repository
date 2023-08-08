@@ -1,23 +1,29 @@
 import util from '../utilites';
 import axios from "axios";
 
-const BASE_INSTAGRAM_QUEST_LINK = '/bot-client/{scriptId}/instagram-quest'
+const BASE_INSTAGRAM_QUEST_LINK = '/bot-client/nstagram-quest'
 
 let state = {}
 
 const getters = {}
 
 const actions = {
-
     async instagramQuestLoadData(context) {
 
+        let tgData = window.Telegram.WebApp.initData || null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 
-        let link = `${BASE_INSTAGRAM_QUEST_LINK}/load-data/${botDomain}`
-            .replace('{scriptId}', slugId)
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain
+        }
 
-        let _axios = util.makeAxiosFactory(link, 'GET')
+        let link = `${BASE_INSTAGRAM_QUEST_LINK}/load-data`
+
+
+        let _axios = util.makeAxiosFactory(link, 'POST', data)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -28,16 +34,19 @@ const actions = {
     },
     async instagramQuestPrepare(context, payload = {prepareForm: null}) {
 
+        let tgData = window.Telegram.WebApp.initData || null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
-        let telegramChatId = window.self.telegram_chat_id || null
 
-        let link = `${BASE_INSTAGRAM_QUEST_LINK}/prepare/${botDomain}`
-            .replace('{scriptId}', slugId)
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain
+        }
 
-        let _axios = util.makeAxiosFactory(link, 'POST', {
-            telegram_chat_id:telegramChatId
-        })
+        let link = `${BASE_INSTAGRAM_QUEST_LINK}/prepare`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', data)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -47,18 +56,20 @@ const actions = {
         })
     },
     async instagramQuestResult(context, payload = {instaForm: null}) {
+        let tgData = window.Telegram.WebApp.initData || null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 
-        let link = `${BASE_INSTAGRAM_QUEST_LINK}/${botDomain}`
-            .replace('{scriptId}', slugId)
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain,
+            ...payload.instaForm
+        }
 
-        let telegramChatId = window.self.telegram_chat_id || null
-        let instaForm = payload.instaForm
+        let link = `${BASE_INSTAGRAM_QUEST_LINK}/callback`
 
-        instaForm.append("telegram_chat_id", telegramChatId)
-
-        let _axios = util.makeAxiosFactory(link, 'POST',instaForm)
+        let _axios = util.makeAxiosFactory(link, 'POST',data)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

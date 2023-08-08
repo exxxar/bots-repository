@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\SlugCheck;
 use App\Http\Middleware\TelegramAdminCheck;
 use App\Http\Middleware\TelegramAuthCheck;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -69,5 +70,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'tgAuth.any' => TelegramAuthCheck::class,
         'tgAuth.admin' => TelegramAdminCheck::class,
+        'slug' => SlugCheck::class,
     ];
 }

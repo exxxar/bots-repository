@@ -88,34 +88,20 @@ class InstagramQuestScriptController extends SlugController
 
     }
 
-    public function instagramQuestCallback(Request $request, $scriptId, $botDomain)
+    public function instagramQuestCallback(Request $request)
     {
         $request->validate([
-            "telegram_chat_id" => "required",
             "name" => "required",
             "phone" => "required",
         ]);
 
-        $bot = \App\Models\Bot::query()
-            ->with(["company"])
-            ->where("bot_domain", $botDomain)
-            ->first();
+        $bot = $request->bot;
+        $botUser = $request->botUser;
+        $slug = $request->slug;
 
-        $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->telegram_chat_id)
-            ->first();
-
-        $slug = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("id", $scriptId)
-            ->first();
-
-        if (is_null($slug))
-            return response()->noContent(404);
-
-        $imageName = $request->image ?? null;
+        $imageName =  null;
         $companySlug = $bot->company->slug;
+
         if ($request->hasFile('photo')) {
 
             $file = $request->file('photo');
@@ -190,7 +176,7 @@ class InstagramQuestScriptController extends SlugController
         );
 
         BotMethods::bot()
-            ->whereDomain($botDomain)
+            ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
                 ->telegram_chat_id,
                 sprintf($winMessage, $winnerName))
@@ -202,21 +188,13 @@ class InstagramQuestScriptController extends SlugController
         return response()->noContent();
     }
 
-    public function loadData(Request $request, $scriptId, $botDomain)
+    public function loadData(Request $request)
     {
 
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
+        $bot = $request->bot;
+        $botUser = $request->botUser;
+        $slug = $request->slug;
 
-
-        $slug = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("id", $scriptId)
-            ->first();
-
-        if (is_null($slug))
-            return response()->noContent(404);
 
         $rules = Collection::make($slug->config ?? [])
             ->where("key", "rules_text")
@@ -230,28 +208,11 @@ class InstagramQuestScriptController extends SlugController
         );
     }
 
-    public function instagramQuestPrepare(Request $request, $scriptId, $botDomain)
+    public function instagramQuestPrepare(Request $request)
     {
-        $request->validate([
-            "telegram_chat_id" => "required",
-        ]);
-
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-        $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->telegram_chat_id)
-            ->first();;
-
-        $slug = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("id", $scriptId)
-            ->first();
-
-        if (is_null($slug))
-            return response()->noContent(404);
+        $bot = $request->bot;
+        $botUser = $request->botUser;
+        $slug = $request->slug;
 
         $maxAttempts = (Collection::make($slug->config)
             ->where("key", "max_attempts")
@@ -301,7 +262,7 @@ class InstagramQuestScriptController extends SlugController
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$slugId/interface/$bot->bot_domain#/instagram-quest"
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/instagram-quest"
                         ]],
                     ],
 

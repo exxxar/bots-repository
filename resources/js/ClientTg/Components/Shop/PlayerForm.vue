@@ -1,12 +1,7 @@
 <template>
     <div class="card card-style">
         <div class="content mb-0">
-            <h3>Анкета игрока</h3>
-
-            <p>
-                Для участия в конкурсе и дальнейшего получения приза необходимо заполнить данную анкету! Укажите своё имя и номер телефона чтоб менеджер
-                мог выдать Вам приз по итогу.
-            </p>
+           <slot name="head"></slot>
 
             <form v-on:submit.prevent="submit">
                 <div class="input-style input-style-2 has-icon input-required">
@@ -34,7 +29,7 @@
                 <button type="submit"
                         :disabled="sending"
                         class="btn btn-full btn-m shadow-l rounded-s text-uppercase font-900 bg-green1-dark my-4 w-100">
-                    Начать игру
+                    Начать
                 </button>
             </form>
 

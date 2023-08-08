@@ -78,6 +78,18 @@ const actions = {
         })
     },
 
+    async duplicateBot(context, payload = {dataObject:{bot_id:null, company_id: null}}) {
+        let link = `${BASE_BOTS_LINK}/duplicate`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async removeBot(context, payload = {botId: null}) {
         let link = `${BASE_BOTS_LINK}/${payload.botId}`
 
@@ -90,6 +102,19 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async forceDeleteBot(context, payload = {botId: null}) {
+        let link = `${BASE_BOTS_LINK}/force/${payload.botId}`
+
+        let _axios = util.makeAxiosFactory(link, 'DELETE')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
     async restoreBot(context, payload = {botId: null}) {
         let link = `${BASE_BOTS_LINK}/restore/${payload.botId}`
 

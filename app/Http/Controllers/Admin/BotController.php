@@ -15,19 +15,26 @@ use App\Http\Resources\BotResource;
 use App\Http\Resources\BotUserResource;
 use App\Http\Resources\ImageMenuResource;
 use App\Http\Resources\LocationResource;
+use App\Models\AmoCrm;
 use App\Models\Bot;
+use App\Models\BotDialogCommand;
+use App\Models\BotDialogGroup;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotPage;
 use App\Models\BotType;
 use App\Models\BotUser;
+use App\Models\CashBack;
 use App\Models\Company;
 use App\Models\ImageMenu;
 use App\Models\Location;
+use App\Models\Product;
 use Carbon\Carbon;
+use Doctrine\DBAL\Schema\Schema;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -351,6 +358,294 @@ class BotController extends Controller
         return BotResource::collection($bots);
     }
 
+
+    public function duplicate(Request $request)
+    {
+        $request->validate([
+            "company_id" => "required",
+            "bot_id" => "required"
+        ]);
+
+        $botId = $request->bot_id;
+        $companyId = $request->company_id;
+
+        $bot = Bot::query()
+            ->find($botId);
+
+        if (is_null($bot))
+            return response()->noContent(404);
+
+        $newBot = $bot->replicate();
+        $newBot->deleted_at = null;
+        $newBot->bot_domain = "duplicate_" . $newBot->bot_domain . "_" . Carbon::now()->format("Y-m-d H:i:s");
+        $newBot->bot_token = null;
+        $newBot->bot_token_dev = null;
+        $newBot->main_channel = null;
+        $newBot->order_channel = null;
+        $newBot->company_id = $companyId;
+
+        $newBot->save();
+
+        $pages = BotPage::query()
+            ->with(["slug", "replyKeyboard", "inlineKeyboard"])
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        $replicated = [];
+
+        if (!empty($pages))
+            foreach ($pages as $page) {
+
+                $isReplicated = in_array((object)[
+                    "type" => "page",
+                    "id" => $page->id
+                ], $replicated);
+
+                if ($isReplicated)
+                    continue;
+
+                $slug = $page->slug ?? null;
+                $replyKeyboard = $page->replyKeyboard ?? null;
+                $inlineKeyboard = $page->inlineKeyboard ?? null;
+
+                if (is_null($slug))
+                    continue;
+
+                $replicated[] = (object)[
+                    "type" => "slug",
+                    "id" => $slug->id
+                ];
+
+                $slug = $slug->replicate();
+                $slug->save();
+
+
+                if (!is_null($replyKeyboard)) {
+
+                    $replicated[] = (object)[
+                        "type" => "keyboard",
+                        "id" => $replyKeyboard->id
+                    ];
+
+                    $replyKeyboard = $replyKeyboard->replicate();
+                    $replyKeyboard->save();
+                }
+
+                if (!is_null($inlineKeyboard)) {
+
+                    $replicated[] = (object)[
+                        "type" => "keyboard",
+                        "id" => $inlineKeyboard->id
+                    ];
+
+                    $inlineKeyboard = $inlineKeyboard->replicate();
+                    $inlineKeyboard->save();
+                }
+
+                $newPage = $page->replicate();
+                $newPage->bot_id = $newBot->id;
+                $newPage->bot_menu_slug_id = $slug->id ?? null;
+                $newPage->reply_keyboard_id = $replyKeyboard->id ?? null;
+                $newPage->inline_keyboard_id = $replyKeyboard->id ?? null;
+                $newPage->next_page_id = null;
+                $newPage->next_bot_dialog_command_id = null;
+                $newPage->next_bot_menu_slug_id = null;
+                $newPage->save();
+
+            }
+
+        $slugs = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($slugs))
+            foreach ($slugs as $slug) {
+                $isReplicated = in_array((object)[
+                    "type" => "slug",
+                    "id" => $slug->id
+                ], $replicated);
+
+                if ($isReplicated)
+                    continue;
+
+                $replicated[] = (object)[
+                    "type" => "slug",
+                    "id" => $slug->id
+                ];
+
+                $slug = $slug->replicate();
+                $slug->bot_id = $newBot->id;
+                $slug->save();
+
+            }
+
+
+        $keyboards = BotMenuTemplate::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($keyboards))
+            foreach ($keyboards as $keyboard) {
+                $isReplicated = in_array((object)[
+                    "type" => "keyboard",
+                    "id" => $keyboard->id
+                ], $replicated);
+
+                if ($isReplicated)
+                    continue;
+
+                $replicated[] = (object)[
+                    "type" => "keyboard",
+                    "id" => $keyboard->id
+                ];
+
+                $keyboard = $keyboard->replicate();
+                $keyboard->bot_id = $newBot->id;
+                $keyboard->slug = Str::uuid();
+                $keyboard->save();
+
+            }
+
+        $dialogs = BotDialogCommand::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+
+        if (!empty($dialogs))
+            foreach ($dialogs as $dialog) {
+                $isReplicated = in_array((object)[
+                    "type" => "dialog",
+                    "id" => $dialog->id
+                ], $replicated);
+
+                if ($isReplicated)
+                    continue;
+
+                $replicated[] = (object)[
+                    "type" => "dialog",
+                    "id" => $dialog->id
+                ];
+
+
+                $baseGroup = BotDialogGroup::query()
+                    ->where("slug", "default_bot_group_slug")
+                    ->where("bot_id", $newBot->id)
+                    ->first();
+
+                if (is_null($baseGroup))
+                    $baseGroup = BotDialogGroup::query()
+                        ->create([
+                            'slug' => "default_bot_group_slug",
+                            'title' => "Группа по умолчанию",
+                            'bot_id' => $newBot->id,
+                        ]);
+
+
+                $newDialog = $dialog->replicate();
+                $newDialog->bot_id = $newBot->id;
+                $newDialog->slug = Str::uuid();
+                $newDialog->inline_keyboard_id = null;
+                $newDialog->next_bot_dialog_command_id = null;
+                $newDialog->bot_dialog_group_id = $baseGroup->id;
+                $newDialog->save();
+
+            }
+
+        return response()->noContent();
+    }
+
+    public function forceDelete(Request $request, $botId){
+        $bot = Bot::query()
+            ->withTrashed()
+            ->find($botId);
+
+
+       \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        if (is_null($bot))
+            return response()->noContent(404);
+
+        $pages = BotPage::query()
+            ->with(["slug", "replyKeyboard", "inlineKeyboard"])
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($pages))
+            foreach ($pages as $page)
+                $page->delete();
+
+        $slugs = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+
+            if (!empty($slugs))
+                foreach ($slugs as $slug)
+                    $slug->delete();
+
+
+        $keyboards = BotMenuTemplate::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($keyboards))
+            foreach ($keyboards as $keyboard)
+                $keyboard->delete();
+
+        $dialogs = BotDialogCommand::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($dialogs))
+            foreach ($dialogs as $dialog)
+                $dialog->delete();
+
+        $groups = BotDialogGroup::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($groups))
+            foreach ($groups as $group)
+                $group->delete();
+
+        $menus = ImageMenu::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($menus))
+            foreach ($menus as $menu)
+                $menu->delete();
+
+        $cashbacks = CashBack::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($cashbacks))
+            foreach ($cashbacks as $cashback)
+                $cashback->delete();
+
+        $products = Product::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($products))
+            foreach ($products as $product)
+                $product->delete();
+
+        $amos = AmoCrm::query()
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        if (!empty($amos))
+            foreach ($amos as $amo)
+                $amo->delete();
+
+
+
+        $bot->forceDelete();
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+
+        return response()->noContent();
+    }
 
     public function destroy(Request $request, $botId)
     {
@@ -748,7 +1043,7 @@ class BotController extends Controller
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
         $tmp->auto_cashback_on_payments = $request->auto_cashback_on_payments == "true";
-        $tmp->is_template =  $request->is_template == "true" ;
+        $tmp->is_template = $request->is_template == "true";
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
@@ -934,7 +1229,7 @@ class BotController extends Controller
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
         $tmp->auto_cashback_on_payments = $request->auto_cashback_on_payments == "true";
-        $tmp->is_template =  $request->is_template == "true" ;
+        $tmp->is_template = $request->is_template == "true";
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 

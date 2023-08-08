@@ -1,7 +1,7 @@
 import util from '../utilites';
 import axios from "axios";
 
-const BASE_WHEEL_OF_FORTUNE_LINK = '/bot-client/{scriptId}/wheel-of-fortune'
+const BASE_WHEEL_OF_FORTUNE_LINK = '/bot-client/wheel-of-fortune'
 
 let state = {}
 
@@ -10,13 +10,19 @@ const getters = {}
 const actions = {
     async wheelOfFortuneLoadData(context) {
 
+        let tgData = window.Telegram.WebApp.initData || null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 
-        let link = `${ BASE_WHEEL_OF_FORTUNE_LINK}/load-data/${botDomain}`
-            .replace('{scriptId}', slugId)
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain
+        }
 
-        let _axios = util.makeAxiosFactory(link, 'GET')
+        let link = `${ BASE_WHEEL_OF_FORTUNE_LINK}/load-data`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', data)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -27,16 +33,19 @@ const actions = {
     },
     async wheelOfFortunePrepare(context) {
 
+        let tgData = window.Telegram.WebApp.initData || null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
-        let telegramChatId = window.self.telegram_chat_id || null
 
-        let link = `${BASE_WHEEL_OF_FORTUNE_LINK}/prepare/${botDomain}`
-            .replace('{scriptId}', slugId)
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain
+        }
 
-        let _axios = util.makeAxiosFactory(link, 'POST', {
-            telegram_chat_id: telegramChatId
-        })
+        let link = `${BASE_WHEEL_OF_FORTUNE_LINK}/prepare`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', data)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -47,18 +56,21 @@ const actions = {
     },
     async wheelOfFortuneWin(context, payload = {winForm: null}) {
 
+        let tgData = window.Telegram.WebApp.initData || null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
-        let telegramChatId = window.self.telegram_chat_id || null
 
-        let winForm = payload.winForm
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain,
+            ...payload.winForm
+        }
 
-        winForm.append("telegram_chat_id", telegramChatId)
 
-        let link = `${BASE_WHEEL_OF_FORTUNE_LINK}/${botDomain}`
-            .replace('{scriptId}', slugId)
+        let link = `${BASE_WHEEL_OF_FORTUNE_LINK}/callback`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', winForm)
+        let _axios = util.makeAxiosFactory(link, 'POST', data)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

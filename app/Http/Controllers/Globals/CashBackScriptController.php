@@ -122,7 +122,7 @@ class CashBackScriptController extends SlugController
                     'menu' => [
                         [
                             ["text" => "Пригласить администратора", "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/route/interface/$bot->bot_domain#/admins"//"/restaurant/active-admins/$bot->bot_domain"
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/admins"//"/restaurant/active-admins/$bot->bot_domain"
                             ]],
                         ],
                     ],
@@ -161,7 +161,7 @@ class CashBackScriptController extends SlugController
                     'menu' => [
                         [
                             ["text" => $btnText, "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/$slugId/interface/$bot->bot_domain#/book-a-table"//"/restaurant/active-admins/$bot->bot_domain"
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/book-a-table"//"/restaurant/active-admins/$bot->bot_domain"
                             ]],
                         ],
                     ],
@@ -313,7 +313,7 @@ class CashBackScriptController extends SlugController
                     'menu' => [
                         [
                             ["text" => "\xF0\x9F\x8E\xB2Пригласить администратора", "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/route/interface/$bot->bot_domain#/admins"
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/admins"
                             ]],
                         ],
                     ],
@@ -346,8 +346,7 @@ class CashBackScriptController extends SlugController
                     [
                         [
                             ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/$slugId/interface/$bot->bot_domain#/vip"//"/restaurant/active-admins/$bot->bot_domain"
-
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/vip"
                             ]],
                         ],
 

@@ -19,6 +19,7 @@ class BotUser extends Model
     protected $fillable = [
         'bot_id',
         'user_id',
+        'telegram_chat_id',
         'parent_id',
         'is_vip',
         'is_admin',
@@ -42,7 +43,7 @@ class BotUser extends Model
         'sex',
 
         'fio_from_telegram',
-        'telegram_chat_id',
+
     ];
 
     /**

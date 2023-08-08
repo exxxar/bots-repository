@@ -42,7 +42,7 @@ class Product extends Model
         'old_price' => 'double',
         'current_price' => 'double',
         'variants' => 'array',
-        'in_stop_list_at' => 'timestamp',
+        'in_stop_list_at' => 'datetime:Y-m-d H:i:s',
         'bot_id' => 'integer',
     ];
 

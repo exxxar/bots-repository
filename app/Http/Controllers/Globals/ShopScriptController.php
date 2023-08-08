@@ -63,16 +63,21 @@ class ShopScriptController extends SlugController
     }
 
 
-
-    public function shopHomePage(Request $request, $scriptId, $botDomain)
+    public function shopHomePage(Request $request, $botDomain)
     {
+        $request->validate([
+            "slug" => "required"
+        ]);
+
+        $scriptId = $request->slug;
+
         $bot = \App\Models\Bot::query()
             ->with(["company", "imageMenus"])
             ->where("bot_domain", $botDomain)
             ->first();
 
         if (is_null($bot)) {
-            Inertia::setRootView("bot");
+            Inertia::setRootView("shop");
             return Inertia::render('Error');
         }
 
@@ -91,7 +96,7 @@ class ShopScriptController extends SlugController
             ->first();
 
         if (is_null($slug)) {
-            Inertia::setRootView("bot");
+            Inertia::setRootView("shop");
             return Inertia::render('Error');
         }
 
@@ -129,7 +134,7 @@ class ShopScriptController extends SlugController
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$slugId/interface/$bot->bot_domain#home"
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#home"
                         ]],
                     ],
 

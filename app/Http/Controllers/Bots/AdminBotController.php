@@ -606,7 +606,7 @@ class AdminBotController extends Controller
                     'menu' => [
                         [
                             ["text" => "Открыть", "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/route/interface/$bot->bot_domain#/admin-main"//"/restaurant/active-admins/$bot->bot_domain"
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/admin-main"//"/restaurant/active-admins/$bot->bot_domain"
                             ]],
                         ],
                     ],

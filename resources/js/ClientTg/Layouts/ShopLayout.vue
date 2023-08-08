@@ -2,17 +2,18 @@
 
 import {Head} from '@inertiajs/vue3'
 
-import Notifications from "ClientTg@/Components/Shop/Modals/Notifications.vue";
-import AddToCartModal from "ClientTg@/Components/Shop/Modals/AddToCartModal.vue";
-import CashBackItemInfoModal from "ClientTg@/Components/Shop/Modals/CashBackItemInfoModal.vue";
-import EventCallbackForm from "ClientTg@/Components/Shop/Modals/EventCallbackForm.vue";
+import Notifications from "@/ClientTg/Components/Shop/Modals/Notifications.vue";
+import AddToCartModal from "@/ClientTg/Components/Shop/Modals/AddToCartModal.vue";
+import CashBackItemInfoModal from "@/ClientTg/Components/Shop/Modals/CashBackItemInfoModal.vue";
+import QrCodeModal from "@/ClientTg/Components/Shop/Modals/QrCodeModal.vue";
+import EventCallbackForm from "@/ClientTg/Components/Shop/Modals/EventCallbackForm.vue";
 
 
-import ShareMenuBar from "ClientTg@/Components/Shop/Modals/ShareMenuBar.vue";
-import HighlightsMenuBar from "ClientTg@/Components/Shop/Modals/HighlightsMenuBar.vue";
-import Preloader from "ClientTg@/Components/Shop/Helpers/Preloader.vue";
-import SideBar from "ClientTg@/Components/Shop/Modals/SideBar.vue";
-import SideBarAdmin from "ClientTg@/Components/Shop/Modals/SideBarAdmin.vue";
+import ShareMenuBar from "@/ClientTg/Components/Shop/Modals/ShareMenuBar.vue";
+import HighlightsMenuBar from "@/ClientTg/Components/Shop/Modals/HighlightsMenuBar.vue";
+import Preloader from "@/ClientTg/Components/Shop/Helpers/Preloader.vue";
+import SideBar from "@/ClientTg/Components/Shop/Modals/SideBar.vue";
+import SideBarAdmin from "@/ClientTg/Components/Shop/Modals/SideBarAdmin.vue";
 </script>
 <template>
 
@@ -23,6 +24,7 @@ import SideBarAdmin from "ClientTg@/Components/Shop/Modals/SideBarAdmin.vue";
     <Preloader/>
     <AddToCartModal/>
     <CashBackItemInfoModal/>
+    <QrCodeModal/>
     <EventCallbackForm/>
     <Notifications/>
 

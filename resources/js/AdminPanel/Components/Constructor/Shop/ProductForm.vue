@@ -1,8 +1,3 @@
-<script setup>
-import Multiselect from '@vueform/multiselect'
-import "@vueform/multiselect/themes/default.css"
-
-</script>
 <template>
 
 
@@ -29,8 +24,10 @@ import "@vueform/multiselect/themes/default.css"
     </ul>
 
     <div v-if="tab===0">
-        <div class="row">
-            <div class="col-md-12">
+        <form
+            v-on:submit.prevent="submit"
+            class="row">
+            <div class="col-md-8 d-flex align-items-center">
                 <div class="form-check">
                     <input class="form-check-input"
                            v-model="productForm.in_stop_list_at"
@@ -42,22 +39,43 @@ import "@vueform/multiselect/themes/default.css"
                 </div>
             </div>
 
-            <div class="col-md-12">
-                <label for="product-category">Категории товара
-                    <span v-for="(category, index) in productForm.categories"
-                          class="badge bg-info mr-1">{{ category.label || category }}</span>
-                </label>
-                <Multiselect
-                    placeholder="Выберите или создайте новую категорию"
-                    id="product-category"
-                    v-model="productForm.categories"
-                    :options="options"
-                    mode="multiple"
-                    class="mb-3 mt-1"
-                    :create-option="true"
-                    :on-create="createCategory"
-                    :searchable="true"
-                />
+            <div class="col-md-4 d-flex justify-content-end">
+                <a href="#" class="btn btn-link" @click="clearForm">Новый товар</a>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <span class="badge bg-info mr-1 mb-1 cursor-pointer" v-for="(cat, index) in productCategories"
+                      @click="removeProductCategory(index)">{{ prepareCategoryName(cat) }}</span>
+                <div class="dropdown">
+                    <button type="button" class="btn btn-outline-info w-100" data-bs-toggle="dropdown"
+                            data-bs-display="static" aria-expanded="false">
+                        <p class="mb-0">Выберите категорию</p>
+                    </button>
+                    <ul class="dropdown-menu w-100" style="overflow-y:scroll; height:300px;">
+
+                        <div class="p-3">
+                            <label for="exampleDropdownFormEmail1" class="form-label">Новая категория</label>
+                            <input type="text" class="form-control"
+                                   v-model="categoryForm.label"
+                                   id="exampleDropdownFormEmail1"
+                                   placeholder="Название категории">
+                        </div>
+
+                        <div class="p-3">
+                            <button class="btn btn-primary w-100" type="button" @click="addCategory">Добавить
+                                категорию
+                            </button>
+                        </div>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li v-for="item in filteredCategories">
+                            <button class="dropdown-item" type="button" @click="selectCategory(item)">{{ item.label }}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <div class="col-md-6">
@@ -131,7 +149,7 @@ import "@vueform/multiselect/themes/default.css"
                 <div class="card">
                     <div class="card-header">
                         <h6>Варианты товара <span
-                            v-if="productForm.variants.length>0">({{ productForm.variants.length }})</span></h6>
+                            v-if="productForm.variants">({{ productForm.variants.length }})</span></h6>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -148,7 +166,7 @@ import "@vueform/multiselect/themes/default.css"
                                             <input type="text"
                                                    v-model="productForm.variants[index].key"
                                                    class="form-control" :id="'variant-key-'+index"
-                                                   placeholder="name@example.com">
+                                                   placeholder="name@example.com" required>
                                             <label :for="'variant-key-'+index">Ключ</label>
                                         </div>
 
@@ -156,14 +174,15 @@ import "@vueform/multiselect/themes/default.css"
                                             <input type="text"
                                                    v-model="productForm.variants[index].value"
                                                    class="form-control" :id="'variant-value-'+index"
-                                                   placeholder="name@example.com">
+                                                   placeholder="name@example.com" required>
                                             <label :for="'variant-value-'+index">Значение</label>
                                         </div>
                                     </div>
                                     <div class="card-footer">
                                         <button type="button"
                                                 class="btn btn-outline-danger"
-                                                @click="removeVariant(index)"><i class="fa-solid fa-trash-can"></i></button>
+                                                @click="removeVariant(index)"><i class="fa-solid fa-trash-can"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -191,16 +210,17 @@ import "@vueform/multiselect/themes/default.css"
                                            aria-label="Recipient's username"
                                            aria-describedby="button-addon2" required>
                                     <button class="btn btn-outline-info" type="submit"
-                                            id="button-addon2">Добавить секцию</button>
+                                            id="button-addon2">Добавить секцию
+                                    </button>
                                 </form>
 
 
-
                                 <span class="badge bg-info mr-1"
-                                      v-for="(section, index) in sections">{{section}} <strong @click="removeSection(index)"><i class="fa-solid fa-xmark"></i></strong></span>
+                                      v-for="(section, index) in sections">{{ section }} <strong
+                                    @click="removeSection(index)"><i class="fa-solid fa-xmark"></i></strong></span>
 
                             </div>
-                           </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-4  mb-3" v-for="(option, index) in productForm.options">
                                 <div class="card w-100">
@@ -229,7 +249,10 @@ import "@vueform/multiselect/themes/default.css"
                                                     :id="'option-section-'+index"
                                                     aria-label="Floating label select example">
                                                 <option :value="null">Без секции</option>
-                                                <option :value="section" v-for="section in sections">{{ section }}</option>
+                                                <option :value="section" v-for="section in sections">{{
+                                                        section
+                                                    }}
+                                                </option>
                                             </select>
                                             <label :for="'option-section-'+index">Секция товара</label>
                                         </div>
@@ -237,7 +260,8 @@ import "@vueform/multiselect/themes/default.css"
                                     <div class="card-footer">
                                         <button type="button"
                                                 class="btn btn-outline-danger"
-                                                @click="removeOption(index)"><i class="fa-solid fa-trash-can"></i></button>
+                                                @click="removeOption(index)"><i class="fa-solid fa-trash-can"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -254,7 +278,7 @@ import "@vueform/multiselect/themes/default.css"
                 </div>
             </div>
 
-<!--            <div class="col-md-12 mb-3">
+            <div class="col-md-12 mb-3">
                 <h6>Фотографии товара</h6>
                 <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
                     <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
@@ -267,6 +291,15 @@ import "@vueform/multiselect/themes/default.css"
                     <div class="mb-2 img-preview" style="margin-right: 10px;"
                          v-for="(img, index) in productForm.images"
                          v-if="productForm.images">
+                        <img v-lazy="img">
+                        <div class="remove">
+                            <a @click="removeImage(index)">Удалить</a>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 img-preview" style="margin-right: 10px;"
+                         v-for="(img, index) in photos"
+                         v-if="photos.length>0">
                         <img v-lazy="getPhoto(img).imageUrl">
                         <div class="remove">
                             <a @click="removePhoto(index)">Удалить</a>
@@ -275,9 +308,15 @@ import "@vueform/multiselect/themes/default.css"
 
                 </div>
 
-            </div>-->
+            </div>
 
-        </div>
+            <div class="col-12">
+                <button
+                    type="submit"
+                    class="btn btn-outline-primary w-100 p-3">Сохранить
+                </button>
+            </div>
+        </form>
 
     </div>
 
@@ -288,42 +327,46 @@ import "@vueform/multiselect/themes/default.css"
 
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     props: ["bot", "item"],
     data() {
         return {
-            sectionForm:{
+            sectionForm: {
                 section: null,
             },
-            tab:0,
+            categoryForm: {
+                label: null
+            },
+            tab: 0,
             types: [
                 {
-                    title: 'Готовый продук',
-                    value: 0,
-                },
-                {
-                    title: 'Товар на вес',
+                    title: 'Готовый продукт',
                     value: 1,
                 },
                 {
-                    title: 'Конструктор товара',
+                    title: 'Товар на вес',
                     value: 2,
                 },
+                {
+                    title: 'Конструктор товара',
+                    value: 3,
+                },
             ],
+
             productCategories: [],
             sections: ["Общие характеристики", "Дополнительная информация"],
-            options: [
-                {value: 'test', label: 'test'},
-                {value: 'test1', label: 'test1'},
-                {value: 'test2', label: 'test2'},
-            ],
+            photos: [],
+            categories: [],
+            removed_options: [],
             productForm: {
                 article: null,
                 vk_product_id: null,
                 title: null,
                 description: null,
                 images: [],
-                type: 0,
+                type: 1,
                 old_price: null,
                 current_price: null,
                 variants: [],
@@ -335,46 +378,132 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapGetters(['getProductCategories']),
+        filteredCategories() {
+            if (this.productCategories.length === 0)
+                return this.categories
+
+            return this.categories.filter(item => this.productCategories.indexOf(item.value) === -1)
+        }
+    },
     mounted() {
         this.loadProductCategories();
 
         if (this.item) {
             this.$nextTick(() => {
                 this.productForm = {
+                    id: this.item.id || null,
                     article: this.item.article || null,
                     vk_product_id: this.item.vk_product_id || null,
                     title: this.item.title || null,
                     description: this.item.description || null,
-                    images: this.item.images || [],
-                    type: this.item.type || 0,
+                    images: this.item.images || null,
+                    type: this.item.type || 1,
                     old_price: this.item.old_price || null,
                     current_price: this.item.current_price || null,
-                    variants: this.item.variants || [],
+                    variants: this.item.variants || null,
                     in_stop_list_at: this.item.in_stop_list_at || null,
                     bot_id: this.item.bot_id || null,
-                    options: this.item.options || [],
-                    reviews: this.item.reviews || [],
-                    categories: this.item.categories || [],
+                    options: this.item.options || null,
+                    reviews: this.item.reviews || null,
+                    // categories: this.item.categories || null,
                 }
+
+                this.options = []
+                this.item.categories.forEach(category => {
+                    this.productCategories.push(category.id)
+
+                    // this.options.push({value: category.id, label: category.title})
+                })
+
             })
         }
     },
     methods: {
+        prepareCategoryName(category) {
+            let cat = this.categories.find(item => item.value === category)
+
+            console.log(cat)
+            return cat ? cat.label : category
+        },
+        addCategory() {
+            const category = this.categoryForm.label
+            this.productCategories.push(category)
+            this.categoryForm.label = null
+        },
+        selectCategory(item) {
+            this.productCategories.push(item.value)
+        },
+        submit() {
+            let data = new FormData();
+            Object.keys(this.productForm)
+                .forEach(key => {
+                    const item = this.productForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+
+            if (this.bot)
+                data.append("bot_id", this.bot.id)
+
+            if (this.photos.length > 0)
+                for (let i = 0; i < this.photos.length; i++) {
+                    data.append('photos[]', this.photos[i]);
+                }
+
+            if (this.removed_options.length > 0)
+                data.append("removed_options", JSON.stringify(this.removed_options))
+
+            if (this.productCategories.length > 0)
+                data.append("categories", JSON.stringify(this.productCategories))
+
+            this.$store.dispatch("saveProduct", {
+                productForm: data
+            }).then((response) => {
+                this.load = true
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Продукт успешно сохранен!",
+                    type: 'success'
+                });
+
+                this.clearForm()
+                this.$emit("refresh")
+            }).catch(err => {
+
+            })
+
+        },
         onChangePhotos(e) {
             const files = e.target.files
             for (let i = 0; i < files.length; i++)
-                this.productForm.images.push(files[i])
+                this.photos.push(files[i])
         },
         loadProductCategories() {
+            this.$store.dispatch("loadProductCategories", {
+                dataObject: {
+                    bot_id: this.bot.id
+                }
+            }).then(() => {
+                const categories = this.getProductCategories
+                categories.forEach(item => {
+                    this.categories.push({value: item.id, label: item.title})
+                })
 
+            })
         },
         getPhoto(imgObject) {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
-        removeSection(index){
+        removeSection(index) {
             this.sections.splice(index, 1)
         },
-        addSection(){
+        addSection() {
             this.sections.push(this.sectionForm.section)
 
             this.sectionForm.section = null
@@ -391,26 +520,6 @@ export default {
                 section: null,
             })
         },
-        createCategory: async (option, select$) => {
-            console.log(option, select$)
-            if (!event)
-                return false;
-            console.log("test add")
-           // this.options.push(option)
-
-            // Async request (eg. for validating)
-            await new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve()
-                }, 1000)
-            })
-
-            // Modifying option label
-            option.label = option.label + ' - добавленный'
-
-            return option
-
-        },
 
         addVariant() {
             if (!this.productForm.variants)
@@ -421,15 +530,45 @@ export default {
                 value: null
             })
         },
+        removeProductCategory(index) {
+            this.productCategories.splice(index, 1)
+        },
         removeVariant(index) {
             this.productForm.variants.splice(index, 1)
         },
         removeOption(index) {
+            if (this.productForm.options[index].id)
+                this.removed_options.push(this.productForm.options[index].id)
             this.productForm.options.splice(index, 1)
         },
-        removePhoto(index) {
+        removeImage(index) {
             this.productForm.images.splice(index, 1)
         },
+        removePhoto(index) {
+            this.photos.splice(index, 1)
+        },
+        clearForm() {
+            const formData = {
+                article: null,
+                vk_product_id: null,
+                title: null,
+                description: null,
+                images: [],
+                type: 1,
+                old_price: null,
+                current_price: null,
+                variants: [],
+                in_stop_list_at: null,
+                bot_id: null,
+                options: [],
+                reviews: [],
+                categories: [],
+            }
+            this.photos = []
+            this.removed_options = []
+            this.productCategories = []
+            this.productForm = formData
+        }
     }
 }
 </script>

@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Bots\AdminBotController;
+use App\Http\Controllers\Globals\AboutBotScriptController;
+use App\Http\Controllers\Globals\BonusProductScriptController;
 use App\Http\Controllers\Globals\InstagramQuestScriptController;
 use App\Http\Controllers\Globals\ShopScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
@@ -17,33 +19,47 @@ Route::prefix("bot-client")
             ->controller(AdminBotController::class)
             ->group(function () {
                 Route::post('/load-statistic/{botDomain}', "statistic");
-
             });
 
-        Route::prefix("{scriptId}/wheel-of-fortune")
+        Route::prefix("wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)
+            ->middleware(["tgAuth.any", "slug"])
             ->group(function () {
-                Route::post('/prepare/{botDomain}', "formWheelOfFortunePrepare");
-                Route::get('/load-data/{botDomain}', "loadData");
-                //  Route::get('/{botDomain}/{path?}', "formWheelOfFortune");
-                Route::post('/{botDomain}', "formWheelOfFortuneCallback");
+                Route::post('/prepare', "formWheelOfFortunePrepare");
+                Route::post('/load-data', "loadData");
+                Route::post('/callback', "formWheelOfFortuneCallback");
+            });
+
+        Route::prefix("bonus-product")
+            ->controller(BonusProductScriptController::class)
+            ->middleware(["tgAuth.any", "slug"])
+            ->group(function () {
+                Route::post('/prepare', "prepare");
+                Route::post('/check', "check")
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/exchange', "exchange")
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/load-action-data', "loadActionData")
+                    ->middleware(["tgAuth.admin"]);
+            });
+
+        Route::prefix("instagram-quest")
+            ->controller(InstagramQuestScriptController::class)
+            ->middleware(["tgAuth.any", "slug"])
+            ->group(function () {
+                Route::post('/load-data', "loadData");
+                Route::post('/prepare', "instagramQuestPrepare");
+                Route::post('/callback', "instagramQuestCallback");
             });
 
         Route::prefix("about-bot")
-            ->controller(\App\Http\Controllers\Globals\AboutBotScriptController::class)
+            ->controller(AboutBotScriptController::class)
             ->group(function () {
                 Route::get('/callback/{botDomain}', "callbackFormGet");
                 Route::post('/callback/{botDomain}', "callbackFormPost");
             });
 
-        Route::prefix("{scriptId}/instagram-quest")
-            ->controller(InstagramQuestScriptController::class)
-            ->group(function () {
-                Route::get('/load-data/{botDomain}', "loadData");
-                Route::post('/prepare/{botDomain}', "instagramQuestPrepare");
-                //Route::get('/{botDomain}/{path?}', "instagramQuestForm");
-                Route::post('/{botDomain}', "instagramQuestCallback");
-            });
+
 
         Route::prefix("shop")
             ->group(function () {
@@ -105,8 +121,7 @@ Route::prefix("bot-client")
                     ->middleware(["tgAuth.admin"]);
             });
 
-        Route::get("{scriptId}/interface/{botDomain}/{path?}", [ShopScriptController::class, "shopHomePage"])
-            ->where("scriptId", "[0-9]+|route");
-
+        Route::get("/{botDomain}", [ShopScriptController::class, "shopHomePage"])
+            ->where("slug", "[0-9]+|route");
 
     });

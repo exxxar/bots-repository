@@ -82,6 +82,8 @@ Route::prefix("admin")
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");
                 Route::post("/current-bot-user", "getCurrentBotUser");
+                Route::post("/duplicate", "duplicate");
+                Route::delete("/force/{botId}", "forceDelete");
                 Route::delete("/{botId}", "destroy");
                 Route::get("/restore/{botId}", "restore");
             });
@@ -170,8 +172,11 @@ Route::prefix("admin")
 
         Route::prefix("shop")
             ->group(function () {
-
                 Route::post("/products", [\App\Http\Controllers\Admin\ProductController::class, "index"]);
+                Route::post("/products/categories", [\App\Http\Controllers\Admin\ProductController::class, "getCategories"]);
+                Route::post("/products/save", [\App\Http\Controllers\Admin\ProductController::class, "saveProduct"]);
+                Route::delete("/products/remove/{productId}", [\App\Http\Controllers\Admin\ProductController::class, "destroy"]);
+                Route::post("/products/duplicate/{productId}", [\App\Http\Controllers\Admin\ProductController::class, "duplicate"]);
             });
 
         Route::any('/register-webhooks', [\App\Http\Controllers\Admin\TelegramController::class, "registerWebhooks"]);

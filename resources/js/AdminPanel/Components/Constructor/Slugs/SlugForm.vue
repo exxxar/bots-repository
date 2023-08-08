@@ -127,6 +127,17 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             </label>
                         </div>
 
+                        <div
+                            v-if="filteredConfigs[index].type==='color'"
+                            class="form-check mb-1 mt-2">
+                            <input class="form-check-input"
+                                   v-model="filteredConfigs[index].value"
+                                   type="color" :id="'filtered-config-'+index+'-color'">
+                            <label class="form-check-label" :for="'filtered-config-'+index+'-color'">
+                               <p v-bind:style="{'color':filteredConfigs[index].value}">Цвет: {{filteredConfigs[index].value}}</p>
+                            </label>
+                        </div>
+
                         <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='large-text'">
                             <textarea class="form-control" :id="'field-input-'+index"
                                       v-model="filteredConfigs[index].value"
@@ -199,6 +210,10 @@ export default {
                 {
                     title: 'Ссылка на изображение',
                     type: 'image',
+                },
+                {
+                    title: 'Цвет',
+                    type: 'color',
                 },
                 /*
                    {

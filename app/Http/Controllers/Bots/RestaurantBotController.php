@@ -31,33 +31,52 @@ class RestaurantBotController extends Controller
         $message = $bot->welcome_message ?? null;
 
         if (!is_null($data[3])) {
-            $pattern = "/([0-9]{3})([0-9]+)/";
+            $pattern_simple = "/([0-9]{3})([0-9]+)/";
+            $pattern_extended = "/([0-9]{3})([0-9]{8,10})S([0-9]+)/";
 
             $string = base64_decode($data[3]);
 
-            preg_match_all($pattern, $string, $matches);
+            preg_match_all(strlen($string)<=13 ? $pattern_simple : $pattern_extended, $string, $matches);
 
             $code = $matches[1][0] ?? null;
             $request_telegram_chat_id = $matches[2][0] ?? null;
+            $slug_id = $matches[3][0] ?? 'route';
 
-           // Log::info("request_telegram_chat_id".print_r($matches, true));
+            // Log::info("request_telegram_chat_id".print_r($matches, true));
 
             //$qrCode = new QRCodeHandler($code, $request_user_id);
 
             if ($botUser->is_admin) {
-                $bot_domain = BotManager::bot()->getSelf()->bot_domain;
+
+                switch ($code) {
+                    default:
+                    case "001":
+                        $text = "Основная административная панель";
+                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/admin-main?user=$request_telegram_chat_id";
+                        break;
+
+                    case "002":
+                        $text = "Административное меню системы бонусных накоплений";
+                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slug_id#/admin-bonus-product?user=$request_telegram_chat_id";
+                        break;
+
+                }
+
+
                 BotManager::bot()->replyInlineKeyboard(
-                    "Административное меню",
+                    $text,
                     [
                         [
-                            ["text" => "\xF0\x9F\x8E\xB0Перейти в админку бота",
+                            ["text" => "\xF0\x9F\x8E\xB0Перейти в административное меню",
                                 "web_app" => [
-                                    "url" => env("APP_URL") . "/bot-client/route/interface/$bot->bot_domain#/admin-main?user=$request_telegram_chat_id"
+                                    "url" => $path
                                 ]
                             ],
                         ]
                     ]
                 );
+
+
             }
 
             $userBotUser = BotUser::query()
@@ -106,7 +125,7 @@ class RestaurantBotController extends Controller
             ->replyInlineKeyboard("Отлично! Вы перешли по ссылке друга и теперь готовы к большому CashBack-путешествию:)",
                 [
                     [
-                        ["text" => "Поехали! ЖМИ:)", "callback_data"=>"/start"],
+                        ["text" => "Поехали! ЖМИ:)", "callback_data" => "/start"],
                     ],
 
                 ],);
@@ -128,48 +147,48 @@ class RestaurantBotController extends Controller
             return;
         }
 
-    /*   BotManager::bot()->reply("test");
+        /*   BotManager::bot()->reply("test");
 
 
-        BotManager::bot()->replyInlineKeyboard("TESSSST1",[
-            [
-                ["text"=>"Action 1","callback_data"=>"/action"],
-                ["text"=>"Action 2","callback_data"=>"/action"],
-                ["text"=>"Action 3","callback_data"=>"/action"],
-            ],
-            [
-                ["text"=>"Action 3","callback_data"=>"/action"],
-                ["text"=>"Action 4","callback_data"=>"/action"],
-            ],
+            BotManager::bot()->replyInlineKeyboard("TESSSST1",[
+                [
+                    ["text"=>"Action 1","callback_data"=>"/action"],
+                    ["text"=>"Action 2","callback_data"=>"/action"],
+                    ["text"=>"Action 3","callback_data"=>"/action"],
+                ],
+                [
+                    ["text"=>"Action 3","callback_data"=>"/action"],
+                    ["text"=>"Action 4","callback_data"=>"/action"],
+                ],
 
-        ]);
+            ]);
 
-        BotManager::bot()->replyKeyboard("TESSSST2",[
-           [
-               ["text"=>"Action 1"],
-               ["text"=>"Action 2"],
-           ],
-            [
-                ["text"=>"Action 1"],
-                ["text"=>"Action 2"],
-            ],
-            [
-                ["text"=>"Action 1"],
-                ["text"=>"Action 2"],
-            ],
-            [
-                ["text"=>"Action 1"],
-                ["text"=>"Action 2"],
-            ],
-            [
-                ["text"=>"Action 1"],
-                ["text"=>"Action 2"],
-            ],
-            [
-                ["text"=>"Action 1"],
-                ["text"=>"Action 2"],
-            ],
-        ]);*/
+            BotManager::bot()->replyKeyboard("TESSSST2",[
+               [
+                   ["text"=>"Action 1"],
+                   ["text"=>"Action 2"],
+               ],
+                [
+                    ["text"=>"Action 1"],
+                    ["text"=>"Action 2"],
+                ],
+                [
+                    ["text"=>"Action 1"],
+                    ["text"=>"Action 2"],
+                ],
+                [
+                    ["text"=>"Action 1"],
+                    ["text"=>"Action 2"],
+                ],
+                [
+                    ["text"=>"Action 1"],
+                    ["text"=>"Action 2"],
+                ],
+                [
+                    ["text"=>"Action 1"],
+                    ["text"=>"Action 2"],
+                ],
+            ]);*/
 
         BotManager::bot()
             ->sendReplyMenu((is_null($message) ? "" : $message),

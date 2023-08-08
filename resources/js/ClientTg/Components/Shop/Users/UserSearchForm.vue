@@ -25,7 +25,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <div class="card card-style mx-0 mt-3 pt-2 pb-0 mb-2" v-if="users">
                 <small class="w-100 text-center p-2 mb-0">Найдено {{users_paginate_object.meta.total}}</small>
                 <div class="list-group list-custom-large">
-                    <a href="#"
+                    <a
                        @click.prevent="selectUser(item)"
                        v-for="(item, index) in users">
                         <i class="fa-solid fa-a color-red2-dark" v-if="item.is_admin"></i>

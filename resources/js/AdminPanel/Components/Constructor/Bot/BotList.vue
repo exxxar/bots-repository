@@ -64,7 +64,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         @click="selectBot(null)">Создать нового бота
                     </li>
                     <li class="list-group-item cursor-pointer btn mb-1 d-flex  align-items-center justify-between"
-                        v-bind:class="{'btn-outline-info':bot.deleted_at==null,'btn-outline-danger border-danger':bot.deleted_at!=null}"
+                        v-bind:class="{'btn-outline-info':bot.deleted_at==null,'btn-outline-secondary border-secondary':bot.deleted_at!=null}"
                         v-for="(bot, index) in filteredBots"
                     >
                         <strong
@@ -80,16 +80,31 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                               v-if="bot.is_template">{{ bot.template_description || 'Шаблон без названия' }}
                     </span>
 
-
+                        <div>
+                        <button class="btn btn-outline-info mr-2"
+                                type="button"
+                                @click="duplicate(bot.id)"
+                                title="Дублировать" >
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
                         <button class="btn btn-outline-info"
                                 type="button"
                                 @click="addToArchive(bot.id)"
                                 title="В архив" v-if="bot.deleted_at==null"><i
                             class="fa-solid fa-boxes-packing"></i></button>
-                        <button class="btn btn-outline-info"
-                                @click="extractFromArchive(bot.id)"
-                                title="Из архива" v-if="bot.deleted_at!=null"><i
-                            class="fa-solid fa-box-open"></i></button>
+
+                            <button class="btn btn-outline-info mr-2"
+                                    @click="extractFromArchive(bot.id)"
+                                    title="Из архива" v-if="bot.deleted_at!=null"><i
+                                class="fa-solid fa-box-open"></i></button>
+
+                            <button class="btn btn-danger  mr-2 "
+                                    @click="forceDelete(bot.id)"
+                                    title="Удалить на совсем" v-if="bot.deleted_at!=null">
+                                <i class="fa-solid fa-trash-can text-white"></i>
+                            </button>
+                        </div>
+
 
                     </li>
                 </ul>
@@ -142,7 +157,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getBots', 'getBotsPaginateObject']),
+        ...mapGetters(['getBots', 'getBotsPaginateObject','getCurrentCompany']),
         filteredBots() {
             if (!this.bots)
                 return [];
@@ -193,6 +208,22 @@ export default {
         this.selectFilter('active')
     },
     methods: {
+        duplicate(id){
+            if (!this.getCurrentCompany){
+                this.$notify("У вас не выбран клиент!");
+                return;
+            }
+            this.$store.dispatch("duplicateBot", {
+                dataObject:{
+                    bot_id: id,
+                    company_id: this.getCurrentCompany.id
+                }
+            }).then(resp => {
+                let currentPage = this.bots_paginate_object.meta.current_page || 0
+                this.loadBots(currentPage)
+                this.$notify("Указанный бот успешно продублирован");
+            })
+        },
         addToArchive(id) {
             this.$store.dispatch("removeBot", {
                 botId: id
@@ -200,6 +231,15 @@ export default {
                 let currentPage = this.bots_paginate_object.meta.current_page || 0
                 this.loadBots(currentPage)
                 this.$notify("Указанный бот успешно перемещен в архив");
+            })
+        },
+        forceDelete(id){
+            this.$store.dispatch("forceDeleteBot", {
+                botId: id
+            }).then(resp => {
+                let currentPage = this.bots_paginate_object.meta.current_page || 0
+                this.loadBots(currentPage)
+                this.$notify("Указанный бот успешно перемещен из архива");
             })
         },
         extractFromArchive(id) {

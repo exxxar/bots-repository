@@ -68,14 +68,18 @@ import ProductList from "@/AdminPanel/Components/Constructor/Shop/ProductList.vu
             <h6>Работа с товаром</h6>
         </div>
         <div class="card-body">
-            <ProductForm :bot="bot" :item="selectedProduct" v-if="bot&&!load"/>
+            <ProductForm :bot="bot"
+                         :item="selectedProduct"
+                         v-on:refresh="refresh"
+                         v-if="bot&&!load"/>
         </div>
     </div>
     <div class="card mt-2">
         <div class="card-body">
-            <ProductList :bot="bot"
-                         v-on:select="selectProduct"
-                         v-if="bot"/>
+            <ProductList
+                :bot="bot"
+                v-on:select="selectProduct"
+                v-if="bot&&!load"/>
         </div>
     </div>
 </template>
@@ -101,9 +105,16 @@ export default {
         this.bot = this.getCurrentBot
     },
     methods: {
-        selectProduct(product){
+        refresh() {
             this.load = true
-            this.$nextTick(()=>{
+            this.selectedProduct = null
+            this.$nextTick(() => {
+                this.load = false
+            })
+        },
+        selectProduct(product) {
+            this.load = true
+            this.$nextTick(() => {
                 this.selectedProduct = product
                 this.load = false
             })

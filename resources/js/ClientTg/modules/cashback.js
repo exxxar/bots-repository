@@ -15,4 +15,12 @@ export default {
         }));
     },
 
+    qr(code){
+        window.dispatchEvent(new CustomEvent('show-qr-code', {
+            detail:{
+                code: code,
+            }
+        }));
+    },
+
 }
