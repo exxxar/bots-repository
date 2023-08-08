@@ -24,7 +24,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
             </p>
 
             <div class="list-group list-boxes">
-                <a href="#"
+                <a
                    @click="sendRequest(item, index)"
                    v-for="(item, index) in admins"
                    v-bind:class="{'border-green1-dark':item.is_work,'border-red1-dark':!item.is_work}"
