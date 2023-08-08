@@ -24,7 +24,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
             </p>
 
             <div class="list-group list-boxes">
-                <li
+                <a href="#"
                    @click="sendRequest(item, index)"
                    v-for="(item, index) in admins"
                    v-bind:class="{'border-green1-dark':item.is_work,'border-red1-dark':!item.is_work}"
@@ -38,7 +38,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                     <u class="color-red2-light" v-else>Не в сети</u>
                     <i class="fa fa-check-circle color-green1-dark" v-if="item.is_work"></i>
                     <i class="fa fa-times-circle color-red2-light" v-else></i>
-                </li>
+                </a>
 
             </div>
 
