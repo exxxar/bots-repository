@@ -1,9 +1,9 @@
 <script setup>
 
-import UserInfo from 'ClientTg@/Components/UserInfo.vue';
-import Pagination from 'ClientTg@/Components/Shop/Helpers/Pagination.vue'
-import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
-import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
+import UserInfo from '@/ClientTg/Components/UserInfo.vue';
+import Pagination from '@/ClientTg/Components/Shop/Helpers/Pagination.vue'
+import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
+import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue";
 //todo: добавить историю кэшбека, добавить сумму кэшбэка на текущий момент
 </script>
 <template>

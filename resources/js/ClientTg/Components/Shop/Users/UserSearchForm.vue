@@ -23,15 +23,16 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             </form>
 
             <div class="card card-style mx-0 mt-3 pt-2 pb-0 mb-2" v-if="users">
-                <small class="w-100 text-center p-2 mb-0">Найдено {{users_paginate_object.meta.total}}</small>
+                <small class="w-100 text-center p-2 mb-0">Найдено {{ users_paginate_object.meta.total }}</small>
                 <div class="list-group list-custom-large">
                     <a
-                       @click.prevent="selectUser(item)"
-                       v-for="(item, index) in users">
+                        href="javascript:void(0)"
+                        @click="selectUser(item)"
+                        v-for="(item, index) in users">
                         <i class="fa-solid fa-a color-red2-dark" v-if="item.is_admin"></i>
                         <i class="fa-solid fa-u color-green2-dark" v-else></i>
-                        <span>{{item.name || item.fio_from_telegram || 'Не указано'}}</span>
-                        <strong>{{item.phone || 'Телефон не указан'}}</strong>
+                        <span>{{ item.name || item.fio_from_telegram || 'Не указано' }}</span>
+                        <strong>{{ item.phone || 'Телефон не указан' }}</strong>
                         <i class="fa fa-angle-right mr-2"></i>
                     </a>
 
@@ -74,8 +75,8 @@ export default {
         nextUsers(index) {
             this.loadUsers(index)
         },
-        selectUser(item){
-          this.$emit("select", item)
+        selectUser(item) {
+            this.$emit("select", item)
         },
         loadUsers(page = 0) {
             this.loading = true
