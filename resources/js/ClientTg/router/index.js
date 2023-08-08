@@ -34,6 +34,10 @@ import AdminBonusProduct from '@/ClientTg/Pages/Admin/BonusProduct.vue';
 export const routes = [
 
     {
+        path: '/',
+        redirect: '/empty'
+    },
+    {
         name: 'empty',
         path: '/empty',
         component: Empty,
