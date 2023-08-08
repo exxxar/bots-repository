@@ -1,6 +1,6 @@
 <template>
     <img v-lazy="qr" class="w-100 p-3 object-fit-cover my-0 " alt="">
-    <a href="#" @click.prevent="copy" class="btn btn-link w-100 text-center">Скопировать ссылку</a>
+    <a href="javascript:void(0)" @click.prevent="copy" class="btn btn-link w-100 text-center">Скопировать ссылку</a>
 </template>
 <script>
 export default {

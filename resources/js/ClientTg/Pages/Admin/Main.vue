@@ -13,7 +13,7 @@ import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
             <div class="content mb-0">
                 <div class="tab-controls mb-5 tabs-round tab-animated tabs-medium tabs-rounded shadow-xl">
                     <a
-                        href="#"
+                        href="javascript:void(0)"
                         v-bind:class="{'bg-blue2-dark color-white':tab===0}"
                         @click.prevent="tab=0"
                         style="width: 50%;">
@@ -21,7 +21,7 @@ import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
                     </a>
 
                     <a
-                        href="#"
+                        href="javascript:void(0)"
                         v-bind:class="{'bg-blue2-dark color-white':tab===1}"
                         @click.prevent="tab=1"
                         style="width: 50%;">
@@ -49,7 +49,7 @@ import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
                         <a
                             @click.prevent="showInfo(item)"
                             v-bind:class="{'border-green2-dark':item.operation_type,'border-red1-dark':!item.operation_type}"
-                            href="#"
+                            href="javascript:void(0)"
                             v-for="(item, index) in cashback" class="border  rounded-s shadow-xs">
                             <i class="fa font-20 fa-mobile"
                                v-bind:class="{'color-green2-dark':item.operation_type,'color-red1-dark':!item.operation_type}"></i>
@@ -77,7 +77,7 @@ import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
             <div class="divider-icon divider-margins bg-blue2-dark my-4"><i class="fa font-17 color-blue2-dark fa-cog bg-white"></i></div>
             <div class="content mt-0">
                 <a
-                    href="#"
+                    href="javascript:void(0)"
                     @click.prevent="openSection(5)"
                     v-bind:class="{'bg-blue2-dark text-white':section===5, 'color-blue2-dark':section!==5}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Отметить
@@ -103,7 +103,7 @@ import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
                 </form>
 
                 <a
-                    href="#"
+                    href="javascript:void(0)"
                     @click.prevent="openSection(6)"
                     v-if="currentBot.payment_provider_token"
                     v-bind:class="{'bg-blue2-dark text-white':section===6, 'color-blue2-dark':section!==6}"
@@ -139,7 +139,7 @@ import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
                 </form>
 
                 <a
-                    href="#"
+                    href="javascript:void(0)"
                     @click.prevent="openSection(1)"
                     v-bind:class="{'bg-blue2-dark text-white':section===1, 'color-blue2-dark':section!==1}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark  ">Списать
@@ -178,7 +178,7 @@ import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
 
 
                 <a
-                    href="#"
+                    href="javascript:void(0)"
                     @click.prevent="openSection(2)"
                     v-bind:class="{'bg-blue2-dark text-white':section===2, 'color-blue2-dark':section!==2}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Начислить
@@ -232,7 +232,7 @@ import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
 
 
                 <a
-                    href="#"
+                    href="javascript:void(0)"
                     @click.prevent="openSection(3)"
                     v-bind:class="{'bg-blue2-dark text-white':section===3, 'color-blue2-dark':section!==3}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
@@ -261,7 +261,7 @@ import UserSearchForm from "ClientTg@/Components/Shop/Users/UserSearchForm.vue";
 
 
                 <a
-                    href="#"
+                    href="javascript:void(0)"
                     @click.prevent="openSection(4)"
                     v-bind:class="{'bg-blue2-dark text-white':section===4, 'color-blue2-dark':section!==4}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark  ">

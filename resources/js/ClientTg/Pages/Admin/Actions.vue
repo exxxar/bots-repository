@@ -27,24 +27,24 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                 </p>
                 <div class="row mt-2 mb-2">
                     <div class="col-4">
-                        <a href="#"
-                           @click.prevent="filter = 'users'"
+                        <a href="javascript:void(0)"
+                           @click="filter = 'users'"
                            v-bind:class="{'border-red2-dark color-red2-dark':filter === 'users', 'border-gray2-dark color-gray2-dark':filter !== 'users'}"
                            class="btn btn-border btn-m btn-full  rounded-s text-uppercase font-900  bg-theme">
                             <i class="fa-solid fa-users"></i>
                         </a>
                     </div>
                     <div class="col-4">
-                        <a href="#"
-                           @click.prevent="filter = 'event'"
+                        <a href="javascript:void(0)"
+                           @click="filter = 'event'"
                            v-bind:class="{'border-red2-dark color-red2-dark':filter === 'event', 'border-gray2-dark color-gray2-dark':filter !== 'event'}"
                            class="btn btn-border btn-m btn-full rounded-s text-uppercase font-900 border-red2-dark color-red2-dark bg-theme">
                             <i class="fa-solid fa-bolt"></i>
                         </a>
                     </div>
                     <div class="col-4">
-                        <a href="#"
-                           @click.prevent="filter = 'phone'"
+                        <a href="javascript:void(0)"
+                           @click="filter = 'phone'"
                            v-bind:class="{'border-red2-dark color-red2-dark':filter === 'phone', 'border-gray2-dark color-gray2-dark':filter !== 'phone'}"
                            class="btn btn-border btn-m btn-full  rounded-s text-uppercase font-900 border-red2-dark color-red2-dark bg-theme">
                             <i class="fa-solid fa-phone"></i>

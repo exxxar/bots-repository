@@ -123,17 +123,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-4ee61737.js",
@@ -236,7 +236,7 @@
   },
   "resources/js/AdminPanel/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/Landing/Pages/ChatWindow.css"
+    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
   },
   "resources/js/AdminPanel/Pages/ChatWindow.vue": {
     "css": [
@@ -444,7 +444,7 @@
     "css": [
       "assets/WheelOfFortune-b050e0a8.css"
     ],
-    "file": "assets/WheelOfFortune-782974f4.js",
+    "file": "assets/WheelOfFortune-b0525766.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "resources/js/ClientTg/app.js",
@@ -505,7 +505,7 @@
     "css": [
       "assets/Main-ed5ad4d6.css"
     ],
-    "file": "assets/Main-26ef7948.js",
+    "file": "assets/Main-3b203776.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -536,7 +536,7 @@
       "resources/js/ClientTg/Pages/Shop/Categories.vue",
       "resources/js/ClientTg/Pages/Shop/Main.vue"
     ],
-    "file": "assets/app-46ffa624.js",
+    "file": "assets/app-4e70bb4b.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -548,7 +548,7 @@
   },
   "resources/js/Landing/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/Landing/Pages/ChatWindow.css"
+    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
   },
   "resources/js/Landing/Pages/ChatWindow.vue": {
     "css": [
