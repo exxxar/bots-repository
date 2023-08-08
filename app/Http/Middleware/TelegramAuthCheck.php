@@ -43,7 +43,7 @@ class TelegramAuthCheck
         }
 
         if (is_null($botDomain)) {
-            Log::info("bot domain not found");
+           // Log::info("bot domain not found");
             return \response()->json(["error" => "bot domain not found"], 400);
         }
 

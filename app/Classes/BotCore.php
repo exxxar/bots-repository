@@ -255,7 +255,7 @@ abstract class BotCore
                             ->first();
 
                         $item = Collection::make($this->slugs)
-                            ->where("path", $slug->slug)
+                            ->where("path", $slug->slug ?? "/start")
                             ->first();
 
                         if (!is_null($item)) {
@@ -492,7 +492,7 @@ abstract class BotCore
         $payload = $data->invoice_payload;
         $shippingAddress = $data->shipping_address;
 
-        Log::info("shippingQueryHandler" . print_r($data, true));
+        //Log::info("shippingQueryHandler" . print_r($data, true));
 
         $transaction = Transaction::query()->where("payload", $payload)
             ->first();

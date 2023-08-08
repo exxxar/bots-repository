@@ -81,7 +81,7 @@ class VKProductController extends Controller
 
         try {
 
-            Log::info("tmpScreenName $tmpScreenName");
+            //Log::info("tmpScreenName $tmpScreenName");
             $response = $vk->utils()->resolveScreenName($access_token, [
                 'screen_name' => $tmpScreenName ?? null,
             ]);

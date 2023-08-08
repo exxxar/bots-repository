@@ -35,7 +35,7 @@ class AmoCRMIntegration
             AmoAPI::oAuth2($this->subdomain, $this->clientId, $this->clientSecret, $this->redirectUri, $this->authCode);
 
             // Получение информации об аккаунте вместе с пользователями и группами
-            Log::info(print_r(AmoAPI::getAccount($with = 'users,groups'), true));
+           // Log::info(print_r(AmoAPI::getAccount($with = 'users,groups'), true));
 
         } catch (AmoAPIException $e) {
             Log::info(printf('Ошибка авторизации (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
@@ -51,7 +51,7 @@ class AmoCRMIntegration
 
             //371656 - воронка продаж, в которую нужно слать
             // Получение информации об аккаунте
-            Log::info(print_r(AmoAPI::getAccount(), true));
+           // Log::info(print_r(AmoAPI::getAccount(), true));
 
             $contact1 = new AmoContact([
                 'name' => 'Тест CashMAN Contact',

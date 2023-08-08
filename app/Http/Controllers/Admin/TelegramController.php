@@ -22,7 +22,7 @@ class TelegramController extends Controller
 
     public function handler(Request $request, $domain)
     {
-        Log::info("test".$domain);
+     //   Log::info("test".$domain);
         BotManager::bot()->handler($domain);
     }
 
