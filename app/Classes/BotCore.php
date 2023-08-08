@@ -254,8 +254,11 @@ abstract class BotCore
                                 ->next_bot_menu_slug_id)
                             ->first();
 
+                        if (is_null($slug))
+                            return true;
+
                         $item = Collection::make($this->slugs)
-                            ->where("path", $slug->slug ?? "/start")
+                            ->where("path", $slug->slug )
                             ->first();
 
                         if (!is_null($item)) {
