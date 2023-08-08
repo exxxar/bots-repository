@@ -123,17 +123,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-4ee61737.js",
@@ -414,14 +414,14 @@
     "src": "resources/js/ClientTg/Pages/BotPages/InstagramQuest.vue"
   },
   "resources/js/ClientTg/Pages/BotPages/VipForm.css": {
-    "file": "assets/DeliveryManForm-81a6d53b.css",
-    "src": "resources/js/ClientTg/Pages/BotPages/VipForm.css"
+    "file": "assets/VipForm-81a6d53b.css",
+    "src": "resources/js/ClientTg/Pages/DeliveryManForm.css"
   },
   "resources/js/ClientTg/Pages/BotPages/VipForm.vue": {
     "css": [
-      "assets/DeliveryManForm-81a6d53b.css"
+      "assets/VipForm-81a6d53b.css"
     ],
-    "file": "assets/VipForm-593273d0.js",
+    "file": "assets/VipForm-86de830d.js",
     "imports": [
       "_index.es-b4fa9b8f.js"
     ],
@@ -444,7 +444,7 @@
     "css": [
       "assets/WheelOfFortune-b050e0a8.css"
     ],
-    "file": "assets/WheelOfFortune-734f8460.js",
+    "file": "assets/WheelOfFortune-45134944.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "resources/js/ClientTg/app.js",
@@ -456,14 +456,14 @@
     "src": "resources/js/ClientTg/Pages/BotPages/WheelOfFortune.vue"
   },
   "resources/js/ClientTg/Pages/DeliveryManForm.css": {
-    "file": "assets/DeliveryManForm-81a6d53b.css",
-    "src": "resources/js/ClientTg/Pages/BotPages/VipForm.css"
+    "file": "assets/VipForm-81a6d53b.css",
+    "src": "resources/js/ClientTg/Pages/DeliveryManForm.css"
   },
   "resources/js/ClientTg/Pages/DeliveryManForm.vue": {
     "css": [
-      "assets/DeliveryManForm-81a6d53b.css"
+      "assets/VipForm-81a6d53b.css"
     ],
-    "file": "assets/DeliveryManForm-48f31016.js",
+    "file": "assets/DeliveryManForm-d206b4d9.js",
     "imports": [
       "_index.es-b4fa9b8f.js"
     ],
@@ -505,7 +505,7 @@
     "css": [
       "assets/Main-ed5ad4d6.css"
     ],
-    "file": "assets/Main-1d2b4abb.js",
+    "file": "assets/Main-7d4231bd.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -536,7 +536,7 @@
       "resources/js/ClientTg/Pages/Shop/Categories.vue",
       "resources/js/ClientTg/Pages/Shop/Main.vue"
     ],
-    "file": "assets/app-e58269a6.js",
+    "file": "assets/app-2e407ec2.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
