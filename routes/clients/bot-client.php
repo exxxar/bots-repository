@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("bot-client")
     ->group(function () {
 
-        Route::post('/self', [BotController::class, "getSelf"]);
+        Route::post('/self', [BotController::class, "getSelf"])
+            ->middleware(["tgAuth.any"]);
+
         Route::post('/callback', [BotController::class, "sendCallback"]);
 
         Route::prefix("admin")

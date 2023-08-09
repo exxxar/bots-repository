@@ -117,12 +117,7 @@ export default {
         window.currentScript = this.slug_id || null
 
         let tgUser = this.tgUser || null
-        this.$store.dispatch("loadSelf", {
-            dataObject: {
-                telegram_chat_id: tgUser ? tgUser.id : 484698703,
-                bot_id: window.currentBot.id
-            }
-        }).then(() => {
+        this.$store.dispatch("loadSelf").then(() => {
             window.self = this.getSelf
 
         })

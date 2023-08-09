@@ -12,11 +12,21 @@ const getters = {
 }
 
 const actions = {
-    async loadSelf(context, payload = {dataObject: { telegram_chat_id: null, bot_id:null}}) {
+    async loadSelf(context) {
+
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain
+        }
 
         let link = `${BASE_PRODUCTS_LINK}`
         let method = 'POST'
-        let _axios = util.makeAxiosFactory(link, method, payload.dataObject)
+        let _axios = util.makeAxiosFactory(link, method, data)
 
         return _axios.then((response) => {
             let dataObject = response.data

@@ -281,9 +281,7 @@ export default {
         }
     },
     mounted() {
-        if (this.tgUser) {
-            this.loadBotUser()
-        }
+        this.botUser = this.self
     },
 
     computed: {
@@ -305,20 +303,7 @@ export default {
         nextStep() {
             this.step++;
         },
-        loadBotUser(){
-            this.loading = true;
-            this.$store.dispatch("loadCurrentBotUser", {
-                dataObject: {
-                    bot_id: this.currentBot.id,
-                    tg: this.tgUser,
-                }
-            }).then((resp) => {
-                this.loading = false
-                this.botUser = resp
-            }).catch(() => {
-                this.loading = false
-            })
-        },
+
         submit() {
             this.loading = true;
 
