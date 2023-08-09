@@ -283,7 +283,10 @@ export default {
         }
     },
     mounted() {
-        this.botUser = this.getSelf
+        this.$store.dispatch("loadSelf").then(() => {
+            this.botUser = this.getSelf
+            console.log(this.botUser)
+        })
     },
 
     computed: {
@@ -297,6 +300,8 @@ export default {
         }
     },
     methods: {
+
+
         nextStep() {
             this.step++;
         },
