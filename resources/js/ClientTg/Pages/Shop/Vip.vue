@@ -307,13 +307,8 @@ export default {
         submit() {
             this.loading = true;
 
-
             this.$store.dispatch("saveVip", {
-                dataObject: {
-                    bot_id: this.currentBot.id,
-                    telegram_chat_id: this.botUser.telegram_chat_id,
-                    form: this.vipForm
-                }
+                ...this.vipForm
             }).then((resp) => {
                 this.loading = false
                 this.tg.close()

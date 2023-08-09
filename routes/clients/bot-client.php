@@ -117,7 +117,8 @@ Route::prefix("bot-client")
                     ->middleware(["tgAuth.admin"]);
                 Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"])
                     ->middleware(["tgAuth.admin"]);
-                Route::post('/vip', [\App\Http\Controllers\Bots\AdminBotController::class, "vipStore"]);
+                Route::post('/vip', [\App\Http\Controllers\Bots\AdminBotController::class, "vipStore"])
+                    ->middleware(["tgAuth.any"]);
                 //Route::post('/deliveryman', [\App\Http\Controllers\Bots\AdminBotController::class, "deliverymanStore"]);
                 Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"])
                     ->middleware(["tgAuth.admin"]);

@@ -668,31 +668,24 @@ class AdminBotController extends Controller
     {
 
         $request->validate([
-            "bot_id" => "required",
-            "telegram_chat_id" => "required",
-            "form.name" => "required",
-            "form.phone" => "required",
-            //"form.email" => "required",
-            "form.birthday" => "required",
-            "form.city" => "required",
-            //"form.country" => "required",
-            //"form.address" => "required",
-            "form.sex" => "required",
+            "name" => "required",
+            "phone" => "required",
+            "birthday" => "required",
+            "city" => "required",
+            //"country" => "required",
+            //"address" => "required",
+            "sex" => "required",
         ]);
 
-        $form = $request->form;
+        $bot = $request->bot;
+
+        $botUser = $request->botUser;
+
+        $form = $request;
         $form["birthday"] = Carbon::parse($form["birthday"])
             ->format("Y-m-d");
 
         $form["sex"] = $form["sex"] === "on" ? 1 : 0;
-
-        $botUser = BotUser::query()
-            ->where("bot_id", $request->bot_id)
-            ->where("telegram_chat_id", $request->telegram_chat_id)
-            ->first();
-
-        if (is_null($botUser))
-            return response()->noContent(404);
 
         $botUser->update($form);
 
@@ -702,11 +695,10 @@ class AdminBotController extends Controller
         $botUser->save();
 
         BotMethods::bot()
-            ->whereId($request->bot_id)
-            ->sendSlugKeyboard(
+            ->whereId($bot->id)
+            ->sendMessage(
                 $botUser->telegram_chat_id,
-                "Вы стали нашим <b>V.I.P.</b> пользователем! Поздравляем!",
-                "main_menu_restaurant_2"
+                "Вы стали нашим <b>V.I.P.</b> пользователем! Поздравляем!"
             );
         return response()->noContent();
 
