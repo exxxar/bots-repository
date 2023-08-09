@@ -260,6 +260,8 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
     <ProjectInfoCard/>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     data() {
         return {
@@ -281,20 +283,15 @@ export default {
         }
     },
     mounted() {
-        this.botUser = this.self
+        this.botUser = this.getSelf
     },
 
     computed: {
-        self() {
-            return window.self || null
-        },
+        ...mapGetters(['getSelf']),
         tg() {
             return window.Telegram.WebApp;
         },
-        tgUser() {
-            const urlParams = new URLSearchParams(this.tg.initData);
-            return JSON.parse(urlParams.get('user'));
-        },
+
         currentBot() {
             return window.currentBot
         }
