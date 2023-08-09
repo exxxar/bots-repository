@@ -228,7 +228,7 @@ class BotManager extends BotCore
         $link = "https://t.me/$bot->bot_domain?start=" .
             base64_encode("001" . $telegramChatId);
         //$content = sprintf($content);
-        $qr = "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$link";
+        $qr = "<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$link'>QR-код</a>";
         $content = str_replace(["{{referralLink}}"], $link, $content);
 
         $content = str_replace(["{{referralQr}}"], $qr, $content);
