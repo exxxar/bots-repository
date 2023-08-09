@@ -217,6 +217,13 @@ class BotManager extends BotCore
         $content = str_replace(["<p>", "</p>"], "", $page->content);
         $content = str_replace(["<br>"], "\n", $content);
 
+        $name = $botUser->fio_from_telegram ?? $botUser->name ?? "Без имени";
+
+        $content = str_replace(["{{userName}}"], $name, $content);
+
+     //   $content = str_replace(["{{userName}}"], $name, $content);
+
+
         //$content = sprintf($content);
 
         $needSendReplyMenu = true;
