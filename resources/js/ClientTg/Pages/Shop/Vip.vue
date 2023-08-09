@@ -290,9 +290,8 @@ export default {
             }
         }
     },
-    mounted() {
-
-        this.$store.dispatch("loadSelf").then(() => {
+    watch: {
+        'getSelf': function () {
             this.botUser = this.getSelf
 
             this.vipForm = {
@@ -305,7 +304,25 @@ export default {
                 address: this.botUser.address || null,
                 sex: this.botUser.sex || true,
             }
-        })
+
+        },
+    },
+    mounted() {
+
+     /*   this.$store.dispatch("loadSelf").then(() => {
+            this.botUser = this.getSelf
+
+            this.vipForm = {
+                name: this.botUser.name || this.botUser.fio_from_telegram || null,
+                phone: this.botUser.phone || null,
+                email: this.botUser.email || null,
+                birthday: this.botUser.birthday || null,
+                city: this.botUser.city || null,
+                country: this.botUser.country || null,
+                address: this.botUser.address || null,
+                sex: this.botUser.sex || true,
+            }
+        })*/
     },
 
     computed: {

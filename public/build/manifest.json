@@ -123,17 +123,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-4ee61737.js",
@@ -242,7 +242,7 @@
     "css": [
       "assets/ChatWindow-dadc2ae3.css"
     ],
-    "file": "assets/ChatWindow-108e59c0.js",
+    "file": "assets/ChatWindow-5e88e81e.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -440,7 +440,7 @@
     "css": [
       "assets/Main-ed5ad4d6.css"
     ],
-    "file": "assets/Main-e659b5ef.js",
+    "file": "assets/Main-8c4773bd.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -452,12 +452,12 @@
     "src": "resources/js/ClientTg/Pages/Shop/Main.vue"
   },
   "resources/js/ClientTg/app.css": {
-    "file": "assets/app-a83bf304.css",
+    "file": "assets/app-0e030869.css",
     "src": "resources/js/ClientTg/app.css"
   },
   "resources/js/ClientTg/app.js": {
     "css": [
-      "assets/app-a83bf304.css"
+      "assets/app-0e030869.css"
     ],
     "dynamicImports": [
       "resources/js/ClientTg/Pages/DeliveryManForm.vue",
@@ -466,7 +466,7 @@
       "resources/js/ClientTg/Pages/Shop/Categories.vue",
       "resources/js/ClientTg/Pages/Shop/Main.vue"
     ],
-    "file": "assets/app-f285d042.js",
+    "file": "assets/app-7a485054.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -484,7 +484,7 @@
     "css": [
       "assets/ChatWindow-dadc2ae3.css"
     ],
-    "file": "assets/ChatWindow-5e88e81e.js",
+    "file": "assets/ChatWindow-108e59c0.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
