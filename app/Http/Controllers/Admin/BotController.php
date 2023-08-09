@@ -417,6 +417,7 @@ class BotController extends Controller
                 ];
 
                 $slug = $slug->replicate();
+                $slug->bot_id = $newBot->id;
                 $slug->save();
 
 
@@ -428,6 +429,7 @@ class BotController extends Controller
                     ];
 
                     $replyKeyboard = $replyKeyboard->replicate();
+                    $replyKeyboard->bot_id = $newBot->id;
                     $replyKeyboard->save();
                 }
 
@@ -439,6 +441,7 @@ class BotController extends Controller
                     ];
 
                     $inlineKeyboard = $inlineKeyboard->replicate();
+                    $inlineKeyboard->bot_id = $newBot->id;
                     $inlineKeyboard->save();
                 }
 
