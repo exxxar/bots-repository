@@ -52,12 +52,12 @@ class RestaurantBotController extends Controller
                     default:
                     case "001":
                         $text = "Основная административная панель";
-                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/admin-main?user=$request_telegram_chat_id";
+                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_telegram_chat_id#/admin-main";
                         break;
 
                     case "002":
                         $text = "Административное меню системы бонусных накоплений";
-                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slug_id#/admin-bonus-product?user=$request_telegram_chat_id";
+                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slug_id&user=$request_telegram_chat_id#/admin-bonus-product";
                         break;
 
                 }
