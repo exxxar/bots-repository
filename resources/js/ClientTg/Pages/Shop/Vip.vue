@@ -249,6 +249,14 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 <li>Накопление CashBack за покупки</li>
                 <li>Оплата товаров через CashBak</li>
                 <li>Реферальная программа</li>
+                <li>
+                    <h6>Ваши данные:</h6>
+                    <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
+                    <p class="mb-0">Телефон: {{ botUser.phone || 'Не указано' }}</p>
+                    <p class="mb-0">Город: {{ botUser.city || 'Не указано' }}</p>
+                    <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
+                    <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
+                </li>
             </ul>
 
             <ReturnToBot class="mb-2"/>
@@ -283,12 +291,21 @@ export default {
         }
     },
     mounted() {
-        this.$nextTick(()=>{
+
+        this.$store.dispatch("loadSelf").then(() => {
             this.botUser = this.getSelf
+
+            this.vipForm = {
+                name: this.botUser.name || this.botUser.fio_from_telegram || null,
+                phone: this.botUser.phone || null,
+                email: this.botUser.email || null,
+                birthday: this.botUser.birthday || null,
+                city: this.botUser.city || null,
+                country: this.botUser.country || null,
+                address: this.botUser.address || null,
+                sex: this.botUser.sex || true,
+            }
         })
-       /* this.$store.dispatch("loadSelf").then(() => {
-            this.botUser = this.getSelf
-        })*/
     },
 
     computed: {
