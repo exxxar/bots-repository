@@ -357,10 +357,13 @@ export default {
             this.botUser = this.getSelf
         }
 
-        if (this.$route.query.user) {
-            this.request_telegram_chat_id = this.$route.query.user
+        const urlParams = new URLSearchParams(window.location.search);
+        let user = JSON.parse(urlParams.get('user'));
 
-            console.log("this.$route.query.user=>", this.$route.query.user)
+        if (user) {
+            this.request_telegram_chat_id = user
+
+            console.log("this.$route.query.user=>", user)
             this.loadReceiverUserData()
             this.loadCashBack()
         }

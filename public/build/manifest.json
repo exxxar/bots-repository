@@ -236,13 +236,13 @@
   },
   "resources/js/AdminPanel/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
+    "src": "resources/js/Landing/Pages/ChatWindow.css"
   },
   "resources/js/AdminPanel/Pages/ChatWindow.vue": {
     "css": [
       "assets/ChatWindow-dadc2ae3.css"
     ],
-    "file": "assets/ChatWindow-5e88e81e.js",
+    "file": "assets/ChatWindow-108e59c0.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -440,7 +440,7 @@
     "css": [
       "assets/Main-ed5ad4d6.css"
     ],
-    "file": "assets/Main-6493dc8c.js",
+    "file": "assets/Main-6b893de2.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -466,7 +466,7 @@
       "resources/js/ClientTg/Pages/Shop/Categories.vue",
       "resources/js/ClientTg/Pages/Shop/Main.vue"
     ],
-    "file": "assets/app-e05ee248.js",
+    "file": "assets/app-9972b4b3.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -478,13 +478,13 @@
   },
   "resources/js/Landing/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
+    "src": "resources/js/Landing/Pages/ChatWindow.css"
   },
   "resources/js/Landing/Pages/ChatWindow.vue": {
     "css": [
       "assets/ChatWindow-dadc2ae3.css"
     ],
-    "file": "assets/ChatWindow-108e59c0.js",
+    "file": "assets/ChatWindow-5e88e81e.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
