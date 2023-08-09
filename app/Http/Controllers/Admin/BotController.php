@@ -97,20 +97,7 @@ class BotController extends Controller
 
     public function getSelf(Request $request)
     {
-        $request->validate([
-            "telegram_chat_id" => "required",
-            "bot_id" => "required"
-        ]);
-
-        $botUser = BotUser::query()
-            ->where("telegram_chat_id", $request->telegram_chat_id)
-            ->where("bot_id", $request->bot_id)
-            ->first();
-
-        if (is_null($botUser))
-            return response()->noContent(404);
-
-        return new BotUserResource($botUser);
+        return new BotUserResource($request->botUser);
     }
 
     public function requestTelegramChannel(Request $request)

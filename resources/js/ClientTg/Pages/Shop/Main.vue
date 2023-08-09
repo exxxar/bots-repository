@@ -116,10 +116,8 @@ export default {
         window.currentBot = this.bot.data
         window.currentScript = this.slug_id || null
 
-        let tgUser = this.tgUser || null
         this.$store.dispatch("loadSelf").then(() => {
             window.self = this.getSelf
-
         })
         this.$notify({type: "success", text: "The operation completed"});
     },
