@@ -1,5 +1,5 @@
 <script setup>
-import ProductForm from "ClientTg@/Components/Constructor/Shop/ProductForm.vue";
+import ProductForm from "@/ClientTg/Components/Shop/ProductForm.vue";
 </script>
 <template>
     <div class="card mb-2">

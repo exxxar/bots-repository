@@ -145,7 +145,6 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark  ">Списать
                     CashBack</a>
 
-
                 <form v-on:submit.prevent="removeCashBack" v-if="section===1">
                     <p>У пользователя <strong>{{ botUser.cashBack.amount || 0 }} руб</strong> CashBack</p>
                     <div class="mb-3">
@@ -175,7 +174,6 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                         </button>
                     </div>
                 </form>
-
 
                 <a
                     href="javascript:void(0)"
@@ -230,15 +228,14 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     </div>
                 </form>
 
-
                 <a
+                    v-if="!botUser.is_admin"
                     href="javascript:void(0)"
                     @click.prevent="openSection(3)"
                     v-bind:class="{'bg-blue2-dark text-white':section===3, 'color-blue2-dark':section!==3}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
                     Назначить администратором
                 </a>
-
 
                 <form v-on:submit.prevent="addAdmin" v-if="section===3">
                     <div class="mb-3">
@@ -259,15 +256,14 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     </div>
                 </form>
 
-
                 <a
+                    v-if="botUser.is_admin"
                     href="javascript:void(0)"
                     @click.prevent="openSection(4)"
                     v-bind:class="{'bg-blue2-dark text-white':section===4, 'color-blue2-dark':section!==4}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark  ">
                   Убрать администратора
                 </a>
-
 
                 <form v-on:submit.prevent="removeAdmin" v-if="section===4">
                     <div class="mb-3">
