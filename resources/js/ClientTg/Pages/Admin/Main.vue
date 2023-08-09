@@ -379,14 +379,6 @@ export default {
 
             this.loadReceiverUserData()
             this.loadCashBack()
-
-            this.$nextTick(()=>{
-
-                let ele = document.getElementById('user-profile-info');
-                window.scrollTo(ele.offsetLeft,ele.offsetTop-70)
-
-                //document.getElementById('user-profile-info').scrollIntoView();
-            })
         },
         showInfo(item) {
             this.$cashback.show(item)
@@ -403,6 +395,14 @@ export default {
             }).then(resp => {
                 this.botUser = resp.data
                 this.loading = false
+
+                this.$nextTick(()=>{
+
+                    let ele = document.getElementById('user-profile-info');
+                    window.scrollTo(ele.offsetLeft,ele.offsetTop-70)
+
+                    //document.getElementById('user-profile-info').scrollIntoView();
+                })
             }).catch(() => {
                 this.loading = false
             })
