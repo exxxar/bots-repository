@@ -512,6 +512,9 @@ abstract class BotCore
     {
         $this->setApiToken($domain);
 
+        if (is_null($this->bot))
+            return;
+
         $update = $this->bot->getWebhookUpdate();
 
         // Log::info(print_r($update, true));

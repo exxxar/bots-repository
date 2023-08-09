@@ -382,13 +382,13 @@ class AdminBotController extends Controller
         $providerData = (object)[
             "receipt" => [
                 (object)[
-                    "description"=>"Счет на оплату",
-                    "quantity"=>"1.00",
-                    "amount"=>(object)[
-                        "value"=>$amount/100,
-                        "currency"=>$currency
+                    "description" => "Счет на оплату",
+                    "quantity" => "1.00",
+                    "amount" => (object)[
+                        "value" => $amount / 100,
+                        "currency" => $currency
                     ],
-                    "vat_code"=>$taxSystemCode
+                    "vat_code" => $taxSystemCode
                 ]
             ]
         ];
@@ -402,7 +402,7 @@ class AdminBotController extends Controller
                 "Счет на оплату", $info, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
-                "Вы отправили счет на оплату пользователю $name:\n".($request->amount ?? 100)."руб\n$info"
+                "Вы отправили счет на оплату пользователю $name:\n" . ($request->amount ?? 100) . "руб\n$info"
             );
 
         return response()->noContent();
@@ -681,11 +681,20 @@ class AdminBotController extends Controller
 
         $botUser = $request->botUser;
 
-        $form = $request;
+        $form = [
+            "birthday" => $request->birthday ?? Carbon::now(),
+            "name" => $request->name ?? null,
+            "phone" => $request->phone ?? null,
+            "city" => $request->city ?? null,
+            "country" => $request->country ?? null,
+            "address" => $request->address ?? null,
+            "sex" => ($request->sex ?? false) == "on" ? 1 : 0,
+            "email" =>  $request->email ?? null,
+        ];
+
         $form["birthday"] = Carbon::parse($form["birthday"])
             ->format("Y-m-d");
 
-        $form["sex"] = $form["sex"] === "on" ? 1 : 0;
 
         $botUser->update($form);
 

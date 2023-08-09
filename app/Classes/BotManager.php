@@ -96,7 +96,7 @@ class BotManager extends BotCore
 
 
                 CashBack::query()->create([
-                    'user_id' => $user->id,
+                    'user_id' => $this->botUser->user_id,
                     'bot_id' => $this->getSelf()->id,
                     'amount' => 0,
                 ]);
