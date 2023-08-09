@@ -4,6 +4,7 @@ import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 import BotSlugListSimple from "@/AdminPanel/Components/Constructor/Slugs/BotSlugListSimple.vue";
 import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
+import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
 </script>
 <template>
     <form
@@ -59,18 +60,21 @@ import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialog
             </textarea>
         </div>
         <div class="col-12 mb-2">
-            <label class="form-label" id="bot-domain">
-                <Popper>
-                    <i class="fa-regular fa-circle-question mr-1"></i>
-                    <template #content>
-                        <div>
-                            Текстовый редактор. Данный текст будет в таком<br>
-                            же виде отображен в посте в телеграм.
-                        </div>
-                    </template>
-                </Popper>
-                Текстовое содержимое страницы
-                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+            <label class="form-label d-flex justify-content-between align-items-center mb-0" id="bot-domain">
+                <div>
+                    <Popper>
+                        <i class="fa-regular fa-circle-question mr-1"></i>
+                        <template #content>
+                            <div>
+                                Текстовый редактор. Данный текст будет в таком<br>
+                                же виде отображен в посте в телеграм.
+                            </div>
+                        </template>
+                    </Popper>
+                    Текстовое содержимое страницы
+                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                </div>
+                <InlineInjectionsHelper param="content" v-on:callback="injectContent"/>
             </label>
 
 
@@ -80,7 +84,8 @@ import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialog
                                           maxlength="4096"
                                           placeholder="Введите текст"
                                           id="floatingTextarea2" style="min-height: 100px"></textarea>
-                <label for="floatingTextarea2">Содержимое страницы <span v-if="pageForm.content">{{pageForm.content.length}}/4096 </span></label>
+                <label for="floatingTextarea2">Содержимое страницы <span
+                    v-if="pageForm.content">{{ pageForm.content.length }}/4096 </span></label>
             </div>
 
         </div>
@@ -476,6 +481,12 @@ export default {
                     text: "Вы не можете связать данную страницу с собой",
                     type: 'error'
                 });
+        },
+        injectContent(data) {
+            if (this.pageForm.content)
+                this.pageForm.content += data.text
+            else
+                this.pageForm.content = data.text
         },
         clearForm() {
             this.photos = []

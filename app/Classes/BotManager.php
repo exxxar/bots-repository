@@ -221,10 +221,17 @@ class BotManager extends BotCore
 
         $content = str_replace(["{{userName}}"], $name, $content);
 
-     //   $content = str_replace(["{{userName}}"], $name, $content);
+        $telegramChatId =  $this->botUser->telegram_chat_id ??  "Не указан";
 
+        $content = str_replace(["{{telegramChatId}}"], $telegramChatId, $content);
 
+        $link = "https://t.me/$bot->bot_domain?start=" .
+            base64_encode("001" . $telegramChatId);
         //$content = sprintf($content);
+        $qr = "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$link";
+        $content = str_replace(["{{referralLink}}"], $link, $content);
+
+        $content = str_replace(["{{referralQr}}"], $qr, $content);
 
         $needSendReplyMenu = true;
 

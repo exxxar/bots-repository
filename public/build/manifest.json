@@ -1,6 +1,6 @@
 {
   "BotList.css": {
-    "file": "assets/BotList-7d8c6c46.css",
+    "file": "assets/BotList-6aae5b55.css",
     "src": "BotList.css"
   },
   "CompanyForm.css": {
@@ -19,11 +19,11 @@
     "file": "assets/SlugForm-5ad24a6a.css",
     "src": "SlugForm.css"
   },
-  "_BotList-7792e6c4.js": {
+  "_BotList-89dea532.js": {
     "css": [
-      "assets/BotList-7d8c6c46.css"
+      "assets/BotList-6aae5b55.css"
     ],
-    "file": "assets/BotList-7792e6c4.js",
+    "file": "assets/BotList-89dea532.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -123,17 +123,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-be875afa.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-4ee61737.js",
@@ -201,10 +201,10 @@
     "src": "resources/js/AdminPanel/Pages/Auth/VerifyEmail.vue"
   },
   "resources/js/AdminPanel/Pages/BotPage.vue": {
-    "file": "assets/BotPage-56d7c7c5.js",
+    "file": "assets/BotPage-3311f1f1.js",
     "imports": [
       "_MainAdminLayout-23614bc4.js",
-      "_BotList-7792e6c4.js",
+      "_BotList-89dea532.js",
       "_CompanyList-edb10f26.js",
       "_index-77633b4c.js",
       "_index.es-b4fa9b8f.js",
@@ -236,7 +236,7 @@
   },
   "resources/js/AdminPanel/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
+    "src": "resources/js/Landing/Pages/ChatWindow.css"
   },
   "resources/js/AdminPanel/Pages/ChatWindow.vue": {
     "css": [
@@ -277,10 +277,10 @@
       "assets/Dashboard-db3e581c.css",
       "assets/InstagramQuest-28f51984.css"
     ],
-    "file": "assets/Dashboard-a743224d.js",
+    "file": "assets/Dashboard-34691471.js",
     "imports": [
       "_CompanyList-edb10f26.js",
-      "_BotList-7792e6c4.js",
+      "_BotList-89dea532.js",
       "_SlugForm-512bb23d.js",
       "_index-77633b4c.js",
       "_index.es-b4fa9b8f.js",
@@ -382,7 +382,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-26e6c68d.js",
+    "file": "assets/app-e7eef513.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "_index-77633b4c.js"
@@ -414,14 +414,14 @@
     "src": "resources/js/ClientTg/Pages/BotPages/InstagramQuest.vue"
   },
   "resources/js/ClientTg/Pages/BotPages/VipForm.css": {
-    "file": "assets/DeliveryManForm-81a6d53b.css",
-    "src": "resources/js/ClientTg/Pages/BotPages/VipForm.css"
+    "file": "assets/VipForm-81a6d53b.css",
+    "src": "resources/js/ClientTg/Pages/DeliveryManForm.css"
   },
   "resources/js/ClientTg/Pages/BotPages/VipForm.vue": {
     "css": [
-      "assets/DeliveryManForm-81a6d53b.css"
+      "assets/VipForm-81a6d53b.css"
     ],
-    "file": "assets/VipForm-593273d0.js",
+    "file": "assets/VipForm-86de830d.js",
     "imports": [
       "_index.es-b4fa9b8f.js"
     ],
@@ -444,7 +444,7 @@
     "css": [
       "assets/WheelOfFortune-b050e0a8.css"
     ],
-    "file": "assets/WheelOfFortune-2ce3b9f6.js",
+    "file": "assets/WheelOfFortune-7a4fb78c.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "resources/js/ClientTg/app.js",
@@ -456,14 +456,14 @@
     "src": "resources/js/ClientTg/Pages/BotPages/WheelOfFortune.vue"
   },
   "resources/js/ClientTg/Pages/DeliveryManForm.css": {
-    "file": "assets/DeliveryManForm-81a6d53b.css",
-    "src": "resources/js/ClientTg/Pages/BotPages/VipForm.css"
+    "file": "assets/VipForm-81a6d53b.css",
+    "src": "resources/js/ClientTg/Pages/DeliveryManForm.css"
   },
   "resources/js/ClientTg/Pages/DeliveryManForm.vue": {
     "css": [
-      "assets/DeliveryManForm-81a6d53b.css"
+      "assets/VipForm-81a6d53b.css"
     ],
-    "file": "assets/DeliveryManForm-48f31016.js",
+    "file": "assets/DeliveryManForm-d206b4d9.js",
     "imports": [
       "_index.es-b4fa9b8f.js"
     ],
@@ -505,7 +505,7 @@
     "css": [
       "assets/Main-ed5ad4d6.css"
     ],
-    "file": "assets/Main-fb748627.js",
+    "file": "assets/Main-b63dc0ca.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -536,7 +536,7 @@
       "resources/js/ClientTg/Pages/Shop/Categories.vue",
       "resources/js/ClientTg/Pages/Shop/Main.vue"
     ],
-    "file": "assets/app-74a85d32.js",
+    "file": "assets/app-98f8665a.js",
     "imports": [
       "_index.es-b4fa9b8f.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -548,7 +548,7 @@
   },
   "resources/js/Landing/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
+    "src": "resources/js/Landing/Pages/ChatWindow.css"
   },
   "resources/js/Landing/Pages/ChatWindow.vue": {
     "css": [
