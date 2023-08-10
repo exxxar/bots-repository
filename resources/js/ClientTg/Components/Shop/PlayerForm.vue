@@ -55,7 +55,6 @@ export default {
     },
     methods:{
         submit(){
-            console.log("callback form", this.form)
             this.$emit("callback", this.form)
         }
     }

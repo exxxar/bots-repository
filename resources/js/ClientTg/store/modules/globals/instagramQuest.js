@@ -60,19 +60,14 @@ const actions = {
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-            ...payload.instaForm
-        }
+        payload.instaForm.append("tgData", tgData)
+        payload.instaForm.append("slug_id", slugId)
+        payload.instaForm.append("botDomain", botDomain)
 
-        console.log("data", data)
-        console.log("payload.instaForm", payload.instaForm)
 
         let link = `${BASE_INSTAGRAM_QUEST_LINK}/callback`
 
-        let _axios = util.makeAxiosFactory(link, 'POST',data)
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.instaForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

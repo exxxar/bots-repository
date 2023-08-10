@@ -60,19 +60,13 @@ const actions = {
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-            ...payload.winForm
-        }
-
-        console.log("data", data)
-        console.log("payload.winForm", payload.winForm)
+        payload.winForm.append("tgData", tgData)
+        payload.winForm.append("slug_id", slugId)
+        payload.winForm.append("botDomain", botDomain)
 
         let link = `${BASE_WHEEL_OF_FORTUNE_LINK}/callback`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', data)
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.winForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
