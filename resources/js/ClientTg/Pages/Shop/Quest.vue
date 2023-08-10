@@ -24,7 +24,7 @@ import PlayerForm from "ClientTg@/Components/Shop/PlayerForm.vue";
 
     <div class="card card-style" v-if="canPlay&&hasProfileData">
         <div class="content">
-            <div class="card mb-3">
+            <div class="card mb-0">
                 <div class="card-body">
                     <label for="photos"
                            class="photo-loader mb-2 d-flex justify-content-center align-items-center flex-column text-center w-100">
@@ -50,11 +50,11 @@ import PlayerForm from "ClientTg@/Components/Shop/PlayerForm.vue";
                 v-if="photo"
                 @click="submit"
                 type="button"
-                class="btn btn-m btn-full rounded-s text-uppercase font-900 shadow-s bg-green1-light w-100 mt-3 mb-3">
+                class="btn btn-m btn-full rounded-s text-uppercase font-900 shadow-s bg-green1-light w-100 mt-2 mb-2">
                 Получить приз
             </button>
 
-            <ReturnToBot class="mb-3"/>
+            <ReturnToBot class="mb-0"/>
         </div>
     </div>
 
