@@ -38,7 +38,7 @@
     </div>
 </template>
 <script>
-import baseJS from 'ClientTg@/modules/custom.js'
+import baseJS from '@/ClientTg/modules/custom.js'
 
 export default {
     data(){
@@ -55,6 +55,7 @@ export default {
     },
     methods:{
         submit(){
+            console.log("callback form", this.form)
             this.$emit("callback", this.form)
         }
     }

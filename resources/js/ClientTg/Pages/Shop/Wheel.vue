@@ -1,7 +1,7 @@
 <script setup>
-import CallbackForm from "ClientTg@/Components/Shop/CallbackForm.vue";
-import PlayerForm from "ClientTg@/Components/Shop/PlayerForm.vue";
-import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
+import CallbackForm from "@/ClientTg/Components/Shop/CallbackForm.vue";
+import PlayerForm from "@/ClientTg/Components/Shop/PlayerForm.vue";
+import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
 <template>
     <div class="card card-style" v-if="rules">
@@ -153,6 +153,8 @@ export default {
                         data.append(key, item)
                 });
 
+            console.log("Submit winform", this.winForm)
+            console.log("Submit data", data)
 
             this.$store.dispatch("wheelOfFortuneWin", {
                 winForm: data
@@ -185,7 +187,10 @@ export default {
 
         },
         callbackPlayerForm(form) {
+            console.log("callbackPlayerForm form", form)
             this.winForm = {...this.winForm, ...form}
+
+            console.log("callbackPlayerForm winForm",  this.winForm)
             this.hasProfileData = true
         },
         wheelEndedCallback(evt) {
