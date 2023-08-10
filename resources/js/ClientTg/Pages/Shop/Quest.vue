@@ -50,7 +50,7 @@ import PlayerForm from "ClientTg@/Components/Shop/PlayerForm.vue";
                 v-if="photo"
                 @click="submit"
                 type="button"
-                class="btn btn-m btn-full rounded-xs text-uppercase font-900 shadow-s bg-green1-light w-100 mt-3">
+                class="btn btn-m btn-full rounded-s text-uppercase font-900 shadow-s bg-green1-light w-100 mt-3 mb-3">
                 Получить приз
             </button>
 
