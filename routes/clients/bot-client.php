@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Bots\AdminBotController;
+use App\Http\Controllers\Bots\CompanyController;
 use App\Http\Controllers\Globals\AboutBotScriptController;
 use App\Http\Controllers\Globals\BonusProductScriptController;
 use App\Http\Controllers\Globals\InstagramQuestScriptController;
@@ -61,7 +62,16 @@ Route::prefix("bot-client")
                 Route::post('/callback/{botDomain}', "callbackFormPost");
             });
 
-
+        Route::prefix("companies")
+            ->controller(CompanyController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function () {
+                Route::post("/", "index");
+                Route::post("/company-update","editCompany");
+                Route::post("/company", "loadCompany");
+                Route::post("/location-list", "loadLocations");
+                Route::post("/location", "createLocation");
+            });
 
         Route::prefix("shop")
             ->group(function () {

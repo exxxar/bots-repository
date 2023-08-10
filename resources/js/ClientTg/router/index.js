@@ -29,6 +29,7 @@ import AdminOrders from '@/ClientTg/Pages/Admin/Orders.vue';
 import AdminUsers from '@/ClientTg/Pages/Admin/Users.vue';
 import AdminActions from '@/ClientTg/Pages/Admin/Actions.vue';
 import AdminShopManager from '@/ClientTg/Pages/Admin/ShopManager.vue';
+import AdminCompanyManager from '@/ClientTg/Pages/Admin/CompanyManager.vue';
 import AdminBonusProduct from '@/ClientTg/Pages/Admin/BonusProduct.vue';
 
 export const routes = [
@@ -149,56 +150,62 @@ export const routes = [
 
 export const adminRoutes = [
     {
-        name: 'adminmain',
+        name: 'AdminMain',
         path: '/admin-main',
         component: AdminMain,
         meta: { title: 'Админ панель: Главная', hide_menu:true, need_admin_menu:true }
     },
     {
-        name: 'adminpromotion',
+        name: 'AdminPromotion',
         path: '/admin-promotion',
         component: AdminPromotion,
         meta: { title: 'Админ панель: Реклама', hide_menu:true, need_admin_menu:true }
     },
     {
-        name: 'adminshopmanager',
+        name: 'AdminShopManager',
         path: '/admin-shop-manager',
         component: AdminShopManager,
         meta: { title: 'Админ панель: Магазин', hide_menu:true, need_admin_menu:true }
     },
     {
-        name: 'adminstatistic',
+        name: 'AdminCompanyManager',
+        path: '/admin-company-manager',
+        component: AdminCompanyManager,
+        meta: { title: 'Админ панель: Профиль компании', hide_menu:true, need_admin_menu:true }
+    },
+    {
+        name: 'AdminStatistic',
         path: '/admin-statistic',
         component: AdminStatistic,
         meta: { title: 'Админ панель: Статистика', hide_menu:true, need_admin_menu:true }
     },
     {
-        name: 'adminworkstatus',
+        name: 'AdminWorkStatus',
         path: '/admin-work-status',
         component: AdminWorkStatus,
         meta: { title: 'Админ панель: Работа', hide_menu:true, need_admin_menu:true }
     },
     {
-        name: 'adminusers',
+        name: 'AdminUsers',
         path: '/admin-users',
         component: AdminUsers,
         meta: { title: 'Админ панель: Пользователи', hide_menu:true, need_admin_menu:true }
     },
     {
-        name: 'adminactions',
+        name: 'AdminActions',
         path: '/admin-actions',
         component: AdminActions,
         meta: { title: 'Админ панель: События', hide_menu:true, need_admin_menu:true }
     },
     {
-        name: 'adminorders',
+        name: 'AdminOrders',
         path: '/admin-orders',
         component: AdminOrders,
         meta: { title: 'Админ панель: Заказы', hide_menu:true, need_admin_menu:true }
     },
 
     {
-        name: 'adminbonusproduct',
+        name: 'AdminBonusProduct',
         path: '/admin-bonus-product',
         component: AdminBonusProduct,
         meta: { title: 'Админ панель: Бонусы', hide_menu:true, need_admin_menu:true }

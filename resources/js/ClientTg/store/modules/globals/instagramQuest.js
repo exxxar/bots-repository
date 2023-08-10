@@ -67,6 +67,9 @@ const actions = {
             ...payload.instaForm
         }
 
+        console.log("data", data)
+        console.log("payload.instaForm", payload.instaForm)
+
         let link = `${BASE_INSTAGRAM_QUEST_LINK}/callback`
 
         let _axios = util.makeAxiosFactory(link, 'POST',data)

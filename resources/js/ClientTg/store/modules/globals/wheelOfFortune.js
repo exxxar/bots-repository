@@ -67,6 +67,8 @@ const actions = {
             ...payload.winForm
         }
 
+        console.log("data", data)
+        console.log("payload.winForm", payload.winForm)
 
         let link = `${BASE_WHEEL_OF_FORTUNE_LINK}/callback`
 

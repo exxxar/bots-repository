@@ -18,3 +18,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/*
+ * companies (компании)
+ * shops (или bots) - по сути ээто магазины
+ * categories - категории товаров
+ * products - товары
+ * locations - локации
+ * orders - заказы
+ */
+Route::prefix("companies")
+    ->group(function(){
+          //  Route::get("/")
+    });

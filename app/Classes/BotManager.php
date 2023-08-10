@@ -266,7 +266,7 @@ class BotManager extends BotCore
             if (mb_strlen($content) >= 1024)
                 $this->reply($content);
 
-            $this->replyPhoto(mb_strlen($content) >= 1024 ? "Изображения к странице" : $content,
+            $this->replyPhoto(mb_strlen($content) >= 1024 ? null : $content,
                 InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0]),
                 $iMenu
             );
