@@ -1,7 +1,7 @@
 import util from '../utilites';
 import axios from "axios";
 
-const BASE_INSTAGRAM_QUEST_LINK = '/bot-client/nstagram-quest'
+const BASE_INSTAGRAM_QUEST_LINK = '/bot-client/instagram-quest'
 
 let state = {}
 
