@@ -27,19 +27,19 @@ import PlayerForm from "ClientTg@/Components/Shop/PlayerForm.vue";
             <div class="card mb-3">
                 <div class="card-body">
                     <label for="photos"
-                           class="photo-loader ml-2 d-flex justify-content-center align-items-center flex-column text-center">
+                           class="photo-loader mb-2 d-flex justify-content-center align-items-center flex-column text-center w-100">
                         <i class="fa-brands fa-instagram font-36"></i>
                         <input type="file" id="photos"
                                accept="image/*" @change="onChangePhotos"
                                style="display:none;"/>
-                        <p class="mt-3 font-24"> Нажмите для выбора фотографии</p>
+                        <p class="mt-3 font-16"> Нажмите для выбора фотографии</p>
                     </label>
-                    <div class="img-preview"
+                    <div class="img-preview w-100"
                          v-if="photo">
                         <img v-lazy="getPhoto().imageUrl" class="w-100 object-fit-cover">
-                        <div class="remove mt-3">
+                        <div class="remove">
                             <a @click="removePhoto"
-                               class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s border-danger text-danger">
+                               class="btn btn-m btn-full rounded-xs text-uppercase font-900 shadow-s border-danger text-danger">
                                 <i class="fa-regular fa-trash-can"></i> Удалить фото</a>
                         </div>
                     </div>
@@ -51,7 +51,7 @@ import PlayerForm from "ClientTg@/Components/Shop/PlayerForm.vue";
                 @click="submit"
                 type="button"
                 class="btn btn-m btn-full rounded-xs text-uppercase font-900 shadow-s bg-green1-light w-100 mt-3">
-               Получить приз
+                Получить приз
             </button>
 
             <ReturnToBot class="mb-3"/>
@@ -65,14 +65,14 @@ import PlayerForm from "ClientTg@/Components/Shop/PlayerForm.vue";
             <h3>Анкета участника акции</h3>
 
             <p>
-                Для участия в конкурсе и дальнейшего получения приза необходимо заполнить данную анкету! Укажите своё имя и номер телефона чтоб менеджер
+                Для участия в конкурсе и дальнейшего получения приза необходимо заполнить данную анкету! Укажите своё
+                имя и номер телефона чтоб менеджер
                 мог выдать Вам приз по итогу.
             </p>
         </template>
     </PlayerForm>
 
     <CallbackForm/>
-
 
 
 </template>
@@ -86,7 +86,7 @@ export default {
             sending: false,
             action: null,
             photo: null,
-            hasProfileData:false,
+            hasProfileData: false,
             instaForm: {
                 comment: null,
                 name: null,
@@ -141,7 +141,7 @@ export default {
             this.photo = files[0]
             //this.success = true
         },
-        callbackPlayerForm(form){
+        callbackPlayerForm(form) {
             this.instaForm = {...this.instaForm, ...form}
             this.hasProfileData = true
         },
@@ -175,7 +175,7 @@ export default {
 
                 this.$botNotification.success("Вы выиграли!", "Наш менеджер свяжется с вами для дальнейших инструкций.")
 
-                setTimeout(()=>{
+                setTimeout(() => {
                     this.prepareUserData()
                 }, 5000)
 
@@ -188,7 +188,7 @@ export default {
 }
 ;
 </script>
-<style>
+<style lang="scss">
 .wheel-base-container .wheel-base-indicator {
     left: 45px !important;
 }
@@ -199,4 +199,18 @@ export default {
     margin: 0 !important;
 }
 
+.img-preview {
+    position: relative;
+
+    .remove {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
 </style>
