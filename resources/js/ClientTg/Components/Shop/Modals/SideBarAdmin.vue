@@ -102,7 +102,7 @@
             <router-link
                 id="nav-out-team"
                 :active-class="'nav-item-active'"
-                :tag="'a'" :to="'/admin-company-manage'">
+                :tag="'a'" :to="'/admin-company-manager'">
                 <i class="fa-regular fa-building" style="color:#ff5454;"></i>
                 <span>Настройка компании</span>
                 <i class="fa fa-circle"></i>
