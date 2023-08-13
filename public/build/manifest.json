@@ -141,17 +141,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-6f9f7ddf.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-6f9f7ddf.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-6f9f7ddf.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-39a5237c.js",
@@ -255,7 +255,7 @@
   },
   "resources/js/AdminPanel/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/Landing/Pages/ChatWindow.css"
+    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
   },
   "resources/js/AdminPanel/Pages/ChatWindow.vue": {
     "css": [
@@ -451,7 +451,7 @@
     "css": [
       "assets/Main-ed5ad4d6.css"
     ],
-    "file": "assets/Main-2507ba75.js",
+    "file": "assets/Main-3765a520.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -480,7 +480,7 @@
       "resources/js/ClientTg/Pages/Shop/AboutUs.vue",
       "resources/js/ClientTg/Pages/Shop/Main.vue"
     ],
-    "file": "assets/app-405c717d.js",
+    "file": "assets/app-7f9f60f8.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -496,7 +496,7 @@
   },
   "resources/js/Landing/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/Landing/Pages/ChatWindow.css"
+    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
   },
   "resources/js/Landing/Pages/ChatWindow.vue": {
     "css": [

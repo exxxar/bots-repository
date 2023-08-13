@@ -275,6 +275,13 @@ class WheelOfFortuneScriptController extends SlugController
                     'current_attempts' => 0
                 ]);
 
+        if (is_null($action->data)) {
+            $action->max_attempts = $maxAttempts;
+            $action->current_attempts = 0;
+            $action->save();
+        }
+
+
         return response()->json([
             "action" => new ActionStatusResource($action),
 
