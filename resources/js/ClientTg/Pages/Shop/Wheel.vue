@@ -16,9 +16,19 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 }}</strong> из <strong>{{
                     action.max_attempts || 1
                 }}</strong></p>
-            <p
+            <div
                 @click="lose"
-                style="font-weight:900; color:red;" v-else>Вы израсходовали все ваши попытки</p>
+                v-else>
+
+                <p style="font-weight:900; color:red;" class="mb-2">Вы израсходовали все ваши попытки</p>
+                <ul v-if="action.data" class="m-0 p-0">
+                    <li v-for="item in action.data" class="d-flex flex-column">
+                        <span>Приз <strong>№{{item.win || 'Отсуствует'}}</strong></span>
+                        <span>Победитель  <strong>{{item.name || 'Не указано'}}</strong></span>
+                        <span>Телефон  <strong>{{item.phone || 'Не указано'}}</strong></span>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -187,19 +197,22 @@ export default {
 
         },
         callbackPlayerForm(form) {
-            console.log("callbackPlayerForm form", form)
+
             this.winForm = {...this.winForm, ...form}
 
-            console.log("callbackPlayerForm winForm",  this.winForm)
             this.hasProfileData = true
         },
         wheelEndedCallback(evt) {
             if (!evt)
                 return;
-            this.winForm.win = evt.id
-            this.submit()
-            this.hasProfileData = false
-            this.$botNotification.success("Победа!", "Вы выиграли приз <strong>" + (this.winForm.win || '-') + "</strong>. Для получения приза заполните анкету победителя!")
+            const win = evt.id
+            setTimeout(()=>{
+                this.winForm.win = win
+                this.submit()
+                this.hasProfileData = false
+            }, 2000)
+
+            this.$botNotification.success("Победа!", "Вы выиграли приз <strong>" + (this.winForm.win || '-') + "</strong>.")
         },
     },
 }

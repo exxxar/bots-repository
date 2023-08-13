@@ -16,6 +16,16 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                            v-model="search"
                            class="border-0" placeholder="Кого ищим?">
                 </div>
+
+                <div class="fac fac-checkbox  py-2 my-2">
+                    <span></span>
+                    <input id="box3-fac-checkbox"
+                           v-model="need_admins"
+                           value="false"
+                           type="checkbox">
+                    <label for="box3-fac-checkbox">Только администраторы</label>
+                </div>
+
                 <button type="submit"
                         class="btn btn-m btn-full my-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
                     <i class="fa-solid fa-magnifying-glass mr-1"></i>Искать
@@ -60,6 +70,7 @@ export default {
             loading: true,
             users: null,
             search: null,
+            need_admins: false,
             users_paginate_object: null,
         }
     },
@@ -82,7 +93,8 @@ export default {
             this.loading = true
             this.$store.dispatch("loadUsers", {
                 dataObject: {
-                    search: this.search
+                    search: this.search,
+                    need_admins: this.need_admins
                 },
                 page: page
             }).then(resp => {

@@ -390,6 +390,9 @@ export default {
                 }
             }).then(resp => {
                 this.product = resp.data
+
+                this.$store.dispatch("addToWatch", this.product)
+
                 baseJS.handler()
 
             })

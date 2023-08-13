@@ -2,6 +2,7 @@ import {createWebHashHistory , createRouter} from "vue-router";
 
 import Home from '@/ClientTg/Pages/Shop/Home.vue';
 import Products from '@/ClientTg/Pages/Shop/Products.vue';
+import ProductsInCategory from '@/ClientTg/Pages/Shop/ProductsInCategory.vue';
 import Product from '@/ClientTg/Pages/Shop/Product.vue';
 import Favorites from '@/ClientTg/Pages/Shop/Favorites.vue';
 import Basket from '@/ClientTg/Pages/Shop/Basket.vue';
@@ -20,6 +21,7 @@ import Empty from '@/ClientTg/Pages/Shop/Empty.vue';
 import Booking from '@/ClientTg/Pages/Shop/Booking.vue';
 import Admins from '@/ClientTg/Pages/Shop/Admins.vue';
 import Vip from '@/ClientTg/Pages/Shop/Vip.vue';
+import Categories from '@/ClientTg/Pages/Shop/Categories.vue';
 
 import AdminMain from '@/ClientTg/Pages/Admin/Main.vue';
 import AdminPromotion from '@/ClientTg/Pages/Admin/Promotion.vue';
@@ -30,6 +32,7 @@ import AdminUsers from '@/ClientTg/Pages/Admin/Users.vue';
 import AdminActions from '@/ClientTg/Pages/Admin/Actions.vue';
 import AdminShopManager from '@/ClientTg/Pages/Admin/ShopManager.vue';
 import AdminCompanyManager from '@/ClientTg/Pages/Admin/CompanyManager.vue';
+import AdminBotManager from '@/ClientTg/Pages/Admin/BotManager.vue';
 import AdminBonusProduct from '@/ClientTg/Pages/Admin/BonusProduct.vue';
 
 export const routes = [
@@ -73,6 +76,22 @@ export const routes = [
         path: '/products',
         component: Products,
         meta: { title: 'Продукты' }
+    },
+
+    {
+        name: 'productsInCategory',
+        path: '/products-in-category/:categoryId',
+        component: ProductsInCategory,
+        meta: { title: 'Продукты в категории' }
+    },
+
+
+
+    {
+        name: 'categories',
+        path: '/categories',
+        component: Categories,
+        meta: { title: 'Категории товаров' }
     },
     {
         name: 'checkout',
@@ -171,7 +190,13 @@ export const adminRoutes = [
         name: 'AdminCompanyManager',
         path: '/admin-company-manager',
         component: AdminCompanyManager,
-        meta: { title: 'Админ панель: Профиль компании', hide_menu:true, need_admin_menu:true }
+        meta: { title: 'Профиль компании', hide_menu:true, need_admin_menu:true }
+    },
+    {
+        name: 'AdminBotManager',
+        path: '/admin-bot-manager',
+        component: AdminBotManager,
+        meta: { title: 'Настройки бота', hide_menu:true, need_admin_menu:true }
     },
     {
         name: 'AdminStatistic',

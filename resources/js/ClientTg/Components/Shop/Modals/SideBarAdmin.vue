@@ -111,7 +111,7 @@
             <router-link
                 id="nav-out-team"
                 :active-class="'nav-item-active'"
-                :tag="'a'" :to="'/admin-bot-config'">
+                :tag="'a'" :to="'/admin-bot-manager'">
                 <i class="fa-solid fa-robot" style="color:#00ff38;"></i>
                 <span>Настройка бота</span>
                 <i class="fa fa-circle"></i>

@@ -17,6 +17,8 @@ class BotUsersController extends Controller
     {
         $bot = $request->bot;
 
+        $need_admins = $request->need_admins == "true";
+
         $size = $request->get("size") ?? config('app.results_per_page');
 
         $search = $request->search ?? null;
@@ -33,6 +35,10 @@ class BotUsersController extends Controller
                 });
 
         }
+
+        if ($need_admins)
+            $botUsers = $botUsers
+                ->where("is_admin", $need_admins);
 
         $botUsers = $botUsers
             ->orderBy("created_at", "DESC")
@@ -65,8 +71,7 @@ class BotUsersController extends Controller
                         $q->where("command", "like", "%$search%");
                     });
 
-            if ($event == "users")
-            {
+            if ($event == "users") {
                 $userIds = BotUser::query()
                     ->where("name", "like", "%$search%")
                     ->orWhere("fio_from_telegram", "like", "%$search%")
@@ -77,8 +82,7 @@ class BotUsersController extends Controller
                     ->orWhereIn("user_id", $userIds);
             }
 
-            if ($event == "phone")
-            {
+            if ($event == "phone") {
                 $userIds = BotUser::query()
                     ->where("phone", "like", "%$search%")
                     ->get()

@@ -100,6 +100,11 @@ class BotController extends Controller
         return new BotUserResource($request->botUser);
     }
 
+    public function getBot(Request $request)
+    {
+        return new BotResource($request->bot);
+    }
+
     public function requestTelegramChannel(Request $request)
     {
         $request->validate([
@@ -544,13 +549,14 @@ class BotController extends Controller
         return response()->noContent();
     }
 
-    public function forceDelete(Request $request, $botId){
+    public function forceDelete(Request $request, $botId)
+    {
         $bot = Bot::query()
             ->withTrashed()
             ->find($botId);
 
 
-       \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
         if (is_null($bot))
             return response()->noContent(404);
 
@@ -568,9 +574,9 @@ class BotController extends Controller
             ->get();
 
 
-            if (!empty($slugs))
-                foreach ($slugs as $slug)
-                    $slug->delete();
+        if (!empty($slugs))
+            foreach ($slugs as $slug)
+                $slug->delete();
 
 
         $keyboards = BotMenuTemplate::query()
@@ -628,7 +634,6 @@ class BotController extends Controller
         if (!empty($amos))
             foreach ($amos as $amo)
                 $amo->delete();
-
 
 
         $bot->forceDelete();

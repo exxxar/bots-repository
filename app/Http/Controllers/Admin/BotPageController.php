@@ -15,6 +15,7 @@ use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class BotPageController extends Controller
@@ -76,7 +77,21 @@ class BotPageController extends Controller
         if (is_null($botPage))
             return \response()->noContent(404);
 
-        $botPage->delete();
+        $slug = BotMenuSlug::query()
+            ->find($botPage->bot_menu_slug_id);
+
+        if (!is_null($slug))
+            $slug->delete();
+
+        $botPage->bot_menu_slug_id = null;
+        $botPage->reply_keyboard_id = null;
+        $botPage->inline_keyboard_id = null;
+        $botPage->next_page_id = null;
+        $botPage->next_bot_dialog_command_id = null;
+        $botPage->next_bot_menu_slug_id = null;
+        $botPage->save();
+
+        $botPage->forceDelete();
 
         return response()->noContent();
     }
@@ -144,7 +159,7 @@ class BotPageController extends Controller
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($request->reply_keyboard);
 
-          //  $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+            //  $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             unset($tmp->reply_keyboard);
 
@@ -162,7 +177,7 @@ class BotPageController extends Controller
         if (!is_null($inlineKeyboard)) {
             $keyboard = json_decode($request->inline_keyboard);
 
-           // $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+            // $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             unset($tmp->inline_keyboard);
 
@@ -179,13 +194,12 @@ class BotPageController extends Controller
 
         $oldSlugs = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
-            ->where("command",$request->command)
+            ->where("command", $request->command)
             ->whereNull("deprecated_at")
             ->get();
 
         if (!empty($oldSlugs)) {
-            foreach ($oldSlugs as $oldSlug)
-            {
+            foreach ($oldSlugs as $oldSlug) {
                 $oldSlug->deprecated_at = Carbon::now();
                 $oldSlug->save();
             }
@@ -269,7 +283,7 @@ class BotPageController extends Controller
             $images = json_decode($images);
 
 
-        $tmp->images = count($photos) == 0 ? (is_array($images) ? $images : null) : [...$photos,...$images];
+        $tmp->images = count($photos) == 0 ? (is_array($images) ? $images : null) : [...$photos, ...$images];
 
 
         //$text = str_replace(["<p>", "</p>"], "", $tmp->content);
@@ -285,7 +299,7 @@ class BotPageController extends Controller
             $keyboard = json_decode($request->reply_keyboard);
             unset($tmp->reply_keyboard);
 
-          //  $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+            //  $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             $reply_keyboard_id = $tmp->reply_keyboard_id ?? -1;
             $menu = BotMenuTemplate::query()
@@ -315,7 +329,7 @@ class BotPageController extends Controller
 
             unset($tmp->inline_keyboard);
 
-           // $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+            // $keyboard = $this->keyboardAssign($keyboard, $bot->id);
 
             $inline_keyboard_id = $tmp->inline_keyboard_id ?? -1;
 

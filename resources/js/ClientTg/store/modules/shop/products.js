@@ -5,23 +5,37 @@ const BASE_PRODUCTS_LINK = '/bot-client/shop/products'
 
 let state = {
     products: [],
+    categories: [],
     products_paginate_object: null,
+    categories_paginate_object: null,
 }
 
 const getters = {
     getProducts: state => state.products || [],
+    getCategories: state => state.categories || [],
     getProductById: (state) => (id) => {
         return state.products.find(item => item.id === id)
     },
     getProductsPaginateObject: state => state.products_paginate_object || null,
+    getCategoriesPaginateObject: state => state.categories_paginate_object || null,
 }
 
 const actions = {
-    async loadProduct(context, payload = {dataObject: { productId: null}}) {
+    async loadProduct(context, payload = {dataObject: {productId: null}}) {
+
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain
+        }
 
         let link = `${BASE_PRODUCTS_LINK}/${payload.dataObject.productId}`
-        let method = 'GET'
-        let _axios = util.makeAxiosFactory(link, method)
+        let method = 'POST'
+        let _axios = util.makeAxiosFactory(link, method, data)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -30,13 +44,46 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadProducts(context, payload = {dataObject: {bot_id: null}, page: 0, size: 12}) {
+    async loadCategory(context, payload = {dataObject: {categoryId: null}}) {
+
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain
+        }
+
+        let link = `${BASE_PRODUCTS_LINK}/category/${payload.dataObject.categoryId}`
+        let method = 'POST'
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadProducts(context, payload = {dataObject: {search: null}, page: 0, size: 12}) {
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain,
+            ...payload.dataObject
+        }
+
         let page = payload.page || 0
         let size = 12
 
         let link = `${BASE_PRODUCTS_LINK}?page=${page}&size=${size}`
         let method = 'POST'
-        let data = payload.dataObject
 
         let _axios = util.makeAxiosFactory(link, method, data)
 
@@ -51,11 +98,82 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadRandomProducts(context, payload = {dataObject: {bot_id: null}}) {
+    async loadProductsInCategory(context, payload = {dataObject: {search: null, category_id: null}, page: 0, size: 12}) {
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
 
-        let link = `${BASE_PRODUCTS_LINK}`
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain,
+            ...payload.dataObject
+        }
+
+        let page = payload.page || 0
+        let size = 12
+
+        let link = `${BASE_PRODUCTS_LINK}/in-category?page=${page}&size=${size}`
         let method = 'POST'
-        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            context.commit("setProducts", dataObject.data)
+            delete dataObject.data
+            context.commit('setProductsPaginateObject', dataObject)
+            return Promise.resolve();
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadCategories(context, payload = {page: 0, size: 5}) {
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain
+        }
+
+        let page = payload.page || 0
+        let size = payload.size || 5
+
+        let link = `${BASE_PRODUCTS_LINK}/categories?page=${page}&size=${size}`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            const dataObject = response.data
+
+            context.commit("setCategories", dataObject.data)
+            delete dataObject.data
+            context.commit('setCategoriesPaginateObject', dataObject)
+            return Promise.resolve();
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadRandomProducts(context) {
+
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain
+        }
+
+        let link = `${BASE_PRODUCTS_LINK}/random`
+        let method = 'POST'
 
         let _axios = util.makeAxiosFactory(link, method, data)
 
@@ -76,6 +194,14 @@ const mutations = {
     setProducts(state, payload) {
         state.products = payload || [];
         localStorage.setItem('cashman_products', JSON.stringify(payload));
+    },
+    setCategories(state, payload) {
+        state.categories = payload || [];
+        localStorage.setItem('cashman_categories', JSON.stringify(payload));
+    },
+    setCategoriesPaginateObject(state, payload) {
+        state.categories_paginate_object = payload || [];
+        localStorage.setItem('cashman_categories_paginate_object', JSON.stringify(payload));
     },
     setProductsPaginateObject(state, payload) {
         state.products_paginate_object = payload || [];

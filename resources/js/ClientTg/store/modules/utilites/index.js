@@ -23,12 +23,22 @@ export default {
     },
     async loadActualProducts(ids = []) {
 
-        let link = `/global-scripts/shop/products-by-ids`
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain,
+            ids:ids
+        }
+
+        let link = `/bot-client/shop/products/by-ids`
         let method = 'POST'
 
-        let _axios = this.makeAxiosFactory(link, method, {
-            ids: ids
-        })
+        let _axios = this.makeAxiosFactory(link, method, data)
 
         return _axios.then((response) => {
             const products = response.data.data;

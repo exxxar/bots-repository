@@ -1,6 +1,7 @@
 <script setup>
-import ProductItemSimple from "ClientTg@/Components/Shop/Products/ProductItemSimple.vue";
-import Pagination from "ClientTg@/Components/Shop/Helpers/Pagination.vue";
+import ProductItemSimple from "@/ClientTg/Components/Shop/Products/ProductItemSimple.vue";
+import Pagination from "@/ClientTg/Components/Shop/Helpers/Pagination.vue";
+import CategoryList from "@/ClientTg/Components/Shop/Categories/CategoryList.vue";
 </script>
 
 <template>
@@ -44,6 +45,7 @@ import Pagination from "ClientTg@/Components/Shop/Helpers/Pagination.vue";
                 <ProductItemSimple :item="product" v-for="(product, index) in filteredProducts"/>
 
                 <Pagination
+                    :simple="true"
                     v-on:pagination_page="nextProducts"
                     v-if="paginate"
                     :pagination="paginate"/>
@@ -51,6 +53,8 @@ import Pagination from "ClientTg@/Components/Shop/Helpers/Pagination.vue";
 
 
         </div>
+
+
     </div>
     <div class="card bg-20 mt-4 content rounded-m shadowl" v-else>
         <div class="card-body">
@@ -67,6 +71,14 @@ import Pagination from "ClientTg@/Components/Shop/Helpers/Pagination.vue";
         <div class="card-overlay bg-gradient-green1 opacity-95 rounded-m shadow-l"></div>
         <div class="card-overlay dark-mode-tint rounded-m shadow-l"></div>
     </div>
+
+    <div class="content mb-3">
+        <h5 class="float-left font-16 font-500">Категории товаров</h5>
+        <a class="float-right font-12 color-highlight mt-n1" href="#/categories">Посмотреть все</a>
+        <div class="clearfix"></div>
+    </div>
+
+    <CategoryList />
 </template>
 <script>
 
@@ -90,9 +102,6 @@ export default {
 
             return this.products.filter(product => product.title.toLowerCase().trim().indexOf(this.search.toLowerCase().trim()) >= 0)
         },
-        currentBot() {
-            return window.currentBot
-        }
     },
     mounted() {
         this.loadProducts()
@@ -105,7 +114,6 @@ export default {
         loadProducts(page = 0) {
             return this.$store.dispatch("loadProducts", {
                 dataObject: {
-                    bot_id: this.currentBot.id,
                     search: this.search
                 },
                 page: page

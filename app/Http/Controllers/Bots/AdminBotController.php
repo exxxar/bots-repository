@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BotUserResource;
 use App\Models\ActionStatus;
 use App\Models\Bot;
+use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\CashBack;
@@ -689,7 +690,7 @@ class AdminBotController extends Controller
             "country" => $request->country ?? null,
             "address" => $request->address ?? null,
             "sex" => ($request->sex ?? false) == "on" ? 1 : 0,
-            "email" =>  $request->email ?? null,
+            "email" => $request->email ?? null,
         ];
 
         $form["birthday"] = Carbon::parse($form["birthday"])
@@ -744,6 +745,7 @@ class AdminBotController extends Controller
 
     }
 
+
     public function acceptUserInLocation(Request $request)
     {
         $request->validate([
@@ -779,6 +781,61 @@ class AdminBotController extends Controller
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы отметили пользователя $name в заведении."
+            );
+
+        return response()->noContent();
+    }
+
+    public function requestUserData(Request $request)
+    {
+        $request->validate([
+            "user_telegram_chat_id" => "required",
+            "info" => "required",
+        ]);
+
+        $info = $request->info ?? '-';
+
+        $bot = $request->bot;
+
+        $userBotUser = BotUser::query()
+            ->with(["user"])
+            ->where("telegram_chat_id", $request->user_telegram_chat_id)
+            ->where("bot_id", $bot->id)
+            ->first();
+
+        $adminBotUser = $request->botUser;
+
+        if (is_null($userBotUser))
+            return response()->noContent(404);
+
+        $userBotUser->is_vip = false;
+        $userBotUser->save();
+
+        $name = BotMethods::prepareUserName($userBotUser);
+
+        $slug = BotMenuSlug::query()
+            ->where("slug", "global_cashback_main")
+            ->where("bot_id", $bot->id)
+            ->orderBy("created_at", "desc")
+            ->first();
+
+        BotMethods::bot()
+            ->whereId($bot->id)
+            ->sendInlineKeyboard(
+                $userBotUser->telegram_chat_id,
+                "Вам отправили запрос на ввод пользовательских данных с сообщением:\n$info",
+                [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=" . ($slug->id ?? "route") . "#/vip"
+                        ]],
+                    ],
+
+                ]
+            )
+            ->sendMessage(
+                $adminBotUser->telegram_chat_id,
+                "Вы отправили пользователю $name запрос на ввод данных."
             );
 
         return response()->noContent();

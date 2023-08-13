@@ -37,13 +37,15 @@ class ProductController extends Controller
         $search = $request->search ?? null;
 
         $products = Product::query()
-            ->with(["productCategories", "productOptions"]);
+            ->with(["productCategories", "productOptions"])
+            ->where("bot_id", $request->bot_id);
 
         if (!is_null($search))
             $products = $products
-                ->where("title", "like", "%$search%")
-                ->orWhere("description", "like", "%$search%");
-
+                ->where(function ($q) use ($search) {
+                    $q->where("title", "like", "%$search%")
+                        ->orWhere("description", "like", "%$search%");
+                });
 
         $products = $products
             ->orderBy("created_at", "DESC")
@@ -281,8 +283,8 @@ class ProductController extends Controller
 
         $tmp = [];
         if (!empty($categories))
-        foreach ($categories as $category)
-            $tmp[] = $category->id;
+            foreach ($categories as $category)
+                $tmp[] = $category->id;
 
         $product->productCategories()->detach($tmp);
 

@@ -22,25 +22,6 @@ const actions = {
     ...products.actions,
     ...users.actions,
     ...events.actions,
-    async testCallback(context) {
-        let link = `/test-auth`
-
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
-
-        let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain
-        })
-
-        return _axios.then((response) => {
-            return Promise.resolve(response.data);
-        }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
-            return Promise.reject(err);
-        })
-
-    },
     async cashmanAdminStatisticPrepare(context, payload = {telegram_chat_id: null}) {
 
         let botDomain = window.currentBot.bot_domain || null

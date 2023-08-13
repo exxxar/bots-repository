@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Admin\BotController;
+use App\Http\Controllers\Bots\ProductController;
 use App\Http\Controllers\Bots\AdminBotController;
 use App\Http\Controllers\Bots\CompanyController;
 use App\Http\Controllers\Globals\AboutBotScriptController;
@@ -15,6 +16,10 @@ Route::prefix("bot-client")
 
         Route::post('/self', [BotController::class, "getSelf"])
             ->middleware(["tgAuth.any"]);
+
+        Route::post('/bot', [BotController::class, "getBot"])
+            ->middleware(["tgAuth.admin"]);
+
 
         Route::post('/callback', [BotController::class, "sendCallback"]);
 
@@ -74,11 +79,16 @@ Route::prefix("bot-client")
             });
 
         Route::prefix("shop")
+            ->middleware(["tgAuth.any"])
             ->group(function () {
-                Route::post("/products", [\App\Http\Controllers\Admin\ProductController::class, "index"]);
-                Route::post("/products-by-ids", [\App\Http\Controllers\Admin\ProductController::class, "getProductsByIds"]);
-                Route::get("/products/{productId}", [\App\Http\Controllers\Admin\ProductController::class, "getProduct"]);
-                Route::post("/random-products", [\App\Http\Controllers\Admin\ProductController::class, "randomProducts"]);
+                Route::post("/products", [ProductController::class, "index"]);
+                Route::post("/checkout", [ProductController::class, "checkout"]);
+                Route::post("/products/by-ids", [ProductController::class, "getProductsByIds"]);
+                Route::post("/products/random", [ProductController::class, "randomProducts"]);
+                Route::post("/products/categories", [ProductController::class, "getCategories"]);
+                Route::post("/products/in-category", [ProductController::class, "getProductsInCategory"]);
+                Route::post("/products/category/{productId}", [ProductController::class, "getCategory"]);
+                Route::post("/products/{productId}", [ProductController::class, "getProduct"]);
             });
 
         Route::prefix("admins")
@@ -132,6 +142,10 @@ Route::prefix("bot-client")
                 //Route::post('/deliveryman', [\App\Http\Controllers\Bots\AdminBotController::class, "deliverymanStore"]);
                 Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"])
                     ->middleware(["tgAuth.admin"]);
+
+                Route::post('/request-user-data', [\App\Http\Controllers\Bots\AdminBotController::class, "requestUserData"])
+                    ->middleware(["tgAuth.admin"]);
+
             });
 
         Route::get("/{botDomain}", [ShopScriptController::class, "shopHomePage"])

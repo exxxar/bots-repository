@@ -28,7 +28,7 @@
                 <button
                     type="button"
                     class="btn btn-border rounded-xs color-white  shadow-xl border-0 border-highlight color-highlight">
-                    {{pagination.meta.current_page}}
+                    {{pagination.meta.current_page}} / {{pagination.meta.last_page}}
                 </button>
             </li>
 

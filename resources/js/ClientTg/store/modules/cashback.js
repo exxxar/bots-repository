@@ -101,6 +101,25 @@ const actions = {
         })
     },
 
+    async requestUserData(context, payload) {
+        let link = `${BASE_CASHBACK_LINK}/request-user-data`
+
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async acceptUserInLocation(context, payload) {
         let link = `${BASE_CASHBACK_LINK}/user-in-location`
 

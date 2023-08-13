@@ -46,6 +46,37 @@ const getters = {
 
 // actions
 const actions = {
+    async startCheckout(context){
+
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        let ids = []
+        context.state.items.forEach(item => {
+            if (item.product)
+            ids.push(item.product.id)
+        })
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain,
+            ids:ids
+        }
+
+        let link = `/bot-client/shop/checkout`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            context.commit("setCartItems", [])
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadActualPriceInCart(context) {
 
         let ids = []

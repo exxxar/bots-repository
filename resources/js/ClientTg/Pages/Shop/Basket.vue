@@ -20,9 +20,9 @@ import EmptyCard from "ClientTg@/Components/Shop/Helpers/EmptyCard.vue";
             </p>
             <div class="row mb-0" v-for="(item, index) in cartProducts">
 
-                <div class="col-6 text-left"><h6 class="font-600">{{ item.product.title }}</h6></div>
+                <div class="col-6 text-left" v-if="item.product"><h6 class="font-600">{{ item.product.title ||'Не указано' }}</h6></div>
                 <div class="col-2 text-center"><h6 class="font-600">x{{ item.quantity || 1 }}</h6></div>
-                <div class="col-4 text-right"><h6 class="font-600">{{ item.product.current_price }} <sup>.00</sup>₽</h6>
+                <div class="col-4 text-right" v-if="item.product"><h6 class="font-600">{{ item.product.current_price }} <sup>.00</sup>₽</h6>
                 </div>
 
 
@@ -39,12 +39,12 @@ import EmptyCard from "ClientTg@/Components/Shop/Helpers/EmptyCard.vue";
 
             <div class="divider mt-4"></div>
 
-            <router-link
-                class="btn btn-full btn-sm rounded-sm bg-highlight font-800 text-uppercase"
-                :tag="'a'" :to="'/checkout'">
+            <button
+                @click="startCheckout"
+                class="btn btn-full btn-sm rounded-s bg-highlight font-800 text-uppercase w-100">
                 <i class="fa-solid fa-file-invoice mr-2"></i><span class="color-white">Перейти к
                 оформлению</span>
-            </router-link>
+            </button>
 
         </div>
     </div>
@@ -73,6 +73,9 @@ import {mapGetters} from "vuex";
 export default {
     computed: {
         ...mapGetters(['cartProducts', 'cartTotalCount', 'cartTotalPrice']),
+        tg() {
+            return window.Telegram.WebApp;
+        },
     },
     mounted() {
         if (this.cartProducts.length > 0)
@@ -81,6 +84,11 @@ export default {
     methods: {
         loadActualProducts() {
             this.$store.dispatch("loadActualPriceInCart")
+        },
+        startCheckout(){
+            console.log("startCheckout")
+            this.$store.dispatch("startCheckout")
+            this.tg.close();
         }
     }
 }

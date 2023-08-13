@@ -13,6 +13,7 @@ import self from "./modules/self";
 import favorites from "./modules/shop/favorites";
 import shopAdmin from "./modules/shop/admin";
 import company from "./modules/company";
+import watches from "./modules/shop/watch";
 
 import util from "./modules/utilites";
 
@@ -66,6 +67,7 @@ export default createStore({
         favorites,
         shopAdmin,
         bonusProduct,
+        watches,
         company
     }
 })

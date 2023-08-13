@@ -31,14 +31,22 @@ class ProductCategory extends Model
         'bot_id' => 'integer',
     ];
 
+    protected $appends = ["count"];
+
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
     }
 
 
+    public function getCountAttribute(){
+        return $this->products()->count();
+    }
+
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class);
     }
+
+
 }

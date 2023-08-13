@@ -33,7 +33,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 
                 <div v-if="tab===0">
                     <h3>Информация о пользователе</h3>
-                    <p>
+                    <p class="mb-2">
                         Ваша персональная информация
                     </p>
                     <UserInfo
@@ -76,6 +76,34 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 
             <div class="divider-icon divider-margins bg-blue2-dark my-4"><i class="fa font-17 color-blue2-dark fa-cog bg-white"></i></div>
             <div class="content mt-0">
+
+                <a
+                    href="javascript:void(0)"
+                    @click.prevent="openSection(7)"
+                    v-bind:class="{'bg-blue2-dark text-white':section===7, 'color-blue2-dark':section!==7}"
+                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
+                    Запросить заполнение анкеты
+                </a>
+
+                <form v-on:submit.prevent="requestUserData" v-if="section===7">
+                    <div class="mb-3">
+                        <label for="bill-info" class="form-label">Комменатрий</label>
+                        <textarea class="form-control"
+                                  placeholder="Комментарий к запросу"
+                                  v-model="userDataForm.info"
+                                  id="bill-info" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <button
+                            :disabled="loading"
+                            type="submit"
+                            class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
+                            Запросить
+                        </button>
+                    </div>
+                </form>
+
                 <a
                     href="javascript:void(0)"
                     @click.prevent="openSection(5)"
@@ -316,6 +344,9 @@ export default {
               amount:100,
               info: null,
             },
+            userDataForm: {
+                info: null,
+            },
             locationForm: {
                 info: null,
             },
@@ -440,6 +471,22 @@ export default {
 
             }).catch(() => {
                 this.loading = false
+            })
+        },
+        requestUserData(){
+            this.loading = true;
+            this.$store.dispatch("requestUserData", {
+                dataObject: {
+                    user_telegram_chat_id: this.request_telegram_chat_id,
+                    ...this.userDataForm
+                }
+            }).then((resp) => {
+                this.loading = false
+                this.userDataForm.info = null
+                this.$botNotification.success("Отлично!", "Вы отправили запрос на заполнение пользовательских данных")
+            }).catch(() => {
+                this.loading = false
+                this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
         },
         acceptUserInLocation() {
