@@ -207,14 +207,12 @@ class WheelOfFortuneScriptController extends SlugController
             ->pluck("value")
             ->toArray();
 
-
-        Log::info(print_r($wheelText,true));
-        Log::info("winNumber=>".$winNumber);
+        $description = $wheelText[$winNumber-1] ?? null;
 
         $tmp[] = (object)[
             "name" => $winnerName,
             "win" => $winNumber,
-            "description" => $wheelText[$winNumber-1] ?? null,
+            "description" => $description,
             "phone" => $winnerPhone,
             "answered_at" => null,
             "answered_by" => null,
@@ -228,9 +226,9 @@ class WheelOfFortuneScriptController extends SlugController
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
                 ->telegram_chat_id,
-                sprintf("%s, вы приняли участие в розыгрыше и выиграли приз под номером %s. Наш менеджер свяжется с вами в ближайшее время!", $winnerName, $winNumber))
+                sprintf("%s, вы приняли участие в розыгрыше и выиграли приз под номером %s ($description). Наш менеджер свяжется с вами в ближайшее время!", $winnerName, $winNumber))
             ->sendMessage($callbackChannel,
-                "Участника $winnerPhone ($winnerName) принял участие в розыгрыше и выиграл приз №$winNumber - свяжитесь с ним для дальнейших указаний");
+                "Участника $winnerPhone ($winnerName) принял участие в розыгрыше и выиграл приз №$winNumber ( $description )- свяжитесь с ним для дальнейших указаний");
 
         return response()->noContent();
     }
