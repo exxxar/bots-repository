@@ -200,9 +200,16 @@ class WheelOfFortuneScriptController extends SlugController
 
         $tmp = $action->data ?? [];
 
+
+        $wheelText = Collection::make($slug->config)
+            ->where("key", "wheel_text")
+            ->toArray();
+
+
         $tmp[] = (object)[
             "name" => $winnerName,
             "win" => $winNumber,
+            "description" => $wheelText[$winNumber-1],
             "phone" => $winnerPhone,
             "answered_at" => null,
             "answered_by" => null,
