@@ -204,7 +204,7 @@ class WheelOfFortuneScriptController extends SlugController
 
         $wheelText = Collection::make($slug->config)
             ->where("key", "wheel_text")
-            ->get()
+            ->pluck("value")
             ->toArray();
 
 
