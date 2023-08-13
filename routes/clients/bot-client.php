@@ -146,6 +146,11 @@ Route::prefix("bot-client")
                 Route::post('/request-user-data', [\App\Http\Controllers\Bots\AdminBotController::class, "requestUserData"])
                     ->middleware(["tgAuth.admin"]);
 
+                Route::post('/request-refresh-menu', [\App\Http\Controllers\Bots\AdminBotController::class, "requestRefreshMenu"])
+                    ->middleware(["tgAuth.admin"]);
+
+
+
             });
 
         Route::get("/{botDomain}", [ShopScriptController::class, "shopHomePage"])

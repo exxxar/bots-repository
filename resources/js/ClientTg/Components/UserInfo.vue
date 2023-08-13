@@ -11,6 +11,16 @@
         </thead>
         <tbody>
         <tr>
+            <th scope="row">ID в системе</th>
+            <td class="font-weight-bold">{{botUser.id||'Не указано'}}</td>
+
+        </tr>
+        <tr>
+            <th scope="row">Телеграм ID</th>
+            <td class="font-weight-bold">{{botUser.telegram_chat_id||'Не указано'}}</td>
+
+        </tr>
+        <tr>
             <th scope="row">Имя из телеграмма</th>
             <td class="font-weight-bold">{{botUser.fio_from_telegram||'Не указано'}}</td>
 

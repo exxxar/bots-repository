@@ -141,17 +141,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-6f9f7ddf.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-6f9f7ddf.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-6f9f7ddf.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-39a5237c.js",
@@ -451,7 +451,7 @@
     "css": [
       "assets/Main-ed5ad4d6.css"
     ],
-    "file": "assets/Main-c56a9b6f.js",
+    "file": "assets/Main-2507ba75.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -480,7 +480,7 @@
       "resources/js/ClientTg/Pages/Shop/AboutUs.vue",
       "resources/js/ClientTg/Pages/Shop/Main.vue"
     ],
-    "file": "assets/app-275cf1ac.js",
+    "file": "assets/app-405c717d.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "__plugin-vue_export-helper-c27b6911.js",

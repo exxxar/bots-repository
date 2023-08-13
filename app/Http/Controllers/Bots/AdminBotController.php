@@ -840,4 +840,67 @@ class AdminBotController extends Controller
 
         return response()->noContent();
     }
+
+    public function requestRefreshMenu(Request $request)
+    {
+        $request->validate([
+            "user_telegram_chat_id" => "required",
+            "info" => "required",
+        ]);
+
+        $info = $request->info ?? '-';
+
+        $bot = $request->bot;
+
+        $userBotUser = BotUser::query()
+            ->with(["user"])
+            ->where("telegram_chat_id", $request->user_telegram_chat_id)
+            ->where("bot_id", $bot->id)
+            ->first();
+
+        $adminBotUser = $request->botUser;
+
+        if (is_null($userBotUser))
+            return response()->noContent(404);
+
+        $userBotUser->is_vip = false;
+        $userBotUser->save();
+
+        $name = BotMethods::prepareUserName($userBotUser);
+
+        $slug = BotMenuSlug::query()
+            ->where("slug", "global_cashback_main")
+            ->where("bot_id", $bot->id)
+            ->orderBy("created_at", "desc")
+            ->first();
+
+        BotMethods::bot()
+            ->whereId($bot->id)
+            ->sendInlineKeyboard(
+                $userBotUser->telegram_chat_id,
+                "Вам отправили запрос на обновление главного меню с сообщением:\n$info",
+                [
+                    [
+                        ["text" => "Обновить главное меню","callback_data"=>"/start"],
+                    ],
+
+                ]
+            )
+            ->sendReplyKeyboard(
+                $userBotUser->telegram_chat_id,
+                "Обновить меню",
+                [
+                    [
+                        ["text" => "Главное меню"],
+                    ],
+
+                ]
+            )
+            ->sendMessage(
+                $adminBotUser->telegram_chat_id,
+                "Вы отправили пользователю $name запрос на обновление меню."
+            );
+
+        return response()->noContent();
+    }
 }

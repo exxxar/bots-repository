@@ -21,14 +21,16 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 v-else>
 
                 <p style="font-weight:900; color:red;" class="mb-2">Вы израсходовали все ваши попытки</p>
-                <ul v-if="action.data" class="m-0 p-0">
-                    <li v-for="item in action.data" class="d-flex flex-column">
-                        <span>Приз <strong>№{{item.win || 'Отсуствует'}}</strong></span>
-                        <span>Победитель  <strong>{{item.name || 'Не указано'}}</strong></span>
-                        <span>Телефон  <strong>{{item.phone || 'Не указано'}}</strong></span>
-                    </li>
-                </ul>
+
             </div>
+
+            <ul v-if="action.data" class="m-0 p-0">
+                <li v-for="item in action.data" class="d-flex flex-column">
+                    <span>Приз <strong>№{{item.win || 'Отсуствует'}}</strong></span>
+                    <span>Победитель  <strong>{{item.name || 'Не указано'}}</strong></span>
+                    <span>Телефон  <strong>{{item.phone || 'Не указано'}}</strong></span>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -162,9 +164,6 @@ export default {
                     else
                         data.append(key, item)
                 });
-
-            console.log("Submit winform", this.winForm)
-            console.log("Submit data", data)
 
             this.$store.dispatch("wheelOfFortuneWin", {
                 winForm: data

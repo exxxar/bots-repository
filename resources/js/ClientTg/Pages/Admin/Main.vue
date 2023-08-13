@@ -79,6 +79,33 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 
                 <a
                     href="javascript:void(0)"
+                    @click.prevent="openSection(8)"
+                    v-bind:class="{'bg-blue2-dark text-white':section===8, 'color-blue2-dark':section!==8}"
+                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
+                    Обновить меню пользователю
+                </a>
+
+                <form v-on:submit.prevent="requestUserMenu" v-if="section===8">
+                    <div class="mb-3">
+                        <label for="bill-info" class="form-label">Комменатрий</label>
+                        <textarea class="form-control"
+                                  placeholder="Комментарий к запросу"
+                                  v-model="userDataForm.info"
+                                  id="bill-info" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <button
+                            :disabled="loading"
+                            type="submit"
+                            class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
+                            Запросить
+                        </button>
+                    </div>
+                </form>
+
+                <a
+                    href="javascript:void(0)"
                     @click.prevent="openSection(7)"
                     v-bind:class="{'bg-blue2-dark text-white':section===7, 'color-blue2-dark':section!==7}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
@@ -471,6 +498,22 @@ export default {
 
             }).catch(() => {
                 this.loading = false
+            })
+        },
+        requestUserMenu(){
+            this.loading = true;
+            this.$store.dispatch("requestRefreshMenu", {
+                dataObject: {
+                    user_telegram_chat_id: this.request_telegram_chat_id,
+                    ...this.userDataForm
+                }
+            }).then((resp) => {
+                this.loading = false
+                this.userDataForm.info = null
+                this.$botNotification.success("Отлично!", "Вы отправили запрос на обновление меню у попльзователя")
+            }).catch(() => {
+                this.loading = false
+                this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
         },
         requestUserData(){

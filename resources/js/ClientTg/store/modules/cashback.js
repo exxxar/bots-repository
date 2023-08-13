@@ -14,8 +14,6 @@ const getters = {
 }
 
 const actions = {
-
-
     async loadReceiverUserData(context, payload = { dataObject:{ user_telegram_chat_id:null } }) {
         let tgData = window.Telegram.WebApp.initData
         let botDomain = window.currentBot.bot_domain || null
@@ -100,9 +98,27 @@ const actions = {
             return Promise.reject(err);
         })
     },
-
     async requestUserData(context, payload) {
         let link = `${BASE_CASHBACK_LINK}/request-user-data`
+
+        let tgData = window.Telegram.WebApp.initData
+        let botDomain = window.currentBot.bot_domain || null
+
+        let _axios = util.makeAxiosFactory(link, 'POST', {
+            tgData: tgData,
+            botDomain: botDomain,
+            ...payload.dataObject
+        })
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async requestRefreshMenu(context, payload) {
+        let link = `${BASE_CASHBACK_LINK}/request-refresh-menu`
 
         let tgData = window.Telegram.WebApp.initData
         let botDomain = window.currentBot.bot_domain || null
