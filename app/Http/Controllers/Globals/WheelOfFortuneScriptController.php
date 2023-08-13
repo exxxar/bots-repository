@@ -15,6 +15,7 @@ use App\Models\BotUser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use ReflectionClass;
 use Telegram\Bot\FileUpload\InputFile;
@@ -203,13 +204,17 @@ class WheelOfFortuneScriptController extends SlugController
 
         $wheelText = Collection::make($slug->config)
             ->where("key", "wheel_text")
+            ->get()
             ->toArray();
 
+
+        Log::info(print_r($wheelText,true));
+        Log::info("winNumber=>".$winNumber);
 
         $tmp[] = (object)[
             "name" => $winnerName,
             "win" => $winNumber,
-            "description" => $wheelText[$winNumber-1],
+            "description" => $wheelText[$winNumber-1] ?? null,
             "phone" => $winnerPhone,
             "answered_at" => null,
             "answered_by" => null,
