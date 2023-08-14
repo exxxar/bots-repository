@@ -25,6 +25,12 @@ BotManager::bot()
     ->slug("global_single_payment_main", "singlePaymentMain");
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\FastRequestScriptController::class)
+    ->route("/request_callback ([0-9]+)", "requestCallback")
+    ->slug("global_fast_request_main", "fastRequest");
+
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\CashBackScriptController::class)
     ->slug("global_cashback_main", "specialCashBackSystem")
     ->slug("global_cashback_budget", "myBudget")
