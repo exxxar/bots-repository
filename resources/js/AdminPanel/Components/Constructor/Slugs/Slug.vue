@@ -186,14 +186,25 @@ export default {
                 }
             }).then((response) => {
 
+
                 this.$notify({
                     title: "Конструктор команд",
                     text: "Команда успешно продублирована",
                     type: 'success'
                 });
 
-            }).catch(err => {
+                this.$emit("callback")
 
+                this.$nextTick(()=>{
+                    this.load = false
+                })
+
+            }).catch(err => {
+                this.$emit("callback")
+
+                this.$nextTick(()=>{
+                    this.load = false
+                })
             })
 
             this.$emit("callback")

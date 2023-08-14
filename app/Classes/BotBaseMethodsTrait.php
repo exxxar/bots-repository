@@ -57,6 +57,34 @@ trait BotBaseMethodsTrait
 
     }
 
+    public function sendVenue($chatId, $lat, $lon, $address, $title)
+    {
+
+        $tmp = [
+            "chat_id" => $chatId,
+            "latitude" => $lat,
+            "longitude" => $lon,
+            "title" => $title,
+            "address" => $address,
+            "parse_mode" => "HTML"
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->sendVenue($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+        return $this;
+
+    }
+
     public function sendDocument($chatId, $caption, $path)
     {
         $tmp = [

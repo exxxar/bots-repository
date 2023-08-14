@@ -17,13 +17,13 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
-class GeoScriptController extends SlugController
+class VenueScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
         $mainScript = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
-            ->where("slug", "global_geo_main")
+            ->where("slug", "global_venue_main")
             ->first();
 
         if (is_null($mainScript))
@@ -38,6 +38,18 @@ class GeoScriptController extends SlugController
                     "value" => "0.00000,0.00000",
 
                 ],
+                [
+                    "type" => "text",
+                    "key" => "title",
+                    "value" => "Заголовок",
+
+                ],
+                [
+                    "type" => "text",
+                    "key" => "address",
+                    "value" => "Адрес расположения",
+
+                ],
 
             ];
             $mainScript->save();
@@ -45,19 +57,19 @@ class GeoScriptController extends SlugController
 
         BotMenuSlug::query()->updateOrCreate(
             [
-                "slug" => "global_geo_main",
+                "slug" => "global_venue_main",
                 "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [
-                'command' => ".*Гео-метка",
-                'comment' => "Скрипт отображения карты с координатой",
+                'command' => ".*Место проведения события",
+                'comment' => "Скрипт отображения карты с координатами, адресом и заголовком",
             ]);
 
     }
 
 
-    public function geoScript(...$config)
+    public function venueScript(...$config)
     {
         $coords = (Collection::make($config[1])
             ->where("key", "coords")
@@ -66,8 +78,16 @@ class GeoScriptController extends SlugController
         $latitude = explode(',', $coords)[0] ?? 0;
         $longitude = explode(',', $coords)[1] ?? 0;
 
+        $address = (Collection::make($config[1])
+            ->where("key", "address")
+            ->first())["value"] ?? "ул. Красная";
+
+        $title= (Collection::make($config[1])
+            ->where("key", "title")
+            ->first())["value"] ?? "Точка сбора";
+
         BotManager::bot()
-            ->replyLocation($latitude, $longitude);
+            ->replyVenue($latitude, $longitude, $address, $title);
 
     }
 }
