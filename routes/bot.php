@@ -24,7 +24,7 @@ BotManager::bot()
             ->replyVideoNote(
                 InputFile::create(public_path() . "/videos/vid1.mp4"),[
                     [
-                        ["text"=>"Главное меню"]
+                        ["text"=>"Главное меню","callback_data"=>"/start"]
                     ]
                 ]
             );
