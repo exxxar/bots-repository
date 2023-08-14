@@ -55,6 +55,17 @@ class FastRequestScriptController extends SlugController
             $mainScript->save();
         }
 
+        BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_fast_request_main",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Быстрый запрос",
+                'comment' => "быстрый запрос к администрации бота",
+            ]);
+
     }
 
     public function requestCallback(...$data)
