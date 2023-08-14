@@ -14,7 +14,7 @@ const getters = {
 const actions = {
     async loadSelf(context) {
 
-        let tgData = window.Telegram.WebApp.initData || null
+        let tgData = window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 
@@ -39,7 +39,7 @@ const actions = {
     },
     async loadBotAdminConfig(context) {
 
-        let tgData = window.Telegram.WebApp.initData || null
+        let tgData =  window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 

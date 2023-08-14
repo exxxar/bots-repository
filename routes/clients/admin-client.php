@@ -63,11 +63,11 @@ Route::middleware(['auth', 'verified'])
         })->name('visit-card-page');
 
 
-        Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
-        Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
 
     });
 
+Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
+Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
 
 Route::prefix("admin")
     ->middleware(['auth', 'verified'])

@@ -1,5 +1,9 @@
 <?php
-use App\Http\Controllers\Admin\BotController;
+
+use App\Http\Controllers\Bots\AmoCrmController;
+use App\Http\Controllers\Bots\BotController;
+use App\Http\Controllers\Bots\BotDialogsController;
+use App\Http\Controllers\Bots\BotPageController;
 use App\Http\Controllers\Bots\ProductController;
 use App\Http\Controllers\Bots\AdminBotController;
 use App\Http\Controllers\Bots\CompanyController;
@@ -19,7 +23,6 @@ Route::prefix("bot-client")
 
         Route::post('/bot', [BotController::class, "getBot"])
             ->middleware(["tgAuth.admin"]);
-
 
         Route::post('/callback', [BotController::class, "sendCallback"]);
 
@@ -128,29 +131,54 @@ Route::prefix("bot-client")
             });
 
         Route::prefix("cashback")
+            ->middleware(["tgAuth.admin"])
             ->group(function () {
                 Route::post('/receiver', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "receiver"])
                     ->middleware(["tgAuth.any"]);
                 Route::post('/history', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "index"])
                     ->middleware(["tgAuth.any"]);
-                Route::post('/add', [\App\Http\Controllers\Bots\AdminBotController::class, "addCashBack"])
-                    ->middleware(["tgAuth.admin"]);
-                Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"])
-                    ->middleware(["tgAuth.admin"]);
+                Route::post('/add', [\App\Http\Controllers\Bots\AdminBotController::class, "addCashBack"]);
+                Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"]);
                 Route::post('/vip', [\App\Http\Controllers\Bots\AdminBotController::class, "vipStore"])
                     ->middleware(["tgAuth.any"]);
-                //Route::post('/deliveryman', [\App\Http\Controllers\Bots\AdminBotController::class, "deliverymanStore"]);
-                Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"])
-                    ->middleware(["tgAuth.admin"]);
-
-                Route::post('/request-user-data', [\App\Http\Controllers\Bots\AdminBotController::class, "requestUserData"])
-                    ->middleware(["tgAuth.admin"]);
-
-                Route::post('/request-refresh-menu', [\App\Http\Controllers\Bots\AdminBotController::class, "requestRefreshMenu"])
-                    ->middleware(["tgAuth.admin"]);
+                Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"]);
+                Route::post('/request-user-data', [\App\Http\Controllers\Bots\AdminBotController::class, "requestUserData"]);
+                Route::post('/request-refresh-menu', [\App\Http\Controllers\Bots\AdminBotController::class, "requestRefreshMenu"]);
+            });
 
 
+        Route::prefix("pages")
+            ->controller(BotPageController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function () {
+                Route::post("/", "index");
+                Route::post("/page", "createPage");
+                Route::post("/page-update", "updatePage");
+                Route::post("/duplicate/{pageId}", "duplicate");
+                Route::post("/remove/{pageId}", "destroy");
+            });
 
+        Route::prefix("bots")
+            ->controller(BotController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function () {
+                Route::post("/", "index");
+                Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
+                Route::post("/bot-update", "updateBot");
+                Route::post("/user-status", "changeUserStatus");
+                Route::post("/users", "loadBotUsers");
+                Route::post("/image-menu", "loadImageMenu");
+                Route::post("/slugs", "loadSlugs");
+                Route::post("/current-bot-user", "getCurrentBotUser");
+                Route::post("/duplicate", "duplicate");
+                Route::post("/restore/{botId}", "restore");
+            });
+
+        Route::prefix("dialogs")
+            ->middleware(["tgAuth.admin"])
+            ->controller(BotDialogsController::class)
+            ->group(function () {
+                Route::post("/", "index");
             });
 
         Route::get("/{botDomain}", [ShopScriptController::class, "shopHomePage"])

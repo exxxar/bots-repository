@@ -5,12 +5,14 @@ import BotUserList from "@/AdminPanel/Components/Constructor/BotUserList.vue";
 
 import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
 
-import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
-import Page from "@/AdminPanel/Components/Constructor/Pages/Page.vue"
-import ImageMenu from "@/AdminPanel/Components/Constructor/ImageMenu.vue";
+import PagesList from "@/ClientTg/Components/Admin/Pages/PagesList.vue";
+import Page from "@/ClientTg/Components/Admin/Pages/Page.vue"
+import ImageMenu from "@/ClientTg/Components/Admin/ImageMenu.vue";
 import BotDialogGroupList from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import Shop from "@/AdminPanel/Components/Constructor/Shop/Shop.vue";
-import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
+import AmoForm from "@/ClientTg/Components/Admin/Amo/AmoForm.vue";
+
+
 </script>
 <template>
 
@@ -35,6 +37,18 @@ import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
                 <i class="fa-solid fa-hand-holding-dollar"></i> Тариф {{ bot.tax_per_day || '0' }} ₽/день
             </p>
 
+            <div class="w-100 d-flex justify-content-center py-4">
+
+                <div class="custom-control ios-switch">
+                    <input type="checkbox"
+                           v-model="botForm.is_active"
+                           class="ios-input" id="toggle-id-1">
+                    <label class="custom-control-label" for="toggle-id-1"></label>
+                </div>
+                <span class="ml-5 text-white" v-if="botForm.is_active">Вкл</span>
+                <span class="ml-5 text-white" v-else>Выкл</span>
+            </div>
+
             <a href="javascript:void(0)"
                @click="goToStep(0)"
                v-bind:class="{'bg-highlight':step===0,'bg-gray2-light': step!==0}"
@@ -42,32 +56,27 @@ import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
                 <i class="fa-solid fa-info mr-1"></i> Информация о боте
             </a>
             <a href="javascript:void(0)"
-               @click="step=1"
-               v-bind:class="{'bg-highlight':step===1,'bg-gray2-light': step!==1}"
+               @click="goToStep(4)"
+               v-bind:class="{'bg-highlight':step===4,'bg-gray2-light': step!==4}"
                class="btn btn-m font-900 text-uppercase btn-center-xl mb-2">
                 <i class="fa-solid fa-file mr-2"></i> Страницы бота
             </a>
             <a href="javascript:void(0)"
-               @click="step=2"
+               @click="goToStep(2)"
                v-bind:class="{'bg-highlight':step===2,'bg-gray2-light': step!==2}"
                class="btn btn-m font-900 text-uppercase btn-center-xl mb-2">
                 <i class="fa-solid fa-list-check mr-2"></i> Настройка AMO
             </a>
+
             <a href="javascript:void(0)"
-               @click="step=3"
-               v-bind:class="{'bg-highlight':step===3,'bg-gray2-light': step!==3}"
-               class="btn btn-m font-900 text-uppercase btn-center-xl mb-2">
-                <i class="fa-brands fa-shopify mr-2"></i> Настройка Магазина
-            </a>
-            <a href="javascript:void(0)"
-               @click="step=3"
-               v-bind:class="{'bg-highlight':step===3,'bg-gray2-light': step!==3}"
+               @click="goToStep(5)"
+               v-bind:class="{'bg-highlight':step===5,'bg-gray2-light': step!==5}"
                class="btn btn-m font-900 text-uppercase btn-center-xl mb-2">
                 <i class="fa-brands fa-shopify mr-2"></i> Настройка меню
             </a>
             <a href="javascript:void(0)"
-               @click="step=3"
-               v-bind:class="{'bg-highlight':step===3,'bg-gray2-light': step!==3}"
+               @click="goToStep(1)"
+               v-bind:class="{'bg-highlight':step===1,'bg-gray2-light': step!==1}"
                class="btn btn-m font-900 text-uppercase btn-center-xl">
                 <i class="fa-brands fa-shopify mr-2"></i> Настройка клавиатур
             </a>
@@ -75,505 +84,534 @@ import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
         <div class="card-overlay bg-black opacity-70"></div>
     </div>
 
-    <form v-on:submit.prevent="addBot">
-        <div class="card card-style" v-if="step===0">
-            <div class="content">
-                <div class="mb-0">
-                    <div class="mb-2">
-                        <label class="form-label d-flex justify-content-between mt-2" id="bot-domain">
+    <form
+        v-if="step===0"
+        v-on:submit.prevent="addBot"
+        class="card card-style">
+        <div class="content">
+            <div class="mb-0">
+                <div class="mb-2">
+                    <label class="form-label d-flex justify-content-between mt-2" id="bot-domain">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Строго взять из BotFather! ТО что при создании с окончанием на "bot"</div>
+                            </template>
+                        </Popper>
+                        Доменное имя бота из BotFather
+                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                    </label>
+                    <input type="text" class="form-control"
+                           placeholder="Имя бота"
+                           aria-label="Имя бота"
+                           v-model="botForm.bot_domain"
+                           maxlength="255"
+                           aria-describedby="bot-domain" required>
+                    <p v-if="botForm.bot_domain">Проверить работу бота <a
+                        :href="'https://t.me/'+botForm.bot_domain"
+                        target="_blank">@{{
+                            botForm.bot_domain
+                        }}</a>
+                    </p>
+                </div>
+
+                <div class="mb-2">
+                    <label
+                        class="form-label d-flex justify-content-between mt-2 d-flex justify-content-between flex-wrap"
+                        id="bot-token">
+
+                        <div>
                             <Popper>
                                 <i class="fa-regular fa-circle-question mr-1"></i>
                                 <template #content>
-                                    <div>Строго взять из BotFather! ТО что при создании с окончанием на "bot"</div>
+                                    <div>Взять из BotFater при создании бота! Длинная нечитаемая подсвеченная
+                                        строка!
+                                    </div>
                                 </template>
                             </Popper>
-                            Доменное имя бота из BotFather
-                            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
-                        </label>
-                        <input type="text" class="form-control"
-                               placeholder="Имя бота"
-                               aria-label="Имя бота"
-                               v-model="botForm.bot_domain"
-                               maxlength="255"
-                               aria-describedby="bot-domain" required>
-                        <p v-if="botForm.bot_domain">Проверить работу бота <a
-                            :href="'https://t.me/'+botForm.bot_domain"
-                            target="_blank">@{{
-                                botForm.bot_domain
-                            }}</a>
-                        </p>
-                    </div>
-
-                    <div class="mb-2">
-                        <label
-                            class="form-label d-flex justify-content-between mt-2 d-flex justify-content-between flex-wrap"
-                            id="bot-token">
-
-                            <div>
-                                <Popper>
-                                    <i class="fa-regular fa-circle-question mr-1"></i>
-                                    <template #content>
-                                        <div>Взять из BotFater при создании бота! Длинная нечитаемая подсвеченная
-                                            строка!
-                                        </div>
-                                    </template>
-                                </Popper>
-                                Токен бота
-                            </div>
-
-                            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
-
-                            <a href="https://t.me/botfather" class="w-100" target="_blank">Создать нового бота в
-                                ТГ</a>
-                        </label>
-                        <input type="text" class="form-control"
-                               placeholder="Токен"
-                               aria-label="Токен"
-                               v-model="botForm.bot_token"
-                               maxlength="255"
-                               aria-describedby="bot-token" required>
-                    </div>
-
-
-                    <div class="mb-2">
-                        <label class="form-label d-flex justify-content-between mt-2" id="bot-token-dev">Токен бота
-                            (для тестирования)</label>
-                        <input type="text" class="form-control"
-                               placeholder="Токен"
-                               aria-label="Токен"
-                               v-model="botForm.bot_token_dev"
-                               maxlength="255"
-                               aria-describedby="bot-token-dev">
-                    </div>
-
-
-                    <div class="mb-2">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap">
-                            <label
-                                class="form-label d-flex justify-content-between mt-2 d-flex justify-content-center w-100"
-                                id="bot-order-channel">
-                                <div>
-                                    <Popper>
-                                        <i class="fa-regular fa-circle-question mr-1"></i>
-                                        <template #content>
-                                            <div>Ввести адрес ссылки на канал в форму после добавления тоукена
-                                            </div>
-                                        </template>
-                                    </Popper>
-                                    Канал для заказов (id) <a href="" class="ml-2"><i
-                                    class="fa-brands fa-telegram"></i></a>
-                                </div>
-                                <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
-
-                            </label>
-
-                            <!--                                <TelegramChannelHelper
-                                                                :token="botForm.bot_token"
-                                                                :param="'order_channel'"
-                                                                v-on:callback="addTextTo"
-                                                            />-->
-                        </div>
-                        <input type="text" class="form-control"
-                               placeholder="id канала"
-                               aria-label="id канала"
-                               v-model="botForm.order_channel"
-                               maxlength="255"
-                               aria-describedby="bot-order-channel">
-                    </div>
-
-
-                    <div class="mb-2">
-                        <div class="d-flex justify-content-between">
-                            <label class="form-label d-flex justify-content-between mt-2" id="bot-main-channel">Канал
-                                для постов (id,рекламный)</label>
-
-                            <!--                                <TelegramChannelHelper
-                                                                :token="botForm.bot_token"
-                                                                :param="'main_channel'"
-                                                                v-on:callback="addTextTo"
-                                                            />-->
-                        </div>
-                        <input type="text" class="form-control"
-                               placeholder="id канала"
-                               aria-label="id канала"
-                               v-model="botForm.main_channel"
-                               maxlength="255"
-                               aria-describedby="bot-main-channel">
-                    </div>
-
-
-                </div>
-                <div class="mb-0" v-if="botForm.bot_token">
-
-
-                    <div class="mb-2">
-                        <div class="d-flex justify-content-between">
-                            <label class="form-label d-flex justify-content-between mb-0  flex-wrap"
-                                   id="bot-description">
-                                <div>
-                                    <Popper>
-                                        <i class="fa-regular fa-circle-question mr-1"></i>
-                                        <template #content>
-                                            <div>Отобразится пользователю при первом запуске</div>
-                                        </template>
-                                    </Popper>
-                                    Приветственное сообщение
-
-                                </div>
-                                <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
-
-
-                                <small class="text-gray-400 w-100" style="font-size:10px;"
-                                       v-if="botForm.welcome_message">
-                                    Длина текста {{ botForm.welcome_message.length }}</small>
-                            </label>
-
-
-                        </div>
-                        <textarea type="text" class="form-control"
-                                  placeholder="Текстовое приветствие при запуске бота"
-                                  aria-label="Текстовое приветствие при запуске бота"
-                                  v-model="botForm.welcome_message"
-                                  aria-describedby="bot-description" required>
-                    </textarea>
-                    </div>
-
-
-                    <div class="mb-2">
-                        <div class="d-flex justify-content-between flex-wrap">
-                            <label class="form-label d-flex justify-content-between w-100 mb-0" id="bot-description">
-                                <div>
-                                    <Popper>
-                                        <i class="fa-regular fa-circle-question mr-1"></i>
-                                        <template #content>
-                                            <div>Для меню "О Боте"</div>
-                                        </template>
-                                    </Popper>
-                                    Описание бота
-                                </div>
-                                <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
-
-
-                            </label>
-                            <small class="text-gray-400 w-100" style="font-size:10px;"
-                                   v-if="botForm.description">
-                                Длина текста {{ botForm.description.length }} / 255</small>
-
+                            Токен бота
                         </div>
 
-                        <textarea type="text" class="form-control"
-                                  placeholder="Текстовое описание бота"
-                                  aria-label="Текстовое описание бота"
-                                  v-model="botForm.description"
-                                  aria-describedby="bot-description" required>
-                    </textarea>
-                    </div>
-
-
-                    <div class="mb-2">
-
-                        <div class="d-flex justify-content-between flex-wrap">
-                            <label class="form-label d-flex justify-content-between w-100 mb-0"
-                                   id="bot-maintenance-message">
-
-                                <div>
-                                    <Popper>
-                                        <i class="fa-regular fa-circle-question mr-1"></i>
-                                        <template #content>
-                                            <div>Для меню "О Боте"</div>
-                                        </template>
-                                    </Popper>
-                                    Режим тех. работ
-                                </div>
-                                <span class="badge rounded-pill bg-danger px-3 text-white m-0">Нужно</span>
-
-
-                            </label>
-                            <small class="text-gray-400 w-100" style="font-size:10px;"
-                                   v-if="botForm.maintenance_message">
-                                Длина текста {{ botForm.maintenance_message.length }} / 255 </small>
-                        </div>
-                        <textarea type="text" class="form-control"
-                                  placeholder="Текстовое сообщение"
-                                  aria-label="Текстовое сообщение"
-                                  v-model="botForm.maintenance_message"
-                                  maxlength="255"
-                                  aria-describedby="bot-maintenance-message" required>
-                    </textarea>
-
-                    </div>
-
-
-                    <div class="mb-2">
-
-                        <label class="form-label d-flex justify-content-between mt-2" id="bot-level-1">
-                            Уровень 1 CashBack, %
-                            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
-                        </label>
-                        <input type="number" class="form-control"
-                               placeholder="%"
-                               aria-label="уровень CashBack"
-                               v-model="botForm.level_1"
-                               max="50"
-                               min="0"
-                               aria-describedby="bot-level-1" required>
-
-                    </div>
-
-                    <div class="mb-2">
-
-                        <label class="form-label d-flex justify-content-between mt-2" id="bot-level-2">Уровень 2
-                            CashBack, %</label>
-                        <input type="number" class="form-control"
-                               placeholder="%"
-                               aria-label="уровень CashBack"
-                               v-model="botForm.level_2"
-                               max="50"
-                               min="0"
-                               aria-describedby="bot-level-2">
-
-                    </div>
-
-                    <div class="mb-2">
-
-                        <label class="form-label d-flex justify-content-between mt-2" id="bot-level-3">Уровень 3
-                            CashBack, %</label>
-                        <input type="number" class="form-control"
-                               placeholder="%"
-                               aria-label="уровень CashBack"
-                               v-model="botForm.level_3"
-                               max="50"
-                               min="0"
-                               aria-describedby="bot-level-3">
-
-                    </div>
-
-                    <div class="mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input"
-                                   v-model="need_payments"
-                                   type="checkbox"
-                                   id="need-payments">
-                            <label class="form-check-label" for="need-payments">
-                                Необходимо подключить платежную систему
-                            </label>
-                        </div>
-
-                    </div>
-
-                    <div class=" mb-2" v-if="need_payments">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox"
-                                   :value="botForm.auto_cashback_on_payments"
-                                   v-model="botForm.auto_cashback_on_payments"
-                                   id="bot-auto-cashback-on-payments">
-                            <label class="form-check-label" for="bot-auto-cashback-on-payments">
-                                Начислять CashBack автоматически после успешной оплаты
-                            </label>
-                        </div>
-
-                        <div class="mb-2">
-
-                            <label class="form-label d-flex justify-content-between mt-2" id="bot-level-3">
-                                <div>
-                                    <Popper>
-                                        <i class="fa-regular fa-circle-question mr-1"></i>
-                                        <template #content>
-                                            <div>Если в боте планируется оплата, то необходимо через BotFather привязать
-                                                нужную
-                                                платежную систему и указать в данном поле полученный токен
-                                            </div>
-                                        </template>
-                                    </Popper>
-                                    Токен платежной системы
-                                </div>
-                                <a href="https://t.me/botfather" target="_blank">Подключить</a>
-                            </label>
-
-
-                            <input type="text" class="form-control"
-                                   placeholder="Токен"
-                                   aria-label="уровень CashBack"
-                                   v-model="botForm.payment_provider_token"
-                                   aria-describedby="bot-level-3">
-                        </div>
-                    </div>
-
-                    <div class=" mb-2">
-                        <div class="form-check">
-                            <input class="form-check-input"
-                                   v-model="need_shop"
-                                   type="checkbox"
-                                   id="need-shop">
-                            <label class="form-check-label" for="need-shop">
-                                Необходимо интегрировать магазин в бота
-                            </label>
-                        </div>
-
-                    </div>
-
-                    <div class=" mb-2" v-if="need_shop">
-
-
-                        <label class="form-label d-flex justify-content-between mt-2" id="bot-level-3">
-                            <div>
-                                <Popper>
-                                    <i class="fa-regular fa-circle-question mr-1"></i>
-                                    <template #content>
-                                        <div>Ссылка на страницу ВК с товарами для вашего магазина в боте
-                                        </div>
-                                    </template>
-                                </Popper>
-                                ВК-группа
-                            </div>
-
-                            <a href="https://vk.com/groups?w=groups_create" target="_blank">Создать</a>
-                        </label>
-
-
-                        <input type="url" class="form-control"
-                               placeholder="Ссылка на группу ВК"
-                               aria-label="ссылка на группу ВК"
-                               v-model="botForm.vk_shop_link"
-                               aria-describedby="vk_shop_link">
-
-                    </div>
-
-                    <div class="divider divider-small my-3 bg-highlight "></div>
-
-                    <div class="mb-2">
-
-                        <label class="form-label d-flex justify-content-between mt-2" id="bot-level-3">
-
-                            <div>
-                                <Popper>
-                                    <i class="fa-regular fa-circle-question mr-1"></i>
-                                    <template #content>
-                                        <div>Ссылка на страницу ВК с товарами для вашего магазина в боте
-                                        </div>
-                                    </template>
-                                </Popper>
-                                Информационная ссылка
-                            </div>
-
-                            <a target="_blank"
-                                                     href="https://telegra.ph">Создать</a>
-                        </label>
-                        <input type="text" class="form-control"
-                               placeholder="Ссылка ресурс telegraph"
-                               aria-label="Ссылка ресурс telegraph"
-                               maxlength="255"
-                               v-model="botForm.info_link"
-                               :aria-describedby="'bot-info-link'">
-
-                    </div>
-
-                    <div class="divider divider-small my-3  bg-highlight"></div>
-                    <h6>Ссылки на соц. сети</h6>
-
-
-                    <div class="d-flex justify-content-between mb-2 flex-wrap"
-                         :key="'social-link'+index"
-                         v-for="(item, index) in botForm.social_links">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                            <small>Ссылка</small>
-
-                            <button
-                                type="button"
-                                @click="removeItem('social_links', index)"
-                                class="btn btn-link text-danger"><i class="fa-regular fa-trash-can"></i>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control mb-2 w-100"
-                               placeholder="Название ссылки"
-                               aria-label="Название ссылки"
-                               maxlength="255"
-                               v-model="botForm.social_links[index].title"
-                               :aria-describedby="'bot-social-link-'+index" required>
-
-                        <input type="text" class="form-control  mb-2 "
-                               placeholder="Ссылка на соц.сеть"
-                               aria-label="Ссылка на соц.сеть"
-                               maxlength="255"
-                               v-model="botForm.social_links[index].url"/>
-
-
-                    </div>
-                    <button
-                        type="button"
-                        @click="addSocialLinks()"
-                        class="btn btn-border btn-m btn-full mb-2 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme w-100">
-                        Добавить еще ссылку
-                    </button>
-                    <div class="divider divider-small my-3  bg-highlight"></div>
-                    <h6 class="d-flex justify-content-between">Аватар для бота
                         <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
-                    </h6>
-                    <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
-                        <label for="bot-photos" style="margin-right: 10px;" class="photo-loader ml-2">
-                            <span>+</span>
-                            <input type="file" id="bot-photos" multiple accept="image/*"
-                                   @change="onChangePhotos"
-                                   style="display:none;"/>
+
+                        <a href="https://t.me/botfather" class="w-100" target="_blank">Создать нового бота в
+                            ТГ</a>
+                    </label>
+                    <input type="text" class="form-control"
+                           placeholder="Токен"
+                           aria-label="Токен"
+                           v-model="botForm.bot_token"
+                           maxlength="255"
+                           aria-describedby="bot-token" required>
+                </div>
+
+
+                <div class="mb-2">
+                    <label class="form-label d-flex justify-content-between mt-2" id="bot-token-dev">Токен бота
+                        (для тестирования)</label>
+                    <input type="text" class="form-control"
+                           placeholder="Токен"
+                           aria-label="Токен"
+                           v-model="botForm.bot_token_dev"
+                           maxlength="255"
+                           aria-describedby="bot-token-dev">
+                </div>
+
+
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <label
+                            class="form-label d-flex justify-content-between mt-2 d-flex justify-content-center w-100"
+                            id="bot-order-channel">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Ввести адрес ссылки на канал в форму после добавления тоукена
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Канал для заказов (id) <a href="" class="ml-2"><i
+                                class="fa-brands fa-telegram"></i></a>
+                            </div>
+                            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
 
                         </label>
 
-                        <div class="mb-2 img-preview" style="margin-right: 10px;"
-                             v-for="(img, index) in botForm.photos"
-                             v-if="botForm.photos">
-                            <img v-lazy="getPhoto(img).imageUrl">
-                            <div class="remove">
-                                <a @click="removePhoto(index)"><i class="fa-regular fa-trash-can"></i></a>
-                            </div>
-                        </div>
-
-                        <div class="mb-2 img-preview" style="margin-right: 10px;"
-                             v-else>
-                            <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+botForm.image">
-                            <div class="remove">
-                                <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
-                            </div>
-                        </div>
-
+                        <!--                                <TelegramChannelHelper
+                                                            :token="botForm.bot_token"
+                                                            :param="'order_channel'"
+                                                            v-on:callback="addTextTo"
+                                                        />-->
                     </div>
+                    <input type="text" class="form-control"
+                           placeholder="id канала"
+                           aria-label="id канала"
+                           v-model="botForm.order_channel"
+                           maxlength="255"
+                           aria-describedby="bot-order-channel">
+                </div>
 
 
-                    <button
-                        :disabled="!botForm.bot_token"
-                        type="submit"
-                        class="btn btn-m btn-full mb-0 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">
-                        Сохранить настройки
-                    </button>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label d-flex justify-content-between mt-2" id="bot-main-channel">Канал
+                            для постов (id,рекламный)</label>
 
+                        <!--                                <TelegramChannelHelper
+                                                            :token="botForm.bot_token"
+                                                            :param="'main_channel'"
+                                                            v-on:callback="addTextTo"
+                                                        />-->
+                    </div>
+                    <input type="text" class="form-control"
+                           placeholder="id канала"
+                           aria-label="id канала"
+                           v-model="botForm.main_channel"
+                           maxlength="255"
+                           aria-describedby="bot-main-channel">
                 </div>
 
 
             </div>
-        </div>
+            <div class="mb-0" v-if="botForm.bot_token">
 
-        <div class="card card-style" v-if="step===7">
-            <div class="content">
-                <AmoForm
-                    :data="botForm.amo"
-                    v-if="!load"
-                />
+
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label d-flex justify-content-between mb-0  flex-wrap"
+                               id="bot-description">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Отобразится пользователю при первом запуске</div>
+                                    </template>
+                                </Popper>
+                                Приветственное сообщение
+
+                            </div>
+                            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+
+
+                            <small class="text-gray-400 w-100" style="font-size:10px;"
+                                   v-if="botForm.welcome_message">
+                                Длина текста {{ botForm.welcome_message.length }}</small>
+                        </label>
+
+
+                    </div>
+                    <textarea type="text" class="form-control"
+                              placeholder="Текстовое приветствие при запуске бота"
+                              aria-label="Текстовое приветствие при запуске бота"
+                              v-model="botForm.welcome_message"
+                              aria-describedby="bot-description" required>
+                    </textarea>
+                </div>
+
+
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <label class="form-label d-flex justify-content-between w-100 mb-0" id="bot-description">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Для меню "О Боте"</div>
+                                    </template>
+                                </Popper>
+                                Описание бота
+                            </div>
+                            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+
+
+                        </label>
+                        <small class="text-gray-400 w-100" style="font-size:10px;"
+                               v-if="botForm.description">
+                            Длина текста {{ botForm.description.length }} / 255</small>
+
+                    </div>
+
+                    <textarea type="text" class="form-control"
+                              placeholder="Текстовое описание бота"
+                              aria-label="Текстовое описание бота"
+                              v-model="botForm.description"
+                              aria-describedby="bot-description" required>
+                    </textarea>
+                </div>
+
+
+                <div class="mb-2">
+
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <label class="form-label d-flex justify-content-between w-100 mb-0"
+                               id="bot-maintenance-message">
+
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Для меню "О Боте"</div>
+                                    </template>
+                                </Popper>
+                                Режим тех. работ
+                            </div>
+                            <span class="badge rounded-pill bg-danger px-3 text-white m-0">Нужно</span>
+
+
+                        </label>
+                        <small class="text-gray-400 w-100" style="font-size:10px;"
+                               v-if="botForm.maintenance_message">
+                            Длина текста {{ botForm.maintenance_message.length }} / 255 </small>
+                    </div>
+                    <textarea type="text" class="form-control"
+                              placeholder="Текстовое сообщение"
+                              aria-label="Текстовое сообщение"
+                              v-model="botForm.maintenance_message"
+                              maxlength="255"
+                              aria-describedby="bot-maintenance-message" required>
+                    </textarea>
+
+                </div>
+
+
+                <div class="mb-2">
+
+                    <label class="form-label d-flex justify-content-between mt-2" id="bot-level-1">
+                        Уровень 1 CashBack, %
+                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                    </label>
+                    <input type="number" class="form-control"
+                           placeholder="%"
+                           aria-label="уровень CashBack"
+                           v-model="botForm.level_1"
+                           max="50"
+                           min="0"
+                           aria-describedby="bot-level-1" required>
+
+                </div>
+
+                <div class="mb-2">
+
+                    <label class="form-label d-flex justify-content-between mt-2" id="bot-level-2">Уровень 2
+                        CashBack, %</label>
+                    <input type="number" class="form-control"
+                           placeholder="%"
+                           aria-label="уровень CashBack"
+                           v-model="botForm.level_2"
+                           max="50"
+                           min="0"
+                           aria-describedby="bot-level-2">
+
+                </div>
+
+                <div class="mb-2">
+
+                    <label class="form-label d-flex justify-content-between mt-2" id="bot-level-3">Уровень 3
+                        CashBack, %</label>
+                    <input type="number" class="form-control"
+                           placeholder="%"
+                           aria-label="уровень CashBack"
+                           v-model="botForm.level_3"
+                           max="50"
+                           min="0"
+                           aria-describedby="bot-level-3">
+
+                </div>
+
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_payments"
+                               type="checkbox"
+                               id="need-payments">
+                        <label class="form-check-label" for="need-payments">
+                            Необходимо подключить платежную систему
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class=" mb-2" v-if="need_payments">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                               :value="botForm.auto_cashback_on_payments"
+                               v-model="botForm.auto_cashback_on_payments"
+                               id="bot-auto-cashback-on-payments">
+                        <label class="form-check-label" for="bot-auto-cashback-on-payments">
+                            Начислять CashBack автоматически после успешной оплаты
+                        </label>
+                    </div>
+
+                    <div class="mb-2">
+
+                        <label class="form-label d-flex justify-content-between mt-2" id="bot-level-3">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Если в боте планируется оплата, то необходимо через BotFather привязать
+                                            нужную
+                                            платежную систему и указать в данном поле полученный токен
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Токен платежной системы
+                            </div>
+                            <a href="https://t.me/botfather" target="_blank">Подключить</a>
+                        </label>
+
+
+                        <input type="text" class="form-control"
+                               placeholder="Токен"
+                               aria-label="уровень CashBack"
+                               v-model="botForm.payment_provider_token"
+                               aria-describedby="bot-level-3">
+                    </div>
+                </div>
+
+                <div class=" mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_shop"
+                               type="checkbox"
+                               id="need-shop">
+                        <label class="form-check-label" for="need-shop">
+                            Необходимо интегрировать магазин в бота
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class=" mb-2" v-if="need_shop">
+
+
+                    <label class="form-label d-flex justify-content-between mt-2" id="bot-level-3">
+                        <div>
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Ссылка на страницу ВК с товарами для вашего магазина в боте
+                                    </div>
+                                </template>
+                            </Popper>
+                            ВК-группа
+                        </div>
+
+                        <a href="https://vk.com/groups?w=groups_create" target="_blank">Создать</a>
+                    </label>
+
+
+                    <input type="url" class="form-control"
+                           placeholder="Ссылка на группу ВК"
+                           aria-label="ссылка на группу ВК"
+                           v-model="botForm.vk_shop_link"
+                           aria-describedby="vk_shop_link">
+
+                </div>
+
+                <div class="divider divider-small my-3 bg-highlight "></div>
+
+                <div class="mb-2">
+
+                    <label class="form-label d-flex justify-content-between mt-2" id="bot-level-3">
+
+                        <div>
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Ссылка на страницу ВК с товарами для вашего магазина в боте
+                                    </div>
+                                </template>
+                            </Popper>
+                            Информационная ссылка
+                        </div>
+
+                        <a target="_blank"
+                           href="https://telegra.ph">Создать</a>
+                    </label>
+                    <input type="text" class="form-control"
+                           placeholder="Ссылка ресурс telegraph"
+                           aria-label="Ссылка ресурс telegraph"
+                           maxlength="255"
+                           v-model="botForm.info_link"
+                           :aria-describedby="'bot-info-link'">
+
+                </div>
+
+                <div class="divider divider-small my-3  bg-highlight"></div>
+                <h6>Ссылки на соц. сети</h6>
+
+
+                <div class="d-flex justify-content-between mb-2 flex-wrap"
+                     :key="'social-link'+index"
+                     v-for="(item, index) in botForm.social_links">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <small>Ссылка</small>
+
+                        <button
+                            type="button"
+                            @click="removeItem('social_links', index)"
+                            class="btn btn-link text-danger"><i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <input type="text" class="form-control mb-2 w-100"
+                           placeholder="Название ссылки"
+                           aria-label="Название ссылки"
+                           maxlength="255"
+                           v-model="botForm.social_links[index].title"
+                           :aria-describedby="'bot-social-link-'+index" required>
+
+                    <input type="text" class="form-control  mb-2 "
+                           placeholder="Ссылка на соц.сеть"
+                           aria-label="Ссылка на соц.сеть"
+                           maxlength="255"
+                           v-model="botForm.social_links[index].url"/>
+
+
+                </div>
+                <button
+                    type="button"
+                    @click="addSocialLinks()"
+                    class="btn btn-border btn-m btn-full mb-2 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme w-100">
+                    Добавить еще ссылку
+                </button>
+                <div class="divider divider-small my-3  bg-highlight"></div>
+                <h6 class="d-flex justify-content-between">Аватар для бота
+                    <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                </h6>
+                <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
+                    <label for="bot-photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                        <span>+</span>
+                        <input type="file" id="bot-photos" multiple accept="image/*"
+                               @change="onChangePhotos"
+                               style="display:none;"/>
+
+                    </label>
+
+                    <div class="mb-2 img-preview" style="margin-right: 10px;"
+                         v-for="(img, index) in botForm.photos"
+                         v-if="botForm.photos">
+                        <img v-lazy="getPhoto(img).imageUrl">
+                        <div class="remove">
+                            <a @click="removePhoto(index)"><i class="fa-regular fa-trash-can"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 img-preview" style="margin-right: 10px;"
+                         v-else>
+                        <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+botForm.image">
+                        <div class="remove">
+                            <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <button
+                    :disabled="!botForm.bot_token"
+                    type="submit"
+                    class="btn btn-m btn-full mb-0 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">
+                    Сохранить настройки
+                </button>
+
             </div>
-        </div>
 
+
+        </div>
     </form>
 
 
+    <div v-if="step===2">
+
+        <AmoForm
+            :bot="bot"
+            :data="botForm.amo"
+            v-if="!load&&bot"
+        />
+
+    </div>
+
+
+    <div v-if="step===4">
+
+        <div class="card card-style">
+            <div class="content mb-0">
+                <PagesList
+                    v-if="!loadPageList&&!load"
+                    :editor="true"
+                    v-on:callback="pageListCallback"/>
+            </div>
+        </div>
+
+        <Page
+            v-if="!loadPage&&!load"
+            :page="page"
+            v-on:callback="pageCallback"/>
+
+
+    </div>
+
+    <div v-if="step===5">
+        <ImageMenu
+            :bot="bot"
+            v-if="!load"
+        />
+    </div>
+
+    <div v-if="step===1">
+        <KeyboardList
+            :select-mode="false"
+            v-if="!load"/>
+    </div>
     <!--
         <div v-if="step===8">
             <Shop v-if="!load"/>
         </div>
 
 
-        <div v-if="step===5">
-            <ImageMenu
-                v-if="!load"
-            />
-        </div>
+
 
 
         <div v-if="step===1">
@@ -593,27 +631,8 @@ import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
             />
         </div>
 
-        <div v-if="step===3">
-            <BotUserList
-                v-if="!load"/>
-        </div>
 
-        <div class="row" v-if="step===4">
-            <div class="col-12 col-md-8" v-if="!load">
-                <Page
-                    v-if="!loadPage"
-                    :page="page"
-                    v-on:callback="pageCallback"/>
-            </div>
 
-            <div class="col-12 col-md-4" v-if="!load">
-                <PagesList
-                    v-if="!loadPageList"
-                    :editor="true"
-                    v-on:callback="pageListCallback"/>
-
-            </div>
-        </div>
         </form>-->
 </template>
 <script>
@@ -657,7 +676,8 @@ export default {
                 photos: [],
                 selected_bot_template_id: null,
                 pages: [],
-                amo: null
+                amo: null,
+                is_active: false,
             },
         }
     },
@@ -714,6 +734,7 @@ export default {
                     photos: this.bot.photos || [],
 
                     amo: this.bot.amo || null,
+                    is_active: this.bot.is_active || false,
                 }
 
                 if (this.botForm.payment_provider_token)
@@ -837,7 +858,7 @@ export default {
                         selected_bot_template_id: null,
 
                         pages: [],
-
+                        is_active:  false,
 
                     }
             }).catch(err => {
@@ -865,11 +886,11 @@ export default {
                 this.loadPageList = false
             });
         },
-        goToStep(step){
-            this.step=step
+        goToStep(step) {
+            this.step = step
 
-            this.$nextTick(()=>{
-                window.scrollTo(0,630)
+            this.$nextTick(() => {
+                window.scrollTo(0, 630)
                 //document.getElementById('user-profile-info').scrollIntoView();
             })
         }

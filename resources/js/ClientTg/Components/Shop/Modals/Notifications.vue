@@ -15,7 +15,8 @@
         </p>
     </div>
 
-    <div id="menu-success-1" class="menu menu-box-bottom menu-box-detached rounded-m" data-menu-height="305" data-menu-effect="menu-over" style="display: block; height: 305px;">
+    <div id="menu-success-1" class="menu menu-box-bottom menu-box-detached rounded-m"
+         data-menu-height="305" data-menu-effect="menu-over" style="display: block; height: 305px;">
         <h1 class="text-center mt-4"><i class="fa fa-3x fa-check-circle color-green1-dark"></i></h1>
         <h1 class="text-center mt-3 text-uppercase font-700">{{title || 'Системное'}} </h1>
         <p class="boxed-text-l" v-html="text">

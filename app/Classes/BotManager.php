@@ -118,6 +118,12 @@ class BotManager extends BotCore
             return BotStatusEnum::Working;
 
 
+        if ($this->botUser->is_admin) {
+            $this->reply("<b>Сервер недоступен для пользователей!</b>");
+            return BotStatusEnum::Working;
+        }
+
+
         $message = $this->getSelf()->maintenance_message ?? 'Техническое обслуживание';
 
         $this

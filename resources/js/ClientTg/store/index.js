@@ -14,6 +14,9 @@ import favorites from "./modules/shop/favorites";
 import shopAdmin from "./modules/shop/admin";
 import company from "./modules/company";
 import watches from "./modules/shop/watch";
+import pages from "./modules/pages";
+import bots from "./modules/bots";
+import dialogs from "./modules/dialogs";
 
 import util from "./modules/utilites";
 
@@ -68,6 +71,9 @@ export default createStore({
         shopAdmin,
         bonusProduct,
         watches,
-        company
+        company,
+        pages,
+        bots,
+        dialogs
     }
 })

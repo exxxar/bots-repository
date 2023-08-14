@@ -14,6 +14,10 @@ import HighlightsMenuBar from "@/ClientTg/Components/Shop/Modals/HighlightsMenuB
 import Preloader from "@/ClientTg/Components/Shop/Helpers/Preloader.vue";
 import SideBar from "@/ClientTg/Components/Shop/Modals/SideBar.vue";
 import SideBarAdmin from "@/ClientTg/Components/Shop/Modals/SideBarAdmin.vue";
+
+
+import PageMenuModal from "@/ClientTg/Components/Shop/Modals/PageMenuModal.vue";
+import KeyboardMenuModal from "@/ClientTg/Components/Shop/Modals/KeyboardMenuModal.vue";
 </script>
 <template>
 
@@ -161,6 +165,9 @@ import SideBarAdmin from "@/ClientTg/Components/Shop/Modals/SideBarAdmin.vue";
 
         <SideBar/>
         <SideBarAdmin/>
+
+        <PageMenuModal/>
+        <KeyboardMenuModal/>
     </div>
 
 </template>
@@ -176,22 +183,13 @@ export default {
             this.$nextTick(() => {
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
             })
-
-
         },
     },
     computed: {
         ...mapGetters(['cartTotalCount', 'favoritesCount']),
-        prefix() {
-            return window.currentPath || ''
-        },
         tg() {
             return window.Telegram.WebApp;
         },
-        tgUser() {
-            const urlParams = new URLSearchParams(this.tg.initData);
-            return JSON.parse(urlParams.get('user'));
-        }
     },
     mounted() {
 
