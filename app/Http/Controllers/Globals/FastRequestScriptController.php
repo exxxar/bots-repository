@@ -94,7 +94,7 @@ class FastRequestScriptController extends SlugController
         $sex = $botUser->sex ? "Мужской":"Женский";
         $phone = $botUser->phone ?? 'Не указан';
         $city = $botUser->city ?? 'Не указан';
-        $birth = $botUser->birthdaty ?? 'Не указан';
+        $birth = $botUser->birthday ?? 'Не указан';
         $age = $botUser->age ?? 'Не указан';
 
         BotManager::bot()

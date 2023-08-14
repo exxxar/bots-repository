@@ -25,6 +25,11 @@ BotManager::bot()
     ->slug("global_single_payment_main", "singlePaymentMain");
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\GeoScriptController::class)
+    ->slug("global_geo_main", "geoScript");
+
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\FastRequestScriptController::class)
     ->route("/request_callback ([0-9]+)", "requestCallback")
     ->slug("global_fast_request_main", "fastRequest");
