@@ -62,7 +62,7 @@ class SendContactScriptController extends SlugController
                 'is_global' => true,
             ],
             [
-                'command' => ".*Отправть контакт",
+                'command' => ".*Отправить контакт",
                 'comment' => "Скрипт позволяющий отправить телефонный контакт пользовалю",
             ]);
 
