@@ -75,7 +75,7 @@ Route::prefix("bot-client")
             ->middleware(["tgAuth.admin"])
             ->group(function () {
                 Route::post("/", "index");
-                Route::post("/company-update","editCompany");
+                Route::post("/company-update", "editCompany");
                 Route::post("/company", "loadCompany");
                 Route::post("/location-list", "loadLocations");
                 Route::post("/location", "createLocation");
@@ -131,19 +131,22 @@ Route::prefix("bot-client")
             });
 
         Route::prefix("cashback")
-            ->middleware(["tgAuth.admin"])
+            ->middleware(["tgAuth.any"])
             ->group(function () {
-                Route::post('/receiver', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "receiver"])
-                    ->middleware(["tgAuth.any"]);
-                Route::post('/history', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "index"])
-                    ->middleware(["tgAuth.any"]);
-                Route::post('/add', [\App\Http\Controllers\Bots\AdminBotController::class, "addCashBack"]);
-                Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"]);
+                Route::post('/receiver', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "receiver"]);
+                Route::post('/history', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "index"]);
+                Route::post('/add', [\App\Http\Controllers\Bots\AdminBotController::class, "addCashBack"])
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"])
+                    ->middleware(["tgAuth.admin"]);
                 Route::post('/vip', [\App\Http\Controllers\Bots\AdminBotController::class, "vipStore"])
-                    ->middleware(["tgAuth.any"]);
-                Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"]);
-                Route::post('/request-user-data', [\App\Http\Controllers\Bots\AdminBotController::class, "requestUserData"]);
-                Route::post('/request-refresh-menu', [\App\Http\Controllers\Bots\AdminBotController::class, "requestRefreshMenu"]);
+                    ->middleware(["slug"]);
+                Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"])
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/request-user-data', [\App\Http\Controllers\Bots\AdminBotController::class, "requestUserData"])
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/request-refresh-menu', [\App\Http\Controllers\Bots\AdminBotController::class, "requestRefreshMenu"])
+                    ->middleware(["tgAuth.admin"]);
             });
 
 

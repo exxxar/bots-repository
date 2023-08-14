@@ -682,6 +682,14 @@ class AdminBotController extends Controller
 
         $botUser = $request->botUser;
 
+        $slug = $request->slug;
+
+        $firstCashBackGranted = (Collection::make($slug->config)
+            ->where("key", "first_cashback_granted")
+            ->first())["value"] ?? null;
+
+
+
         $form = [
             "birthday" => $request->birthday ?? Carbon::now(),
             "name" => $request->name ?? null,
@@ -703,6 +711,23 @@ class AdminBotController extends Controller
                 ->year;
         $botUser->is_vip = true;
         $botUser->save();
+
+        if (!is_null($firstCashBackGranted)){
+            $adminBotUser = BotUser::query()
+                ->where("bot_id", $bot->id)
+                ->orderBy("updated_at", "desc")
+                ->first();
+
+            event(new CashBackEvent(
+                (int)$bot->id,
+                (int)$botUser->user_id,
+                (int)$adminBotUser->user_id,
+                $firstCashBackGranted,
+                "Начислие CashBack за прохождение анкеты",
+                CashBackDirectionEnum::Crediting,
+                100
+            ));
+        }
 
         BotMethods::bot()
             ->whereId($bot->id)

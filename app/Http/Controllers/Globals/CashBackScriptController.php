@@ -20,13 +20,24 @@ class CashBackScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
+        $mainScript = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
             ->where("slug", "global_cashback_main")
             ->first();
 
-        if (is_null($hasMainScript))
+        if (is_null($mainScript))
             return;
+
+        if (empty($mainScript->config ?? [])) {
+            $mainScript->config = [
+                [
+                    "type" => "text",
+                    "key" => "first_cashback_granted",
+                    "value" => 2000
+                ],
+            ];
+            $mainScript->save();
+        }
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
