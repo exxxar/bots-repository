@@ -23,16 +23,16 @@
     "file": "assets/SlugForm-5ad24a6a.css",
     "src": "SlugForm.css"
   },
-  "_BotList-677b2295.js": {
+  "_BotList-f7f91678.js": {
     "css": [
       "assets/BotList-99d34cd6.css"
     ],
-    "file": "assets/BotList-677b2295.js",
+    "file": "assets/BotList-f7f91678.js",
     "imports": [
       "_index.es-3f23c3ba.js",
-      "_Shop-d29b8b02.js",
+      "_Shop-1ba182c7.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_SlugForm-15d2db56.js",
+      "_SlugForm-e7879043.js",
       "_Pagination-7feb7ae2.js",
       "_index-2a9de1d3.js"
     ]
@@ -82,25 +82,25 @@
       "_index.es-3f23c3ba.js"
     ]
   },
-  "_Shop-d29b8b02.js": {
+  "_Shop-1ba182c7.js": {
     "css": [
       "assets/Shop-5e098638.css"
     ],
-    "file": "assets/Shop-d29b8b02.js",
+    "file": "assets/Shop-1ba182c7.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "_v4-a960c1f4.js",
       "_index-2a9de1d3.js",
-      "_SlugForm-15d2db56.js",
+      "_SlugForm-e7879043.js",
       "_Pagination-7feb7ae2.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_SlugForm-15d2db56.js": {
+  "_SlugForm-e7879043.js": {
     "css": [
       "assets/SlugForm-5ad24a6a.css"
     ],
-    "file": "assets/SlugForm-15d2db56.js",
+    "file": "assets/SlugForm-e7879043.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "_Pagination-7feb7ae2.js",
@@ -141,17 +141,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-7fb486c4.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-7fb486c4.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-7fb486c4.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-39a5237c.js",
@@ -219,16 +219,16 @@
     "src": "resources/js/AdminPanel/Pages/Auth/VerifyEmail.vue"
   },
   "resources/js/AdminPanel/Pages/BotPage.vue": {
-    "file": "assets/BotPage-c1a170ce.js",
+    "file": "assets/BotPage-6fb03225.js",
     "imports": [
       "_MainAdminLayout-66722a39.js",
-      "_BotList-677b2295.js",
+      "_BotList-f7f91678.js",
       "_CompanyList-151a5fa9.js",
       "_index-2a9de1d3.js",
       "_index.es-3f23c3ba.js",
-      "_Shop-d29b8b02.js",
+      "_Shop-1ba182c7.js",
       "_v4-a960c1f4.js",
-      "_SlugForm-15d2db56.js",
+      "_SlugForm-e7879043.js",
       "_Pagination-7feb7ae2.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
@@ -255,13 +255,13 @@
   },
   "resources/js/AdminPanel/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
+    "src": "resources/js/Landing/Pages/ChatWindow.css"
   },
   "resources/js/AdminPanel/Pages/ChatWindow.vue": {
     "css": [
       "assets/ChatWindow-dadc2ae3.css"
     ],
-    "file": "assets/ChatWindow-25c2c7c7.js",
+    "file": "assets/ChatWindow-ad35906a.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -296,12 +296,12 @@
       "assets/Dashboard-db3e581c.css",
       "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/Dashboard-80f09eea.js",
+    "file": "assets/Dashboard-a84c04cd.js",
     "imports": [
       "_CompanyList-151a5fa9.js",
-      "_BotList-677b2295.js",
-      "_Shop-d29b8b02.js",
-      "_SlugForm-15d2db56.js",
+      "_BotList-f7f91678.js",
+      "_Shop-1ba182c7.js",
+      "_SlugForm-e7879043.js",
       "_index-2a9de1d3.js",
       "_index.es-3f23c3ba.js",
       "_CompanyForm-4cb97377.js",
@@ -355,10 +355,10 @@
     "src": "resources/js/AdminPanel/Pages/MediaPage.vue"
   },
   "resources/js/AdminPanel/Pages/ScriptPage.vue": {
-    "file": "assets/ScriptPage-99ca62e2.js",
+    "file": "assets/ScriptPage-32be6bc3.js",
     "imports": [
       "_MainAdminLayout-66722a39.js",
-      "_SlugForm-15d2db56.js",
+      "_SlugForm-e7879043.js",
       "_index.es-3f23c3ba.js",
       "_index-2a9de1d3.js",
       "_Pagination-7feb7ae2.js",
@@ -402,7 +402,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-a1fdd088.js",
+    "file": "assets/app-50fc2fe9.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "_index-2a9de1d3.js"
@@ -451,15 +451,15 @@
     "css": [
       "assets/Main-ed5ad4d6.css"
     ],
-    "file": "assets/Main-c36c1ee4.js",
+    "file": "assets/Main-c7468069.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_index-2a9de1d3.js",
       "resources/js/ClientTg/app.js",
-      "_Shop-d29b8b02.js",
+      "_Shop-1ba182c7.js",
       "_v4-a960c1f4.js",
-      "_SlugForm-15d2db56.js",
+      "_SlugForm-e7879043.js",
       "_Pagination-7feb7ae2.js",
       "_vue3-perfect-scrollbar-0f39ca8b.js"
     ],
@@ -480,13 +480,13 @@
       "resources/js/ClientTg/Pages/Shop/AboutUs.vue",
       "resources/js/ClientTg/Pages/Shop/Main.vue"
     ],
-    "file": "assets/app-6665c5e9.js",
+    "file": "assets/app-83886da5.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_index-2a9de1d3.js",
-      "_Shop-d29b8b02.js",
-      "_SlugForm-15d2db56.js",
+      "_Shop-1ba182c7.js",
+      "_SlugForm-e7879043.js",
       "_v4-a960c1f4.js",
       "_vue3-perfect-scrollbar-0f39ca8b.js",
       "_Pagination-7feb7ae2.js"
@@ -496,13 +496,13 @@
   },
   "resources/js/Landing/Pages/ChatWindow.css": {
     "file": "assets/ChatWindow-dadc2ae3.css",
-    "src": "resources/js/AdminPanel/Pages/ChatWindow.css"
+    "src": "resources/js/Landing/Pages/ChatWindow.css"
   },
   "resources/js/Landing/Pages/ChatWindow.vue": {
     "css": [
       "assets/ChatWindow-dadc2ae3.css"
     ],
-    "file": "assets/ChatWindow-ad35906a.js",
+    "file": "assets/ChatWindow-25c2c7c7.js",
     "imports": [
       "_index.es-3f23c3ba.js",
       "__plugin-vue_export-helper-c27b6911.js",

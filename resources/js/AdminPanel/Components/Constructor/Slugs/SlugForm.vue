@@ -129,9 +129,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
                         <div
                             v-if="filteredConfigs[index].type==='geo'"
-                            class="form-check mb-1 mt-2">
+                            class="form-floating mb-1 mt-2">
                             <input class="form-control"
                                    v-mask="'##.######,##.######'"
+                                   placeholder="##.######,##.######"
                                    v-model="filteredConfigs[index].value"
                                    type="text" :id="'filtered-config-'+index+'-geo'">
                             <label :for="'filtered-config-'+index+'-geo'">Значение</label>
