@@ -56,9 +56,9 @@ trait BotMethodsTrait
         return $this->sendPhoto($this->chatId, $caption, $path, $keyboard);
     }
 
-    public function replyVideoNote($videoNotePath,  $keyboard = [])
+    public function replyVideoNote($videoNotePath,  $keyboard = [], $keyboardType = "inline")
     {
-        return $this->sendVideoNote($this->chatId, $videoNotePath, $keyboard);
+        return $this->sendVideoNote($this->chatId, $videoNotePath, $keyboard, $keyboardType);
     }
 
     public function replyPhotoWithInlineMenu($caption, $path, $menuSlug)

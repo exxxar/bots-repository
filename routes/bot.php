@@ -13,20 +13,21 @@ include_once "bots/admin.php";
 include_once "bots/global.php";
 
 BotManager::bot()
-    ->route("/.*Мой id|.*мой id", function (...$data){
+    ->route("/.*Мой id|.*мой id", function (...$data) {
         BotManager::bot()
-            ->reply("Ваш чат id: ".($data[0]->chat->id??'не указан'));
+            ->reply("Ваш чат id: " . ($data[0]->chat->id ?? 'не указан'));
     });
 
 BotManager::bot()
-    ->route("/democircle", function (...$data){
+    ->route("/democircle", function (...$data) {
         BotManager::bot()
             ->replyVideoNote(
-                InputFile::create(public_path() . "/videos/vid1.mp4"),[
-                    [
-                        ["text"=>"Главное меню","callback_data"=>"/start"]
-                    ]
+                InputFile::create(public_path() . "/videos/vid1.mp4"), [
+                [
+                    ["text" => "Главное меню"]
                 ]
+            ],
+                "reply"
             );
     });
 

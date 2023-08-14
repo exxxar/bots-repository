@@ -172,7 +172,7 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken,  $currency, $needs, $keyboard, $providerData = null)
+    public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData = null)
     {
         $tmp = [
             "chat_id" => $chatId,
@@ -197,7 +197,7 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendInvoice($tmp);
         } catch (\Exception $e) {
-           Log::info("Ошибка конфигурации платежной системы:" . $e->getMessage());
+            Log::info("Ошибка конфигурации платежной системы:" . $e->getMessage());
         }
 
         return $this;
@@ -269,16 +269,29 @@ trait BotBaseMethodsTrait
     }
 
 
-    public function sendVideoNote($chatId, $videoNotePath,  $keyboard = [])
+    public function sendVideoNote($chatId, $videoNotePath, $keyboard = [], $keyboardType = "inline")
     {
+        $tmpKeyboard = $keyboardType == "reply" ?
+            [
+                'reply_markup' => json_encode([
+                    'keyboard' => $keyboard,
+                    'resize_keyboard' => true,
+                    'input_field_placeholder' => "Выбор действия"
+                ])
+            ] :
+            [
+                'reply_markup' => json_encode([
+                    'inline_keyboard' => $keyboard,
+                ])
+            ];
+
         $tmp = [
             "chat_id" => $chatId,
             "video_note" => $videoNotePath,
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
-            ])
+            ...$tmpKeyboard
         ];
+
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
