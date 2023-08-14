@@ -138,6 +138,17 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             <label :for="'filtered-config-'+index+'-geo'">Значение</label>
                         </div>
 
+                        <div
+                            v-if="filteredConfigs[index].type==='phone'"
+                            class="form-floating mb-1 mt-2">
+                            <input class="form-control"
+                                   v-mask="'+7(###)###-##-##'"
+                                   placeholder="+7(###)###-##-##"
+                                   v-model="filteredConfigs[index].value"
+                                   type="text" :id="'filtered-config-'+index+'-phone'">
+                            <label :for="'filtered-config-'+index+'-phone'">Значение</label>
+                        </div>
+
 
                         <div
                             v-if="filteredConfigs[index].type==='color'"
@@ -230,6 +241,10 @@ export default {
                 {
                     title: 'Geo',
                     type: 'geo',
+                },
+                {
+                    title: 'Номер телефона',
+                    type: 'phone',
                 },
                 /*
                    {

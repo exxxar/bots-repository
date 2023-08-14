@@ -33,7 +33,7 @@ class SendContactScriptController extends SlugController
             $mainScript->config = [
 
                 [
-                    "type" => "text",
+                    "type" => "phone",
                     "key" => "phone",
                     "value" => "+7(000)000-00-00",
 
