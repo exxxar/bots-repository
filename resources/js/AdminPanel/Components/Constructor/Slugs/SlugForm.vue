@@ -133,7 +133,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             <input class="form-control"
                                    v-mask="'##.######,##.######'"
                                    v-model="filteredConfigs[index].value"
-                                   type="color" :id="'filtered-config-'+index+'-geo'">
+                                   type="text" :id="'filtered-config-'+index+'-geo'">
                             <label :for="'filtered-config-'+index+'-geo'">Значение</label>
                         </div>
 
