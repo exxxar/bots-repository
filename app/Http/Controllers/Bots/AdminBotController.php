@@ -688,8 +688,7 @@ class AdminBotController extends Controller
             ->where("key", "first_cashback_granted")
             ->first())["value"] ?? null;
 
-
-
+        Log::info("first_cashback_granted=>$firstCashBackGranted");
         $form = [
             "birthday" => $request->birthday ?? Carbon::now(),
             "name" => $request->name ?? null,
@@ -717,7 +716,8 @@ class AdminBotController extends Controller
                 ->where("bot_id", $bot->id)
                 ->orderBy("updated_at", "desc")
                 ->first();
-
+            Log::info("step 1=>$adminBotUser->id");
+            Log::info("step 2=>$botUser->id");
             event(new CashBackEvent(
                 (int)$bot->id,
                 (int)$botUser->user_id,
