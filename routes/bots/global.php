@@ -28,6 +28,9 @@ BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\GeoScriptController::class)
     ->slug("global_geo_main", "geoScript");
 
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\VenueScriptController::class)
+    ->slug("global_venue_main", "venueScript");
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\FastRequestScriptController::class)
