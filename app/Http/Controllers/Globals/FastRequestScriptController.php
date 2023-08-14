@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Globals;
 
+use App\Classes\BotMethods;
 use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
@@ -59,7 +60,39 @@ class FastRequestScriptController extends SlugController
     public function requestCallback(...$data)
     {
 
-        BotManager::bot()->reply(print_r($data,true));
+        $slugId = $data[3] ?? null;
+
+        $slug = BotMenuSlug::query()->where("id", $slugId)
+            ->first();
+
+        if (is_null($slug)) {
+            BotManager::bot()->reply("Упс... у нас тут заминочка!");
+            return;
+        }
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $name = \App\Facades\BotMethods::prepareUserName($botUser);
+
+        $resultText = (Collection::make($slug->config)
+            ->where("key", "result_message")
+            ->first())["value"] ?? "%s, Ваш запрос получен!";
+
+        $bot = BotManager::bot()->getSelf();
+
+        $sex = $botUser->sex ? "Мужской":"Женский";
+        $phone = $botUser->phone ?? 'Не указан';
+        $city = $botUser->city ?? 'Не указан';
+        $birth = $botUser->birthdaty ?? 'Не указан';
+        $age = $botUser->age ?? 'Не указан';
+
+        BotManager::bot()
+            ->sendMessage(($bot->main_channel ?? $bot->order_channel ?? null),
+            "Запрос от пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)"
+
+        );
+
+        BotManager::bot()->reply(sprintf($resultText, $name));
     }
 
     public function fastRequest(...$config)
@@ -68,7 +101,7 @@ class FastRequestScriptController extends SlugController
             ->where("key", "slug_id")
             ->first())["value"];
 
-        $btnText= (Collection::make($config[1])
+        $btnText = (Collection::make($config[1])
             ->where("key", "btn_text")
             ->first())["value"] ?? "Запросить";
 
@@ -118,7 +151,7 @@ class FastRequestScriptController extends SlugController
                 ], [
                 'menu' => [
                     [
-                        ["text" => "$btnText","callback_data"=>"/request_callback $slugId"],
+                        ["text" => "$btnText", "callback_data" => "/request_callback $slugId"],
                     ],
                 ],
             ]);
