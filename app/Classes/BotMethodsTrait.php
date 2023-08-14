@@ -56,6 +56,11 @@ trait BotMethodsTrait
         return $this->sendPhoto($this->chatId, $caption, $path, $keyboard);
     }
 
+    public function replyVideoNote($videoNotePath,  $keyboard = [])
+    {
+        return $this->sendVideoNote($this->chatId, $videoNotePath, $keyboard);
+    }
+
     public function replyPhotoWithInlineMenu($caption, $path, $menuSlug)
     {
         $bot = Bot::query()

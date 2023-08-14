@@ -2,6 +2,7 @@
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Bots\InlineBotController;
+use Telegram\Bot\FileUpload\InputFile;
 
 include_once "bots/cashback.php";
 include_once "bots/shop.php";
@@ -16,6 +17,19 @@ BotManager::bot()
         BotManager::bot()
             ->reply("Ваш чат id: ".($data[0]->chat->id??'не указан'));
     });
+
+BotManager::bot()
+    ->route("/.*Демо-круг", function (...$data){
+        BotManager::bot()
+            ->replyVideoNote(
+                InputFile::create(public_path() . "/videos/vid1.mp4"),[
+                    [
+                        ["text"=>"Главное меню"]
+                    ]
+                ]
+            );
+    });
+
 
 BotManager::bot()
     ->controller(InlineBotController::class)

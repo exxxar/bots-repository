@@ -268,6 +268,39 @@ trait BotBaseMethodsTrait
         return $this;
     }
 
+
+    public function sendVideoNote($chatId, $videoNotePath,  $keyboard = [])
+    {
+        $tmp = [
+            "chat_id" => $chatId,
+            "video_note" => $videoNotePath,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->sendVideoNote($tmp);
+        } catch (\Exception $e) {
+
+            unset($tmp['reply_markup']);
+            $this->bot->sendPhoto($tmp);
+
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+
+    }
+
     public function sendPhoto($chatId, $caption, $path, $keyboard = [])
     {
         $tmp = [
