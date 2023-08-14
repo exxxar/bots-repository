@@ -711,22 +711,22 @@ class AdminBotController extends Controller
         $botUser->is_vip = true;
         $botUser->save();
 
-        if (!is_null($firstCashBackGranted)){
+        if (!is_null($firstCashBackGranted)) {
             $adminBotUser = BotUser::query()
                 ->where("bot_id", $bot->id)
                 ->orderBy("updated_at", "desc")
                 ->first();
-            Log::info("step 1=>$adminBotUser->id");
-            Log::info("step 2=>$botUser->id");
-            event(new CashBackEvent(
-                (int)$bot->id,
-                (int)$botUser->user_id,
-                (int)$adminBotUser->user_id,
-                $firstCashBackGranted,
-                "Начислие CashBack за прохождение анкеты",
-                CashBackDirectionEnum::Crediting,
-                100
-            ));
+
+            if (!is_null($adminBotUser))
+                event(new CashBackEvent(
+                    (int)$bot->id,
+                    (int)$botUser->user_id,
+                    (int)$adminBotUser->user_id,
+                    $firstCashBackGranted,
+                    "Начислие CashBack за прохождение анкеты",
+                    CashBackDirectionEnum::Crediting,
+                    100
+                ));
         }
 
         BotMethods::bot()
@@ -906,7 +906,7 @@ class AdminBotController extends Controller
                 "Вам отправили запрос на обновление главного меню с сообщением:\n$info",
                 [
                     [
-                        ["text" => "Обновить главное меню","callback_data"=>"/start"],
+                        ["text" => "Обновить главное меню", "callback_data" => "/start"],
                     ],
 
                 ]

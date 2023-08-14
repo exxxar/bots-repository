@@ -29,9 +29,10 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
                         v-for="(page, index) in pages"
                        >
-                        <div  v-if="page.slug" class=" d-flex justify-content-between">
+                        <div  class=" d-flex justify-content-between">
                             <strong  @click="selectPage(page)">#{{ page.id || 'Не указано' }}
                                 <span v-if="page.slug">{{ page.slug.command || 'Не указано' }}</span>
+                                <span v-else>Не привязано к команде</span>
                                 <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
                             </strong>
 
