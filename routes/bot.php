@@ -19,7 +19,7 @@ BotManager::bot()
     });
 
 BotManager::bot()
-    ->route("/.*Демо-круг", function (...$data){
+    ->route("/democircle", function (...$data){
         BotManager::bot()
             ->replyVideoNote(
                 InputFile::create(public_path() . "/videos/vid1.mp4"),[
