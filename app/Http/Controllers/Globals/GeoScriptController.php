@@ -35,7 +35,7 @@ class GeoScriptController extends SlugController
                 [
                     "type" => "geo",
                     "key" => "coords",
-                    "value" => "0.00000,0.00000",
+                    "value" => "00.000000,00.000000",
 
                 ],
 
@@ -61,7 +61,7 @@ class GeoScriptController extends SlugController
     {
         $coords = (Collection::make($config[1])
             ->where("key", "coords")
-            ->first())["value"] ?? "0.00000,0.00000";
+            ->first())["value"] ?? "00.000000,00.000000";
 
         $latitude = explode(',', $coords)[0] ?? 0;
         $longitude = explode(',', $coords)[1] ?? 0;

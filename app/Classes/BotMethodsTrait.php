@@ -86,6 +86,11 @@ trait BotMethodsTrait
         return $this->sendVenue($this->chatId, $lat, $lon, $address, $title);
     }
 
+    public function replyContact($phoneNumber, $firstName, $lastName = null, $vcard = null)
+    {
+        return $this->sendContact($this->chatId, $phoneNumber, $firstName, $lastName, $vcard);
+    }
+
     public function replyInvoice($title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData = null)
     {
         return $this->sendInvoice($this->chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard,$providerData);

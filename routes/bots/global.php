@@ -33,6 +33,10 @@ BotManager::bot()
     ->slug("global_venue_main", "venueScript");
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\SendContactScriptController::class)
+    ->slug("global_send_contact_main", "sendContactScript");
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\FastRequestScriptController::class)
     ->route("/request_callback ([0-9]+)", "requestCallback")
     ->slug("global_fast_request_main", "fastRequest");

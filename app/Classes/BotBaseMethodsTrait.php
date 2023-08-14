@@ -85,6 +85,34 @@ trait BotBaseMethodsTrait
 
     }
 
+    public function sendContact($chatId, $phoneNumber, $firstName, $lastName = null, $vcard = null)
+    {
+
+        $tmp = [
+            "chat_id" => $chatId,
+            "phone_number" => $phoneNumber,
+            "first_name" => $firstName,
+            "last_name" => $lastName,
+            "vcard" => $vcard,
+            "parse_mode" => "HTML"
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->sendContact($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+        return $this;
+
+    }
+
     public function sendDocument($chatId, $caption, $path)
     {
         $tmp = [
