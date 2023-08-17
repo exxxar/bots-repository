@@ -947,6 +947,7 @@ export default {
             this.need_attach_page = false
             this.need_attach_dialog = false
             this.need_attach_slug = false
+            this.need_rules = false
 
             this.$nextTick(() => {
                 this.need_clean = false
