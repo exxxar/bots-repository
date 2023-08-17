@@ -234,15 +234,6 @@ class BotManager extends BotCore
         if (!$result && !is_null($page->rules_else_message))
             $this->reply($page->rules_else_message);
 
-        if (!$result) {
-            if (!is_null($page->rules_else_page_id)) {
-                $next = BotPage::query()
-                    ->find($page->rules_else_page_id);
-
-                $this->prepareTemplatePage($next);
-            }
-
-        }
 
         return $result;
     }
@@ -338,6 +329,8 @@ class BotManager extends BotCore
 
             $this->prepareTemplatePage($next);
         }
+
+
 
     }
 

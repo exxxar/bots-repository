@@ -250,7 +250,10 @@ abstract class BotCore
                     if (!is_null($template->page->rules_if)) {
                         $result = $this->checkTemplatePageRules($page);
                         if (!$result)
-                            return true;
+                            if (!is_null($page->rules_else_page_id))
+                                $page = BotPage::query()
+                                    ->find($page->rules_else_page_id);
+
                     }
 
                     if (is_null($page))
