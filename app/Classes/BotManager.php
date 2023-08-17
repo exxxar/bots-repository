@@ -210,7 +210,7 @@ class BotManager extends BotCore
             $keys = array_keys($rules["bot_user"]);
             Log::info("we are here 2 (keys)=>".print_r($keys, true));
             foreach ($keys as $key) {
-                $botUser = (array)$this->botUser;
+                $botUser = $this->botUser->toArray();
 
                 Log::info("we are here 3 (foreach and test, botUser)=>".print_r($botUser, true));
 
