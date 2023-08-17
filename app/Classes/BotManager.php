@@ -201,7 +201,7 @@ class BotManager extends BotCore
 
     protected function checkTemplatePageRules($page)
     {
-        $rules = (object)$page->rules_if;
+        $rules = $page->rules_if;
 
         $result = false;
 
