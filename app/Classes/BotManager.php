@@ -205,21 +205,21 @@ class BotManager extends BotCore
 
         $result = false;
 
-        Log::info("we are here 1".print_r($rules["bot_user"],true));
+        // Log::info("we are here 1".print_r($rules["bot_user"],true));
         if (isset($rules["bot_user"])) {
             $keys = array_keys($rules["bot_user"]);
-            Log::info("we are here 2 (keys)=>".print_r($keys, true));
+            // Log::info("we are here 2 (keys)=>".print_r($keys, true));
             foreach ($keys as $key) {
                 $botUser = $this->botUser->toArray();
 
-                Log::info("we are here 3 (foreach and test, botUser)=>".print_r($botUser, true));
+                //Log::info("we are here 3 (foreach and test, botUser)=>".print_r($botUser, true));
 
                 $need = $rules["bot_user"][$key] ?? $botUser[$key];
 
                 $result = ($need === $botUser[$key] && (gettype($botUser[$key]) === "boolean" || gettype($botUser[$key]) === "string")) ||
                     ($need >= $botUser[$key] && gettype($botUser[$key]) === "integer");
 
-                Log::info("we are here 4 (result)=>".print_r($result, true));
+                // Log::info("we are here 4 (result)=>".print_r($result, true));
             }
 
         }
@@ -228,8 +228,7 @@ class BotManager extends BotCore
 
         }
 
-        if (!$result )
-        {
+        if (!$result) {
             if (!is_null($page->rules_else_page_id)) {
                 $next = BotPage::query()
                     ->find($page->rules_else_page_id);
@@ -238,6 +237,12 @@ class BotManager extends BotCore
             }
 
         }
+
+        if ($result && !is_null($page->rules_if_message))
+            $this->reply($page->rules_if_message);
+
+        if (!$result && !is_null($page->rules_else_message))
+            $this->reply($page->rules_else_message);
 
         return $result;
     }
