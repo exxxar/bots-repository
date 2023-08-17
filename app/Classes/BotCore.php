@@ -51,6 +51,8 @@ abstract class BotCore
 
     protected abstract function prepareTemplatePage($page);
 
+    protected abstract function checkTemplatePageRules($page);
+
     protected abstract function botStatusHandler(): BotStatusEnum;
 
     protected abstract function nextBotDialog($text): void;
@@ -244,13 +246,22 @@ abstract class BotCore
 
             try {
                 if (preg_match($command . "$/i", $query, $matches)) {
-                    $this->prepareTemplatePage($template->page);
+                    $page = $template->page;
+                    if (!is_null($template->page->rules_if)) {
+                        $result = $this->checkTemplatePageRules($page);
+                        if (!$result)
+                            return true;
+                    }
+
+                    if (is_null($page))
+                        return true;
+
+                    $this->prepareTemplatePage($page);
 
 
-                    if (!is_null($template->page->next_bot_menu_slug_id)) {
+                    if (!is_null($page->next_bot_menu_slug_id)) {
                         $slug = BotMenuSlug::query()
-                            ->where("id", $template
-                                ->page
+                            ->where("id", $page
                                 ->next_bot_menu_slug_id)
                             ->first();
 
@@ -258,7 +269,7 @@ abstract class BotCore
                             return true;
 
                         $item = Collection::make($this->slugs)
-                            ->where("path", $slug->slug )
+                            ->where("path", $slug->slug)
                             ->first();
 
                         if (!is_null($item)) {
@@ -277,8 +288,8 @@ abstract class BotCore
                         }
                     }
 
-                    if (!is_null($template->page->next_bot_dialog_command_id)) {
-                        $this->startBotDialog($template->page->next_bot_dialog_command_id);
+                    if (!is_null($page->next_bot_dialog_command_id)) {
+                        $this->startBotDialog($page->next_bot_dialog_command_id);
                         return true;
                     }
 

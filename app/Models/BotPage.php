@@ -26,6 +26,10 @@ class BotPage extends Model
         'next_page_id',
         'next_bot_dialog_command_id',
         'next_bot_menu_slug_id',
+        'rules_if',
+        'rules_else_page_id',
+        'rules_if_message',
+        'rules_else_message',
 
     ];
 
@@ -38,6 +42,8 @@ class BotPage extends Model
         'id' => 'integer',
         'bot_menu_slug_id' => 'integer',
         'images' => 'array',
+        'rules_if' => 'array',
+        'rules_else_page_id' => 'integer',
         'reply_keyboard_id' => 'integer',
         'inline_keyboard_id' => 'integer',
         'bot_id' => 'integer',

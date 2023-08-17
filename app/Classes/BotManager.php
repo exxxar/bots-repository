@@ -199,6 +199,49 @@ class BotManager extends BotCore
             ->first();
     }
 
+    protected function checkTemplatePageRules($page)
+    {
+        $rules = (object)$page->rules_if;
+
+        $result = false;
+
+        Log::info("we are here 1".print_r($rules["bot_user"],true));
+        if (isset($rules["bot_user"])) {
+            $keys = array_keys($rules["bot_user"]);
+            Log::info("we are here 2 (keys)=>".print_r($keys, true));
+            foreach ($keys as $key) {
+                $botUser = (array)$this->botUser;
+
+                Log::info("we are here 3 (foreach and test, botUser)=>".print_r($botUser, true));
+
+                $need = $rules["bot_user"][$key] ?? $botUser[$key];
+
+                $result = ($need === $botUser[$key] && (gettype($botUser[$key]) === "boolean" || gettype($botUser[$key]) === "string")) ||
+                    ($need >= $botUser[$key] && gettype($botUser[$key]) === "integer");
+
+                Log::info("we are here 4 (result)=>".print_r($result, true));
+            }
+
+        }
+
+        if (isset($rules["channels"])) {
+
+        }
+
+        if (!$result )
+        {
+            if (!is_null($page->rules_else_page_id)) {
+                $next = BotPage::query()
+                    ->find($page->rules_else_page_id);
+
+                $this->prepareTemplatePage($next);
+            }
+
+        }
+
+        return $result;
+    }
+
     protected function prepareTemplatePage($page)
     {
 
@@ -223,11 +266,11 @@ class BotManager extends BotCore
         $content = str_replace(["<p>", "</p>"], "", $page->content);
         $content = str_replace(["<br>"], "\n", $content);
 
-        $name = $this->botUser->fio_from_telegram ??  $this->botUser->name ?? "Без имени";
+        $name = $this->botUser->fio_from_telegram ?? $this->botUser->name ?? "Без имени";
 
         $content = str_replace(["{{userName}}"], $name, $content);
 
-        $telegramChatId =  $this->botUser->telegram_chat_id ??  "Не указан";
+        $telegramChatId = $this->botUser->telegram_chat_id ?? "Не указан";
 
         $content = str_replace(["{{telegramChatId}}"], $telegramChatId, $content);
 

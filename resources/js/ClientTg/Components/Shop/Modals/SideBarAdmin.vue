@@ -52,14 +52,7 @@
                 <i class="fa fa-circle"></i>
             </router-link>
 
-            <router-link
-                id="nav-basket"
-                :active-class="'nav-item-active'"
-                :tag="'a'" :to="'/admin-shop-manager'">
-                <i class="fa-solid fa-basket-shopping"></i>
-                <span>Менеджер магазина</span>
-                <i class="fa fa-circle"></i>
-            </router-link>
+
 
             <router-link
                 id="nav-products"
@@ -117,6 +110,14 @@
                 <i class="fa fa-circle"></i>
             </router-link>
 
+            <router-link
+                id="nav-basket"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/admin-shop-manager'">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span>Настройка магазина</span>
+                <i class="fa fa-circle"></i>
+            </router-link>
 
 
             <a href="#" class="close-menu">

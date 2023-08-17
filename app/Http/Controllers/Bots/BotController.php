@@ -1131,17 +1131,10 @@ class BotController extends Controller
             "welcome_message" => "required",
             "level_1" => "required",
             // "slugs" => "required",
-
-
         ]);
 
 
-        $bot = Bot::query()
-            ->where("id", $request->id)
-            ->first();
-
-        if (is_null($bot))
-            return response()->noContent(400);
+        $bot = $request->bot;
 
         $company = Company::query()->where("id", $bot->company_id)
             ->first();

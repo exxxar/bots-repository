@@ -26,6 +26,12 @@ class BotPageResource extends JsonResource
             'next_bot_dialog_command_id' => $this->next_bot_dialog_command_id ?? null,
             'next_bot_menu_slug_id' => $this->next_bot_menu_slug_id ?? null,
             'bot_menu_slug_id' => $this->bot_menu_slug_id ?? null,
+
+            'rules_if' => $this->rules_if ?? null,
+            'rules_else_page_id' => $this->rules_else_page_id ?? null,
+
+            'rules_if_message'=> $this->rules_if_message ?? null,
+            'rules_else_message'=> $this->rules_else_message ?? null,
         ];
     }
 }

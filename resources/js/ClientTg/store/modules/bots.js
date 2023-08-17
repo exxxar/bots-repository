@@ -35,6 +35,16 @@ const actions = {
         })
     },
     async updateBot(context, payload = {botForm: null}) {
+
+        let tgData =   window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        payload.botForm.append("tgData",tgData)
+        payload.botForm.append("slug_id",slugId)
+        payload.botForm.append("botDomain",botDomain)
+
+
         let link = `${BASE_BOTS_LINK}/bot-update`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.botForm)

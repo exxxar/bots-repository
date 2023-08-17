@@ -83,7 +83,6 @@ class BotPageController extends Controller
         if (!is_null($slug))
             $slug->delete();
 
-        $botPage->bot_menu_slug_id = null;
         $botPage->reply_keyboard_id = null;
         $botPage->inline_keyboard_id = null;
         $botPage->next_page_id = null;
@@ -218,6 +217,7 @@ class BotPageController extends Controller
         unset($tmp->command);
         unset($tmp->comment);
 
+        $tmp->rules_if = json_decode($tmp->rules_if);
 
         $page = BotPage::query()->create((array)$tmp);
 
@@ -370,6 +370,7 @@ class BotPageController extends Controller
         unset($tmp->comment);
         unset($tmp->slug_id);
 
+        $tmp->rules_if = json_decode($tmp->rules_if);
 
         $page->update((array)$tmp);
 
