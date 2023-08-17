@@ -225,8 +225,14 @@ class BotManager extends BotCore
         }
 
         if (isset($rules["channels"])) {
-
+            //todo: сделать логику проверки каналов
         }
+
+        if ($result && !is_null($page->rules_if_message))
+            $this->reply($page->rules_if_message);
+
+        if (!$result && !is_null($page->rules_else_message))
+            $this->reply($page->rules_else_message);
 
         if (!$result) {
             if (!is_null($page->rules_else_page_id)) {
@@ -237,12 +243,6 @@ class BotManager extends BotCore
             }
 
         }
-
-        if ($result && !is_null($page->rules_if_message))
-            $this->reply($page->rules_if_message);
-
-        if (!$result && !is_null($page->rules_else_message))
-            $this->reply($page->rules_else_message);
 
         return $result;
     }
