@@ -241,6 +241,10 @@ class BotManager extends BotCore
                         $result = false;
                         break;
                     }
+                    else
+                        $result = true;
+
+
                 }catch (\Exception $e){
                     Log::info($e->getMessage()." ".$e->getLine());
                 }
