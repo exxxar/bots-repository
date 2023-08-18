@@ -535,12 +535,6 @@ abstract class BotCore
 
       //  Log::info(print_r($update, true));
 
-        $data = $this->bot->getChatMember([
-            "chat_id"=>"-1001954398414",
-            "user_id"=>997456696,
-        ]);
-
-        Log::info(print_r($data, true));
 
         include_once base_path('routes/bot.php');
 

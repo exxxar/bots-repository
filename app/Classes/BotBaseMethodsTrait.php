@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 trait BotBaseMethodsTrait
 {
+
     public function sendMessage($chatId, $message)
     {
         $tmp = [
