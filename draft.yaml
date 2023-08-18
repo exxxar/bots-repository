@@ -1,24 +1,15 @@
 models:
-  Transaction:
-    user_id: id foreign:users
+  JoinChannel:
+    channel_id: string:255 nullable
+    telegram_chat_id: string:255 nullable
     bot_id: id foreign:bots
-    payload: string:128 unique
-    currency: string:5 default:'RUB'
-    total_amount: integer default:0
-    status: integer default:0
-    order_info: json nullable
-    products_info: json nullable
-    shipping_address: json nullable
-    telegram_payment_charge_id: string:255 nullable
-    provider_payment_charge_id: string:255 nullable
-    completed_at: timestamp nullable
+    joined_at: timestamp nullable
+    left_at: timestamp nullable
     relationships:
-      belongsTo: Bot, User
+      belongsTo: Bot
 
-
-seeders:  Transaction
-
+seeders:  JoinChannel
 
 controllers:
-  Transaction:
+  JoinChannel:
     resource: api

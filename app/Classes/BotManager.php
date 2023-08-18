@@ -219,6 +219,8 @@ class BotManager extends BotCore
                 $result = ($need === $botUser[$key] && (gettype($botUser[$key]) === "boolean" || gettype($botUser[$key]) === "string")) ||
                     ($need >= $botUser[$key] && gettype($botUser[$key]) === "integer");
 
+                if (!$result)
+                    break;
                 // Log::info("we are here 4 (result)=>".print_r($result, true));
             }
 
