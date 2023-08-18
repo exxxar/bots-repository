@@ -533,7 +533,14 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-        Log::info(print_r($update, true));
+      //  Log::info(print_r($update, true));
+
+        $data = $this->bot->getChatMember([
+            "chat_id"=>"-1001962436674",
+            "user_id"=>484698703,
+        ]);
+
+        Log::info(print_r($data, true));
 
         include_once base_path('routes/bot.php');
 
