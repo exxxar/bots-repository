@@ -228,15 +228,14 @@ class BotManager extends BotCore
 
         if (isset($rules["channels"])) {
             //todo: сделать логику проверки каналов
-            Log::info("channels=>".print_r($rules["channels"], true));
             foreach ($rules["channels"] as $channel){
                 try {
-                    Log::info("channel=>$channel");
+
                     $data = $this->bot->getChatMember([
                         "chat_id"=>$channel,
                         "user_id"=>$this->botUser->telegram_chat_id,
                     ]);
-                    Log::info(($data["status"]??'error'));
+
                     if ($data["status"]==="left") {
                         $result = false;
                         break;

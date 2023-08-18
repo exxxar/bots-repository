@@ -28,10 +28,8 @@ class BotPageController extends Controller
 
         $search = $request->search ?? null;
 
-        $botPages = BotPage::query();
-
-        if (!is_null($botId))
-            $botPages = $botPages->where("bot_id", $botId);
+        $botPages = BotPage::query()
+            ->where("bot_id", $botId);
 
         if (!is_null($search))
             $botPages = $botPages
