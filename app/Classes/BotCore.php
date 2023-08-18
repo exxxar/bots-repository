@@ -537,7 +537,7 @@ abstract class BotCore
 
         $data = $this->bot->getChatMember([
             "chat_id"=>"-1001962436674",
-            "user_id"=>484698703,
+            "user_id"=>997456696,
         ]);
 
         Log::info(print_r($data, true));
