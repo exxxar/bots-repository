@@ -217,7 +217,8 @@ class BotPageController extends Controller
         unset($tmp->command);
         unset($tmp->comment);
 
-        $tmp->rules_if = json_decode($tmp->rules_if);
+        if (!is_null($tmp->rules_if ?? null))
+            $tmp->rules_if = json_decode($tmp->rules_if);
 
         $page = BotPage::query()->create((array)$tmp);
 
@@ -370,7 +371,8 @@ class BotPageController extends Controller
         unset($tmp->comment);
         unset($tmp->slug_id);
 
-        $tmp->rules_if = json_decode($tmp->rules_if);
+        if (!is_null($tmp->rules_if ?? null))
+            $tmp->rules_if = json_decode($tmp->rules_if);
 
         $page->update((array)$tmp);
 
