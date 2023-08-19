@@ -248,12 +248,7 @@ class BotManager extends BotCore
                     Log::info($e->getMessage()." ".$e->getLine());
                 }
 
-
-
-
-
             }
-
 
         }
 

@@ -33,10 +33,12 @@ class BotPageController extends Controller
 
         if (!is_null($search))
             $botPages = $botPages
-                ->whereHas("slug", function ($q) use ($search) {
-                    $q->where("command", 'like', "%$search%");
-                })
-                ->orWhere("content", 'like', "%$search%");
+                ->where(function ($q) use ($search) {
+                    $q->whereHas("slug", function ($q) use ($search) {
+                        $q->where("command", 'like', "%$search%");
+                    })->orWhere("content", 'like', "%$search%");
+                });
+
 
         $botPages = $botPages->paginate($size);
 
