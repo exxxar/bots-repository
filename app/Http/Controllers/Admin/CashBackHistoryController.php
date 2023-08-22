@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CashBackHistoryStoreRequest;
 use App\Http\Requests\CashBackHistoryUpdateRequest;
@@ -12,50 +13,39 @@ use App\Models\BotUser;
 use App\Models\CashBackHistory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class CashBackHistoryController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function index(Request $request): \App\Http\Resources\CashBackHistoryCollection
     {
         $request->validate([
-           "user_telegram_chat_id"=>"required"
+            "user_telegram_chat_id" => "required"
         ]);
-
-        $bot = $request->bot ?? null;
-        $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->first();
-
-        if (is_null($botUser))
-            return response()->noContent(404);
 
         $size = $request->get("size") ?? config('app.results_per_page');
 
-        $cashBackHistories = CashBackHistory::query()
-            ->where("bot_id", $bot->id)
-            ->where("user_id", $botUser->user_id)
-            ->orderBy("created_at", "desc")
-            ->paginate($size);
-
-        return CashBackHistoryResource::collection($cashBackHistories);
+        return BusinessLogic::administrative()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->cashBackHistoryList($request->all(), $size);
     }
 
-    public function receiver(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function receiver(Request $request): BotUserResource
     {
         $request->validate([
-            "user_telegram_chat_id"=>"required"
+            "user_telegram_chat_id" => "required"
         ]);
 
-        $bot = $request->bot ?? null;
-        $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->first();
-
-        if (is_null($botUser))
-            return response()->noContent(404);
-
-        return new BotUserResource($botUser);
+        return BusinessLogic::administrative()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->cashbackReceiver($request->all());
     }
 }

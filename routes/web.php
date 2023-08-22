@@ -1,17 +1,8 @@
 <?php
 
-use App\Http\Controllers\Admin\BotController;
-use App\Http\Controllers\Admin\BotPageController;
-use App\Http\Controllers\Admin\CompanyController;
-use App\Http\Controllers\Admin\ProfileController;
+use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\TelegramController;
-use App\Http\Controllers\Bots\AdminBotController;
-use App\Http\Controllers\Globals\InstagramQuestScriptController;
-use App\Http\Controllers\Globals\ShopScriptController;
-use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +19,21 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('/test-logic', function (Request $request){
+
+    $bot = $request->bot;
+    $botUser = $request->botUser;
+
+        return BusinessLogic::administrative()
+            ->setBot($bot)
+            ->setBotUser($botUser)
+            ->test();
+
+
+});
+
 Route::get('/test-files', function (){
+
     $files = Storage::disk('public')->allFiles("/companies");
 
     return $files;

@@ -70,6 +70,8 @@ class Bot extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+    protected $with = ["company","amo"];
+
     public function imageMenus(): HasMany
     {
         return $this->hasMany(ImageMenu::class);

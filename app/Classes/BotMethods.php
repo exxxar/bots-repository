@@ -21,6 +21,21 @@ class BotMethods
         return $this;
     }
 
+    public function whereBot($bot)
+    {
+        if (is_null($bot))
+            return $this;
+
+        $token = env("APP_DEBUG") ?
+            $bot->bot_token_dev : $bot->bot_token;
+
+        $this->bot = new Api($token);
+
+        $this->domain = $bot->bot_domain;
+
+        return $this;
+    }
+
     public function whereId($value)
     {
         $bot = Bot::query()->where("id", $value)->first();

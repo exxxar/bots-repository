@@ -227,7 +227,7 @@ class BotManager extends BotCore
         }
 
         if (isset($rules["channels"])) {
-            //todo: сделать логику проверки каналов
+
             foreach ($rules["channels"] as $channel){
                 try {
 

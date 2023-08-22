@@ -22,17 +22,22 @@ const actions = {
     ...products.actions,
     ...users.actions,
     ...events.actions,
-    async cashmanAdminStatisticPrepare(context, payload = {telegram_chat_id: null}) {
+    async cashmanAdminStatisticPrepare(context) {
 
+        let tgData = window.Telegram.WebApp.initData || null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null
 
-        let link = `${BASE_CASHMAN_ADMIN_LINK}/load-statistic/${botDomain}`
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain,
+        }
+
+        let link = `${BASE_CASHMAN_ADMIN_LINK}/load-statistic`
             .replace('{scriptId}', slugId)
 
-        let _axios = util.makeAxiosFactory(link, 'POST', {
-            telegram_chat_id: payload.telegram_chat_id
-        })
+        let _axios = util.makeAxiosFactory(link, 'POST',data)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

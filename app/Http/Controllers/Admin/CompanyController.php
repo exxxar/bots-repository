@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyStoreRequest;
 use App\Http\Requests\CompanyUpdateRequest;
@@ -13,77 +14,35 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class CompanyController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): \App\Http\Resources\CompanyCollection
     {
-        $size = $request->get("size") ?? config('app.results_per_page');
-
-        $search = $request->search ?? null;
-
-        $companies = Company::query()
-            ->withTrashed();
-
-        if (!is_null($search))
-            $companies = $companies->where("title", 'like', "%$search%")
-                ->orWhere("slug", "like", "%$search%");
-
-        $companies = $companies
-            ->orderBy("updated_at","DESC")
-            ->paginate($size);
-
-        return CompanyResource::collection($companies);
+        return BusinessLogic::companies()
+            ->list($request->search ?? null,
+                $request->get("size") ?? config('app.results_per_page')
+            );
     }
 
-    public function store(CompanyStoreRequest $request): Response
+    public function destroy(Request $request, $companyId): CompanyResource
     {
-        $company = Company::create($request->validated());
-
-        return new CompanyResource($company);
+        return BusinessLogic::companies()
+            ->destroy($companyId);
     }
 
-    public function show(Request $request, Company $company): Response
+    public function restore(Request $request, $companyId): CompanyResource
     {
-        return new CompanyResource($company);
+
+        return BusinessLogic::companies()
+            ->restore($companyId);
     }
 
-    public function update(CompanyUpdateRequest $request, Company $company): Response
-    {
-        $company->update($request->validated());
-
-        return new CompanyResource($company);
-    }
-
-    public function destroy(Request $request, $companyId)
-    {
-        $company = Company::query()->find($companyId);
-
-        if (is_null($company))
-            return response()->noContent(404);
-
-        $company->deleted_at = Carbon::now();
-        $company->save();
-
-        return response()->noContent();
-    }
-
-    public function restore(Request $request, $companyId)
-    {
-        $company = Company::query()
-            ->withTrashed()
-            ->find($companyId);
-
-        if (is_null($company))
-            return response()->noContent(404);
-
-        $company->deleted_at = null;
-        $company->save();
-
-        return response()->noContent();
-    }
-
-    public function createCompany(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function createCompany(Request $request): CompanyResource
     {
         $request->validate([
             'title' => "required|string:255",
@@ -94,37 +53,17 @@ class CompanyController extends Controller
             'vat_code' => "required|integer",
         ]);
 
-        $creatorId = Auth::user()->id ?? null;
-
-        $imageName = null;
-        if ($request->hasFile('company_logo')) {
-
-            $file = $request->file('company_logo');
-
-            $ext = $file->getClientOriginalExtension();
-
-            $imageName = Str::uuid() . "." . $ext;
-
-            $file->storeAs("/public/companies/$request->slug/$imageName");
-
-        }
-
-        $tmp = (object)$request->all();
-
-
-        $tmp->links = json_decode($tmp->links);
-        $tmp->schedule = json_decode($tmp->schedule);
-        $tmp->phones = json_decode($tmp->phones);
-        $tmp->image = $imageName;
-        $tmp->creator_id = $creatorId;
-        $tmp->owner_id = $creatorId;
-
-        $company = Company::query()->create((array)$tmp);
-
-        return new CompanyResource($company);
+        return BusinessLogic::companies()
+            ->createCompany($request->all(),
+                $request->hasFile('company_logo') ? $request->file('company_logo') : null,
+                Auth::user()->id ?? null
+            );
     }
 
-    public function editCompany(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function editCompany(Request $request): CompanyResource
     {
         $request->validate([
             'title' => "required|string:255",
@@ -135,43 +74,10 @@ class CompanyController extends Controller
             'vat_code' => "required|integer",
         ]);
 
-        $creatorId = Auth::user()->id ?? null;
-
-        $imageName = $request->image ?? null;
-
-        if (isset($request->removed_image)){
-            unlink(storage_path()."/app/public/companies/$request->slug/$request->removed_image");
-        }
-
-        if ($request->hasFile('company_logo')) {
-
-            $file = $request->file('company_logo');
-
-            $ext = $file->getClientOriginalExtension();
-
-            $imageName = Str::uuid() . "." . $ext;
-
-            $file->storeAs("/public/companies/$request->slug/$imageName");
-
-        }
-
-        $tmp = (object)$request->all();
-
-        $tmp->links = json_decode($tmp->links);
-        $tmp->schedule = json_decode($tmp->schedule);
-        $tmp->phones = json_decode($tmp->phones);
-        $tmp->image = $imageName;
-        $tmp->creator_id = $creatorId;
-        $tmp->owner_id = $creatorId;
-
-        $company = Company::query()->where("id", $request->id)
-            ->first();
-
-        if (is_null($company))
-            return response()->noContent(404);
-
-        $company->update ((array)$tmp);
-
-        return new CompanyResource($company);
+        return BusinessLogic::companies()
+            ->editCompany($request->all(),
+                $request->hasFile('company_logo') ? $request->file('company_logo') : null,
+                Auth::user()->id ?? null
+            );
     }
 }

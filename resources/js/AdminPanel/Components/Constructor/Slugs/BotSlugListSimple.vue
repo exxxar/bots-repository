@@ -42,6 +42,8 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     props: ["bot","global"],
     data() {
@@ -52,6 +54,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['getSlugs']),
         filteredSlugs() {
             if (!this.slugs)
                 return [];
@@ -91,11 +94,13 @@ export default {
             this.$notify("Вы выбрали скрипт из списка!");
         },
         loadSlugs() {
-            this.$store.dispatch("loadBotSlugs", {
-                botId:this.bot.id,
-                isGlobal: this.global || false
+            this.$store.dispatch("loadSlugs", {
+                dataObject:{
+                    botId: this.bot.id,
+                    needGlobal: this.need_global
+                }
             }).then(resp => {
-                this.slugs = resp
+                this.slugs = this.getSlugs
             })
         },
 

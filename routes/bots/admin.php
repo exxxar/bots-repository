@@ -1,7 +1,7 @@
 <?php
 
 use App\Facades\BotManager;
-use App\Http\Controllers\Bots\AdminBotController;
+use App\Http\Controllers\Bots\Web\AdminBotController;
 
 BotManager::bot()
     ->controller(AdminBotController::class)

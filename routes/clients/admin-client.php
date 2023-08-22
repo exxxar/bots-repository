@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Admin\BotPageController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\AmoCrmController;
-use App\Http\Controllers\Bots\AdminBotController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -66,6 +65,7 @@ Route::middleware(['auth', 'verified'])
 
     });
 
+Route::post("/send-to-channel", [\App\Http\Controllers\Admin\BotController::class, "sendToChannel"]);
 Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
 Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
 
@@ -81,7 +81,6 @@ Route::prefix("admin")
                 Route::post("/bot-update", "updateBot");
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");
-                Route::post("/current-bot-user", "getCurrentBotUser");
                 Route::post("/duplicate", "duplicate");
                 Route::delete("/force/{botId}", "forceDelete");
                 Route::delete("/{botId}", "destroy");
@@ -94,7 +93,6 @@ Route::prefix("admin")
                 Route::post("/", "index");
                 Route::post("/swap-group", "swapGroup");
                 Route::post("/swap-dialog", "swapDialog");
-                Route::post("/attach-dialog-to-slug", "attachDialogToSlug");
                 Route::post("/unlink-dialog", "unlinkDialog");
                 Route::post("/add-group", "addGroup");
                 Route::post("/add-dialog", "addDialog");
@@ -116,7 +114,7 @@ Route::prefix("admin")
                 Route::get("/description", "loadDescriptions");
                 Route::post("/telegram-channel-id", "requestTelegramChannel");
                 Route::get("/keyboards/{botId}", "loadKeyboards");
-                Route::post("/keyboards/{botId}", "loadKeyboardsByText");
+
                 Route::post("/keyboard-template", "createKeyboardTemplate");
                 Route::post("/edit-keyboard-template", "editKeyboardTemplate");
                 Route::delete("/remove-keyboard-template/{templateId}", "removeKeyboardTemplate");

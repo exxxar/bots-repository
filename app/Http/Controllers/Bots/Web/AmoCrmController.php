@@ -1,16 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Bots\Web;
 
 use App\Facades\BusinessLogic;
-use App\Http\Requests\AmoCrmStoreRequest;
-use App\Http\Requests\AmoCrmUpdateRequest;
-use App\Http\Resources\AmoCrmCollection;
-use App\Http\Resources\AmoCrmResource;
+use App\Http\Controllers\Controller;
 use App\Models\AmoCrm;
-use App\Models\Bot;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
 class AmoCrmController extends Controller
@@ -24,21 +19,19 @@ class AmoCrmController extends Controller
     /**
      * @throws ValidationException
      */
-    public function saveAmoCrm(Request $request)
+    public function saveAmoCrm(Request $request): \App\Http\Resources\AmoCrmResource
     {
         $request->validate([
             "client_id" => "required",
             "client_secret" => "required",
             "auth_code" => "required",
             "subdomain" => "required",
-            "bot_id" => "required",
         ]);
 
-
-        $bot = Bot::query()->find($request->bot_id ?? null);
-
         return BusinessLogic::amo()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->createOrUpdate($request->all());
+
+
     }
 }

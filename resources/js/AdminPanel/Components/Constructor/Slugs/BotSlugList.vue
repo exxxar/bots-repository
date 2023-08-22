@@ -95,7 +95,7 @@ export default {
     },
     computed: {
 
-        ...mapGetters(['getCurrentBot']),
+        ...mapGetters(['getCurrentBot', 'getSlugs']),
 
         filteredSlugs() {
             if (this.slugs.length === 0)
@@ -117,6 +117,7 @@ export default {
         }
 
     },
+
     mounted() {
         this.loadCurrentBot().then(() => {
             this.loadSlugs();
@@ -131,11 +132,17 @@ export default {
     },
     methods: {
         loadSlugs() {
-            this.$store.dispatch("loadBotSlugs", {
-                botId: this.bot.id,
-                isGlobal: this.need_global
+            this.$store.dispatch("loadSlugs", {
+                dataObject:{
+                    botId: this.bot.id,
+                    needGlobal: this.need_global
+                }
+
+
             }).then((resp) => {
-                this.slugs = resp
+                this.slugs = this.getSlugs
+
+
             })
         },
         loadCurrentBot(bot = null) {

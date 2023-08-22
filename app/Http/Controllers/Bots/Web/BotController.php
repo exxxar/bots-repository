@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Bots\Web;
 
-use App\Classes\SystemUtilitiesTrait;
+
 use App\Facades\BotManager;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
@@ -19,6 +19,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 
+
 class BotController extends Controller
 {
 
@@ -31,16 +32,13 @@ class BotController extends Controller
             "text" => "required",
             "inline_keyboard" => "",
             "channel" => "required",
-            "bot_id" => "required",
+
         ]);
 
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->bot_id)
-            ->first();
-
         BusinessLogic::bots()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->sendToChannel($request->all(),
                 $request->hasFile('photos') ? $request->file('photos') : null
             );
@@ -62,18 +60,24 @@ class BotController extends Controller
             "message" => "required",
         ]);
 
-        $bot = \App\Models\Bot::query()
-            ->with(["company"])
-            ->where("bot_domain", $request->bot_domain)
-            ->first();
-
         BusinessLogic::bots()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->sendCallback($request->all());
 
         return response()->noContent();
     }
 
+    public function getSelf(Request $request): BotUserResource
+    {
+        return new BotUserResource($request->botUser);
+    }
+
+    public function getBot(Request $request): BotResource
+    {
+        return new BotResource($request->bot);
+    }
 
     /**
      * @throws ValidationException
@@ -88,6 +92,9 @@ class BotController extends Controller
         return response()
             ->json(
                 BusinessLogic::bots()
+                    ->setBot($request->bot ?? null)
+                    ->setBotUser($request->botUser ?? null)
+                    ->setSlug($request->slug ?? null)
                     ->requestTelegramChannel($request->all())
             );
     }
@@ -103,7 +110,9 @@ class BotController extends Controller
 
     public function loadAllSlugs(Request $request): \App\Http\Resources\BotMenuSlugCollection
     {
-        return BusinessLogic::slugs()->globals();
+        return BusinessLogic::slugs()
+            ->setBot($request->bot ?? null)
+            ->globals();
     }
 
     /**
@@ -117,6 +126,9 @@ class BotController extends Controller
         ]);
 
         BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->changeUserStatus($request->all());
 
         return response()->noContent();
@@ -124,20 +136,17 @@ class BotController extends Controller
 
     public function loadBotUsers(Request $request): \App\Http\Resources\BotUserCollection
     {
-        $request->validate([
-            "botId" => "required"
-        ]);
-
-        $bot = Bot::query()->find($request->botId);
-
         return BusinessLogic::botUsers()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->list();
     }
 
     public function loadBotsAsTemplate(Request $request): \Illuminate\Http\JsonResponse
     {
         return response()->json(BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->templateList());
     }
 
@@ -149,31 +158,26 @@ class BotController extends Controller
 
     public function loadImageMenu(Request $request, $botId): \App\Http\Resources\ImageMenuCollection
     {
-        $bot = Bot::query()
-            ->with(["company", "imageMenus"])
-            ->find($botId);
-
         return BusinessLogic::bots()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->imageMenuList();
     }
 
 
     public function loadKeyboards(Request $request, $botId): \App\Http\Resources\BotMenuTemplateCollection
     {
-        $bot = Bot::query()->find($botId);
 
         return BusinessLogic::keyboards()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->list();
     }
 
     public function loadPages(Request $request, $botId): \App\Http\Resources\BotPageCollection
     {
-        $bot = Bot::query()->find($botId);
-
         return BusinessLogic::pages()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->list(
                 null,
                 $request->get("size") ?? config('app.results_per_page'),
@@ -182,12 +186,10 @@ class BotController extends Controller
 
     public function loadSlugs(Request $request, $botId): \App\Http\Resources\BotMenuSlugCollection
     {
-        $bot = Bot::query()->find($botId);
 
         return BusinessLogic::slugs()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->list(
-
                 null,
                 $request->get("size") ?? config('app.results_per_page'),
                 ($request->isGlobal ?? false) == "true"
@@ -198,6 +200,9 @@ class BotController extends Controller
     {
 
         return BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->list(
                 $request->companyId ?? null,
                 $request->search ?? null,
@@ -213,49 +218,44 @@ class BotController extends Controller
     {
         $request->validate([
             "company_id" => "required",
-            "bot_id" => "required"
         ]);
 
-        $bot = Bot::query()
-            ->find($request->bot_id ?? null);
-
         return BusinessLogic::bots()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->duplicate($request->company_id ?? null);
     }
 
 
-    public function forceDelete(Request $request, $botId): Response
+    public function forceDelete(Request $request): Response
     {
-        $bot = Bot::query()
-            ->withTrashed()
-            ->find($botId);
-
         BusinessLogic::bots()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->forceDelete();
 
         return response()->noContent();
     }
 
-    public function destroy(Request $request, $botId): BotResource
+    public function destroy(Request $request): BotResource
     {
-        $bot = Bot::query()->find($botId);
-
         return BusinessLogic::bots()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->destroy();
 
     }
 
-    public function restore(Request $request, $botId): BotResource
+    public function restore(Request $request): BotResource
     {
-        $bot = Bot::query()
-            ->withTrashed()
-            ->find($botId);
 
         return BusinessLogic::bots()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->restore();
     }
 
@@ -268,12 +268,10 @@ class BotController extends Controller
             "slug" => "required",
             "menu" => "required",
             "type" => "required",
-            "bot_id" => "required",
         ]);
 
-        $bot = Bot::query()->find($request->bot_id ?? null);
         return BusinessLogic::keyboards()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->create($request->all());
     }
 
@@ -287,13 +285,12 @@ class BotController extends Controller
             "slug" => "required",
             "menu" => "required",
             "type" => "required",
-            "bot_id" => "required",
         ]);
 
         $bot = Bot::query()->find($request->bot_id ?? null);
 
         return BusinessLogic::keyboards()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->update($request->all());
     }
 
@@ -317,13 +314,13 @@ class BotController extends Controller
         $request->validate([
             'title' => "required|string:255",
             'description' => "required|string:255",
-            'bot_id' => "required",
         ]);
 
-        $bot = Bot::query()->find($request->bot_id ?? null);
 
         return BusinessLogic::bots()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->createOrUpdateImageMenu(
                 $request->all(),
                 $request->hasFile('preview') ? $request->file('preview') : null
@@ -491,6 +488,8 @@ class BotController extends Controller
         ]);
 
         return BusinessLogic::bots()
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->create(
                 $request->all(),
                 $request->hasFile('images') ? $request->file('images') : null
@@ -518,12 +517,10 @@ class BotController extends Controller
         ]);
 
 
-        $bot = Bot::query()
-            ->where("id", $request->id)
-            ->first();
-
         return BusinessLogic::bots()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
             ->update(
                 $request->all(),
                 $request->hasFile('images') ? $request->file('images') : null
@@ -533,6 +530,7 @@ class BotController extends Controller
     public function removeKeyboardTemplate(Request $request, $templateId): BotMenuTemplateResource
     {
         return BusinessLogic::keyboards()
+            ->setBot($request->bot ?? null)
             ->destroy($templateId);
     }
 

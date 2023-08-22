@@ -20,7 +20,18 @@ const actions = {
 
         let link = `${BASE_ADMINS_LINK}?page=${page}&size=${size}`
         let method = 'POST'
-        let data = payload.dataObject
+
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain,
+            ...payload.dataObject
+        }
+
 
         let _axios = util.makeAxiosFactory(link, method, data)
 
@@ -36,9 +47,20 @@ const actions = {
         })
     },
     async requestAdmin(context, payload = {dataObject: null}){
+
+        let tgData = window.Telegram.WebApp.initData || null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        let data = {
+            tgData: tgData,
+            slug_id: slugId,
+            botDomain: botDomain,
+            ...payload.dataObject
+        }
+
         let link = `${BASE_ADMINS_LINK}/request`
         let method = 'POST'
-        let data = payload.dataObject
 
         let _axios = util.makeAxiosFactory(link, method, data)
 

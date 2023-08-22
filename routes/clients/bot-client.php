@@ -1,18 +1,17 @@
 <?php
 
-use App\Http\Controllers\Bots\AmoCrmController;
-use App\Http\Controllers\Bots\BotController;
-use App\Http\Controllers\Bots\BotDialogsController;
-use App\Http\Controllers\Bots\BotPageController;
-use App\Http\Controllers\Bots\ProductController;
-use App\Http\Controllers\Bots\AdminBotController;
-use App\Http\Controllers\Bots\CompanyController;
+use App\Http\Controllers\Bots\Web\AdminBotController;
+use App\Http\Controllers\Bots\Web\AmoCrmController;
+use App\Http\Controllers\Bots\Web\BotController;
+use App\Http\Controllers\Bots\Web\BotDialogsController;
+use App\Http\Controllers\Bots\Web\BotPageController;
+use App\Http\Controllers\Bots\Web\CompanyController;
+use App\Http\Controllers\Bots\Web\ProductController;
 use App\Http\Controllers\Globals\AboutBotScriptController;
 use App\Http\Controllers\Globals\BonusProductScriptController;
 use App\Http\Controllers\Globals\InstagramQuestScriptController;
 use App\Http\Controllers\Globals\ShopScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
-
 use Illuminate\Support\Facades\Route;
 
 Route::prefix("bot-client")
@@ -24,12 +23,14 @@ Route::prefix("bot-client")
         Route::post('/bot', [BotController::class, "getBot"])
             ->middleware(["tgAuth.admin"]);
 
-        Route::post('/callback', [BotController::class, "sendCallback"]);
+        Route::post('/callback', [BotController::class, "sendCallback"])
+            ->middleware(["tgAuth.admin"]);
 
         Route::prefix("admin")
             ->controller(AdminBotController::class)
+            ->middleware(["tgAuth.admin"])
             ->group(function () {
-                Route::post('/load-statistic/{botDomain}', "statistic");
+                Route::post('/load-statistic', "statistic");
             });
 
         Route::prefix("wheel-of-fortune")
@@ -97,8 +98,11 @@ Route::prefix("bot-client")
         Route::prefix("admins")
             ->controller(AdminBotController::class)
             ->group(function () {
-                Route::post('/', "loadActiveAdminList");
-                Route::post('/request', "requestCashBack");
+                Route::post('/', "loadActiveAdminList")
+                    ->middleware(["tgAuth.any"]);
+                Route::post('/request', "requestCashBack")
+                    ->middleware(["tgAuth.any"]);
+
                 Route::post('/send-invoice', "sendInvoice")
                     ->middleware(["tgAuth.admin"]);
                 Route::post('/add', "addAdmin")
@@ -135,17 +139,17 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post('/receiver', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "receiver"]);
                 Route::post('/history', [\App\Http\Controllers\Admin\CashBackHistoryController::class, "index"]);
-                Route::post('/add', [\App\Http\Controllers\Bots\AdminBotController::class, "addCashBack"])
+                Route::post('/add', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "addCashBack"])
                     ->middleware(["tgAuth.admin"]);
-                Route::post('/remove', [\App\Http\Controllers\Bots\AdminBotController::class, "removeCashBack"])
+                Route::post('/remove', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "removeCashBack"])
                     ->middleware(["tgAuth.admin"]);
-                Route::post('/vip', [\App\Http\Controllers\Bots\AdminBotController::class, "vipStore"])
+                Route::post('/vip', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "vipStore"])
                     ->middleware(["slug"]);
-                Route::post('/user-in-location', [\App\Http\Controllers\Bots\AdminBotController::class, "acceptUserInLocation"])
+                Route::post('/user-in-location', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "acceptUserInLocation"])
                     ->middleware(["tgAuth.admin"]);
-                Route::post('/request-user-data', [\App\Http\Controllers\Bots\AdminBotController::class, "requestUserData"])
+                Route::post('/request-user-data', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "requestUserData"])
                     ->middleware(["tgAuth.admin"]);
-                Route::post('/request-refresh-menu', [\App\Http\Controllers\Bots\AdminBotController::class, "requestRefreshMenu"])
+                Route::post('/request-refresh-menu', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "requestRefreshMenu"])
                     ->middleware(["tgAuth.admin"]);
             });
 
@@ -172,7 +176,6 @@ Route::prefix("bot-client")
                 Route::post("/users", "loadBotUsers");
                 Route::post("/image-menu", "loadImageMenu");
                 Route::post("/slugs", "loadSlugs");
-                Route::post("/current-bot-user", "getCurrentBotUser");
                 Route::post("/duplicate", "duplicate");
                 Route::post("/restore/{botId}", "restore");
             });

@@ -33,7 +33,7 @@ class CashBackScriptController extends SlugController
                 [
                     "type" => "text",
                     "key" => "first_cashback_granted",
-                    "value" => 2000
+                    "value" => 0
                 ],
             ];
             $mainScript->save();

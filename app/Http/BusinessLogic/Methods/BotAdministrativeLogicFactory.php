@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Bots;
+namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\CashBackDirectionEnum;
 use App\Events\CashBackEvent;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
-use App\Http\Controllers\Controller;
+use App\Http\Resources\BotUserCollection;
 use App\Http\Resources\BotUserResource;
+use App\Http\Resources\CashBackHistoryCollection;
+use App\Http\Resources\CashBackHistoryResource;
 use App\Models\ActionStatus;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
@@ -17,189 +19,203 @@ use App\Models\CashBack;
 use App\Models\CashBackHistory;
 use App\Models\Transaction;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Exception;
+
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class AdminBotController extends Controller
+class BotAdministrativeLogicFactory
 {
+    protected $bot;
 
+    protected $botUser;
 
-    public function statistic(Request $request, $botDomain)
+    protected $slug;
+
+    public function __construct()
     {
-        $request->validate([
-            "telegram_chat_id" => "required"
-        ]);
+        $this->bot = null;
+        $this->botUser = null;
+        $this->slug = null;
+    }
 
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
+    public function setBot($bot): static
+    {
+        if (is_null($bot))
+            throw new HttpException(400, "Бот не задан!");
 
-        $botUser = BotUser::query()
-            ->where("bot_id", $bot->id)
-            ->where("telegram_chat_id", $request->telegram_chat_id)
-            ->first();
+        $this->bot = $bot;
+        return $this;
+    }
 
+    public function setSlug($slug): static
+    {
+        if (is_null($slug))
+            throw new HttpException(400, "Команда не задана!");
+
+        $this->slug = $slug;
+        return $this;
+    }
+
+    public function setBotUser($botUser): static
+    {
         if (is_null($botUser))
-            return response()->noContent(404);
+            throw new HttpException(400, "Пользователь бота не задан!");
 
-        if (!$botUser->is_admin)
-            return response()->noContent(400);
+        $this->botUser = $botUser;
+        return $this;
+    }
 
-        $statistics = [
+    /**
+     * @throws HttpException
+     */
+    public function statistic(): array
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        if (!$this->botUser->is_admin)
+            throw new HttpException(403, "Пользователь не является администратором");
+
+        return [
             "users_in_bd" => BotUser::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->count(),
             "users_in_bd_today" => BotUser::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->whereDate('updated_at', Carbon::today())
                 ->count(),
             "vip_in_bd" => BotUser::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("is_vip", true)
                 ->count(),
             "vip_in_bd_today" => BotUser::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("is_vip", true)
                 ->whereDate('updated_at', Carbon::today())
                 ->count(),
             "admin_in_bd" => BotUser::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("is_admin", true)
                 ->count(),
             "work_admin_in_bd" => BotUser::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("is_admin", true)
                 ->where("is_work", true)
                 ->count(),
             "summary_cashback" => CashBack::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->sum("amount"),
             "cashback_day_up" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
             "cashback_day_up_level_1" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->where("level", 1)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
             "cashback_day_up_level_2" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->where("level", 2)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
             "cashback_day_up_level_3" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->where("level", 3)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
             "cashback_day_down" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 0)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
             "cashback_summary_up" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->sum("amount"),
             "cashback_summary_up_level_1" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("level", 1)
                 ->where("operation_type", 1)
                 ->sum("amount"),
             "cashback_summary_up_level_2" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("level", 1)
                 ->where("operation_type", 1)
                 ->sum("amount"),
             "cashback_summary_up_level_3" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("level", 1)
                 ->where("operation_type", 1)
                 ->sum("amount"),
             "cashback_summary_down" => CashBackHistory::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 0)
                 ->sum("amount")
         ];
-
-
-        return response()->json([
-            'statistic' => $statistics
-        ]);
-
     }
 
-    public function promotion($botDomain, $userId)
+    /**
+     * @throws HttpException
+     */
+    public function adminList($size = null): BotUserCollection
     {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
 
-
-    }
-
-    public function loadActiveAdminList(Request $request)
-    {
-        $request->validate([
-            "bot_domain" => "required"
-        ]);
-
-        $botDomain = $request->bot_domain;
-
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-        $size = $request->get("size") ?? config('app.results_per_page');
+        $size = $size ?? config('app.results_per_page');
 
         $botUsers = BotUser::query()
             ->with(["user"])
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             //->where("is_work", true)
             ->where("is_admin", true)
             ->orderBy("is_work", "DESC")
             ->paginate($size);
 
 
-        return BotUserResource::collection($botUsers);
-
+        return new BotUserCollection($botUsers);
     }
 
-    public function requestCashBack(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function requestCashBack(array $data): void
     {
-        $request->validate([
-            "bot_id" => "required",
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
-            "admin_telegram_chat_id" => "required",
         ]);
 
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
-        $bot = Bot::query()
-            ->where("id", $request->bot_id)
-            ->first();
+        $tmp_user_id = (string)$data["user_telegram_chat_id"];
 
-        $tmp_user_id = (string)$request->user_telegram_chat_id;
+        $code = base64_encode("001$tmp_user_id");
 
-        $code = base64_encode("001" . $tmp_user_id);
-        $url_link = "https://t.me/" . $bot->bot_domain . "?start=$code";
+        $url_link = "https://t.me/" . $this->bot->bot_domain . "?start=$code";
 
-        $adminBotUser = BotUser::query()
-            ->where("telegram_chat_id", $request->admin_telegram_chat_id)
-            ->where("bot_id", $bot->id)
-            ->first();
+        $adminBotUser = $this->botUser;
 
         $userBotUser = BotUser::query()
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-
-        if ($adminBotUser->is_work && $adminBotUser->is_admin) {
+        if ($adminBotUser->is_work) {
             $name = BotMethods::prepareUserName($userBotUser);
 
             $phone = $userBotUser->phone ?? null;
@@ -209,7 +225,7 @@ class AdminBotController extends Controller
                 (is_null($phone) ? "" : "\nНомер телефона для связи: <b>$phone</b>\n");
 
             BotMethods::bot()
-                ->whereId($request->bot_id)
+                ->whereId($this->bot->id)
                 ->sendInlineKeyboard(
                     $adminBotUser->telegram_chat_id,
                     $text,
@@ -224,7 +240,7 @@ class AdminBotController extends Controller
             $name = BotMethods::prepareUserName($adminBotUser);
 
             BotMethods::bot()
-                ->whereId($request->bot_id)
+                ->whereId($this->bot->id)
                 ->sendMessage(
                     $userBotUser->telegram_chat_id,
                     "Администратор <b>$name</b> получил ваш запрос на зачисление CashBack"
@@ -234,106 +250,125 @@ class AdminBotController extends Controller
             $name = BotMethods::prepareUserName($adminBotUser);
 
             BotMethods::bot()
-                ->whereId($request->bot_id)
+                ->whereId($this->bot->id)
                 ->sendMessage(
                     $userBotUser->telegram_chat_id,
                     "Администратор <b>$name</b> на текущий момент не доступен! Попробуйте позже или же обратитесь к другому администратору!",
                 );
         }
-
-
-        return response()->noContent();
     }
 
-    public function addCashBack(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function addCashBack(array $data): void
     {
-        $request->validate([
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
             "amount" => "required",
             "info" => "required",
         ]);
 
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $adminBotUser = $this->botUser ?? null;
+
         $userBotUser = BotUser::query()
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-        $adminBotUser = $request->botUser ?? null;
-        $bot = $request->bot ?? null;
+        $percent = $data["percent"] ?? null;
 
-        $percent = $request->percent ?? null;
-
-        if (is_null($userBotUser) || is_null($adminBotUser))
-            return \response()->noContent(404);
+        if (is_null($userBotUser))
+            throw new HttpException(404, "Пользователь не найден");
 
         event(new CashBackEvent(
-            (int)$bot->id,
+            (int)$this->bot->id,
             (int)$userBotUser->user_id,
             (int)$adminBotUser->user_id,
-            ((float)$request->amount ?? 0),
-            $request->info,
+            ((float)$data["amount"] ?? 0),
+            $data["info"],
             CashBackDirectionEnum::Crediting,
             $percent
         ));
-
-        return \response()->noContent();
     }
 
-    public function removeCashBack(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function removeCashBack(array $data): void
     {
-        $request->validate([
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
             "amount" => "required",
             "info" => "required",
         ]);
 
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
         $userBotUser = BotUser::query()
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-        $adminBotUser = $request->botUser ?? null;
-        $bot = $request->bot ?? null;
+        $adminBotUser = $this->botUser;
 
-
-        if (is_null($userBotUser) || is_null($adminBotUser))
-            return \response()->noContent(404);
+        if (is_null($userBotUser))
+            throw new HttpException(404, "Пользователь не найден");
 
         event(new CashBackEvent(
-            (int)$bot->id,
+            (int)$this->bot->id,
             (int)$userBotUser->user_id,
             (int)$adminBotUser->user_id,
-            ((float)$request->amount ?? 0),
-            $request->info,
+            ((float)$data["amount"] ?? 0),
+            $data["info"],
             CashBackDirectionEnum::Debiting
         ));
 
-        return response()->noContent();
     }
 
 
-    public function sendInvoice(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function sendInvoice(array $data): void
     {
-        $request->validate([
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
-            "info" => "required",
             "amount" => "required|integer",
+            "info" => "required",
         ]);
 
-        $info = $request->info ?? '-';
-        $amount = ($request->amount ?? 100) * 100;
-        $bot = $request->bot;
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $info = $data["info"] ?? '-';
+        $amount = ($data["amount"] ?? 100) * 100;
 
         $userBotUser = BotUser::query()
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-        $adminBotUser = $request->botUser;
+        $adminBotUser = $this->botUser;
 
         if (is_null($userBotUser))
-            return response()->noContent(404);
-
+            throw new HttpException(404, "Пользователь не найден");
 
         $prices = [
             [
@@ -341,14 +376,15 @@ class AdminBotController extends Controller
                 "amount" => $amount
             ]
         ];
+
         $payload = bin2hex(Str::uuid());
 
-        $providerToken = $bot->payment_provider_token;
+        $providerToken = $this->bot->payment_provider_token;
         $currency = "RUB";
 
         Transaction::query()->create([
             'user_id' => $userBotUser->user_id,
-            'bot_id' => $bot->id,
+            'bot_id' => $this->bot->id,
             'payload' => $payload,
             'currency' => $currency,
             'total_amount' => $amount,
@@ -397,45 +433,53 @@ class AdminBotController extends Controller
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendInvoice(
                 $userBotUser->telegram_chat_id,
                 "Счет на оплату", $info, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
-                "Вы отправили счет на оплату пользователю $name:\n" . ($request->amount ?? 100) . "руб\n$info"
+                "Вы отправили счет на оплату пользователю $name:\n" . ($data["amount"] ?? 100) . "руб\n$info"
             );
 
-        return response()->noContent();
     }
 
-    public function sendApprove(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function sendApprove(array $data): void
     {
-        $request->validate([
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
             "info" => "required",
             "action_id" => "required",
         ]);
 
-        $info = $request->info ?? '-';
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
+
+        $info = $data["info"] ?? '-';
 
         $userBotUser = BotUser::query()
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-        $adminBotUser = $request->botUser;
+        $adminBotUser = $this->botUser;
 
 
         if (is_null($userBotUser))
-            return response()->noContent(404);
+            throw new HttpException(404, "Пользователь не найден");
 
-        $action = ActionStatus::query()->find($request->action_id);
-        $data = $action->data;
+        $action = ActionStatus::query()->find($data["action_id"]);;
 
         $tmp = [];
-        foreach ($data as $item) {
+        foreach (($action->data ?? []) as $item) {
             $item["answered_at"] = Carbon::now();
             $item["answered_by"] = BotMethods::prepareUserName($adminBotUser);
 
@@ -444,51 +488,58 @@ class AdminBotController extends Controller
         $action->data = $tmp;
         $action->save();
 
-
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
                 "Информация от администратора:\n$info"
             );
 
-
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы успешно отправили сообщение для <b>$name</b>",
             );
 
-        return response()->noContent();
     }
 
-    public function addAdmin(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function addAdmin(array $data): void
     {
-        $request->validate([
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
             "info" => "required",
         ]);
 
-        $info = $request->info ?? '-';
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $info = $data["info"] ?? '-';
 
         $userBotUser = BotUser::query()
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-        $adminBotUser = $request->botUser;
+        $adminBotUser = $this->botUser;
 
         if (is_null($userBotUser))
-            return response()->noContent(404);
+            throw new HttpException(404, "Пользователь не найден");
 
         $userBotUser->is_admin = true;
         $userBotUser->save();
 
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
                 "Вас назначили администратором данного бота!Повторно запустите команду /start:\n$info"
@@ -498,39 +549,48 @@ class AdminBotController extends Controller
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы успешно назанчили администратором <b>$name</b>",
             );
 
-        return response()->noContent();
     }
 
-    public function removeAdmin(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function removeAdmin(array $data): void
     {
-        $request->validate([
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
             "info" => "required",
         ]);
 
-        $info = $request->info ?? '-';
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $info = $data["info"] ?? '-';
 
         $userBotUser = BotUser::query()
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-        $adminBotUser = $request->botUser;
+        $adminBotUser = $this->botUser;
 
         if (is_null($userBotUser))
-            return response()->noContent(404);
+            throw new HttpException(404, "Пользователь не найден");
 
         $userBotUser->is_admin = false;
         $userBotUser->save();
 
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
                 "Вас разжаловали с должности администратора, теперь вам недоступны административные возможности:\n$info"
@@ -539,188 +599,111 @@ class AdminBotController extends Controller
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы успешно убрали статус администратора у пользовтеля <b>$name</b>",
             );
 
-        return response()->noContent();
     }
 
-    public function selfRemoveAdmin(Request $request)
+    /**
+     * @throws HttpException
+     */
+    public function selfRemoveAdmin(): void
     {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
 
-        $adminBotUser = $request->botUser;
+        $adminBotUser = $this->botUser;
         $adminBotUser->is_admin = false;
         $adminBotUser->save();
 
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вас разжаловали с должности администратора, теперь вам недоступны административные возможности"
             );
 
-        return response()->noContent();
     }
 
-    public function workStatus(Request $request)
+    /**
+     * @throws HttpException
+     */
+    public function workStatus(): void
     {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
 
-        $adminBotUser = $request->botUser;
+        $adminBotUser = $this->botUser;
         $adminBotUser->is_work = !$adminBotUser->is_work;
         $adminBotUser->save();
 
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы изменили свой рабочий статус на <b>" . ($adminBotUser->is_work ? "Работаю" : "Не работаю") . "</b>." .
                 ($adminBotUser->is_work ? "Теперь вас МОГУТ выбирать для работы с CashBack" : "Теперь вас НЕ могут выбирать для работы с CashBack"),
             );
 
-        return response()->noContent();
     }
 
-    public function getBotAdminMenu()
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function vipStore(array $data): void
     {
 
-        $botUser = BotManager::bot()->currentBotUser();
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(403, "Не выполнены условия функции");
 
-        if (!$botUser->is_admin) {
-            BotManager::bot()->reply("Вы не являетесь администратором данного бота!");
-            return;
-        }
-
-        $bot = BotManager::bot()->getSelf();
-
-        $menu = BotMenuTemplate::query()
-            ->updateOrCreate(
-                [
-                    'bot_id' => $bot->id,
-                    'type' => 'inline',
-                    'slug' => "menu_admin_main",
-
-                ],
-                [
-                    'menu' => [
-                        [
-                            ["text" => "Открыть", "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/admin-main"//"/restaurant/active-admins/$bot->bot_domain"
-                            ]],
-                        ],
-                    ],
-                ]);
-
-        \App\Facades\BotManager::bot()
-            ->replyInlineKeyboard("Административная панель", $menu->menu);
-
-    }
-
-    public function deliverymanStore(Request $request)
-    {
-        $request->validate([
-            "bot_id" => "required",
-            "tg" => "required",
-            "form.name" => "required",
-            "form.phone" => "required",
-            //"form.email" => "required",
-            "form.birthday" => "required",
-            "form.city" => "required",
-            //"form.country" => "required",
-            //"form.address" => "required",
-            "form.sex" => "required",
-        ]);
-
-        $form = $request->form;
-        $form["birthday"] = Carbon::parse($form["birthday"])
-            ->format("Y-m-d");
-
-        $form["sex"] = $form["sex"] === "on" ? 1 : 0;
-
-        $botUser = BotUser::query()
-            ->where("bot_id", $request->bot_id)
-            ->where("telegram_chat_id", $request->tg["id"])
-            ->first();
-
-        if (is_null($botUser))
-            return response()->noContent(404);
-
-        $botUser->update($form);
-
-        $botUser->age = Carbon::now()->year - Carbon::parse($botUser->birthday)
-                ->year;
-        $botUser->is_vip = true;
-        $botUser->is_deliveryman = true;
-        $botUser->save();
-
-        BotMethods::bot()
-            ->whereId($request->bot_id)
-            ->sendSlugKeyboard(
-                $botUser->telegram_chat_id,
-                "Вы стали нашим <b>Доставщиком</b>! Поздравляем!",
-                "main_menu_deliveryman_1"
-            );
-        return response()->noContent();
-    }
-
-    public function vipStore(Request $request)
-    {
-
-        $request->validate([
+        $validator = Validator::make($data, [
             "name" => "required",
             "phone" => "required",
             "birthday" => "required",
             "city" => "required",
-            //"country" => "required",
-            //"address" => "required",
             "sex" => "required",
         ]);
 
-        $bot = $request->bot;
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
-        $botUser = $request->botUser;
 
-        $slug = $request->slug;
-
-        $firstCashBackGranted = (Collection::make($slug->config)
+        $firstCashBackGranted = (Collection::make($this->slug->config)
             ->where("key", "first_cashback_granted")
             ->first())["value"] ?? null;
 
-        Log::info("first_cashback_granted=>$firstCashBackGranted");
+        $birthday = Carbon::parse($data["birthday"] ?? Carbon::now())->format("Y-m-d");
         $form = [
-            "birthday" => $request->birthday ?? Carbon::now(),
-            "name" => $request->name ?? null,
-            "phone" => $request->phone ?? null,
-            "city" => $request->city ?? null,
-            "country" => $request->country ?? null,
-            "address" => $request->address ?? null,
-            "sex" => ($request->sex ?? false) == "on" ? 1 : 0,
-            "email" => $request->email ?? null,
+            "birthday" => $birthday,
+            "name" => $data["name"] ?? null,
+            "phone" => $data["phone"] ?? null,
+            "city" => $data["city"] ?? null,
+            "country" => $data["country"] ?? null,
+            "address" => $data["address"] ?? null,
+            "sex" => ($data["sex"] ?? false) == "on" ? 1 : 0,
+            "email" => $data["email"] ?? null,
+            "is_vip" => true,
+            "age" => Carbon::now()->year - Carbon::parse($birthday)
+                    ->year
         ];
 
-        $form["birthday"] = Carbon::parse($form["birthday"])
-            ->format("Y-m-d");
-
-
-        $botUser->update($form);
-
-        $botUser->age = Carbon::now()->year - Carbon::parse($botUser->birthday)
-                ->year;
-        $botUser->is_vip = true;
-        $botUser->save();
+        $this->botUser->update($form);
 
         if (!is_null($firstCashBackGranted)) {
             $adminBotUser = BotUser::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->orderBy("updated_at", "desc")
                 ->first();
 
             if (!is_null($adminBotUser))
                 event(new CashBackEvent(
-                    (int)$bot->id,
-                    (int)$botUser->user_id,
+                    (int)$this->bot->id,
+                    (int)$this->botUser->user_id,
                     (int)$adminBotUser->user_id,
                     $firstCashBackGranted,
                     "Начислие CashBack за прохождение анкеты",
@@ -730,75 +713,52 @@ class AdminBotController extends Controller
         }
 
         BotMethods::bot()
-            ->whereId($bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
-                $botUser->telegram_chat_id,
+                $this->botUser->telegram_chat_id,
                 "Вы стали нашим <b>V.I.P.</b> пользователем! Поздравляем!"
             );
-        return response()->noContent();
 
     }
 
-    public function vipFormDeliveryman($botDomain)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function acceptUserInLocation(array $data): void
     {
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
 
-        $bot = new \App\Http\Resources\BotResource($bot);
-
-        Inertia::setRootView("bot");
-
-        return Inertia::render('DeliveryManForm', [
-            'bot' => json_decode($bot->toJson()),
-        ]);
-    }
-
-    public function vipForm($botDomain)
-    {
-        $bot = \App\Models\Bot::query()
-            ->where("bot_domain", $botDomain)
-            ->first();
-
-        $bot = new \App\Http\Resources\BotResource($bot);
-
-        Inertia::setRootView("bot");
-
-        return Inertia::render('BotPages/VipForm', [
-            'bot' => json_decode($bot->toJson()),
-        ]);
-
-    }
-
-
-    public function acceptUserInLocation(Request $request)
-    {
-        $request->validate([
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
             "info" => "required",
         ]);
 
-        $info = $request->info ?? '-';
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $info = $data["info"] ?? '-';
 
         $userBotUser = BotUser::query()
             ->with(["user"])
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $request->bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-        $adminBotUser = $request->botUser;
+        $adminBotUser = $this->botUser;
 
         if (is_null($userBotUser))
-            return response()->noContent(404);
+            throw new HttpException(404, "Пользователь не найден!");
 
         $userBotUser->user_in_location = true;
-        $userBotUser->location_comment = $request->info ?? null;
+        $userBotUser->location_comment = $data["info"] ?? null;
         $userBotUser->save();
 
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($request->bot->id)
+            ->whereId($this->bot->id)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
                 "Вас отметили в заведении с сообщением:\n$info"
@@ -808,30 +768,38 @@ class AdminBotController extends Controller
                 "Вы отметили пользователя $name в заведении."
             );
 
-        return response()->noContent();
     }
 
-    public function requestUserData(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function requestUserData(array $data): void
     {
-        $request->validate([
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
             "info" => "required",
         ]);
 
-        $info = $request->info ?? '-';
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
-        $bot = $request->bot;
+
+        $info = $data["info"] ?? '-';
 
         $userBotUser = BotUser::query()
             ->with(["user"])
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-        $adminBotUser = $request->botUser;
+        $adminBotUser = $this->botUser;
 
         if (is_null($userBotUser))
-            return response()->noContent(404);
+            throw new HttpException(404, "Пользователь не найден!");
 
         $userBotUser->is_vip = false;
         $userBotUser->save();
@@ -840,19 +808,19 @@ class AdminBotController extends Controller
 
         $slug = BotMenuSlug::query()
             ->where("slug", "global_cashback_main")
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->orderBy("created_at", "desc")
             ->first();
 
         BotMethods::bot()
-            ->whereId($bot->id)
+            ->whereId($this->bot->id)
             ->sendInlineKeyboard(
                 $userBotUser->telegram_chat_id,
                 "Вам отправили запрос на ввод пользовательских данных с сообщением:\n$info",
                 [
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=" . ($slug->id ?? "route") . "#/vip"
+                            "url" => env("APP_URL") . "/bot-client/" . $this->bot->bot_domain . "?slug=" . ($slug->id ?? "route") . "#/vip"
                         ]],
                     ],
 
@@ -863,44 +831,45 @@ class AdminBotController extends Controller
                 "Вы отправили пользователю $name запрос на ввод данных."
             );
 
-        return response()->noContent();
     }
 
-    public function requestRefreshMenu(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function requestRefreshMenu(array $data): void
     {
-        $request->validate([
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
             "user_telegram_chat_id" => "required",
             "info" => "required",
         ]);
 
-        $info = $request->info ?? '-';
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
-        $bot = $request->bot;
+        $info = $data["info"] ?? '-';
 
         $userBotUser = BotUser::query()
             ->with(["user"])
-            ->where("telegram_chat_id", $request->user_telegram_chat_id)
-            ->where("bot_id", $bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
             ->first();
 
-        $adminBotUser = $request->botUser;
+        $adminBotUser = $this->botUser;
 
         if (is_null($userBotUser))
-            return response()->noContent(404);
+            throw new HttpException(404, "Пользователь не найден!");
 
         $userBotUser->is_vip = false;
         $userBotUser->save();
 
         $name = BotMethods::prepareUserName($userBotUser);
 
-        $slug = BotMenuSlug::query()
-            ->where("slug", "global_cashback_main")
-            ->where("bot_id", $bot->id)
-            ->orderBy("created_at", "desc")
-            ->first();
-
         BotMethods::bot()
-            ->whereId($bot->id)
+            ->whereId($this->bot->id)
             ->sendInlineKeyboard(
                 $userBotUser->telegram_chat_id,
                 "Вам отправили запрос на обновление главного меню с сообщением:\n$info",
@@ -926,6 +895,71 @@ class AdminBotController extends Controller
                 "Вы отправили пользователю $name запрос на обновление меню."
             );
 
-        return response()->noContent();
     }
+
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function cashBackHistoryList(array $data, $size = null): CashBackHistoryCollection
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "user_telegram_chat_id"=>"required"
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $size = $size ?? config('app.results_per_page');
+
+        $botUser = BotUser::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->first();
+
+        if (is_null($botUser))
+            throw new HttpException(404, "Пользователь не найден!");
+
+        $cashBackHistories = CashBackHistory::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("user_id", $botUser->user_id)
+            ->orderBy("created_at", "desc")
+            ->paginate($size);
+
+        return new CashBackHistoryCollection($cashBackHistories);
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function cashbackReceiver(array $data): BotUserResource
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "user_telegram_chat_id"=>"required"
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $botUser = BotUser::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->first();
+
+        if (is_null($botUser))
+            throw new HttpException(404, "Пользователь не найден!");
+
+        return new BotUserResource($botUser);
+    }
+
+
+
 }

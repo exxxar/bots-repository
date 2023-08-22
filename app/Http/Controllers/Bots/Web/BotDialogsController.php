@@ -1,40 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Bots\Web;
 
-use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BotDialogGroupStoreRequest;
-use App\Http\Requests\BotDialogGroupUpdateRequest;
 use App\Http\Resources\BotDialogCommandResource;
 use App\Http\Resources\BotDialogGroupCollection;
 use App\Http\Resources\BotDialogGroupResource;
 use App\Models\Bot;
-use App\Models\BotDialogCommand;
 use App\Models\BotDialogGroup;
-use App\Models\BotDialogResult;
-use App\Models\BotMenuSlug;
-use App\Models\BotPage;
-use App\Models\BotUser;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-class BotDialogGroupController extends Controller
+class BotDialogsController extends Controller
 {
     public function index(Request $request): BotDialogGroupCollection
     {
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->botId ?? $request->bot_id ?? null)
-            ->first();
-
 
         return BusinessLogic::dialogs()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->list(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page'),
@@ -53,6 +38,7 @@ class BotDialogGroupController extends Controller
         ]);
 
         BusinessLogic::dialogs()
+            ->setBot($request->bot ?? null)
             ->swapGroup($request->all());
 
         return response()->noContent();
@@ -70,6 +56,7 @@ class BotDialogGroupController extends Controller
         ]);
 
         BusinessLogic::dialogs()
+            ->setBot($request->bot ?? null)
             ->swapDialog($request->all());
 
         return response()->noContent();
@@ -86,6 +73,7 @@ class BotDialogGroupController extends Controller
         ]);
 
         BusinessLogic::dialogs()
+            ->setBot($request->bot ?? null)
             ->unlinkDialog($request->all());
 
         return response()->noContent();
@@ -101,6 +89,7 @@ class BotDialogGroupController extends Controller
         ]);
 
         return BusinessLogic::dialogs()
+            ->setBot($request->bot ?? null)
             ->duplicateDialog($request->all());
 
     }
@@ -113,16 +102,11 @@ class BotDialogGroupController extends Controller
         $request->validate([
             'slug' => "required",
             'title' => "required",
-            'bot_id' => "required",
+
         ]);
 
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->bot_id ?? null)
-            ->first();
-
         return BusinessLogic::dialogs()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->createGroup($request->all());
     }
 
@@ -135,7 +119,6 @@ class BotDialogGroupController extends Controller
             'pre_text' => "required",
             'post_text' => "required",
             'error_text' => "required",
-            'bot_id' => "required",
             'input_pattern' => "",
             'inline_keyboard_id' => "",
             'images' => "",
@@ -143,14 +126,9 @@ class BotDialogGroupController extends Controller
             'result_channel' => ""
         ]);
 
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->bot_id ?? null)
-            ->first();
-
 
         return BusinessLogic::dialogs()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->createDialog($request->all(),
                 $request->hasFile('files') ?
                     $request->file('files') : null);
@@ -167,7 +145,6 @@ class BotDialogGroupController extends Controller
             'pre_text' => "required",
             'post_text' => "required",
             'error_text' => "required",
-            'bot_id' => "required",
             'input_pattern' => "",
             'inline_keyboard_id' => "",
             'images' => "",
@@ -176,13 +153,9 @@ class BotDialogGroupController extends Controller
             'result_channel' => ""
         ]);
 
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->bot_id ?? null)
-            ->first();
 
         return BusinessLogic::dialogs()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->updateDialog($request->all(),
                 $request->hasFile('files') ?
                     $request->file('files') : null);
@@ -197,35 +170,32 @@ class BotDialogGroupController extends Controller
             "id" => "required",
             "slug" => "required",
             "title" => "required",
-            "bot_id" => "required",
 
         ]);
 
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->bot_id ?? null)
-            ->first();
-
         return BusinessLogic::dialogs()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->updateGroup($request->all());
     }
 
     public function removeGroup(Request $request, $groupId): BotDialogGroupResource
     {
         return BusinessLogic::dialogs()
+            ->setBot($request->bot ?? null)
             ->removeGroup($groupId);
     }
 
     public function removeDialog(Request $request, $dialogId): BotDialogCommandResource
     {
         return BusinessLogic::dialogs()
+            ->setBot($request->bot ?? null)
             ->removeDialog($dialogId);
     }
 
     public function stopDialogs(Request $request): Response
     {
         BusinessLogic::dialogs()
+            ->setBot($request->bot ?? null)
             ->stopDialogs();
 
         return response()->noContent();

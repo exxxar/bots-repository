@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Bots;
+namespace App\Http\BusinessLogic\Methods;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\BotPageStoreRequest;
-use App\Http\Requests\BotPageUpdateRequest;
+use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\BotPageCollection;
 use App\Http\Resources\BotPageResource;
 use App\Models\Bot;
@@ -13,38 +11,62 @@ use App\Models\BotMenuTemplate;
 use App\Models\BotPage;
 use App\Models\Company;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Schema;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
-class BotPageController extends Controller
+
+class BotPageLogicFactory
 {
-    public function index(Request $request)
+
+    use LogicUtilities;
+
+    protected $bot;
+
+    public function __construct()
     {
-        $bot = $request->bot;
+        $this->bot = null;
 
-        $size = $request->get("size") ?? config('app.results_per_page');
+    }
 
-        $search = $request->search ?? null;
+    public function setBot($bot): static
+    {
+        if (is_null($bot))
+            throw new HttpException(400, "Бот не задан!");
+
+        $this->bot = $bot;
+        return $this;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function list($search = null, $size = null): BotPageCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $size = $size ?? config('app.results_per_page');
 
         $botPages = BotPage::query()
-            ->where("bot_id", $bot->id);
+            ->where("bot_id", $this->bot->id);
 
         if (!is_null($search))
             $botPages = $botPages
-                ->whereHas("slug", function ($q) use ($search) {
-                    $q->where("command", 'like', "%$search%");
-                })
-                ->orWhere("content", 'like', "%$search%");
+                ->where(function ($q) use ($search) {
+                    $q->whereHas("slug", function ($q) use ($search) {
+                        $q->where("command", 'like', "%$search%");
+                    })->orWhere("content", 'like', "%$search%");
+                });
 
-        $botPages = $botPages->paginate($size);
-
-        return new BotPageCollection($botPages);
+        return new BotPageCollection($botPages->paginate($size));
     }
 
-
-    public function duplicate(Request $request, $pageId): Response
+    /**
+     * @throws HttpException
+     */
+    public function duplicate($pageId): BotPageResource
     {
         $botPage = BotPage::query()
             ->with(["slug"])
@@ -52,8 +74,7 @@ class BotPageController extends Controller
             ->first();
 
         if (is_null($botPage))
-            return \response()->noContent(404);
-
+            throw new HttpException(404, "Страница не найдена!");
 
         $newBotPage = $botPage->replicate();
 
@@ -64,16 +85,19 @@ class BotPageController extends Controller
         $newBotPage->bot_menu_slug_id = $slug->id;
         $newBotPage->save();
 
-        return response()->noContent();
+        return new BotPageResource($newBotPage);
     }
 
-    public function destroy(Request $request, $pageId): Response
+    /**
+     * @throws HttpException
+     */
+    public function destroy($pageId): BotPageResource
     {
         $botPage = BotPage::query()->where("id", $pageId)
             ->first();
 
         if (is_null($botPage))
-            return \response()->noContent(404);
+            throw new HttpException(404, "Страница не найдена!");
 
         $slug = BotMenuSlug::query()
             ->find($botPage->bot_menu_slug_id);
@@ -81,7 +105,8 @@ class BotPageController extends Controller
         if (!is_null($slug))
             $slug->delete();
 
-        $botPage->bot_menu_slug_id = null;
+        $tmp = $botPage;
+
         $botPage->reply_keyboard_id = null;
         $botPage->inline_keyboard_id = null;
         $botPage->next_page_id = null;
@@ -91,69 +116,55 @@ class BotPageController extends Controller
 
         $botPage->forceDelete();
 
-        return response()->noContent();
+        return new BotPageResource($tmp);
     }
 
-    public function createPage(Request $request)
+    /**
+     * @param array{content: string, command: string, comment: string, bot_id: int} $pageData
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function create(array $pageData, array $uploadedPhotos = null): BotPageResource
     {
-        $request->validate([
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($pageData, [
             "content" => "required",
             "command" => "required",
             "comment" => "required",
         ]);
 
-
-        $bot = $request->bot;
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
         $company = Company::query()
-            ->where("id", $bot->company_id)
+            ->where("id", $this->bot->company_id)
             ->first();
 
         if (is_null($company))
-            return response()->noContent(400);
+            throw new HttpException(404, "Компания (клиент) не найдена!");
 
-        $photos = [];
+        $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
 
-        if ($request->hasFile('photos')) {
-            $files = $request->file('photos');
-
-            foreach ($files as $key => $file) {
-                $ext = $file->getClientOriginalExtension();
-
-                $imageName = Str::uuid() . "." . $ext;
-
-                $file->storeAs("/public/companies/$company->slug/$imageName");
-                $photos[] = $imageName;
-            }
-
-
-        }
-
-        $tmp = (object)$request->all();
+        $tmp = (object)$pageData;
         unset($tmp->photos);
         $tmp->images = count($photos) == 0 ? null : $photos;
 
-        // $text = str_replace(["<p>", "</p>"], "", $tmp->content);
-        // $text = str_replace(["<br>", "<br/>"], "\n", $text);
-
-        // $tmp->content = $text;
-
-        $replyKeyboard = $request->reply_keyboard ?? null;
-        $inlineKeyboard = $request->inline_keyboard ?? null;
+        $replyKeyboard = $tmp->reply_keyboard ?? null;
+        $inlineKeyboard = $tmp->inline_keyboard ?? null;
 
         $tmp->reply_keyboard_id = null;
         $tmp->inline_keyboard_id = null;
 
         if (!is_null($replyKeyboard)) {
-            $keyboard = json_decode($request->reply_keyboard);
-
-            //  $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+            $keyboard = json_decode($tmp->reply_keyboard);
 
             unset($tmp->reply_keyboard);
 
             $strSlug = Str::uuid();
             $menu = BotMenuTemplate::query()->create([
-                'bot_id' => $bot->id,
+                'bot_id' => $this->bot->id,
                 'type' => "reply",
                 'slug' => $strSlug,
                 'menu' => $keyboard,
@@ -163,15 +174,13 @@ class BotPageController extends Controller
         }
 
         if (!is_null($inlineKeyboard)) {
-            $keyboard = json_decode($request->inline_keyboard);
-
-            // $keyboard = $this->keyboardAssign($keyboard, $bot->id);
+            $keyboard = json_decode($tmp->inline_keyboard);
 
             unset($tmp->inline_keyboard);
 
             $strSlug = Str::uuid();
             $menu = BotMenuTemplate::query()->create([
-                'bot_id' => $bot->id,
+                'bot_id' => $this->bot->id,
                 'type' => "inline",
                 'slug' => $strSlug,
                 'menu' => $keyboard,
@@ -181,8 +190,8 @@ class BotPageController extends Controller
         }
 
         $oldSlugs = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("command", $request->command)
+            ->where("bot_id", $this->bot->id)
+            ->where("command", $tmp->command)
             ->whereNull("deprecated_at")
             ->get();
 
@@ -194,11 +203,11 @@ class BotPageController extends Controller
         }
         $strSlug = Str::uuid();
         $slug = BotMenuSlug::query()->create([
-            'bot_id' => $bot->id,
-            'command' => $request->command,
-            'comment' => $request->comment,
+            'bot_id' => $this->bot->id,
+            'command' => $tmp->command,
+            'comment' => $tmp->comment,
             'slug' => $strSlug,
-            'next_page_id' => $request->next_page_id,
+            'next_page_id' => $tmp->next_page_id,
         ]);
 
         $tmp->bot_menu_slug_id = $slug->id;
@@ -206,15 +215,24 @@ class BotPageController extends Controller
         unset($tmp->command);
         unset($tmp->comment);
 
+        if (!is_null($tmp->rules_if ?? null))
+            $tmp->rules_if = json_decode($tmp->rules_if);
 
         $page = BotPage::query()->create((array)$tmp);
 
         return new BotPageResource($page);
     }
 
-    public function updatePage(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function update(array $pageData, array $uploadedPhotos = null): BotPageResource
     {
-        $request->validate([
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($pageData, [
             "id" => "required",
             "content" => "required",
             "command" => "required",
@@ -222,41 +240,27 @@ class BotPageController extends Controller
             "slug_id" => "required",
         ]);
 
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
-        $bot = $request->bot;
 
         $company = Company::query()
-            ->where("id", $bot->company_id)
+            ->where("id", $this->bot->company_id)
             ->first();
 
         if (is_null($company))
-            return response()->noContent(400);
+            throw new HttpException(404, "Компания (клиент) не найдена!");
 
         $page = BotPage::query()
-            ->where("id", $request->id)
+            ->where("id", $pageData["id"])
             ->first();
 
         if (is_null($page))
-            return response()->noContent(400);
+            throw new HttpException(404, "Страница не найдена!");
 
-        $photos = [];
+        $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
 
-        if ($request->hasFile('photos')) {
-            $files = $request->file('photos');
-
-            foreach ($files as $key => $file) {
-                $ext = $file->getClientOriginalExtension();
-
-                $imageName = Str::uuid() . "." . $ext;
-
-                $file->storeAs("/public/companies/$company->slug/$imageName");
-                $photos[] = $imageName;
-            }
-
-
-        }
-
-        $tmp = (object)$request->all();
+        $tmp = (object)$pageData;
         unset($tmp->photos);
 
         $images = $tmp->images ?? null;
@@ -267,17 +271,16 @@ class BotPageController extends Controller
 
         $tmp->images = count($photos) == 0 ? (is_array($images) ? $images : null) : [...$photos, ...$images];
 
-        $replyKeyboard = $request->reply_keyboard ?? null;
-        $inlineKeyboard = $request->inline_keyboard ?? null;
-
+        $replyKeyboard = $tmp->reply_keyboard ?? null;
+        $inlineKeyboard = $tmp->inline_keyboard ?? null;
 
         if (!is_null($replyKeyboard)) {
-            $keyboard = json_decode($request->reply_keyboard);
+            $keyboard = json_decode($tmp->reply_keyboard);
             unset($tmp->reply_keyboard);
 
             $reply_keyboard_id = $tmp->reply_keyboard_id ?? -1;
             $menu = BotMenuTemplate::query()
-                ->where("bot_id", $bot->id)
+                ->where("bot_id", $this->bot->id)
                 ->where("id", $reply_keyboard_id)
                 ->first();
 
@@ -288,7 +291,7 @@ class BotPageController extends Controller
             else {
                 $strSlug = Str::uuid();
                 $menu = BotMenuTemplate::query()->create([
-                    'bot_id' => $bot->id,
+                    'bot_id' => $this->bot->id,
                     'type' => "reply",
                     'slug' => $strSlug,
                     'menu' => $keyboard,
@@ -299,9 +302,10 @@ class BotPageController extends Controller
         }
 
         if (!is_null($inlineKeyboard)) {
-            $keyboard = json_decode($request->inline_keyboard);
+            $keyboard = json_decode($tmp->inline_keyboard);
 
             unset($tmp->inline_keyboard);
+
 
             $inline_keyboard_id = $tmp->inline_keyboard_id ?? -1;
 
@@ -315,7 +319,7 @@ class BotPageController extends Controller
             else {
                 $strSlug = Str::uuid();
                 $menu = BotMenuTemplate::query()->create([
-                    'bot_id' => $bot->id,
+                    'bot_id' => $this->bot->id,
                     'type' => "inline",
                     'slug' => $strSlug,
                     'menu' => $keyboard,
@@ -327,14 +331,14 @@ class BotPageController extends Controller
 
 
         $slug = BotMenuSlug::query()
-            ->where("id", $request->slug_id)
+            ->where("id", $tmp->slug_id)
             ->first();
 
         if (!is_null($slug))
             $slug->update([
-                'command' => $request->command,
-                'comment' => $request->comment,
-                'next_page_id' => $request->next_page_id ?? null,
+                'command' => $tmp->command,
+                'comment' => $tmp->comment,
+                'next_page_id' => $tmp->next_page_id ?? null,
             ]);
 
         unset($tmp->slug);
@@ -342,9 +346,12 @@ class BotPageController extends Controller
         unset($tmp->comment);
         unset($tmp->slug_id);
 
+        if (!is_null($tmp->rules_if ?? null))
+            $tmp->rules_if = json_decode($tmp->rules_if);
 
         $page->update((array)$tmp);
 
         return new BotPageResource($page);
     }
+
 }

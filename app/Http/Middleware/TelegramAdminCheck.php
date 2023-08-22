@@ -29,6 +29,7 @@ class TelegramAdminCheck
 
         if ($isDebug) {
             $bot = Bot::query()
+                ->withTrashed()
                 ->with(["company","amo"])
                 ->where("bot_domain", $botDomain)
                 ->first();

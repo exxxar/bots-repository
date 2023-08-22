@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Bots\Web;
 
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BotPageStoreRequest;
-use App\Http\Requests\BotPageUpdateRequest;
 use App\Http\Resources\BotPageCollection;
 use App\Http\Resources\BotPageResource;
 use App\Models\Bot;
@@ -16,7 +14,6 @@ use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -28,7 +25,7 @@ class BotPageController extends Controller
     public function index(Request $request): BotPageCollection
     {
         return BusinessLogic::pages()
-            ->setBot(Bot::query()->find($request->botId ?? $request->bot_id ?? null))
+            ->setBot($request->bot ?? null)
             ->list(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page')
@@ -42,6 +39,7 @@ class BotPageController extends Controller
     public function duplicate(Request $request, $pageId): BotPageResource
     {
         return BusinessLogic::pages()
+            ->setBot($request->bot ?? null)
             ->duplicate($pageId);
     }
 
@@ -51,6 +49,7 @@ class BotPageController extends Controller
     public function destroy($pageId): BotPageResource
     {
         return BusinessLogic::pages()
+            ->setBot($request->bot ?? null)
             ->destroy($pageId);
     }
 
@@ -64,11 +63,10 @@ class BotPageController extends Controller
             "content" => "required",
             "command" => "required",
             "comment" => "required",
-            "bot_id" => "required",
         ]);
 
         return BusinessLogic::pages()
-            ->setBot(Bot::query()->find($request->bot_id ?? null))
+            ->setBot($request->bot ?? null)
             ->create($request->all(),
                 $request->hasFile('photos') ?
                     $request->file('photos') : null);
@@ -85,12 +83,11 @@ class BotPageController extends Controller
             "content" => "required",
             "command" => "required",
             "comment" => "required",
-            "bot_id" => "required",
             "slug_id" => "required",
         ]);
 
         return BusinessLogic::pages()
-            ->setBot(Bot::query()->find($request->bot_id ?? null))
+            ->setBot($request->bot ?? null)
             ->update($request->all(),
                 $request->hasFile('photos') ?
                     $request->file('photos') : null);

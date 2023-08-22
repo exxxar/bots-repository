@@ -32,7 +32,19 @@ export default createStore({
         },
     },
     actions: {
+        async sendToChannel(context, payload = {mailForm: null}) {
 
+            let link = `/send-to-channel`
+
+            let _axios = util.makeAxiosFactory(link, 'POST', payload.mailForm)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
         async removeFile(context, payload = {file_path: null}) {
 
             let link = `/remove-file`

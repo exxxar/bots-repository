@@ -126,9 +126,7 @@ export default {
     },
     methods: {
         prepareStatistic() {
-            return this.$store.dispatch("cashmanAdminStatisticPrepare", {
-                telegram_chat_id: this.botUser.telegram_chat_id
-            })
+            return this.$store.dispatch("cashmanAdminStatisticPrepare")
                 .then((response) => {
                     this.statistic = response.statistic
 

@@ -75,7 +75,9 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
             </div>
 
             <div class="divider-icon divider-margins bg-blue2-dark my-4"><i class="fa font-17 color-blue2-dark fa-cog bg-white"></i></div>
-            <div class="content mt-0">
+            <div
+                v-if="botUser"
+                class="content mt-0">
 
                 <a
                     href="javascript:void(0)"

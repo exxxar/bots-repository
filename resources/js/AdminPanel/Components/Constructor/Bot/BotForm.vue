@@ -11,6 +11,7 @@ import ImageMenu from "@/AdminPanel/Components/Constructor/ImageMenu.vue";
 import BotDialogGroupList from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import Shop from "@/AdminPanel/Components/Constructor/Shop/Shop.vue";
 import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
+import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 </script>
 <template>
     <div class="row" v-if="company">
@@ -25,6 +26,11 @@ import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
                         v-bind:class="{'btn-info text-white':step===0}"
                         @click="step=0"
                         class="btn btn-outline-info"><i class="fa-solid fa-info mr-1"></i> Информация о боте
+                </button>
+                <button type="button"
+                        v-bind:class="{'btn-info text-white':step===9}"
+                        @click="step=9"
+                        class="btn btn-outline-info"><i class="fa-regular fa-newspaper mr-2"></i> Новостной канал
                 </button>
                 <button type="button"
                         :disabled="botForm.selected_bot_template_id===null"
@@ -668,7 +674,7 @@ import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
         </div>
 
         <div v-if="step===8">
-            <Shop  v-if="!load"/>
+            <Shop v-if="!load"/>
         </div>
 
 
@@ -716,6 +722,11 @@ import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
                     v-on:callback="pageListCallback"/>
 
             </div>
+        </div>
+        <div v-if="step===9">
+
+            <Mail/>
+
         </div>
     </form>
 </template>
@@ -779,6 +790,10 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapGetters(['getSlugs']),
+
+    },
     mounted() {
         this.loadBotTemplates()
 
@@ -837,10 +852,14 @@ export default {
 
             this.load = true
 
-            this.$store.dispatch("loadBotSlugs", {
-                botId: botId
+            this.$store.dispatch("loadSlugs", {
+                dataObject:{
+                    botId: botId
+                },
+                size:1000,
             }).then((resp) => {
-                this.botForm.slugs = resp
+
+                this.botForm.slugs = this.getSlugs
 
                 this.$nextTick(() => {
                     this.load = false

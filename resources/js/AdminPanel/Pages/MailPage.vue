@@ -2,7 +2,7 @@
 import Layout from "@/AdminPanel/Layouts/MainAdminLayout.vue";
 import CompanyForm from "@/AdminPanel/Components/Constructor/Company/CompanyForm.vue";
 import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList.vue";
-
+import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 </script>
 
 <template>
@@ -10,9 +10,11 @@ import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList
         <template #default>
             <div class="container">
                 <div class="row">
-                    <div class="alert alert-danger" role="alert">
-                       Данный раздел находится в разработке
+                    <div class="col-12">
+
                     </div>
+
+
                 </div>
             </div>
         </template>

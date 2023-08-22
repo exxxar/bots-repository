@@ -32,17 +32,18 @@ export default createStore({
     actions: {
         async callbackForm(context, payload = {callbackForm: null}) {
 
+            let tgData = window.Telegram.WebApp.initData
             let botDomain = window.currentBot.bot_domain || null
             let slugId = window.currentScript || null
-            let telegramChatId = window.self.telegram_chat_id || null
+
 
             let callbackForm = payload.callbackForm
 
-            callbackForm.append("telegram_chat_id", telegramChatId)
-            callbackForm.append("slug_id", slugId)
-            callbackForm.append("bot_domain", botDomain)
+            callbackForm.append("tgData", tgData)
+            callbackForm.append("slugId", slugId)
+            callbackForm.append("botDomain", botDomain)
 
-            let link = `/global-scripts/callback`
+            let link = `/bot-client/callback`
 
             let _axios = util.makeAxiosFactory(link, 'POST', callbackForm)
 

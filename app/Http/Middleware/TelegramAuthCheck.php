@@ -27,6 +27,7 @@ class TelegramAuthCheck
 
         if ($isDebug){
             $bot = Bot::query()
+                ->withTrashed()
                 ->with(["company"])
                 ->where("bot_domain", $botDomain)
                 ->first();

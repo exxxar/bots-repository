@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Bots;
+namespace App\Http\BusinessLogic\Methods;
 
-use App\Classes\SystemUtilitiesTrait;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\BotStoreRequest;
-use App\Http\Requests\BotUpdateRequest;
-use App\Http\Resources\BotMenuSlugResource;
+use App\Facades\BusinessLogic;
+use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
+use App\Http\Resources\BotCollection;
 use App\Http\Resources\BotMenuTemplateResource;
-use App\Http\Resources\BotPageResource;
 use App\Http\Resources\BotResource;
 use App\Http\Resources\BotUserResource;
+use App\Http\Resources\ImageMenuCollection;
 use App\Http\Resources\ImageMenuResource;
 use App\Http\Resources\LocationResource;
 use App\Models\AmoCrm;
@@ -30,317 +28,82 @@ use App\Models\ImageMenu;
 use App\Models\Location;
 use App\Models\Product;
 use Carbon\Carbon;
-use Doctrine\DBAL\Schema\Schema;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use function App\Http\Controllers\mb_strpos;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Telegram\Bot\FileUpload\InputFile;
 
-class BotController extends Controller
+class BotLogicFactory
 {
+    use LogicUtilities;
 
-    use SystemUtilitiesTrait;
 
-    public function sendCallback(Request $request)
+    protected $bot;
+
+    protected $botUser;
+
+    protected $slug;
+
+    public function __construct()
     {
-        $request->validate([
-            "bot_domain" => "required",
-            "slug_id" => "required",
-            "telegram_chat_id" => "required",
-            "name" => "required",
-            "phone" => "required",
-            "message" => "required",
-        ]);
-
-        $type = $request->type ?? null;
-        $bot = \App\Models\Bot::query()
-            ->with(["company"])
-            ->where("bot_domain", $request->bot_domain)
-            ->first();
-
-        /*      $botUser = BotUser::query()
-                  ->where("bot_id", $bot->id)
-                  ->where("telegram_chat_id", $request->telegram_chat_id)
-                  ->first();*/
-
-        $slug = BotMenuSlug::query()
-            ->where("id", $request->slug_id)
-            ->first();
-
-        $callbackChannel = $bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
-
-        $typeText = match ($type) {
-            'booking' => "#бронированиестолика",
-            default => "#обратнаясвязь",
-        };
-
-        $adminMessage = "$typeText\nБот: %s\nСкрипт: #%s (название скрипта: %s) \nПользователь: \n -tg id: %s \n -имя: %s \n -телефон: %s)\nСообщение: %s\n";
-        BotMethods::bot()
-            ->whereDomain($bot->bot_domain)
-            ->sendMessage($callbackChannel,
-                sprintf($adminMessage,
-                    $bot->bot_domain,
-                    $slug->id,
-                    $slug->slug,
-                    $request->telegram_chat_id ?? '-',
-                    $request->name ?? '-',
-                    $request->phone ?? '-',
-                    $request->message ?? '-'
-                ));
-
-        return response()->noContent();
+        $this->bot = null;
+        $this->botUser = null;
+        $this->slug = null;
     }
 
-    public function getSelf(Request $request)
+    /**
+     * @throws HttpException
+     */
+    public function setBot($bot): static
     {
-        return new BotUserResource($request->botUser);
+        if (is_null($bot))
+            throw new HttpException(400, "Бот не задан!");
+
+        $this->bot = $bot;
+        return $this;
     }
 
-    public function getBot(Request $request)
+    /**
+     * @throws HttpException
+     */
+    public function setSlug($slug): static
     {
-        return new BotResource($request->bot);
+        if (is_null($slug))
+            throw new HttpException(400, "Команда не задана!");
+
+        $this->slug = $slug;
+        return $this;
     }
 
-    public function requestTelegramChannel(Request $request)
+    /**
+     * @throws HttpException
+     */
+    public function setBotUser($botUser): static
     {
-        $request->validate([
-            "token" => "required",
-            "channel" => "required",
-        ]);
-
-        $token = $request->token;
-        $channel = $request->channel;
-
-        $res = Http::get("https://api.telegram.org/bot$token/sendMessage?chat_id=$channel&text=channelId");
-
-        return \response()->json($res->json());
-    }
-
-    public function getCurrentBotUser(Request $request)
-    {
-        $request->validate([
-            "tg" => "required",
-            "bot_id" => "required"
-        ]);
-
-
-        $botUser = BotUser::query()
-            ->where("telegram_chat_id", $request->tg["id"])
-            ->where("bot_id", $request->bot_id)
-            ->first();
-
         if (is_null($botUser))
-            return response()->noContent(404);
+            throw new HttpException(400, "Пользователь бота не задан!");
 
-        return new BotUserResource($botUser);
-
+        $this->botUser = $botUser;
+        return $this;
     }
 
-    public function loadDescriptions()
+    public function list($companyId = null, $search = null, $size = null): BotCollection
     {
-        $bots = Bot::query()
-            ->select("welcome_message", "maintenance_message", "description")
-            ->get();
 
-        $tmp = [];
-
-        foreach ($bots as $bot) {
-            if (!empty($bot->welcome_message))
-                $tmp[] = (object)[
-                    "text" => $bot->welcome_message
-                ];
-            if (!empty($bot->maintenance_message))
-                $tmp[] = (object)[
-                    "text" => $bot->maintenance_message
-                ];
-            if (!empty($bot->description))
-                $tmp[] = (object)[
-                    "text" => $bot->description
-                ];
-        }
-
-        return response()->json([
-            "data" => $tmp
-        ]);
-    }
-
-    public function loadAllSlugs(Request $request)
-    {
-        $slugs = BotMenuSlug::query()
-            ->where("is_global", true)
-            ->whereNull("bot_id")
-            ->get()
-            ->unique("slug");
-
-        return BotMenuSlugResource::collection($slugs);
-    }
-
-    public function changeUserStatus(Request $request)
-    {
-        $request->validate([
-            "botUserId" => "required",
-            "status" => "required"
-        ]);
-
-        $botUser = BotUser::query()
-            ->where("id", $request->botUserId)
-            ->first();
-
-        if (is_null($botUser))
-            return response()->noContent(404);
-
-        $botUser->is_admin = $request->status == 1;
-        $botUser->save();
-
-        $status = $botUser->is_admin ? "Администратор" : "Пользователь";
-        BotMethods::bot()
-            ->whereId($botUser->bot_id)
-            ->sendSlugKeyboard($botUser->telegram_chat_id,
-                "Вам изменили статус учетной записи на \"$status\"",
-                ($botUser->is_admin ? "main_menu_restaurant_3" : "main_menu_restaurant_2")
-            );
-
-        return response()->noContent();
-    }
-
-    public function loadBotUsers(Request $request)
-    {
-        $request->validate([
-            "botId" => "required"
-        ]);
-
-        $size = $request->get("size") ?? config('app.results_per_page');
-
-        $search = $request->search ?? null;
-
-        $botUsers = BotUser::query();
-
-        if (!is_null($search)) {
-            $botUsers = $botUsers
-                ->where("name", 'like', "%$search%")
-                ->orWhere("phone", 'like', "%$search%")
-                ->orWhere("email", 'like', "%$search%")
-                ->orWhere("fio_from_telegram", 'like', "%$search%");
-        }
-
-        $botUsers = $botUsers->where("bot_id", $request->botId)
-            ->paginate($size);
-
-        return BotUserResource::collection($botUsers);
-    }
-
-    public function loadBotsAsTemplate(Request $request)
-    {
-        $bots = Bot::query()
-            ->where("is_template", true)
-            ->select("bot_domain", "id", "template_description")
-            ->get();
-
-        return response()->json($bots->toArray());
-    }
-
-    public function loadLocations(Request $request, $companyId)
-    {
-        $locations = Location::query()
-            ->where("company_id", $companyId)
-            ->get();
-
-        return LocationResource::collection($locations);
-    }
-
-    public function loadImageMenu(Request $request)
-    {
-        $bot = $request->bot;
-        $menus = ImageMenu::query()
-            ->where("bot_id", $bot->id)
-            ->get();
-
-        return ImageMenuResource::collection($menus);
-    }
-
-    public function loadKeyboardsByText(Request $request, $botId)
-    {
-        $request->validate([
-            "text" => "required"
-        ]);
-
-        $text = $request->text ?? '';
-
-        $keyboards = BotMenuTemplate::query()
-            ->where("bot_id", 1)
-            ->get();
-
-        $tmp = [];
-        foreach ($keyboards as $keyboard) {
-            $find = false;
-            foreach ($keyboard->menu as $row) {
-                foreach ($row as $button) {
-                    $button = (object)$button;
-                    if (mb_strpos($button->text, $text) !== false)
-                        $find = true;
-                }
-            }
-
-            if ($find)
-                $tmp[] = $keyboard;
-
-        }
-
-
-        return response()->json(BotMenuTemplateResource::collection($tmp));
-    }
-
-    public function loadKeyboards(Request $request, $botId)
-    {
-        $keyboards = BotMenuTemplate::query()
-            ->where("bot_id", $botId)
-            ->get();
-
-        return response()->json(BotMenuTemplateResource::collection($keyboards));
-    }
-
-    public function loadPages(Request $request, $botId)
-    {
-        $pages = BotPage::query()
-            ->where("bot_id", $botId)
-            ->orderBy("created_at", "desc")
-            ->get();
-
-        return response()->json(BotPageResource::collection($pages));
-    }
-
-    public function loadSlugs(Request $request)
-    {
-        $bot = $request->bot;
-
-        $isGlobal = ($request->is_global ?? false) == "true";
-
-        $slugs = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
-            ->where("is_global", $isGlobal)
-            ->orderBy("created_at", "desc")
-            ->get();
-
-        return BotMenuSlugResource::collection($slugs);
-    }
-
-    public function index(Request $request)
-    {
-        $companyId = $request->companyId ?? null;
-
-        $size = $request->get("size") ?? config('app.results_per_page');
-        $search = $request->search ?? null;
+        $size = $size ?? config('app.results_per_page');
 
         $bots = Bot::query()
             ->with(["amo"])
             ->withTrashed();
 
         if (!is_null($companyId))
-            $bots = $bots->where("company_id", $request->companyId);
+            $bots = $bots->where("company_id", $companyId);
 
         if (!is_null($search))
             $bots = $bots->where("bot_domain", 'like', "%$search%");
@@ -349,28 +112,19 @@ class BotController extends Controller
             ->orderBy("updated_at", 'DESC')
             ->paginate($size);
 
-
-        return BotResource::collection($bots);
+        return new BotCollection($bots);
     }
 
-
-    public function duplicate(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function duplicate($companyId): BotResource
     {
-        $request->validate([
-            "company_id" => "required",
-            "bot_id" => "required"
-        ]);
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
 
-        $botId = $request->bot_id;
-        $companyId = $request->company_id;
-
-        $bot = Bot::query()
-            ->find($botId);
-
-        if (is_null($bot))
-            return response()->noContent(404);
-
-        $newBot = $bot->replicate();
+        $newBot = $this->bot->replicate();
         $newBot->deleted_at = null;
         $newBot->bot_domain = "duplicate_" . $newBot->bot_domain . "_" . Carbon::now()->format("Y-m-d H:i:s");
         $newBot->bot_token = null;
@@ -383,7 +137,7 @@ class BotController extends Controller
 
         $pages = BotPage::query()
             ->with(["slug", "replyKeyboard", "inlineKeyboard"])
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         $replicated = [];
@@ -453,7 +207,7 @@ class BotController extends Controller
             }
 
         $slugs = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($slugs))
@@ -479,7 +233,7 @@ class BotController extends Controller
 
 
         $keyboards = BotMenuTemplate::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($keyboards))
@@ -505,7 +259,7 @@ class BotController extends Controller
             }
 
         $dialogs = BotDialogCommand::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
 
@@ -549,23 +303,22 @@ class BotController extends Controller
 
             }
 
-        return response()->noContent();
+        return new BotResource($newBot);
     }
 
-    public function forceDelete(Request $request, $botId)
+    /**
+     * @throws HttpException
+     */
+    public function forceDelete(): void
     {
-        $bot = Bot::query()
-            ->withTrashed()
-            ->find($botId);
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
 
-
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
-        if (is_null($bot))
-            return response()->noContent(404);
+        Schema::disableForeignKeyConstraints();
 
         $pages = BotPage::query()
             ->with(["slug", "replyKeyboard", "inlineKeyboard"])
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($pages))
@@ -573,7 +326,7 @@ class BotController extends Controller
                 $page->delete();
 
         $slugs = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
 
@@ -581,9 +334,8 @@ class BotController extends Controller
             foreach ($slugs as $slug)
                 $slug->delete();
 
-
         $keyboards = BotMenuTemplate::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($keyboards))
@@ -591,7 +343,7 @@ class BotController extends Controller
                 $keyboard->delete();
 
         $dialogs = BotDialogCommand::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($dialogs))
@@ -599,7 +351,7 @@ class BotController extends Controller
                 $dialog->delete();
 
         $groups = BotDialogGroup::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($groups))
@@ -607,7 +359,7 @@ class BotController extends Controller
                 $group->delete();
 
         $menus = ImageMenu::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($menus))
@@ -615,7 +367,7 @@ class BotController extends Controller
                 $menu->delete();
 
         $cashbacks = CashBack::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($cashbacks))
@@ -623,7 +375,7 @@ class BotController extends Controller
                 $cashback->delete();
 
         $products = Product::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($products))
@@ -631,219 +383,202 @@ class BotController extends Controller
                 $product->delete();
 
         $amos = AmoCrm::query()
-            ->where("bot_id", $bot->id)
+            ->where("bot_id", $this->bot->id)
             ->get();
 
         if (!empty($amos))
             foreach ($amos as $amo)
                 $amo->delete();
 
+        $this->bot->forceDelete();
+        Schema::enableForeignKeyConstraints();
 
-        $bot->forceDelete();
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
 
-        return response()->noContent();
     }
 
-    public function destroy(Request $request, $botId)
+    /**
+     * @throws HttpException
+     */
+    public function destroy(): BotResource
     {
-        $bot = Bot::query()->find($botId);
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
 
-        if (is_null($bot))
-            return response()->noContent(404);
+        $tmpBot = $this->bot;
+        $this->bot->deleted_at = Carbon::now();
+        $this->bot->save();
 
-        $bot->deleted_at = Carbon::now();
-        $bot->save();
-
-        return response()->noContent();
+        return new BotResource($tmpBot);
     }
 
-    public function restore(Request $request, $botId)
+    /**
+     * @throws HttpException
+     */
+    public function restore(): BotResource
     {
-        $bot = Bot::query()
-            ->withTrashed()
-            ->find($botId);
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
 
-        if (is_null($bot))
-            return response()->noContent(404);
+        $this->bot->deleted_at = null;
+        $this->bot->save();
 
-        $bot->deleted_at = null;
-        $bot->save();
-
-        return response()->noContent();
+        return new BotResource($this->bot);
     }
 
-    public function createKeyboardTemplate(Request $request)
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function sendCallback(array $data): void
     {
-        $request->validate([
-            "slug" => "required",
-            "menu" => "required",
-            "type" => "required",
-            "bot_id" => "required",
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "name" => "required",
+            "phone" => "required",
+            "message" => "required",
         ]);
 
-        $botMenuTemplate = BotMenuTemplate::query()
-            ->create([
-                "slug" => $request->slug ?? Str::uuid(),
-                "menu" => json_decode($request->menu),
-                "type" => $request->type,
-                "bot_id" => $request->bot_id,
-            ]);
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
-        return \response()->json(new BotMenuTemplateResource($botMenuTemplate));
+        $type = $data["type"] ?? null;
+
+        $callbackChannel = $this->bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
+
+        $typeText = match ($type) {
+            'booking' => "#бронированиестолика",
+            default => "#обратнаясвязь",
+        };
+
+        $adminMessage = "$typeText\nБот: %s\nСкрипт: #%s (название скрипта: %s) \nПользователь: \n -tg id: %s \n -имя: %s \n -телефон: %s)\nСообщение: %s\n";
+
+        BotMethods::bot()
+            ->whereId($this->bot->id)
+            ->sendMessage($callbackChannel,
+                sprintf($adminMessage,
+                    $this->bot->bot_domain,
+                    $this->slug->id,
+                    $this->slug->slug,
+                    $this->botUser->telegram_chat_id ?? '-',
+                    $data["name"] ?? '-',
+                    $data["phone"] ?? '-',
+                    $data["message"] ?? '-'
+                ));
+
     }
 
-    public function editKeyboardTemplate(Request $request)
+
+    /**
+     * @throws ValidationException
+     */
+    public function requestTelegramChannel(array $data): mixed
     {
-        $request->validate([
-            "id" => "required",
-            "slug" => "required",
-            "menu" => "required",
-            "type" => "required",
-            "bot_id" => "required",
+        $validator = Validator::make($data, [
+            "token" => "required",
+            "channel" => "required",
         ]);
 
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
-        $botMenuTemplate = BotMenuTemplate::query()->find($request->id);
+        $token = $data["token"];
+        $channel = $data["channel"];
 
-        if (is_null($botMenuTemplate))
-            return response()->noContent(404);
+        $res = Http::get("https://api.telegram.org/bot$token/sendMessage?chat_id=$channel&text=channelId");
 
-
-        $botMenuTemplate
-            ->update([
-                "slug" => $request->slug ?? Str::uuid(),
-                "menu" => json_decode($request->menu),
-                "type" => $request->type,
-                "bot_id" => $request->bot_id,
-            ]);
-
-        return \response()->json(new BotMenuTemplateResource($botMenuTemplate));
+        return $res->json();
     }
 
-    public function createLocation(Request $request): Response
+
+    public function descriptions(): array
     {
+        $bots = Bot::query()
+            ->select("welcome_message", "maintenance_message", "description")
+            ->get();
+
+        $tmp = [];
+
+        foreach ($bots as $bot) {
+            if (!empty($bot->welcome_message))
+                $tmp[] = (object)[
+                    "text" => $bot->welcome_message
+                ];
+            if (!empty($bot->maintenance_message))
+                $tmp[] = (object)[
+                    "text" => $bot->maintenance_message
+                ];
+            if (!empty($bot->description))
+                $tmp[] = (object)[
+                    "text" => $bot->description
+                ];
+        }
+
+        return $tmp;
+    }
 
 
-        $company = Company::query()->where("id", $request->company_id)
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function changeUserStatus(array $data): void
+    {
+        $validator = Validator::make($data, [
+            "botUserId" => "required", //todo: сделать bot_user_id
+            "status" => "required"
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $botUser = BotUser::query()
+            ->where("id", $data["botUserId"])
             ->first();
 
-        if (is_null($company))
-            return response()->noContent(400);
+        if (is_null($botUser))
+            throw new HttpException(404, "Пользователь бота не найден");
 
-        if (isset($request->deleted_locations)) {
+        $botUser->is_admin = $data["status"] == 1;
+        $botUser->save();
 
-            $deleteds = json_decode($request->deleted_locations);
+        $status = $botUser->is_admin ? "Администратор" : "Пользователь";
+        BotMethods::bot()
+            ->whereId($botUser->bot_id)
+            ->sendSlugKeyboard($botUser->telegram_chat_id,
+                "Вам изменили статус учетной записи на \"$status\"",
+                ($botUser->is_admin ? "main_menu_restaurant_3" : "main_menu_restaurant_2")
+            );
 
-            foreach ($deleteds as $id) {
-                $dlocation = Location::query()->find($id);
-                if (!is_null($dlocation))
-                    $dlocation->delete();
-            }
-
-        }
-
-        $photos = [];
-
-        if ($request->hasFile('files')) {
-            $files = $request->file('files');
-
-            foreach ($files as $key => $file) {
-                $ext = $file->getClientOriginalExtension();
-
-                $imageName = Str::uuid() . "." . $ext;
-
-                $file->storeAs("/public/companies/$company->slug/$imageName");
-                array_push($photos, $imageName);
-            }
-        }
-
-        $tmp = (object)$request->all();
-
-        $tmp->images = json_decode($tmp->images ?? '[]');
-
-        if (count($photos) > 0)
-            $tmp->images = $photos;
-
-        $tmp->is_active = true;
-        $tmp->can_booking = $request->can_booking == "true" ? true : false;
-
-        $locationId = $tmp->id ?? null;
-        if (!is_null($locationId)) {
-            $location = Location::query()
-                ->where("id", $locationId)
-                ->first();
-
-            if (!is_null($location))
-                $location->update((array)$tmp);
-        } else {
-            Location::query()->create((array)$tmp);
-        }
-
-        return response()->noContent();
     }
 
-    public function createImageMenu(Request $request)
+
+    public function templateList(): array
     {
+        $bots = Bot::query()
+            ->where("is_template", true)
+            ->select("bot_domain", "id", "template_description")
+            ->get();
 
-        $request->validate([
-            'title' => "required|string:255",
-            'description' => "required|string:255",
-            'bot_id' => "required",
-        ]);
+        return $bots->toArray();
+    }
 
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->bot_id)
-            ->first();
 
-        if (is_null($bot))
-            return response()->noContent(400);
+    /**
+     * @throws HttpException
+     */
+    public function imageMenuList(): ImageMenuCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
 
-        if (isset($request->deleted_menus)) {
+        $menus = ImageMenu::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
 
-            $deleteds = json_decode($request->deleted_menus);
-
-            foreach ($deleteds as $id) {
-                $dmenu = ImageMenu::query()->find($id);
-                if (!is_null($dmenu))
-                    $dmenu->delete();
-            }
-
-        }
-
-        $imageName = $request->image ?? null;
-        if ($request->hasFile('preview')) {
-
-            $file = $request->file('preview');
-
-            $ext = $file->getClientOriginalExtension();
-
-            $imageName = Str::uuid() . "." . $ext;
-
-            $companySlug = $bot->company->slug;
-            $file->storeAs("/public/companies/$companySlug/$imageName");
-
-        }
-
-        $tmp = (object)$request->all();
-
-        $tmp->image = $imageName;
-        $tmp->product_count = $request->product_count ?? 0;
-
-        $menuId = $tmp->id ?? null;
-        if (!is_null($menuId)) {
-            $imgMenu = ImageMenu::query()->find($menuId);
-
-            if (!is_null($imgMenu))
-                $imgMenu->update((array)$tmp);
-
-            $imgMenu = $imgMenu->refresh();
-        } else
-            $imgMenu = ImageMenu::query()->create((array)$tmp);
-
-        return new ImageMenuResource($imgMenu);
-
+        return new ImageMenuCollection($menus);
     }
 
     public function createBotLazy(Request $request)
@@ -989,9 +724,13 @@ class BotController extends Controller
         return new BotResource($bot);
     }
 
-    public function createBot(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function create(array $data, array $uploadedPhotos = null): BotResource
     {
-        $request->validate([
+
+        $validator = Validator::make($data, [
             "bot_domain" => "required|unique:bots,bot_domain",
             "bot_token" => "required",
 
@@ -1009,65 +748,53 @@ class BotController extends Controller
             "company_id" => "required",
         ]);
 
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
-        $company = Company::query()->where("id", $request->company_id)
+        $company = Company::query()->where("id", $data["company_id"])
             ->first();
 
         if (is_null($company))
-            return response()->noContent(400);
+            throw new HttpException(404, "Компания не найдена");
 
-        $photos = [];
-
-        if ($request->hasFile('images')) {
-            $files = $request->file('images');
-
-            foreach ($files as $key => $file) {
-                $ext = $file->getClientOriginalExtension();
-
-                $imageName = Str::uuid() . "." . $ext;
-
-                $file->storeAs("/public/companies/$company->slug/$imageName");
-                array_push($photos, $imageName);
-            }
-        }
+        $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
 
         $botType = BotType::query()->where("slug", "cashback")->first();
 
-        $tmp = (object)$request->all();
+        $tmp = (object)$data;
 
         $tmp->image = is_null($photos) ? null : ($photos[0] ?? null);
         $tmp->level_2 = $request->level_2 ?? 0;
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
-        $tmp->auto_cashback_on_payments = $request->auto_cashback_on_payments == "true";
-        $tmp->is_template = $request->is_template == "true";
+        $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
+        $tmp->is_template = $data["is_template"] == "true";
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
         $keyboards = null;
-        if (isset($request->keyboards)) {
-            $keyboards = json_decode($request->keyboards);
+        if (isset($data["keyboards"])) {
+            $keyboards = json_decode($data["keyboards"]);
             unset($tmp->keyboards);
         }
         $slugs = null;
 
-        if (isset($request->slugs)) {
-            $slugs = json_decode($request->slugs);
+        if (isset($data["slugs"])) {
+            $slugs = json_decode($data["slugs"]);
             unset($tmp->slugs);
         }
 
         $pages = null;
 
-        if (isset($request->pages)) {
-            $pages = json_decode($request->pages);
+        if (isset($data["pages"])) {
+            $pages = json_decode($data["pages"]);
             unset($tmp->pages);
         }
 
         if (!is_null($tmp->selected_bot_template_id))
             unset($tmp->selected_bot_template_id);
 
-        //dd($tmp);
         $bot = Bot::query()->create((array)$tmp);
 
         if (!is_null($pages))
@@ -1116,9 +843,16 @@ class BotController extends Controller
         return new BotResource($bot);
     }
 
-    public function updateBot(Request $request)
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function update(array $data, array $uploadedPhotos = null): BotResource
     {
-        $request->validate([
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
             "bot_domain" => "required",
             "bot_token" => "required",
 
@@ -1130,21 +864,21 @@ class BotController extends Controller
             "maintenance_message" => "required",
             "welcome_message" => "required",
             "level_1" => "required",
-            // "slugs" => "required",
         ]);
 
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
-        $bot = $request->bot;
 
-        $company = Company::query()->where("id", $bot->company_id)
+        $company = Company::query()->where("id", $this->bot->company_id)
             ->first();
 
         if (is_null($company))
-            return response()->noContent(400);
+            throw new HttpException(404, "Компания не найдена");
 
-        if (isset($request->removed_keyboards)) {
+        if (isset($data["removed_keyboards"])) {
 
-            $tmpKeyboards = json_decode($request->removed_keyboards);
+            $tmpKeyboards = json_decode($data["removed_keyboards"]);
 
             foreach ($tmpKeyboards as $id) {
                 $keyboard = BotMenuTemplate::query()->find($id);
@@ -1174,9 +908,9 @@ class BotController extends Controller
 
         }
 
-        if (isset($request->removed_slugs)) {
+        if (isset($data["removed_slugs"])) {
 
-            $tmpSlugs = json_decode($request->removed_slugs);
+            $tmpSlugs = json_decode($data["removed_slugs"]);
 
             foreach ($tmpSlugs as $id) {
                 $slug = BotMenuSlug::query()
@@ -1194,53 +928,41 @@ class BotController extends Controller
 
         }
 
-        $photos = [];
-
-        if ($request->hasFile('images')) {
-            $files = $request->file('images');
-
-            foreach ($files as $key => $file) {
-                $ext = $file->getClientOriginalExtension();
-
-                $imageName = Str::uuid() . "." . $ext;
-
-                $file->storeAs("/public/companies/$company->slug/$imageName");
-                $photos[] = $imageName;
-            }
-        }
+        $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
 
         $botType = BotType::query()->where("slug", "cashback")->first();
 
-        $tmp = (object)$request->all();
+        $tmp = (object)$data;
 
         if (is_null($tmp->image))
             $tmp->image = is_null($photos) ? null : ($photos[0] ?? null);
+
         $tmp->level_2 = $request->level_2 ?? 0;
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
-        $tmp->auto_cashback_on_payments = $request->auto_cashback_on_payments == "true";
-        $tmp->is_template = $request->is_template == "true";
+        $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
+        $tmp->is_template = $data["is_template"] == "true";
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
         $keyboards = null;
-        if (isset($request->keyboards)) {
-            $keyboards = json_decode($request->keyboards);
+        if (isset($data["keyboards"])) {
+            $keyboards = json_decode($data["keyboards"]);
             unset($tmp->keyboards);
         }
 
         $slugs = null;
 
-        if (isset($request->slugs)) {
-            $slugs = json_decode($request->slugs);
+        if (isset($data["slugs"])) {
+            $slugs = json_decode($data["slugs"]);
             unset($tmp->slugs);
         }
         unset($tmp->selected_bot_template_id);
 
         //dd($tmp);
 
-        $bot->update((array)$tmp);
+        $this->bot->update((array)$tmp);
 
         if (!is_null($slugs))
             foreach ($slugs as $slug) {
@@ -1260,7 +982,7 @@ class BotController extends Controller
                     ]);
                 else
                     BotMenuSlug::query()->create([
-                        'bot_id' => $request->id,
+                        'bot_id' => $this->bot->id,
                         'command' => $slug->command,
                         'comment' => $slug->comment,
                         'slug' => $slug->slug,
@@ -1282,45 +1004,149 @@ class BotController extends Controller
                     ]);
                 else
                     BotMenuTemplate::query()->create([
-                        'bot_id' => $request->id,
+                        'bot_id' => $this->bot->id,
                         'type' => $keyboard->type,
                         'slug' => $keyboard->slug,
                         'menu' => $keyboard->menu,
                     ]);
             }
 
-        $bot = Bot::query()->find($request->id);
 
         BotManager::bot()->setWebhooks();
 
-        return new BotResource($bot);
+        return new BotResource($this->bot);
     }
 
-    public function removeKeyboardTemplate(Request $request, $templateId)
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function createOrUpdateImageMenu(array $data, $uploadedPhoto = null): ImageMenuResource
     {
-        $botMenuTemplate = BotMenuTemplate::query()->find($templateId);
 
-        if (is_null($botMenuTemplate))
-            return response()->noContent(404);
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
 
-        $pages = BotPage::query()
-            ->where('reply_keyboard_id', $templateId)
-            ->orWhere('inline_keyboard_id', $templateId)
-            ->get();
+        $validator = Validator::make($data, [
+            'title' => "required|string:255",
+            'description' => "required|string:255",
+            'bot_id' => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
 
 
-        foreach ($pages as $page) {
-            if ($page->reply_keyboard_id == $templateId)
-                $page->reply_keyboard_id = null;
-            if ($page->inline_keyboard_id == $templateId)
-                $page->inline_keyboard_id = null;
-            $page->save();
+        if (isset($data["deleted_menus"])) {
+
+            $deleteds = json_decode($data["deleted_menus"]);
+
+            foreach ($deleteds as $id) {
+                $dmenu = ImageMenu::query()->find($id);
+                if (!is_null($dmenu))
+                    $dmenu->delete();
+            }
+
         }
 
-        $botMenuTemplate->delete();
+        $imageName = $request->image ?? null;
 
-        return \response()->noContent();
+        if (!is_null($uploadedPhoto))
+            $imageName = $this->uploadPhoto("/public/companies/" . $this->bot->company->slug, $uploadedPhoto);
+
+
+        $tmp = (object)$data;
+
+        $tmp->image = $imageName;
+        $tmp->product_count = $data["product_count"] ?? 0;
+
+        $menuId = $tmp->id ?? null;
+        if (!is_null($menuId)) {
+            $imgMenu = ImageMenu::query()->find($menuId);
+
+            if (!is_null($imgMenu))
+                $imgMenu->update((array)$tmp);
+
+            $imgMenu = $imgMenu->refresh();
+        } else
+            $imgMenu = ImageMenu::query()->create((array)$tmp);
+
+        return new ImageMenuResource($imgMenu);
+
     }
 
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function sendToChannel(array $data, array $uploadedPhotos = null): void
+    {
 
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "text"=>"required",
+            "inline_keyboard"=>"",
+            "channel"=>"required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $channel = $data["channel"];
+
+
+        $inlineKeyboard = json_decode($data["inline_keyboard"] ?? '[]');
+
+        //dd($inlineKeyboard);
+
+        $content = str_replace(["<p>", "</p>"], "", $data["text"]);
+        $content = str_replace(["<br>"], "\n", $content);
+
+        $slug = $this->bot->company->slug;
+
+        $photos = $this->uploadPhotos("/public/companies/$slug", $uploadedPhotos);
+
+        if (count($photos) > 1) {
+
+            $media = [];
+            foreach ($photos as $image) {
+
+                $media[] = [
+                    "media" => env("APP_URL") . "/images-by-bot-id/" . $bot->id . "/" . $image,
+                    "type" => "photo",
+                    "caption" => "$image"
+                ];
+            }
+
+            BotMethods::bot()
+                ->whereId($this->bot->id)
+                ->sendMediaGroup($channel, $media)
+                ->sendInlineKeyboard($channel, $content, $inlineKeyboard);
+
+
+        } else if (count($photos) === 1) {
+
+            if (mb_strlen($content) >= 1024)
+
+                BotMethods::bot()
+                    ->whereId($this->bot->id)
+                    ->sendMessage($channel, $content);
+
+            BotMethods::bot()
+                ->whereId($this->bot->id)
+                ->sendPhoto($channel,mb_strlen($content) >= 1024 ? null : $content,
+                    InputFile::create(storage_path("app/public") . "/companies/" . $slug . "/" . $photos[0]),
+                    $inlineKeyboard
+                );
+
+        } else if (count($photos) === 0)
+            BotMethods::bot()
+                ->whereId($this->bot->id)
+                ->sendInlineKeyboard($channel,$content, $inlineKeyboard);
+
+
+    }
 }

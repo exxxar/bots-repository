@@ -22,7 +22,6 @@ class TelegramController extends Controller
 
     public function handler(Request $request, $domain)
     {
-     //   Log::info("test".$domain);
         BotManager::bot()->handler($domain);
     }
 
@@ -55,7 +54,6 @@ class TelegramController extends Controller
             ->webHandler($domain,
                 (object)$request->all());
     }
-
 
     public function getFiles($companySlug, $file)
     {
@@ -135,6 +133,5 @@ class TelegramController extends Controller
 
         return response()->noContent();
     }
-
 
 }

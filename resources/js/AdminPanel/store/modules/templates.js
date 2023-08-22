@@ -180,18 +180,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadBotSlugs(context, payload = {botId: null, isGlobal:false}) {
-        let link = `${BASE_TEMPLATES_LINK}/slugs/${payload.botId}?isGlobal=${payload.isGlobal || false}`
 
-        let _axios = util.makeAxiosFactory(link)
-
-        return _axios.then((response) => {
-            return Promise.resolve(response.data);
-        }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
-            return Promise.reject(err);
-        })
-    },
 }
 const mutations = {
     setTemplates(state, payload) {
