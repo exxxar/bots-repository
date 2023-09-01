@@ -21,21 +21,14 @@ const getters = {
 }
 
 const actions = {
+
+
+
     async loadProduct(context, payload = {dataObject: {productId: null}}) {
-
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain
-        }
 
         let link = `${BASE_PRODUCTS_LINK}/${payload.dataObject.productId}`
         let method = 'POST'
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let _axios = util.makeAxiosFactory(link, method)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -46,19 +39,10 @@ const actions = {
     },
     async loadCategory(context, payload = {dataObject: {categoryId: null}}) {
 
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain
-        }
 
         let link = `${BASE_PRODUCTS_LINK}/category/${payload.dataObject.categoryId}`
         let method = 'POST'
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let _axios = util.makeAxiosFactory(link, method)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -98,7 +82,11 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadProductsInCategory(context, payload = {dataObject: {search: null, category_id: null}, page: 0, size: 12}) {
+    async loadProductsInCategory(context, payload = {
+        dataObject: {search: null, category_id: null},
+        page: 0,
+        size: 12
+    }) {
         let tgData = window.Telegram.WebApp.initData || null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null

@@ -1,6 +1,6 @@
 <script setup>
 import CategoryItem from "@/ClientTg/Components/Shop/Categories/CategoryItem.vue";
-import Pagination from "@/ClientTg/Components/Shop/Helpers/Pagination.vue";
+import Pagination from "@/ClientTg/Components/Pagination.vue";
 </script>
 <template>
     <div v-if="categories">

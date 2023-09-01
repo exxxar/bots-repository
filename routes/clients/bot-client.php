@@ -4,6 +4,7 @@ use App\Http\Controllers\Bots\Web\AdminBotController;
 use App\Http\Controllers\Bots\Web\AmoCrmController;
 use App\Http\Controllers\Bots\Web\BotController;
 use App\Http\Controllers\Bots\Web\BotDialogsController;
+use App\Http\Controllers\Bots\Web\BotMenuSlugController;
 use App\Http\Controllers\Bots\Web\BotPageController;
 use App\Http\Controllers\Bots\Web\CompanyController;
 use App\Http\Controllers\Bots\Web\ProductController;
@@ -17,11 +18,18 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("bot-client")
     ->group(function () {
 
+        Route::post("/send-to-channel", [BotController::class, "sendToChannel"])
+            ->middleware(["tgAuth.any"]);
+
+        Route::post("/telegram-channel-id", [BotController::class, "requestTelegramChannel"])
+            ->middleware(["tgAuth.any"]);
+
         Route::post('/self', [BotController::class, "getSelf"])
             ->middleware(["tgAuth.any"]);
 
         Route::post('/bot', [BotController::class, "getBot"])
             ->middleware(["tgAuth.admin"]);
+
 
         Route::post('/callback', [BotController::class, "sendCallback"])
             ->middleware(["tgAuth.admin"]);
@@ -177,7 +185,25 @@ Route::prefix("bot-client")
                 Route::post("/image-menu", "loadImageMenu");
                 Route::post("/slugs", "loadSlugs");
                 Route::post("/duplicate", "duplicate");
+                Route::post("/keyboards", "loadKeyboards");
+                Route::post("/keyboard-template", "createKeyboardTemplate");
+                Route::post("/remove-keyboard-template/{keyboardId}", "removeKeyboardTemplate");
+                Route::post("/edit-keyboard-template", "editKeyboardTemplate");
+                Route::post('/switch-status',"switchBotStatus");
                 Route::post("/restore/{botId}", "restore");
+            });
+
+        Route::prefix("slugs")
+            ->controller(BotMenuSlugController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function () {
+                Route::post("/", "index");
+                Route::post("/global-list", "globalList");
+                Route::post("/slug", "createSlug");
+                Route::post("/slug-update", "updateSlug");
+                Route::post("/duplicate/{slugId}", "duplicate");
+                Route::get("/reload-params/{slugId}", "reloadParams");
+                Route::delete("/{slugId}", "destroy");
             });
 
         Route::prefix("dialogs")

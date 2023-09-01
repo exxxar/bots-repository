@@ -72,7 +72,7 @@ class BotManager extends BotCore
                 // $uuid = Str::uuid();
 
                 $role = Role::query()
-                    ->where("slug", "owner")
+                    ->where("slug", "user")
                     ->first();
 
                 if (is_null($existUserId))

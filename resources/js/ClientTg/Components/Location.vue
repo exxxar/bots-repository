@@ -56,10 +56,12 @@
 
         <label class="form-label  d-flex justify-content-between mt-2" id="location-description">
             Описание локации
-            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
-
             <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="locationForm.description">
                 Длина текста {{ locationForm.description.length }}</small>
+
+            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+
+
         </label>
         <textarea type="text" class="form-control"
                   placeholder="Описание локации"
@@ -272,7 +274,7 @@ export default {
         submitLocation() {
             this.locationForm.company_id = this.company.id
             this.locations.push(this.locationForm);
-            this.$botNotification.success("Локация", "окация успешно добавлена в список. Не забудьте сохранить");
+            this.$botNotification.success("Локация", "Локация успешно добавлена в список. Не забудьте сохранить");
             this.locationForm = {
                 id: null,
                 lat: null,

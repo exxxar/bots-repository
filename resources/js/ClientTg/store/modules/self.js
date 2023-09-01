@@ -14,19 +14,9 @@ const getters = {
 const actions = {
     async loadSelf(context) {
 
-        let tgData = window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain
-        }
-
         let link = `${BASE_SELF_LINK}/self`
         let method = 'POST'
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let _axios = util.makeAxiosFactory(link, method)
 
         return _axios.then((response) => {
             let dataObject = response.data

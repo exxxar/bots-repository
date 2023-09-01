@@ -1,6 +1,6 @@
 <script setup>
 import ProductItemSimple from "ClientTg@/Components/Shop/Products/ProductItemSimple.vue";
-import Pagination from "ClientTg@/Components/Shop/Helpers/Pagination.vue";
+import Pagination from "ClientTg@/Components/Pagination.vue";
 import EmptyCard from "ClientTg@/Components/Shop/Helpers/EmptyCard.vue";
 </script>
 

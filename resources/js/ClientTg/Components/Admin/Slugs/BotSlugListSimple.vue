@@ -12,12 +12,17 @@
         <a href="javascript:void(0)"
            @click="selectSlug(item)"
            v-for="(item, index) in filteredSlugs"
-           class="border border-green1-dark rounded-s shadow-xs">
+           v-bind:class="{'border-green1-dark':item.is_global,'border-blue2-dark':!item.is_global}"
+           class="border rounded-s shadow-xs">
 
             <span class="font-12"> #{{item.id}} {{ item.command || 'Нет команды' }}</span>
             <strong>{{ item.comment || 'Нет описания' }}</strong>
             <u class="color-green1-dark" v-if="item.is_global">Глобальный</u>
             <i class="fa-solid fa-globe color-green1-dark" v-if="item.is_global"></i>
+
+            <u class="color-blue2-dark" v-if="!item.is_global">Локальный</u>
+            <i class="fa-solid fa-thumbtack color-blue2-dark" v-if="!item.is_global"></i>
+
         </a>
     </div>
 
@@ -78,7 +83,7 @@ export default {
             this.$botNotification.notification("Скрипты","Вы выбрали скрипт из списка!");
         },
         loadSlugs() {
-            this.$store.dispatch("loadBotSlugs", {
+            this.$store.dispatch("loadSlugs", {
                 isGlobal: this.global || false
             }).then(resp => {
                 this.slugs = resp.data

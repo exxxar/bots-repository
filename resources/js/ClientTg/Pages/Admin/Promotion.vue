@@ -1,55 +1,63 @@
 <script setup>
-
-defineProps({
-    bot: {
-        type: Object,
-    },
-    botUser: {
-        type: Object
-    },
-
-});
+import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
+import Mail from "@/ClientTg/Components/Admin/Mail/Mail.vue";
 </script>
 <template>
-    <div class="container pt-3 pb-3" v-if="botUser.is_admin">
-        <div class="row mb-2">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Управление рассылкой и рекламой</h5>
-                    </div>
-                    <div class="card-body">
+    <div v-if="botUser">
+        <div class="card card-style" v-if="botUser.is_admin">
+            <div class="content mb-2">
+                <Mail></Mail>
+                <div class="divider divider-small my-3 bg-highlight "></div>
+                <ReturnToBot class="mb-2"/>
+            </div>
+        </div>
 
-                    </div>
-                </div>
+        <div class="card card-style bg-red2-dark" v-else>
+            <div class="content">
+                <h4 class="color-white">Внимание!</h4>
+                <p class="color-white">
+                    Данная страница доступа только администраторам заведения!
+                </p>
             </div>
         </div>
     </div>
-    <div class="container" v-else>
-        <div class="row">
-            <div class="alert alert-warning" role="alert">
-                Вы не являетесь администратором
-            </div>
-        </div>
-    </div>
+
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     data() {
         return {
+            botUser: null,
+            statistic: null,
             loading: false,
         }
     },
     computed: {
-        tg() {
-            return window.Telegram.WebApp;
-        },
-        tgUser(){
-            const urlParams = new URLSearchParams(this.tg.initData);
-            return JSON.parse(urlParams.get('user'));
+        ...mapGetters(['getSelf']),
+    },
+    watch: {
+        'getSelf': function () {
+            this.botUser = this.getSelf
+            this.prepareStatistic()
+        }
+    },
+    mounted() {
+        if (this.getSelf) {
+            this.botUser = this.getSelf
+            this.prepareStatistic()
         }
     },
     methods: {
+        prepareStatistic() {
+            return this.$store.dispatch("cashmanAdminStatisticPrepare")
+                .then((response) => {
+                    this.statistic = response.statistic
+
+                })
+        },
+
 
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
+use App\Http\Resources\BotDialogCommandCollection;
 use App\Http\Resources\BotDialogCommandResource;
 use App\Http\Resources\BotDialogGroupCollection;
 use App\Http\Resources\BotDialogGroupResource;
@@ -43,13 +44,34 @@ class BotDialogsLogicFactory
      * @throws HttpException
      */
 
-    public function list( $search = null, $size = null): BotDialogGroupCollection
+    public function list($search = null, $size = null, bool $simple = false): BotDialogCommandCollection|BotDialogGroupCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
         $size = $size ?? config('app.results_per_page');
 
+        if ($simple) {
+
+
+            $botDialogCommands = BotDialogCommand::query()
+                ->where("bot_id", $this->bot->id);
+
+            if (!is_null($search))
+                $botDialogCommands = $botDialogCommands
+                    ->where(function ($q) use ($search) {
+                        $q->where("pre_text", 'like', "%$search%")
+                            ->orWhere("slug", 'like', "%$search%")
+                            ->orWhere("post_text", 'like', "%$search%");
+
+                    });
+
+            $botDialogCommands = $botDialogCommands
+                ->orderBy("created_at", "desc")
+                ->paginate($size);
+
+            return new BotDialogCommandCollection($botDialogCommands);
+        }
 
         $botDialogGroups = BotDialogGroup::query()
             ->where("bot_id", $this->bot->id);
@@ -62,7 +84,6 @@ class BotDialogsLogicFactory
         $botDialogGroups = $botDialogGroups
             ->orderBy("created_at", "desc")
             ->paginate($size);
-
 
 
         return new BotDialogGroupCollection($botDialogGroups);
@@ -406,10 +427,6 @@ class BotDialogsLogicFactory
                     $result->save();
                 }
 
-            /*  BotMethods::bot()
-                  ->whereId($botUser->bot_id)
-                  ->sendMessage($botUser->telegram_chat_id,
-                      "Ваш диалог принудительно остановлен администратором системы!");*/
 
         }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bots\Web;
 
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BotDialogCommandCollection;
 use App\Http\Resources\BotDialogCommandResource;
 use App\Http\Resources\BotDialogGroupCollection;
 use App\Http\Resources\BotDialogGroupResource;
@@ -15,7 +16,7 @@ use Illuminate\Validation\ValidationException;
 
 class BotDialogsController extends Controller
 {
-    public function index(Request $request): BotDialogGroupCollection
+    public function index(Request $request): BotDialogGroupCollection|BotDialogCommandCollection
     {
 
         return BusinessLogic::dialogs()
@@ -23,7 +24,7 @@ class BotDialogsController extends Controller
             ->list(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page'),
-
+                $request->simple ?? false
             );
     }
 

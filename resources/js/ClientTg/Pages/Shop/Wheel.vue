@@ -94,6 +94,7 @@ export default {
     },
     data() {
         return {
+            winResultMessage:"Наш менеджер свяжется с вами для дальнейших инструкций.",
             rules: null,
             rouletteKey: 0,
             action: null,
@@ -136,6 +137,7 @@ export default {
                 let index = 1;
 
                 this.rules = response.rules
+                this.winResultMessage = response.callback_message
                 const wheels = response.wheels
 
                 this.items = []
@@ -177,7 +179,7 @@ export default {
                     phone: null,
                 }
 
-                this.$botNotification.success("Вы выиграли!", "Наш менеджер свяжется с вами для дальнейших инструкций.")
+                this.$botNotification.success("Вы выиграли!", this.winResultMessage)
 
 
                 this.prepareUserData()

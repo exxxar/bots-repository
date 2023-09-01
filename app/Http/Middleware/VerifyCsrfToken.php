@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/bot/*',
         '/bot/*/*',
+        '/sanctum/token'
     ];
 }

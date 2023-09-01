@@ -1,5 +1,6 @@
 <script setup>
-import ProductForm from "@/ClientTg/Components/Shop/ProductForm.vue";
+import ProductForm from "@/ClientTg/Components/Admin/Shop/ProductForm.vue";
+import ProductList from "@/ClientTg/Components/Admin/Shop/ProductList.vue";
 </script>
 <template>
     <div class="card mb-2">
@@ -9,16 +10,15 @@ import ProductForm from "@/ClientTg/Components/Shop/ProductForm.vue";
         <div class="card-body">
             <div class="row" v-if="tab===1">
                 <div class="col-12">
-
+                    <form v-on:submit.prevent="updateProducts">
                         <div class="input-group mb-3">
                             <button
                                 :disabled="load"
-                                @click="updateProducts"
                                 class="btn btn-outline-secondary"
                                 type="sub,it" id="button-addon2">Обновить товары
                             </button>
                         </div>
-
+                    </form>
 
                     <div
                         v-if="load"
@@ -63,14 +63,18 @@ import ProductForm from "@/ClientTg/Components/Shop/ProductForm.vue";
             </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <h6>Работа с товаром</h6>
-        </div>
-        <div class="card-body">
-            <ProductForm></ProductForm>
-        </div>
-    </div>
+
+    <h6>Работа с товаром</h6>
+
+    <ProductForm
+        :item="selectedProduct"
+        v-on:refresh="refresh"
+    />
+    <ProductList
+        v-on:select="selectProduct"
+    />
+
+
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -82,26 +86,45 @@ export default {
             tab: 0,
             url: null,
             link: null,
-
+            bot: null,
+            selectedProduct: null,
         }
     },
-    computed: {
-        ...mapGetters(['getCurrentBot']),
+
+    mounted() {
 
     },
     methods: {
+        refresh() {
+            this.load = true
+            this.selectedProduct = null
+            this.$nextTick(() => {
+                this.load = false
+            })
+        },
+        selectProduct(product) {
+            this.load = true
+            this.$nextTick(() => {
+                this.selectedProduct = product
+                this.load = false
+            })
+
+            console.log(product)
+        },
         updateProducts() {
 
             this.load = true
             this.$store.dispatch("updateProductsFromVk", {
-                dataObject:{
-                    botDomain: window.currentBot.bot_domain
+                dataObject: {
+                    botDomain: this.getCurrentBot.bot_domain
                 }
             }).then((resp) => {
+
+                console.log(resp)
                 this.link = resp.data.url
                 this.load = false
                 this.url = null
-            }).catch(()=>{
+            }).catch(() => {
                 this.load = false
             })
 

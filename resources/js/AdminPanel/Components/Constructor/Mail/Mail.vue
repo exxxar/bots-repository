@@ -1,12 +1,7 @@
 <script setup>
 import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardConstructor.vue";
 import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
-import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
-import BotSlugListSimple from "@/AdminPanel/Components/Constructor/Slugs/BotSlugListSimple.vue";
-import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
-import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
 
-import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 
 import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
 </script>
@@ -45,7 +40,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     <div class="d-flex flex-wrap align-items-center">
                         <TelegramChannelHelper
                             :token="bot.bot_token"
-                            :param="'main_channel'"
+                            :param="'channel'"
                             v-on:callback="addTextTo"
                         />
 
@@ -60,7 +55,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                        aria-label="id канала"
                        v-model="mailForm.channel"
                        maxlength="255"
-                       aria-describedby="bot-main-channel">
+                       aria-describedby="bot-main-channel" required>
             </div>
         </div>
 
@@ -77,7 +72,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                           v-model="mailForm.text"
                                           maxlength="4096"
                                           placeholder="Введите текст"
-                                          id="floatingTextarea2" style="min-height: 100px"></textarea>
+                                          id="floatingTextarea2" style="min-height: 100px" required></textarea>
                 <label for="floatingTextarea2">Содержимое страницы <span
                     v-if="mailForm.text">{{ mailForm.text.length }}/4096 </span></label>
             </div>
@@ -196,7 +191,6 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["page"],
     data() {
         return {
 
@@ -275,7 +269,7 @@ export default {
                 }
                 this.$notify({
                     title: "Конструктор ботов",
-                    text: (this.mailForm.id == null ? "Страница успешно создана!" : "Страница успешно обновлена!"),
+                    text: "Сообщение успещно отправлено!",
                     type: 'success'
                 });
             }).catch(err => {

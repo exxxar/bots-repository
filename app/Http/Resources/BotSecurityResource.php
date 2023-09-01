@@ -19,6 +19,8 @@ class BotSecurityResource extends JsonResource
             'welcome_message' => $this->welcome_message,
             'image' => $this->image,
             'description' => $this->description,
+            'main_channel' => $this->main_channel,
+            'order_channel' => $this->order_channel,
             'info_link' => $this->info_link,
             'social_links' => $this->social_links,
             'company' => new CompanySecurityResource($this->whenLoaded('company')),

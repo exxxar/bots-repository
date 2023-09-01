@@ -33,14 +33,9 @@ class ProductController extends Controller
 
     public function index(Request $request): ProductCollection
     {
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->bot_id ?? null)
-            ->first();
-
 
         return BusinessLogic::products()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->list(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page')
@@ -49,14 +44,8 @@ class ProductController extends Controller
 
     public function getCategories(Request $request): ProductCategoryCollection
     {
-        $request->validate([
-            "bot_id" => "required"
-        ]);
-
-        $bot = Bot::query()->find($request->bot_id ?? null);
-
         return BusinessLogic::products()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->categories();
     }
 
@@ -68,18 +57,9 @@ class ProductController extends Controller
 
     public function randomProducts(Request $request): ProductCollection
     {
-        $request->validate([
-            "bot_id" => "required"
-        ]);
-
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->bot_id ?? null)
-            ->first();
-
 
         return BusinessLogic::products()
-            ->setBot($bot)
+            ->setBot($request->bot ?? null)
             ->randomList();
     }
 

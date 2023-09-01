@@ -1,6 +1,6 @@
 <script setup>
 
-import Pagination from "ClientTg@/Components/Shop/Helpers/Pagination.vue";
+import Pagination from "ClientTg@/Components/Pagination.vue";
 import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
 <template>

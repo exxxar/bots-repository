@@ -217,6 +217,8 @@ return [
         'BotMethods' => \App\Facades\BotMethods::class,
         'BusinessLogic'=>\App\Facades\BusinessLogic::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+        'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
     ])->toArray(),
 
 ];

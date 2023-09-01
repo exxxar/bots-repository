@@ -15,16 +15,11 @@ const getters = {
 
 const actions = {
     async loadReceiverUserData(context, payload = { dataObject:{ user_telegram_chat_id:null } }) {
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
+
 
         let link = `${BASE_CASHBACK_LINK}/receiver`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain,
-            ...payload.dataObject
-        })
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 
         return _axios.then((response) => {
             let dataObject = response.data
@@ -38,14 +33,11 @@ const actions = {
         let page = payload.page || 0
         let size = 12
 
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
+
 
         let link = `${BASE_CASHBACK_LINK}/history?page=${page}&size=${size}`
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain,
             ...payload.dataObject
         })
 
@@ -82,12 +74,8 @@ const actions = {
     async addCashBack(context, payload = {dataObject: null}) {
         let link = `${BASE_CASHBACK_LINK}/add`
 
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain,
             ...payload.dataObject
         })
 
@@ -101,12 +89,7 @@ const actions = {
     async requestUserData(context, payload) {
         let link = `${BASE_CASHBACK_LINK}/request-user-data`
 
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
-
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain,
             ...payload.dataObject
         })
 
@@ -120,12 +103,10 @@ const actions = {
     async requestRefreshMenu(context, payload) {
         let link = `${BASE_CASHBACK_LINK}/request-refresh-menu`
 
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
+
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain,
+
             ...payload.dataObject
         })
 
@@ -139,12 +120,8 @@ const actions = {
     async acceptUserInLocation(context, payload) {
         let link = `${BASE_CASHBACK_LINK}/user-in-location`
 
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain,
             ...payload.dataObject
         })
 
@@ -169,14 +146,8 @@ const actions = {
     },
     async saveVip(context, payload) {
 
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
 
         let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
             ...payload
         }
 

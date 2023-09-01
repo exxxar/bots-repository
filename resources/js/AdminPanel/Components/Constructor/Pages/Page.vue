@@ -638,8 +638,6 @@ export default {
         selectInlineKeyboard(keyboard) {
             this.pageForm.inline_keyboard = keyboard
 
-            console.log(keyboard)
-
             this.showInlineTemplateSelector = false;
         },
         saveReplyKeyboard(keyboard) {

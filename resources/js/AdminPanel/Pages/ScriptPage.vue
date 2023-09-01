@@ -36,7 +36,8 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
                 </div>
 
                 <div  v-if="step===1">
-                    <GlobalSlugList v-on:select="selectScript"/>
+                    <GlobalSlugList
+                        v-on:select="selectScript"/>
                 </div>
 
                 <div class="row" v-if="step===2">

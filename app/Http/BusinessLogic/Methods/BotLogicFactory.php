@@ -60,7 +60,7 @@ class BotLogicFactory
     /**
      * @throws HttpException
      */
-    public function setBot($bot): static
+    public function setBot($bot = null): static
     {
         if (is_null($bot))
             throw new HttpException(400, "Бот не задан!");
@@ -72,7 +72,7 @@ class BotLogicFactory
     /**
      * @throws HttpException
      */
-    public function setSlug($slug): static
+    public function setSlug($slug = null): static
     {
         if (is_null($slug))
             throw new HttpException(400, "Команда не задана!");
@@ -84,7 +84,7 @@ class BotLogicFactory
     /**
      * @throws HttpException
      */
-    public function setBotUser($botUser): static
+    public function setBotUser($botUser = null): static
     {
         if (is_null($botUser))
             throw new HttpException(400, "Пользователь бота не задан!");
@@ -455,7 +455,7 @@ class BotLogicFactory
         $adminMessage = "$typeText\nБот: %s\nСкрипт: #%s (название скрипта: %s) \nПользователь: \n -tg id: %s \n -имя: %s \n -телефон: %s)\nСообщение: %s\n";
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage($callbackChannel,
                 sprintf($adminMessage,
                     $this->bot->bot_domain,
@@ -475,15 +475,18 @@ class BotLogicFactory
      */
     public function requestTelegramChannel(array $data): mixed
     {
+        if (is_null($this->bot))
+            throw new HttpException(403, "Не выполнены условия функции");
+
         $validator = Validator::make($data, [
-            "token" => "required",
             "channel" => "required",
         ]);
 
         if ($validator->fails())
             throw new ValidationException($validator);
 
-        $token = $data["token"];
+
+        $token = $this->bot->bot_token;
         $channel = $data["channel"];
 
         $res = Http::get("https://api.telegram.org/bot$token/sendMessage?chat_id=$channel&text=channelId");
@@ -525,6 +528,9 @@ class BotLogicFactory
      */
     public function changeUserStatus(array $data): void
     {
+        if (is_null($this->bot))
+            throw new HttpException(403, "Не выполнены условия функции");
+
         $validator = Validator::make($data, [
             "botUserId" => "required", //todo: сделать bot_user_id
             "status" => "required"
@@ -546,7 +552,7 @@ class BotLogicFactory
 
         $status = $botUser->is_admin ? "Администратор" : "Пользователь";
         BotMethods::bot()
-            ->whereId($botUser->bot_id)
+            ->whereBot($this->bot)
             ->sendSlugKeyboard($botUser->telegram_chat_id,
                 "Вам изменили статус учетной записи на \"$status\"",
                 ($botUser->is_admin ? "main_menu_restaurant_3" : "main_menu_restaurant_2")
@@ -838,7 +844,8 @@ class BotLogicFactory
                     'menu' => $keyboard->menu,
                 ]);
 
-        BotManager::bot()->setWebhooks();
+        if (env("APP_DEBUG") === false)
+            BotManager::bot()->setWebhooks();
 
         return new BotResource($bot);
     }
@@ -1012,7 +1019,8 @@ class BotLogicFactory
             }
 
 
-        BotManager::bot()->setWebhooks();
+        if (env("APP_DEBUG") === false)
+            BotManager::bot()->setWebhooks();
 
         return new BotResource($this->bot);
     }
@@ -1086,9 +1094,9 @@ class BotLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $validator = Validator::make($data, [
-            "text"=>"required",
-            "inline_keyboard"=>"",
-            "channel"=>"required",
+            "text" => "required",
+            "inline_keyboard" => "",
+            "channel" => "required",
         ]);
 
         if ($validator->fails())
@@ -1115,14 +1123,14 @@ class BotLogicFactory
             foreach ($photos as $image) {
 
                 $media[] = [
-                    "media" => env("APP_URL") . "/images-by-bot-id/" . $bot->id . "/" . $image,
+                    "media" => env("APP_URL") . "/images-by-bot-id/" . $this->bot->id . "/" . $image,
                     "type" => "photo",
                     "caption" => "$image"
                 ];
             }
 
             BotMethods::bot()
-                ->whereId($this->bot->id)
+                ->whereBot($this->bot)
                 ->sendMediaGroup($channel, $media)
                 ->sendInlineKeyboard($channel, $content, $inlineKeyboard);
 
@@ -1132,21 +1140,35 @@ class BotLogicFactory
             if (mb_strlen($content) >= 1024)
 
                 BotMethods::bot()
-                    ->whereId($this->bot->id)
+                    ->whereBot($this->bot)
                     ->sendMessage($channel, $content);
 
             BotMethods::bot()
-                ->whereId($this->bot->id)
-                ->sendPhoto($channel,mb_strlen($content) >= 1024 ? null : $content,
+                ->whereBot($this->bot)
+                ->sendPhoto($channel, mb_strlen($content) >= 1024 ? null : $content,
                     InputFile::create(storage_path("app/public") . "/companies/" . $slug . "/" . $photos[0]),
                     $inlineKeyboard
                 );
 
         } else if (count($photos) === 0)
             BotMethods::bot()
-                ->whereId($this->bot->id)
-                ->sendInlineKeyboard($channel,$content, $inlineKeyboard);
+                ->whereBot($this->bot)
+                ->sendInlineKeyboard($channel, $content, $inlineKeyboard);
 
 
+    }
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function switchBotStatus(): void
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $this->bot->is_active = !$this->bot->is_active;
+        $this->bot->save();
     }
 }

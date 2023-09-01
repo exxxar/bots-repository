@@ -15,14 +15,8 @@ const getters = {
 const actions = {
     async loadPages(context, payload = {dataObject: { search:null}, page: 0, size: 12}) {
 
-        let tgData =   window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
 
         let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
             ...payload.dataObject
         }
 
@@ -47,14 +41,6 @@ const actions = {
     },
     async updatePage(context, payload= {pageForm: null}){
 
-        let tgData =  window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        payload.pageForm.append("tgData", tgData)
-        payload.pageForm.append("botDomain", botDomain)
-        payload.pageForm.append("slug_id", slugId)
-
         let link = `${BASE_PAGES_LINK}/page-update`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.pageForm)
@@ -66,6 +52,9 @@ const actions = {
         })
     },
     async duplicatePage(context, payload= {dataObject: {pageId: null}}){
+
+
+
         let link = `${BASE_PAGES_LINK}/duplicate/${payload.dataObject.pageId}`
         let _axios = util.makeAxiosFactory(link, 'POST')
         return _axios.then((response) => {
@@ -77,18 +66,9 @@ const actions = {
     },
     async removePage(context, payload= {dataObject: {pageId: null}}){
 
-        let tgData =  window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-        }
 
         let link = `${BASE_PAGES_LINK}/remove/${payload.dataObject.pageId}`
-        let _axios = util.makeAxiosFactory(link, 'POST', data)
+        let _axios = util.makeAxiosFactory(link, 'POST')
 
         return _axios.then((response) => {
             return Promise.resolve(response);
@@ -98,13 +78,6 @@ const actions = {
         })
     },
     async createPage(context, payload = {pageForm: null}) {
-        let tgData =  window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        payload.pageForm.append("tgData", tgData)
-        payload.pageForm.append("botDomain", botDomain)
-        payload.pageForm.append("slug_id", slugId)
 
         let link = `${BASE_PAGES_LINK}/page`
 

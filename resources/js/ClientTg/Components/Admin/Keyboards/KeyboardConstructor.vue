@@ -82,7 +82,7 @@
 
                 </div>
             </div>
-            <p v-else>Элементы клавиатуры еще не добавлены</p>
+            <p class="text-danger font-weight-bold p-0 m-0" v-else>Элементы клавиатуры еще не добавлены</p>
             <div class="mb-0" v-if="showCode">
                 <label class="form-label" id="bot-domain">JSON-код клавиатуры</label>
                 <Vue3JsonEditor

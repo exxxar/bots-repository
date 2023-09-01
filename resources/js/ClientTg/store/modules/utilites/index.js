@@ -1,21 +1,30 @@
 import axios from "axios";
 
 export default {
-    async makeAxiosFactory(link,method = 'GET', data = null, config = null){
+    async makeAxiosFactory(link, method = 'GET', data = null, config = null) {
         let result;
-        switch(method.toUpperCase()) {
+
+        let tgData = window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
+        let botDomain = window.currentBot.bot_domain || null
+        let slugId = window.currentScript || null
+
+        axios.defaults.headers.common['X-CASHMAN-SLUG-ID'] = slugId ? btoa(slugId) : null
+        axios.defaults.headers.common['X-CASHMAN-BOT-DOMAIN'] = botDomain ? btoa(botDomain) : null
+        axios.defaults.headers.common['X-CASHMAN-TG-DATA'] = tgData ? btoa(tgData) : null
+
+        switch (method.toUpperCase()) {
             default:
             case 'GET':
-                result =  await axios.get(link);
+                result = await axios.get(link);
                 break;
             case 'POST':
-                result =  await axios.post(link, data, config)
+                result = await axios.post(link, data, config)
                 break;
             case 'PUT':
-                result =  await axios.put(link, data)
+                result = await axios.put(link, data)
                 break;
             case 'DELETE':
-                result =  await axios.delete(link)
+                result = await axios.delete(link)
                 break;
         }
 
@@ -32,7 +41,7 @@ export default {
             tgData: tgData,
             slug_id: slugId,
             botDomain: botDomain,
-            ids:ids
+            ids: ids
         }
 
         let link = `/bot-client/shop/products/by-ids`

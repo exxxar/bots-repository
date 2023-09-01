@@ -43,6 +43,7 @@ class KeyboardLogicFactory
 
         $keyboards = BotMenuTemplate::query()
             ->where("bot_id", $this->bot->id)
+            ->orderBy("updated_at","desc")
             ->get();
 
         return new BotMenuTemplateCollection($keyboards);
@@ -146,5 +147,5 @@ class KeyboardLogicFactory
         return new BotMenuTemplateResource($tmpKeyboard);
     }
 
-    
+
 }

@@ -225,7 +225,7 @@ class BotAdministrativeLogicFactory
                 (is_null($phone) ? "" : "\nНомер телефона для связи: <b>$phone</b>\n");
 
             BotMethods::bot()
-                ->whereId($this->bot->id)
+                ->whereBot($this->bot)
                 ->sendInlineKeyboard(
                     $adminBotUser->telegram_chat_id,
                     $text,
@@ -240,7 +240,7 @@ class BotAdministrativeLogicFactory
             $name = BotMethods::prepareUserName($adminBotUser);
 
             BotMethods::bot()
-                ->whereId($this->bot->id)
+                ->whereBot($this->bot)
                 ->sendMessage(
                     $userBotUser->telegram_chat_id,
                     "Администратор <b>$name</b> получил ваш запрос на зачисление CashBack"
@@ -250,7 +250,7 @@ class BotAdministrativeLogicFactory
             $name = BotMethods::prepareUserName($adminBotUser);
 
             BotMethods::bot()
-                ->whereId($this->bot->id)
+                ->whereBot($this->bot)
                 ->sendMessage(
                     $userBotUser->telegram_chat_id,
                     "Администратор <b>$name</b> на текущий момент не доступен! Попробуйте позже или же обратитесь к другому администратору!",
@@ -433,7 +433,7 @@ class BotAdministrativeLogicFactory
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendInvoice(
                 $userBotUser->telegram_chat_id,
                 "Счет на оплату", $info, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData)
@@ -489,7 +489,7 @@ class BotAdministrativeLogicFactory
         $action->save();
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
                 "Информация от администратора:\n$info"
@@ -498,7 +498,7 @@ class BotAdministrativeLogicFactory
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы успешно отправили сообщение для <b>$name</b>",
@@ -539,7 +539,7 @@ class BotAdministrativeLogicFactory
         $userBotUser->save();
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
                 "Вас назначили администратором данного бота!Повторно запустите команду /start:\n$info"
@@ -549,7 +549,7 @@ class BotAdministrativeLogicFactory
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы успешно назанчили администратором <b>$name</b>",
@@ -590,7 +590,7 @@ class BotAdministrativeLogicFactory
         $userBotUser->save();
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
                 "Вас разжаловали с должности администратора, теперь вам недоступны административные возможности:\n$info"
@@ -599,7 +599,7 @@ class BotAdministrativeLogicFactory
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы успешно убрали статус администратора у пользовтеля <b>$name</b>",
@@ -620,7 +620,7 @@ class BotAdministrativeLogicFactory
         $adminBotUser->save();
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вас разжаловали с должности администратора, теперь вам недоступны административные возможности"
@@ -641,7 +641,7 @@ class BotAdministrativeLogicFactory
         $adminBotUser->save();
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы изменили свой рабочий статус на <b>" . ($adminBotUser->is_work ? "Работаю" : "Не работаю") . "</b>." .
@@ -713,7 +713,7 @@ class BotAdministrativeLogicFactory
         }
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $this->botUser->telegram_chat_id,
                 "Вы стали нашим <b>V.I.P.</b> пользователем! Поздравляем!"
@@ -758,7 +758,7 @@ class BotAdministrativeLogicFactory
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
                 "Вас отметили в заведении с сообщением:\n$info"
@@ -813,7 +813,7 @@ class BotAdministrativeLogicFactory
             ->first();
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendInlineKeyboard(
                 $userBotUser->telegram_chat_id,
                 "Вам отправили запрос на ввод пользовательских данных с сообщением:\n$info",
@@ -869,7 +869,7 @@ class BotAdministrativeLogicFactory
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
-            ->whereId($this->bot->id)
+            ->whereBot($this->bot)
             ->sendInlineKeyboard(
                 $userBotUser->telegram_chat_id,
                 "Вам отправили запрос на обновление главного меню с сообщением:\n$info",

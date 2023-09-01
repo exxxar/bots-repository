@@ -1,5 +1,5 @@
 <script setup>
-import Pagination from '@/ClientTg/Components/Shop/Helpers/Pagination.vue';
+import Pagination from '@/ClientTg/Components/Pagination.vue';
 
 </script>
 <template>
@@ -26,7 +26,7 @@ import Pagination from '@/ClientTg/Components/Shop/Helpers/Pagination.vue';
 
             v-for="(page, index) in pages"
         >
-            <div class=" d-flex justify-content-between">
+            <div class=" d-flex justify-content-between align-items-center">
                 <strong @click="selectPage(page)">#{{ page.id || 'Не указано' }}
                     <span v-if="page.slug">{{ page.slug.command || 'Не указано' }}</span>
                     <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
@@ -78,11 +78,11 @@ export default {
             need_new_page: false,
         }
     },
-    watch: {
+  /*  watch: {
         search: function (oldVal, newVal) {
             this.loadPages()
         }
-    },
+    },*/
     computed: {
         ...mapGetters(['getPages', 'getPagesPaginateObject']),
     },
@@ -90,6 +90,10 @@ export default {
         this.loadPages();
 
 
+        window.addEventListener("reload-page-list", (e) => {
+            console.log("Test reload-page-list")
+            this.loadPages();
+        } );
     },
     methods: {
         openPageMenuModal(pageId){

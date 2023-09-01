@@ -170,11 +170,23 @@ class CompanyLogicFactory
         return new CompanyResource($company);
     }
 
-    public function locationsList($companyId): LocationCollection
+    public function locationsList($companyId = null, $size = null): LocationCollection
     {
-        $locations = Location::query()
-            ->where("company_id", $companyId)
-            ->get();
+        $size = $size ?? config('app.results_per_page');
+
+        $locations = Location::query();
+
+        if (is_null($companyId))
+            $locations = $locations
+                ->with(["company"]);
+
+        if (!is_null($companyId))
+            $locations = $locations
+                ->where("company_id", $companyId);
+
+        $locations = $locations
+            ->orderBy("created_at", "DESC")
+            ->paginate($size);
 
         return new LocationCollection($locations);
     }
@@ -216,7 +228,7 @@ class CompanyLogicFactory
         $tmp->is_active = true;
         $tmp->can_booking = $data["can_booking"] == "true" ? true : false;
 
-        $locationId = $tmp["id"] ?? null;
+        $locationId = $tmp->id ?? null;
         if (!is_null($locationId)) {
             $location = Location::query()
                 ->where("id", $locationId)

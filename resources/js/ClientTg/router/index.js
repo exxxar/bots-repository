@@ -33,6 +33,11 @@ import AdminActions from '@/ClientTg/Pages/Admin/Actions.vue';
 import AdminShopManager from '@/ClientTg/Pages/Admin/ShopManager.vue';
 import AdminCompanyManager from '@/ClientTg/Pages/Admin/CompanyManager.vue';
 import AdminBotManager from '@/ClientTg/Pages/Admin/BotManager.vue';
+import AdminBotPage from '@/ClientTg/Pages/Admin/BotManager/Pages.vue';
+import AdminBotSlug from '@/ClientTg/Pages/Admin/BotManager/Slugs.vue';
+import AdminBotDialog from '@/ClientTg/Pages/Admin/BotManager/Dialogs.vue';
+import AdminBotKeyboard from '@/ClientTg/Pages/Admin/BotManager/Keyboards.vue';
+import AdminBotAmo from '@/ClientTg/Pages/Admin/BotManager/Amo.vue';
 import AdminBonusProduct from '@/ClientTg/Pages/Admin/BonusProduct.vue';
 
 export const routes = [
@@ -198,6 +203,42 @@ export const adminRoutes = [
         component: AdminBotManager,
         meta: { title: 'Настройки бота', hide_menu:true, need_admin_menu:true }
     },
+
+    {
+        name: 'AdminBotAmo',
+        path: '/admin-bot-amo',
+        component: AdminBotAmo,
+        meta: { title: 'AMO CRM', hide_menu:true, need_admin_menu:true }
+    },
+
+    {
+        name: 'AdminBotPage',
+        path: '/admin-bot-page',
+        component: AdminBotPage,
+        meta: { title: 'Страницы бота', hide_menu:true, need_admin_menu:true }
+    },
+
+    {
+        name: 'AdminBotSlug',
+        path: '/admin-bot-slug',
+        component: AdminBotSlug,
+        meta: { title: 'Скрипты бота', hide_menu:true, need_admin_menu:true }
+    },
+
+    {
+        name: 'AdminBotDialog',
+        path: '/admin-bot-dialog',
+        component: AdminBotDialog,
+        meta: { title: 'Диалоги бота', hide_menu:true, need_admin_menu:true }
+    },
+
+    {
+        name: 'AdminBotKeyboard',
+        path: '/admin-bot-keyboard',
+        component: AdminBotKeyboard,
+        meta: { title: 'Клавитуары бота', hide_menu:true, need_admin_menu:true }
+    },
+
     {
         name: 'AdminStatistic',
         path: '/admin-statistic',

@@ -2,10 +2,13 @@
 
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\TelegramController;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 /*
@@ -93,3 +96,25 @@ Route::prefix("web")
 require __DIR__ . '/clients/admin-client.php';
 require __DIR__ . '/clients/bot-client.php';
 require __DIR__ . '/auth.php';
+
+Route::post('/sanctum/token', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+        'device_name' => 'required',
+    ]);
+
+    $user = User::query()
+        ->where('email', $request->email)
+        ->first();
+
+    if (! $user || ! Hash::check($request->password, $user->password)) {
+        throw ValidationException::withMessages([
+            'email' => ['The provided credentials are incorrect.'],
+        ]);
+    }
+
+    $user->tokens()->delete();
+
+    return ['token' => $user->createToken($request->device_name,['server:update'])->plainTextToken];
+});

@@ -10,20 +10,11 @@ const getters = {}
 const actions = {
     async instagramQuestLoadData(context) {
 
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain
-        }
 
         let link = `${BASE_INSTAGRAM_QUEST_LINK}/load-data`
 
 
-        let _axios = util.makeAxiosFactory(link, 'POST', data)
+        let _axios = util.makeAxiosFactory(link, 'POST')
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

@@ -80,6 +80,7 @@ class BotPageLogicFactory
 
         $slug = $newBotPage->slug->replicate();
         $slug->slug = Str::uuid();
+        $slug->command = "[Копия]" . $slug->command;
         $slug->save();
 
         $newBotPage->bot_menu_slug_id = $slug->id;
@@ -156,6 +157,7 @@ class BotPageLogicFactory
 
         $tmp->reply_keyboard_id = null;
         $tmp->inline_keyboard_id = null;
+        $tmp->bot_id = $this->bot->id;
 
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($tmp->reply_keyboard);

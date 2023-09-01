@@ -110,7 +110,6 @@ Route::prefix("admin")
             ->group(function () {
                 Route::get("/bots", "loadBotsAsTemplate");
 
-                Route::get("/slugs", "loadAllSlugs");
                 Route::get("/description", "loadDescriptions");
                 Route::post("/telegram-channel-id", "requestTelegramChannel");
                 Route::get("/keyboards/{botId}", "loadKeyboards");

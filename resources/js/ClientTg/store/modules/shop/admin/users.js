@@ -19,14 +19,10 @@ const actions = {
         let page = payload.page || 0
         let size = 12
 
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
 
         let link = `${BASE_USERS_LINK}/search?page=${page}&size=${size}`
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain,
             ...payload.dataObject
         })
 
@@ -44,12 +40,8 @@ const actions = {
     async removeUsers(context, payload = {dataObject: null}) {
         let link = `${BASE_USERS_LINK}/remove`
 
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
 
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain,
             ...payload.dataObject
         })
 
@@ -63,12 +55,7 @@ const actions = {
     async addUsers(context, payload = {dataObject: null}) {
         let link = `${BASE_USERS_LINK}/add`
 
-        let tgData = window.Telegram.WebApp.initData
-        let botDomain = window.currentBot.bot_domain || null
-
         let _axios = util.makeAxiosFactory(link, 'POST', {
-            tgData: tgData,
-            botDomain: botDomain,
             ...payload.dataObject
         })
 

@@ -13,6 +13,69 @@ const getters = {
 }
 
 const actions = {
+
+    async switchBotStatus(context) {
+        let link = `${BASE_BOTS_LINK}/switch-status`
+        let _axios = util.makeAxiosFactory(link,"POST")
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async removeKeyboardTemplate(context, payload = {templateId: null}) {
+
+        let link = `${BASE_BOTS_LINK}/remove-keyboard-template/${payload.templateId}`
+
+        let _axios = util.makeAxiosFactory(link,"POST")
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async createKeyboardTemplate(context, payload = {keyboardForm: null}) {
+        let link = `${BASE_BOTS_LINK}/keyboard-template`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload.keyboardForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async editKeyboardTemplate(context, payload = {keyboardForm: null}) {
+
+        let link = `${BASE_BOTS_LINK}/edit-keyboard-template`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload.keyboardForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadBotKeyboards(context) {
+
+
+        let link = `${BASE_BOTS_LINK}/keyboards`
+
+        let _axios = util.makeAxiosFactory(link,'POST')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadBots(context, payload = {dataObject: null, page: 0, size: 50}) {
         let page = payload.page || 0
         let size = payload.size || 50
@@ -35,16 +98,6 @@ const actions = {
         })
     },
     async updateBot(context, payload = {botForm: null}) {
-
-        let tgData =   window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        payload.botForm.append("tgData",tgData)
-        payload.botForm.append("slug_id",slugId)
-        payload.botForm.append("botDomain",botDomain)
-
-
         let link = `${BASE_BOTS_LINK}/bot-update`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.botForm)
@@ -69,14 +122,6 @@ const actions = {
         })
     },
     async saveAmoCRM(context, payload = {amoForm: null}) {
-
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        payload.amoForm.append("tgData", tgData)
-        payload.amoForm.append("slug_id", slugId)
-        payload.amoForm.append("botDomain", botDomain)
 
         let link = `${BASE_BOTS_LINK}/save-amo`
 
@@ -115,7 +160,6 @@ const actions = {
         })
     },
 
-
     async restoreBot(context, payload = {botId: null}) {
         let link = `${BASE_BOTS_LINK}/restore/${payload.botId}`
 
@@ -151,19 +195,10 @@ const actions = {
     },
     async loadImageMenus(context) {
 
-        let tgData =   window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-        }
 
         let link = `${BASE_BOTS_LINK}/image-menu`
 
-        let _axios = util.makeAxiosFactory(link,"POST", data)
+        let _axios = util.makeAxiosFactory(link,"POST")
 
         return _axios.then((response) => {
             return Promise.resolve(response.data.data);
@@ -174,14 +209,8 @@ const actions = {
     },
     async loadBotSlugs(context, payload = { isGlobal:false}) {
 
-        let tgData =   window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
 
         let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
             is_global: payload.isGlobal || false
         }
 

@@ -54,6 +54,7 @@ class CompanyController extends Controller
 
     public function loadLocations(Request $request): \App\Http\Resources\LocationCollection
     {
+        $bot = $request->bot;
         return BusinessLogic::companies()
             ->locationsList($bot->company_id ?? null);
     }

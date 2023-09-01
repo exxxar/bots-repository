@@ -23,7 +23,13 @@ class TelegramAdminCheck
     public function handle(Request $request, Closure $next): Response
     {
 
+        $headerTgDataEncrypted = $request->header("X-Cashman-Tg-Data") ?? null;
+        $headerBotDomainEncrypted = $request->header("X-Cashman-Bot-Domain") ?? null;
+
         $botDomain = $request->botDomain ?? $request->bot_domain ?? null;
+
+        if (!is_null($headerBotDomainEncrypted))
+            $botDomain = base64_decode($headerBotDomainEncrypted);
 
         $isDebug = env("APP_DEBUG");
 
@@ -57,8 +63,11 @@ class TelegramAdminCheck
         if (is_null($bot))
             return \response()->json(["error" => "bot not found"], 400);
 
+        $tgData = $request->tgData;
+        if (!is_null($headerTgDataEncrypted))
+            $tgData = base64_decode($headerTgDataEncrypted);
 
-        parse_str($request->tgData, $arr);
+        parse_str($tgData, $arr);
 
         $tgUser = $arr['user'] ?? null;
 
@@ -87,7 +96,7 @@ class TelegramAdminCheck
         }
 
 
-        if ($this->validateTGData($bot->bot_token, $request->tgData)) {
+        if ($this->validateTGData($bot->bot_token, $tgData)) {
             $request->botUser = $botUser;
             $request->bot = $bot;
 

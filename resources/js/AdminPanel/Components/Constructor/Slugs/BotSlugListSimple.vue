@@ -97,7 +97,7 @@ export default {
             this.$store.dispatch("loadSlugs", {
                 dataObject:{
                     botId: this.bot.id,
-                    needGlobal: this.need_global
+                    needGlobal: this.global
                 }
             }).then(resp => {
                 this.slugs = this.getSlugs

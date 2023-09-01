@@ -1,5 +1,5 @@
 <script setup>
-import Pagination from '@/ClientTg/Components/Shop/Helpers/Pagination.vue';
+import Pagination from '@/ClientTg/Components/Pagination.vue';
 
 </script>
 <template>
@@ -7,12 +7,12 @@ import Pagination from '@/ClientTg/Components/Shop/Helpers/Pagination.vue';
     <div v-if="dialogs.length>0" >
         <div v-for="(dialog, index) in dialogs" class="mb-2">
             <h6> #{{ dialog.id }} - {{ dialog.title || 'Не указано ' }} ({{ dialog.slug || 'Не указано' }})</h6>
-            <div class="list-group list-boxes" v-if="dialog.bot_dialog_commands.length>0">
+            <div class="list-group list-boxes " v-if="dialog.bot_dialog_commands.length>0">
                 <div
                     @click="selectDialog(command)"
                    v-for="(command, index) in dialog.bot_dialog_commands"
-                   class="border border-green1-dark rounded-s shadow-xs p-3">
-                  {{ command.pre_text || '-' }}
+                   class="border border-green1-dark rounded-s shadow-xs p-3 mb-2">
+                  #{{command.id}} {{ command.pre_text || '-' }}
                 </div>
 
             </div>

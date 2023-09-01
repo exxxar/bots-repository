@@ -17,6 +17,7 @@ import watches from "./modules/shop/watch";
 import pages from "./modules/pages";
 import bots from "./modules/bots";
 import dialogs from "./modules/dialogs";
+import slugs from "./modules/slugs";
 
 import util from "./modules/utilites";
 
@@ -30,18 +31,39 @@ export default createStore({
         getErrors: state => state.errors || [],
     },
     actions: {
+        async sendToChannel(context, payload = {mailForm: null}) {
+
+            let link = `/bot-client/send-to-channel`
+
+            let _axios = util.makeAxiosFactory(link, 'POST', payload.mailForm)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
+        async requestTelegramChannelId(context, payload = {dataObject:null}) {
+
+
+
+            let data = {
+                ...payload.dataObject
+            }
+            let link = `/bot-client/telegram-channel-id`
+
+            let _axios = util.makeAxiosFactory(link,'POST',data)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
         async callbackForm(context, payload = {callbackForm: null}) {
-
-            let tgData = window.Telegram.WebApp.initData
-            let botDomain = window.currentBot.bot_domain || null
-            let slugId = window.currentScript || null
-
-
             let callbackForm = payload.callbackForm
-
-            callbackForm.append("tgData", tgData)
-            callbackForm.append("slugId", slugId)
-            callbackForm.append("botDomain", botDomain)
 
             let link = `/bot-client/callback`
 
@@ -75,6 +97,7 @@ export default createStore({
         company,
         pages,
         bots,
-        dialogs
+        dialogs,
+        slugs
     }
 })

@@ -9,19 +9,11 @@ const getters = {}
 
 const actions = {
     async bonusProductPrepare(context) {
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
 
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain
-        }
 
         let link = `${BASE_BONUS_PRODUCT_LINK}/prepare`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', data)
+        let _axios = util.makeAxiosFactory(link, 'POST')
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

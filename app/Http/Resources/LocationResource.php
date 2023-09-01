@@ -27,6 +27,7 @@ class LocationResource extends JsonResource
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
             'imageMenus' => ImageMenuCollection::make($this->whenLoaded('imageMenus')),
+            'company' => CompanyResource::make($this->whenLoaded('company')),
         ];
     }
 }

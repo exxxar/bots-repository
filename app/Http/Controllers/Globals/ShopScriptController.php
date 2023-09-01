@@ -84,7 +84,7 @@ class ShopScriptController extends SlugController
         if ($scriptId == "route") {
             Inertia::setRootView("shop");
 
-            return Inertia::render('Shop/Main', [
+            return Inertia::render('Main', [
                 'bot' => BotSecurityResource::make($bot),
             ]);
         }
@@ -103,7 +103,7 @@ class ShopScriptController extends SlugController
 
         Inertia::setRootView("shop");
 
-        return Inertia::render('Shop/Main', [
+        return Inertia::render('Main', [
             'bot' => BotSecurityResource::make($bot),
             'slug_id' => $slug->id,
         ]);

@@ -1,24 +1,11 @@
 <script setup>
-import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
-import BotSlugList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugList.vue";
-import BotUserList from "@/AdminPanel/Components/Constructor/BotUserList.vue";
-
-import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
-
-import PagesList from "@/ClientTg/Components/Admin/Pages/PagesList.vue";
-import Page from "@/ClientTg/Components/Admin/Pages/Page.vue"
-import ImageMenu from "@/ClientTg/Components/Admin/ImageMenu.vue";
-import BotDialogGroupList from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
-import Shop from "@/AdminPanel/Components/Constructor/Shop/Shop.vue";
-import AmoForm from "@/ClientTg/Components/Admin/Amo/AmoForm.vue";
-
 
 </script>
 <template>
 
     <div class="card card-style bg-1"
          v-if="bot"
-         style="height: 580px;">
+         style="height: 330px;">
         <div class="card-center">
             <div class="w-100 d-flex justify-content-center p-3">
                 <img
@@ -41,6 +28,7 @@ import AmoForm from "@/ClientTg/Components/Admin/Amo/AmoForm.vue";
 
                 <div class="custom-control ios-switch">
                     <input type="checkbox"
+                           @change="switchStatus"
                            v-model="botForm.is_active"
                            class="ios-input" id="toggle-id-1">
                     <label class="custom-control-label" for="toggle-id-1"></label>
@@ -49,37 +37,8 @@ import AmoForm from "@/ClientTg/Components/Admin/Amo/AmoForm.vue";
                 <span class="ml-5 text-white" v-else>Выкл</span>
             </div>
 
-            <a href="javascript:void(0)"
-               @click="goToStep(0)"
-               v-bind:class="{'bg-highlight':step===0,'bg-gray2-light': step!==0}"
-               class="btn btn-m font-900 text-uppercase btn-center-xl mb-2">
-                <i class="fa-solid fa-info mr-1"></i> Информация о боте
-            </a>
-            <a href="javascript:void(0)"
-               @click="goToStep(4)"
-               v-bind:class="{'bg-highlight':step===4,'bg-gray2-light': step!==4}"
-               class="btn btn-m font-900 text-uppercase btn-center-xl mb-2">
-                <i class="fa-solid fa-file mr-2"></i> Страницы бота
-            </a>
-            <a href="javascript:void(0)"
-               @click="goToStep(2)"
-               v-bind:class="{'bg-highlight':step===2,'bg-gray2-light': step!==2}"
-               class="btn btn-m font-900 text-uppercase btn-center-xl mb-2">
-                <i class="fa-solid fa-list-check mr-2"></i> Настройка AMO
-            </a>
 
-            <a href="javascript:void(0)"
-               @click="goToStep(5)"
-               v-bind:class="{'bg-highlight':step===5,'bg-gray2-light': step!==5}"
-               class="btn btn-m font-900 text-uppercase btn-center-xl mb-2">
-                <i class="fa-brands fa-shopify mr-2"></i> Настройка меню
-            </a>
-            <a href="javascript:void(0)"
-               @click="goToStep(1)"
-               v-bind:class="{'bg-highlight':step===1,'bg-gray2-light': step!==1}"
-               class="btn btn-m font-900 text-uppercase btn-center-xl">
-                <i class="fa-brands fa-shopify mr-2"></i> Настройка клавиатур
-            </a>
+
         </div>
         <div class="card-overlay bg-black opacity-70"></div>
     </div>
@@ -171,18 +130,15 @@ import AmoForm from "@/ClientTg/Components/Admin/Amo/AmoForm.vue";
                                         </div>
                                     </template>
                                 </Popper>
-                                Канал для заказов (id) <a href="" class="ml-2"><i
-                                class="fa-brands fa-telegram"></i></a>
+                                Канал для заказов (id)
+                                <span @click="requestChannelId('order_channel')"><i
+                                    class="fa-brands fa-telegram ml-2 color-blue2-dark"></i></span>
                             </div>
                             <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
 
                         </label>
 
-                        <!--                                <TelegramChannelHelper
-                                                            :token="botForm.bot_token"
-                                                            :param="'order_channel'"
-                                                            v-on:callback="addTextTo"
-                                                        />-->
+
                     </div>
                     <input type="text" class="form-control"
                            placeholder="id канала"
@@ -196,13 +152,11 @@ import AmoForm from "@/ClientTg/Components/Admin/Amo/AmoForm.vue";
                 <div class="mb-2">
                     <div class="d-flex justify-content-between">
                         <label class="form-label d-flex justify-content-between mt-2" id="bot-main-channel">Канал
-                            для постов (id,рекламный)</label>
+                            для постов (id,рекламный)
+                            <span @click="requestChannelId('main_channel')"><i
+                                class="fa-brands fa-telegram ml-2 color-blue2-dark"></i></span>
+                        </label>
 
-                        <!--                                <TelegramChannelHelper
-                                                            :token="botForm.bot_token"
-                                                            :param="'main_channel'"
-                                                            v-on:callback="addTextTo"
-                                                        />-->
                     </div>
                     <input type="text" class="form-control"
                            placeholder="id канала"
@@ -562,94 +516,15 @@ import AmoForm from "@/ClientTg/Components/Admin/Amo/AmoForm.vue";
         </div>
     </form>
 
-
-    <div v-if="step===2">
-
-        <AmoForm
-            :bot="bot"
-            :data="botForm.amo"
-            v-if="!load&&bot"
-        />
-
-    </div>
-
-
-    <div v-if="step===4">
-
-        <div class="card card-style">
-            <div class="content mb-0">
-                <PagesList
-                    v-if="!loadPageList&&!load"
-                    :editor="true"
-                    v-on:callback="pageListCallback"/>
-            </div>
-        </div>
-
-        <Page
-            v-if="!loadPage&&!load"
-            :page="page"
-            v-on:callback="pageCallback"/>
-
-
-    </div>
-
-    <div v-if="step===5">
-        <ImageMenu
-            :bot="bot"
-            v-if="!load"
-        />
-    </div>
-
-    <div v-if="step===1">
-        <KeyboardList
-            :select-mode="false"
-            v-if="!load"/>
-    </div>
-    <!--
-        <div v-if="step===8">
-            <Shop v-if="!load"/>
-        </div>
-
-
-
-
-
-        <div v-if="step===1">
-            <KeyboardList
-                :select-mode="false"
-                v-if="!load"/>
-        </div>
-
-        <div v-if="step===6">
-            <BotDialogGroupList
-                v-if="!load"/>
-        </div>
-
-        <div v-if="step===2">
-            <BotSlugList
-                v-if="!load"
-            />
-        </div>
-
-
-
-        </form>-->
 </template>
 <script>
-
-import {mapGetters} from "vuex";
 
 export default {
     data() {
         return {
-            page: null,
-            step: 0,
             load: false,
-            loadPage: false,
-            loadPageList: false,
             need_payments: false,
             need_shop: false,
-            command: null,
             bot: null,
             botForm: {
                 is_template: false,
@@ -689,17 +564,21 @@ export default {
         },
     },
 
+
     mounted() {
 
-
         this.loadBotAdminConfig();
+
+        window.addEventListener("select-telegram-channel-id", (e) => {
+            this.botForm[e.detail.param] = e.detail.channel
+        });
+
 
     },
     methods: {
         loadBotAdminConfig() {
             this.$store.dispatch("loadBotAdminConfig").then((resp) => {
                 this.bot = resp.data
-                console.log(resp.data)
 
                 this.botForm = {
                     id: this.bot.id || null,
@@ -742,28 +621,7 @@ export default {
             })
         },
 
-        loadSlugsByBotTemplate(botId) {
 
-            this.load = true
-
-            this.$store.dispatch("loadBotSlugs", {
-                botId: botId
-            }).then((resp) => {
-                this.botForm.slugs = resp
-
-                this.$nextTick(() => {
-                    this.load = false
-
-                });
-            })
-        },
-        loadPagesByBotTemplate(botId) {
-            this.$store.dispatch("loadBotPages", {
-                botId: botId
-            }).then((resp) => {
-                this.botForm.pages = resp
-            })
-        },
 
         getPhoto(img) {
             return {imageUrl: URL.createObjectURL(img)}
@@ -792,6 +650,13 @@ export default {
             else
                 this.botForm.image = null
         },
+        switchStatus(){
+            this.$store.dispatch("switchBotStatus").then(()=>{
+                this.$botNotification.success(
+                    "Конструктор ботов","Статус бота успешно изменен!"
+                );
+            })
+        },
         addBot() {
 
             let data = new FormData();
@@ -819,11 +684,10 @@ export default {
 
                 this.$emit("callback", response.data)
 
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
-                    type: 'success'
-                });
+                this.$botNotification.success(
+                    "Конструктор ботов",
+                    (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!")
+                );
 
                 if (this.bot == null)
                     this.botForm = {
@@ -858,7 +722,7 @@ export default {
                         selected_bot_template_id: null,
 
                         pages: [],
-                        is_active:  false,
+                        is_active: false,
 
                     }
             }).catch(err => {
@@ -867,32 +731,11 @@ export default {
 
 
         },
-        addTextTo(object = {param: null, text: null}) {
-            this.botForm[object.param] = object.text;
 
-        },
-        pageListCallback(page) {
-            this.loadPage = true
-            this.page = page
-            this.$nextTick(() => {
-                this.loadPage = false
 
-            });
-        },
 
-        pageCallback(page) {
-            this.loadPageList = true
-            this.$nextTick(() => {
-                this.loadPageList = false
-            });
-        },
-        goToStep(step) {
-            this.step = step
-
-            this.$nextTick(() => {
-                window.scrollTo(0, 630)
-                //document.getElementById('user-profile-info').scrollIntoView();
-            })
+        requestChannelId(param) {
+            this.$botPages.telegramChannelHelper(param);
         }
     }
 }

@@ -48,10 +48,6 @@ const getters = {
 const actions = {
     async startCheckout(context){
 
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
         let ids = []
         context.state.items.forEach(item => {
             if (item.product)
@@ -59,9 +55,6 @@ const actions = {
         })
 
         let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
             ids:ids
         }
 

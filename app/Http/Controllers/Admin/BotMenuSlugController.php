@@ -23,12 +23,14 @@ class BotMenuSlugController extends Controller
     public function index(Request $request): BotMenuSlugCollection
     {
         $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->botId ?? null)
-            ->first();
+            ->find($request->botId);
 
-        return BusinessLogic::slugs()
-            ->setBot($bot)
+        $slugs = BusinessLogic::slugs();
+
+        if (!is_null($bot))
+            $slugs = $slugs->setBot($bot);
+
+        return $slugs
             ->list(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page'),

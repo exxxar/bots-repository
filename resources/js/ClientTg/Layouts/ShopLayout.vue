@@ -2,22 +2,7 @@
 
 import {Head} from '@inertiajs/vue3'
 
-import Notifications from "@/ClientTg/Components/Shop/Modals/Notifications.vue";
-import AddToCartModal from "@/ClientTg/Components/Shop/Modals/AddToCartModal.vue";
-import CashBackItemInfoModal from "@/ClientTg/Components/Shop/Modals/CashBackItemInfoModal.vue";
-import QrCodeModal from "@/ClientTg/Components/Shop/Modals/QrCodeModal.vue";
-import EventCallbackForm from "@/ClientTg/Components/Shop/Modals/EventCallbackForm.vue";
 
-
-import ShareMenuBar from "@/ClientTg/Components/Shop/Modals/ShareMenuBar.vue";
-import HighlightsMenuBar from "@/ClientTg/Components/Shop/Modals/HighlightsMenuBar.vue";
-import Preloader from "@/ClientTg/Components/Shop/Helpers/Preloader.vue";
-import SideBar from "@/ClientTg/Components/Shop/Modals/SideBar.vue";
-import SideBarAdmin from "@/ClientTg/Components/Shop/Modals/SideBarAdmin.vue";
-
-
-import PageMenuModal from "@/ClientTg/Components/Shop/Modals/PageMenuModal.vue";
-import KeyboardMenuModal from "@/ClientTg/Components/Shop/Modals/KeyboardMenuModal.vue";
 </script>
 <template>
 
@@ -25,12 +10,12 @@ import KeyboardMenuModal from "@/ClientTg/Components/Shop/Modals/KeyboardMenuMod
         <title>CashMan - система твоего бизнеса внутри</title>
         <meta name="description" content="CashMan - система твоего бизнеса внутри"/>
     </Head>
-    <Preloader/>
+<!--    <Preloader/>
     <AddToCartModal/>
     <CashBackItemInfoModal/>
     <QrCodeModal/>
     <EventCallbackForm/>
-    <Notifications/>
+    <Notifications/>-->
 
 
     <div id="page">
@@ -159,15 +144,16 @@ import KeyboardMenuModal from "@/ClientTg/Components/Shop/Modals/KeyboardMenuMod
 
         <slot/>
 
+        <slot name="modals"></slot>
         <!-- end of page content-->
-        <ShareMenuBar/>
+<!--        <ShareMenuBar/>
         <HighlightsMenuBar/>
 
         <SideBar/>
         <SideBarAdmin/>
 
         <PageMenuModal/>
-        <KeyboardMenuModal/>
+        <KeyboardMenuModal/>-->
     </div>
 
 </template>
@@ -186,13 +172,13 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['cartTotalCount', 'favoritesCount']),
+        ...mapGetters(['cartTotalCount', 'favoritesCount','getSelf']),
         tg() {
             return window.Telegram.WebApp;
         },
     },
     mounted() {
-
+        console.log(window.currentBot)
     },
     methods: {
         openLink(url) {

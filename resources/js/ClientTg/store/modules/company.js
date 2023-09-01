@@ -25,14 +25,8 @@ const actions = {
         let page = payload.page || 0
         let size = payload.size || 50
 
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
 
         let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
             ...payload
         }
 
@@ -54,19 +48,9 @@ const actions = {
     },
     async updateCompany(context, payload= {companyForm: null}){
 
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-            ...payload.companyForm
-        }
 
         let link = `${BASE_COMPANIES_LINK}/company-update`
-        let _axios = util.makeAxiosFactory(link, 'POST',data)
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.companyForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -77,20 +61,11 @@ const actions = {
     },
     async loadCompany(context) {
 
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-        }
 
         let link = `${BASE_COMPANIES_LINK}/company`
         let method = 'POST'
 
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let _axios = util.makeAxiosFactory(link, method)
 
         return _axios.then((response) => {
             let dataObject = response.data
@@ -103,19 +78,10 @@ const actions = {
     },
     async loadLocationsByCompany(context) {
 
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-        }
 
         let link = `${BASE_COMPANIES_LINK}/location-list`
 
-        let _axios = util.makeAxiosFactory(link,"POST", data)
+        let _axios = util.makeAxiosFactory(link,"POST")
 
         return _axios.then((response) => {
             let dataObject = response.data
@@ -130,20 +96,9 @@ const actions = {
     },
     async createLocation(context, payload = {locationForm: null}) {
 
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-            ...payload.locationForm
-        }
-
         let link = `${BASE_COMPANIES_LINK}/location`
 
-        let _axios = util.makeAxiosFactory(link,"POST", data)
+        let _axios = util.makeAxiosFactory(link,"POST",  payload.locationForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response);

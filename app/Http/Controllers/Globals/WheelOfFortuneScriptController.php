@@ -78,6 +78,13 @@ class WheelOfFortuneScriptController extends SlugController
                 ],
                 [
                     "type" => "text",
+                    "key" => "callback_message",
+                    "value" => "Спасибо за ваше участие! Вы выиграли приз!
+Когда будете готовы сделать заказ, позвоните по номеру: +7 (999) 418-28-84 и при заказе, обязательно, уточните что вы выиграли в «Колесо Фортуны»",
+
+                ],
+                [
+                    "type" => "text",
                     "key" => "btn_text",
                     "value" => "К заданию",
 
@@ -249,10 +256,17 @@ class WheelOfFortuneScriptController extends SlugController
             ->where("key", "rules_text")
             ->first();
 
+        $callback_message = Collection::make($slug->config)
+            ->where("key", "callback_message")
+            ->first();
+
+
+
         return response()->json(
             [
                 "wheels" => array_values($wheels),
                 'rules' => $rules["value"] ?? null,
+                'callback_message' => $rules["value"] ?? null,
             ]
 
         );

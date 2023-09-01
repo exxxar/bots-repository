@@ -48,13 +48,42 @@ class BotSlugLogicFactory
      */
     public function list($search = null, $size = null, bool $needGlobal = false): BotMenuSlugCollection
     {
-        if (is_null($this->bot))
-            throw new HttpException(404, "Бот не найден!");
 
         $size = $size ?? config('app.results_per_page');
 
 
-        if ($needGlobal) {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $botMenuSlugs = BotMenuSlug::query()
+            ->where("bot_id", $this->bot->id);
+
+        if ($needGlobal)
+            $botMenuSlugs = $botMenuSlugs->where("is_global", true);
+
+        if (!is_null($search))
+            $botMenuSlugs = $botMenuSlugs
+                ->where(function ($q) use ($search) {
+                    $q->where("command", "like", "%$search%")
+                        ->orWhere("comment", "like", "%$search%");
+                });
+
+        $botMenuSlugs = $botMenuSlugs
+            ->orderBy("created_at", "desc")
+            ->paginate($size);
+
+
+        return new BotMenuSlugCollection($botMenuSlugs);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function globalList($search = null, $size = null): BotMenuSlugCollection
+    {
+
+        $size = $size ?? config('app.results_per_page');
+
 
             $botMenuSlugs = BotMenuSlug::query()
                 ->where("is_global", true)
@@ -72,25 +101,9 @@ class BotSlugLogicFactory
                 ->paginate($size);
 
             return new BotMenuSlugCollection($botMenuSlugs);
-        }
 
-        $botMenuSlugs = BotMenuSlug::query()
-            ->where("bot_id", $this->bot->id);
-
-        if (!is_null($search))
-            $botMenuSlugs = $botMenuSlugs
-                ->where(function ($q) use ($search) {
-                    $q->where("command", "like", "%$search%")
-                        ->orWhere("comment", "like", "%$search%");
-                });
-
-        $botMenuSlugs = $botMenuSlugs
-            ->orderBy("created_at", "desc")
-            ->paginate($size);
-
-
-        return new BotMenuSlugCollection($botMenuSlugs);
     }
+
 
     /**
      * @throws HttpException

@@ -51,6 +51,7 @@ class Handler extends ExceptionHandler
         });
 
 
+
         $this->renderable(function (HttpException $e, Request $request) {
             //if ($request->is('api/*'))
             return response()->json([
@@ -64,6 +65,14 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => $e->getMessage()
             ], 400);
+
+        });
+
+        $this->renderable(function (\Exception $e, Request $request) {
+            //if ($request->is('api/*'))
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
 
         });
     }

@@ -4,6 +4,7 @@ import KeyboardList from "@/ClientTg/Components/Admin/Keyboards/KeyboardList.vue
 import PagesList from "@/ClientTg/Components/Admin/Pages/PagesList.vue";
 import BotSlugListSimple from "@/ClientTg/Components/Admin/Slugs/BotSlugListSimple.vue";
 import DialogList from "@/ClientTg/Components/Admin/Dialogs/BotDialogGroupListSimple.vue";
+import PageRules from "@/ClientTg/Components/Admin/Pages/PageRules.vue";
 import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
 </script>
 <template>
@@ -305,6 +306,23 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                         v-on:select-dialog="associateDialog"/>
                 </div>
 
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_rules"
+                               type="checkbox" id="need-rules">
+                        <label class="form-check-label" for="need-rules">
+                            Нужны правила загрузки страницы
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-2" v-if="need_rules">
+                    <PageRules
+                        :bot="bot"
+                        :rules-form="pageForm"
+                    />
+                </div>
 
                 <button class="bg-highlight btn btn-m font-900 text-uppercase btn-center-xl mb-3 w-100">Сохранить
                     страницу
@@ -331,6 +349,7 @@ export default {
 
 
             need_page_images: false,
+            need_rules: false,
             need_inline_menu: false,
             need_reply_menu: false,
             need_attach_page: false,
@@ -352,11 +371,26 @@ export default {
                 next_page_id: null,
                 next_bot_dialog_command_id: null,
                 next_bot_menu_slug_id: null,
+
+
+                rules_if: null,
+                rules_else_page_id: null,
+                rules_if_message: null,
+                rules_else_message: null,
             },
         }
     },
     watch: {
 
+        'need_rules': function (newVal, oldVal) {
+            if (!this.need_rules) {
+                this.pageForm.rules_if = null
+                this.pageForm.rules_else_page_id = null
+                this.pageForm.rules_if_message = null
+                this.pageForm.rules_else_message = null
+            }
+
+        },
         'need_page_images': function (newVal, oldVal) {
             if (!this.need_page_images) {
                 this.photos = []
@@ -417,6 +451,9 @@ export default {
                 if (this.pageForm.next_page_id != null)
                     this.need_attach_page = true
 
+                if (this.pageForm.rules_if != null)
+                    this.need_rules = true
+
                 this.need_clean = true
             },
             deep: true
@@ -444,6 +481,12 @@ export default {
                 next_page_id: page.next_page_id || null,
                 next_bot_dialog_command_id: page.next_bot_dialog_command_id || null,
                 next_bot_menu_slug_id: page.next_bot_menu_slug_id || null,
+
+                rules_if: page.rules_if || null,
+                rules_else_page_id: page.rules_else_page_id || null,
+
+                rules_if_message: page.rules_if_message || null,
+                rules_else_message: page.rules_else_message || null,
             }
         } else
             this.clearForm()
@@ -500,6 +543,9 @@ export default {
                 next_bot_dialog_command_id: null,
                 next_bot_menu_slug_id: null,
 
+                rules_if_message: null,
+                rules_else_message: null,
+
             }
             this.photos = []
 
@@ -513,6 +559,7 @@ export default {
             this.need_attach_page = false
             this.need_attach_dialog = false
             this.need_attach_slug = false
+            this.need_rules = false
 
             this.$nextTick(() => {
                 this.need_clean = false
