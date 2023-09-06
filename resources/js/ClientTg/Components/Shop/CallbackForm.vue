@@ -20,8 +20,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
             <form v-on:submit.prevent="submitCallback">
                 <div class="input-style input-style-2 has-icon">
                     <i class="input-icon fa fa-user"></i>
-                    <span class="color-highlight">Ф.И.О.</span>
-                    <em>(нужно)</em>
+
                     <input class="form-control"
                            v-model="callbackForm.name"
                            type="text" placeholder="Иванов Иван Иванович" required>
@@ -29,8 +28,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 
                 <div class="input-style input-style-2 has-icon">
                     <i class="input-icon fa-solid fa-phone"></i>
-                    <span class="color-highlight">Телефон</span>
-                    <em>(нужно)</em>
+
                     <input class="form-control"
                            type="text"
                            v-mask="'+7(###)###-##-##'"
@@ -63,7 +61,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
     </div>
 </template>
 <script>
-import baseJS from '../../modules/custom.js'
+
 
 export default {
     props: ["type"],
@@ -78,7 +76,7 @@ export default {
         }
     },
     mounted() {
-        baseJS.handler();
+
 
         if (this.type === 'booking')
             this.callbackForm.message = 'Добрый день! Я хочу забронировать столик! Перезвоните мне.'
