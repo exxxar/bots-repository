@@ -343,6 +343,7 @@ class AdminBotController extends Controller
         BusinessLogic::administrative()
             ->setBotUser( $request->botUser ?? null)
             ->setBot($request->bot ?? null)
+            ->setSlug($request->slug ?? null)
             ->vipStore($request->all());
 
         return response()->noContent();
