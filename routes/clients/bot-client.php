@@ -34,12 +34,6 @@ Route::prefix("bot-client")
         Route::post('/callback', [BotController::class, "sendCallback"])
             ->middleware(["tgAuth.admin"]);
 
-        Route::prefix("admin")
-            ->controller(AdminBotController::class)
-            ->middleware(["tgAuth.admin"])
-            ->group(function () {
-                Route::post('/load-statistic', "statistic");
-            });
 
         Route::prefix("wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)
@@ -123,6 +117,15 @@ Route::prefix("bot-client")
                 Route::post('/self-remove', "selfRemoveAdmin")
                     ->middleware(["tgAuth.admin"]);
                 Route::post('/work-status', "workStatus")
+                    ->middleware(["tgAuth.admin"]);
+
+                Route::post('/load-statistic', "statistic")
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/download-bot-statistic', "exportBotStatistic")
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/download-bot-users', "exportBotUsers")
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/download-cashback-history', "exportCashBackHistory")
                     ->middleware(["tgAuth.admin"]);
             });
 

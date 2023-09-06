@@ -34,6 +34,8 @@
 
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     props:["global"],
     data() {
@@ -44,6 +46,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters([ 'getSlugs']),
         filteredSlugs() {
             if (!this.slugs)
                 return [];
@@ -86,7 +89,9 @@ export default {
             this.$store.dispatch("loadSlugs", {
                 isGlobal: this.global || false
             }).then(resp => {
-                this.slugs = resp.data
+                this.slugs = this.getSlugs
+
+
             })
         },
 

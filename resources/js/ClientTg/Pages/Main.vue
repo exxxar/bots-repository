@@ -17,6 +17,8 @@ import PageMenuModal from "@/ClientTg/Components/Modals/Admin/PageMenuModal.vue"
 import RulesModal from "@/ClientTg/Components/Modals/Admin/RulesModal.vue";
 import KeyboardMenuModal from "@/ClientTg/Components/Modals/Admin/KeyboardMenuModal.vue";
 import TgHelperModal from "@/ClientTg/Components/Modals/Admin/TgHelperModal.vue";
+import MapModal from "@/ClientTg/Components/Modals/Admin/MapModal.vue";
+
 defineProps({
     bot: {
         type: Object,
@@ -114,6 +116,7 @@ import Layout from "ClientTg@/Layouts/ShopLayout.vue";
             <KeyboardMenuModal/>
             <RulesModal/>
             <TgHelperModal/>
+            <MapModal/>
         </template>
 
     </Layout>

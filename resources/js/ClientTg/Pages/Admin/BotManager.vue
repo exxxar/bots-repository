@@ -4,9 +4,8 @@
 <template>
 
     <div class="card card-style bg-1"
-         v-if="bot"
          style="height: 330px;">
-        <div class="card-center">
+        <div class="card-center" v-if="bot">
             <div class="w-100 d-flex justify-content-center p-3">
                 <img
                     class="object-cover" style="width:100px; border-radius:50%;"
@@ -22,6 +21,10 @@
             </p>
             <p class="color-white text-center opacity-60 mt-n1 my-1">
                 <i class="fa-solid fa-hand-holding-dollar"></i> Тариф {{ bot.tax_per_day || '0' }} ₽/день
+            </p>
+
+            <p class="color-white text-center opacity-60 mt-n1 my-1">
+                <i class="fa-regular fa-calendar-days"></i> Дней {{ bot.balance / bot.tax_per_day }} осталось
             </p>
 
             <div class="w-100 d-flex justify-content-center py-4">
@@ -40,14 +43,21 @@
 
 
         </div>
+        <div class="card-center" v-else>
+            <p>Загружаем данные бота</p>
+            <div class="d-flex justify-content-center w-100">
+                <div class="spinner-border color-orange-dark" role="status">
+                    <span class="sr-only">Загрузка...</span>
+                </div>
+            </div>
+        </div>
         <div class="card-overlay bg-black opacity-70"></div>
     </div>
 
     <form
-        v-if="step===0"
         v-on:submit.prevent="addBot"
         class="card card-style">
-        <div class="content">
+        <div class="content" v-if="bot">
             <div class="mb-0">
                 <div class="mb-2">
                     <label class="form-label d-flex justify-content-between mt-2" id="bot-domain">
@@ -511,8 +521,14 @@
                 </button>
 
             </div>
-
-
+        </div>
+        <div class="content" v-else>
+            <p>Загружаем данные бота</p>
+            <div class="d-flex justify-content-center w-100">
+                <div class="spinner-border color-orange-dark" role="status">
+                    <span class="sr-only">Загрузка...</span>
+                </div>
+            </div>
         </div>
     </form>
 

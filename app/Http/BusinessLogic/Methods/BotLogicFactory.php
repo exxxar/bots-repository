@@ -10,6 +10,9 @@ use App\Http\Resources\BotCollection;
 use App\Http\Resources\BotMenuTemplateResource;
 use App\Http\Resources\BotResource;
 use App\Http\Resources\BotUserResource;
+use App\Http\Resources\CashBackCollection;
+use App\Http\Resources\CashBackHistoryCollection;
+use App\Http\Resources\CashBackResource;
 use App\Http\Resources\ImageMenuCollection;
 use App\Http\Resources\ImageMenuResource;
 use App\Http\Resources\LocationResource;
@@ -23,6 +26,7 @@ use App\Models\BotPage;
 use App\Models\BotType;
 use App\Models\BotUser;
 use App\Models\CashBack;
+use App\Models\CashBackHistory;
 use App\Models\Company;
 use App\Models\ImageMenu;
 use App\Models\Location;
@@ -1170,5 +1174,52 @@ class BotLogicFactory
 
         $this->bot->is_active = !$this->bot->is_active;
         $this->bot->save();
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function cashbackList(): CashBackCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $cashback = CashBack::query()
+            ->with(["bot", "user", "user.botUser"])
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        return new CashBackCollection($cashback);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function cashbackHistoryList($orderBy = "user_id", $direction = "DESC"): CashBackHistoryCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $acceptFields = [
+            'money_in_check',
+            'description',
+            'operation_type',
+            'user_id',
+            'bot_id',
+            'amount',
+            'level',
+            'employee_id',
+        ];
+
+        if (!in_array($orderBy, $acceptFields))
+            throw new HttpException(400, "Поле сортировки указано неверно!");
+
+        $history = CashBackHistory::query()
+            ->with(["bot", "user", "user.botUser", "employee"])
+            ->where("bot_id", $this->bot->id)
+            ->orderBy($orderBy, ($direction == "DESC" || $direction == "ASC" ? $direction : "DESC"))
+            ->get();
+
+        return new CashBackHistoryCollection($history);
     }
 }

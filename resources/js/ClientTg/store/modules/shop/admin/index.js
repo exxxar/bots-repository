@@ -3,9 +3,6 @@ import users from './users'
 import events from './actions'
 import util from "@/AdminPanel/store/modules/utilites";
 
-const BASE_SHOP_LINK = '/bot-client/shop'
-const BASE_CASHMAN_ADMIN_LINK = '/bot-client/admin'
-
 let state = {
     ...products.state,
     ...users.state,
@@ -22,68 +19,6 @@ const actions = {
     ...products.actions,
     ...users.actions,
     ...events.actions,
-    async cashmanAdminStatisticPrepare(context) {
-
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-        }
-
-        let link = `${BASE_CASHMAN_ADMIN_LINK}/load-statistic`
-            .replace('{scriptId}', slugId)
-
-        let _axios = util.makeAxiosFactory(link, 'POST',data)
-
-        return _axios.then((response) => {
-            return Promise.resolve(response.data);
-        }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
-            return Promise.reject(err);
-        })
-    },
-    async cashmanAdminLoadData(context) {
-
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let link = `${BASE_CASHMAN_ADMIN_LINK}/load-data/${botDomain}`
-            .replace('{scriptId}', slugId)
-
-        let _axios = util.makeAxiosFactory(link, 'GET')
-
-        return _axios.then((response) => {
-            return Promise.resolve(response.data);
-        }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
-            return Promise.reject(err);
-        })
-    },
-    async cashmanAdminUserDataPrepare(context) {
-
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-        let telegramChatId = window.self.telegram_chat_id || null
-
-        let link = `${BASE_CASHMAN_ADMIN_LINK}/prepare/${botDomain}`
-            .replace('{scriptId}', slugId)
-
-        let _axios = util.makeAxiosFactory(link, 'POST', {
-            telegram_chat_id: telegramChatId
-        })
-
-        return _axios.then((response) => {
-            return Promise.resolve(response.data);
-        }).catch(err => {
-            context.commit("setErrors", err.response.data.errors || [])
-            return Promise.reject(err);
-        })
-    },
-
     async updateProductsFromVk(context, payload = {dataObject: {botDomain: null, url: null}}) {
         let link = `/vk-auth-link`
 

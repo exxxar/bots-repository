@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         prepareStatistic() {
-            return this.$store.dispatch("cashmanAdminStatisticPrepare")
+            return this.$store.dispatch("statisticLoad")
                 .then((response) => {
                     this.statistic = response.statistic
 

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Bots\Web;
 
 use App\Enums\CashBackDirectionEnum;
 use App\Events\CashBackEvent;
+use App\Exports\BotCashBackExport;
+use App\Exports\BotStatisticExport;
+use App\Exports\BotUsersExport;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
@@ -20,6 +23,7 @@ use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -38,6 +42,39 @@ class AdminBotController extends Controller
         return response()->json([
             'statistic' => $statistics
         ]);
+    }
+
+    public function exportBotStatistic(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+
+        $statistics = (object)BusinessLogic::administrative()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->statistic();
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new BotStatisticExport($statistics), "statistic.xlsx");
+    }
+
+    public function exportBotUsers(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+
+        $users = (object)BusinessLogic::botUsers()
+            ->setBot($request->bot ?? null)
+            ->all();
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new BotUsersExport($users), "users.xlsx");
+    }
+
+    public function exportCashBackHistory(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $orderBy = $request->orderBy ?? null;
+        $direction = $request->direction ?? null;
+
+        $cashback = (object)BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->cashbackHistoryList();
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new BotCashBackExport($cashback), "cashback.xlsx");
     }
 
 

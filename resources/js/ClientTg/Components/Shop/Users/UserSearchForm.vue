@@ -56,6 +56,17 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     v-if="users_paginate_object"
                     :pagination="users_paginate_object"/>
             </div>
+            <a href="javascript:void(0)"
+               @click="downloadBotUsers"
+               class="btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900 border-blue1-dark color-blue1-dark bg-theme">
+                <i class="fa-regular fa-file-excel mr-2"></i> Скачать список пользователей
+            </a>
+
+            <a href="javascript:void(0)"
+               @click="downloadCashBackHistory"
+               class="btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900 border-blue1-dark color-blue1-dark bg-theme">
+                <i class="fa-regular fa-file-excel mr-2"></i> Скачать историю CashBack
+            </a>
 
             <ReturnToBot class="mt-3"/>
         </div>
@@ -63,7 +74,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
-
+import {saveAs} from 'file-saver';
 export default {
     data() {
         return {
@@ -83,6 +94,28 @@ export default {
         this.loadUsers(0)
     },
     methods: {
+        downloadBotUsers(){
+            this.$botNotification.notification("Внимание!", "Начался формироваться документ статистики!");
+            this.$store.dispatch("downloadBotUsers").then((resp) => {
+                saveAs(resp.data, 'users.xlsx');
+
+                this.$botNotification.success("Отлично!", "Документ успешно сформирован");
+
+            }).catch(() => {
+                this.$botNotification.warning("Упс...", "Что-то пошло не так...");
+            })
+        },
+        downloadCashBackHistory(){
+            this.$botNotification.notification("Внимание!", "Начался формироваться документ статистики!");
+            this.$store.dispatch("downloadCashBackHistory").then((resp) => {
+                saveAs(resp.data, 'cashback.xlsx');
+
+                this.$botNotification.success("Отлично!", "Документ успешно сформирован");
+
+            }).catch(() => {
+                this.$botNotification.warning("Упс...", "Что-то пошло не так...");
+            })
+        },
         nextUsers(index) {
             this.loadUsers(index)
         },

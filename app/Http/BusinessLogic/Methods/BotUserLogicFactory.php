@@ -27,6 +27,25 @@ class BotUserLogicFactory
         return $this;
     }
 
+    public function all($needAdmins = false): BotUserCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $botUsers = BotUser::query()
+            ->with(["bot","cashBack"])
+            ->where("bot_id", $this->bot->id);
+
+        if ($needAdmins)
+            $botUsers = $botUsers
+                ->where("is_admin", $needAdmins);
+
+        $botUsers = $botUsers
+            ->orderBy("created_at", "DESC")
+            ->get();
+
+        return new BotUserCollection($botUsers);
+    }
     /**
      * @throws HttpException
      */

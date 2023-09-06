@@ -1,5 +1,5 @@
 <template>
-    <form v-on:submit.prevent="submit">
+    <form id="slugForm" v-on:submit.prevent="submit">
         <div class="form-floating mb-2">
             <label for="floatingInput">Команда</label>
             <input type="text"

@@ -82,6 +82,12 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                     </tbody>
                 </table>
                 <p class="text-danger" v-else>Статистика еще не загружена</p>
+
+                <a href="javascript:void(0)"
+                   @click="downloadBotStatistic"
+                   class="btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900 border-blue1-dark color-blue1-dark bg-theme">
+                    <i class="fa-regular fa-file-excel mr-2"></i> Скачать статистику
+                </a>
                 <ReturnToBot/>
             </div>
         </div>
@@ -99,6 +105,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
+import {saveAs} from 'file-saver';
 
 export default {
     data() {
@@ -118,21 +125,30 @@ export default {
         }
     },
     mounted() {
-        if (this.getSelf)
-        {
+        if (this.getSelf) {
             this.botUser = this.getSelf
             this.prepareStatistic()
         }
     },
     methods: {
         prepareStatistic() {
-            return this.$store.dispatch("cashmanAdminStatisticPrepare")
+            return this.$store.dispatch("statisticLoad")
                 .then((response) => {
                     this.statistic = response.statistic
 
                 })
         },
+        downloadBotStatistic() {
+            this.$botNotification.notification("Внимание!", "Начался формироваться документ статистики!");
+            this.$store.dispatch("downloadBotStatistic").then((resp) => {
+                saveAs(resp.data, 'result.xlsx');
 
+                this.$botNotification.success("Отлично!", "Документ успешно сформирован");
+
+            }).catch(() => {
+                this.$botNotification.warning("Упс...", "Что-то пошло не так...");
+            })
+        },
 
     }
 }

@@ -20,6 +20,18 @@ export default {
         window.dispatchEvent(new CustomEvent("reload-page-list"));
     },
 
+    map() {
+        window.dispatchEvent(new CustomEvent("open-map-modal"));
+    },
+
+    mapCallback(param){
+        window.dispatchEvent(new CustomEvent("select-map-coords", {
+            detail: {
+                param: param
+            }
+        }));
+    },
+
     rules() {
         window.dispatchEvent(new CustomEvent("open-rules-modal"));
     },

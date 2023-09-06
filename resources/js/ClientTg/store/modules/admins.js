@@ -35,7 +35,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async requestAdmin(context, payload = {dataObject: null}){
+    async requestAdmin(context, payload = {dataObject: null}) {
 
         let link = `${BASE_ADMINS_LINK}/request`
         let method = 'POST'
@@ -49,7 +49,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async sendApproveToUser(context, payload){
+    async sendApproveToUser(context, payload) {
         let link = `${BASE_ADMINS_LINK}/send-approve`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
@@ -61,7 +61,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async sendInvoice(context, payload){
+    async sendInvoice(context, payload) {
         let link = `${BASE_ADMINS_LINK}/send-invoice`
 
 
@@ -74,7 +74,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async addAdmin(context, payload){
+    async addAdmin(context, payload) {
         let link = `${BASE_ADMINS_LINK}/add`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
@@ -86,7 +86,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async removeAdmin(context, payload){
+    async removeAdmin(context, payload) {
         let link = `${BASE_ADMINS_LINK}/remove`
 
 
@@ -122,6 +122,55 @@ const actions = {
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async statisticLoad(context) {
+
+        let link = `${BASE_ADMINS_LINK}/load-statistic`
+
+        let _axios = util.makeAxiosFactory(link, 'POST')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async downloadBotStatistic(context) {
+        let _axios = util.makeAxiosFactory(`${BASE_ADMINS_LINK}/download-bot-statistic`, 'POST', null, {
+            responseType: 'blob'
+        })
+
+        return _axios.then((response) => {
+            return response
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async downloadBotUsers(context) {
+        let _axios = util.makeAxiosFactory(`${BASE_ADMINS_LINK}/download-bot-users`, 'POST', null, {
+            responseType: 'blob'
+        })
+
+        return _axios.then((response) => {
+            return response
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async downloadCashBackHistory(context, payload = {orderBy: null, direction: null}) {
+        let _axios = util.makeAxiosFactory(`${BASE_ADMINS_LINK}/download-cashback-history`, 'POST', payload, {
+            responseType: 'blob'
+        })
+
+        return _axios.then((response) => {
+            return response
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);

@@ -1,12 +1,12 @@
 <script setup>
-import Location from "@/ClientTg/Components/Location.vue";
+import Location from "@/ClientTg/Components/Admin/Location.vue";
 </script>
 
 <template>
     <div class="card card-style bg-1"
-         v-if="company"
+
          style="height: 350px;">
-        <div class="card-center">
+        <div class="card-center"    v-if="company">
             <div class="w-100 d-flex justify-content-center p-3">
                 <img
                     class="object-cover" style="width:100px; border-radius:50%;"
@@ -32,11 +32,20 @@ import Location from "@/ClientTg/Components/Location.vue";
                 Информация о расположении
             </a>
         </div>
+
+        <div class="card-center" v-else>
+            <p>Загружаем данные компании</p>
+            <div class="d-flex justify-content-center w-100">
+                <div class="spinner-border color-orange-dark" role="status">
+                    <span class="sr-only">Загрузка...</span>
+                </div>
+            </div>
+        </div>
         <div class="card-overlay bg-black opacity-70"></div>
     </div>
 
     <div class="card card-style" v-if="step===0">
-        <div class="content">
+        <div class="content" v-if="company">
             <form v-on:submit.prevent="submitForm" >
 
                 <label class="form-label d-flex justify-content-between" id="company-title">
@@ -313,7 +322,14 @@ import Location from "@/ClientTg/Components/Location.vue";
 
             </form>
         </div>
-
+        <div class="content" v-else>
+           <p>Загружаем данные компании</p>
+            <div class="d-flex justify-content-center w-100">
+                <div class="spinner-border color-orange-dark" role="status">
+                    <span class="sr-only">Загрузка...</span>
+                </div>
+            </div>
+        </div>
     </div>
 
 

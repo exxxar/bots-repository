@@ -63,7 +63,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
     </div>
 </template>
 <script>
-import baseJS from 'ClientTg@/modules/custom.js'
+import baseJS from '../../modules/custom.js'
 
 export default {
     props: ["type"],

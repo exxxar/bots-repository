@@ -3,11 +3,13 @@ import ProductForm from "@/ClientTg/Components/Admin/Shop/ProductForm.vue";
 import ProductList from "@/ClientTg/Components/Admin/Shop/ProductList.vue";
 </script>
 <template>
-    <div class="card mb-2">
-        <div class="card-header">
-            <h6>Управление магазином</h6>
-        </div>
-        <div class="card-body">
+
+    <div class="card card-style">
+        <div class="content mb-0">
+            <h3 class="font-700">Управление магазином</h3>
+            <p class="mt-n2 mb-4">
+                Three levels of roundness, small, medium and large.
+            </p>
             <div class="row" v-if="tab===1">
                 <div class="col-12">
                     <form v-on:submit.prevent="updateProducts">
@@ -36,35 +38,38 @@ import ProductList from "@/ClientTg/Components/Admin/Shop/ProductList.vue";
 
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <button
-                        type="button"
-                        @click="tab=1"
-                        v-bind:class="{'btn-info text-white':tab===1}"
-                        class="btn btn-outline-info w-100">Обновить товар из ВК
-                    </button>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-outline-info w-100">Экспорт в XLS</button>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-outline-info w-100">Импорт из XLS</button>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-outline-danger w-100">Удалить товары</button>
-                </div>
 
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <button class="btn btn-outline-info w-100">Экспортировать заказы</button>
-                </div>
-            </div>
+
+
+            <button
+                type="button"
+                @click="tab=1"
+                v-bind:class="{'btn-info text-white':tab===1}"
+                class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-blue2-dark w-100">
+                Обновить товар из ВК
+            </button>
+
+            <button class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-blue2-dark w-100">
+                Экспортировать заказы
+            </button>
+
+            <button class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-blue2-dark w-100">
+                Импорт из XLS
+            </button>
+
+            <button class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-blue2-dark w-100">
+                Экспорт в XLS
+            </button>
+
+            <button class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-blue2-dark w-100">
+                Удалить товары
+            </button>
         </div>
     </div>
 
-    <h6>Работа с товаром</h6>
+    <h6></h6>
+
+
 
     <ProductForm
         :item="selectedProduct"
