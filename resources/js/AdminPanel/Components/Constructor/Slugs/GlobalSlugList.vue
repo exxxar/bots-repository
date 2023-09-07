@@ -118,7 +118,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getSlugs', 'getSlugsPaginateObject']),
+        ...mapGetters(['getGlobalSlugs', 'getGlobalSlugsPaginateObject']),
         filteredAllSlugs() {
             if (this.slugs.length === 0)
                 return [];
@@ -143,15 +143,15 @@ export default {
     },
     methods: {
         loadAllSlugs(page = 0) {
-            this.$store.dispatch("loadSlugs", {
+            this.$store.dispatch("loadGlobalSlugs", {
                 dataObject: {
                     needGlobal: true,
-                    botId: this.bot.id
+                   /// botId: this.bot.id
                 },
                 page: page
             }).then(resp => {
-                this.slugs = this.getSlugs
-                this.slugs_paginate_object = this.getSlugsPaginateObject
+                this.slugs = this.getGlobalSlugs
+                this.slugs_paginate_object = this.getGlobalSlugsPaginateObject
             })
         },
         removeSlug(item) {

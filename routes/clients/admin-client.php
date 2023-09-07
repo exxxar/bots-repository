@@ -142,6 +142,7 @@ Route::prefix("admin")
             ->controller(\App\Http\Controllers\Admin\BotMenuSlugController::class)
             ->group(function () {
                 Route::post("/", "index");
+                Route::post("/global-list", "globalList");
                 Route::post("/slug", "createSlug");
                 Route::post("/slug-update", "updateSlug");
                 Route::post("/duplicate/{slugId}", "duplicate");

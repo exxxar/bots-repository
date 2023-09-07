@@ -46,20 +46,19 @@ class BotSlugLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, $size = null, bool $needGlobal = false): BotMenuSlugCollection
+    public function list($search = null, $size = null, bool $needGlobal = null): BotMenuSlugCollection
     {
-
-        $size = $size ?? config('app.results_per_page');
-
 
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
+        $size = $size ?? config('app.results_per_page');
+
         $botMenuSlugs = BotMenuSlug::query()
             ->where("bot_id", $this->bot->id);
 
-        if ($needGlobal)
-            $botMenuSlugs = $botMenuSlugs->where("is_global", true);
+        if (!is_null($needGlobal))
+            $botMenuSlugs = $botMenuSlugs->where("is_global", $needGlobal);
 
         if (!is_null($search))
             $botMenuSlugs = $botMenuSlugs

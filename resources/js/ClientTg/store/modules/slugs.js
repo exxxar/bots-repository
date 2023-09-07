@@ -4,15 +4,19 @@ const BASE_SLUGS_LINK = '/bot-client/slugs'
 
 let state = {
     slugs: [],
+    global_slugs: [],
     slugs_paginate_object: null,
+    global_slugs_paginate_object: null,
 }
 
 const getters = {
     getSlugs: state => state.slugs || [],
+    getGlobalSlugs: state => state.global_slugs || [],
     getSlugById: (state) => (id) => {
         return state.slugs.find(item => item.id === id)
     },
     getSlugsPaginateObject: state => state.slugs_paginate_object || null,
+    getGlobalSlugsPaginateObject: state => state.global_slugs_paginate_object || null,
 }
 
 const actions = {
@@ -43,9 +47,9 @@ const actions = {
 
         return _axios.then((response) => {
             let dataObject = response.data
-            context.commit("setSlugs", dataObject.data)
+            context.commit("setGlobalSlugs", dataObject.data)
             delete dataObject.data
-            context.commit('setSlugsPaginateObject', dataObject)
+            context.commit('setGlobalSlugsPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
@@ -64,6 +68,7 @@ const actions = {
 
         return _axios.then((response) => {
             let dataObject = response.data
+
             context.commit("setSlugs", dataObject.data)
             delete dataObject.data
             context.commit('setSlugsPaginateObject', dataObject)
@@ -134,6 +139,14 @@ const mutations = {
     setSlugsPaginateObject(state, payload) {
         state.slugs_paginate_object = payload || [];
         localStorage.setItem('cashman_slugs_paginate_object', JSON.stringify(payload));
+    },
+    setGlobalSlugs(state, payload) {
+        state.global_slugs = payload || [];
+        localStorage.setItem('cashman_global_slugs', JSON.stringify(payload));
+    },
+    setGlobalSlugsPaginateObject(state, payload) {
+        state.global_slugs_paginate_object = payload || [];
+        localStorage.setItem('cashman_global_slugs_paginate_object', JSON.stringify(payload));
     }
 }
 

@@ -34,10 +34,19 @@ class BotMenuSlugController extends Controller
             ->list(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page'),
-                $request->needGlobal ?? $request->isGlobal ?? false
+                $request->needGlobal ?? $request->isGlobal ?? null
             );
     }
 
+    public function globalList(Request $request): BotMenuSlugCollection
+    {
+
+        return  BusinessLogic::slugs()
+            ->globalList(
+                $request->search ?? null,
+                $request->get("size") ?? config('app.results_per_page')
+            );
+    }
 
     public function destroy(Request $request, $slugId): BotMenuSlugResource
     {
