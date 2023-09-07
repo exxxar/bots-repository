@@ -1,5 +1,6 @@
 <script setup>
 import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
+import Pagination from '@/AdminPanel/Components/Pagination.vue';
 </script>
 <template>
     <div class="row">
@@ -23,6 +24,12 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
                                 v-on:callback="callbackSlugs"
                                 v-on:select="selectSlug"/>
                         </div>
+
+                        <Pagination
+
+                            v-on:pagination_page="nextSlugs"
+                            v-if="paginate"
+                            :pagination="paginate"/>
                     </div>
                     <div class="row" v-else>
                         <div class="col-12">
@@ -51,10 +58,11 @@ export default {
             load: false,
             search: null,
             slugs: [],
+            paginate: [],
         }
     },
     computed: {
-        ...mapGetters(['getSlugs']),
+        ...mapGetters(['getSlugs','getSlugsPaginateObject']),
         filteredSlugs() {
             if (!this.slugs)
                 return [];
@@ -82,6 +90,9 @@ export default {
         this.loadSlugs()
     },
     methods: {
+        nextSlugs(index) {
+            this.loadSlugs(index)
+        },
         selectSlug(item) {
             this.$emit("callback", {
                 id: item.id || null,
@@ -93,16 +104,21 @@ export default {
 
             this.$notify("Вы выбрали скрипт из списка!");
         },
-        loadSlugs() {
+        loadSlugs(page = 0) {
             this.$store.dispatch("loadSlugs", {
                 dataObject:{
                     botId: this.bot.id,
                     needGlobal: this.global
-                }
+                },
+                page:page
             }).then(resp => {
                 this.slugs = this.getSlugs
+                this.paginate = this.getSlugsPaginateObject
             })
         },
+        callbackSlugs(){
+
+        }
 
     }
 }

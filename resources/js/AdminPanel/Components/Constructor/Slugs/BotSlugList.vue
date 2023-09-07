@@ -1,7 +1,7 @@
 <script setup>
 
 import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlugList.vue";
-
+import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 </script>
 <template>
@@ -54,7 +54,16 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
                   :bot="bot"
                   v-on:callback="callbackSlugs"
                   v-on:select="selectSlug"/>
+
+
         </div>
+
+
+        <Pagination
+
+            v-on:pagination_page="nextSlugs"
+            v-if="paginate"
+            :pagination="paginate"/>
 
         <div class="mb-3 col-md-12" v-if="filteredSlugs.length===0">
 
@@ -78,6 +87,7 @@ export default {
             need_global:true,
             show: false,
             slugs:[],
+            paginate:[],
             ownSearch: null,
             slugForm: {
                 command: null,
@@ -95,7 +105,7 @@ export default {
     },
     computed: {
 
-        ...mapGetters(['getCurrentBot', 'getSlugs']),
+        ...mapGetters(['getCurrentBot', 'getSlugs','getSlugsPaginateObject']),
 
         filteredSlugs() {
             if (this.slugs.length === 0)
@@ -131,16 +141,19 @@ export default {
 
     },
     methods: {
-        loadSlugs() {
+        nextSlugs(index) {
+            this.loadSlugs(index)
+        },
+        loadSlugs(page = 0) {
             this.$store.dispatch("loadSlugs", {
                 dataObject:{
                     botId: this.bot.id,
                     needGlobal: this.need_global
-                }
-
-
+                },
+                page: page
             }).then((resp) => {
                 this.slugs = this.getSlugs
+                this.paginate = this.getSlugsPaginateObject
 
 
             })
@@ -160,14 +173,7 @@ export default {
             this.$emit("select", item)
         },
 
-        loadAllSlugs() {
-            this.$store.dispatch("loadAllSlugs").then(resp => {
-                this.allSlugs = resp.data
-            })
-        },
-        addSlug(slug) {
 
-        }
     }
 }
 </script>
