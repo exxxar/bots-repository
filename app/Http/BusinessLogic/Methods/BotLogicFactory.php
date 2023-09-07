@@ -493,9 +493,14 @@ class BotLogicFactory
         $token = $this->bot->bot_token;
         $channel = $data["channel"];
 
-        $res = Http::get("https://api.telegram.org/bot$token/sendMessage?chat_id=$channel&text=channelId");
+        try {
+            $res = Http::get("https://api.telegram.org/bot$token/sendMessage?chat_id=$channel&text=channelId");
 
-        return $res->json();
+            return $res->json();
+        } catch (\Exception $exception) {
+            return null;
+        }
+
     }
 
 

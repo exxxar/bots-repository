@@ -85,12 +85,12 @@ class BotController extends Controller
             "channel" => "required",
         ]);
 
-        $bot = Bot::query()->where("token", $request->token)->first();
+        $bot = Bot::query()->where("bot_token", $request->token)->first();
 
         return response()
             ->json(
                 BusinessLogic::bots()
-                    ->setBot($bot)
+                    ->setBot($bot ?? null)
                     ->requestTelegramChannel($request->all())
             );
     }
