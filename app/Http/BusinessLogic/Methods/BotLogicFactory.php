@@ -845,6 +845,8 @@ class BotLogicFactory
                     'command' => $slug->command,
                     'comment' => $slug->comment,
                     'slug' => $slug->slug,
+                    'is_global' => $slug->is_global ?? false,
+                    'config' => $slug->config ?? null,
                 ]);
 
         if (!is_null($keyboards))
@@ -998,6 +1000,8 @@ class BotLogicFactory
                         'command' => $slug->command,
                         'comment' => $slug->comment,
                         'slug' => $slug->slug,
+                        'is_global' => $slug->is_global ?? false,
+                        'config' => $slug->config ?? null,
                     ]);
                 else
                     BotMenuSlug::query()->create([
@@ -1005,6 +1009,8 @@ class BotLogicFactory
                         'command' => $slug->command,
                         'comment' => $slug->comment,
                         'slug' => $slug->slug,
+                        'is_global' => $slug->is_global ?? false,
+                        'config' => $slug->config ?? null,
                     ]);
             }
 
