@@ -145,7 +145,8 @@ export default {
         loadAllSlugs(page = 0) {
             this.$store.dispatch("loadSlugs", {
                 dataObject: {
-                    needGlobal: true
+                    needGlobal: true,
+                    botId: this.bot.id
                 },
                 page: page
             }).then(resp => {

@@ -2,19 +2,28 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Exports\BotStatisticExport;
+use App\Exports\BotUsersExport;
+use App\Facades\BotMethods;
 use App\Http\Resources\ActionStatusCollection;
 use App\Http\Resources\BotUserCollection;
 use App\Models\ActionStatus;
 use App\Models\BotUser;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Telegram\Bot\FileUpload\InputFile;
 
 class BotUserLogicFactory
 {
     protected $bot;
+    protected $botUser;
 
     public function __construct()
     {
         $this->bot = null;
+        $this->botUser = null;
 
     }
 
@@ -24,6 +33,18 @@ class BotUserLogicFactory
             throw new HttpException(400, "Бот не задан!");
 
         $this->bot = $bot;
+        return $this;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function setBotUser($botUser = null): static
+    {
+        if (is_null($botUser))
+            throw new HttpException(400, "Пользователь бота не задан!");
+
+        $this->botUser = $botUser;
         return $this;
     }
 
@@ -46,6 +67,35 @@ class BotUserLogicFactory
 
         return new BotUserCollection($botUsers);
     }
+
+
+    public function exportBotUsers($needAdmins = false): void
+    {
+        if (is_null($this->botUser))
+            throw new HttpException(404, "Пользователь бота не найден!");
+
+        $statistics = $this->all($needAdmins);
+
+        $name = Str::uuid();
+
+        $date = Carbon::now()->format("Y-m-d H-i-s");
+
+        Excel::store(new BotUsersExport($statistics),"$name.xls","public");
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendDocument($this->botUser->telegram_chat_id,
+                "Пользователи бота с CashBack",
+                InputFile::create(
+                    storage_path("app\\public")."\\$name.xls",
+                    "bot-users-$date.xls"
+                )
+            );
+
+        unlink(storage_path("app\\public")."\\$name.xls");
+    }
+
+
     /**
      * @throws HttpException
      */

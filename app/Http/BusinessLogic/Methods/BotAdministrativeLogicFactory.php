@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\CashBackDirectionEnum;
 use App\Events\CashBackEvent;
+use App\Exports\BotStatisticExport;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Http\Resources\BotUserCollection;
@@ -27,7 +28,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Telegram\Bot\FileUpload\InputFile;
 
 class BotAdministrativeLogicFactory
 {
@@ -164,6 +167,33 @@ class BotAdministrativeLogicFactory
                 ->sum("amount")
         ];
     }
+
+    /**
+     * @throws HttpException
+     */
+    public function exportBotStatistic(): void
+    {
+        $statistics = $this->statistic();
+
+        $name = Str::uuid();
+
+        $date = Carbon::now()->format("Y-m-d H-i-s");
+
+        Excel::store(new BotStatisticExport($statistics),"$name.xls","public");
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendDocument($this->botUser->telegram_chat_id,
+                "Общая статистика бота",
+                InputFile::create(
+                    storage_path("app\\public")."\\$name.xls",
+                    "statistic-$date.xls"
+                )
+            );
+
+        unlink(storage_path("app\\public")."\\$name.xls");
+    }
+
 
     /**
      * @throws HttpException

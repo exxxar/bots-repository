@@ -49,52 +49,33 @@ class AdminBotController extends Controller
     public function exportBotStatistic(Request $request): void
     {
 
-        $statistics = (object)BusinessLogic::administrative()
+        BusinessLogic::administrative()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->statistic();
-
-        $name = Str::uuid();
-
-        $date = Carbon::now()->format("Y-m-d H-i-s");
-
-        Excel::store(new BotStatisticExport($statistics),"$name.xls","public");
-
-        //dd(storage_path("app\\public")."\\$name.xls");
-        BotMethods::bot()
-            ->whereBot($request->bot)
-            ->sendDocument($request->botUser->telegram_chat_id,
-                "Общая статистика бота",
-                InputFile::create(
-                    storage_path("app\\public")."\\$name.xls",
-                    "statistic-$date.xls"
-                )
-            );
-
-        unlink(storage_path("app\\public")."\\$name.xls");
+            ->exportBotStatistic();
 
     }
 
-    public function exportBotUsers(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function exportBotUsers(Request $request): void
     {
 
-        $users = (object)BusinessLogic::botUsers()
+        BusinessLogic::botUsers()
             ->setBot($request->bot ?? null)
-            ->all();
+            ->setBotUser($request->botUser ?? null)
+            ->exportBotUsers();
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new BotUsersExport($users), "users.xlsx");
     }
 
-    public function exportCashBackHistory(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function exportCashBackHistory(Request $request): void
     {
         $orderBy = $request->orderBy ?? null;
         $direction = $request->direction ?? null;
 
-        $cashback = (object)BusinessLogic::bots()
+        BusinessLogic::bots()
             ->setBot($request->bot ?? null)
-            ->cashbackHistoryList();
+            ->setBotUser($request->botUser ?? null)
+            ->exportCashBackHistory();
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new BotCashBackExport($cashback), "cashback.xlsx");
     }
 
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Exports\BotCashBackExport;
+use App\Exports\BotStatisticExport;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
@@ -40,6 +42,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -1226,5 +1229,36 @@ class BotLogicFactory
             ->get();
 
         return new CashBackHistoryCollection($history);
+    }
+
+
+    /**
+     * @throws HttpException
+     */
+    public function exportCashBackHistory($orderBy = "user_id", $direction = "DESC"): void
+    {
+
+        if (is_null($this->botUser))
+            throw new HttpException(404, "Пользователь бота не найден!");
+
+        $statistics = $this->cashbackHistoryList($orderBy, $direction);
+
+        $name = Str::uuid();
+
+        $date = Carbon::now()->format("Y-m-d H-i-s");
+
+        Excel::store(new BotCashBackExport($statistics),"$name.xls","public");
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendDocument($this->botUser->telegram_chat_id,
+                "Статистика CashBack в боте",
+                InputFile::create(
+                    storage_path("app\\public")."\\$name.xls",
+                    "bot-users-$date.xls"
+                )
+            );
+
+        unlink(storage_path("app\\public")."\\$name.xls");
     }
 }

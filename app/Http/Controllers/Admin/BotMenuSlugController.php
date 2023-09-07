@@ -23,7 +23,7 @@ class BotMenuSlugController extends Controller
     public function index(Request $request): BotMenuSlugCollection
     {
         $bot = Bot::query()
-            ->find($request->botId);
+            ->find($request->botId ?? $request->bot_id ?? null);
 
         $slugs = BusinessLogic::slugs();
 

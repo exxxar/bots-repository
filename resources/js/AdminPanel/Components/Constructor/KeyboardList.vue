@@ -125,8 +125,10 @@ export default {
     computed: {
         ...mapGetters(['getCurrentBot']),
         filteredKeyboard(){
+
             if (!this.type)
                 return this.keyboards
+
 
             return this.keyboards.filter(item=>item.type==this.type)
         }
@@ -153,7 +155,7 @@ export default {
             this.$store.dispatch("loadBotKeyboards", {
                 botId: this.bot.id
             }).then((resp) => {
-                this.keyboards = resp
+                this.keyboards = resp.data
             })
         },
         loadCurrentBot(bot = null) {
