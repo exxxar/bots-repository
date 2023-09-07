@@ -540,9 +540,6 @@ class BotLogicFactory
      */
     public function changeUserStatus(array $data): void
     {
-        if (is_null($this->bot))
-            throw new HttpException(403, "Не выполнены условия функции");
-
         $validator = Validator::make($data, [
             "botUserId" => "required", //todo: сделать bot_user_id
             "status" => "required"
@@ -564,7 +561,7 @@ class BotLogicFactory
 
         $status = $botUser->is_admin ? "Администратор" : "Пользователь";
         BotMethods::bot()
-            ->whereBot($this->bot)
+            ->whereId($botUser->bot_id)
             ->sendSlugKeyboard($botUser->telegram_chat_id,
                 "Вам изменили статус учетной записи на \"$status\"",
                 ($botUser->is_admin ? "main_menu_restaurant_3" : "main_menu_restaurant_2")
