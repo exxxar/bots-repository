@@ -813,7 +813,7 @@ class BotLogicFactory
         $bot = Bot::query()->create((array)$tmp);
 
         if (!is_null($pages))
-            foreach ($pages["data"] as $page) {
+            foreach ($pages->data as $page) {
                 $page = (object)$page;
 
                 $tmpSlug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
