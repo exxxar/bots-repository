@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
+use Telegram\Bot\FileUpload\InputFile;
 
 class AdminBotController extends Controller
 {
@@ -44,7 +46,7 @@ class AdminBotController extends Controller
         ]);
     }
 
-    public function exportBotStatistic(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function exportBotStatistic(Request $request): void
     {
 
         $statistics = (object)BusinessLogic::administrative()
@@ -52,7 +54,25 @@ class AdminBotController extends Controller
             ->setBotUser($request->botUser ?? null)
             ->statistic();
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new BotStatisticExport($statistics), "statistic.xlsx");
+        $name = Str::uuid();
+
+        $date = Carbon::now()->format("Y-m-d H-i-s");
+
+        Excel::store(new BotStatisticExport($statistics),"$name.xls","public");
+
+        //dd(storage_path("app\\public")."\\$name.xls");
+        BotMethods::bot()
+            ->whereBot($request->bot)
+            ->sendDocument($request->botUser->telegram_chat_id,
+                "Общая статистика бота",
+                InputFile::create(
+                    storage_path("app\\public")."\\$name.xls",
+                    "statistic-$date.xls"
+                )
+            );
+
+        unlink(storage_path("app\\public")."\\$name.xls");
+
     }
 
     public function exportBotUsers(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
@@ -82,7 +102,7 @@ class AdminBotController extends Controller
     {
 
         return BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->adminList($request->get("size") ?? config('app.results_per_page'));
 
@@ -100,7 +120,7 @@ class AdminBotController extends Controller
 
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->requestCashBack($request->all());
 
@@ -119,7 +139,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->addCashBack($request->all());
 
@@ -138,7 +158,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->removeCashBack($request->all());
 
@@ -158,7 +178,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->sendInvoice($request->all());
 
@@ -177,7 +197,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->sendApprove($request->all());
 
@@ -195,7 +215,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->addAdmin($request->all());
 
@@ -213,7 +233,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->removeAdmin($request->all());
 
@@ -224,7 +244,7 @@ class AdminBotController extends Controller
     {
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->selfRemoveAdmin();
 
@@ -235,7 +255,7 @@ class AdminBotController extends Controller
     {
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->workStatus();
 
@@ -341,7 +361,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->setSlug($request->slug ?? null)
             ->vipStore($request->all());
@@ -393,7 +413,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->acceptUserInLocation($request->all());
 
@@ -411,7 +431,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->requestUserData($request->all());
 
@@ -429,7 +449,7 @@ class AdminBotController extends Controller
         ]);
 
         BusinessLogic::administrative()
-            ->setBotUser( $request->botUser ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->requestRefreshMenu($request->all());
 
