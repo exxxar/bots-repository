@@ -186,12 +186,12 @@ class BotAdministrativeLogicFactory
             ->sendDocument($this->botUser->telegram_chat_id,
                 "Общая статистика бота",
                 InputFile::create(
-                    storage_path("app\\public")."\\$name.xls",
+                    storage_path("app/public")."/$name.xls",
                     "statistic-$date.xls"
                 )
             );
 
-        unlink(storage_path("app\\public")."\\$name.xls");
+        unlink(storage_path("app/public")."/$name.xls");
     }
 
 

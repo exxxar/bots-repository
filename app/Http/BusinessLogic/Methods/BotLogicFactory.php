@@ -1257,11 +1257,11 @@ class BotLogicFactory
             ->sendDocument($this->botUser->telegram_chat_id,
                 "Статистика CashBack в боте",
                 InputFile::create(
-                    storage_path("app\\public")."\\$name.xls",
+                    storage_path("app/public")."/$name.xls",
                     "bot-users-$date.xls"
                 )
             );
 
-        unlink(storage_path("app\\public")."\\$name.xls");
+        unlink(storage_path("app/public")."/$name.xls");
     }
 }
