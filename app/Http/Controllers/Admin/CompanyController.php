@@ -69,8 +69,8 @@ class CompanyController extends Controller
             'title' => "required|string:255",
             'slug' => "required|string:190",
             'description' => "required|string:255",
-            'address' => "required|string:255",
-            'email' => "required|string:255",
+           // 'address' => "required|string:255",
+           // 'email' => "required|string:255",
             'vat_code' => "required|integer",
         ]);
 
