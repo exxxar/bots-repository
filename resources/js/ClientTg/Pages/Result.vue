@@ -8,11 +8,13 @@ defineProps({
     }
 });
 
-
+import Layout from "ClientTg@/Layouts/ShopLayout.vue";
 import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
 <template>
+    <Layout>
 
+        <template #default>
     <div class="d-flex justify-content-center align-items-center w-100" style="height: 100vh;">
         <div class="card card-style bg-8 w-100 px-3" data-card-height="250" style="height: 250px;">
             <div class="card-center">
@@ -24,10 +26,10 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
                 <p
                    v-if="statistic"
-                    class="color-white boxed-text-l text-center opacity-60 mt-n1 mb-3">
-                    <span>Всего товаров затронуто {{statistic.total_product_count || 0}}</span>
-                    <span>Созданое новых товаров {{statistic.created_product_count || 0}}</span>
-                    <span>Обновелно товаров {{statistic.updated_product_count || 0}}</span>
+                    class="color-white boxed-text-l text-center opacity-60 mt-n1 mb-3 d-flex flex-column">
+                    <span>Всего товаров затронуто <strong>{{statistic.total_product_count || 0}}</strong></span>
+                    <span>Созданое новых товаров <strong>{{statistic.created_product_count || 0}}</strong></span>
+                    <span>Обновелно товаров <strong>{{statistic.updated_product_count || 0}}</strong></span>
                 </p>
 
                 <ReturnToBot/>
@@ -36,6 +38,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
         </div>
 
     </div>
+        </template>
+    </Layout>
 
 
 
