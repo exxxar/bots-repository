@@ -87,6 +87,9 @@ class CashBackListener
             $nextBotUser = $botUserUser;
             $index = 1;
             foreach ($levels as $level) {
+
+                Log::info("step $index level=$level");
+
                 $this->prepareLevel(
                     $nextBotUser,
                     $botUserAdmin,
@@ -96,13 +99,14 @@ class CashBackListener
                     $index
                 );
 
+                Log::info("step $index data=".print_r($nextBotUser->toArray(), true));
+
                 $nextBotUser = BotUser::query()
                     ->with(["user", "parent"])
                     ->where("bot_id", $event->botId)
                     ->where("id", $nextBotUser->parent_id)
                     ->first();
 
-                $nextBotUser = is_null($nextBotUser) ? null : $nextBotUser;
                 if (is_null($nextBotUser))
                     return;
                 $index++;
