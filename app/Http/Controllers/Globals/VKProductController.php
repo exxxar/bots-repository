@@ -31,7 +31,7 @@ class VKProductController extends Controller
         $client_id = env("VK_CLIENT_ID");
         $redirect_uri = env("APP_URL") . '/bot-client/vk-callback';
         $display = VKOAuthDisplay::PAGE;
-        $scope = [VKOAuthUserScope::MARKET, VKOAuthUserScope::GROUPS, VKOAuthUserScope::WALL];
+        $scope = [ VKOAuthUserScope::GROUPS, VKOAuthUserScope::WALL, VKOAuthUserScope::MARKET];
         $state = $botDomain ?? 'secret_state_code';
 
         $browser_url = $oauth->getAuthorizeUrl(VKOAuthResponseType::CODE, $client_id, $redirect_uri, $display, $scope, $state);
@@ -99,7 +99,7 @@ class VKProductController extends Controller
             return response()->noContent(400);
 
         $response = $vk->market()->get($access_token, [
-            'owner_id' => "-$data->object_id",
+            'owner_id' => "-219858406",
             'need_variants' => 1,
             'extended' => 1
         ]);
