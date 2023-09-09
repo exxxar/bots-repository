@@ -67,12 +67,13 @@ class VKProductController extends Controller
         if (is_null($bot->vk_shop_link))
             return response()->noContent(404);
 
+        Log::info("1test $client_id $client_secret $redirect_uri $code $state");
 
         $tmpScreenName = substr($bot->vk_shop_link, strpos($bot->vk_shop_link,"https://vk.com/")+strlen("https://vk.com/"));
 
         $response = $oauth->getAccessToken($client_id, $client_secret, $redirect_uri, $code);
-        $access_token = $response['access_token'];
-
+        $access_token = $response['access_token'] ?? null;
+        Log::info("2test $client_id $client_secret $redirect_uri $code ".$response['access_token']);
 
         $vk = new VKApiClient();
 
