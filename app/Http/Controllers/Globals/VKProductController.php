@@ -123,15 +123,15 @@ class VKProductController extends Controller
           "total_product_count"=>0,
           "created_product_count"=>0,
           "updated_product_count"=>0,
-
-
         ];
 
-       // $results->total_product_count =
+
 
         foreach ($vkProducts as $vkProduct) {
 
             $variants = [];
+
+            $results->total_product_count++;
 
             $vkVariants = $vkProduct->property_values ?? null;
             if (!is_null($vkVariants))
@@ -149,7 +149,7 @@ class VKProductController extends Controller
                 ->where("vk_product_id", $vkProduct->id)
                 ->first();
 
-            if (is_null($product))
+            if (is_null($product)) {
                 $product = Product::query()->create([
                     'article' => $vkProduct->sku ?? null,
                     'vk_product_id' => $vkProduct->id,
@@ -165,6 +165,9 @@ class VKProductController extends Controller
                     'in_stop_list_at' => $vkProduct->availability == 0 ? Carbon::now() : null,
                     'bot_id' => $bot->id,
                 ]);
+
+                $results->created_product_count++;
+            }
             else {
                 $product->update([
                     'article' => $vkProduct->sku ?? null,
@@ -179,6 +182,8 @@ class VKProductController extends Controller
                     'variants' => empty($variants) ? null : $variants,
                     'in_stop_list_at' => $vkProduct->availability == 0 ? Carbon::now() : null,
                 ]);
+
+                $results->updated_product_count++;
             }
 
             $vkDimensions = $vkProduct->dimensions ?? null;
@@ -288,6 +293,7 @@ class VKProductController extends Controller
 
         return Inertia::render('Result', [
             'message' => "Товары успешно добавлены!",
+            'data'=>json_encode($results)
         ]);
         // dd($response);
     }

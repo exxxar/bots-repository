@@ -2,6 +2,9 @@
 defineProps({
     message: {
         type: String
+    },
+    data: {
+        type: String
     }
 });
 
@@ -16,6 +19,15 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <h2 class="color-white font-700 text-center mb-2">Результат</h2>
                 <p class="color-white boxed-text-l text-center opacity-60 mt-n1 mb-3">
                     {{ message }}
+
+                </p>
+
+                <p
+                   v-if="statistic"
+                    class="color-white boxed-text-l text-center opacity-60 mt-n1 mb-3">
+                    <span>Всего товаров затронуто {{statistic.total_product_count || 0}}</span>
+                    <span>Созданое новых товаров {{statistic.created_product_count || 0}}</span>
+                    <span>Обновелно товаров {{statistic.updated_product_count || 0}}</span>
                 </p>
 
                 <ReturnToBot/>
@@ -35,7 +47,9 @@ import {mapGetters} from "vuex";
 
 export default {
     data() {
-        return {}
+        return {
+            statistic: null
+        }
     },
     computed: {
         tg() {
@@ -47,7 +61,8 @@ export default {
         }
     },
     mounted() {
-
+        if (this.data)
+        this.statistic = JSON.parse(this.data)
     },
     methods: {}
 }
