@@ -32,7 +32,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     <span>Обновелно товаров <strong>{{statistic.updated_product_count || 0}}</strong></span>
                 </p>
 
-                <ReturnToBot/>
+                <ReturnToBot class="px-3"/>
             </div>
             <div class="card-overlay bg-black opacity-80"></div>
         </div>
