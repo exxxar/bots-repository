@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Globals;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BotSecurityResource;
 use App\Models\Bot;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -10,7 +11,9 @@ use App\Models\ProductOption;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 use VK\Client\VKApiClient;
+use VK\Exceptions\VKException;
 use VK\OAuth\Scopes\VKOAuthUserScope;
 use VK\OAuth\VKOAuth;
 use VK\OAuth\VKOAuthDisplay;
@@ -98,11 +101,21 @@ class VKProductController extends Controller
         if ($data->type!="group")
             return response()->noContent(400);
 
-        $response = $vk->market()->get($access_token, [
-            'owner_id' => "-221542370",
-            'need_variants' => 1,
-            'extended' => 1
-        ]);
+
+        try {
+            $response = $vk->market()->get($access_token, [
+                'owner_id' => "-$data->object_id",
+                'need_variants' => 1,
+                'extended' => 1
+            ]);
+        }catch (VKException $e){
+            Inertia::setRootView("shop");
+
+            return Inertia::render('Result', [
+                'message' => "Ошиюка добавления товаров!",
+            ]);
+        }
+
 
         $vkProducts = ((object)$response)->items;
 
@@ -271,7 +284,11 @@ class VKProductController extends Controller
             }
         }
 
-        return "ok";
+        Inertia::setRootView("shop");
+
+        return Inertia::render('Result', [
+            'message' => "Товары успешно добавлены!",
+        ]);
         // dd($response);
     }
 }
