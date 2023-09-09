@@ -84,11 +84,11 @@ class CashBackListener
             Log::info("cashback crediting levels=".print_r($levels, true));
             Log::info("cashback percent=".print_r($event->percent , true));
 
-            $nextUser = $botUserUser->user;
-            $admin = $botUserAdmin->user;
+            $nextBotUser = $botUserUser;
             $index = 1;
             foreach ($levels as $level) {
-                $this->prepareLevel($botUserUser,
+                $this->prepareLevel(
+                    $nextBotUser,
                     $botUserAdmin,
                     $bot->id,
                     $event->amount,
@@ -99,11 +99,11 @@ class CashBackListener
                 $nextBotUser = BotUser::query()
                     ->with(["user", "parent"])
                     ->where("bot_id", $event->botId)
-                    ->where("id", $nextUser->parent_id)
+                    ->where("id", $nextBotUser->parent_id)
                     ->first();
 
-                $nextUser = is_null($nextBotUser) ? null : $nextBotUser->user;
-                if (is_null($nextUser))
+                $nextBotUser = is_null($nextBotUser) ? null : $nextBotUser;
+                if (is_null($nextBotUser))
                     return;
                 $index++;
             }
