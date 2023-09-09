@@ -14,6 +14,7 @@ const getters = {
 }
 
 const actions = {
+
     async loadReceiverUserData(context, payload = { dataObject:{ user_telegram_chat_id:null } }) {
 
 

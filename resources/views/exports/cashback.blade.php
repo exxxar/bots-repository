@@ -21,8 +21,8 @@
             <td style="width: 200px;">Описание операции</td>
             <td style="width: 100px;">Тип операции</td>
             <td style="width: 100px;">Денег в чеке,руб</td>
-            <td style="width: 100px;">Начислено,руб</td>
-            <td style="width: 100px;">Уровень начисления</td>
+            <td style="width: 100px;">Величина,руб</td>
+            <td style="width: 100px;">Уровень</td>
             <td style="width: 100px;">Сотрудник</td>
 
         </tr>
@@ -38,7 +38,7 @@
                 <td style="width: 50px;"> {{$cashback->user->botUser->is_admin ? "да":"нет"}}</td>
 
                 <td style="width: 200px;"> {{$cashback->description?? 'Не указан'}}</td>
-                <td style="width: 100px;"> {{$cashback->operation_type?? 'Не указан'}}</td>
+                <td style="width: 100px;"> {{$cashback->operation_type == 1? "Начисление":"Списание"}}</td>
                 <td style="width: 100px;"> {{$cashback->money_in_check?? 'Не указан'}}</td>
                 <td style="width: 100px;"> {{$cashback->amount?? 'Не указан'}}</td>
                 <td style="width: 100px;"> {{$cashback->level?? 'Не указан'}}</td>

@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("bot-client")
     ->group(function () {
 
+        Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"])
+            ->middleware(["tgAuth.admin"]);
+
         Route::post("/send-to-channel", [BotController::class, "sendToChannel"])
             ->middleware(["tgAuth.any"]);
 
@@ -92,6 +95,9 @@ Route::prefix("bot-client")
                 Route::post("/products/by-ids", [ProductController::class, "getProductsByIds"]);
                 Route::post("/products/random", [ProductController::class, "randomProducts"]);
                 Route::post("/products/categories", [ProductController::class, "getCategories"]);
+                Route::post("/products/add-product", [ProductController::class, "saveProduct"]);
+                Route::delete("/products/remove-category/{categoryId}", [ProductController::class, "removeCategoryId"]);
+                Route::post("/products/add-category", [ProductController::class, "addCategory"]);
                 Route::post("/products/in-category", [ProductController::class, "getProductsInCategory"]);
                 Route::post("/products/category/{productId}", [ProductController::class, "getCategory"]);
                 Route::post("/products/{productId}", [ProductController::class, "getProduct"]);

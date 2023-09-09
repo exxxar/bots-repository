@@ -97,7 +97,7 @@ export default {
         downloadBotUsers(){
             this.$botNotification.notification("Внимание!", "Начался формироваться документ статистики!");
             this.$store.dispatch("downloadBotUsers").then((resp) => {
-                saveAs(resp.data, 'users.xlsx');
+                //saveAs(resp.data, 'users.xlsx');
 
                 this.$botNotification.success("Отлично!", "Документ успешно сформирован");
 
@@ -108,7 +108,7 @@ export default {
         downloadCashBackHistory(){
             this.$botNotification.notification("Внимание!", "Начался формироваться документ статистики!");
             this.$store.dispatch("downloadCashBackHistory").then((resp) => {
-                saveAs(resp.data, 'cashback.xlsx');
+              //  saveAs(resp.data, 'cashback.xlsx');
 
                 this.$botNotification.success("Отлично!", "Документ успешно сформирован");
 

@@ -31,6 +31,15 @@ class ProductController extends Controller
             ->byIds($request->ids ?? []);
     }
 
+
+    public function removeCategoryId(Request $request, $categoryId): ProductCategoryResource
+    {
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->destroyCategory($categoryId);
+    }
+
+
     public function index(Request $request): ProductCollection
     {
 
@@ -40,6 +49,20 @@ class ProductController extends Controller
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page')
             );
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function addCategory(Request $request): ProductCategoryResource
+    {
+        $request->validate([
+            "category"=>"required"
+        ]);
+
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->createOrUpdateCategory($request->all());
     }
 
     public function getCategories(Request $request): ProductCategoryCollection
@@ -79,8 +102,6 @@ class ProductController extends Controller
 
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->setSlug($request->slug ?? null)
-            ->setBotUser($request->botUser ?? null)
             ->createOrUpdate($request->all(),
                 $request->hasFile('photos') ?
                     $request->file('photos') : null);
@@ -91,8 +112,6 @@ class ProductController extends Controller
     {
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->setSlug($request->slug ?? null)
-            ->setBotUser($request->botUser ?? null)
             ->destroy($productId);
     }
 
@@ -100,8 +119,6 @@ class ProductController extends Controller
     {
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->setSlug($request->slug ?? null)
-            ->setBotUser($request->botUser ?? null)
             ->duplicate($productId);
     }
 
@@ -116,7 +133,6 @@ class ProductController extends Controller
         ]);
         BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->setSlug($request->slug ?? null)
             ->setBotUser($request->botUser ?? null)
             ->checkout($request->all());
 
@@ -129,8 +145,6 @@ class ProductController extends Controller
 
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->setSlug($request->slug ?? null)
-            ->setBotUser($request->botUser ?? null)
             ->productsInCategory(
                 $request->category_id ?? null,
                 $request->search ?? null
@@ -141,8 +155,6 @@ class ProductController extends Controller
     {
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->setSlug($request->slug ?? null)
-            ->setBotUser($request->botUser ?? null)
             ->category($categoryId);
     }
 

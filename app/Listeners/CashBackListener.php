@@ -12,6 +12,7 @@ use App\Models\CashBackHistory;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
 
 class CashBackListener
@@ -80,6 +81,8 @@ class CashBackListener
             } else
                 $levels[] = $event->percent ?? $bot->level_1 ?? env("BASE_CASHBACK_LEVEL_1") ?? 0;
 
+            Log::info("cashback crediting levels=".print_r($levels, true));
+            Log::info("cashback percent=".print_r($event->percent , true));
 
             $nextUser = $botUserUser->user;
             $admin = $botUserAdmin->user;

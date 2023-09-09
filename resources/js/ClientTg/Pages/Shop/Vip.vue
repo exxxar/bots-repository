@@ -119,7 +119,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
             </form>
 
-            <form
+<!--            <form
                 v-if="step===3"
                 v-on:submit.prevent="nextStep" class="row mb-0">
                 <div class="col-12 d-flex justify-content-center mb-3">
@@ -146,10 +146,10 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     </button>
 
                 </div>
-            </form>
+            </form>-->
 
             <form
-                v-if="step===4"
+                v-if="step===3"
                 v-on:submit.prevent="nextStep" class="row mb-0">
                 <div class="col-12 d-flex justify-content-center mb-3">
                     <div class="img-avatar">
@@ -189,7 +189,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
             </form>
 
             <form
-                v-if="step===5"
+                v-if="step===4"
                 v-on:submit.prevent="submit" class="row mb-0">
                 <div class="col-12 d-flex justify-content-center mb-3">
                     <div class="img-avatar">
@@ -254,7 +254,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
                     <p class="mb-0">Телефон: {{ botUser.phone || 'Не указано' }}</p>
                     <p class="mb-0">Город: {{ botUser.city || 'Не указано' }}</p>
-                    <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
+<!--                    <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>-->
                     <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
                 </li>
             </ul>

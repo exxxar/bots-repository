@@ -3,9 +3,15 @@
     <div class="card card-style bg-theme pb-0">
         <div class="content">
             <form
-                v-on:submit.prevent="submit"
-                class="row">
-                <div class="col-md-8 d-flex align-items-center">
+                v-on:submit.prevent="submit">
+                <div class="d-flex justify-content-between flex-wrap">
+
+                    <a href="javascript:void(0)"
+                       class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-green2-light w-100"
+                       @click="clearForm">
+                        <i class="fa-solid fa-plus mr-1"></i> Новый товар
+                    </a>
+
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="productForm.in_stop_list_at"
@@ -15,250 +21,220 @@
                             Товар находится в стоп-листе
                         </label>
                     </div>
+
+
                 </div>
 
-                <div class="col-md-4 d-flex justify-content-end">
-                    <a href="#" class="btn btn-link" @click="clearForm">Новый товар</a>
+                <div class="divider divider-small my-3 bg-highlight "></div>
+
+                <div class="d-flex flex-wrap" v-if="categories.length>0">
+                       <p class="px-3 font-10 rounded mr-1 mb-1 cursor-pointer"
+                             v-bind:class="{'bg-info text-white':productCategories.indexOf(cat.id)!=-1}"
+                             v-for="(cat, index) in categories"
+                            >
+                           <span @click="selectCategory(cat)">{{ cat.title }}</span>
+                           <i
+                           @click="removeCategory(cat.id)"
+                           class="fa-solid fa-trash ml-2 color-red2-dark"></i>
+
+                       </p>
+
+
                 </div>
 
-                <div class="col-md-12 mb-3">
-                <span class="badge bg-info mr-1 mb-1 cursor-pointer" v-for="(cat, index) in productCategories"
-                      @click="removeProductCategory(index)">{{ prepareCategoryName(cat) }}</span>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-outline-info w-100" data-bs-toggle="dropdown"
-                                data-bs-display="static" aria-expanded="false">
-                            <p class="mb-0">Выберите категорию</p>
+
+                <div class="mb-2">
+
+                    <label for="exampleDropdownFormEmail1" class="form-label">Новая категория</label>
+                    <input type="text" class="form-control"
+                           v-model="categoryForm.label"
+                           id="exampleDropdownFormEmail1"
+                           placeholder="Название категории">
+
+                </div>
+
+                <button class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" type="button" @click="addCategory">Добавить
+                    категорию
+                </button>
+
+                <div class="divider divider-small my-3 bg-highlight "></div>
+
+                <div class="mb-2">
+                    <label for="vk-product-id">Идентификатор товара VK</label>
+                    <input type="text"
+                           v-model="productForm.vk_product_id"
+                           :disabled="true" class="form-control" id="vk-product-id"
+                           placeholder="Идентификатор">
+
+                </div>
+
+                <div class="mb-2">
+                    <label for="article">Артикул товара</label>
+                    <input type="text"
+                           v-model="productForm.article"
+                           class="form-control" id="article" placeholder="Название артикула">
+                </div>
+
+
+
+                <div class=" mb-2">
+                    <label for="title">Названи товара</label>
+                    <input type="text"
+                           v-model="productForm.title"
+                           class="form-control" id="title" placeholder="Название"/>
+                </div>
+
+                <div class="mb-2">
+                    <label for="type">Тип товара</label>
+                    <select class="form-control font-12"
+                            v-model="productForm.type"
+                            id="type" aria-label="Floating label select example">
+                        <option :value="type.value" v-for="(type, index) in types">{{ type.title }}</option>
+                    </select>
+                </div>
+                <div class=" mb-2">
+                    <label for="description">Описание товара</label>
+                    <textarea class="form-control font-12"
+                              v-model="productForm.description"
+                              placeholder="Напишие полное описание товара" id="description"></textarea>
+
+                </div>
+
+                <div class="mb-2">
+                    <label for="current-price">Актуальная цена, руб</label>
+                    <input type="number"
+                           v-model="productForm.current_price"
+                           class="form-control" id="current-price" placeholder="0 руб." required>
+
+                </div>
+
+                <div class="mb-2">
+                    <label for="old-price">Старая цена, руб</label>
+                    <input type="number"
+                           v-model="productForm.old_price"
+                           class="form-control" id="old-price" placeholder="0 руб">
+                </div>
+                <div class="divider divider-small my-3 bg-highlight "></div>
+                <h6>Варианты товара <span
+                    v-if="productForm.variants">({{ productForm.variants.length }})</span></h6>
+
+
+                <button
+                    type="button"
+                    class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" @click="addVariant">Добавить вариант
+                </button>
+
+                <div class="mb-2" v-for="(variant, index) in productForm.variants">
+
+                    <div class="mb-2">
+                        <label :for="'variant-key-'+index">Ключ</label>
+                        <input type="text"
+                               v-model="productForm.variants[index].key"
+                               class="form-control" :id="'variant-key-'+index"
+                               placeholder="Название варианта" required>
+
+                    </div>
+
+                    <div class="mb-2">
+                        <label :for="'variant-value-'+index">Значение</label>
+                        <input type="text"
+                               v-model="productForm.variants[index].value"
+                               class="form-control" :id="'variant-value-'+index"
+                               placeholder="Величина\значение варианта" required>
+
+                    </div>
+
+                    <button type="button"
+                            class="btn btn-outline-danger w-100"
+                            @click="removeVariant(index)"><i class="fa-solid fa-trash-can"></i>
+                        Удалить вариант
+                    </button>
+                </div>
+
+                <div class="divider divider-small my-3 bg-highlight "></div>
+                <h6>Характеристики товара</h6>
+
+                <div class="mb-2">
+
+
+                    <form
+                        v-on:submit.prevent="addSection"
+                        class="mb-2">
+                        <input type="text"
+                               v-model="sectionForm.section"
+                               class="form-control  mb-2"
+                               placeholder="Название секции"
+                               aria-label="Recipient's username"
+                               aria-describedby="button-addon2" required>
+                        <button class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" type="submit"
+                                id="button-addon2">Добавить секцию
                         </button>
-                        <ul class="dropdown-menu w-100" style="overflow-y:scroll; height:300px;">
+                    </form>
 
-                            <div class="p-3">
-                                <label for="exampleDropdownFormEmail1" class="form-label">Новая категория</label>
-                                <input type="text" class="form-control"
-                                       v-model="categoryForm.label"
-                                       id="exampleDropdownFormEmail1"
-                                       placeholder="Название категории">
-                            </div>
 
-                            <div class="p-3">
-                                <button class="btn btn-primary w-100" type="button" @click="addCategory">Добавить
-                                    категорию
-                                </button>
-                            </div>
 
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li v-for="item in filteredCategories">
-                                <button class="dropdown-item" type="button" @click="selectCategory(item)">{{ item.label }}
-                                </button>
-                            </li>
-                        </ul>
+                    <div class="d-flex flex-wrap" v-if="sections.length>0">
+                        <p class="mb-0">Для удаления характеристики - нажми на неё</p>
+ <span @click="removeSection(index)" class="px-3 text-white rounded bg-info mr-1 mb-1 cursor-pointer"
+       v-for="(section, index) in sections">{{ section }}</span>
                     </div>
+
+
                 </div>
 
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
+                <div class="mb-2" v-for="(option, index) in productForm.options">
+
+                    <div class="form-floating mb-2">
                         <input type="text"
-                               v-model="productForm.article"
-                               class="form-control" id="article" placeholder="name@example.com">
-                        <label for="article">Артикул товара</label>
+                               v-model="productForm.options[index].title"
+                               class="form-control" :id="'option-title-'+index"
+                               placeholder="Характеристика">
+                        <label :for="'option-title-'+index">Название характеристики</label>
                     </div>
-                </div>
-                <div class="col-md-6">
 
-                    <div class="form-floating mb-3">
+                    <div class="form-floating mb-2">
                         <input type="text"
-                               v-model="productForm.vk_product_id"
-                               :disabled="true" class="form-control" id="vk-product-id"
-                               placeholder="name@example.com">
-                        <label for="vk-product-id">Идентификатор товара VK</label>
+                               v-model="productForm.options[index].value"
+                               class="form-control" :id="'option-value-'+index"
+                               placeholder="Значение">
+                        <label :for="'option-value-'+index">Значение характеристики</label>
+
                     </div>
 
-                </div>
+                    <div class="form-floating mb-2">
 
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <input type="text"
-                               v-model="productForm.title"
-                               class="form-control" id="title" placeholder="name@example.com"/>
-                        <label for="title">Названи товара</label>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-floating  mb-3">
-                        <select class="form-select"
-                                v-model="productForm.type"
-                                id="type" aria-label="Floating label select example">
-                            <option :value="type.value" v-for="(type, index) in types">{{ type.title }}</option>
+                        <select class="form-control font-12"
+                                v-model="productForm.options[index].section"
+                                :id="'option-section-'+index"
+                                aria-label="Floating label select example">
+                            <option :value="null">Без секции</option>
+                            <option :value="section" v-for="section in sections">{{
+                                    section
+                                }}
+                            </option>
                         </select>
-                        <label for="type">Тип товара</label>
+                        <label :for="'option-section-'+index">Секция товара</label>
                     </div>
+
+                    <button type="button"
+                            class="btn btn-outline-danger w-100"
+                            @click="removeOption(index)">
+                        <i class="fa-solid fa-trash-can mr-1"></i>
+                        Удалить секцию товара
+                    </button>
+
+
                 </div>
 
-                <div class="col-md-12">
-                    <div class="form-floating mb-3">
-                <textarea class="form-control"
-                          v-model="productForm.description"
-                          placeholder="Leave a comment here" id="description"></textarea>
-                        <label for="description">Описание товара</label>
-                    </div>
-                </div>
+                <button
+                    type="button"
+                    class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" @click="addOption">Добавить характеристику
+                </button>
 
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <input type="number"
-                               v-model="productForm.current_price"
-                               class="form-control" id="current-price" placeholder="name@example.com">
-                        <label for="current-price">Актуальная цена</label>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <input type="number"
-                               v-model="productForm.old_price"
-                               class="form-control" id="old-price" placeholder="name@example.com">
-                        <label for="old-price">Старая цена</label>
-                    </div>
-                </div>
-
-                <div class="col-md-12 mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6>Варианты товара <span
-                                v-if="productForm.variants">({{ productForm.variants.length }})</span></h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <button
-                                        type="button"
-                                        class="btn btn-outline-info w-100" @click="addVariant">Добавить вариант
-                                    </button>
-                                </div>
-                                <div class="col-md-6 mb-3" v-for="(variant, index) in productForm.variants">
-                                    <div class="card w-100">
-                                        <div class="card-body">
-                                            <div class="form-floating mb-3">
-                                                <input type="text"
-                                                       v-model="productForm.variants[index].key"
-                                                       class="form-control" :id="'variant-key-'+index"
-                                                       placeholder="name@example.com" required>
-                                                <label :for="'variant-key-'+index">Ключ</label>
-                                            </div>
-
-                                            <div class="form-floating mb-3">
-                                                <input type="text"
-                                                       v-model="productForm.variants[index].value"
-                                                       class="form-control" :id="'variant-value-'+index"
-                                                       placeholder="name@example.com" required>
-                                                <label :for="'variant-value-'+index">Значение</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer">
-                                            <button type="button"
-                                                    class="btn btn-outline-danger"
-                                                    @click="removeVariant(index)"><i class="fa-solid fa-trash-can"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12 mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6>Характеристики товара</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-
-                                <div class="col-12">
-                                    <form
-                                        v-on:submit.prevent="addSection"
-                                        class="input-group mb-3">
-                                        <input type="text"
-                                               v-model="sectionForm.section"
-                                               class="form-control border-info"
-                                               placeholder="Название секции"
-                                               aria-label="Recipient's username"
-                                               aria-describedby="button-addon2" required>
-                                        <button class="btn btn-outline-info" type="submit"
-                                                id="button-addon2">Добавить секцию
-                                        </button>
-                                    </form>
-
-
-                                    <span class="badge bg-info mr-1"
-                                          v-for="(section, index) in sections">{{ section }} <strong
-                                        @click="removeSection(index)"><i class="fa-solid fa-xmark"></i></strong></span>
-
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4  mb-3" v-for="(option, index) in productForm.options">
-                                    <div class="card w-100">
-                                        <div class="card-body">
-                                            <div class="form-floating mb-3">
-                                                <input type="text"
-                                                       v-model="productForm.options[index].title"
-                                                       class="form-control" :id="'option-title-'+index"
-                                                       placeholder="name@example.com">
-                                                <label :for="'option-title-'+index">Название характеристики</label>
-                                            </div>
-
-                                            <div class="form-floating mb-3">
-                                                <input type="text"
-                                                       v-model="productForm.options[index].value"
-                                                       class="form-control" :id="'option-value-'+index"
-                                                       placeholder="name@example.com">
-                                                <label :for="'option-value-'+index">Значение характеристики</label>
-
-                                            </div>
-
-                                            <div class="form-floating mb-3">
-
-                                                <select class="form-select"
-                                                        v-model="productForm.options[index].section"
-                                                        :id="'option-section-'+index"
-                                                        aria-label="Floating label select example">
-                                                    <option :value="null">Без секции</option>
-                                                    <option :value="section" v-for="section in sections">{{
-                                                            section
-                                                        }}
-                                                    </option>
-                                                </select>
-                                                <label :for="'option-section-'+index">Секция товара</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer">
-                                            <button type="button"
-                                                    class="btn btn-outline-danger"
-                                                    @click="removeOption(index)"><i class="fa-solid fa-trash-can"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <button
-                                        type="button"
-                                        class="btn btn-outline-info w-100" @click="addOption">Добавить характеристику
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12 mb-3">
+                <div class="divider divider-small my-3 bg-highlight "></div>
+                <div class=" mb-2">
                     <h6>Фотографии товара</h6>
-                    <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
+                    <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
                         <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
                             <span>+</span>
                             <input type="file" id="location-photos" multiple accept="image/*"
@@ -271,7 +247,7 @@
                              v-if="productForm.images">
                             <img v-lazy="img">
                             <div class="remove">
-                                <a @click="removeImage(index)">Удалить</a>
+                                <a href="javascript:void(0)" @click="removeImage(index)">Удалить</a>
                             </div>
                         </div>
 
@@ -280,7 +256,7 @@
                              v-if="photos.length>0">
                             <img v-lazy="getPhoto(img).imageUrl">
                             <div class="remove">
-                                <a @click="removePhoto(index)">Удалить</a>
+                                <a href="javascript:void(0)" @click="removePhoto(index)">Удалить</a>
                             </div>
                         </div>
 
@@ -288,39 +264,13 @@
 
                 </div>
 
-                <div class="col-12">
-                    <button
-                        type="submit"
-                        class="btn btn-outline-primary w-100 p-3">Сохранить
-                    </button>
-                </div>
+                <button
+                    type="submit"
+                    class="btn btn-m btn-full mb-0 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark w-100">Сохранить
+                </button>
             </form>
         </div>
     </div>
-
-<!--    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link "
-               @click="tab=0"
-               v-bind:class="{'active':tab===0}"
-               aria-current="page" href="#product-form-info">Информация о товаре</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link"
-               @click="tab=1"
-               v-bind:class="{'active':tab===1}"
-               href="#product-reviews">Комментарии</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link"
-               @click="tab=2"
-               v-bind:class="{'active':tab===2}"
-               href="#product-reviews">Заказы</a>
-        </li>
-
-    </ul>-->
-
-
 
 
 </template>
@@ -378,18 +328,16 @@ export default {
     },
     computed: {
         ...mapGetters(['getCategories']),
-        filteredCategories() {
-            if (this.productCategories.length === 0)
-                return this.categories
 
-            return this.categories.filter(item => this.productCategories.indexOf(item.value) === -1)
-        }
+
     },
     mounted() {
         this.loadProductCategories();
 
         if (this.item) {
             this.$nextTick(() => {
+
+                console.log("Test")
                 this.productForm = {
                     id: this.item.id || null,
                     article: this.item.article || null,
@@ -425,13 +373,30 @@ export default {
             console.log(cat)
             return cat ? cat.label : category
         },
+        removeCategory(id){
+            let index  = this.categories.findIndex(item=>item.id===id)||null
+
+            if (index)
+                this.categories.splice(index, 1)
+
+            this.$store.dispatch("removeProductCategory",{
+                category_id: id
+            }).then(()=>{
+                this.loadProductCategories()
+            })
+        },
         addCategory() {
             const category = this.categoryForm.label
-            this.productCategories.push(category)
             this.categoryForm.label = null
+            this.$store.dispatch("addProductCategory",{
+                category: category
+            }).then(()=>{
+                this.loadProductCategories()
+            })
         },
         selectCategory(item) {
-            this.productCategories.push(item.value)
+            this.productCategories.push(item.id)
+            console.log("productCategories",this.productCategories)
         },
         submit() {
             let data = new FormData();
@@ -465,9 +430,8 @@ export default {
                 this.load = true
 
                 this.$botNotification.notification(
-                     "Конструктор ботов",
-                   "Продукт успешно сохранен!",
-
+                    "Конструктор ботов",
+                    "Продукт успешно сохранен!",
                 );
 
                 this.clearForm()
@@ -484,10 +448,11 @@ export default {
         },
         loadProductCategories() {
             this.$store.dispatch("loadCategories").then(() => {
-               /* const categories = this.getProductCategories
-                categories.forEach(item => {
-                    this.categories.push({value: item.id, label: item.title})
-                })*/
+                this.categories = this.getCategories
+                /* const categories = this.getProductCategories
+                 categories.forEach(item => {
+                     this.categories.push({value: item.id, label: item.title})
+                 })*/
 
             })
         },
@@ -525,7 +490,7 @@ export default {
             })
         },
         removeProductCategory(index) {
-            this.productCategories.splice(index, 1)
+
         },
         removeVariant(index) {
             this.productForm.variants.splice(index, 1)

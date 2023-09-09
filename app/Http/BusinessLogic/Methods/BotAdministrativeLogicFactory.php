@@ -694,7 +694,7 @@ class BotAdministrativeLogicFactory
         $validator = Validator::make($data, [
             "name" => "required",
             "phone" => "required",
-            "birthday" => "required",
+            //"birthday" => "required",
             "city" => "required",
             "sex" => "required",
         ]);

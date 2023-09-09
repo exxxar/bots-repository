@@ -22,13 +22,10 @@ class VKProductController extends Controller
 
     public function getVKAuthLink(Request $request)
     {
-        $request->validate([
-            //"url"=>"required",
-            "botDomain"=>"required",
-        ]);
+       $bot = $request->bot;
 
        // $this->vkUrl = $request->url ?? null;
-        $botDomain = $request->botDomain ?? null;
+        $botDomain = $bot->bot_domain ?? null;
 
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");

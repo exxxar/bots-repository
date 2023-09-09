@@ -3,9 +3,52 @@ import ProductItemMini from "ClientTg@/Components/Shop/Products/ProductItemMini.
 import ProductItemLarge from "ClientTg@/Components/Shop/Products/ProductItemLarge.vue";
 import SearchBox from "@/ClientTg/Components/Shop/SearchBox.vue";
 import CategoryList from "@/ClientTg/Components/Shop/Categories/CategoryList.vue";
+import Pagination from "@/ClientTg/Components/Pagination.vue";
 </script>
 
 <template>
+
+    <div
+        v-if="currentBot"
+        class="card card-style preload-img"
+         :data-src="logo" style="height: 500px;">
+        <div class="card-bottom px-3">
+            <h1 class="font-40 line-height-xl">{{currentBot.company.title||'Без названия'}}</h1>
+            <p class="pb-0 mb-0 font-12"><i class="fa fa-map-marker mr-2"></i>{{currentBot.company.address || 'Без адреса'}}</p>
+            <p>
+                {{currentBot.description || 'Без описания'}}
+            </p>
+
+            <a href="#/contact-us"
+               class="btn btn-m btn-border w-100 btn-full rounded-s mb-3 border-highlight color-highlight text-uppercase font-900">
+                <i class="fa-regular fa-envelope mr-2"></i> Написать нам
+            </a>
+
+        </div>
+        <div class="card-overlay bg-gradient-fade"></div>
+    </div>
+
+    <div class="card card-style p-3">
+        <h5>Галлерея продуктов</h5>
+
+        <div class="row text-center row-cols-3 mb-n4">
+            <a class="col mb-4 default-link"
+               v-for="product in products"
+               :href="'#/products/'+product.id"
+               :title="product.title">
+                <img v-lazy="product.images[0]"
+                     class="img-fluid rounded-xs preload-img" alt="img">
+            </a>
+
+
+        </div>
+
+        <Pagination
+            :simple="true"
+            v-on:pagination_page="nextProducts"
+            v-if="paginate"
+            :pagination="paginate"/>
+    </div>
 
     <SearchBox/>
 
@@ -107,6 +150,8 @@ export default {
         return {
             botUser: null,
             watches: null,
+            products:null,
+            paginate:null,
             randomProducts: null
         }
     },
@@ -125,7 +170,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getProducts', 'getSelf', 'getWatches']),
+        ...mapGetters(['getProducts', 'getSelf', 'getWatches','getProductsPaginateObject']),
         currentBot() {
             return window.currentBot;
         },
@@ -136,10 +181,14 @@ export default {
     },
     mounted() {
         // this.watchStore()
+        this.loadProducts()
         this.loadRandomProducts()
         this.watches = this.getWatches.slice(0, 10)
     },
     methods: {
+        nextProducts(index) {
+            this.loadProducts(index)
+        },
         watchStore() {
             this.$store.watch(
                 () => this.$store.getters.getSelf,
@@ -149,7 +198,17 @@ export default {
                 }
             )
         },
-
+        loadProducts(page = 0) {
+            return this.$store.dispatch("loadProducts", {
+                dataObject: {
+                    search: this.search
+                },
+                page: page
+            }).then(() => {
+                this.products = this.getProducts
+                this.paginate = this.getProductsPaginateObject
+            })
+        },
         loadRandomProducts() {
             return this.$store.dispatch("loadRandomProducts").then(() => {
                 this.randomProducts = this.getProducts

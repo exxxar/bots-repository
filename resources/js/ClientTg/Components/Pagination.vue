@@ -1,6 +1,6 @@
 <template>
 
-    <nav v-if="pagination.links && simple"  class="mt-4">
+    <nav v-if="pagination.links"  class="mt-4">
         <ul class="pagination pagination- justify-content-center">
 
             <li class="page-item">
@@ -54,50 +54,13 @@
             </li>
         </ul>
     </nav>
-    <nav v-if="pagination.meta.total > 0 && !simple">
-        <ul class="pagination pagination- justify-content-center">
-            <li class="page-item">
-                <a
-                    type="button"
-                    @click="prevPage"
-                    v-bind:class="{'disabled':pagination.links.prev===null}"
-                    class="page-link rounded-xs color-white bg-black shadow-xl border-0" tabindex="-1"
-                    aria-disabled="true"><i class="fa fa-angle-left"></i></a>
-            </li>
-            <li
-                :key="'paginate'+index"
-                v-for="(item, index) in filteredLinks"
-                @click.prevent="page(index)"
-                v-bind:class="{'active':index===pagination.meta.current_page }"
-                class="page-item">
-
-                <a
-                    href="#/products"
-                    v-if="index!==0&&index!==filteredLinks.length-1"
-                    v-bind:class="{'bg-highlight':index===pagination.meta.current_page }"
-                    class="page-link rounded-xs color-black shadow-xl border-0">{{ item.label }}
-
-                    <span class="sr-only" v-if="index===pagination.meta.current_page">(current)</span>
-                </a>
-            </li>
-
-            <li class="page-item">
-                <button
-                    @click="nextPage"
-                    v-bind:class="{'disabled':pagination.links.next===null}"
-                    type="button"
-                    class="page-link rounded-xs color-white bg-black shadow-xl border-0"><i
-                    class="fa fa-angle-right"></i></button>
-            </li>
-        </ul>
-    </nav>
 
 </template>
 <script>
 
 
 export default {
-    props: ["pagination", "simple"],
+    props: ["pagination"],
     data() {
         return {
             currentPage: 1,

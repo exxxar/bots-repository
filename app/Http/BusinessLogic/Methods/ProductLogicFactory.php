@@ -115,14 +115,16 @@ class ProductLogicFactory
     /**
      * @throws HttpException
      */
-    public function categories(): ProductCategoryCollection
+    public function categories($size = null): ProductCategoryCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
+        $size = $size ?? config('app.results_per_page');
+
         $categories = ProductCategory::query()
             ->where("bot_id", $this->bot->id)
-            ->get();
+            ->paginate($size);
 
         return new ProductCategoryCollection($categories);
     }
@@ -306,6 +308,30 @@ class ProductLogicFactory
     }
 
     /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function createOrUpdateCategory(array $data): ProductCategoryResource
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "category" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $category = ProductCategory::query()
+            ->create([
+                'title'=>$data["category"],
+                'bot_id'=>$this->bot->id,
+            ]);
+
+        return new ProductCategoryResource($category);
+    }
+    /**
      * @throws HttpException
      */
     public function destroy($productId): ProductResource
@@ -336,6 +362,23 @@ class ProductLogicFactory
         $product->delete();
 
         return new ProductResource($tmpProduct);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function destroyCategory($categoryId): ProductCategoryResource
+    {
+        $category = ProductCategory::query()
+            ->find($categoryId);
+
+        if (is_null($category))
+            throw new HttpException(404, "Категория не найден");
+
+        $tmpCategory = $category;
+        $category->delete();
+
+        return new ProductCategoryResource($tmpCategory);
     }
 
     /**

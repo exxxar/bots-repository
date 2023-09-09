@@ -141,7 +141,7 @@ export default {
         downloadBotStatistic() {
             this.$botNotification.notification("Внимание!", "Начался формироваться документ статистики!");
             this.$store.dispatch("downloadBotStatistic").then((resp) => {
-                saveAs(resp.data, 'result.xlsx');
+               // saveAs(resp.data, 'result.xlsx');
 
                 this.$botNotification.success("Отлично!", "Документ успешно сформирован");
 

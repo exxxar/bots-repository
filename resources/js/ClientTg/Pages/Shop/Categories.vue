@@ -15,7 +15,7 @@ import CategoryList from "@/ClientTg/Components/Shop/Categories/CategoryList.vue
         </div>
         <div class="card-overlay bg-black opacity-80"></div>
     </div>
-    <CategoryList size="100"/>
+    <CategoryList size="10"/>
 
 </template>
 <script>

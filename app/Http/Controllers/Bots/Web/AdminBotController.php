@@ -334,7 +334,7 @@ class AdminBotController extends Controller
         $request->validate([
             "name" => "required",
             "phone" => "required",
-            "birthday" => "required",
+           // "birthday" => "required",
             "city" => "required",
             //"country" => "required",
             //"address" => "required",

@@ -11,33 +11,30 @@ import CategoryList from "@/ClientTg/Components/Shop/Categories/CategoryList.vue
             <h3>Наши товары</h3>
 
 
-            <div class="collapse" id="collapse-8" style="">
+            <div v-if="!isCollapsed">
 
                 <div class="input-style input-style-2 has-icon input-required">
                     <i class="input-icon fa-solid fa-magnifying-glass" @click="loadProducts(0)"></i>
                     <input class="form-control" v-model="search" type="name" placeholder="Найди товар на странице">
                 </div>
-                <p class="mb-0 pb-1">
-                   Цена:
-                </p>
+                <p class="mb-0">Цена товара</p>
                <div class="row mb-0">
                    <div class="col-6">
                        <div class="input-style input-style-2 input-required">
-                           <span class="color-highlight">От, ₽</span>
-                           <input class="form-control" type="email" placeholder="0 ₽">
+                           <input class="form-control" type="email" placeholder="От, руб">
                        </div>
                    </div>
                    <div class="col-6">
                        <div class="input-style input-style-2 input-required">
-                           <span class="color-highlight">До, ₽</span>
-                           <input class="form-control" type="email" placeholder="100 ₽">
+                           <input class="form-control" type="email" placeholder="До, руб">
                        </div>
                    </div>
                </div>
             </div>
-            <a data-toggle="collapse" href="#collapse-8"
-               class="btn btn-m btn-full rounded-sm font-900 shadow-xl text-uppercase mb-3" aria-expanded="true">
-                <i class="fa-solid fa-filter  mr-2"></i>
+            <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
+               class="btn btn-m btn-full rounded-sm font-900 shadow-xl text-uppercase mb-3" >
+                <i class="fa-solid fa-chevron-down mr-2" v-if="isCollapsed"></i>
+                <i class="fa-solid fa-filter  mr-2" v-else></i>
                 <span class="font-14">Фильтры товара</span>
             </a>
 
@@ -88,6 +85,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
+            isCollapsed:true,
             search: null,
             products: [],
             paginate: null,

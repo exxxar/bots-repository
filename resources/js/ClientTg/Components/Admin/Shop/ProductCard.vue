@@ -1,29 +1,28 @@
 <template>
 
-    <div class="card rounded-l shadow-xl bg-18 mb-3" style="height: 320px;">
-        <div class="card-top mt-3 mr-3">
-            <a href="javascript:void(0)" class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i class="fa fa-heart"></i></a>
-            <a href="javascript:void(0)" data-menu="menu-share" class="icon icon-s rounded-l shadow-xl bg-highlight color-white float-right"><i class="fa fa-shopping-cart"></i></a>
+    <div class="d-flex pb-2">
+        <div class="mr-auto">
+            <img v-lazy="preparedImgUrl(item.images[0])" class="rounded-m shadow-xl" width="110">
+            <a href="javascript:void(0)" data-menu="cart-item-edit" class="color-white mt-n5 py-3 pl-2 d-block font-11"><i class="fa fa-pen pl-2 pr-2"></i> Редактировать</a>
         </div>
-        <div class="card-bottom mb-3">
-            <div class="content mb-0">
-                <div class="d-flex">
-                    <div>
-                        <p class="mb-n1 font-600 color-highlight">Mobile Template and PWA</p>
-                        <h1 class="font-700">{{ item.title }}</h1>
-                    </div>
-                    <div class="ml-auto">
-                        <h1>$23<sup class="font-300 opacity-30">.99</sup></h1>
-                        <span class="badge bg-highlight color-white px-3 py-1 mt-n1 text-uppercase d-block">On Sale</span>
-                    </div>
+        <div class="ml-auto w-100 pl-3">
+            <h5 class="font-14 font-600 opacity-80 pb-2">#{{item.id}} {{ item.title }}</h5>
+            <div class="clearfix"></div>
+            <h1 class="font-23 font-700 float-left pt-2 ">{{item.current_price}}₽<sup
+                v-if="item.old_price"
+                style="text-decoration: line-through;" class="font-15 opacity-50">{{item.old_price}}₽</sup></h1>
+            <div class="float-right">
+                <div class="input-style input-style-1 mt-1">
+                    <button
+                        @click="selectProduct"
+                        class="btn btn-full btn-sm rounded-sm bg-highlight font-800 text-uppercase"><i class="fa-regular fa-pen-to-square"></i></button>
                 </div>
             </div>
         </div>
-        <div class="card-overlay bg-gradient-fade rounded-l"></div>
-        <div class="card-overlay"></div>
     </div>
 
-    <div class="card" >
+
+<!--    <div class="card" >
         <div class="card-header">
             <p>#{{ item.id }}</p>
         </div>
@@ -71,7 +70,7 @@
 
 
         </div>
-    </div>
+    </div>-->
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -84,6 +83,10 @@ export default {
         }
     },
     methods: {
+        selectProduct(){
+          this.$emit("select", this.item)
+            window.scrollTo(50,400);
+        },
         preparedImgUrl(url) {
             if (url.toLocaleLowerCase().startsWith("https://") || url.toLocaleLowerCase().startsWith("http://"))
                 return url;

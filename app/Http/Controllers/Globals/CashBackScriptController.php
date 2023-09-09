@@ -28,14 +28,32 @@ class CashBackScriptController extends SlugController
         if (is_null($mainScript))
             return;
 
-        if (empty($mainScript->config ?? [])) {
-            $mainScript->config = [
-                [
-                    "type" => "text",
-                    "key" => "first_cashback_granted",
-                    "value" => 0
-                ],
-            ];
+        $params = [
+            [
+                "type" => "text",
+                "key" => "first_cashback_granted",
+                "value" => 0
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_birthday",
+                "value" => true,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_city",
+                "value" => true,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_age",
+                "value" => true,
+            ],
+        ];
+
+        if (count($mainScript->config ?? []) < count($params)) {
+            $mainScript->config = $params;
             $mainScript->save();
         }
 

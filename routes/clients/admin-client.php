@@ -66,12 +66,14 @@ Route::middleware(['auth', 'verified'])
     });
 
 Route::post("/send-to-channel", [\App\Http\Controllers\Admin\BotController::class, "sendToChannel"]);
-Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
+
 Route::get("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
 
 Route::prefix("admin")
     ->middleware(['auth', 'verified'])
     ->group(function () {
+
+        Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
 
         Route::prefix("bots")
             ->controller(BotController::class)

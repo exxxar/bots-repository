@@ -91,6 +91,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
     async saveProduct(context, payload = {productForm: null}) {
         let link = `${BASE_PRODUCTS_LINK}/save`
 

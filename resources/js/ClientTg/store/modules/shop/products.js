@@ -23,6 +23,43 @@ const getters = {
 const actions = {
 
 
+    async removeProductCategory(context, payload = {category_id: null}){
+        let link = `${BASE_PRODUCTS_LINK}/remove-category/${payload.category_id}`
+
+        let _axios = util.makeAxiosFactory(link,"DELETE")
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async addProductCategory(context, payload = {category: null}){
+        let link = `${BASE_PRODUCTS_LINK}/add-category`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
+    async saveProduct(context, payload = {productForm: null}) {
+        let link = `${BASE_PRODUCTS_LINK}/add-product"`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload.productForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
 
     async loadProduct(context, payload = {dataObject: {productId: null}}) {
 

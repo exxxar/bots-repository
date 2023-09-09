@@ -1258,7 +1258,7 @@ class BotLogicFactory
                 "Статистика CashBack в боте",
                 InputFile::create(
                     storage_path("app/public")."/$name.xls",
-                    "bot-users-$date.xls"
+                    "cashback-history-$date.xls"
                 )
             );
 

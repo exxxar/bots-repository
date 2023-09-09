@@ -19,10 +19,10 @@ const actions = {
     ...products.actions,
     ...users.actions,
     ...events.actions,
-    async updateProductsFromVk(context, payload = {dataObject: {botDomain: null, url: null}}) {
-        let link = `/vk-auth-link`
+    async updateProductsFromVk(context) {
+        let link = `/bot-client/vk-auth-link`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+        let _axios = util.makeAxiosFactory(link, 'POST')
 
         return _axios.then((response) => {
             return Promise.resolve(response);
