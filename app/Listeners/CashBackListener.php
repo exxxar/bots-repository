@@ -81,8 +81,6 @@ class CashBackListener
             } else
                 $levels[] = $event->percent ?? $bot->level_1 ?? env("BASE_CASHBACK_LEVEL_1") ?? 0;
 
-            Log::info("cashback crediting levels=".print_r($levels, true));
-            Log::info("cashback percent=".print_r($event->percent , true));
 
             $nextBotUser = $botUserUser;
             $index = 1;
@@ -99,7 +97,6 @@ class CashBackListener
                     $index
                 );
 
-                Log::info("step $index data=".print_r($nextBotUser->toArray(), true));
 
                 $nextBotUser = BotUser::query()
                     ->with(["user", "parent"])

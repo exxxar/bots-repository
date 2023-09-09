@@ -21,6 +21,8 @@ Route::prefix("bot-client")
         Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"])
             ->middleware(["tgAuth.admin"]);
 
+        Route::any("/vk-callback", [\App\Http\Controllers\Globals\VKProductController::class, "callback"]);
+
         Route::post("/send-to-channel", [BotController::class, "sendToChannel"])
             ->middleware(["tgAuth.any"]);
 

@@ -29,7 +29,7 @@ class VKProductController extends Controller
 
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");
-        $redirect_uri = env("APP_URL") . '/bot-client/shop/vk-callback';
+        $redirect_uri = env("APP_URL") . '/bot-client/vk-callback';
         $display = VKOAuthDisplay::PAGE;
         $scope = [VKOAuthUserScope::MARKET];
         $state = $botDomain ?? 'secret_state_code';
@@ -52,7 +52,7 @@ class VKProductController extends Controller
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");
         $client_secret = env('VK_CLIENT_SECRET');
-        $redirect_uri = env("APP_URL") . '/bot-client/shop/vk-callback';
+        $redirect_uri = env("APP_URL") . '/bot-client/vk-callback';
         $code = $request->code;
         $state = $request->state; //bot domain
 
