@@ -99,7 +99,7 @@ class VKProductController extends Controller
             return response()->noContent(400);
 
         $response = $vk->market()->get($access_token, [
-            'owner_id' => "-106641010",
+            'owner_id' => "-221542370",
             'need_variants' => 1,
             'extended' => 1
         ]);
