@@ -101,13 +101,21 @@ class RestaurantBotController extends Controller
                     'activated' => true,
                 ]);
 
-                $userName = BotMethods::prepareUserName($botUser);
+                $userName1 = BotMethods::prepareUserName($botUser);
+                $userName2 = BotMethods::prepareUserName($userBotUser);
+
+                $botUser->parent_id = $userBotUser->id;
+                $botUser->save();
 
                 BotMethods::bot()
                     ->whereId($botUser->bot_id)
                     ->sendMessage(
-                        $request_telegram_chat_id,
-                        "По вашей ссылке перешел пользователь $userName"
+                        $userBotUser->telegram_chat_id,
+                        "По вашей ссылке перешел пользователь $userName1"
+                    )
+                    ->sendMessage(
+                        $botUser->telegram_chat_id,
+                        "Вас и вашего друга $userName2 теперь объеденяет еще и CashBack;)"
                     );
             }
 
