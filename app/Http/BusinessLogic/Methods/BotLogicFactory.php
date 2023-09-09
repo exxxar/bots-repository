@@ -34,7 +34,6 @@ use App\Models\ImageMenu;
 use App\Models\Location;
 use App\Models\Product;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -955,8 +954,8 @@ class BotLogicFactory
         if (is_null($tmp->image))
             $tmp->image = is_null($photos) ? null : ($photos[0] ?? null);
 
-        $tmp->level_2 = $request->level_2 ?? 0;
-        $tmp->level_3 = $request->level_3 ?? 0;
+        $tmp->level_2 = $data["level_2"] ?? 0;
+        $tmp->level_3 = $data["level_3"] ?? 0;
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
         $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
@@ -1072,7 +1071,7 @@ class BotLogicFactory
 
         }
 
-        $imageName = $request->image ?? null;
+        $imageName = $data["image"] ?? null;
 
         if (!is_null($uploadedPhoto))
             $imageName = $this->uploadPhoto("/public/companies/" . $this->bot->company->slug, $uploadedPhoto);
