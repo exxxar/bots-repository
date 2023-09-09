@@ -15,34 +15,34 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
     <Layout>
 
         <template #default>
-    <div class="d-flex justify-content-center align-items-center w-100" style="height: 100vh;">
-        <div class="card card-style bg-8 w-100 px-3" data-card-height="250" style="height: 250px;">
-            <div class="card-center">
-                <h2 class="color-white font-700 text-center mb-2">Результат</h2>
-                <p class="color-white boxed-text-l text-center opacity-60 mt-n1 mb-3">
-                    {{ message }}
+            <div class="d-flex justify-content-center align-items-center w-100" style="height: 100vh;">
+                <div class="card card-style bg-8 w-100 px-3" data-card-height="250" style="height: 250px;">
+                    <div class="card-center">
+                        <h2 class="color-white font-700 text-center mb-2">Результат</h2>
+                        <p class="color-white boxed-text-l text-center opacity-60 mt-n1 mb-3">
+                            {{ message }}
 
-                </p>
+                        </p>
 
-                <p
-                   v-if="statistic"
-                    class="color-white boxed-text-l text-center opacity-60 mt-n1 mb-3 d-flex flex-column">
-                    <span>Всего товаров затронуто <strong>{{statistic.total_product_count || 0}}</strong></span>
-                    <span>Созданое новых товаров <strong>{{statistic.created_product_count || 0}}</strong></span>
-                    <span>Обновелно товаров <strong>{{statistic.updated_product_count || 0}}</strong></span>
-                </p>
+                        <p
+                            v-if="statistic"
+                            class="color-white boxed-text-l text-center opacity-60 mt-n1 mb-3 d-flex flex-column">
+                            <span>Всего товаров затронуто <strong>{{ statistic.total_product_count || 0 }}</strong></span>
+                            <span>Созданое новых товаров <strong>{{ statistic.created_product_count || 0 }}</strong></span>
+                            <span>Обновелно товаров <strong>{{ statistic.updated_product_count || 0 }}</strong></span>
+                        </p>
 
-                <ReturnToBot class="px-3"/>
+                        <div class="px-3">
+                            <ReturnToBot/>
+                        </div>
+
+                    </div>
+                    <div class="card-overlay bg-black opacity-80"></div>
+                </div>
+
             </div>
-            <div class="card-overlay bg-black opacity-80"></div>
-        </div>
-
-    </div>
         </template>
     </Layout>
-
-
-
 
 
 </template>
@@ -59,14 +59,10 @@ export default {
         tg() {
             return window.Telegram.WebApp;
         },
-        tgUser() {
-            const urlParams = new URLSearchParams(this.tg.initData);
-            return JSON.parse(urlParams.get('user'));
-        }
     },
     mounted() {
         if (this.data)
-        this.statistic = JSON.parse(this.data)
+            this.statistic = JSON.parse(this.data)
     },
     methods: {}
 }
