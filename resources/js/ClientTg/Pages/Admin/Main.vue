@@ -443,6 +443,7 @@ export default {
 
             this.reloadUsers = true
             this.botUser = null
+            this.request_telegram_chat_id = null
             this.$nextTick(() => {
                 this.reloadUsers = false
             })
