@@ -8,7 +8,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 </script>
 <template>
     <UserSearchForm
-        v-if="!loading"
+        v-if="!reloadUsers"
         v-on:select="selectUser"/>
     <div v-if="request_telegram_chat_id" id="user-profile-info">
         <div class="card card-style bg-theme pb-0">
@@ -40,7 +40,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     </p>
                     <UserInfo
                         v-on:update="updateUserInfo"
-                        v-if="botUser&&!loading"
+                        v-if="botUser&&!reloadUsers"
                         :bot-user="botUser"></UserInfo>
                     <ReturnToBot></ReturnToBot>
                 </div>
@@ -364,6 +364,7 @@ export default {
 
             statistic: null,
             loading: false,
+            reloadUsers: false,
 
             tab: 0,
             section: 0,
@@ -440,10 +441,10 @@ export default {
     methods: {
         updateUserInfo() {
 
-            this.loading = true
+            this.reloadUsers = true
             this.botUser = null
             this.$nextTick(() => {
-                this.loading = false
+                this.reloadUsers = false
             })
         },
         selectUser(user) {

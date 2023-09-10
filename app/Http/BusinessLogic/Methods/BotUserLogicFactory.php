@@ -257,7 +257,7 @@ class BotUserLogicFactory
             $botUser->sex ? "муж":"жен",
             $botUser->is_vip ? "да":"нет",
             $botUser->is_admin ? "да":"нет",
-            $botUser->is_work ? "работает":"не работае",
+            $botUser->is_work ? "да":"нет",
         );
         BotMethods::bot()
             ->whereBot($this->bot)
