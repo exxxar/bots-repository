@@ -269,6 +269,17 @@
                     class="btn btn-m btn-full mb-0 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark w-100">Сохранить
                 </button>
             </form>
+
+            <div
+                v-if="productForm.id"
+                class="divider divider-small my-3 bg-highlight "></div>
+
+            <button
+                @click="removeProduct"
+                v-if="productForm.id"
+                type="button"
+                class="btn btn-m btn-full mb-0 rounded-xs text-uppercase font-900 shadow-s bg-red2-dark w-100">Удалить товар
+            </button>
         </div>
     </div>
 
@@ -336,8 +347,6 @@ export default {
 
         if (this.item) {
             this.$nextTick(() => {
-
-                console.log("Test")
                 this.productForm = {
                     id: this.item.id || null,
                     article: this.item.article || null,
@@ -359,8 +368,6 @@ export default {
                 this.options = []
                 this.item.categories.forEach(category => {
                     this.productCategories.push(category.id)
-
-                    // this.options.push({value: category.id, label: category.title})
                 })
 
             })
@@ -369,9 +376,18 @@ export default {
     methods: {
         prepareCategoryName(category) {
             let cat = this.categories.find(item => item.value === category)
-
-            console.log(cat)
             return cat ? cat.label : category
+        },
+        removeProduct(){
+            this.$store.dispatch("removeProductCategory",{
+                category_id: id
+            }).then(()=>{
+                this.loadProductCategories()
+                this.$botNotification.notification(
+                    "Конструктор ботов",
+                    "Продукт успешно удален!",
+                );
+            })
         },
         removeCategory(id){
             let index  = this.categories.findIndex(item=>item.id===id)||null
@@ -383,6 +399,10 @@ export default {
                 category_id: id
             }).then(()=>{
                 this.loadProductCategories()
+                this.$botNotification.notification(
+                    "Конструктор ботов",
+                    "Категория успешно удалена!",
+                );
             })
         },
         addCategory() {
@@ -396,7 +416,6 @@ export default {
         },
         selectCategory(item) {
             this.productCategories.push(item.id)
-            console.log("productCategories",this.productCategories)
         },
         submit() {
             let data = new FormData();

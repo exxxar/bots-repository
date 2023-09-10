@@ -1,6 +1,6 @@
 <script setup>
-import UserInfo from 'ClientTg@/Components/UserInfo.vue';
-import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
+import UserInfo from '@/ClientTg/Components/UserInfo.vue';
+import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
 <template>
     <div v-if="botUser">
@@ -10,7 +10,9 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                 <p>
                     Ваша персональная информация
                 </p>
-                <UserInfo :bot-user="botUser"></UserInfo>
+                <UserInfo
+                    v-on:update="loadSelf"
+                    :bot-user="botUser"></UserInfo>
                 <ReturnToBot/>
                 <div class="divider-icon divider-margins bg-blue2-dark my-4">
                     <i class="fa font-17 color-blue2-dark fa-cog bg-white"></i>
@@ -71,6 +73,9 @@ export default {
         }
     },
     methods: {
+        loadSelf(){
+            this.$store.dispatch("loadSelf")
+        },
         loadReceiverUserData() {
             this.loading = true
             this.$store.dispatch("loadReceiverUserData", {

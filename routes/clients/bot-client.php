@@ -6,6 +6,7 @@ use App\Http\Controllers\Bots\Web\BotController;
 use App\Http\Controllers\Bots\Web\BotDialogsController;
 use App\Http\Controllers\Bots\Web\BotMenuSlugController;
 use App\Http\Controllers\Bots\Web\BotPageController;
+use App\Http\Controllers\Bots\Web\BotUsersController;
 use App\Http\Controllers\Bots\Web\CompanyController;
 use App\Http\Controllers\Bots\Web\ProductController;
 use App\Http\Controllers\Globals\AboutBotScriptController;
@@ -149,6 +150,14 @@ Route::prefix("bot-client")
             ->controller(\App\Http\Controllers\Admin\BotUsersController::class)
             ->group(function () {
                 Route::post("/search", "loadBotUsers")
+                    ->middleware(["tgAuth.admin"]);
+
+            });
+
+        Route::prefix("bot-users")
+            ->controller(BotUsersController::class)
+            ->group(function () {
+                Route::post("/update-bot-user", "updateBotUser")
                     ->middleware(["tgAuth.admin"]);
 
             });

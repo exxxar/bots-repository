@@ -17,15 +17,15 @@ import ProductList from "@/ClientTg/Components/Admin/Shop/ProductList.vue";
             </a>
 
             <button class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme w-100">
-                Экспортировать заказы
+                <i class="fa-solid fa-lock mr-2"></i> Экспортировать заказы
             </button>
 
             <button class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme w-100">
-                Импорт из XLS
+                <i class="fa-solid fa-lock mr-2"></i> Импорт из XLS
             </button>
 
             <button class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme w-100">
-                Экспорт в XLS
+                <i class="fa-solid fa-lock mr-2"></i>  Экспорт в XLS
             </button>
 
             <div class="divider divider-small my-3 bg-highlight "></div>

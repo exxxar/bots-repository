@@ -7,10 +7,13 @@ use App\Exports\BotUsersExport;
 use App\Facades\BotMethods;
 use App\Http\Resources\ActionStatusCollection;
 use App\Http\Resources\BotUserCollection;
+use App\Http\Resources\BotUserResource;
 use App\Models\ActionStatus;
 use App\Models\BotUser;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
@@ -54,7 +57,7 @@ class BotUserLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $botUsers = BotUser::query()
-            ->with(["bot","cashBack"])
+            ->with(["bot", "cashBack"])
             ->where("bot_id", $this->bot->id);
 
         if ($needAdmins)
@@ -80,19 +83,19 @@ class BotUserLogicFactory
 
         $date = Carbon::now()->format("Y-m-d H-i-s");
 
-        Excel::store(new BotUsersExport($statistics),"$name.xls","public");
+        Excel::store(new BotUsersExport($statistics), "$name.xls", "public");
 
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendDocument($this->botUser->telegram_chat_id,
                 "Пользователи бота с CashBack",
                 InputFile::create(
-                    storage_path("app/public")."/$name.xls",
+                    storage_path("app/public") . "/$name.xls",
                     "bot-users-$date.xls"
                 )
             );
 
-        unlink(storage_path("app/public")."/$name.xls");
+        unlink(storage_path("app/public") . "/$name.xls");
     }
 
 
@@ -189,4 +192,80 @@ class BotUserLogicFactory
         return new ActionStatusCollection($actions);
     }
 
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function update(array $data): BotUserResource
+    {
+        $validator = Validator::make($data, [
+            "id" => "required",
+            "is_vip" => "required",
+            "is_admin" => "required",
+            "is_work" => "required",
+            "user_in_location" => "required",
+            "name" => "required",
+            "phone" => "required",
+            "email" => "",
+            "birthday" => "",
+            "city" => "",
+            "country" => "",
+            "address" => "",
+            "sex" => "",
+
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $botUser = BotUser::query()
+            ->where("id", $data["id"])
+            ->first();
+
+        if (is_null($botUser))
+            throw new HttpException(404, "Пользователь бота не найден");
+
+
+        $birthday = Carbon::parse($data["birthday"] ?? $botUser->birthday?? Carbon::now())->format("Y-m-d");
+
+        $botUser->is_vip = (bool)(($data["is_vip"] ?? false));
+        $botUser->is_admin = (bool)(($data["is_admin"] ?? false));
+        $botUser->is_work = (bool)(($data["is_work"] ?? false));
+        $botUser->user_in_location = (bool)(($data["user_in_location"] ?? false));
+        $botUser->name = $data["name"] ?? $botUser->name ?? null;
+        $botUser->phone = $data["phone"] ?? $botUser->phone ?? null;
+        $botUser->email = $data["email"] ?? $botUser->email ?? null;
+        $botUser->birthday = $birthday;
+        $botUser->city = $data["city"] ?? $botUser->city ?? null;
+        $botUser->country = $data["country"] ?? $botUser->country ?? null;
+        $botUser->address = $data["address"] ?? $botUser->address ?? null;
+        $botUser->sex = (bool)(($data["sex"] ?? false));
+        $botUser->age = Carbon::now()->year - Carbon::parse($birthday)
+                ->year;
+        $botUser->save();
+
+        $message = sprintf("Ф.И.О: %s\nТелефон: %s\nПочта: %s\nДР: %s\nВозраст: %s\nСтрана: %s\nГород: %s\nАдрес: %s\nПол: %s\nVip: %s\nAdmin: %s\nЗа работой: %s",
+            $botUser->name ?? "Не указано",
+            $botUser->phone ?? "Не указано",
+            $botUser->email ?? "Не указано",
+            $botUser->birthday ?? "Не указано",
+            $botUser->age ?? "Не указано",
+            $botUser->country ?? "Не указано",
+            $botUser->city ?? "Не указано",
+            $botUser->address ?? "Не указано",
+            $botUser->sex ? "муж":"жен",
+            $botUser->is_vip ? "да":"нет",
+            $botUser->is_admin ? "да":"нет",
+            $botUser->is_work ? "работает":"не работае",
+        );
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                "Ваши анкетные данные обновлены администратором:\n $message"
+            );
+
+        return new BotUserResource($botUser);
+    }
 }

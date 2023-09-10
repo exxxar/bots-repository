@@ -7,7 +7,9 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 //todo: добавить историю кэшбека, добавить сумму кэшбэка на текущий момент
 </script>
 <template>
-    <UserSearchForm v-on:select="selectUser" />
+    <UserSearchForm
+        v-if="!loading"
+        v-on:select="selectUser"/>
     <div v-if="request_telegram_chat_id" id="user-profile-info">
         <div class="card card-style bg-theme pb-0">
             <div class="content mb-0">
@@ -37,7 +39,8 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                         Ваша персональная информация
                     </p>
                     <UserInfo
-                        v-if="botUser"
+                        v-on:update="updateUserInfo"
+                        v-if="botUser&&!loading"
                         :bot-user="botUser"></UserInfo>
                     <ReturnToBot></ReturnToBot>
                 </div>
@@ -74,7 +77,8 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 
             </div>
 
-            <div class="divider-icon divider-margins bg-blue2-dark my-4"><i class="fa font-17 color-blue2-dark fa-cog bg-white"></i></div>
+            <div class="divider-icon divider-margins bg-blue2-dark my-4"><i
+                class="fa font-17 color-blue2-dark fa-cog bg-white"></i></div>
             <div
                 v-if="botUser"
                 class="content mt-0">
@@ -164,7 +168,8 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     @click.prevent="openSection(6)"
                     v-if="currentBot.payment_provider_token"
                     v-bind:class="{'bg-blue2-dark text-white':section===6, 'color-blue2-dark':section!==6}"
-                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Запрос на оплату</a>
+                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Запрос
+                    на оплату</a>
 
                 <form v-on:submit.prevent="sendInvoice" v-if="section===6">
                     <div class="mb-3">
@@ -173,9 +178,9 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                                type="number"
                                min="100"
                                step="50"
-                                  placeholder="100"
-                                  v-model="invoiceForm.amount"
-                                  id="bill-amount"  required/>
+                               placeholder="100"
+                               v-model="invoiceForm.amount"
+                               id="bill-amount" required/>
                     </div>
                     <div class="mb-3">
                         <label for="bill-info" class="form-label">Введите сообщение для пользователя</label>
@@ -319,7 +324,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     @click.prevent="openSection(4)"
                     v-bind:class="{'bg-blue2-dark text-white':section===4, 'color-blue2-dark':section!==4}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark  ">
-                  Убрать администратора
+                    Убрать администратора
                 </a>
 
                 <form v-on:submit.prevent="removeAdmin" v-if="section===4">
@@ -357,7 +362,6 @@ export default {
         return {
             botUser: null,
 
-
             statistic: null,
             loading: false,
 
@@ -369,9 +373,9 @@ export default {
             cashback_paginate_object: null,
             referrals_paginate_object: null,
 
-            invoiceForm:{
-              amount:100,
-              info: null,
+            invoiceForm: {
+                amount: 100,
+                info: null,
             },
             userDataForm: {
                 info: null,
@@ -386,7 +390,7 @@ export default {
 
             cashbackForm: {
                 percent: null,
-                need_custom_percents:false,
+                need_custom_percents: false,
                 amount: null,
                 info: null
             }
@@ -396,7 +400,7 @@ export default {
     computed: {
         ...mapGetters(['getSelf', 'getCashBack',
             'getCashBackPaginateObject']),
-        currentBot(){
+        currentBot() {
             return window.currentBot
         }
 
@@ -423,7 +427,7 @@ export default {
         if (user) {
             this.request_telegram_chat_id = user
 
-            console.log("this.$route.query.user=>", user)
+
             this.loadReceiverUserData()
             this.loadCashBack()
         }
@@ -434,8 +438,16 @@ export default {
 
 
     methods: {
-        selectUser(user){
-          this.request_telegram_chat_id = user.telegram_chat_id
+        updateUserInfo() {
+
+            this.loading = true
+            this.botUser = null
+            this.$nextTick(() => {
+                this.loading = false
+            })
+        },
+        selectUser(user) {
+            this.request_telegram_chat_id = user.telegram_chat_id
 
             this.loadReceiverUserData()
             this.loadCashBack()
@@ -456,10 +468,10 @@ export default {
                 this.botUser = resp.data
                 this.loading = false
 
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
 
                     let ele = document.getElementById('user-profile-info');
-                    window.scrollTo(ele.offsetLeft,ele.offsetTop-70)
+                    window.scrollTo(ele.offsetLeft, ele.offsetTop - 70)
 
                     //document.getElementById('user-profile-info').scrollIntoView();
                 })
@@ -502,7 +514,7 @@ export default {
                 this.loading = false
             })
         },
-        requestUserMenu(){
+        requestUserMenu() {
             this.loading = true;
             this.$store.dispatch("requestRefreshMenu", {
                 dataObject: {
@@ -518,7 +530,7 @@ export default {
                 this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
         },
-        requestUserData(){
+        requestUserData() {
             this.loading = true;
             this.$store.dispatch("requestUserData", {
                 dataObject: {
@@ -597,7 +609,7 @@ export default {
                 this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
         },
-        sendInvoice(){
+        sendInvoice() {
             this.loading = true;
             this.$store.dispatch("sendInvoice", {
                 dataObject: {
