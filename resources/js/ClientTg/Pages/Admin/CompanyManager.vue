@@ -6,7 +6,7 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
     <div class="card card-style bg-1"
 
          style="height: 350px;">
-        <div class="card-center"    v-if="company">
+        <div class="card-center" v-if="company">
             <div class="w-100 d-flex justify-content-center p-3">
                 <img
                     class="object-cover" style="width:100px; border-radius:50%;"
@@ -46,9 +46,9 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
 
     <div class="card card-style" v-if="step===0">
         <div class="content" v-if="company">
-            <form v-on:submit.prevent="submitForm" >
+            <form v-on:submit.prevent="submitForm">
 
-                <label class="form-label d-flex justify-content-between" id="company-title">
+                <label class="form-label d-flex justify-content-between align-items-center" id="company-title">
                        <span>
                              <Popper content="Название вашей компании">
                             <i class="fa-regular fa-circle-question mr-1"></i>
@@ -56,7 +56,15 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                         Название компании
                        </span>
 
-                    <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+
+                    <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
+
                 </label>
                 <input type="text" class="form-control "
                        placeholder="Название"
@@ -66,7 +74,7 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                        aria-describedby="company-title" required>
 
 
-                <label class="form-label d-flex justify-content-between mt-2" id="company-title">
+                <label class="form-label d-flex justify-content-between align-items-center mt-2" id="company-title">
                     <span>
                           <Popper content="Тип налогооблажения вашей компании">
                         <i class="fa-regular fa-circle-question mr-1"></i>
@@ -75,7 +83,14 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                     </span>
 
 
-                    <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                    <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
+
                 </label>
                 <select type="text" class="form-control"
                         aria-label="Выберите налогооблажение"
@@ -87,7 +102,7 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                 </select>
 
 
-                <label class="form-label d-flex justify-content-between mt-2"
+                <label class="form-label d-flex justify-content-between align-items-center mt-2"
                        id="company-slug">
                     <span>
                           <Popper>
@@ -102,7 +117,15 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                     Домен компании
                     </span>
 
-                    <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+
+                    <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
+
                 </label>
                 <input type="text" class="form-control"
                        placeholder="Мнемоническое имя"
@@ -112,7 +135,8 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                        aria-describedby="company-slug" required>
 
 
-                <label class="form-label d-flex justify-content-between flex-wrap mt-2" id="company-description">
+                <label class="form-label d-flex justify-content-between align-items-center flex-wrap mt-2"
+                       id="company-description">
                   <span>
                          <Popper>
                         <i class="fa-regular fa-circle-question mr-1"></i>
@@ -124,13 +148,21 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
 
                   </span>
 
-                    <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                    <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
+
 
                     <small class="text-gray-400 w-100" style="font-size:10px;"
                            v-if="companyForm.description">
                         Длина текста {{ companyForm.description.length }}</small>
                 </label>
                 <textarea type="text" class="form-control"
+                          style="min-height:250px;"
                           placeholder="Описание компании"
                           aria-label="Описание компании"
                           v-model="companyForm.description"
@@ -177,7 +209,8 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                        aria-describedby="company-manager">
 
                 <div class="divider divider-small my-3 bg-highlight "></div>
-                <h6 class="d-flex justify-content-between">Логотип компании  <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span></h6>
+                <h6 class="d-flex justify-content-between align-items-center">Логотип компании <i
+                    class="fa-solid fa-star color-red2-dark"></i></h6>
 
                 <div class="d-flex justify-content-center">
                     <label for="photos" style="margin-right: 10px;" class="photo-loader ml-2">
@@ -206,7 +239,6 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                 </div>
 
 
-
                 <div class="divider divider-small my-3  bg-highlight"></div>
                 <h6>Телефонные номера</h6>
                 <div class="d-flex justify-content-between">
@@ -217,19 +249,19 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                      :key="'phone'+index"
                      v-for="(item, index) in companyForm.phones">
 
-                            <input type="text" class="form-control w-100 mr-2"
-                                   v-mask="'+7(###)###-##-##'"
-                                   placeholder="+7(000)000-00-00"
-                                   aria-label="Номер телефона"
-                                   maxlength="255"
-                                   v-model="companyForm.phones[index]"
-                                   :aria-describedby="'company-phone-'+index">
+                    <input type="text" class="form-control w-100 mr-2"
+                           v-mask="'+7(###)###-##-##'"
+                           placeholder="+7(000)000-00-00"
+                           aria-label="Номер телефона"
+                           maxlength="255"
+                           v-model="companyForm.phones[index]"
+                           :aria-describedby="'company-phone-'+index">
 
-                        <button
-                            type="button"
-                            @click="removeItem('phones', index)"
-                            class="btn btn-outline-danger py-1 px-3 "><i class="fa-regular fa-trash-can"></i>
-                        </button>
+                    <button
+                        type="button"
+                        @click="removeItem('phones', index)"
+                        class="btn btn-outline-danger py-1 px-3 "><i class="fa-regular fa-trash-can"></i>
+                    </button>
 
                 </div>
 
@@ -237,7 +269,8 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                 <button
                     type="button"
                     @click="addItem('phones')"
-                    class="btn btn-border btn-m btn-full mb-2 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme w-100">Добавить еще номер
+                    class="btn btn-border btn-m btn-full mb-2 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme w-100">
+                    Добавить еще номер
                 </button>
 
                 <div class="divider divider-small my-3  bg-highlight"></div>
@@ -323,7 +356,7 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
             </form>
         </div>
         <div class="content" v-else>
-           <p>Загружаем данные компании</p>
+            <p>Загружаем данные компании</p>
             <div class="d-flex justify-content-center w-100">
                 <div class="spinner-border color-orange-dark" role="status">
                     <span class="sr-only">Загрузка...</span>
@@ -333,14 +366,13 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
     </div>
 
 
-    <div  v-if="step===1">
+    <div v-if="step===1">
 
-            <Location v-if="company&&!load"
-                      :company="company"
-            />
+        <Location v-if="company&&!load"
+                  :company="company"
+        />
 
     </div>
-
 
 
 </template>
@@ -492,7 +524,7 @@ export default {
                 }).then((response) => {
                 this.$emit("callback", response.data)
 
-                this.$notify("Компания успешно создана");
+                this.$botNotification.notification("Компания","Компания успешно создана");
             }).catch(err => {
             })
 
@@ -533,6 +565,7 @@ export default {
     padding: 10px !important;
     border-radius: 10px !important;
     color: white !important;
+    text-align: center;
 }
 
 

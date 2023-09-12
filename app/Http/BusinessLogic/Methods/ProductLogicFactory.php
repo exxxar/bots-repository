@@ -101,8 +101,8 @@ class ProductLogicFactory
         if (!is_null($search))
             $products = $products
                 ->where(function ($q) use ($search) {
-                    $q->where("title", "like", "%$search%")
-                        ->orWhere("description", "like", "%$search%");
+                    $q->where("title", "like", "%$search%");
+                       // ->orWhere("description", "like", "%$search%");
                 });
 
         $products = $products
@@ -325,12 +325,13 @@ class ProductLogicFactory
 
         $category = ProductCategory::query()
             ->create([
-                'title'=>$data["category"],
-                'bot_id'=>$this->bot->id,
+                'title' => $data["category"],
+                'bot_id' => $this->bot->id,
             ]);
 
         return new ProductCategoryResource($category);
     }
+
     /**
      * @throws HttpException
      */
@@ -362,6 +363,44 @@ class ProductLogicFactory
         $product->delete();
 
         return new ProductResource($tmpProduct);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function removeAllProducts(): void
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $products = Product::query()
+            ->with(["productCategories", "productOptions"])
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (empty($products))
+            throw new HttpException(404, "Продукты не найден");
+
+        foreach ($products as $product) {
+            $options = $product->productOptions;
+
+            if (!empty($options))
+                foreach ($options as $option)
+                    $option->delete();
+
+            $categories = $product->productCategories;
+
+            $tmp = [];
+            if (!empty($categories))
+                foreach ($categories as $category)
+                    $tmp[] = $category->id;
+
+            $product->productCategories()->detach($tmp);
+
+            $product->delete();
+        }
+
+
     }
 
     /**

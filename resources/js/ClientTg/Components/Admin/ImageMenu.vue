@@ -197,7 +197,12 @@ export default {
                     menuForm: data
                 }).then((response) => {
                     this.$emit("callback", response.data)
-                    this.$notify("Меню успешно создано и сохранено");
+
+                    this.$botNotification.success(
+                        "Меню",
+                        "Меню успешно создано и сохранено!",
+                    );
+
                 }).catch(err => {
 
                 })
@@ -206,7 +211,13 @@ export default {
         addImageMenu() {
             this.menuForm.bot_id = this.bot.id
             this.menus.push(this.menuForm);
-            this.$notify("Меню успешно добавлено в список");
+
+            this.$botNotification.success(
+                "Меню",
+                "Меню успешно добавлено в список",
+            );
+
+
             this.menuForm = {
                 title: null,
                 description: null,

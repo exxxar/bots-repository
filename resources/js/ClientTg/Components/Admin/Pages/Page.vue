@@ -33,7 +33,14 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                             </Popper>
                             Команда
                         </div>
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                         <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
+
                     </label>
                     <input type="text" class="form-control"
                            placeholder="Команда"
@@ -55,7 +62,14 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                             </Popper>
                             Описание страницы
                         </div>
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                         <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
+
                     </label>
                     <textarea type="text" class="form-control"
                               placeholder="Описание страницы"
@@ -82,7 +96,14 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                             </Popper>
                             Контент
                         </div>
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                         <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
+
 
                         <!--                        <InlineInjectionsHelper param="content" v-on:callback="injectContent"/>-->
                     </label>
@@ -144,7 +165,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                             <img
                                 v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
                             <div class="remove">
-                                <a @click="removeImage(index)">Удалить</a>
+                                <a href="javascript:void(0)" @click="removeImage(index)">Удалить</a>
                             </div>
                         </div>
                     </div>
@@ -247,6 +268,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                     <p
                         class="d-flex justify-content-between mb-0 align-items-center"
                         v-if="pageForm.next_page_id">Связано со страницей #{{ pageForm.next_page_id }} <a
+                        href="javascript:void(0)"
                         class="btn font-16 text-danger font-weight-bold"
                         @click="pageForm.next_page_id = null"><i class="fa-solid fa-trash"></i></a></p>
                     <PagesList
@@ -273,6 +295,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                        class="d-flex justify-content-between mb-0 align-items-center">Связано со скриптом
                         #{{ pageForm.next_bot_menu_slug_id }}
                         <a
+                            href="javascript:void(0)"
                             class="btn font-16 text-danger font-weight-bold"
                             @click="pageForm.next_bot_menu_slug_id = null"><i class="fa-solid fa-trash"></i></a></p>
                     <BotSlugListSimple
@@ -300,6 +323,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                         Связано с диалогом
                         #{{ pageForm.next_bot_dialog_command_id }}
                         <a
+                            href="javascript:void(0)"
                             class="btn font-16 text-danger font-weight-bold"
                             @click="pageForm.next_bot_dialog_command_id = null"><i class="fa-solid fa-trash"></i></a></p>
                     <DialogList

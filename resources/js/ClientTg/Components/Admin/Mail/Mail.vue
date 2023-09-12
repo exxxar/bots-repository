@@ -34,7 +34,13 @@ import KeyboardList from "@/ClientTg/Components/Admin/Keyboards/KeyboardList.vue
 
                     <label class="form-label" id="bot-main-channel">Канал для постов</label>
                     <span @click="requestChannelId('channel')"><i class="fa-brands fa-telegram mr-2 color-blue2-dark"></i></span>
-                    <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                     <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
 
 
                 </div>
@@ -50,7 +56,13 @@ import KeyboardList from "@/ClientTg/Components/Admin/Keyboards/KeyboardList.vue
         <div class="mb-2">
             <label class="form-label d-flex justify-content-between align-items-center mb-2" id="bot-domain">
                 Текстовое содержимое страницы
-                <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                 <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
 
             </label>
 

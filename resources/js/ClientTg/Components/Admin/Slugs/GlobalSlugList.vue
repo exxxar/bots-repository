@@ -130,11 +130,13 @@ export default {
                     slugId: item.id
                 }
             }).then((response) => {
-                this.$notify({
-                    title: "Конструктор команд",
-                    text: "Команда успешно удалена",
-                    type: 'success'
-                });
+
+                this.$botNotification.notification(
+                    "Команды",
+                    "Команда успешно удалена",
+                );
+
+
                 this.loadAllSlugs()
 
             }).catch(err => {

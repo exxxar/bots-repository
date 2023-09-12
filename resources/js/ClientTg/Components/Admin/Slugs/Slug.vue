@@ -191,13 +191,10 @@ export default {
             }).then((response) => {
 
 
-                this.$notify({
-                    title: "Конструктор команд",
-                    text: "Команда успешно продублирована",
-                    type: 'success'
-                });
-
-                this.$emit("callback")
+                this.$botNotification.success(
+                    "Конструктор команд",
+                    "Команда успешно продублирована",
+                );
 
                 this.$nextTick(() => {
                     this.load = false
@@ -225,11 +222,12 @@ export default {
                     slugId: this.item.id
                 }
             }).then((response) => {
-                this.$notify({
-                    title: "Конструктор команд",
-                    text: "Команда успешно удалена",
-                    type: 'success'
-                });
+
+                this.$botNotification.success(
+                    "Конструктор команд",
+                    "Команда успешно удалена",
+                );
+
                 this.$emit("callback")
 
                 this.$nextTick(() => {

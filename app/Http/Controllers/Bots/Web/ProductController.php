@@ -108,6 +108,12 @@ class ProductController extends Controller
 
     }
 
+    public function removeAllProducts(Request $request){
+        BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->removeAllProducts();
+    }
+
     public function destroy(Request $request, $productId): ProductResource
     {
         return BusinessLogic::products()

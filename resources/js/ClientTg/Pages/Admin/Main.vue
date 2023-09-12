@@ -350,8 +350,6 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
         </div>
 
     </div>
-
-
 </template>
 <script>
 //import baseJS from "./modules/custom.js";
@@ -415,6 +413,30 @@ export default {
         'tab': function () {
             if (this.tab === 1)
                 this.loadCashBack()
+        },
+        'section': function () {
+            this.invoiceForm = {
+                amount: 100,
+                info: null,
+            }
+
+            this.userDataForm = {
+                info: null,
+            }
+            this.locationForm = {
+                info: null,
+            }
+
+            this.adminForm = {
+                info: null
+            }
+
+            this.cashbackForm = {
+                percent: null,
+                need_custom_percents: false,
+                amount: null,
+                info: null
+            }
         }
     },
     mounted() {

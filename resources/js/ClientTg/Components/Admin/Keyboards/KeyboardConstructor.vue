@@ -1,8 +1,25 @@
 <template>
 
+    <Popper>
+      <p class="mb-2"><i class="fa-regular fa-circle-question mr-1"></i>Инструкция</p>
+        <template #content>
+            <div class="text-left w-100 ">
+                <p class="mb-0 text-white"><i class="fa-solid fa-arrow-down"></i> - добавление в нижнюю часть новой строки (кнопки)</p>
+                <p class="mb-0 text-white"><i class="fa-solid fa-arrow-turn-up"></i> - добавление строки над выбранной строкой</p>
+                <p class="mb-0 text-white"><i class="fa-solid fa-arrow-turn-down"></i> - добавление строки под выбранной строкой</p>
+                <p class="mb-0 text-white"><i class="fa-solid fa-plus"></i> - добавление кнопки на строку</p>
+                <p class="mb-0 text-white"><i class="fa-solid fa-minus"></i> - удаление крайней левой кнопки из строки либо самой строки</p>
+                <p class="mb-0 text-white"><i class="fa-solid fa-xmark"></i> - отмена выделения</p>
+            </div>
+
+        </template>
+    </Popper>
+
+
     <div class="mb-2 d-flex justify-content-between align-items-center">
         <div>
             <button
+                title="добавление в нижнюю часть новой строки (кнопки)"
                 type="button"
                 class="btn btn-primary mb-2"
                 v-if="selectedRow==null"
@@ -10,12 +27,14 @@
             </button>
             <button
                 type="button"
+                title="добавление строки над выбранной строкой"
                 class="btn btn-primary mb-2"
                 v-if="selectedRow!=null"
                 @click="addRowAbove"><i class="fa-solid fa-arrow-turn-up"></i>
             </button>
             <button
                 type="button"
+                title="добавление строки под выбранной строкой"
                 class="btn btn-primary mb-2 ml-2"
                 v-if="selectedRow!=null"
                 @click="addRowBelow"><i class="fa-solid fa-arrow-turn-down"></i>
@@ -43,19 +62,23 @@
 
     </div>
 
-    <div style="overflow-x: scroll;padding: 5px 20px;">
+    <p  v-if="keyboard.length===0" class="text-danger font-weight-bold p-0 m-0">Элементы клавиатуры еще не добавлены</p>
+
+    <div  v-if="keyboard.length>0" style="overflow-x: scroll;padding: 5px 20px;" class="mb-3">
         <div style="min-width:600px;width:100%;">
             <div class="row mb-0"
-                 v-if="keyboard.length>0"
+
                  v-for="(row, rowIndex) in keyboard">
                 <div class="col-2 d-flex justify-content-around p-2">
                     <button
                         type="button"
+                        title="добавление кнопки на строку"
                         class="btn btn-link w-100"
                         @click="addColToRow(rowIndex)"><i class="fa-solid fa-plus"></i>
                     </button>
                     <button
                         type="button"
+                        title="удаление крайней левой кнопки из строки либо самой строки"
                         class="btn btn-link w-100"
                         @click="removeColFromRow(rowIndex)"><i class="fa-solid fa-minus"></i>
                     </button>
@@ -82,7 +105,7 @@
 
                 </div>
             </div>
-            <p class="text-danger font-weight-bold p-0 m-0" v-else>Элементы клавиатуры еще не добавлены</p>
+
             <div class="mb-0" v-if="showCode">
                 <label class="form-label" id="bot-domain">JSON-код клавиатуры</label>
                 <Vue3JsonEditor
@@ -151,8 +174,8 @@ export default {
         openKeyboardEditorMenu(rowIndex, colIndex) {
 
             this.$botPages.keyboard({
-                row:rowIndex,
-                col:colIndex,
+                row: rowIndex,
+                col: colIndex,
                 type: this.type,
             }, this.keyboard)
         },

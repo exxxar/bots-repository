@@ -3,13 +3,10 @@ import util from './utilites';
 const BASE_BOTS_LINK = '/bot-client/bots'
 
 let state = {
-    bot_users: [],
-    bot_users_paginate_object: null,
+
 }
 
 const getters = {
-    getBotUsers: state => state.bot_users || [],
-    getBotUsersPaginateObject: state => state.bot_users_paginate_object || null,
 }
 
 const actions = {
@@ -173,7 +170,7 @@ const actions = {
         })
     },
 
-    async loadBotUsers(context, payload = {dataObject: {botId: null, search: null}, page: 0, size: 12}) {
+   /* async loadBotUsers(context, payload = {dataObject: {botId: null, search: null}, page: 0, size: 12}) {
 
         let page = payload.page || 0
         let size = 12
@@ -192,7 +189,7 @@ const actions = {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);
         })
-    },
+    },*/
     async loadImageMenus(context) {
 
 
@@ -229,14 +226,14 @@ const actions = {
 }
 const mutations = {
 
-    setBotUsers(state, payload) {
+   /* setBotUsers(state, payload) {
         state.bot_users = payload || [];
         localStorage.setItem('cashman_bot_users', JSON.stringify(payload));
     },
     setBotUsersPaginateObject(state, payload) {
         state.bot_users_paginate_object = payload || [];
         localStorage.setItem('cashman_bot_users_paginate_object', JSON.stringify(payload));
-    },
+    },*/
 
 }
 

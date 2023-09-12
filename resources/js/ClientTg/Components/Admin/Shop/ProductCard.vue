@@ -3,7 +3,7 @@
     <div class="d-flex pb-2">
         <div class="mr-auto">
             <img v-lazy="preparedImgUrl(item.images[0])" class="rounded-m shadow-xl" width="110">
-            <a href="javascript:void(0)" data-menu="cart-item-edit" class="color-white mt-n5 py-3 pl-2 d-block font-11"><i class="fa fa-pen pl-2 pr-2"></i> Редактировать</a>
+<!--            <a href="javascript:void(0)" data-menu="cart-item-edit" class="color-white mt-n5 py-3 pl-2 d-block font-11"><i class="fa fa-pen pl-2 pr-2"></i> Редактировать</a>-->
         </div>
         <div class="ml-auto w-100 pl-3">
             <h5 class="font-14 font-600 opacity-80 pb-2">#{{item.id}} {{ item.title }}</h5>
@@ -96,11 +96,11 @@ export default {
         removeProduct(){
             this.$store.dispatch("removeProduct", this.item.id).then((response) => {
 
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Продукт успешно удален!",
-                    type: 'success'
-                });
+                this.$botNotification.success(
+                    "Продукты",
+                    "Продукт успешно удален!",
+                );
+
             }).catch(err => {
 
             })
@@ -108,11 +108,12 @@ export default {
         duplicateProduct(){
             this.$store.dispatch("duplicateProduct", this.item.id).then((response) => {
 
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Продукт успешно продублирован!",
-                    type: 'success'
-                });
+                this.$botNotification.success(
+                    "Продукты",
+                    "Продукт успешно продублирован!",
+                );
+
+
             }).catch(err => {
 
             })

@@ -159,7 +159,12 @@ export default {
         this.$store.dispatch("loadSelf").then(() => {
             window.self = this.getSelf
         })
-        this.$notify({type: "success", text: "The operation completed"});
+
+        this.$botNotification.success(
+            "Главная",
+            "Успешно!",
+        );
+
     },
     methods: {
         open(url) {
@@ -185,6 +190,15 @@ export default {
 
 .footer-card {
 bottom:-80px;
+}
+
+::-webkit-scrollbar {
+    /* display: block; */
+}
+
+.popper {
+    transform: translate3d(0px, 25px, 0px) !important;
+    z-index: 1000 !important;
 }
 </style>
 

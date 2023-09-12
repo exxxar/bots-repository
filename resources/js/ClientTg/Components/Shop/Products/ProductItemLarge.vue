@@ -9,7 +9,7 @@
                     style="width:50px;height:50px;"
                     class="btn rounded-l shadow-xl bg-highlight color-white float-right"><i
                 class="fa fa-shopping-cart"></i></button>
-            <a href="#" class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i
+            <a href="javascript:void(0)" class="icon icon-s rounded-l shadow-xl bg-red2-dark color-white float-right ml-2 mr-2"><i
                 class="fa fa-heart"></i></a>
 
         </div>

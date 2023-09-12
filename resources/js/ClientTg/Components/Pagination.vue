@@ -1,7 +1,7 @@
 <template>
 
     <nav v-if="pagination.links"  class="mt-4">
-        <ul class="pagination pagination- justify-content-center">
+        <ul class="pagination pagination- justify-content-center mb-3">
 
             <li class="page-item">
                 <button
@@ -125,4 +125,6 @@ export default {
 .page-item {
     height: 100%;
 }
+
+
 </style>

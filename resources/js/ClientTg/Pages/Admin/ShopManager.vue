@@ -29,7 +29,9 @@ import ProductList from "@/ClientTg/Components/Admin/Shop/ProductList.vue";
             </button>
 
             <div class="divider divider-small my-3 bg-highlight "></div>
-            <button class="btn btn-m btn-full mb-3 rounded-sm text-uppercase font-900 shadow-s bg-red2-dark w-100">
+            <button
+                @click="removeAllProducts"
+                class="btn btn-m btn-full mb-3 rounded-sm text-uppercase font-900 shadow-s bg-red2-dark w-100">
                 Удалить товары
             </button>
         </div>
@@ -45,6 +47,7 @@ import ProductList from "@/ClientTg/Components/Admin/Shop/ProductList.vue";
         v-on:refresh="refresh"
     />
     <ProductList
+        v-if="!load"
         v-on:select="selectProduct"
     />
 
@@ -75,11 +78,19 @@ export default {
                 this.load = false
             })
         },
+        removeAllProducts(){
+            this.load = true
+            this.$store.dispatch("removeAllProducts").then((resp) => {
+                this.load = false
+                this.$botNotification.notification("Продукты","Все продукты удалены");
+            }).catch(() => {
+                this.load = false
+            })
+        },
         selectProduct(product) {
             this.load = true
             this.$nextTick(() => {
                 this.selectedProduct = product
-                console.log("Select!!", product)
                 this.load = false
             })
 
@@ -88,8 +99,6 @@ export default {
 
             this.load = true
             this.$store.dispatch("updateProductsFromVk").then((resp) => {
-
-                console.log(resp)
                 this.link = resp.data.url
                 this.load = false
                 this.url = null

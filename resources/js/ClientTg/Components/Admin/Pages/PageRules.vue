@@ -318,11 +318,12 @@ export default {
             if (item.id != this.rulesForm.id)
                 this.rulesForm.rules_else_page_id = item.id
             else
-                this.$notify({
-                    title: "Конструктор страниц",
-                    text: "Вы не можете связать данную страницу с собой",
-                    type: 'error'
-                });
+                this.$botNotification.warning(
+                    "Правила страниц",
+                    "Вы не можете связать данную страницу с собой",
+                );
+
+
         },
         openRulesModal(){
             this.$botPages.rules()

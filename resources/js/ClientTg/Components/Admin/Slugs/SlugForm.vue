@@ -280,11 +280,10 @@ export default {
                 slugForm: data
             }).then((response) => {
 
-                this.$notify({
-                    title: "Конструктор команд",
-                    text: "Команда успешно обновлена",
-                    type: 'success'
-                });
+                this.$botNotification.notification(
+                    "Команды",
+                    "Команда успешно обновлена",
+                );
 
                 if (this.slugForm.id === null) {
                     this.slugForm.id = null

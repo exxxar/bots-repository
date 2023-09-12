@@ -28,8 +28,8 @@ import KeyboardConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardC
             type="button"
             title="Обновить клавиатуру"
             :disabled="load||!is_edited"
-            class="btn btn-outline-primary mr-2"
-            v-bind:class="{'have-change':is_edited}"
+            class="btn  mr-2"
+            v-bind:class="{'btn-outline-primary have-change':is_edited,'btn-outline-secondary':!is_edited}"
         >
             <i class="fa-regular fa-floppy-disk"></i>
         </button>
@@ -64,8 +64,8 @@ import KeyboardConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardC
                 type="button"
                 title="Обновить клавиатуру"
                 :disabled="load||!is_edited"
-                class="btn btn-outline-primary mr-2"
-                v-bind:class="{'have-change':is_edited}"
+                class="btn mr-2"
+                v-bind:class="{'btn-outline-primary have-change':is_edited,'btn-outline-secondary':!is_edited}"
             >
                 <i class="fa-regular fa-floppy-disk"></i>
             </button>
@@ -164,14 +164,29 @@ export default {
                     this.load = false
                 })
 
+                this.$botNotification.success(
+                    "Конструктор клавитатуры",
+                    "Клавиатура успешно удалена!",
+                );
+
                 this.$emit("callback", this.keyboardForm.id)
             }).catch(() => {
                 this.$emit("callback", this.keyboardForm.id)
+
+                this.$botNotification.warning(
+                    "Конструктор клавитатуры",
+                    "Ошибка удаления клавиатуры",
+                );
             })
         },
 
         saveKeyboard(keyboard) {
             this.keyboardForm.menu = keyboard
+
+            this.$botNotification.notification(
+                "Конструктор клавитатуры",
+                "Клавиатура успешно выбрана!",
+            );
         },
 
         selectCard() {
@@ -194,11 +209,10 @@ export default {
                 keyboardForm: data
             }).then((resp) => {
 
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Меню успешно продублировано!",
-                    type: 'success'
-                });
+                this.$botNotification.success(
+                    "Конструктор ботов",
+                    "Меню успешно продублировано!",
+                );
 
                 this.load = true
                 this.$nextTick(() => {
@@ -231,6 +245,10 @@ export default {
                     this.is_edited = false
                 })
 
+                this.$botNotification.success(
+                    "Конструктор клавитатуры",
+                    "Клавиатура успешно сохранена!",
+                );
 
                 this.$emit("callback")
             }).catch(() => {

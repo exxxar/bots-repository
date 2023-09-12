@@ -23,10 +23,10 @@ const getters = {
 const actions = {
 
 
-    async removeProductCategory(context, payload = {category_id: null}){
+    async removeProductCategory(context, payload = {category_id: null}) {
         let link = `${BASE_PRODUCTS_LINK}/remove-category/${payload.category_id}`
 
-        let _axios = util.makeAxiosFactory(link,"DELETE")
+        let _axios = util.makeAxiosFactory(link, "DELETE")
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -35,10 +35,10 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async addProductCategory(context, payload = {category: null}){
+    async addProductCategory(context, payload = {category: null}) {
         let link = `${BASE_PRODUCTS_LINK}/add-category`
 
-        let _axios = util.makeAxiosFactory(link,"POST", payload)
+        let _axios = util.makeAxiosFactory(link, "POST", payload)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -51,7 +51,7 @@ const actions = {
     async saveProduct(context, payload = {productForm: null}) {
         let link = `${BASE_PRODUCTS_LINK}/add-product"`
 
-        let _axios = util.makeAxiosFactory(link,"POST", payload.productForm)
+        let _axios = util.makeAxiosFactory(link, "POST", payload.productForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -60,7 +60,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async removeAllProducts(context) {
+        let link = `${BASE_PRODUCTS_LINK}/remove-all-products`
+        let method = 'POST'
+        let _axios = util.makeAxiosFactory(link, method)
 
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadProduct(context, payload = {dataObject: {productId: null}}) {
 
         let link = `${BASE_PRODUCTS_LINK}/${payload.dataObject.productId}`

@@ -15,8 +15,8 @@
            v-bind:class="{'border-green1-dark':item.is_global,'border-blue2-dark':!item.is_global}"
            class="border rounded-s shadow-xs">
 
-            <span class="font-12"> #{{item.id}} {{ item.command || 'Нет команды' }}</span>
-            <strong>{{ item.comment || 'Нет описания' }}</strong>
+            <span class="font-12 slug-span"> #{{item.id}} {{ item.command || 'Нет команды' }}</span>
+            <strong class="slug-strong">{{ item.comment || 'Нет описания' }}</strong>
             <u class="color-green1-dark" v-if="item.is_global">Глобальный</u>
             <i class="fa-solid fa-globe color-green1-dark" v-if="item.is_global"></i>
 
@@ -98,3 +98,18 @@ export default {
     }
 }
 </script>
+<style>
+.slug-span {
+    margin-top: -15px !important;
+}
+
+.slug-strong {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height: 36px;
+    line-height: 100%;
+    /* top: 12px; */
+    width: 78%;
+    margin-top: 22px  !important;
+}
+</style>

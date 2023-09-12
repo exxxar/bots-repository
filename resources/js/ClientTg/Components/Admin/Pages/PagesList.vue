@@ -35,11 +35,10 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
                 <button
                     v-if="editor"
                     class="btn btn-outline-secondary" type="button"
-                        @click="openPageMenuModal(page.id)"
-                        aria-expanded="false">
+                    @click="openPageMenuModal(page.id)"
+                    aria-expanded="false">
                     <i class="fa-solid fa-ellipsis"></i>
                 </button>
-
 
 
             </div>
@@ -60,14 +59,12 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
     </div>
 
 
-
-
 </template>
 <script>
 import {mapGetters} from "vuex";
 
 export default {
-    props: [ "current","editor"],
+    props: ["current", "editor"],
     data() {
         return {
             bot: null,
@@ -78,11 +75,11 @@ export default {
             need_new_page: false,
         }
     },
-  /*  watch: {
-        search: function (oldVal, newVal) {
-            this.loadPages()
-        }
-    },*/
+    /*  watch: {
+          search: function (oldVal, newVal) {
+              this.loadPages()
+          }
+      },*/
     computed: {
         ...mapGetters(['getPages', 'getPagesPaginateObject']),
     },
@@ -93,15 +90,19 @@ export default {
         window.addEventListener("reload-page-list", (e) => {
             console.log("Test reload-page-list")
             this.loadPages();
-        } );
+        });
     },
     methods: {
-        openPageMenuModal(pageId){
+        openPageMenuModal(pageId) {
             this.$botPages.open(pageId)
         },
         selectPage(page) {
             this.$emit("callback", page)
-            this.$notify("Вы выбрали страницу из списка! Все остальные действия будут производится для этой страницы");
+            this.$botNotification.notification(
+                "Страницы",
+                "Вы выбрали страницу из списка! Все остальные действия будут производится для этой страницы",
+            );
+
         },
         nextPages(index) {
             this.loadPages(index)

@@ -41,7 +41,6 @@
             </div>
 
 
-
         </div>
         <div class="card-center" v-else>
             <p>Загружаем данные бота</p>
@@ -60,15 +59,24 @@
         <div class="content" v-if="bot">
             <div class="mb-0">
                 <div class="mb-2">
-                    <label class="form-label d-flex justify-content-between mt-2" id="bot-domain">
+                    <label class="form-label d-flex justify-content-between  align-items-center mt-2" id="bot-domain">
+                        <div>
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Строго взять из BotFather! ТО что при создании с окончанием на "bot"</div>
+                                </template>
+                            </Popper>
+                            Доменное имя бота из BotFather
+                        </div>
                         <Popper>
-                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <i class="fa-solid font-10 fa-star color-red2-dark"></i>
                             <template #content>
-                                <div>Строго взять из BotFather! ТО что при создании с окончанием на "bot"</div>
+                                <div>Нужно
+                                </div>
                             </template>
                         </Popper>
-                        Доменное имя бота из BotFather
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+
                     </label>
                     <input type="text" class="form-control"
                            placeholder="Имя бота"
@@ -77,8 +85,8 @@
                            maxlength="255"
                            aria-describedby="bot-domain" required>
                     <p v-if="botForm.bot_domain">Проверить работу бота <a
-                        :href="'https://t.me/'+botForm.bot_domain"
-                        target="_blank">@{{
+                        href="javascript:void(0)"
+                        @click="openUrl('https://t.me/'+botForm.bot_domain)">@{{
                             botForm.bot_domain
                         }}</a>
                     </p>
@@ -86,7 +94,7 @@
 
                 <div class="mb-2">
                     <label
-                        class="form-label d-flex justify-content-between mt-2 d-flex justify-content-between flex-wrap"
+                        class="form-label d-flex justify-content-between mt-2 d-flex align-items-center flex-wrap"
                         id="bot-token">
 
                         <div>
@@ -101,10 +109,18 @@
                             Токен бота
                         </div>
 
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                        <Popper>
+                            <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                            <template #content>
+                                <div>Нужно
+                                </div>
+                            </template>
+                        </Popper>
 
-                        <a href="https://t.me/botfather" class="w-100" target="_blank">Создать нового бота в
-                            ТГ</a>
+                        <a href="javascript:void(0)"
+                           @click="openUrl('https://t.me/botfather')"
+                           class="w-100"
+                           target="_blank">Создать нового бота в ТГ</a>
                     </label>
                     <input type="text" class="form-control"
                            placeholder="Токен"
@@ -130,7 +146,7 @@
                 <div class="mb-2">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <label
-                            class="form-label d-flex justify-content-between mt-2 d-flex justify-content-center w-100"
+                            class="form-label d-flex justify-content-between mt-2 d-flex  align-items-center w-100"
                             id="bot-order-channel">
                             <div>
                                 <Popper>
@@ -144,7 +160,14 @@
                                 <span @click="requestChannelId('order_channel')"><i
                                     class="fa-brands fa-telegram ml-2 color-blue2-dark"></i></span>
                             </div>
-                            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                            <Popper>
+                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                <template #content>
+                                    <div>Нужно
+                                    </div>
+                                </template>
+                            </Popper>
+
 
                         </label>
 
@@ -182,9 +205,10 @@
 
 
                 <div class="mb-2">
-                    <div class="d-flex justify-content-between">
-                        <label class="form-label d-flex justify-content-between mb-0  flex-wrap"
-                               id="bot-description">
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <label
+                            class="form-label d-flex justify-content-between  align-items-center mb-0  flex-wrap w-100"
+                            id="bot-description">
                             <div>
                                 <Popper>
                                     <i class="fa-regular fa-circle-question mr-1"></i>
@@ -195,20 +219,26 @@
                                 Приветственное сообщение
 
                             </div>
-                            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                            <Popper>
+                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                <template #content>
+                                    <div>Нужно
+                                    </div>
+                                </template>
+                            </Popper>
 
 
-                            <small class="text-gray-400 w-100" style="font-size:10px;"
-                                   v-if="botForm.welcome_message">
-                                Длина текста {{ botForm.welcome_message.length }}</small>
                         </label>
 
-
+                        <small class="text-gray-400 w-100" style="font-size:10px;"
+                               v-if="botForm.welcome_message">
+                            Длина текста {{ botForm.welcome_message.length }}</small>
                     </div>
-                    <textarea type="text" class="form-control"
+                    <textarea class="form-control font-12"
                               placeholder="Текстовое приветствие при запуске бота"
                               aria-label="Текстовое приветствие при запуске бота"
                               v-model="botForm.welcome_message"
+                              style="min-height:200px;"
                               aria-describedby="bot-description" required>
                     </textarea>
                 </div>
@@ -216,7 +246,8 @@
 
                 <div class="mb-2">
                     <div class="d-flex justify-content-between flex-wrap">
-                        <label class="form-label d-flex justify-content-between w-100 mb-0" id="bot-description">
+                        <label class="form-label d-flex justify-content-between  align-items-center w-100 mb-0"
+                               id="bot-description">
                             <div>
                                 <Popper>
                                     <i class="fa-regular fa-circle-question mr-1"></i>
@@ -226,7 +257,13 @@
                                 </Popper>
                                 Описание бота
                             </div>
-                            <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                            <Popper>
+                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                <template #content>
+                                    <div>Нужно
+                                    </div>
+                                </template>
+                            </Popper>
 
 
                         </label>
@@ -236,10 +273,11 @@
 
                     </div>
 
-                    <textarea type="text" class="form-control"
+                    <textarea class="form-control  font-12"
                               placeholder="Текстовое описание бота"
                               aria-label="Текстовое описание бота"
                               v-model="botForm.description"
+                              style="min-height:200px;"
                               aria-describedby="bot-description" required>
                     </textarea>
                 </div>
@@ -248,7 +286,7 @@
                 <div class="mb-2">
 
                     <div class="d-flex justify-content-between flex-wrap">
-                        <label class="form-label d-flex justify-content-between w-100 mb-0"
+                        <label class="form-label d-flex justify-content-between align-items-center w-100 mb-0"
                                id="bot-maintenance-message">
 
                             <div>
@@ -260,7 +298,13 @@
                                 </Popper>
                                 Режим тех. работ
                             </div>
-                            <span class="badge rounded-pill bg-danger px-3 text-white m-0">Нужно</span>
+                            <Popper>
+                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                <template #content>
+                                    <div>Нужно
+                                    </div>
+                                </template>
+                            </Popper>
 
 
                         </label>
@@ -268,11 +312,12 @@
                                v-if="botForm.maintenance_message">
                             Длина текста {{ botForm.maintenance_message.length }} / 255 </small>
                     </div>
-                    <textarea type="text" class="form-control"
+                    <textarea class="form-control font-12"
                               placeholder="Текстовое сообщение"
                               aria-label="Текстовое сообщение"
                               v-model="botForm.maintenance_message"
                               maxlength="255"
+                              style="min-height:200px;"
                               aria-describedby="bot-maintenance-message" required>
                     </textarea>
 
@@ -281,9 +326,16 @@
 
                 <div class="mb-2">
 
-                    <label class="form-label d-flex justify-content-between mt-2" id="bot-level-1">
+                    <label class="form-label d-flex justify-content-between  align-items-center mt-2" id="bot-level-1">
                         Уровень 1 CashBack, %
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                        <Popper>
+                            <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                            <template #content>
+                                <div>Нужно
+                                </div>
+                            </template>
+                        </Popper>
+
                     </label>
                     <input type="number" class="form-control"
                            placeholder="%"
@@ -481,8 +533,15 @@
                     Добавить еще ссылку
                 </button>
                 <div class="divider divider-small my-3  bg-highlight"></div>
-                <h6 class="d-flex justify-content-between">Аватар для бота
-                    <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                <h6 class="d-flex justify-content-between  align-items-center">Аватар для бота
+                    <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
+
                 </h6>
                 <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
                     <label for="bot-photos" style="margin-right: 10px;" class="photo-loader ml-2">
@@ -638,7 +697,6 @@ export default {
         },
 
 
-
         getPhoto(img) {
             return {imageUrl: URL.createObjectURL(img)}
         },
@@ -666,10 +724,10 @@ export default {
             else
                 this.botForm.image = null
         },
-        switchStatus(){
-            this.$store.dispatch("switchBotStatus").then(()=>{
+        switchStatus() {
+            this.$store.dispatch("switchBotStatus").then(() => {
                 this.$botNotification.success(
-                    "Конструктор ботов","Статус бота успешно изменен!"
+                    "Конструктор ботов", "Статус бота успешно изменен!"
                 );
             })
         },
@@ -749,10 +807,12 @@ export default {
         },
 
 
-
         requestChannelId(param) {
             this.$botPages.telegramChannelHelper(param);
-        }
+        },
+        openUrl(url) {
+            this.tg.openLink(url)
+        },
     }
 }
 </script>

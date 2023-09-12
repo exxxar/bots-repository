@@ -9,7 +9,11 @@
                 <li> № события: {{ item.slug.id }}</li>
                 <li> Название события: {{ item.slug.command }}</li>
                 <li> Использовано попыток: {{ item.current_attempts }}</li>
-                <li> Дата прохождения: {{ $filters.current(item.completed_at) }}</li>
+                <li> Дата прохождения: <span v-if="item.completed_at">
+                    {{ $filters.current(item.completed_at) }}
+                </span>
+                <span v-else>Не установлена</span>
+                </li>
                 <li v-for="res in item.data">
                     <p class="mb-0" v-for="obj in Object.keys(res)">
                         {{ params[obj] }}:{{ res[obj] || 'Не установлено' }}

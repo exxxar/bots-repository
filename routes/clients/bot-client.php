@@ -99,6 +99,7 @@ Route::prefix("bot-client")
                 Route::post("/products/random", [ProductController::class, "randomProducts"]);
                 Route::post("/products/categories", [ProductController::class, "getCategories"]);
                 Route::post("/products/add-product", [ProductController::class, "saveProduct"]);
+                Route::post("/products/remove-all-products", [ProductController::class, "removeAllProducts"]);
                 Route::delete("/products/remove-category/{categoryId}", [ProductController::class, "removeCategoryId"]);
                 Route::post("/products/add-category", [ProductController::class, "addCategory"]);
                 Route::post("/products/in-category", [ProductController::class, "getProductsInCategory"]);

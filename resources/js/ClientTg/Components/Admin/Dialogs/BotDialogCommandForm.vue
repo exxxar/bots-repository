@@ -19,25 +19,35 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
         <div class="form-floating mb-2">
             <label :for="'commandForm-pre-text-'+commandForm.id">Текст диалога</label>
-            <input type="text" class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
+            <textarea
+                style="min-height:200px;"
+                class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
+                placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
+
+            </textarea>
 
         </div>
 
         <div class="form-floating mb-2">
             <label :for="'commandForm-post-text-'+commandForm.id">Текст после успешного завершения
                 диалога</label>
-            <input type="text" class="form-control"
-                   :id="'commandForm-post-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.post_text" required>
+            <textarea
+                style="min-height:200px;"
+                class="form-control"
+                :id="'commandForm-post-text-'+commandForm.id"
+                placeholder="Начни с малого..." v-model="commandForm.post_text" required>
+            </textarea>
 
         </div>
 
         <div class="form-floating mb-2">
             <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
                 данных</label>
-            <input type="text" class="form-control" :id="'commandForm-error-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.error_text" required>
+            <textarea
+                style="min-height:200px;"
+                class="form-control" :id="'commandForm-error-text-'+commandForm.id"
+                placeholder="Начни с малого..." v-model="commandForm.error_text" required>
+            </textarea>
 
         </div>
 
@@ -52,7 +62,7 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
                 </label>
                 <select id="next-dialog-select" class="form-select form-control" v-model="commandForm.input_pattern">
                     <option :value="item.expression"
-                           v-for="item in expressions">{{item.description || '-'}}
+                            v-for="item in expressions">{{ item.description || '-' }}
                     </option>
                 </select>
             </div>
@@ -68,9 +78,12 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
         <div class="mb-2">
             <label :for="'next-dialog-select'+commandForm.id">Следующий диалог</label>
-            <select :id="'next-dialog-select'+commandForm.id" class="form-select form-control" aria-label="Default select example">
+            <select :id="'next-dialog-select'+commandForm.id" class="form-select form-control"
+                    aria-label="Default select example">
                 <option :value="null" selected>Не указан</option>
-                <option :value="command.id" v-for="(command, index) in commands">#{{command.id }} {{ command.pre_text || 'Без текста' }}</option>
+                <option :value="command.id" v-for="(command, index) in commands">#{{ command.id }}
+                    {{ command.pre_text || 'Без текста' }}
+                </option>
 
             </select>
         </div>
@@ -114,52 +127,53 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
         <div class="mb-2" v-if="need_images">
 
-                <h6>Фотографии к диалогу</h6>
-                <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
-                    <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
-                        <span>+</span>
-                        <input type="file" id="location-photos" multiple accept="image/*"
-                               @change="onChangePhotos"
-                               style="display:none;"/>
+            <h6>Фотографии к диалогу</h6>
+            <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
+                <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                    <span>+</span>
+                    <input type="file" id="location-photos" multiple accept="image/*"
+                           @change="onChangePhotos"
+                           style="display:none;"/>
 
-                    </label>
-                    <div class="mb-2 img-preview" style="margin-right: 10px;"
-                         v-for="(img, index) in photos"
-                         v-if="photos.length>0">
-                        <img v-lazy="getPhoto(img).imageUrl">
-                        <div class="remove">
-                            <a @click="removePhoto('photos',index)">Удалить</a>
-                        </div>
+                </label>
+                <div class="mb-2 img-preview" style="margin-right: 10px;"
+                     v-for="(img, index) in photos"
+                     v-if="photos.length>0">
+                    <img v-lazy="getPhoto(img).imageUrl">
+                    <div class="remove">
+                        <a @click="removePhoto('photos',index)">Удалить</a>
                     </div>
-                    <div class="mb-2 img-preview"
-                         v-if="commandForm.images&&bot"
-                         style="margin-right: 10px;"
-                         v-for="(img, index) in commandForm.images">
-                        <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
-                        <div class="remove">
-                            <a @click="removePhoto('images',index)">Удалить</a>
-                        </div>
-                    </div>
-
                 </div>
+                <div class="mb-2 img-preview"
+                     v-if="commandForm.images&&bot"
+                     style="margin-right: 10px;"
+                     v-for="(img, index) in commandForm.images">
+                    <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
+                    <div class="remove">
+                        <a @click="removePhoto('images',index)">Удалить</a>
+                    </div>
+                </div>
+
+            </div>
 
 
         </div>
 
         <div class=" mb-2" v-if="need_keyboard">
 
-                <h6>Кнопки к вопросу</h6>
+            <h6>Кнопки к вопросу</h6>
 
 
-                <BotMenuConstructor
-                    v-on:save="saveInlineKeyboard"
-                    :edited-keyboard="commandForm.inline_keyboard"/>
+            <BotMenuConstructor
+                v-on:save="saveInlineKeyboard"
+                :edited-keyboard="commandForm.inline_keyboard"/>
 
 
         </div>
 
         <div class="mb-2">
-            <button type="submit" class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark w-100">
+            <button type="submit"
+                    class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark w-100">
                 <span v-if="commandForm.id">Обновить диалог</span>
                 <span v-else>Добавить диалог</span>
             </button>
@@ -167,10 +181,10 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
         <div class="divider divider-small my-3 bg-highlight " v-if="commandForm.id"></div>
 
-        <a  v-if="commandForm.id"
-            @click="removeCommand"
-            title="Удаление команды"
-            class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-red2-dark">
+        <a v-if="commandForm.id"
+           @click="removeCommand"
+           title="Удаление команды"
+           class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-red2-dark">
             <i class="fa-solid fa-trash-can mr-1"></i> Удалить диалог
         </a>
     </form>
@@ -186,43 +200,43 @@ export default {
         return {
             need_images: false,
             need_keyboard: false,
-            commands:[],
-            expressions:[
+            commands: [],
+            expressions: [
                 {
-                    expression:null,
-                    description:'Нет проверки'
+                    expression: null,
+                    description: 'Нет проверки'
                 },
                 {
-                    expression:'/([a-z0-9]+)/i',
-                    description:'Проверка набора из латинских букв и цифр'
+                    expression: '/([a-z0-9]+)/i',
+                    description: 'Проверка набора из латинских букв и цифр'
                 },
                 {
-                    expression:'/([а-яё0-9]+)/iu',
-                    description:'Проверка на кириллицу и цифры'
+                    expression: '/([а-яё0-9]+)/iu',
+                    description: 'Проверка на кириллицу и цифры'
                 },
                 {
                     expression: '/(?P<digit>\\d+)/',
-                    description:'Проверка на число'
+                    description: 'Проверка на число'
                 },
                 {
                     expression: '/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/',
-                    description:'Проверка Email'
+                    description: 'Проверка Email'
                 },
                 {
                     expression: '/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/',
-                    description:'Проверка номера телефона'
+                    description: 'Проверка номера телефона'
                 },
                 {
                     expression: '/^(0[1-9]|[12][0-9]|3[01])[\.](0[1-9]|1[012])[\.](19|20)\d\d$/',
-                    description:'Проверка даты по формату'
+                    description: 'Проверка даты по формату'
                 },
                 {
                     expression: '/^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])$/',
-                    description:'Проверка даты по формату YYYY-MM-DD'
+                    description: 'Проверка даты по формату YYYY-MM-DD'
                 },
                 {
-                    expression:  '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
-                    description:'Проверка доменного имени'
+                    expression: '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
+                    description: 'Проверка доменного имени'
                 }
             ],
             commandForm: {
@@ -289,43 +303,42 @@ export default {
 
         this.loadGroups()
     }, methods: {
-        unlinkCommand(){
+        unlinkCommand() {
 
             this.loading = true
 
             this.$store.dispatch("unlinkDialogCommand", {
                 dataObject: {
-                    dialogCommandId:this.item.id
+                    dialogCommandId: this.item.id
                 }
             }).then((response) => {
                 this.loading = false
 
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Диалоговая команда успешно продублирована!",
-                    type: 'success'
-                });
+                this.$botNotification.success(
+                    "Команды",
+                    "Диалоговая команда успешно продублирована!",
+                );
 
                 this.$emit("callback")
             }).catch(err => {
                 this.loading = false
             })
         },
-        removeCommand(){
+        removeCommand() {
             this.loading = true
 
             this.$store.dispatch("removeDialogCommand", {
                 dataObject: {
-                    dialogCommandId:this.item.id
+                    dialogCommandId: this.item.id
                 }
             }).then((response) => {
                 this.loading = false
 
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Диалоговая команда успешно удалена!",
-                    type: 'success'
-                });
+                this.$botNotification.success(
+                    "Команды",
+                    "Диалоговая команда успешно удалена!",
+                );
+
 
                 this.$emit("callback")
             }).catch(err => {
@@ -335,11 +348,11 @@ export default {
         loadGroups(page = 0) {
             this.loading = true
             this.$store.dispatch("loadDialogs", {
-                dataObject:{
-                  simple:true
+                dataObject: {
+                    simple: true
                 },
                 page: page,
-                size:100,
+                size: 100,
             }).then(resp => {
                 this.loading = false
                 this.commands = this.getDialogs
@@ -379,11 +392,10 @@ export default {
 
                 this.loading = false
 
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Успешная обработка диалоговой команды",
-                    type: 'success'
-                });
+                this.$botNotification.success(
+                    "Команды",
+                    "Успешная обработка диалоговой команды!",
+                );
 
                 if (this.commandForm.id == null) {
                     this.commandForm = {
