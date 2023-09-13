@@ -28,11 +28,10 @@ class AmoCrmController extends Controller
             "domain" => 'https://your-cashman.com/crm/amo/' . $bot->amo->redirect_uri,
             "subdomain" => $bot->amo->subdomain ?? null,
         ];
-        Log::info("amo1 ".print_r($data, true));
+
         $amo = new \App\Integrations\AmoCRMIntegration($data);
 
-       $amo->firstOAuth();
-        //$amo->nextOAuth($bot);
+        $amo->nextOAuth($bot);
     }
 
     /**
@@ -47,8 +46,22 @@ class AmoCrmController extends Controller
             "subdomain" => "required",
         ]);
 
+        $bot = $request->bot;
+
+        $data = (object)[
+            "clientId" => $request->client_id ?? null,
+            "clientSecret" => $request->client_secret ?? null,
+            "authCode" => $request->auth_code ?? null,
+            "domain" => 'https://your-cashman.com/crm/amo/' . $bot->amo->redirect_uri,
+            "subdomain" =>  $request->subdomain ?? null,
+        ];
+
+        $amo = new \App\Integrations\AmoCRMIntegration($data);
+
+        $amo->firstOAuth();
+
         return BusinessLogic::amo()
-            ->setBot($request->bot ?? null)
+            ->setBot( $bot ?? null)
             ->createOrUpdate($request->all());
 
 
