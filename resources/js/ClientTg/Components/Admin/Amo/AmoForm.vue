@@ -23,7 +23,13 @@
                             client_id
                         </div>
 
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                         <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
                     </label>
                     <input type="text" class="form-control"
                            placeholder="client_id"
@@ -42,7 +48,13 @@
                             </Popper>
                             client_secret
                         </div>
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                         <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
                     </label>
                     <input type="text" class="form-control"
                            placeholder="client_secret"
@@ -61,7 +73,13 @@
                             </Popper>
                             auth_code
                         </div>
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                         <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
                     </label>
                     <textarea class="form-control"
                               placeholder="auth_code"
@@ -81,7 +99,13 @@
                             </Popper>
                             subdomain
                         </div>
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-white m-0">Нужно</span>
+                         <Popper>
+                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                        <template #content>
+                            <div>Нужно
+                            </div>
+                        </template>
+                    </Popper>
                     </label>
                     <input type="text" class="form-control"
                            placeholder="subdomain"
@@ -98,6 +122,12 @@
 
             </form>
 
+            <div class="divider divider-small my-3 bg-highlight "></div>
+            <a href="javascript:void(0)"
+                @click="syncAmo"
+               class="btn btn-m btn-full rounded-s mb-3 rounded-0 text-uppercase font-900 shadow-s bg-green2-dark">
+                Синохрозировать
+            </a>
         </div>
     </div>
 
@@ -138,7 +168,13 @@ export default {
 
     },
     methods: {
-
+        syncAmo(){
+            this.$store.dispatch("syncAmo").then((response) => {
+                this.$botNotification.success("Работа с AMO", "Данные CRM успешно сохранены");
+            }).catch(err => {
+                this.$botNotification.warning("Работа с AMO", "Ошибка работы");
+            })
+        },
         submitAmo() {
             /*    if (!this.hasConnect) {
                     return;

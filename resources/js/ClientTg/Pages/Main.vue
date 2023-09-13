@@ -197,7 +197,7 @@ bottom:-80px;
 }
 
 .popper {
-    transform: translate3d(0px, 25px, 0px) !important;
+    //transform: translateX(0px) !important;
     z-index: 1000 !important;
 }
 </style>

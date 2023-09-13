@@ -106,8 +106,8 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async testConnectionAmoCRM(context, payload = {dataObject: null}) {
-        let link = `${BASE_BOTS_LINK}/test-amo`
+    async syncAmo(context, payload = {dataObject: null}) {
+        let link = `${BASE_BOTS_LINK}/sync-amo`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 

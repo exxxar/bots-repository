@@ -16,6 +16,21 @@ class AmoCrmController extends Controller
 
     }
 
+    public function syncAmoCrm(Request $request){
+
+        $bot = $request->bot;
+
+        $amo = new \App\Integrations\AmoCRMIntegration((object)[
+            "clientId" => $bot->amo->client_id ?? null,
+            "clientSecret" => $bot->amo->client_secret ?? null,
+            "authCode" => $bot->amo->auth_code ?? null,
+            "domain" => 'https://your-cashman.com/crm/amo/' . ($bot->domain ?? null),
+            "subdomain" => $bot->amo->subdomain ?? null,
+        ]);
+       return  $amo->firstOAuth();
+        //$amo->nextOAuth();
+    }
+
     /**
      * @throws ValidationException
      */

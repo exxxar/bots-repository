@@ -200,6 +200,7 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
+                Route::post("/sync-amo", [AmoCrmController::class, "syncAmoCrm"]);
                 Route::post("/bot-update", "updateBot");
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");
