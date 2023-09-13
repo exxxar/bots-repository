@@ -174,20 +174,26 @@ class BotManager extends BotCore
 
     protected function setApiToken($domain)
     {
-        $bot = Bot::query()
-            ->withTrashed()
-            ->where("bot_domain", $domain)->first();
+        try {
+            $bot = Bot::query()
+                ->withTrashed()
+                ->where("bot_domain", $domain)->first();
 
-        if (is_null($bot))
-            return;
+            if (is_null($bot))
+                return;
 
-        $token = env("APP_DEBUG") ?
-            ($bot->bot_token_dev ?? null) :
-            ($bot->bot_token ?? $bot->bot_token_dev ?? null);
+            $token = env("APP_DEBUG") ?
+                ($bot->bot_token_dev ?? null) :
+                ($bot->bot_token ?? $bot->bot_token_dev ?? null);
 
-        $this->domain = $domain;
+            $this->domain = $domain;
 
-        $this->bot = new Api($token);
+            $this->bot = new Api($token);
+        } catch (\Exception $e) {
+            $this->bot = null;
+            $this->domain = null;
+        }
+
     }
 
     public function getSelf()
@@ -228,24 +234,23 @@ class BotManager extends BotCore
 
         if (isset($rules["channels"])) {
 
-            foreach ($rules["channels"] as $channel){
+            foreach ($rules["channels"] as $channel) {
                 try {
 
                     $data = $this->bot->getChatMember([
-                        "chat_id"=>$channel,
-                        "user_id"=>$this->botUser->telegram_chat_id,
+                        "chat_id" => $channel,
+                        "user_id" => $this->botUser->telegram_chat_id,
                     ]);
 
-                    if ($data["status"]==="left") {
+                    if ($data["status"] === "left") {
                         $result = false;
                         break;
-                    }
-                    else
+                    } else
                         $result = true;
 
 
-                }catch (\Exception $e){
-                    Log::info($e->getMessage()." ".$e->getLine());
+                } catch (\Exception $e) {
+                    Log::info($e->getMessage() . " " . $e->getLine());
                 }
 
             }
@@ -353,7 +358,6 @@ class BotManager extends BotCore
 
             $this->prepareTemplatePage($next);
         }
-
 
 
     }

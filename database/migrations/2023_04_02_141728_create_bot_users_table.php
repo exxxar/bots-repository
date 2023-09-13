@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bot_id')->constrained();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('parent_id')->nullable()->constrained('users');
+            $table->foreignId('parent_id')->nullable()->constrained('bot_users');
             $table->boolean('is_vip')->default(false);
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_work')->default(false);
