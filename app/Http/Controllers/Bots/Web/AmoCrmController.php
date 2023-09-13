@@ -31,8 +31,8 @@ class AmoCrmController extends Controller
         Log::info("amo1 ".print_r($data, true));
         $amo = new \App\Integrations\AmoCRMIntegration($data);
 
-       $amo->nextOAuth($bot);
-        //$amo->nextOAuth();
+       $amo->firstOAuth();
+        //$amo->nextOAuth($bot);
     }
 
     /**
