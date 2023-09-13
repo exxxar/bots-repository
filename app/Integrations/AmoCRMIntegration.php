@@ -43,7 +43,7 @@ class AmoCRMIntegration
 
         } catch (AmoAPIException $e) {
 
-            Log::info("amo error1 ".print_r($e, true));
+            Log::info("amo error1 ".print_r($e->getMessage(), true));
 
             return response()->json([
                 "message"=>$e->getMessage()
@@ -103,7 +103,7 @@ class AmoCRMIntegration
 
 
         } catch (AmoAPIException $e) {
-
+            Log::info("amo error2 ".print_r($e->getMessage(), true));
             $this->firstOAuth();
             //Log::info(printf('Ошибка авторизации (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
         }
