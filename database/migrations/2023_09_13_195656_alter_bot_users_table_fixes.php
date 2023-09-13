@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
         Schema::table('bot_users', function (Blueprint $table) {
-            $table->dropColumn('parent_id');
+            $table->integer('parent_id')->change();
         });
 
-        Schema::table('bot_users', function (Blueprint $table) {
+      /*  Schema::table('bot_users', function (Blueprint $table) {
             $table->foreignId('parent_id')->nullable()->constrained("bot_users");
-        });
+        });*/
         Schema::enableForeignKeyConstraints();
     }
 
