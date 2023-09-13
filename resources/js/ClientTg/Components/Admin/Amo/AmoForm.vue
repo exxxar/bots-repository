@@ -81,7 +81,8 @@
                         </template>
                     </Popper>
                     </label>
-                    <textarea class="form-control"
+                    <textarea class="form-control font-12"
+                              style="min-height:250px;"
                               placeholder="auth_code"
                               aria-label="auth_code"
                               v-model="amoForm.auth_code"

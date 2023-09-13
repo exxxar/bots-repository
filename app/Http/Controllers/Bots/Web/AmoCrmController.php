@@ -6,6 +6,7 @@ use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use App\Models\AmoCrm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class AmoCrmController extends Controller
@@ -20,14 +21,17 @@ class AmoCrmController extends Controller
 
         $bot = $request->bot;
 
-        $amo = new \App\Integrations\AmoCRMIntegration((object)[
+        $data = (object)[
             "clientId" => $bot->amo->client_id ?? null,
             "clientSecret" => $bot->amo->client_secret ?? null,
             "authCode" => $bot->amo->auth_code ?? null,
             "domain" => 'https://your-cashman.com/crm/amo/' . $bot->amo->redirect_uri,
             "subdomain" => $bot->amo->subdomain ?? null,
-        ]);
-       return  $amo->firstOAuth();
+        ];
+        Log::info("amo1 ".print_r($data, true));
+        $amo = new \App\Integrations\AmoCRMIntegration($data);
+
+       $amo->nextOAuth($bot);
         //$amo->nextOAuth();
     }
 

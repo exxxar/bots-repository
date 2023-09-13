@@ -42,6 +42,9 @@ class AmoCRMIntegration
            // Log::info(print_r(AmoAPI::getAccount($with = 'users,groups'), true));
 
         } catch (AmoAPIException $e) {
+
+            Log::info("amo error1 ".print_r($e, true));
+
             return response()->json([
                 "message"=>$e->getMessage()
             ], $e->getCode());
@@ -49,10 +52,9 @@ class AmoCRMIntegration
         }
     }
 
-    public function nextOAuth(Request $request)
+    public function nextOAuth($bot)
     {
 
-        $bot = $request->bot;
 
         try {
 
