@@ -98,7 +98,7 @@ class VKProductController extends Controller
         if (is_null($data))
             return response()->noContent(400);
 
-        if ($data->type!="group"||$data->type!="page")
+        if ($data->type!="group"&&$data->type!="page")
             return response()->noContent(400);
 
 
