@@ -229,7 +229,7 @@ class WheelOfFortuneScriptController extends SlugController
 
         $action->data = $tmp;
 
-        $link = "https://t.me/$bot->bot_domain?start=" . bcrypt("003$botUser->telegram_chat_id");
+        $link = "https://t.me/$bot->bot_domain?start=" . base64_encode("003$botUser->telegram_chat_id");
 
         Log::info("link=$link");
 
