@@ -216,7 +216,7 @@ class WheelOfFortuneScriptController extends SlugController
             ->pluck("value")
             ->toArray();
 
-        $description = $wheelText[$winNumber-1] ?? 'Без описания';
+        $description = $wheelText[$winNumber - 1] ?? 'Без описания';
 
         $tmp[] = (object)[
             "name" => $winnerName,
@@ -229,7 +229,7 @@ class WheelOfFortuneScriptController extends SlugController
 
         $action->data = $tmp;
 
-        $link = "https://t.me/$bot->bot_domain?start=".bcrypt("003$botUser->telegram_chat_id");
+        $link = "https://t.me/$bot->bot_domain?start=" . bcrypt("003$botUser->telegram_chat_id");
 
         $action->save();
 
@@ -238,10 +238,10 @@ class WheelOfFortuneScriptController extends SlugController
             ->sendMessage($botUser
                 ->telegram_chat_id,
                 sprintf("%s, вы приняли участие в розыгрыше и выиграли приз под номером %s (%s). Наш менеджер свяжется с вами в ближайшее время!", $winnerName, $winNumber, $description))
-            ->sendReplyKeyboard($callbackChannel,
-                "Участника $winnerPhone ($winnerName ".($username?"@$username":'Домен не указан').") принял участие в розыгрыше и выиграл приз №$winNumber ( $description ) - свяжитесь с ним для дальнейших указаний",[
+            ->sendInlineKeyboard($callbackChannel,
+                "Участника $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $description ) - свяжитесь с ним для дальнейших указаний", [
                     [
-                        ["text"=>"Написать пользователю","url"=>$link]
+                        ["text" => "Написать пользователю ответ", "url" => $link]
                     ]
                 ]);
 
@@ -267,7 +267,6 @@ class WheelOfFortuneScriptController extends SlugController
         $callback_message = Collection::make($slug->config)
             ->where("key", "callback_message")
             ->first();
-
 
 
         return response()->json(
