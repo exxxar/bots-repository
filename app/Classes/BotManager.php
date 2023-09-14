@@ -86,6 +86,7 @@ class BotManager extends BotCore
                 $this->botUser = BotUser::query()->create([
                     'bot_id' => $this->getSelf()->id,
                     'user_id' => $existUserId ?? $user->id ?? null,
+                    'username' =>  $username,
                     'is_vip' => false,
                     'is_admin' => false,
                     'is_work' => false,

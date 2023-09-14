@@ -33,6 +33,7 @@ class BotUser extends Model
         'current_longitude',
 
         'name',
+        'username',
         'phone',
         'email',
         'birthday',

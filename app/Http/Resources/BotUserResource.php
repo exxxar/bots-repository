@@ -18,6 +18,7 @@ class BotUserResource extends JsonResource
             'user_id' => $this->user_id,
 
             'name' => $this->name,
+            'username' => $this->username ?? null,
             'phone' => $this->phone,
             'email' => $this->email,
             'birthday' => $this->birthday,

@@ -65,6 +65,8 @@ class AmoCRMIntegration
            $test = AmoAPI::oAuth2($this->subdomain);
 
 
+         //  AmoAPI::loadTokens("")
+
             //371656 - воронка продаж, в которую нужно слать
             // Получение информации об аккаунте
            // Log::info(print_r(AmoAPI::getAccount(), true));
@@ -78,6 +80,7 @@ class AmoCRMIntegration
                     'name' => $botUser->name,
                     'responsible_user_id' => $botUser->id
                 ]);
+
 
                 // Установка дополнительных полей
                 $contact->setCustomFields([

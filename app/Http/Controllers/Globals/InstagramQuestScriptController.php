@@ -99,7 +99,7 @@ class InstagramQuestScriptController extends SlugController
         $botUser = $request->botUser;
         $slug = $request->slug;
 
-        $imageName =  null;
+        $imageName = null;
         $companySlug = $bot->company->slug;
 
         if ($request->hasFile('photo')) {
@@ -157,6 +157,8 @@ class InstagramQuestScriptController extends SlugController
         $botUser->phone = $botUser->phone ?? $winnerPhone;
         $botUser->save();
 
+        $username = $botUser->username ?? null;
+
         $tmp[] = (object)[
             "name" => $winnerName,
             "phone" => $winnerPhone,
@@ -181,7 +183,7 @@ class InstagramQuestScriptController extends SlugController
                 ->telegram_chat_id,
                 sprintf($winMessage, $winnerName))
             ->sendPhoto($callbackChannel,
-                "Участника $winnerPhone ($winnerName) принял участие в InstagramQuest - свяжитесь с ним для дальнейших указаний",
+                "Участника $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в InstagramQuest - свяжитесь с ним для дальнейших указаний",
                 $file
             );
 
@@ -235,7 +237,7 @@ class InstagramQuestScriptController extends SlugController
                 ]);
 
         return response()->json([
-            "action"=>new ActionStatusResource($action)
+            "action" => new ActionStatusResource($action)
         ]);
     }
 
