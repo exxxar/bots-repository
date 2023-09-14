@@ -206,7 +206,7 @@ class WheelOfFortuneScriptController extends SlugController
         $botUser->phone = $botUser->phone ?? $winnerPhone;
         $botUser->save();
 
-        $username = $botUser->username ?? 'Домен не указан';
+        $username = $botUser->username ?? null;
 
         $tmp = $action->data ?? [];
 
