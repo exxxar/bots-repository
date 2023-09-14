@@ -229,6 +229,8 @@ class WheelOfFortuneScriptController extends SlugController
 
         $action->data = $tmp;
 
+        $link = "https://t.me/$bot->bot_domain?start=".bcrypt("003$botUser->telegram_chat_id");
+
         $action->save();
 
         BotMethods::bot()
@@ -236,8 +238,12 @@ class WheelOfFortuneScriptController extends SlugController
             ->sendMessage($botUser
                 ->telegram_chat_id,
                 sprintf("%s, вы приняли участие в розыгрыше и выиграли приз под номером %s (%s). Наш менеджер свяжется с вами в ближайшее время!", $winnerName, $winNumber, $description))
-            ->sendMessage($callbackChannel,
-                "Участника $winnerPhone ($winnerName ".($username?"@$username":'Домен не указан').") принял участие в розыгрыше и выиграл приз №$winNumber ( $description ) - свяжитесь с ним для дальнейших указаний");
+            ->sendReplyKeyboard($callbackChannel,
+                "Участника $winnerPhone ($winnerName ".($username?"@$username":'Домен не указан').") принял участие в розыгрыше и выиграл приз №$winNumber ( $description ) - свяжитесь с ним для дальнейших указаний",[
+                    [
+                        ["text"=>"Написать пользователю","url"=>$link]
+                    ]
+                ]);
 
         return response()->noContent();
     }

@@ -30,7 +30,7 @@ class RestaurantBotController extends Controller
 
         $message = $bot->welcome_message ?? null;
 
-        Log::info("startWithParam data".print_r($data[3], true));
+      //  Log::info("startWithParam data".print_r($data[3], true));
 
         if (!is_null($data[3])) {
             $pattern_simple = "/([0-9]{3})([0-9]+)/";
@@ -45,7 +45,7 @@ class RestaurantBotController extends Controller
             $slug_id = $matches[3][0] ?? 'route';
 
 
-            Log::info("request_telegram_chat_id".$request_telegram_chat_id);
+            //Log::info("request_telegram_chat_id".$request_telegram_chat_id);
 
             //$qrCode = new QRCodeHandler($code, $request_user_id);
 
@@ -61,6 +61,11 @@ class RestaurantBotController extends Controller
                     case "002":
                         $text = "Административное меню системы бонусных накоплений";
                         $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slug_id&user=$request_telegram_chat_id#/admin-bonus-product";
+                        break;
+
+                    case "003":
+                        $text = "Обратная связь с пользователем";
+                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_telegram_chat_id#/admin-callback";
                         break;
 
                 }
