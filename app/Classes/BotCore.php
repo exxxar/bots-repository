@@ -646,7 +646,7 @@ abstract class BotCore
         if ($this->botFallbackHandler($message))
             return;
 
-        if (mb_strlen($message) >= 10) {
+        if (mb_strlen($query) >= 10) {
             $channel = $this->getSelf()->main_channel ?? $this->getSelf()->order_channel ?? null;
             if (!is_null($channel)) {
                 $domain = $this->currentBotUser()->username ?? null;
@@ -658,7 +658,7 @@ abstract class BotCore
                 $this->sendInlineKeyboard($channel,
                     "#ответ\n"
                     (!is_null($domain)?"Сообщение от @$domain:\n":"Сообщение от $name:\n").
-                    "$message",
+                    "$query",
                     [
                         [
                             ["text" => "Написать пользователю ответ", "url" => $link]
