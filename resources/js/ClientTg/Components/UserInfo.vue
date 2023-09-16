@@ -21,6 +21,13 @@
             <td class="font-weight-bold">{{ botUser.id || 'Не указано' }}</td>
 
         </tr>
+
+        <tr>
+            <th scope="row">Дата регистрации</th>
+            <td class="font-weight-bold">{{ $filters(botUser.created_at) }}</td>
+
+        </tr>
+
         <tr>
             <th scope="row">Телеграм ID</th>
             <td class="font-weight-bold">{{ botUser.telegram_chat_id || 'Не указано' }}</td>
