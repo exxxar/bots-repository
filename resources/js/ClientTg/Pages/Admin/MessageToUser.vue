@@ -124,6 +124,7 @@ export default {
             this.botUser = this.getSelf
         }
 
+
         const urlParams = new URLSearchParams(window.location.search);
         const user = JSON.parse(urlParams.get('user'));
 
@@ -133,6 +134,7 @@ export default {
             this.loadActionData()
 
         }
+
 
         //?user=$request_telegram_chat_id
         //  if (window.location.)

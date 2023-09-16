@@ -39,6 +39,7 @@ import AdminBotDialog from '@/ClientTg/Pages/Admin/BotManager/Dialogs.vue';
 import AdminBotKeyboard from '@/ClientTg/Pages/Admin/BotManager/Keyboards.vue';
 import AdminBotAmo from '@/ClientTg/Pages/Admin/BotManager/Amo.vue';
 import AdminBonusProduct from '@/ClientTg/Pages/Admin/BonusProduct.vue';
+import AdminMessageToUser from '@/ClientTg/Pages/Admin/MessageToUser.vue';
 
 export const routes = [
 
@@ -184,6 +185,13 @@ export const adminRoutes = [
         path: '/admin-promotion',
         component: AdminPromotion,
         meta: { title: 'Админ панель: Реклама', hide_menu:true, need_admin_menu:true }
+    },
+
+    {
+        name: 'AdminMessageToUser',
+        path: '/admin-callback',
+        component: AdminMessageToUser,
+        meta: { title: 'Админ панель: Сообщение к пользователю', hide_menu:true, need_admin_menu:true }
     },
     {
         name: 'AdminShopManager',
