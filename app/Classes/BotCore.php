@@ -668,7 +668,7 @@ abstract class BotCore
 
                 $this->reply("Ваше сообщение успешно доставлено администратору бота");
             }
-
+            return;
         }
 
 
