@@ -24,7 +24,7 @@
 
         <tr>
             <th scope="row">Дата регистрации</th>
-            <td class="font-weight-bold">{{ $filters(botUser.created_at) }}</td>
+            <td class="font-weight-bold">{{ $filters.current(botUser.created_at) }}</td>
 
         </tr>
 
