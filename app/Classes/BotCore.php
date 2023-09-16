@@ -533,7 +533,7 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-      //  Log::info(print_r($update, true));
+        //  Log::info(print_r($update, true));
 
 
         include_once base_path('routes/bot.php');
@@ -645,6 +645,32 @@ abstract class BotCore
 
         if ($this->botFallbackHandler($message))
             return;
+
+        if (mb_strlen($message) >= 10) {
+            $channel = $this->getSelf()->main_channel ?? $this->getSelf()->order_channel ?? null;
+            if (!is_null($channel)) {
+                $domain = $this->currentBotUser()->username ?? null;
+                $name = $this->currentBotUser()->name ?? $this->currentBotUser()->telegram_chat_id;
+
+                $botDomain = $this->getSelf()->bot_domain;
+                $link = "https://t.me/?start=$botDomain" . base64_encode("003".$this->currentBotUser()->telegram_chat_id);
+
+                $this->sendInlineKeyboard($channel,
+                    "#ответ\n"
+                    (!is_null($domain)?"Сообщение от @$domain:\n":"Сообщение от $name:\n").
+                    "$message",
+                    [
+                        [
+                            ["text" => "Написать пользователю ответ", "url" => $link]
+                        ]
+                    ]
+                );
+
+                $this->reply("Ваше сообщение успешно доставлено администратору бота");
+            }
+
+        }
+
 
         $this->reply("Ошибка обработки данных!");
     }

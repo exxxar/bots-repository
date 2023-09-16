@@ -791,7 +791,7 @@ class BotAdministrativeLogicFactory
             ->whereBot($this->bot)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
-                "Вам прислали сообщение:\n$info"
+                "Вам прислали сообщение:\n$info\n<em>Для ответа наберите текст БОЛЬШЕ 10 символов в боте и отправьте.</em>"
             )
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
