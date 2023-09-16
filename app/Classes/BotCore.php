@@ -653,7 +653,7 @@ abstract class BotCore
                 $name = $this->currentBotUser()->name ?? $this->currentBotUser()->telegram_chat_id;
 
                 $botDomain = $this->getSelf()->bot_domain;
-                $link = "https://t.me/?start=$botDomain" . base64_encode("003".$this->currentBotUser()->telegram_chat_id);
+                $link = "https://t.me/$botDomain?start=" . base64_encode("003".$this->currentBotUser()->telegram_chat_id);
 
                 $this->sendInlineKeyboard($channel,
                     "#ответ\n".
