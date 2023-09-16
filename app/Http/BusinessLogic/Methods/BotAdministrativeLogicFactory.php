@@ -755,7 +755,7 @@ class BotAdministrativeLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function acceptUserInLocation(array $data): void
+    public function messageToUser(array $data): void
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(403, "Не выполнены условия функции");
@@ -781,9 +781,9 @@ class BotAdministrativeLogicFactory
         if (is_null($userBotUser))
             throw new HttpException(404, "Пользователь не найден!");
 
-        $userBotUser->user_in_location = true;
-        $userBotUser->location_comment = $data["info"] ?? null;
-        $userBotUser->save();
+      //  $userBotUser->user_in_location = true;
+       // $userBotUser->location_comment = $data["info"] ?? null;
+       // $userBotUser->save();
 
         $name = BotMethods::prepareUserName($userBotUser);
 
@@ -791,11 +791,11 @@ class BotAdministrativeLogicFactory
             ->whereBot($this->bot)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
-                "Вас отметили в заведении с сообщением:\n$info"
+                "Вам прислали сообщение:\n$info"
             )
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
-                "Вы отметили пользователя $name в заведении."
+                "Вы отправили пользователяю $name в сообщение."
             );
 
     }

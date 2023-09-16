@@ -118,8 +118,8 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async acceptUserInLocation(context, payload) {
-        let link = `${BASE_CASHBACK_LINK}/user-in-location`
+    async userMessage(context, payload) {
+        let link = `${BASE_CASHBACK_LINK}/user-message`
 
 
         let _axios = util.makeAxiosFactory(link, 'POST', {

@@ -85,6 +85,31 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 
                 <a
                     href="javascript:void(0)"
+                    @click.prevent="openSection(5)"
+                    v-bind:class="{'bg-blue2-dark text-white':section===5, 'color-blue2-dark':section!==5}"
+                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Написать пользователю сообщение</a>
+
+                <form v-on:submit.prevent="acceptUserInLocation" v-if="section===5">
+                    <div class="mb-3">
+                        <label for="bill-info" class="form-label">Написать сообщение</label>
+                        <textarea class="form-control"
+                                  placeholder="Текст сообщения"
+                                  v-model="locationForm.info"
+                                  id="bill-info" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <button
+                            :disabled="loading"
+                            type="submit"
+                            class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
+                            Отправить
+                        </button>
+                    </div>
+                </form>
+
+                <a
+                    href="javascript:void(0)"
                     @click.prevent="openSection(8)"
                     v-bind:class="{'bg-blue2-dark text-white':section===8, 'color-blue2-dark':section!==8}"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
@@ -137,31 +162,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     </div>
                 </form>
 
-                <a
-                    href="javascript:void(0)"
-                    @click.prevent="openSection(5)"
-                    v-bind:class="{'bg-blue2-dark text-white':section===5, 'color-blue2-dark':section!==5}"
-                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Отметить
-                    пользователя в заведении</a>
 
-                <form v-on:submit.prevent="acceptUserInLocation" v-if="section===5">
-                    <div class="mb-3">
-                        <label for="bill-info" class="form-label">Комменатрий</label>
-                        <textarea class="form-control"
-                                  placeholder="Информация"
-                                  v-model="locationForm.info"
-                                  id="bill-info" rows="3" required></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <button
-                            :disabled="loading"
-                            type="submit"
-                            class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
-                            Отметить
-                        </button>
-                    </div>
-                </form>
 
                 <a
                     href="javascript:void(0)"
@@ -572,7 +573,7 @@ export default {
         },
         acceptUserInLocation() {
             this.loading = true;
-            this.$store.dispatch("acceptUserInLocation", {
+            this.$store.dispatch("userMessage", {
                 dataObject: {
                     user_telegram_chat_id: this.request_telegram_chat_id,
                     ...this.locationForm

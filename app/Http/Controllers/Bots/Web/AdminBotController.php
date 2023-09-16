@@ -386,7 +386,7 @@ class AdminBotController extends Controller
     /**
      * @throws ValidationException
      */
-    public function acceptUserInLocation(Request $request): \Illuminate\Http\Response
+    public function messageToUser(Request $request): \Illuminate\Http\Response
     {
         $request->validate([
             "user_telegram_chat_id" => "required",
@@ -396,7 +396,7 @@ class AdminBotController extends Controller
         BusinessLogic::administrative()
             ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
-            ->acceptUserInLocation($request->all());
+            ->messageToUser($request->all());
 
         return response()->noContent();
     }
