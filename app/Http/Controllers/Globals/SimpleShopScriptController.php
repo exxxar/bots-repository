@@ -158,12 +158,10 @@ class SimpleShopScriptController extends SlugController
 
         $keyboard = [];
         foreach ($categories as $category) {
-            $keyboard[] =   [
+            $keyboard[] =
                 [
                     ["text" => $category->title, "callback_data" => "/category_products $category->id"],
-                ],
-
-            ];
+                ];
         }
 
         BotManager::bot()
