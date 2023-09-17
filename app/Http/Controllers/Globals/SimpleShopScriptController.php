@@ -152,15 +152,14 @@ class SimpleShopScriptController extends SlugController
 
         $categories = ProductCategory::query()
             ->where("bot_id", $bot->id)
-            //->whereHas("products")
-            //->take(5)
+            ->whereHas("products")
             ->get();
 
         $keyboard = [];
         foreach ($categories as $category) {
             $keyboard[] =
                 [
-                    ["text" => $category->title, "callback_data" => "/category_products $category->id"],
+                    ["text" => "$category->title ($category->count шт.)", "callback_data" => "/category_products $category->id"],
                 ];
         }
 
