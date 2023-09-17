@@ -91,7 +91,7 @@ class SimpleShopScriptController extends SlugController
                 'is_global' => true,
             ],
             [
-                'command' => ".*Корзина ([0-9]{1,3})",
+                'command' => ".*Корзина .([0-9]{1,3}).",
                 'comment' => "Скрипт отображения корзины товаров",
             ]);
 
@@ -194,7 +194,7 @@ class SimpleShopScriptController extends SlugController
                     [
                         'menu' => [
                             [
-                                ["text" => "🛒Корзина $productInCart"],
+                                ["text" => "🛒Корзина ($productInCart)"],
                             ],
                             [
                                 ["text" => "🥂Категории товаров"],
