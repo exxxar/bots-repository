@@ -14,6 +14,7 @@ use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -127,8 +128,13 @@ class SimpleShopScriptController extends SlugController
         BotManager::bot()->reply("История заказов");
     }
 
-    public function addToBasket(){
+    public function addToBasket()
+    {
         BotManager::bot()->reply("Добавить в корзину");
+    }
+
+    public function productsInCategory(){
+        BotManager::bot()->reply("Товары в категории");
     }
 
     public function basket(...$config)
@@ -142,7 +148,30 @@ class SimpleShopScriptController extends SlugController
     {
         $bot = BotManager::bot()->getSelf();
 
-        BotManager::bot()->reply("Категории товара");
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $categories = ProductCategory::query()
+            ->where("bot_id", $bot->id)
+            ->whereHas("products")
+            ->get();
+
+        $keyboard = [];
+        foreach ($categories as $category) {
+            $keyboard[] =   [
+                [
+                    ["text" => $category->title, "callback_data" => "/category_products $category->id"],
+                ],
+
+            ];
+        }
+
+        BotManager::bot()
+            ->sendPhoto(
+                $botUser->telegram_chat_id,
+                "Категории товаров",
+                InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                $keyboard
+              );
     }
 
     public function main(...$config)
@@ -182,41 +211,42 @@ class SimpleShopScriptController extends SlugController
 
                     ]);
 
-
-            $productInCart = 0;
-            $menu = BotMenuTemplate::query()
-                ->updateOrCreate(
-                    [
-                        'bot_id' => $bot->id,
-                        'type' => 'reply',
-                        'slug' => "menu_products",
-
-                    ],
-                    [
-                        'menu' => [
-                            [
-                                ["text" => "🛒Корзина ($productInCart)"],
-                            ],
-                            [
-                                ["text" => "🥂Категории товаров"],
-                            ],
-                            [
-                                ["text" => "🌭Магазин товаров"],
-                            ],
-                            [
-                                ["text" => "🕖История покупок"],
-                            ],
-                            [
-                                ["text" => "🔥Главное меню"],
-                            ],
-                        ],
-                    ]);
-
-            \App\Facades\BotManager::bot()
-                ->replyKeyboard(
-                    $title,
-                    $menu->menu);
-
         }
+
+        $productInCart = 0;
+        $menu = BotMenuTemplate::query()
+            ->updateOrCreate(
+                [
+                    'bot_id' => $bot->id,
+                    'type' => 'reply',
+                    'slug' => "menu_products",
+
+                ],
+                [
+                    'menu' => [
+                        [
+                            ["text" => "🛒Корзина ($productInCart)"],
+                        ],
+                        [
+                            ["text" => "🥂Категории товаров"],
+                        ],
+                        [
+                            ["text" => "🌭Магазин товаров"],
+                        ],
+                        [
+                            ["text" => "🕖История покупок"],
+                        ],
+                        [
+                            ["text" => "🔥Главное меню"],
+                        ],
+                    ],
+                ]);
+
+        \App\Facades\BotManager::bot()
+            ->replyKeyboard(
+                $title,
+                $menu->menu);
+
+
     }
 }
