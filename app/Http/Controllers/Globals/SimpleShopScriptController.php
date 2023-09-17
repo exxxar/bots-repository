@@ -194,7 +194,7 @@ class SimpleShopScriptController extends SlugController
                     [
                         'menu' => [
                             [
-                                ["text" => "🛒Корзина ($productInCart)"],
+                                ["text" => "🛒Корзина $productInCart"],
                             ],
                             [
                                 ["text" => "🥂Категории товаров"],
