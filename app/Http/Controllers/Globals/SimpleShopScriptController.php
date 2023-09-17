@@ -11,6 +11,7 @@ use App\Http\Resources\BotSecurityResource;
 use App\Models\ActionStatus;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
+use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -53,6 +54,12 @@ class SimpleShopScriptController extends SlugController
 
             ],
             [
+                "type" => "text",
+                "key" => "shop_title",
+                "value" => "Меню продукции",
+
+            ],
+            [
                 "type" => "channel",
                 "key" => "callback_channel_id",
                 "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
@@ -84,7 +91,7 @@ class SimpleShopScriptController extends SlugController
                 'is_global' => true,
             ],
             [
-                'command' => ".*Корзина товаров",
+                'command' => ".*Корзина ([0-9]{1,3})",
                 'comment' => "Скрипт отображения корзины товаров",
             ]);
 
@@ -102,28 +109,36 @@ class SimpleShopScriptController extends SlugController
     }
 
 
-
-    public function nextProductPage(){
+    public function nextProductPage()
+    {
         BotManager::bot()->reply("Следующая страница товаров");
     }
 
-    public function detailProduct(){
+    public function detailProduct()
+    {
         BotManager::bot()->reply("Детали товара");
     }
 
-    public function orders(...$config){
+    public function orders(...$config)
+    {
         $bot = BotManager::bot()->getSelf();
 
         BotManager::bot()->reply("История заказов");
     }
 
-    public function basket(...$config){
+    public function addToBasket(){
+        BotManager::bot()->reply("Добавить в корзину");
+    }
+
+    public function basket(...$config)
+    {
         $bot = BotManager::bot()->getSelf();
 
         BotManager::bot()->reply("Корзина");
     }
 
-    public function categories(...$config){
+    public function categories(...$config)
+    {
         $bot = BotManager::bot()->getSelf();
 
         BotManager::bot()->reply("Категории товара");
@@ -140,13 +155,17 @@ class SimpleShopScriptController extends SlugController
             ->where("key", "products_per_page")
             ->first())["value"] ?? 10;
 
+        $title = (Collection::make($config[1])
+            ->where("key", "shop_title")
+            ->first())["value"] ?? "Меню";
+
         $products = Product::query()
             ->where("bot_id", $bot->id)
             ->take($count)
             ->skip(0)
             ->get();
 
-        foreach ($products as $product){
+        foreach ($products as $product) {
             BotManager::bot()
                 ->sendPhoto(
                     $botUser->telegram_chat_id,
@@ -154,10 +173,48 @@ class SimpleShopScriptController extends SlugController
                     InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
                     [
                         [
-                            ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "callback_data" =>"/detail_global_product $bot->id $product->id"],
+                            ["text" => "👍Детали товара", "callback_data" => "/detail_global_product $product->id"],
+                        ],
+                        [
+                            ["text" => "🛒Добавить в корзину", "callback_data" => "/detail_global_product $product->id"],
                         ],
 
                     ]);
+
+
+            $productInCart = 0;
+            $menu = BotMenuTemplate::query()
+                ->updateOrCreate(
+                    [
+                        'bot_id' => $bot->id,
+                        'type' => 'reply',
+                        'slug' => "menu_products",
+
+                    ],
+                    [
+                        'menu' => [
+                            [
+                                ["text" => "🛒Корзина ($productInCart)"],
+                            ],
+                            [
+                                ["text" => "🥂Категории товаров"],
+                            ],
+                            [
+                                ["text" => "🌭Товары"],
+                            ],
+                            [
+                                ["text" => "🕖История заказов"],
+                            ],
+                            [
+                                ["text" => "🔥Главное меню"],
+                            ],
+                        ],
+                    ]);
+
+            \App\Facades\BotManager::bot()
+                ->replyKeyboard(
+                    $title,
+                    $menu->menu);
 
         }
     }
