@@ -152,8 +152,8 @@ class SimpleShopScriptController extends SlugController
 
         $categories = ProductCategory::query()
             ->where("bot_id", $bot->id)
-            ->whereHas("products")
-            ->take(8)
+            //->whereHas("products")
+            //->take(5)
             ->get();
 
         $keyboard = [];
