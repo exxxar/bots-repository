@@ -435,6 +435,30 @@ class BotLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
+    public function updateShopLink(array $data): BotResource
+    {
+        if (is_null($this->bot))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "vk_shop_link" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $this->bot->vk_shop_link = $data["vk_shop_link"] ?? null;
+        $this->bot->save();
+
+        return new BotResource($this->bot);
+
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
     public function sendCallback(array $data): void
     {
         if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))

@@ -212,6 +212,7 @@ Route::prefix("bot-client")
                 Route::post("/remove-keyboard-template/{keyboardId}", "removeKeyboardTemplate");
                 Route::post("/edit-keyboard-template", "editKeyboardTemplate");
                 Route::post('/switch-status',"switchBotStatus");
+                Route::post('/update-shop-link',"updateShopLink");
                 Route::post("/restore/{botId}", "restore");
             });
 

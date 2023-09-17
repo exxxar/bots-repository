@@ -10,7 +10,18 @@ const getters = {
 }
 
 const actions = {
+    updateShopLink(context, payload = {botForm:null}){
+        let link = `${BASE_BOTS_LINK}/update-shop-link`
 
+        let _axios = util.makeAxiosFactory(link,"POST", payload.botForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async switchBotStatus(context) {
         let link = `${BASE_BOTS_LINK}/switch-status`
         let _axios = util.makeAxiosFactory(link,"POST")

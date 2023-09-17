@@ -693,6 +693,9 @@ export default {
 
                 if (this.botForm.payment_provider_token)
                     this.need_payments = true
+
+                if (this.botForm.vk_shop_link)
+                    this.need_shop = true
             })
         },
 

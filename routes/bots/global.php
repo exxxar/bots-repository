@@ -41,6 +41,16 @@ BotManager::bot()
     ->route("/request_callback ([0-9]+)", "requestCallback")
     ->slug("global_fast_request_main", "fastRequest");
 
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\SimpleShopScriptController::class)
+    ->route("/next_global_products ([0-9]+) ([0-9]+)", "nextProductPage")
+    ->route("/detail_global_product ([0-9]+) ([0-9]+)", "detailProduct")
+    ->slug("global_simple_shop", "main")
+    ->slug("global_products_categories", "categories")
+    ->slug("global_order_history", "orders")
+    ->slug("global_product_basket", "basket");
+
+
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\CashBackScriptController::class)

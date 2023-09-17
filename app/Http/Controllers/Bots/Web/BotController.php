@@ -34,6 +34,20 @@ class BotController extends Controller
 
         return response()->noContent();
     }
+
+    /**
+     * @throws ValidationException
+     */
+    public function updateShopLink(Request $request): BotResource
+    {
+        $request->validate([
+            "vk_shop_link"=>"required"
+        ]);
+
+        return BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->updateShopLink($request->all());
+    }
     /**
      * @throws ValidationException
      */

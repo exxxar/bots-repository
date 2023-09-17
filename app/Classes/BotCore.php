@@ -646,33 +646,42 @@ abstract class BotCore
         if ($this->botFallbackHandler($message))
             return;
 
-        if (mb_strlen($query) >= 10) {
-            $channel = $this->getSelf()->main_channel ?? $this->getSelf()->order_channel ?? null;
-            if (!is_null($channel)) {
-                $domain = $this->currentBotUser()->username ?? null;
-                $name = $this->currentBotUser()->name ?? $this->currentBotUser()->telegram_chat_id;
-
-                $botDomain = $this->getSelf()->bot_domain;
-                $link = "https://t.me/$botDomain?start=" . base64_encode("003".$this->currentBotUser()->telegram_chat_id);
-
-                $this->sendInlineKeyboard($channel,
-                    "#ответ\n".
-                    (!is_null($domain)?"Сообщение от @$domain:\n":"Сообщение от $name:\n").
-                    "$query",
-                    [
-                        [
-                            ["text" => "Написать пользователю ответ", "url" => $link]
-                        ]
-                    ]
-                );
-
-                $this->reply("Ваше сообщение успешно доставлено администратору бота");
-            }
+        if ($this->adminNotificationHandler($query))
             return;
-        }
-
 
         $this->reply("Ошибка обработки данных!");
+    }
+
+    public function adminNotificationHandler($query): bool
+    {
+        if (mb_strlen($query) < 10)
+            return false;
+
+        $channel = $this->getSelf()->main_channel ?? $this->getSelf()->order_channel ?? null;
+        if (!is_null($channel)) {
+            $domain = $this->currentBotUser()->username ?? null;
+            $name = $this->currentBotUser()->name ?? $this->currentBotUser()->fio_from_telegram ?? $this->currentBotUser()->telegram_chat_id;
+
+            $botDomain = $this->getSelf()->bot_domain;
+            $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
+
+            $this->sendInlineKeyboard($channel,
+                "#ответ\n" .
+                (!is_null($domain) ? "Сообщение от @$domain:\n" : "Сообщение от $name:\n") .
+                "$query",
+                [
+                    [
+                        ["text" => "Написать пользователю ответ", "url" => $link]
+                    ]
+                ]
+            );
+
+            $this->reply("Ваше сообщение успешно доставлено администратору бота");
+            return true;
+
+        }
+        return false;
+
     }
 
     public function next($name)

@@ -22,6 +22,7 @@ class BotSecurityResource extends JsonResource
             'main_channel' => $this->main_channel,
             'order_channel' => $this->order_channel,
             'info_link' => $this->info_link,
+            'vk_shop_link' => $this->vk_shop_link,
             'social_links' => $this->social_links,
             'company' => new CompanySecurityResource($this->whenLoaded('company')),
             'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
