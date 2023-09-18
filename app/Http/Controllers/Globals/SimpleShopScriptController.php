@@ -285,7 +285,7 @@ class SimpleShopScriptController extends SlugController
             foreach ($product->images as $image) {
 
                 $image = !strpos($image, "http" ) ? env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image : $image;
-
+                Log::info("step1=>".$image);
                 $media[] = [
                     "media" => $image,
                     "type" => "photo",
@@ -300,6 +300,8 @@ class SimpleShopScriptController extends SlugController
             $image = $product->images[0];
 
             $image = !strpos($image,"http") ? env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image : $image;
+            Log::info("step2=>".$image);
+
             BotManager::bot()->replyPhoto("Изображение к товару",
                 InputFile::create($image));
         }
