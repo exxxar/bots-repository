@@ -96,6 +96,18 @@ class SimpleShopScriptController extends SlugController
                 'comment' => "Скрипт отображения категорий товаров",
             ]);
 
+        $model = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_clear_basket",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Очистить корзину",
+                'comment' => "Скрипт очистки товаров в корзине",
+            ]);
+
+
 
         $params = [
             [
@@ -390,6 +402,24 @@ class SimpleShopScriptController extends SlugController
         BotManager::bot()->reply("История заказов");
     }
 
+    public function clearBasket(){
+        $bot = BotManager::bot()->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $baskets = Basket::query()
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->whereNull("ordered_at")
+            ->get();
+
+        foreach ($baskets as $basket){
+            $basket->ordered_at = Carbon::now();
+            $basket->save();
+        }
+
+        $this->shopMenu("Корзина успешно очищена!\nМеню магазина");
+    }
+
     public function startOrder(...$config)
     {
         $bot = BotManager::bot()->getSelf();
@@ -481,6 +511,40 @@ class SimpleShopScriptController extends SlugController
                 "Оформление заказа", $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard,
                 $providerData
             );
+
+        $productInCart = Basket::query()
+            ->where("bot_id", $bot->id)
+            ->where("bot_user_id", $botUser->id)
+            ->whereNull("ordered_at")
+            ->sum("count") ?? 0;
+
+        $menu = BotMenuTemplate::query()
+            ->updateOrCreate(
+                [
+                    'bot_id' => $bot->id,
+                    'type' => 'reply',
+                    'slug' => "menu_products",
+
+                ],
+                [
+                    'menu' => [
+                        [
+                            ["text" => "🛒Корзина ($productInCart)"],
+                        ],
+                        [
+                            ["text" => "🧻Очистить корзину"],
+                        ],
+                        [
+                            ["text" => "🔥Главное меню"],
+                        ],
+                    ],
+                ]);
+
+        \App\Facades\BotManager::bot()
+            ->replyKeyboard(
+                $title,
+                $menu->menu);
+
     }
 
     public function removeFromBasket(...$data)
