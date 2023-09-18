@@ -192,7 +192,9 @@ class SimpleShopScriptController extends SlugController
                 ->replyInlineKeyboard("Еще осталось просмотреть <b>".($hasProductCount/$count - $page)." страниц</b>",
                     [
                         [
-                            ["text" => "👉Загрузить еще", "callback_data" => "/next_global_products " . ($page + 1)],
+                            ["text" => "👉Загрузить еще", "callback_data" =>
+                                is_null($categoryId)?"/next_global_products " . ($page + 1):"/category_products $categoryId " . ($page + 1)
+                            ],
                         ],
 
                     ]);
