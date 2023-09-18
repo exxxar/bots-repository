@@ -331,8 +331,9 @@ class SimpleShopScriptController extends SlugController
         $bot = BotManager::bot()->getSelf();
         $botUser = BotManager::bot()->currentBotUser();
 
+        Log::info(print_r($data, true));
 
-        $messageId = $botUser->temporary["message_id"] ?? null;
+       /* $messageId = $botUser->temporary["message_id"] ?? null;
 
         Log::info("message id = $messageId");
 
@@ -340,7 +341,7 @@ class SimpleShopScriptController extends SlugController
             [
                 ["text" => "🛒Удалить из корзины", "callback_data" => "/add_to_basket 1"],
             ],
-        ]);
+        ]);*/
 
 
         $productId = $data[3] ?? null;

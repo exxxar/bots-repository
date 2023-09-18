@@ -258,8 +258,8 @@ trait BotBaseMethodsTrait
 
         try {
             $data = $this->bot->sendMessage($tmp);
-            $this->botUser->temporary["message_id"] = $data->message_id ?? null;
-            $this->botUser->save();
+         /*   $this->botUser->temporary["message_id"] = $data->message_id ?? null;
+            $this->botUser->save();*/
         } catch (\Exception $e) {
 
             unset($tmp['reply_markup']);
