@@ -152,22 +152,21 @@ class SimpleShopScriptController extends SlugController
         $botUser = BotManager::bot()->currentBotUser();
 
         $request = Product::query()
-       /*     ->with(["productCategories"=>function ($q) use ($categoryId) {
-                $q->where("product_category_id", $categoryId);
-            }])*/
             ->where("bot_id", $bot->id);
 
+        if (!is_null($categoryId))
+            $request = $request->with(["productCategories" => function ($q) use ($categoryId) {
+                $q->where("product_category_id", $categoryId);
+            }]);
 
 
+        $hasProductCount = $request
+            ->count();
 
-            $hasProductCount = $request
-                ->count();
-
-            $products = $request
-                ->skip($page * $count)
-                ->take($count)
-                ->get();
-
+        $products = $request
+            ->skip($page * $count)
+            ->take($count)
+            ->get();
 
 
         foreach ($products as $product) {
@@ -190,7 +189,7 @@ class SimpleShopScriptController extends SlugController
 
         if ($hasProductCount > 0)
             BotManager::bot()
-                ->replyKeyboard("Еще осталось просмотреть <b>$hasProductCount шт. товаров</b>",
+                ->replyInlineKeyboard("Еще осталось просмотреть <b>$hasProductCount шт. товаров</b>",
                     [
                         [
                             ["text" => "👉Загрузить еще", "callback_data" => "/next_global_products " . ($page + 1)],
