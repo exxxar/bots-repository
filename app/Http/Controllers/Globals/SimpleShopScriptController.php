@@ -331,17 +331,7 @@ class SimpleShopScriptController extends SlugController
         $bot = BotManager::bot()->getSelf();
         $botUser = BotManager::bot()->currentBotUser();
 
-        Log::info(print_r($data[0]->message_id, true));
 
-        $messageId = $data[0]->message_id ?? null;
-
-        Log::info("message id = $messageId");
-
-        BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId, [
-            [
-                ["text" => "🛒Удалить из корзины", "callback_data" => "/add_to_basket 1"],
-            ],
-        ]);
 
 
         $productId = $data[3] ?? null;
@@ -609,6 +599,8 @@ class SimpleShopScriptController extends SlugController
             return;
         }
 
+        $messageId = $data[0]->message_id ?? null;
+
         if ($productInBasket->count - 1 > 0) {
             $productInBasket->count--;
             $productInBasket->save();
@@ -617,12 +609,33 @@ class SimpleShopScriptController extends SlugController
             $price = $productInBasket->count * $productInBasket->product->current_price;
 
             BotManager::bot()->reply("Товар $title убран из корзины. Осталось $productInBasket->count. Цена товара $price ₽");
+
+            BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId,[
+                [
+                    ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
+                ],
+                [
+                    ["text" => "🛒Добавить в корзину $product->current_price ₽ [$productInBasket->count] ", "callback_data" => "/add_to_basket $product->id"],
+                ],
+                [
+                    ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
+                ],
+            ]);
             return;
         }
 
         $title = $productInBasket->product->title;
         $productInBasket->delete();
         BotManager::bot()->reply("Товар $title успешно удален из корзины.");
+
+        BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId,[
+            [
+                ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
+            ],
+            [
+                ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
+            ]
+        ]);
 
         $this->shopMenu();
     }
@@ -676,6 +689,20 @@ class SimpleShopScriptController extends SlugController
             $title = $productInBasket->product->title;
             BotManager::bot()->reply("Товар $title добавлен в корзину в колличестве $productInBasket->count. Цена товара $price ₽");
         }
+
+        $messageId = $data[0]->message_id ?? null;
+
+        BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId,[
+            [
+                ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
+            ],
+            [
+                ["text" => "🛒Добавить в корзину $product->current_price ₽ [$productInBasket->count] ", "callback_data" => "/add_to_basket $product->id"],
+            ],
+            [
+                ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
+            ],
+        ]);
 
         $this->shopMenu();
     }
