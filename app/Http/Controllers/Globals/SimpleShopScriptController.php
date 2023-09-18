@@ -16,10 +16,12 @@ use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use ReflectionClass;
 use Telegram\Bot\FileUpload\InputFile;
@@ -153,6 +155,16 @@ class SimpleShopScriptController extends SlugController
                 'comment' => "Скрипт отображения истории покупок товаров",
             ]);
 
+        $model = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_start_order",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Оформление заказа",
+                'comment' => "Вывод диалога оформления заказа",
+            ]);
 
     }
 
@@ -188,10 +200,11 @@ class SimpleShopScriptController extends SlugController
         foreach ($products as $product) {
 
             $basket = Basket::query()
-                        ->where("product_id", $product->id)
-                        ->where("bot_id", $bot->id)
-                        ->where("bot_user_id", $botUser->id)
-                        ->first();
+                ->where("product_id", $product->id)
+                ->where("bot_id", $bot->id)
+                ->where("bot_user_id", $botUser->id)
+                ->whereNull("ordered_at")
+                ->first();
 
             if (is_null($basket))
 
@@ -338,6 +351,7 @@ class SimpleShopScriptController extends SlugController
             ->where("product_id", $productId)
             ->where("bot_id", $bot->id)
             ->where("bot_user_id", $botUser->id)
+            ->whereNull("ordered_at")
             ->first();
 
         if (is_null($basket))
@@ -374,6 +388,99 @@ class SimpleShopScriptController extends SlugController
         $bot = BotManager::bot()->getSelf();
 
         BotManager::bot()->reply("История заказов");
+    }
+
+    public function startOrder(...$config)
+    {
+        $bot = BotManager::bot()->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $baskets = Basket::query()
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->whereNull("ordered_at")
+            ->get();
+
+        $taxSystemCode = $bot->company->vat_code ?? 0;
+        $currency = "RUB";
+
+        $prices = [];
+        $receipt = [];
+        $description = "";
+        $summaryPrice = 0;
+        $summaryCount = 0;
+        foreach ($baskets as $basket) {
+            $price = ($basket->product->current_price * $basket->count)*100;
+            $prices[] =   [
+                "label" => $basket->product->title,
+                "amount" => $price
+            ];
+            $summaryCount +=$basket->count;
+            $summaryPrice +=$price;
+
+            $title =  $basket->product->title;
+            $description .= "$title x$basket->count = ".$basket->product->current_price."руб.\n";
+
+            $receipt[] =   (object)[
+                    "description" => $basket->product->title,
+                    "quantity" => " $basket->count.00",
+                    "amount" => (object)[
+                        "value" => $price / 100,
+                        "currency" => $currency
+                    ],
+                    "vat_code" =>$taxSystemCode
+                ];
+
+        }
+
+        $payload = bin2hex(Str::uuid());
+        $providerToken = $bot->payment_provider_token;
+
+
+        Transaction::query()->create([
+            'user_id' => $botUser->user_id,
+            'bot_id' => $bot->id,
+            'payload' => $payload,
+            'currency' => $currency,
+            'total_amount' => $summaryPrice,
+            'status' => 0,
+            'products_info' => (object)[
+                "payload" => $payloadData ?? null,
+                "prices" => $prices,
+            ],
+        ]);
+
+        $needs = [
+            "need_name" => true,
+            "need_phone_number" => true,
+            "need_email" => true,
+            "need_shipping_address" => false,
+            "send_phone_number_to_provider" => true,
+            "send_email_to_provider" => true,
+            "is_flexible" => false,
+            "disable_notification" => false,
+            "protect_content" => false,
+        ];
+
+
+        $keyboard = [
+            [
+                ["text" => "Оплатить покупку картой", "pay" => true],
+            ],
+
+        ];
+
+
+
+        $providerData = (object)[
+            "receipt" => $receipt
+        ];
+
+        \App\Facades\BotManager::bot()
+            ->replyInvoice(
+                "Оформление заказа", $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard,
+                $providerData
+            );
     }
 
     public function removeFromBasket(...$data)
@@ -489,7 +596,8 @@ class SimpleShopScriptController extends SlugController
         $this->productsPage($pageId, 5, $categoryId);
     }
 
-    private function shopMenu($title = "Меню магазина"){
+    private function shopMenu($title = "Меню магазина")
+    {
 
         $bot = BotManager::bot()->getSelf();
 
@@ -498,6 +606,7 @@ class SimpleShopScriptController extends SlugController
         $productInCart = Basket::query()
             ->where("bot_id", $bot->id)
             ->where("bot_user_id", $botUser->id)
+            ->whereNull("ordered_at")
             ->sum("count") ?? 0;
 
         $menu = BotMenuTemplate::query()
@@ -534,18 +643,20 @@ class SimpleShopScriptController extends SlugController
                 $menu->menu);
     }
 
-    public function productsInBasket(...$config){
+    public function productsInBasket(...$config)
+    {
         $bot = BotManager::bot()->getSelf();
         $botUser = BotManager::bot()->currentBotUser();
 
         $baskets = Basket::query()
             ->where("bot_id", $bot->id)
             ->where("bot_user_id", $botUser->id)
+            ->whereNull("ordered_at")
             ->get();
 
-        foreach ($baskets  as $basket) {
+        foreach ($baskets as $basket) {
 
-            $product =  $basket->product;
+            $product = $basket->product;
 
             $count = $basket->count ?? 0;
 
@@ -561,7 +672,7 @@ class SimpleShopScriptController extends SlugController
             BotManager::bot()
                 ->sendPhoto(
                     $botUser->telegram_chat_id,
-                    $product->title." <b>($count ед.)</b>",
+                    $product->title . " <b>($count ед.)</b>",
                     InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
                     $keyboard);
         }
@@ -602,6 +713,7 @@ class SimpleShopScriptController extends SlugController
         $baskets = Basket::query()
             ->where("bot_id", $bot->id)
             ->where("bot_user_id", $botUser->id)
+            ->whereNull("ordered_at")
             ->get();
 
         $tmpSum = 0;

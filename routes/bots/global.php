@@ -54,6 +54,7 @@ BotManager::bot()
     ->slug("global_order_history", "orders")
     ->slug("global_products_menu", "products")
     ->slug("global_products_in_basket", "productsInBasket")
+    ->slug("global_start_order", "startOrder")
     ->slug("global_product_basket", "basket");
 
 
