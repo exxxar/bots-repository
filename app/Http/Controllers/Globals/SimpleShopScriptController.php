@@ -694,9 +694,9 @@ class SimpleShopScriptController extends SlugController
                         [
                             ["text" => "🌭Наши товары"],
                         ],
-                        [
+                       /* [
                             ["text" => "🕖История покупок"],
-                        ],
+                        ],*/
                         [
                             ["text" => "🔥Главное меню"],
                         ],
