@@ -478,7 +478,7 @@ class SimpleShopScriptController extends SlugController
         $this->productsPage($pageId, 5, $categoryId);
     }
 
-    private function shopMenu(){
+    private function shopMenu($title = "Меню магазина"){
 
         $bot = BotManager::bot()->getSelf();
 
@@ -487,7 +487,7 @@ class SimpleShopScriptController extends SlugController
         $productInCart = Basket::query()
             ->where("bot_id", $bot->id)
             ->where("bot_user_id", $botUser->id)
-            ->count();
+            ->count() ?? 0;
 
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
@@ -601,7 +601,7 @@ class SimpleShopScriptController extends SlugController
 
         $count = (Collection::make($config[1])
             ->where("key", "products_per_page")
-            ->first())["value"] ?? 10;
+            ->first())["value"] ?? 5;
 
         $title = (Collection::make($config[1])
             ->where("key", "shop_title")
@@ -618,7 +618,7 @@ class SimpleShopScriptController extends SlugController
                 InputFile::create(public_path() . "/images/shopify.png")
             );
 
-        $this->shopMenu();
+        $this->shopMenu($title);
 
 
     }
