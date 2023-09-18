@@ -333,6 +333,8 @@ class SimpleShopScriptController extends SlugController
 
 
         $messageId = BotManager::bot()->getLastMessageId();
+        Log::info("message id = $messageId");
+
         BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId, [
             [
                 ["text" => "🛒Удалить из корзины", "callback_data" => "/add_to_basket 1"],
