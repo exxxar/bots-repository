@@ -324,6 +324,9 @@ class SimpleShopScriptController extends SlugController
         $bot = BotManager::bot()->getSelf();
         $botUser = BotManager::bot()->currentBotUser();
 
+        $messageId = BotManager::bot()->getLastMessageId();
+        BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId, null);
+
         $productId = $data[3] ?? null;
 
         $product = Product::query()
@@ -368,6 +371,8 @@ class SimpleShopScriptController extends SlugController
             ->whereNull("ordered_at")
             ->first();
 
+
+
         if (is_null($basket))
 
             $keyboard = [
@@ -384,6 +389,8 @@ class SimpleShopScriptController extends SlugController
                     ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
                 ],
             ];
+
+
 
 
         BotManager::bot()

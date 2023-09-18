@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Log;
 trait BotBaseMethodsTrait
 {
 
+    public $lastMessageId = null;
+
+    public function getLastMessageId(){
+        return $this->lastMessageId;
+    }
+
     public function sendMessage($chatId, $message)
     {
         $tmp = [
@@ -23,7 +29,8 @@ trait BotBaseMethodsTrait
         }
 
         try {
-            $this->bot->sendMessage($tmp);
+            $data = $this->bot->sendMessage($tmp);
+            $this->lastMessageId = $data->message_id ?? null;
         } catch (\Exception $e) {
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
@@ -161,7 +168,8 @@ trait BotBaseMethodsTrait
         }
 
         try {
-            $this->bot->sendMessage($tmp);
+            $data = $this->bot->sendMessage($tmp);
+            $this->lastMessageId = $data->message_id ?? null;
 
         } catch (\Exception $e) {
             unset($tmp['reply_markup']);
@@ -256,7 +264,7 @@ trait BotBaseMethodsTrait
 
         try {
             $data = $this->bot->sendMessage($tmp);
-            Log::info(print_r($data->message_id ?? '-', true));
+            $this->lastMessageId = $data->message_id ?? null;
         } catch (\Exception $e) {
 
             unset($tmp['reply_markup']);
@@ -334,7 +342,8 @@ trait BotBaseMethodsTrait
         }
 
         try {
-            $this->bot->sendPhoto($tmp);
+            $data = $this->bot->sendPhoto($tmp);
+            $this->lastMessageId = $data->message_id ?? null;
         } catch (\Exception $e) {
 
             unset($tmp['reply_markup']);
