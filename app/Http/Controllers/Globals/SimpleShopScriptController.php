@@ -544,7 +544,7 @@ class SimpleShopScriptController extends SlugController
 
         \App\Facades\BotManager::bot()
             ->replyKeyboard(
-                $title,
+                "Оформление заказа",
                 $menu->menu);
 
     }
@@ -719,6 +719,11 @@ class SimpleShopScriptController extends SlugController
             ->where("bot_user_id", $botUser->id)
             ->whereNull("ordered_at")
             ->get();
+
+        if (count($baskets)==0){
+            BotManager::bot()->reply("Корзина пуста!");
+            return;
+        }
 
         foreach ($baskets as $basket) {
 
