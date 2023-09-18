@@ -177,10 +177,10 @@ class SimpleShopScriptController extends SlugController
         foreach ($products as $product) {
 
             $basket = Basket::query()
-                ->where("product_id", $product->id)
-                ->where("bot_id", $bot->id)
-                ->where("bot_user_id", $botUser->id)
-                ->first();
+                        ->where("product_id", $product->id)
+                        ->where("bot_id", $bot->id)
+                        ->where("bot_user_id", $botUser->id)
+                        ->first();
 
             if (is_null($basket))
 
@@ -568,12 +568,37 @@ class SimpleShopScriptController extends SlugController
             $tmpCount += $basket->count;
         }
 
+        $baskets = Basket::query()
+            ->where("bot_id", $bot->id)
+            ->where("bot_user_id", $botUser->id)
+            ->get();
+
+        foreach ($baskets  as $basket) {
+
+            $product =  $basket->product;
+
+            $keyboard = [
+                [
+                    ["text" => "🛒Добавить $product->current_price еще в корзину ₽", "callback_data" => "/add_to_basket $product->id"],
+                ],
+                [
+                    ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
+                ],
+            ];
+
+            BotManager::bot()
+                ->sendPhoto(
+                    $botUser->telegram_chat_id,
+                    $product->title,
+                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                    $keyboard);
+        }
+
         \App\Facades\BotManager::bot()
             ->replyKeyboard(
                 "Корзина товаров. Товаров в корзине $tmpCount ед. на сумму $tmpSum руб.",
                 $menu->menu);
 
-        $this->shopMenu();
     }
 
     public function categories(...$config)
