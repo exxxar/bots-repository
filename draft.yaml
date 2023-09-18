@@ -1,15 +1,15 @@
 models:
-  JoinChannel:
-    channel_id: string:255 nullable
-    telegram_chat_id: string:255 nullable
+  Basket:
+    product_id: id foreign:products
+    count: integer default:1
+    bot_user_id:  id foreign:bot_users
     bot_id: id foreign:bots
-    joined_at: timestamp nullable
-    left_at: timestamp nullable
+    ordered_at: timestamp nullable
     relationships:
-      belongsTo: Bot
+      belongsTo: Bot, BotUser, Product
 
-seeders:  JoinChannel
+seeders: Basket
 
 controllers:
-  JoinChannel:
+  Basket:
     resource: api

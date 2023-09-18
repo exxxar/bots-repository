@@ -12,6 +12,6 @@ class BasketSeeder extends Seeder
      */
     public function run(): void
     {
-        //Basket::factory()->count(5)->create();
+        Basket::factory()->count(5)->create();
     }
 }

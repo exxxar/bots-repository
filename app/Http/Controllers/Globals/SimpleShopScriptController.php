@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ActionStatusResource;
 use App\Http\Resources\BotSecurityResource;
 use App\Models\ActionStatus;
+use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
@@ -284,8 +285,8 @@ class SimpleShopScriptController extends SlugController
 
             foreach ($product->images as $image) {
 
-                $image = !str_contains($image, "http" ) ? env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image : $image;
-                Log::info("step1=>".$image);
+                $image = !str_contains($image, "http") ? env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image : $image;
+
                 $media[] = [
                     "media" => $image,
                     "type" => "photo",
@@ -300,7 +301,6 @@ class SimpleShopScriptController extends SlugController
             $image = $product->images[0];
 
             $image = !str_contains($image, "http") ? env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image : $image;
-            Log::info("step2=>".$image);
 
             BotManager::bot()->replyPhoto("Изображение к товару",
                 InputFile::create($image));
@@ -330,7 +330,54 @@ class SimpleShopScriptController extends SlugController
 
     public function addToBasket(...$data)
     {
-        BotManager::bot()->reply("Добавить в корзину");
+        $productId = $data[3] ?? null;
+
+        if (is_null($productId)) {
+            BotManager::bot()->reply("Упс... что-то пошло не так...");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $product = Product::query()
+            ->where("bot_id", $bot->id)
+            ->where("id", $productId)
+            ->first();
+
+        if (is_null($product)) {
+            BotManager::bot()->reply("Упс... товар не наден...");
+            return;
+        }
+
+        $productInBasket = Basket::query()
+            ->where("product_id", $product->id)
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->whereNull("ordered_at")
+            ->first();
+
+        if (is_null($productInBasket)) {
+            $productInBasket = Basket::query()->create([
+                'product_id' => $product->id,
+                'count' => 1,
+                'bot_user_id' => $botUser->id,
+                'bot_id' => $bot->id,
+                'ordered_at' => null,
+            ]);
+            $price = $productInBasket->count * $productInBasket->current_price;
+            BotManager::bot()->reply("Товар $productInBasket->title добавлен в корзину. Цена товара $price ₽");
+        } else {
+            $productInBasket->count++;
+            $productInBasket->save();
+
+            $price = $productInBasket->count * $productInBasket->current_price;
+
+            BotManager::bot()->reply("Товар $productInBasket->title добавлен в корзину в колличестве $productInBasket->count. Цена товара $price ₽");
+        }
+
+
+
     }
 
     public function productsInCategory(...$data)
@@ -383,7 +430,6 @@ class SimpleShopScriptController extends SlugController
 
     public function products(...$config)
     {
-
         $count = (Collection::make($config[1])
             ->where("key", "products_per_page")
             ->first())["value"] ?? 10;

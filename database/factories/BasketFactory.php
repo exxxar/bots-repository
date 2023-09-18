@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Basket;
 use App\Models\Bot;
-use App\Models\Order;
+use App\Models\BotUser;
 use App\Models\Product;
-use App\Models\User;
 
 class BasketFactory extends Factory
 {
@@ -27,12 +26,9 @@ class BasketFactory extends Factory
         return [
             'product_id' => Product::factory(),
             'count' => $this->faker->numberBetween(-10000, 10000),
-            'user_id' => User::factory(),
+            'bot_user_id' => BotUser::factory(),
             'bot_id' => Bot::factory(),
-            'order_id' => Order::factory(),
-            'created_at' => $this->faker->dateTime(),
-            'updated_at' => $this->faker->dateTime(),
-            'deleted_at' => $this->faker->dateTime(),
+            'ordered_at' => $this->faker->dateTime(),
         ];
     }
 }

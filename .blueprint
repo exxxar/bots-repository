@@ -1,14 +1,14 @@
 created:
-    - app/Http/Controllers/TransactionController.php
-    - database/factories/TransactionFactory.php
-    - database/migrations/2023_07_18_232807_create_transactions_table.php
-    - app/Models/Transaction.php
-    - database/seeders/TransactionSeeder.php
-    - tests/Feature/Http/Controllers/TransactionControllerTest.php
-    - app/Http/Requests/TransactionStoreRequest.php
-    - app/Http/Requests/TransactionUpdateRequest.php
-    - app/Http/Resources/TransactionCollection.php
-    - app/Http/Resources/TransactionResource.php
+    - app/Http/Controllers/BasketController.php
+    - database/factories/BasketFactory.php
+    - database/migrations/2023_09_18_160403_create_baskets_table.php
+    - app/Models/Basket.php
+    - database/seeders/BasketSeeder.php
+    - tests/Feature/Http/Controllers/BasketControllerTest.php
+    - app/Http/Requests/BasketStoreRequest.php
+    - app/Http/Requests/BasketUpdateRequest.php
+    - app/Http/Resources/BasketCollection.php
+    - app/Http/Resources/BasketResource.php
 updated:
     - routes/api.php
 models:
@@ -42,3 +42,4 @@ models:
     Order: { bot_id: 'id foreign:companies', user_id: 'id foreign:users', delivery_service_info: "json nullable comment:'Информация о сервисе доставки'", deliveryman_info: "json nullable comment:'Берется из внешнего доверенного сервиса'", product_details: "json nullable comment:'Дамп заказанных продуктов'", product_count: 'integer default:0', summary_price: 'double default:0', delivery_price: 'double default:0', delivery_range: 'double default:0', deliveryman_latitude: 'double default:0', deliveryman_longitude: 'double default:0', delivery_note: 'longtext nullable', receiver_name: 'string:255 nullable', receiver_phone: 'string:255 nullable', receiver_get_id: 'id foreign:geos', status: 'integer default:0', order_type: 'integer default:0', payed_at: 'timestamp nullable', relationships: { belongsTo: 'User, Geo, Bot' } }
     PaymentHistory: { amount: 'double default:0', user_id: 'id foreign:users', order_id: 'id foreign:orders' }
     Geo: { region: "string:255 nullable comment:'Регион'", city: "string:255 nullable comment:'Город'", district: "string:255 nullable comment:'Район'", address: "string:255 nullable comment:'Адрес'", landmark: "string:255 nullable comment:'Ориентир'", latitude: "string:50 nullable comment:'Широта'", longitude: "string:50 nullable comment:'Долгота'", user_id: 'id foreign:users', bot_id: 'id foreign:bots', deleted_at: 'timestamp nullable', relationships: { belongsTo: 'Bot, User' } }
+    Basket: { product_id: 'id foreign:products', count: 'integer default:1', bot_user_id: 'id foreign:bot_users', bot_id: 'id foreign:bots', ordered_at: 'timestamp nullable', relationships: { belongsTo: 'Bot, BotUser, Product' } }

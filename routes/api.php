@@ -93,3 +93,6 @@ Route::middleware([/*"auth:sanctum"*/])
  * locations - локации
  * orders - заказы
  */
+
+
+Route::apiResource('basket', App\Http\Controllers\BasketController::class);
