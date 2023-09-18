@@ -41,6 +41,18 @@ class SimpleShopScriptController extends SlugController
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
+                "slug" => "global_clear_basket",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Очистить корзину",
+                'comment' => "Скрипт очистки товаров в корзине",
+            ]);
+
+
+        $model = BotMenuSlug::query()->updateOrCreate(
+            [
                 "slug" => "global_simple_shop",
                 "bot_id" => $bot->id,
                 'is_global' => true,
@@ -96,16 +108,6 @@ class SimpleShopScriptController extends SlugController
                 'comment' => "Скрипт отображения категорий товаров",
             ]);
 
-        $model = BotMenuSlug::query()->updateOrCreate(
-            [
-                "slug" => "global_clear_basket",
-                "bot_id" => $bot->id,
-                'is_global' => true,
-            ],
-            [
-                'command' => ".*Очистить корзину",
-                'comment' => "Скрипт очистки товаров в корзине",
-            ]);
 
 
 
