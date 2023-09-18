@@ -184,7 +184,7 @@ class SimpleShopScriptController extends SlugController
                             ["text" => "👍Детали товара", "callback_data" => "/detail_global_product $product->id"],
                         ],
                         [
-                            ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/detail_global_product $product->id"],
+                            ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
                         ],
 
                     ]);
@@ -285,7 +285,7 @@ class SimpleShopScriptController extends SlugController
             foreach ($product->images as $image) {
 
                 $image = !strpos("http", $image) ? env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image : $image;
-
+                Log::info("step1=>".$image);
                 $media[] = [
                     "media" => $image,
                     "type" => "photo",
@@ -296,8 +296,14 @@ class SimpleShopScriptController extends SlugController
             BotManager::bot()->replyMediaGroup($media);
 
         } else if (count($product->images) === 1) {
+
+            $image = $product->images[0];
+
+            $image = !strpos("http", $image) ? env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image : $image;
+            Log::info("step2=>".$image);
+
             BotManager::bot()->replyPhoto("Изображение к товару",
-                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $product->images[0]));
+                InputFile::create($image));
         }
 
         BotManager::bot()
@@ -307,7 +313,7 @@ class SimpleShopScriptController extends SlugController
                 "Цена товара: $product->current_price ₽",
                 [
                     [
-                        ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/detail_global_product $product->id"],
+                        ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
                     ],
                 ]
             );
