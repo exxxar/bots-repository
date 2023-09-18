@@ -161,8 +161,6 @@ class SimpleShopScriptController extends SlugController
 
 
 
-        $hasProductCount = round($request
-                ->count() / (($page+1)*$count));
 
         $products = $request
             ->skip($page * $count)
@@ -188,9 +186,9 @@ class SimpleShopScriptController extends SlugController
 
         }
 
-        if ($hasProductCount-$page > 0)
+        if (count($products) >= $count)
             BotManager::bot()
-                ->replyInlineKeyboard("Еще осталось просмотреть <b>".($page+1)." из $hasProductCount страниц</b>",
+                ->replyInlineKeyboard("Текущая страница <b>".($page+1)."</b>",
                     [
                         [
                             ["text" => "👉Загрузить еще", "callback_data" =>
@@ -218,9 +216,6 @@ class SimpleShopScriptController extends SlugController
             ->take($count)
             ->get();
 
-        $hasCategoriesCount = round($request
-            ->count() / (($page+1)*$count));
-
         $keyboard = [];
         foreach ($categories as $category) {
             $keyboard[] =
@@ -229,7 +224,7 @@ class SimpleShopScriptController extends SlugController
                 ];
         }
 
-        if ($hasCategoriesCount - $page > 0)
+        if (count($categories) >= $count)
             $keyboard[] = [
                 ["text" => "👉Загрузить еще", "callback_data" => "/next_category_products " . ($page + 1)],
             ];
@@ -237,7 +232,7 @@ class SimpleShopScriptController extends SlugController
         BotManager::bot()
             ->sendPhoto(
                 $botUser->telegram_chat_id,
-                "Категории товаров, страница ".($page+1)." из  ".$hasCategoriesCount,
+                "Категории товаров, страница <b>".($page+1)."</b>",
                 InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
                 $keyboard
             );
