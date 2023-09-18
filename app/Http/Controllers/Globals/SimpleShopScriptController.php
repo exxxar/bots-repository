@@ -184,7 +184,7 @@ class SimpleShopScriptController extends SlugController
                             ["text" => "👍Детали товара", "callback_data" => "/detail_global_product $product->id"],
                         ],
                         [
-                            ["text" => "🛒Добавить в корзину", "callback_data" => "/detail_global_product $product->id"],
+                            ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/detail_global_product $product->id"],
                         ],
 
                     ]);
@@ -286,7 +286,7 @@ class SimpleShopScriptController extends SlugController
                 $media[] = [
                     "media" => env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image,
                     "type" => "photo",
-                    "caption" => env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image
+                    "caption" => $image
                 ];
             }
 
@@ -298,13 +298,11 @@ class SimpleShopScriptController extends SlugController
         }
 
         BotManager::bot()
-            ->reply(`<b>$product->title</b>
+            ->reply("<b>$product->title</b>
 
-$product->description
-Старая цена: $product->old_price руб
-Цена товара: $product->current_price руб
-
-`);
+                $product->description
+                Старая цена: $product->old_price руб
+                Цена товара: $product->current_price руб");
 
     }
 
