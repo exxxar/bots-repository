@@ -157,7 +157,6 @@ class SimpleShopScriptController extends SlugController
         if (!is_null($categoryId))
             $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
                 $q->where("product_category_id", $categoryId);
-
             });
 
 
@@ -279,8 +278,9 @@ class SimpleShopScriptController extends SlugController
     public function productsInCategory(...$data)
     {
         $categoryId = $data[3] ?? null;
+        $pageId = $data[4] ?? null;
         BotManager::bot()->reply("category id=$categoryId");
-        $this->productsPage(0, 5, $categoryId);
+        $this->productsPage($pageId, 5, $categoryId);
     }
 
     public function basket(...$config)
