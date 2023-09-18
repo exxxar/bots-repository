@@ -43,7 +43,7 @@ class SimpleShopScriptController extends SlugController
                 'is_global' => true,
             ],
             [
-                'command' => ".*Магазин товаров",
+                'command' => ".*Упрощенный магазин товаров",
                 'comment' => "Модуль вывода товаров в ТГ-бот, включая корзину и детали о товаре",
             ]);
 
@@ -60,6 +60,14 @@ class SimpleShopScriptController extends SlugController
                 "value" => "Меню продукции",
 
             ],
+
+            [
+                "type" => "text",
+                "key" => "shop_welcome_message",
+                "value" => "Приветствуем вас, %s, в нашем магазине товаров!",
+
+            ],
+
             [
                 "type" => "channel",
                 "key" => "callback_channel_id",
@@ -83,6 +91,17 @@ class SimpleShopScriptController extends SlugController
             [
                 'command' => ".*Категории товаров",
                 'comment' => "Скрипт отображения категорий товаров",
+            ]);
+
+        $model = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_products_menu",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Наши товары",
+                'comment' => "Скрипт отображения списка товаров",
             ]);
 
         $model = BotMenuSlug::query()->updateOrCreate(
@@ -172,9 +191,7 @@ class SimpleShopScriptController extends SlugController
               );
     }
 
-    public function main(...$config)
-    {
-
+    public function products(...$config){
         $bot = BotManager::bot()->getSelf();
 
         $botUser = BotManager::bot()->currentBotUser();
@@ -182,10 +199,6 @@ class SimpleShopScriptController extends SlugController
         $count = (Collection::make($config[1])
             ->where("key", "products_per_page")
             ->first())["value"] ?? 10;
-
-        $title = (Collection::make($config[1])
-            ->where("key", "shop_title")
-            ->first())["value"] ?? "Меню";
 
         $products = Product::query()
             ->where("bot_id", $bot->id)
@@ -210,6 +223,35 @@ class SimpleShopScriptController extends SlugController
                     ]);
 
         }
+    }
+
+    public function main(...$config)
+    {
+
+        $bot = BotManager::bot()->getSelf();
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $name = BotMethods::prepareUserName($botUser);
+
+        $count = (Collection::make($config[1])
+            ->where("key", "products_per_page")
+            ->first())["value"] ?? 10;
+
+        $title = (Collection::make($config[1])
+            ->where("key", "shop_title")
+            ->first())["value"] ?? "Меню";
+
+        $welcome = (Collection::make($config[1])
+            ->where("key", "shop_welcome_message")
+            ->first())["value"] ?? "%s";
+
+        BotManager::bot()
+            ->sendPhoto(
+                $botUser->telegram_chat_id,
+                sprintf($welcome, $name),
+                InputFile::create(public_path() . "/images/shopify.png")
+                );
 
         $productInCart = 0;
         $menu = BotMenuTemplate::query()
@@ -229,7 +271,7 @@ class SimpleShopScriptController extends SlugController
                             ["text" => "🥂Категории товаров"],
                         ],
                         [
-                            ["text" => "🌭Магазин товаров"],
+                            ["text" => "🌭Наши товары"],
                         ],
                         [
                             ["text" => "🕖История покупок"],

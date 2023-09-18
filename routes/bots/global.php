@@ -50,6 +50,7 @@ BotManager::bot()
     ->slug("global_simple_shop", "main")
     ->slug("global_products_categories", "categories")
     ->slug("global_order_history", "orders")
+    ->slug("global_products_menu", "products")
     ->slug("global_product_basket", "basket");
 
 
