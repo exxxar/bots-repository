@@ -43,7 +43,7 @@ class SimpleShopScriptController extends SlugController
                 'is_global' => true,
             ],
             [
-                'command' => ".*Упрощенный магазин товаров",
+                'command' => ".*Магазин товаров",
                 'comment' => "Модуль вывода товаров в ТГ-бот, включая корзину и детали о товаре",
             ]);
 
