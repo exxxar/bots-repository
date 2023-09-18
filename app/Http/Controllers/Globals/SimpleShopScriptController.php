@@ -254,18 +254,21 @@ class SimpleShopScriptController extends SlugController
     public function nextProductPage(...$data)
     {
         $page = $data[3] ?? 0;
+        BotManager::bot()->reply("nextProductPage page=$page");
         $this->productsPage($page);
     }
 
     public function nextCategories(...$data)
     {
         $page = $data[3] ?? 0;
+        BotManager::bot()->reply("nextCategories page=$page");
         $this->categoriesPage($page);
     }
 
     public function detailProduct(...$data)
     {
-        BotManager::bot()->reply(print_r($data[3], true));
+        $productId = $data[3] ?? null;
+        BotManager::bot()->reply("detailProduct id=$productId");
         BotManager::bot()->reply("Детали товара");
     }
 
@@ -285,6 +288,7 @@ class SimpleShopScriptController extends SlugController
     public function productsInCategory(...$data)
     {
         $categoryId = $data[3] ?? null;
+        BotManager::bot()->reply("category id=$categoryId");
         $this->productsPage(0, 5, $categoryId);
     }
 
