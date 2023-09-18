@@ -175,20 +175,36 @@ class SimpleShopScriptController extends SlugController
         }
 
         foreach ($products as $product) {
+
+            $basket = Basket::query()
+                ->where("product_id", $product->id)
+                ->where("bot_id", $bot->id)
+                ->where("bot_user_id", $botUser->id)
+                ->first();
+
+            if (is_null($basket))
+
+                $keyboard = [
+                    [
+                        ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
+                    ],
+                ];
+            else
+                $keyboard = [
+                    [
+                        ["text" => "🛒Добавить еще в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
+                    ],
+                    [
+                        ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
+                    ],
+                ];
+
             BotManager::bot()
                 ->sendPhoto(
                     $botUser->telegram_chat_id,
                     $product->title,
                     InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
-                    [
-                        [
-                            ["text" => "👍Детали товара", "callback_data" => "/detail_global_product $product->id"],
-                        ],
-                        [
-                            ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
-                        ],
-
-                    ]);
+                    $keyboard);
 
         }
 
@@ -268,6 +284,7 @@ class SimpleShopScriptController extends SlugController
     public function detailProduct(...$data)
     {
         $bot = BotManager::bot()->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
 
         $productId = $data[3] ?? null;
 
@@ -306,16 +323,36 @@ class SimpleShopScriptController extends SlugController
                 InputFile::create($image));
         }
 
+        $basket = Basket::query()
+            ->where("product_id", $productId)
+            ->where("bot_id", $bot->id)
+            ->where("bot_user_id", $botUser->id)
+            ->first();
+
+        if (is_null($basket))
+
+            $keyboard = [
+                [
+                    ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
+                ],
+            ];
+        else
+            $keyboard = [
+                [
+                    ["text" => "🛒Добавить еще в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
+                ],
+                [
+                    ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
+                ],
+            ];
+
+
         BotManager::bot()
             ->replyInlineKeyboard("<b>$product->title</b>\n" .
                 "$product->description\n" .
                 "Старая цена: $product->old_price ₽\n" .
                 "Цена товара: $product->current_price ₽",
-                [
-                    [
-                        ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
-                    ],
-                ]
+                $keyboard
             );
 
 
@@ -326,6 +363,57 @@ class SimpleShopScriptController extends SlugController
         $bot = BotManager::bot()->getSelf();
 
         BotManager::bot()->reply("История заказов");
+    }
+
+    public function removeFromBasket(...$data)
+    {
+        $productId = $data[3] ?? null;
+
+        if (is_null($productId)) {
+            BotManager::bot()->reply("Упс... что-то пошло не так...");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $product = Product::query()
+            ->where("bot_id", $bot->id)
+            ->where("id", $productId)
+            ->first();
+
+        if (is_null($product)) {
+            BotManager::bot()->reply("Упс... товар не наден...");
+            return;
+        }
+
+        $productInBasket = Basket::query()
+            ->where("product_id", $product->id)
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->whereNull("ordered_at")
+            ->first();
+
+        if (is_null($productInBasket)) {
+            $title = $product->title;
+            BotManager::bot()->reply("Товар $title уже удален из корзины");
+            return;
+        }
+
+        if ($productInBasket->count - 1 > 0) {
+            $productInBasket->count--;
+            $productInBasket->save();
+
+            $title = $productInBasket->product->title;
+            $price = $productInBasket->count * $productInBasket->product->current_price;
+
+            BotManager::bot()->reply("Товар $title убран из корзины. Осталось $productInBasket->count. Цена товара $price ₽");
+            return;
+        }
+
+        $title = $productInBasket->product->title;
+        $productInBasket->delete();
+        BotManager::bot()->reply("Товар $title успешно удален из корзины.");
     }
 
     public function addToBasket(...$data)
@@ -365,17 +453,18 @@ class SimpleShopScriptController extends SlugController
                 'bot_id' => $bot->id,
                 'ordered_at' => null,
             ]);
-            $price = $productInBasket->count * $productInBasket->current_price;
-            BotManager::bot()->reply("Товар $productInBasket->title добавлен в корзину. Цена товара $price ₽");
+            $title = $productInBasket->product->title;
+            $price = $productInBasket->count * $productInBasket->product->current_price;
+            BotManager::bot()->reply("Товар $title добавлен в корзину. Цена товара $price ₽");
         } else {
             $productInBasket->count++;
             $productInBasket->save();
 
-            $price = $productInBasket->count * $productInBasket->current_price;
+            $price = $productInBasket->count * $productInBasket->product->current_price;
 
-            BotManager::bot()->reply("Товар $productInBasket->title добавлен в корзину в колличестве $productInBasket->count. Цена товара $price ₽");
+            $title = $productInBasket->product->title;
+            BotManager::bot()->reply("Товар $title добавлен в корзину в колличестве $productInBasket->count. Цена товара $price ₽");
         }
-
 
 
     }
