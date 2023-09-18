@@ -238,7 +238,7 @@ class SimpleShopScriptController extends SlugController
 
         if ($hasCategoriesCount > 0)
             $keyboard[] = [
-                ["text" => "👉Загрузить еще", "callback_data" => "/next_global_products " . ($page + 1)],
+                ["text" => "👉Загрузить еще", "callback_data" => "/next_category_products " . ($page + 1)],
             ];
 
         BotManager::bot()
@@ -257,6 +257,10 @@ class SimpleShopScriptController extends SlugController
 
         BotManager::bot()->reply(print_r($data[3], true));
         BotManager::bot()->reply("Следующая страница товаров");
+
+    }
+
+    public function nextCategories(...$data){
 
     }
 
