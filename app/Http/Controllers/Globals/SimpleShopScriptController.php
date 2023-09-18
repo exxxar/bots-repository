@@ -152,7 +152,8 @@ class SimpleShopScriptController extends SlugController
         $botUser = BotManager::bot()->currentBotUser();
 
         $request = Product::query()
-            ->where("bot_id", $bot->id);
+            ->where("bot_id", $bot->id)
+            ->where("in_stop_list_at", false);
 
         if (!is_null($categoryId))
             $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
@@ -160,13 +161,17 @@ class SimpleShopScriptController extends SlugController
             });
 
 
-
-
         $products = $request
             ->skip($page * $count)
             ->take($count)
             ->get();
 
+
+        if (count($products)==0){
+            BotManager::bot()
+                ->reply("Упс... Товара то нет:(");
+            return;
+        }
 
         foreach ($products as $product) {
             BotManager::bot()
@@ -188,11 +193,11 @@ class SimpleShopScriptController extends SlugController
 
         if (count($products) >= $count)
             BotManager::bot()
-                ->replyInlineKeyboard("Текущая страница <b>".($page+1)."</b>",
+                ->replyInlineKeyboard("Текущая страница <b>" . ($page + 1) . "</b>",
                     [
                         [
                             ["text" => "👉Загрузить еще", "callback_data" =>
-                                is_null($categoryId)?"/next_global_products " . ($page + 1):"/category_products $categoryId " . ($page + 1)
+                                is_null($categoryId) ? "/next_global_products " . ($page + 1) : "/category_products $categoryId " . ($page + 1)
                             ],
                         ],
 
@@ -216,6 +221,13 @@ class SimpleShopScriptController extends SlugController
             ->take($count)
             ->get();
 
+        if (count($categories)==0){
+            BotManager::bot()
+                ->reply("Упс... Категорий то нет:(");
+            return;
+        }
+
+
         $keyboard = [];
         foreach ($categories as $category) {
             $keyboard[] =
@@ -232,7 +244,7 @@ class SimpleShopScriptController extends SlugController
         BotManager::bot()
             ->sendPhoto(
                 $botUser->telegram_chat_id,
-                "Категории товаров, страница <b>".($page+1)."</b>",
+                "Категории товаров, страница <b>" . ($page + 1) . "</b>",
                 InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
                 $keyboard
             );
@@ -254,9 +266,46 @@ class SimpleShopScriptController extends SlugController
 
     public function detailProduct(...$data)
     {
+        $bot = BotManager::bot()->getSelf();
+
         $productId = $data[3] ?? null;
-        BotManager::bot()->reply("detailProduct id=$productId");
-        BotManager::bot()->reply("Детали товара");
+
+        $product = Product::query()
+            ->where("id", $productId)
+            ->first();
+
+        if (is_null($product)) {
+            BotManager::bot()->reply("Упс... Продукт не найден");
+            return;
+        }
+
+        if (count($product->images) > 1) {
+            $media = [];
+
+            foreach ($product->images as $image) {
+                $media[] = [
+                    "media" => env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image,
+                    "type" => "photo",
+                    "caption" => env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image
+                ];
+            }
+
+            BotManager::bot()->replyMediaGroup($media);
+
+        } else if (count($product->images) === 1) {
+            BotManager::bot()->replyPhoto("Изображение к товару",
+                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $product->images[0]));
+        }
+
+        BotManager::bot()
+            ->reply(`<b>$product->title</b>
+
+$product->description
+Старая цена: $product->old_price руб
+Цена товара: $product->current_price руб
+
+`);
+
     }
 
     public function orders(...$config)
@@ -268,7 +317,6 @@ class SimpleShopScriptController extends SlugController
 
     public function addToBasket(...$data)
     {
-        BotManager::bot()->reply(print_r($data[3], true));
         BotManager::bot()->reply("Добавить в корзину");
     }
 
@@ -276,7 +324,6 @@ class SimpleShopScriptController extends SlugController
     {
         $categoryId = $data[3] ?? null;
         $pageId = $data[4] ?? null;
-        BotManager::bot()->reply("category id=$categoryId");
         $this->productsPage($pageId, 5, $categoryId);
     }
 
