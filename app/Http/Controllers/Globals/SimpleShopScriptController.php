@@ -224,11 +224,18 @@ class SimpleShopScriptController extends SlugController
 
                 $keyboard = [
                     [
+                        ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
+                    ],
+                    [
+
                         ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
                     ],
                 ];
             else
                 $keyboard = [
+                    [
+                        ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
+                    ],
                     [
                         ["text" => "🛒Добавить еще в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
                     ],
