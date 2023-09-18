@@ -487,7 +487,7 @@ class SimpleShopScriptController extends SlugController
         $productInCart = Basket::query()
             ->where("bot_id", $bot->id)
             ->where("bot_user_id", $botUser->id)
-            ->count() ?? 0;
+            ->sum("count") ?? 0;
 
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
@@ -591,7 +591,7 @@ class SimpleShopScriptController extends SlugController
             BotManager::bot()
                 ->sendPhoto(
                     $botUser->telegram_chat_id,
-                    $product->title."($count ед.)",
+                    $product->title." ($count ед.)",
                     InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
                     $keyboard);
         }
