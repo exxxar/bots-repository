@@ -153,7 +153,7 @@ class SimpleShopScriptController extends SlugController
 
         $request = Product::query()
             ->where("bot_id", $bot->id);
-            //->where("in_stop_list_at", false);
+        //->where("in_stop_list_at", false);
 
         if (!is_null($categoryId))
             $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
@@ -167,7 +167,7 @@ class SimpleShopScriptController extends SlugController
             ->get();
 
 
-        if (count($products)==0){
+        if (count($products) == 0) {
             BotManager::bot()
                 ->reply("Упс... Товара то нет:(");
             return;
@@ -221,7 +221,7 @@ class SimpleShopScriptController extends SlugController
             ->take($count)
             ->get();
 
-        if (count($categories)==0){
+        if (count($categories) == 0) {
             BotManager::bot()
                 ->reply("Упс... Категорий то нет:(");
             return;
@@ -283,8 +283,11 @@ class SimpleShopScriptController extends SlugController
             $media = [];
 
             foreach ($product->images as $image) {
+
+                $image = !strpos("http", $image) ? env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image : $image;
+
                 $media[] = [
-                    "media" => env("APP_URL") . "/images/" . $bot->company->slug . "/" . $image,
+                    "media" => $image,
                     "type" => "photo",
                     "caption" => $image
                 ];
@@ -298,11 +301,17 @@ class SimpleShopScriptController extends SlugController
         }
 
         BotManager::bot()
-            ->reply("<b>$product->title</b>
+            ->replyInlineKeyboard("<b>$product->title</b>\n" .
+                "$product->description\n" .
+                "Старая цена: $product->old_price ₽\n" .
+                "Цена товара: $product->current_price ₽",
+                [
+                    [
+                        ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/detail_global_product $product->id"],
+                    ],
+                ]
+            );
 
-                $product->description
-                Старая цена: $product->old_price руб
-                Цена товара: $product->current_price руб");
 
     }
 
