@@ -155,14 +155,16 @@ class SimpleShopScriptController extends SlugController
        /*     ->with(["productCategories"=>function ($q) use ($categoryId) {
                 $q->where("product_category_id", $categoryId);
             }])*/
-            ->where("bot_id", $bot->id)
-            ->skip($page * $count);
+            ->where("bot_id", $bot->id);
+
+
 
 
             $hasProductCount = $request
                 ->count();
 
             $products = $request
+                ->skip($page * $count)
                 ->take($count)
                 ->get();
 
