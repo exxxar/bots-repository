@@ -155,9 +155,10 @@ class SimpleShopScriptController extends SlugController
             ->where("bot_id", $bot->id);
 
         if (!is_null($categoryId))
-            $request = $request->with(["productCategories" => function ($q) use ($categoryId) {
+            $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
                 $q->where("product_category_id", $categoryId);
-            }]);
+
+            });
 
 
         $hasProductCount = $request
@@ -189,7 +190,7 @@ class SimpleShopScriptController extends SlugController
 
         if ($hasProductCount > 0)
             BotManager::bot()
-                ->replyInlineKeyboard("Еще осталось просмотреть <b>$hasProductCount шт. товаров</b>",
+                ->replyInlineKeyboard("Еще осталось просмотреть <b>".($hasProductCount/$count - $page)." страниц</b>",
                     [
                         [
                             ["text" => "👉Загрузить еще", "callback_data" => "/next_global_products " . ($page + 1)],
