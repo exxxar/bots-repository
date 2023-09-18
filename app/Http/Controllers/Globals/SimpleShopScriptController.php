@@ -577,9 +577,11 @@ class SimpleShopScriptController extends SlugController
 
             $product =  $basket->product;
 
+            $count = $basket->count ?? 0;
+
             $keyboard = [
                 [
-                    ["text" => "🛒Добавить $product->current_price еще в корзину ₽", "callback_data" => "/add_to_basket $product->id"],
+                    ["text" => "🛒Добавить $product->current_price ₽ еще в корзину ", "callback_data" => "/add_to_basket $product->id"],
                 ],
                 [
                     ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
@@ -589,7 +591,7 @@ class SimpleShopScriptController extends SlugController
             BotManager::bot()
                 ->sendPhoto(
                     $botUser->telegram_chat_id,
-                    $product->title,
+                    $product->title."($count ед.)",
                     InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
                     $keyboard);
         }
