@@ -152,8 +152,8 @@ class SimpleShopScriptController extends SlugController
         $botUser = BotManager::bot()->currentBotUser();
 
         $request = Product::query()
-            ->where("bot_id", $bot->id)
-            ->where("in_stop_list_at", false);
+            ->where("bot_id", $bot->id);
+            //->where("in_stop_list_at", false);
 
         if (!is_null($categoryId))
             $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
