@@ -93,6 +93,21 @@ class SimpleShopScriptController extends SlugController
                 'comment' => "Скрипт отображения категорий товаров",
             ]);
 
+
+        $params = [
+            [
+                "type" => "text",
+                "key" => "categories_per_page",
+                "value" => 5,
+
+            ],
+        ];
+
+        if (count($model->config ?? []) < count($params)) {
+            $model->config = $params;
+            $model->save();
+        }
+
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_products_menu",
@@ -130,13 +145,124 @@ class SimpleShopScriptController extends SlugController
     }
 
 
-    public function nextProductPage()
+    private function productsPage($page = 0, $count = 5, $categoryId = null)
     {
-        BotManager::bot()->reply("Следующая страница товаров");
+
+        $bot = BotManager::bot()->getSelf();
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $request = Product::query()
+            ->with(["productCategories"])
+            ->where("bot_id", $bot->id)
+            ->skip($page * $count);
+
+        if (!is_null($categoryId)) {
+            $hasProductCount = $request
+                ->whereHas("productCategories", function ($q) use ($categoryId) {
+                    $q->where("id", $categoryId);
+                })
+                ->count();
+
+            $products = $request
+                ->whereHas("productCategories", function ($q) use ($categoryId) {
+                    $q->where("id", $categoryId);
+                })
+                ->take($count)
+                ->get();
+        } else {
+            $hasProductCount = $request
+                ->count();
+
+            $products = $request
+                ->take($count)
+                ->get();
+        }
+
+
+        foreach ($products as $product) {
+            BotManager::bot()
+                ->sendPhoto(
+                    $botUser->telegram_chat_id,
+                    $product->title,
+                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                    [
+                        [
+                            ["text" => "👍Детали товара", "callback_data" => "/detail_global_product $product->id"],
+                        ],
+                        [
+                            ["text" => "🛒Добавить в корзину", "callback_data" => "/detail_global_product $product->id"],
+                        ],
+
+                    ]);
+
+        }
+
+        if ($hasProductCount > 0)
+            BotManager::bot()
+                ->replyKeyboard("Еще осталось просмотреть <b>$hasProductCount шт. товаров</b>",
+                    [
+                        [
+                            ["text" => "👉Загрузить еще", "callback_data" => "/next_global_products " . ($page + 1)],
+                        ],
+
+                    ]);
     }
 
-    public function detailProduct()
+    private function categoriesPage($page = 0, $count = 5)
     {
+
+        $bot = BotManager::bot()->getSelf();
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $request = ProductCategory::query()
+            ->where("bot_id", $bot->id)
+            ->whereHas("products")
+            ->skip($page * $count);
+
+        $categories = $request
+            ->take($count)
+            ->get();
+
+        $hasCategoriesCount = $request
+            ->count();
+
+        $keyboard = [];
+        foreach ($categories as $category) {
+            $keyboard[] =
+                [
+                    ["text" => "$category->title ($category->count шт.)", "callback_data" => "/category_products $category->id"],
+                ];
+        }
+
+        if ($hasCategoriesCount > 0)
+            $keyboard[] = [
+                ["text" => "👉Загрузить еще", "callback_data" => "/next_global_products " . ($page + 1)],
+            ];
+
+        BotManager::bot()
+            ->sendPhoto(
+                $botUser->telegram_chat_id,
+                "Категории товаров",
+                InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                $keyboard
+            );
+
+
+    }
+
+    public function nextProductPage(...$data)
+    {
+
+        BotManager::bot()->reply(print_r($data[3], true));
+        BotManager::bot()->reply("Следующая страница товаров");
+
+    }
+
+    public function detailProduct(...$data)
+    {
+        BotManager::bot()->reply(print_r($data[3], true));
         BotManager::bot()->reply("Детали товара");
     }
 
@@ -147,13 +273,17 @@ class SimpleShopScriptController extends SlugController
         BotManager::bot()->reply("История заказов");
     }
 
-    public function addToBasket()
+    public function addToBasket(...$data)
     {
+        BotManager::bot()->reply(print_r($data[3], true));
         BotManager::bot()->reply("Добавить в корзину");
     }
 
-    public function productsInCategory(){
+    public function productsInCategory(...$data)
+    {
+        BotManager::bot()->reply(print_r($data[3], true));
         BotManager::bot()->reply("Товары в категории");
+        $this->productsPage(0, 5);
     }
 
     public function basket(...$config)
@@ -194,64 +324,17 @@ class SimpleShopScriptController extends SlugController
 
     public function categories(...$config)
     {
-        $bot = BotManager::bot()->getSelf();
-
-        $botUser = BotManager::bot()->currentBotUser();
-
-        $categories = ProductCategory::query()
-            ->where("bot_id", $bot->id)
-            ->whereHas("products")
-            ->get();
-
-        $keyboard = [];
-        foreach ($categories as $category) {
-            $keyboard[] =
-                [
-                    ["text" => "$category->title ($category->count шт.)", "callback_data" => "/category_products $category->id"],
-                ];
-        }
-
-        BotManager::bot()
-            ->sendPhoto(
-                $botUser->telegram_chat_id,
-                "Категории товаров",
-                InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
-                $keyboard
-              );
+        $this->categoriesPage(0, 5);
     }
 
-    public function products(...$config){
-        $bot = BotManager::bot()->getSelf();
-
-        $botUser = BotManager::bot()->currentBotUser();
+    public function products(...$config)
+    {
 
         $count = (Collection::make($config[1])
             ->where("key", "products_per_page")
             ->first())["value"] ?? 10;
 
-        $products = Product::query()
-            ->where("bot_id", $bot->id)
-            ->take($count)
-            ->skip(0)
-            ->get();
-
-        foreach ($products as $product) {
-            BotManager::bot()
-                ->sendPhoto(
-                    $botUser->telegram_chat_id,
-                    $product->title,
-                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
-                    [
-                        [
-                            ["text" => "👍Детали товара", "callback_data" => "/detail_global_product $product->id"],
-                        ],
-                        [
-                            ["text" => "🛒Добавить в корзину", "callback_data" => "/detail_global_product $product->id"],
-                        ],
-
-                    ]);
-
-        }
+        $this->productsPage(0, $count);
     }
 
     public function main(...$config)
@@ -280,7 +363,7 @@ class SimpleShopScriptController extends SlugController
                 $botUser->telegram_chat_id,
                 sprintf($welcome, $name),
                 InputFile::create(public_path() . "/images/shopify.png")
-                );
+            );
 
         $productInCart = 0;
         $menu = BotMenuTemplate::query()
