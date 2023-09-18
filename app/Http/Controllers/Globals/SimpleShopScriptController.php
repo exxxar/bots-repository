@@ -220,7 +220,7 @@ class SimpleShopScriptController extends SlugController
         foreach ($categories as $category) {
             $keyboard[] =
                 [
-                    ["text" => "$category->title ($category->count шт.)", "callback_data" => "/category_products $category->id"],
+                    ["text" => "$category->title ($category->count шт.)", "callback_data" => "/category_products $category->id 0"],
                 ];
         }
 
