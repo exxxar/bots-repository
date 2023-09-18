@@ -152,31 +152,20 @@ class SimpleShopScriptController extends SlugController
         $botUser = BotManager::bot()->currentBotUser();
 
         $request = Product::query()
-            ->with(["productCategories"])
+            ->with(["productCategories"=>function ($q) use ($categoryId) {
+                $q->where("category_id", $categoryId);
+            }])
             ->where("bot_id", $bot->id)
             ->skip($page * $count);
 
-        if (!is_null($categoryId)) {
-            $hasProductCount = $request
-                ->whereHas("productCategories", function ($q) use ($categoryId) {
-                    $q->where("category_id", $categoryId);
-                })
-                ->count();
 
-            $products = $request
-                ->whereHas("productCategories", function ($q) use ($categoryId) {
-                    $q->where("category_id", $categoryId);
-                })
-                ->take($count)
-                ->get();
-        } else {
             $hasProductCount = $request
                 ->count();
 
             $products = $request
                 ->take($count)
                 ->get();
-        }
+
 
 
         foreach ($products as $product) {
