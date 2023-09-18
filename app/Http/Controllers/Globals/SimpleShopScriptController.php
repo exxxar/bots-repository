@@ -332,7 +332,8 @@ class SimpleShopScriptController extends SlugController
         $botUser = BotManager::bot()->currentBotUser();
 
 
-        $messageId = BotManager::bot()->getLastMessageId();
+        $messageId = $botUser->temporary["message_id"] ?? null;
+
         Log::info("message id = $messageId");
 
         BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId, [
