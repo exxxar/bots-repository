@@ -159,13 +159,13 @@ class SimpleShopScriptController extends SlugController
         if (!is_null($categoryId)) {
             $hasProductCount = $request
                 ->whereHas("productCategories", function ($q) use ($categoryId) {
-                    $q->where("id", $categoryId);
+                    $q->where("category_id", $categoryId);
                 })
                 ->count();
 
             $products = $request
                 ->whereHas("productCategories", function ($q) use ($categoryId) {
-                    $q->where("id", $categoryId);
+                    $q->where("category_id", $categoryId);
                 })
                 ->take($count)
                 ->get();
