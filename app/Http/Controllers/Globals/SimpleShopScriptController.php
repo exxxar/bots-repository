@@ -160,7 +160,36 @@ class SimpleShopScriptController extends SlugController
     {
         $bot = BotManager::bot()->getSelf();
 
-        BotManager::bot()->reply("Корзина");
+        $menu = BotMenuTemplate::query()
+            ->updateOrCreate(
+                [
+                    'bot_id' => $bot->id,
+                    'type' => 'reply',
+                    'slug' => "menu_basket",
+
+                ],
+                [
+                    'menu' => [
+
+                        [
+                            ["text" => "📜Товары в корзине"],
+                        ],
+                        [
+                            ["text" => "💶Оформление заказа"],
+                        ],
+                        [
+                            ["text" => "🌟Магазин товаров"],
+                        ],
+                        [
+                            ["text" => "🔥Главное меню"],
+                        ],
+                    ],
+                ]);
+
+        \App\Facades\BotManager::bot()
+            ->replyKeyboard(
+                "Корзина товаров",
+                $menu->menu);
     }
 
     public function categories(...$config)
