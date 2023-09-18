@@ -255,7 +255,8 @@ trait BotBaseMethodsTrait
         }
 
         try {
-            $this->bot->sendMessage($tmp);
+            $data = $this->bot->sendMessage($tmp);
+            Log::info(print_r($data, true));
         } catch (\Exception $e) {
 
             unset($tmp['reply_markup']);
