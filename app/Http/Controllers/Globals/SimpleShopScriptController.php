@@ -133,6 +133,17 @@ class SimpleShopScriptController extends SlugController
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
+                "slug" => "global_products_in_basket",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Товары в корзине",
+                'comment' => "Вывод списка товаров в корзине",
+            ]);
+
+        $model = BotMenuSlug::query()->updateOrCreate(
+            [
                 "slug" => "global_order_history",
                 "bot_id" => $bot->id,
                 'is_global' => true,
@@ -523,6 +534,39 @@ class SimpleShopScriptController extends SlugController
                 $menu->menu);
     }
 
+    public function productsInBasket(...$config){
+        $bot = BotManager::bot()->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $baskets = Basket::query()
+            ->where("bot_id", $bot->id)
+            ->where("bot_user_id", $botUser->id)
+            ->get();
+
+        foreach ($baskets  as $basket) {
+
+            $product =  $basket->product;
+
+            $count = $basket->count ?? 0;
+
+            $keyboard = [
+                [
+                    ["text" => "🛒Добавить $product->current_price ₽ еще в корзину ", "callback_data" => "/add_to_basket $product->id"],
+                ],
+                [
+                    ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
+                ],
+            ];
+
+            BotManager::bot()
+                ->sendPhoto(
+                    $botUser->telegram_chat_id,
+                    $product->title." <b>($count ед.)</b>",
+                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                    $keyboard);
+        }
+    }
+
     public function basket(...$config)
     {
         $bot = BotManager::bot()->getSelf();
@@ -566,34 +610,6 @@ class SimpleShopScriptController extends SlugController
         foreach ($baskets as $basket) {
             $tmpSum += $basket->product->current_price * $basket->count;
             $tmpCount += $basket->count;
-        }
-
-        $baskets = Basket::query()
-            ->where("bot_id", $bot->id)
-            ->where("bot_user_id", $botUser->id)
-            ->get();
-
-        foreach ($baskets  as $basket) {
-
-            $product =  $basket->product;
-
-            $count = $basket->count ?? 0;
-
-            $keyboard = [
-                [
-                    ["text" => "🛒Добавить $product->current_price ₽ еще в корзину ", "callback_data" => "/add_to_basket $product->id"],
-                ],
-                [
-                    ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
-                ],
-            ];
-
-            BotManager::bot()
-                ->sendPhoto(
-                    $botUser->telegram_chat_id,
-                    $product->title." ($count ед.)",
-                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
-                    $keyboard);
         }
 
         \App\Facades\BotManager::bot()
