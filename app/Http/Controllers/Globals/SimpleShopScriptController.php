@@ -144,7 +144,6 @@ class SimpleShopScriptController extends SlugController
 
     }
 
-
     private function productsPage($page = 0, $count = 5, $categoryId = null)
     {
 
@@ -238,7 +237,7 @@ class SimpleShopScriptController extends SlugController
 
         if ($hasCategoriesCount > 0)
             $keyboard[] = [
-                ["text" => "👉Загрузить еще", "callback_data" => "/next_category_products " . ($page + 1)],
+                ["text" => "👉Загрузить еще " . min($hasCategoriesCount, $count), "callback_data" => "/next_category_products " . ($page + 1)],
             ];
 
         BotManager::bot()
@@ -254,14 +253,14 @@ class SimpleShopScriptController extends SlugController
 
     public function nextProductPage(...$data)
     {
-
-        BotManager::bot()->reply(print_r($data[3], true));
-        BotManager::bot()->reply("Следующая страница товаров");
-
+        $page = $data[3] ?? 0;
+        $this->productsPage($page);
     }
 
-    public function nextCategories(...$data){
-
+    public function nextCategories(...$data)
+    {
+        $page = $data[3] ?? 0;
+        $this->categoriesPage($page);
     }
 
     public function detailProduct(...$data)
@@ -285,9 +284,8 @@ class SimpleShopScriptController extends SlugController
 
     public function productsInCategory(...$data)
     {
-        BotManager::bot()->reply(print_r($data[3], true));
-        BotManager::bot()->reply("Товары в категории");
-        $this->productsPage(0, 5);
+        $categoryId = $data[3] ?? null;
+        $this->productsPage(0, 5, $categoryId);
     }
 
     public function basket(...$config)
