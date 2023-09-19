@@ -615,12 +615,14 @@ class SimpleShopScriptController extends SlugController
                     ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
                 ],
                 [
-                    ["text" => "🛒Добавить в корзину $product->current_price ₽ [$productInBasket->count] ", "callback_data" => "/add_to_basket $product->id"],
+                    ["text" => "🛒Добавить в корзину $product->current_price ₽ [x$productInBasket->count] ", "callback_data" => "/add_to_basket $product->id"],
                 ],
                 [
                     ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
                 ],
             ]);
+
+            $this->shopMenu();
             return;
         }
 
@@ -697,7 +699,7 @@ class SimpleShopScriptController extends SlugController
                 ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
             ],
             [
-                ["text" => "🛒Добавить в корзину $product->current_price ₽ [$productInBasket->count] ", "callback_data" => "/add_to_basket $product->id"],
+                ["text" => "🛒Добавить в корзину $product->current_price ₽ [x$productInBasket->count] ", "callback_data" => "/add_to_basket $product->id"],
             ],
             [
                 ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
