@@ -53,6 +53,11 @@ class CashBackScriptController extends SlugController
             ],
             [
                 "type" => "boolean",
+                "key" => "need_sex",
+                "value" => true,
+            ],
+            [
+                "type" => "boolean",
                 "key" => "need_age",
                 "value" => true,
             ],
@@ -379,6 +384,9 @@ class CashBackScriptController extends SlugController
                         ->first())["value"] ?? true,
                 'need_city' => (Collection::make($slug->config)
                         ->where("key", "need_city")
+                        ->first())["value"] ?? true,
+                'need_sex' => (Collection::make($slug->config)
+                        ->where("key", "need_sex")
                         ->first())["value"] ?? true,
             ]
         );

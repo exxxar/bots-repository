@@ -6,7 +6,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 </script>
 <template>
     <div v-if="botUser">
-        <div class="card card-style p-3" v-if="settings.display_type==0">
+        <div class="card card-style p-3" v-if="!botUser.is_vip&&settings.display_type==0">
             <form
                 v-on:submit.prevent="submit" class="row mb-0">
                 <div class="col-12 d-flex justify-content-center mb-3">
@@ -50,7 +50,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
                 </div>
 
-                <div class="col-12">
+                <div class="col-12" v-if="settings.need_sex">
                     <p class="mb-3"><em>Чтобы я мог обращаться к Вам правильно, скажи мне, какого Вы пол?</em></p>
                     <h6 class="text-center">Вы мужчина или женщина?</h6>
 
@@ -338,7 +338,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     </div>
 
                 </div>
-                <div class="col-12">
+                <div class="col-12" >
                     <p class="mb-3"><em>Отлично! Теперь, прежде чем продолжить, пожалуйста, прочитайте мои условия
                         использования и дайте свое согласие на их принятие.</em></p>
                     <h6 class="text-center">Последний шаг</h6>
@@ -417,6 +417,7 @@ export default {
                 need_birthday: true,
                 need_age: true,
                 need_city: true,
+                need_sex: true,
             },
             load: false,
             confirm: false,
@@ -493,10 +494,13 @@ export default {
                 this.loading = false
 
                 this.$nextTick(()=>{
-                    this.settings.display_type = resp.display_type || 0
+                    Object.keys(resp).forEach(item=>{
+                        this.settings[item] = resp[item]
+                    })
+              /*      this.settings.display_type = resp.display_type || 0
                     this.settings.need_birthday = resp.need_birthday
                     this.settings.need_age = resp.need_age
-                    this.settings.need_city = resp.need_city
+                    this.settings.need_city = resp.need_city*/
                 })
 
             }).catch(() => {
