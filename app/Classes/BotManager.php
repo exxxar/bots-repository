@@ -323,7 +323,6 @@ class BotManager extends BotCore
 
             $media = [];
             foreach ($images as $image) {
-
                 $media[] = [
                     "media" => env("APP_URL") . "/images-by-bot-id/" . $bot->id . "/" . $image,
                     "type" => "photo",
@@ -331,7 +330,14 @@ class BotManager extends BotCore
                 ];
             }
 
-            $this->replyMediaGroup($media);
+            try {
+                $this->replyMediaGroup($media);
+            } catch (\Exception $e){
+                $this->replyPhoto( null,
+                    InputFile::create( public_path() . "/images/cashman2.jpg")
+                );
+            }
+
 
 
             if (!empty($iMenu)) {
@@ -347,14 +353,15 @@ class BotManager extends BotCore
 
 
         } else if (count($images) === 1) {
-
-          /*  if (mb_strlen($content) >= 1024)
-                $this->reply($content);*/
-
-            $this->replyPhoto(/*mb_strlen($content) >= 1024 ? null : $content*/ null,
-                InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0])
-                /*$iMenu*/
-            );
+            try {
+                $this->replyPhoto( null,
+                    InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0])
+                );
+            } catch (\Exception $e){
+                $this->replyPhoto( null,
+                    InputFile::create( public_path() . "/images/cashman2.jpg")
+                );
+            }
 
         }
 
@@ -366,9 +373,9 @@ class BotManager extends BotCore
         if (!empty($replyKeyboard) && $needSendReplyMenu)
             $this->replyKeyboard($needContentInReply ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
-        if ($needContentInReply && empty($replyKeyboard)){
+        if ($needContentInReply && empty($replyKeyboard))
             $this->reply($content);
-        }
+
 
         if (!is_null($page->next_page_id)) {
             $next = BotPage::query()
