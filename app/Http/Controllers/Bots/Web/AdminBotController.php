@@ -335,7 +335,7 @@ class AdminBotController extends Controller
             "name" => "required",
             "phone" => "required",
            // "birthday" => "required",
-            "city" => "required",
+          //  "city" => "required",
             //"country" => "required",
             //"address" => "required",
             "sex" => "required",

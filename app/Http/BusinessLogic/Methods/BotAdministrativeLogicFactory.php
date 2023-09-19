@@ -179,19 +179,19 @@ class BotAdministrativeLogicFactory
 
         $date = Carbon::now()->format("Y-m-d H-i-s");
 
-        Excel::store(new BotStatisticExport($statistics),"$name.xls","public");
+        Excel::store(new BotStatisticExport($statistics), "$name.xls", "public");
 
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendDocument($this->botUser->telegram_chat_id,
                 "Общая статистика бота",
                 InputFile::create(
-                    storage_path("app/public")."/$name.xls",
+                    storage_path("app/public") . "/$name.xls",
                     "statistic-$date.xls"
                 )
             );
 
-        unlink(storage_path("app/public")."/$name.xls");
+        unlink(storage_path("app/public") . "/$name.xls");
     }
 
 
@@ -695,7 +695,7 @@ class BotAdministrativeLogicFactory
             "name" => "required",
             "phone" => "required",
             //"birthday" => "required",
-            "city" => "required",
+            //"city" => "required",
             "sex" => "required",
         ]);
 
@@ -730,7 +730,7 @@ class BotAdministrativeLogicFactory
                 ->orderBy("updated_at", "desc")
                 ->first();
 
-            if (!is_null($adminBotUser))
+            if (!is_null($adminBotUser) && $firstCashBackGranted > 0)
                 event(new CashBackEvent(
                     (int)$this->bot->id,
                     (int)$this->botUser->user_id,
@@ -781,9 +781,9 @@ class BotAdministrativeLogicFactory
         if (is_null($userBotUser))
             throw new HttpException(404, "Пользователь не найден!");
 
-      //  $userBotUser->user_in_location = true;
-       // $userBotUser->location_comment = $data["info"] ?? null;
-       // $userBotUser->save();
+        //  $userBotUser->user_in_location = true;
+        // $userBotUser->location_comment = $data["info"] ?? null;
+        // $userBotUser->save();
 
         $name = BotMethods::prepareUserName($userBotUser);
 
@@ -938,7 +938,7 @@ class BotAdministrativeLogicFactory
             throw new HttpException(403, "Не выполнены условия функции");
 
         $validator = Validator::make($data, [
-            "user_telegram_chat_id"=>"required"
+            "user_telegram_chat_id" => "required"
         ]);
 
         if ($validator->fails())
@@ -973,7 +973,7 @@ class BotAdministrativeLogicFactory
             throw new HttpException(403, "Не выполнены условия функции");
 
         $validator = Validator::make($data, [
-            "user_telegram_chat_id"=>"required"
+            "user_telegram_chat_id" => "required"
         ]);
 
         if ($validator->fails())
@@ -989,7 +989,6 @@ class BotAdministrativeLogicFactory
 
         return new BotUserResource($botUser);
     }
-
 
 
 }
