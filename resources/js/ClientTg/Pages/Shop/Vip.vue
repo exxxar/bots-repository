@@ -6,7 +6,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 </script>
 <template>
     <div v-if="botUser">
-        <div class="card card-style p-3" v-if="!botUser.is_vip&&settings.display_type===0">
+        <div class="card card-style p-3" v-if="!botUser.is_vip&&settings.display_type==0">
             <form
                 v-on:submit.prevent="submit" class="row mb-0">
                 <div class="col-12 d-flex justify-content-center mb-3">
@@ -144,7 +144,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
         </div>
 
-        <div class="card card-style p-3" v-if="!botUser.is_vip&&settings.display_type===1">
+        <div class="card card-style p-3" v-if="!botUser.is_vip&&settings.display_type==1">
             <form
                 v-if="step===0"
                 v-on:submit.prevent="nextStep" class="row mb-0">
