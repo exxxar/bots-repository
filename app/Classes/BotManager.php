@@ -348,21 +348,20 @@ class BotManager extends BotCore
 
         } else if (count($images) === 1) {
 
-            if (mb_strlen($content) >= 1024)
-                $this->reply($content);
+          /*  if (mb_strlen($content) >= 1024)
+                $this->reply($content);*/
 
-            $this->replyPhoto(mb_strlen($content) >= 1024 ? null : $content,
+            $this->replyPhoto(/*mb_strlen($content) >= 1024 ? null : $content*/ null,
                 InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0]),
                 $iMenu
             );
 
-        } else if (count($images) === 0) {
-
-            $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
-
-            if (!$needContentInReply)
-                $this->replyInlineKeyboard($content, $iMenu);
         }
+
+        $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
+
+        if (!$needContentInReply)
+            $this->replyInlineKeyboard($content, $iMenu);
 
         if (!empty($replyKeyboard) && $needSendReplyMenu)
             $this->replyKeyboard($needContentInReply ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
