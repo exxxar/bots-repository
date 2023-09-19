@@ -75,7 +75,9 @@ class SendContactScriptController extends SlugController
             ->where("key", "phone")
             ->first())["value"] ?? "+7(000)000-00-00";
 
-        Log::info(print_r($phone, true));
+        Log::info(print_r(Collection::make($config[1])
+            ->where("key", "phone")
+            ->first(), true));
         $firstName = (Collection::make($config[1])
             ->where("key", "first_name")
             ->first())["value"] ?? "Имя";
