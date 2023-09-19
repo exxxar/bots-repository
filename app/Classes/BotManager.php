@@ -86,7 +86,7 @@ class BotManager extends BotCore
                 $this->botUser = BotUser::query()->create([
                     'bot_id' => $this->getSelf()->id,
                     'user_id' => $existUserId ?? $user->id ?? null,
-                    'username' =>  $username,
+                    'username' => $username,
                     'is_vip' => false,
                     'is_admin' => false,
                     'is_work' => false,
@@ -287,7 +287,6 @@ class BotManager extends BotCore
         $replyKeyboard = $page->replyKeyboard ?? null;
 
 
-
         $iMenu = is_null($inlineKeyboard) ? [] : ($inlineKeyboard->menu ?? []);
         $rMenu = is_null($replyKeyboard) ? [] : ($replyKeyboard->menu ?? []);
 
@@ -335,16 +334,17 @@ class BotManager extends BotCore
             $this->replyMediaGroup($media);
 
 
-            if (!empty($iMenu)){
+            if (!empty($iMenu)) {
                 $this->replyInlineKeyboard($content, $iMenu);
                 $needContentInReply = false;
             }
 
 
-            if (!empty($rMenu))
+            if (!empty($rMenu)) {
                 $this->replyKeyboard($needContentInReply ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $needSendReplyMenu = false;
+            }
 
-            $needSendReplyMenu = false;
 
         } else if (count($images) === 1) {
 
@@ -357,11 +357,15 @@ class BotManager extends BotCore
             );
 
         } else if (count($images) === 0) {
-            $this->replyInlineKeyboard($content, $iMenu);
+
+            $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
+
+            if (!$needContentInReply)
+                $this->replyInlineKeyboard($content, $iMenu);
         }
 
         if (!empty($replyKeyboard) && $needSendReplyMenu)
-            $this->replyKeyboard($replyMenuTitle ?? 'Меню', $rMenu);
+            $this->replyKeyboard($needContentInReply ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
         if (!is_null($page->next_page_id)) {
             $next = BotPage::query()
