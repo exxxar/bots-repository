@@ -201,13 +201,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                                 </Popper>
                                 Команда
                             </div>
-                            <Popper>
-                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
-                                <template #content>
-                                    <div>Нужно
-                                    </div>
-                                </template>
-                            </Popper>
+
 
                         </label>
                         <input type="text" class="form-control"
@@ -215,7 +209,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                                aria-label="Заголовок нижнего меню"
                                v-model="pageForm.reply_keyboard_title"
                                maxlength="255"
-                               aria-describedby="bot-domain" required>
+                               aria-describedby="bot-domain">
                     </div>
 
                     <button class="btn mb-2 w-100" type="button"

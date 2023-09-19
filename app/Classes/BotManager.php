@@ -286,7 +286,7 @@ class BotManager extends BotCore
         $inlineKeyboard = $page->inlineKeyboard ?? null;
         $replyKeyboard = $page->replyKeyboard ?? null;
 
-        $replyMenuTitle = $page->reply_keyboard_title ?? "Меню страницы";
+
 
         $iMenu = is_null($inlineKeyboard) ? [] : ($inlineKeyboard->menu ?? []);
         $rMenu = is_null($replyKeyboard) ? [] : ($replyKeyboard->menu ?? []);
@@ -317,6 +317,7 @@ class BotManager extends BotCore
             $images = $page->images;
         }
 
+        $replyMenuTitle = $page->reply_keyboard_title ?? null;
 
         if (count($images) > 1) {
 
@@ -331,10 +332,16 @@ class BotManager extends BotCore
             }
 
             $this->replyMediaGroup($media);
-            $this->replyInlineKeyboard($content, $iMenu);
 
-            if (!empty($replyKeyboard))
-                $this->replyKeyboard($replyMenuTitle, $rMenu);
+            $needContentInReply = true;
+            if (!empty($iMenu)){
+                $this->replyInlineKeyboard($content, $iMenu);
+                $needContentInReply = false;
+            }
+
+
+            if (!empty($rMenu))
+                $this->replyKeyboard($needContentInReply ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             $needSendReplyMenu = false;
 

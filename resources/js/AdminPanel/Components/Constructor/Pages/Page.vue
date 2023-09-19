@@ -189,14 +189,14 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                                 </template>
                             </Popper>
                             Команда
-                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+<!--                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                         </label>
                         <input type="text" class="form-control"
                                placeholder="Заголовок меню"
                                aria-label="Заголовок меню"
                                v-model="pageForm.reply_keyboard_title"
                                maxlength="255"
-                               aria-describedby="bot-domain" required>
+                               aria-describedby="bot-domain">
                     </div>
 
 
