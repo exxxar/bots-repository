@@ -17,6 +17,7 @@ class BotPageResource extends JsonResource
             'slug' => $this->whenLoaded('slug'),
             'content' => $this->content ?? null,
             'images' => $this->images ?? null,
+            'reply_keyboard_title' => $this->reply_keyboard_title ?? null,
             'reply_keyboard_id' => $this->reply_keyboard_id ?? null,
             'replyKeyboard' => $this->whenLoaded('replyKeyboard'),
             'inline_keyboard_id' => $this->inline_keyboard_id ?? null,

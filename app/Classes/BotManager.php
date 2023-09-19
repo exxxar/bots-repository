@@ -286,6 +286,8 @@ class BotManager extends BotCore
         $inlineKeyboard = $page->inlineKeyboard ?? null;
         $replyKeyboard = $page->replyKeyboard ?? null;
 
+        $replyMenuTitle = $page->reply_keyboard_title ?? "Меню страницы";
+
         $iMenu = is_null($inlineKeyboard) ? [] : ($inlineKeyboard->menu ?? []);
         $rMenu = is_null($replyKeyboard) ? [] : ($replyKeyboard->menu ?? []);
 
@@ -332,7 +334,7 @@ class BotManager extends BotCore
             $this->replyInlineKeyboard($content, $iMenu);
 
             if (!empty($replyKeyboard))
-                $this->replyKeyboard("Меню страницы", $rMenu);
+                $this->replyKeyboard($replyMenuTitle, $rMenu);
 
             $needSendReplyMenu = false;
 
@@ -351,7 +353,7 @@ class BotManager extends BotCore
         }
 
         if (!empty($replyKeyboard) && $needSendReplyMenu)
-            $this->replyKeyboard("Меню страницы", $rMenu);
+            $this->replyKeyboard($replyMenuTitle, $rMenu);
 
         if (!is_null($page->next_page_id)) {
             $next = BotPage::query()

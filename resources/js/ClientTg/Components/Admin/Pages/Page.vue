@@ -187,6 +187,37 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
 
                     <h6>Конструктор нижнего меню</h6>
 
+
+
+                    <div class="mb-2">
+                        <label class="form-label d-flex justify-content-between mt-2" id="bot-domain">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div> Заголовок для отображения в нижнем меню
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Команда
+                            </div>
+                            <Popper>
+                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                <template #content>
+                                    <div>Нужно
+                                    </div>
+                                </template>
+                            </Popper>
+
+                        </label>
+                        <input type="text" class="form-control"
+                               placeholder="Заголовок нижнего меню"
+                               aria-label="Заголовок нижнего меню"
+                               v-model="pageForm.reply_keyboard_title"
+                               maxlength="255"
+                               aria-describedby="bot-domain" required>
+                    </div>
+
                     <button class="btn mb-2 w-100" type="button"
                             v-bind:class="{'btn-outline-primary':!showReplyTemplateSelector,'btn-primary':showReplyTemplateSelector}"
                             @click="showReplyTemplateSelector = !showReplyTemplateSelector"
@@ -389,6 +420,7 @@ export default {
                 comment: null,
 
                 images: [],
+                reply_keyboard_title: null,
                 reply_keyboard: null,
                 inline_keyboard: null,
 
@@ -498,6 +530,7 @@ export default {
                 slug: page.slug ? page.slug.slug : null,
                 comment: page.slug ? page.slug.comment : null,
                 images: page.images || [],
+                reply_keyboard_title: page.reply_keyboard_title || null,
                 reply_keyboard_id: page.reply_keyboard_id || null,
                 inline_keyboard_id: page.inline_keyboard_id || null,
                 reply_keyboard: page.replyKeyboard || null,
@@ -556,6 +589,7 @@ export default {
                 slug: null,
                 comment: null,
                 images: [],
+                reply_keyboard_title: null,
                 reply_keyboard: null,
                 inline_keyboard: null,
 

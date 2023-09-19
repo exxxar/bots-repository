@@ -179,6 +179,26 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 
                 <div class="card-body">
 
+                    <div class="col-12 mb-2">
+                        <label class="form-label" id="bot-domain">
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div> Заголовок для нижнего меню
+                                    </div>
+                                </template>
+                            </Popper>
+                            Команда
+                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        </label>
+                        <input type="text" class="form-control"
+                               placeholder="Заголовок меню"
+                               aria-label="Заголовок меню"
+                               v-model="pageForm.reply_keyboard_title"
+                               maxlength="255"
+                               aria-describedby="bot-domain" required>
+                    </div>
+
 
                     <KeyboardList
                         class="mb-2"
@@ -369,6 +389,7 @@ export default {
                 comment: null,
 
                 images: [],
+                reply_keyboard_title: null,
                 reply_keyboard: null,
                 inline_keyboard: null,
 
@@ -482,6 +503,7 @@ export default {
                 slug: page.slug ? page.slug.slug : null,
                 comment: page.slug ? page.slug.comment : null,
                 images: page.images || [],
+                reply_keyboard_title: page.reply_keyboard_title || null,
                 reply_keyboard_id: page.reply_keyboard_id || null,
                 inline_keyboard_id: page.inline_keyboard_id || null,
                 reply_keyboard: page.replyKeyboard || null,
@@ -550,6 +572,7 @@ export default {
                 reply_keyboard: null,
                 inline_keyboard: null,
 
+                reply_keyboard_title: null,
                 reply_keyboard_id: null,
                 inline_keyboard_id: null,
 
