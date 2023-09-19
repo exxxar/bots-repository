@@ -490,12 +490,11 @@ export default {
             this.loading = true;
             this.$store.dispatch("loadCashBackModuleData").then((resp) => {
                 this.loading = false
-                console.log(resp)
                 this.settings = {
-                    display_type: resp.data.display_type || 0,
-                    need_birthday: resp.data.need_birthday || true,
-                    need_age: resp.data.need_age || true,
-                    need_city: resp.data.need_city || true,
+                    display_type: resp.display_type || 0,
+                    need_birthday: resp.need_birthday || true,
+                    need_age: resp.need_age || true,
+                    need_city: resp.need_city || true,
                 }
             }).catch(() => {
                 this.loading = false
