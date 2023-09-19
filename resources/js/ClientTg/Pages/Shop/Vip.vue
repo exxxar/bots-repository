@@ -34,7 +34,8 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12">
-                    <p class="mb-3" v-if="vipForm.name"><em>- Отлично, <strong>{{ vipForm.name }}</strong>! А теперь, чтобы Вы могли
+                    <p class="mb-3" v-if="vipForm.name"><em>- Отлично, <strong>{{ vipForm.name }}</strong>! А теперь,
+                        чтобы Вы могли
                         пользоваться всеми моими функциями, мне нужен Ваш номер телефона. Можете ввести его?</em>
                     </p>
                     <h6 class="text-center">Введите свой номер телефона</h6>
@@ -490,12 +491,12 @@ export default {
             this.loading = true;
             this.$store.dispatch("loadCashBackModuleData").then((resp) => {
                 this.loading = false
-                this.settings = {
-                    display_type: resp.display_type || 0,
-                    need_birthday: resp.need_birthday || true,
-                    need_age: resp.need_age || true,
-                    need_city: resp.need_city || true,
-                }
+
+                this.settings.display_type = resp.display_type || 0
+                this.settings.need_birthday = resp.need_birthday || true
+                this.settings.need_age = resp.need_age || true
+                this.settings.need_city = resp.need_city || true
+
             }).catch(() => {
                 this.loading = false
             })
