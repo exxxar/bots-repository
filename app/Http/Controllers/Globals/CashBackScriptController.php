@@ -61,6 +61,12 @@ class CashBackScriptController extends SlugController
                 "key" => "need_age",
                 "value" => true,
             ],
+            [
+                "type" => "image",
+                "key" => "image",
+                "value" => null,
+            ],
+
         ];
 
         if (count($mainScript->config ?? []) != count($params)) {
@@ -398,6 +404,10 @@ class CashBackScriptController extends SlugController
             ->where("key", "slug_id")
             ->first())["value"];
 
+        $image = (Collection::make($config[1])
+            ->where("key", "image")
+            ->first())["value"] ?? null;
+
         $bot = BotManager::bot()->getSelf();
 
         $botDomain = $bot->bot_domain;
@@ -409,7 +419,7 @@ class CashBackScriptController extends SlugController
 
             \App\Facades\BotManager::bot()
                 ->replyPhoto("Заполни эту анкету и получи достук к системе CashBack",
-                    InputFile::create(public_path() . "/images/cashman2.jpg"),
+                    InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
                     [
                         [
                             ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
