@@ -6,7 +6,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 </script>
 <template>
     <div v-if="botUser">
-        <div class="card card-style p-3" v-if="!botUser.is_vip&&settings.display_type==0">
+        <div class="card card-style p-3" v-if="settings.display_type==0">
             <form
                 v-on:submit.prevent="submit" class="row mb-0">
                 <div class="col-12 d-flex justify-content-center mb-3">
@@ -492,10 +492,12 @@ export default {
             this.$store.dispatch("loadCashBackModuleData").then((resp) => {
                 this.loading = false
 
-                this.settings.display_type = resp.display_type || 0
-                this.settings.need_birthday = resp.need_birthday || true
-                this.settings.need_age = resp.need_age || true
-                this.settings.need_city = resp.need_city || true
+                this.$nextTick(()=>{
+                    this.settings.display_type = resp.display_type || 0
+                    this.settings.need_birthday = resp.need_birthday
+                    this.settings.need_age = resp.need_age
+                    this.settings.need_city = resp.need_city
+                })
 
             }).catch(() => {
                 this.loading = false
