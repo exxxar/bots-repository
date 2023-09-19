@@ -180,6 +180,8 @@ Route::prefix("bot-client")
                     ->middleware(["tgAuth.admin"]);
                 Route::post('/request-refresh-menu', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "requestRefreshMenu"])
                     ->middleware(["tgAuth.admin"]);
+                Route::post('/load-data', [\App\Http\Controllers\Globals\CashBackScriptController::class, "loadData"])
+                ->middleware(["slug"]);
             });
 
 

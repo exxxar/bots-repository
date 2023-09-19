@@ -1,7 +1,7 @@
 <template>
-    <div class="row d-flex justify-content-center">
+    <div class="row d-flex justify-content-center" v-if="pagination">
 
-        <div class="col-lg-6 dt-pagination d-flex justify-content-center align-items-center">
+        <div class="col-lg-6 dt-pagination d-flex justify-content-center align-items-center" v-if="pagination.links">
 
             <nav aria-label="Page navigation example">
                 <ul class="pagination">

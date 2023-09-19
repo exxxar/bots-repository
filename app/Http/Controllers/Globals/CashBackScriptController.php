@@ -12,6 +12,7 @@ use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
@@ -35,6 +36,11 @@ class CashBackScriptController extends SlugController
                 "value" => 0
             ],
             [
+                "type" => "text",
+                "key" => "display_type",
+                "value" => 0
+            ],
+            [
                 "type" => "boolean",
                 "key" => "need_birthday",
                 "value" => true,
@@ -52,7 +58,7 @@ class CashBackScriptController extends SlugController
             ],
         ];
 
-        if (count($mainScript->config ?? []) < count($params)) {
+        if (count($mainScript->config ?? []) != count($params)) {
             $mainScript->config = $params;
             $mainScript->save();
         }
@@ -115,20 +121,22 @@ class CashBackScriptController extends SlugController
                 'comment' => "Бронирование столика",
             ]);
 
-        if (empty($model->config ?? [])) {
-            $model->config = [
-                [
-                    "type" => "text",
-                    "key" => "book_table_message",
-                    "value" => "В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию."
-                ],
-                [
-                    "type" => "text",
-                    "key" => "btn_text",
-                    "value" => "\xF0\x9F\x8E\xB2Выбрать столик для бронирования",
+        $params = [
+            [
+                "type" => "text",
+                "key" => "book_table_message",
+                "value" => "В открывшемся окне укажите какой именно столик вы хотите забронировать. Администратор заведения в телефонном режиме уточнит у вас информацию."
+            ],
+            [
+                "type" => "text",
+                "key" => "btn_text",
+                "value" => "\xF0\x9F\x8E\xB2Выбрать столик для бронирования",
 
-                ]
-            ];
+            ]
+        ];
+
+        if (count($model->config ?? []) != count($params)) {
+            $model->config = $params;
             $model->save();
         }
 
@@ -354,6 +362,28 @@ class CashBackScriptController extends SlugController
 
     }
 
+    public function loadData(Request $request)
+    {
+        $slug = $request->slug;
+
+        return response()->json(
+            [
+                'display_type' => (Collection::make($slug->config)
+                        ->where("key", "display_type")
+                        ->first())["value"] ?? 0,
+                'need_birthday' => (Collection::make($slug->config)
+                        ->where("key", "need_birthday")
+                        ->first())["value"] ?? true,
+                'need_age' => (Collection::make($slug->config)
+                        ->where("key", "need_age")
+                        ->first())["value"] ?? true,
+                'need_city' => (Collection::make($slug->config)
+                        ->where("key", "need_city")
+                        ->first())["value"] ?? true,
+            ]
+        );
+    }
+
     public function specialCashBackSystem(...$config)
     {
         $slugId = (Collection::make($config[1])
@@ -370,7 +400,7 @@ class CashBackScriptController extends SlugController
             $bot = BotManager::bot()->getSelf();
 
             \App\Facades\BotManager::bot()
-                ->replyPhoto("Заполни эту анкету и получит достук к системе CashBack",
+                ->replyPhoto("Заполни эту анкету и получи достук к системе CashBack",
                     InputFile::create(public_path() . "/images/cashman2.jpg"),
                     [
                         [

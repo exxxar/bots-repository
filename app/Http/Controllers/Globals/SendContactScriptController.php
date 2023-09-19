@@ -29,32 +29,6 @@ class SendContactScriptController extends SlugController
         if (is_null($mainScript))
             return;
 
-        if (empty($mainScript->config ?? [])) {
-            $mainScript->config = [
-
-                [
-                    "type" => "phone",
-                    "key" => "phone",
-                    "value" => "+7(000)000-00-00",
-
-                ],
-                [
-                    "type" => "text",
-                    "key" => "first_name",
-                    "value" => "Имя",
-
-                ],
-                [
-                    "type" => "text",
-                    "key" => "last_name",
-                    "value" => "Фамилия",
-
-                ],
-
-            ];
-            $mainScript->save();
-        }
-
         BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_send_contact_main",
@@ -65,6 +39,35 @@ class SendContactScriptController extends SlugController
                 'command' => ".*Отправить контакт",
                 'comment' => "Скрипт позволяющий отправить телефонный контакт пользовалю",
             ]);
+
+
+        $params = [
+
+            [
+                "type" => "phone",
+                "key" => "phone",
+                "value" => "+7(000)000-00-00",
+
+            ],
+            [
+                "type" => "text",
+                "key" => "first_name",
+                "value" => "Имя",
+
+            ],
+            [
+                "type" => "text",
+                "key" => "last_name",
+                "value" => "Фамилия",
+
+            ],
+        ];
+
+        if (count($mainScript->config ?? []) != count($params)) {
+            $mainScript->config = $params;
+            $mainScript->save();
+        }
+
 
     }
 

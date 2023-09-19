@@ -14,7 +14,20 @@ const getters = {
 }
 
 const actions = {
+    async loadCashBackModuleData(context) {
 
+
+        let link = `${ BASE_CASHBACK_LINK}/load-data`
+
+        let _axios = util.makeAxiosFactory(link, 'POST')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadReceiverUserData(context, payload = { dataObject:{ user_telegram_chat_id:null } }) {
 
 
