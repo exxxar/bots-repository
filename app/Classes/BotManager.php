@@ -310,6 +310,7 @@ class BotManager extends BotCore
 
         $content = str_replace(["{{referralQr}}"], $qr, $content);
 
+        $needContentInReply = true;
         $needSendReplyMenu = true;
 
         $images = [];
@@ -333,7 +334,7 @@ class BotManager extends BotCore
 
             $this->replyMediaGroup($media);
 
-            $needContentInReply = true;
+
             if (!empty($iMenu)){
                 $this->replyInlineKeyboard($content, $iMenu);
                 $needContentInReply = false;
