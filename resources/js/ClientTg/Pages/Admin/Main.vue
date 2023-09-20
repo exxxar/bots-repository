@@ -485,6 +485,7 @@ export default {
         },
         loadReceiverUserData() {
             this.loading = true
+            this.reloadUsers = true
             this.$store.dispatch("loadReceiverUserData", {
                 dataObject: {
                     user_telegram_chat_id: this.request_telegram_chat_id
@@ -492,6 +493,7 @@ export default {
             }).then(resp => {
                 this.botUser = resp.data
                 this.loading = false
+                this.reloadUsers = false
 
                 this.$nextTick(() => {
 
