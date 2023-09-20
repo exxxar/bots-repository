@@ -333,7 +333,7 @@ class BotManager extends BotCore
             try {
                 $this->replyMediaGroup($media);
             } catch (\Exception $e){
-                $this->replyPhoto( null,
+                $this->replyPhoto( "Ошибочка с изображениями",
                     InputFile::create( public_path() . "/images/cashman2.jpg")
                 );
             }
@@ -358,7 +358,7 @@ class BotManager extends BotCore
                     InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0])
                 );
             } catch (\Exception $e){
-                $this->replyPhoto( null,
+                $this->replyPhoto( "Ошибочка с изображением",
                     InputFile::create( public_path() . "/images/cashman2.jpg")
                 );
             }

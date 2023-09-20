@@ -14,7 +14,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     <i class="fa fa-search"></i>
                     <input type="text"
                            v-model="search"
-                           class="border-0" placeholder="Кого ищим?">
+                           class="border-0" placeholder="Кого ищем?">
                 </div>
 
                 <div class="fac fac-checkbox  py-2 my-2">

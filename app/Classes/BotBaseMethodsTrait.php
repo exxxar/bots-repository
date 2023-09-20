@@ -167,7 +167,7 @@ trait BotBaseMethodsTrait
 
         } catch (\Exception $e) {
             unset($tmp['reply_markup']);
-            $this->bot->sendMessage($tmp);
+            $this->sendMessage($chatId, $message);
 
         }
 
@@ -258,12 +258,11 @@ trait BotBaseMethodsTrait
 
         try {
             $data = $this->bot->sendMessage($tmp);
-         /*   $this->botUser->temporary["message_id"] = $data->message_id ?? null;
-            $this->botUser->save();*/
+
         } catch (\Exception $e) {
 
-            unset($tmp['reply_markup']);
-            $this->bot->sendMessage($tmp);
+           // unset($tmp['reply_markup']);
+           $this->sendMessage($chatId, $message);
 
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
@@ -341,7 +340,7 @@ trait BotBaseMethodsTrait
 
         } catch (\Exception $e) {
 
-            unset($tmp['reply_markup']);
+            //unset($tmp['reply_markup']);
             $this->bot->sendPhoto($tmp);
 
             Log::error($e->getMessage() . " " .

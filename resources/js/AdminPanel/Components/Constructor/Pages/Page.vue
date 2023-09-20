@@ -188,7 +188,7 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                                     </div>
                                 </template>
                             </Popper>
-                            Команда
+                            Заголовок
 <!--                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                         </label>
                         <input type="text" class="form-control"
