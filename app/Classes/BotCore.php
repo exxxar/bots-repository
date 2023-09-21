@@ -39,6 +39,8 @@ abstract class BotCore
 
     protected $next = [];
 
+    protected abstract function currentBotUser();
+
     protected abstract function createUser($data);
 
     protected abstract function setWebhooks();
@@ -593,6 +595,10 @@ abstract class BotCore
         else
             $this->createUser($message->from);
 
+        if (!is_null($this->currentBotUser()->blocked_at ?? null)) {
+            $this->reply($this->currentBotUser()->blocked_message ?? "Вам ограничен доступ!");
+            return;
+        }
 
         try {
             if (isset($update["message"]["successful_payment"])) {
@@ -665,8 +671,7 @@ abstract class BotCore
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
 
-            if (strlen($channel) > 6 && str_starts_with($channel, "-"))
-            {
+            if (strlen($channel) > 6 && str_starts_with($channel, "-")) {
                 $this->sendInlineKeyboard($channel,
                     "#ответ\n" .
                     (!is_null($domain) ? "Сообщение от @$domain:\n" : "Сообщение от $name:\n") .

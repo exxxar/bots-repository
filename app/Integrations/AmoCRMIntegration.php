@@ -65,11 +65,13 @@ class AmoCRMIntegration
            $test = AmoAPI::oAuth2($this->subdomain);
 
 
+           Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
+
          //  AmoAPI::loadTokens("")
 
             //371656 - воронка продаж, в которую нужно слать
             // Получение информации об аккаунте
-           // Log::info(print_r(AmoAPI::getAccount(), true));
+           /Log::info(print_r(AmoAPI::getAccount(), true));
 
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)

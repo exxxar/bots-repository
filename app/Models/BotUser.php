@@ -46,6 +46,9 @@ class BotUser extends Model
 
         'fio_from_telegram',
 
+        'blocked_at',
+        'blocked_message',
+
     ];
 
     /**

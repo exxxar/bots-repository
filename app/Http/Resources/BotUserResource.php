@@ -45,8 +45,14 @@ class BotUserResource extends JsonResource
             'user' => $this->whenLoaded("user") ?? null,
             'user_in_location' => $this->user_in_location,
             'temporary' => $this->temporary ?? null,
+
+            'blocked_at' => $this->blocked_at ?? null,
+            'blocked_message' => $this->blocked_message ?? null,
+
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+
+
         ];
     }
 }

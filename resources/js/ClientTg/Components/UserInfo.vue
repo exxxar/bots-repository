@@ -34,7 +34,7 @@
 
         </tr>
         <tr v-bind:class="{'bg-red1-light':botUser.name==null}">
-            <th scope="row">Имя </th>
+            <th scope="row">Имя</th>
             <td class="font-weight-bold">{{ botUser.name || 'Не указано' }}</td>
 
         </tr>
@@ -99,6 +99,14 @@
             <th scope="row">В заведении</th>
             <td class="font-weight-bold">{{ botUser.user_in_location ? 'Да' : 'Нет' }}</td>
 
+        </tr>
+
+        <tr v-if="botUser.blocked_at">
+            <th scope="row">Пользователь заблокирован</th>
+            <td class="font-weight-bold">
+                <p class="mb-0"> {{ $filters.current(botUser.blocked_at) }}</p>
+                <p class="mb-0"><em>{{ botUser.blocked_message ?? 'Без сообщения' }}</em></p>
+            </td>
         </tr>
 
         </tbody>
@@ -279,7 +287,7 @@ export default {
         return {
             isEdit: false,
             botUserForm: {
-                id:null,
+                id: null,
                 is_vip: false,
                 is_admin: false,
                 is_work: false,
@@ -304,7 +312,7 @@ export default {
                     is_vip: this.botUser.is_vip || false,
                     is_admin: this.botUser.is_admin || false,
                     is_work: this.botUser.is_work || false,
-                    user_in_location:this.botUser.user_in_location || false,
+                    user_in_location: this.botUser.user_in_location || false,
                     name: this.botUser.name || null,
                     phone: this.botUser.phone || null,
                     email: this.botUser.email || null,
@@ -318,12 +326,12 @@ export default {
     },
     methods: {
         submit() {
-            this.$store.dispatch('updateBotUser',{
+            this.$store.dispatch('updateBotUser', {
                 botUserForm: this.botUserForm
-            }).then(()=>{
+            }).then(() => {
                 this.isEdit = false
                 this.botUserForm = {
-                    id:null,
+                    id: null,
                     is_vip: false,
                     is_admin: false,
                     is_work: false,
