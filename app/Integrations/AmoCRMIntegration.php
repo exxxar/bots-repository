@@ -8,6 +8,7 @@ use AmoCRM\AmoContact;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\BotUser;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 
@@ -65,13 +66,13 @@ class AmoCRMIntegration
            $test = AmoAPI::oAuth2($this->subdomain);
 
 
-           Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
+           //Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
 
          //  AmoAPI::loadTokens("")
 
             //371656 - воронка продаж, в которую нужно слать
             // Получение информации об аккаунте
-           Log::info(print_r(AmoAPI::getAccount(), true));
+           //Log::info(print_r(AmoAPI::getAccount(), true));
 
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)
@@ -84,23 +85,35 @@ class AmoCRMIntegration
                 ]);
 
 
+              //  $fName = explode(' ', $botUser->fio_from_telegram ?? '')[0] ?? 'Не указано';
+               // $sName = explode(' ', $botUser->fio_from_telegram ?? '')[1] ?? 'Не указано';
                 // Установка дополнительных полей
                 $contact->setCustomFields([
-                    'telegram_chat_id' => $botUser->telegram_chat_id??'-',
-                    'fio_from_telegram' => $botUser->fio_from_telegram??'-',
+                   /* 'telegram_chat_id' => $botUser->telegram_chat_id??'-',
+                    'fio_from_telegram' =>
                     'birthday' => $botUser->birthday??'-',
                     'age' => $botUser->age ?? '-',
                     'city' => $botUser->city??'-',
                     'country' => $botUser->country ?? '-',
                     'address' => $botUser->address ?? '-',
-                    'sex' => $botUser->sex ? 'мужчина':'женщина',
-                    'phone' => [[
+                    'sex' => $botUser->sex ? 'мужчина':'женщина',*/
+                    '211629' => [[
                         'value' => $botUser->phone ?? '-',
-                        'enum' => 'WORK'
+                        'enum' => 'MOB'
                     ]],
-                    '123467' => [[
+
+                    '902909' => [[
+                        'value' => $botUser->fio_from_telegram ?? '-',
+
+                    ]],
+
+
+                    '335635' => [[
+                        'value' => Carbon::parse($botUser->birthday ?? Carbon::now())->format('Y-M-D'),
+                    ]],
+                    '211631' => [[
                         'value' => $botUser->email ?? '-',
-                        'enum' => 'WORK'
+                        'enum' => 'PRIV'
                     ]]
                 ]);
 
