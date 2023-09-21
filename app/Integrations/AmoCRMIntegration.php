@@ -66,12 +66,25 @@ class AmoCRMIntegration
 
             $test = AmoAPI::oAuth2($this->subdomain);
 
-
-            $company = new AmoCompany([
+            $generator = AmoAPI::getCompanies([
                 'name' => $bot->bot_domain ?? 'CashMan'
             ]);
-            $companyId = $company->save();
-            //  Log::info( print_r($companyId,true));
+
+            if (is_null($generator[0]["name"] ?? null)) {
+                $company = new AmoCompany([
+                    'name' => $bot->bot_domain ?? 'CashMan'
+                ]);
+                $companyId = $company->save();
+            }
+            else
+                $companyId = $generator[0]["id"];
+
+
+            $generator = AmoAPI::getContacts([
+                'name' => 'Алексей | DoIT Разработка',
+                'company_id'=>$companyId
+            ]);
+              Log::info( print_r($generator,true));
             //Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
 
             //  AmoAPI::loadTokens("")
@@ -82,9 +95,7 @@ class AmoCRMIntegration
 
             //Log::info(print_r(  AmoAPI::getContacts(),true));
 
-            $generator = AmoAPI::getCompanies([
-                'name' => 'flera_hus_1_bot'
-            ]);
+
             Log::info(print_r($generator[0]["name"] ?? null, true));
             return;
             $botUsers = BotUser::query()
