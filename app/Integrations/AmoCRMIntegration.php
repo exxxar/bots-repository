@@ -135,8 +135,7 @@ class AmoCRMIntegration
                 ]);
 
                 $contactId = $contact->save();
-                $contact->addCompany($companyId);
-                $contact->save();
+
             }
 
 
