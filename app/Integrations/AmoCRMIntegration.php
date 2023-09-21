@@ -146,7 +146,7 @@ class AmoCRMIntegration
 
 
                     '335635' => [[
-                        'value' => Carbon::parse($botUser->birthday ?? Carbon::now())->format('D.M.Y'),
+                        'value' => Carbon::parse($botUser->birthday ?? Carbon::now())->format('d.M.Y'),
                     ]],
                     '211631' => [[
                         'value' => $botUser->email ?? '-',
