@@ -71,7 +71,7 @@ class AmoCRMIntegration
 
             //371656 - воронка продаж, в которую нужно слать
             // Получение информации об аккаунте
-           /Log::info(print_r(AmoAPI::getAccount(), true));
+           Log::info(print_r(AmoAPI::getAccount(), true));
 
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)
