@@ -80,11 +80,8 @@ class AmoCRMIntegration
                 $companyId = $generator[0]["id"];
 
 
-            $generator = AmoAPI::getContacts([
-                'name' => 'Алексей | DoIT Разработка',
-                'company_id'=>$companyId
-            ]);
-              Log::info( print_r($generator,true));
+
+              //Log::info( print_r($generator,true));
             //Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
 
             //  AmoAPI::loadTokens("")
@@ -96,13 +93,22 @@ class AmoCRMIntegration
             //Log::info(print_r(  AmoAPI::getContacts(),true));
 
 
-            Log::info(print_r($generator[0]["name"] ?? null, true));
-            return;
+           // Log::info(print_r($generator[0]["name"] ?? null, true));
+            //return;
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)
                 ->get();
 
             foreach ($botUsers as $botUser) {
+
+                $generator = AmoAPI::getContacts([
+                    'name' => 'Алексей | DoIT Разработка',
+                    'company_id'=>$companyId
+                ]);
+
+                if (!is_null($generator[0]["id"]?? null))
+                    continue;
+
                 $contact = new AmoContact([
                     'name' => $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id,
                 ]);
@@ -110,9 +116,7 @@ class AmoCRMIntegration
 
                 $contact->addCompany($companyId);
 
-                //  $fName = explode(' ', $botUser->fio_from_telegram ?? '')[0] ?? 'Не указано';
-                // $sName = explode(' ', $botUser->fio_from_telegram ?? '')[1] ?? 'Не указано';
-                // Установка дополнительных полей
+
                 $contact->setCustomFields([
                     /* 'telegram_chat_id' => $botUser->telegram_chat_id??'-',
                      'fio_from_telegram' =>
