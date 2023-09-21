@@ -80,7 +80,7 @@ class AmoCRMIntegration
 
             foreach ($botUsers as $botUser) {
                 $contact = new AmoContact([
-                    'name' => $botUser->name,
+                    'name' => $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id,
                     'responsible_user_id' => $botUser->id
                 ]);
 
