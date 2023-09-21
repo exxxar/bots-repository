@@ -82,7 +82,9 @@ class AmoCRMIntegration
 
            //Log::info(print_r(  AmoAPI::getContacts(),true));
 
-            $generator = AmoAPI::getCompanies();
+            $generator = AmoAPI::getCompanies([
+                'name'=>'flera_hus_1_bot'
+            ]);
             Log::info(print_r(  $generator,true));
             return;
             $botUsers = BotUser::query()
