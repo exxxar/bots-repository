@@ -49,12 +49,12 @@ class AmoCRMIntegration
 
         } catch (AmoAPIException $e) {
 
-            Log::info("amo error1 ".print_r($e->getMessage(), true));
+            Log::info("amo error1 " . print_r($e->getMessage(), true));
 
             return response()->json([
-                "message"=>$e->getMessage()
+                "message" => $e->getMessage()
             ], $e->getCode());
-           // Log::info(printf('Ошибка авторизации (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
+            // Log::info(printf('Ошибка авторизации (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
         }
     }
 
@@ -64,28 +64,28 @@ class AmoCRMIntegration
 
         try {
 
-           $test = AmoAPI::oAuth2($this->subdomain);
+            $test = AmoAPI::oAuth2($this->subdomain);
 
 
-          $company =  new AmoCompany([
-                'name'=>$bot->bot_domain ?? 'CashMan'
-           ]);
+            $company = new AmoCompany([
+                'name' => $bot->bot_domain ?? 'CashMan'
+            ]);
             $companyId = $company->save();
-        //  Log::info( print_r($companyId,true));
-          //Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
+            //  Log::info( print_r($companyId,true));
+            //Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
 
-         //  AmoAPI::loadTokens("")
+            //  AmoAPI::loadTokens("")
 
             //371656 - воронка продаж, в которую нужно слать
             // Получение информации об аккаунте
-           //Log::info(print_r(AmoAPI::getAccount(), true));
+            //Log::info(print_r(AmoAPI::getAccount(), true));
 
-           //Log::info(print_r(  AmoAPI::getContacts(),true));
+            //Log::info(print_r(  AmoAPI::getContacts(),true));
 
             $generator = AmoAPI::getCompanies([
-                'name'=>'flera_hus_1_bot'
+                'name' => 'flera_hus_1_bot'
             ]);
-            Log::info(print_r(  $generator,true));
+            Log::info(print_r($generator[0]["name"] ?? null, true));
             return;
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)
@@ -99,18 +99,18 @@ class AmoCRMIntegration
 
                 $contact->addCompany($companyId);
 
-              //  $fName = explode(' ', $botUser->fio_from_telegram ?? '')[0] ?? 'Не указано';
-               // $sName = explode(' ', $botUser->fio_from_telegram ?? '')[1] ?? 'Не указано';
+                //  $fName = explode(' ', $botUser->fio_from_telegram ?? '')[0] ?? 'Не указано';
+                // $sName = explode(' ', $botUser->fio_from_telegram ?? '')[1] ?? 'Не указано';
                 // Установка дополнительных полей
                 $contact->setCustomFields([
-                   /* 'telegram_chat_id' => $botUser->telegram_chat_id??'-',
-                    'fio_from_telegram' =>
-                    'birthday' => $botUser->birthday??'-',
-                    'age' => $botUser->age ?? '-',
-                    'city' => $botUser->city??'-',
-                    'country' => $botUser->country ?? '-',
-                    'address' => $botUser->address ?? '-',
-                    'sex' => $botUser->sex ? 'мужчина':'женщина',*/
+                    /* 'telegram_chat_id' => $botUser->telegram_chat_id??'-',
+                     'fio_from_telegram' =>
+                     'birthday' => $botUser->birthday??'-',
+                     'age' => $botUser->age ?? '-',
+                     'city' => $botUser->city??'-',
+                     'country' => $botUser->country ?? '-',
+                     'address' => $botUser->address ?? '-',
+                     'sex' => $botUser->sex ? 'мужчина':'женщина',*/
                     '211629' => [[
                         'value' => $botUser->phone ?? '-',
                         'enum' => 'MOB'
@@ -144,11 +144,8 @@ class AmoCRMIntegration
             }
 
 
-
-
-
         } catch (AmoAPIException $e) {
-            Log::info("amo error2 ".print_r($e->getMessage(), true));
+            Log::info("amo error2 " . print_r($e->getMessage(), true));
             $this->firstOAuth();
             //Log::info(printf('Ошибка авторизации (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
         }
