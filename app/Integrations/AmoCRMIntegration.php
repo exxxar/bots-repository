@@ -4,6 +4,7 @@ namespace App\Integrations;
 
 use AmoCRM\AmoAPI;
 use AmoCRM\AmoAPIException;
+use AmoCRM\AmoCompany;
 use AmoCRM\AmoContact;
 use App\Models\AmoCrm;
 use App\Models\Bot;
@@ -66,7 +67,7 @@ class AmoCRMIntegration
            $test = AmoAPI::oAuth2($this->subdomain);
 
 
-           Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
+          //Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
 
          //  AmoAPI::loadTokens("")
 
@@ -74,8 +75,8 @@ class AmoCRMIntegration
             // Получение информации об аккаунте
            //Log::info(print_r(AmoAPI::getAccount(), true));
 
-           // Log::info(print_r(  AmoAPI::getContacts(),true));
-            return;
+           Log::info(print_r(  AmoAPI::getContacts(),true));
+
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)
                 ->get();
@@ -107,6 +108,14 @@ class AmoCRMIntegration
 
                     '902909' => [[
                         'value' => $botUser->fio_from_telegram ?? '-',
+
+                    ]],
+                    '868299' => [[
+                        'value' => $botUser->bot->bot_domain ?? '-',
+
+                    ]],
+                    '896303' => [[
+                        'value' => Carbon::now(),
 
                     ]],
 
