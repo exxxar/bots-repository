@@ -67,9 +67,10 @@ class AmoCRMIntegration
            $test = AmoAPI::oAuth2($this->subdomain);
 
 
-          /* $company =  new AmoCompany([
+           $company =  new AmoCompany([
                 'name'=>$bot->bot_domain ?? 'CashMan'
-           ]);*/
+           ]);
+          Log::info( print_r($company,true));
           //Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
 
          //  AmoAPI::loadTokens("")
@@ -78,7 +79,7 @@ class AmoCRMIntegration
             // Получение информации об аккаунте
            //Log::info(print_r(AmoAPI::getAccount(), true));
 
-           Log::info(print_r(  AmoAPI::getContacts(),true));
+           //Log::info(print_r(  AmoAPI::getContacts(),true));
 
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)
@@ -87,7 +88,7 @@ class AmoCRMIntegration
             foreach ($botUsers as $botUser) {
                 $contact = new AmoContact([
                     'name' => $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id,
-                    'company_name' => $bot->bot_domain ?? 'CashMan'
+                   // 'company_id' => $bot->bot_domain ?? 'CashMan'
                 ]);
 
 
