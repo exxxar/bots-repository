@@ -332,12 +332,11 @@ class BotManager extends BotCore
 
             try {
                 $this->replyMediaGroup($media);
-            } catch (\Exception $e){
-                $this->replyPhoto( "Ошибочка с изображениями",
-                    InputFile::create( public_path() . "/images/cashman2.jpg")
+            } catch (\Exception $e) {
+                $this->replyPhoto("Ошибочка с изображениями",
+                    InputFile::create(public_path() . "/images/cashman2.jpg")
                 );
             }
-
 
 
             if (!empty($iMenu)) {
@@ -352,29 +351,39 @@ class BotManager extends BotCore
             }
 
 
-        } else if (count($images) === 1) {
+        }
+
+        if (count($images) === 1) {
             try {
-                $this->replyPhoto( null,
-                    InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0])
+                $this->replyPhoto(mb_strlen($content) < 1024 ? $content : null,
+                    InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0]),
+                    $iMenu
                 );
-            } catch (\Exception $e){
-                $this->replyPhoto( "Ошибочка с изображением",
-                    InputFile::create( public_path() . "/images/cashman2.jpg")
+            } catch (\Exception $e) {
+                $this->replyPhoto("Ошибочка с изображением",
+                    InputFile::create(public_path() . "/images/cashman2.jpg")
                 );
             }
 
+            if (!empty($replyKeyboard))
+                $this->replyKeyboard(mb_strlen($content) >= 1024 ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+
+            if (empty($replyKeyboard) && mb_strlen($content) >= 1024)
+                $this->reply($content);
         }
 
-        $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
+        if (count($images) === 0) {
+            $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
 
-        if (!$needContentInReply)
-            $this->replyInlineKeyboard($content, $iMenu);
+            if (!$needContentInReply)
+                $this->replyInlineKeyboard($content, $iMenu);
 
-        if (!empty($replyKeyboard) && $needSendReplyMenu)
-            $this->replyKeyboard($needContentInReply ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+            if (!empty($replyKeyboard) && $needSendReplyMenu)
+                $this->replyKeyboard($needContentInReply ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
-        if ($needContentInReply && empty($replyKeyboard))
-            $this->reply($content);
+            if ($needContentInReply && empty($replyKeyboard))
+                $this->reply($content);
+        }
 
 
         if (!is_null($page->next_page_id)) {

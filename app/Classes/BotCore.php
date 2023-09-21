@@ -665,19 +665,22 @@ abstract class BotCore
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
 
-            $this->sendInlineKeyboard($channel,
-                "#ответ\n" .
-                (!is_null($domain) ? "Сообщение от @$domain:\n" : "Сообщение от $name:\n") .
-                "$query",
-                [
+            if (strlen($channel) > 6 && str_starts_with($channel, "-"))
+            {
+                $this->sendInlineKeyboard($channel,
+                    "#ответ\n" .
+                    (!is_null($domain) ? "Сообщение от @$domain:\n" : "Сообщение от $name:\n") .
+                    "$query",
                     [
-                        ["text" => "Написать пользователю ответ", "url" => $link]
+                        [
+                            ["text" => "Написать пользователю ответ", "url" => $link]
+                        ]
                     ]
-                ]
-            );
+                );
 
-            $this->reply("Ваше сообщение успешно доставлено администратору бота");
-            return true;
+                $this->reply("Ваше сообщение успешно доставлено администратору бота");
+                return true;
+            }
 
         }
         return false;
