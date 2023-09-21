@@ -74,6 +74,7 @@ class AmoCRMIntegration
             // Получение информации об аккаунте
            //Log::info(print_r(AmoAPI::getAccount(), true));
 
+            Log::info(print_r(  AmoAPI::getContacts(),true));
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)
                 ->get();
@@ -83,6 +84,7 @@ class AmoCRMIntegration
                     'name' => $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id,
                     'responsible_user_id' => $botUser->id
                 ]);
+
 
 
               //  $fName = explode(' ', $botUser->fio_from_telegram ?? '')[0] ?? 'Не указано';
