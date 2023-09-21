@@ -82,6 +82,11 @@ class AmoCRMIntegration
 
            //Log::info(print_r(  AmoAPI::getContacts(),true));
 
+            $generator = AmoAPI::getAllContacts([
+                'query' => $bot->bot_domain
+            ]);
+            Log::info(print_r(  $generator,true));
+            return;
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)
                 ->get();
