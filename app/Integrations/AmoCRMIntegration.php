@@ -102,7 +102,7 @@ class AmoCRMIntegration
             foreach ($botUsers as $botUser) {
 
                 $generator = AmoAPI::getContacts([
-                    'name' => 'Алексей | DoIT Разработка',
+                    'name' => $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id,
                     'company_id'=>$companyId
                 ]);
 
