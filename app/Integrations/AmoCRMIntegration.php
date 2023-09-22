@@ -61,7 +61,7 @@ class AmoCRMIntegration
     public function nextOAuth($bot)
     {
 
-
+        ini_set('max_execution_time', '300000');
         try {
 
             $test = AmoAPI::oAuth2($this->subdomain);
@@ -164,6 +164,8 @@ class AmoCRMIntegration
             $this->firstOAuth();
             //Log::info(printf('Ошибка авторизации (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
         }
+
+        ini_set('max_execution_time', '300');
     }
 
 

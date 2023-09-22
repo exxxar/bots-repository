@@ -2,8 +2,12 @@
 
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\TelegramController;
+use App\Models\BotUser;
+use App\Models\CashBack;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -22,20 +26,70 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/test-logic', function (Request $request){
+Route::get('/db-transfer', function (Request $request) {
+  /*  $users2 = DB::connection('mysql2')->table("users")
+        ->get();
 
-    $bot = $request->bot;
-    $botUser = $request->botUser;
+    ini_set('max_execution_time', '300000');
+    foreach ($users2 as $user2) {
 
-        return BusinessLogic::administrative()
-            ->setBot($bot)
-            ->setBotUser($botUser)
-            ->test();
+        $user1 = DB::connection('mysql1')->table("bot_users")
+            ->where("telegram_chat_id", $user2->telegram_chat_id)
+            ->where("bot_id", 29)
+            ->first();
 
+        if (!is_null($user1))
+            continue;
+
+        $role = Role::query()
+            ->where("slug", "user")
+            ->first();
+
+
+        $telegram_chat_id = $user2->telegram_chat_id;
+
+
+        $user = User::query()->updateOrCreate([
+            'email' => "$telegram_chat_id@your-cashman.ru",
+        ],
+            [
+                'name' => $user2->fio_from_telegram ?? $user2->name ?? 'unknown',
+                'password' => bcrypt($telegram_chat_id),
+                'role_id' => $role->id,
+            ]);
+
+        BotUser::query()->create([
+            'bot_id' => 29,
+            'user_id' => $user->id ?? null,
+            'username' => $user2->name,
+            'is_vip' => $user2->is_vip ?? false,
+            'is_admin' => $user2->is_admin ?? false,
+            'is_work' => $user2->is_working ?? false,
+            'name' => $user2->fio_from_telegram ?? null,
+            'phone' => $user2->phone ?? null,
+            'birthday' => \Carbon\Carbon::parse($user2->birthday ?? \Carbon\Carbon::now())->format('Y-m-d'),
+            'age' => $user2->age ?? 18,
+            'city' => $user2->city ?? null,
+            'sex' => !is_null($user2->sex) ? ($user2->sex == "Мужской" ? 1 : 0) : 1,
+            'user_in_location' => false,
+            'telegram_chat_id' => $telegram_chat_id,
+            'fio_from_telegram' => $user2->fio_from_telegram ?? null,
+        ]);
+
+
+        CashBack::query()->create([
+            'user_id' => $user->id,
+            'bot_id' => 29,
+            'amount' => $user2->cashback_money ?? 0,
+        ]);
+
+
+    }
+    ini_set('max_execution_time', '300');*/
 
 });
 
-Route::get('/test-files', function (){
+Route::get('/test-files', function () {
 
     $files = Storage::disk('public')->allFiles("/companies");
 
@@ -57,7 +111,7 @@ Route::get("/test-amo", function () {
 });
 
 Route::any('/crm/amo/flera_hus_bot', function (Request $request) {
-    Log::info("callback".print_r($request->all(), true));
+    Log::info("callback" . print_r($request->all(), true));
 });
 
 
@@ -82,7 +136,7 @@ Route::get('/images/{companySlug}/{fileName}',
     [TelegramController::class, 'getFiles']);
 
 Route::prefix("bot")
-    ->group(function(){
+    ->group(function () {
         Route::any('/register-webhooks', [\App\Http\Controllers\Admin\TelegramController::class, "registerWebhooks"]);
         Route::any('/{domain}', [\App\Http\Controllers\Admin\TelegramController::class, "handler"]);
     });
@@ -108,7 +162,7 @@ Route::post('/sanctum/token', function (Request $request) {
         ->where('email', $request->email)
         ->first();
 
-    if (! $user || ! Hash::check($request->password, $user->password)) {
+    if (!$user || !Hash::check($request->password, $user->password)) {
         throw ValidationException::withMessages([
             'email' => ['The provided credentials are incorrect.'],
         ]);
@@ -116,5 +170,5 @@ Route::post('/sanctum/token', function (Request $request) {
 
     $user->tokens()->delete();
 
-    return ['token' => $user->createToken($request->device_name,['server:update'])->plainTextToken];
+    return ['token' => $user->createToken($request->device_name, ['server:update'])->plainTextToken];
 });
