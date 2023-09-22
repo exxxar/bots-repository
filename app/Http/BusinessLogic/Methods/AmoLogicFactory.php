@@ -27,6 +27,7 @@ class AmoLogicFactory
         $this->bot = $bot;
         return $this;
     }
+
     /**
      * @throws ValidationException
      */
@@ -59,6 +60,7 @@ class AmoLogicFactory
                 'auth_code' => $data["auth_code"],
                 'redirect_uri' => $this->bot->bot_domain,
                 'subdomain' => $data["subdomain"],
+                'fields' => is_null($data["fields"] ?? null) ? null : json_decode($data["fields"]),
             ]);
 
         return new AmoCrmResource($amo);

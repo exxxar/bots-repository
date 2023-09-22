@@ -115,15 +115,40 @@ class AmoCRMIntegration
                 $contact->addCompany($companyId);
 
 
-                $contact->setCustomFields([
-                    /* 'telegram_chat_id' => $botUser->telegram_chat_id??'-',
-                     'fio_from_telegram' =>
-                     'birthday' => $botUser->birthday??'-',
-                     'age' => $botUser->age ?? '-',
-                     'city' => $botUser->city??'-',
-                     'country' => $botUser->country ?? '-',
-                     'address' => $botUser->address ?? '-',
-                     'sex' => $botUser->sex ? 'мужчина':'женщина',*/
+                if (is_null($bot->amo->fields ?? null))
+                    continue;
+
+                $fields = [];
+
+                foreach ($bot->amo->fields as $field) {
+                    $tmpBotUser = $botUser->toArray();
+
+                    $data = $tmpBotUser[$field->field] ?? null;
+                    switch ($field->field) {
+                        case 'birthday':
+                            $data = (is_null($data) ? Carbon::now() : Carbon::parse($tmpBotUser[$field->field]))
+                                ->format('d.M.Y');
+                            break;
+                        case 'sex':
+                            $data = is_null($data) ? "Мужской" : ($data == 1 ? "Мужской" : "Женский");
+                            break;
+                    }
+                    $fields[$field->key] = is_null($field->enum) ?
+                        [[
+                            "value" => $data,
+                        ]] :
+                        [[
+                            "value" => $tmpBotUser[$field->field] ?? '-',
+                            "enum" => $field->enum ?? '-'
+                        ]];
+                }
+
+                Log::info(print_r($fields, true));
+                return;
+                $contact->setCustomFields($fields);
+
+          /*      $contact->setCustomFields([
+
                     '211629' => [[
                         'value' => $botUser->phone ?? '-',
                         'enum' => 'MOB'
@@ -150,7 +175,7 @@ class AmoCRMIntegration
                         'value' => $botUser->email ?? '-',
                         'enum' => 'PRIV'
                     ]]
-                ]);
+                ]);*/
 
                 $contactId = $contact->save();
 
@@ -171,7 +196,7 @@ class AmoCRMIntegration
         try {
 
             $test = AmoAPI::oAuth2($this->subdomain);
-            Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
+            Log::info(print_r(AmoAPI::getAccount($with = 'custom_fields'), true));
             return AmoAPI::getAccount($with = 'custom_fields');
         } catch (AmoAPIException $e) {
             Log::info("amo error2 " . print_r($e->getMessage(), true));

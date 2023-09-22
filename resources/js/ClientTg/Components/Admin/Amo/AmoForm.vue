@@ -124,15 +124,103 @@
                 </button>
 
                 <Vue3JsonEditor
-                    v-if="!load"
-                    :mode="'code'"
+                    v-if="!load&&custom_fields"
+                    :mode="'tree'"
                     v-model="custom_fields"
                     :show-btns="false"
-                    :expandedOnStart="true"
+                    :expandedOnStart="false"
                 />
 
+                <div
+                    v-if="amoForm.fields"
+                    v-for="(field, index) in amoForm.fields">
+
+                    <div class="mb-2">
+                        <label class="form-label d-flex justify-content-between mt-0 mb-0" :id="'field-key-'+index">
+                                <div>
+                                    <Popper>
+                                        <i class="fa-regular fa-circle-question mr-1"></i>
+                                        <template #content>
+                                            <div>Ключевое значение из справочника</div>
+                                        </template>
+                                    </Popper>
+                                    Ключевое значение из справочника
+                                </div>
+                                <Popper>
+                                    <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                    <template #content>
+                                        <div>Нужно
+                                        </div>
+                                    </template>
+                                </Popper>
+
+                        </label>
+                        <input type="number" class="form-control"
+                               placeholder="Ключ"
+                               aria-label="Ключ"
+                               v-model="amoForm.fields[index].key"
+                               aria-describedby="Ключ" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label d-flex justify-content-between mt-0 mb-0" :id="'field-field-'+index">
+
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Поле из списка для связи</div>
+                                    </template>
+                                </Popper>
+                                Поле из списка для связи
+                            </div>
+                            <Popper>
+                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                <template #content>
+                                    <div>Нужно
+                                    </div>
+                                </template>
+                            </Popper>
+                        </label>
+
+                        <select class="form-control font-12"
+                                v-model="amoForm.fields[index].field">
+                            <option
+                                v-for="item in fields"
+                                :value="item.field">{{ item.title || 'Ошибка' }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label d-flex justify-content-between mt-0 mb-0" :id="'field-enum-'+index">
+                            Перечисление (enum) из справочника
+
+                        </label>
+                        <input type="text" class="form-control"
+                               placeholder="Перечисление"
+                               aria-label="Перечисление"
+                               v-model="amoForm.fields[index].enum"
+                               aria-describedby="Перечисление">
+                    </div>
+                    <button
+                        type="button"
+                        @click="removeField(index)"
+                        class="btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900 border-red1-dark color-red1-dark bg-theme w-100">
+                        Удалитьс связь полей
+                    </button>
+                    <div class="divider divider-small my-3 bg-highlight "></div>
+                </div>
+                <button
+                    type="button"
+                    @click="addField"
+                    class="btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme w-100">
+                    Добавить связь полей
+                </button>
+
+
                 <button type="submit"
-                        class="btn btn-m btn-full mb-3 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">
+                        class="btn btn-m btn-full mt-3 mb-3 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">
                     <i class="fa-solid fa-cloud-arrow-down mr-1"></i> Сохранить настройку AMO
                 </button>
 
@@ -162,8 +250,8 @@ export default {
     },
     data() {
         return {
-            load:false,
-            custom_fields:null,
+            load: false,
+            custom_fields: null,
             fields: [
                 {
                     title: 'Телефонный номер',
@@ -177,15 +265,31 @@ export default {
                     title: 'Почта',
                     field: 'email',
                 },
+                {
+                    title: 'Дата рождения',
+                    field: 'birthday',
+                },
+                {
+                    title: 'Возраст',
+                    field: 'age',
+                },
+                {
+                    title: 'Страна',
+                    field: 'country',
+                },
+                {
+                    title: 'Адрес',
+                    field: 'address',
+                },
+                {
+                    title: 'Пол',
+                    field: 'sex',
+                },
+                {
+                    title: 'Идентификатор чата',
+                    field: 'fio_from_telegram',
+                },
 
-                /* 'telegram_chat_id' => $botUser->telegram_chat_id??'-',
-                   'fio_from_telegram' =>
-                   'birthday' => $botUser->birthday??'-',
-                   'age' => $botUser->age ?? '-',
-                   'city' => $botUser->city??'-',
-                   'country' => $botUser->country ?? '-',
-                   'address' => $botUser->address ?? '-',
-                   'sex' => $botUser->sex ? 'мужчина':'женщина',*/
             ],
             hasConnect: false,
             amoForm: {
@@ -221,8 +325,8 @@ export default {
             this.load = true
             this.custom_fields = null
             this.$store.dispatch("loadAmoFields").then((response) => {
-                this.custom_fields = response._embedded.custom_fields || null
-                this.$nextTick(()=>{
+                this.custom_fields = response._embedded.custom_fields.contacts || null
+                this.$nextTick(() => {
                     this.load = false
                 })
                 this.$botNotification.success("Работа с AMO", "Справочная информация успешно загружена");
@@ -230,13 +334,19 @@ export default {
                 this.$botNotification.warning("Работа с AMO", "Ошибка работы со справочной информацией");
             })
         },
+        removeField(index){
+            if (!this.amoForm.fields)
+                return;
+
+            this.amoForm.fields.splice(index, 1)
+        },
         addField() {
             if (!this.amoForm.fields)
                 this.amoForm.fields = []
 
             this.amoForm.fields.push({
                 key: null,
-                value: null,
+                field: null,
                 enum: null,
 
             })

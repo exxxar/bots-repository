@@ -64,7 +64,7 @@ class AmoCrmController extends Controller
             "clientId" => $request->client_id ?? null,
             "clientSecret" => $request->client_secret ?? null,
             "authCode" => $request->auth_code ?? null,
-            "domain" => 'https://your-cashman.com/crm/amo/' . $bot->amo->redirect_uri,
+            "domain" => 'https://your-cashman.com/crm/amo/' . ($bot->amo->redirect_uri ?? $bot->bot_domain),
             "subdomain" =>  $request->subdomain ?? null,
         ];
 
