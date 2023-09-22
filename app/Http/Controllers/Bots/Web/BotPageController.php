@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BotPageController extends Controller
 {
@@ -44,9 +45,9 @@ class BotPageController extends Controller
     }
 
     /**
-     * @throws \HttpException
+     * @throws HttpException
      */
-    public function destroy($pageId): BotPageResource
+    public function destroy(Request $request, $pageId): BotPageResource
     {
         return BusinessLogic::pages()
             ->setBot($request->bot ?? null)
@@ -55,7 +56,7 @@ class BotPageController extends Controller
 
     /**
      * @throws ValidationException
-     * @throws \HttpException
+     * @throws HttpException
      */
     public function createPage(Request $request): BotPageResource
     {
