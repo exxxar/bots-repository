@@ -123,6 +123,14 @@
                     Загрузить справочную информацию
                 </button>
 
+                <Vue3JsonEditor
+                    v-if="!load"
+                    :mode="'code'"
+                    v-model="custom_fields"
+                    :show-btns="false"
+                    :expandedOnStart="true"
+                />
+
                 <button type="submit"
                         class="btn btn-m btn-full mb-3 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">
                     <i class="fa-solid fa-cloud-arrow-down mr-1"></i> Сохранить настройку AMO
@@ -144,12 +152,15 @@
 
 </template>
 <script>
+import {Vue3JsonEditor} from 'vue3-json-editor'
 import {mapGetters} from "vuex";
 
 export default {
     props: ["data", "bot"],
     data() {
         return {
+            load:false,
+            custom_fields:null,
             fields: [
                 {
                     title: 'Телефонный номер',
@@ -204,8 +215,13 @@ export default {
     },
     methods: {
         loadAmoFields() {
+            this.load = true
+            this.custom_fields = null
             this.$store.dispatch("loadAmoFields").then((response) => {
-                console.log(response)
+                this.custom_fields = response._embedded.custom_fields || null
+                this.$nextTick(()=>{
+                    this.load = false
+                })
                 this.$botNotification.success("Работа с AMO", "Справочная информация успешно загружена");
             }).catch(err => {
                 this.$botNotification.warning("Работа с AMO", "Ошибка работы со справочной информацией");
