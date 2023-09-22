@@ -127,7 +127,7 @@ class AmoCRMIntegration
                     switch ($field->field) {
                         case 'birthday':
                             $data = (is_null($data) ? Carbon::now() : Carbon::parse($tmpBotUser[$field->field]))
-                                ->format('d.M.Y');
+                                ->format('d.m.Y');
                             break;
                         case 'sex':
                             $data = is_null($data) ? "Мужской" : ($data == 1 ? "Мужской" : "Женский");
@@ -143,7 +143,7 @@ class AmoCRMIntegration
                         ]];
                 }
 
-                Log::info(print_r($fields, true));
+              //  Log::info(print_r($fields, true));
             //    return;
                 $contact->setCustomFields($fields);
 
