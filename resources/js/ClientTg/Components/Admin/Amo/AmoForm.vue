@@ -157,6 +157,9 @@ import {mapGetters} from "vuex";
 
 export default {
     props: ["data", "bot"],
+    components: {
+        Vue3JsonEditor
+    },
     data() {
         return {
             load:false,
