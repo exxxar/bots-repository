@@ -122,7 +122,7 @@ class AmoCRMIntegration
 
                 foreach ($bot->amo->fields as $field) {
                     $tmpBotUser = $botUser->toArray();
-
+                    $field = (object)$field;
                     $data = $tmpBotUser[$field->field] ?? null;
                     switch ($field->field) {
                         case 'birthday':
@@ -144,7 +144,7 @@ class AmoCRMIntegration
                 }
 
                 Log::info(print_r($fields, true));
-                return;
+            //    return;
                 $contact->setCustomFields($fields);
 
           /*      $contact->setCustomFields([
