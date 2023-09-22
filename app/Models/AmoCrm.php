@@ -22,6 +22,7 @@ class AmoCrm extends Model
         'auth_code',
         'redirect_uri',
         'subdomain',
+        'fields',
     ];
 
     /**
@@ -32,6 +33,7 @@ class AmoCrm extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
+        'fields' => 'array',
     ];
 
     public function bot(): BelongsTo

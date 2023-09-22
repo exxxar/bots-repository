@@ -12,9 +12,21 @@ use Illuminate\Validation\ValidationException;
 class AmoCrmController extends Controller
 {
 
-    public function testAmoCrm(Request $request)
+    public function loadAmoFields(Request $request)
     {
+        $bot = $request->bot;
 
+        $data = (object)[
+            "clientId" => $bot->amo->client_id ?? null,
+            "clientSecret" => $bot->amo->client_secret ?? null,
+            "authCode" => $bot->amo->auth_code ?? null,
+            "domain" => 'https://your-cashman.com/crm/amo/' . $bot->amo->redirect_uri,
+            "subdomain" => $bot->amo->subdomain ?? null,
+        ];
+
+        $amo = new \App\Integrations\AmoCRMIntegration($data);
+
+        return response()->json($amo->getCustomFields($bot));
     }
 
     public function syncAmoCrm(Request $request){

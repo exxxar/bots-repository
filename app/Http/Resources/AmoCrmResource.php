@@ -20,6 +20,7 @@ class AmoCrmResource extends JsonResource
             'auth_code' => $this->auth_code,
             'redirect_uri' => $this->redirect_uri,
             'subdomain' => $this->subdomain,
+            'fields' => $this->fields ?? null,
         ];
     }
 }

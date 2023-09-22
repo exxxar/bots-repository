@@ -227,7 +227,8 @@ class BotUserLogicFactory
             throw new HttpException(404, "Пользователь бота не найден");
 
 
-        $birthday = Carbon::parse($data["birthday"] ?? $botUser->birthday?? Carbon::now())->format("Y-m-d");
+        $birthday = Carbon::parse($data["birthday"] ?? $botUser->birthday ?? Carbon::now())->format("Y-m-d");
+
 
         $botUser->is_vip = (bool)(($data["is_vip"] ?? false));
         $botUser->is_admin = (bool)(($data["is_admin"] ?? false));
@@ -243,7 +244,13 @@ class BotUserLogicFactory
         $botUser->sex = (bool)(($data["sex"] ?? false));
         $botUser->age = Carbon::now()->year - Carbon::parse($birthday)
                 ->year;
+        $botUser->blocked_at = (bool)(($data["is_blocked"] ?? false)) ? Carbon::now() : null;
+        $botUser->blocked_message = $data["blocked_message"] ?? null;
         $botUser->save();
+
+        if (!is_null($botUser->blocked_at))
+            return new BotUserResource($botUser);
+
 
         $message = sprintf("Ф.И.О: %s\nТелефон: %s\nПочта: %s\nДР: %s\nВозраст: %s\nСтрана: %s\nГород: %s\nАдрес: %s\nПол: %s\nVip: %s\nAdmin: %s\nЗа работой: %s",
             $botUser->name ?? "Не указано",
@@ -254,10 +261,10 @@ class BotUserLogicFactory
             $botUser->country ?? "Не указано",
             $botUser->city ?? "Не указано",
             $botUser->address ?? "Не указано",
-            $botUser->sex ? "муж":"жен",
-            $botUser->is_vip ? "да":"нет",
-            $botUser->is_admin ? "да":"нет",
-            $botUser->is_work ? "да":"нет",
+            $botUser->sex ? "муж" : "жен",
+            $botUser->is_vip ? "да" : "нет",
+            $botUser->is_admin ? "да" : "нет",
+            $botUser->is_work ? "да" : "нет",
         );
         BotMethods::bot()
             ->whereBot($this->bot)

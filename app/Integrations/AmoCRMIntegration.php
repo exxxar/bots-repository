@@ -75,13 +75,11 @@ class AmoCRMIntegration
                     'name' => $bot->bot_domain ?? 'CashMan'
                 ]);
                 $companyId = $company->save();
-            }
-            else
+            } else
                 $companyId = $generator[0]["id"];
 
 
-
-              //Log::info( print_r($generator,true));
+            //Log::info( print_r($generator,true));
             //Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
 
             //  AmoAPI::loadTokens("")
@@ -93,7 +91,7 @@ class AmoCRMIntegration
             //Log::info(print_r(  AmoAPI::getContacts(),true));
 
 
-           // Log::info(print_r($generator[0]["name"] ?? null, true));
+            // Log::info(print_r($generator[0]["name"] ?? null, true));
             //return;
             $botUsers = BotUser::query()
                 ->where("bot_id", $bot->id)
@@ -103,10 +101,10 @@ class AmoCRMIntegration
 
                 $generator = AmoAPI::getContacts([
                     'name' => $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id,
-                    'company_id'=>$companyId
+                    'company_id' => $companyId
                 ]);
 
-                if (!is_null($generator[0]["id"]?? null))
+                if (!is_null($generator[0]["id"] ?? null))
                     continue;
 
                 $contact = new AmoContact([
@@ -166,6 +164,22 @@ class AmoCRMIntegration
         }
 
         ini_set('max_execution_time', '300');
+    }
+
+    public function getCustomFields($bot)
+    {
+        try {
+
+            $test = AmoAPI::oAuth2($this->subdomain);
+            Log::info( print_r(AmoAPI::getAccount($with = 'custom_fields'),true));
+            return AmoAPI::getAccount($with = 'custom_fields');
+        } catch (AmoAPIException $e) {
+            Log::info("amo error2 " . print_r($e->getMessage(), true));
+            $this->firstOAuth();
+            //Log::info(printf('Ошибка авторизации (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
+        }
+
+        return null;
     }
 
 

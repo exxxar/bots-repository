@@ -251,6 +251,34 @@
         </div>
 
         <div class="row mb-0">
+            <p class="col-12 mb-0">Заблокирован</p>
+            <div class="col-6">
+                <button
+                    type="button"
+                    @click="botUserForm.is_blocked = true"
+                    v-bind:class="{'bg-blue1-dark text-white':botUserForm.is_blocked,'bg-theme border-green1-dark color-green1-dark':!botUserForm.is_blocked}"
+                    class="w-100 btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900">
+                    <i class="fa-solid fa-check mr-1"></i> Да
+                </button>
+            </div>
+            <div class="col-6">
+                <button
+                    type="button"
+                    @click="botUserForm.is_blocked = false"
+                    v-bind:class="{'bg-blue1-dark text-white':!botUserForm.is_blocked,'bg-theme border-green1-dark color-green1-dark':botUserForm.is_blocked}"
+                    class="w-100 btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900">
+                    <i class="fa-solid fa-xmark mr-1"></i> Нет
+                </button>
+            </div>
+            <div class="col-12" v-if="botUserForm.is_blocked">
+                <label for="">Сообщение блокировки</label>
+                <input type="text" class="form-control"
+                       v-model="botUserForm.blocked_message"
+                       placeholder="Увы и ах.. ">
+            </div>
+        </div>
+
+        <div class="row mb-0">
             <p class="col-12 mb-0">Пол</p>
             <div class="col-6">
                 <button
@@ -301,6 +329,8 @@ export default {
                 country: null,
                 address: null,
                 sex: null,
+                is_blocked: null,
+                blocked_message: null,
             }
         }
     },
@@ -321,6 +351,8 @@ export default {
                     country: this.botUser.country || null,
                     address: this.botUser.address || null,
                     sex: this.botUser.sex || false,
+                    is_blocked: this.botUser.blocked_at != null,
+                    blocked_message: this.botUser.blocked_message || null
                 }
             })
     },
@@ -345,6 +377,7 @@ export default {
                     country: null,
                     address: null,
                     sex: null,
+                    is_blocked: false
                 }
 
                 this.$emit("update")
