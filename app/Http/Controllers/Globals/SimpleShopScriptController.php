@@ -252,7 +252,7 @@ class SimpleShopScriptController extends SlugController
                 ["text" => "➡ " . ($page + 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page + 1)],
             ];
 
-        if ($page >= 2)
+        if ($page >= 1)
             $keyboard[] = [
                 ["text" => "⬅ " . ($page - 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page - 1)],
                 ["text" => "➡ " . ($page + 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page + 1)],
