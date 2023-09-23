@@ -250,13 +250,13 @@ class SimpleShopScriptController extends SlugController
 
         if ($page==0)
         $keyboard[] = [
-            ["text" => "К странице ".($page+1)."/$allProductCount", "callback_data" => "/next_global_products ".($page+1)],
+            ["text" => "➡ ".($page+1)."/$allProductCount", "callback_data" => "/next_global_products ".($page+1)],
         ];
 
-        if ($page>=1)
+        if ($page>=2)
             $keyboard[] = [
-                ["text" => "К странице ".($page)."/$allProductCount", "callback_data" => "/next_global_products ".($page-1)],
-                ["text" => "К странице ".($page+1)."/$allProductCount", "callback_data" => "/next_global_products ".($page+1)],
+                ["text" => "⬅ ".($page-1)."/$allProductCount", "callback_data" => "/next_global_products ".($page-1)],
+                ["text" => "➡ ".($page+1)."/$allProductCount", "callback_data" => "/next_global_products ".($page+1)],
             ];
 
         if (!is_null($messageId)){
@@ -268,7 +268,7 @@ class SimpleShopScriptController extends SlugController
                     [
                         "type"=>"photo",
                         "media"=> InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png")->getFile(),
-                        "caption"=>  $product->title."\nЦена товара: $product->current_price ₽ ".(is_null($product->old_price ?? null)?"":"<s>$product->old_price ₽</s>"),
+                        "caption"=>  $product->title."\nЦена товара: $product->current_price ₽ ".($product->old_price == 0?"":"<strike>$product->old_price ₽</strike>"),
                     ],
                     $keyboard
                 );
