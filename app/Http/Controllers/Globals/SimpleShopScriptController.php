@@ -111,8 +111,6 @@ class SimpleShopScriptController extends SlugController
             ]);
 
 
-
-
         $params = [
             [
                 "type" => "text",
@@ -184,7 +182,7 @@ class SimpleShopScriptController extends SlugController
 
     }
 
-    private function productsPage($page = 0, $messageId = null, $categoryId = null)
+    private function productsPage($page = 0, $messageId = null, $categoryId = null, $productId = null)
     {
 
         $bot = BotManager::bot()->getSelf();
@@ -195,8 +193,9 @@ class SimpleShopScriptController extends SlugController
             ->where("bot_id", $bot->id);
         //->where("in_stop_list_at", false);
 
-
-
+        if (!is_null($productId))
+            $request = $request
+                ->where("id", $productId);
 
         if (!is_null($categoryId))
             $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
@@ -241,44 +240,44 @@ class SimpleShopScriptController extends SlugController
             $keyboard = [
                 [
                     ["text" => "💡О товаре", "callback_data" => "/detail_global_product $product->id"],
-                    ["text" => "🛒В корзину (".$basket->count.")" , "callback_data" => "/add_to_basket $product->id"],
+                    ["text" => "🛒В корзину (" . $basket->count . ")", "callback_data" => "/add_to_basket $product->id"],
                 ],
                 [
                     ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
                 ],
             ];
 
-        if ($page==0)
-        $keyboard[] = [
-            ["text" => "➡ ".($page+1)."/$allProductCount", "callback_data" => "/next_global_products ".($page+1)],
-        ];
-
-        if ($page>=2)
+        if ($page == 0)
             $keyboard[] = [
-                ["text" => "⬅ ".($page-1)."/$allProductCount", "callback_data" => "/next_global_products ".($page-1)],
-                ["text" => "➡ ".($page+1)."/$allProductCount", "callback_data" => "/next_global_products ".($page+1)],
+                ["text" => "➡ " . ($page + 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page + 1)],
             ];
 
-        if (!is_null($messageId)){
+        if ($page >= 2)
+            $keyboard[] = [
+                ["text" => "⬅ " . ($page - 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page - 1)],
+                ["text" => "➡ " . ($page + 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page + 1)],
+            ];
+
+        if (!is_null($messageId)) {
 
             BotManager::bot()
                 ->editMessageMedia(
                     $botUser->telegram_chat_id,
                     $messageId,
                     [
-                        "type"=>"photo",
-                        "media"=> InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png")->getFile(),
-                        "caption"=>  $product->title."\nЦена товара: $product->current_price ₽ ".($product->old_price == 0?"":"<strike>$product->old_price ₽</strike>"),
+                        "type" => "photo",
+                        "media" => InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png")->getFile(),
+                        "caption" => $product->title . "\nЦена товара: $product->current_price ₽ " . ($product->old_price == 0 ? "" : "<strike>$product->old_price ₽</strike>"),
                     ],
                     $keyboard
                 );
-/*
-            BotManager::bot()
-                ->editMessageCaption(
-                    $botUser->telegram_chat_id,
-                    $messageId,
-                    $product->title,
-                    $keyboard);*/
+            /*
+                        BotManager::bot()
+                            ->editMessageCaption(
+                                $botUser->telegram_chat_id,
+                                $messageId,
+                                $product->title,
+                                $keyboard);*/
 
             return;
         }
@@ -291,18 +290,17 @@ class SimpleShopScriptController extends SlugController
                 $keyboard);
 
 
+        /*  if (count($products) >= $count)
+              BotManager::bot()
+                  ->replyInlineKeyboard("Текущая страница <b>" . ($page + 1) . "</b>",
+                      [
+                          [
+                              ["text" => "👉Загрузить еще", "callback_data" =>
+                                  is_null($categoryId) ? "/next_global_products " . ($page + 1) : "/category_products $categoryId " . ($page + 1)
+                              ],
+                          ],
 
-      /*  if (count($products) >= $count)
-            BotManager::bot()
-                ->replyInlineKeyboard("Текущая страница <b>" . ($page + 1) . "</b>",
-                    [
-                        [
-                            ["text" => "👉Загрузить еще", "callback_data" =>
-                                is_null($categoryId) ? "/next_global_products " . ($page + 1) : "/category_products $categoryId " . ($page + 1)
-                            ],
-                        ],
-
-                    ]);*/
+                      ]);*/
     }
 
     private function categoriesPage($page = 0, $count = 5)
@@ -372,8 +370,6 @@ class SimpleShopScriptController extends SlugController
         $botUser = BotManager::bot()->currentBotUser();
 
 
-
-
         $productId = $data[3] ?? null;
 
 
@@ -420,7 +416,6 @@ class SimpleShopScriptController extends SlugController
             ->first();
 
 
-
         if (is_null($basket))
 
             $keyboard = [
@@ -437,8 +432,6 @@ class SimpleShopScriptController extends SlugController
                     ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
                 ],
             ];
-
-
 
 
         BotManager::bot()
@@ -459,7 +452,8 @@ class SimpleShopScriptController extends SlugController
         BotManager::bot()->reply("История заказов");
     }
 
-    public function clearBasket(){
+    public function clearBasket()
+    {
         $bot = BotManager::bot()->getSelf();
         $botUser = BotManager::bot()->currentBotUser();
 
@@ -469,7 +463,7 @@ class SimpleShopScriptController extends SlugController
             ->whereNull("ordered_at")
             ->get();
 
-        foreach ($baskets as $basket){
+        foreach ($baskets as $basket) {
             $basket->ordered_at = Carbon::now();
             $basket->save();
         }
@@ -497,26 +491,26 @@ class SimpleShopScriptController extends SlugController
         $summaryPrice = 0;
         $summaryCount = 0;
         foreach ($baskets as $basket) {
-            $price = ($basket->product->current_price * $basket->count)*100;
-            $prices[] =   [
+            $price = ($basket->product->current_price * $basket->count) * 100;
+            $prices[] = [
                 "label" => $basket->product->title,
                 "amount" => $price
             ];
-            $summaryCount +=$basket->count;
-            $summaryPrice +=$price;
+            $summaryCount += $basket->count;
+            $summaryPrice += $price;
 
-            $title =  $basket->product->title;
-            $description .= "$title x$basket->count = ".$basket->product->current_price."руб.\n";
+            $title = $basket->product->title;
+            $description .= "$title x$basket->count = " . $basket->product->current_price . "руб.\n";
 
-            $receipt[] =   (object)[
-                    "description" => $basket->product->title,
-                    "quantity" => " $basket->count.00",
-                    "amount" => (object)[
-                        "value" => $price / 100,
-                        "currency" => $currency
-                    ],
-                    "vat_code" =>$taxSystemCode
-                ];
+            $receipt[] = (object)[
+                "description" => $basket->product->title,
+                "quantity" => " $basket->count.00",
+                "amount" => (object)[
+                    "value" => $price / 100,
+                    "currency" => $currency
+                ],
+                "vat_code" => $taxSystemCode
+            ];
 
         }
 
@@ -556,7 +550,6 @@ class SimpleShopScriptController extends SlugController
             ],
 
         ];
-
 
 
         $providerData = (object)[
@@ -650,19 +643,10 @@ class SimpleShopScriptController extends SlugController
 
             BotManager::bot()->reply("Товар $title убран из корзины. Осталось $productInBasket->count. Цена товара $price ₽");
 
-            BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId,[
-                [
-                    ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
-                ],
-                [
-                    ["text" => "🛒Добавить в корзину $product->current_price ₽ [x$productInBasket->count] ", "callback_data" => "/add_to_basket $product->id"],
-                ],
-                [
-                    ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
-                ],
-            ]);
+            $this->productsPage(productId: $productId);
 
             $this->shopMenu();
+
             return;
         }
 
@@ -670,14 +654,7 @@ class SimpleShopScriptController extends SlugController
         $productInBasket->delete();
         BotManager::bot()->reply("Товар $title успешно удален из корзины.");
 
-        BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId,[
-            [
-                ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
-            ],
-            [
-                ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
-            ]
-        ]);
+        $this->productsPage(productId: $productId);
 
         $this->shopMenu();
     }
@@ -732,19 +709,7 @@ class SimpleShopScriptController extends SlugController
             BotManager::bot()->reply("Товар $title добавлен в корзину в колличестве $productInBasket->count. Цена товара $price ₽");
         }
 
-        $messageId = $data[0]->message_id ?? null;
-
-        BotManager::bot()->editInlineKeyboard($botUser->telegram_chat_id, $messageId,[
-            [
-                ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
-            ],
-            [
-                ["text" => "🛒Добавить в корзину $product->current_price ₽ [x$productInBasket->count] ", "callback_data" => "/add_to_basket $product->id"],
-            ],
-            [
-                ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
-            ],
-        ]);
+        $this->productsPage(productId: $productId);
 
         $this->shopMenu();
     }
@@ -789,9 +754,9 @@ class SimpleShopScriptController extends SlugController
                         [
                             ["text" => "🌭Наши товары"],
                         ],
-                       /* [
-                            ["text" => "🕖История покупок"],
-                        ],*/
+                        /* [
+                             ["text" => "🕖История покупок"],
+                         ],*/
                         [
                             ["text" => "🔥Главное меню"],
                         ],
@@ -815,7 +780,7 @@ class SimpleShopScriptController extends SlugController
             ->whereNull("ordered_at")
             ->get();
 
-        if (count($baskets)==0){
+        if (count($baskets) == 0) {
             BotManager::bot()->reply("Корзина пуста!");
             return;
         }
