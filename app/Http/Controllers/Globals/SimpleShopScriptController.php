@@ -249,13 +249,13 @@ class SimpleShopScriptController extends SlugController
 
         if ($page == 0)
             $keyboard[] = [
-                ["text" => "➡ " . ($page + 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page + 1)],
+                ["text" => ($page + 1) . "/$allProductCount ➡", "callback_data" => "/next_global_products " . ($page + 1)],
             ];
 
         if ($page >= 1)
             $keyboard[] = [
                 ["text" => "⬅ " . ($page - 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page - 1)],
-                ["text" => "➡ " . ($page + 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page + 1)],
+                ["text" => ($page + 1) . "/$allProductCount ➡", "callback_data" => "/next_global_products " . ($page + 1)],
             ];
 
         if (!is_null($messageId)) {
@@ -600,6 +600,7 @@ class SimpleShopScriptController extends SlugController
     public function removeFromBasket(...$data)
     {
         $productId = $data[3] ?? null;
+        $messageId = $data[0]->message_id ?? null;
 
         if (is_null($productId)) {
             BotManager::bot()->reply("Упс... что-то пошло не так...");
@@ -608,6 +609,7 @@ class SimpleShopScriptController extends SlugController
 
         $bot = BotManager::bot()->getSelf();
         $botUser = BotManager::bot()->currentBotUser();
+
 
         $product = Product::query()
             ->where("bot_id", $bot->id)
@@ -632,7 +634,7 @@ class SimpleShopScriptController extends SlugController
             return;
         }
 
-        $messageId = $data[0]->message_id ?? null;
+
 
         if ($productInBasket->count - 1 > 0) {
             $productInBasket->count--;
@@ -643,7 +645,7 @@ class SimpleShopScriptController extends SlugController
 
             BotManager::bot()->reply("Товар $title убран из корзины. Осталось $productInBasket->count. Цена товара $price ₽");
 
-            $this->productsPage(productId: $productId);
+            $this->productsPage(messageId:$messageId, productId: $productId);
 
             $this->shopMenu();
 
@@ -654,7 +656,7 @@ class SimpleShopScriptController extends SlugController
         $productInBasket->delete();
         BotManager::bot()->reply("Товар $title успешно удален из корзины.");
 
-        $this->productsPage(productId: $productId);
+        $this->productsPage(messageId:$messageId, productId: $productId);
 
         $this->shopMenu();
     }
@@ -662,6 +664,7 @@ class SimpleShopScriptController extends SlugController
     public function addToBasket(...$data)
     {
         $productId = $data[3] ?? null;
+        $messageId = $data[0]->message_id ?? null;
 
         if (is_null($productId)) {
             BotManager::bot()->reply("Упс... что-то пошло не так...");
@@ -709,7 +712,7 @@ class SimpleShopScriptController extends SlugController
             BotManager::bot()->reply("Товар $title добавлен в корзину в колличестве $productInBasket->count. Цена товара $price ₽");
         }
 
-        $this->productsPage(productId: $productId);
+        $this->productsPage(messageId:$messageId, productId: $productId);
 
         $this->shopMenu();
     }
