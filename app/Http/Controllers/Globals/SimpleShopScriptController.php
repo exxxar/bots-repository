@@ -229,7 +229,7 @@ class SimpleShopScriptController extends SlugController
 
             $keyboard = [
                 [
-                    ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
+                    ["text" => "💡О товаре", "callback_data" => "/detail_global_product $product->id"],
                     ["text" => "🛒В корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
                 ],
 
@@ -237,7 +237,7 @@ class SimpleShopScriptController extends SlugController
         else
             $keyboard = [
                 [
-                    ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
+                    ["text" => "💡О товаре", "callback_data" => "/detail_global_product $product->id"],
                     ["text" => "🛒В корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
                 ],
                 [
@@ -257,18 +257,26 @@ class SimpleShopScriptController extends SlugController
             ];
 
         if (!is_null($messageId)){
+
+            BotManager::bot()
+                ->editMessageMedia(
+                    $botUser->telegram_chat_id,
+                    $messageId,
+                    [
+                        "type"=>"photo",
+                        "media"=> InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                        "caption"=>  $product->title,
+                    ],
+                    $keyboard
+                );
+/*
             BotManager::bot()
                 ->editMessageCaption(
                     $botUser->telegram_chat_id,
                     $messageId,
                     $product->title,
-                    $keyboard);
-            BotManager::bot()
-                ->editMessageMedia(
-                    $botUser->telegram_chat_id,
-                    $messageId,
-                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
-                 );
+                    $keyboard);*/
+
             return;
         }
 
