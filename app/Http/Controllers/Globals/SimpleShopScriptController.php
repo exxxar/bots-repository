@@ -227,7 +227,6 @@ class SimpleShopScriptController extends SlugController
             ->whereNull("ordered_at")
             ->first();
 
-        $keyboard = [];
 
         if (is_null($basket))
 
@@ -256,7 +255,7 @@ class SimpleShopScriptController extends SlugController
 
         if ($page>=1)
             $keyboard[] = [
-                ["text" => "К странице ".($page-1)."/$allProductCount", "callback_data" => "/next_global_products ".($page-1)],
+                ["text" => "К странице ".($page)."/$allProductCount", "callback_data" => "/next_global_products ".($page-1)],
                 ["text" => "К странице ".($page+1)."/$allProductCount", "callback_data" => "/next_global_products ".($page+1)],
             ];
 
@@ -754,7 +753,8 @@ class SimpleShopScriptController extends SlugController
     {
         $categoryId = $data[3] ?? null;
         $pageId = $data[4] ?? null;
-        $this->productsPage($pageId, 5, $categoryId);
+        $messageId = $data[0]->message_id ?? null;
+        $this->productsPage($pageId, $messageId, $categoryId);
     }
 
     private function shopMenu($title = "Меню магазина")
@@ -908,7 +908,7 @@ class SimpleShopScriptController extends SlugController
             ->where("key", "products_per_page")
             ->first())["value"] ?? 10;
 
-        $this->productsPage(0, $count);
+        $this->productsPage();
     }
 
     public function main(...$config)
