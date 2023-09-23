@@ -193,67 +193,90 @@ class SimpleShopScriptController extends SlugController
             ->where("bot_id", $bot->id);
         //->where("in_stop_list_at", false);
 
+
+        $messageId = $data[0]->message_id ?? null;
+
         if (!is_null($categoryId))
             $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
                 $q->where("product_category_id", $categoryId);
             });
 
+        $count = 1;
 
-        $products = $request
+        $product = $request
             ->skip($page * $count)
             ->take($count)
-            ->get();
+            ->first();
 
 
-        if (count($products) == 0) {
+        if (is_null($product)) {
             BotManager::bot()
                 ->reply("Упс... Товара то нет:(");
             return;
         }
 
-        foreach ($products as $product) {
 
-            $basket = Basket::query()
-                ->where("product_id", $product->id)
-                ->where("bot_id", $bot->id)
-                ->where("bot_user_id", $botUser->id)
-                ->whereNull("ordered_at")
-                ->first();
+        $basket = Basket::query()
+            ->where("product_id", $product->id)
+            ->where("bot_id", $bot->id)
+            ->where("bot_user_id", $botUser->id)
+            ->whereNull("ordered_at")
+            ->first();
 
-            if (is_null($basket))
+        $keyboard = [];
 
-                $keyboard = [
-                    [
-                        ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
-                    ],
-                    [
+        if (is_null($basket))
 
-                        ["text" => "🛒Добавить в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
-                    ],
-                ];
-            else
-                $keyboard = [
-                    [
-                        ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
-                    ],
-                    [
-                        ["text" => "🛒Добавить еще в корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
-                    ],
-                    [
-                        ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
-                    ],
-                ];
+            $keyboard = [
+                [
+                    ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
+                    ["text" => "🛒В корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
+                ],
 
+            ];
+        else
+            $keyboard = [
+                [
+                    ["text" => "💡Информация о товаре", "callback_data" => "/detail_global_product $product->id"],
+                    ["text" => "🛒В корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
+                ],
+                [
+                    ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
+                ],
+            ];
+
+        $keyboard[] = [
+            ["text" => "К странице ".($page-1), "callback_data" => "/next_global_products ".($page-1)],
+            ["text" => "К странице ".($page+1), "callback_data" => "/next_global_products ".($page+1)],
+        ];
+
+
+        if (!is_null($messageId)){
             BotManager::bot()
-                ->sendPhoto(
+                ->editMessageCaption(
                     $botUser->telegram_chat_id,
+                    $messageId,
                     $product->title,
-                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
                     $keyboard);
-
+            BotManager::bot()
+                ->editMessageMedia(
+                    $botUser->telegram_chat_id,
+                    $messageId,
+                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                 );
+            return;
         }
 
-        if (count($products) >= $count)
+        BotManager::bot()
+            ->sendPhoto(
+                $botUser->telegram_chat_id,
+                $product->title,
+                InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                $keyboard);
+
+
+
+      /*  if (count($products) >= $count)
             BotManager::bot()
                 ->replyInlineKeyboard("Текущая страница <b>" . ($page + 1) . "</b>",
                     [
@@ -263,7 +286,7 @@ class SimpleShopScriptController extends SlugController
                             ],
                         ],
 
-                    ]);
+                    ]);*/
     }
 
     private function categoriesPage($page = 0, $count = 5)

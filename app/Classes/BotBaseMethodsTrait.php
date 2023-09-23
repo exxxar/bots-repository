@@ -238,6 +238,64 @@ trait BotBaseMethodsTrait
         return $this;
     }
 
+    public function editMessageMedia($chatId, $messageId, $media, $keyboard = [])
+    {
+        $tmp = [
+            "chat_id" => $chatId,
+            "message_id" => $messageId,
+            "media" => $media,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->editMessageMedia($tmp);
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+    }
+
+    public function editMessageCaption($chatId, $messageId, $caption, $keyboard = [])
+    {
+        $tmp = [
+            "chat_id" => $chatId,
+            "message_id" => $messageId,
+            "caption" => $caption,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->editMessageCaption($tmp);
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+    }
+
     public function sendInlineKeyboard($chatId, $message, $keyboard)
     {
 
