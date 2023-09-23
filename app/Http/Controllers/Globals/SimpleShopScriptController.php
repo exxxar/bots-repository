@@ -182,7 +182,7 @@ class SimpleShopScriptController extends SlugController
 
     }
 
-    private function productsPage($page = 0, $count = 5, $categoryId = null)
+    private function productsPage($page = 0, $messageId = null, $categoryId = null)
     {
 
         $bot = BotManager::bot()->getSelf();
@@ -194,7 +194,7 @@ class SimpleShopScriptController extends SlugController
         //->where("in_stop_list_at", false);
 
 
-        $messageId = $data[0]->message_id ?? null;
+
 
         if (!is_null($categoryId))
             $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
@@ -245,11 +245,16 @@ class SimpleShopScriptController extends SlugController
                 ],
             ];
 
+        if ($page==0)
         $keyboard[] = [
-            ["text" => "К странице ".($page-1), "callback_data" => "/next_global_products ".($page-1)],
             ["text" => "К странице ".($page+1), "callback_data" => "/next_global_products ".($page+1)],
         ];
 
+        if ($page>0)
+            $keyboard[] = [
+                ["text" => "К странице ".($page-1), "callback_data" => "/next_global_products ".($page-1)],
+                ["text" => "К странице ".($page+1), "callback_data" => "/next_global_products ".($page+1)],
+            ];
 
         if (!is_null($messageId)){
             BotManager::bot()
@@ -339,8 +344,9 @@ class SimpleShopScriptController extends SlugController
 
     public function nextProductPage(...$data)
     {
+        $messageId = $data[0]->message_id ?? null;
         $page = $data[3] ?? 0;
-        $this->productsPage($page);
+        $this->productsPage($page, $messageId);
     }
 
     public function nextCategories(...$data)
