@@ -25,6 +25,8 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use ReflectionClass;
 use Telegram\Bot\FileUpload\InputFile;
+use Telegram\Bot\Objects\InputMedia\InputMedia;
+use Telegram\Bot\Objects\InputMedia\InputMediaPhoto;
 
 class SimpleShopScriptController extends SlugController
 {
@@ -258,13 +260,18 @@ class SimpleShopScriptController extends SlugController
 
         if (!is_null($messageId)){
 
+            $tmp = InputMediaPhoto::make(
+                [
+                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                ]);
+            Log::info(print_r($tmp, true));
             BotManager::bot()
                 ->editMessageMedia(
                     $botUser->telegram_chat_id,
                     $messageId,
                     [
                         "type"=>"photo",
-                        "media"=> InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
+                        "media"=> $tmp,
                         "caption"=>  $product->title,
                     ],
                     $keyboard
