@@ -203,6 +203,8 @@ class SimpleShopScriptController extends SlugController
                 $q->where("product_category_id", $categoryId);
             });
 
+        $allProductCount = $request->count;
+
         $count = 1;
 
         $product = $request
@@ -240,7 +242,7 @@ class SimpleShopScriptController extends SlugController
             $keyboard = [
                 [
                     ["text" => "💡О товаре", "callback_data" => "/detail_global_product $product->id"],
-                    ["text" => "🛒В корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
+                    ["text" => "🛒В корзину (".$basket->count.")" , "callback_data" => "/add_to_basket $product->id"],
                 ],
                 [
                     ["text" => "👎Удалить из корзины", "callback_data" => "/remove_from_basket $product->id"],
@@ -249,13 +251,13 @@ class SimpleShopScriptController extends SlugController
 
         if ($page==0)
         $keyboard[] = [
-            ["text" => "К странице ".($page+1), "callback_data" => "/next_global_products ".($page+1)],
+            ["text" => "К странице ".($page+1)."/$allProductCount", "callback_data" => "/next_global_products ".($page+1)],
         ];
 
-        if ($page>0)
+        if ($page>=1)
             $keyboard[] = [
-                ["text" => "К странице ".($page-1), "callback_data" => "/next_global_products ".($page-1)],
-                ["text" => "К странице ".($page+1), "callback_data" => "/next_global_products ".($page+1)],
+                ["text" => "К странице ".($page-1)."/$allProductCount", "callback_data" => "/next_global_products ".($page-1)],
+                ["text" => "К странице ".($page+1)."/$allProductCount", "callback_data" => "/next_global_products ".($page+1)],
             ];
 
         if (!is_null($messageId)){
@@ -267,7 +269,7 @@ class SimpleShopScriptController extends SlugController
                     [
                         "type"=>"photo",
                         "media"=> InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png")->getFile(),
-                        "caption"=>  $product->title,
+                        "caption"=>  $product->title."\nЦена товара: $product->current_price ₽ ".(is_null($product->old_price ?? null)?"":"<s>$product->old_price ₽</s>"),
                     ],
                     $keyboard
                 );
