@@ -243,7 +243,7 @@ trait BotBaseMethodsTrait
         $tmp = [
             "chat_id" => $chatId,
             "message_id" => $messageId,
-            "media" => $media,
+            "media" => json_encode($media),
             "parse_mode" => "HTML",
             'reply_markup' => json_encode([
                 'inline_keyboard' => $keyboard,
