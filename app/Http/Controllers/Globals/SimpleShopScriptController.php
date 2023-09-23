@@ -203,7 +203,7 @@ class SimpleShopScriptController extends SlugController
                 $q->where("product_category_id", $categoryId);
             });
 
-        $allProductCount = $request->count;
+        $allProductCount = $request->count();
 
         $count = 1;
 
