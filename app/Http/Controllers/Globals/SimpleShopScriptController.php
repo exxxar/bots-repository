@@ -231,7 +231,7 @@ class SimpleShopScriptController extends SlugController
 
             $keyboard = [
                 [
-                    ["text" => "💡О товаре", "callback_data" => "/detail_global_product $product->id"],
+                    //["text" => "💡О товаре", "callback_data" => "/detail_global_product $product->id"],
                     ["text" => "🛒В корзину $product->current_price ₽", "callback_data" => "/add_to_basket $product->id"],
                 ],
 
@@ -239,7 +239,7 @@ class SimpleShopScriptController extends SlugController
         else
             $keyboard = [
                 [
-                    ["text" => "💡О товаре", "callback_data" => "/detail_global_product $product->id"],
+                    //["text" => "💡О товаре", "callback_data" => "/detail_global_product $product->id"],
                     ["text" => "🛒В корзину (" . $basket->count . ")", "callback_data" => "/add_to_basket $product->id"],
                 ],
                 [
@@ -249,7 +249,7 @@ class SimpleShopScriptController extends SlugController
 
         if ($page == 0)
             $keyboard[] = [
-                ["text" => ($page + 1) . "/$allProductCount ➡", "callback_data" => "/next_global_products " . ($page + 1)],
+                ["text" => "Следующий товар", "callback_data" => "/next_global_products " . ($page + 1)],
             ];
 
         if ($page >= 1)
