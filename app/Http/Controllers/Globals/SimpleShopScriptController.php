@@ -260,18 +260,13 @@ class SimpleShopScriptController extends SlugController
 
         if (!is_null($messageId)){
 
-            $tmp = InputMediaPhoto::make(
-                [
-                    InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
-                ]);
-            Log::info(print_r($tmp, true));
             BotManager::bot()
                 ->editMessageMedia(
                     $botUser->telegram_chat_id,
                     $messageId,
                     [
                         "type"=>"photo",
-                        "media"=> $tmp,
+                        "media"=> InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png")->getFile(),
                         "caption"=>  $product->title,
                     ],
                     $keyboard
