@@ -43,7 +43,7 @@
                         <strong>{{ filteredConfigs[index].key }}</strong></label>
                     <input type="text" class="form-control" :id="'field-input-'+index"
                            v-model="filteredConfigs[index].value"
-                           placeholder="name@example.com" required>
+                           placeholder="name@example.com">
 
                 </div>
 
@@ -105,7 +105,7 @@
                     <textarea class="form-control font-12" :id="'field-input-'+index"
                               v-model="filteredConfigs[index].value"
                               style="min-height: 200px;"
-                              placeholder="name@example.com" required>
+                              placeholder="name@example.com">
                             </textarea>
 
                 </div>
@@ -117,7 +117,7 @@
                            type="url"
                            pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
                            v-model="filteredConfigs[index].value"
-                           placeholder="name@example.com" required>
+                           placeholder="name@example.com">
 
                 </div>
 

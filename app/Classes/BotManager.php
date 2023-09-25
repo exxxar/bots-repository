@@ -361,7 +361,7 @@ class BotManager extends BotCore
                 );
             } catch (\Exception $e) {
                 Log::info($e);
-                $this->replyPhoto("Ошибочка с изображением",
+                $this->replyPhoto("Ошибочка у вас... напишите программисту:)",
                     InputFile::create(public_path() . "/images/cashman2.jpg")
                 );
             }

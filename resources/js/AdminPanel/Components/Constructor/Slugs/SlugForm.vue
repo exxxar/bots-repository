@@ -103,7 +103,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             <input type="text" class="form-control"
                                    v-model="filteredConfigs[index].key"
                                    :id="'field-input-key-'+index"
-                                   placeholder="name@example.com" required>
+                                   placeholder="name@example.com" >
                             <label :for="'field-input-key-'+index">Ключ</label>
                         </div>
 
@@ -111,7 +111,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                              v-if="filteredConfigs[index].type==='text' || filteredConfigs[index].type==='channel'">
                             <input type="text" class="form-control" :id="'field-input-'+index"
                                    v-model="filteredConfigs[index].value"
-                                   placeholder="name@example.com" required>
+                                   placeholder="name@example.com" >
                             <label :for="'field-input-'+index">Значение</label>
                         </div>
 
@@ -164,7 +164,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                         <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='large-text'">
                             <textarea class="form-control" :id="'field-input-'+index"
                                       v-model="filteredConfigs[index].value"
-                                      placeholder="name@example.com" required>
+                                      placeholder="name@example.com" >
                             </textarea>
                             <label :for="'field-input-'+index">Значение</label>
                         </div>
@@ -174,7 +174,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                    type="url"
                                    pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
                                    v-model="filteredConfigs[index].value"
-                                   placeholder="name@example.com" required>
+                                   placeholder="name@example.com" >
                             <label :for="'field-input-'+index">URL ссылка на изображение</label>
                         </div>
 
