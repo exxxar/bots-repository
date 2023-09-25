@@ -112,7 +112,7 @@ import ChatDialog from "../Components/Chat/ChatDialog.vue";
             </section>
 
             <section class="py-5">
-                <div class="container px-5 mb-5">
+                <div class="container px-sm-5 px-0 mb-5">
                     <div class="text-center mb-5">
                         <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Наши кейсы</span></h1>
                     </div>
@@ -121,7 +121,7 @@ import ChatDialog from "../Components/Chat/ChatDialog.vue";
                             <!-- Project Card 1-->
                             <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
                                 <div class="card-body p-0">
-                                    <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center ">
                                         <div class="p-5">
                                             <h2 class="fw-bolder">Project Name 1</h2>
                                             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius at enim eum

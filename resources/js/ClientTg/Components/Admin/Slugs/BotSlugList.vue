@@ -53,7 +53,7 @@ import Slug from '@/ClientTg/Components/Admin/Slugs/Slug.vue'
     <div class="mb-3" v-if="filteredSlugs.length===0">
 
         <div class="alert alert-danger" role="alert">
-            У вас еще нет добавленных скриптов!
+            У Вас еще нет добавленных скриптов!
         </div>
 
     </div>

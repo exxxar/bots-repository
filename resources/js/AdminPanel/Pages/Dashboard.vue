@@ -35,7 +35,7 @@ import BotDashboard from "@/AdminPanel/Components/Constructor/BotDashboard.vue";
         <div class="navbar-nav" v-if="bot">
             <div class="nav-item text-nowrap">
                 <div class="bot-label d-flex justify-between align-items-center" >
-                    <span class="p-2 text-white">У вас выбран бот: <a :href="'https://t.me/'+(bot.bot_domain||'botfather')" target="_blank">{{bot.bot_domain || 'Без имени'}}</a> </span>
+                    <span class="p-2 text-white">У Вас выбран бот: <a :href="'https://t.me/'+(bot.bot_domain||'botfather')" target="_blank">{{bot.bot_domain || 'Без имени'}}</a> </span>
                     <span
                         @click="resetBot"
                         class="p-2 text-white"><i class="fa-solid fa-xmark text-white"></i></span>

@@ -125,7 +125,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                             <Popper>
                                 <i class="fa-regular fa-circle-question mr-1"></i>
                                 <template #content>
-                                    <div>Если вы создаете шаблон, а не реального бота
+                                    <div>Если Вы создаете шаблон, а не реального бота
                                     </div>
                                 </template>
                             </Popper>

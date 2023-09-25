@@ -37,14 +37,14 @@ import ImageMenu from "@/AdminPanel/Components/Constructor/ImageMenu.vue";
             </div>
             <div class="card-body" v-if="step===1">
                 <div class="alert alert-success" role="alert">
-                    Если нет необходимости в локациях, вы можете пропустить данный шаг
+                    Если нет необходимости в локациях, Вы можете пропустить данный шаг
                     <button
                         type="button"
                         class="btn btn-primary"
                         @click="skip"
                     >Пропустить
                     </button>
-                    или же вы можете вернуться на прошлый шаг
+                    или же Вы можете вернуться на прошлый шаг
                     <button
                         type="button"
                         class="btn btn-primary"
@@ -78,7 +78,7 @@ import ImageMenu from "@/AdminPanel/Components/Constructor/ImageMenu.vue";
             <div class="card-body" v-if="step===2">
 
                 <div class="alert alert-success" role="alert">
-                    При необходимости вы можете начать по новой
+                    При необходимости Вы можете начать по новой
                     <button
                         type="button"
                         class="btn btn-primary"
@@ -125,7 +125,7 @@ import ImageMenu from "@/AdminPanel/Components/Constructor/ImageMenu.vue";
             <div class="card-body" v-if="step===3">
 
                 <div class="alert alert-success" role="alert">
-                    При необходимости вы можете начать по новой
+                    При необходимости Вы можете начать по новой
                     <button
                         type="button"
                         class="btn btn-primary"
@@ -166,7 +166,7 @@ import ImageMenu from "@/AdminPanel/Components/Constructor/ImageMenu.vue";
             <div class="card-body">
                 <div class="row">
                     <div class="alert alert-warning" role="alert">
-                        <strong>Важно!</strong> новые боты начнут работать только после того, как вы обновите зависимости!
+                        <strong>Важно!</strong> новые боты начнут работать только после того, как Вы обновите зависимости!
                     </div>
 
                     <div class="col-12 mb-3">

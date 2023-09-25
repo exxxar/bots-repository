@@ -38,7 +38,7 @@ import { Head } from '@inertiajs/vue3'
                         <li class="nav-item p-2" v-if="company">
                             <div class="card border-info">
                                 <div class="card-body">
-                                    <p>У вас выбран клиент:</p>
+                                    <p>У Вас выбран клиент:</p>
                                     <div class="d-flex justify-content-between w-100">
                                         <span>{{company.title || 'Без имени'}} </span>
                                         <span @click="resetCompany"><i class="fa-solid fa-xmark"></i></span>
@@ -51,7 +51,7 @@ import { Head } from '@inertiajs/vue3'
                         <li class="nav-item p-2" v-if="bot">
                            <div class="card border-info">
                                <div class="card-body">
-                                   <p>У вас выбран бот:</p>
+                                   <p>У Вас выбран бот:</p>
                                    <div class="d-flex justify-content-between w-100">
                                        <span><a :href="'https://t.me/'+(bot.bot_domain||'botfather')" target="_blank">{{bot.bot_domain || 'Без имени'}}</a> </span>
                                        <span @click="resetBot"><i class="fa-solid fa-xmark"></i></span>

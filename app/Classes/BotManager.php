@@ -360,6 +360,7 @@ class BotManager extends BotCore
                     $iMenu
                 );
             } catch (\Exception $e) {
+                Log::info($e);
                 $this->replyPhoto("Ошибочка с изображением",
                     InputFile::create(public_path() . "/images/cashman2.jpg")
                 );

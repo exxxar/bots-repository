@@ -34,7 +34,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <div class="row" v-else>
                         <div class="col-12">
                             <div class="alert alert-danger" role="alert">
-                               У вас еще нет добавленных скриптов! Воспользуйтесь разделом "Скрипты" для добавления.
+                               У Вас еще нет добавленных скриптов! Воспользуйтесь разделом "Скрипты" для добавления.
                             </div>
                         </div>
                     </div>

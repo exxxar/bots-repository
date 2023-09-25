@@ -2,6 +2,7 @@
 
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\TelegramController;
+use App\Models\Bot;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\Role;
@@ -89,26 +90,7 @@ Route::get('/db-transfer', function (Request $request) {
 
 });
 
-Route::get('/test-files', function () {
 
-    $files = Storage::disk('public')->allFiles("/companies");
-
-    return $files;
-});
-
-
-Route::get("/test-amo", function () {
-    $amo = new \App\Integrations\AmoCRMIntegration((object)[
-        "clientId" => null,
-        "clientSecret" => null,
-        "authCode" => null,
-        "domain" => null,
-        "subdomain" => null,
-    ]);
-    //$amo->firstOAuth();
-    $amo->nextOAuth();
-
-});
 
 Route::any('/crm/amo/flera_hus_bot', function (Request $request) {
     Log::info("callback" . print_r($request->all(), true));
@@ -149,6 +131,7 @@ Route::prefix("web")
 
 require __DIR__ . '/clients/admin-client.php';
 require __DIR__ . '/clients/bot-client.php';
+require __DIR__ . '/clients/landing.php';
 require __DIR__ . '/auth.php';
 
 Route::post('/sanctum/token', function (Request $request) {

@@ -43,11 +43,11 @@
                         pattern="[_A-Za-z0-9]{5,50}(bot)"
                         id="floatingTextarea" required/>
                     <label for="floatingTextarea"
-                           class="text-primary">Доменное имя вашего бота на английском</label>
+                           class="text-primary">Доменное имя Вашего бота на английском</label>
                 </div>
 
                 <div class="alert border-light alert-dismissible fade show w-100" role="alert">
-                    <p>Если у вас есть <a href="https://t.me/botFather" class="text-light">Token</a>, то вы сразу же сможете протестировать своего бота на парктике. Если же Token-а нет, то вам помогут его создать наши менеджеры.</p>
+                    <p>Если у Вас есть <a href="https://t.me/botFather" class="text-light">Token</a>, то Вы сразу же сможете протестировать своего бота на парктике. Если же Token-а нет, то вам помогут его создать наши менеджеры.</p>
                     <div class="form-check form-switch">
                         <input class="form-check-input"
                                v-model="form.have_token"

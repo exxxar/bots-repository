@@ -46,7 +46,7 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                     <i class="fa-regular fa-circle-question mr-1"></i>
                     <template #content>
                         <div>Напишите для себя пояснение для чего нужна данная страница.
-                            Это поможет другим менеджерам лучше понять вас.
+                            Это поможет другим менеджерам лучше понять Вас.
                         </div>
                     </template>
                 </Popper>

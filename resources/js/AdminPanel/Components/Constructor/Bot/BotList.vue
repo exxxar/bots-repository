@@ -210,7 +210,7 @@ export default {
     methods: {
         duplicate(id){
             if (!this.getCurrentCompany){
-                this.$notify("У вас не выбран клиент!");
+                this.$notify("У Вас не выбран клиент!");
                 return;
             }
             this.$store.dispatch("duplicateBot", {

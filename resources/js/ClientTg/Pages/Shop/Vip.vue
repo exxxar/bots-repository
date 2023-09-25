@@ -18,9 +18,9 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
                 </div>
                 <div class="col-12">
-                    <p class="mb-3"><em>Приветствую вас, <strong>Дорогой друг!</strong> Я хочу поздавить тебя и дать
+                    <p class="mb-3"><em>Приветствую Вас, <strong>Дорогой друг!</strong> Я хочу поздавить Вам и дать
                         возможность получать неограниченные преимушества нашего сервиса! Для начала нам нужно с Вами
-                        познакомится - это поможет сделать использование сервиса более кофортным и взаимовыгодным!</em>
+                        познакомиться - это поможет сделать использование сервиса более комфортным и взаимовыгодным!</em>
                     </p>
                     <h6 class="text-center">Как мне к Вам обращаться?</h6>
                     <div class="input-style input-style-2">
@@ -51,7 +51,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12" v-if="settings.need_sex">
-                    <p class="mb-3"><em>Чтобы я мог обращаться к Вам правильно, скажи мне, какого Вы пол?</em></p>
+                    <p class="mb-3"><em>Чтобы я мог обращаться к Вам правильно, скажи мне, какого Вы пола?</em></p>
                     <h6 class="text-center">Вы мужчина или женщина?</h6>
 
                     <div class="row mb-0">
@@ -158,9 +158,9 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
                 </div>
                 <div class="col-12">
-                    <p class="mb-3"><em>Приветствую вас, <strong>Дорогой друг!</strong> Я хочу поздавить тебя и дать
-                        возможность получать неограниченные преимушества нашего сервиса! Для начала нам нужно с тобой
-                        познакомится - это поможет сделать использование сервиса более кофортным и взаимовыгодным!</em>
+                    <p class="mb-3"><em>Приветствую Вас, <strong>Дорогой друг!</strong> Я хочу поздавить Вас и дать
+                        возможность получать неограниченные преимушества нашего сервиса! Для начала нам нужно с Вами
+                        познакомиться - это поможет сделать использование сервиса более комфортным и взаимовыгодным!</em>
                     </p>
                     <h6 class="text-center">Как мне к Вам обращаться?</h6>
                     <div class="input-style input-style-2">
@@ -225,7 +225,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
                 </div>
                 <div class="col-12">
-                    <p class="mb-3"><em>Чтобы я мог обращаться к Вам правильно, скажи мне, какого Вы пол?</em></p>
+                    <p class="mb-3"><em>Чтобы я мог обращаться к Вам правильно, скажи мне, какого Вы пола?</em></p>
                     <h6 class="text-center">Ты мужчина или женщина?</h6>
 
                     <div class="row mb-0">
