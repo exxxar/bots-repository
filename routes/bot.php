@@ -67,15 +67,16 @@ BotManager::bot()
             return;
         }
 
-        $data = \Illuminate\Support\Facades\Http::get("https://api.telegram.org/bot" . $bot->bot_token . "/getFile?file_id=$photoToSend")
+        $data2 = \Illuminate\Support\Facades\Http::get("https://api.telegram.org/bot" . $bot->bot_token . "/getFile?file_id=$photoToSend")
             ->json("result");
 
+        Log::info(print_r($data2, true));
 
         BotManager::bot()
             ->sendPhoto(
                 $channel,
                 InputFile::create(
-                    "https://api.telegram.org/file/bot" . $bot->bot_token . "/" . $data["file_path"],"payment.jpg"
+                    "https://api.telegram.org/file/bot" . $bot->bot_token . "/" . $data2["file_path"],"payment.jpg"
                 )
                 ,
                 $caption
