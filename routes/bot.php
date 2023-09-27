@@ -78,7 +78,7 @@ BotManager::bot()
         BotManager::bot()
             ->sendPhoto(
                 $channel,
-                InputFile::createFromContents( $photos[count($photos) - 1]->file_unique_id,"payments.jpg")
+                InputFile::create( $photos[count($photos) - 1]->file_unique_id,"payments.jpg")
                ,
                 $caption
             );
