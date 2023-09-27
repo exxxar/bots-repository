@@ -75,7 +75,7 @@ BotManager::bot()
             ->sendPhoto(
                 $channel,
                 InputFile::create(
-                    "https://api.telegram.org/file/bot" . $bot->bot_token . "/" . $data["file_path"]
+                    "https://api.telegram.org/file/bot" . $bot->bot_token . "/" . $data["file_path"],"payment.jpg"
                 )
                 ,
                 $caption
