@@ -34,6 +34,17 @@ class RequestMoneyWithdrawScriptController extends SlugController
         if (is_null($mainScript))
             return;
 
+        BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_cash_out_main",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Вывод средств",
+                'comment' => "Скрипт вывода средств на карту",
+            ]);
+
         $params = [
 
             [
@@ -59,21 +70,14 @@ class RequestMoneyWithdrawScriptController extends SlugController
 
         ];
 
+        Log::info("count1=>".count($mainScript->config ?? []));
+        Log::info("count2=>".count($params));
         if (count($mainScript->config ?? []) != count($params)) {
             $mainScript->config = $params;
             $mainScript->save();
         }
 
-        BotMenuSlug::query()->updateOrCreate(
-            [
-                "slug" => "global_cash_out_main",
-                "bot_id" => $bot->id,
-                'is_global' => true,
-            ],
-            [
-                'command' => ".*Вывод средств",
-                'comment' => "Скрипт вывода средств на карту",
-            ]);
+
 
     }
 
