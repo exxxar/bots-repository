@@ -70,14 +70,16 @@ BotManager::bot()
         BotManager::bot()
             ->sendPhoto(
                 $channel,
-                $photoToSend,
+                InputFile::create($photoToSend)
+                ,
                 $caption
             );
 
         BotManager::bot()
             ->sendPhoto(
                 $channel,
-                $photos[count($photos) - 1]->file_unique_id,
+                InputFile::create( $photos[count($photos) - 1]->file_unique_id)
+               ,
                 $caption
             );
 
