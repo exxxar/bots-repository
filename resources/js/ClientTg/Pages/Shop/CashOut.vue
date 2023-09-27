@@ -43,7 +43,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
                 <div class="col-12" v-if="need_phone">
 
-                    <h6 class="text-center" >Введите номер телефона</h6>
+                    <h6 class="text-center">Введите номер телефона</h6>
                     <div class="input-style input-style-2">
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
                                v-mask="'+7(###)###-##-##'"
@@ -56,7 +56,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
                 <div class="col-12" v-if="!need_phone">
 
-                    <h6 class="text-center" >Введите номер карты</h6>
+                    <h6 class="text-center">Введите номер карты</h6>
                     <div class="input-style input-style-2">
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
                                v-mask="'#### #### #### ####'"
@@ -79,19 +79,26 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     </div>
                 </div>
 
+                <div class="col-12">
+                    <button type="submit"
+                            :disabled="load"
+                            class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
+                        Отправить заявку
+                    </button>
 
-                <button type="submit"
-                        :disabled="!confirm||load"
-                        class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
-                    Отправить заявку
-                </button>
+                </div>
 
+                <div class="divider divider-small my-3 bg-highlight "></div>
+
+                <div class="col-12">
+                    <ReturnToBot class="mb-2"/>
+                </div>
 
             </form>
 
         </div>
 
-        <ReturnToBot class="mb-2"/>
+
     </div>
 
 
@@ -105,7 +112,7 @@ export default {
         return {
             load: false,
             botUser: null,
-            need_phone:false,
+            need_phone: false,
             withDrawMoneyForm: {
                 amount: null,
                 card: null,
