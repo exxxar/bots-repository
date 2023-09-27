@@ -44,7 +44,7 @@ BotManager::bot()
         $caption = $data[2] ?? null;
         $photos = $data[3] ?? null;
 
-        if (is_null($caption)){
+        if (is_null($caption)) {
             BotManager::bot()->reply("Фотография в описании должна содержать подпись!");
             return;
         }
@@ -59,7 +59,7 @@ BotManager::bot()
         $bot = BotManager::bot()->getSelf();
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
-        Log::info("my_photo ".print_r($photoToSend, true));
+        Log::info("my_photo " . print_r($photoToSend, true));
         $channel = $bot->main_channel ?? $bot->order_channel ?? null;
 
         if (is_null($photoToSend) || is_null($channel)) {
@@ -67,12 +67,16 @@ BotManager::bot()
             return;
         }
 
+        $data = \Illuminate\Support\Facades\Http::get("https://api.telegram.org/bot" . $bot->bot_token . "/getFile?file_id=$photoToSend")
+            ->json("result");
+
+
         BotManager::bot()
             ->sendPhoto(
                 $channel,
                 InputFile::create(
-                    "https://api.telegram.org/bot".$bot->bot_token."/getFile?file_id=$photoToSend"
-                    ,"payments.jpg")
+                    "https://api.telegram.org/file/bot" . $bot->bot_token . "/" . $data->file_path
+                )
                 ,
                 $caption
             );
