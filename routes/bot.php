@@ -73,9 +73,7 @@ BotManager::bot()
             ->sendPhoto(
                 $channel,
                 $caption,
-                InputFile::create(
-                    $photoToSend
-                )
+                $photoToSend
                 ,
 
             );
