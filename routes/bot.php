@@ -59,6 +59,7 @@ BotManager::bot()
         $bot = BotManager::bot()->getSelf();
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
+        Log::info("my_photo ".print_r($photoToSend, true));
         $channel = $bot->main_channel ?? $bot->order_channel ?? null;
 
         if (is_null($photoToSend) || is_null($channel)) {
@@ -66,12 +67,17 @@ BotManager::bot()
             return;
         }
 
-
-
         BotManager::bot()
             ->sendPhoto(
                 $channel,
                 $photoToSend,
+                $caption
+            );
+
+        BotManager::bot()
+            ->sendPhoto(
+                $channel,
+                $photos[count($photos) - 1]->file_unique_id,
                 $caption
             );
 
