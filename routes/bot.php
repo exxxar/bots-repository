@@ -39,9 +39,10 @@ BotManager::bot()
 
 BotManager::bot()
     ->fallbackPhoto(function (...$data) {
+        Log::info(print_r($data, true));
 
-        $caption = $data[2] ?? null;
-        $photos = $data[3] ?? null;
+        $caption = $data[3] ?? null;
+        $photos = $data[4] ?? null;
 
         if (is_null($caption))
             return;
@@ -63,7 +64,7 @@ BotManager::bot()
             return;
         }
 
-        Log::info(print_r($data, true));
+
 
         BotManager::bot()
             ->sendPhoto(
