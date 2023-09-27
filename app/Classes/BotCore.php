@@ -406,6 +406,8 @@ abstract class BotCore
     private function botFallbackPhotoHandler($message): bool
     {
         $photos = $message->photo ?? null;
+        $caption = $message->caption ?? null;
+
         if (is_null($photos))
             return false;
 
@@ -416,7 +418,7 @@ abstract class BotCore
                 continue;
 
             if ($item["path"] === "fallback_photo") {
-                $find = $this->tryCall($item, $message, null, [...$photos]);
+                $find = $this->tryCall($item, $message, null, [($caption ?? 'Без подписи'), ...$photos]);
             }
         }
         return $find;

@@ -38,8 +38,39 @@ BotManager::bot()
     ->inline("inlineHandler");
 
 BotManager::bot()
-    ->fallbackPhoto(function (...$data){
+    ->fallbackPhoto(function (...$data) {
+
+        $caption = $data[2] ?? null;
+        $photos = $data[3] ?? null;
+
+        if (is_null($caption))
+            return;
+
+        $caption = strtolower($caption);
+
+        if (!str_contains($caption, "оплата")) {
+            BotManager::bot()->reply("Фотографию в описании должна содержать ключевое слово, например: оплата");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+        $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
+
+        $channel = $bot->main_channel ?? $bot->order_channel ?? null;
+
+        if (is_null($photoToSend) || is_null($channel)) {
+            BotManager::bot()->reply("Ошибка отправки фотографии!");
+            return;
+        }
+
         Log::info(print_r($data, true));
+
+        BotManager::bot()
+            ->sendPhoto(
+                $channel,
+                $photoToSend,
+                $caption
+            );
 
         BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
     });
