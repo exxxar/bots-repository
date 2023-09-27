@@ -38,7 +38,9 @@ BotManager::bot()
     ->inline("inlineHandler");
 
 BotManager::bot()
-    ->fallback(function (...$data){
+    ->fallbackPhoto(function (...$data){
         Log::info(print_r($data, true));
+
+        BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
     });
 

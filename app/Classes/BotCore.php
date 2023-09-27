@@ -146,6 +146,9 @@ abstract class BotCore
         if ($this->botNextHandler($data))
             return response()->json($this->webMessages);
 
+        if ($this->botFallbackPhotoHandler($message))
+            return response()->json($this->webMessages);
+
         if ($this->botFallbackHandler($data))
             return response()->json($this->webMessages);
 
@@ -400,6 +403,25 @@ abstract class BotCore
         return $find;
     }
 
+    private function botFallbackPhotoHandler($message): bool
+    {
+        $photos = $message->photo ?? $message["photo"] ?? null;
+        if (is_null($photos))
+            return false;
+
+        $find = false;
+        foreach ($this->routes as $item) {
+
+            if (is_null($item["path"]))
+                continue;
+
+            if ($item["path"] === "fallback_photo") {
+                $find = $this->tryCall($item, $message, null, [...$photos]);
+            }
+        }
+        return $find;
+    }
+
     public function preCheckoutQueryHandler($data)
     {
 
@@ -649,6 +671,9 @@ abstract class BotCore
         if ($this->botNextHandler($message))
             return;
 
+        if ($this->botFallbackPhotoHandler($message))
+            return;
+
         if ($this->botFallbackHandler($message))
             return;
 
@@ -766,6 +791,18 @@ abstract class BotCore
         $this->routes[] = [
             "controller" => $this->controller ?? null,
             "path" => "fallback",
+            "is_service" => true,
+            "function" => $function
+        ];
+
+        return $this;
+    }
+
+    public function fallbackPhoto($function)
+    {
+        $this->routes[] = [
+            "controller" => $this->controller ?? null,
+            "path" => "fallback_photo",
             "is_service" => true,
             "function" => $function
         ];
