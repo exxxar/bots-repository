@@ -3,6 +3,7 @@
 use App\Facades\BotManager;
 use App\Http\Controllers\Bots\InlineBotController;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Telegram\Bot\FileUpload\InputFile;
 
 include_once "bots/cashback.php";
@@ -67,19 +68,16 @@ BotManager::bot()
             return;
         }
 
-        $data2 = \Illuminate\Support\Facades\Http::get("https://api.telegram.org/bot" . $bot->bot_token . "/getFile?file_id=$photoToSend")
-            ->json("result");
-
-        Log::info(print_r($data2, true));
 
         BotManager::bot()
             ->sendPhoto(
                 $channel,
+                $caption,
                 InputFile::create(
-                    "https://api.telegram.org/file/bot" . $bot->bot_token . "/" . $data2["file_path"],"payment.jpg"
+                    $photoToSend
                 )
                 ,
-                $caption
+
             );
 
 
