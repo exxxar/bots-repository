@@ -139,15 +139,17 @@ export default {
     methods: {
 
         submit() {
-            this.loading = true;
+            this.load = true;
 
             this.$store.dispatch("withDrawMoney", {
-                ...this.withDrawMoneyForm
+                withDrawMoneyForm: this.withDrawMoneyForm
             }).then((resp) => {
-                this.loading = false
+                this.load = false
+                this.$botNotification.success("Вывод средств", "Данные успешно переданы на обработку!")
                 this.tg.close()
             }).catch(() => {
-                this.loading = false
+                this.load = false
+                this.$botNotification.warning("Вывод средств", "Ошибка обработки данных!")
             })
         }
     }
