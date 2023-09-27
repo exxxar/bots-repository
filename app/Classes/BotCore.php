@@ -418,7 +418,7 @@ abstract class BotCore
                 continue;
 
             if ($item["path"] === "fallback_photo") {
-                $find = $this->tryCall($item, $message, null, ($caption ?? 'Без подписи'),[ ...$photos]);
+                $find = $this->tryCall($item, $message, null, ($caption ?? null),[ ...$photos]);
             }
         }
         return $find;

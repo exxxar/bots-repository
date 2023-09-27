@@ -41,16 +41,18 @@ BotManager::bot()
     ->fallbackPhoto(function (...$data) {
         Log::info(print_r($data, true));
 
-        $caption = $data[3] ?? null;
-        $photos = $data[4] ?? null;
+        $caption = $data[2] ?? null;
+        $photos = $data[3] ?? null;
 
-        if (is_null($caption))
+        if (is_null($caption)){
+            BotManager::bot()->reply("Фотография в описании должна содержать подпись!");
             return;
+        }
 
         $caption = strtolower($caption);
 
         if (!str_contains($caption, "оплата")) {
-            BotManager::bot()->reply("Фотографию в описании должна содержать ключевое слово, например: оплата");
+            BotManager::bot()->reply("Фотография в описании должна содержать ключевое слово, например: оплата");
             return;
         }
 
