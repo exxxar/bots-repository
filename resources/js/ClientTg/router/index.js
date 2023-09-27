@@ -15,6 +15,7 @@ import OurTeam from '@/ClientTg/Pages/Shop/OurTeam.vue';
 import ContactUs from '@/ClientTg/Pages/Shop/ContactUs.vue';
 import Help from '@/ClientTg/Pages/Shop/Help.vue';
 import Wheel from '@/ClientTg/Pages/Shop/Wheel.vue';
+import CashOut from '@/ClientTg/Pages/Shop/CashOut.vue';
 import SaveUp from '@/ClientTg/Pages/Shop/SaveUp.vue';
 import Quest from '@/ClientTg/Pages/Shop/Quest.vue';
 import Empty from '@/ClientTg/Pages/Shop/Empty.vue';
@@ -58,6 +59,12 @@ export const routes = [
         path: '/vip',
         component: Vip,
         meta: { title: 'VIP-анкета', hide_menu:true }
+    },
+    {
+        name: 'cashOut',
+        path: '/cash-out',
+        component: CashOut,
+        meta: { title: 'Вывод средств', hide_menu:true }
     },
     {
         name: 'admin',

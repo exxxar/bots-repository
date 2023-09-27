@@ -36,15 +36,6 @@ const actions = {
         })
     },
     async wheelOfFortuneWin(context, payload = {winForm: null}) {
-
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        payload.winForm.append("tgData", tgData)
-        payload.winForm.append("slug_id", slugId)
-        payload.winForm.append("botDomain", botDomain)
-
         let link = `${BASE_WHEEL_OF_FORTUNE_LINK}/callback`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.winForm)

@@ -58,7 +58,9 @@ BotManager::bot()
     ->slug("global_clear_basket", "clearBasket")
     ->slug("global_product_basket", "basket");
 
-
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\RequestMoneyWithdrawScriptController::class)
+    ->slug("global_cash_out_main", "moneyWithdrawScript");
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\CashBackScriptController::class)

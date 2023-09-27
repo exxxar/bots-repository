@@ -8,6 +8,7 @@ import products from './modules/shop/products';
 import wheelOfFortune from "./modules/globals/wheelOfFortune";
 import bonusProduct from "./modules/globals/bonusProduct";
 import instagramQuest from "./modules/globals/instagramQuest";
+import cashOut from "./modules/globals/cashOut";
 import cart from "./modules/shop/cart";
 import self from "./modules/self";
 import favorites from "./modules/shop/favorites";
@@ -89,6 +90,7 @@ export default createStore({
         products,
         wheelOfFortune,
         instagramQuest,
+        cashOut,
         cart,
         self,
         favorites,

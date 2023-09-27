@@ -184,6 +184,12 @@ Route::prefix("bot-client")
                 ->middleware(["slug"]);
             });
 
+        Route::prefix("cash-out")
+            ->middleware(["tgAuth.any"])
+            ->group(function(){
+                Route::post('/withdraw-money', [\App\Http\Controllers\Globals\RequestMoneyWithdrawScriptController::class, "withDrawMoney"])
+                    ->middleware(["slug"]);
+            });
 
         Route::prefix("pages")
             ->controller(BotPageController::class)

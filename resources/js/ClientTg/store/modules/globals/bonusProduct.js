@@ -23,20 +23,10 @@ const actions = {
         })
     },
     async bonusProductCheck(context, payload = {dataObject:null}) {
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-            ...payload.dataObject
-        }
 
         let link = `${BASE_BONUS_PRODUCT_LINK}/check`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', data)
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -46,20 +36,10 @@ const actions = {
         })
     },
     async bonusProductExchange(context, payload = {dataObject:null}) {
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-            ...payload.dataObject
-        }
 
         let link = `${BASE_BONUS_PRODUCT_LINK}/exchange`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', data)
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -69,20 +49,9 @@ const actions = {
         })
     },
     async loadActionData(context, payload = {dataObject: null}) {
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
-            ...payload.dataObject
-        }
-
         let link = `${BASE_BONUS_PRODUCT_LINK}/load-action-data`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', data)
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
