@@ -22,27 +22,57 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                                aria-describedby="withDrawMoneyForm-amount" required>
                     </div>
                 </div>
-
                 <div class="col-12">
+                    <div class="d-flex mb-2">
+                        <div class="pt-1">
+                            <h5 data-activate="toggle-id-1" class="font-500 font-13">
+                                <span v-if="need_phone">На карту</span>
+                                <span v-else>По номеру телефона</span>
+                            </h5>
+                        </div>
+                        <div class="ml-auto mr-4 pr-2">
+                            <div class="custom-control ios-switch">
+                                <input
+                                    v-model="need_phone"
+                                    type="checkbox" class="ios-input" id="toggle-id-2">
+                                <label class="custom-control-label" for="toggle-id-2"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <h6 class="text-center">Введите номер телефона или своей карты для вывода средств</h6>
+                <div class="col-12" v-if="need_phone">
+
+                    <h6 class="text-center" >Введите номер телефона</h6>
                     <div class="input-style input-style-2">
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               v-mask="['+7(###)###-##-##','#### #### #### ####']"
+                               v-mask="'+7(###)###-##-##'"
                                v-model="withDrawMoneyForm.card"
-                               placeholder="+7(000)000-00-00 или 0000 0000 0000 0000"
+                               placeholder="+7(000)000-00-00"
                                aria-label="withDrawMoneyForm-card" aria-describedby="withDrawMoneyForm-card" required>
 
                     </div>
                 </div>
 
+                <div class="col-12" v-if="!need_phone">
+
+                    <h6 class="text-center" >Введите номер карты</h6>
+                    <div class="input-style input-style-2">
+                        <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                               v-mask="'#### #### #### ####'"
+                               v-model="withDrawMoneyForm.card"
+                               placeholder="0000 0000 0000 0000"
+                               aria-label="withDrawMoneyForm-card" aria-describedby="withDrawMoneyForm-card" required>
+
+                    </div>
+                </div>
 
                 <div class="col-12">
                     <h6 class="text-center">Укажите инициалы получателя и название банка</h6>
                     <div class="input-style input-style-2">
 
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               placeholder="1000 руб."
+                               placeholder="Иванов И.И., сбер"
                                aria-label="withDrawMoneyForm-info"
                                v-model="withDrawMoneyForm.info"
                                aria-describedby="withDrawMoneyForm-info" required>
@@ -75,6 +105,7 @@ export default {
         return {
             load: false,
             botUser: null,
+            need_phone:false,
             withDrawMoneyForm: {
                 amount: null,
                 card: null,
