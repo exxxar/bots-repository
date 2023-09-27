@@ -146,7 +146,7 @@ abstract class BotCore
         if ($this->botNextHandler($data))
             return response()->json($this->webMessages);
 
-        if ($this->botFallbackPhotoHandler($message))
+        if ($this->botFallbackPhotoHandler($data))
             return response()->json($this->webMessages);
 
         if ($this->botFallbackHandler($data))
