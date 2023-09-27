@@ -2,6 +2,7 @@
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Bots\InlineBotController;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
 include_once "bots/cashback.php";
@@ -35,4 +36,9 @@ BotManager::bot()
 BotManager::bot()
     ->controller(InlineBotController::class)
     ->inline("inlineHandler");
+
+BotManager::bot()
+    ->fallback(function (...$data){
+        Log::info(print_r($data, true));
+    });
 
