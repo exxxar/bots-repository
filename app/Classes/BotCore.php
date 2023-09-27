@@ -405,7 +405,7 @@ abstract class BotCore
 
     private function botFallbackPhotoHandler($message): bool
     {
-        $photos = $message->photo ?? $message["photo"] ?? null;
+        $photos = $message->photo ?? null;
         if (is_null($photos))
             return false;
 
