@@ -40,8 +40,6 @@ BotManager::bot()
 
 BotManager::bot()
     ->fallbackPhoto(function (...$data) {
-        Log::info(print_r($data, true));
-
         $caption = $data[2] ?? null;
         $photos = $data[3] ?? null;
 
@@ -60,7 +58,6 @@ BotManager::bot()
         $bot = BotManager::bot()->getSelf();
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
-        Log::info("my_photo " . print_r($photoToSend, true));
         $channel = $bot->main_channel ?? $bot->order_channel ?? null;
 
         if (is_null($photoToSend) || is_null($channel)) {
@@ -68,16 +65,32 @@ BotManager::bot()
             return;
         }
 
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $name = \App\Facades\BotMethods::prepareUserName($botUser);
+
+        $id = $botUser->telegram_chat_id;
+
+        $phone = $botUser->phone ?? 'Не указан';
+
+        $data = "001" . $botUser->telegram_chat_id;
+
+        $link = "https://t.me/$bot->bot_domain?start=" .
+            base64_encode($data);
 
         BotManager::bot()
             ->sendPhoto(
                 $channel,
-                $caption,
-                $photoToSend
-                ,
-
+                "#оплатачеком\n" .
+                "Идентификатор: $id\n" .
+                "Пользователь: $name\n" .
+                "телефон: $phone\n",
+                $photoToSend, [
+                    [
+                        ["text" => "Работа с пользователем", "url" => $link]
+                    ]
+                ]
             );
-
 
         BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
     });
