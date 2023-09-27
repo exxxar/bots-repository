@@ -70,18 +70,13 @@ BotManager::bot()
         BotManager::bot()
             ->sendPhoto(
                 $channel,
-                InputFile::create($photoToSend,"payments.jpg")
+                InputFile::create(
+                    "https://api.telegram.org/bot".$bot->bot_token."/getFile?file_id=$photoToSend"
+                    ,"payments.jpg")
                 ,
                 $caption
             );
 
-        BotManager::bot()
-            ->sendPhoto(
-                $channel,
-                InputFile::create( $photos[count($photos) - 1]->file_unique_id,"payments.jpg")
-               ,
-                $caption
-            );
 
         BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
     });
