@@ -70,10 +70,7 @@ class RequestMoneyWithdrawScriptController extends SlugController
 
         ];
 
-        Log::info("count1=>".count($mainScript->config ?? []).print_r($mainScript->config, true));
-        Log::info("count2=>".count($params).print_r($params, true));
         if (count($mainScript->config ?? []) != count($params)) {
-            Log::info("test we are here!".print_r($params, true));
             $mainScript->config = $params;
             $mainScript->save();
         }
@@ -97,7 +94,7 @@ class RequestMoneyWithdrawScriptController extends SlugController
 
         $minCashOutValue = (Collection::make($slug->config)
             ->where("key", "min_cash_out_value")
-            ->first())["Value"] ?? 500;
+            ->first())["value"] ?? 500;
 
         $cashBackAmount = $botUser->cashBack->amount ?? 0;
 
@@ -171,7 +168,7 @@ class RequestMoneyWithdrawScriptController extends SlugController
 
         $minCashOutValue = (Collection::make($config[1])
             ->where("key", "min_cash_out_value")
-            ->first())["Value"] ?? 500;
+            ->first())["value"] ?? 500;
 
         $cashBackAmount = $botUser->cashBack->amount ?? 0;
 
