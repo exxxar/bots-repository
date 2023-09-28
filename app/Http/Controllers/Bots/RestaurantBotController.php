@@ -149,6 +149,7 @@ class RestaurantBotController extends Controller
 
     public function firstStart()
     {
+        Log::info("first start");
         BotManager::bot()->stopBotDialog();
 
         $botUser = BotManager::bot()->currentBotUser();
