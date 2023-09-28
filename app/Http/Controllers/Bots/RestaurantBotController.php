@@ -30,7 +30,7 @@ class RestaurantBotController extends Controller
 
         $message = $bot->welcome_message ?? null;
 
-      //  Log::info("startWithParam data".print_r($data[3], true));
+       Log::info("startWithParam data".print_r($data[3], true));
 
         if (!is_null($data[3])) {
             $pattern_simple = "/([0-9]{3})([0-9]+)/";
@@ -45,12 +45,12 @@ class RestaurantBotController extends Controller
             $slug_id = $matches[3][0] ?? 'route';
 
 
-           // Log::info("code = $code request_telegram_chat_id " .$request_telegram_chat_id);
+            Log::info("code = $code request_telegram_chat_id " .$request_telegram_chat_id);
 
             //$qrCode = new QRCodeHandler($code, $request_user_id);
 
             if ($botUser->is_admin) {
-               // Log::info("startWithParam is_admin $code $request_telegram_chat_id $slug_id");
+                Log::info("startWithParam is_admin $code $request_telegram_chat_id $slug_id");
                 switch ($code) {
                     default:
                     case "001":
