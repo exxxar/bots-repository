@@ -207,6 +207,28 @@
         </div>
 
         <div class="row mb-0">
+            <p class="col-12 mb-0">Менеджер</p>
+            <div class="col-6">
+                <button
+                    type="button"
+                    @click="botUserForm.is_manager = true"
+                    v-bind:class="{'bg-blue1-dark text-white':botUserForm.is_manager,'bg-theme border-green1-dark color-green1-dark':!botUserForm.is_manager}"
+                    class="w-100 btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900">
+                    <i class="fa-solid fa-check mr-1"></i> Да
+                </button>
+            </div>
+            <div class="col-6">
+                <button
+                    type="button"
+                    @click="botUserForm.is_manager = false"
+                    v-bind:class="{'bg-blue1-dark text-white':!botUserForm.is_manager,'bg-theme border-green1-dark color-green1-dark':botUserForm.is_manager}"
+                    class="w-100 btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900">
+                    <i class="fa-solid fa-xmark mr-1"></i> Нет
+                </button>
+            </div>
+        </div>
+
+        <div class="row mb-0">
             <p class="col-12 mb-0">Работает</p>
             <div class="col-6">
                 <button
@@ -319,6 +341,7 @@ export default {
                 is_vip: false,
                 is_admin: false,
                 is_work: false,
+                is_manager: false,
                 user_in_location: false,
                 name: null,
                 phone: null,
@@ -342,6 +365,7 @@ export default {
                     is_vip: this.botUser.is_vip || false,
                     is_admin: this.botUser.is_admin || false,
                     is_work: this.botUser.is_work || false,
+                    is_manager: this.botUser.is_manager || false,
                     user_in_location: this.botUser.user_in_location || false,
                     name: this.botUser.name || null,
                     phone: this.botUser.phone || null,
@@ -367,6 +391,7 @@ export default {
                     is_vip: false,
                     is_admin: false,
                     is_work: false,
+                    is_manager: false,
                     user_in_location: false,
                     name: null,
                     phone: null,
