@@ -117,7 +117,8 @@
             <label for="">Ф.И.О пользователя</label>
             <input type="text" class="form-control"
                    v-model="botUserForm.name"
-                   placeholder="Иванов Иван Иванович">
+                   @invalid="alert('Вы не указали имя!')"
+                   placeholder="Иванов Иван Иванович" required>
         </div>
 
 
@@ -126,7 +127,8 @@
             <input type="text" class="form-control"
                    v-model="botUserForm.phone"
                    v-mask="'+7(###)###-##-##'"
-                   placeholder="+7(XXX) XXX-XX-XX">
+                   @invalid="alert('Вы не указали телефон!')"
+                   placeholder="+7(XXX) XXX-XX-XX" required>
         </div>
 
         <div class="form-group mb-2">
@@ -324,8 +326,19 @@
             </div>
         </div>
 
+        <div v-if="messages.length>0"
+             v-for="(message, index) in messages"
+             class="alert alert-small rounded-s shadow-xl bg-red2-dark w-100" role="alert">
+
+            <p class="custom-alert-text">{{ message || 'Ошибка' }}</p>
+            <button type="button"
+                    @click="removeMessage(index)"
+                    class="close color-white opacity-60 font-16">×
+            </button>
+        </div>
+
         <button type="submit"
-                class="btn btn-m btn-full mb-1 rounded-s text-uppercase font-900 shadow-s bg-green2-dark w-100">
+                class="btn btn-m btn-full mt-2 mb-1 rounded-s text-uppercase font-900 shadow-s bg-green2-dark w-100">
             Сохранить
         </button>
         <div class="divider divider-small my-3 bg-highlight "></div>
@@ -338,6 +351,7 @@ export default {
     data() {
         return {
             isEdit: false,
+            messages:[],
             botUserForm: {
                 id: null,
                 is_vip: false,
@@ -383,11 +397,19 @@ export default {
     },
 
     methods: {
+        alert(msg) {
+            this.messages.push(msg)
+        },
+        removeMessage(index) {
+            this.messages.splice(index, 1)
+        },
         submit() {
             this.$store.dispatch('updateBotUser', {
                 botUserForm: this.botUserForm
             }).then(() => {
                 this.isEdit = false
+
+                this.messages = []
                 this.botUserForm = {
                     id: null,
                     is_vip: false,
@@ -409,6 +431,8 @@ export default {
 
                 this.$emit("update")
                 this.$botNotification.notification("Редактирование данных", "Данные успешно обновлены!")
+            }).catch(()=>{
+                this.$botNotification.warning("Редактирование данных", "Ошибка обновления данных")
             })
         }
     }
