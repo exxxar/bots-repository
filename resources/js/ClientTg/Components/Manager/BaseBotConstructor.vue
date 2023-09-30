@@ -1218,6 +1218,13 @@ export default {
                     is_active: true
                 },
                 {
+                    title: 'AMO CRM',
+                    description: 'Интеграция с AMO CRM',
+                    slug: 'amo-crm',
+                    icon: 'fa-solid fa-money-bill-trend-up',
+                    is_active: true
+                },
+                {
                     title: 'Система друзей',
                     description: 'Реферальная система друзей',
                     slug: 'friends-system',
