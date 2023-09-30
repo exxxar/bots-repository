@@ -24,6 +24,7 @@ class BotUser extends Model
         'is_vip',
         'is_admin',
         'is_work',
+        'is_manager',
         'in_dialog_mode',
         'temporary',
 

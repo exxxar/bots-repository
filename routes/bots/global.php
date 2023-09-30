@@ -63,6 +63,10 @@ BotManager::bot()
     ->slug("global_cash_out_main", "moneyWithdrawScript");
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\ManagerScriptController::class)
+    ->slug("global_manager_main", "managerScript");
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\CashBackScriptController::class)
     ->slug("global_cashback_main", "specialCashBackSystem")
     ->slug("global_cashback_budget", "myBudget")

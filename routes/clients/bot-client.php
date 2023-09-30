@@ -90,6 +90,15 @@ Route::prefix("bot-client")
                 Route::post("/location", "createLocation");
             });
 
+        Route::prefix("companies")
+            ->controller(CompanyController::class)
+            ->middleware(["tgAuth.manager"])
+            ->group(function () {
+                Route::post("/manager-companies-list", "managerCompaniesList");
+                Route::delete("/{companyId}", "destroy");
+
+            });
+
         Route::prefix("shop")
             ->middleware(["tgAuth.any"])
             ->group(function () {
@@ -223,6 +232,15 @@ Route::prefix("bot-client")
                 Route::post('/switch-status',"switchBotStatus");
                 Route::post('/update-shop-link',"updateShopLink");
                 Route::post("/restore/{botId}", "restore");
+
+            });
+
+        Route::prefix("bots")
+            ->controller(BotController::class)
+            ->middleware(["tgAuth.manager"])
+            ->group(function(){
+                Route::post("/simple-bot-list", "simpleList");
+                Route::post("/bot-lazy", "createBotLazy");
             });
 
         Route::prefix("slugs")

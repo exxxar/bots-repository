@@ -21,6 +21,42 @@ const getters = {
 }
 
 const actions = {
+    async removeManagerCompany(context, payload= {companyId: null}){
+        let link = `${BASE_COMPANIES_LINK}/${payload.companyId}`
+
+        let _axios = util.makeAxiosFactory(link, 'DELETE')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadManagersCompanies(context, payload = { page: 0, size: 50}) {
+        let page = payload.page || 0
+        let size = payload.size || 50
+
+
+        let data = {
+            ...payload
+        }
+        let link = `${BASE_COMPANIES_LINK}/manager-companies-list?page=${page}&size=${size}`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            context.commit("setCompanies", dataObject.data)
+            delete dataObject.data
+            context.commit('setCompaniesPaginateObject', dataObject)
+            return Promise.resolve();
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadCompanies(context, payload = { page: 0, size: 50}) {
         let page = payload.page || 0
         let size = payload.size || 50

@@ -42,6 +42,9 @@ import AdminBotAmo from '@/ClientTg/Pages/Admin/BotManager/Amo.vue';
 import AdminBonusProduct from '@/ClientTg/Pages/Admin/BonusProduct.vue';
 import AdminMessageToUser from '@/ClientTg/Pages/Admin/MessageToUser.vue';
 
+
+import ManagerMain from '@/ClientTg/Pages/Manager/Main.vue';
+
 export const routes = [
 
     {
@@ -293,9 +296,19 @@ export const adminRoutes = [
     },
 ]
 
+export const managerRoutes = [
+    {
+        name: 'ManagerMain',
+        path: '/manager-main',
+        component: ManagerMain,
+        meta: { title: 'Менеджер: Главная', hide_menu:true}
+    },
+
+]
+
 const router = createRouter({
    history: createWebHashHistory(),
-    routes: [...routes, ...adminRoutes],
+    routes: [...routes, ...adminRoutes, ...managerRoutes],
 });
 
 export default router;

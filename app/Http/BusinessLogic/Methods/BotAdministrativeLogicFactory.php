@@ -114,57 +114,111 @@ class BotAdministrativeLogicFactory
             "summary_cashback" => CashBack::query()
                 ->where("bot_id", $this->bot->id)
                 ->sum("amount"),
+            "summary_cashback_people_count" => CashBack::query()
+                ->where("bot_id", $this->bot->id)
+                ->count(),
             "cashback_day_up" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
+            "cashback_day_up_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("operation_type", 1)
+                ->whereDate('updated_at', Carbon::today())
+                ->count(),
             "cashback_day_up_level_1" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->where("level", 1)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
+            "cashback_day_up_level_1_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("operation_type", 1)
+                ->where("level", 1)
+                ->whereDate('updated_at', Carbon::today())
+                ->count(),
             "cashback_day_up_level_2" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->where("level", 2)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
+            "cashback_day_up_level_2_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("operation_type", 1)
+                ->where("level", 2)
+                ->whereDate('updated_at', Carbon::today())
+                ->count(),
             "cashback_day_up_level_3" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->where("level", 3)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
+            "cashback_day_up_level_3_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("operation_type", 1)
+                ->where("level", 3)
+                ->whereDate('updated_at', Carbon::today())
+                ->count(),
             "cashback_day_down" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 0)
                 ->whereDate('updated_at', Carbon::today())
                 ->sum("amount"),
+            "cashback_day_down_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("operation_type", 0)
+                ->whereDate('updated_at', Carbon::today())
+                ->count(),
             "cashback_summary_up" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 1)
                 ->sum("amount"),
+            "cashback_summary_up_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("operation_type", 1)
+                ->count(),
             "cashback_summary_up_level_1" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("level", 1)
                 ->where("operation_type", 1)
                 ->sum("amount"),
+            "cashback_summary_up_level_1_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("level", 1)
+                ->where("operation_type", 1)
+                ->count(),
             "cashback_summary_up_level_2" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("level", 1)
                 ->where("operation_type", 1)
                 ->sum("amount"),
+            "cashback_summary_up_level_2_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("level", 1)
+                ->where("operation_type", 1)
+                ->count(),
             "cashback_summary_up_level_3" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("level", 1)
                 ->where("operation_type", 1)
                 ->sum("amount"),
+            "cashback_summary_up_level_3_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("level", 1)
+                ->where("operation_type", 1)
+                ->count(),
             "cashback_summary_down" => CashBackHistory::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("operation_type", 0)
-                ->sum("amount")
+                ->sum("amount"),
+            "cashback_summary_down_people_count" => CashBackHistory::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("operation_type", 0)
+                ->count()
         ];
     }
 

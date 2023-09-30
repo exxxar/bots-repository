@@ -11,6 +11,8 @@ use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\BotCollection;
 use App\Http\Resources\BotMenuTemplateResource;
 use App\Http\Resources\BotResource;
+use App\Http\Resources\BotSecurityCollection;
+use App\Http\Resources\BotSecurityResource;
 use App\Http\Resources\BotUserResource;
 use App\Http\Resources\CashBackCollection;
 use App\Http\Resources\CashBackHistoryCollection;
@@ -121,23 +123,46 @@ class BotLogicFactory
         return new BotCollection($bots);
     }
 
+    public function simple($companyId = null, $search = null, $size = null): BotSecurityCollection
+    {
+
+        $size = $size ?? config('app.results_per_page');
+
+        $bots = Bot::query();
+
+        if (!is_null($companyId))
+            $bots = $bots->where("company_id", $companyId);
+
+        if (!is_null($search))
+            $bots = $bots->where("bot_domain", 'like', "%$search%");
+
+        $bots = $bots
+            ->orderBy("updated_at", 'DESC')
+            ->paginate($size);
+
+        return new BotSecurityCollection($bots);
+    }
+
     /**
      * @throws ValidationException
      * @throws HttpException
      */
-    public function duplicate($companyId): BotResource
+    public function duplicate(array $customParams = null): BotResource
     {
+        if (is_null($customParams["company_id"]))
+            throw new HttpException(403, "Идентификатор компании не должен быть пустым!");
+
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
         $newBot = $this->bot->replicate();
         $newBot->deleted_at = null;
-        $newBot->bot_domain = "duplicate_" . $newBot->bot_domain . "_" . Carbon::now()->format("Y-m-d H:i:s");
-        $newBot->bot_token = null;
-        $newBot->bot_token_dev = null;
-        $newBot->main_channel = null;
-        $newBot->order_channel = null;
-        $newBot->company_id = $companyId;
+        $newBot->bot_domain = $customParams["bot_domain"] ?? "duplicate_" . $newBot->bot_domain . "_" . Carbon::now()->format("Y-m-d H:i:s");
+        $newBot->bot_token = $customParams["bot_token"] ?? null;
+        $newBot->bot_token_dev = $customParams["bot_token_dev"] ?? null;
+        $newBot->main_channel = $customParams["main_channel"] ?? null;
+        $newBot->order_channel = $customParams["order_channel"] ?? null;
+        $newBot->company_id = $customParams["company_id"] ?? null;
 
         $newBot->save();
 
@@ -1273,18 +1298,18 @@ class BotLogicFactory
 
         $date = Carbon::now()->format("Y-m-d H-i-s");
 
-        Excel::store(new BotCashBackExport($statistics),"$name.xls","public");
+        Excel::store(new BotCashBackExport($statistics), "$name.xls", "public");
 
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendDocument($this->botUser->telegram_chat_id,
                 "Статистика CashBack в боте",
                 InputFile::create(
-                    storage_path("app/public")."/$name.xls",
+                    storage_path("app/public") . "/$name.xls",
                     "cashback-history-$date.xls"
                 )
             );
 
-        unlink(storage_path("app/public")."/$name.xls");
+        unlink(storage_path("app/public") . "/$name.xls");
     }
 }

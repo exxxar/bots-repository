@@ -3,13 +3,28 @@ import util from './utilites';
 const BASE_BOTS_LINK = '/bot-client/bots'
 
 let state = {
-
+    bots: [],
+    bots_paginate_object: null,
 }
 
 const getters = {
+    getBots: state => state.bots || [],
+    getBotsPaginateObject: state => state.bots_paginate_object || null,
 }
 
 const actions = {
+    async createBotLazy(context, payload = {botForm: null}) {
+        let link = `${BASE_BOTS_LINK}/bot-lazy`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload.botForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     updateShopLink(context, payload = {botForm:null}){
         let link = `${BASE_BOTS_LINK}/update-shop-link`
 
@@ -84,11 +99,11 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadBots(context, payload = {dataObject: null, page: 0, size: 50}) {
+    async loadSimpleBots(context, payload = {dataObject: null, page: 0, size: 50}) {
         let page = payload.page || 0
         let size = payload.size || 50
 
-        let link = `${BASE_BOTS_LINK}?page=${page}&size=${size}`
+        let link = `${BASE_BOTS_LINK}/simple-bot-list?page=${page}&size=${size}`
         let method = 'POST'
         let data = payload.dataObject
 
@@ -248,7 +263,14 @@ const actions = {
 
 }
 const mutations = {
-
+    setBots(state, payload) {
+        state.bots = payload || [];
+        localStorage.setItem('cashman_bots', JSON.stringify(payload));
+    },
+    setBotsPaginateObject(state, payload) {
+        state.bots_paginate_object = payload || [];
+        localStorage.setItem('cashman_bots_paginate_object', JSON.stringify(payload));
+    }
    /* setBotUsers(state, payload) {
         state.bot_users = payload || [];
         localStorage.setItem('cashman_bot_users', JSON.stringify(payload));

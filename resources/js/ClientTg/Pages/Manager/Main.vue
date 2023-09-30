@@ -1,0 +1,43 @@
+<script setup>
+
+import BaseBotConstructor from "@/ClientTg/Components/Manager/BaseBotConstructor.vue";
+</script>
+<template>
+<!--    todo: мои бот, мои клиенты, добавить роль is_manager, боты для примера и для копирования-->
+    <BaseBotConstructor></BaseBotConstructor>
+</template>
+<script>
+//import baseJS from "./modules/custom.js";
+import {mapGetters} from "vuex";
+
+export default {
+    data() {
+        return {
+            botUser: null,
+            loading: false,
+
+        }
+    },
+    computed: {
+        ...mapGetters(['getSelf']),
+        currentBot() {
+            return window.currentBot
+        }
+
+    },
+    watch: {
+        'getSelf': function () {
+            this.botUser = this.getSelf
+
+        },
+    },
+    mounted() {
+        if (this.getSelf) {
+            this.botUser = this.getSelf
+        }
+    },
+    methods: {
+
+    }
+}
+</script>

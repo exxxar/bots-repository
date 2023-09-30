@@ -26,10 +26,10 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
             <ul v-if="action.data" class="m-0 p-0">
                 <li v-for="item in action.data" class="d-flex flex-column mb-2">
-                    <span>Приз <strong>№{{item.win || 'Отсуствует'}}</strong></span>
-                    <span>Описание <strong>{{item.description || 'Отсуствует'}}</strong></span>
-                    <span>Победитель  <strong>{{item.name || 'Не указано'}}</strong></span>
-                    <span>Телефон  <strong>{{item.phone || 'Не указано'}}</strong></span>
+                    <span>Приз <strong>№{{ item.win || 'Отсуствует' }}</strong></span>
+                    <span>Описание <strong>{{ item.description || 'Отсуствует' }}</strong></span>
+                    <span>Победитель  <strong>{{ item.name || 'Не указано' }}</strong></span>
+                    <span>Телефон  <strong>{{ item.phone || 'Не указано' }}</strong></span>
                 </li>
             </ul>
         </div>
@@ -73,7 +73,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <h3>Анкета участника акции</h3>
 
             <p>
-                Для участия в конкурсе и дальнейшего получения приза необходимо заполнить данную анкету! Укажите своё имя и номер телефона чтоб менеджер
+                Для участия в конкурсе и дальнейшего получения приза необходимо заполнить данную анкету! Укажите своё
+                имя и номер телефона чтоб менеджер
                 мог выдать Вам приз по итогу.
             </p>
         </template>
@@ -94,7 +95,7 @@ export default {
     },
     data() {
         return {
-            winResultMessage:"Наш менеджер свяжется с вами для дальнейших инструкций.",
+            winResultMessage: "Наш менеджер свяжется с вами для дальнейших инструкций.",
             rules: null,
             rouletteKey: 0,
             action: null,
@@ -156,7 +157,6 @@ export default {
         }
         ,
         submit() {
-
             let data = new FormData();
 
             Object.keys(this.winForm)
@@ -167,28 +167,21 @@ export default {
                     else
                         data.append(key, item)
                 });
+            const winResult = this.winForm.win || 'Что-то интересное...'
 
             this.$store.dispatch("wheelOfFortuneWin", {
                 winForm: data
-
             }).then((response) => {
-
-                this.winForm = {
-                    win: null,
-                    name: null,
-                    phone: null,
-                }
-
-                this.$botNotification.success("Вы выиграли!", this.winResultMessage)
-
+                this.winForm.win = null
+                this.winForm.name = null
+                this.winForm.phone = null
 
                 this.prepareUserData()
-
-
             }).catch(err => {
 
             })
 
+            this.$botNotification.success("Вы выиграли!", winResult)
         },
 
         launchWheel() {
@@ -208,7 +201,7 @@ export default {
             if (!evt)
                 return;
             const win = evt.id
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.winForm.win = win
                 this.submit()
                 this.hasProfileData = false

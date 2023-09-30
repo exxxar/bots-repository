@@ -22,6 +22,25 @@ class CompanyLogicFactory
 {
     use LogicUtilities;
 
+    protected $botUser;
+
+    public function __construct()
+    {
+        $this->botUser = null;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function setBotUser($botUser = null): static
+    {
+        if (is_null($botUser))
+            throw new HttpException(400, "Пользователь бота не задан!");
+
+        $this->botUser = $botUser;
+        return $this;
+    }
+
     public function get($companyId): CompanyResource
     {
         $company = Company::query()
@@ -32,6 +51,28 @@ class CompanyLogicFactory
             throw new HttpException(404, "Компания (клиент) не найден");
 
         return new CompanyResource($company);
+    }
+
+    public function managerList($search = null, $size = null): CompanyCollection
+    {
+        if (is_null($this->botUser))
+            throw new HttpException(404, "Активные менеджер должен быть обязательно указан");
+
+        $size = $size ?? config('app.results_per_page');
+
+        $companies = Company::query()
+            ->withTrashed()
+            ->where("creator_id", $this->botUser->id);
+
+        if (!is_null($search))
+            $companies = $companies->where("title", 'like', "%$search%")
+                ->orWhere("slug", "like", "%$search%");
+
+        $companies = $companies
+            ->orderBy("updated_at", "DESC")
+            ->paginate($size);
+
+        return new CompanyCollection($companies);
     }
 
     public function list($search = null, $size = null): CompanyCollection
@@ -95,7 +136,7 @@ class CompanyLogicFactory
             'title' => "required|string:255",
             'slug' => "required|string:190|unique:companies,slug",
             'description' => "required|string:255",
-           // 'address' => "required|string:255",
+            // 'address' => "required|string:255",
             //'email' => "required|string:255",
             'vat_code' => "required|integer",
         ]);
@@ -131,8 +172,8 @@ class CompanyLogicFactory
             'title' => "required|string:255",
             'slug' => "required|string:190",
             'description' => "required|string:255",
-           // 'address' => "required|string:255",
-         //   'email' => "required|string:255",
+            // 'address' => "required|string:255",
+            //   'email' => "required|string:255",
             'vat_code' => "required|integer",
         ]);
 

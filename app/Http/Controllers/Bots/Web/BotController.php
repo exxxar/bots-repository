@@ -41,13 +41,14 @@ class BotController extends Controller
     public function updateShopLink(Request $request): BotResource
     {
         $request->validate([
-            "vk_shop_link"=>"required"
+            "vk_shop_link" => "required"
         ]);
 
         return BusinessLogic::bots()
             ->setBot($request->bot ?? null)
             ->updateShopLink($request->all());
     }
+
     /**
      * @throws ValidationException
      */
@@ -223,6 +224,17 @@ class BotController extends Controller
             );
     }
 
+    public function simpleList(Request $request): \App\Http\Resources\BotSecurityCollection
+    {
+
+        return BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->simple(
+                $request->companyId ?? null,
+                $request->search ?? null,
+                $request->get("size") ?? config('app.results_per_page')
+            );
+    }
 
     /**
      * @throws ValidationException
@@ -333,35 +345,11 @@ class BotController extends Controller
     public function createBotLazy(Request $request)
     {
 
-        $services = [
-            "investors" => [""],
-            "franchise" => [""],
-            "cashback" => ["", "", ""],
-            "agent-cabinet" => [""],
-            "referral-bonus" => [""],
-            "event-form" => [""],
-            "attached-documents" => [""],
-            "lead-magnet" => [""],
-            "sales-funnel" => [""],
-            "reviews" => [""],
-            "ask-a-question" => [""],
-            "online-consultation" => [""],
-            "location" => [""],
-            "promotions" => [""],
-            "our-clients" => [""],
-            "cost-of-services" => [""],
-            "custom-shop" => [""],
-            "buy-or-try" => [""],
-            "delivery" => [""],
-            "booking" => [""],
-            "atmosphere" => [""],
-            "courses" => [""],
-            "individual-button" => [""],
-        ];
-
         $name = $request->name;
         $token = $request->token ?? null;
         $botDomain = $request->botDomain;
+
+        $botUser = $request->botUser ?? null;
 
         $greeting = json_decode($request->greeting);
         $contacts = json_decode($request->contacts);
@@ -395,6 +383,69 @@ class BotController extends Controller
             ->first();
 
         $photos = [];
+
+        if (!is_null($request->selected_bot_id)) {
+            $bot = Bot::query()
+                ->find($request->selected_bot_id);
+
+            if (is_null($bot))
+                return "error";
+
+            $company = Company::query()->updateOrCreate(
+                [
+                    'slug' => $botDomain
+                ],
+                [
+                    'title' => $businessInfo->name,
+                    'description' => $businessInfo->text,
+                    'image' => null,
+                    'address' => $address->value ?? null,
+                    'phones' => $phones,
+                    'links' => $links,
+                    'email' => $email->value ?? null,
+                    'schedule' => [],
+                    'manager' => $selfInfo->name,
+                    'is_active' => true,
+                    'creator_id' => $botUser->id,
+                    'owner_id' => null,
+                    'blocked_message' => null,
+                    'blocked_at' => null,
+                ]);
+
+            $duplicateBot = BusinessLogic::bots()
+                ->setBot($bot ?? null)
+                ->duplicate([
+                    "company_id" => $company->id ?? null,
+                    "bot_domain" => $request->botDomain
+                ]);
+
+            return $duplicateBot;
+        }
+        $services = [
+            "investors" => [""],
+            "franchise" => [""],
+            "cashback" => ["", "", ""],
+            "agent-cabinet" => [""],
+            "referral-bonus" => [""],
+            "event-form" => [""],
+            "attached-documents" => [""],
+            "lead-magnet" => [""],
+            "sales-funnel" => [""],
+            "reviews" => [""],
+            "ask-a-question" => [""],
+            "online-consultation" => [""],
+            "location" => [""],
+            "promotions" => [""],
+            "our-clients" => [""],
+            "cost-of-services" => [""],
+            "custom-shop" => [""],
+            "buy-or-try" => [""],
+            "delivery" => [""],
+            "booking" => [""],
+            "atmosphere" => [""],
+            "courses" => [""],
+            "individual-button" => [""],
+        ];
 
 
         dd($phones);

@@ -84,15 +84,19 @@
                     </div>
                 </div>
             </div>
-            <div class="message">
+            <div class="message" style="position:relative;">
                 <input type="text"
                        :disabled="!loaded"
                        class="form-control w-100"
                        placeholder="text"
                        @keydown.enter="send(null)"
                        v-model="dataForm.message">
-            </div>
 
+                <button type="button"
+                        :disabled="!loaded"
+                        @click="send(null)"
+                        class="btn btn-send"><i class="fa-regular fa-paper-plane"></i></button>
+            </div>
         </div>
         <div class=" w-100" v-if="!canEnter">
             <form v-on:submit.prevent="login" class="p-2">
@@ -239,6 +243,20 @@ export default {
 </script>
 
 <style lang="scss">
+.btn-send {
+    background: #2196F3;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    font-size: 10px;
+}
+
 .chat-icon {
     display: flex;
     justify-content: center;
@@ -307,6 +325,7 @@ export default {
             border-radius: 25px;
             font-size: 10px;
             padding: 13px;
+            padding-right: 45px;
         }
 
         .chat-menu-btn {

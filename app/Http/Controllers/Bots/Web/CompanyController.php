@@ -11,6 +11,15 @@ use Illuminate\Validation\ValidationException;
 
 class CompanyController extends Controller
 {
+    public function managerCompaniesList(Request $request)
+    {
+        return BusinessLogic::companies()
+            ->setBotUser($request->botUser ?? null)
+            ->managerList($request->search ?? null,
+                $request->get("size") ?? config('app.results_per_page')
+            );
+    }
+
     public function index(Request $request): \App\Http\Resources\CompanyCollection
     {
 

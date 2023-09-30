@@ -43,40 +43,57 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                     </tr>
                     <tr>
                         <th scope="row">Выдано кэшбэка за день, руб</th>
-                        <td class="font-weight-bold">{{ (statistic.cashback_day_up || 0).toFixed(2) }}</td>
+                        <td class="font-weight-bold">{{ (statistic.cashback_day_up || 0).toFixed(2) }}
+                            <strong v-if="statistic.cashback_day_up_people_count">({{statistic.cashback_day_up_people_count}} чел)</strong>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Списано кэшбэка за день, руб</th>
-                        <td class="font-weight-bold">{{ (statistic.cashback_day_down || 0).toFixed(2) }}</td>
+                        <td class="font-weight-bold">{{ (statistic.cashback_day_down || 0).toFixed(2) }}
+                            <strong v-if="statistic.cashback_day_down_people_count">({{statistic.cashback_day_down_people_count}} чел)</strong>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Всего кэшбэка на счету у пользователей, руб</th>
-                        <td class="font-weight-bold">{{ (statistic.summary_cashback || 0).toFixed(2) }}</td>
+                        <td class="font-weight-bold">{{ (statistic.summary_cashback || 0).toFixed(2) }}
+                            <strong v-if="statistic.summary_cashback_people_count">({{statistic.summary_cashback_people_count}} чел)</strong>
+                        </td>
                     </tr>
 
                     <tr>
                         <th scope="row">Всего кэшбэка начислено пользователям, руб</th>
-                        <td class="font-weight-bold">{{ (statistic.cashback_summary_up || 0).toFixed(2) }}</td>
+                        <td class="font-weight-bold">{{ (statistic.cashback_summary_up || 0).toFixed(2) }}
+                            <strong v-if="statistic.cashback_summary_up_people_count">({{statistic.cashback_summary_up_people_count}} чел)</strong>
+                        </td>
                     </tr>
 
                     <tr>
                         <th scope="row">Всего кэшбэка списано у пользователей, руб</th>
-                        <td class="font-weight-bold">{{ (statistic.cashback_summary_down || 0).toFixed(2) }}</td>
+                        <td class="font-weight-bold">{{ (statistic.cashback_summary_down || 0).toFixed(2) }}
+                            <strong v-if="statistic.cashback_summary_down_people_count">({{statistic.cashback_summary_down_people_count}} чел)</strong>
+                        </td>
                     </tr>
 
                     <tr>
                         <th scope="row">Всего за день начислено кэшбэка первого уровня, руб</th>
-                        <td class="font-weight-bold">{{ (statistic.cashback_day_up_level_1 || 0).toFixed(2) }}</td>
+                        <td class="font-weight-bold">{{ (statistic.cashback_day_up_level_1 || 0).toFixed(2) }}
+                            <strong v-if="statistic.cashback_day_up_level_1_people_count">({{statistic.cashback_day_up_level_1_people_count}} чел)</strong>
+                        </td>
+
                     </tr>
 
                     <tr>
                         <th scope="row">Всего за день начислено кэшбэка второго уровня, руб</th>
-                        <td class="font-weight-bold">{{ (statistic.cashback_day_up_level_2 || 0).toFixed(2) }}</td>
+                        <td class="font-weight-bold">{{ (statistic.cashback_day_up_level_2 || 0).toFixed(2) }}
+                            <strong v-if="statistic.cashback_day_up_level_2_people_count">({{statistic.cashback_day_up_level_2_people_count}} чел)</strong>
+                        </td>
                     </tr>
 
                     <tr>
                         <th scope="row">Всего за день начислено кэшбэка третьего уровня, руб</th>
-                        <td class="font-weight-bold">{{ (statistic.cashback_day_up_level_3 || 0).toFixed(2) }}</td>
+                        <td class="font-weight-bold">{{ (statistic.cashback_day_up_level_3 || 0).toFixed(2) }}
+                            <strong v-if="statistic.cashback_day_up_level_3_people_count">({{statistic.cashback_day_up_level_3_people_count}} чел)</strong>
+                        </td>
                     </tr>
 
                     </tbody>

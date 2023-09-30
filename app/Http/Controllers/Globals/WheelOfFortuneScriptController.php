@@ -231,15 +231,14 @@ class WheelOfFortuneScriptController extends SlugController
 
         $link = "https://t.me/$bot->bot_domain?start=" . base64_encode("003$botUser->telegram_chat_id");
 
-        //Log::info("link=$link");
-
         $action->save();
 
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
                 ->telegram_chat_id,
-                sprintf("%s, вы приняли участие в розыгрыше и выиграли приз под номером %s (%s). Наш менеджер свяжется с вами в ближайшее время!", $winnerName, $winNumber, $description))
+                str_contains($winMessage, "%s") ?
+                    sprintf($winMessage, $winnerName, $winNumber, $description) : $winMessage)
             ->sendInlineKeyboard($callbackChannel,
                 "Участника $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $description ) - свяжитесь с ним для дальнейших указаний", [
                     [
