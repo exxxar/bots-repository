@@ -112,12 +112,14 @@
         </tbody>
     </table>
     <form v-on:submit.prevent="submit" v-if="isEdit">
+
         <div class="form-group mb-2">
             <label for="">Ф.И.О пользователя</label>
             <input type="text" class="form-control"
                    v-model="botUserForm.name"
                    placeholder="Иванов Иван Иванович">
         </div>
+
 
         <div class="form-group mb-2">
             <label for="">Телефон</label>
@@ -357,29 +359,29 @@ export default {
             }
         }
     },
-    mounted() {
-        if (this.botUser)
-            this.$nextTick(() => {
-                this.botUserForm = {
-                    id: this.botUser.id || null,
-                    is_vip: this.botUser.is_vip || false,
-                    is_admin: this.botUser.is_admin || false,
-                    is_work: this.botUser.is_work || false,
-                    is_manager: this.botUser.is_manager || false,
-                    user_in_location: this.botUser.user_in_location || false,
-                    name: this.botUser.name || null,
-                    phone: this.botUser.phone || null,
-                    email: this.botUser.email || null,
-                    birthday: this.botUser.birthday || null,
-                    city: this.botUser.city || null,
-                    country: this.botUser.country || null,
-                    address: this.botUser.address || null,
-                    sex: this.botUser.sex || false,
-                    is_blocked: this.botUser.blocked_at != null,
-                    blocked_message: this.botUser.blocked_message || null
-                }
-            })
+
+
+    watch: {
+        'isEdit': function () {
+            this.botUserForm.id = this.botUser.id
+            this.botUserForm.is_vip = this.botUser.is_vip
+            this.botUserForm.is_admin = this.botUser.is_admin
+            this.botUserForm.is_work = this.botUser.is_work
+            this.botUserForm.is_manager = this.botUser.is_manager
+            this.botUserForm.user_in_location = this.botUser.user_in_location
+            this.botUserForm.name = this.botUser.name || this.botUser.username || this.botUser.id
+            this.botUserForm.phone = this.botUser.phone
+            this.botUserForm.email = this.botUser.email
+            this.botUserForm.birthday = this.botUser.birthday || null
+            this.botUserForm.city = this.botUser.city || null
+            this.botUserForm.country = this.botUser.country || null
+            this.botUserForm.address = this.botUser.address || null
+            this.botUserForm.sex = this.botUser.sex || false
+            this.botUserForm.is_blocked = this.botUser.blocked_at != null
+            this.botUserForm.blocked_message = this.botUser.blocked_message || null
+        }
     },
+
     methods: {
         submit() {
             this.$store.dispatch('updateBotUser', {
