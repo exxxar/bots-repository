@@ -65,6 +65,7 @@ class BotUser extends Model
         'is_admin' => 'boolean',
         'is_work' => 'boolean',
         'is_vip' => 'boolean',
+        'is_manager' => 'boolean',
         'in_dialog_mode' => 'boolean',
         'sex' => 'boolean',
         'user_in_location' => 'boolean',
