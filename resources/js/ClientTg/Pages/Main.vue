@@ -74,10 +74,10 @@ import Layout from "ClientTg@/Layouts/ShopLayout.vue";
                             <a href="#" v-if="currentBot.company.email" @click="open('mailTo:'+currentBot.company.email)"
                                class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook text-white"><i
                                 class="fa-solid fa-at"></i></a>
-                            <a href="#" v-if="currentBot.company.links[0]" @click="open(currentBot.company.links[0])"
+                            <a href="#" v-if="currentBot.company.links" @click="open(currentBot.company.links[0])"
                                class="icon icon-xs rounded-sm shadow-l mr-1 bg-vk text-white">
                                 <i class="fa-brands fa-vk"></i></a>
-                            <a href="#" v-if="currentBot.company.phones[0]" @click="open('tel:'+currentBot.company.phones[0])"
+                            <a href="#" v-if="currentBot.company.phones" @click="open('tel:'+currentBot.company.phones[0])"
                                class="icon icon-xs rounded-sm shadow-l mr-1 bg-phone text-white"><i
                                 class="fa fa-phone"></i></a>
                             <a href="#" data-menu="menu-share"
@@ -154,6 +154,7 @@ export default {
     },
     created() {
         window.currentBot = this.bot.data
+
         window.currentScript = this.slug_id || null
 
         this.$store.dispatch("loadSelf").then(() => {

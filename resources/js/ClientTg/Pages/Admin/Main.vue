@@ -73,8 +73,6 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                         v-if="cashback_paginate_object"
                         :pagination="cashback_paginate_object"/>
                 </div>
-
-
             </div>
 
             <div class="divider-icon divider-margins bg-blue2-dark my-4"><i
