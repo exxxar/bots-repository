@@ -88,7 +88,7 @@ class RestaurantBotController extends Controller
             }
 
 
-            if ( BotManager::bot()->getSelf()->getCurrentChatId() == $request_telegram_chat_id){
+            if ( BotManager::bot()->currentBotUser()->telegram_chat_id == $request_telegram_chat_id){
                 BotManager::bot()
                     ->reply(
                         "Вы перешли по своей собственной ссылке... вы, конечно, себе друг, но CashBack достанется кому-то одному..."
