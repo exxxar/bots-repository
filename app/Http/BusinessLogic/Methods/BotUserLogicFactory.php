@@ -233,6 +233,7 @@ class BotUserLogicFactory
         $botUser->is_vip = (bool)(($data["is_vip"] ?? false));
         $botUser->is_admin = (bool)(($data["is_admin"] ?? false));
         $botUser->is_work = (bool)(($data["is_work"] ?? false));
+        $botUser->is_manager = (bool)(($data["is_manager"] ?? false));
         $botUser->user_in_location = (bool)(($data["user_in_location"] ?? false));
         $botUser->name = $data["name"] ?? $botUser->name ?? null;
         $botUser->phone = $data["phone"] ?? $botUser->phone ?? null;
@@ -252,7 +253,7 @@ class BotUserLogicFactory
             return new BotUserResource($botUser);
 
 
-        $message = sprintf("Ф.И.О: %s\nТелефон: %s\nПочта: %s\nДР: %s\nВозраст: %s\nСтрана: %s\nГород: %s\nАдрес: %s\nПол: %s\nVip: %s\nAdmin: %s\nЗа работой: %s",
+        $message = sprintf("Ф.И.О: %s\nТелефон: %s\nПочта: %s\nДР: %s\nВозраст: %s\nСтрана: %s\nГород: %s\nАдрес: %s\nПол: %s\nVip: %s\nAdmin: %s\nЗа работой: %s\nМенеджер: %s",
             $botUser->name ?? "Не указано",
             $botUser->phone ?? "Не указано",
             $botUser->email ?? "Не указано",
@@ -265,6 +266,7 @@ class BotUserLogicFactory
             $botUser->is_vip ? "да" : "нет",
             $botUser->is_admin ? "да" : "нет",
             $botUser->is_work ? "да" : "нет",
+            $botUser->is_manager ? "да" : "нет",
         );
         BotMethods::bot()
             ->whereBot($this->bot)
