@@ -58,7 +58,7 @@
                             data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-ellipsis"></i>
                     </button>
-                    <div class="dropdown-menu w-100 chat-custom-dropdown-menu">
+                    <div class="dropdown-menu w-100 chat-custom-dropdown-menu" style="padding: 10px;">
                         <button
                             @click="send('/start')"
                             v-if="buttons.length===0"
@@ -393,6 +393,10 @@ export default {
         border-color: #b4b4b4;
 
         margin-bottom: 3px;
+
+        &:hover {
+            border-color: #185018;
+        }
     }
 }
 
