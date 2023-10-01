@@ -40,7 +40,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 'is_global' => true,
             ],
             [
-                'command' => ".*Колесо фортуны тест",
+                'command' => ".*Колесо фортуны (вариант 2)",
                 'comment' => "Игровой модуль",
             ]);
 
