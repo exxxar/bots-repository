@@ -245,19 +245,8 @@ export default {
 </script>
 
 <style lang="scss">
-.btn-send {
-    background: #2196F3;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    position: absolute;
-    right: 6px;
-    top: 6px;
-    font-size: 10px;
-}
+
+
 
 .chat-icon {
     display: flex;
@@ -415,5 +404,23 @@ export default {
     background: white;
     box-shadow: 0px 0px 3px 0px #9c9c9c;
 }
+.btn-send {
 
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    position: absolute;
+    right: 6px;
+
+
+    background: #007bff;
+    border-radius: 50%;
+    color: white;
+    position: absolute;
+    top: 5px;
+    font-size: 13px;
+}
 </style>
