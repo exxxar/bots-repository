@@ -177,7 +177,7 @@ export default {
 
             })
 
-            this.$botNotification.success("Вы выиграли!", "Вы выиграли приз "+(winResult?this.items[winResult]:'Что-то интересное...'))
+            this.$botNotification.success("Вы выиграли!", "Вы выиграли приз "+(winResult?this.items[winResult].text:'Что-то интересное...'))
         },
 
 
