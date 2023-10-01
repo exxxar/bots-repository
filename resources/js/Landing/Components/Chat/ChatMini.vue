@@ -2,6 +2,7 @@
 
     <div class="chat-window d-flex justify-content-between align-items-center flex-column">
         <perfect-scrollbar
+            ref="scroll"
             v-if="canEnter"
             class="ps-container w-100">
             <div class="message-card"
@@ -230,6 +231,7 @@ export default {
 
                         this.$nextTick(() => {
                             this.loaded = true
+                            this.$refs.scroll.$el.scrollTop = 100000;
                         })
                     }).catch(() => {
                         this.$nextTick(() => {
@@ -290,14 +292,16 @@ export default {
             border-radius: 10px;
 
             &.incoming {
-                background: linear-gradient(45deg, #2937f0, #9f1ae2) !important;
-                color: white;
+                //background: linear-gradient(45deg, #2937f0, #9f1ae2) !important;
+                color: black;
+                padding: 10px;
 
-
+                background-color: #fbfbfb;
             }
 
             &.outgoing {
-                background-color: #d0d0d0;
+                background-color: #e4f3ff;
+                padding: 10px;
             }
 
             .message-card-body {
@@ -306,6 +310,7 @@ export default {
 
                 p {
                     margin: 0;
+                    font-size: 12px;
                 }
             }
         }
@@ -340,7 +345,7 @@ export default {
         .ps-keyboard-container {
             position: relative;
             height: auto;
-            max-height: 140px;
+            max-height: 250px;
         }
 
         .message-form {
@@ -377,8 +382,17 @@ export default {
         padding-left: 0;
     }
 
+    a,
     button {
-        font-size: 8px;
+       // font-size: 8px;
+        font-size: 12px;
+        color: black;
+
+        padding: 10px;
+
+        border-color: #b4b4b4;
+
+        margin-bottom: 3px;
     }
 }
 
@@ -389,8 +403,13 @@ export default {
 }
 
 .chat-custom-dropdown-menu {
-    padding: 2px;
-    background: linear-gradient(45deg, #2937f0, #9f1ae2) !important;
+    //padding: 2px;
+    //background: linear-gradient(45deg, #2937f0, #9f1ae2) !important;
+
+    padding: 10px;
+    /* background: linear-gradient(45deg, #2937f0, #9f1ae2) !important; */
+    background: white;
+    box-shadow: 0px 0px 3px 0px #9c9c9c;
 }
 
 </style>

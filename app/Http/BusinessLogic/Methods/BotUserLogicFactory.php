@@ -102,7 +102,7 @@ class BotUserLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, $size = null, $needAdmins = false): BotUserCollection
+    public function list($search = null, $size = null, array $params = null): BotUserCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -124,9 +124,31 @@ class BotUserLogicFactory
 
         }
 
+        $needAdmins = $params["need_admins"] ?? false;
+        $needVip = $params["need_vip"] ?? false;
+        $needNotVip = $params["need_not_vip"] ?? false;
+        $needWithPhone = $params["need_with_phone"] ?? false;
+        $needWithoutPhone = $params["need_without_phone"] ?? false;
+
         if ($needAdmins)
             $botUsers = $botUsers
-                ->where("is_admin", $needAdmins);
+                ->where("is_admin", true);
+
+        if ($needVip)
+            $botUsers = $botUsers
+                ->where("is_vip", true);
+
+        if ($needNotVip)
+            $botUsers = $botUsers
+                ->where("is_vip", false);
+
+        if ($needWithPhone)
+            $botUsers = $botUsers
+                ->whereNotNull("phone");
+
+        if ($needWithoutPhone)
+            $botUsers = $botUsers
+                ->whereNull("phone");
 
         $botUsers = $botUsers
             ->orderBy("created_at", "DESC")

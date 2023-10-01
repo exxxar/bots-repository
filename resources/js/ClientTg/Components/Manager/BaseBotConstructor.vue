@@ -6,22 +6,22 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
     <div class="card card-style" v-if="step===0">
         <div class="content mb-0">
             <h2>Создание клиента</h2>
-            <h6>Так-с, создаем нового клиента или выберим из существующих?</h6>
+            <h6>Так-с, создаем нового клиента или используем уже созданного клиента?</h6>
             <button
                 @click="step=1"
                 class="w-100 btn btn-border btn-m btn-full mb-2 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme">
-                Новый клиент
+                Создать нового клиента
             </button>
 
             <div class="divider divider-small my-3 bg-highlight "></div>
 
+            <h6>Выбрать клиента из списка</h6>
             <CompanyList v-on:callback="selectCompany">
 
             </CompanyList>
 
         </div>
     </div>
-
 
 
     <div class="card card-style" v-if="step===1">
@@ -37,20 +37,20 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                 <h2>Персональная информация</h2>
                 <p class="mt-2 mb-2"><span class="badge bg-light text-primary p-2 mr-2"><i
                     class="fa-regular fa-bell"></i></span> Напишите подробную информацию о
-                    себе + фото</p>
+                    клиенте и его фото</p>
                 <div class="form-floating mb-2 w-100">
-                    <label for="form-selfInfo-name" class="text-primary">Ваше Ф.И.О.</label>
+                    <label for="form-selfInfo-name" class="text-primary">Ф.И.О. клиента</label>
                     <input
                         type="text"
                         class="form-control"
                         placeholder="Иванов И.И."
                         v-model="form.selfInfo.name"
-                        @invalid="alert('Вы не добавили своё имя')"
+                        @invalid="alert('Вы не добавили Ф.И.О.')"
                         id="form-selfInfo-name" required/>
 
                 </div>
                 <div class="form-floating mb-2 w-100">
-                    <label for="form-selfInfo-phone" class="text-primary">Ваш личный номер телефона для связи
+                    <label for="form-selfInfo-phone" class="text-primary">Личный номер телефона клиента для связи
                         менеджера</label>
                     <input
                         type="text"
@@ -63,19 +63,41 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 
                 </div>
                 <div class="form-floating mb-2 w-100">
-                    <label for="form-selfInfo-text" class="text-primary">Информация о Вас:</label>
+                    <label for="form-selfInfo-text" class="text-primary">Информация о клиенте:</label>
                     <textarea
                         style="min-height:150px;"
                         v-model="form.selfInfo.text"
                         class="form-control font-12"
-                        @invalid="alert('Вы не добавили информацию о себе')"
+                        @invalid="alert('Вы не добавили информацию о клиенте')"
                         placeholder="Немного деталей о Вас"
                         id="form-selfInfo-text" required></textarea>
 
                 </div>
 
-                <div class="d-flex justify-content-center align-items-center flex-column">
-                    <h6 class="mb-3 mt-3">Выберите своё персональное фото </h6>
+                <p>Вы можете пропустить этап добавления фотографий в данном конструкторе и добавить их позже. По
+                    умолчанию будут добавлены красивые фотографии с CashMan-ом вместо реальных фотографий.</p>
+
+                <div class="d-flex w-100">
+                    <div class="pt-1">
+                        <h5 data-activate="toggle-id-2" class="font-500 font-13">
+                            <strong v-if="form.need_all_photo">Добавить все фото сразу</strong>
+                            <strong v-if="!form.need_all_photo">Пропустить фото</strong>
+                        </h5>
+                    </div>
+                    <div class="ml-auto mr-4 pr-2">
+                        <div class="custom-control ios-switch ios-switch-icon">
+                            <input type="checkbox"
+                                   v-model="form.need_all_photo"
+                                   class="ios-input" id="toggle-id-2">
+                            <label class="custom-control-label" for="toggle-id-2"></label>
+                            <i class="fa fa-check font-11 color-white"></i>
+                            <i class="fa fa-times font-11 color-white"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center align-items-center flex-column" v-if="form.need_all_photo">
+                    <h6 class="mb-3 mt-3">Выберите персональное фото клиента</h6>
                     <p>Вы можете выбрать фото или же указать ссылку на фото</p>
 
                     <div class="d-flex w-100">
@@ -133,16 +155,19 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 
                 </div>
 
-                <div v-if="messages.length>0"
-                     v-for="(message, index) in messages"
-                     class="mb-2 alert alert-small rounded-s shadow-xl bg-red2-dark w-100" role="alert">
+                <div class="mt-3 w-100">
+                    <div v-if="messages.length>0"
+                         v-for="(message, index) in messages"
+                         class="mb-2 alert alert-small rounded-s shadow-xl bg-red2-dark w-100" role="alert">
 
-                    <p class="custom-alert-text">{{ message || 'Ошибка' }}</p>
-                    <button type="button"
-                            @click="removeMessage(index)"
-                            class="close color-white opacity-60 font-16">×
-                    </button>
+                        <p class="custom-alert-text">{{ message || 'Ошибка' }}</p>
+                        <button type="button"
+                                @click="removeMessage(index)"
+                                class="close color-white opacity-60 font-16">×
+                        </button>
+                    </div>
                 </div>
+
 
                 <div class="divider divider-small my-3 bg-highlight "></div>
 
@@ -176,9 +201,11 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                 <h2>Информация о бизнесе</h2>
                 <p class="mt-2 mb-2"><span class="badge bg-light text-primary p-2 mr-2"><i
                     class="fa-regular fa-bell"></i></span> Напишите подробную информацию о
-                    Вашем бизнесе + фото.</p>
+                    бизнесе клиента и добавьте логотип компании. Он будет использоваться для общедоступной информации о
+                    клиенте.</p>
                 <div class="form-floating mb-2 w-100">
-                    <label for="form-business-info-name" class="text-primary">Название вашей организации</label>
+                    <label for="form-business-info-name" class="text-primary">Название организации клиента (имя
+                        компании)</label>
                     <input
                         type="text"
                         class="form-control"
@@ -200,8 +227,8 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 
                 </div>
 
-                <div class="d-flex justify-content-center align-items-center flex-column">
-                    <h6 class="mb-3 mt-3">Выберите фото для вашей визитки </h6>
+                <div class="d-flex justify-content-center align-items-center flex-column" v-if="form.need_all_photo">
+                    <h6 class="mb-3 mt-3">Выберите фото для визитки с информацией о бизнесе </h6>
                     <p>Вы можете выбрать фото или же указать ссылку на фото</p>
 
                     <div class="d-flex w-100">
@@ -303,12 +330,14 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                                         src="/images/cashman.jpg" alt="">-->
                 <h2>Контактная информация</h2>
                 <p class="mt-2 mb-2"><span class="badge bg-light text-primary p-2 mr-2"><i
-                    class="fa-regular fa-bell"></i></span> Здесь будут ссылки на все ваши контактные данные ( социальные
-                    сети,
-                    месенджеры, новер телефона и сайт) + фото.</p>
+                    class="fa-regular fa-bell"></i></span> Здесь будут ссылки на все контактные данные компании (
+                    социальные
+                    сети, месенджеры, номер телефона и сайт) + фотография, которая будет отображаться в разделе
+                    контактов.</p>
 
 
-                <div class="mb-2 d-flex align-items-center justify-content-center flex-column">
+                <div class="mb-2 d-flex align-items-center justify-content-center flex-column"
+                     v-if="form.need_all_photo">
 
                     <p>Вы можете выбрать фото или же указать ссылку на фото</p>
 
@@ -506,14 +535,13 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                 v-on:submit.prevent="nextStep"
                 class="w-100 d-flex justify-content-center align-items-center flex-column"
             >
-                <h2>Создадим Вашего бота вместе!</h2>
+                <h2>Создадим непосредственно бота</h2>
                 <h6><span class="badge bg-light text-primary p-2 mr-2"><i
                     class="fa-regular fa-bell"></i></span>Первым делом необходимо имя бота (на русском - для
-                    пользователей, на английском - как ссылка на
-                    вашего бота)</h6>
+                    пользователей, на английском - как ссылка на вашего бота)</h6>
 
                 <div class="form-floating mb-2 w-100">
-                    <label for="floatingTextarea" class="text-primary">Название вашего бота (на русском)</label>
+                    <label for="floatingTextarea" class="text-primary">Название бота (на русском)</label>
 
                     <input
                         type="text"
@@ -548,9 +576,28 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                 </div>
 
 
-                <div class="form-floating mb-2 w-100">
+                <div class="d-flex w-100">
+                    <div class="pt-1">
+                        <h5 data-activate="toggle-id-2" class="font-500 font-13">
+                            <strong v-if="!form.has_name">Сгенерировать временное имя</strong>
+                            <strong v-if="form.has_name">У меня есть имя</strong>
+                        </h5>
+                    </div>
+                    <div class="ml-auto mr-4 pr-2">
+                        <div class="custom-control ios-switch ios-switch-icon">
+                            <input type="checkbox"
+                                   v-model="form.has_name"
+                                   class="ios-input" id="toggle-id-2">
+                            <label class="custom-control-label" for="toggle-id-2"></label>
+                            <i class="fa fa-check font-11 color-white"></i>
+                            <i class="fa fa-times font-11 color-white"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-2 w-100" v-if="form.has_name">
                     <label for="form-bot-domain"
-                           class="text-primary">Доменное имя Вашего бота на английском</label>
+                           class="text-primary">Доменное имя бота на английском</label>
                     <input
                         type="text"
                         class="form-control"
@@ -567,7 +614,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                 border-left border-top-0 border-bottom-0 border-right-0 mb-2">
 
                     <p class="mb-1">Если у Вас есть <a href="https://t.me/botFather" class="text-primary">Token</a>, то
-                        Вы сразу же сможете протестировать своего бота на парктике. Если же Token-а нет, то вам помогут
+                        Вы сразу же сможете протестировать своего бота на практике. Если же Token-а нет, то вам помогут
                         его создать наши менеджеры.</p>
                     <div class="d-flex">
                         <div class="pt-1">
@@ -589,7 +636,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                     </div>
                 </div>
 
-                <div class="form-floating mb-2 w-100" v-if="form.have_token">
+                <div class="form-floating mb-2 w-100" v-if="form.has_token">
                     <label for="floatingTextarea"
                            class="text-primary">Телеграм token бота</label>
                     <input
@@ -649,49 +696,51 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 
                 <p class="mt-2 mb-2 w-100s"><span class="badge bg-light text-primary p-2 mr-2"><i
                     class="fa-regular fa-bell"></i></span>И так,бот должен быть общительным и вежливым!
-                    Вам необходимо добавить привественное сообщение. <strong>Напишите небольшой текст</strong>
-                    привествия и добавьте 2
+                    Вам необходимо добавить приветственное сообщение. <strong>Напишите небольшой текст</strong>
+                    приветствия и добавьте 2
                     фото (одно к приветствию, второе на аватар).</p>
                 <div class="form-floating mb-2 w-100">
-                    <label for="floatingInputValue" class="text-primary">Напишите текст привествия в боте! </label>
+                    <label for="floatingInputValue" class="text-primary">Напишите текст приветствия в боте! </label>
                     <textarea class="form-control font-12"
                               style="min-height:150px;"
-                              @invalid="alert('Незаполненно базовое привествие')"
+                              @invalid="alert('Незаполненно базовое приветствие')"
                               v-model="form.greeting.text"
                               placeholder="Начните с чего-то хорошего... клиенты это любят!)"
                               id="floatingInputValue" required></textarea>
 
                 </div>
-                <h6 class="mt-3 mb-3">Добавим изображения</h6>
-                <p>Вы можете выбрать фото или же указать ссылку на фото</p>
 
-                <div class="d-flex w-100">
-                    <div class="pt-1">
-                        <h5 data-activate="toggle-greeting-need-photo" class="font-500 font-13">
-                            <strong v-if="form.greeting.need_photo">Выбрать фото</strong>
-                            <strong v-if="!form.greeting.need_photo">Указать ссылку на фото</strong>
-                        </h5>
-                    </div>
-                    <div class="ml-auto mr-4 pr-2">
-                        <div class="custom-control ios-switch ios-switch-icon">
-                            <input type="checkbox"
-                                   v-model="form.greeting.need_photo"
-                                   class="ios-input" id="toggle-greeting-need-photo">
-                            <label class="custom-control-label" for="toggle-greeting-need-photo"></label>
-                            <i class="fa fa-check font-11 color-white"></i>
-                            <i class="fa fa-times font-11 color-white"></i>
+                <div v-if="form.need_all_photo">
+                    <h6 class="mt-3 mb-3">Добавим изображения</h6>
+                    <p>Вы можете выбрать фото или же указать ссылку на фото</p>
+
+                    <div class="d-flex w-100">
+                        <div class="pt-1">
+                            <h5 data-activate="toggle-greeting-need-photo" class="font-500 font-13">
+                                <strong v-if="form.greeting.need_photo">Выбрать фото</strong>
+                                <strong v-if="!form.greeting.need_photo">Указать ссылку на фото</strong>
+                            </h5>
+                        </div>
+                        <div class="ml-auto mr-4 pr-2">
+                            <div class="custom-control ios-switch ios-switch-icon">
+                                <input type="checkbox"
+                                       v-model="form.greeting.need_photo"
+                                       class="ios-input" id="toggle-greeting-need-photo">
+                                <label class="custom-control-label" for="toggle-greeting-need-photo"></label>
+                                <i class="fa fa-check font-11 color-white"></i>
+                                <i class="fa fa-times font-11 color-white"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div
-                    v-if="form.greeting.need_photo"
-                    class="d-flex mt-3">
+                    <div
+                        v-if="form.greeting.need_photo"
+                        class="d-flex mt-3">
 
-                    <label style="height: 100px; width:100px;"
-                           for="greeting-avatar"
-                           class="btn btn-border btn-m btn-full mb-3 rounded-s text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme w d-flex justify-content-center align-items-center flex-column mr-2">
+                        <label style="height: 100px; width:100px;"
+                               for="greeting-avatar"
+                               class="btn btn-border btn-m btn-full mb-3 rounded-s text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme w d-flex justify-content-center align-items-center flex-column mr-2">
 
                             <span v-if="!form.greeting.avatar"
                                   class="d-flex justify-content-center align-items-center flex-column">
@@ -699,66 +748,68 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                                   <span>Аватарка</span>
                             </span>
 
-                        <span style="overflow: hidden" v-else>
+                            <span style="overflow: hidden" v-else>
                             <img v-lazy="getPhoto(form.greeting.avatar).imageUrl" style="width:100%;object-fit: cover;"
                                  alt="">
                         </span>
 
-                        <input type="file"
-                               id="greeting-avatar"
-                               accept="image/*"
-                               @invalid="alert('Не выбрала фотография аватара!')"
-                               @change="onChangePhotos($event,'greeting','avatar')"
-                               style="display:none;" required/>
-                    </label>
+                            <input type="file"
+                                   id="greeting-avatar"
+                                   accept="image/*"
+                                   @invalid="alert('Не выбрала фотография аватара!')"
+                                   @change="onChangePhotos($event,'greeting','avatar')"
+                                   style="display:none;" required/>
+                        </label>
 
-                    <label style="height: 100px; width:100px;"
-                           for="greeting-profile"
-                           class="btn btn-border btn-m btn-full mb-3 rounded-s text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme w d-flex justify-content-center align-items-center flex-column mr-2">
+                        <label style="height: 100px; width:100px;"
+                               for="greeting-profile"
+                               class="btn btn-border btn-m btn-full mb-3 rounded-s text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme w d-flex justify-content-center align-items-center flex-column mr-2">
                         <span v-if="!form.greeting.profile"
                               class="d-flex justify-content-center align-items-center flex-column">
                                   <i class="fa-regular fa-image"></i>
                                   <span>Профиль</span>
                             </span>
 
-                        <span style="overflow: hidden" v-else>
+                            <span style="overflow: hidden" v-else>
                             <img v-lazy="getPhoto(form.greeting.profile).imageUrl" style="width:100%;object-fit: cover;"
                                  alt="">
                         </span>
-                        <input type="file"
-                               id="greeting-profile"
-                               accept="image/*"
-                               @invalid="alert('Требуется фотография для профиля!')"
-                               @change="onChangePhotos($event,'greeting','profile')"
-                               style="display:none;" required/>
-                    </label>
+                            <input type="file"
+                                   id="greeting-profile"
+                                   accept="image/*"
+                                   @invalid="alert('Требуется фотография для профиля!')"
+                                   @change="onChangePhotos($event,'greeting','profile')"
+                                   style="display:none;" required/>
+                        </label>
 
-
-                </div>
-
-                <div
-                    v-if="!form.greeting.need_photo"
-                    class="mt-3 w-100">
-
-                    <div class="form-floating w-100">
-                        <label for="form-greeting-photo-url" class="text-black">Аватар</label>
-                        <input type="url" class="form-control"
-                               @invalid="alert('Требуется url фото для аватара!')"
-                               id="form-greeting-photo-url"
-                               placeholder="Ссылка на аватар" required>
 
                     </div>
 
-                    <div class="form-floating w-100">
-                        <label for="form-greeting-profile-photo-url" class="text-black">В профиль</label>
-                        <input type="url"
-                               class="form-control"
-                               @invalid="alert('Требуется url фото для профиля!')"
-                               id="form-greeting-profile-photo-url"
-                               placeholder="Ссылка на фото профиля" required>
-                    </div>
+                    <div
+                        v-if="!form.greeting.need_photo"
+                        class="mt-3 w-100">
 
+                        <div class="form-floating w-100">
+                            <label for="form-greeting-photo-url" class="text-black">Аватар</label>
+                            <input type="url" class="form-control"
+                                   @invalid="alert('Требуется url фото для аватара!')"
+                                   id="form-greeting-photo-url"
+                                   placeholder="Ссылка на аватар" required>
+
+                        </div>
+
+                        <div class="form-floating w-100">
+                            <label for="form-greeting-profile-photo-url" class="text-black">В профиль</label>
+                            <input type="url"
+                                   class="form-control"
+                                   @invalid="alert('Требуется url фото для профиля!')"
+                                   id="form-greeting-profile-photo-url"
+                                   placeholder="Ссылка на фото профиля" required>
+                        </div>
+
+                    </div>
                 </div>
+
 
                 <div v-if="messages.length>0"
                      v-for="(message, index) in messages"
@@ -835,7 +886,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                     type="button"
                     @click="submitBot"
                     class="btn btn-m btn-full mb-2 rounded-l text-uppercase font-900 shadow-s bg-green2-dark w-100">
-                    Завершить создание бота
+                    Создать демон и перейти к оформлению
                 </button>
                 <button
                     type="button"
@@ -896,7 +947,8 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 
                 <div v-if="form.functions.indexOf('individual-button')>=0">
 
-                    <p class="alert border-success  m-0 my-2">Опишите ваши индивидуальные потребности и наши разработчики неприменно реализуют
+                    <p class="alert border-success  m-0 my-2">Опишите ваши индивидуальные потребности и наши
+                        разработчики неприменно реализуют
                         данную фичу
                         для Вас!</p>
 
@@ -1016,11 +1068,12 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
             </div>
 
             <div class="divider divider-small my-3 bg-highlight "></div>
+            <p class="mb-2">Так-с, финальный этап! Сейчас мы создадим демо и сможем перейти к завершению создания бота!</p>
             <button
                 type="button"
                 @click="submitBot"
                 class="btn btn-m btn-full mb-2 rounded-l text-uppercase font-900 shadow-s bg-green2-dark w-100">
-                Завершить создание бота
+                Создать демо
             </button>
 
             <button
@@ -1064,22 +1117,71 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 
     <div class="card card-style" v-if="step===8">
         <div class="content mb-0">
-            <h6>Информация о созданном Вами боте:</h6>
-            <a href="#" class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark">Перейти
-                в телеграмм</a>
-            <div class="divider divider-small my-3 bg-highlight "></div>
+            <h2 class="text-center mt-3 mb-0">Оформление заказа</h2>
+            <h6 class="text-center mb-3">Выберите тариф для подключения</h6>
 
-            <button
-                type="submit"
-                class="btn btn-m btn-full mb-2 rounded-l text-uppercase font-900 shadow-s bg-blue2-dark w-100">
-                Завершить создание бота
-            </button>
+            <div class="pricing-4 rounded-m shadow-m bg-theme">
+                <h1 class="pricing-title text-center bg-green2-dark text-uppercase">Пробный</h1>
+                <h3 class="pricing-value text-center bg-green1-light color-white font-40">3999<sup>руб</sup></h3>
+                <h2 class="pricing-subtitle text-center bg-green1-light font-16">Разовый на 1 месяц</h2>
+                <ul class="pricing-list text-center">
+                    <li>1 бот</li>
+                    <li>до 20 страниц</li>
+                    <li>до 10 любых модулей</li>
+                    <li>1 месяц тех. поддержки</li>
+                </ul>
+                <a href="#" class="btn btn-s bg-green2-dark btn-center-l text-uppercase rounded-s font-900">Выбрать</a>
+                <p class="text-center color-gray-dark small-text font-10 uppercase mt-2 mb-0 pb-0">+0.01% персональной
+                    скидки менеджера</p>
+            </div>
+
+
+            <div class="pricing-4 rounded-m shadow-m bg-theme">
+                <h1 class="pricing-title text-center bg-blue2-dark text-uppercase">Базовый</h1>
+                <h3 class="pricing-value text-center bg-blue2-light color-white font-40">6999<sup>руб</sup></h3>
+                <h2 class="pricing-subtitle text-center bg-blue2-light font-16">+2500руб\месяц</h2>
+                <ul class="pricing-list text-center">
+                    <li>до 3х ботов</li>
+                    <li>до 20 страниц в боте</li>
+                    <li>жо 20 модулей в боте</li>
+                    <li>неограниченно тех.поддержка</li>
+                    <li>интеграция с CRM</li>
+                    <li>до 2х пользовательских модулей индивидуальной разработки</li>
+                </ul>
+                <a href="#" class="btn btn-s bg-blue2-dark btn-center-l text-uppercase rounded-s font-900">Выбрать</a>
+                <p class="text-center color-gray-dark small-text font-10 uppercase mt-2 mb-0 pb-0">+0.05% персональной
+                    скидки менеджера</p>
+            </div>
+
+            <div class="pricing-4 rounded-m shadow-m bg-theme">
+                <h1 class="pricing-title text-center bg-red2-dark text-uppercase">V.I.P.</h1>
+                <h3 class="pricing-value text-center bg-red2-light color-white font-40">26999<sup>руб</sup></h3>
+                <h2 class="pricing-subtitle text-center bg-red2-light font-16">+6 500руб\месяц</h2>
+                <ul class="pricing-list text-center">
+                    <li>неограниченное число ботов</li>
+                    <li>неограниченно страниц</li>
+                    <li>неограниченно модулей</li>
+                    <li>неограниченно тех.поддержка</li>
+                    <li>интеграция с CRM</li>
+                    <li>пользовательская индивидуальная разработка</li>
+                </ul>
+                <a href="#" class="btn btn-s bg-red2-dark btn-center-l text-uppercase rounded-s font-900">Выбрать</a>
+                <p class="text-center color-gray-dark small-text font-10 uppercase mt-2 mb-0 pb-0">+0.5% персональной
+                    скидки менеджера</p>
+            </div>
 
             <button
                 type="button"
                 class="w-100 btn btn-border btn-m btn-full mb-3 rounded-l text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme"
                 @click="prevStep">
                 Назад
+            </button>
+
+            <button
+                type="button"
+                class="w-100 btn btn-border btn-m btn-full mb-3 rounded-l text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme"
+                @click="start">
+                В начало
             </button>
         </div>
     </div>
@@ -1100,8 +1202,10 @@ export default {
 
             form: {
                 name: null,
-                botDomain: null,
-                have_token: false,
+                botDomain: "isushibot",
+                has_token: false,
+                has_name: false,
+                need_all_photo: true,
                 token: null,
                 need_create_bot: true,
                 selected_bot_id: null,
@@ -1131,7 +1235,7 @@ export default {
                     image: null,
                     need_photo: true
                 },
-                functions: ['cashback','friends-system','ask-a-question','location','wheel-of-fortune'],
+                functions: ['cashback', 'friends-system', 'ask-a-question', 'location', 'wheel-of-fortune'],
                 pages: [
                     {
                         title: '/start',
@@ -1433,8 +1537,18 @@ export default {
             this.step = this.start
     },
     methods: {
-        prevStep(){
-          this.step--;
+        start(){
+            this.step = 0
+            this.messages = []
+
+            window.scrollTo({
+                top: 50,
+                behavior: "smooth"
+            })
+        },
+        prevStep() {
+
+            this.step--;
             this.messages = []
 
             window.scrollTo({
@@ -1443,7 +1557,9 @@ export default {
             })
         },
         nextStep() {
-            this.step++
+
+            this.step++;
+
             this.messages = []
 
             window.scrollTo({
@@ -1540,7 +1656,7 @@ export default {
 
 
             }).catch(err => {
-
+                this.step++;
             })
         },
         remove(index) {

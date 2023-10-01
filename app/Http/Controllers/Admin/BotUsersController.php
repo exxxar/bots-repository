@@ -20,7 +20,13 @@ class BotUsersController extends Controller
             ->setBot($request->bot ?? null)
             ->list($request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page'),
-                ($request->need_admins ?? false) == "true");
+                [
+                    "need_admins"=>(($request->need_admins ?? false) == "true"),
+                    "need_vip"=>(($request->need_vip ?? false) == "true"),
+                    "need_not_vip"=>(($request->need_not_vip ?? false) == "true"),
+                    "need_with_phone"=>(($request->need_with_phone ?? false) == "true"),
+                    "need_without_phone"=>(($request->need_without_phone ?? false) == "true"),
+                ]);
     }
 
     public function loadActionStatusHistories(Request $request): ActionStatusCollection

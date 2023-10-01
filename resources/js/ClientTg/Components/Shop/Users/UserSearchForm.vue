@@ -17,14 +17,60 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                            class="border-0" placeholder="Кого ищем?">
                 </div>
 
-                <div class="fac fac-checkbox  py-2 my-2">
-                    <span></span>
-                    <input id="box3-fac-checkbox"
-                           v-model="need_admins"
-                           value="false"
-                           type="checkbox">
-                    <label for="box3-fac-checkbox">Только администраторы</label>
+                <div class="d-flex w-100" style="height:70px; overflow-x: scroll;min-width: 100%;">
+                    <div class="scroll d-flex" style="min-width: 1000px;">
+                        <div class="fac fac-checkbox  py-2 my-2">
+                            <span></span>
+                            <input id="need-admins-checkbox"
+                                   v-model="need_admins"
+                                   value="false"
+                                   type="checkbox">
+                            <label for="need-admins-checkbox">Только администраторы</label>
+                        </div>
+
+                        <div class="fac fac-checkbox  py-2 my-2">
+                            <span></span>
+                            <input id="need-with-phone-checkbox"
+                                   v-model="need_with_phone"
+                                   value="false"
+                                   type="checkbox">
+                            <label for="need-with-phone-checkbox">Только с телефоном</label>
+                        </div>
+
+                        <div class="fac fac-checkbox  py-2 my-2">
+                            <span></span>
+                            <input id="need-without-phone-checkbox"
+                                   v-model="need_without_phone"
+                                   value="false"
+                                   type="checkbox">
+                            <label for="need-without-phone-checkbox">Только без телефоном</label>
+                        </div>
+
+                        <div class="fac fac-checkbox  py-2 my-2">
+                            <span></span>
+                            <input id="need-vip-checkbox"
+                                   v-model="need_vip"
+                                   value="false"
+                                   type="checkbox">
+                            <label for="need-vip-checkbox">Только вип</label>
+                        </div>
+
+                        <div class="fac fac-checkbox  py-2 my-2">
+                            <span></span>
+                            <input id="need-not-vip-checkbox"
+                                   v-model="need_not_vip"
+                                   value="false"
+                                   type="checkbox">
+                            <label for="need-not-vip-checkbox">Только не вип</label>
+                        </div>
+
+
+                    </div>
+
                 </div>
+
+
+
 
                 <button type="submit"
                         class="btn btn-m btn-full my-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
@@ -82,7 +128,12 @@ export default {
             users: null,
             search: null,
             need_admins: false,
+            need_vip: false,
+            need_not_vip: false,
+            need_with_phone: false,
+            need_without_phone: false,
             users_paginate_object: null,
+
         }
     },
     computed: {
@@ -127,7 +178,11 @@ export default {
             this.$store.dispatch("loadUsers", {
                 dataObject: {
                     search: this.search,
-                    need_admins: this.need_admins
+                    need_admins: this.need_admins,
+                    need_vip:  this.need_vip,
+                    need_not_vip:  this.need_not_vip,
+                    need_with_phone:  this.need_with_phone,
+                    need_without_phone:  this.need_without_phone,
                 },
                 page: page
             }).then(resp => {

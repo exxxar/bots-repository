@@ -17,6 +17,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 
@@ -347,7 +348,7 @@ class BotController extends Controller
 
         $name = $request->name;
         $token = $request->token ?? null;
-        $botDomain = $request->botDomain;
+        $botDomain = $request->botDomain ?? Str::uuid();
 
         $botUser = $request->botUser ?? null;
 
@@ -416,7 +417,7 @@ class BotController extends Controller
                 ->setBot($bot ?? null)
                 ->duplicate([
                     "company_id" => $company->id ?? null,
-                    "bot_domain" => $request->botDomain
+                    "bot_domain" => $botDomain
                 ]);
 
             return $duplicateBot;

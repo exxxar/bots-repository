@@ -4,6 +4,8 @@ import BaseBotConstructor from "@/ClientTg/Components/Manager/BaseBotConstructor
 </script>
 <template>
 <!--    todo: мои бот, мои клиенты, добавить роль is_manager, боты для примера и для копирования-->
+<!--    todo: на последнем шаге добавить выбор тарифа и оплату-->
+<!--    todo: добавить фильтрацию пользователей по разным критеряим: вип, с телефоном, в заведении и.д.-->
     <BaseBotConstructor></BaseBotConstructor>
 </template>
 <script>
