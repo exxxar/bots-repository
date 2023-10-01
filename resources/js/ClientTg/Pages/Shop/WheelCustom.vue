@@ -163,7 +163,7 @@ export default {
                     else
                         data.append(key, item)
                 });
-            const winResult = this.winForm.win || 'Что-то интересное...'
+            const winResult = this.winForm.win || null
 
             this.$store.dispatch("wheelOfFortuneCustomWin", {
                 winForm: data
@@ -177,7 +177,7 @@ export default {
 
             })
 
-            this.$botNotification.success("Вы выиграли!", winResult)
+            this.$botNotification.success("Вы выиграли!", "Вы выиграли приз "+(winResult?this.items[winResult]:'Что-то интересное...'))
         },
 
 
@@ -197,7 +197,6 @@ export default {
                 this.hasProfileData = false
             }, 2000)
 
-            this.$botNotification.success("Победа!", "Вы выиграли приз <strong>" + (this.winForm.win || '-') + "</strong>.")
         },
     },
 }
