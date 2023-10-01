@@ -15,6 +15,7 @@ import OurTeam from '@/ClientTg/Pages/Shop/OurTeam.vue';
 import ContactUs from '@/ClientTg/Pages/Shop/ContactUs.vue';
 import Help from '@/ClientTg/Pages/Shop/Help.vue';
 import Wheel from '@/ClientTg/Pages/Shop/Wheel.vue';
+import WheelCustom from '@/ClientTg/Pages/Shop/WheelCustom.vue';
 import CashOut from '@/ClientTg/Pages/Shop/CashOut.vue';
 import SaveUp from '@/ClientTg/Pages/Shop/SaveUp.vue';
 import Quest from '@/ClientTg/Pages/Shop/Quest.vue';
@@ -120,6 +121,12 @@ export const routes = [
         path: '/wheel-of-fortune',
         component: Wheel,
         meta: { title: 'Колесо фортуны', hide_menu:true }
+    },
+    {
+        name: 'wheelCustom',
+        path: '/wheel-of-fortune-custom',
+        component: WheelCustom,
+        meta: { title: 'Колесо фортуны 2', hide_menu:true }
     },
     {
         name: 'saveup',
