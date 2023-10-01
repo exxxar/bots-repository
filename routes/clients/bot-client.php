@@ -13,6 +13,7 @@ use App\Http\Controllers\Globals\AboutBotScriptController;
 use App\Http\Controllers\Globals\BonusProductScriptController;
 use App\Http\Controllers\Globals\InstagramQuestScriptController;
 use App\Http\Controllers\Globals\ShopScriptController;
+use App\Http\Controllers\Globals\WheelOfFortuneCustomScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,15 @@ Route::prefix("bot-client")
 
         Route::prefix("wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)
+            ->middleware(["tgAuth.any", "slug"])
+            ->group(function () {
+                Route::post('/prepare', "formWheelOfFortunePrepare");
+                Route::post('/load-data', "loadData");
+                Route::post('/callback', "formWheelOfFortuneCallback");
+            });
+
+        Route::prefix("wheel-of-fortune-custom")
+            ->controller(WheelOfFortuneCustomScriptController::class)
             ->middleware(["tgAuth.any", "slug"])
             ->group(function () {
                 Route::post('/prepare', "formWheelOfFortunePrepare");

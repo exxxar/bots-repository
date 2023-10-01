@@ -6,6 +6,7 @@ import admins from './modules/admins';
 import products from './modules/shop/products';
 
 import wheelOfFortune from "./modules/globals/wheelOfFortune";
+import wheelOfFortuneCustom from "./modules/globals/wheelOfFortuneCustom";
 import bonusProduct from "./modules/globals/bonusProduct";
 import instagramQuest from "./modules/globals/instagramQuest";
 import cashOut from "./modules/globals/cashOut";
@@ -89,6 +90,7 @@ export default createStore({
         admins,
         products,
         wheelOfFortune,
+        wheelOfFortuneCustom,
         instagramQuest,
         cashOut,
         cart,
