@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BotDialogCommand;
 use App\Models\BotMenuSlug;
 use App\Models\BotPage;
+use App\Models\BotUser;
 use Telegram\Bot\FileUpload\InputFile;
 
 class SystemDiagnosticController extends Controller
@@ -51,8 +52,13 @@ class SystemDiagnosticController extends Controller
         $bot = BotManager::bot()->getSelf();
         $companyDomain = $bot->company->slug;
 
+        $usersInBot = BotUser::query()
+            ->where("bot_id", $bot->id)
+            ->count();
+
         $text = "Бот: " . $bot->bot_domain . " состояние бота - " . ($bot->is_active ? 'включен' : 'выключен') . "\n" .
             "Компания-владелец: " . $companyDomain . "\n" .
+            "Пользователей в боте: " . $usersInBot . "\n" .
             "Наличие тоукена: " . (is_null($bot->bot_token) ? "Без тоукена":"С тоукеном") . "\n" .
             "Баланс: " . ($bot->balance ?? 0) . " руб.\n" .
             "Тариф: " . ($bot->tax_per_day ?? 0) . " руб\день\n" .
