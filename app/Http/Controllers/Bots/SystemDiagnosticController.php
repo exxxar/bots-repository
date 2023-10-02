@@ -148,12 +148,12 @@ class SystemDiagnosticController extends Controller
                 if ($index % 4 != 0) {
                     $rowTmpKeyboard[] = [
                         "text" => $index,
-                        "callback_data" => $page->slug->command ?? $slug->slug
+                        "callback_data" => $slug->command ?? $slug->slug
                     ];
                 } else {
                     $rowTmpKeyboard[] = [
                         "text" => $index,
-                        "callback_data" => $page->slug->command ?? $slug->slug
+                        "callback_data" => $slug->command ?? $slug->slug
                     ];
 
                     $keyboard[] = $rowTmpKeyboard;
