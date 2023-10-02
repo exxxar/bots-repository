@@ -114,6 +114,10 @@ class SystemDiagnosticController extends Controller
                 $index++;
             }
 
+            if (count($rowTmpKeyboard)>0){
+                $keyboard[] = $rowTmpKeyboard;
+            }
+
             BotManager::bot()
                 ->replyInlineKeyboard("Доступные страницы <b>($index стр.)</b> в боте:\n$tmp", $keyboard);
 
@@ -151,6 +155,10 @@ class SystemDiagnosticController extends Controller
                 }
 
                 $index++;
+            }
+
+            if (count($rowTmpKeyboard)>0){
+                $keyboard[] = $rowTmpKeyboard;
             }
 
             BotManager::bot()
