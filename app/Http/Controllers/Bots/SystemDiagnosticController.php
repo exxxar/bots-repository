@@ -65,14 +65,12 @@ class SystemDiagnosticController extends Controller
             "CashBack уровень 1: " . ($bot->level_1 ?? 0) . " %\n" .
             "CashBack уровень 2: " . ($bot->level_2 ?? 0) . " %\n" .
             "CashBack уровень 3: " . ($bot->level_3 ?? 0) . " %\n" .
-            "Тариф: " . ($bot->tax_per_day ?? 0) . " руб\день\n" .
-            "Тариф: " . ($bot->tax_per_day ?? 0) . " руб\день\n" .
             "Основной канал: " . ($bot->main_channel ?? 'Не подключен') . "\n" .
             "Канал заказов: " . ($bot->order_channel ?? 'Не подключен') . "\n" .
             "Магазин: " . ($bot->vk_shop_link ?? 'Не подключен') . "\n" .
             "Платежная система: " . (is_null($bot->payment_provider_token) ? 'Не подключена' : 'Подключена') . "\n" .
             "AMO CRM: " . (is_null($bot->amo) ? 'Не подключена' : 'Подключена') . "\n" .
-            "Автоматическое начисление кэшбэка при оплате: " . ($bot->auto_cashback_on_payments ? 'Да' : 'Нет') . "\n" .
+            "Автоматическое начисление кэшбэка при оплате: " . ($bot->auto_cashback_on_payments ? 'Да' : 'Нет') . "\n\n" .
             "Описание бота:\n <em>" . ($bot->description ?? 'Не задано') . "</em>\n\n" .
             "Привественное сообщение:\n <em>" . ($bot->welcome_message ?? 'Не задано') . "</em>\n\n" .
             "Сообщение тех. работ:\n <em>" . ($bot->maintenance_message ?? 'Не задано') . "</em>\n\n" .
