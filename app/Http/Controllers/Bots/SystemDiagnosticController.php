@@ -53,7 +53,7 @@ class SystemDiagnosticController extends Controller
 
         $text = "Бот: " . $bot->bot_domain . " состояние бота - " . ($bot->is_active ? 'включен' : 'выключен') . "\n" .
             "Компания-владелец: " . $companyDomain . "\n" .
-            "Наличие тоукена: " . ($bot->bot_token ?? "Без тоукена") . "\n" .
+            "Наличие тоукена: " . (is_null($bot->bot_token) ? "Без тоукена":"С тоукеном") . "\n" .
             "Баланс: " . ($bot->balance ?? 0) . " руб.\n" .
             "Тариф: " . ($bot->tax_per_day ?? 0) . " руб\день\n" .
             "CashBack уровень 1: " . ($bot->level_1 ?? 0) . " %\n" .
@@ -66,9 +66,9 @@ class SystemDiagnosticController extends Controller
             "Магазин: " . ($bot->vk_shop_link ?? 'Не подключен') . "\n" .
             "Платежная система: " . (is_null($bot->payment_provider_token) ? 'Не подключена' : 'Подключена') . "\n" .
             "Автоматическое начисление кэшбэка при оплате: " . ($bot->auto_cashback_on_payments ? 'Да' : 'Нет') . "\n" .
-            "Описание бота:\n <em>" . ($bot->description ?? 'Не задано') . "</em>\n" .
-            "Привественное сообщение:\n <em>" . ($bot->welcome_message ?? 'Не задано') . "</em>\n" .
-            "Сообщение тех. работ:\n <em>" . ($bot->maintenance_message ?? 'Не задано') . "</em>\n" .
+            "Описание бота:\n <em>" . ($bot->description ?? 'Не задано') . "</em>\n\n" .
+            "Привественное сообщение:\n <em>" . ($bot->welcome_message ?? 'Не задано') . "</em>\n\n" .
+            "Сообщение тех. работ:\n <em>" . ($bot->maintenance_message ?? 'Не задано') . "</em>\n\n" .
             "Сообщение при блокировке:\n <em>" . ($bot->blocked_message ?? 'Не задано') . "</em>\n";
 
 
@@ -94,7 +94,7 @@ class SystemDiagnosticController extends Controller
             $rowTmpKeyboard = [];
             $index = 1;
             foreach ($pages as $page) {
-                $tmp .= "$index# " . ($page->slug->command ?? 'Не указано');
+                $tmp .= "$index# <b>" . ($page->slug->command ?? 'Не указано')."</b>\n";
 
                 if ($index % 3 != 0) {
                     $rowTmpKeyboard[] = [
@@ -102,6 +102,11 @@ class SystemDiagnosticController extends Controller
                         "callback_data" => $page->slug->command ?? $page->slug->slug
                     ];
                 } else {
+                    $rowTmpKeyboard[] = [
+                        "text" => $index,
+                        "callback_data" => $page->slug->command ?? $page->slug->slug
+                    ];
+
                     $keyboard[] = $rowTmpKeyboard;
                     $rowTmpKeyboard = [];
                 }
@@ -128,7 +133,7 @@ class SystemDiagnosticController extends Controller
             $index = 1;
 
             foreach ($slugs as $slug) {
-                $tmp .= "$index# " . ($slug->command ?? 'Не указано');
+                $tmp .= "$index# <b>" . ($slug->command ?? 'Не указано')."</b>\n";
 
                 if ($index % 3 != 0) {
                     $rowTmpKeyboard[] = [
@@ -136,6 +141,11 @@ class SystemDiagnosticController extends Controller
                         "callback_data" => $page->slug->command ?? $slug->slug
                     ];
                 } else {
+                    $rowTmpKeyboard[] = [
+                        "text" => $index,
+                        "callback_data" => $page->slug->command ?? $slug->slug
+                    ];
+
                     $keyboard[] = $rowTmpKeyboard;
                     $rowTmpKeyboard = [];
                 }
@@ -158,7 +168,7 @@ class SystemDiagnosticController extends Controller
         if (count($dialogs)>0){
             $tmp = "";
             foreach ($dialogs as $dialog)
-                $tmp .= $dialog->pre_text ?? 'Не задан';
+                $tmp .= ($dialog->pre_text ?? 'Не задан')."\n";
 
             BotManager::bot()
                 ->reply("Подключенные диалоги (".count($dialogs)." ед):\n$tmp");
