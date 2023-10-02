@@ -119,7 +119,7 @@ class SystemDiagnosticController extends Controller
             }
 
             BotManager::bot()
-                ->replyInlineKeyboard("Доступные страницы <b>($index стр.)</b> в боте:\n$tmp", $keyboard);
+                ->replyInlineKeyboard("Доступные страницы <b>(".count($pages)." стр.)</b> в боте:\n$tmp", $keyboard);
 
         } else
             BotManager::bot()
@@ -162,7 +162,7 @@ class SystemDiagnosticController extends Controller
             }
 
             BotManager::bot()
-                ->replyInlineKeyboard("Подключенные скрипты <b>($index ед.)</b> в боте:\n$tmp", $keyboard);
+                ->replyInlineKeyboard("Подключенные скрипты <b>(".count($slugs)." ед.)</b> в боте:\n$tmp", $keyboard);
 
         } else
             BotManager::bot()
@@ -170,7 +170,6 @@ class SystemDiagnosticController extends Controller
 
         $dialogs = BotDialogCommand::query()
             ->where("bot_id", $bot->id)
-            ->where("is_global", true)
             ->get();
 
         if (count($dialogs)>0){
