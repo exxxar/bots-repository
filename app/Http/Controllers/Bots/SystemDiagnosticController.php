@@ -96,7 +96,7 @@ class SystemDiagnosticController extends Controller
             foreach ($pages as $page) {
                 $tmp .= "$index# <b>" . ($page->slug->command ?? 'Не указано')."</b>\n";
 
-                if ($index % 3 != 0) {
+                if ($index % 4 != 0) {
                     $rowTmpKeyboard[] = [
                         "text" => $index,
                         "callback_data" => $page->slug->command ?? $page->slug->slug
@@ -139,7 +139,7 @@ class SystemDiagnosticController extends Controller
             foreach ($slugs as $slug) {
                 $tmp .= "$index# <b>" . ($slug->command ?? 'Не указано')."</b>\n";
 
-                if ($index % 3 != 0) {
+                if ($index % 4 != 0) {
                     $rowTmpKeyboard[] = [
                         "text" => $index,
                         "callback_data" => $page->slug->command ?? $slug->slug
