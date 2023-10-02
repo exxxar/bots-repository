@@ -1,5 +1,25 @@
 <template>
 
+    <!-- Модальное окно -->
+    <div class="modal fade" id="web-form-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <iframe
+                        class="zoomed"
+                        v-if="selected_url"
+                        style="width:100%; border:none;min-height:500px;"
+                        :src="selected_url" frameborder="0">
+
+                    </iframe>
+                </div>
+                <div class="modal-footer p-2">
+                    <button type="button" class="btn btn-outline-info w-100" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="chat-window d-flex justify-content-between align-items-center flex-column">
         <perfect-scrollbar
             ref="scroll"
@@ -16,15 +36,27 @@
                     <img v-lazy="message.photo" v-if="message.photo" class="w-100 mb-1 mt-1" alt="">
                     <div class="inline-keyboard w-100 " v-if="message.keyboard">
 
-                        <div v-for="row in message.keyboard" class="d-flex justify-content-between flex-wrap">
+                        <div v-for="row in message.keyboard" class="d-flex justify-content-between  flex-wrap">
 
-                            <div class="d-flex justify-content-between w-100">
-                                <div class="chat-inline-btn w-100" v-for="col in row">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <div
+                                    style="height:100%;"
+                                    class="chat-inline-btn w-100" v-for="col in row">
                                     <button
+                                        style="height:100%;"
                                         v-if="col.callback_data"
                                         @click="send(col.callback_data || col.text, 1)"
                                         class="btn btn-outline-light w-100">{{ col.text || col || '-' }}
                                     </button>
+
+<!--
+                                    <button
+                                        class="btn btn-outline-light w-100"
+                                        v-if="col.web_app"
+                                        @click="selected_url=col.web_app.url"
+                                        data-bs-toggle="modal" data-bs-target="#web-form-modal">
+                                        {{col.text || 'Не указано'}}
+                                    </button>-->
 
                                     <a
                                         class="btn btn-outline-light w-100"
@@ -149,6 +181,7 @@ export default {
 
     data() {
         return {
+            selected_url:null,
             loaded: true,
             canEnter: false,
             messages: [],
@@ -422,5 +455,15 @@ export default {
     position: absolute;
     top: 5px;
     font-size: 13px;
+}
+
+.zoomed {
+    -ms-zoom: 0.75;
+    -moz-transform: scale(0.75);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.75);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.75);
+    -webkit-transform-origin: 0 0;
 }
 </style>

@@ -84,7 +84,7 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
 
 
         <div v-else class="alert alert-warning" role="alert">
-            Данный менеджер еще не создал ни 1 клиента
+          Вы еще не завели ни одного клиента!
         </div>
 
 
