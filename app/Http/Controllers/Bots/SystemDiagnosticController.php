@@ -71,6 +71,7 @@ class SystemDiagnosticController extends Controller
             "Канал заказов: " . ($bot->order_channel ?? 'Не подключен') . "\n" .
             "Магазин: " . ($bot->vk_shop_link ?? 'Не подключен') . "\n" .
             "Платежная система: " . (is_null($bot->payment_provider_token) ? 'Не подключена' : 'Подключена') . "\n" .
+            "AMO CRM: " . (is_null($bot->amo) ? 'Не подключена' : 'Подключена') . "\n" .
             "Автоматическое начисление кэшбэка при оплате: " . ($bot->auto_cashback_on_payments ? 'Да' : 'Нет') . "\n" .
             "Описание бота:\n <em>" . ($bot->description ?? 'Не задано') . "</em>\n\n" .
             "Привественное сообщение:\n <em>" . ($bot->welcome_message ?? 'Не задано') . "</em>\n\n" .
