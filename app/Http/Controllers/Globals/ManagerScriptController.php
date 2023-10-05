@@ -61,6 +61,43 @@ class ManagerScriptController extends SlugController
                 'command' => ".*Клиенты менеджера",
                 'comment' => "Отображение списка клиентов менеджера",
             ]);
+
+        BotMenuSlug::query()->updateOrCreate(
+            [
+                'bot_id' => $bot->id,
+                'slug' => "global_manager_profile",
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Профиль менеджера",
+                'comment' => "Отображение анкеты или рабочего профиля менеджера",
+            ]);
+    }
+
+    public function profile(...$config)
+    {
+
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        \App\Facades\BotManager::bot()
+            ->replyPhoto("Профиль менеджера",
+                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Открыть", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-form"
+                        ]],
+                    ],
+
+                ]);
+
+
     }
 
     public function clients(...$config)
