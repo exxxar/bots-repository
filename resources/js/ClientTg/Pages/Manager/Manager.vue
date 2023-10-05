@@ -6,7 +6,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 </script>
 <template>
     <div v-if="botUser">
-        <div class="card card-style p-3" v-if="!botUser.is_manager">
+        <div class="card card-style p-3" v-if="!botUser.is_manager||botUser.manager==null">
             <form
                 v-on:submit.prevent="submit" class="row mb-0">
                 <div class="col-12 d-flex justify-content-center mb-3">
@@ -267,7 +267,9 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                             <i class="fa-range-icon-1 color-theme">0</i>
                             <i class="fa-range-icon-2 color-theme">100</i>
                             <p class="mb-0 text-center"><span
-                                v-if="managerForm.skills[index].title">{{ managerForm.skills[index].title }} прокачан на </span>{{ managerForm.skills[index].value }}%
+                                v-if="managerForm.skills[index].title">{{
+                                    managerForm.skills[index].title
+                                }} прокачан на </span>{{ managerForm.skills[index].value }}%
                             </p>
 
                             <input class="ios-slider"
@@ -352,7 +354,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
         </div>
 
 
-        <div class="card card-style p-3" v-if="botUser.is_manager">
+        <div class="card card-style p-3" v-if="botUser.is_manager&&botUser.manager != null">
             <h6>Поздравляем! Вы являетесь нашим официальным Менеджером! </h6>
 
             <a href="javascript:void(0)"
@@ -374,8 +376,8 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
             <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
             <p class="mb-0">Ваш баланс: {{ botUser.manager.balance || 0 }} руб</p>
             <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
-            <p class="mb-0">Колл-во слотов под клиентов: {{botUser.manager.max_company_slot_count || 0}}</p>
-            <p class="mb-3">Колл-во слотов под ботов у клиента: {{botUser.manager.max_bot_slot_count || 0}}</p>
+            <p class="mb-0">Колл-во слотов под клиентов: {{ botUser.manager.max_company_slot_count || 0 }}</p>
+            <p class="mb-3">Колл-во слотов под ботов у клиента: {{ botUser.manager.max_bot_slot_count || 0 }}</p>
 
             <h6>Вам доступны следующие возможности:</h6>
             <ul>
