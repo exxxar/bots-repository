@@ -123,12 +123,20 @@ class BotLogicFactory
         return new BotCollection($bots);
     }
 
-    public function simple($companyId = null, $search = null, $size = null): BotSecurityCollection
+    public function simple($companyId = null, $search = null, $needSelfBots = false, $size = null): BotSecurityCollection
     {
+        if (is_null($this->botUser))
+            throw new HttpException(400, "Менеджер не указан!");
 
         $size = $size ?? config('app.results_per_page');
 
         $bots = Bot::query();
+
+        if ($needSelfBots)
+            $bots = $bots->whereHas("company", function ($q) {
+                $q->where("creator_id", $this->botUser->id)
+                    ->orderBy("updated_at", 'DESC');
+            });
 
         if (!is_null($companyId))
             $bots = $bots->where("company_id", $companyId);
@@ -155,9 +163,17 @@ class BotLogicFactory
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
+        $botDomain = $customParams["bot_domain"] ?? null;
+        $tmpBot = Bot::query()
+            ->where("bot_domain", $botDomain)
+            ->first();
+
+        if (!is_null($tmpBot))
+            throw new HttpException(403, "Указанный бот уже существует в системе");
+
         $newBot = $this->bot->replicate();
         $newBot->deleted_at = null;
-        $newBot->bot_domain = $customParams["bot_domain"] ?? "duplicate_" . $newBot->bot_domain . "_" . Carbon::now()->format("Y-m-d H:i:s");
+        $newBot->bot_domain = $botDomain ?? "duplicate_" . $newBot->bot_domain . "_" . Carbon::now()->format("Y-m-d H:i:s");
         $newBot->bot_token = $customParams["bot_token"] ?? null;
         $newBot->bot_token_dev = $customParams["bot_token_dev"] ?? null;
         $newBot->main_channel = $customParams["main_channel"] ?? null;
@@ -445,6 +461,31 @@ class BotLogicFactory
     /**
      * @throws HttpException
      */
+    public function destroyByManager($botId): BotResource
+    {
+        if (is_null($this->botUser))
+            throw new HttpException(404, "Условия функции не выполнены!");
+
+        $bot = Bot::query()
+            ->where("id", $botId)
+            ->whereHas("company", function ($q) {
+                $q->where("creator_id", $this->botUser->id);
+            })
+            ->first();
+
+        if (is_null($bot))
+            throw new HttpException(404, "Бот не принадлежит данному менеджеру");
+
+        $tmpBot = $bot;
+        $bot->deleted_at = Carbon::now();
+        $bot->save();
+
+        return new BotResource($tmpBot);
+    }
+
+    /**
+     * @throws HttpException
+     */
     public function restore(): BotResource
     {
         if (is_null($this->bot))
@@ -478,6 +519,35 @@ class BotLogicFactory
 
         return new BotResource($this->bot);
 
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function getManagerBot(array $data): BotResource
+    {
+        if (is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "botId" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $bot = Bot::query()
+            ->where("id", $data["botId"])
+            ->whereHas("company", function ($q) {
+                $q->where("creator_id", $this->botUser->id);
+            })
+            ->first();
+
+        if (is_null($bot))
+            throw new HttpException(404, "Бот не принадлежит данному менеджеру");
+
+        return new BotResource($bot);
     }
 
     /**
@@ -1092,6 +1162,192 @@ class BotLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
+    public function updateByManager(array $data, array $uploadedPhotos = null): BotResource
+    {
+        if (is_null($this->botUser))
+            throw new HttpException(404, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "id" => "required",
+            "bot_domain" => "required",
+            "bot_token" => "required",
+
+            "balance" => "required",
+            "tax_per_day" => "required",
+            "description" => "required",
+
+            "social_links" => "required",
+            "maintenance_message" => "required",
+            "welcome_message" => "required",
+            "level_1" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $data["id"])
+            ->whereHas("company", function ($q) {
+                $q->where("creator_id", $this->botUser->id);
+            })
+            ->first();
+
+        if (is_null($bot))
+            throw new HttpException(404, "Бот не найдена");
+
+        if (isset($data["removed_keyboards"])) {
+
+            $tmpKeyboards = json_decode($data["removed_keyboards"]);
+
+            foreach ($tmpKeyboards as $id) {
+                $keyboard = BotMenuTemplate::query()->find($id);
+                if (!is_null($keyboard)) {
+
+                    $tmpPages = BotPage::query()
+                        ->where("reply_keyboard_id", $keyboard->id)
+                        ->orWhere('inline_keyboard_id', $keyboard->id)
+                        ->get();
+
+                    if (!empty($tmpPages))
+                        foreach ($tmpPages as $tmpPage) {
+                            if ($tmpPage->reply_keyboard_id == $keyboard->id)
+                                $tmpPage->reply_keyboard_id = null;
+
+                            if ($tmpPage->inline_keyboard_id == $keyboard->id)
+                                $tmpPage->inline_keyboard_id = null;
+
+                            $tmpPage->save();
+
+                        }
+                    $keyboard->delete();
+
+                }
+
+            }
+
+        }
+
+        if (isset($data["removed_slugs"])) {
+
+            $tmpSlugs = json_decode($data["removed_slugs"]);
+
+            foreach ($tmpSlugs as $id) {
+                $slug = BotMenuSlug::query()
+                    ->with(["page"])
+                    ->find($id);
+                if (!is_null($slug)) {
+                    if (!is_null($slug->page)) {
+                        $slug->page->delete();
+                        $slug->delete();
+                    } else
+                        $slug->delete();
+                }
+
+            }
+
+        }
+
+        $photos = $this->uploadPhotos("/public/companies/" . $bot->company->slug, $uploadedPhotos);
+
+        $botType = BotType::query()
+            ->where("slug", "cashback")
+            ->first();
+
+        $tmp = (object)$data;
+
+        if (is_null($tmp->image))
+            $tmp->image = is_null($photos) ? null : ($photos[0] ?? null);
+
+        $tmp->level_2 = $data["level_2"] ?? 0;
+        $tmp->level_3 = $data["level_3"] ?? 0;
+        $tmp->bot_type_id = $botType->id;
+        $tmp->is_active = true;
+        $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
+        $tmp->is_template = $data["is_template"] == "true";
+
+        $tmp->social_links = json_decode($tmp->social_links ?? '[]');
+
+        $keyboards = null;
+        if (isset($data["keyboards"])) {
+            $keyboards = json_decode($data["keyboards"]);
+            unset($tmp->keyboards);
+        }
+
+        $slugs = null;
+
+        if (isset($data["slugs"])) {
+            $slugs = json_decode($data["slugs"]);
+            unset($tmp->slugs);
+        }
+        unset($tmp->selected_bot_template_id);
+
+        //dd($tmp);
+
+        $bot->update((array)$tmp);
+
+        if (!is_null($slugs))
+            foreach ($slugs as $slug) {
+                $slugId = $slug->id ?? null;
+
+                $tmpSlug = !is_null($slugId) ? BotMenuSlug::query()
+                    ->where("id", $slug->id)
+                    ->where("command", $slug->command)
+                    ->where("slug", $slug->slug)
+                    ->first() : null;
+
+                if (!is_null($tmpSlug))
+                    $tmpSlug->update([
+                        'command' => $slug->command,
+                        'comment' => $slug->comment,
+                        'slug' => $slug->slug,
+                        'is_global' => $slug->is_global ?? false,
+                        'config' => $slug->config ?? null,
+                    ]);
+                else
+                    BotMenuSlug::query()->create([
+                        'bot_id' => $this->bot->id,
+                        'command' => $slug->command,
+                        'comment' => $slug->comment,
+                        'slug' => $slug->slug,
+                        'is_global' => $slug->is_global ?? false,
+                        'config' => $slug->config ?? null,
+                    ]);
+            }
+
+
+        if (!is_null($keyboards))
+            foreach ($keyboards as $keyboard) {
+                $tmpKeyboard = BotMenuTemplate::query()
+                    ->where("id", $keyboard->id)
+                    ->first();
+
+                if (!is_null($tmpKeyboard))
+                    $tmpKeyboard->update([
+                        'type' => $keyboard->type,
+                        'slug' => $keyboard->slug,
+                        'menu' => $keyboard->menu,
+                    ]);
+                else
+                    BotMenuTemplate::query()->create([
+                        'bot_id' => $this->bot->id,
+                        'type' => $keyboard->type,
+                        'slug' => $keyboard->slug,
+                        'menu' => $keyboard->menu,
+                    ]);
+            }
+
+
+        if (env("APP_DEBUG") === false)
+            BotManager::bot()->setWebhooks();
+
+        return new BotResource($bot);
+    }
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
     public function createOrUpdateImageMenu(array $data, $uploadedPhoto = null): ImageMenuResource
     {
 
@@ -1220,6 +1476,7 @@ class BotLogicFactory
 
 
     }
+
 
     /**
      * @throws HttpException

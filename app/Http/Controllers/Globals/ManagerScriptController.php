@@ -50,8 +50,62 @@ class ManagerScriptController extends SlugController
             $hasMainScript->config = $params;
             $hasMainScript->save();
         }
+
+        BotMenuSlug::query()->updateOrCreate(
+            [
+                'bot_id' => $bot->id,
+                'slug' => "global_manager_clients",
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Клиенты менеджера",
+                'comment' => "Отображение списка клиентов менеджера",
+            ]);
     }
 
+    public function clients(...$config)
+    {
+
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        if (!$botUser->is_manager) {
+
+            \App\Facades\BotManager::bot()
+                ->replyPhoto("Заполни эту анкету и стань менеджером",
+                    InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                    [
+                        [
+                            ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-form"
+                            ]],
+                        ],
+
+                    ]);
+
+            return;
+
+        }
+
+        \App\Facades\BotManager::bot()
+            ->replyPhoto("Список ваших клиентов",
+                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Открыть список клиентов", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-clients"
+                        ]],
+                    ],
+
+                ]);
+
+
+    }
 
     public function managerScript(...$config)
     {
@@ -66,29 +120,39 @@ class ManagerScriptController extends SlugController
 
         $botUser = BotManager::bot()->currentBotUser();
 
-        if (!$botUser->is_manager) {
-            BotManager::bot()
-                ->reply("Вы не менеджер!");
-            return;
-        }
+        $bot = BotManager::bot()->getSelf();
 
-        if ($botUser->is_manager) {
-            $bot = BotManager::bot()->getSelf();
+        if (!$botUser->is_manager) {
 
             \App\Facades\BotManager::bot()
-                ->replyPhoto("Кабинет менеджера к вашим услугам",
+                ->replyPhoto("Заполни эту анкету и стань менеджером",
                     InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
                     [
                         [
-                            ["text" => "\xF0\x9F\x8E\xB2Приступить к работе", "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-main"
+                            ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-form"
                             ]],
                         ],
 
                     ]);
 
+            return;
 
         }
+
+
+        \App\Facades\BotManager::bot()
+            ->replyPhoto("Кабинет менеджера к вашим услугам",
+                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Приступить к работе", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-main"
+                        ]],
+                    ],
+
+                ]);
+
 
     }
 }

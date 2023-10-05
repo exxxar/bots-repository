@@ -23,6 +23,7 @@ import Empty from '@/ClientTg/Pages/Shop/Empty.vue';
 import Booking from '@/ClientTg/Pages/Shop/Booking.vue';
 import Admins from '@/ClientTg/Pages/Shop/Admins.vue';
 import Vip from '@/ClientTg/Pages/Shop/Vip.vue';
+
 import Categories from '@/ClientTg/Pages/Shop/Categories.vue';
 
 import AdminMain from '@/ClientTg/Pages/Admin/Main.vue';
@@ -45,6 +46,8 @@ import AdminMessageToUser from '@/ClientTg/Pages/Admin/MessageToUser.vue';
 
 
 import ManagerMain from '@/ClientTg/Pages/Manager/Main.vue';
+import ManagerForm from '@/ClientTg/Pages/Manager/Manager.vue';
+import ManagerClients from '@/ClientTg/Pages/Manager/Clients.vue';
 
 export const routes = [
 
@@ -309,6 +312,18 @@ export const managerRoutes = [
         path: '/manager-main',
         component: ManagerMain,
         meta: { title: 'Менеджер: Главная', hide_menu:true}
+    },
+    {
+        name: 'ManagerForm',
+        path: '/manager-form',
+        component: ManagerForm,
+        meta: { title: 'Менеджер: Регистрация', hide_menu:true}
+    },
+    {
+        name: 'ManagerClients',
+        path: '/manager-clients',
+        component: ManagerClients,
+        meta: { title: 'Менеджер: Клиенты', hide_menu:true}
     },
 
 ]

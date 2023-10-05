@@ -418,7 +418,7 @@ class CashBackScriptController extends SlugController
             $bot = BotManager::bot()->getSelf();
 
             \App\Facades\BotManager::bot()
-                ->replyPhoto("Заполни эту анкету и получи достук к системе CashBack",
+                ->replyPhoto("Заполни эту анкету и получи доступ к системе CashBack",
                     InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
                     [
                         [

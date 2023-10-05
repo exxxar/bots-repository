@@ -1068,7 +1068,8 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
             </div>
 
             <div class="divider divider-small my-3 bg-highlight "></div>
-            <p class="mb-2">Так-с, финальный этап! Сейчас мы создадим демо и сможем перейти к завершению создания бота!</p>
+            <p class="mb-2">Так-с, финальный этап! Сейчас мы создадим демо и сможем перейти к завершению создания
+                бота!</p>
             <button
                 type="button"
                 @click="submitBot"
@@ -1210,6 +1211,12 @@ export default {
                 need_create_bot: true,
                 selected_bot_id: null,
                 selected_company_id: null,
+
+                cashback: {
+                    level_1: 7,
+                    level_2: 3,
+                    level_3: 1
+                },
 
                 greeting: {
                     text: null,
@@ -1537,7 +1544,7 @@ export default {
             this.step = this.start
     },
     methods: {
-        start(){
+        start() {
             this.step = 0
             this.messages = []
 
@@ -1646,7 +1653,6 @@ export default {
                 botForm: data
             }).then((response) => {
 
-                this.step++;
 
                 this.$notify({
                     title: "Конструктор ботов",
@@ -1654,6 +1660,11 @@ export default {
                     type: 'success'
                 });
 
+
+                this.form.botDomain = reponse.data.botDomain || 'testx'
+
+
+                this.step++;
 
             }).catch(err => {
                 this.step++;

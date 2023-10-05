@@ -6,6 +6,7 @@ namespace App\Facades;
 use App\Http\BusinessLogic\Methods\BotPageLogicFactory as PageLogic;
 use App\Http\BusinessLogic\Methods\BotLogicFactory as BotLogic;
 use App\Http\BusinessLogic\Methods\BotSlugLogicFactory as SlugLogic;
+use App\Http\BusinessLogic\Methods\ManagerLogicFactory as ManagerLogic;
 use App\Http\BusinessLogic\Methods\ProductLogicFactory as ProductLogic;
 use App\Http\BusinessLogic\Methods\BotDialogsLogicFactory as DialogLogic;
 use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory as AdminLogic;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static BotUserLogic botUsers()
  * @method static AmoLogic amo()
  * @method static KeyboardLogic keyboards()
+ * @method static ManagerLogic manager()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

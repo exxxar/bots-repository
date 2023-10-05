@@ -49,14 +49,14 @@
                                         class="btn btn-outline-light w-100">{{ col.text || col || '-' }}
                                     </button>
 
-<!--
-                                    <button
-                                        class="btn btn-outline-light w-100"
-                                        v-if="col.web_app"
-                                        @click="selected_url=col.web_app.url"
-                                        data-bs-toggle="modal" data-bs-target="#web-form-modal">
-                                        {{col.text || 'Не указано'}}
-                                    </button>-->
+                                    <!--
+                                                                        <button
+                                                                            class="btn btn-outline-light w-100"
+                                                                            v-if="col.web_app"
+                                                                            @click="selected_url=col.web_app.url"
+                                                                            data-bs-toggle="modal" data-bs-target="#web-form-modal">
+                                                                            {{col.text || 'Не указано'}}
+                                                                        </button>-->
 
                                     <a
                                         class="btn btn-outline-light w-100"
@@ -94,7 +94,7 @@
                         <button
                             @click="send('/start')"
                             v-if="buttons.length===0"
-                            class="btn btn-outline-light w-100 text-center">Начать
+                            class="btn btn-light w-100 text-center">Начать
                         </button>
 
                         <perfect-scrollbar
@@ -181,7 +181,7 @@ export default {
 
     data() {
         return {
-            selected_url:null,
+            selected_url: null,
             loaded: true,
             canEnter: false,
             messages: [],
@@ -234,6 +234,15 @@ export default {
 
             axios.post('/web/' + this.domain, this.dataForm)
                 .then(resp => {
+
+                    if (resp.data.length == 0) {
+                        this.$nextTick(() => {
+                            this.loaded = true
+                            this.$refs.scroll.$el.scrollTop = 100000;
+                        })
+                        return;
+                    }
+                    console.log("resp", resp)
                     this.dataForm.message = null
                     this.dataForm.query = null
 
@@ -278,7 +287,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 
 
 .chat-icon {
@@ -406,7 +414,7 @@ export default {
 
     a,
     button {
-       // font-size: 8px;
+        // font-size: 8px;
         font-size: 12px;
         color: black;
 
@@ -437,6 +445,7 @@ export default {
     background: white;
     box-shadow: 0px 0px 3px 0px #9c9c9c;
 }
+
 .btn-send {
 
     color: white;

@@ -11,6 +11,7 @@ use App\Http\BusinessLogic\Methods\BotSlugLogicFactory;
 use App\Http\BusinessLogic\Methods\BotUserLogicFactory;
 use App\Http\BusinessLogic\Methods\CompanyLogicFactory;
 use App\Http\BusinessLogic\Methods\KeyboardLogicFactory;
+use App\Http\BusinessLogic\Methods\ManagerLogicFactory;
 use App\Http\BusinessLogic\Methods\ProductLogicFactory;
 
 class BusinessLogic
@@ -25,6 +26,7 @@ class BusinessLogic
     protected CompanyLogicFactory $company;
     protected BotAdministrativeLogicFactory $administrative;
     protected KeyboardLogicFactory $keyboard;
+    protected ManagerLogicFactory $manager;
 
     public function __construct()
     {
@@ -38,6 +40,7 @@ class BusinessLogic
         $this->company = new CompanyLogicFactory();
         $this->administrative = new BotAdministrativeLogicFactory();
         $this->keyboard = new KeyboardLogicFactory();
+        $this->manager = new ManagerLogicFactory();
     }
 
     public function bots(): BotLogicFactory
@@ -88,5 +91,10 @@ class BusinessLogic
     public function administrative(): BotAdministrativeLogicFactory
     {
         return $this->administrative;
+    }
+
+    public function manager(): ManagerLogicFactory
+    {
+        return $this->manager;
     }
 }

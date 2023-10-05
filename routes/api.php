@@ -96,3 +96,6 @@ Route::middleware([/*"auth:sanctum"*/])
 
 
 Route::apiResource('basket', App\Http\Controllers\BasketController::class);
+
+
+Route::apiResource('manager-profile', App\Http\Controllers\ManagerProfileController::class);

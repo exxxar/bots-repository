@@ -44,6 +44,7 @@ class BotUserResource extends JsonResource
             'current_longitude' => $this->current_longitude ?? 0,
 
             'user' => $this->whenLoaded("user") ?? null,
+            'manager' => $this->whenLoaded("manager") ?? null,
             'user_in_location' => $this->user_in_location,
             'temporary' => $this->temporary ?? null,
 

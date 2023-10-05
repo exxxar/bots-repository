@@ -37,6 +37,9 @@ Route::prefix("bot-client")
         Route::post('/bot', [BotController::class, "getBot"])
             ->middleware(["tgAuth.admin"]);
 
+        Route::post('/manage-bot', [BotController::class, "getManagerBot"])
+            ->middleware(["tgAuth.manager"]);
+
 
         Route::post('/callback', [BotController::class, "sendCallback"])
             ->middleware(["tgAuth.admin"]);
@@ -245,12 +248,22 @@ Route::prefix("bot-client")
 
             });
 
+        Route::prefix("manager")
+            ->controller(\App\Http\Controllers\ManagerProfileController::class)
+            ->middleware(["tgAuth.any"])
+            ->group(function(){
+                Route::post("/register", "registerManager");
+            });
+
         Route::prefix("bots")
             ->controller(BotController::class)
             ->middleware(["tgAuth.manager"])
             ->group(function(){
                 Route::post("/simple-bot-list", "simpleList");
                 Route::post("/bot-lazy", "createBotLazy");
+                Route::post('/manager-switch-status',"switchBotStatusManager");
+                Route::post("/manager-bot-update", "updateBotByManager");
+                Route::delete("/remove-my-manager/{botId}", "destroyByManager");
             });
 
         Route::prefix("slugs")

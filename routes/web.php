@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -27,6 +28,29 @@ use Inertia\Inertia;
 |
 */
 
+Route::get("/push-command", function (){
+
+    $botUser = BotUser::query()
+        ->where("bot_id", 2)
+        ->where("telegram_chat_id","484698703")
+        ->first();
+    \App\Facades\BotManager::bot()
+        ->setBotUser($botUser)
+        ->setApiToken("isushibot")
+        ->pushCommand("/diagnostic");
+});
+Route::get("/write-test", function (){
+    Log:info("data comming");
+
+    return "success";
+});
+
+Route::get("/test-async", function (){
+    $promise = Http::get('http://bots.your-cashman.com/write-test');
+
+    return "ok";
+
+});
 Route::get('/db-transfer', function (Request $request) {
   /*  $users2 = DB::connection('mysql2')->table("users")
         ->get();

@@ -176,6 +176,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
 }
 const mutations = {
     setCashBack(state, payload) {

@@ -37,6 +37,16 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async switchBotStatusManager(context, payload = {botId:null}) {
+        let link = `${BASE_BOTS_LINK}/manager-switch-status`
+        let _axios = util.makeAxiosFactory(link,"POST", payload)
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async switchBotStatus(context) {
         let link = `${BASE_BOTS_LINK}/switch-status`
         let _axios = util.makeAxiosFactory(link,"POST")
@@ -120,6 +130,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async updateBotByManager(context, payload = {botForm: null}) {
+        let link = `${BASE_BOTS_LINK}/manager-bot-update`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.botForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async updateBot(context, payload = {botForm: null}) {
         let link = `${BASE_BOTS_LINK}/bot-update`
 
@@ -174,6 +196,18 @@ const actions = {
         let link = `${BASE_BOTS_LINK}/duplicate`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async removeBotByManager(context, payload = {botId: null}) {
+        let link = `${BASE_BOTS_LINK}/remove-my-manager/${payload.botId}`
+
+        let _axios = util.makeAxiosFactory(link, 'DELETE')
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

@@ -15,6 +15,7 @@ use App\Models\BotUser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use ReflectionClass;
@@ -33,6 +34,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
         if (is_null($hasMainScript))
             return;
 
+
+
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_wheel_of_fortune_custom",
@@ -40,7 +43,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 'is_global' => true,
             ],
             [
-                'command' => ".*Колесо фортуны (вариант 2)",
+                'command' => ".*Колесо фортуны вариант 2",
                 'comment' => "Игровой модуль",
             ]);
 

@@ -1,14 +1,14 @@
 created:
-    - app/Http/Controllers/BasketController.php
-    - database/factories/BasketFactory.php
-    - database/migrations/2023_09_18_160403_create_baskets_table.php
-    - app/Models/Basket.php
-    - database/seeders/BasketSeeder.php
-    - tests/Feature/Http/Controllers/BasketControllerTest.php
-    - app/Http/Requests/BasketStoreRequest.php
-    - app/Http/Requests/BasketUpdateRequest.php
-    - app/Http/Resources/BasketCollection.php
-    - app/Http/Resources/BasketResource.php
+    - app/Http/Controllers/ManagerProfileController.php
+    - database/factories/ManagerProfileFactory.php
+    - database/migrations/2023_10_05_203251_create_manager_profiles_table.php
+    - app/Models/ManagerProfile.php
+    - database/seeders/ManagerProfileSeeder.php
+    - tests/Feature/Http/Controllers/ManagerProfileControllerTest.php
+    - app/Http/Requests/ManagerProfileStoreRequest.php
+    - app/Http/Requests/ManagerProfileUpdateRequest.php
+    - app/Http/Resources/ManagerProfileCollection.php
+    - app/Http/Resources/ManagerProfileResource.php
 updated:
     - routes/api.php
 models:
@@ -43,3 +43,4 @@ models:
     PaymentHistory: { amount: 'double default:0', user_id: 'id foreign:users', order_id: 'id foreign:orders' }
     Geo: { region: "string:255 nullable comment:'Регион'", city: "string:255 nullable comment:'Город'", district: "string:255 nullable comment:'Район'", address: "string:255 nullable comment:'Адрес'", landmark: "string:255 nullable comment:'Ориентир'", latitude: "string:50 nullable comment:'Широта'", longitude: "string:50 nullable comment:'Долгота'", user_id: 'id foreign:users', bot_id: 'id foreign:bots', deleted_at: 'timestamp nullable', relationships: { belongsTo: 'Bot, User' } }
     Basket: { product_id: 'id foreign:products', count: 'integer default:1', bot_user_id: 'id foreign:bot_users', bot_id: 'id foreign:bots', ordered_at: 'timestamp nullable', relationships: { belongsTo: 'Bot, BotUser, Product' } }
+    ManagerProfile: { bot_user_id: 'id foreign:bot_users', info: 'nullable longtext', referral: 'nullable string:255', strengths: 'json nullable', weaknesses: 'json nullable', educations: 'json nullable', social_links: 'json nullable', skills: 'json nullable', stable_personal_discount: 'double default:0', permanent_personal_discount: 'double default:0', max_company_slot_count: 'integer default:0', max_bot_slot_count: 'integer default:0', balance: "integer default:0 comment:'Баланс счета менеджера'", verified_at: 'timestamp nullable', relationships: { belongsTo: BotUser } }

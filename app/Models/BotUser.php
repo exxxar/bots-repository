@@ -71,7 +71,7 @@ class BotUser extends Model
         'user_in_location' => 'boolean',
     ];
 
-    protected $with = ["cashBack"];
+    protected $with = ["cashBack","manager"];
 
     public function bot(): BelongsTo
     {
@@ -91,5 +91,10 @@ class BotUser extends Model
     public function parent(): HasOne
     {
         return $this->hasOne(BotUser::class,'id','parent_id');
+    }
+
+    public function manager(): HasOne
+    {
+        return $this->hasOne(ManagerProfile::class,'bot_user_id','id');
     }
 }

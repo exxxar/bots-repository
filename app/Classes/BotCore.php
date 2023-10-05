@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use ReflectionClass;
 use ReflectionMethod;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
 
 abstract class BotCore
@@ -155,6 +156,7 @@ abstract class BotCore
         $this->reply("Ошибка обработки данных!");
         return response()->json($this->webMessages);
     }
+
 
     private function botLocationHandler($coords, $message): bool
     {
@@ -418,7 +420,7 @@ abstract class BotCore
                 continue;
 
             if ($item["path"] === "fallback_photo") {
-                $find = $this->tryCall($item, $message, null, ($caption ?? null),[ ...$photos]);
+                $find = $this->tryCall($item, $message, null, ($caption ?? null), [...$photos]);
             }
         }
         return $find;
@@ -685,6 +687,31 @@ abstract class BotCore
         $this->reply("Ошибка обработки данных!");
     }
 
+    public function pushCommand(string $command): void
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        //если сообщения нет, то завершаем работу
+        if (is_null($command))
+            return;
+
+
+        include_once base_path('routes/bot.php');
+
+        if ($this->botTemplatePageHandler(null, $command))
+            return;
+
+        if ($this->botSlugHandler(null, $command))
+            return;
+
+        if ($this->botRouteHandler(null, $command))
+            return;
+
+        $this->reply("Ошибка обработки данных!");
+    }
+
     public function adminNotificationHandler($query): bool
     {
         if (mb_strlen($query) < 10)
@@ -740,6 +767,7 @@ abstract class BotCore
         $this->controller = $controller;
 
         try {
+
 
             if (is_subclass_of($controller, SlugController::class)) {
                 app($controller)->config($this->getSelf());

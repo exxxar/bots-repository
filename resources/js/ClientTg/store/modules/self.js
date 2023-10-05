@@ -27,21 +27,44 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadBotAdminConfig(context) {
-
-        let tgData =  window.Telegram ? (window.Telegram.WebApp.initData || null ) : null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
+    async saveManager(context, payload) {
 
         let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain
+            ...payload
         }
+
+        let link = `${BASE_SELF_LINK}/manager/register`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadBotManagerConfig(context, payload = {botId: null}) {
+
+console.log("payload", payload)
+        let link = `${BASE_SELF_LINK}/manage-bot`
+        let method = 'POST'
+        let _axios = util.makeAxiosFactory(link, method, payload)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            return Promise.resolve(dataObject);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadBotAdminConfig(context) {
+
 
         let link = `${BASE_SELF_LINK}/bot`
         let method = 'POST'
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let _axios = util.makeAxiosFactory(link, method)
 
         return _axios.then((response) => {
             let dataObject = response.data

@@ -1,17 +1,8 @@
 <script setup>
 import Pagination from '@/ClientTg/Components/Pagination.vue';
+import BotEditor from "@/ClientTg/Components/Manager/Bots/BotEditor.vue";
 </script>
 <template>
-    <!--    <div class="row mb-2">
-            <div class="col-12">
-                <button type="button"
-                        @click="show=!show"
-                        class="btn btn-outline-success p-3 w-100">
-                    <span v-if="!show"><i class="fa-solid fa-robot"></i> Открыть список ботов</span>
-                    <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть список ботов</span>
-                </button>
-            </div>
-        </div>-->
 
     <div v-if="show">
 
@@ -32,24 +23,7 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
                     id="button-addon2">Найти
             </button>
         </div>
-        <div class="d-flex my-3 w-100">
-            <div class="pt-1">
-                <h5 data-activate="toggle-id-2" class="font-500 font-13">
-                    <strong v-if="need_self_bots">Все боты в системе</strong>
-                    <strong v-if="!need_self_bots">Только мои боты</strong>
-                </h5>
-            </div>
-            <div class="ml-auto mr-4 pr-2">
-                <div class="custom-control ios-switch ios-switch-icon">
-                    <input type="checkbox"
-                           v-model="need_self_bots"
-                           class="ios-input" id="toggle-id-2">
-                    <label class="custom-control-label" for="toggle-id-2"></label>
-                    <i class="fa fa-check font-11 color-white"></i>
-                    <i class="fa fa-times font-11 color-white"></i>
-                </div>
-            </div>
-        </div>
+
 
         <div v-if="bots.length>0" >
             <div class="divider divider-small my-3 bg-highlight "></div>
@@ -87,6 +61,11 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
             </div>
         </div>
     </div>
+
+    <BotEditor
+        v-on:remove="removeBotCallback"
+        v-if="selectedBotId&&!loading"
+        :bot-id="selectedBotId"></BotEditor>
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -94,10 +73,11 @@ import {mapGetters} from "vuex";
 export default {
     props: {
         companyId: null,
-        selectedBotId: null
+        selectedBot: null
     },
     data() {
         return {
+            selectedBotId:null,
             need_self_bots:false,
             filters: [
                 {
@@ -138,6 +118,10 @@ export default {
 
     },
     methods: {
+        removeBotCallback(){
+          this.loadBots();
+            this.selectedBotId = null
+        },
         duplicate(id) {
             if (!this.getCurrentCompany) {
                 this.$notify("У Вас не выбран клиент!");
@@ -156,7 +140,13 @@ export default {
         },
 
         selectBot(bot) {
-            this.$emit("callback", bot)
+           /// this.$emit("callback", bot)
+            this.loading = true
+            this.selectedBotId = bot.id
+
+            this.$nextTick(()=>{
+                this.loading = false
+            })
             this.$notify("Вы выбрали бота из списка! Все остальные действия будут производится для этого бота.");
         },
         nextBots(index) {
@@ -167,9 +157,10 @@ export default {
             this.$store.dispatch("loadSimpleBots", {
                 dataObject: {
                     companyId: this.companyId || null,
-                    needSelfBots: this.need_self_bots ,
+                    needSelfBots: true ,
                     search: this.search
                 },
+                size:5,
                 page: page
             }).then(resp => {
                 this.loading = false

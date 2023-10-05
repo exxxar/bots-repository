@@ -18,6 +18,7 @@ use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
+use App\Models\ManagerProfile;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Exception;
@@ -733,6 +734,8 @@ class BotAdministrativeLogicFactory
             );
 
     }
+
+
 
 
     /**

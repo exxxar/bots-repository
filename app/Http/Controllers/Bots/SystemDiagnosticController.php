@@ -8,6 +8,7 @@ use App\Models\BotDialogCommand;
 use App\Models\BotMenuSlug;
 use App\Models\BotPage;
 use App\Models\BotUser;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
 class SystemDiagnosticController extends Controller

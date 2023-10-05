@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\Api;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -36,6 +37,19 @@ class BotManager extends BotCore
     public function currentBotUser()
     {
         return $this->botUser;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function setBotUser($botUser = null): static
+    {
+        if (is_null($botUser))
+            throw new HttpException(400, "Пользователь бота не задан!");
+
+        $this->botUser = $botUser;
+        $this->chatId = $botUser->telegram_chat_id;
+        return $this;
     }
 
     protected function checkIsWorking()
@@ -173,7 +187,7 @@ class BotManager extends BotCore
         return $result;
     }
 
-    protected function setApiToken($domain)
+    public function setApiToken($domain)
     {
         try {
             $bot = Bot::query()
@@ -194,7 +208,7 @@ class BotManager extends BotCore
             $this->bot = null;
             $this->domain = null;
         }
-
+        return $this;
     }
 
     public function getSelf()

@@ -69,6 +69,7 @@ BotManager::bot()
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\ManagerScriptController::class)
+    ->slug("global_manager_clients", "clients")
     ->slug("global_manager_main", "managerScript");
 
 BotManager::bot()
