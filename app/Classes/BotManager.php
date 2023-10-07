@@ -303,7 +303,7 @@ class BotManager extends BotCore
 
             $callbackUrl = $bot->callback_link ?? null;
 
-            if (!is_null($callbackUrl))
+            if (is_null($callbackUrl))
                 return;
 
             $external = BotExternalRequest::query()
