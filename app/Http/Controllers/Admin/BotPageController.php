@@ -61,7 +61,7 @@ class BotPageController extends Controller
     public function createPage(Request $request): BotPageResource
     {
         $request->validate([
-            "content" => "required",
+          //  "content" => "required",
             "command" => "required",
             "comment" => "required",
             "bot_id" => "required",
@@ -82,7 +82,7 @@ class BotPageController extends Controller
     {
         $request->validate([
             "id" => "required",
-            "content" => "required",
+           // "content" => "required",
             "command" => "required",
             "comment" => "required",
             "bot_id" => "required",
