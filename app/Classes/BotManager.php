@@ -323,10 +323,7 @@ class BotManager extends BotCore
             $this->replyAction();
 
             try {
-                $data = Http::post($callbackUrl, [
-                    "command" => $page->slug->command ?? null,
-                    "bot" => $bot->bot_domain ?? null
-                ]);
+                $data = Http::connectTimeout(3)->get($callbackUrl);
 
                 Log::info($data->body());
             } catch (\Exception $e) {

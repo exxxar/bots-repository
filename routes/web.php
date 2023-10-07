@@ -137,7 +137,7 @@ Route::get("/push-command", function () {
         ->setApiToken("isushibot")
         ->pushCommand("/diagnostic");
 });
-Route::post("/write-test", function () {
+Route::get("/write-test", function () {
     Log::info("data comming");
 
     return "success";
