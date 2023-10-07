@@ -306,19 +306,26 @@ class BotManager extends BotCore
             if (!is_null($callbackUrl))
                 return;
 
-            BotExternalRequest::query()->create([
-                "bot_id"=>$bot->id,
-                "bot_user_id"=>$this->botUser->id,
-                "command"=>$page->command,
-                "completed_at"=>null
-            ]);
+            $external = BotExternalRequest::query()
+                ->where("bot_id", $bot->id)
+                ->where("bot_user_id", $this->botUser->id)
+                ->whereNull("completed_at")
+                ->first();
+
+            if (is_null($external))
+                BotExternalRequest::query()->create([
+                    "bot_id" => $bot->id,
+                    "bot_user_id" => $this->botUser->id,
+                    "command" => $page->command,
+                    "completed_at" => null
+                ]);
 
             $this->replyAction();
 
             try {
-                Http::connectTimeout(3)->post($callbackUrl,[
-                    "command"=>$page->command ?? null,
-                    "bot"=>$bot->bot_domain ?? null
+                Http::connectTimeout(3)->post($callbackUrl, [
+                    "command" => $page->command ?? null,
+                    "bot" => $bot->bot_domain ?? null
                 ]);
             } catch (\Exception $e) {
 
