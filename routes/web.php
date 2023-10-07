@@ -138,8 +138,7 @@ Route::get("/push-command", function () {
         ->pushCommand("/diagnostic");
 });
 Route::get("/write-test", function () {
-    Log:
-    info("data comming");
+    Log::info("data comming");
 
     return "success";
 });
