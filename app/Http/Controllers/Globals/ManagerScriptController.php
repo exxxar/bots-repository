@@ -170,8 +170,8 @@ class ManagerScriptController extends SlugController
     public function getFriendList(Request $request)
     {
 
-        $bot = Bot::query()->find(21);//$request->bot;
-        $botUser = BotUser::query()->find(182);//$request->botUser;
+        $bot = $request->bot;//Bot::query()->find(21);//;
+        $botUser = $request->botUser;//BotUser::query()->find(182);//$request->botUser;
 
         $userIds = ReferralHistory::query()
             ->where("user_sender_id", $botUser->user_id)
