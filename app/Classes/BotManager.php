@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Enums\BotStatusEnum;
 use App\Models\Bot;
+use App\Models\BotExternalRequest;
 use App\Models\BotMenuSlug;
 use App\Models\BotPage;
 use App\Models\BotUser;
@@ -296,6 +297,35 @@ class BotManager extends BotCore
             return;
 
         $bot = $this->getSelf();
+
+        if ($page->is_external) {
+            $this->reply("Передано на внешнее управление (тестовый режим)");
+
+            $callbackUrl = $bot->callback_link ?? null;
+
+            if (!is_null($callbackUrl))
+                return;
+
+            BotExternalRequest::query()->create([
+                "bot_id"=>$bot->id,
+                "bot_user_id"=>$this->botUser->id,
+                "command"=>$page->command,
+                "completed_at"=>null
+            ]);
+
+            $this->replyAction();
+
+            try {
+                Http::connectTimeout(3)->post($callbackUrl,[
+                    "command"=>$page->command ?? null,
+                    "bot"=>$bot->bot_domain ?? null
+                ]);
+            } catch (\Exception $e) {
+
+            }
+
+            return;
+        }
 
         $inlineKeyboard = $page->inlineKeyboard ?? null;
         $replyKeyboard = $page->replyKeyboard ?? null;

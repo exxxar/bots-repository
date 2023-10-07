@@ -99,3 +99,6 @@ Route::apiResource('basket', App\Http\Controllers\BasketController::class);
 
 
 Route::apiResource('manager-profile', App\Http\Controllers\ManagerProfileController::class);
+
+
+Route::apiResource('bot-external-request', App\Http\Controllers\BotExternalRequestController::class);

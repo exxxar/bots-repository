@@ -27,6 +27,7 @@ class Bot extends Model
         'order_channel',
         'main_channel',
         'vk_shop_link',
+        'callback_link',
         'balance',
         'tax_per_day',
         'image',

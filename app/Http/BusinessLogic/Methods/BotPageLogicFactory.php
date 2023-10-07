@@ -157,6 +157,7 @@ class BotPageLogicFactory
 
         $tmp->reply_keyboard_id = null;
         $tmp->inline_keyboard_id = null;
+        $tmp->is_external = (bool)($tmp->is_external ?? false);
         $tmp->bot_id = $this->bot->id;
 
         if (!is_null($replyKeyboard)) {
@@ -263,6 +264,8 @@ class BotPageLogicFactory
         $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
 
         $tmp = (object)$pageData;
+        $tmp->is_external = (bool)($tmp->is_external ?? false);
+
         unset($tmp->photos);
 
         $images = $tmp->images ?? null;

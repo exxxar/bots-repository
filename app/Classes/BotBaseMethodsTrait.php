@@ -376,6 +376,35 @@ trait BotBaseMethodsTrait
 
     }
 
+
+
+    public function sendChatAction($chatId, $action)
+    {
+        $tmp = [
+            "chat_id" => $chatId,
+            "action" => $action,
+
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $data = $this->bot->sendChatAction($tmp);
+
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+
+    }
+
     public function sendPhoto($chatId, $caption, $path, $keyboard = [])
     {
         $tmp = [

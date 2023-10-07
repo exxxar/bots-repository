@@ -25,6 +25,7 @@ class BotResource extends JsonResource
             'order_channel' => $this->order_channel,
             'main_channel' => $this->main_channel,
             'vk_shop_link' => $this->vk_shop_link ?? null,
+            'callback_link' => $this->callback_link ?? null,
             'maintenance_message' => $this->maintenance_message,
             'balance' => $this->balance,
             'tax_per_day' => $this->tax_per_day,

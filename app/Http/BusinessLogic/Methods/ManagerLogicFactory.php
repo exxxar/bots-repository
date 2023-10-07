@@ -104,6 +104,105 @@ class ManagerLogicFactory
     }
 
 
+    public function friendList(): array
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $bot = $this->bot;//Bot::query()->find(21);//;
+        $botUser = $this->botUser;//BotUser::query()->find(182);//$request->botUser;
+
+        $userIds = ReferralHistory::query()
+            ->where("user_sender_id", $botUser->user_id)
+            ->where("bot_id", $bot->id)
+            ->get()
+            ->pluck("user_recipient_id");
+
+
+        $botUsersLevel1 = BotUser::query()
+            ->whereIn("user_id", $userIds)
+            ->where("bot_id", $bot->id)
+            ->select(["id", "fio_from_telegram", "telegram_chat_id", "parent_id", "user_id", "bot_id"])
+            ->get();
+
+
+        $userIdsLevel2 = ReferralHistory::query()
+            ->whereIn("user_sender_id", $botUsersLevel1->pluck("user_id"))
+            ->where("bot_id", $bot->id)
+            ->get()
+            ->pluck("user_recipient_id");
+
+        $botUsersLevel2 = BotUser::query()
+            ->whereIn("user_id", $userIdsLevel2)
+            ->where("bot_id", $bot->id)
+            ->select(["id", "fio_from_telegram", "telegram_chat_id", "parent_id", "user_id", "bot_id"])
+            ->get();
+
+
+        $userIdsLevel3 = ReferralHistory::query()
+            ->whereIn("user_sender_id", $botUsersLevel2->pluck("user_id"))
+            ->where("bot_id", $bot->id)
+            ->get()
+            ->pluck("user_recipient_id");
+
+        $botUsersLevel3 = BotUser::query()
+            ->whereIn("user_id", $userIdsLevel3)
+            ->where("bot_id", $bot->id)
+            ->select(["id", "fio_from_telegram", "telegram_chat_id", "parent_id", "user_id", "bot_id"])
+            ->get();
+
+        $tmp = $botUsersLevel1->toArray();
+
+        $level1Index = 0;
+        foreach ($tmp as $level1) {
+
+            if (!isset($tmp[$level1Index]["child"]))
+                $tmp[$level1Index]["child"] = [];
+
+            $level2Index = 0;
+            $tmpLevel2 = $botUsersLevel2->toArray() ?? [];
+
+            $test1 = [];
+            foreach ($tmpLevel2 as $level2) {
+
+
+                if (!isset($tmpLevel2[$level2Index]["child"]))
+                    $tmpLevel2[$level2Index]["child"] = [];
+
+
+                $tmpLevel3 = $botUsersLevel3->toArray() ?? [];
+                $level3Index = 0;
+                $test2 = [];
+
+                foreach ($tmpLevel3 as $level3) {
+                    if ($tmpLevel2[$level2Index]["id"] === $tmpLevel3[$level3Index]["parent_id"]) {
+                        $test2[] = $tmpLevel3[$level3Index];
+                    }
+
+
+                    $level3Index++;
+                }
+
+                $tmpLevel2[$level2Index]["child"] = $test2;
+
+                if ($tmp[$level1Index]["id"] == $tmpLevel2[$level2Index]["parent_id"]) {
+                    $test1[] = $tmpLevel2[$level2Index];
+                }
+
+
+                $level2Index++;
+            }
+
+            $tmp[$level1Index]["child"] = $test1;
+
+            $level1Index++;
+
+        }
+
+        return $tmp;
+    }
+
     /**
      * @throws ValidationException
      * @throws HttpException
@@ -208,7 +307,7 @@ class ManagerLogicFactory
 
         $string = base64_decode($referral);
 
-        preg_match_all($pattern_simple , $string, $matches);
+        preg_match_all($pattern_simple, $string, $matches);
 
         $telegramChatId = $matches[2][0] ?? null;
 

@@ -466,6 +466,34 @@
 
                 </div>
 
+
+                <div class=" mb-2">
+
+
+                    <label class="form-label d-flex justify-content-between mt-2" id="bot-callback-url">
+                        <div>
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Ссылка на внешний сервис для обратной связи
+                                    </div>
+                                </template>
+                            </Popper>
+                            ВК-группа
+                        </div>
+
+
+                    </label>
+
+
+                    <input type="url" class="form-control"
+                           placeholder="Ссылка на внешний сервис"
+                           aria-label="Ссылка на внешний сервис"
+                           v-model="botForm.callback_link"
+                           aria-describedby="callback_link">
+
+                </div>
+
                 <div class="divider divider-small my-3 bg-highlight "></div>
 
                 <div class="mb-2">
@@ -611,6 +639,7 @@ export default {
                 order_channel: null,
                 main_channel: null,
                 vk_shop_link: null,
+                callback_link: null,
                 balance: null,
                 tax_per_day: null,
                 welcome_message: null,
@@ -668,6 +697,7 @@ export default {
                     balance: this.bot.balance || null,
                     tax_per_day: this.bot.tax_per_day || null,
                     vk_shop_link: this.bot.vk_shop_link || null,
+                    callback_link: this.bot.callback_link || null,
 
                     image: this.bot.image || null,
 

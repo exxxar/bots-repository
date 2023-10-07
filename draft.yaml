@@ -1,29 +1,16 @@
 models:
-  ManagerProfile:
+  BotExternalRequest:
+    bot_id: id foreign:bots
     bot_user_id: id foreign:bot_users
-    info: nullable longtext
-    referral: nullable string:255
-    strengths: json nullable
-    weaknesses: json nullable
-    educations: json nullable
-    social_links: json nullable
-    skills: json nullable
-
-    stable_personal_discount: double default:0
-    permanent_personal_discount: double default:0
-
-    max_company_slot_count: integer default:0
-    max_bot_slot_count: integer default:0
-
-    balance: integer default:0 comment:'Баланс счета менеджера'
-
-    verified_at: timestamp nullable
-
+    command: nullable string:255
+    completed_at: timestamp nullable
     relationships:
-      belongsTo: BotUser
+      belongsTo: BotUser, Bot
 
-seeders: ManagerProfile
+
+
+seeders:   BotExternalRequest
 
 controllers:
-  ManagerProfile:
+  BotExternalRequest:
     resource: api

@@ -530,6 +530,27 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     </div>
                 </div>
 
+                <div class="col-md-12 col-12">
+                    <div class="mb-3">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Ссылка на внешний сервис обработки данных
+                                </div>
+                            </template>
+                        </Popper>
+                        <label class="form-label" id="callback_link">Ссылка на внешний сервис обработки данных
+                        </label>
+
+
+                        <input type="url" class="form-control"
+                               placeholder="Ссылка на внешний сервис"
+                               aria-label="ссылка на внешний сервис"
+                               v-model="botForm.callback_link"
+                               aria-describedby="callback_link">
+                    </div>
+                </div>
+
 
                 <div class="col-12 ">
                     <div class="card mb-3">
@@ -758,6 +779,7 @@ export default {
                 order_channel: null,
                 main_channel: null,
                 vk_shop_link: null,
+                callback_link: null,
                 balance: null,
                 tax_per_day: null,
                 welcome_message: null,
@@ -816,6 +838,7 @@ export default {
                     balance: this.bot.balance || null,
                     tax_per_day: this.bot.tax_per_day || null,
                     vk_shop_link: this.bot.vk_shop_link || null,
+                    callback_link: this.bot.callback_link || null,
 
                     image: this.bot.image || null,
 

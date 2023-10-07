@@ -16,27 +16,27 @@
     "src": "Mail.css"
   },
   "MainAdminLayout.css": {
-    "file": "assets/ShopLayout-5ac8cdc0.css",
-    "src": "MainAdminLayout.css"
+    "file": "assets/MainAdminLayout-5ac8cdc0.css",
+    "src": "ShopLayout.css"
   },
   "Pagination.css": {
     "file": "assets/Pagination-4757d200.css",
     "src": "Pagination.css"
   },
   "ShopLayout.css": {
-    "file": "assets/ShopLayout-5ac8cdc0.css",
-    "src": "MainAdminLayout.css"
+    "file": "assets/MainAdminLayout-5ac8cdc0.css",
+    "src": "ShopLayout.css"
   },
   "TelegramChannelHelper.css": {
     "file": "assets/InlineInjectionsHelper-5ad24a6a.css",
     "src": "TelegramChannelHelper.css"
   },
-  "_BotList-6c647a7b.js": {
+  "_BotList-bec974aa.js": {
     "css": [
       "assets/BotList-ed550ed8.css",
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/BotList-6c647a7b.js",
+    "file": "assets/BotList-bec974aa.js",
     "imports": [
       "_index.es-0d0be4b9.js",
       "_Mail-a2a57499.js",
@@ -79,11 +79,11 @@
       "_TelegramChannelHelper-bcff88dc.js"
     ]
   },
-  "_MainAdminLayout-8cccebd5.js": {
+  "_MainAdminLayout-d495fd57.js": {
     "css": [
-      "assets/ShopLayout-5ac8cdc0.css"
+      "assets/MainAdminLayout-5ac8cdc0.css"
     ],
-    "file": "assets/MainAdminLayout-8cccebd5.js",
+    "file": "assets/MainAdminLayout-d495fd57.js",
     "imports": [
       "_index.es-0d0be4b9.js",
       "_index-d069a1eb.js"
@@ -106,11 +106,11 @@
       "_index.es-0d0be4b9.js"
     ]
   },
-  "_ShopLayout-9d853906.js": {
+  "_ShopLayout-5e12d3dd.js": {
     "css": [
-      "assets/ShopLayout-5ac8cdc0.css"
+      "assets/MainAdminLayout-5ac8cdc0.css"
     ],
-    "file": "assets/ShopLayout-9d853906.js",
+    "file": "assets/ShopLayout-5e12d3dd.js",
     "imports": [
       "_index.es-0d0be4b9.js",
       "_index-d069a1eb.js",
@@ -175,17 +175,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-00f0aa96.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-00f0aa96.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-00f0aa96.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-205a8b8f.js",
@@ -256,10 +256,10 @@
     "css": [
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/BotPage-b2ef07a2.js",
+    "file": "assets/BotPage-63ebac26.js",
     "imports": [
-      "_MainAdminLayout-8cccebd5.js",
-      "_BotList-6c647a7b.js",
+      "_MainAdminLayout-d495fd57.js",
+      "_BotList-bec974aa.js",
       "_CompanyList-75d6947c.js",
       "_index-d069a1eb.js",
       "_index.es-0d0be4b9.js",
@@ -282,9 +282,9 @@
     "css": [
       "assets/BotVisitCardConstructorPage-8a909fea.css"
     ],
-    "file": "assets/BotVisitCardConstructorPage-6af28672.js",
+    "file": "assets/BotVisitCardConstructorPage-082a1762.js",
     "imports": [
-      "_MainAdminLayout-8cccebd5.js",
+      "_MainAdminLayout-d495fd57.js",
       "_index-d069a1eb.js",
       "_index.es-0d0be4b9.js",
       "__plugin-vue_export-helper-c27b6911.js"
@@ -313,9 +313,9 @@
     "css": [
       "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/CompanyPage-5f793740.js",
+    "file": "assets/CompanyPage-ebcf824f.js",
     "imports": [
-      "_MainAdminLayout-8cccebd5.js",
+      "_MainAdminLayout-d495fd57.js",
       "_CompanyForm-a725cded.js",
       "_CompanyList-75d6947c.js",
       "_index-d069a1eb.js",
@@ -336,10 +336,10 @@
       "assets/CompanyForm-28f51984.css",
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/Dashboard-02f9e778.js",
+    "file": "assets/Dashboard-dd582b51.js",
     "imports": [
       "_CompanyList-75d6947c.js",
-      "_BotList-6c647a7b.js",
+      "_BotList-bec974aa.js",
       "_index-d069a1eb.js",
       "_index.es-0d0be4b9.js",
       "_CompanyForm-a725cded.js",
@@ -358,9 +358,9 @@
     "css": [
       "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/MailPage-288f9efd.js",
+    "file": "assets/MailPage-e5ec4262.js",
     "imports": [
-      "_MainAdminLayout-8cccebd5.js",
+      "_MainAdminLayout-d495fd57.js",
       "_CompanyList-75d6947c.js",
       "_Mail-a2a57499.js",
       "_index-d069a1eb.js",
@@ -378,9 +378,9 @@
     "css": [
       "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/MainPage-d36eb2a4.js",
+    "file": "assets/MainPage-9bbe3de5.js",
     "imports": [
-      "_MainAdminLayout-8cccebd5.js",
+      "_MainAdminLayout-d495fd57.js",
       "_CompanyList-75d6947c.js",
       "_index-d069a1eb.js",
       "_index.es-0d0be4b9.js",
@@ -391,19 +391,19 @@
     "src": "resources/js/AdminPanel/Pages/MainPage.vue"
   },
   "resources/js/AdminPanel/Pages/MediaPage.vue": {
-    "file": "assets/MediaPage-760cfd7b.js",
+    "file": "assets/MediaPage-745c4615.js",
     "imports": [
       "_index.es-0d0be4b9.js",
-      "_MainAdminLayout-8cccebd5.js",
+      "_MainAdminLayout-d495fd57.js",
       "_index-d069a1eb.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/AdminPanel/Pages/MediaPage.vue"
   },
   "resources/js/AdminPanel/Pages/ScriptPage.vue": {
-    "file": "assets/ScriptPage-551f18e4.js",
+    "file": "assets/ScriptPage-71e583d6.js",
     "imports": [
-      "_MainAdminLayout-8cccebd5.js",
+      "_MainAdminLayout-d495fd57.js",
       "_SlugForm-6ba466b8.js",
       "_index.es-0d0be4b9.js",
       "_index-d069a1eb.js",
@@ -418,9 +418,9 @@
     "css": [
       "assets/CompanyForm-28f51984.css"
     ],
-    "file": "assets/UserPage-1b531cb3.js",
+    "file": "assets/UserPage-5c16cea6.js",
     "imports": [
-      "_MainAdminLayout-8cccebd5.js",
+      "_MainAdminLayout-d495fd57.js",
       "_CompanyList-75d6947c.js",
       "_index-d069a1eb.js",
       "_index.es-0d0be4b9.js",
@@ -449,7 +449,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-0d67dae6.js",
+    "file": "assets/app-b1b285e8.js",
     "imports": [
       "_index.es-0d0be4b9.js",
       "_index-d069a1eb.js"
@@ -490,12 +490,12 @@
       "assets/Main-57dd244b.css",
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/Main-13f2dfc7.js",
+    "file": "assets/Main-65e9a0d2.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-0d0be4b9.js",
       "_index-d069a1eb.js",
-      "_ShopLayout-9d853906.js",
+      "_ShopLayout-5e12d3dd.js",
       "resources/js/ClientTg/app.js",
       "_vue3-json-editor.esm.prod-743a86dd.js",
       "_v4-a960c1f4.js",
@@ -517,9 +517,9 @@
     "css": [
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/Result-dacd8bd5.js",
+    "file": "assets/Result-6210c742.js",
     "imports": [
-      "_ShopLayout-9d853906.js",
+      "_ShopLayout-5e12d3dd.js",
       "resources/js/ClientTg/app.js",
       "_index.es-0d0be4b9.js",
       "_index-d069a1eb.js",
@@ -558,7 +558,7 @@
       "resources/js/ClientTg/Pages/Result.vue",
       "resources/js/ClientTg/Pages/Shop/AboutUs.vue"
     ],
-    "file": "assets/app-6fcf8490.js",
+    "file": "assets/app-94115970.js",
     "imports": [
       "_index.es-0d0be4b9.js",
       "__plugin-vue_export-helper-c27b6911.js",

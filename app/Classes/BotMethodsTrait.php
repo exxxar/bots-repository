@@ -56,7 +56,13 @@ trait BotMethodsTrait
         return $this->sendPhoto($this->chatId, $caption, $path, $keyboard);
     }
 
-    public function replyVideoNote($videoNotePath,  $keyboard = [], $keyboardType = "inline")
+    public function replyAction($action = "typing")
+    {
+        return $this->sendPhoto($this->chatId, $action);
+    }
+
+
+    public function replyVideoNote($videoNotePath, $keyboard = [], $keyboardType = "inline")
     {
         return $this->sendVideoNote($this->chatId, $videoNotePath, $keyboard, $keyboardType);
     }
@@ -98,7 +104,7 @@ trait BotMethodsTrait
 
     public function replyInvoice($title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData = null)
     {
-        return $this->sendInvoice($this->chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard,$providerData);
+        return $this->sendInvoice($this->chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData);
     }
 
     public function replyKeyboard($message, $keyboard = [])

@@ -79,6 +79,19 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                               aria-describedby="bot-domain" required>
             </textarea>
                 </div>
+
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="pageForm.is_external"
+                               type="checkbox" id="is_external">
+                        <label class="form-check-label" for="is_external">
+                           Внешнее управление страницей
+                        </label>
+                    </div>
+                </div>
+
+                <div v-if="!pageForm.is_external">
                 <div class="mb-2">
                     <label
                         class="form-label d-flex justify-content-between mt-2"
@@ -366,12 +379,14 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                     </div>
                 </div>
 
+                </div>
                 <div class="mb-2" v-if="need_rules">
                     <PageRules
                         :bot="bot"
                         :rules-form="pageForm"
                     />
                 </div>
+
 
                 <button class="bg-highlight btn btn-m font-900 text-uppercase btn-center-xl mb-3 w-100">Сохранить
                     страницу
@@ -417,6 +432,7 @@ export default {
                 reply_keyboard_title: null,
                 reply_keyboard: null,
                 inline_keyboard: null,
+                is_external: false,
 
                 next_page_id: null,
                 next_bot_dialog_command_id: null,
@@ -532,6 +548,7 @@ export default {
                 next_page_id: page.next_page_id || null,
                 next_bot_dialog_command_id: page.next_bot_dialog_command_id || null,
                 next_bot_menu_slug_id: page.next_bot_menu_slug_id || null,
+                is_external: page.is_external || false,
 
                 rules_if: page.rules_if || null,
                 rules_else_page_id: page.rules_else_page_id || null,
@@ -586,6 +603,7 @@ export default {
                 reply_keyboard_title: null,
                 reply_keyboard: null,
                 inline_keyboard: null,
+                is_external: false,
 
                 reply_keyboard_id: null,
                 inline_keyboard_id: null,
