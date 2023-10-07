@@ -456,6 +456,44 @@ import Clients from "@/ClientTg/Components/Manager/Clients/Clients.vue";
             </div>
         </div>
 
+        <div class="card card-style p-3">
+            <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
+            <p class="mb-0">Телефон: {{ botUser.phone || 'Не указано' }}</p>
+            <p class="mb-0">Город: {{ botUser.city || 'Не указано' }}</p>
+            <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
+            <p class="mb-0">Ваш баланс: {{ botUser.manager.balance || 0 }} руб</p>
+            <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
+            <p class="mb-0">Колл-во слотов под клиентов: {{ botUser.manager.max_company_slot_count || 0 }}</p>
+            <p class="mb-3">Колл-во слотов под ботов у клиента: {{ botUser.manager.max_bot_slot_count || 0 }}</p>
+
+            <h6>Вам доступны следующие возможности:</h6>
+
+            <ul>
+                <li>Регистрация клиента</li>
+                <li>Создание ботов любой конфигурации и сложности</li>
+                <li>Выставление счетов на оплату и прием платеже за обслуживание</li>
+                <li>Реферальная программа</li>
+                <li>Профессиональное обучение</li>
+                <li>Использование ресурсов компании для привлечения клиентов: маркетологи, дизайнеры, smm-специалисты,
+                    программисты
+                </li>
+                <li>Тех.поддержка по системе 24\7</li>
+            </ul>
+
+            <h6> Ваши бонусы:</h6>
+
+            <ul>
+                <li>Оплата за регистрацию клиента (после его оплаты)</li>
+                <li>Начисление персональной скидки (сгораемой и несгораемой)</li>
+                <li>Получение бонусных доходов с реферальной программы 1, 2 и 3 уровня: ваши друзья работают, а вы
+                    получаете доход. Доход ограничен лишь числом друзей.
+                </li>
+            </ul>
+
+            <ReturnToBot class="mb-2"/>
+        </div>
+
+
         <div class="card card-style">
             <div class="content mb-0">
 
@@ -465,43 +503,66 @@ import Clients from "@/ClientTg/Components/Manager/Clients/Clients.vue";
             </div>
         </div>
 
-        <div class="card card-style">
+        <div class="card card-style bg-28"
+             v-if="friends.length===0"
+             data-card-height="130" style="height: 130px;">
+            <div class="card-center">
+                <h3 class="color-white font-700 text-center mb-0">Мои партнеры</h3>
+                <p class="color-white text-center opacity-60 mt-n1 mb-0">К сожалению вы не добавили ни одного
+                    партнера:(</p>
+            </div>
+            <div class="card-overlay bg-highlight opacity-90"></div>
+        </div>
+
+        <div class="card card-style" v-if="friends.length>0">
+
             <div class="content">
                 <h3 class="py-3">Мои партнеры</h3>
 
                 <div v-for="(partner, index) in friends">
-                    <div class="d-flex" >
+                    <div class="d-flex">
                         <div class="w-35 border-right pr-3 border-highlight partner-avatar">
-                            <img v-if="partner.manager" v-lazy="partner.manager.image || null" data-src="images/avatars/1s.png" width="80"
+                            <img v-if="partner.manager" v-lazy="partner.manager.image || null"
+                                 data-src="images/avatars/1s.png" width="80"
                                  class="bg-highlight rounded-circle preload-img">
                             <img v-else v-lazy="'/images/manager.png'" data-src="images/avatars/1s.png" width="80"
                                  class="bg-highlight rounded-circle preload-img">
-                            <h6 class="font-14 font-600 mt-2 text-center">{{partner.fio_from_telegram || 'Не задано'}}</h6>
-                            <p class="color-blue2-dark mt-n3 font-9 font-400 text-center mb-0 pt-1">Партнер первой линии</p>
+                            <h6 class="font-14 font-600 mt-2 text-center">
+                                {{ partner.fio_from_telegram || 'Не задано' }}</h6>
+                            <p class="color-blue2-dark mt-n3 font-9 font-400 text-center mb-0 pt-1">Партнер первой
+                                линии</p>
                         </div>
                         <div class="w-65 pl-3 pt-2">
                             <h5>Команда партнера</h5>
-                            <p class="color-highlight mt-n3 font-10 pt-1 mb-3">Всего партнеров: {{partner.child.length}}</p>
+                            <p class="color-highlight mt-n3 font-10 pt-1 mb-3">Всего партнеров:
+                                {{ partner.child.length }}</p>
 
 
-
-                            <a href="#" v-if="partner.child.length>0"
-                                class="d-inline-block position-relative"
+                            <a href="javascript:void(0)"
+                               v-if="partner.child.length>0"
+                               @click="showPartner"
+                               class="d-inline-block position-relative"
                                v-for="subPartner in partner.child.slice(0, 4)">
-                                <img v-if="subPartner.manager" v-lazy="subPartner.manager.image || null" data-src="images/avatars/1s.png" width="40"
+                                <img v-if="subPartner.manager" v-lazy="subPartner.manager.image || null"
+                                     data-src="images/avatars/1s.png" width="40"
                                      class="rounded-circle preload-img">
                                 <img v-else v-lazy="'/images/manager.png'" data-src="images/avatars/1s.png" width="40"
                                      class="rounded-circle preload-img ">
-                                <span class="sub-badge-count rounded-circle bg-highlight color-white" v-if="subPartner.child.length>0">{{subPartner.child.length}}</span>
+                                <span class="sub-badge-count rounded-circle bg-highlight color-white"
+                                      v-if="subPartner.child.length>0">{{ subPartner.child.length }}</span>
                             </a>
 
-                            <a href="#" v-if="partner.child.length>4">
+                            <a href="javascript:void(0)" v-if="partner.child.length>4">
                                 <span
-                                    class="rounded-circle preload-img bg-highlight color-white sub-partner-badge" >+{{partner.child.length-4}}</span>
+                                    class="rounded-circle preload-img bg-highlight color-white sub-partner-badge">+{{
+                                        partner.child.length - 4
+                                    }}</span>
                             </a>
 
-                            <a href="#" v-if="partner.child.length===0">
-                              У вашего друга нет собственных партнеров
+                            <a href="javascript:void(0)"
+                               @click="showPartner"
+                               v-if="partner.child.length===0">
+                                У вашего друга нет собственных партнеров
                             </a>
 
                         </div>
@@ -512,56 +573,6 @@ import Clients from "@/ClientTg/Components/Manager/Clients/Clients.vue";
             </div>
         </div>
 
-        <!--        <div class="card card-style p-3" v-if="botUser.is_manager&&botUser.manager != null">
-                    <h6>Поздравляем! Вы являетесь нашим официальным Менеджером! </h6>
-
-                    <a href="javascript:void(0)"
-                       v-if="botUser.manager.verified_at!=null"
-                       class="chip chip-small bg-gray1-dark">
-                        <i class="fa fa-check bg-green1-dark"></i>
-                        <strong class="color-black font-400">Учетная запись менеджера активна</strong>
-                    </a>
-
-
-                    <a href="#" class="chip chip-small bg-gray1-dark" v-else>
-                        <i class="fa fa-times bg-red2-dark"></i>
-                        <strong class="color-black font-400">Учетная запись менеджера не активна</strong>
-                    </a>
-
-                    <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
-                    <p class="mb-0">Телефон: {{ botUser.phone || 'Не указано' }}</p>
-                    <p class="mb-0">Город: {{ botUser.city || 'Не указано' }}</p>
-                    <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
-                    <p class="mb-0">Ваш баланс: {{ botUser.manager.balance || 0 }} руб</p>
-                    <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
-                    <p class="mb-0">Колл-во слотов под клиентов: {{ botUser.manager.max_company_slot_count || 0 }}</p>
-                    <p class="mb-3">Колл-во слотов под ботов у клиента: {{ botUser.manager.max_bot_slot_count || 0 }}</p>
-
-                    <h6>Вам доступны следующие возможности:</h6>
-                    <ul>
-                        <li>Регистрация клиента</li>
-                        <li>Создание ботов любой конфигурации и сложности</li>
-                        <li>Выставление счетов на оплату и прием платеже за обслуживание</li>
-                        <li>Реферальная программа</li>
-                        <li>Профессиональное обучение</li>
-                        <li>Использование ресурсов компании для привлечения клиентов: маркетологи, дизайнеры, smm-специалисты,
-                            программисты
-                        </li>
-                        <li>Тех.поддержка по системе 24\7</li>
-
-
-                    </ul>
-                    <h6> Ваши бонусы:</h6>
-                    <ul>
-                        <li>Оплата за регистрацию клиента (после его оплаты)</li>
-                        <li>Начисление персональной скидки (сгораемой и несгораемой)</li>
-                        <li>Получение бонусных доходов с реферальной программы 1, 2 и 3 уровня: ваши друзья работают, а вы
-                            получаете доход. Доход ограничен лишь числом друзей.
-                        </li>
-                    </ul>
-
-                    <ReturnToBot class="mb-2"/>
-                </div>-->
 
     </div>
 
@@ -649,6 +660,9 @@ export default {
         nextStep() {
             this.step++;
         },
+        showPartner() {
+            this.$botNotification.notification("Партнеры", "Просмотр информации о партнере еще недоступен")
+        },
         remove(section, index) {
             this.managerForm[section].splice(index, 1)
         },
@@ -671,7 +685,7 @@ export default {
                 this.loading = false
 
                 this.friends = resp
-              //  console.log(resp)
+                //  console.log(resp)
 
             }).catch(() => {
                 this.loading = false
