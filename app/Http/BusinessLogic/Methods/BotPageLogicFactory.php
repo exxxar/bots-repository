@@ -131,7 +131,7 @@ class BotPageLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $validator = Validator::make($pageData, [
-            "content" => "required",
+           // "content" => "required",
             "command" => "required",
             "comment" => "required",
         ]);
@@ -237,7 +237,7 @@ class BotPageLogicFactory
 
         $validator = Validator::make($pageData, [
             "id" => "required",
-            "content" => "required",
+           // "content" => "required",
             "command" => "required",
             "comment" => "required",
             "slug_id" => "required",
