@@ -328,7 +328,7 @@ class BotManager extends BotCore
                     "bot" => $bot->bot_domain ?? null
                 ]);
             } catch (\Exception $e) {
-
+                Log::info($e->getMessage());
             }
 
             return;
