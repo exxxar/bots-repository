@@ -58,7 +58,7 @@ trait BotMethodsTrait
 
     public function replyAction($action = "typing")
     {
-        return $this->sendPhoto($this->chatId, $action);
+        return $this->sendChatAction($this->chatId, $action);
     }
 
 
