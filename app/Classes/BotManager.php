@@ -316,7 +316,7 @@ class BotManager extends BotCore
                 BotExternalRequest::query()->create([
                     "bot_id" => $bot->id,
                     "bot_user_id" => $this->botUser->id,
-                    "command" => $page->command,
+                    "command" => $page->slug->command ?? null,
                     "completed_at" => null
                 ]);
 
@@ -324,7 +324,7 @@ class BotManager extends BotCore
 
             try {
                 Http::connectTimeout(3)->post($callbackUrl, [
-                    "command" => $page->command ?? null,
+                    "command" => $page->slug->command ?? null,
                     "bot" => $bot->bot_domain ?? null
                 ]);
             } catch (\Exception $e) {

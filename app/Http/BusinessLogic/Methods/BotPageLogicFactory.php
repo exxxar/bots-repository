@@ -157,6 +157,7 @@ class BotPageLogicFactory
 
         $tmp->reply_keyboard_id = null;
         $tmp->inline_keyboard_id = null;
+        $tmp->content = $tmp->content ?? "Внешнее управление";
         $tmp->is_external = (bool)($tmp->is_external ?? false);
         $tmp->bot_id = $this->bot->id;
 
@@ -265,6 +266,7 @@ class BotPageLogicFactory
 
         $tmp = (object)$pageData;
         $tmp->is_external = (bool)($tmp->is_external ?? false);
+        $tmp->content = $tmp->content ?? "Внешнее управление";
 
         unset($tmp->photos);
 
