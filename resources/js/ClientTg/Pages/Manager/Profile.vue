@@ -1,0 +1,771 @@
+<script setup>
+import CallbackForm from "ClientTg@/Components/Shop/CallbackForm.vue";
+import PlayerForm from "ClientTg@/Components/Shop/PlayerForm.vue";
+import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
+import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.vue";
+import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
+import Clients from "@/ClientTg/Components/Manager/Clients/Clients.vue";
+</script>
+<template>
+    <div v-if="botUser">
+        <!--
+                <div class="card card-style p-3" v-if="!botUser.is_manager||botUser.manager==null">
+                    <form
+                        v-on:submit.prevent="submit" class="row mb-0">
+                        <div class="col-12 d-flex justify-content-center mb-3">
+                            <div class="img-avatar">
+                                <img
+                                    v-lazy="'/images/manager.png'"
+                                    class="img-avatar"/>
+                            </div>
+
+                        </div>
+                        <div class="col-12">
+                            <p class="mb-3"><em>Приветствую Вас, <strong>Дорогой друг!</strong> Я хочу поздравить Вас и дать
+                                возможность получать неограниченные заработка вместе с нашим сервисом! Для начала нам нужно с
+                                Вами
+                                познакомиться - это поможет нам понимать с кем мы становимся крепкими друзьями! Я задам Вам два
+                                блока вопросов - по легче - вопросы общего плана и по сложнее - вопросы профессиональной сферы.</em>
+                            </p>
+                            <h6 class="text-center">Как мне к Вам обращаться?</h6>
+                            <div class="input-style input-style-2">
+
+                                <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       placeholder="Петров Петр Семенович"
+                                       aria-label="managerForm-name"
+                                       v-model="managerForm.name"
+                                       aria-describedby="managerForm-name" required>
+                            </div>
+                        </div>
+
+
+                        <div class="col-12">
+                            <h4 class="text-center my-3">
+                                <i class="fa-solid fa-person-circle-question mr-2 color-green2-light"></i>
+                                Общий блок вопросов
+                            </h4>
+                            <p class="mb-3" v-if="managerForm.name"><em>- Отлично, <strong>{{ managerForm.name }}</strong>! А
+                                теперь,
+                                чтобы Вы могли
+                                пользоваться всеми моими функциями, мне нужен Ваш номер телефона. Можете ввести его?</em>
+                            </p>
+                            <h6 class="text-center">Введите свой номер телефона</h6>
+                            <div class="input-style input-style-2">
+                                <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       v-mask="'+7(###)###-##-##'"
+                                       v-model="managerForm.phone"
+                                       placeholder="+7(000)000-00-00"
+                                       aria-label="managerForm-phone" aria-describedby="managerForm-phone" required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>Для своевременного оповещения Вас о наших нововведениях мы используем рассылку
+                                через email. Вам необходимо указать его для удобства получения актуальной информации и отчетов о
+                                Вашей работе и доходе.</em>
+                            </p>
+                            <h6 class="text-center">Введите свой email адрес</h6>
+                            <div class="input-style input-style-2">
+                                <input type="email" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       v-model="managerForm.email"
+                                       placeholder="inbox@your-cashman.com"
+                                       aria-label="managerForm-phone" aria-describedby="managerForm-email" required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>Для связи с Вами нам также понадобятся ссылки на Ваши социальные сети!</em>
+                            </p>
+                            <h6 class="text-center">Ссылки на ваши соц. сети</h6>
+
+                            <div class="input-style input-style-2 position-relative"
+                                 v-for="(item, index) in managerForm.social_links">
+                                <input type="url" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       v-model="managerForm.social_links[index]"
+                                       placeholder="Ссылка на соц. сеть"
+                                       :aria-label="'managerForm-social-links-'+index"
+                                       :aria-describedby="'managerForm-social-links-'+index" required>
+
+                                <a href="javascript:void(0)"
+                                   v-if="index>0"
+                                   @click="remove('social_links', index)"
+                                   class="sub-btn">
+                                    <i class="fa-regular fa-square-minus"></i>
+                                </a>
+                            </div>
+                            <a
+                                @click="add('social_links')"
+                                class="d-block w-100 py-3 text-center"
+                                href="javascript:void(0)">Добавить еще ссылку</a>
+                        </div>
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>Чтобы я мог обращаться к Вам правильно, скажи мне, какого Вы пола?</em></p>
+                            <h6 class="text-center">Вы мужчина или женщина?</h6>
+
+                            <div class="row mb-0">
+                                <div class="col-6 p-3">
+                                    <div
+                                        v-bind:class="{'bg-highlight':managerForm.sex}"
+                                        @click="managerForm.sex = true"
+                                        class="btn btn-border btn-m btn-full border-highlight rounded-s shadow-s w-100 p-3 d-flex justify-content-between flex-column align-items-center ">
+                                        <i class="fa-solid fa-mars font-28"></i>
+                                        <span class="text-center text-uppercase my-2">Мужчина</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 p-3">
+                                    <div
+                                        v-bind:class="{'bg-highlight ':!managerForm.sex}"
+                                        @click="managerForm.sex = false"
+                                        class="btn btn-border btn-m btn-full border-highlight rounded-s  shadow-s w-100 p-3 d-flex justify-content-between flex-column align-items-center ">
+                                        <i class="fa-solid fa-mars font-28"></i>
+                                        <span class="text-center text-uppercase my-2">Женщина</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>Для того, чтобы я мог поздравлять Вас с днем рождения и сделать Вам приятно, мне
+                                нужно знать, когда он у Вас</em></p>
+                            <h6 class="text-center">Введите свой день рождения</h6>
+                            <div class="input-style input-style-2">
+                                <input type="date" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       v-model="managerForm.birthday"
+                                       aria-label="managerForm-birthday" aria-describedby="managerForm-birthday" required>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>Чтобы я мог показывать Вам информацию, актуальную для Вашего города, мне нужно
+                                знать
+                                город Вашего проживания\работы.</em></p>
+                            <h6 class="text-center">Какой у Вас город?</h6>
+                            <div class="input-style input-style-2">
+                                <input type="text"
+                                       v-model="managerForm.city"
+                                       list="datalistCityOptions"
+                                       class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       placeholder="Краснодар"
+                                       aria-label="managerForm-city" aria-describedby="managerForm-city" required>
+                                <datalist id="datalistCityOptions">
+                                    <option value="Краснодар"/>
+                                    <option value="Ростов-на-Дону"/>
+                                    <option value="Таганрог"/>
+                                    <option value="Донецк"/>
+                                    <option value="Москва"/>
+                                </datalist>
+                            </div>
+                        </div>
+
+
+                        <div class="col-12">
+                            <h4 class="text-center my-3">
+                                <i class="fa-solid fa-clipboard-question mr-2 color-green2-light"></i>
+                                Профессиональный блок вопросов
+                            </h4>
+                        </div>
+
+                        <div class="col-12">
+                            <h6 class="text-center">Полученное высшее образование</h6>
+                            <p class="mb-0 text-center"><em>Если еще нет высшего образования, впишите "нет"</em></p>
+                            <div class="input-style input-style-2 position-relative"
+                                 v-for="(item, index) in managerForm.educations">
+                                <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       v-model="managerForm.educations[index]"
+                                       placeholder="Название ВУЗа, специализация, уровень образования"
+                                       :aria-label="'managerForm-educations-'+index"
+                                       :aria-describedby="'managerForm-educations-'+index" required>
+
+                                <a href="javascript:void(0)"
+                                   v-if="index>0"
+                                   @click="remove('educations', index)"
+                                   class="sub-btn">
+                                    <i class="fa-regular fa-square-minus"></i>
+                                </a>
+                            </div>
+                            <a
+                                @click="add('educations')"
+                                class="d-block w-100 py-3 text-center"
+                                href="javascript:void(0)">Добавить еще высшее образование</a>
+                        </div>
+
+                        <div class="col-12">
+                            <h6 class="text-center">Ваши сильные стороны</h6>
+
+                            <div class="input-style input-style-2 position-relative"
+                                 v-for="(item, index) in managerForm.strengths">
+                                <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       v-model="managerForm.strengths[index]"
+                                       placeholder="Ваше сильное качество"
+                                       :aria-label="'managerForm-strengths-'+index"
+                                       :aria-describedby="'managerForm-strengths-'+index" required>
+
+                                <a href="javascript:void(0)"
+                                   v-if="index>0"
+                                   @click="remove('strengths', index)"
+                                   class="sub-btn">
+                                    <i class="fa-regular fa-square-minus"></i>
+                                </a>
+                            </div>
+                            <a
+                                @click="add('strengths')"
+                                class="d-block w-100 py-3 text-center"
+                                href="javascript:void(0)">Добавить еще сильные стороны</a>
+                        </div>
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>Слабые стороны есть у всех! Нам нужно понимать в чем Вас стоит прокачать и в
+                                каких проблемных для Вас местах оказать помощь и т.д.</em></p>
+                            <h6 class="text-center">Ваши слабые стороны</h6>
+
+                            <div class="input-style input-style-2 position-relative"
+                                 v-for="(item, index) in managerForm.weaknesses">
+                                <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       v-model="managerForm.weaknesses[index]"
+                                       placeholder="Ваша слабая сторона"
+                                       :aria-label="'managerForm-weaknesses-'+index"
+                                       :aria-describedby="'managerForm-weaknesses-'+index" required>
+
+                                <a href="javascript:void(0)"
+                                   v-if="index>0"
+                                   @click="remove('weaknesses', index)"
+                                   class="sub-btn">
+                                    <i class="fa-regular fa-square-minus"></i>
+                                </a>
+                            </div>
+                            <a
+                                @click="add('weaknesses')"
+                                class="d-block w-100 py-3 text-center"
+                                href="javascript:void(0)">Добавить еще слабые стороны</a>
+                        </div>
+
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>А теперь о ваших навыка - впишите название навыка и укажите % владения навыком
+                                при помощи ползунка.</em></p>
+                            <h6 class="text-center">Ваши профессиональные навыки</h6>
+
+                            <div class="mb-2" v-for="(item, index) in managerForm.skills">
+                                <div class="input-style input-style-2 position-relative">
+                                    <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                           v-model="managerForm.skills[index].title"
+                                           placeholder="Название навыка"
+                                           :aria-label="'managerForm-skills-'+index"
+                                           :aria-describedby="'managerForm-skills-'+index" required>
+
+                                    <a href="javascript:void(0)"
+                                       v-if="index>0"
+                                       @click="remove('skills', index)"
+                                       class="sub-btn">
+                                        <i class="fa-regular fa-square-minus"></i>
+                                    </a>
+                                </div>
+
+                                <div class="range-slider bottom-15 range-slider-icons">
+                                    <i class="fa-range-icon-1 color-theme">0</i>
+                                    <i class="fa-range-icon-2 color-theme">100</i>
+                                    <p class="mb-0 text-center"><span
+                                        v-if="managerForm.skills[index].title">{{
+                                            managerForm.skills[index].title
+                                        }} прокачан на </span>{{ managerForm.skills[index].value }}%
+                                    </p>
+
+                                    <input class="ios-slider"
+                                           max="100"
+                                           v-model="managerForm.skills[index].value"
+                                           type="range">
+                                </div>
+                            </div>
+
+                            <a
+                                @click="add('skills')"
+                                class="d-block w-100 py-3 text-center"
+                                href="javascript:void(0)">Добавить еще навык</a>
+                        </div>
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>Напишите о себе любую информацию, которая может иметь для нас значение </em></p>
+                            <h6 class="text-center">Дополнительная информация</h6>
+                            <div class="input-style input-style-2">
+                                <textarea type="text" class="form-control text-left font-14 p-3 rounded-s border-theme"
+                                          v-model="managerForm.info"
+                                          placeholder="Дополнительная информация"
+                                          style="min-height:200px;"
+                                          aria-label="managerForm-referral" aria-describedby="managerForm-info">
+                                </textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="divider divider-small my-3 bg-highlight "></div>
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>Для того чтоб вы и ваш друг получали больше бонусов воспользуйтесь
+                                реферальной программой и введите реферальный код от вашего друга!</em></p>
+                            <h6 class="text-center">Введите ссылку на вашего друга</h6>
+                            <div class="input-style input-style-2">
+                                <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                       v-model="managerForm.referral"
+                                       v-mask="'#######-#######-#######'"
+                                       placeholder="0000000-0000000-0000000"
+                                       aria-label="managerForm-referral" aria-describedby="managerForm-referral">
+                            </div>
+                        </div>
+
+
+                        <div class="divider divider-small my-3 bg-highlight "></div>
+
+                        <div class="col-12">
+                            <p class="mb-3"><em>Отлично! Теперь, прежде чем закончить, пожалуйста, прочитайте условия
+                                использования и дайте свое согласие на их принятие.</em></p>
+
+                            <p>Перед отправкой данных нужно ознакомиться с <a
+                                href="#">политикой конфиденциальности</a>.</p>
+
+                            <div class="d-flex mb-3">
+                                <div class="pt-1">
+                                    <h5 data-activate="toggle-id-1" class="font-500 font-13">
+                                        <span v-if="!managerForm.sex">С правилами озакномилась</span>
+                                        <span v-if="managerForm.sex">С правилами ознакомлен</span>
+                                    </h5>
+                                </div>
+                                <div class="ml-auto mr-4 pr-2">
+                                    <div class="custom-control ios-switch">
+                                        <input
+                                            v-model="confirm"
+                                            type="checkbox" class="ios-input" id="toggle-id-1">
+                                        <label class="custom-control-label" for="toggle-id-1"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <button type="submit"
+                                    :disabled="!confirm||load"
+                                    class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
+                                Отправить анкету
+                            </button>
+
+                        </div>
+                    </form>
+
+                </div>
+
+        -->
+
+
+        <div class="card card-style preload-img"
+
+             v-bind:style="{'background-image':'url(\''+botUser.manager.image+'\')'}"
+             style="height: 55vh; ">
+            <div class="card-bottom ml-3">
+                <h1 class="font-40 line-height-xl">{{ botUser.name }}</h1>
+                <p class="pb-0 mb-0 font-12"><i class="fa fa-map-marker mr-2"></i>{{ botUser.city }}</p>
+                <p v-if="botUser.manager.info">
+                    {{ botUser.manager.info }}
+                </p>
+                <a href="javascript:void(0)"
+                   v-if="botUser.manager.verified_at!=null"
+                   class="chip chip-small bg-gray1-dark">
+                    <i class="fa fa-check bg-green1-dark"></i>
+                    <strong class="color-black font-400">Учетная запись менеджера активна</strong>
+                </a>
+
+
+                <a href="#" class="chip chip-small bg-gray1-dark" v-else>
+                    <i class="fa fa-times bg-red2-dark"></i>
+                    <strong class="color-black font-400">Учетная запись менеджера не активна</strong>
+                </a>
+                <p
+                    class="cursor-pointer"
+                    @click="copyToClipboard"
+                    v-if="statistic.ref_code">
+                    Ваш реферальный код: <strong>{{ statistic.ref_code }}</strong>
+                </p>
+            </div>
+            <div class="card-overlay bg-gradient-fade"></div>
+        </div>
+
+
+        <div class="card card-style">
+            <div class="content mb-0">
+                <h3 class="text-center py-3">Общая статистика менеджера</h3>
+                <div class="row mb-0 text-center">
+                    <div class="col-4">
+                        <h1 class="mb-n1">{{ statistic.clients_count }}</h1>
+                        <p class="font-10 mb-0 pb-0">Клиентов</p>
+                    </div>
+                    <div class="col-4">
+                        <h1 class="mb-n1">{{ statistic.bots_count }}</h1>
+                        <p class="font-10 mb-0 pb-0">Ботов</p>
+                    </div>
+                    <div class="col-4">
+                        <h1 class="mb-n1">{{ statistic.bot_users_count }}</h1>
+                        <p class="font-10 mb-0 pb-0">Пользователей</p>
+                    </div>
+                </div>
+
+                <div class="divider mb-4 mt-3"></div>
+                <div class="row mb-0 text-center">
+                    <div class="col-6">
+                        <h1 class="mb-n1">{{ statistic.free_client_slot_count }}</h1>
+                        <p class="font-10 mb-0 pb-0">К-Слотов</p>
+                    </div>
+                    <div class="col-6">
+                        <h1 class="mb-n1">{{ statistic.free_bot_slot_count }}</h1>
+                        <p class="font-10 mb-0 pb-0">Б-Слотов</p>
+                    </div>
+
+                </div>
+
+                <div class="divider mb-4 mt-3"></div>
+                <div class="row mb-0 text-center">
+
+
+                    <div class="col-12">
+                        <h1 class="mb-n1">{{ botUser.cashBack.amount }} руб</h1>
+                        <p class="font-10 mb-0 pb-0">Денег для вывода</p>
+                    </div>
+
+                    <div class="col-12">
+                        <h3 class="mb-n1">{{ botUser.manager.balance }} руб</h3>
+                        <p class="font-10 mb-0 pb-0">Внутренний счет</p>
+                    </div>
+
+
+                </div>
+                <div class="divider mb-4 mt-3"></div>
+                <div class="row mb-0 pb-4">
+
+                    <div class="col-12 mb-2">
+                        <a href="#" class="btn btn-m btn-full rounded-s bg-highlight text-uppercase font-900">Пополнить
+                            баланс</a>
+                    </div>
+
+                    <div class="col-12">
+                        <a href="#"
+                           class="btn btn-m btn-border btn-full rounded-s border-highlight color-highlight text-uppercase font-900">Скачать
+                            статистику</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-style">
+            <div class="content mb-0">
+
+                <h6>Список ваших клиентов</h6>
+                <Clients></Clients>
+
+            </div>
+        </div>
+
+        <div class="card card-style">
+            <div class="content">
+                <h3 class="py-3">Мои партнеры</h3>
+
+                <div v-for="(partner, index) in friends">
+                    <div class="d-flex" >
+                        <div class="w-35 border-right pr-3 border-highlight partner-avatar">
+                            <img v-if="partner.manager" v-lazy="partner.manager.image || null" data-src="images/avatars/1s.png" width="80"
+                                 class="bg-highlight rounded-circle preload-img">
+                            <img v-else v-lazy="'/images/manager.png'" data-src="images/avatars/1s.png" width="80"
+                                 class="bg-highlight rounded-circle preload-img">
+                            <h6 class="font-14 font-600 mt-2 text-center">{{partner.fio_from_telegram || 'Не задано'}}</h6>
+                            <p class="color-blue2-dark mt-n3 font-9 font-400 text-center mb-0 pt-1">Партнер первой линии</p>
+                        </div>
+                        <div class="w-65 pl-3 pt-2">
+                            <h5>Команда партнера</h5>
+                            <p class="color-highlight mt-n3 font-10 pt-1 mb-3">Всего партнеров: {{partner.child.length}}</p>
+
+
+
+                            <a href="#" v-if="partner.child.length>0"
+                                class="d-inline-block position-relative"
+                               v-for="subPartner in partner.child.slice(0, 4)">
+                                <img v-if="subPartner.manager" v-lazy="subPartner.manager.image || null" data-src="images/avatars/1s.png" width="40"
+                                     class="rounded-circle preload-img">
+                                <img v-else v-lazy="'/images/manager.png'" data-src="images/avatars/1s.png" width="40"
+                                     class="rounded-circle preload-img ">
+                                <span class="sub-badge-count rounded-circle bg-highlight color-white" v-if="subPartner.child.length>0">{{subPartner.child.length}}</span>
+                            </a>
+
+                            <a href="#" v-if="partner.child.length>4">
+                                <span
+                                    class="rounded-circle preload-img bg-highlight color-white sub-partner-badge" >+{{partner.child.length-4}}</span>
+                            </a>
+
+                            <a href="#" v-if="partner.child.length===0">
+                              У вашего друга нет собственных партнеров
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <div class="divider mt-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--        <div class="card card-style p-3" v-if="botUser.is_manager&&botUser.manager != null">
+                    <h6>Поздравляем! Вы являетесь нашим официальным Менеджером! </h6>
+
+                    <a href="javascript:void(0)"
+                       v-if="botUser.manager.verified_at!=null"
+                       class="chip chip-small bg-gray1-dark">
+                        <i class="fa fa-check bg-green1-dark"></i>
+                        <strong class="color-black font-400">Учетная запись менеджера активна</strong>
+                    </a>
+
+
+                    <a href="#" class="chip chip-small bg-gray1-dark" v-else>
+                        <i class="fa fa-times bg-red2-dark"></i>
+                        <strong class="color-black font-400">Учетная запись менеджера не активна</strong>
+                    </a>
+
+                    <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
+                    <p class="mb-0">Телефон: {{ botUser.phone || 'Не указано' }}</p>
+                    <p class="mb-0">Город: {{ botUser.city || 'Не указано' }}</p>
+                    <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
+                    <p class="mb-0">Ваш баланс: {{ botUser.manager.balance || 0 }} руб</p>
+                    <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
+                    <p class="mb-0">Колл-во слотов под клиентов: {{ botUser.manager.max_company_slot_count || 0 }}</p>
+                    <p class="mb-3">Колл-во слотов под ботов у клиента: {{ botUser.manager.max_bot_slot_count || 0 }}</p>
+
+                    <h6>Вам доступны следующие возможности:</h6>
+                    <ul>
+                        <li>Регистрация клиента</li>
+                        <li>Создание ботов любой конфигурации и сложности</li>
+                        <li>Выставление счетов на оплату и прием платеже за обслуживание</li>
+                        <li>Реферальная программа</li>
+                        <li>Профессиональное обучение</li>
+                        <li>Использование ресурсов компании для привлечения клиентов: маркетологи, дизайнеры, smm-специалисты,
+                            программисты
+                        </li>
+                        <li>Тех.поддержка по системе 24\7</li>
+
+
+                    </ul>
+                    <h6> Ваши бонусы:</h6>
+                    <ul>
+                        <li>Оплата за регистрацию клиента (после его оплаты)</li>
+                        <li>Начисление персональной скидки (сгораемой и несгораемой)</li>
+                        <li>Получение бонусных доходов с реферальной программы 1, 2 и 3 уровня: ваши друзья работают, а вы
+                            получаете доход. Доход ограничен лишь числом друзей.
+                        </li>
+                    </ul>
+
+                    <ReturnToBot class="mb-2"/>
+                </div>-->
+
+    </div>
+
+</template>
+<script>
+import {mapGetters} from "vuex";
+
+export default {
+    data() {
+        return {
+
+            load: false,
+            confirm: false,
+            step: 0,
+            friends: [],
+            statistic: {
+                clients_count: 0,
+                bots_count: 0,
+                bot_users_count: 0,
+                free_client_slot_count: 0,
+                free_bot_slot_count: 0,
+                ref_code: 0,
+            },
+            botUser: null,
+            managerForm: {
+                name: null,
+                phone: null,
+                email: null,
+
+                birthday: null,
+                city: null,
+                country: null,
+                address: null,
+                sex: true,
+                referral: null,
+                strengths: [""],
+                weaknesses: [""],
+                educations: [""],
+                social_links: [""],
+                skills: [
+                    {
+                        title: null,
+                        value: 50,
+                    }
+                ],
+                info: null,
+
+                //навыки, сильные и слабые стороны, краткое био
+
+            }
+        }
+    },
+    watch: {
+        'getSelf': function () {
+            this.botUser = this.getSelf
+
+            this.managerForm.name = this.botUser.name || this.botUser.fio_from_telegram || null
+            this.managerForm.phone = this.botUser.phone || null
+            this.managerForm.email = this.botUser.email || null
+            this.managerForm.birthday = this.botUser.birthday || null
+            this.managerForm.city = this.botUser.city || null
+            this.managerForm.country = this.botUser.country || null
+            this.managerForm.address = this.botUser.address || null
+            this.managerForm.sex = this.botUser.sex || true
+
+            this.loadManagerData()
+
+            this.loadFriendsWeb()
+        }
+
+    },
+    mounted() {
+
+    },
+    computed: {
+        ...mapGetters(['getSelf']),
+        tg() {
+            return window.Telegram.WebApp;
+        },
+        currentBot() {
+            return window.currentBot
+        }
+    },
+    methods: {
+        nextStep() {
+            this.step++;
+        },
+        remove(section, index) {
+            this.managerForm[section].splice(index, 1)
+        },
+        add(section) {
+            if (section !== "skills")
+                this.managerForm[section].push('')
+            else
+                this.managerForm[section].push({
+                    title: null,
+                    value: 50,
+                })
+        },
+        copyToClipboard() {
+            navigator.clipboard.writeText(this.statistic.ref_code)
+            this.$botNotification.notification("Реферальный код", "Код скопирован в буфер обмена")
+        },
+        loadFriendsWeb() {
+            this.loading = true;
+            this.$store.dispatch("loadFriendsWeb").then((resp) => {
+                this.loading = false
+
+                this.friends = resp
+              //  console.log(resp)
+
+            }).catch(() => {
+                this.loading = false
+            })
+        },
+        loadManagerData() {
+            this.loading = true;
+            this.$store.dispatch("loadManagerData").then((resp) => {
+                this.loading = false
+
+                this.statistic = resp
+
+            }).catch(() => {
+                this.loading = false
+            })
+        },
+
+
+        submit() {
+            this.loading = true;
+
+            let data = new FormData();
+            Object.keys(this.managerForm)
+                .forEach(key => {
+                    const item = this.managerForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+            this.$store.dispatch("saveManager",
+                data
+            ).then((resp) => {
+                window.location.reload()
+            }).catch(() => {
+                this.loading = false
+            })
+        }
+    }
+}
+</script>
+<style lang="scss" scoped>
+.img-avatar {
+    width: 200px;
+    height: 200px;
+    padding: 10px;
+
+    img {
+        object-fit: cover;
+        width: 100%;
+    }
+
+}
+
+.theme-dark {
+    input {
+        border-color: white;
+    }
+}
+
+.input-style-2 a {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-size: 16px;
+}
+
+.partner-avatar {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    min-width: 150px;
+}
+
+.sub-partner-badge {
+    width: 35px;
+    height: 35px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sub-badge-count {
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+}
+</style>

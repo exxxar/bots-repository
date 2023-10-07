@@ -48,6 +48,7 @@ import AdminMessageToUser from '@/ClientTg/Pages/Admin/MessageToUser.vue';
 import ManagerMain from '@/ClientTg/Pages/Manager/Main.vue';
 import ManagerForm from '@/ClientTg/Pages/Manager/Manager.vue';
 import ManagerClients from '@/ClientTg/Pages/Manager/Clients.vue';
+import ManagerProfile from '@/ClientTg/Pages/Manager/Profile.vue';
 
 export const routes = [
 
@@ -324,6 +325,13 @@ export const managerRoutes = [
         path: '/manager-clients',
         component: ManagerClients,
         meta: { title: 'Менеджер: Клиенты', hide_menu:true}
+    },
+
+    {
+        name: 'ManagerProfile',
+        path: '/manager-profile',
+        component: ManagerProfile,
+        meta: { title: 'Менеджер: Профиль', hide_menu:true}
     },
 
 ]

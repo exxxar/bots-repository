@@ -40,7 +40,9 @@ class ManagerProfileController extends Controller
         BusinessLogic::manager()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->managerRegister($request->all());
+            ->managerRegister($request->all(),
+                $request->hasFile('image') ? $request->file('photo') : null
+            );
 
         return response()->noContent();
     }

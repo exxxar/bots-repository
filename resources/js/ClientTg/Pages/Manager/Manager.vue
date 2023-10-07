@@ -6,7 +6,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 </script>
 <template>
     <div v-if="botUser">
-        <div class="card card-style p-3" v-if="!botUser.is_manager||botUser.manager==null">
+        <div class="card card-style p-3" v-if="!botUser.is_manager||botUser.manager==null" >
             <form
                 v-on:submit.prevent="submit" class="row mb-0">
                 <div class="col-12 d-flex justify-content-center mb-3">
@@ -34,6 +34,29 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                                aria-describedby="managerForm-name" required>
                     </div>
                 </div>
+
+                <div class="col-12">
+                    <p class="mb-3">Загрузи свой персональное фото, мы же должны знать в лицо наших сотрудников</p>
+                    <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
+                        <label for="bot-photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                            <span>+</span>
+                            <input type="file" id="bot-photos"  accept="image/*"
+                                   @change="onChangePhotos"
+                                   style="display:none;"/>
+
+                        </label>
+
+
+                        <div class="mb-2 img-preview" v-if="managerForm.image" style="margin-right: 10px;">
+                            <img v-lazy="getPhoto(managerForm.image).imageUrl">
+                            <div class="remove">
+                                <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
 
 
                 <div class="col-12">
@@ -245,7 +268,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 <div class="col-12">
                     <p class="mb-3"><em>А теперь о ваших навыка - впишите название навыка и укажите % владения навыком
                         при помощи ползунка.</em></p>
-                    <h6 class="text-center">Ваши слабые стороны</h6>
+                    <h6 class="text-center">Ваши профессиональные навыки</h6>
 
                     <div class="mb-2" v-for="(item, index) in managerForm.skills">
                         <div class="input-style input-style-2 position-relative">
@@ -304,13 +327,12 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 <div class="col-12">
                     <p class="mb-3"><em>Для того чтоб вы и ваш друг получали больше бонусов воспользуйтесь
                         реферальной программой и введите реферальный код от вашего друга!</em></p>
-                    <h6 class="text-center">Введите ссылку на вашего друга</h6>
+                    <h6 class="text-center">Введите реферальный код вашего друга</h6>
                     <div class="input-style input-style-2">
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
                                v-model="managerForm.referral"
-                               v-mask="'#######-#######-#######'"
-                               placeholder="0000000-0000000-0000000"
-                               aria-label="managerForm-referral" aria-describedby="managerForm-referral" required>
+                               placeholder="Реферальный код"
+                               aria-label="managerForm-referral" aria-describedby="managerForm-referral">
                     </div>
                 </div>
 
@@ -425,7 +447,7 @@ export default {
                 name: null,
                 phone: null,
                 email: null,
-
+                image: null,
                 birthday: null,
                 city: null,
                 country: null,
@@ -477,6 +499,18 @@ export default {
         }
     },
     methods: {
+        getPhoto(img) {
+            return {imageUrl: URL.createObjectURL(img)}
+        },
+        removePhoto(index) {
+
+                this.managerForm.image = null
+        },
+        onChangePhotos(e) {
+            const files = e.target.files
+            this.managerForm.image = files[0]
+            console.log(files)
+        },
         nextStep() {
             this.step++;
         },
@@ -504,6 +538,8 @@ export default {
                     else
                         data.append(key, item)
                 });
+
+            data.set('image', this.managerForm.image);
 
             this.$store.dispatch("saveManager",
                 data

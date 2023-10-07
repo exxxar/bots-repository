@@ -62,6 +62,7 @@ class CompanyLogicFactory
 
         $companies = Company::query()
             ->withTrashed()
+           // ->whereNotNull("image");
             ->where("creator_id", $this->botUser->id);
 
         if (!is_null($search))

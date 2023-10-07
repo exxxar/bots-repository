@@ -30,7 +30,7 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
 
 
         <button class="w-100 btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-blue2-dark"
-                @click="loadCompanies"
+                @click="loadCompanies(0)"
                 type="button"
                 id="button-addon2"><i class="fa-solid fa-magnifying-glass mr-1"></i> Найти
         </button>
@@ -43,14 +43,14 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
                             </span>
                 </p>-->
 
-        <div v-if="companies.length>0">
+        <div v-if="companies.length>0&&!visualMode">
 
 
-                <a href="javascript:void(0)"
-                   class="btn btn-border btn-xs btn-full mb-2 rounded-sm text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme mb-1 d-flex justify-content-between align-items-center"
-                    v-bind:class="{'btn-outline-info':company.deleted_at==null,'btn-outline-danger border-danger':company.deleted_at!=null}"
-                    v-for="(company, index) in filteredCompanies"
-                >
+            <a href="javascript:void(0)"
+               class="btn btn-border btn-xs btn-full mb-2 rounded-sm text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme mb-1 d-flex justify-content-between align-items-center"
+               v-bind:class="{'btn-outline-info':company.deleted_at==null,'btn-outline-danger border-danger':company.deleted_at!=null}"
+               v-for="(company, index) in filteredCompanies"
+            >
 
                         <span
                             class="mb-0"
@@ -59,18 +59,19 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
                             {{ company.title || 'Не указано' }}
 
                         </span>
-                    <button class="btn btn-border btn-xs btn-full rounded-xl text-uppercase font-900 border-red2-dark color-red2-dark bg-theme"
-                            type="button"
-                            @click="addToArchive(company.id)"
-                            title="В архив" v-if="company.deleted_at==null"><i
-                        class="fa-solid fa-boxes-packing"></i></button>
-                    <button class="btn btn-border btn-xs btn-full rounded-xl text-uppercase font-900 border-green2-dark color-green2-dark bg-theme"
-                            type="button"
-                            @click="extractFromArchive(company.id)"
-                            title="Из архива" v-if="company.deleted_at!=null"><i
-                        class="fa-solid fa-box-open"></i></button>
-                </a>
-
+                <button
+                    class="btn btn-border btn-xs btn-full rounded-xl text-uppercase font-900 border-red2-dark color-red2-dark bg-theme"
+                    type="button"
+                    @click="addToArchive(company.id)"
+                    title="В архив" v-if="company.deleted_at==null"><i
+                    class="fa-solid fa-boxes-packing"></i></button>
+                <button
+                    class="btn btn-border btn-xs btn-full rounded-xl text-uppercase font-900 border-green2-dark color-green2-dark bg-theme"
+                    type="button"
+                    @click="extractFromArchive(company.id)"
+                    title="Из архива" v-if="company.deleted_at!=null"><i
+                    class="fa-solid fa-box-open"></i></button>
+            </a>
 
 
             <Pagination
@@ -82,9 +83,45 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
 
         </div>
 
+        <div v-if="companies.length>0&&visualMode"
+             class="row text-center row-cols-3 mb-n4">
+            <a class="col mb-4 default-link"
+               href="javascript:void(0)"
+               v-for="item in companies"
+               @click="selectCompany(item)"
+               :title="item.title||'Без названия'">
+                <img class="img-fluid rounded-xs preload-img"
+                     :alt="item.title||'Не указано'"
+
+                     v-lazy="'/images-by-company-id/'+item.id+'/'+item.image">
+
+                <span
+                    v-bind:class="{'company-border-select':selectedCompanyId==item.id}"
+                    class="company-image-badge">{{ item.title || 'Без названия' }}</span>
+                <span class="company-bot-count-badge rounded-circle bg-highlight text-white"
+                      v-if="item.bot_count>0">{{ item.bot_count || 0 }}</span>
+            </a>
+
+           <div class="col-12 mb-2"   v-if="selectedCompanyId">
+               <a class="col mb-4 default-link"
+                  href="javascript:void(0)"
+                  @click="selectCompany(null)">
+                   Сброс
+               </a>
+           </div>
+
+            <div class="col-12 mb-3">
+
+                <Pagination
+
+                    v-on:pagination_page="nextCompanies"
+                    v-if="companies_paginate_object"
+                    :pagination="companies_paginate_object"/>
+            </div>
+        </div>
 
         <div v-else class="alert alert-warning" role="alert">
-          Вы еще не завели ни одного клиента!
+            Вы еще не завели ни одного клиента!
         </div>
 
 
@@ -96,8 +133,10 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
+    props: ["visualMode"],
     data() {
         return {
+            selectedCompanyId: null,
             show: true,
             loading: true,
             companies: [],
@@ -202,6 +241,8 @@ export default {
             this.selectedFilters.splice(index, 1)
         },
         selectCompany(company) {
+
+            this.selectedCompanyId = company ? company.id : null
             this.$emit("callback", company)
         },
         nextCompanies(index) {
@@ -213,7 +254,8 @@ export default {
                 dataObject: {
                     search: this.search
                 },
-                page: page
+                page: page,
+                size: 12
             }).then(resp => {
                 this.loading = false
                 this.companies = this.getCompanies
@@ -225,3 +267,25 @@ export default {
     }
 }
 </script>
+<style>
+.company-image-badge {
+    font-size: 12px;
+    line-height: 100%;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+
+.company-bot-count-badge {
+    position: absolute;
+    top: 4px;
+    right: 20px;
+    width: 25px;
+    height: 25px;
+}
+
+.company-border-select {
+    border-bottom: 2px dashed #8BC34A;
+    padding-bottom: 5px;
+}
+</style>

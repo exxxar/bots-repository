@@ -36,6 +36,7 @@ use App\Models\ImageMenu;
 use App\Models\Location;
 use App\Models\ManagerProfile;
 use App\Models\Product;
+use App\Models\ReferralHistory;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -107,7 +108,7 @@ class ManagerLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function managerRegister(array $data): void
+    public function managerRegister(array $data, $uploadedPhoto = null): void
     {
 
         if (is_null($this->bot) || is_null($this->botUser))
@@ -149,27 +150,35 @@ class ManagerLogicFactory
                     ->year
         ];
 
-        $strengths = json_decode($data["strengths"]??'[]');
-        $weaknesses = json_decode($data["weaknesses"]??'[]');
-        $educations = json_decode($data["educations"]??'[]');
-        $socialLinks = json_decode($data["social_links"]??'[]');
-        $skills = json_decode($data["skills"]??'[]');
+        $strengths = json_decode($data["strengths"] ?? '[]');
+        $weaknesses = json_decode($data["weaknesses"] ?? '[]');
+        $educations = json_decode($data["educations"] ?? '[]');
+        $socialLinks = json_decode($data["social_links"] ?? '[]');
+        $skills = json_decode($data["skills"] ?? '[]');
+
+        $imageName = $data["image"] ?? null;
+
+        if (!is_null($uploadedPhoto))
+            $imageName = $this->uploadPhoto("/public/companies/" . $this->bot->company->slug, $uploadedPhoto);
+
+        $referral = $data["referral"] ?? null;
 
         $form2 = [
-            'bot_user_id'=>$this->botUser->id,
-            'info'=>$data["info"] ?? null,
-            'referral'=>$data["referral"] ?? null,
-            'strengths'=>$strengths,
-            'weaknesses'=>$weaknesses,
-            'educations'=>$educations,
-            'social_links'=>$socialLinks,
-            'skills'=>$skills,
-            'stable_personal_discount'=>0,
-            'permanent_personal_discount'=>0,
-            'max_company_slot_count'=>1,
-            'max_bot_slot_count'=>1,
-            'balance'=>0,
-            'verified_at'=>null
+            'bot_user_id' => $this->botUser->id,
+            'info' => $data["info"] ?? null,
+            'referral' => $referral,
+            'strengths' => $strengths,
+            'weaknesses' => $weaknesses,
+            'educations' => $educations,
+            'social_links' => $socialLinks,
+            'skills' => $skills,
+            'stable_personal_discount' => 0,
+            'permanent_personal_discount' => 0,
+            'max_company_slot_count' => 1,
+            'max_bot_slot_count' => 1,
+            'balance' => 0,
+            'image' => $imageName,
+            'verified_at' => null
         ];
 
         $this->botUser->update($form1);
@@ -178,10 +187,12 @@ class ManagerLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->first();
 
+
         if (is_null($manager))
             ManagerProfile::query()->create($form2);
         else
             $manager->update($form2);
+
 
         BotMethods::bot()
             ->whereBot($this->bot)
@@ -189,6 +200,71 @@ class ManagerLogicFactory
                 $this->botUser->telegram_chat_id,
                 "Ваши анкетные данные приняты в работу! Вы уже менеджер, остались нюансы!"
             );
+
+        if (is_null($referral))
+            return;
+
+        $pattern_simple = "/([0-9]{3})([0-9]+)/";
+
+        $string = base64_decode($referral);
+
+        preg_match_all($pattern_simple , $string, $matches);
+
+        $telegramChatId = $matches[2][0] ?? null;
+
+        $refBotUser = BotUser::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("telegram_chat_id", $telegramChatId)
+            ->first();
+
+        if (is_null($refBotUser))
+            return;
+
+        if ($this->botUser->telegram_chat_id == $refBotUser->telegram_chat_id) {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $this->botUser->telegram_chat_id,
+                    "Вы перешли по своей собственной ссылке... вы, конечно, себе друг, но CashBack достанется кому-то одному..."
+                );
+
+            return;
+
+        }
+
+
+        $ref = ReferralHistory::query()
+            ->where("user_sender_id", $refBotUser->user_id)
+            ->where("user_recipient_id", $this->botUser->user_id)
+            ->where("bot_id", $this->botUser->bot_id)
+            ->first();
+
+        if (is_null($ref)) {
+            ReferralHistory::query()->create([
+                'user_sender_id' => $refBotUser->user_id,
+                'user_recipient_id' => $this->botUser->user_id,
+                'bot_id' => $this->botUser->bot_id,
+                'activated' => true,
+            ]);
+
+            $userName1 = BotMethods::prepareUserName($this->botUser);
+            $userName2 = BotMethods::prepareUserName($refBotUser);
+
+            $this->botUser->parent_id = $refBotUser->id;
+            $this->botUser->save();
+
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $refBotUser->telegram_chat_id,
+                    "По вашей ссылке перешел пользователь $userName1"
+                )
+                ->sendMessage(
+                    $this->botUser->telegram_chat_id,
+                    "Вас и вашего друга $userName2 теперь обьеденяет еще и CashBack;)"
+                );
+        }
+
 
     }
 

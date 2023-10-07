@@ -253,6 +253,8 @@ Route::prefix("bot-client")
             ->middleware(["tgAuth.any"])
             ->group(function(){
                 Route::post("/register", "registerManager");
+                Route::post('/load-data', [\App\Http\Controllers\Globals\ManagerScriptController::class,"loadData"]);
+                Route::post('/friends-web', [\App\Http\Controllers\Globals\ManagerScriptController::class,"getFriendList"]);
             });
 
         Route::prefix("bots")

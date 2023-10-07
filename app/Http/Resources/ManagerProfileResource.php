@@ -15,6 +15,7 @@ class ManagerProfileResource extends JsonResource
         return [
             'id' => $this->id,
             'bot_user_id' => $this->bot_user_id,
+            'image' => $this->image ?? null,
             'info' => $this->info,
             'referral' => $this->referral,
             'strengths' => $this->strengths,

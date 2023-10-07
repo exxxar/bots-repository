@@ -18,7 +18,7 @@ import BotEditor from "@/ClientTg/Components/Manager/Bots/BotEditor.vue";
                    aria-describedby="button-addon2">
 
             <button class="btn btn-m btn-full mb-0 rounded-xs text-uppercase font-900 shadow-s bg-blue2-dark"
-                    @click="loadBots"
+                    @click="loadBots(0)"
                     type="button"
                     id="button-addon2">Найти
             </button>

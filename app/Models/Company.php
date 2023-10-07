@@ -52,6 +52,14 @@ class Company extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+    protected $appends = ["bot_count"];
+
+    public function getBotCountAttribute()
+    {
+        return $this->bots()->count() ?? 0;
+
+    }
+
     public function bots(): HasMany
     {
         return $this->hasMany(Bot::class);
