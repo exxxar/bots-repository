@@ -202,17 +202,6 @@ class ManagerScriptController extends SlugController
 
         }
 
-        \App\Facades\BotManager::bot()
-            ->replyPhoto("Список ваших клиентов",
-                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
-                [
-                    [
-                        ["text" => "\xF0\x9F\x8E\xB2Открыть список клиентов", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-clients"
-                        ]],
-                    ],
-
-                ]);
 
         $client = Company::query()
             ->where("creator_id", $botUser->id)
@@ -368,16 +357,15 @@ class ManagerScriptController extends SlugController
                 public_path() . "/images/cashman.jpg"
         );
 
-        $message = sprintf(
-            "Название клиента: %s\n
-Описание:\n
-<em>%s</em>\n
-Адрес: %s\n
-Почта: %s\n
-Ответственный менеджер: %s\n
-Телефоны:\n
+        $message = sprintf("Название клиента: %s
+Описание:
+<em>%s</em>
+Адрес: %s
+Почта: %s
+Ответственный менеджер: %s
+Телефоны:
 %s
-Ссылки на соц. сети: \n
+Ссылки на соц. сети:
 %s
             ",
             $client->title,
@@ -395,10 +383,10 @@ class ManagerScriptController extends SlugController
                     $file,
                     [
                         [
-                            ["text" => "\xF0\x9F\x8E\xB2Боты клиента", "callback_data" => "/client_bot_list $client->id"],
+                            ["text" => "🤖Боты клиента", "callback_data" => "/client_bot_list $client->id"],
                         ],
                         [
-                            ["text" => "Следующий клиент", "callback_data" => "/next_client 1"],
+                            ["text" => "Следующий клиент▶", "callback_data" => "/next_client 1"],
                         ],
                     ]);
 
