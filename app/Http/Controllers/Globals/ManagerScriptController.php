@@ -308,12 +308,12 @@ class ManagerScriptController extends SlugController
 
         $bot = Bot::query();
 
-        if (!is_null($companyId))
-            $bot = $bot->where("company_id", $companyId);
+     /*   if (!is_null($companyId))
+            $bot = $bot->where("company_id", $companyId);*/
 
-        $bot = $bot->whereHas("company", function ($q) use ($botUser) {
+        $bot = $bot/*->whereHas("company", function ($q) use ($botUser) {
             $q->where("creator_id", $botUser->id);
-        })
+        })*/
             ->orderBy("updated_at", "desc")
             ->first();
 
@@ -432,7 +432,7 @@ class ManagerScriptController extends SlugController
                         ["text" => "🤖Перейти в бот", "url" => "https://t.me/$bot->bot_domain"],
                     ],
                     [
-                        ["text" => "🏻‍💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
+                        ["text" => "‍💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
                     ],
                     [
                         ["text" => "Следующий бот ▶", "callback_data" => "/next_bots 1 " . ($companyId ?? "")],
@@ -455,7 +455,7 @@ class ManagerScriptController extends SlugController
                         ["text" => "🤖Перейти в бот", "url" => "https://t.me/$bot->bot_domain"],
                     ],
                     [
-                        ["text" => "👨🏻‍💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
+                        ["text" => "💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
                     ],
                     [
                         ["text" => "◀Предыдущий бот (" . ($page - 1) . ")", "callback_data" => "/next_bots " . ($page - 1) . " " . ($companyId ?? "")],
