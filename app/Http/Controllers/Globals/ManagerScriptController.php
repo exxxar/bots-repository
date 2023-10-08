@@ -413,7 +413,7 @@ class ManagerScriptController extends SlugController
                     $file,
                     [
                         [
-                            ["text" => "🤖Боты клиента", "callback_data" => "/next_bots 0 $client->id"],
+                            ["text" => "🤖Боты клиента", "callback_data" => "/next_bots_by_company 0 $client->id"],
                         ],
                         [
                             ["text" => "Вперед ▶", "callback_data" => "/next_clients 1"],
