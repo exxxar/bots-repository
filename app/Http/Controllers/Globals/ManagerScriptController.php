@@ -453,9 +453,7 @@ class ManagerScriptController extends SlugController
         $companyDomain = $bot->company->slug ?? null;
 
 
-        $path = !is_null($bot->image) ?
-            storage_path("app/public") . "/companies/$companyDomain/" . $bot->image :
-            public_path() . "/images/cashman.jpg";
+        $path = storage_path("app/public") . "/companies/$companyDomain/" . $bot->image ;
 
         Log::info("exist file=>$path => " . (file_exists($path) ? "true" : "false"));
 
