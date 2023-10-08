@@ -307,12 +307,12 @@ class ManagerScriptController extends SlugController
 
         $bot = Bot::query();
 
-        /*   if (!is_null($companyId))
-               $bot = $bot->where("company_id", $companyId);*/
+           if (!is_null($companyId))
+               $bot = $bot->where("company_id", $companyId);
 
-        $bot = $bot/*->whereHas("company", function ($q) use ($botUser) {
+        $bot = $bot->whereHas("company", function ($q) use ($botUser) {
             $q->where("creator_id", $botUser->id);
-        })*/
+        })
         ->orderBy("updated_at", "desc")
             ->take(1)
             ->skip($pageId ?? 0)
@@ -325,7 +325,7 @@ class ManagerScriptController extends SlugController
                     ->replyEditInlineKeyboard($messageId, []);
 
             BotManager::bot()
-                ->reply("Вы еще не добавили ни 1 бота для данного клиента");
+                ->reply("Никаких ботов не найдено");
 
             return;
         }
@@ -341,14 +341,10 @@ class ManagerScriptController extends SlugController
 
         $botUser = BotManager::bot()->currentBotUser();
 
-        $bot = Bot::query();
-
-        /*   if (!is_null($companyId))
-               $bot = $bot->where("company_id", $companyId);*/
-
-        $bot = $bot/*->whereHas("company", function ($q) use ($botUser) {
+        $bot = Bot::query()
+            ->whereHas("company", function ($q) use ($botUser) {
             $q->where("creator_id", $botUser->id);
-        })*/
+        })
         ->orderBy("updated_at", "desc")
             ->take(1)
             ->skip($pageId ?? 0)
@@ -361,7 +357,7 @@ class ManagerScriptController extends SlugController
                     ->replyEditInlineKeyboard($messageId, []);
 
             BotManager::bot()
-                ->reply("Вы еще не добавили ни 1 бота для данного клиента");
+                ->reply("Никаких ботов не нейдано");
 
             return;
         }
@@ -381,13 +377,14 @@ class ManagerScriptController extends SlugController
         foreach ($client->links ?? [] as $link)
             $links .= "$link\n";
 
-
-        $path = storage_path("app/public") . "/companies/$client->slug/" . ($client->image ?? 'noimage.jpg');
+        $path = !is_null($client->image) ?
+            storage_path("app/public") . "/companies/$client->slug/" . $client->image :
+            null;
 
         $file = InputFile::create(
             file_exists($path) ?
-                $path :
-                public_path() . "/images/cashman.jpg"
+                env("APP_URL") . "/images-by-company-id/$client->id/$client->image" :
+                env("APP_URL") . "/images/cashman.jpg"
         );
 
         $message = sprintf("Название клиента: %s
@@ -419,7 +416,7 @@ class ManagerScriptController extends SlugController
                             ["text" => "🤖Боты клиента", "callback_data" => "/next_bots 0 $client->id"],
                         ],
                         [
-                            ["text" => "Следующий клиент▶", "callback_data" => "/next_clients 1"],
+                            ["text" => "Вперед ▶", "callback_data" => "/next_clients 1"],
                         ],
                     ]);
 
@@ -437,11 +434,11 @@ class ManagerScriptController extends SlugController
                 ],
                 [
                     [
-                        ["text" => "\xF0\x9F\x8E\xB2Боты клиента", "callback_data" => "/client_bot_list"],
+                        ["text" => "🤖Боты клиента", "callback_data" => "/client_bot_list"],
                     ],
                     [
-                        ["text" => "Предыдущий клиент (" . ($page - 1) . ")", "callback_data" => "/next_client " . ($page - 1)],
-                        ["text" => "Следующий клиент (" . ($page + 1) . ")", "callback_data" => "/next_client " . ($page + 1)],
+                        ["text" => "◀ Назад (" . ($page - 1) . ")", "callback_data" => "/next_client " . ($page - 1)],
+                        ["text" => "Вперед (" . ($page + 1) . ") ▶", "callback_data" => "/next_client " . ($page + 1)],
                     ],
                 ]
             );
@@ -457,8 +454,6 @@ class ManagerScriptController extends SlugController
             storage_path("app/public") . "/companies/$companyDomain/" . $bot->image :
             null;
 
-        Log::info("exist file=>$path => " . (file_exists($path) ? "true" : "false"));
-
         $file = InputFile::create(
             file_exists($path) ?
                 env("APP_URL") . "/images-by-bot-id/$bot->id/$bot->image" :
@@ -467,8 +462,6 @@ class ManagerScriptController extends SlugController
 
 
         $text = "$bot->bot_domain (Владелец $companyDomain)";
-
-        Log::info("we are here 1=>" . $text);
 
         if (is_null($messageId)) {
 
@@ -487,7 +480,6 @@ class ManagerScriptController extends SlugController
             return;
         }
 
-        Log::info("we are here 2");
 
         $keyboard = [
             [
@@ -519,7 +511,7 @@ class ManagerScriptController extends SlugController
                 ],
                 $keyboard
             );
-        Log::info("we are here 3");
+
     }
 
     public function getFriendList(Request $request)
