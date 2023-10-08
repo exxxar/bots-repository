@@ -295,9 +295,17 @@ class ManagerScriptController extends SlugController
             ->first();
 
         if (is_null($client)) {
-            \App\Facades\BotManager::bot()
-                ->reply("Вы еще не добавили ни 1 клиента");
 
+            if (is_null($messageId))
+               BotManager::bot()
+                    ->reply("Вы еще не добавили ни 1 клиента");
+            else
+                BotManager::bot()
+                    ->replyEditInlineKeyboard($messageId,[
+                        [
+                            ["text" => "🤖Боты клиента", "callback_data" => "/next_bots 0 $client->id"],
+                        ],
+                    ]);
             return;
         }
 
