@@ -218,7 +218,6 @@ class ManagerScriptController extends SlugController
         $this->prepareClient($client, null, 0);
 
 
-
     }
 
     public function bots(...$config)
@@ -252,9 +251,9 @@ class ManagerScriptController extends SlugController
 
 
         $bot = Bot::query()
-          /*  ->whereHas("company", function ($q) use ($botUser) {
-                $q->where("creator_id", $botUser->id);
-            })*/
+            /*  ->whereHas("company", function ($q) use ($botUser) {
+                  $q->where("creator_id", $botUser->id);
+              })*/
             ->orderBy("updated_at", "desc")
             ->first();
 
@@ -288,7 +287,7 @@ class ManagerScriptController extends SlugController
         if (is_null($client)) {
             if (!is_null($messageId))
                 BotManager::bot()
-                    ->replyEditInlineKeyboard($messageId,[]);
+                    ->replyEditInlineKeyboard($messageId, []);
 
             BotManager::bot()
                 ->reply("Вы еще не добавили ни 1 клиента");
@@ -300,6 +299,8 @@ class ManagerScriptController extends SlugController
 
     public function nextBot(...$data)
     {
+
+        Log::info(print_r($data, true));
         $messageId = $data[0]->message_id ?? null;
         $companyId = $data[4] ?? null;
         $pageId = $data[3] ?? null;
@@ -308,20 +309,22 @@ class ManagerScriptController extends SlugController
 
         $bot = Bot::query();
 
-     /*   if (!is_null($companyId))
-            $bot = $bot->where("company_id", $companyId);*/
+        /*   if (!is_null($companyId))
+               $bot = $bot->where("company_id", $companyId);*/
 
         $bot = $bot/*->whereHas("company", function ($q) use ($botUser) {
             $q->where("creator_id", $botUser->id);
         })*/
-            ->orderBy("updated_at", "desc")
+        ->orderBy("updated_at", "desc")
+            ->take(1)
+            ->skip($pageId ?? 0)
             ->first();
 
 
         if (is_null($bot)) {
             if (!is_null($messageId))
                 BotManager::bot()
-                    ->replyEditInlineKeyboard($messageId,[]);
+                    ->replyEditInlineKeyboard($messageId, []);
 
             BotManager::bot()
                 ->reply("Вы еще не добавили ни 1 бота для данного клиента");
