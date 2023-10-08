@@ -488,6 +488,27 @@ class ManagerScriptController extends SlugController
         }
 
         Log::info("we are here 2");
+
+        $keyboard = [
+            [
+                ["text" => "🤖Перейти в бот", "url" => "https://t.me/" . ($bot->bot_domain ?? 'error')],
+            ],
+            [
+                ["text" => "💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
+            ],
+
+        ];
+
+        if ($page == 0)
+            $keyboard[] = [
+                ["text" => "Следующий бот ▶", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page + 1) : "/next_bots_by_company " . ($page + 1) . " $companyId"],
+            ];
+        if ($page > 0)
+            $keyboard[] = [
+                ["text" => "◀Предыдущий бот (" . ($page - 1) . ")", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page - 1) : "/next_bots_by_company " . ($page - 1) . " $companyId"],
+                ["text" => "Следующий бот (" . ($page + 1) . ") ▶", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page + 1) : "/next_bots_by_company " . ($page + 1) . " $companyId"],
+            ];
+
         BotManager::bot()
             ->replyEditMessageMedia(
                 $messageId,
@@ -496,18 +517,7 @@ class ManagerScriptController extends SlugController
                     "media" => $file->getFile(),
                     "caption" => $text,
                 ],
-                [
-                    [
-                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/" . ($bot->bot_domain ?? 'error')],
-                    ],
-                    [
-                        ["text" => "💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
-                    ],
-                    [
-                        ["text" => "◀Предыдущий бот (" . ($page - 1) . ")", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page - 1) : "/next_bots_by_company " . ($page - 1) . " $companyId"],
-                        ["text" => "Следующий бот (" . ($page + 1) . ") ▶", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page - 1) : "/next_bots_by_company " . ($page - 1) . " $companyId"],
-                    ],
-                ]
+                $keyboard
             );
         Log::info("we are here 3");
     }
