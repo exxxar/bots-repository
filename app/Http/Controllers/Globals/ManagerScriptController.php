@@ -455,9 +455,10 @@ class ManagerScriptController extends SlugController
         Log::info("we are here 0=>".$path);
 
         $file = InputFile::create(
+            "https://img3.fonwall.ru/o/bx/-forest-sky.jpg?auto=compress&fit=resize&w=1200&display=large"
             /*file_exists($path) ?
                 $path :*/
-                public_path() . "/images/cashman.jpg"
+              /*  public_path() . "/images/cashman.jpg"*/
         );
 
         $text = "$bot->bot_domain (Владелец $companyDomain)";
@@ -487,7 +488,7 @@ class ManagerScriptController extends SlugController
                 $messageId,
                 [
                     "type" => "photo",
-                    "media" => $file->getFile(),
+                    "media" => $file,
                     "caption" => $text,
                 ],
                 [
