@@ -251,9 +251,9 @@ class ManagerScriptController extends SlugController
 
 
         $bot = Bot::query()
-            /*  ->whereHas("company", function ($q) use ($botUser) {
-                  $q->where("creator_id", $botUser->id);
-              })*/
+            ->whereHas("company", function ($q) use ($botUser) {
+                $q->where("creator_id", $botUser->id);
+            })
             ->orderBy("updated_at", "desc")
             ->first();
 
@@ -307,13 +307,13 @@ class ManagerScriptController extends SlugController
 
         $bot = Bot::query();
 
-           if (!is_null($companyId))
-               $bot = $bot->where("company_id", $companyId);
+        if (!is_null($companyId))
+            $bot = $bot->where("company_id", $companyId);
 
         $bot = $bot->whereHas("company", function ($q) use ($botUser) {
             $q->where("creator_id", $botUser->id);
         })
-        ->orderBy("updated_at", "desc")
+            ->orderBy("updated_at", "desc")
             ->take(1)
             ->skip($pageId ?? 0)
             ->first();
@@ -343,9 +343,9 @@ class ManagerScriptController extends SlugController
 
         $bot = Bot::query()
             ->whereHas("company", function ($q) use ($botUser) {
-            $q->where("creator_id", $botUser->id);
-        })
-        ->orderBy("updated_at", "desc")
+                $q->where("creator_id", $botUser->id);
+            })
+            ->orderBy("updated_at", "desc")
             ->take(1)
             ->skip($pageId ?? 0)
             ->first();
