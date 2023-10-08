@@ -149,7 +149,7 @@ class ManagerScriptController extends SlugController
                     ],
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Запросить вывод средств", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/checkout"
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/cash-out"
                         ]],
                     ],
                     [
