@@ -52,7 +52,7 @@
 
         <div class="divider mt-4"></div>
     </div>
-    <p>К сожалению на текущий момент у Вас нет ни 1 партнера:(</p>
+    <p v-else>К сожалению на текущий момент у Вас нет ни 1 партнера:(</p>
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -73,7 +73,7 @@ export default {
 
     },
     mounted() {
-
+        this.loadFriendsWeb()
     },
     computed: {
         ...mapGetters(['getSelf']),
