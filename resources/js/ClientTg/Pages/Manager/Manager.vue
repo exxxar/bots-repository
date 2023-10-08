@@ -321,6 +321,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     </div>
                 </div>
 
+                <div class="divider divider-small my-3 bg-highlight "></div>
 
                 <div class="divider divider-small my-3 bg-highlight "></div>
 
@@ -349,7 +350,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     <div class="d-flex mb-3">
                         <div class="pt-1">
                             <h5 data-activate="toggle-id-1" class="font-500 font-13">
-                                <span v-if="!managerForm.sex">С правилами озакномилась</span>
+                                <span v-if="!managerForm.sex">С правилами ознакомилась</span>
                                 <span v-if="managerForm.sex">С правилами ознакомлен</span>
                             </h5>
                         </div>

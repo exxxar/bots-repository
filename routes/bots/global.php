@@ -69,8 +69,12 @@ BotManager::bot()
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\ManagerScriptController::class)
+    ->route("/next_clients ([0-9]+)", "nextClient")
+    ->route("/next_bots ([0-9]+)", "nextBot")
+    ->route("/next_bots ([0-9]+) ([0-9]+)", "nextBot")
     ->slug("global_manager_profile", "profile")
     ->slug("global_manager_clients", "clients")
+    ->slug("global_manager_bots", "bots")
     ->slug("global_manager_main", "managerScript");
 
 BotManager::bot()

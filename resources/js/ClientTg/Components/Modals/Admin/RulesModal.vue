@@ -89,6 +89,14 @@ export default {
                       channel: 1,
                   }
               },
+              {
+                  id: 9,
+                  title: "Является Менеджером",
+                  rules_block: 'bot_user',
+                  rule: {
+                      is_manager: true,
+                  }
+              },
 
           ],
       }

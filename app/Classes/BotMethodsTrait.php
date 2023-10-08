@@ -61,6 +61,21 @@ trait BotMethodsTrait
         return $this->sendChatAction($this->chatId, $action);
     }
 
+    public function replyEditMessageMedia($messageId,$media, $keyboard = [])
+    {
+        return $this->editMessageMedia($this->chatId, $messageId, $media, $keyboard);
+    }
+
+
+    public function replyEditInlineKeyboard($messageId, $keyboard = [])
+    {
+        return $this->editInlineKeyboard($this->chatId, $messageId, $keyboard);
+    }
+
+    public function replyEditMessageCaption($messageId, $caption, $keyboard = [])
+    {
+        return $this->editMessageCaption($this->chatId, $messageId, $caption, $keyboard);
+    }
 
     public function replyVideoNote($videoNotePath, $keyboard = [], $keyboardType = "inline")
     {
@@ -82,10 +97,6 @@ trait BotMethodsTrait
         return $this->sendPhoto($this->chatId, $caption, $path, is_null($menu) ? [] : $menu->menu);
     }
 
-    public function replyEditInlineKeyboard($messageId, $keyboard)
-    {
-        return $this->editInlineKeyboard($this->chatId, $messageId, $keyboard);
-    }
 
     public function replyLocation($lat, $lon)
     {

@@ -69,6 +69,17 @@ class ManagerScriptController extends SlugController
         BotMenuSlug::query()->updateOrCreate(
             [
                 'bot_id' => $bot->id,
+                'slug' => "global_manager_bots",
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Созданные менеджером боты",
+                'comment' => "Отображение списка всех созданных менеджером ботов",
+            ]);
+
+        BotMenuSlug::query()->updateOrCreate(
+            [
+                'bot_id' => $bot->id,
                 'slug' => "global_manager_profile",
                 'is_global' => true,
             ],
@@ -108,8 +119,28 @@ class ManagerScriptController extends SlugController
 
         }
 
+        $message = sprintf("
+         Имя: %s\n
+         Телефон: %s\n
+         Город: %s\n
+         Дата рождения: %s\n
+         Ваш баланс: %s руб\n
+         Пол: %s \n
+         Колл-во слотов под клиентов:  %s \n
+         Колл-во слотов под ботов у клиента: %s
+        ",
+            $botUser->name ?? 'Не указано',
+            $botUser->phone ?? 'Не указано',
+            $botUser->city ?? 'Не указано',
+            $botUser->birthday ?? 'Не указано',
+            $botUser->manager->balance ?? 0,
+            $botUser->sex ? 'Мужской' : 'Женский',
+            $botUser->manager->max_company_slot_count ?? 0,
+            $botUser->manager->max_bot_slot_count ?? 0,
+        );
+
         \App\Facades\BotManager::bot()
-            ->replyPhoto("Профиль менеджера",
+            ->replyPhoto("Профиль менеджера\n$message",
                 InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
                 [
                     [
@@ -119,8 +150,6 @@ class ManagerScriptController extends SlugController
                     ],
 
                 ]);
-
-
     }
 
     public function clients(...$config)
@@ -164,9 +193,267 @@ class ManagerScriptController extends SlugController
 
                 ]);
 
+        $client = Company::query()
+            ->where("creator_id", $botUser->id)
+            ->orderBy("updated_at", "desc")
+            ->first();
+
+        if (is_null($client)) {
+            \App\Facades\BotManager::bot()
+                ->reply("Вы еще не добавили ни 1 клиента");
+
+            return;
+        }
+
+        \App\Facades\BotManager::bot()
+            ->replyPhoto("Список ваших клиентов",
+                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Открыть список клиентов", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-clients"
+                        ]],
+                    ],
+
+                ]);
+
+        $this->prepareClient($client, null, 0);
+
 
     }
 
+    public function bots(...$config)
+    {
+
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        if (!$botUser->is_manager) {
+
+            \App\Facades\BotManager::bot()
+                ->replyPhoto("Заполни эту анкету и стань менеджером",
+                    InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                    [
+                        [
+                            ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-form"
+                            ]],
+                        ],
+
+                    ]);
+
+            return;
+
+        }
+
+
+        $bot = Bot::query()
+            ->whereHas("company", function ($q) use ($botUser) {
+                $q->where("creator_id", $botUser->id);
+            })
+            ->orderBy("updated_at", "desc")
+            ->first();
+
+        if (is_null($bot)) {
+            \App\Facades\BotManager::bot()
+                ->reply("Вы еще не добавили ни 1 бота");
+
+            return;
+        }
+
+
+        $this->prepareBots($bot, null, 0);
+
+
+    }
+
+    public function nextClient(...$data)
+    {
+        $messageId = $data[0]->message_id ?? null;
+        $pageId = $data[3] ?? null;
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $client = Company::query()
+            ->where("creator_id", $botUser->id)
+            ->orderBy("updated_at", "desc")
+            ->take(1)
+            ->skip(max(0, $pageId))
+            ->first();
+
+        if (is_null($client)) {
+            \App\Facades\BotManager::bot()
+                ->reply("Вы еще не добавили ни 1 клиента");
+
+            return;
+        }
+
+        $this->prepareClient($client, $messageId, $pageId);
+    }
+
+    public function nextBot(...$data)
+    {
+        $messageId = $data[0]->message_id ?? null;
+        $companyId = $data[4] ?? null;
+        $pageId = $data[3] ?? null;
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = Bot::query();
+
+        if (!is_null($companyId))
+            $bot = $bot->where("company_id", $companyId);
+
+        $bot = $bot->whereHas("company", function ($q) use ($botUser) {
+            $q->where("creator_id", $botUser->id);
+        })
+            ->orderBy("updated_at", "desc")
+            ->first();
+
+
+        if (is_null($bot)) {
+            \App\Facades\BotManager::bot()
+                ->reply("Вы еще не добавили ни 1 бота для данного клиента");
+
+            return;
+        }
+
+        $this->prepareBots($bot, $messageId, $pageId, $companyId);
+    }
+
+    private function prepareClient($client, $messageId = null, $page = 0)
+    {
+        $phones = "";
+
+        foreach ($client->phones ?? [] as $phone)
+            $phones .= "$phone\n";
+
+        $links = "";
+
+        foreach ($client->links ?? [] as $link)
+            $links .= "$link\n";
+
+
+        $path = storage_path("app/public") . "/companies/$client->slug/" . ($client->image ?? 'noimage.jpg');
+
+        $file = InputFile::create(
+            file_exists($path) ?
+                $path :
+                public_path() . "/images/cashman.jpg"
+        );
+
+        $message = sprintf(
+            "Название клиента: %s\n
+Описание:\n
+<em>%s</em>\n
+Адрес: %s\n
+Почта: %s\n
+Ответственный менеджер: %s\n
+Телефоны:\n
+%s
+Ссылки на соц. сети: \n
+%s
+            ",
+            $client->title,
+            $client->description,
+            $client->address,
+            $client->email,
+            $client->manager,
+            $phones,
+            $links,
+        );
+
+        if (is_null($messageId)) {
+            \App\Facades\BotManager::bot()
+                ->replyPhoto("$message",
+                    $file,
+                    [
+                        [
+                            ["text" => "\xF0\x9F\x8E\xB2Боты клиента", "callback_data" => "/client_bot_list $client->id"],
+                        ],
+                        [
+                            ["text" => "Следующий клиент", "callback_data" => "/next_client 1"],
+                        ],
+                    ]);
+
+            return;
+        }
+
+
+        BotManager::bot()
+            ->replyEditMessageMedia(
+                $messageId,
+                [
+                    "type" => "photo",
+                    "media" => $file,
+                    "caption" => $message,
+                ],
+                [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Боты клиента", "callback_data" => "/client_bot_list"],
+                    ],
+                    [
+                        ["text" => "Предыдущий клиент (" . ($page - 1) . ")", "callback_data" => "/next_client " . ($page - 1)],
+                        ["text" => "Следующий клиент (" . ($page + 1) . ")", "callback_data" => "/next_client " . ($page + 1)],
+                    ],
+                ]
+            );
+    }
+
+    private function prepareBots($bot, $messageId = null, $page = 0, $companyId = null)
+    {
+
+        $companyDomain = $bot->company->slug ?? null;
+
+        $path = storage_path("app/public") . "/companies/$companyDomain/" . ($bot->image ?? 'noimage.jpg');
+
+        $file = InputFile::create(
+            file_exists($path) ?
+                $path :
+                public_path() . "/images/cashman.jpg"
+        );
+
+        $text = "$bot->bot_domain (Владелец $companyDomain)";
+        if (is_null($messageId)) {
+
+            BotManager::bot()
+                ->replyPhoto($text, $file, [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Информация по боту", "callback_data" => "/diagnostic $bot->id " . ($companyId ?? "")],
+                    ],
+                    [
+                        ["text" => "Следующий бот", "callback_data" => "/next_bots 1"],
+                    ],
+                ]);
+            return;
+        }
+
+
+        BotManager::bot()
+            ->replyEditMessageMedia(
+                $messageId,
+                [
+                    "type" => "photo",
+                    "media" => $file,
+                    "caption" => $text,
+                ],
+                [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Диагностика бота", "callback_data" => "/diagnostic  $bot->id"],
+                    ],
+                    [
+                        ["text" => "Предыдущий бот (" . ($page - 1) . ")", "callback_data" => "/next_bots " . ($page - 1) . " " . ($companyId ?? "")],
+                        ["text" => "Следующий бот (" . ($page + 1) . ")", "callback_data" => "/next_bots " . ($page + 1) . " " . ($companyId ?? "")],
+                    ],
+                ]
+            );
+
+    }
 
     public function getFriendList(Request $request)
     {

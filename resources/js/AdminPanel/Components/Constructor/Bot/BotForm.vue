@@ -975,6 +975,7 @@ export default {
                         main_channel: null,
                         balance: null,
                         tax_per_day: null,
+                        callback_link: null,
 
                         image: null,
 

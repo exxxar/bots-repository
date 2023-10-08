@@ -19,7 +19,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
                 <div class="col-12">
                     <p class="mb-3"><em>Приветствую Вас, <strong>Дорогой друг!</strong> Я хочу поздравить Вас и дать
-                        возможность получать неограниченные преимушества нашего сервиса! Для начала нам нужно с Вами
+                        возможность получать неограниченные преимущества нашего сервиса! Для начала нам нужно с Вами
                         познакомиться - это поможет сделать использование сервиса более комфортным и взаимовыгодным!</em>
                     </p>
                     <h6 class="text-center">Как мне к Вам обращаться?</h6>
@@ -119,7 +119,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     <div class="d-flex mb-3">
                         <div class="pt-1">
                             <h5 data-activate="toggle-id-1" class="font-500 font-13">
-                                <span v-if="!vipForm.sex">С правилами озакномилась</span>
+                                <span v-if="!vipForm.sex">С правилами ознакомилась</span>
                                 <span v-if="vipForm.sex">С правилами ознакомлен</span>
                             </h5>
                         </div>

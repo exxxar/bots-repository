@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bots;
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Models\Bot;
 use App\Models\BotDialogCommand;
 use App\Models\BotMenuSlug;
 use App\Models\BotPage;
@@ -37,6 +38,8 @@ class SystemDiagnosticController extends Controller
     public function getDiagnosticTable(...$data)
     {
 
+        $botId = $data[3] ?? null;
+
         $botUser = BotManager::bot()
             ->currentBotUser();
 
@@ -50,7 +53,16 @@ class SystemDiagnosticController extends Controller
             ->reply("Диагностическая страница бота")
             ->reply("Ваш чат id: " . ($data[0]->chat->id ?? 'не указан'));
 
-        $bot = BotManager::bot()->getSelf();
+        $bot = !is_null($botId) ? Bot::query()->find($botId) : null;
+
+        if (is_null($bot) || is_null($botId))
+            $bot = BotManager::bot()->getSelf();
+
+        $this->makeDiagnostic($bot);
+    }
+
+    private function makeDiagnostic($bot)
+    {
         $companyDomain = $bot->company->slug;
 
         $usersInBot = BotUser::query()
@@ -60,7 +72,7 @@ class SystemDiagnosticController extends Controller
         $text = "Бот: " . $bot->bot_domain . " состояние бота - " . ($bot->is_active ? 'включен' : 'выключен') . "\n" .
             "Компания-владелец: " . $companyDomain . "\n" .
             "Пользователей в боте: " . $usersInBot . "\n" .
-            "Наличие тоукена: " . (is_null($bot->bot_token) ? "Без тоукена":"С тоукеном") . "\n" .
+            "Наличие тоукена: " . (is_null($bot->bot_token) ? "Без тоукена" : "С тоукеном") . "\n" .
             "Баланс: " . ($bot->balance ?? 0) . " руб.\n" .
             "Тариф: " . ($bot->tax_per_day ?? 0) . " руб\день\n" .
             "CashBack уровень 1: " . ($bot->level_1 ?? 0) . " %\n" .
@@ -100,7 +112,7 @@ class SystemDiagnosticController extends Controller
             $rowTmpKeyboard = [];
             $index = 1;
             foreach ($pages as $page) {
-                $tmp .= "$index# <b>" . ($page->slug->command ?? 'Не указано')."</b>\n";
+                $tmp .= "$index# <b>" . ($page->slug->command ?? 'Не указано') . "</b>\n";
 
                 if ($index % 4 != 0) {
                     $rowTmpKeyboard[] = [
@@ -120,12 +132,12 @@ class SystemDiagnosticController extends Controller
                 $index++;
             }
 
-            if (count($rowTmpKeyboard)>0){
+            if (count($rowTmpKeyboard) > 0) {
                 $keyboard[] = $rowTmpKeyboard;
             }
 
             BotManager::bot()
-                ->replyInlineKeyboard("Доступные страницы <b>(".count($pages)." стр.)</b> в боте:\n$tmp", $keyboard);
+                ->replyInlineKeyboard("Доступные страницы <b>(" . count($pages) . " стр.)</b> в боте:\n$tmp", $keyboard);
 
         } else
             BotManager::bot()
@@ -143,7 +155,7 @@ class SystemDiagnosticController extends Controller
             $index = 1;
 
             foreach ($slugs as $slug) {
-                $tmp .= "$index# <b>" . ($slug->command ?? 'Не указано')."</b>\n";
+                $tmp .= "$index# <b>" . ($slug->command ?? 'Не указано') . "</b>\n";
 
                 if ($index % 4 != 0) {
                     $rowTmpKeyboard[] = [
@@ -163,12 +175,12 @@ class SystemDiagnosticController extends Controller
                 $index++;
             }
 
-            if (count($rowTmpKeyboard)>0){
+            if (count($rowTmpKeyboard) > 0) {
                 $keyboard[] = $rowTmpKeyboard;
             }
 
             BotManager::bot()
-                ->replyInlineKeyboard("Подключенные скрипты <b>(".count($slugs)." ед.)</b> в боте:\n$tmp", $keyboard);
+                ->replyInlineKeyboard("Подключенные скрипты <b>(" . count($slugs) . " ед.)</b> в боте:\n$tmp", $keyboard);
 
         } else
             BotManager::bot()
@@ -178,15 +190,14 @@ class SystemDiagnosticController extends Controller
             ->where("bot_id", $bot->id)
             ->get();
 
-        if (count($dialogs)>0){
+        if (count($dialogs) > 0) {
             $tmp = "";
             foreach ($dialogs as $dialog)
-                $tmp .= ($dialog->pre_text ?? 'Не задан')."\n";
+                $tmp .= ($dialog->pre_text ?? 'Не задан') . "\n";
 
             BotManager::bot()
-                ->reply("Подключенные диалоги (".count($dialogs)." ед):\n$tmp");
-        }
-        else
+                ->reply("Подключенные диалоги (" . count($dialogs) . " ед):\n$tmp");
+        } else
             BotManager::bot()
                 ->reply("Подключенные диалоги в боте отсутствуют");
 

@@ -18,7 +18,10 @@ BotManager::bot()
     ->controller(\App\Http\Controllers\Bots\SystemDiagnosticController::class)
     ->route("/.*Мой id|.*мой id", "getMyId")
     ->route("/democircle", "democircle")
-    ->route("/diagnostic", "getDiagnosticTable");
+    ->route("/diagnostic", "getDiagnosticTable")
+    ->route("/diagnostic ([0-9]+)", "getDiagnosticTable");
+
+
 
 BotManager::bot()
     ->controller(InlineBotController::class)
