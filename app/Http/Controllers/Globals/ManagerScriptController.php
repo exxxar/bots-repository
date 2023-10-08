@@ -398,7 +398,7 @@ class ManagerScriptController extends SlugController
                 $messageId,
                 [
                     "type" => "photo",
-                    "media" => $file,
+                    "media" => $file->getFile(),
                     "caption" => $message,
                 ],
                 [
@@ -452,7 +452,7 @@ class ManagerScriptController extends SlugController
                 $messageId,
                 [
                     "type" => "photo",
-                    "media" => $file,
+                    "media" => $file->getFile(),
                     "caption" => $text,
                 ],
                 [
