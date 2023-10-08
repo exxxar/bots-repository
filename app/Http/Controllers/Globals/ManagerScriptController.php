@@ -297,10 +297,7 @@ class ManagerScriptController extends SlugController
         $this->prepareClient($client, $messageId, $pageId);
     }
 
-    public function nextBot(...$data)
-    {
-
-        Log::info(print_r($data, true));
+    public function nextBotByCompany(...$data){
         $messageId = $data[0]->message_id ?? null;
         $companyId = $data[4] ?? null;
         $pageId = $data[3] ?? null;
@@ -333,6 +330,42 @@ class ManagerScriptController extends SlugController
         }
 
         $this->prepareBots($bot, $messageId, $pageId, $companyId);
+    }
+
+    public function nextBot(...$data)
+    {
+
+        $messageId = $data[0]->message_id ?? null;
+        $pageId = $data[3] ?? null;
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = Bot::query();
+
+        /*   if (!is_null($companyId))
+               $bot = $bot->where("company_id", $companyId);*/
+
+        $bot = $bot/*->whereHas("company", function ($q) use ($botUser) {
+            $q->where("creator_id", $botUser->id);
+        })*/
+        ->orderBy("updated_at", "desc")
+            ->take(1)
+            ->skip($pageId ?? 0)
+            ->first();
+
+
+        if (is_null($bot)) {
+            if (!is_null($messageId))
+                BotManager::bot()
+                    ->replyEditInlineKeyboard($messageId, []);
+
+            BotManager::bot()
+                ->reply("Вы еще не добавили ни 1 бота для данного клиента");
+
+            return;
+        }
+
+        $this->prepareBots($bot, $messageId, $pageId);
     }
 
     private function prepareClient($client, $messageId = null, $page = 0)
@@ -440,7 +473,7 @@ class ManagerScriptController extends SlugController
                         ["text" => "‍💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
                     ],
                     [
-                        ["text" => "Следующий бот ▶", "callback_data" => "/next_bots 1 " . ($companyId ?? "")],
+                        ["text" => "Следующий бот ▶", "callback_data" => is_null($companyId)?"/next_bots_all 1":"/next_bots_by_company 1 $companyId"],
                     ],
                 ]);
             return;
@@ -463,8 +496,8 @@ class ManagerScriptController extends SlugController
                         ["text" => "💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
                     ],
                     [
-                        ["text" => "◀Предыдущий бот (" . ($page - 1) . ")", "callback_data" => "/next_bots " . ($page - 1) . " " . ($companyId ?? "")],
-                        ["text" => "Следующий бот (" . ($page + 1) . ") ▶", "callback_data" => "/next_bots " . ($page + 1) . " " . ($companyId ?? "")],
+                        ["text" => "◀Предыдущий бот (" . ($page - 1) . ")", "callback_data" => is_null($companyId)?"/next_bots_all ".($page-1):"/next_bots_by_company ".($page-1)." $companyId"],
+                        ["text" => "Следующий бот (" . ($page + 1) . ") ▶", "callback_data" => is_null($companyId)?"/next_bots_all ".($page-1):"/next_bots_by_company ".($page-1)." $companyId"],
                     ],
                 ]
             );
