@@ -459,15 +459,13 @@ class ManagerScriptController extends SlugController
                 public_path() . "/images/cashman.jpg"
         );
 
-        Log::info($path);
-
         $text = "$bot->bot_domain (Владелец $companyDomain)";
         if (is_null($messageId)) {
 
             BotManager::bot()
                 ->replyPhoto($text, $file, [
                     [
-                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/$bot->bot_domain"],
+                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/".($bot->bot_domain??'error')],
                     ],
                     [
                         ["text" => "‍💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
@@ -490,7 +488,7 @@ class ManagerScriptController extends SlugController
                 ],
                 [
                     [
-                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/$bot->bot_domain"],
+                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/".($bot->bot_domain??'error')],
                     ],
                     [
                         ["text" => "💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
