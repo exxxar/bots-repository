@@ -218,15 +218,6 @@ class ManagerScriptController extends SlugController
         $this->prepareClient($client, null, 0);
 
 
-        \App\Facades\BotManager::bot()
-            ->replyInlineKeyboard("Полный список ваших клиентов",
-                [
-                    [
-                        ["text" => "🤝Открыть список клиентов", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-clients"
-                        ]],
-                    ],
-                ]);
 
     }
 
@@ -295,17 +286,12 @@ class ManagerScriptController extends SlugController
             ->first();
 
         if (is_null($client)) {
-
-            if (is_null($messageId))
-               BotManager::bot()
-                    ->reply("Вы еще не добавили ни 1 клиента");
-            else
+            if (!is_null($messageId))
                 BotManager::bot()
-                    ->replyEditInlineKeyboard($messageId,[
-                        [
-                            ["text" => "🤖Боты клиента", "callback_data" => "/next_bots 0 $client->id"],
-                        ],
-                    ]);
+                    ->replyEditInlineKeyboard($messageId,[]);
+
+            BotManager::bot()
+                ->reply("Вы еще не добавили ни 1 клиента");
             return;
         }
 
