@@ -73,6 +73,7 @@ BotManager::bot()
     ->route("/next_bots_all ([0-9]+)", "nextBot")
     ->route("/next_bots_by_company ([0-9]+) ([0-9]+)", "nextBotByCompany")
     ->slug("global_manager_profile", "profile")
+    ->slug("global_manager_partners", "partners")
     ->slug("global_manager_clients", "clients")
     ->slug("global_manager_bots", "bots")
     ->slug("global_manager_main", "managerScript");

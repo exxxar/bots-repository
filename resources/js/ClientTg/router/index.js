@@ -49,6 +49,7 @@ import ManagerMain from '@/ClientTg/Pages/Manager/Main.vue';
 import ManagerForm from '@/ClientTg/Pages/Manager/Manager.vue';
 import ManagerClients from '@/ClientTg/Pages/Manager/Clients.vue';
 import ManagerProfile from '@/ClientTg/Pages/Manager/Profile.vue';
+import ManagerPartners from '@/ClientTg/Pages/Manager/Partners.vue';
 
 export const routes = [
 
@@ -332,6 +333,13 @@ export const managerRoutes = [
         path: '/manager-profile',
         component: ManagerProfile,
         meta: { title: 'Менеджер: Профиль', hide_menu:true}
+    },
+
+    {
+        name: 'ManagerPartners',
+        path: '/manager-partners',
+        component: ManagerPartners,
+        meta: { title: 'Менеджер: Партнеры', hide_menu:true}
     },
 
 ]

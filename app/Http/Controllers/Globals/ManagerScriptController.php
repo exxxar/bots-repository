@@ -78,6 +78,31 @@ class ManagerScriptController extends SlugController
                 'comment' => "Отображение списка всех созданных менеджером ботов",
             ]);
 
+       $pertnerScript = BotMenuSlug::query()->updateOrCreate(
+            [
+                'bot_id' => $bot->id,
+                'slug' => "global_manager_partners",
+                'is_global' => true,
+            ],
+            [
+                'command' => ".*Сеть партнеров менеджера",
+                'comment' => "Отображение списка всех партнеров менеджера",
+            ]);
+
+        $params = [
+            [
+                "type" => "image",
+                "key" => "image",
+                "value" => null,
+            ],
+
+        ];
+
+        if (count($pertnerScript->config ?? []) != count($params)) {
+            $pertnerScript->config = $params;
+            $pertnerScript->save();
+        }
+
         BotMenuSlug::query()->updateOrCreate(
             [
                 'bot_id' => $bot->id,
@@ -169,6 +194,54 @@ class ManagerScriptController extends SlugController
                         ]],
                     ],
 
+
+                ]);
+    }
+
+    public function partners(...$config)
+    {
+
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+
+        if (!$botUser->is_manager) {
+
+            \App\Facades\BotManager::bot()
+                ->replyPhoto("Заполни эту анкету и стань менеджером",
+                    InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                    [
+                        [
+                            ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-form"
+                            ]],
+                        ],
+
+                    ]);
+
+            return;
+
+        }
+
+
+        $image = (Collection::make($config[1])
+            ->where("key", "image")
+            ->first())["value"] ?? null;
+
+        \App\Facades\BotManager::bot()
+            ->replyPhoto("Открыть информацию о партнерах",
+                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Информация о партнерах", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-partners"
+                        ]],
+                    ],
 
                 ]);
     }

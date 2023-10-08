@@ -5,6 +5,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.vue";
 import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 import Clients from "@/ClientTg/Components/Manager/Clients/Clients.vue";
+import Partners from "@/ClientTg/Pages/Manager/Partners.vue";
 </script>
 <template>
     <div v-if="botUser">
@@ -519,57 +520,7 @@ import Clients from "@/ClientTg/Components/Manager/Clients/Clients.vue";
             <div class="content">
                 <h3 class="py-3">Мои партнеры</h3>
 
-                <div v-for="(partner, index) in friends">
-                    <div class="d-flex">
-                        <div class="w-35 border-right pr-3 border-highlight partner-avatar">
-                            <img v-if="partner.manager" v-lazy="partner.manager.image || null"
-                                 data-src="images/avatars/1s.png" width="80"
-                                 class="bg-highlight rounded-circle preload-img">
-                            <img v-else v-lazy="'/images/manager.png'" data-src="images/avatars/1s.png" width="80"
-                                 class="bg-highlight rounded-circle preload-img">
-                            <h6 class="font-14 font-600 mt-2 text-center">
-                                {{ partner.fio_from_telegram || 'Не задано' }}</h6>
-                            <p class="color-blue2-dark mt-n3 font-9 font-400 text-center mb-0 pt-1">Партнер первой
-                                линии</p>
-                        </div>
-                        <div class="w-65 pl-3 pt-2">
-                            <h5>Команда партнера</h5>
-                            <p class="color-highlight mt-n3 font-10 pt-1 mb-3">Всего партнеров:
-                                {{ partner.child.length }}</p>
-
-
-                            <a href="javascript:void(0)"
-                               v-if="partner.child.length>0"
-                               @click="showPartner"
-                               class="d-inline-block position-relative"
-                               v-for="subPartner in partner.child.slice(0, 4)">
-                                <img v-if="subPartner.manager" v-lazy="subPartner.manager.image || null"
-                                     data-src="images/avatars/1s.png" width="40"
-                                     class="rounded-circle preload-img">
-                                <img v-else v-lazy="'/images/manager.png'" data-src="images/avatars/1s.png" width="40"
-                                     class="rounded-circle preload-img ">
-                                <span class="sub-badge-count rounded-circle bg-highlight color-white"
-                                      v-if="subPartner.child.length>0">{{ subPartner.child.length }}</span>
-                            </a>
-
-                            <a href="javascript:void(0)" v-if="partner.child.length>4">
-                                <span
-                                    class="rounded-circle preload-img bg-highlight color-white sub-partner-badge">+{{
-                                        partner.child.length - 4
-                                    }}</span>
-                            </a>
-
-                            <a href="javascript:void(0)"
-                               @click="showPartner"
-                               v-if="partner.child.length===0">
-                                У вашего друга нет собственных партнеров
-                            </a>
-
-                        </div>
-                    </div>
-
-                    <div class="divider mt-4"></div>
-                </div>
+                <Partners></Partners>
             </div>
         </div>
 
@@ -587,7 +538,7 @@ export default {
             load: false,
             confirm: false,
             step: 0,
-            friends: [],
+
             statistic: {
                 clients_count: 0,
                 bots_count: 0,
@@ -640,7 +591,6 @@ export default {
 
             this.loadManagerData()
 
-            this.loadFriendsWeb()
         }
 
     },
@@ -660,9 +610,7 @@ export default {
         nextStep() {
             this.step++;
         },
-        showPartner() {
-            this.$botNotification.notification("Партнеры", "Просмотр информации о партнере еще недоступен")
-        },
+
         remove(section, index) {
             this.managerForm[section].splice(index, 1)
         },
@@ -679,18 +627,7 @@ export default {
             navigator.clipboard.writeText(this.statistic.ref_code)
             this.$botNotification.notification("Реферальный код", "Код скопирован в буфер обмена")
         },
-        loadFriendsWeb() {
-            this.loading = true;
-            this.$store.dispatch("loadFriendsWeb").then((resp) => {
-                this.loading = false
 
-                this.friends = resp
-                //  console.log(resp)
-
-            }).catch(() => {
-                this.loading = false
-            })
-        },
         loadManagerData() {
             this.loading = true;
             this.$store.dispatch("loadManagerData").then((resp) => {
