@@ -252,9 +252,9 @@ class ManagerScriptController extends SlugController
 
 
         $bot = Bot::query()
-            ->whereHas("company", function ($q) use ($botUser) {
+          /*  ->whereHas("company", function ($q) use ($botUser) {
                 $q->where("creator_id", $botUser->id);
-            })
+            })*/
             ->orderBy("updated_at", "desc")
             ->first();
 
@@ -319,7 +319,11 @@ class ManagerScriptController extends SlugController
 
 
         if (is_null($bot)) {
-            \App\Facades\BotManager::bot()
+            if (!is_null($messageId))
+                BotManager::bot()
+                    ->replyEditInlineKeyboard($messageId,[]);
+
+            BotManager::bot()
                 ->reply("Вы еще не добавили ни 1 бота для данного клиента");
 
             return;
@@ -425,10 +429,13 @@ class ManagerScriptController extends SlugController
             BotManager::bot()
                 ->replyPhoto($text, $file, [
                     [
-                        ["text" => "\xF0\x9F\x8E\xB2Информация по боту", "callback_data" => "/diagnostic $bot->id " . ($companyId ?? "")],
+                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/$bot->bot_domain"],
                     ],
                     [
-                        ["text" => "Следующий бот", "callback_data" => "/next_bots 1"],
+                        ["text" => "🏻‍💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
+                    ],
+                    [
+                        ["text" => "Следующий бот ▶", "callback_data" => "/next_bots 1 " . ($companyId ?? "")],
                     ],
                 ]);
             return;
@@ -445,11 +452,14 @@ class ManagerScriptController extends SlugController
                 ],
                 [
                     [
-                        ["text" => "\xF0\x9F\x8E\xB2Диагностика бота", "callback_data" => "/diagnostic  $bot->id"],
+                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/$bot->bot_domain"],
                     ],
                     [
-                        ["text" => "Предыдущий бот (" . ($page - 1) . ")", "callback_data" => "/next_bots " . ($page - 1) . " " . ($companyId ?? "")],
-                        ["text" => "Следующий бот (" . ($page + 1) . ")", "callback_data" => "/next_bots " . ($page + 1) . " " . ($companyId ?? "")],
+                        ["text" => "👨🏻‍💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
+                    ],
+                    [
+                        ["text" => "◀Предыдущий бот (" . ($page - 1) . ")", "callback_data" => "/next_bots " . ($page - 1) . " " . ($companyId ?? "")],
+                        ["text" => "Следующий бот (" . ($page + 1) . ") ▶", "callback_data" => "/next_bots " . ($page + 1) . " " . ($companyId ?? "")],
                     ],
                 ]
             );
