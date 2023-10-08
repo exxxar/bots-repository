@@ -5,7 +5,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.vue";
 import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 import Clients from "@/ClientTg/Components/Manager/Clients/Clients.vue";
-import Partners from "@/ClientTg/Pages/Manager/Partners.vue";
+import PartnersList from "@/ClientTg/Components/Manager/PartnersList.vue";
 </script>
 <template>
     <div v-if="botUser">
@@ -504,23 +504,13 @@ import Partners from "@/ClientTg/Pages/Manager/Partners.vue";
             </div>
         </div>
 
-        <div class="card card-style bg-28"
-             v-if="friends.length===0"
-             data-card-height="130" style="height: 130px;">
-            <div class="card-center">
-                <h3 class="color-white font-700 text-center mb-0">Мои партнеры</h3>
-                <p class="color-white text-center opacity-60 mt-n1 mb-0">К сожалению вы не добавили ни одного
-                    партнера:(</p>
-            </div>
-            <div class="card-overlay bg-highlight opacity-90"></div>
-        </div>
 
-        <div class="card card-style" v-if="friends.length>0">
+        <div class="card card-style">
 
             <div class="content">
                 <h3 class="py-3">Мои партнеры</h3>
 
-                <Partners></Partners>
+                <PartnersList></PartnersList>
             </div>
         </div>
 
