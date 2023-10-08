@@ -119,21 +119,22 @@ class ManagerScriptController extends SlugController
 
         }
 
-        $message = sprintf("
-         Имя: %s\n
-         Телефон: %s\n
-         Город: %s\n
-         Дата рождения: %s\n
-         Ваш баланс: %s руб\n
-         Пол: %s \n
-         Колл-во слотов под клиентов:  %s \n
-         Колл-во слотов под ботов у клиента: %s
+        $message = sprintf("Имя: %s
+Телефон: %s
+Город: %s
+Дата рождения: %s
+Ваш внутренний баланс: %s руб
+Ваши средства для вывода: %s руб
+Пол: %s
+Колл-во слотов под клиентов:  %s
+Колл-во слотов под ботов у клиента: %s
         ",
             $botUser->name ?? 'Не указано',
             $botUser->phone ?? 'Не указано',
             $botUser->city ?? 'Не указано',
             $botUser->birthday ?? 'Не указано',
             $botUser->manager->balance ?? 0,
+            $botUser->cashback->amount ?? 0,
             $botUser->sex ? 'Мужской' : 'Женский',
             $botUser->manager->max_company_slot_count ?? 0,
             $botUser->manager->max_bot_slot_count ?? 0,
@@ -143,6 +144,14 @@ class ManagerScriptController extends SlugController
             ->replyPhoto("Профиль менеджера\n$message",
                 InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
                 [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Пополнить баланс", "/callback_data"=>"/manager_payments"],
+                    ],
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Запросить вывод средств", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/checkout"
+                        ]],
+                    ],
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Открыть", "web_app" => [
                             "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-profile"
