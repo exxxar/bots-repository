@@ -452,6 +452,7 @@ class ManagerScriptController extends SlugController
         $companyDomain = $bot->company->slug ?? null;
 
         $path = storage_path("app/public") . "/companies/$companyDomain/" . ($bot->image ?? 'noimage.jpg');
+        Log::info("we are here 0=>".$path);
 
         $file = InputFile::create(
             file_exists($path) ?
@@ -460,6 +461,9 @@ class ManagerScriptController extends SlugController
         );
 
         $text = "$bot->bot_domain (Владелец $companyDomain)";
+
+        Log::info("we are here 1=>".$text);
+
         if (is_null($messageId)) {
 
             BotManager::bot()
@@ -477,7 +481,7 @@ class ManagerScriptController extends SlugController
             return;
         }
 
-
+        Log::info("we are here 2");
         BotManager::bot()
             ->replyEditMessageMedia(
                 $messageId,
@@ -499,7 +503,7 @@ class ManagerScriptController extends SlugController
                     ],
                 ]
             );
-
+        Log::info("we are here 3");
     }
 
     public function getFriendList(Request $request)
