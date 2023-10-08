@@ -138,7 +138,7 @@ class ManagerScriptController extends SlugController
             $botUser->city ?? 'Не указано',
             $botUser->birthday ?? 'Не указано',
             $botUser->manager->balance ?? 0,
-            $botUser->cashback->amount ?? 0,
+            $botUser->cashBack->amount ?? 0,
             $botUser->sex ? 'Мужской' : 'Женский',
             $botUser->manager->max_company_slot_count ?? 0,
             $botUser->manager->max_bot_slot_count ?? 0,
