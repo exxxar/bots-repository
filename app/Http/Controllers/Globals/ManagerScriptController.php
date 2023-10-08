@@ -481,7 +481,7 @@ class ManagerScriptController extends SlugController
                         ["text" => "‍💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
                     ],
                     [
-                        ["text" => "Следующий бот ▶", "callback_data" => is_null($companyId) ? "/next_bots_all 1" : "/next_bots_by_company 1 $companyId"],
+                        ["text" => "Вперед ▶", "callback_data" => is_null($companyId) ? "/next_bots_all 1" : "/next_bots_by_company 1 $companyId"],
                     ],
                 ]);
             return;
@@ -501,12 +501,12 @@ class ManagerScriptController extends SlugController
 
         if ($page == 0)
             $keyboard[] = [
-                ["text" => "Следующий бот ▶", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page + 1) : "/next_bots_by_company " . ($page + 1) . " $companyId"],
+                ["text" => "Вперед ▶", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page + 1) : "/next_bots_by_company " . ($page + 1) . " $companyId"],
             ];
         if ($page > 0)
             $keyboard[] = [
-                ["text" => "◀Предыдущий бот (" . ($page - 1) . ")", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page - 1) : "/next_bots_by_company " . ($page - 1) . " $companyId"],
-                ["text" => "Следующий бот (" . ($page + 1) . ") ▶", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page + 1) : "/next_bots_by_company " . ($page + 1) . " $companyId"],
+                ["text" => "◀Назад (" . ($page - 1) . ")", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page - 1) : "/next_bots_by_company " . ($page - 1) . " $companyId"],
+                ["text" => "Вперед (" . ($page + 1) . ") ▶", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page + 1) : "/next_bots_by_company " . ($page + 1) . " $companyId"],
             ];
 
         BotManager::bot()
