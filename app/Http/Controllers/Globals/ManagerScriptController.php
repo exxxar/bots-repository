@@ -156,18 +156,19 @@ class ManagerScriptController extends SlugController
                 $file,
                 [
                     [
-                        ["text" => "\xF0\x9F\x8E\xB2Пополнить баланс", "callback_data"=>"/manager_payments"],
-                    ],
-                    [
-                        ["text" => "\xF0\x9F\x8E\xB2Запросить вывод средств", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/cash-out"
-                        ]],
-                    ],
-                    [
-                        ["text" => "\xF0\x9F\x8E\xB2Открыть", "web_app" => [
+                        ["text" => "👨🏽‍💻Детали профиля", "web_app" => [
                             "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-profile"
                         ]],
                     ],
+                    [
+                        ["text" => "💳Пополнить внутренний баланс", "callback_data" => "/manager_payments"],
+                    ],
+                    [
+                        ["text" => "💰Запросить вывод средств", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/cash-out"
+                        ]],
+                    ],
+
 
                 ]);
     }
