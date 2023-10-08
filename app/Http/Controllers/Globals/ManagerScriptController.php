@@ -297,7 +297,8 @@ class ManagerScriptController extends SlugController
         $this->prepareClient($client, $messageId, $pageId);
     }
 
-    public function nextBotByCompany(...$data){
+    public function nextBotByCompany(...$data)
+    {
         $messageId = $data[0]->message_id ?? null;
         $companyId = $data[4] ?? null;
         $pageId = $data[3] ?? null;
@@ -451,31 +452,36 @@ class ManagerScriptController extends SlugController
 
         $companyDomain = $bot->company->slug ?? null;
 
-        $path = storage_path("app/public") . "/companies/$companyDomain/" . ($bot->image ?? 'noimage.jpg');
-        Log::info("we are here 0=>".$path);
+
+        $path = !is_null($bot->image) ?
+            storage_path("app/public") . "/companies/$companyDomain/" . $bot->image :
+            public_path() . "/images/cashman.jpg";
+
+        Log::info("exist file=>$path => " . (file_exists($path) ? "true" : "false"));
 
         $file = InputFile::create(
             file_exists($path) ?
-                env("APP_URL")."/images-by-bot-id/$bot->id/$bot->image" :
-                env("APP_URL"). "/images/cashman.jpg"
+                env("APP_URL") . "/images-by-bot-id/$bot->id/$bot->image" :
+                env("APP_URL") . "/images/cashman.jpg"
         );
+
 
         $text = "$bot->bot_domain (Владелец $companyDomain)";
 
-        Log::info("we are here 1=>".$text);
+        Log::info("we are here 1=>" . $text);
 
         if (is_null($messageId)) {
 
             BotManager::bot()
                 ->replyPhoto($text, $file, [
                     [
-                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/".($bot->bot_domain??'error')],
+                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/" . ($bot->bot_domain ?? 'error')],
                     ],
                     [
                         ["text" => "‍💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
                     ],
                     [
-                        ["text" => "Следующий бот ▶", "callback_data" => is_null($companyId)?"/next_bots_all 1":"/next_bots_by_company 1 $companyId"],
+                        ["text" => "Следующий бот ▶", "callback_data" => is_null($companyId) ? "/next_bots_all 1" : "/next_bots_by_company 1 $companyId"],
                     ],
                 ]);
             return;
@@ -492,14 +498,14 @@ class ManagerScriptController extends SlugController
                 ],
                 [
                     [
-                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/".($bot->bot_domain??'error')],
+                        ["text" => "🤖Перейти в бот", "url" => "https://t.me/" . ($bot->bot_domain ?? 'error')],
                     ],
                     [
                         ["text" => "💻Диагностика бота", "callback_data" => "/diagnostic $bot->id"],
                     ],
                     [
-                        ["text" => "◀Предыдущий бот (" . ($page - 1) . ")", "callback_data" => is_null($companyId)?"/next_bots_all ".($page-1):"/next_bots_by_company ".($page-1)." $companyId"],
-                        ["text" => "Следующий бот (" . ($page + 1) . ") ▶", "callback_data" => is_null($companyId)?"/next_bots_all ".($page-1):"/next_bots_by_company ".($page-1)." $companyId"],
+                        ["text" => "◀Предыдущий бот (" . ($page - 1) . ")", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page - 1) : "/next_bots_by_company " . ($page - 1) . " $companyId"],
+                        ["text" => "Следующий бот (" . ($page + 1) . ") ▶", "callback_data" => is_null($companyId) ? "/next_bots_all " . ($page - 1) : "/next_bots_by_company " . ($page - 1) . " $companyId"],
                     ],
                 ]
             );
