@@ -426,6 +426,8 @@ class ManagerScriptController extends SlugController
                 public_path() . "/images/cashman.jpg"
         );
 
+        Log::info($path);
+
         $text = "$bot->bot_domain (Владелец $companyDomain)";
         if (is_null($messageId)) {
 
