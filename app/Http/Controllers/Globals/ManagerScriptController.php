@@ -99,11 +99,8 @@ class ManagerScriptController extends SlugController
 
         $botUser = BotManager::bot()->currentBotUser();
 
-        Log::info("profile=>".print_r($botUser->toArray(),true));
-
         $bot = BotManager::bot()->getSelf();
 
-        Log::info("bot=>".print_r($bot->toArray(),true));
 
         if (!$botUser->is_manager) {
 
@@ -144,9 +141,19 @@ class ManagerScriptController extends SlugController
             $botUser->manager->max_bot_slot_count ?? 0,
         );
 
+        $companyDomain = $bot->company->slug;
+
+        $path = storage_path("app/public") . "/companies/$companyDomain/" . ($botUser->manager->image ?? 'noimage.jpg');
+
+        $file = InputFile::create(
+            file_exists($path) ?
+                $path :
+                public_path() . "/images/manager.png"
+        );
+
         \App\Facades\BotManager::bot()
             ->replyPhoto("Профиль менеджера\n$message",
-                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                $file,
                 [
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Пополнить баланс", "callback_data"=>"/manager_payments"],
