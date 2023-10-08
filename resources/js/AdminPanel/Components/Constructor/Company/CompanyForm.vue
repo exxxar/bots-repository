@@ -109,6 +109,7 @@ import Location from "@/AdminPanel/Components/Constructor/Location/Location.vue"
                             <input type="text" class="form-control"
                                    placeholder="Мнемоническое имя"
                                    aria-label="Мнемоническое имя"
+                                   pattern="^[a-zA-Z][a-zA-Z0-9-_]{1,40}$"
                                    v-model="companyForm.slug"
                                    maxlength="255"
                                    aria-describedby="company-slug" required>

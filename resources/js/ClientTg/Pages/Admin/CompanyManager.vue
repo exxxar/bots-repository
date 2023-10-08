@@ -131,6 +131,7 @@ import Location from "@/ClientTg/Components/Admin/Location.vue";
                        placeholder="Мнемоническое имя"
                        aria-label="Мнемоническое имя"
                        v-model="companyForm.slug"
+                       pattern="^[a-zA-Z][a-zA-Z0-9-_]{1,40}$"
                        maxlength="255"
                        aria-describedby="company-slug" required>
 
