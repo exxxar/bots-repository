@@ -13,6 +13,7 @@ use App\Models\Company;
 use App\Models\ReferralHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -98,8 +99,11 @@ class ManagerScriptController extends SlugController
 
         $botUser = BotManager::bot()->currentBotUser();
 
+        Log::info("profile=>".print_r($botUser->toArray(),true));
+
         $bot = BotManager::bot()->getSelf();
 
+        Log::info("bot=>".print_r($bot->toArray(),true));
 
         if (!$botUser->is_manager) {
 
