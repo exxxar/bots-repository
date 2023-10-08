@@ -215,20 +215,18 @@ class ManagerScriptController extends SlugController
             return;
         }
 
+        $this->prepareClient($client, null, 0);
+
+
         \App\Facades\BotManager::bot()
-            ->replyPhoto("Список ваших клиентов",
-                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+            ->replyInlineKeyboard("Полный список ваших клиентов",
                 [
                     [
-                        ["text" => "\xF0\x9F\x8E\xB2Открыть список клиентов", "web_app" => [
+                        ["text" => "🤝Открыть список клиентов", "web_app" => [
                             "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-clients"
                         ]],
                     ],
-
                 ]);
-
-        $this->prepareClient($client, null, 0);
-
 
     }
 
@@ -364,17 +362,17 @@ class ManagerScriptController extends SlugController
 Почта: %s
 Ответственный менеджер: %s
 Телефоны:
-%s
+<em>%s</em>
 Ссылки на соц. сети:
-%s
+<em>%s</em>
             ",
             $client->title,
             $client->description,
             $client->address,
             $client->email,
             $client->manager,
-            $phones,
-            $links,
+            strlen($phones) == 0 ? "Не добавлены" : $phones,
+            strlen($links) == 0 ? "Не добавлены" : $links,
         );
 
         if (is_null($messageId)) {
@@ -383,10 +381,10 @@ class ManagerScriptController extends SlugController
                     $file,
                     [
                         [
-                            ["text" => "🤖Боты клиента", "callback_data" => "/client_bot_list $client->id"],
+                            ["text" => "🤖Боты клиента", "callback_data" => "/next_bots 0 $client->id"],
                         ],
                         [
-                            ["text" => "Следующий клиент▶", "callback_data" => "/next_client 1"],
+                            ["text" => "Следующий клиент▶", "callback_data" => "/next_clients 1"],
                         ],
                     ]);
 
