@@ -561,7 +561,7 @@ export default {
             let tmpId = "";
             for (let i = 0; i < 10 - this.pageForm.id.length ; i++)
                 tmpId += "0"
-            tmpId += this.id;
+            tmpId += this.pageForm.id;
 
             return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa("004" + tmpId);
         }
