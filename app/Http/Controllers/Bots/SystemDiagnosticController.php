@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Bots;
 
 use App\Facades\BotManager;
+use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Models\Bot;
 use App\Models\BotDialogCommand;
 use App\Models\BotMenuSlug;
 use App\Models\BotPage;
 use App\Models\BotUser;
+use App\Models\ReferralHistory;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -201,5 +203,149 @@ class SystemDiagnosticController extends Controller
             BotManager::bot()
                 ->reply("Подключенные диалоги в боте отсутствуют");
 
+    }
+
+    public function startWithParam(...$data)
+    {
+        BotManager::bot()->stopBotDialog();
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        $message = $bot->welcome_message ?? null;
+
+        //  Log::info("startWithParam data".print_r($data[3], true));
+
+        if (!is_null($data[3])) {
+            $pattern_simple = "/([0-9]{3})([0-9]+)/";
+            $pattern_extended = "/([0-9]{3})([0-9]{8,10})S([0-9]+)/";
+
+            $string = base64_decode($data[3]);
+
+            preg_match_all(strlen($string)<=13 ? $pattern_simple : $pattern_extended, $string, $matches);
+
+            $code = $matches[1][0] ?? null;
+            $request_id = $matches[2][0] ?? null;
+            $slug_id = $matches[3][0] ?? 'route';
+
+
+            // Log::info("code = $code request_telegram_chat_id " .$request_telegram_chat_id);
+
+            //$qrCode = new QRCodeHandler($code, $request_user_id);
+
+            if ($botUser->is_admin) {
+                // Log::info("startWithParam is_admin $code $request_telegram_chat_id $slug_id");
+                switch ($code) {
+                    default:
+                    case "001":
+                        $text = "Основная административная панель";
+                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
+                        break;
+
+                    case "002":
+                        $text = "Административное меню системы бонусных накоплений";
+                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slug_id&user=$request_id#/admin-bonus-product";
+                        break;
+
+                    case "003":
+                        $text = "Обратная связь с пользователем";
+                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
+                        break;
+
+                    case "004":
+                        BotManager::bot()->runPage($request_id);
+                        break;
+
+                }
+
+
+                BotManager::bot()->replyInlineKeyboard(
+                    $text,
+                    [
+                        [
+                            ["text" => "\xF0\x9F\x8E\xB0Перейти в административное меню",
+                                "web_app" => [
+                                    "url" => $path
+                                ]
+                            ],
+                        ]
+                    ]
+                );
+
+
+            }
+
+
+            if ( BotManager::bot()->currentBotUser()->telegram_chat_id == $request_id){
+                BotManager::bot()
+                    ->reply(
+                        "Вы перешли по своей собственной ссылке... вы, конечно, себе друг, но CashBack достанется кому-то одному..."
+                    );
+
+                return;
+
+            }
+
+            $userBotUser = BotUser::query()
+                ->where("telegram_chat_id", $request_id)
+                ->where("bot_id", BotManager::bot()->getSelf()->id)
+                ->first();
+
+
+
+            $ref = ReferralHistory::query()
+                ->where("user_sender_id", $userBotUser->user_id)
+                ->where("user_recipient_id", $botUser->user_id)
+                ->where("bot_id", $botUser->bot_id)
+                ->first();
+
+            if (is_null($ref)) {
+                ReferralHistory::query()->create([
+                    'user_sender_id' => $userBotUser->user_id,
+                    'user_recipient_id' => $botUser->user_id,
+                    'bot_id' => $botUser->bot_id,
+                    'activated' => true,
+                ]);
+
+                $userName1 = BotMethods::prepareUserName($botUser);
+                $userName2 = BotMethods::prepareUserName($userBotUser);
+
+                $botUser->parent_id = $userBotUser->id;
+                $botUser->save();
+
+                BotMethods::bot()
+                    ->whereId($botUser->bot_id)
+                    ->sendMessage(
+                        $userBotUser->telegram_chat_id,
+                        "По вашей ссылке перешел пользователь $userName1"
+                    )
+                    ->sendMessage(
+                        $botUser->telegram_chat_id,
+                        "Вас и вашего друга $userName2 теперь объеденяет еще и CashBack;)"
+                    );
+            }
+
+
+            if (is_null($userBotUser)) {
+                BotManager::bot()->reply("Данный код не корректный!");
+                return;
+            }
+
+            $userBotUser->user_in_location = true;
+            $userBotUser->save();
+
+            BotManager::bot()->reply($message);
+        }
+
+
+        BotManager::bot()
+            ->replyInlineKeyboard("Отлично! Вы перешли по ссылке друга и теперь готовы к большому CashBack-путешествию:)",
+                [
+                    [
+                        ["text" => "Поехали! ЖМИ:)", "callback_data" => "/start"],
+                    ],
+
+                ]);
     }
 }

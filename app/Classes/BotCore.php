@@ -687,6 +687,61 @@ abstract class BotCore
         $this->reply("Ошибка обработки данных!");
     }
 
+
+    public function runPage(int $pageId):void {
+
+        $page = BotPage::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("id",$pageId)
+            ->first();
+
+        if (is_null($page)) {
+            $this->reply("Страничка не найдена:(");
+            return;
+        }
+
+        try {
+            $this->prepareTemplatePage($page);
+
+            if (!is_null($page->next_bot_menu_slug_id)) {
+                $slug = BotMenuSlug::query()
+                    ->where("id", $page
+                        ->next_bot_menu_slug_id)
+                    ->first();
+
+                if (is_null($slug))
+                {
+                    $this->reply("Скрипт не найден");
+                    return;
+                }
+
+                $item = Collection::make($this->slugs)
+                    ->where("path", $slug->slug)
+                    ->first();
+
+                if (!is_null($item)) {
+                    $config = $slug->config ?? [];
+                    $config[] = [
+                        "key" => "slug_id",
+                        "value" => $slug->id,
+                    ];
+
+
+                    $this->tryCall($item, [],
+                        $config, []);
+
+                }
+            }
+
+            if (!is_null($page->next_bot_dialog_command_id))
+                $this->startBotDialog($page->next_bot_dialog_command_id);
+
+        } catch (\Exception $e) {
+
+        }
+    }
+
+
     public function pushCommand(string $command): void
     {
 

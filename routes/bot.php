@@ -19,6 +19,7 @@ BotManager::bot()
     ->route("/.*Мой id|.*мой id", "getMyId")
     ->route("/democircle", "democircle")
     ->route("/diagnostic", "getDiagnosticTable")
+    ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     ->route("/diagnostic ([0-9]+)", "getDiagnosticTable");
 
 

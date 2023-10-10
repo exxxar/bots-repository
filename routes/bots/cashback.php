@@ -7,7 +7,6 @@ use App\Http\Controllers\Bots\RestaurantBotController;
 
 BotManager::bot()
     ->controller(RestaurantBotController::class)
-    ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     ->route("/location ([0-9]+)", "locationInfo")
     ->route("/more_cashback ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)", "moreCashBackHistory")
     ->route("/start", "firstStart")

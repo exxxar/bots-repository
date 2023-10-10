@@ -20,6 +20,26 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                    v-if="pageForm.id||need_clean"
                    @click="clearForm"><i class="fa-solid fa-xmark mr-1"></i> Очистить форму</a>
 
+
+                <div class="w-100 d-flex justify-content-between py-4" v-if="pageForm.id">
+                    <span class="ml-1" v-if="need_show_qr_and_link">Отобразить QR-код и ссылку на страницу</span>
+                    <span class="ml-1" v-else>Не отображать QR-код и ссылку на страницу</span>
+                    <div class="custom-control ios-switch mr-5">
+                        <input type="checkbox"
+                               v-model="need_show_qr_and_link"
+                               class="ios-input" id="need_show_qr_and_link">
+                        <label class="custom-control-label" for="need_show_qr_and_link"></label>
+                    </div>
+
+                </div>
+
+                <div class="mb-2" v-if="pageForm.id&&need_show_qr_and_link">
+                    <p>Ссылка на текущую страницу: <span class="font-weight-bold" @click="copyToClipBoard(pageLink)">{{ pageLink }}</span> </p>
+                    <div class="d-flex justify-content-center">
+                        <img v-lazy="qr" style="width:300px;height:300px;">
+                    </div>
+                </div>
+
                 <div class="mb-2">
                     <label class="form-label d-flex justify-content-between mt-2" id="bot-domain">
                         <div>
@@ -405,6 +425,7 @@ export default {
     props: ["page"],
     data() {
         return {
+            need_show_qr_and_link:false,
             need_clean: false,
             load: false,
             photos: [],
@@ -526,6 +547,25 @@ export default {
         }
     },
 
+    computed: {
+        currentBot() {
+            return window.currentBot
+        },
+        qr() {
+            return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.link
+        },
+        pageLink() {
+            if (!this.pageForm.id)
+                return "Ссылка недоступна"
+
+            let tmpId = "";
+            for (let i = 0; i < 10 - this.pageForm.id.length ; i++)
+                tmpId += "0"
+            tmpId += this.id;
+
+            return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa("004" + tmpId);
+        }
+    },
     mounted() {
         this.loadBot();
 
@@ -563,6 +603,20 @@ export default {
     },
 
     methods: {
+        copyToClipBoard(text){
+            navigator.clipboard.writeText(text).then(()=> {
+                console.log("copy",text)
+                this.$botNotification.notification(
+                    "Конструктор страниц",
+                    "Ссылка скопирована в буфер",
+                );
+            }).catch((err)=> {
+                this.$botNotification.warning(
+                    "Копирование",
+                    "Ошибка копирования",
+                );
+            })
+        },
         loadBot() {
             this.$store.dispatch("loadBotAdminConfig").then((resp) => {
                 this.bot = resp.data

@@ -198,6 +198,10 @@ class ManagerScriptController extends SlugController
                 ]);
     }
 
+    public function payments(...$config){
+
+    }
+
     public function partners(...$config)
     {
 

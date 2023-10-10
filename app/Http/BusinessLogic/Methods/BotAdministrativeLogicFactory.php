@@ -736,8 +736,6 @@ class BotAdministrativeLogicFactory
     }
 
 
-
-
     /**
      * @throws ValidationException
      * @throws HttpException
@@ -763,6 +761,8 @@ class BotAdministrativeLogicFactory
         $firstCashBackGranted = (Collection::make($this->slug->config)
             ->where("key", "first_cashback_granted")
             ->first())["value"] ?? null;
+
+        Log::info("first_cashback_granted" . print_r($firstCashBackGranted ?? '-', true));
 
         $birthday = Carbon::parse($data["birthday"] ?? Carbon::now())->format("Y-m-d");
         $form = [
@@ -793,7 +793,7 @@ class BotAdministrativeLogicFactory
                     (int)$this->botUser->user_id,
                     (int)$adminBotUser->user_id,
                     $firstCashBackGranted,
-                    "Начислие CashBack за прохождение анкеты",
+                    "Начисление CashBack за прохождение анкеты",
                     CashBackDirectionEnum::Crediting,
                     100
                 ));

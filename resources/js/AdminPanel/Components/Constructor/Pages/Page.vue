@@ -22,6 +22,26 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                        @click="clearForm">очистить форму</a>
                 </h6>
             </div>
+
+            <div class="form-check" v-if="pageForm.id">
+                <input class="form-check-input"
+                       v-model="need_show_qr_and_link"
+                       type="checkbox"
+                       id="need-show-qr-and-link">
+                <label class="form-check-label" for="need-show-qr-and-link">
+                    Показать ссылку на страницу и QR-код
+                </label>
+            </div>
+
+            <div class="col-12 mb-2" v-if="pageForm.id&&need_show_qr_and_link">
+                <p>Ссылка на текущую страницу: <span class="bg-secondary font-bold cursor-pointer"
+                                                     @click="copyToClipBoard(pageLink)">{{
+                        pageLink
+                    }}</span></p>
+                <div class="d-flex justify-content-center">
+                    <img v-lazy="qr" style="width:200px;height:200px;">
+                </div>
+            </div>
             <div class="col-12 mb-2">
                 <label class="form-label" id="bot-domain">
                     <Popper>
@@ -389,6 +409,7 @@ export default {
     props: ["page"],
     data() {
         return {
+            need_show_qr_and_link: false,
             need_clean: false,
             load: false,
             photos: [],
@@ -513,7 +534,20 @@ export default {
     },
     computed: {
         ...mapGetters(['getCurrentBot']),
+        qr() {
+            return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.link
+        },
+        pageLink() {
+            if (!this.pageForm.id)
+                return "Ссылка недоступна"
 
+            let tmpId = "";
+            for (let i = 0; i < 10 - this.pageForm.id.length; i++)
+                tmpId += "0"
+            tmpId += this.id;
+
+            return "https://t.me/" + this.getCurrentBot.bot_domain + "?start=" + btoa("004" + tmpId);
+        }
     },
     mounted() {
         if (this.page) {
@@ -553,7 +587,20 @@ export default {
     },
 
     methods: {
-
+        copyToClipBoard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.$notify({
+                    title: "Копирование",
+                    text: "Ссылка скопирована в буфер"
+                })
+            }).catch((err) => {
+                this.$notify({
+                    title: "Копирование",
+                    text: "Ошибка копирования",
+                    type: "error"
+                })
+            });
+        },
         associateDialog(item) {
             this.pageForm.next_bot_dialog_command_id = item.id
         },
