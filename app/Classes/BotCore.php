@@ -691,7 +691,7 @@ abstract class BotCore
     public function runPage(int $pageId):void {
 
         $page = BotPage::query()
-            ->where("bot_id", $this->bot->id)
+            ->where("bot_id", $this->getSelf()->id)
             ->where("id",$pageId)
             ->first();
 
