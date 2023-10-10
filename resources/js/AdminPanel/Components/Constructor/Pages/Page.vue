@@ -542,7 +542,7 @@ export default {
                 return "Ссылка недоступна"
 
             let tmpId = "";
-            for (let i = 0; i < 10 - this.pageForm.id.length; i++)
+            for (let i = 0; i < 10 - (""+this.pageForm.id).length ; i++)
                 tmpId += "0"
             tmpId += this.pageForm.id;
 
