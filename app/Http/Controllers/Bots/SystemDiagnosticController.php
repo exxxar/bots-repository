@@ -272,8 +272,11 @@ class SystemDiagnosticController extends Controller
 
             }
 
-            if ($code === "004")
+            if ($code === "004") {
                 BotManager::bot()->runPage($request_id);
+                return;
+            }
+
 
 
             if (BotManager::bot()->currentBotUser()->telegram_chat_id == $request_id) {
