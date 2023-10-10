@@ -223,12 +223,11 @@ class SystemDiagnosticController extends Controller
 
             $string = base64_decode($data[3]);
 
-            preg_match_all(strlen($string)<=13 ? $pattern_simple : $pattern_extended, $string, $matches);
+            preg_match_all(strlen($string) <= 13 ? $pattern_simple : $pattern_extended, $string, $matches);
 
             $code = $matches[1][0] ?? null;
             $request_id = $matches[2][0] ?? null;
             $slug_id = $matches[3][0] ?? 'route';
-
 
             // Log::info("code = $code request_telegram_chat_id " .$request_telegram_chat_id);
 
@@ -240,22 +239,19 @@ class SystemDiagnosticController extends Controller
                     default:
                     case "001":
                         $text = "Основная административная панель";
-                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
+                        $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
                         break;
 
                     case "002":
                         $text = "Административное меню системы бонусных накоплений";
-                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slug_id&user=$request_id#/admin-bonus-product";
+                        $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slug_id&user=$request_id#/admin-bonus-product";
                         break;
 
                     case "003":
                         $text = "Обратная связь с пользователем";
-                        $path =  env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
+                        $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
                         break;
 
-                    case "004":
-                        BotManager::bot()->runPage($request_id);
-                        break;
 
                 }
 
@@ -276,8 +272,11 @@ class SystemDiagnosticController extends Controller
 
             }
 
+            if ($code === "004")
+                BotManager::bot()->runPage($request_id);
 
-            if ( BotManager::bot()->currentBotUser()->telegram_chat_id == $request_id){
+
+            if (BotManager::bot()->currentBotUser()->telegram_chat_id == $request_id) {
                 BotManager::bot()
                     ->reply(
                         "Вы перешли по своей собственной ссылке... вы, конечно, себе друг, но CashBack достанется кому-то одному..."
@@ -291,7 +290,6 @@ class SystemDiagnosticController extends Controller
                 ->where("telegram_chat_id", $request_id)
                 ->where("bot_id", BotManager::bot()->getSelf()->id)
                 ->first();
-
 
 
             $ref = ReferralHistory::query()
