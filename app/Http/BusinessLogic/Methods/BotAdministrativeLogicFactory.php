@@ -797,7 +797,16 @@ class BotAdministrativeLogicFactory
                     CashBackDirectionEnum::Crediting,
                     100
                 ));
+            else{
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendMessage(
+                        $this->botUser->telegram_chat_id,
+                        "Сейчас, к сожалению, нет администратора, но когда он появится вы сможете получить дополнительно <strong>$firstCashBackGranted руб.</strong> кэшбэка"
+                    );
+            }
         }
+
 
         BotMethods::bot()
             ->whereBot($this->bot)
