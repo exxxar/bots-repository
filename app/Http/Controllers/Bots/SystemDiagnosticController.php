@@ -640,8 +640,8 @@ class SystemDiagnosticController extends Controller
 
         foreach ($values as $value) {
 
-            $amount = (str_repeat("0", 10 - strlen($value)));
-            $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amount");
+            $amount = (str_repeat("0", 10 - strlen($value))).$value;
+            $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A".$amount);
             $url = "$paymentUrl?start=$bcryptLink";
 
             $row[] = ["text" => "$value ₽", "url" => $url];
@@ -665,19 +665,19 @@ class SystemDiagnosticController extends Controller
         BotManager::bot()
             ->replyInlineKeyboard($message . "Выберите сумму оплаты из вариантов:", $keyboard);
 
-        $amountWeek = (str_repeat("0", 10 - strlen($weekTaxFee)));
+        $amountWeek = (str_repeat("0", 10 - strlen($weekTaxFee))).$weekTaxFee;
         $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountWeek");
         $urlWeek = "$paymentUrl?start=$bcryptLink";
 
-        $amountMonth = (str_repeat("0", 10 - strlen($monthTaxFee)));
+        $amountMonth = (str_repeat("0", 10 - strlen($monthTaxFee))).$monthTaxFee;
         $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountMonth");
         $urlMonth= "$paymentUrl?start=$bcryptLink";
 
-        $amountHalfYear = (str_repeat("0", 10 - strlen($halfYearTaxFee)));
+        $amountHalfYear = (str_repeat("0", 10 - strlen($halfYearTaxFee))).$halfYearTaxFee;
         $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountHalfYear");
         $urlHalfYear= "$paymentUrl?start=$bcryptLink";
 
-        $amountYear = (str_repeat("0", 10 - strlen($yearTaxFee)));
+        $amountYear = (str_repeat("0", 10 - strlen($yearTaxFee))).$yearTaxFee;
         $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountYear");
         $urlYear= "$paymentUrl?start=$bcryptLink";
 
