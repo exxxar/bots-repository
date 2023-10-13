@@ -223,14 +223,119 @@ class SystemDiagnosticController extends Controller
         if (!is_null($data[3])) {
             $pattern_simple = "/([0-9]{3})([0-9]+)/";
             $pattern_extended = "/([0-9]{3})([0-9]{8,10})S([0-9]+)/";
+            $pattern_payments = "/([0-9]{3})U([0-9]{10})B([0-9]{10})A([0-9]{10})/";
 
             $string = base64_decode($data[3]);
 
-            preg_match_all(strlen($string) <= 13 ? $pattern_simple : $pattern_extended, $string, $matches);
+            if (preg_match_all(strlen($string) <= 13 ? $pattern_simple : $pattern_extended, $string, $matches))
+            {
+                $code = $matches[1][0] ?? null;
+                $request_id = $matches[2][0] ?? null;
+                $slug_id = $matches[3][0] ?? 'route';
+            }
 
-            $code = $matches[1][0] ?? null;
-            $request_id = $matches[2][0] ?? null;
-            $slug_id = $matches[3][0] ?? 'route';
+            if (preg_match_all($pattern_payments, $string, $matches))
+            {
+                $code = $matches[1][0] ?? null;
+
+                if ($code!="005"){
+                    BotManager::bot()
+                        ->reply("Ошибка типа данных!");
+                    return;
+                }
+
+                $bot_user_id = $matches[2][0] ?? null;
+                $bot_id = $matches[3][0] ?? null;
+                $value = $matches[4][0] ?? 0;
+
+                $botUserPayment = BotUser::query()
+                    ->where("id", $bot_user_id)
+                    ->first();
+
+                $botPayment = Bot::query()
+                    ->where("bot_id", $bot_id)
+                    ->first();
+
+                if (is_null($botPayment)||is_null($botUserPayment))
+                {
+                    BotManager::bot()
+                        ->reply("Ошибка передачи платежных данных!");
+                    return;
+                }
+
+                if (!$botUserPayment->is_admin)
+                {
+                    BotManager::bot()
+                        ->reply("У вас нет прав доступа!");
+                    return;
+                }
+
+                $prices = [
+                    [
+                        "label" => "Оплата услуг сервиса CashMan",
+                        "amount" => $value * 100
+                    ]
+                ];
+                $payload = bin2hex(Str::uuid());
+
+                $providerToken = $bot->payment_provider_token;
+                $currency = "RUB";
+
+                Transaction::query()->create([
+                    'user_id' => $botUser->user_id,
+                    'bot_id' => $bot->id,
+                    'payload' => $payload,
+                    'currency' => $currency,
+                    'total_amount' => $value,
+                    'status' => 0,
+                    'products_info' => (object)[
+                        "payload" => $payloadData ?? null,
+                        "prices" => $prices,
+                    ],
+                ]);
+
+                $needs = [
+                    "need_name" => true,
+                    "need_phone_number" => true,
+                    "need_email" => true,
+                    "need_shipping_address" => false,
+                    "send_phone_number_to_provider" => true,
+                    "send_email_to_provider" => true,
+                    "is_flexible" => false,
+                    "disable_notification" => false,
+                    "protect_content" => false,
+                ];
+
+                $keyboard = [
+                    [
+                        ["text" => "Оплатить $value ₽", "pay" => true],
+                    ],
+
+                ];
+
+                $providerData = (object)[
+                    "receipt" => [
+                        (object)[
+                            "description" => "Оплата услуг сервиса CashMan",
+                            "quantity" => "1.00",
+                            "amount" => (object)[
+                                "value" => $value,
+                                "currency" => $currency
+                            ],
+                            "vat_code" => 0
+                        ]
+                    ]
+                ];
+
+                \App\Facades\BotManager::bot()
+                    ->replyInvoice(
+                        "CashMan", "Оплата услуг сервиса CashMan", $prices, $payload, $providerToken, $currency, $needs, $keyboard,
+                        $providerData
+                    );
+
+                return;
+            }
+
 
             // Log::info("code = $code request_telegram_chat_id " .$request_telegram_chat_id);
 
@@ -503,6 +608,12 @@ class SystemDiagnosticController extends Controller
 
         $bot = BotManager::bot()->getSelf();
 
+        if (!$botUser->is_admin) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
         $paymentUrl = env("PAYMENT_BOT_SERVICE_URL") ?? null;
 
         if (is_null($paymentUrl)) {
@@ -510,17 +621,82 @@ class SystemDiagnosticController extends Controller
             return;
         }
 
+
+        $values = [500, 1000, 2000, 5000, 10000, 25000, 50000];
+
+        $weekTaxFee = $bot->tax_per_day * 7;
+        $monthTaxFee = $bot->tax_per_day * 31;
+        $halfYearTaxFee = $bot->tax_per_day * 31 * 6;
+        $yearTaxFee = $bot->tax_per_day * 31 * 12;
+
+
+        $keyboard = [];
+        $row = [];
+
+        $rowIndex = 1;
         $tmpBotId = (str_repeat("0", 10 - strlen($bot->id))) . $bot->id;
         $tmpBotUserId = (str_repeat("0", 10 - strlen($botUser->id))) . $botUser->id;
 
-        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId);
-        $url = "$paymentUrl?start=$bcryptLink";
+
+        foreach ($values as $value) {
+
+            $amount = (str_repeat("0", 10 - strlen($value)));
+            $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amount");
+            $url = "$paymentUrl?start=$bcryptLink";
+
+            $row[] = ["text" => "$value ₽", "url" => $url];
+
+            if ($rowIndex % 3 == 0) {
+                $keyboard[] = $row;
+                $row = [];
+            }
+
+            $rowIndex++;
+
+        }
+
+        if (!empty($row))
+            $keyboard[] = $row;
+
+        $message = "Ваш баланс: <b>" . ($bot->balance ?? 0) . " ₽</b>\n" .
+            "Ваш тариф: <b>" . ($bot->tax_per_day ?? 0) . " ₽/день</b>\n";
+
 
         BotManager::bot()
-            ->replyInlineKeyboard("Внимание! Сейчас вас перенаправит в бот оплаты", [
-                [
-                    ["text" => "💸Перейти к оплате", "url" => "$url"]
-                ]
-            ]);
+            ->replyInlineKeyboard($message . "Выберите сумму оплаты из вариантов:", $keyboard);
+
+        $amountWeek = (str_repeat("0", 10 - strlen($weekTaxFee)));
+        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountWeek");
+        $urlWeek = "$paymentUrl?start=$bcryptLink";
+
+        $amountMonth = (str_repeat("0", 10 - strlen($monthTaxFee)));
+        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountMonth");
+        $urlMonth= "$paymentUrl?start=$bcryptLink";
+
+        $amountHalfYear = (str_repeat("0", 10 - strlen($halfYearTaxFee)));
+        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountHalfYear");
+        $urlHalfYear= "$paymentUrl?start=$bcryptLink";
+
+        $amountYear = (str_repeat("0", 10 - strlen($yearTaxFee)));
+        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountYear");
+        $urlYear= "$paymentUrl?start=$bcryptLink";
+
+        $keyboard = [
+            [
+                ["text" => "Неделя $weekTaxFee ₽", "url" => "$urlWeek"],
+                ["text" => "Месяц $monthTaxFee ₽", "url" => "$urlMonth"],
+
+            ],
+
+            [
+                ["text" => "Пол года $halfYearTaxFee ₽", "url" => "$urlHalfYear"],
+                ["text" => "Год $yearTaxFee ₽", "url" => "$urlYear"],
+            ],
+
+
+        ];
+
+        BotManager::bot()->replyInlineKeyboard("или согласно вашему тарифу:", $keyboard);
+
     }
 }
