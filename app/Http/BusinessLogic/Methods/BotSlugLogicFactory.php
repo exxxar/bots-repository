@@ -96,6 +96,17 @@ class BotSlugLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
+        $slugSender = BotMenuSlug::query()
+            ->find($data["slug_sender_id"]);
+
+        $slugRecipient = BotMenuSlug::query()
+            ->find($data["slug_recipient_id"]);
+
+        if (is_null($slugSender)||is_null($slugRecipient))
+            throw new HttpException(404, "Скрипт не найден!");
+
+        $slugRecipient->config = $slugSender->config ?? [];
+        $slugRecipient->save();
 
         $tmp = (object)$data;
 
