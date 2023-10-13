@@ -392,11 +392,11 @@ class SystemDiagnosticController extends Controller
         if (!empty($row))
             $keyboard[] = $row;
 
-        $message = "Ваш баланс: <b>".($bot->balance??0)." ₽</b>\n".
-            "Ваш тариф: <b>".($bot->tax_per_day??0)." ₽/день</b>\n";
+        $message = "Ваш баланс: <b>" . ($bot->balance ?? 0) . " ₽</b>\n" .
+            "Ваш тариф: <b>" . ($bot->tax_per_day ?? 0) . " ₽/день</b>\n";
 
         BotManager::bot()
-            ->replyInlineKeyboard("$message Выберите сумму оплаты из вариантов:", $keyboard);
+            ->replyInlineKeyboard($message . "Выберите сумму оплаты из вариантов:", $keyboard);
 
         $keyboard = [
             [
@@ -494,5 +494,33 @@ class SystemDiagnosticController extends Controller
                 "CashMan", "Оплата услуг сервиса CashMan", $prices, $payload, $providerToken, $currency, $needs, $keyboard,
                 $providerData
             );
+    }
+
+    public function cashmanPayment(...$data)
+    {
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        $paymentUrl = env("PAYMENT_BOT_SERVICE_URL") ?? null;
+
+        if (is_null($paymentUrl)) {
+            BotManager::bot()->reply("Сервис оплаты временно недоступен!");
+            return;
+        }
+
+        $tmpBotId = (str_repeat("0", 10 - strlen($bot->id))) . $bot->id;
+        $tmpBotUserId = (str_repeat("0", 10 - strlen($botUser->id))) . $botUser->id;
+
+        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId);
+        $url = "$paymentUrl?start=$bcryptLink";
+
+        BotManager::bot()
+            ->replyInlineKeyboard("Внимание! Сейчас вас перенаправит в бот оплаты", [
+                [
+                    ["text" => "💸Перейти к оплате", "url" => "$url"]
+                ]
+            ]);
     }
 }
