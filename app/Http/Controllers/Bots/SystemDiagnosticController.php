@@ -253,7 +253,7 @@ class SystemDiagnosticController extends Controller
                     ->first();
 
                 $botPayment = Bot::query()
-                    ->where("bot_id", $bot_id)
+                    ->where("id", $bot_id)
                     ->first();
 
                 if (is_null($botPayment)||is_null($botUserPayment))
