@@ -11,7 +11,10 @@ use App\Models\BotMenuSlug;
 use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\ReferralHistory;
+use App\Models\Transaction;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Telegram\Bot\FileUpload\InputFile;
 
 class SystemDiagnosticController extends Controller
@@ -278,7 +281,6 @@ class SystemDiagnosticController extends Controller
             }
 
 
-
             if (BotManager::bot()->currentBotUser()->telegram_chat_id == $request_id) {
                 BotManager::bot()
                     ->reply(
@@ -348,5 +350,142 @@ class SystemDiagnosticController extends Controller
                     ],
 
                 ]);
+    }
+
+    public function payForBot(...$data)
+    {
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        if (!$botUser->is_admin) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $values = [500, 1000, 2000, 5000, 10000, 25000, 50000];
+
+        $monthTaxFee = $bot->tax_per_day * 31;
+        $yearTaxFee = $bot->tax_per_day * 31 * 6;
+        $halfYearTaxFee = $bot->tax_per_day * 31 * 12;
+
+        $keyboard = [];
+        $row = [];
+
+        $rowIndex = 0;
+        foreach ($values as $value) {
+            $row[] = ["text" => "$value ₽", "callback_data" => "/pay_tax_fee $value"];
+
+            if ($rowIndex % 3 == 0) {
+                $keyboard[] = $row;
+                $row = [];
+            }
+
+            $rowIndex++;
+
+        }
+
+        if (!empty($orw))
+            $keyboard[] = $row;
+
+        BotManager::bot()
+            ->replyInlineKeyboard("Выберите сумму оплаты из вариантов:", $keyboard);
+
+        $keyboard = [
+            [
+                ["text" => "Месяц $monthTaxFee ₽", "callback_data" => "/pay_tax_fee $monthTaxFee"],
+
+            ],
+            [
+                ["text" => "Пол года $halfYearTaxFee ₽", "callback_data" => "/pay_tax_fee $halfYearTaxFee"],
+            ],
+            [
+                ["text" => "Год $yearTaxFee ₽", "callback_data" => "/pay_tax_fee $yearTaxFee"],
+            ],
+
+        ];
+
+        BotManager::bot()->replyInlineKeyboard("или согласно вашему тарифу:", $keyboard);
+
+
+    }
+
+    public function payTaxFee(...$data){
+
+
+        $bot = BotManager::bot()->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $value = $data[3] ?? null;
+
+        if (is_null($value)){
+            BotManager::bot()->reply("Вы не выбрали нужную для оплаты сумму! Повторите операцию");
+            return;
+        }
+
+        $prices = [
+            [
+                "label" => "Оплата услуг сервиса CashMan",
+                "amount" => $value*100
+            ]
+        ];
+        $payload = bin2hex(Str::uuid());
+
+        $providerToken = $bot->payment_provider_token;
+        $currency = "RUB";
+
+        Transaction::query()->create([
+            'user_id' => $botUser->user_id,
+            'bot_id' => $bot->id,
+            'payload' => $payload,
+            'currency' => $currency,
+            'total_amount' => $value,
+            'status' => 0,
+            'products_info' => (object)[
+                "payload" => $payloadData ?? null,
+                "prices" => $prices,
+            ],
+        ]);
+
+        $needs = [
+            "need_name" => true,
+            "need_phone_number" => true,
+            "need_email" => true,
+            "need_shipping_address" => true,
+            "send_phone_number_to_provider" => true,
+            "send_email_to_provider" =>true,
+            "is_flexible" => false,
+            "disable_notification" => false,
+            "protect_content" => false,
+        ];
+
+        $keyboard = [
+            [
+                ["text" => "Оплатить $value ₽", "pay" => true],
+            ],
+
+        ];
+
+        $providerData = (object)[
+            "receipt" => [
+                (object)[
+                    "description"=>"Оплата услуг сервиса CashMan",
+                    "quantity"=>"1.00",
+                    "amount"=>(object)[
+                        "value"=>$value,
+                        "currency"=>$currency
+                    ],
+                    "vat_code"=>0
+                ]
+            ]
+        ];
+
+        \App\Facades\BotManager::bot()
+            ->replyInvoice(
+                "CashMan", "Оплата услуг сервиса CashMan", $prices, $payload, $providerToken, $currency, $needs, $keyboard,
+                $providerData
+            );
     }
 }

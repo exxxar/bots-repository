@@ -19,9 +19,11 @@ BotManager::bot()
     ->route("/.*Мой id|.*мой id", "getMyId")
     ->route("/democircle", "democircle")
     ->route("/diagnostic", "getDiagnosticTable")
+    ->route("/botpay", "payForBot")
+    ->route("/pay_tax_fee ([0-9]+)", "payTaxFee")
+    ->route("/pay", "payForBot")
     ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     ->route("/diagnostic ([0-9]+)", "getDiagnosticTable");
-
 
 
 BotManager::bot()
