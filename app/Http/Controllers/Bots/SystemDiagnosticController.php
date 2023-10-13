@@ -389,7 +389,7 @@ class SystemDiagnosticController extends Controller
 
         }
 
-        if (!empty($orw))
+        if (!empty($row))
             $keyboard[] = $row;
 
         BotManager::bot()
