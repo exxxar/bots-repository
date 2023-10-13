@@ -246,7 +246,7 @@ class SystemDiagnosticController extends Controller
 
                 $bot_user_id = $matches[2][0] ?? null;
                 $bot_id = $matches[3][0] ?? null;
-                $value = $matches[4][0] ?? 0;
+                $value = intval($matches[4][0] ?? 0);
 
                 $botUserPayment = BotUser::query()
                     ->where("id", $bot_user_id)
