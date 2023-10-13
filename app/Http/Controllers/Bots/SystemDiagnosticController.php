@@ -367,9 +367,11 @@ class SystemDiagnosticController extends Controller
 
         $values = [500, 1000, 2000, 5000, 10000, 25000, 50000];
 
+        $weekTaxFee = $bot->tax_per_day * 7;
         $monthTaxFee = $bot->tax_per_day * 31;
-        $yearTaxFee = $bot->tax_per_day * 31 * 6;
-        $halfYearTaxFee = $bot->tax_per_day * 31 * 12;
+        $halfYearTaxFee = $bot->tax_per_day * 31 * 6;
+        $yearTaxFee = $bot->tax_per_day * 31 * 12;
+
 
         $keyboard = [];
         $row = [];
@@ -395,6 +397,10 @@ class SystemDiagnosticController extends Controller
 
         $keyboard = [
             [
+                ["text" => "Месяц $weekTaxFee ₽", "callback_data" => "/pay_tax_fee $weekTaxFee"],
+
+            ],
+            [
                 ["text" => "Месяц $monthTaxFee ₽", "callback_data" => "/pay_tax_fee $monthTaxFee"],
 
             ],
@@ -412,7 +418,8 @@ class SystemDiagnosticController extends Controller
 
     }
 
-    public function payTaxFee(...$data){
+    public function payTaxFee(...$data)
+    {
 
 
         $bot = BotManager::bot()->getSelf();
@@ -420,7 +427,7 @@ class SystemDiagnosticController extends Controller
 
         $value = $data[3] ?? null;
 
-        if (is_null($value)){
+        if (is_null($value)) {
             BotManager::bot()->reply("Вы не выбрали нужную для оплаты сумму! Повторите операцию");
             return;
         }
@@ -428,7 +435,7 @@ class SystemDiagnosticController extends Controller
         $prices = [
             [
                 "label" => "Оплата услуг сервиса CashMan",
-                "amount" => $value*100
+                "amount" => $value * 100
             ]
         ];
         $payload = bin2hex(Str::uuid());
@@ -453,9 +460,9 @@ class SystemDiagnosticController extends Controller
             "need_name" => true,
             "need_phone_number" => true,
             "need_email" => true,
-            "need_shipping_address" => true,
+            "need_shipping_address" => false,
             "send_phone_number_to_provider" => true,
-            "send_email_to_provider" =>true,
+            "send_email_to_provider" => true,
             "is_flexible" => false,
             "disable_notification" => false,
             "protect_content" => false,
@@ -471,13 +478,13 @@ class SystemDiagnosticController extends Controller
         $providerData = (object)[
             "receipt" => [
                 (object)[
-                    "description"=>"Оплата услуг сервиса CashMan",
-                    "quantity"=>"1.00",
-                    "amount"=>(object)[
-                        "value"=>$value,
-                        "currency"=>$currency
+                    "description" => "Оплата услуг сервиса CashMan",
+                    "quantity" => "1.00",
+                    "amount" => (object)[
+                        "value" => $value,
+                        "currency" => $currency
                     ],
-                    "vat_code"=>0
+                    "vat_code" => 0
                 ]
             ]
         ];
