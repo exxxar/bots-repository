@@ -251,8 +251,8 @@ export default {
         },
         submitRelocateData() {
             this.$store.dispatch("relocateSlugActionData", {
-                slug_sender_id: this.item.id,
-                slug_recipient_id: this.selected_slug_id,
+                slug_sender_id:  this.selected_slug_id,
+                slug_recipient_id: this.item.id,
                 bot_id: this.bot.id
             }).then((response) => {
                 this.$notify({
