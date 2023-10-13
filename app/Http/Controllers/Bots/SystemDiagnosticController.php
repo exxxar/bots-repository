@@ -392,24 +392,24 @@ class SystemDiagnosticController extends Controller
         if (!empty($row))
             $keyboard[] = $row;
 
+        $message = "Ваш баланс: <b>".($bot->balance??0)." ₽</b>\n".
+            "Ваш тариф: <b>".($bot->tax_per_day??0)." ₽/день</b>\n";
+
         BotManager::bot()
-            ->replyInlineKeyboard("Выберите сумму оплаты из вариантов:", $keyboard);
+            ->replyInlineKeyboard("$message Выберите сумму оплаты из вариантов:", $keyboard);
 
         $keyboard = [
             [
                 ["text" => "Неделя $weekTaxFee ₽", "callback_data" => "/pay_tax_fee $weekTaxFee"],
-
-            ],
-            [
                 ["text" => "Месяц $monthTaxFee ₽", "callback_data" => "/pay_tax_fee $monthTaxFee"],
 
             ],
+
             [
                 ["text" => "Пол года $halfYearTaxFee ₽", "callback_data" => "/pay_tax_fee $halfYearTaxFee"],
-            ],
-            [
                 ["text" => "Год $yearTaxFee ₽", "callback_data" => "/pay_tax_fee $yearTaxFee"],
             ],
+
 
         ];
 
