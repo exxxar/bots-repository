@@ -20,7 +20,22 @@ const getters = {
 }
 
 const actions = {
-    async loadGlobalSlugs(context, payload = {dataObject: { search:null}, page: 0, size: 12}) {
+    async loadAllSlugs(context, payload = {botId: null}) {
+
+        let link = `${BASE_SLUGS_LINK}/all-slugs/${payload.botId}`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            return Promise.resolve(dataObject);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadGlobalSlugs(context, payload = {dataObject: {search: null}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12
 
@@ -41,7 +56,11 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadSlugs(context, payload = {dataObject: {botId: null, search:null, needGlobal:false}, page: 0, size: 12}) {
+    async loadSlugs(context, payload = {
+        dataObject: {botId: null, search: null, needGlobal: false},
+        page: 0,
+        size: 12
+    }) {
         let page = payload.page || 0
         let size = 12
 
@@ -63,7 +82,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async updateSlug(context, payload= {slugForm: null}){
+    async updateSlug(context, payload = {slugForm: null}) {
         let link = `${BASE_SLUGS_LINK}/slug-update`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.slugForm)
         return _axios.then((response) => {
@@ -73,7 +92,21 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async duplicateSlug(context, payload= {dataObject: {slugId: null}}){
+    async relocateSlugActionData(context, payload = {
+        slug_sender_id: null,
+        slug_recipient_id: null,
+        bot_id: null
+    }) {
+        let link = `${BASE_SLUGS_LINK}/relocate-actions-data`
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async duplicateSlug(context, payload = {dataObject: {slugId: null}}) {
         let link = `${BASE_SLUGS_LINK}/duplicate/${payload.dataObject.slugId}`
         let _axios = util.makeAxiosFactory(link, 'POST')
         return _axios.then((response) => {
@@ -83,7 +116,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async removeSlug(context, payload= {dataObject: {slugId: null}}){
+    async removeSlug(context, payload = {dataObject: {slugId: null}}) {
         let link = `${BASE_SLUGS_LINK}/${payload.dataObject.slugId}`
         let _axios = util.makeAxiosFactory(link, 'DELETE')
         return _axios.then((response) => {
@@ -93,7 +126,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async refreshSlugParams(context, payload= {dataObject: {slugId: null}}){
+    async refreshSlugParams(context, payload = {dataObject: {slugId: null}}) {
         let link = `${BASE_SLUGS_LINK}/reload-params/${payload.dataObject.slugId}`
         let _axios = util.makeAxiosFactory(link, 'GET')
         return _axios.then((response) => {
@@ -106,7 +139,7 @@ const actions = {
     async createSlug(context, payload = {slugForm: null}) {
         let link = `${BASE_SLUGS_LINK}/slug`
 
-        let _axios = util.makeAxiosFactory(link,"POST", payload.slugForm)
+        let _axios = util.makeAxiosFactory(link, "POST", payload.slugForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

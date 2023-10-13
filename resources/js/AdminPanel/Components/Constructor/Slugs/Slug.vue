@@ -16,7 +16,8 @@ import SlugForm from '@/AdminPanel/Components/Constructor/Slugs/SlugForm.vue'
                     <li><a
                         @click="selectSlug"
                         title="Выбрать команду"
-                        class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i> Выбрать команду </a></li>
+                        class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i> Выбрать команду
+                    </a></li>
                     <hr>
                     <li><a class="dropdown-item cursor-pointer"
                            @click="editSlug"
@@ -84,7 +85,11 @@ import SlugForm from '@/AdminPanel/Components/Constructor/Slugs/SlugForm.vue'
                             class="list-group-item d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold">Набор параметров скрипта</div>
-                                <p v-if="item.config" v-for="param in item.config"><strong>{{param.key || 'Ключ не найден'}}:</strong>{{param.value||'Не указано'}}</p>
+                                <p v-if="item.config" v-for="param in item.config">
+                                    <strong>{{ param.key || 'Ключ не найден' }}:</strong>{{
+                                        param.value || 'Не указано'
+                                    }}
+                                </p>
                             </div>
                         </li>
                         <li
@@ -100,6 +105,29 @@ import SlugForm from '@/AdminPanel/Components/Constructor/Slugs/SlugForm.vue'
                             class="list-group-item d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold">Глобальный скрипт</div>
+                            </div>
+
+                        </li>
+
+                        <li
+                            class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto w-100">
+                                <form v-on:submit.prevent="submitRelocateData">
+                                    <div class="fw-bold">Перенести данные из:</div>
+                                    <select class="form-control w-100" v-model="selected_slug_id" required>
+                                        <option :value="null">Не выбрано</option>
+                                        <option :value="slug.id" v-for="slug in slugs">#{{ slug.id }}
+                                            {{ slug.slug || 'Не указан' }}
+                                        </option>
+                                    </select>
+                                    <p class="my-2"><em>Перенос данных затирает текущие данные в данном скрипте</em></p>
+                                    <button
+                                        :disabled="selected_slug_id == null"
+                                        class="btn btn-outline-warning w-100">
+                                        Выполнить перенос
+                                    </button>
+                                </form>
+
                             </div>
 
                         </li>
@@ -143,8 +171,16 @@ export default {
     props: ["item", "bot", "selectMode"],
     data() {
         return {
-            load:false,
+            selected_slug_id: null,
+            slugs: [],
+            load: false,
             simple: true,
+        }
+    },
+    watch: {
+        simple: function () {
+            if (!this.simple)
+                this.loadAllSlugs()
         }
     },
 
@@ -159,21 +195,21 @@ export default {
         slugFormCallback() {
             this.load = true
             this.$emit("callback")
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.load = false
             })
         },
 
-        editSlug(){
+        editSlug() {
             this.load = true
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.load = false
             })
         },
         selectSlug() {
             this.load = true
             this.$emit("select", this.item)
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.load = false
             })
         },
@@ -195,23 +231,51 @@ export default {
 
                 this.$emit("callback")
 
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.load = false
                 })
 
             }).catch(err => {
                 this.$emit("callback")
 
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.load = false
                 })
             })
 
             this.$emit("callback")
 
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.load = false
             })
+        },
+        submitRelocateData() {
+            this.$store.dispatch("relocateSlugActionData", {
+                slug_sender_id: this.item.id,
+                slug_recipient_id: this.selected_slug_id,
+                bot_id: this.bot.id
+            }).then((response) => {
+                this.$notify({
+                    title: "Конструктор команд",
+                    text: "Данные команды успешно перенесены",
+                    type: 'success'
+                });
+
+            }).catch(err => {
+                this.$notify({
+                    title: "Конструктор команд",
+                    text: "Ошибка переноса данных",
+                    type: 'error'
+                });
+            })
+
+        },
+        loadAllSlugs() {
+            this.$store.dispatch("loadAllSlugs", {
+                botId: this.bot.id
+            }).then((response) => {
+                this.slugs = response.data
+            });
         },
         removeSlug() {
 
@@ -228,14 +292,14 @@ export default {
                 });
                 this.$emit("callback")
 
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.load = false
                 })
 
             }).catch(err => {
                 this.$emit("callback")
 
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.load = false
                 })
             })

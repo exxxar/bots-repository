@@ -23,14 +23,16 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                 </h6>
             </div>
 
-            <div class="form-check" v-if="pageForm.id">
-                <input class="form-check-input"
-                       v-model="need_show_qr_and_link"
-                       type="checkbox"
-                       id="need-show-qr-and-link">
-                <label class="form-check-label" for="need-show-qr-and-link">
-                    Показать ссылку на страницу и QR-код
-                </label>
+            <div class="col-12 mb-2" v-if="pageForm.id">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_show_qr_and_link"
+                           type="checkbox"
+                           id="need-show-qr-and-link">
+                    <label class="form-check-label" for="need-show-qr-and-link">
+                        Показать ссылку на страницу и QR-код
+                    </label>
+                </div>
             </div>
 
             <div class="col-12 mb-2" v-if="pageForm.id&&need_show_qr_and_link">
@@ -542,7 +544,7 @@ export default {
                 return "Ссылка недоступна"
 
             let tmpId = "";
-            for (let i = 0; i < 10 - (""+this.pageForm.id).length ; i++)
+            for (let i = 0; i < 10 - ("" + this.pageForm.id).length; i++)
                 tmpId += "0"
             tmpId += this.pageForm.id;
 

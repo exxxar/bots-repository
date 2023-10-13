@@ -56,6 +56,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
     async loadSlugs(context, payload = {dataObject: {botId: null, search:null, needGlobal:false}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = payload.size || 12

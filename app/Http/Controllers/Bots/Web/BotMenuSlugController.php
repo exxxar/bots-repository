@@ -21,10 +21,12 @@ use Illuminate\Validation\ValidationException;
 class BotMenuSlugController extends Controller
 {
 
+
+
     public function globalList(Request $request): BotMenuSlugCollection
     {
 
-        return  BusinessLogic::slugs()
+        return BusinessLogic::slugs()
             ->globalList(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page')

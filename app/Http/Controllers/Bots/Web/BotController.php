@@ -395,6 +395,14 @@ class BotController extends Controller
         $token = $request->token ?? null;
         $botDomain = $request->botDomain ?? Str::uuid();
 
+        $bot = Bot::query()
+            ->where("bot_domain", $botDomain)
+            ->first();
+
+        if (!is_null($bot))
+            $botDomain = Str::uuid()."_bot";
+
+
         $botUser = $request->botUser ?? null;
 
         $greeting = json_decode($request->greeting);
@@ -564,6 +572,7 @@ class BotController extends Controller
         $botType = BotType::query()
             ->where("slug", "business_card")
             ->first();
+
 
         $bot = Bot::query()->create([
             'company_id' => $company->id,

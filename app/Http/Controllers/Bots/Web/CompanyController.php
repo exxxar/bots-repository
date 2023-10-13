@@ -79,4 +79,10 @@ class CompanyController extends Controller
                 $request->hasFile('files') ? $request->file('files') : null
             );
     }
+
+    public function destroy(Request $request, $companyId): CompanyResource
+    {
+        return BusinessLogic::companies()
+            ->destroy($companyId);
+    }
 }

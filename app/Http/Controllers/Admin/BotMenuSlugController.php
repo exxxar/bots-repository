@@ -20,6 +20,35 @@ use Illuminate\Validation\ValidationException;
 
 class BotMenuSlugController extends Controller
 {
+    /**
+     * @throws ValidationException
+     */
+    public function relocateData(Request $request): Response
+    {
+        $request->validate([
+            "bot_id" => "required",
+            "slug_sender_id" => "required",
+            "slug_recipient_id" => "required",
+        ]);
+
+        $bot = Bot::query()->find($request->bot_id);
+
+        BusinessLogic::slugs()
+            ->setBot($bot ?? null)
+            ->relocateActionData((array)$request->all());
+
+        return response()->noContent();
+    }
+
+    public function allSlugList(Request $request, $botId): BotMenuSlugCollection
+    {
+        $bot = Bot::query()->find($botId);
+
+        return BusinessLogic::slugs()
+            ->setBot($bot ?? null)
+            ->allSlugList();
+    }
+
     public function index(Request $request): BotMenuSlugCollection
     {
         $bot = Bot::query()
@@ -41,7 +70,7 @@ class BotMenuSlugController extends Controller
     public function globalList(Request $request): BotMenuSlugCollection
     {
 
-        return  BusinessLogic::slugs()
+        return BusinessLogic::slugs()
             ->globalList(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page')

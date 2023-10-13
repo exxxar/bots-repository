@@ -34,7 +34,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                 <!--                    <img
                                         style="width: 200px; height: 200px; object-fit:cover;"
                                         src="/images/cashman.jpg" alt="">-->
-                <h2>Персональная информация</h2>
+                <h2 class="my-5">Персональная информация</h2>
                 <p class="mt-2 mb-2"><span class="badge bg-light text-primary p-2 mr-2"><i
                     class="fa-regular fa-bell"></i></span> Напишите подробную информацию о
                     клиенте и его фото</p>
@@ -74,7 +74,35 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 
                 </div>
 
-                <p>Вы можете пропустить этап добавления фотографий в данном конструкторе и добавить их позже. По
+                <h2 class="my-5">Информация о бизнесе</h2>
+                <p class="mt-2 mb-2"><span class="badge bg-light text-primary p-2 mr-2"><i
+                    class="fa-regular fa-bell"></i></span> Напишите подробную информацию о
+                    бизнесе клиента и добавьте логотип компании. Он будет использоваться для общедоступной информации о
+                    клиенте.</p>
+                <div class="form-floating mb-2 w-100">
+                    <label for="form-business-info-name" class="text-primary">Название организации клиента (имя
+                        компании)</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="ООО 'Рога и Копыта'"
+                        v-model="form.businessInfo.name"
+                        @invalid="alert('Вы не добавили название компании!')"
+                        id="form-business-info-name" required/>
+
+                </div>
+                <div class="form-floating mb-2 w-100">
+                    <label for="form-business-info-text" class="text-primary">Информация о бизнесе:</label>
+                    <textarea
+                        style="min-height:150px;"
+                        class="form-control  font-12"
+                        v-model="form.businessInfo.text"
+                        placeholder="Главное начать..."
+                        @invalid="alert('Вы не добавили описание компании')"
+                        id="form-business-info-text" required></textarea>
+
+                </div>
+<!--                <p>Вы можете пропустить этап добавления фотографий в данном конструкторе и добавить их позже. По
                     умолчанию будут добавлены красивые фотографии с CashMan-ом вместо реальных фотографий.</p>
 
                 <div class="d-flex w-100">
@@ -153,7 +181,105 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                     </div>
 
 
+                </div>-->
+                <h2 class="my-5">Контактная информация</h2>
+
+                <div class="card bg-20 m-0 content rounded-m shadow mb-2 w-100">
+                    <div class="card-body">
+                        <h6 class="color-white">А также добавьте контактную информацию, нажав на <i
+                            class="fa-solid fa-square-plus"></i></h6>
+
+
+
+                        <div class="card card-style ml-0 mr-0 mb-3 bg-white"
+                             v-for="(item, index) in form.contacts.links">
+                            <div class="content">
+
+                                <select
+                                    v-model="form.contacts.links[index].slug"
+                                    class="form-control w-100 mb-2">
+                                    <option
+                                        :value="ct.slug"
+                                        v-for="ct in contactTypes">
+                                        {{ ct.title || 'Не указан' }}
+                                    </option>
+                                </select>
+
+                                <div class="form-floating w-100">
+                                    <label
+                                        class="text-primary"
+                                        :for="'contact-input-'+index">
+                                        {{ getContactsType(form.contacts.links[index].slug).title || 'Не указано' }}
+                                    </label>
+                                    <input type="text"
+                                           v-if="getContactsType(form.contacts.links[index].slug).mask||null"
+                                           :pattern="getContactsType(form.contacts.links[index].slug).pattern"
+                                           v-mask="getContactsType(form.contacts.links[index].slug).mask"
+                                           class="form-control"
+                                           placeholder="Введите данные"
+                                           @invalid="alert('Вы не ввели данные')"
+                                           :id="'contact-input-'+index"
+                                           v-model="form.contacts.links[index].value" required>
+                                    <input type="text"
+                                           v-else
+                                           :pattern="getContactsType(item.slug).pattern"
+                                           class="form-control w-100"
+                                           :id="'contact-input-'+index"
+                                           @invalid="alert('Вы не ввели данные')"
+                                           v-model="form.contacts.links[index].value" required>
+
+                                </div>
+
+                                <div class="form-floating mt-1 ">
+                                    <label
+                                        class="text-primary"
+                                        :for="'contact-description-textarea-'+index">Описание</label>
+                                    <textarea class="form-control font-12"
+                                              v-model="form.contacts.links[index].description"
+                                              @invalid="alert('Вы не ввели описание контакта')"
+                                              placeholder="Поясните пользователям к чему относится данный контакт"
+                                              :id="'contact-description-textarea-'+index" required>
+
+                                        </textarea>
+
+                                </div>
+
+
+                                <div class="d-flex justify-content-center mt-3">
+                                    <a href="javascript:void(0)"
+                                       class="btn mr-2 btn-border btn-m btn-full rounded-s text-uppercase font-900 border-red2-dark color-red2-dark bg-theme"
+                                       @click="remove(index)"><i class="fa-solid fa-trash-can"></i> </a>
+                                    <a href="javascript:void(0)"
+                                       class="btn btn-border btn-m btn-full rounded-s text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme"
+
+                                       @click="duplicate(item)"><i
+                                        class="fa-solid fa-clone"></i> </a>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <button type="button"
+                                class="w-100  btn btn-border btn-m btn-full my-2 rounded-sm text-uppercase font-900 border-blue1-dark color-blue1-dark bg-theme"
+                                @click="addContact"><i
+                            class="fa-solid fa-square-plus mr-1"></i> Добавить
+                        </button>
+                        <div
+                            v-if="form.contacts.links.length>0"
+                            class="divider divider-small my-3 bg-white "></div>
+
+                        <button type="button"
+                                v-if="form.contacts.links.length>0"
+                                class="w-100  btn  btn-m btn-full my-2 rounded-sm text-uppercase font-900 border-gray1-dark color-gray1-dark "
+                                @click="form.contacts.links.length = []"><i
+                            class="fa-solid fa-trash mr-1"></i> Очистить контакты
+                        </button>
+                    </div>
+                    <div class="card-overlay bg-blue2-dark opacity-95 rounded-m shadow-l"></div>
+                    <div class="card-overlay dark-mode-tint rounded-m shadow-l"></div>
                 </div>
+
 
                 <div class="mt-3 w-100">
                     <div v-if="messages.length>0"
@@ -167,7 +293,6 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                         </button>
                     </div>
                 </div>
-
 
                 <div class="divider divider-small my-3 bg-highlight "></div>
 
@@ -189,15 +314,15 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
         </div>
     </div>
 
-    <div class="card card-style" v-if="step===2">
+<!--    <div class="card card-style" v-if="step===2">
         <div class="content mb-0">
             <form
                 v-on:submit.prevent="nextStep"
                 class="w-100 d-flex justify-content-center align-items-center flex-column"
             >
-                <!--                    <img
+                &lt;!&ndash;                    <img
                                         style="width: 200px; height: 200px; object-fit:cover;"
-                                        src="/images/cashman.jpg" alt="">-->
+                                        src="/images/cashman.jpg" alt="">&ndash;&gt;
                 <h2>Информация о бизнесе</h2>
                 <p class="mt-2 mb-2"><span class="badge bg-light text-primary p-2 mr-2"><i
                     class="fa-regular fa-bell"></i></span> Напишите подробную информацию о
@@ -312,12 +437,12 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                 </button>
             </form>
 
-            <!--Шаг 4-->
+            &lt;!&ndash;Шаг 4&ndash;&gt;
 
         </div>
-    </div>
+    </div>-->
 
-    <div class="card card-style" v-if="step===3">
+<!--    <div class="card card-style" v-if="step===3">
         <div class="content mb-0">
 
 
@@ -325,9 +450,9 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                 v-on:submit.prevent="nextStep"
                 class="w-100 d-flex justify-content-center align-items-center flex-column"
             >
-                <!--                    <img
+                &lt;!&ndash;                    <img
                                         style="width: 200px; height: 200px; object-fit:cover;"
-                                        src="/images/cashman.jpg" alt="">-->
+                                        src="/images/cashman.jpg" alt="">&ndash;&gt;
                 <h2>Контактная информация</h2>
                 <p class="mt-2 mb-2"><span class="badge bg-light text-primary p-2 mr-2"><i
                     class="fa-regular fa-bell"></i></span> Здесь будут ссылки на все контактные данные компании (
@@ -394,7 +519,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                     </div>
 
 
-                    <!--                    <div class="mb-2 row">
+                    &lt;!&ndash;                    <div class="mb-2 row">
 
                                             <div class="col-6 " v-for="item in contactTypes">
                                                 <a href="javascript:void(0)"
@@ -409,7 +534,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                                             </div>
 
 
-                                        </div>-->
+                                        </div>&ndash;&gt;
                 </div>
 
 
@@ -524,12 +649,12 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
                 </button>
             </form>
 
-            <!--Шаг 5-->
+            &lt;!&ndash;Шаг 5&ndash;&gt;
 
         </div>
-    </div>
+    </div>-->
 
-    <div class="card card-style" v-if="step===4">
+    <div class="card card-style" v-if="step===2">
         <div class="content mb-0">
             <form
                 v-on:submit.prevent="nextStep"
@@ -683,15 +808,15 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
         </div>
     </div>
 
-    <div class="card card-style" v-if="step===5">
+<!--    <div class="card card-style" v-if="step===3">
         <div class="content mb-0">
             <form
                 v-on:submit="nextStep"
                 class="w-100 d-flex justify-content-center align-items-center flex-column"
             >
-                <!--                    <img
+                &lt;!&ndash;                    <img
                                         style="width: 200px; height: 200px; object-fit:cover;"
-                                        src="/images/cashman.jpg" alt="">-->
+                                        src="/images/cashman.jpg" alt="">&ndash;&gt;
                 <h2>Приветственное сообщение!</h2>
 
                 <p class="mt-2 mb-2 w-100s"><span class="badge bg-light text-primary p-2 mr-2"><i
@@ -840,11 +965,11 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 
 
             </form>
-            <!--Шаг 2-->
+            &lt;!&ndash;Шаг 2&ndash;&gt;
         </div>
-    </div>
+    </div>-->
 
-    <div class="card card-style" v-if="step===6">
+    <div class="card card-style" v-if="step===3">
         <div class="content mb-0">
             <div class="d-flex w-100">
                 <div class="pt-1">
@@ -1001,7 +1126,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
         </div>
     </div>
 
-    <div class="card card-style" v-if="step===7">
+    <div class="card card-style" v-if="step===4">
         <div class="content mb-0">
             <h6>Добавьте нужные страницы в бота:</h6>
 
@@ -1086,7 +1211,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
         </div>
     </div>
 
-    <div class="card card-style" v-if="step===8">
+    <div class="card card-style" v-if="step===5">
         <div class="content mb-0">
 
             <div
@@ -1098,6 +1223,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
 
                 <div class="mobile mb-2 p-0">
                     <iframe
+                        v-if="!load"
                         style="border:none;"
                         :src="'/web/'+form.botDomain"></iframe>
                 </div>
@@ -1116,7 +1242,7 @@ import CompanyList from "@/ClientTg/Components/Manager/Clients/CompanyList.vue";
         </div>
     </div>
 
-    <div class="card card-style" v-if="step===8">
+    <div class="card card-style" v-if="step===5">
         <div class="content mb-0">
             <h2 class="text-center mt-3 mb-0">Оформление заказа</h2>
             <h6 class="text-center mb-3">Выберите тариф для подключения</h6>
@@ -1203,7 +1329,7 @@ export default {
 
             form: {
                 name: null,
-                botDomain: "isushibot",
+                botDomain: null,
                 has_token: false,
                 has_name: false,
                 need_all_photo: true,
@@ -1583,7 +1709,7 @@ export default {
         selectCompany(company) {
             this.form.selected_company_id = company.id
             this.$botNotification.notification("Информация", "Вы успешно выбрали за основу данного клиента!")
-            this.step = 4
+            this.step = 2
         },
         selectBot(bot) {
             this.form.selected_bot_id = bot.id
@@ -1654,15 +1780,20 @@ export default {
             }).then((response) => {
 
 
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Бот успешно создан!",
-                    type: 'success'
-                });
+                console.log("response", response)
+                this.form.botDomain = response.botDomain
 
+                this.load = true
 
-                this.form.botDomain = reponse.data.botDomain || 'testx'
+                console.log("this.form.botDomain", this.form.botDomain)
+                console.log("response.data.botDomain",response.botDomain)
 
+                this.$nextTick(()=>{
+                    this.load = false
+                })
+
+                this.$botNotification.notification( "Конструктор ботов",
+                   "Бот успешно создан!");
 
                 this.step++;
 

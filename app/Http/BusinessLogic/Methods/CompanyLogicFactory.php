@@ -61,7 +61,7 @@ class CompanyLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $companies = Company::query()
-            ->withTrashed()
+            //->withTrashed()
            // ->whereNotNull("image");
             ->where("creator_id", $this->botUser->id);
 

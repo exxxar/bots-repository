@@ -145,7 +145,9 @@ Route::prefix("admin")
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/global-list", "globalList");
+                Route::post("/relocate-actions-data", "relocateData");
                 Route::post("/slug", "createSlug");
+                Route::post("/all-slugs/{botId}", "allSlugList");
                 Route::post("/slug-update", "updateSlug");
                 Route::post("/duplicate/{slugId}", "duplicate");
                 Route::get("/reload-params/{slugId}", "reloadParams");

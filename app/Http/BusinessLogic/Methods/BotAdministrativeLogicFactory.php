@@ -784,6 +784,7 @@ class BotAdministrativeLogicFactory
         if (!is_null($firstCashBackGranted)) {
             $adminBotUser = BotUser::query()
                 ->where("bot_id", $this->bot->id)
+                ->where("is_admin", true)
                 ->orderBy("updated_at", "desc")
                 ->first();
 
@@ -797,7 +798,7 @@ class BotAdministrativeLogicFactory
                     CashBackDirectionEnum::Crediting,
                     100
                 ));
-            else{
+            else {
                 BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendMessage(
