@@ -376,7 +376,7 @@ class SystemDiagnosticController extends Controller
         $keyboard = [];
         $row = [];
 
-        $rowIndex = 0;
+        $rowIndex = 1;
         foreach ($values as $value) {
             $row[] = ["text" => "$value ₽", "callback_data" => "/pay_tax_fee $value"];
 
@@ -397,7 +397,7 @@ class SystemDiagnosticController extends Controller
 
         $keyboard = [
             [
-                ["text" => "Месяц $weekTaxFee ₽", "callback_data" => "/pay_tax_fee $weekTaxFee"],
+                ["text" => "Неделя $weekTaxFee ₽", "callback_data" => "/pay_tax_fee $weekTaxFee"],
 
             ],
             [
