@@ -111,7 +111,7 @@ class BotSlugLogicFactory
             ActionStatus::query()
                 ->updateOrCreate([
                     'user_id' => $action->user_id,
-                    'bot_id' => $action->id,
+                    'bot_id' => $action->bot_id,
                     'slug_id' => $tmp->slug_recipient_id,
                 ], [
                     'max_attempts' => $action->max_attempts ?? 0,
