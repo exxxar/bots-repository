@@ -51,11 +51,11 @@ class StartCodesCore
         $find = false;
         try {
             if (is_callable($item["function"])) {
-                app()->call($item["function"], ... $arguments);
+                app()->call($item["function"], $arguments);
             } else {
                 app()->call((!is_null($item["controller"]) ?
                     $item["controller"] . "@" . $item["function"] :
-                    $item["function"]), ... $arguments);
+                    $item["function"]), $arguments);
             }
 
             $find = true;
@@ -107,7 +107,7 @@ class StartCodesCore
             {
                 Log::info(print_r($matches, true));
                 foreach ($matches as $match)
-                    $arguments[] = $match;
+                    $arguments[] = $match[0];
 
                 $find = $this->tryCall($item,  ...$arguments);
                 break;
