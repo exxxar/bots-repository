@@ -24,7 +24,7 @@ class StartCodesCore
         $this->bot = null;
         $this->botUser = null;
 
-        include_once base_path('routes/codes.php');
+
     }
 
     public function setBot($bot): StartCodesCore
@@ -80,7 +80,7 @@ class StartCodesCore
      */
     public function handler(string $data): StartCodesCore
     {
-
+        include_once base_path('routes/codes.php');
         Log::info("data=>".$data);
         $result = $this->regularExpressionHandler(base64_decode($data));
 
@@ -127,6 +127,8 @@ class StartCodesCore
             "controller" => $this->controller ?? null,
             "function" => $action,
         ];
+
+        Log::info("regular routes=>".print_r($this->routes, true));
 
         return $this;
     }
