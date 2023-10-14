@@ -215,6 +215,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'BotManager' => \App\Facades\BotManager::class,
         'BotMethods' => \App\Facades\BotMethods::class,
+        'StartCodesService' => \App\Facades\StartCodesService::class,
         'BusinessLogic'=>\App\Facades\BusinessLogic::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,

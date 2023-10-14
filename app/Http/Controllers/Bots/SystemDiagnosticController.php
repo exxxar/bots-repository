@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bots;
 
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
+use App\Facades\StartCodesService;
 use App\Http\Controllers\Controller;
 use App\Models\Bot;
 use App\Models\BotDialogCommand;
@@ -224,6 +225,11 @@ class SystemDiagnosticController extends Controller
             $pattern_simple = "/([0-9]{3})([0-9]+)/";
             $pattern_extended = "/([0-9]{3})([0-9]{8,10})S([0-9]+)/";
             $pattern_payments = "/([0-9]{3})U([0-9]{10})B([0-9]{10})A([0-9]{10})/";
+
+            try {
+                StartCodesService::bot()->handler($data[3]);
+            } catch (\Exception $e) {
+            }
 
             $string = base64_decode($data[3]);
 
