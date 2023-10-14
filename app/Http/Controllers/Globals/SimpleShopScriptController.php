@@ -185,6 +185,7 @@ class SimpleShopScriptController extends SlugController
     private function productsPage($page = 0, $messageId = null, $categoryId = null, $productId = null)
     {
 
+        Log::info("page = $page messageId=" . ($messageId ?? '-') . " categoryId=" . ($categoryId ?? '-') . " productId=" . ($productId ?? '-'));
         $bot = BotManager::bot()->getSelf();
 
         $botUser = BotManager::bot()->currentBotUser();
