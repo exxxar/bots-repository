@@ -48,7 +48,7 @@ BotManager::bot()
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\SimpleShopScriptController::class)
-    ->route("/next_global_products ([0-9]+)", "nextProductPage")
+    ->route("/next_global_products ([0-9]+) ([0-9]+)", "nextProductPage")
     ->route("/detail_global_product ([0-9]+)", "detailProduct")
     ->route("/add_to_basket ([0-9]+) ([0-9]+) ([0-9]+)", "addToBasket")
     ->route("/remove_from_basket ([0-9]+)", "removeFromBasket")

@@ -199,7 +199,6 @@ class SimpleShopScriptController extends SlugController
                 ->where("id", $productId);
 
 
-
         if (!is_null($categoryId))
             $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
                 $q->where("product_category_id", $categoryId);
@@ -255,13 +254,13 @@ class SimpleShopScriptController extends SlugController
 
         if ($page == 0)
             $keyboard[] = [
-                ["text" => "Следующий товар", "callback_data" => "/next_global_products " . ($page + 1)],
+                ["text" => "Следующий товар", "callback_data" => "/next_global_products " . ($page + 1). " " . ($categoryId ?? 0)],
             ];
 
         if ($page >= 1)
             $keyboard[] = [
-                ["text" => "⬅ " . ($page - 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page - 1)],
-                ["text" => ($page + 1) . "/$allProductCount ➡", "callback_data" => "/next_global_products " . ($page + 1)],
+                ["text" => "⬅ " . ($page - 1) . "/$allProductCount", "callback_data" => "/next_global_products " . ($page - 1) . " " . ($categoryId ?? 0)],
+                ["text" => ($page + 1) . "/$allProductCount ➡", "callback_data" => "/next_global_products " . ($page + 1). " " . ($categoryId ?? 0)],
             ];
 
         if (!is_null($messageId)) {
@@ -425,7 +424,8 @@ class SimpleShopScriptController extends SlugController
     {
         $messageId = $data[0]->message_id ?? null;
         $page = $data[3] ?? 0;
-        $this->productsPage($page, $messageId);
+        $categoryId =$data[4] ?? null;
+        $this->productsPage($page, $messageId,$categoryId);
     }
 
     public function nextCategories(...$data)
