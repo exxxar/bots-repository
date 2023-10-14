@@ -209,251 +209,14 @@ class SystemDiagnosticController extends Controller
 
     }
 
+    /**
+     * @throws \Exception
+     */
     public function startWithParam(...$data)
     {
         BotManager::bot()->stopBotDialog();
 
-        $botUser = BotManager::bot()->currentBotUser();
-
-        $bot = BotManager::bot()->getSelf();
-
-        $message = $bot->welcome_message ?? null;
-
-        //  Log::info("startWithParam data".print_r($data[3], true));
-
-        if (!is_null($data[3])) {
-            $pattern_simple = "/([0-9]{3})([0-9]+)/";
-            $pattern_extended = "/([0-9]{3})([0-9]{8,10})S([0-9]+)/";
-            $pattern_payments = "/([0-9]{3})U([0-9]{10})B([0-9]{10})A([0-9]{10})/";
-
-            try {
-                Log::info("start param=>".print_r($data[3],true));
-                StartCodesService::bot()->handler($data[3]);
-            } catch (\Exception $e) {
-                Log::info($e->getMessage());
-            }
-
-            $string = base64_decode($data[3]);
-
-            if (preg_match_all(strlen($string) <= 13 ? $pattern_simple : $pattern_extended, $string, $matches))
-            {
-                $code = $matches[1][0] ?? null;
-                $request_id = $matches[2][0] ?? null;
-                $slug_id = $matches[3][0] ?? 'route';
-            }
-
-            if (preg_match_all($pattern_payments, $string, $matches))
-            {
-                $code = $matches[1][0] ?? null;
-
-                if ($code!="005"){
-                    BotManager::bot()
-                        ->reply("Ошибка типа данных!");
-                    return;
-                }
-
-                $bot_user_id = $matches[2][0] ?? null;
-                $bot_id = $matches[3][0] ?? null;
-                $value = intval($matches[4][0] ?? 0);
-
-                $botUserPayment = BotUser::query()
-                    ->where("id", $bot_user_id)
-                    ->first();
-
-                $botPayment = Bot::query()
-                    ->where("id", $bot_id)
-                    ->first();
-
-                if (is_null($botPayment)||is_null($botUserPayment))
-                {
-                    BotManager::bot()
-                        ->reply("Ошибка передачи платежных данных!");
-                    return;
-                }
-
-                if (!$botUserPayment->is_admin)
-                {
-                    BotManager::bot()
-                        ->reply("У вас нет прав доступа!");
-                    return;
-                }
-
-                $prices = [
-                    [
-                        "label" => "Оплата услуг сервиса CashMan",
-                        "amount" => $value * 100
-                    ]
-                ];
-                $payload = bin2hex(Str::uuid());
-
-                $providerToken = $bot->payment_provider_token;
-                $currency = "RUB";
-
-                Transaction::query()->create([
-                    'user_id' => $botUser->user_id,
-                    'bot_id' => $bot->id,
-                    'payload' => $payload,
-                    'currency' => $currency,
-                    'total_amount' => $value,
-                    'status' => 0,
-                    'products_info' => (object)[
-                        "payload" => $payloadData ?? null,
-                        "prices" => $prices,
-                    ],
-                ]);
-
-                $needs = [
-                    "need_name" => true,
-                    "need_phone_number" => true,
-                    "need_email" => true,
-                    "need_shipping_address" => false,
-                    "send_phone_number_to_provider" => true,
-                    "send_email_to_provider" => true,
-                    "is_flexible" => false,
-                    "disable_notification" => false,
-                    "protect_content" => false,
-                ];
-
-                $keyboard = [
-                    [
-                        ["text" => "Оплатить $value ₽", "pay" => true],
-                    ],
-
-                ];
-
-                $providerData = (object)[
-                    "receipt" => [
-                        (object)[
-                            "description" => "Оплата услуг сервиса CashMan",
-                            "quantity" => "1.00",
-                            "amount" => (object)[
-                                "value" => $value,
-                                "currency" => $currency
-                            ],
-                            "vat_code" => 0
-                        ]
-                    ]
-                ];
-
-                \App\Facades\BotManager::bot()
-                    ->replyInvoice(
-                        "CashMan", "Оплата услуг сервиса CashMan", $prices, $payload, $providerToken, $currency, $needs, $keyboard,
-                        $providerData
-                    );
-
-                return;
-            }
-
-
-            // Log::info("code = $code request_telegram_chat_id " .$request_telegram_chat_id);
-
-            //$qrCode = new QRCodeHandler($code, $request_user_id);
-
-            if ($botUser->is_admin) {
-                // Log::info("startWithParam is_admin $code $request_telegram_chat_id $slug_id");
-                switch ($code) {
-                    default:
-                    case "001":
-                        $text = "Основная административная панель";
-                        $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
-                        break;
-
-                    case "002":
-                        $text = "Административное меню системы бонусных накоплений";
-                        $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slug_id&user=$request_id#/admin-bonus-product";
-                        break;
-
-                    case "003":
-                        $text = "Обратная связь с пользователем";
-                        $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
-                        break;
-
-
-                }
-
-
-                BotManager::bot()->replyInlineKeyboard(
-                    $text,
-                    [
-                        [
-                            ["text" => "\xF0\x9F\x8E\xB0Перейти в административное меню",
-                                "web_app" => [
-                                    "url" => $path
-                                ]
-                            ],
-                        ]
-                    ]
-                );
-
-
-            }
-
-            if ($code === "004") {
-                BotManager::bot()->runPage($request_id);
-                return;
-            }
-
-
-            if (BotManager::bot()->currentBotUser()->telegram_chat_id == $request_id) {
-                BotManager::bot()
-                    ->reply(
-                        "Вы перешли по своей собственной ссылке... вы, конечно, себе друг, но CashBack достанется кому-то одному..."
-                    );
-
-                return;
-
-            }
-
-            $userBotUser = BotUser::query()
-                ->where("telegram_chat_id", $request_id)
-                ->where("bot_id", BotManager::bot()->getSelf()->id)
-                ->first();
-
-
-            $ref = ReferralHistory::query()
-                ->where("user_sender_id", $userBotUser->user_id)
-                ->where("user_recipient_id", $botUser->user_id)
-                ->where("bot_id", $botUser->bot_id)
-                ->first();
-
-            if (is_null($ref)) {
-                ReferralHistory::query()->create([
-                    'user_sender_id' => $userBotUser->user_id,
-                    'user_recipient_id' => $botUser->user_id,
-                    'bot_id' => $botUser->bot_id,
-                    'activated' => true,
-                ]);
-
-                $userName1 = BotMethods::prepareUserName($botUser);
-                $userName2 = BotMethods::prepareUserName($userBotUser);
-
-                $botUser->parent_id = $userBotUser->id;
-                $botUser->save();
-
-                BotMethods::bot()
-                    ->whereId($botUser->bot_id)
-                    ->sendMessage(
-                        $userBotUser->telegram_chat_id,
-                        "По вашей ссылке перешел пользователь $userName1"
-                    )
-                    ->sendMessage(
-                        $botUser->telegram_chat_id,
-                        "Вас и вашего друга $userName2 теперь объеденяет еще и CashBack;)"
-                    );
-            }
-
-
-            if (is_null($userBotUser)) {
-                BotManager::bot()->reply("Данный код не корректный!");
-                return;
-            }
-
-            $userBotUser->user_in_location = true;
-            $userBotUser->save();
-
-            BotManager::bot()->reply($message);
-        }
-
+        StartCodesService::bot()->handler($data[3] ?? null);
 
         BotManager::bot()
             ->replyInlineKeyboard("Отлично! Вы перешли по ссылке друга и теперь готовы к большому CashBack-путешествию:)",
@@ -648,8 +411,8 @@ class SystemDiagnosticController extends Controller
 
         foreach ($values as $value) {
 
-            $amount = (str_repeat("0", 10 - strlen($value))).$value;
-            $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A".$amount);
+            $amount = (str_repeat("0", 10 - strlen($value))) . $value;
+            $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId . "A" . $amount);
             $url = "$paymentUrl?start=$bcryptLink";
 
             $row[] = ["text" => "$value ₽", "url" => $url];
@@ -673,21 +436,21 @@ class SystemDiagnosticController extends Controller
         BotManager::bot()
             ->replyInlineKeyboard($message . "Выберите сумму оплаты из вариантов:", $keyboard);
 
-        $amountWeek = (str_repeat("0", 10 - strlen($weekTaxFee))).$weekTaxFee;
-        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountWeek");
+        $amountWeek = (str_repeat("0", 10 - strlen($weekTaxFee))) . $weekTaxFee;
+        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId . "A$amountWeek");
         $urlWeek = "$paymentUrl?start=$bcryptLink";
 
-        $amountMonth = (str_repeat("0", 10 - strlen($monthTaxFee))).$monthTaxFee;
-        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountMonth");
-        $urlMonth= "$paymentUrl?start=$bcryptLink";
+        $amountMonth = (str_repeat("0", 10 - strlen($monthTaxFee))) . $monthTaxFee;
+        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId . "A$amountMonth");
+        $urlMonth = "$paymentUrl?start=$bcryptLink";
 
-        $amountHalfYear = (str_repeat("0", 10 - strlen($halfYearTaxFee))).$halfYearTaxFee;
-        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountHalfYear");
-        $urlHalfYear= "$paymentUrl?start=$bcryptLink";
+        $amountHalfYear = (str_repeat("0", 10 - strlen($halfYearTaxFee))) . $halfYearTaxFee;
+        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId . "A$amountHalfYear");
+        $urlHalfYear = "$paymentUrl?start=$bcryptLink";
 
-        $amountYear = (str_repeat("0", 10 - strlen($yearTaxFee))).$yearTaxFee;
-        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId."A$amountYear");
-        $urlYear= "$paymentUrl?start=$bcryptLink";
+        $amountYear = (str_repeat("0", 10 - strlen($yearTaxFee))) . $yearTaxFee;
+        $bcryptLink = base64_encode("005U" . $tmpBotUserId . "B" . $tmpBotId . "A$amountYear");
+        $urlYear = "$paymentUrl?start=$bcryptLink";
 
         $keyboard = [
             [

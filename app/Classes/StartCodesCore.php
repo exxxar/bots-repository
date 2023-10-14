@@ -70,18 +70,19 @@ class StartCodesCore
     {
         $this->controller = $controller;
 
-        Log::info("add controller ".print_r($controller, true));
-
         return $this;
     }
 
     /**
      * @throws \Exception
      */
-    public function handler(string $data): StartCodesCore
+    public function handler($data): StartCodesCore
     {
+        if (is_null($data))
+            return $this;
+
         include_once base_path('routes/codes.php');
-        Log::info("data=>".$data);
+
         $result = $this->regularExpressionHandler(base64_decode($data));
 
         return $this;
@@ -93,7 +94,7 @@ class StartCodesCore
         $find = false;
         $matches = [];
         $arguments = [];
-        Log::info("routes=>".print_r($this->routes, true));
+
         foreach ($this->routes as $item) {
 
             if (is_null($item["path"]))
@@ -101,15 +102,12 @@ class StartCodesCore
 
             $pattern = $item["path"];
 
-            Log::info("pattern=>".print_r($pattern, true));
+            if (preg_match_all($pattern, $string, $matches)) {
 
-            if (preg_match_all( $pattern, $string, $matches))
-            {
-                Log::info(print_r($matches, true));
                 foreach ($matches as $match)
                     $arguments[] = $match[0];
 
-                $find = $this->tryCall($item,  ...$arguments);
+                $find = $this->tryCall($item, ...$arguments);
                 break;
             }
 
@@ -121,14 +119,13 @@ class StartCodesCore
 
     public function regular(string $expression, string $action): StartCodesCore
     {
-        Log::info("add regular $expression and $action");
+
         $this->routes[] = [
             "path" => $expression,
             "controller" => $this->controller ?? null,
             "function" => $action,
         ];
 
-        Log::info("regular routes=>".print_r($this->routes, true));
 
         return $this;
     }
