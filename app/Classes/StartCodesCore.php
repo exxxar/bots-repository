@@ -93,7 +93,7 @@ class StartCodesCore
         $find = false;
         $matches = [];
         $arguments = [];
-        Log::info("routes=>".print_r($matches, true));
+        Log::info("routes=>".print_r($this->routes, true));
         foreach ($this->routes as $item) {
 
             if (is_null($item["path"]))
