@@ -384,6 +384,8 @@ class SimpleShopScriptController extends SlugController
             ->whereHas("products");
 
 
+        $categoryCount  =  $request->count();
+
         $categories = $request
             ->skip($page * $count)
             ->take($count)
@@ -412,7 +414,7 @@ class SimpleShopScriptController extends SlugController
         BotManager::bot()
             ->sendPhoto(
                 $botUser->telegram_chat_id,
-                "Категории товаров, страница <b>" . ($page + 1) . "</b>",
+                "Категории товаров, страница <b>" . ($page + 1) . "/ $categoryCount</b>",
                 InputFile::create($product->images[0] ?? public_path() . "/images/cashman-save-up.png"),
                 $keyboard
             );
