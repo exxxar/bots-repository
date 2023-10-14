@@ -227,8 +227,10 @@ class SystemDiagnosticController extends Controller
             $pattern_payments = "/([0-9]{3})U([0-9]{10})B([0-9]{10})A([0-9]{10})/";
 
             try {
+                Log::info("start param=>".print_r($data[3],true));
                 StartCodesService::bot()->handler($data[3]);
             } catch (\Exception $e) {
+                Log::info($e->getMessage());
             }
 
             $string = base64_decode($data[3]);
