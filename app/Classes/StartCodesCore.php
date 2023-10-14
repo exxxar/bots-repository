@@ -79,6 +79,7 @@ class StartCodesCore
     public function handler(string $data): StartCodesCore
     {
 
+        Log::info("data=>".$data);
         $result = $this->regularExpressionHandler(base64_decode($data));
 
         return $this;
@@ -100,6 +101,7 @@ class StartCodesCore
 
             if (preg_match_all( $pattern, $string, $matches))
             {
+                Log::info(print_r($matches, true));
                 foreach ($matches as $match)
                     $arguments[] = $match;
 
