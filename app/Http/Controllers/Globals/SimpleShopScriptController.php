@@ -198,6 +198,8 @@ class SimpleShopScriptController extends SlugController
             $request = $request
                 ->where("id", $productId);
 
+
+
         if (!is_null($categoryId))
             $request = $request->whereHas("productCategories", function ($q) use ($categoryId) {
                 $q->where("product_category_id", $categoryId);
@@ -207,9 +209,12 @@ class SimpleShopScriptController extends SlugController
 
         $count = 1;
 
+        if (is_null($productId))
+            $request = $request
+                ->skip($page * $count)
+                ->take($count);
+
         $product = $request
-            ->skip($page * $count)
-            ->take($count)
             ->first();
 
 
