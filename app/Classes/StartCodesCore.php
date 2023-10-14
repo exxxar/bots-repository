@@ -91,13 +91,15 @@ class StartCodesCore
         $find = false;
         $matches = [];
         $arguments = [];
-
+        Log::info("routes=>".print_r($matches, true));
         foreach ($this->routes as $item) {
 
             if (is_null($item["path"]))
                 continue;
 
             $pattern = $item["path"];
+
+            Log::info("pattern=>".print_r($pattern, true));
 
             if (preg_match_all( $pattern, $string, $matches))
             {
