@@ -6,6 +6,7 @@ use App\Enums\BotStatusEnum;
 use App\Enums\CashBackDirectionEnum;
 use App\Events\CashBackEvent;
 use App\Facades\BotManager;
+use App\Models\Basket;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotPage;
@@ -514,13 +515,25 @@ abstract class BotCore
             foreach ($productInfo->prices as $item) {
                 $item = (object)$item;
                 $price = $item->amount / 100;
-                $data .= "$item->label по цене $price руб.,";
+                $data .= "$item->label по цене $price руб.,\n";
             }
 
             $this->sendMessage($channel, "Пользователь  $name ($phoneNumber , $email) совершил оплату $tmpTotalAmount руб. за продукт $data ('$payload')");
 
         }
 
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $baskets = Basket::query()
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->whereNull("ordered_at")
+            ->get();
+
+        foreach ($baskets as $basket){
+            $basket->ordered_at = Carbon::now();
+            $basket->save();
+        }
 
         $transaction->update([
             'status' => 2,

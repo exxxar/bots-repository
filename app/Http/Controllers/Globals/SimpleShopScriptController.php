@@ -565,7 +565,7 @@ class SimpleShopScriptController extends SlugController
         foreach ($baskets as $basket) {
             $price = ($basket->product->current_price * $basket->count) * 100;
             $prices[] = [
-                "label" => $basket->product->title,
+                "label" => $basket->product->title." x$basket->count",
                 "amount" => $price
             ];
             $summaryCount += $basket->count;
@@ -618,7 +618,10 @@ class SimpleShopScriptController extends SlugController
 
         $keyboard = [
             [
-                ["text" => "Оплатить покупку картой", "pay" => true],
+                ["text" => "💳Оплатить покупку картой", "pay" => true],
+            ],
+            [
+                ["text" => "🗑️Очистить корзину", "callback_data" => "/clear_basket"],
             ],
 
         ];
