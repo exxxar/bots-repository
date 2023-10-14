@@ -218,14 +218,15 @@ class SystemDiagnosticController extends Controller
 
         StartCodesService::bot()->handler($data[3] ?? null);
 
-        BotManager::bot()
+        BotManager::bot()->pushCommand("/start");
+     /*   BotManager::bot()
             ->replyInlineKeyboard("Отлично! Вы перешли по ссылке друга и теперь готовы к большому CashBack-путешествию:)",
                 [
                     [
                         ["text" => "Поехали! ЖМИ:)", "callback_data" => "/start"],
                     ],
 
-                ]);
+                ]);*/
     }
 
     public function payForBot(...$data)
