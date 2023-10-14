@@ -70,6 +70,8 @@ class StartCodesCore
     {
         $this->controller = $controller;
 
+        Log::info("add controller ".print_r($controller, true));
+
         return $this;
     }
 
@@ -119,6 +121,7 @@ class StartCodesCore
 
     public function regular(string $expression, string $action): StartCodesCore
     {
+        Log::info("add regular $expression and $action");
         $this->routes[] = [
             "path" => $expression,
             "controller" => $this->controller ?? null,
