@@ -24,6 +24,7 @@ class StartCodesCore
         $this->bot = null;
         $this->botUser = null;
 
+        include_once "../../routes/codes.php";
     }
 
     public function setBot($bot): StartCodesCore
