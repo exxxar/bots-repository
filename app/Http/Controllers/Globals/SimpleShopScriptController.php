@@ -365,7 +365,7 @@ class SimpleShopScriptController extends SlugController
 
         $this->productsPage(
             messageId: $messageId,
-            productId: $productId,
+            productId: null,
             page: $page,
             categoryId: $categoryId == 0 ? null : $categoryId);
 
