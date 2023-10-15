@@ -518,7 +518,7 @@ abstract class BotCore
                 $data .= "$item->label по цене $price руб.,\n";
             }
 
-            $this->sendMessage($channel, "Пользователь  $name ($phoneNumber , $email) совершил оплату $tmpTotalAmount руб. за продукт $data ('$payload')");
+            $this->sendMessage($channel, "Пользователь  $name ($phoneNumber , $email) совершил оплату $tmpTotalAmount руб. за продукт:\n <em>$data</em>\n('$payload')");
 
         }
 

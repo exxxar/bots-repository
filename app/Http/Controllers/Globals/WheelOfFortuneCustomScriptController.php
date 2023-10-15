@@ -219,7 +219,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->pluck("value")
             ->toArray();
 
-        $description = $wheelText[$winNumber - 1] ?? 'Без описания';
+        $description = $wheelText[$winNumber ] ?? 'Без описания';
 
         $tmp[] = (object)[
             "name" => $winnerName,
