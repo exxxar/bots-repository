@@ -21,13 +21,13 @@ class CashBackListener
 
     protected $warnings;
 
-    protected $warnText = "";
+    protected $warnText;
     /**
      * Create the event listener.
      */
     public function __construct()
     {
-        //
+        $this->warnText = "";
     }
 
     /**
@@ -167,7 +167,9 @@ class CashBackListener
         }
 
 
-        if (mb_strlen($this->warnText)>0){
+        if (strlen($this->warnText)>0){
+
+            Log::info("warn text".$this->warnText);
             $tgAdminId =   $botUserAdmin->telegram_chat_id ?? 'Не указано';
             $tgUserId =   $botUserUser->telegram_chat_id ?? 'Не указано';
             $nameAdmin = BotMethods::prepareUserName($botUserAdmin);
