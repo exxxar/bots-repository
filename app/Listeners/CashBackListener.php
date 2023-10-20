@@ -93,8 +93,6 @@ class CashBackListener
             $nextBotUser = $botUserUser;
             $index = 1;
             foreach ($levels as $level) {
-
-
                 $this->prepareLevel(
                     $nextBotUser,
                     $botUserAdmin,
@@ -112,7 +110,7 @@ class CashBackListener
                     ->first();
 
                 if (is_null($nextBotUser))
-                    return;
+                    break;
                 $index++;
             }
         }
