@@ -226,6 +226,11 @@ class CashBackListener
     }
 
     private function checkWarnings($amount, $direction){
+
+        Log::info(print_r($this->warnings, true));
+        Log::info(print_r($amount, true));
+        Log::info(print_r($direction, true));
+
         if (empty($this->warnings))
             return;
 
