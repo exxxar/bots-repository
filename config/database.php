@@ -65,8 +65,8 @@ return [
 
         'mysql2' => [
             'driver' => 'mysql',
-            'url' => "likholetov.beget.tech",
-            'host' => "",
+            'url' => env('DATABASE_URL'),
+            'host' => "127.0.0.1",
             'port' => 3306,
             'database' => "likholetov_frien",
             'username' => "likholetov_frien",
