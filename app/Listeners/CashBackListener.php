@@ -207,8 +207,8 @@ class CashBackListener
                 "Вы начислили <b>$tmpAmount руб.</b> CashBack пользователю $name $levelIndex уровня",
             );
 
-       $this->checkWarnings($moneyAmount, CashBackDirectionEnum::None);
-       $this->checkWarnings($tmpAmount, CashBackDirectionEnum::Crediting);
+       $this->checkWarnings($moneyAmount, CashBackDirectionEnum::None, $levelIndex);
+       $this->checkWarnings($tmpAmount, CashBackDirectionEnum::Crediting, $levelIndex);
 
         CashBackHistory::query()->create([
             'money_in_check' => $moneyAmount,
@@ -224,7 +224,7 @@ class CashBackListener
 
     }
 
-    private function checkWarnings($amount, $direction){
+    private function checkWarnings($amount, $direction, $levelIndex = null){
 
 
         if (empty($this->warnings))
@@ -239,7 +239,7 @@ class CashBackListener
                     && $direction == CashBackDirectionEnum::None
                 ){
 
-                    $this->warnText .= "Внимание! Сумма чека $amount руб.\n";
+                    $this->warnText .= "Внимание! Сумма чека $amount руб. > $warn->rule_value руб (для уровня $levelIndex)\n";
                 }
 
                 if ($warn->rule_key=="cashback_up_sum_more_then"
@@ -247,7 +247,7 @@ class CashBackListener
                     && $direction == CashBackDirectionEnum::Crediting
 
                 ){
-                    $this->warnText .= "Внимание! Сумма начисления CashBack $amount руб.\n";
+                    $this->warnText .= "Внимание! Сумма начисления CashBack $amount руб.  > $warn->rule_value руб (для уровня $levelIndex) \n";
                 }
 
                 if ($warn->rule_key=="cashback_down_sum_more_then"
