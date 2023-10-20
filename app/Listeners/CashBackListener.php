@@ -115,7 +115,6 @@ class CashBackListener
                     return;
                 $index++;
             }
-            return;
         }
 
         if ($event->directionEnum == CashBackDirectionEnum::Debiting) {
@@ -166,10 +165,7 @@ class CashBackListener
 
         }
 
-
-        if (strlen($this->warnText)>0){
-
-            Log::info("warn text".$this->warnText);
+        if (mb_strlen($this->warnText)>0){
             $tgAdminId =   $botUserAdmin->telegram_chat_id ?? 'Не указано';
             $tgUserId =   $botUserUser->telegram_chat_id ?? 'Не указано';
             $nameAdmin = BotMethods::prepareUserName($botUserAdmin);
@@ -229,9 +225,6 @@ class CashBackListener
 
     private function checkWarnings($amount, $direction){
 
-       // Log::info(print_r($this->warnings, true));
-        Log::info(print_r($amount, true));
-        Log::info(print_r($direction, true));
 
         if (empty($this->warnings))
             return;
@@ -244,7 +237,6 @@ class CashBackListener
                     && $amount>=$warn->rule_value
                     && $direction == CashBackDirectionEnum::None
                 ){
-                    Log::info("bill_sum_more_then $amount");
 
                     $this->warnText .= "Внимание! Сумма чека $amount руб.\n";
                 }
@@ -254,7 +246,6 @@ class CashBackListener
                     && $direction == CashBackDirectionEnum::Crediting
 
                 ){
-                    Log::info("cashback_up_sum_more_then $amount");
                     $this->warnText .= "Внимание! Сумма начисления CashBack $amount руб.\n";
                 }
 
@@ -262,8 +253,6 @@ class CashBackListener
                     && $amount>=$warn->rule_value
                     && $direction == CashBackDirectionEnum::Debiting
                 ){
-
-                    Log::info("cashback_down_sum_more_then $amount");
                     $this->warnText .= "Внимание! Сумма списания CashBack $amount руб.\n";
                 }
             }
