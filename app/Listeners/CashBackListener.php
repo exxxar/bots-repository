@@ -165,12 +165,15 @@ class CashBackListener
 
         }
 
-        if (mb_strlen($this->warnText)>0){
+        Log::info("we are here $this->warnText");
+
+        if (strlen($this->warnText)>0){
             $tgAdminId =   $botUserAdmin->telegram_chat_id ?? 'Не указано';
             $tgUserId =   $botUserUser->telegram_chat_id ?? 'Не указано';
             $nameAdmin = BotMethods::prepareUserName($botUserAdmin);
             $nameUser = BotMethods::prepareUserName($botUserUser);
 
+            Log::info("🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)");
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
