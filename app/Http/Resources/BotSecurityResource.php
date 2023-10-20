@@ -24,6 +24,7 @@ class BotSecurityResource extends JsonResource
             'info_link' => $this->info_link,
             'vk_shop_link' => $this->vk_shop_link,
             'social_links' => $this->social_links,
+            'warnings' => BotWarningResource::collection($this->whenLoaded("warnings")) ,
             'company' => new CompanySecurityResource($this->whenLoaded('company')),
             'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
             //'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),

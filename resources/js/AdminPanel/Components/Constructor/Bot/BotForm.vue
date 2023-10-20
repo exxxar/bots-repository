@@ -447,6 +447,68 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     </div>
                 </div>
 
+                <div class="col-md-12 col-12 mb-2">
+                    <div class="card border-warning">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-check-label" for="warning-rules">
+                                    <i class="fa-solid fa-triangle-exclamation text-danger"></i> Правила критических
+                                    оповещений
+                                </label>
+                                <select class="form-control"
+                                        v-model="selected_warning"
+                                        @change="addWarning"
+                                        id="warning-rules">
+                                    <option :value="null">Не выбрано</option>
+                                    <option :value="item" v-for="item in filteredWarnings">
+                                        {{ item.title }}
+                                    </option>
+                                </select>
+
+                            </div>
+
+                            <div class="card my-2 p-2" v-for="(warn, index) in botForm.warnings">
+
+                                <div class="row">
+                                    <div class="col-md-4 d-flex align-items-center">
+                                        <p class="m-0">{{ getWarning(warn.rule_key).title || 'Не найдено' }}</p>
+                                    </div>
+                                    <div class="col-md-2">
+
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   v-model="botForm.warnings[index].is_active"
+                                                   type="checkbox"
+                                                   :id="'warning-is-active-'+index">
+                                            <label class="form-check-label" :for="'warning-is-active-'+index">
+                                                <span v-if="botForm.warnings[index].is_active">Вкл</span>
+                                                <span v-else>Выкл</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+
+                                        <input type="number" class="form-control"
+                                               placeholder="Значение"
+                                               v-model="botForm.warnings[index].rule_value"
+                                               min="0"
+                                               aria-describedby="bot-level-3">
+                                    </div>
+                                    <div class="col-md-1 d-flex justify-content-center">
+                                        <button
+                                            @click="removeWarning(index)"
+                                            type="button" class="btn btn-outline-danger"><i
+                                            class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-12 mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -487,7 +549,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 
                         <input type="text" class="form-control"
                                placeholder="Токен"
-                               aria-label="уровень CashBack"
+                               aria-label="Токен"
                                v-model="botForm.payment_provider_token"
                                aria-describedby="bot-level-3">
                     </div>
@@ -759,6 +821,7 @@ export default {
     props: ["company", "bot", "editor"],
     data() {
         return {
+            selected_warning: null,
             page: null,
             step: 0,
             templates: [],
@@ -768,7 +831,20 @@ export default {
             need_payments: false,
             need_shop: false,
             command: null,
-
+            warnings: [
+                {
+                    title: "Сумма чека больше чем",
+                    key: "bill_sum_more_then"
+                },
+                {
+                    title: "Сумма начисления кэшбэка больше чем",
+                    key: "cashback_up_sum_more_then"
+                },
+                {
+                    title: "Сумма списания кэшбэка больше чем",
+                    key: "cashback_down_sum_more_then"
+                }
+            ],
             botForm: {
                 is_template: false,
                 auto_cashback_on_payments: false,
@@ -795,7 +871,8 @@ export default {
                 photos: [],
                 selected_bot_template_id: null,
                 pages: [],
-                amo: null
+                amo: null,
+                warnings: []
             },
         }
     },
@@ -814,17 +891,24 @@ export default {
     },
     computed: {
         ...mapGetters(['getSlugs']),
+        filteredWarnings() {
+            if (this.botForm.warnings.length === 0)
+                return this.warnings;
 
+            return this.warnings.filter(item => {
+                return !(this.botForm.warnings.findIndex(sub => sub.rule_key === item.key) >= 0)
+            })
+        }
     },
     mounted() {
         this.loadBotTemplates()
-
 
         if (this.bot)
             this.$nextTick(() => {
                 this.loadSlugsByBotTemplate(this.bot.id)
                 this.loadPagesByBotTemplate(this.bot.id)
 
+                console.log("bot", this.bot)
                 this.botForm = {
                     id: this.bot.id || null,
                     is_template: this.bot.is_template || false,
@@ -857,6 +941,7 @@ export default {
                     level_3: this.bot.level_3 || 0,
 
                     photos: this.bot.photos || [],
+                    warnings: this.bot.warnings || [],
 
                     amo: this.bot.amo || null,
                 }
@@ -876,10 +961,10 @@ export default {
             this.load = true
 
             this.$store.dispatch("loadSlugs", {
-                dataObject:{
+                dataObject: {
                     botId: botId
                 },
-                size:1000,
+                size: 1000,
             }).then((resp) => {
 
                 this.botForm.slugs = this.getSlugs
@@ -993,6 +1078,7 @@ export default {
                         level_3: 0,
 
                         photos: [],
+                        warnings: [],
 
                         selected_bot_template_id: null,
 
@@ -1015,7 +1101,31 @@ export default {
 
             });
         },
+        getWarning(key) {
+            let item = this.warnings.find(item => item.key === key)
 
+
+            return (!item) ? {
+                title: 'Не найдено'
+            } : item;
+
+        },
+        removeWarning(index) {
+            this.botForm.warnings.splice(index, 1)
+        },
+        addWarning() {
+
+            const item = this.selected_warning
+
+            this.botForm.warnings.push({
+                rule_key: item.key,
+                rule_value: 0,
+                is_active: true,
+            })
+
+            this.selected_warning = null
+
+        },
         pageCallback(page) {
             this.loadPageList = true
             this.$nextTick(() => {

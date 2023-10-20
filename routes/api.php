@@ -102,3 +102,6 @@ Route::apiResource('manager-profile', App\Http\Controllers\ManagerProfileControl
 
 
 Route::apiResource('bot-external-request', App\Http\Controllers\BotExternalRequestController::class);
+
+
+Route::apiResource('bot-warning', App\Http\Controllers\BotWarningController::class);

@@ -71,7 +71,7 @@ class Bot extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    protected $with = ["company","amo"];
+    protected $with = ["company","amo","warnings"];
 
     public function imageMenus(): HasMany
     {
@@ -103,10 +103,6 @@ class Bot extends Model
         return $this->hasMany(CashBack::class);
     }
 
-    public function events(): HasMany
-    {
-        return $this->hasMany(Events::class);
-    }
 
     public function baskets(): HasMany
     {
@@ -138,4 +134,7 @@ class Bot extends Model
         return $this->belongsTo(BotType::class);
     }
 
+    public function warnings():hasMany {
+        return $this->hasMany(BotWarning::class);
+    }
 }

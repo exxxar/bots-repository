@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\CashBackEvent;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\TelegramController;
 use App\Models\Bot;
@@ -143,22 +144,19 @@ Route::get("/write-test", function () {
     return "success";
 });
 
-Route::get("/test-async", function () {
-    $promise = Http::get('http://bots.your-cashman.com/write-test');
-
-    return "ok";
+Route::get("/test-cash", function () {
 
 });
 Route::get('/db-transfer', function (Request $request) {
-    /*  $users2 = DB::connection('mysql2')->table("users")
+      $users2 = DB::connection('mysql2')->table("users")
           ->get();
 
       ini_set('max_execution_time', '300000');
       foreach ($users2 as $user2) {
 
-          $user1 = DB::connection('mysql1')->table("bot_users")
+          $user1 = BotUser::query()
               ->where("telegram_chat_id", $user2->telegram_chat_id)
-              ->where("bot_id", 29)
+              ->where("bot_id", 46)
               ->first();
 
           if (!is_null($user1))
@@ -182,7 +180,7 @@ Route::get('/db-transfer', function (Request $request) {
               ]);
 
           BotUser::query()->create([
-              'bot_id' => 29,
+              'bot_id' => 46,
               'user_id' => $user->id ?? null,
               'username' => $user2->name,
               'is_vip' => $user2->is_vip ?? false,
@@ -202,13 +200,13 @@ Route::get('/db-transfer', function (Request $request) {
 
           CashBack::query()->create([
               'user_id' => $user->id,
-              'bot_id' => 29,
+              'bot_id' => 46,
               'amount' => $user2->cashback_money ?? 0,
           ]);
 
 
       }
-      ini_set('max_execution_time', '300');*/
+      ini_set('max_execution_time', '300');
 
 });
 

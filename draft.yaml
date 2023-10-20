@@ -1,16 +1,16 @@
 models:
-  BotExternalRequest:
+  BotWarning:
     bot_id: id foreign:bots
-    bot_user_id: id foreign:bot_users
-    command: nullable string:255
-    completed_at: timestamp nullable
+    rule_key: string:50
+    rule_value: integer default:0
+    is_active: boolean default:false
     relationships:
-      belongsTo: BotUser, Bot
+      belongsTo: Bot
 
 
 
-seeders:   BotExternalRequest
+seeders:   BotWarning
 
 controllers:
-  BotExternalRequest:
+  BotWarning:
     resource: api

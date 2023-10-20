@@ -29,6 +29,7 @@ use App\Models\BotMenuTemplate;
 use App\Models\BotPage;
 use App\Models\BotType;
 use App\Models\BotUser;
+use App\Models\BotWarning;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
 use App\Models\Company;
@@ -925,6 +926,12 @@ class BotLogicFactory
             unset($tmp->pages);
         }
 
+        $warnings = null;
+        if (isset($data["warnings"])) {
+            $warnings = json_decode($data["warnings"]);
+            unset($tmp->warnings);
+        }
+
         if (!is_null($tmp->selected_bot_template_id))
             unset($tmp->selected_bot_template_id);
 
@@ -971,6 +978,15 @@ class BotLogicFactory
                     'type' => $keyboard->type,
                     'slug' => $keyboard->slug,
                     'menu' => $keyboard->menu,
+                ]);
+
+        if (!is_null($warnings))
+            foreach ($warnings as $warn)
+                BotWarning::query()->create([
+                    'bot_id' => $bot->id,
+                    'rule_key'=> $warn->rule_key ?? null,
+                    'rule_value'=> $warn->rule_value ?? null,
+                    'is_active'=> $warn->is_active ?? false,
                 ]);
 
         if (env("APP_DEBUG") === false)
@@ -1094,6 +1110,13 @@ class BotLogicFactory
             $slugs = json_decode($data["slugs"]);
             unset($tmp->slugs);
         }
+
+        $warnings = null;
+        if (isset($data["warnings"])) {
+            $warnings = json_decode($data["warnings"]);
+            unset($tmp->warnings);
+        }
+
         unset($tmp->selected_bot_template_id);
 
         //dd($tmp);
@@ -1105,7 +1128,7 @@ class BotLogicFactory
                 $slugId = $slug->id ?? null;
 
                 $tmpSlug = !is_null($slugId) ? BotMenuSlug::query()
-                    ->where("id", $slug->id)
+                    ->where("id", $slugId)
                     ->where("command", $slug->command)
                     ->where("slug", $slug->slug)
                     ->first() : null;
@@ -1152,8 +1175,33 @@ class BotLogicFactory
             }
 
 
+        if (!is_null($warnings))
+            foreach ($warnings as $warn) {
+
+
+                $tmpWarn = BotWarning::query()
+                    ->where("rule_key", $warn->rule_key)
+                    ->where("bot_id",$this->bot->id)
+                    ->first();
+
+                if (!is_null($tmpWarn))
+                    $tmpWarn->update([
+                        'rule_key'=> $warn->rule_key ?? null,
+                        'rule_value'=> $warn->rule_value ?? null,
+                        'is_active'=> $warn->is_active ?? false,
+                    ]);
+                else
+                  $rez=  BotWarning::query()->create([
+                        'bot_id' => $this->bot->id,
+                        'rule_key'=> $warn->rule_key ?? null,
+                        'rule_value'=> $warn->rule_value ?? null,
+                        'is_active'=> $warn->is_active ?? false,
+                    ]);
+            }
+
         if (env("APP_DEBUG") === false)
             BotManager::bot()->setWebhooks();
+
 
         return new BotResource($this->bot);
     }

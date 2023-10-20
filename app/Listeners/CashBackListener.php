@@ -19,6 +19,9 @@ class CashBackListener
 {
 
 
+    protected $warnings;
+
+    protected $warnText = "";
     /**
      * Create the event listener.
      */
@@ -39,6 +42,9 @@ class CashBackListener
         $bot = Bot::query()
             ->where("id", $event->botId)
             ->first();
+
+
+        $this->warnings =  $bot->warnings ?? [];
 
         $botUserAdmin = BotUser::query()
             ->with(["user"])
@@ -70,9 +76,11 @@ class CashBackListener
             return;
         }
 
+
         $cashBack = $this->prepareUserCashBack($event->userId, $event->botId);
 
         if ($event->directionEnum == CashBackDirectionEnum::Crediting) {
+
 
             if (is_null($event->percent)) {
                 $levels[] = $bot->level_1 ?? env("BASE_CASHBACK_LEVEL_1") ?? 0;
@@ -86,7 +94,6 @@ class CashBackListener
             $index = 1;
             foreach ($levels as $level) {
 
-                Log::info("step $index level=$level");
 
                 $this->prepareLevel(
                     $nextBotUser,
@@ -130,6 +137,8 @@ class CashBackListener
             $cashBack->amount -= $event->amount;
             $cashBack->save();
 
+            $this->checkWarnings($event->amount, CashBackDirectionEnum::Debiting);
+
             $tmpUser = BotMethods::prepareUserName($botUserUser);
             $tmpAdmin = BotMethods::prepareUserName($botUserAdmin);
 
@@ -158,6 +167,19 @@ class CashBackListener
         }
 
 
+        if (mb_strlen($this->warnText)>0){
+            $tgAdminId =   $botUserAdmin->telegram_chat_id ?? 'Не указано';
+            $tgUserId =   $botUserUser->telegram_chat_id ?? 'Не указано';
+            $nameAdmin = BotMethods::prepareUserName($botUserAdmin);
+            $nameUser = BotMethods::prepareUserName($botUserUser);
+
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $bot->order_channel ?? $bot->main_channel ?? null,
+                    "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
+                );
+        }
     }
 
     private function prepareLevel($userBotUser, $adminBotUser, $botId, $moneyAmount, $levelPercent, $levelIndex)
@@ -186,6 +208,8 @@ class CashBackListener
                 "Вы начислили <b>$tmpAmount руб.</b> CashBack пользователю $name $levelIndex уровня",
             );
 
+       $this->checkWarnings($moneyAmount, CashBackDirectionEnum::None);
+       $this->checkWarnings($tmpAmount, CashBackDirectionEnum::Crediting);
 
         CashBackHistory::query()->create([
             'money_in_check' => $moneyAmount,
@@ -198,6 +222,39 @@ class CashBackListener
             'employee_id' => $admin->id,
         ]);
 
+
+    }
+
+    private function checkWarnings($amount, $direction){
+        if (empty($this->warnings))
+            return;
+
+            foreach ($this->warnings as $warn){
+                if (!$warn->is_active)
+                    continue;
+
+                if ($warn->rule_key=="bill_sum_more_then"
+                    && $amount>=$warn->rule_value
+                    && $direction == CashBackDirectionEnum::None
+                ){
+                    $this->warnText .= "Внимание! Сумма чека $amount руб.\n";
+                }
+
+                if ($warn->rule_key=="cashback_up_sum_more_then"
+                    && $amount>=$warn->rule_value
+                    && $direction == CashBackDirectionEnum::Crediting
+
+                ){
+                    $this->warnText .= "Внимание! Сумма начисления CashBack $amount руб.\n";
+                }
+
+                if ($warn->rule_key=="cashback_down_sum_more_then"
+                    && $amount>=$warn->rule_value
+                    && $direction == CashBackDirectionEnum::Debiting
+                ){
+                    $this->warnText .= "Внимание! Сумма списания CashBack $amount руб.\n";
+                }
+            }
 
     }
 
