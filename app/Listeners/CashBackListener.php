@@ -118,7 +118,7 @@ class CashBackListener
                 ->whereBot($bot)
                 ->sendInlineKeyboard(
                     $botUserUser->telegram_chat_id,
-                    "Оцените уровень нашего сервиса!",[
+                    "Пожалуйста, поставьте оценку нашей работе!",[
                         [
                             ["text"=>"😡","callback_data"=>"/send_review 0"],
                             ["text"=>"😕","callback_data"=>"/send_review 1"],

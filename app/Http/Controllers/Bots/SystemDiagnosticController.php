@@ -473,9 +473,12 @@ class SystemDiagnosticController extends Controller
         $botUser = BotManager::bot()
             ->currentBotUser();
 
+        $emojis = ["😡", "😕", "😐", "🙂", "😁"];
+
+
         $name = BotMethods::prepareUserName($botUser);
 
-        $tgId = $botUser->telegram_chat_id ??'-';
+        $tgId = $botUser->telegram_chat_id ?? '-';
         $phone = $botUser->phone ?? 'Телефон не указан';
 
         $bot = BotManager::bot()->getSelf();
@@ -483,8 +486,17 @@ class SystemDiagnosticController extends Controller
         BotManager::bot()
             ->sendMessage($botUser->telegram_chat_id, "Спасибо! Ваш отзыв учтен!")
             ->sendMessage($bot->order_channel ?? $bot->main_channel ?? null,
-                "Пользователь $name ($tgId, $phone) оставил оценку за обслуживание $value!");
+                "Пользователь $name ($tgId, $phone) оставил оценку за обслуживание " . ($emojis[$value] ?? "😡") . "!");
 
+
+        $messageId = $data[0]->message_id ?? null;
+
+        if (!is_null($messageId))
+            BotManager::bot()
+                ->editInlineKeyboard(
+                    $botUser->telegram_chat_id,
+                    $messageId,
+                    []);
 
     }
 }
