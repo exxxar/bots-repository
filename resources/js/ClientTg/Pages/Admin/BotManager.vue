@@ -375,6 +375,56 @@
 
                 </div>
 
+
+                <div class="mb-2">
+                    <div class="form-group">
+                        <label class="form-check-label" for="warning-rules">
+                            <i class="fa-solid fa-triangle-exclamation text-danger"></i> Правила критических
+                            оповещений
+                        </label>
+                        <select class="form-control"
+                                v-model="selected_warning"
+                                @change="addWarning"
+                                id="warning-rules">
+                            <option :value="null">Не выбрано</option>
+                            <option :value="item" v-for="item in filteredWarnings">
+                                {{ item.title }}
+                            </option>
+                        </select>
+
+                    </div>
+
+                    <div class="card" v-for="(warn, index) in botForm.warnings">
+
+                        <p class="m-0">{{ getWarning(warn.rule_key).title || 'Не найдено' }}</p>
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   v-model="botForm.warnings[index].is_active"
+                                   type="checkbox"
+                                   :id="'warning-is-active-'+index">
+                            <label class="form-check-label" :for="'warning-is-active-'+index">
+                                <span v-if="botForm.warnings[index].is_active">Вкл</span>
+                                <span v-else>Выкл</span>
+                            </label>
+                        </div>
+                        <input type="number" class="form-control mb-2"
+                               placeholder="Значение"
+                               v-model="botForm.warnings[index].rule_value"
+                               min="0"
+                               aria-describedby="bot-level-3">
+                        <button
+                            @click="removeWarning(index)"
+                            type="button" class="btn btn-outline-danger"><i
+                            class="fa-solid fa-trash-can"></i>
+                        </button>
+
+                        <div class="divider divider-small my-3 bg-highlight "></div>
+
+                    </div>
+                </div>
+
+
                 <div class="mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -625,10 +675,25 @@
 export default {
     data() {
         return {
+            selected_warning:null,
             load: false,
             need_payments: false,
             need_shop: false,
             bot: null,
+            warnings: [
+                {
+                    title: "Сумма чека больше чем",
+                    key: "bill_sum_more_then"
+                },
+                {
+                    title: "Сумма начисления кэшбэка больше чем",
+                    key: "cashback_up_sum_more_then"
+                },
+                {
+                    title: "Сумма списания кэшбэка больше чем",
+                    key: "cashback_down_sum_more_then"
+                }
+            ],
             botForm: {
                 is_template: false,
                 auto_cashback_on_payments: false,
@@ -655,9 +720,20 @@ export default {
                 photos: [],
                 selected_bot_template_id: null,
                 pages: [],
+                warnings: [],
                 amo: null,
                 is_active: false,
             },
+        }
+    },
+    computed:{
+        filteredWarnings() {
+            if (this.botForm.warnings.length === 0)
+                return this.warnings;
+
+            return this.warnings.filter(item => {
+                return !(this.botForm.warnings.findIndex(sub => sub.rule_key === item.key) >= 0)
+            })
         }
     },
     watch: {
@@ -714,6 +790,8 @@ export default {
                     level_1: this.bot.level_1 || 10,
                     level_2: this.bot.level_2 || 0,
                     level_3: this.bot.level_3 || 0,
+
+                    warnings: this.bot.warnings || [],
 
                     photos: this.bot.photos || [],
 
@@ -816,7 +894,7 @@ export default {
                         info_link: null,
 
                         social_links: [],
-
+                        warnings: [],
                         maintenance_message: null,
                         payment_provider_token: null,
 
@@ -839,7 +917,31 @@ export default {
 
         },
 
+        getWarning(key) {
+            let item = this.warnings.find(item => item.key === key)
 
+
+            return (!item) ? {
+                title: 'Не найдено'
+            } : item;
+
+        },
+        removeWarning(index) {
+            this.botForm.warnings.splice(index, 1)
+        },
+        addWarning() {
+
+            const item = this.selected_warning
+
+            this.botForm.warnings.push({
+                rule_key: item.key,
+                rule_value: 0,
+                is_active: true,
+            })
+
+            this.selected_warning = null
+
+        },
         requestChannelId(param) {
             this.$botPages.telegramChannelHelper(param);
         },

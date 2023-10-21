@@ -464,4 +464,27 @@ class SystemDiagnosticController extends Controller
         BotManager::bot()->replyInlineKeyboard("или согласно вашему тарифу:", $keyboard);
 
     }
+
+    public function sendReview(...$data)
+    {
+
+        $value = $data[3] ?? 0;
+
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        $name = BotMethods::prepareUserName($botUser);
+
+        $tgId = $botUser->telegram_chat_id ??'-';
+        $phone = $botUser->phone ?? 'Телефон не указан';
+
+        $bot = BotManager::bot()->getSelf();
+
+        BotManager::bot()
+            ->sendMessage($botUser->telegram_chat_id, "Спасибо! Ваш отзыв учтен!")
+            ->sendMessage($bot->order_channel ?? $bot->main_channel ?? null,
+                "Пользователь $name ($tgId, $phone) оставил оценку за обслуживание $value!");
+
+
+    }
 }

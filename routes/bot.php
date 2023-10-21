@@ -21,6 +21,7 @@ BotManager::bot()
     ->route("/diagnostic", "getDiagnosticTable")
     ->route("/botpay", "payForBot")
     ->route("/pay_tax_fee ([0-9]+)", "payTaxFee")
+    ->route("/send_review ([0-9]+)", "sendReview")
     ->route("/cashman", "cashmanPayment")
     ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     ->route("/diagnostic ([0-9]+)", "getDiagnosticTable");

@@ -113,6 +113,21 @@ class CashBackListener
                     break;
                 $index++;
             }
+
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendInlineKeyboard(
+                    $botUserUser->telegram_chat_id,
+                    "Оцените уровень нашего сервиса!",[
+                        [
+                            ["text"=>"😡","callback_data"=>"/send_review 0"],
+                            ["text"=>"😕","callback_data"=>"/send_review 1"],
+                            ["text"=>"😐","callback_data"=>"/send_review 2"],
+                            ["text"=>"🙂","callback_data"=>"/send_review 3"],
+                            ["text"=>"😁","callback_data"=>"/send_review 4"],
+                        ]
+                    ]
+                );
         }
 
         if ($event->directionEnum == CashBackDirectionEnum::Debiting) {
@@ -163,15 +178,12 @@ class CashBackListener
 
         }
 
-        Log::info("we are here $this->warnText");
-
         if (strlen($this->warnText)>0){
             $tgAdminId =   $botUserAdmin->telegram_chat_id ?? 'Не указано';
             $tgUserId =   $botUserUser->telegram_chat_id ?? 'Не указано';
             $nameAdmin = BotMethods::prepareUserName($botUserAdmin);
             $nameUser = BotMethods::prepareUserName($botUserUser);
 
-            Log::info("🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)");
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
@@ -179,6 +191,9 @@ class CashBackListener
                     "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
                 );
         }
+
+
+
     }
 
     private function prepareLevel($userBotUser, $adminBotUser, $botId, $moneyAmount, $levelPercent, $levelIndex)
