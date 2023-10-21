@@ -1,16 +1,16 @@
 models:
-  BotWarning:
+  BotReview:
     bot_id: id foreign:bots
-    rule_key: string:50
-    rule_value: integer default:0
-    is_active: boolean default:false
+    bot_user_id: id foreign:bot_users
+    rating: integer default:0
+    description: longtext nullable
     relationships:
-      belongsTo: Bot
+      belongsTo: Bot, BotUser
 
 
 
-seeders:   BotWarning
+seeders:     BotReview
 
 controllers:
-  BotWarning:
+  BotReview:
     resource: api
