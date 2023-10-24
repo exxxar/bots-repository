@@ -408,10 +408,10 @@ abstract class BotCore
 
     private function botFallbackVideoHandler($message): bool
     {
-        $videos = $message->video ?? $message->video_note  ?? null;
+        $video = $message->video ?? $message->video_note  ?? null;
         $caption = $message->caption ?? null;
 
-        if (is_null($videos))
+        if (is_null($video))
             return false;
 
         $find = false;
@@ -421,7 +421,7 @@ abstract class BotCore
                 continue;
 
             if ($item["path"] === "fallback_video") {
-                $find = $this->tryCall($item, $message, null, ($caption ?? null), [...$videos]);
+                $find = $this->tryCall($item, $message, null, ($caption ?? null), $video);
             }
         }
         return $find;

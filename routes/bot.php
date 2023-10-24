@@ -90,8 +90,10 @@ BotManager::bot()
 
 BotManager::bot()
     ->fallbackVideo(function (...$data) {
+
+        Log::info(print_r($data, true));
         $caption = $data[2] ?? null;
-        $videos = $data[3] ?? null;
+        $video = $data[3] ?? null;
 
         $botUser = BotManager::bot()->currentBotUser();
 
@@ -101,7 +103,7 @@ BotManager::bot()
             return;
         }
 
-        $videoToSend = $videos[count($videos) - 1]->file_id ?? null;
+        $videoToSend = $video->file_id ?? null;
 
         BotManager::bot()->reply("Спасибо! Ваше видео загружено! Идентификатор для добавления: ".($videoToSend??'не указан'));
     });
