@@ -97,13 +97,12 @@ BotManager::bot()
 
         $botUser = BotManager::bot()->currentBotUser();
 
-
-        if (!$botUser->is_admin||!$botUser->is_manager){
+        if (!$botUser->is_admin && !$botUser->is_manager) {
             BotManager::bot()->reply("Данная опция доступна только персоналу бота!");
             return;
         }
 
         $videoToSend = $video->file_id ?? null;
 
-        BotManager::bot()->reply("Спасибо! Ваше видео загружено! Идентификатор для добавления: ".($videoToSend??'не указан'));
+        BotManager::bot()->reply("Спасибо! Ваше видео загружено! Идентификатор для добавления: " . ($videoToSend ?? 'не указан'));
     });
