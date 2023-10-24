@@ -90,8 +90,6 @@ BotManager::bot()
 
 BotManager::bot()
     ->fallbackVideo(function (...$data) {
-
-        Log::info(print_r($data, true));
         $caption = $data[2] ?? null;
         $video = $data[3] ?? null;
 
