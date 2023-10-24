@@ -406,6 +406,27 @@ abstract class BotCore
         return $find;
     }
 
+    private function botFallbackVideoHandler($message): bool
+    {
+        $videos = $message->video ?? $message->video_note  ?? null;
+        $caption = $message->caption ?? null;
+
+        if (is_null($videos))
+            return false;
+
+        $find = false;
+        foreach ($this->routes as $item) {
+
+            if (is_null($item["path"]))
+                continue;
+
+            if ($item["path"] === "fallback_video") {
+                $find = $this->tryCall($item, $message, null, ($caption ?? null), [...$videos]);
+            }
+        }
+        return $find;
+    }
+
     private function botFallbackPhotoHandler($message): bool
     {
         $photos = $message->photo ?? null;
@@ -574,7 +595,10 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-        Log::info(print_r($update, true));
+
+
+        Log::info(print_r($update->message->video ?? $update->maessage->video_note, true));
+        Log::info(print_r($update->message->video ?? $update->maessage->video_note, true));
 
 
         include_once base_path('routes/bot.php');
@@ -689,6 +713,9 @@ abstract class BotCore
             return;
 
         if ($this->botFallbackPhotoHandler($message))
+            return;
+
+        if ($this->botFallbackVideoHandler($message))
             return;
 
         if ($this->botFallbackHandler($message))
@@ -901,6 +928,18 @@ abstract class BotCore
         $this->routes[] = [
             "controller" => $this->controller ?? null,
             "path" => "fallback_photo",
+            "is_service" => true,
+            "function" => $function
+        ];
+
+        return $this;
+    }
+
+    public function fallbackVideo($function)
+    {
+        $this->routes[] = [
+            "controller" => $this->controller ?? null,
+            "path" => "fallback_video",
             "is_service" => true,
             "function" => $function
         ];
