@@ -377,7 +377,6 @@ trait BotBaseMethodsTrait
     }
 
 
-
     public function sendChatAction($chatId, $action)
     {
         $tmp = [
@@ -429,6 +428,37 @@ trait BotBaseMethodsTrait
 
             //unset($tmp['reply_markup']);
             $this->bot->sendPhoto($tmp);
+
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+
+    }
+
+    public function sendVideo($chatId, $caption, $videoPath, $keyboard = [])
+    {
+        $tmp = [
+            "chat_id" => $chatId,
+            "video" => $videoPath,
+            "caption" => $caption,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $data = $this->bot->sendVideo($tmp);
+
+        } catch (\Exception $e) {
 
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .

@@ -361,7 +361,7 @@ import PartnersList from "@/ClientTg/Components/Manager/PartnersList.vue";
 
 
         <div class="card card-style preload-img"
-
+             v-if="botUser.manager"
              v-bind:style="{'background-image':'url(\''+botUser.manager.image+'\')'}"
              style="height: 55vh; ">
             <div class="card-bottom ml-3">

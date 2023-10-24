@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\CashBackEvent;
+use App\Facades\BotManager;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\TelegramController;
 use App\Models\Bot;
@@ -30,6 +31,21 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get("/test-video/{id}", function ($id){
+
+    $bot = Bot::query()
+        ->where("bot_domain", "isushibot")
+        ->first();
+
+    \App\Facades\BotMethods::bot()
+        ->whereBot($bot)
+        ->sendVideo(
+           $bot->order_channel ?? $bot->main_channel,
+            "test",
+            $id
+        );
+});
 
 Route::get("/test-statistic", function () {
     $bot = Bot::query()->find(21);//$request->bot;

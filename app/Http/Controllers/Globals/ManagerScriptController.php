@@ -6,6 +6,7 @@ use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BotSecurityResource;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotUser;
@@ -676,6 +677,54 @@ class ManagerScriptController extends SlugController
                     ],
 
                 ]);
+
+
+    }
+
+    public function managerHomePage(Request $request, $botDomain)
+    {
+        $request->validate([
+            "slug" => "required"
+        ]);
+
+        $scriptId = $request->slug;
+
+        $bot = \App\Models\Bot::query()
+            ->with(["company", "imageMenus"])
+            ->where("bot_domain", $botDomain)
+            ->first();
+
+        if (is_null($bot)) {
+            Inertia::setRootView("shop");
+            return Inertia::render('Error');
+        }
+
+        if ($scriptId == "route") {
+            Inertia::setRootView("bot");
+
+            return Inertia::render('SimpleMain', [
+                'bot' => BotSecurityResource::make($bot),
+            ]);
+        }
+
+        $slug = BotMenuSlug::query()
+            ->where("id", $scriptId)
+            ->where("bot_id", $bot->id)
+            // ->where("slug", self::SCRIPT)
+            ->first();
+
+        if (is_null($slug)) {
+            Inertia::setRootView("shop");
+            return Inertia::render('Error');
+        }
+
+
+        Inertia::setRootView("bot");
+
+        return Inertia::render('SimpleMain', [
+            'bot' => BotSecurityResource::make($bot),
+            'slug_id' => $slug->id,
+        ]);
 
 
     }

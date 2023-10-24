@@ -293,3 +293,9 @@ Route::prefix("bot-client")
             ->where("slug", "[0-9]+|route");
 
     });
+
+Route::prefix("bot-manager-client")
+    ->group(function(){
+        Route::get("/{botDomain}", [\App\Http\Controllers\Globals\ManagerScriptController::class, "managerHomePage"])
+            ->where("slug", "[0-9]+|route");
+    });

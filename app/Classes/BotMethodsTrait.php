@@ -56,6 +56,12 @@ trait BotMethodsTrait
         return $this->sendPhoto($this->chatId, $caption, $path, $keyboard);
     }
 
+    public function replyVideo($caption, $path, $keyboard = [])
+    {
+        return $this->sendVideo($this->chatId, $caption, $path, $keyboard);
+    }
+
+
     public function replyAction($action = "typing")
     {
         return $this->sendChatAction($this->chatId, $action);
