@@ -36,6 +36,26 @@
             <div class="mb-1"
                  v-for="(item, index) in filteredConfigs">
 
+                <button
+                    @click="removeConfigItem(index)"
+                    class="btn btn-outline-info" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+                <button
+                    @click="move(index, 0)"
+                    style="margin-left: 5px;"
+                    class="btn btn-outline-info" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-caret-left"></i>
+                </button>
+                <button
+                    @click="move(index, 1)"
+                    style="margin-left: 5px;"
+                    class="btn btn-outline-info" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-caret-right"></i>
+                </button>
 
                 <div class="form-floating mb-1"
                      v-if="filteredConfigs[index].type==='text' || filteredConfigs[index].type==='channel'">
@@ -252,7 +272,19 @@ export default {
     },
 
     methods: {
+        move(index, direction = 0){
+            let tmp = this.slugForm.config[index]
 
+            let maxConfigElements = this.slugForm.config.length || 0
+
+            let newIndex = direction === 0 ?
+                index -1 >= 0 ?index - 1 : maxConfigElements-1 :
+                index < maxConfigElements-1 ? index + 1 : 0
+
+            this.slugForm.config[index] = this.slugForm.config[newIndex]
+            this.slugForm.config[newIndex] = tmp
+
+        },
         toggleFilter(type) {
             let index = this.filters.indexOf(type)
             if (index >= 0)

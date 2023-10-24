@@ -152,7 +152,6 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
     }
 
-
     public function formWheelOfFortuneCallback(Request $request)
     {
         $request->validate([

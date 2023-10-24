@@ -66,12 +66,29 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                  v-for="(item, index) in filteredConfigs">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <button
-                            @click="removeConfigItem(index)"
-                            class="btn btn-outline-info" type="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                       <div>
+                           <button
+                               @click="removeConfigItem(index)"
+                               class="btn btn-outline-info" type="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                               <i class="fa-solid fa-trash-can"></i>
+                           </button>
+                           <button
+                               @click="move(index, 0)"
+                               style="margin-left: 5px;"
+                               class="btn btn-outline-info" type="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                               <i class="fa-solid fa-caret-left"></i>
+                           </button>
+                           <button
+                               @click="move(index, 1)"
+                               style="margin-left: 5px;"
+                               class="btn btn-outline-info" type="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                               <i class="fa-solid fa-caret-right"></i>
+                           </button>
+                       </div>
+
                         <TelegramChannelHelper
                             v-if="bot&&filteredConfigs[index].type==='channel'"
                             :token="bot.bot_token"
@@ -378,6 +395,19 @@ export default {
                 type: type || 'text'
             });
 
+
+        },
+        move(index, direction = 0){
+            let tmp = this.slugForm.config[index]
+
+            let maxConfigElements = this.slugForm.config.length || 0
+
+            let newIndex = direction === 0 ?
+                index -1 >= 0 ?index - 1 : maxConfigElements-1 :
+                index < maxConfigElements-1 ? index + 1 : 0
+
+            this.slugForm.config[index] = this.slugForm.config[newIndex]
+            this.slugForm.config[newIndex] = tmp
 
         },
         removeConfigItem(index) {

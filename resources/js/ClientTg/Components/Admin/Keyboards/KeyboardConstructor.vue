@@ -40,6 +40,22 @@
                 @click="addRowBelow"><i class="fa-solid fa-arrow-turn-down"></i>
             </button>
 
+
+
+            <button
+                type="button"
+                class="btn btn-primary mb-2 ml-2"
+                v-if="selectedRow!=null"
+                @click="moveRow(0)"><i class="fa-solid fa-arrows-up-to-line"></i>
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary mb-2 ml-2"
+                v-if="selectedRow!=null"
+                @click="moveRow(1)"><i class="fa-solid fa-arrows-down-to-line"></i>
+            </button>
+
             <button
                 type="button"
                 class="btn btn-outline-danger mb-2 ml-2"
@@ -82,6 +98,19 @@
                         class="btn btn-link w-100"
                         @click="removeColFromRow(rowIndex)"><i class="fa-solid fa-minus"></i>
                     </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-link w-100"
+                        @click="moveCol(0)"><i class="fa-solid fa-caret-left"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-link w-100"
+                        @click="moveCol(1)"><i class="fa-solid fa-caret-right"></i>
+                    </button>
+
                 </div>
                 <div class="col-10 d-flex justify-content-center p-1">
 
@@ -171,6 +200,44 @@ export default {
 
     },
     methods: {
+        moveCol(direction = 0) {
+
+            let rowIndex =  this.select.row
+            let colIndex = this.select.col
+
+            let maxCols = this.keyboard[rowIndex].length
+
+            let index = direction === 0 ?
+                colIndex-1 >= 0 ?colIndex - 1 : maxCols-1 :
+                colIndex < maxCols-1 ? colIndex + 1 : 0
+
+            let tmpCol = this.keyboard[rowIndex][colIndex]
+            this.keyboard[rowIndex][colIndex] = this.keyboard[rowIndex][index]
+            this.keyboard[rowIndex][index] = tmpCol
+
+            this.select.row = rowIndex
+            this.select.col = index
+            this.select.text = this.keyboard[rowIndex][index].text
+
+        },
+        moveRow(direction = 0){
+            if (this.selectedRow == null)
+                return;
+
+            let maxRows = this.keyboard.length
+
+            let index = direction === 0 ?
+                this.selectedRow-1 >= 0 ?this.selectedRow - 1 : maxRows-1 :
+                this.selectedRow < maxRows-1 ? this.selectedRow + 1 : 0
+
+            let tmpRow = this.keyboard[this.selectedRow]
+
+            this.keyboard[this.selectedRow] = this.keyboard[index]
+            this.keyboard[index] = tmpRow
+
+            this.selectedRow = index
+            console.log("tmpRow", tmpRow)
+        },
         openKeyboardEditorMenu(rowIndex, colIndex) {
 
             this.$botPages.keyboard({
