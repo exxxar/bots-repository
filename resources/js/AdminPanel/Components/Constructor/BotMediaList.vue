@@ -10,7 +10,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                    aria-label="Поиск файла"
                    v-model="search">
             <button class="btn btn-outline-secondary"
-                    @click="loadMedia"
+                    @click="loadMedia(0)"
                     type="button"
                     id="button-addon2">Найти
             </button>
@@ -58,13 +58,11 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["selected"],
+    props: ["selected","needVideo", "needVideoNote", "needPhoto"],
     data() {
         return {
             bot: null,
-            needVideo: false,
-            needVideoNote: false,
-            needPhoto: false,
+
             loading: true,
             media: [],
             search: null,
@@ -76,7 +74,7 @@ export default {
     },
     mounted() {
         this.loadCurrentBot().then(() => {
-            this.loadUsers();
+            this.loadMedia();
         })
 
     },
@@ -132,9 +130,9 @@ export default {
                 dataObject: {
                     botId: this.bot.id || null,
                     search: this.search,
-                    needVideo: this.needVideo,
-                    needVideoNote: this.needVideoNote,
-                    needPhoto: this.needPhoto,
+                    needVideo: this.needVideo || false,
+                    needVideoNote: this.needVideoNote|| false,
+                    needPhoto: this.needPhoto|| false,
                 },
                 page: page
             }).then(resp => {

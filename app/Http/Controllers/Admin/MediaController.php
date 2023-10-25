@@ -12,10 +12,10 @@ class MediaController extends Controller
     public function media(Request $request): \App\Http\Resources\BotMediaCollection
     {
         $request->validate([
-            "bot_id" => "required"
+            "botId" => "required"
         ]);
 
-        $bot = Bot::query()->find($request->bot_id);
+        $bot = Bot::query()->find($request->botId);
 
         return BusinessLogic::media()
             ->setBot($bot ?? null)

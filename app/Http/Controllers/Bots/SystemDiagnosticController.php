@@ -509,7 +509,7 @@ class SystemDiagnosticController extends Controller
         $botUser = BotManager::bot()
             ->currentBotUser();
 
-        if (!$botUser->is_admin&&!$botUser->is_manager){
+        if (!$botUser->is_admin && !$botUser->is_manager) {
             BotManager::bot()
                 ->reply("У вас недостаточно прав для выполнения данной команды");
             return;
@@ -524,12 +524,12 @@ class SystemDiagnosticController extends Controller
             ->get();
 
         $tmp = "Список доступных видео в медиа контенте:\n";
-        if (!empty($media))
+        if (!empty($media)) {
             foreach ($media as $item) {
                 $tmp .= "#$item->id " . ($item->caption ?? 'Описание не указано') . "\n";
             }
-        else
-            $tmp .= "<em>Видео не найдено!</em>\n";
+        } else
+            $tmp .= "Видео не найдено!\n";
 
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
@@ -537,12 +537,15 @@ class SystemDiagnosticController extends Controller
             ->get();
 
         $tmp .= "Список доступных фото в медиа контенте:\n";
-        foreach ($media as $item) {
-            $tmp .= "#$item->id " . ($item->caption ?? 'Описание не указано') . "\n";
-        }
+        if (!empty($media)) {
+            foreach ($media as $item) {
+                $tmp .= "#$item->id " . ($item->caption ?? 'Описание не указано') . "\n";
+            }
+        } else
+            $tmp .= "Фото не найдено!\n";
 
         BotManager::bot()
-            ->reply( "$tmp");
+            ->reply("$tmp");
 
     }
 }

@@ -202,6 +202,8 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 
             <div class="col-12 mb-2" v-if="need_page_video">
                 <BotMediaList
+                    :need-video="true"
+                    :need-video-note="true"
                     :selected="pageForm.video"
                     v-on:select="selectVideo"></BotMediaList>
             </div>

@@ -10,7 +10,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                    aria-label="Поиск пользователя"
                    v-model="search">
             <button class="btn btn-outline-secondary"
-                    @click="loadUsers"
+                    @click="loadUsers(0)"
                     type="button"
                     id="button-addon2">Найти
             </button>
