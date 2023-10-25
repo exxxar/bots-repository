@@ -55,7 +55,7 @@ const actions = {
     },
 
     async removeMedia(context, payload= {dataObject: {mediaId: null}}){
-        let link = `${BASE_MEDIA_LINK}/${payload.dataObject.mediaId}`
+        let link = `${BASE_MEDIA_LINK}/remove/${payload.dataObject.mediaId}`
         let _axios = util.makeAxiosFactory(link, 'DELETE')
         return _axios.then((response) => {
             return Promise.resolve(response);
