@@ -125,7 +125,7 @@ class BotMediaLogicFactory
                         "text" => "Удалить видео", "callback_data" => "/remove_media $media->id"
                     ]
                 ]
-            ] : null
+            ] : []
             );
 
         if ($media->type === "photo")
@@ -139,7 +139,7 @@ class BotMediaLogicFactory
                         "text" => "Удалить фото", "callback_data" => "/remove_media $media->id"
                     ]
                 ]
-            ] : null
+            ] : []
             );
 
 
