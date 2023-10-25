@@ -34,7 +34,7 @@ class RestaurantBotController extends Controller
 
         if ($botUser->is_admin) {
             BotManager::bot()
-                ->sendReplyMenu((is_null($message) ? "" : $message) . "<b>Режим администратора</b>", "main_menu_restaurant_3");
+                ->sendReplyMenu((is_null($message) ? "" : $message) . "\n<b>Режим администратора</b>", "main_menu_restaurant_3");
             return;
         }
 

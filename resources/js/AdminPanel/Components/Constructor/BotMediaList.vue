@@ -27,8 +27,12 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <div class="ms-2 me-auto">
                         <div class="fw-bold">{{ item.caption ?? 'Без подписи' }} <span
                             class="badge bg-info rounded-pill">{{ item.type }}</span></div>
-                        <small>{{ item.file_id }}</small>
-                        <a href="#" class="btn btn-link m-0 py-2" @click="showPreview(item.id)">Показать превью</a>
+                        <small class="w-100">{{ item.file_id }}</small>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="javascript:void(0)" class="btn btn-link p-0 my-2" @click="showPreview(item.id)">Показать превью</a>
+                            <a href="javascript:void(0)" class="btn btn-link p-0 my-2 text-danger" @click="remove(item.id)">Удалить</a>
+                        </div>
                     </div>
                     <span class="badge bg-primary rounded-pill">#{{ item.id }}</span>
                 </li>
@@ -104,7 +108,7 @@ export default {
 
                 this.$notify({
                     title: 'Удаление медиа-контента',
-                    message: 'Медиа контент удален'
+                    text: 'Медиа контент удален'
                 })
             }).catch(() => {
 
@@ -118,7 +122,7 @@ export default {
             }).then(resp => {
                 this.$notify({
                     title: 'Превью медиа-контента',
-                    message: 'Отправлено в бота'
+                    text: 'Отправлено в бота'
                 })
             }).catch(() => {
 
