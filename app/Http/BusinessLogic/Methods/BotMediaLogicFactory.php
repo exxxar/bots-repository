@@ -77,6 +77,8 @@ class BotMediaLogicFactory
                     continue;
 
                 $q = $q->orWhere("type",$key);
+
+                Log::info("$key");
             }
         } : null;
 
