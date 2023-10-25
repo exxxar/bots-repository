@@ -13,9 +13,9 @@ class MediaController extends Controller
         return BusinessLogic::media()
             ->setBot($request->bot ?? null)
             ->list([
-                "need_video" => $request->needVideo ?? null,
-                "need_video_note" => $request->needVideo ?? null,
-                "need_photo" => $request->needPhoto ?? null,
+                "video" => $request->needVideo ?? null,
+                "video_note" => $request->needVideo ?? null,
+                "photo" => $request->needPhoto ?? null,
             ],
                 $request->search ?? null,
                 $request->size ?? null

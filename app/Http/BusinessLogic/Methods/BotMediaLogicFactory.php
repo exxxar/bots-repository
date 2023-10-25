@@ -74,8 +74,8 @@ class BotMediaLogicFactory
             if (!$value)
                 continue;
 
-            Log::info("value=" . ($value ? "true" : "false") . " key=$key");
-          //  $media = $media->where("type", $key);
+          //  Log::info("value=" . ($value ? "true" : "false") . " key=$key");
+            $media = $media->where("type", $key);
         }
 
 
@@ -100,7 +100,7 @@ class BotMediaLogicFactory
         if (is_null($media))
             throw new HttpException(404, "Медиа контент не найден!");
 
-        $bot = Bot::query()->find($mediaId->bot_id);
+        $bot = Bot::query()->find($media->bot_id);
 
         if (is_null($bot))
             throw new HttpException(404, "Бот не найден!");
