@@ -68,7 +68,7 @@ class BotMediaLogicFactory
             $media = $media->where("caption", 'like', "%$search%");
 
 
-        $func = !is_null($filters)? function ($q) use ($filters) {
+        $func = !is_null($filters) ? function ($q) use ($filters) {
             foreach ($filters as $key => $value) {
                 if (is_null($value))
                     continue;
@@ -76,9 +76,7 @@ class BotMediaLogicFactory
                 if (!$value)
                     continue;
 
-                $q = $q->orWhere("type",$key);
-
-                Log::info("$key");
+                $q = $q->orWhere("type", $key);
             }
         } : null;
 
@@ -121,13 +119,13 @@ class BotMediaLogicFactory
                 !is_null($this->botUser) ? $this->botUser->telegram_chat_id :
                     $bot->order_channel ?? $bot->main_channel ?? null,
                 $media->caption ?? 'Описание не указано',
-                $media->file_id, [
+                $media->file_id, !is_null($this->botUser) ? [
+                [
                     [
-                        [
-                            "text" => "Удалить видео", "callback_data" => "/remove_media $media->id"
-                        ]
+                        "text" => "Удалить видео", "callback_data" => "/remove_media $media->id"
                     ]
                 ]
+            ] : null
             );
 
         if ($media->type === "photo")
@@ -135,13 +133,13 @@ class BotMediaLogicFactory
                 !is_null($this->botUser) ? $this->botUser->telegram_chat_id :
                     $bot->order_channel ?? $bot->main_channel ?? null,
                 $media->caption ?? 'Описание не указано',
-                $media->file_id, [
+                $media->file_id, !is_null($this->botUser) ? [
+                [
                     [
-                        [
-                            "text" => "Удалить фото", "callback_data" => "/remove_media $media->id"
-                        ]
+                        "text" => "Удалить фото", "callback_data" => "/remove_media $media->id"
                     ]
                 ]
+            ] : null
             );
 
 
