@@ -67,16 +67,22 @@ class BotMediaLogicFactory
         if (!is_null($search))
             $media = $media->where("caption", 'like', "%$search%");
 
-        foreach ($filters as $key => $value) {
-            if (is_null($value))
-                continue;
 
-            if (!$value)
-                continue;
+        $func = is_null($filters)? function ($q) use ($filters) {
+            foreach ($filters as $key => $value) {
+                if (is_null($value))
+                    continue;
 
-          //  Log::info("value=" . ($value ? "true" : "false") . " key=$key");
-            $media = $media->where("type", $key);
-        }
+                if (!$value)
+                    continue;
+
+                $q = $q->orWhere("type",$key);
+            }
+        } : null;
+
+
+        if (!is_null($func))
+            $media = $media->where($func);
 
 
         $media = $media
