@@ -89,6 +89,15 @@ Route::prefix("admin")
                 Route::get("/restore/{botId}", "restore");
             });
 
+        Route::prefix("media")
+            ->controller(\App\Http\Controllers\Admin\MediaController::class)
+            ->group(function () {
+                Route::post('/', "media");
+                Route::get('/preview/{id}', "preview");
+                Route::delete('/remove/{id}', "remove");
+            });
+
+
         Route::prefix("dialog-groups")
             ->controller(\App\Http\Controllers\Admin\BotDialogGroupController::class)
             ->group(function () {

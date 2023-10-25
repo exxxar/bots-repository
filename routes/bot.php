@@ -19,6 +19,7 @@ BotManager::bot()
     ->route("/.*Мой id|.*мой id", "getMyId")
     ->route("/democircle", "democircle")
     ->route("/diagnostic", "getDiagnosticTable")
+    ->route("/media", "getMedia")
     ->route("/botpay", "payForBot")
     ->route("/pay_tax_fee ([0-9]+)", "payTaxFee")
     ->route("/send_review ([0-9]+)", "sendReview")
@@ -36,6 +37,24 @@ BotManager::bot()
         $caption = $data[2] ?? null;
         $photos = $data[3] ?? null;
 
+        $botUser = BotManager::bot()->currentBotUser();
+        $bot = BotManager::bot()->getSelf();
+        $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
+
+        if ($botUser->is_admin || $botUser->is_manager){
+            $media = \App\Models\BotMedia::query()->updateOrCreate([
+                'bot_id' => $bot->id,
+                'bot_user_id' => $botUser->id,
+                'file_id' => $photoToSend,
+            ], [
+                'caption' => $caption,
+                'type' => "photo"
+            ]);
+            BotManager::bot()
+                ->reply("Фотография добавлена в медиа пространство бота с идентификатором: <b>#$media->id</b> - для просмотра доступных медиа используйте /media");
+
+        }
+
         if (is_null($caption)) {
             BotManager::bot()->reply("Фотография в описании должна содержать подпись!");
             return;
@@ -48,8 +67,8 @@ BotManager::bot()
             return;
         }
 
-        $bot = BotManager::bot()->getSelf();
-        $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
+
+
 
         $channel = $bot->main_channel ?? $bot->order_channel ?? null;
 
@@ -58,7 +77,6 @@ BotManager::bot()
             return;
         }
 
-        $botUser = BotManager::bot()->currentBotUser();
 
         $name = \App\Facades\BotMethods::prepareUserName($botUser);
 
@@ -92,8 +110,10 @@ BotManager::bot()
     ->fallbackVideo(function (...$data) {
         $caption = $data[2] ?? null;
         $video = $data[3] ?? null;
+        $type = $data[4] ?? "video";
 
         $botUser = BotManager::bot()->currentBotUser();
+
 
         if (!$botUser->is_admin && !$botUser->is_manager) {
             BotManager::bot()->reply("Данная опция доступна только персоналу бота!");
@@ -101,6 +121,21 @@ BotManager::bot()
         }
 
         $videoToSend = $video->file_id ?? null;
+
+        $bot = BotManager::bot()->getSelf();
+
+        $media = \App\Models\BotMedia::query()->updateOrCreate([
+            'bot_id' => $bot->id,
+            'bot_user_id' => $botUser->id,
+            'file_id' => $videoToSend,
+        ], [
+            'caption' => $caption,
+            'type' => $type
+        ]);
+
+        BotManager::bot()
+            ->reply("Видео добавлено в медиа пространство бота с идентификатором: <b>#$media->id</b> - для просмотра доступных медиа используйте /media");
+
 
         BotManager::bot()->reply("Спасибо! Ваше видео загружено! Идентификатор для добавления: " . ($videoToSend ?? 'не указан'));
     });

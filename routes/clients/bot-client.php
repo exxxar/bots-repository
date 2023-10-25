@@ -63,6 +63,15 @@ Route::prefix("bot-client")
                 Route::post('/callback', "formWheelOfFortuneCallback");
             });
 
+        Route::prefix("media")
+            ->controller(\App\Http\Controllers\Bots\MediaController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function () {
+                Route::post('/', "media");
+                Route::get('/preview/{id}', "preview");
+                Route::delete('/remove/{id}', "remove");
+            });
+
         Route::prefix("bonus-product")
             ->controller(BonusProductScriptController::class)
             ->middleware(["tgAuth.any", "slug"])

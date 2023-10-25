@@ -7,6 +7,7 @@ import pages from './modules/pages';
 import dialogGroups from './modules/dialog_groups';
 import slugs from './modules/slugs';
 import products from './modules/products';
+import media from './modules/media';
 import util from "@/AdminPanel/store/modules/utilites";
 
 
@@ -109,5 +110,6 @@ export default createStore({
         dialogGroups,
         slugs,
         products,
+        media
     }
 })

@@ -21,6 +21,7 @@ import bots from "./modules/bots";
 import dialogs from "./modules/dialogs";
 import slugs from "./modules/slugs";
 import botUsers from "./modules/bot_users";
+import media from "./modules/media";
 
 import util from "./modules/utilites";
 
@@ -104,6 +105,7 @@ export default createStore({
         bots,
         dialogs,
         slugs,
-        botUsers
+        botUsers,
+        media
     }
 })

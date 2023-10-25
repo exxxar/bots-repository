@@ -6,6 +6,7 @@ use App\Http\BusinessLogic\Methods\AmoLogicFactory;
 use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory;
 use App\Http\BusinessLogic\Methods\BotDialogsLogicFactory;
 use App\Http\BusinessLogic\Methods\BotLogicFactory;
+use App\Http\BusinessLogic\Methods\BotMediaLogicFactory;
 use App\Http\BusinessLogic\Methods\BotPageLogicFactory;
 use App\Http\BusinessLogic\Methods\BotSlugLogicFactory;
 use App\Http\BusinessLogic\Methods\BotUserLogicFactory;
@@ -27,6 +28,7 @@ class BusinessLogic
     protected BotAdministrativeLogicFactory $administrative;
     protected KeyboardLogicFactory $keyboard;
     protected ManagerLogicFactory $manager;
+    protected BotMediaLogicFactory $media;
 
     public function __construct()
     {
@@ -41,6 +43,7 @@ class BusinessLogic
         $this->administrative = new BotAdministrativeLogicFactory();
         $this->keyboard = new KeyboardLogicFactory();
         $this->manager = new ManagerLogicFactory();
+        $this->media = new BotMediaLogicFactory();
     }
 
     public function bots(): BotLogicFactory
@@ -51,6 +54,11 @@ class BusinessLogic
     public function amo(): AmoLogicFactory
     {
         return $this->amo;
+    }
+
+    public function media(): BotMediaLogicFactory
+    {
+        return $this->media;
     }
 
     public function keyboards(): KeyboardLogicFactory

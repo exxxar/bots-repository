@@ -105,3 +105,6 @@ Route::apiResource('bot-external-request', App\Http\Controllers\BotExternalReque
 
 
 Route::apiResource('bot-warning', App\Http\Controllers\BotWarningController::class);
+
+
+Route::apiResource('bot-media', App\Http\Controllers\BotMediaController::class);

@@ -408,8 +408,11 @@ abstract class BotCore
 
     private function botFallbackVideoHandler($message): bool
     {
-        $video = $message->video ?? $message->video_note  ?? null;
+        $video = $message->video ?? $message->video_note ?? null;
         $caption = $message->caption ?? null;
+
+        $type = isset($message->video) ? "video" : "video_note";
+
 
         if (is_null($video))
             return false;
@@ -421,7 +424,7 @@ abstract class BotCore
                 continue;
 
             if ($item["path"] === "fallback_video") {
-                $find = $this->tryCall($item, $message, null, ($caption ?? null), $video);
+                $find = $this->tryCall($item, $message, null, ($caption ?? null), $video, $type);
             }
         }
         return $find;
@@ -551,7 +554,7 @@ abstract class BotCore
             ->whereNull("ordered_at")
             ->get();
 
-        foreach ($baskets as $basket){
+        foreach ($baskets as $basket) {
             $basket->ordered_at = Carbon::now();
             $basket->save();
         }
@@ -723,11 +726,12 @@ abstract class BotCore
     }
 
 
-    public function runPage(int $pageId):void {
+    public function runPage(int $pageId): void
+    {
 
         $page = BotPage::query()
             ->where("bot_id", $this->getSelf()->id)
-            ->where("id",$pageId)
+            ->where("id", $pageId)
             ->first();
 
         if (is_null($page)) {
@@ -744,8 +748,7 @@ abstract class BotCore
                         ->next_bot_menu_slug_id)
                     ->first();
 
-                if (is_null($slug))
-                {
+                if (is_null($slug)) {
                     $this->reply("Скрипт не найден");
                     return;
                 }

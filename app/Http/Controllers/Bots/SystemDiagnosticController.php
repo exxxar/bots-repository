@@ -8,6 +8,7 @@ use App\Facades\StartCodesService;
 use App\Http\Controllers\Controller;
 use App\Models\Bot;
 use App\Models\BotDialogCommand;
+use App\Models\BotMedia;
 use App\Models\BotMenuSlug;
 use App\Models\BotPage;
 use App\Models\BotUser;
@@ -500,6 +501,48 @@ class SystemDiagnosticController extends Controller
                     $botUser->telegram_chat_id,
                     $messageId,
                     []);
+
+    }
+
+    public function getMedia(...$data)
+    {
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin&&!$botUser->is_manager){
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $media = BotMedia::query()
+            ->where("bot_id", $bot->id)
+            ->where("type", "video")
+            ->orWhere("type", "video_note")
+            ->get();
+
+        $tmp = "Список доступных видео в медиа контенте:\n";
+        if (!empty($media))
+            foreach ($media as $item) {
+                $tmp .= "#$item->id " . ($item->caption ?? 'Описание не указано') . "\n";
+            }
+        else
+            $tmp .= "<em>Видео не найдено!</em>\n";
+
+        $media = BotMedia::query()
+            ->where("bot_id", $bot->id)
+            ->where("type", "photo")
+            ->get();
+
+        $tmp .= "Список доступных фото в медиа контенте:\n";
+        foreach ($media as $item) {
+            $tmp .= "#$item->id " . ($item->caption ?? 'Описание не указано') . "\n";
+        }
+
+        BotManager::bot()
+            ->reply( "$tmp");
 
     }
 }

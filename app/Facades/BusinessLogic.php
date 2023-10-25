@@ -3,6 +3,7 @@
 namespace App\Facades;
 
 
+use App\Http\BusinessLogic\Methods\BotMediaLogicFactory as MediaLogic;
 use App\Http\BusinessLogic\Methods\BotPageLogicFactory as PageLogic;
 use App\Http\BusinessLogic\Methods\BotLogicFactory as BotLogic;
 use App\Http\BusinessLogic\Methods\BotSlugLogicFactory as SlugLogic;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static AmoLogic amo()
  * @method static KeyboardLogic keyboards()
  * @method static ManagerLogic manager()
+ * @method static MediaLogic media()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

@@ -5,7 +5,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 import BotSlugListSimple from "@/AdminPanel/Components/Constructor/Slugs/BotSlugListSimple.vue";
 import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
 import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
-
+import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 </script>
 <template>
@@ -185,6 +185,25 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 
                     </div>
                 </div>
+            </div>
+
+            <div class="col-12 mb-2">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_page_video"
+                           type="checkbox"
+                           id="need-page-video">
+                    <label class="form-check-label" for="need-page-video">
+                        Видео к странице
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="col-12 mb-2" v-if="need_page_video">
+                <BotMediaList
+                    :selected="pageForm.video"
+                    v-on:select="selectVideo"></BotMediaList>
             </div>
 
             <div class="col-12 mb-2">
@@ -418,6 +437,7 @@ export default {
             showReplyTemplateSelector: false,
             showInlineTemplateSelector: false,
 
+            need_page_video: false,
             need_page_images: false,
             need_inline_menu: false,
             need_reply_menu: false,
@@ -434,6 +454,7 @@ export default {
                 slug: null,
                 comment: null,
 
+                video: null,
                 images: [],
                 reply_keyboard_title: null,
                 reply_keyboard: null,
@@ -459,6 +480,12 @@ export default {
             if (!this.need_page_images) {
                 this.photos = []
                 this.pageForm.images = []
+            }
+
+        },
+        'need_page_video': function (newVal, oldVal) {
+            if (!this.need_page_video) {
+                this.pageForm.video = null
             }
 
         },
@@ -529,6 +556,9 @@ export default {
                 if (this.pageForm.rules_if != null)
                     this.need_rules = true
 
+                if (this.pageForm.video != null)
+                    this.need_page_video = true
+
                 this.need_clean = true
             },
             deep: true
@@ -575,6 +605,7 @@ export default {
                 is_external: page.is_external || false,
                 rules_if: page.rules_if || null,
                 rules_else_page_id: page.rules_else_page_id || null,
+                video: page.video || null,
 
                 rules_if_message: page.rules_if_message || null,
                 rules_else_message: page.rules_else_message || null,
@@ -646,7 +677,7 @@ export default {
                 reply_keyboard: null,
                 inline_keyboard: null,
                 is_external: false,
-
+                video: null,
                 reply_keyboard_title: null,
                 reply_keyboard_id: null,
                 inline_keyboard_id: null,
@@ -667,6 +698,7 @@ export default {
 
 
             this.need_page_images = false
+            this.need_page_video = false
             this.need_inline_menu = false
             this.need_reply_menu = false
             this.need_attach_page = false
@@ -761,6 +793,9 @@ export default {
             this.pageForm.content = data
         },
 
+        selectVideo(item){
+            this.pageForm.video = item.file_id
+        }
     }
 }
 </script>

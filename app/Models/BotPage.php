@@ -20,6 +20,7 @@ class BotPage extends Model
         'bot_menu_slug_id',
         'content',
         'images',
+        'video',
         'reply_keyboard_title',
         'reply_keyboard_id',
         'inline_keyboard_id',
