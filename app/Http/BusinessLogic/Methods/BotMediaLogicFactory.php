@@ -10,6 +10,7 @@ use App\Http\Resources\BotMediaResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\BotMedia;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -73,7 +74,8 @@ class BotMediaLogicFactory
             if (!$value)
                 continue;
 
-            $media = $media->where("type", $key);
+            Log::info("value=" . ($value ? "true" : "false") . " key=$key");
+          //  $media = $media->where("type", $key);
         }
 
 
