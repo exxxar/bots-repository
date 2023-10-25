@@ -28,9 +28,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         <div class="fw-bold">{{ item.caption ?? 'Без подписи' }} <span
                             class="badge bg-info rounded-pill">{{ item.type }}</span></div>
                         <small>{{ item.file_id }}</small>
-                        <a href="#" class="btn btn-link" @click="showPreview(item.id)">Показать превью</a>
+                        <a href="#" class="btn btn-link m-0 py-2" @click="showPreview(item.id)">Показать превью</a>
                     </div>
-                    <span class="badge bg-primary rounded-pill">{{ item.id }}</span>
+                    <span class="badge bg-primary rounded-pill">#{{ item.id }}</span>
                 </li>
             </ul>
 
