@@ -7,6 +7,7 @@ import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialog
 import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
+
 </script>
 <template>
     <form

@@ -436,6 +436,9 @@ class BotManager extends BotCore
                 $this->reply($content);
         }
 
+        if (!is_null($page->video)) {
+            $this->replyVideo(null, $page->video);
+        }
 
         if (!is_null($page->next_page_id)) {
             $next = BotPage::query()
