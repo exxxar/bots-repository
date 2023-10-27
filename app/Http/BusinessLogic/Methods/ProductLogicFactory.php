@@ -515,9 +515,10 @@ class ProductLogicFactory
         $summaryPrice = 0;
         $summaryCount = 0;
         foreach ($products as $product) {
+
             $tmpCount = array_filter($tmpProducts, function ($item) use ($product) {
                 return $item->id === $product->id;
-            })[0]->id ?? 0;
+            })[0]->count ?? 0;
 
             $tmpPrice = ($product->current_price ?? 0) * $tmpCount;
             $message .= sprintf("%s x%s=%s руб.\n",
