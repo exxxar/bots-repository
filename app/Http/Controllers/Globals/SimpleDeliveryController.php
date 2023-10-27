@@ -65,7 +65,7 @@ class SimpleDeliveryController extends SlugController
                 [
                     [
                         ["text" => "$btnText", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#delivery-main"
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/delivery-main"
                         ]],
                     ],
 
