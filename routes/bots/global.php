@@ -12,6 +12,9 @@ BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\WheelOfFortuneCustomScriptController::class)
     ->slug("global_wheel_of_fortune_custom", "wheelOfFortune"); //колесо фортуны 2
 
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\SimpleDeliveryController::class)
+    ->slug("global_simple_delivery_main", "simpleDeliveryScript"); //колесо фортуны 2
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\BonusProductScriptController::class)
