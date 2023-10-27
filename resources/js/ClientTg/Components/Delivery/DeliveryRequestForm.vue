@@ -223,6 +223,8 @@ export default {
     },
     mounted() {
 
+        this.clearCart();
+
         this.loadProducts()
 
         if (this.cartProducts.length > 0)
