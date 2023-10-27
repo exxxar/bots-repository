@@ -99,15 +99,8 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadProducts(context, payload = {dataObject: {search: null}, page: 0, size: 12}) {
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
+    async loadProducts(context, payload = {dataObject: {search: null, categories:null}, page: 0, size: 12}) {
         let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain,
             ...payload.dataObject
         }
 

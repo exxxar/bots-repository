@@ -9,6 +9,9 @@ import Basket from '@/ClientTg/Pages/Shop/Basket.vue';
 import CheckOut from '@/ClientTg/Pages/Shop/CheckOut.vue';
 import Settings from '@/ClientTg/Pages/Shop/Settings.vue';
 
+
+import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
+
 //support pages
 import Terms from '@/ClientTg/Pages/Shop/Terms.vue';
 import OurTeam from '@/ClientTg/Pages/Shop/OurTeam.vue';
@@ -344,9 +347,18 @@ export const managerRoutes = [
 
 ]
 
+export const deliveryRoutes = [
+    {
+        name: 'DeliveryMain',
+        path: '/delivery-main',
+        component: DeliveryMain,
+        meta: { title: 'Доставка: Главная', hide_menu:true}
+    },
+];
+
 const router = createRouter({
    history: createWebHashHistory(),
-    routes: [...routes, ...adminRoutes, ...managerRoutes],
+    routes: [...routes, ...adminRoutes, ...managerRoutes, ...deliveryRoutes],
 });
 
 export default router;

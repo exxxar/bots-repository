@@ -1,9 +1,9 @@
 <template>
     <div class="d-flex pb-2">
-        <div class="mr-auto" @click="goToProduct">
+        <div class="mr-auto" >
             <img v-lazy="item.images[0]" class="rounded-m shadow-xl" width="110">
-            <a href="#" data-menu="cart-item-edit"
-               class="color-highlight mt-n5 py-3 pl-2 d-block font-11"><i class="fa-regular fa-share-from-square  pl-2 pr-1"></i>Подробнее</a>
+<!--            <a href="#" data-menu="cart-item-edit"
+               class="color-highlight mt-n5 py-3 pl-2 d-block font-11"><i class="fa-regular fa-share-from-square  pl-2 pr-1"></i>Подробнее</a>-->
         </div>
         <div class="ml-auto w-100 pl-3">
             <h5 class="font-14 font-600 opacity-80 pb-2">{{item.title}}</h5>

@@ -16,6 +16,7 @@ use App\Models\Transaction;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -87,7 +88,7 @@ class ProductLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, $size = null): ProductCollection
+    public function list($search = null, array $filters = null, $size = null): ProductCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -102,8 +103,30 @@ class ProductLogicFactory
             $products = $products
                 ->where(function ($q) use ($search) {
                     $q->where("title", "like", "%$search%");
-                       // ->orWhere("description", "like", "%$search%");
+                    // ->orWhere("description", "like", "%$search%");
                 });
+
+        if (!empty($filters["categories"])) {
+            $products = $products
+                ->whereRelation('productCategories', function ($q) use ($filters) {
+                    $q->whereIn('id', $filters["categories"]);
+                });
+        }
+
+        if (($filters["min_price"] ?? 0) > 0 && ($filters["max_price"] ?? 0) > 0) {
+            $products = $products->where(function ($q) use ($filters) {
+                $q->where("current_price", ">=", $filters["min_price"])
+                    ->where("current_price", "<=", $filters["max_price"]);
+            });
+        }
+
+        if (($filters["min_price"] ?? 0) > 0 && ($filters["max_price"] ?? 0) == 0) {
+            $products = $products->where("current_price", ">=", $filters["min_price"]);
+        }
+
+        if (($filters["min_price"] ?? 0) == 0 && ($filters["max_price"] ?? 0) > 0) {
+            $products = $products->where("current_price", ">=", $filters["min_price"]);
+        }
 
         $products = $products
             ->orderBy("created_at", "DESC")
@@ -458,6 +481,76 @@ class ProductLogicFactory
         return new ProductResource($newProduct);
     }
 
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function checkoutInformation(array $data): void
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Требования функции не выполнены!");
+
+        $validator = Validator::make($data, [
+            "products" => "required",
+            "name" => "required",
+            "phone" => "required",
+            "address" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $tmpProducts = json_decode($data["products"]);
+        $ids = Collection::make($tmpProducts)
+            ->pluck("id");
+
+        $products = Product::query()
+            ->whereIn("id", $ids)
+            ->get();
+
+        $message = "";
+        $summaryPrice = 0;
+        $summaryCount = 0;
+        foreach ($products as $product) {
+            $tmpCount = array_filter($tmpProducts, function ($item) use ($product) {
+                return $item->id === $product->id;
+            })[0]->id ?? 0;
+
+            $tmpPrice = ($product->current_price ?? 0) * $tmpCount;
+            $message .= sprintf("%s x%s=%s\n",
+                $product->title,
+                $tmpCount,
+                $tmpPrice
+            );
+
+            $summaryCount += $tmpCount;
+            $summaryPrice += $tmpPrice;
+        }
+
+        $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
+
+        $userInfo = sprintf("Данные для доставки:\nФ.И.О.:%s\nНомер телефона:%s\nАдрес:%s\nДоп.инфо:%s\n",
+            $data["name"] ?? 'Не указано',
+            $data["phone"] ?? 'Не указано',
+            $data["address"] ?? 'Не указано',
+            $data["info"] ?? 'Не указано',
+        );
+
+        $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->bot->order_channel ?? $this->bot->main_channel ?? null,
+                "#заказдоставка\n\n$message\n\n$userInfo"
+            )
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Спасибо, ваш заказ появился в нашей системе:\n\n<em>$message</em>\n\nОплатите заказ по реквизитам:\nСбер 2222 2222 2222 2222 Егор Ш. или переводом по номеру +7(000)000-00-00 - указав номер  $userId\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>" ?? "Данные не найдены"
+            );
+    }
 
     /**
      * @throws ValidationException

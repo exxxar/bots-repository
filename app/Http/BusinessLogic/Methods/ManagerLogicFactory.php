@@ -400,4 +400,12 @@ class ManagerLogicFactory
         $bot->save();
     }
 
+    public function createVisitCardBot(){
+
+    }
+
+    public function createBusinessBot(){
+
+    }
+
 }

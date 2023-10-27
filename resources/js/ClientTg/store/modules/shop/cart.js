@@ -46,22 +46,25 @@ const getters = {
 
 // actions
 const actions = {
-    async startCheckout(context){
+    async startCheckout(context, payload = {deliveryForm: null}) {
 
-        let ids = []
+        let products = []
         context.state.items.forEach(item => {
             if (item.product)
-            ids.push(item.product.id)
+                products.push({
+                    id: item.product.id,
+                    count: item.quantity || 0
+                })
         })
 
-        let data = {
-            ids:ids
-        }
+        payload.deliveryForm.append("products", JSON.stringify(products))
 
-        let link = `/bot-client/shop/checkout`
+
+
+        let link = `/bot-client/shop/checkout-instruction`
         let method = 'POST'
 
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let _axios = util.makeAxiosFactory(link, method, payload.deliveryForm)
 
         return _axios.then((response) => {
             context.commit("setCartItems", [])

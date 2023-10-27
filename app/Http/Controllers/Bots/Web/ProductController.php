@@ -47,6 +47,12 @@ class ProductController extends Controller
             ->setBot($request->bot ?? null)
             ->list(
                 $request->search ?? null,
+                [
+                    "categories" => $request->categories ?? null,
+                    "min_price" => $request->min_price ?? 0,
+                    "max_price" => $request->max_price ?? 0
+                ],
+
                 $request->get("size") ?? config('app.results_per_page')
             );
     }
@@ -57,7 +63,7 @@ class ProductController extends Controller
     public function addCategory(Request $request): ProductCategoryResource
     {
         $request->validate([
-            "category"=>"required"
+            "category" => "required"
         ]);
 
         return BusinessLogic::products()
@@ -108,7 +114,8 @@ class ProductController extends Controller
 
     }
 
-    public function removeAllProducts(Request $request){
+    public function removeAllProducts(Request $request)
+    {
         BusinessLogic::products()
             ->setBot($request->bot ?? null)
             ->removeAllProducts();
@@ -128,7 +135,24 @@ class ProductController extends Controller
             ->duplicate($productId);
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function checkoutInstruction(Request $request){
+        $request->validate([
+            "products" => "required",
+            "name"=>"required",
+            "phone"=>"required",
+            "address"=>"required",
+        ]);
 
+        BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->checkoutInformation($request->all());
+
+        return response()->noContent();
+    }
     /**
      * @throws ValidationException
      */
