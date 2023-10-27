@@ -167,11 +167,10 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <div class="input-style input-style-2 has-icon">
                 <span class="input-style-1-active input-style-1-inactive">Информация для доставщика</span>
                 <i class="input-icon fa-solid fa-envelope-open-text"></i>
-                <em>(нужно)</em>
                 <textarea class="form-control"
                           style="height:200px;line-height:150%;padding:35px;"
                           v-model="deliveryForm.info"
-                          type="text" placeholder="" required></textarea>
+                          type="text" placeholder=""></textarea>
             </div>
 
             <button

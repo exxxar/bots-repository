@@ -520,7 +520,7 @@ class ProductLogicFactory
             })[0]->id ?? 0;
 
             $tmpPrice = ($product->current_price ?? 0) * $tmpCount;
-            $message .= sprintf("%s x%s=%s\n",
+            $message .= sprintf("%s x%s=%s руб.\n",
                 $product->title,
                 $tmpCount,
                 $tmpPrice
