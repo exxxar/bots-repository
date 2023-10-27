@@ -102,7 +102,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
             <h4>Итого</h4>
             <p>
-                Ниже приведена итоговая цена заказа без учета стоимости доставки. Цена доставки расчитывается отдельно и
+                Ниже приведена итоговая цена заказа без учета стоимости доставки. Цена доставки рассчитывается отдельно и
                 зависит от расстояния.
             </p>
             <div class="row mb-0" v-for="(item, index) in cartProducts">
@@ -110,7 +110,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <div class="col-6 text-left" v-if="item.product"><h6 class="font-600">
                     {{ item.product.title || 'Не указано' }}</h6></div>
                 <div class="col-2 text-center"><h6 class="font-600">x{{ item.quantity || 1 }}</h6></div>
-                <div class="col-4 text-right" v-if="item.product"><h6 class="font-600">{{ item.product.current_price }}
+                <div class="col-4 text-right" v-if="item.product"><h6 class="font-600">{{ item.product.current_price || 0 }}
                     <sup>.00</sup>₽</h6>
                 </div>
 

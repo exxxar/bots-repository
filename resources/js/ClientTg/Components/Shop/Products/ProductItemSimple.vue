@@ -6,7 +6,7 @@
                class="color-highlight mt-n5 py-3 pl-2 d-block font-11"><i class="fa-regular fa-share-from-square  pl-2 pr-1"></i>Подробнее</a>-->
         </div>
         <div class="ml-auto w-100 pl-3">
-            <h5 class="font-14 font-600 opacity-80 pb-2">{{item.title}}</h5>
+            <h5 class="font-14 font-600 opacity-80 pb-2">{{item.title || 'не указано'}}</h5>
             <div class="clearfix"></div>
             <h3 class="font-23 font-700 float-left pt-2 ">₽{{item.current_price || 0}}<sup class="font-15 opacity-50">.00</sup></h3>
             <div class="float-right">
