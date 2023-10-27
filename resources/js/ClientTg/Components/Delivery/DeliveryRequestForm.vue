@@ -84,7 +84,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 v-if="paginate"
                 :pagination="paginate"/>
         </div>
-        <div class="content">
+        <div class="content" v-else>
             <p>К сожалению, никаких товаров еще нет в магазине:(</p>
         </div>
     </div>
