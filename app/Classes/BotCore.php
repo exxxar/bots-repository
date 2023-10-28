@@ -812,7 +812,7 @@ abstract class BotCore
         if (mb_strlen($query) < 10)
             return false;
 
-        $channel = $this->getSelf()->main_channel ?? $this->getSelf()->order_channel ?? null;
+        $channel = $this->getSelf()->order_channel?? $this->getSelf()->main_channel  ?? null;
         if (!is_null($channel)) {
             $domain = $this->currentBotUser()->username ?? null;
             $name = $this->currentBotUser()->name ?? $this->currentBotUser()->fio_from_telegram ?? $this->currentBotUser()->telegram_chat_id;
