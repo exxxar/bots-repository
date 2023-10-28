@@ -46,25 +46,25 @@ trait BotMethodsTrait
             is_null($menu) ? [] : $menu->menu);
     }
 
-    public function reply($message)
+    public function reply($message,  $messageThreadId = null)
     {
-        return $this->sendMessage($this->chatId, $message);
+        return $this->sendMessage($this->chatId, $message, $messageThreadId);
     }
 
-    public function replyPhoto($caption, $path, $keyboard = [])
+    public function replyPhoto($caption, $path, $keyboard = [], $messageThreadId = null)
     {
-        return $this->sendPhoto($this->chatId, $caption, $path, $keyboard);
+        return $this->sendPhoto($this->chatId, $caption, $path, $keyboard, $messageThreadId);
     }
 
-    public function replyVideo($caption, $path, $keyboard = [])
+    public function replyVideo($caption, $path, $keyboard = [], $messageThreadId = null)
     {
-        return $this->sendVideo($this->chatId, $caption, $path, $keyboard);
+        return $this->sendVideo($this->chatId, $caption, $path, $keyboard, $messageThreadId);
     }
 
 
-    public function replyAction($action = "typing")
+    public function replyAction($action = "typing", $messageThreadId = null)
     {
-        return $this->sendChatAction($this->chatId, $action);
+        return $this->sendChatAction($this->chatId, $action, $messageThreadId);
     }
 
     public function replyEditMessageMedia($messageId,$media, $keyboard = [])
@@ -124,20 +124,23 @@ trait BotMethodsTrait
         return $this->sendInvoice($this->chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData);
     }
 
-    public function replyKeyboard($message, $keyboard = [])
+    public function replyKeyboard($message, $keyboard = [], $messageThreadId = null)
     {
-        return $this->sendReplyKeyboard($this->chatId, $message, $keyboard);
+        return $this->sendReplyKeyboard($this->chatId, $message, $keyboard, $messageThreadId);
     }
 
 
-    public function replyDocument($caption, $path, $filename = 'locations.pdf')
+    public function replyDocument($caption, $path, $filename = 'locations.pdf', $messageThreadId = null)
     {
-        return $this->sendDocument($this->chatId, $caption, InputFile::createFromContents($path, $filename));
+        return $this->sendDocument($this->chatId, $caption,
+            InputFile::createFromContents($path, $filename),
+            $messageThreadId
+        );
     }
 
-    public function replyInlineKeyboard($message, $keyboard = [])
+    public function replyInlineKeyboard($message, $keyboard = [], $messageThreadId = null)
     {
-        return $this->sendInlineKeyboard($this->chatId, $message, $keyboard);
+        return $this->sendInlineKeyboard($this->chatId, $message, $keyboard, $messageThreadId);
 
     }
 

@@ -200,6 +200,30 @@
                 </div>
 
 
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_threads"
+                               type="checkbox"
+                               id="need-payments">
+                        <label class="form-check-label" for="need-payments">
+                            Необходимо добавить рассылку по топикам для канала заказов (он же системный канал)
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="mb-2" v-if="need_threads">
+                    <p class="mb-2 font-italic">Для того, чтоб узнать идентификатор топика в группе впишите в чат <strong>"Мой id"</strong></p>
+                    <ul class="list-group">
+                        <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
+                            <p class="mb-0">{{ thread.title }} ({{thread.key}})</p>
+                            <input type="text" class="form-control"
+                                   placeholder="Идентификатор топика"
+                                   v-model="botForm.message_threads[index].value">
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="mb-0" v-if="botForm.bot_token">
 
@@ -680,6 +704,7 @@ export default {
             need_payments: false,
             need_shop: false,
             bot: null,
+            need_threads:false,
             warnings: [
                 {
                     title: "Сумма чека больше чем",
@@ -702,6 +727,7 @@ export default {
                 bot_token: null,
                 bot_token_dev: null,
                 order_channel: null,
+                message_threads: null,
                 main_channel: null,
                 vk_shop_link: null,
                 callback_link: null,
@@ -737,6 +763,33 @@ export default {
         }
     },
     watch: {
+        'need_threads': function (oVal, nVal) {
+            if (this.need_threads) {
+                this.botForm.message_threads = [
+                    {
+                        title: 'Отзывы',
+                        key: 'reviews',
+                        value: null,
+                    },
+                    {
+                        title: 'Начисление cashback',
+                        key: 'cashback',
+                        value: null,
+                    },
+                    {
+                        title: 'Вопросы',
+                        key: 'questions',
+                        value: null,
+                    },
+                    {
+                        title: 'Конкурсы',
+                        key: 'actions',
+                        value: null,
+                    }
+                ]
+            } else
+                this.botForm.message_threads = null
+        },
         'need_payments': function (oVal, nVal) {
             if (!this.need_payments) {
                 this.botForm.auto_cashback_on_payments = false
@@ -769,6 +822,8 @@ export default {
                     bot_token: this.bot.bot_token || null,
                     bot_token_dev: this.bot.bot_token_dev || null,
                     order_channel: this.bot.order_channel || null,
+                    message_threads: this.bot.message_threads || null,
+
                     main_channel: this.bot.main_channel || null,
                     balance: this.bot.balance || null,
                     tax_per_day: this.bot.tax_per_day || null,
@@ -883,6 +938,7 @@ export default {
                         bot_token: null,
                         bot_token_dev: null,
                         order_channel: null,
+                        message_threads: null,
                         main_channel: null,
                         balance: null,
                         tax_per_day: null,

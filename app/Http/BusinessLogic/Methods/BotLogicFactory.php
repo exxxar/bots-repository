@@ -900,6 +900,7 @@ class BotLogicFactory
         $tmp->image = is_null($photos) ? null : ($photos[0] ?? null);
         $tmp->level_2 = $request->level_2 ?? 0;
         $tmp->level_3 = $request->level_3 ?? 0;
+        $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
         $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
@@ -984,9 +985,9 @@ class BotLogicFactory
             foreach ($warnings as $warn)
                 BotWarning::query()->create([
                     'bot_id' => $bot->id,
-                    'rule_key'=> $warn->rule_key ?? null,
-                    'rule_value'=> $warn->rule_value ?? null,
-                    'is_active'=> $warn->is_active ?? false,
+                    'rule_key' => $warn->rule_key ?? null,
+                    'rule_value' => $warn->rule_value ?? null,
+                    'is_active' => $warn->is_active ?? false,
                 ]);
 
         if (env("APP_DEBUG") === false)
@@ -1091,6 +1092,7 @@ class BotLogicFactory
 
         $tmp->level_2 = $data["level_2"] ?? 0;
         $tmp->level_3 = $data["level_3"] ?? 0;
+        $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;
         $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
@@ -1181,21 +1183,21 @@ class BotLogicFactory
 
                 $tmpWarn = BotWarning::query()
                     ->where("rule_key", $warn->rule_key)
-                    ->where("bot_id",$this->bot->id)
+                    ->where("bot_id", $this->bot->id)
                     ->first();
 
                 if (!is_null($tmpWarn))
                     $tmpWarn->update([
-                        'rule_key'=> $warn->rule_key ?? null,
-                        'rule_value'=> $warn->rule_value ?? null,
-                        'is_active'=> $warn->is_active ?? false,
+                        'rule_key' => $warn->rule_key ?? null,
+                        'rule_value' => $warn->rule_value ?? null,
+                        'is_active' => $warn->is_active ?? false,
                     ]);
                 else
-                  $rez=  BotWarning::query()->create([
+                    $rez = BotWarning::query()->create([
                         'bot_id' => $this->bot->id,
-                        'rule_key'=> $warn->rule_key ?? null,
-                        'rule_value'=> $warn->rule_value ?? null,
-                        'is_active'=> $warn->is_active ?? false,
+                        'rule_key' => $warn->rule_key ?? null,
+                        'rule_value' => $warn->rule_value ?? null,
+                        'is_active' => $warn->is_active ?? false,
                     ]);
             }
 

@@ -245,7 +245,10 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                maxlength="255"
                                aria-describedby="bot-order-channel">
                     </div>
+
+
                 </div>
+
 
                 <div class="col-md-6 col-12">
                     <div class="mb-3">
@@ -265,6 +268,31 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                maxlength="255"
                                aria-describedby="bot-main-channel">
                     </div>
+                </div>
+
+                <div class="col-12 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_threads"
+                               type="checkbox"
+                               id="need-payments">
+                        <label class="form-check-label" for="need-payments">
+                            Необходимо добавить рассылку по топикам для канала заказов (он же системный канал)
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="col-12 mb-2" v-if="need_threads">
+                    <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
+                    <ul class="list-group">
+                        <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
+                            <p class="mb-0">{{ thread.title }} ({{thread.key}})</p>
+                            <input type="text" class="form-control"
+                                   placeholder="Идентификатор топика"
+                                   v-model="botForm.message_threads[index].value">
+                        </li>
+                    </ul>
                 </div>
 
             </div>
@@ -828,6 +856,7 @@ export default {
             load: false,
             loadPage: false,
             loadPageList: false,
+            need_threads: false,
             need_payments: false,
             need_shop: false,
             command: null,
@@ -845,6 +874,7 @@ export default {
                     key: "cashback_down_sum_more_then"
                 }
             ],
+
             botForm: {
                 is_template: false,
                 auto_cashback_on_payments: false,
@@ -853,6 +883,7 @@ export default {
                 bot_token: null,
                 bot_token_dev: null,
                 order_channel: null,
+                message_threads: null,
                 main_channel: null,
                 vk_shop_link: null,
                 callback_link: null,
@@ -877,6 +908,33 @@ export default {
         }
     },
     watch: {
+        'need_threads': function (oVal, nVal) {
+            if (this.need_threads) {
+                this.botForm.message_threads = [
+                    {
+                        title: 'Отзывы',
+                        key: 'reviews',
+                        value: null,
+                    },
+                    {
+                        title: 'Начисление cashback',
+                        key: 'cashback',
+                        value: null,
+                    },
+                    {
+                        title: 'Вопросы',
+                        key: 'questions',
+                        value: null,
+                    },
+                    {
+                        title: 'Конкурсы',
+                        key: 'actions',
+                        value: null,
+                    }
+                ]
+            } else
+                this.botForm.message_threads = null
+        },
         'need_payments': function (oVal, nVal) {
             if (!this.need_payments) {
                 this.botForm.auto_cashback_on_payments = false
@@ -918,6 +976,7 @@ export default {
                     bot_token: this.bot.bot_token || null,
                     bot_token_dev: this.bot.bot_token_dev || null,
                     order_channel: this.bot.order_channel || null,
+                    message_threads: this.bot.message_threads || null,
                     main_channel: this.bot.main_channel || null,
                     balance: this.bot.balance || null,
                     tax_per_day: this.bot.tax_per_day || null,
@@ -955,7 +1014,6 @@ export default {
             this.botForm[object.param] = object.text;
 
         },
-
         loadSlugsByBotTemplate(botId) {
 
             this.load = true
@@ -1057,6 +1115,7 @@ export default {
                         bot_token: null,
                         bot_token_dev: null,
                         order_channel: null,
+                        message_threads: null,
                         main_channel: null,
                         balance: null,
                         tax_per_day: null,

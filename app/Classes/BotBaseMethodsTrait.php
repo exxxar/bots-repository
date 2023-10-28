@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\Log;
 trait BotBaseMethodsTrait
 {
 
-    public function sendMessage($chatId, $message)
+    public function sendMessage($chatId, $message,$messageThreadId = null)
     {
         $tmp = [
             "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
             "text" => $message,
             "parse_mode" => "HTML"
         ];
@@ -115,10 +116,11 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendDocument($chatId, $caption, $path)
+    public function sendDocument($chatId, $caption, $path, $messageThreadId = null)
     {
         $tmp = [
             "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
             "document" => $path,
             "caption" => $caption,
             "parse_mode" => "HTML"
@@ -141,12 +143,13 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendReplyKeyboard($chatId, $message, $keyboard)
+    public function sendReplyKeyboard($chatId, $message, $keyboard,$messageThreadId = null)
     {
 
 
         $tmp = [
             "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
             "text" => $message,
             "parse_mode" => "HTML",
             'reply_markup' => json_encode([
@@ -296,12 +299,13 @@ trait BotBaseMethodsTrait
         return $this;
     }
 
-    public function sendInlineKeyboard($chatId, $message, $keyboard)
+    public function sendInlineKeyboard($chatId, $message, $keyboard, $messageThreadId = null)
     {
 
         $tmp = [
             "chat_id" => $chatId,
             "text" => $message,
+            "message_thread_id" => $messageThreadId,
             "parse_mode" => "HTML",
             'reply_markup' => json_encode([
                 'inline_keyboard' => $keyboard,
@@ -377,10 +381,11 @@ trait BotBaseMethodsTrait
     }
 
 
-    public function sendChatAction($chatId, $action)
+    public function sendChatAction($chatId, $action, $messageThreadId = null)
     {
         $tmp = [
             "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
             "action" => $action,
 
         ];
@@ -404,10 +409,11 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendPhoto($chatId, $caption, $path, $keyboard = [])
+    public function sendPhoto($chatId, $caption, $path, $keyboard = [], $messageThreadId = null)
     {
         $tmp = [
             "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
             "photo" => $path,
             "caption" => $caption,
             "parse_mode" => "HTML",
@@ -438,10 +444,11 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendVideo($chatId, $caption, $videoPath, $keyboard = [])
+    public function sendVideo($chatId, $caption, $videoPath, $keyboard = [], $messageThreadId = null)
     {
         $tmp = [
             "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
             "video" => $videoPath,
             "caption" => $caption,
             "parse_mode" => "HTML",
