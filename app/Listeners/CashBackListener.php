@@ -22,6 +22,7 @@ class CashBackListener
     protected $warnings;
 
     protected $warnText;
+
     /**
      * Create the event listener.
      */
@@ -44,7 +45,7 @@ class CashBackListener
             ->first();
 
 
-        $this->warnings =  $bot->warnings ?? [];
+        $this->warnings = $bot->warnings ?? [];
 
         $botUserAdmin = BotUser::query()
             ->with(["user"])
@@ -118,13 +119,13 @@ class CashBackListener
                 ->whereBot($bot)
                 ->sendInlineKeyboard(
                     $botUserUser->telegram_chat_id,
-                    "Пожалуйста, поставьте оценку нашей работе!",[
+                    "Пожалуйста, поставьте оценку нашей работе!", [
                         [
-                            ["text"=>"😡","callback_data"=>"/send_review 0"],
-                            ["text"=>"😕","callback_data"=>"/send_review 1"],
-                            ["text"=>"😐","callback_data"=>"/send_review 2"],
-                            ["text"=>"🙂","callback_data"=>"/send_review 3"],
-                            ["text"=>"😁","callback_data"=>"/send_review 4"],
+                            ["text" => "😡", "callback_data" => "/send_review 0"],
+                            ["text" => "😕", "callback_data" => "/send_review 1"],
+                            ["text" => "😐", "callback_data" => "/send_review 2"],
+                            ["text" => "🙂", "callback_data" => "/send_review 3"],
+                            ["text" => "😁", "callback_data" => "/send_review 4"],
                         ]
                     ]
                 );
@@ -178,20 +179,22 @@ class CashBackListener
 
         }
 
-        if (strlen($this->warnText)>0){
-            $tgAdminId =   $botUserAdmin->telegram_chat_id ?? 'Не указано';
-            $tgUserId =   $botUserUser->telegram_chat_id ?? 'Не указано';
+        if (strlen($this->warnText) > 0) {
+            $tgAdminId = $botUserAdmin->telegram_chat_id ?? 'Не указано';
+            $tgUserId = $botUserUser->telegram_chat_id ?? 'Не указано';
             $nameAdmin = BotMethods::prepareUserName($botUserAdmin);
             $nameUser = BotMethods::prepareUserName($botUserUser);
+
+            $thread = $bot->topics["cashback"] ?? null;
 
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
                     $bot->order_channel ?? $bot->main_channel ?? null,
                     "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
+                    $thread
                 );
         }
-
 
 
     }
@@ -222,8 +225,8 @@ class CashBackListener
                 "Вы начислили <b>$tmpAmount руб.</b> CashBack пользователю $name $levelIndex уровня",
             );
 
-       $this->checkWarnings($moneyAmount, CashBackDirectionEnum::None, $levelIndex);
-       $this->checkWarnings($tmpAmount, CashBackDirectionEnum::Crediting, $levelIndex);
+        $this->checkWarnings($moneyAmount, CashBackDirectionEnum::None, $levelIndex);
+        $this->checkWarnings($tmpAmount, CashBackDirectionEnum::Crediting, $levelIndex);
 
         CashBackHistory::query()->create([
             'money_in_check' => $moneyAmount,
@@ -239,39 +242,40 @@ class CashBackListener
 
     }
 
-    private function checkWarnings($amount, $direction, $levelIndex = null){
+    private function checkWarnings($amount, $direction, $levelIndex = null)
+    {
 
 
         if (empty($this->warnings))
             return;
 
-            foreach ($this->warnings as $warn){
-                if (!$warn->is_active)
-                    continue;
+        foreach ($this->warnings as $warn) {
+            if (!$warn->is_active)
+                continue;
 
-                if ($warn->rule_key=="bill_sum_more_then"
-                    && $amount>=$warn->rule_value
-                    && $direction == CashBackDirectionEnum::None
-                ){
+            if ($warn->rule_key == "bill_sum_more_then"
+                && $amount >= $warn->rule_value
+                && $direction == CashBackDirectionEnum::None
+            ) {
 
-                    $this->warnText .= "Внимание! Сумма чека $amount руб. > $warn->rule_value руб (для уровня $levelIndex)\n";
-                }
-
-                if ($warn->rule_key=="cashback_up_sum_more_then"
-                    && $amount>=$warn->rule_value
-                    && $direction == CashBackDirectionEnum::Crediting
-
-                ){
-                    $this->warnText .= "Внимание! Сумма начисления CashBack $amount руб.  > $warn->rule_value руб (для уровня $levelIndex) \n";
-                }
-
-                if ($warn->rule_key=="cashback_down_sum_more_then"
-                    && $amount>=$warn->rule_value
-                    && $direction == CashBackDirectionEnum::Debiting
-                ){
-                    $this->warnText .= "Внимание! Сумма списания CashBack $amount руб.\n";
-                }
+                $this->warnText .= "Внимание! Сумма чека $amount руб. > $warn->rule_value руб (для уровня $levelIndex)\n";
             }
+
+            if ($warn->rule_key == "cashback_up_sum_more_then"
+                && $amount >= $warn->rule_value
+                && $direction == CashBackDirectionEnum::Crediting
+
+            ) {
+                $this->warnText .= "Внимание! Сумма начисления CashBack $amount руб.  > $warn->rule_value руб (для уровня $levelIndex) \n";
+            }
+
+            if ($warn->rule_key == "cashback_down_sum_more_then"
+                && $amount >= $warn->rule_value
+                && $direction == CashBackDirectionEnum::Debiting
+            ) {
+                $this->warnText .= "Внимание! Сумма списания CashBack $amount руб.\n";
+            }
+        }
 
     }
 

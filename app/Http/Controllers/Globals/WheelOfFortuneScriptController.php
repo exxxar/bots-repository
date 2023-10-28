@@ -232,6 +232,8 @@ class WheelOfFortuneScriptController extends SlugController
 
         $action->save();
 
+        $thread = $bot->topics["actions"] ?? null;
+
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
@@ -243,7 +245,7 @@ class WheelOfFortuneScriptController extends SlugController
                     [
                         ["text" => "Написать пользователю ответ", "url" => $link]
                     ]
-                ]);
+                ], $thread);
 
         return response()->noContent();
     }

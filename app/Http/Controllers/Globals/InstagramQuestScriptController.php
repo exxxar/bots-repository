@@ -177,6 +177,8 @@ class InstagramQuestScriptController extends SlugController
                 public_path() . "/images/cashman.jpg"
         );
 
+        $thread = $bot->topics["actions"] ?? null;
+
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
@@ -184,7 +186,8 @@ class InstagramQuestScriptController extends SlugController
                 sprintf($winMessage, $winnerName))
             ->sendPhoto($callbackChannel,
                 "Участника $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в InstagramQuest - свяжитесь с ним для дальнейших указаний",
-                $file
+                $file,
+                $thread
             );
 
         return response()->noContent();

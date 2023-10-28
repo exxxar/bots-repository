@@ -140,6 +140,7 @@ class RequestMoneyWithdrawScriptController extends SlugController
         $link = "https://t.me/$bot->bot_domain?start=" .
             base64_encode($data);
 
+        $thread = $bot->topics["ask-money"] ?? null;
 
         \App\Facades\BotMethods::bot()
             ->whereDomain($bot->bot_domain)
@@ -151,7 +152,7 @@ class RequestMoneyWithdrawScriptController extends SlugController
                     [
                         ["text" => "Работа с пользователем", "url" => $link]
                     ]
-                ]);
+                ], $thread);
 
         return response()->noContent();
     }

@@ -490,10 +490,14 @@ class SystemDiagnosticController extends Controller
         BotManager::bot()
             ->sendMessage($botUser->telegram_chat_id, "Спасибо! Ваш отзыв учтен!");
 
-        if ($value <= 2)
+        $thread = $bot->topics["reviews"] ?? null;
+/*
+        if ($value <= 2)*/
             BotManager::bot()
                 ->sendMessage($bot->order_channel ?? $bot->main_channel ?? null,
-                    "#отзыв\nПользователь $name ($tgId, $phone) оставил оценку за обслуживание " . ($emojis[$value] ?? "😡") . "!");
+                    "#отзыв\nПользователь $name ($tgId, $phone) оставил оценку за обслуживание " . ($emojis[$value] ?? "😡") . "!",
+                    $thread
+                );
 
         $messageId = $data[0]->message_id ?? null;
 

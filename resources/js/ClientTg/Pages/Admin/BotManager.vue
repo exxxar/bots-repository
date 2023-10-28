@@ -781,11 +781,23 @@ export default {
                         key: 'questions',
                         value: null,
                     },
+
                     {
                         title: 'Конкурсы',
                         key: 'actions',
                         value: null,
-                    }
+                    },
+                    {
+                        title: 'Заказы',
+                        key: 'orders',
+                        value: null,
+                    },
+
+                    {
+                        title: 'Вывод средств',
+                        key: 'ask-money',
+                        value: null,
+                    },
                 ]
             } else
                 this.botForm.message_threads = null

@@ -993,6 +993,7 @@ class BotLogicFactory
         if (env("APP_DEBUG") === false)
             BotManager::bot()->setWebhooks();
 
+
         return new BotResource($bot);
     }
 
@@ -1203,7 +1204,6 @@ class BotLogicFactory
 
         if (env("APP_DEBUG") === false)
             BotManager::bot()->setWebhooks();
-
 
         return new BotResource($this->bot);
     }

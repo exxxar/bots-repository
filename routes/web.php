@@ -32,19 +32,10 @@ use Inertia\Inertia;
 |
 */
 
-Route::get("/test-video/{id}", function ($id){
+Route::get("/bot-info", function (){
+    $bot = Bot::query()->find(2);
 
-    $bot = Bot::query()
-        ->where("bot_domain", "isushibot")
-        ->first();
-
-    \App\Facades\BotMethods::bot()
-        ->whereBot($bot)
-        ->sendVideo(
-           $bot->order_channel ?? $bot->main_channel,
-            "test",
-            $id
-        );
+    dd($bot->toArray());
 });
 
 Route::get("/test-statistic", function () {

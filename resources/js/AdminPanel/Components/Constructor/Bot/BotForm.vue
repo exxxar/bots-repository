@@ -930,7 +930,17 @@ export default {
                         title: 'Конкурсы',
                         key: 'actions',
                         value: null,
-                    }
+                    },
+                    {
+                        title: 'Заказы',
+                        key: 'orders',
+                        value: null,
+                    },
+                    {
+                        title: 'Вывод средств',
+                        key: 'ask-money',
+                        value: null,
+                    },
                 ]
             } else
                 this.botForm.message_threads = null
@@ -963,10 +973,10 @@ export default {
 
         if (this.bot)
             this.$nextTick(() => {
-                this.loadSlugsByBotTemplate(this.bot.id)
-                this.loadPagesByBotTemplate(this.bot.id)
+               // this.loadSlugsByBotTemplate(this.bot.id)
+                //this.loadPagesByBotTemplate(this.bot.id)
 
-                console.log("bot", this.bot)
+
                 this.botForm = {
                     id: this.bot.id || null,
                     is_template: this.bot.is_template || false,

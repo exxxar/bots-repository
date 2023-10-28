@@ -819,6 +819,8 @@ abstract class BotCore
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
 
+            $thread = $this->getSelf()->topics["questions"] ?? null;
+
             if (strlen($channel) > 6 && str_starts_with($channel, "-")) {
                 $this->sendInlineKeyboard($channel,
                     "#ответ\n" .
@@ -828,7 +830,8 @@ abstract class BotCore
                         [
                             ["text" => "Написать пользователю ответ", "url" => $link]
                         ]
-                    ]
+                    ],
+                    $thread
                 );
 
                 $this->reply("Ваше сообщение успешно доставлено администратору бота");

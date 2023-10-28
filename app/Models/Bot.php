@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class Bot extends Model
 {
@@ -74,6 +75,25 @@ class Bot extends Model
     ];
 
     protected $with = ["company","amo","warnings"];
+    protected $appends = ['topics'];
+
+    public function getTopicsAttribute(){
+        if (is_null($this->message_threads))
+            return null;
+        $tmp = [];
+        $messages = Collection::make($this->message_threads ?? [])
+            ->all();
+
+        foreach ($messages as $message)
+        {
+            $key = $message["key"]?? $message->key ?? null;
+            $value = $message["value"]?? $message->key ?? null;
+            $tmp[$key] = $value;
+        }
+
+        return $tmp;
+
+    }
 
     public function imageMenus(): HasMany
     {
@@ -139,4 +159,6 @@ class Bot extends Model
     public function warnings():hasMany {
         return $this->hasMany(BotWarning::class);
     }
+
+
 }

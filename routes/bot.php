@@ -89,6 +89,8 @@ BotManager::bot()
         $link = "https://t.me/$bot->bot_domain?start=" .
             base64_encode($data);
 
+        $thread = $bot->topics["orders"] ?? null;
+
         BotManager::bot()
             ->sendPhoto(
                 $channel,
@@ -100,7 +102,8 @@ BotManager::bot()
                     [
                         ["text" => "Работа с пользователем", "url" => $link]
                     ]
-                ]
+                ],
+                $thread
             );
 
         BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
