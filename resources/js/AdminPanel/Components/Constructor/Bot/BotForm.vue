@@ -909,7 +909,7 @@ export default {
     },
     watch: {
         'need_threads': function (oVal, nVal) {
-            if (this.need_threads) {
+            if (this.need_threads && !this.botForm.message_threads ) {
                 this.botForm.message_threads = [
                     {
                         title: 'Отзывы',
@@ -942,8 +942,7 @@ export default {
                         value: null,
                     },
                 ]
-            } else
-                this.botForm.message_threads = null
+            }
         },
         'need_payments': function (oVal, nVal) {
             if (!this.need_payments) {
