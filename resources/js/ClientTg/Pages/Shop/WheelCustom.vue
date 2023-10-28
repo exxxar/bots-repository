@@ -9,8 +9,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
     <div class="card card-style" v-if="rules">
         <div class="content">
             <h4>Правила данной игры</h4>
-            <p>
-                {{ rules }}
+            <p v-html="rules">
             </p>
 
             <p v-if="canPlay" class="mb-2">Ваши попытки: <strong>{{
