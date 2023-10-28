@@ -218,6 +218,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->pluck("value")
             ->toArray();
 
+        Log::info("in_callback=>".print_r($wheelText,true));
+
         $description = $wheelText[$winNumber - 1] ?? 'Без описания';
 
         $tmp[] = (object)[
@@ -228,6 +230,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "answered_at" => null,
             "answered_by" => null,
         ];
+
+        Log::info("win_result=>".print_r($tmp,true));
 
         $action->data = $tmp;
 
@@ -273,6 +277,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->where("key", "callback_message")
             ->first();
 
+        Log::info("in_prepare=>".print_r($wheels,true));
 
         return response()->json(
             [
