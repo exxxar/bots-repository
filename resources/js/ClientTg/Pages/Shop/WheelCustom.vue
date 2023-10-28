@@ -176,6 +176,9 @@ export default {
 
             })
 
+            console.log("1вы выиграли", this.items)
+            console.log("2вы выиграли", winResult)
+            console.log("3вы выиграли", this.items[winResult])
             this.$botNotification.success("Вы выиграли!", "Вы выиграли приз "+(winResult?this.items[winResult].text:'Что-то интересное...'))
         },
 
@@ -190,6 +193,7 @@ export default {
             if (!evt)
                 return;
             const win = evt
+            console.log("win number=>", evt)
             setTimeout(() => {
                 this.winForm.win = win
                 this.submit()
