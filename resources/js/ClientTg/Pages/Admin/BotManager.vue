@@ -764,43 +764,50 @@ export default {
     },
     watch: {
         'need_threads': function (oVal, nVal) {
-            if (this.need_threads) {
-                this.botForm.message_threads = [
-                    {
-                        title: 'Отзывы',
-                        key: 'reviews',
-                        value: null,
-                    },
-                    {
-                        title: 'Начисление cashback',
-                        key: 'cashback',
-                        value: null,
-                    },
-                    {
-                        title: 'Вопросы',
-                        key: 'questions',
-                        value: null,
-                    },
+            let threads = [
+                {
+                    title: 'Отзывы',
+                    key: 'reviews',
+                    value: null,
+                },
+                {
+                    title: 'Начисление cashback',
+                    key: 'cashback',
+                    value: null,
+                },
+                {
+                    title: 'Вопросы',
+                    key: 'questions',
+                    value: null,
+                },
+                {
+                    title: 'Конкурсы',
+                    key: 'actions',
+                    value: null,
+                },
+                {
+                    title: 'Заказы',
+                    key: 'orders',
+                    value: null,
+                },
+                {
+                    title: 'Вывод средств',
+                    key: 'ask-money',
+                    value: null,
+                }
+            ];
+            if (this.need_threads && !this.botForm.message_threads ) {
+                this.botForm.message_threads = threads
+            }
 
-                    {
-                        title: 'Конкурсы',
-                        key: 'actions',
-                        value: null,
-                    },
-                    {
-                        title: 'Заказы',
-                        key: 'orders',
-                        value: null,
-                    },
+            if (this.need_threads && this.botForm.message_threads){
+                threads.forEach(item=>{
+                    let index = this.botForm.message_threads.findIndex(sub=>sub.key === item.key)
 
-                    {
-                        title: 'Вывод средств',
-                        key: 'ask-money',
-                        value: null,
-                    },
-                ]
-            } else
-                this.botForm.message_threads = null
+                    if (index===-1)
+                        this.botForm.message_threads.push(item)
+                })
+            }
         },
         'need_payments': function (oVal, nVal) {
             if (!this.need_payments) {
