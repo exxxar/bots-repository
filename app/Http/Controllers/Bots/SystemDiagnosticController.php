@@ -26,7 +26,9 @@ class SystemDiagnosticController extends Controller
     public function getMyId(...$data)
     {
         BotManager::bot()
-            ->reply("Ваш чат id: " . ($data[0]->chat->id ?? 'не указан') . "\nИдентификатор топика:" . ($data[0]->message_thread_id ?? 'Не указан'));
+            ->reply("Ваш чат id: " . ($data[0]->chat->id ?? 'не указан') . "\nИдентификатор топика:" . ($data[0]->message_thread_id ?? 'Не указан'),
+                $data[0]->message_thread_id ?? null
+            );
     }
 
     public function democircle(...$data)
