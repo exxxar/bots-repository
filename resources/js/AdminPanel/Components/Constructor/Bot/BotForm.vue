@@ -1015,6 +1015,9 @@ export default {
                     amo: this.bot.amo || null,
                 }
 
+                if (this.botForm.message_threads)
+                    this.need_threads = true
+
                 if (this.botForm.payment_provider_token)
                     this.need_payments = true
             })
