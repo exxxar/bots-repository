@@ -598,7 +598,7 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-        Log::info(print_r($update, true));
+      //  Log::info(print_r($update, true));
 
         include_once base_path('routes/bot.php');
 
@@ -723,7 +723,8 @@ abstract class BotCore
         if ($this->adminNotificationHandler($query))
             return;
 
-        $this->reply("Ошибка обработки данных!");
+        if (($update["message"]["chat"]["is_forum"] ?? 0) == 0)
+            $this->reply("Ошибка обработки данных!");
     }
 
 
