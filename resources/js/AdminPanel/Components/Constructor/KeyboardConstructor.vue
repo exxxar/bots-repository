@@ -1,4 +1,3 @@
-
 <template>
     <div class="container">
         <div class="row">
@@ -79,13 +78,13 @@
                         <button
                             type="button"
                             class="btn btn-link w-100"
-                            @click="moveCol(0)"><i class="fa-solid fa-caret-left"></i>
+                            @click="moveCol(rowIndex,0)"><i class="fa-solid fa-caret-left"></i>
                         </button>
 
                         <button
                             type="button"
                             class="btn btn-link w-100"
-                            @click="moveCol(1)"><i class="fa-solid fa-caret-right"></i>
+                            @click="moveCol(rowIndex,1)"><i class="fa-solid fa-caret-right"></i>
                         </button>
                     </div>
                     <div class="col-10 d-flex justify-content-center p-1">
@@ -148,7 +147,6 @@
                                                :id="'witch-inline-query-current-chat-row-'+rowIndex+'-col-'+colIndex"
                                                placeholder="команда">
                                     </div>
-
 
 
                                     <div class="form-check">
@@ -305,16 +303,22 @@ export default {
         addRowAbove() {
             this.addRow(true)
         },
-        moveCol(direction = 0) {
+        moveCol(row, direction = 0) {
 
-            let rowIndex =  this.select.row
+            if (row !== this.select.row) {
+                this.select.row = row
+                this.select.col = 0
+                this.select.text = this.keyboard[this.select.row][this.select.col].text
+            }
+
+            let rowIndex = this.select.row
             let colIndex = this.select.col
 
             let maxCols = this.keyboard[rowIndex].length
 
             let index = direction === 0 ?
-                colIndex-1 >= 0 ?colIndex - 1 : maxCols-1 :
-                colIndex < maxCols-1 ? colIndex + 1 : 0
+                colIndex - 1 >= 0 ? colIndex - 1 : maxCols - 1 :
+                colIndex < maxCols - 1 ? colIndex + 1 : 0
 
             let tmpCol = this.keyboard[rowIndex][colIndex]
             this.keyboard[rowIndex][colIndex] = this.keyboard[rowIndex][index]
@@ -325,15 +329,15 @@ export default {
             this.select.text = this.keyboard[rowIndex][index].text
 
         },
-        moveRow(direction = 0){
+        moveRow(direction = 0) {
             if (this.selectedRow == null)
                 return;
 
             let maxRows = this.keyboard.length
 
             let index = direction === 0 ?
-                this.selectedRow-1 >= 0 ?this.selectedRow - 1 : maxRows-1 :
-                this.selectedRow < maxRows-1 ? this.selectedRow + 1 : 0
+                this.selectedRow - 1 >= 0 ? this.selectedRow - 1 : maxRows - 1 :
+                this.selectedRow < maxRows - 1 ? this.selectedRow + 1 : 0
 
             let tmpRow = this.keyboard[this.selectedRow]
 
