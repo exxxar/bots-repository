@@ -104,6 +104,7 @@ class RequestMoneyWithdrawScriptController extends SlugController
                 ->whereBot($bot)
                 ->sendMessage($botUser->telegram_chat_id,
                     "У вас на баласне <b>$cashBackAmount руб.</b>. Вывод доступен от $minCashOutValue руб.");
+
             return response()->noContent(400);
         }
 
@@ -174,10 +175,12 @@ class RequestMoneyWithdrawScriptController extends SlugController
 
         $cashBackAmount = $botUser->cashBack->amount ?? 0;
 
+        Log::info("cashback=>".print_r($botUser->cashBack, true));
+
         \App\Facades\BotManager::bot()
-            ->replyPhoto($cashBackAmount < $minCashOutValue ?
+            ->replyPhoto(($cashBackAmount < $minCashOutValue ?
                 "Форма вывода средств: у вас на баласне <b>$cashBackAmount руб.</b>. Вывод доступен от $minCashOutValue руб." :
-                "Форма вывода средств: доступно к выводу <b>$cashBackAmount руб.</b>",
+                "Форма вывода средств: доступно к выводу <b>$cashBackAmount руб.</b>"),
                 InputFile::create($image ?? public_path() . "/images/cashman-cashout.png"),
                 $cashBackAmount < $minCashOutValue ? [] :
                     [
