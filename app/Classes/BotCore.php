@@ -687,10 +687,11 @@ abstract class BotCore
             return;
 
         if ($this->currentBotUserInDialog()) {
+            Log::info("user in dialog ".print_r($query,true));
             $this->nextBotDialog($query);
             return;
         }
-
+            Log::info("here 1");
         $coords = !isset($update["message"]["location"]) ? null :
             (object)[
                 "latitude" => $update["message"]["location"]["latitude"] ?? 0,
@@ -699,36 +700,38 @@ abstract class BotCore
 
         if ($this->botLocationHandler($coords, $message))
             return;
-
+            Log::info("here 2");
         if ($this->botTemplatePageHandler($message, $query))
             return;
-
+            Log::info("here 3");
         /*   if ($this->botDialogStartHandler($message, $query))
                return;*/
 
         if ($this->botSlugHandler($message, $query))
             return;
-
+            Log::info("here 4");
         if ($this->botRouteHandler($message, $query))
             return;
-
+            Log::info("here 5");
         if ($this->botNextHandler($message))
             return;
-
+            Log::info("here 6");
         if ($this->botFallbackPhotoHandler($message))
             return;
-
+            Log::info("here 7");
         if ($this->botFallbackVideoHandler($message))
             return;
-
+            Log::info("here 8");
         if ($this->botFallbackHandler($message))
             return;
-
+            Log::info("here 9");
         if ($this->adminNotificationHandler($query))
             return;
-
+            Log::info("here 10");
         if (($update["message"]["chat"]["is_forum"] ?? 0) == 0)
             $this->reply("Ошибка обработки данных!");
+
+            Log::info("here 11");
         }catch (Exception $e){
             Log::info("in handler function=>".$e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
 
