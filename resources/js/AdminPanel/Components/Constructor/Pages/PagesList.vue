@@ -122,9 +122,8 @@ export default {
 
             this.current_page = localStorage.getItem(`cashman_pagelist_${this.bot.id}_page_index`) || 0
 
-
-            console.log(this.current_page)
             this.loadPages();
+
 
 
         })
@@ -188,6 +187,10 @@ export default {
                 this.loading = false
                 this.pages = this.getPages
                 this.pages_paginate_object = this.getPagesPaginateObject
+
+                if (this.pages.length === 0)
+                    localStorage.setItem(`cashman_pagelist_${this.bot.id}_page_index`,0)
+
             }).catch(() => {
                 this.loading = false
             })
