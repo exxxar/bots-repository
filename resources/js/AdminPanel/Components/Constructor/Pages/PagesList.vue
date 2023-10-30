@@ -24,7 +24,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                 @click="selectPage(null)">Создать новую страницу</button>
                     </div>-->
 
-        <div class="col-12">
+        <div class="col-12" v-if="pages.length>7">
             <Pagination
                 v-on:pagination_page="nextPages"
                 v-if="pages_paginate_object"
