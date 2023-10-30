@@ -200,9 +200,10 @@ class WheelOfFortuneCustomScriptController extends SlugController
         if ($action->current_attempts >= $maxAttempts)
             $action->completed_at = Carbon::now();
 
+
         $winNumber = $request->win ?? 0;
-        $winnerName = $request->name ?? 'Имя не указано';
-        $winnerPhone = $request->phone ?? 'Телефон не указан';
+        $winnerName = $request->name ??  $botUser->name ?? 'Имя не указано';
+        $winnerPhone = $request->phone ??    $botUser->phone ?? 'Телефон не указан';
 
         $botUser->name = $botUser->name ?? $winnerName;
         $botUser->phone = $botUser->phone ?? $winnerPhone;
@@ -217,8 +218,6 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->where("key", "wheel_text")
             ->pluck("value")
             ->toArray();
-
-        Log::info("in_callback=>".print_r($wheelText,true));
 
         $description = $wheelText[$winNumber] ?? 'Без описания';
 
@@ -276,8 +275,6 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $callback_message = Collection::make($slug->config)
             ->where("key", "callback_message")
             ->first();
-
-        Log::info("in_prepare=>".print_r($wheels,true));
 
         return response()->json(
             [

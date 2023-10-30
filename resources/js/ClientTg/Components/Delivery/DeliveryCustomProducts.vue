@@ -117,13 +117,10 @@ import baseJS from "@/ClientTg/modules/custom";
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["type"],
+    props: ["type", "isSimple"],
     data() {
         return {
-            isCollapsed: true,
             search: null,
-            products: [],
-            paginate: null,
             categories: [],
             sending: false,
             dimensions: ["шт", "л", "кг", "гр"],
@@ -132,70 +129,29 @@ export default {
                 phone: null,
                 address: null,
                 info: null,
-                goods: [
-                    {
-                        title: null,
-                        min_price: null,
-                        max_price: null,
-                        count: 0,
-                        dimension: null,
-
-                    }
-                ]
+                goods: []
             },
         }
     },
-    computed: {
-        ...mapGetters(['getProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice']),
-        filteredProducts() {
 
-            if (!this.search)
-                return this.products
-
-            return this.products.filter(product => product.title.toLowerCase().trim().indexOf(this.search.toLowerCase().trim()) >= 0)
-        },
-    },
     mounted() {
 
-        this.clearCart();
-
-        this.loadProducts()
-
-        if (this.cartProducts.length > 0)
-            this.loadActualProducts()
     },
     methods: {
-        clearCart() {
-            this.$store.dispatch("clearCart").then(() => {
-                this.$botNotification.success("Корзина", "Корзина успешно очищена")
+        addGoods() {
+
+            this.deliveryForm.goods.push(this.isSimple ? {
+                title: null,
+                count: 0
+            } : {
+                title: null,
+                min_price: null,
+                max_price: null,
+                count: 0,
+                dimension: null,
+
             })
 
-        },
-        selectCategory(item) {
-            let index = this.categories.findIndex(category => category.id === item.id)
-            if (index !== -1) {
-                this.categories.splice(index, 1)
-                return;
-            }
-            this.categories.push(item)
-        },
-        nextProducts(index) {
-            this.loadProducts(index)
-        },
-        loadProducts(page = 0) {
-            return this.$store.dispatch("loadProducts", {
-                dataObject: {
-                    search: this.search,
-                    categories: this.categories.map(o => o['id']),
-                    min_price: this.min_price,
-                    max_price: this.max_price
-                },
-                page: page
-            }).then(() => {
-                this.products = this.getProducts
-                this.paginate = this.getProductsPaginateObject
-                baseJS.handler()
-            })
         },
         startCheckout() {
             let data = new FormData();
@@ -232,12 +188,6 @@ export default {
             }).catch(err => {
                 this.sending = false
             })
-        },
-        loadActualProducts() {
-            this.$store.dispatch("loadActualPriceInCart")
-        },
-        removeCategory(index) {
-            this.categories.splice(index, 1)
         },
 
     }

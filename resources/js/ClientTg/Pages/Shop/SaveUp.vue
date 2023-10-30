@@ -98,8 +98,8 @@ export default {
     padding: 0;
 
     li {
-        width: 150px;
-        height: 150px;
+        width: 130px;
+        height: 130px;
         padding: 10px;
         list-style: none;
 

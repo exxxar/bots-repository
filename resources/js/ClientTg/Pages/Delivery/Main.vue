@@ -1,5 +1,5 @@
 <script setup>
-import DeliveryRequestForm from "@/ClientTg/Components/Delivery/DeliveryRequestForm.vue";
+import DeliveryRequestForm from "@/ClientTg/Components/Delivery/SelfProductDelivery.vue";
 </script>
 <template>
     <DeliveryRequestForm></DeliveryRequestForm>
