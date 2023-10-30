@@ -247,7 +247,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 str_contains($winMessage, "%s") ?
                     sprintf($winMessage, $winnerName, $winNumber, $description) : $winMessage)
             ->sendInlineKeyboard($callbackChannel,
-                "Участника $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $description ) - свяжитесь с ним для дальнейших указаний", [
+                "Участник $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $description ) - свяжитесь с ним для дальнейших указаний", [
                     [
                         ["text" => "Написать пользователю ответ", "url" => $link]
                     ]

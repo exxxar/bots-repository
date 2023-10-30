@@ -58,33 +58,44 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         </div>
         <div class="row" v-if="bots.length>0">
             <div class="col-12 mb-3">
-                <ul class="list-group w-100">
-                    <li class="list-group-item active cursor-pointer  btn btn-outline-info"
+                <button type="button" class="btn btn-outline-info"
                         v-if="!editor"
                         @click="selectBot(null)">Создать нового бота
-                    </li>
-                    <li class="list-group-item cursor-pointer btn mb-1 d-flex  align-items-center justify-between"
-                        v-bind:class="{'btn-outline-info':bot.deleted_at==null,'btn-outline-secondary border-secondary':bot.deleted_at!=null}"
-                        v-for="(bot, index) in filteredBots"
-                    >
-                        <strong
+                </button>
+            </div>
+            <div class="col-lg-4 col-12 mb-3" v-for="(bot, index) in filteredBots">
+                <div class="card w-100"
+                     v-bind:class="{'border-info':bot.deleted_at==null,'border-secondary':bot.deleted_at!=null}">
+
+                    <div class="card-body">
+                        <p
+                            class="d-flex justify-content-between"
                             @click="selectBot(bot)"
-                            style="word-wrap: break-word;"><i
-                            v-bind:class="{'text-danger':bot.deleted_at!=null}"
-                            class="fa-solid fa-robot mr-2"></i>{{
-                                bot.bot_domain || 'Не указано'
-                            }}
-                        </strong>
+                            style="word-wrap: break-word;">
+                            <span>
+                                <i
+                                    v-bind:class="{'text-danger':bot.deleted_at!=null}"
+                                    class="fa-solid fa-robot mr-2"></i>
 
-                        <span class="badge bg-info"
-                              v-if="bot.is_template">{{ bot.template_description || 'Шаблон без названия' }}
-                    </span>
+                                {{
+                                        bot.bot_domain || 'Не указано'
+                                    }}
+                            </span>
+                            <span class="badge bg-info"
+                                  v-if="bot.is_template">{{
+                                    bot.template_description || 'Шаблон без названия'
+                                }}            </span>
+                        </p>
 
-                        <div>
+
+                    </div>
+
+                    <div class="card-footer d-flex">
+
                         <button class="btn btn-outline-info mr-2"
                                 type="button"
                                 @click="duplicate(bot.id)"
-                                title="Дублировать" >
+                                title="Дублировать">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                         <button class="btn btn-outline-info"
@@ -93,21 +104,20 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                 title="В архив" v-if="bot.deleted_at==null"><i
                             class="fa-solid fa-boxes-packing"></i></button>
 
-                            <button class="btn btn-outline-info mr-2"
-                                    @click="extractFromArchive(bot.id)"
-                                    title="Из архива" v-if="bot.deleted_at!=null"><i
-                                class="fa-solid fa-box-open"></i></button>
+                        <button class="btn btn-outline-info mr-2"
+                                @click="extractFromArchive(bot.id)"
+                                title="Из архива" v-if="bot.deleted_at!=null"><i
+                            class="fa-solid fa-box-open"></i></button>
 
-                            <button class="btn btn-danger  mr-2 "
-                                    @click="forceDelete(bot.id)"
-                                    title="Удалить на совсем" v-if="bot.deleted_at!=null">
-                                <i class="fa-solid fa-trash-can text-white"></i>
-                            </button>
-                        </div>
+                        <button class="btn btn-danger  mr-2 "
+                                @click="forceDelete(bot.id)"
+                                title="Удалить на совсем" v-if="bot.deleted_at!=null">
+                            <i class="fa-solid fa-trash-can text-white"></i>
+                        </button>
 
+                    </div>
 
-                    </li>
-                </ul>
+                </div>
 
             </div>
 
@@ -157,7 +167,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getBots', 'getBotsPaginateObject','getCurrentCompany']),
+        ...mapGetters(['getBots', 'getBotsPaginateObject', 'getCurrentCompany']),
         filteredBots() {
             if (!this.bots)
                 return [];
@@ -167,7 +177,7 @@ export default {
                 return this.bots
 
             if (this.selectedFilters.length === 0 && this.search != null)
-                return this.bots.filter(item => (item.bot_domain||'')
+                return this.bots.filter(item => (item.bot_domain || '')
                     .trim()
                     .toLowerCase()
                     .indexOf(this.search
@@ -193,12 +203,12 @@ export default {
             if (this.search == null)
                 return tmpBots
 
-            return tmpBots.filter(item=>(item.bot_domain||'')
+            return tmpBots.filter(item => (item.bot_domain || '')
                 .trim()
                 .toLowerCase()
                 .indexOf(this.search
                     .trim()
-                    .toLowerCase())!==-1)
+                    .toLowerCase()) !== -1)
 
 
         }
@@ -208,13 +218,13 @@ export default {
         this.selectFilter('active')
     },
     methods: {
-        duplicate(id){
-            if (!this.getCurrentCompany){
+        duplicate(id) {
+            if (!this.getCurrentCompany) {
                 this.$notify("У Вас не выбран клиент!");
                 return;
             }
             this.$store.dispatch("duplicateBot", {
-                dataObject:{
+                dataObject: {
                     bot_id: id,
                     company_id: this.getCurrentCompany.id
                 }
@@ -233,7 +243,7 @@ export default {
                 this.$notify("Указанный бот успешно перемещен в архив");
             })
         },
-        forceDelete(id){
+        forceDelete(id) {
             this.$store.dispatch("forceDeleteBot", {
                 botId: id
             }).then(resp => {

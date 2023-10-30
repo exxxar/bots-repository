@@ -96,6 +96,7 @@ class RequestMoneyWithdrawScriptController extends SlugController
             ->where("key", "min_cash_out_value")
             ->first())["value"] ?? 500;
 
+        Log::info("cashback=>".print_r($botUser->cashBack, true));
         $cashBackAmount = $botUser->cashBack->amount ?? 0;
 
         if ($cashBackAmount < $minCashOutValue) {
