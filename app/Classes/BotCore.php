@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use PHPUnit\Exception;
 use ReflectionClass;
 use ReflectionMethod;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -598,7 +599,7 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-      //  Log::info(print_r($update, true));
+       Log::info(print_r($update, true));
 
         include_once base_path('routes/bot.php');
 
@@ -672,6 +673,9 @@ abstract class BotCore
         }
 
 
+        try {
+
+
         $query = $item->message->text ??
             $item->callback_query->data ?? '';
 
@@ -725,6 +729,10 @@ abstract class BotCore
 
         if (($update["message"]["chat"]["is_forum"] ?? 0) == 0)
             $this->reply("Ошибка обработки данных!");
+        }catch (Exception $e){
+            Log::info("in handler function=>".$e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
+
+        }
     }
 
 
