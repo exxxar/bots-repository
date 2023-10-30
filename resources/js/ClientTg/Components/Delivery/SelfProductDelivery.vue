@@ -1,7 +1,7 @@
 <script setup>
 import ProductItemSimple from "@/ClientTg/Components/Shop/Products/ProductItemSimple.vue";
 import Pagination from "@/ClientTg/Components/Pagination.vue";
-import CategoryList from "@/ClientTg/Components/Shop/Categories/CategoryList.vue";
+import CategoryList from "@/ClientTg/Components/Shop/Categories/CategoryInlineList.vue";
 
 import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
@@ -9,7 +9,6 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
     <div class="card card-style">
         <div class="content">
-            <h3>Наши товары</h3>
 
 
             <div v-if="!isCollapsed">
@@ -18,7 +17,6 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     <i class="input-icon fa-solid fa-magnifying-glass" @click="loadProducts(0)"></i>
                     <input class="form-control" v-model="search" type="search" placeholder="Найди товар на странице">
                 </div>
-                <p class="mb-0 text-center"><small>Всего товаров найдено ({{ paginate.meta.total}})</small></p>
                 <p class="mb-0">Цена товара</p>
                 <div class="row mb-0">
                     <div class="col-6">
@@ -26,9 +24,9 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                             <input
                                 v-model="min_price"
                                 class="form-control"
-                                   type="number"
-                                   min="0"
-                                   placeholder="От, руб">
+                                type="number"
+                                min="0"
+                                placeholder="От, руб">
                         </div>
                     </div>
                     <div class="col-6">
@@ -41,12 +39,12 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     </div>
                 </div>
 
-                <div class="d-flex scrolled-list" v-if="categories.length>0">
-                       <span
-                             class="badge badge-info mr-2 mb-2 mt-0"
-                             v-for="(item, index) in categories">{{item.title || 'не указано'}} <i class="ml-1 fa-solid fa-xmark text-white" @click="removeCategory(index)"></i></span>
+                <!--                <div class="d-flex scrolled-list" v-if="categories.length>0">
+                                       <span
+                                             class="badge badge-info mr-2 mb-2 mt-0"
+                                             v-for="(item, index) in categories">{{item.title || 'не указано'}} <i class="ml-1 fa-solid fa-xmark text-white" @click="removeCategory(index)"></i></span>
 
-                </div>
+                                </div>-->
 
 
                 <button
@@ -56,25 +54,34 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 </button>
 
 
-                <CategoryList
-                    :selected="categories"
-                    v-on:select="selectCategory"/>
-
             </div>
 
 
-            <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
-               class="btn btn-m btn-full rounded-sm font-900 shadow-xl text-uppercase mb-3">
-                <i class="fa-solid fa-chevron-down mr-2" v-if="isCollapsed"></i>
-                <i class="fa-solid fa-filter  mr-2" v-else></i>
-                <span class="font-14">Фильтры товара</span>
-            </a>
+            <!--            <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
+                           class="btn btn-m btn-full rounded-sm font-900 shadow-xl text-uppercase mb-3">
+                            <i class="fa-solid fa-chevron-down mr-2" v-if="isCollapsed"></i>
+                            <i class="fa-solid fa-filter  mr-2" v-else></i>
+                            <span class="font-14">Фильтры товара</span>
+                        </a>-->
 
 
         </div>
     </div>
 
-    <div class="card card-style"  >
+    <div class="card card-style">
+        <div class="content">
+            <CategoryList
+                :size="100"
+                :selected="categories"
+                v-on:select="selectCategory"/>
+        </div>
+    </div>
+
+    <div class="card card-style">
+        <div class="content" v-if="paginate">
+            <p class="mb-0 text-center"><small>Всего товаров найдено ({{ paginate.meta.total }})</small></p>
+
+        </div>
         <div class="content" v-if="products.length>0">
             <ProductItemSimple :item="product" v-for="(product, index) in filteredProducts"/>
 
@@ -102,7 +109,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
             <h4>Итого</h4>
             <p>
-                Ниже приведена итоговая цена заказа без учета стоимости доставки. Цена доставки рассчитывается отдельно и
+                Ниже приведена итоговая цена заказа без учета стоимости доставки. Цена доставки рассчитывается отдельно
+                и
                 зависит от расстояния.
             </p>
             <div class="row mb-0" v-for="(item, index) in cartProducts">
@@ -110,7 +118,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <div class="col-6 text-left" v-if="item.product"><h6 class="font-600">
                     {{ item.product.title || 'Не указано' }}</h6></div>
                 <div class="col-2 text-center"><h6 class="font-600">x{{ item.quantity || 1 }}</h6></div>
-                <div class="col-4 text-right" v-if="item.product"><h6 class="font-600">{{ item.product.current_price || 0 }}
+                <div class="col-4 text-right" v-if="item.product"><h6 class="font-600">
+                    {{ item.product.current_price || 0 }}
                     <sup>.00</sup>₽</h6>
                 </div>
 
@@ -174,7 +183,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             </div>
 
             <button
-               type="submit"
+                type="submit"
                 class="btn btn-full btn-sm rounded-s bg-highlight font-800 text-uppercase w-100 mb-2">
                 <i class="fa-solid fa-file-invoice mr-2"></i><span class="color-white">Оформить</span>
             </button>
@@ -194,14 +203,14 @@ export default {
     props: ["type"],
     data() {
         return {
-            isCollapsed: true,
+            isCollapsed: false,
             search: null,
             products: [],
             paginate: null,
-            categories:[],
+            categories: [],
             sending: false,
-            min_price:0,
-            max_price:0,
+            min_price: 0,
+            max_price: 0,
             deliveryForm: {
                 name: null,
                 phone: null,
@@ -230,19 +239,20 @@ export default {
             this.loadActualProducts()
     },
     methods: {
-        clearCart(){
-            this.$store.dispatch("clearCart").then(()=>{
-                this.$botNotification.success("Корзина","Корзина успешно очищена")
+        clearCart() {
+            this.$store.dispatch("clearCart").then(() => {
+                this.$botNotification.success("Корзина", "Корзина успешно очищена")
             })
 
         },
         selectCategory(item) {
-            let index = this.categories.findIndex(category=>category.id === item.id)
+            let index = this.categories.findIndex(category => category.id === item.id)
             if (index !== -1) {
                 this.categories.splice(index, 1)
-                return;
-            }
-            this.categories.push(item)
+            } else
+                this.categories.push(item)
+
+            this.loadProducts(0)
         },
         nextProducts(index) {
             this.loadProducts(index)
@@ -251,9 +261,9 @@ export default {
             return this.$store.dispatch("loadProducts", {
                 dataObject: {
                     search: this.search,
-                    categories: this.categories.map(o => o['id']),
-                    min_price:this.min_price,
-                    max_price:this.max_price
+                    categories: this.categories.length > 0 ? this.categories.map(o => o['id']) : null,
+                    min_price: this.min_price,
+                    max_price: this.max_price
                 },
                 page: page
             }).then(() => {
@@ -289,7 +299,7 @@ export default {
                     phone: null,
                 }
 
-                this.$botNotification.success("Доставка","Дальнейшая инструкция отправлена вам в бот!")
+                this.$botNotification.success("Доставка", "Дальнейшая инструкция отправлена вам в бот!")
 
                 this.clearCart();
 
@@ -301,8 +311,8 @@ export default {
         loadActualProducts() {
             this.$store.dispatch("loadActualPriceInCart")
         },
-        removeCategory(index){
-          this.categories.splice(index, 1)
+        removeCategory(index) {
+            this.categories.splice(index, 1)
         },
 
     }

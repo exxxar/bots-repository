@@ -41,6 +41,7 @@ const actions = {
         let link = `${BASE_PAGES_LINK}/page-update`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.pageForm)
         return _axios.then((response) => {
+
             return Promise.resolve(response.data);
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])

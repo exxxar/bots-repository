@@ -23,6 +23,14 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         <button type="button" class="btn btn-outline-success w-100"
                                 @click="selectPage(null)">Создать новую страницу</button>
                     </div>-->
+
+        <div class="col-12">
+            <Pagination
+                v-on:pagination_page="nextPages"
+                v-if="pages_paginate_object"
+                :pagination="pages_paginate_object"/>
+        </div>
+
         <div class="col-12 mb-3">
             <ul class="list-group w-100">
 
@@ -96,8 +104,14 @@ export default {
         }
     },
     watch: {
+        getPages: function (oldVal, newVal) {
+            this.$nextTick(() => {
+                if (!this.search)
+                    this.pages = this.getPages
+            })
+        },
         search: function (oldVal, newVal) {
-            this.loadPages()
+            this.nextPages(0)
         }
     },
     computed: {
@@ -105,7 +119,13 @@ export default {
     },
     mounted() {
         this.loadCurrentBot().then(() => {
+
+            this.current_page = localStorage.getItem("cashman_pagelist_page_index") || 0
+
+
             this.loadPages();
+
+
         })
 
     },
@@ -122,7 +142,9 @@ export default {
             this.$notify("Вы выбрали страницу из списка! Все остальные действия будут производится для этой страницы");
         },
         nextPages(index) {
+
             this.current_page = index
+            localStorage.setItem("cashman_pagelist_page_index", this.current_page)
             this.loadPages()
         },
         duplicatePage(id) {
@@ -161,6 +183,7 @@ export default {
                 },
                 page: this.current_page
             }).then(resp => {
+
                 this.loading = false
                 this.pages = this.getPages
                 this.pages_paginate_object = this.getPagesPaginateObject

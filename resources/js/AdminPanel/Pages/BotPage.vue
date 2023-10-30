@@ -14,18 +14,18 @@ import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
                     <div class="col-12">
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                             <button type="button"
-                                    @click="step=0"
+                                    @click="setStep(0)"
                                     v-bind:class="{'btn-primary':step===0,'btn-outline-primary':step!==0}"
                                     class="btn">Создание бота
                             </button>
                             <button type="button"
-                                    @click="step=1"
+                                    @click="setStep(1)"
                                     v-bind:class="{'btn-primary':step===1,'btn-outline-primary':step!==1}"
                                     class="btn">Поиск бота
                             </button>
                             <button type="button"
                                     :disabled="!bot"
-                                    @click="step=2"
+                                    @click="setStep(2)"
                                     v-bind:class="{'btn-primary':step===2,'btn-outline-primary':step!==2}"
                                     class="btn">Редактирование бота
                             </button>
@@ -82,6 +82,7 @@ export default {
         this.loadCurrentCompany()
         this.loadCurrentBot()
 
+
         window.addEventListener('store_current_bot-change-event', (event) => {
             this.bot = this.getCurrentBot
             this.step = this.bot ? 2 : 1;
@@ -92,11 +93,17 @@ export default {
         });
     },
     methods: {
+        setStep(index) {
+            this.step = parseInt(index)
+            localStorage.setItem("cashman_set_botpage_step_index", index)
+        },
         loadCurrentBot(bot = null) {
             this.$store.dispatch("updateCurrentBot", {
                 bot: bot
             }).then(() => {
                 this.bot = this.getCurrentBot
+
+                this.setStep(localStorage.getItem("cashman_set_botpage_step_index") || 0)
             })
         },
         loadCurrentCompany(company = null) {

@@ -172,6 +172,8 @@ const actions = {
         let page = payload.page || 0
         let size = payload.size || 5
 
+        console.log(size)
+
         let link = `${BASE_PRODUCTS_LINK}/categories?page=${page}&size=${size}`
         let method = 'POST'
 

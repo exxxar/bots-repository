@@ -155,7 +155,7 @@ Route::get("/test-cash", function () {
 
 });
 Route::get('/db-transfer', function (Request $request) {
-     $users2 = DB::connection('mysql2')->table("users")
+   /*  $users2 = DB::connection('mysql2')->table("users")
           ->get();
 
       ini_set('max_execution_time', '300000');
@@ -213,7 +213,7 @@ Route::get('/db-transfer', function (Request $request) {
 
 
       }
-      ini_set('max_execution_time', '300');
+      ini_set('max_execution_time', '300');*/
 
 });
 

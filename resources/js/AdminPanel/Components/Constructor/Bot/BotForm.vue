@@ -24,30 +24,18 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
             <div class="btn-group" role="group" aria-label="Basic outlined example">
                 <button type="button"
                         v-bind:class="{'btn-info text-white':step===0}"
-                        @click="step=0"
+                        @click="setStep(0)"
                         class="btn btn-outline-info"><i class="fa-solid fa-info mr-1"></i> Информация о боте
                 </button>
-                <button type="button"
-                        v-bind:class="{'btn-info text-white':step===9}"
-                        @click="step=9"
-                        class="btn btn-outline-info"><i class="fa-regular fa-newspaper mr-2"></i> Новостной канал
-                </button>
+
                 <button type="button"
                         :disabled="botForm.selected_bot_template_id===null"
                         v-bind:class="{'btn-info text-white':step===4}"
-                        @click="step=4"
+                        @click="setStep(4)"
                         class="btn btn-outline-info"><i class="fa-solid fa-file mr-2"></i> Страницы
                 </button>
-                <button type="button"
-                        v-bind:class="{'btn-info text-white':step===7}"
-                        @click="step=7"
-                        class="btn btn-outline-info"><i class="fa-solid fa-list-check mr-2"></i> AMO CRM
-                </button>
-                <button type="button"
-                        v-bind:class="{'btn-info text-white':step===8}"
-                        @click="step=8"
-                        class="btn btn-outline-info"><i class="fa-brands fa-shopify mr-2"></i> Магазин
-                </button>
+
+
                 <div class="dropdown">
                     <button
                         type="button"
@@ -58,12 +46,14 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     </button>
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" href="#bot-image-menu" @click="step=5">Меню заведения</a></li>
-                        <li><a class="dropdown-item" href="#bot-menu-template" @click="step=1">Шаблон клавитатур
-                            бота</a></li>
-                        <li><a class="dropdown-item" href="#bot-slugs" @click="step=2">Скрипты</a></li>
-                        <li><a class="dropdown-item" href="#bot-dialogs" @click="step=6">Диалоги</a></li>
-                        <li><a class="dropdown-item" href="#bot-users" @click="step=3">Пользователи</a></li>
+
+                        <li><a class="dropdown-item" href="#bot-menu-template" @click="setStep(1)"><i class="fa-solid fa-keyboard mr-2"></i>Все клавиатуры в боте</a></li>
+                        <li><a class="dropdown-item" href="#bot-slugs" @click="setStep(2)"><i class="fa-solid fa-scroll mr-2"></i>Все скрипты в боте</a></li>
+                        <li><a class="dropdown-item" href="#bot-dialogs" @click="setStep(6)"><i class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
+                        <li><a class="dropdown-item" href="#bot-users" @click="setStep(3)"><i class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
+                        <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i class="fa-regular fa-newspaper mr-2"></i> Новостной канал</a></li>
+                        <li><a class="dropdown-item" href="#bot-amo" @click="setStep(7)"><i class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
+                        <li><a class="dropdown-item" href="#bot-shop" @click="setStep(8)"><i class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
                     </ul>
                 </div>
             </div>
@@ -287,7 +277,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
                     <ul class="list-group">
                         <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
-                            <p class="mb-0">{{ thread.title }} ({{thread.key}})</p>
+                            <p class="mb-0">{{ thread.title }} ({{ thread.key }})</p>
                             <input type="text" class="form-control"
                                    placeholder="Идентификатор топика"
                                    v-model="botForm.message_threads[index].value">
@@ -789,11 +779,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
         </div>
 
 
-        <div v-if="step===5">
-            <ImageMenu
-                v-if="!load"
-            />
-        </div>
+
 
 
         <div v-if="step===1">
@@ -828,7 +814,6 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 
             <div class="col-12 col-md-4" v-if="!load">
                 <PagesList
-                    v-if="!loadPageList"
                     :editor="true"
                     v-on:callback="pageListCallback"/>
 
@@ -855,7 +840,7 @@ export default {
             templates: [],
             load: false,
             loadPage: false,
-            loadPageList: false,
+            needPageListUpdate: false,
             need_threads: false,
             need_payments: false,
             need_shop: false,
@@ -940,16 +925,16 @@ export default {
                     key: 'ask-money',
                     value: null,
                 }
-                ];
-            if (this.need_threads && !this.botForm.message_threads ) {
+            ];
+            if (this.need_threads && !this.botForm.message_threads) {
                 this.botForm.message_threads = threads
             }
 
-            if (this.need_threads && this.botForm.message_threads){
-                threads.forEach(item=>{
-                    let index = this.botForm.message_threads.findIndex(sub=>sub.key === item.key)
+            if (this.need_threads && this.botForm.message_threads) {
+                threads.forEach(item => {
+                    let index = this.botForm.message_threads.findIndex(sub => sub.key === item.key)
 
-                    if (index===-1)
+                    if (index === -1)
                         this.botForm.message_threads.push(item)
                 })
             }
@@ -982,7 +967,7 @@ export default {
 
         if (this.bot)
             this.$nextTick(() => {
-               // this.loadSlugsByBotTemplate(this.bot.id)
+                // this.loadSlugsByBotTemplate(this.bot.id)
                 //this.loadPagesByBotTemplate(this.bot.id)
 
 
@@ -1029,9 +1014,15 @@ export default {
 
                 if (this.botForm.payment_provider_token)
                     this.need_payments = true
+
+                this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
             })
     },
     methods: {
+        setStep(index) {
+            this.step = parseInt(index)
+            localStorage.setItem("cashman_set_botform_step_index", index)
+        },
         addTextTo(object = {param: null, text: null}) {
             this.botForm[object.param] = object.text;
 

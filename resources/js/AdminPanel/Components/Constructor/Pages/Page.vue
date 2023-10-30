@@ -716,6 +716,7 @@ export default {
             })
         },
         submitPage() {
+
             let data = new FormData();
             Object.keys(this.pageForm)
                 .forEach(key => {
@@ -741,13 +742,16 @@ export default {
             this.$store.dispatch((this.pageForm.id == null ? "createPage" : "updatePage"), {
                 pageForm: data
             }).then((response) => {
-                this.load = true
+            /*    this.load = true
 
                 this.$nextTick(() => {
                     this.load = false
 
                     this.clearForm()
-                })
+                })*/
+
+
+
 
                 this.$emit("callback", response.data)
                 this.$notify({
@@ -755,6 +759,16 @@ export default {
                     text: (this.pageForm.id == null ? "Страница успешно создана!" : "Страница успешно обновлена!"),
                     type: 'success'
                 });
+
+                if (this.pageForm.id != null) {
+                    this.$store.dispatch("loadPages", {
+                        dataObject:{
+                            botId:this.bot.id
+                        },
+                        page: localStorage.getItem("cashman_pagelist_page_index") || 0
+
+                    })
+                }
             }).catch(err => {
 
             })
