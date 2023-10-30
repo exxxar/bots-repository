@@ -82,6 +82,7 @@ export default {
         this.loadCurrentCompany()
         this.loadCurrentBot()
 
+        this.setStep(localStorage.getItem("cashman_set_botpage_step_index") || 0)
 
         window.addEventListener('store_current_bot-change-event', (event) => {
             this.bot = this.getCurrentBot
@@ -103,7 +104,7 @@ export default {
             }).then(() => {
                 this.bot = this.getCurrentBot
 
-                this.setStep(localStorage.getItem("cashman_set_botpage_step_index") || 0)
+
             })
         },
         loadCurrentCompany(company = null) {
@@ -124,7 +125,7 @@ export default {
         botListCallback(bot) {
             this.load = true
 
-            this.step = 2
+            this. setStep(2)
             this.loadCurrentBot(bot)
 
             this.$nextTick(() => {

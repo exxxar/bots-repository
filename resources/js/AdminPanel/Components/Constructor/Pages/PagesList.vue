@@ -120,9 +120,10 @@ export default {
     mounted() {
         this.loadCurrentBot().then(() => {
 
-            this.current_page = localStorage.getItem("cashman_pagelist_page_index") || 0
+            this.current_page = localStorage.getItem(`cashman_pagelist_${this.bot.id}_page_index`) || 0
 
 
+            console.log(this.current_page)
             this.loadPages();
 
 
@@ -144,7 +145,7 @@ export default {
         nextPages(index) {
 
             this.current_page = index
-            localStorage.setItem("cashman_pagelist_page_index", this.current_page)
+            localStorage.setItem(`cashman_pagelist_${this.bot.id}_page_index`, this.current_page)
             this.loadPages()
         },
         duplicatePage(id) {
@@ -179,9 +180,9 @@ export default {
             this.$store.dispatch("loadPages", {
                 dataObject: {
                     botId: this.bot.id || null,
-                    search: this.search
+                    search: this.search || null
                 },
-                page: this.current_page
+                page: this.current_page || 0
             }).then(resp => {
 
                 this.loading = false

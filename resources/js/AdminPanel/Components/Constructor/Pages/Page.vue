@@ -765,7 +765,7 @@ export default {
                         dataObject:{
                             botId:this.bot.id
                         },
-                        page: localStorage.getItem("cashman_pagelist_page_index") || 0
+                        page: localStorage.getItem(`cashman_pagelist_${this.bot.id}_page_index`) || 0
 
                     })
                 }
