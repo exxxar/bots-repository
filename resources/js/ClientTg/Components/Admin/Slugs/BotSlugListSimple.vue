@@ -1,3 +1,7 @@
+<script setup>
+import Pagination from '@/ClientTg/Components/Pagination.vue';
+
+</script>
 <template>
     <h6>Добавление нового скрипта в бота</h6>
     <div>
@@ -32,6 +36,15 @@
         У Вас еще нет добавленных скриптов! Воспользуйтесь разделом "Скрипты" для добавления.
     </div>
 
+    <div class="mb-3">
+        <Pagination
+            :simple="true"
+            v-on:pagination_page="nextSlugs"
+            v-if="paginate"
+            :pagination="paginate"/>
+    </div>
+
+
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -41,12 +54,13 @@ export default {
     data() {
         return {
             load: false,
+            paginate:null,
             search: null,
             slugs: [],
         }
     },
     computed: {
-        ...mapGetters([ 'getSlugs']),
+        ...mapGetters([ 'getSlugs','getSlugsPaginateObject']),
         filteredSlugs() {
             if (!this.slugs)
                 return [];
@@ -74,6 +88,9 @@ export default {
         this.loadSlugs()
     },
     methods: {
+        nextSlugs(index) {
+            this.loadSlugs(index)
+        },
         selectSlug(item) {
             this.$emit("callback", {
                 id: item.id || null,
@@ -85,11 +102,15 @@ export default {
 
             this.$botNotification.notification("Скрипты","Вы выбрали скрипт из списка!");
         },
-        loadSlugs() {
+        loadSlugs(index) {
             this.$store.dispatch("loadSlugs", {
-                isGlobal: this.global || false
+                dataObject:{
+                    needGlobal: this.global || false
+                },
+                page:index
             }).then(resp => {
                 this.slugs = this.getSlugs
+                this.paginate = this.getSlugsPaginateObject
 
 
             })

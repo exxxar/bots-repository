@@ -382,8 +382,8 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                                 @click="pageForm.next_bot_menu_slug_id = null"><i class="fa-solid fa-trash"></i></a></p>
                         <BotSlugListSimple
                             :global="true"
-                            v-on:callback="associateSlug"
-                            :bot="bot"/>
+                            v-on:callback="associateSlug"/>
+
                     </div>
 
                     <div class="mb-2">

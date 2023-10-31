@@ -1,5 +1,8 @@
 <script setup>
 
+import Pagination from '@/ClientTg/Components/Pagination.vue';
+
+
 import GlobalSlugList from "@/ClientTg/Components/Admin/Slugs/GlobalSlugList.vue";
 
 import Slug from '@/ClientTg/Components/Admin/Slugs/Slug.vue'
@@ -50,6 +53,14 @@ import Slug from '@/ClientTg/Components/Admin/Slugs/Slug.vue'
               v-on:select="selectSlug"/>
     </div>
 
+    <div class="mb-3">
+        <Pagination
+            :simple="true"
+            v-on:pagination_page="nextSlugs"
+            v-if="paginate"
+            :pagination="paginate"/>
+    </div>
+
     <div class="mb-3" v-if="filteredSlugs.length===0">
 
         <div class="alert alert-danger" role="alert">
@@ -71,6 +82,7 @@ export default {
             need_global:true,
             show: false,
             slugs:[],
+            paginate:null,
             ownSearch: null,
             slugForm: {
                 command: null,
@@ -88,7 +100,7 @@ export default {
     },
     computed: {
 
-        ...mapGetters([ 'getSlugs']),
+        ...mapGetters([ 'getSlugs', 'getSlugsPaginateObject']),
 
         filteredSlugs() {
             if (this.slugs.length === 0)
@@ -121,14 +133,18 @@ export default {
         }
     },
     methods: {
-        loadSlugs() {
+        nextSlugs(index) {
+            this.loadSlugs(index)
+        },
+        loadSlugs(index) {
             this.$store.dispatch("loadSlugs", {
                 dataObject:{
                     needGlobal: this.need_global
-                }
-
+                },
+                page: index
             }).then((resp) => {
                 this.slugs = this.getSlugs
+                this.paginate = this.getSlugsPaginateObject
 
 
             })

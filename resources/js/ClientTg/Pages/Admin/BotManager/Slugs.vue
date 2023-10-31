@@ -13,6 +13,8 @@ import BotSlugList from "@/ClientTg/Components/Admin/Slugs/BotSlugList.vue";
                 :bot="bot"
                 v-if="!load"
             />
+
+
         </div>
     </div>
 

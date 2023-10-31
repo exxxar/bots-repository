@@ -65,6 +65,7 @@ const actions = {
         let method = 'POST'
         let data = payload.dataObject
 
+
         let _axios = util.makeAxiosFactory(link, method, data)
 
         return _axios.then((response) => {
@@ -72,6 +73,7 @@ const actions = {
 
             context.commit("setSlugs", dataObject.data)
             delete dataObject.data
+            console.log("dataObject")
             context.commit('setSlugsPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
