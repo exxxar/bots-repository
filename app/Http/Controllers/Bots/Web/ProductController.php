@@ -49,8 +49,8 @@ class ProductController extends Controller
                 $request->search ?? null,
                 [
                     "categories" => $request->categories ?? null,
-                    "min_price" => $request->min_price ?? 0,
-                    "max_price" => $request->max_price ?? 0
+                    "min_price" => $request->min_price ?? null,
+                    "max_price" => $request->max_price ?? null
                 ],
 
                 $request->get("size") ?? config('app.results_per_page')

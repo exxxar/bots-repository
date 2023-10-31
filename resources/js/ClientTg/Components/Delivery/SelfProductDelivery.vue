@@ -72,6 +72,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
         <div class="content">
             <CategoryList
                 :size="100"
+                :active="activeCategories"
                 :selected="categories"
                 v-on:select="selectCategory"/>
         </div>
@@ -209,8 +210,8 @@ export default {
             paginate: null,
             categories: [],
             sending: false,
-            min_price: 0,
-            max_price: 0,
+            min_price: null,
+            max_price: null,
             deliveryForm: {
                 name: null,
                 phone: null,
@@ -228,6 +229,13 @@ export default {
 
             return this.products.filter(product => product.title.toLowerCase().trim().indexOf(this.search.toLowerCase().trim()) >= 0)
         },
+        activeCategories(){
+            let tmp = [];
+            this.filteredProducts.forEach(item=>{
+                tmp.push(item.categories.map(o => o['id']))
+            })
+            return [...new Set(tmp.map(item => item[0])), ...new Set(tmp.map(item => item[1]))];
+        }
     },
     mounted() {
 
@@ -262,8 +270,8 @@ export default {
                 dataObject: {
                     search: this.search,
                     categories: this.categories.length > 0 ? this.categories.map(o => o['id']) : null,
-                    min_price: this.min_price,
-                    max_price: this.max_price
+                    min_price: this.min_price || null,
+                    max_price: this.max_price || null
                 },
                 page: page
             }).then(() => {

@@ -125,7 +125,7 @@ class ProductLogicFactory
         }
 
         if (($filters["min_price"] ?? 0) == 0 && ($filters["max_price"] ?? 0) > 0) {
-            $products = $products->where("current_price", ">=", $filters["min_price"]);
+            $products = $products->where("current_price", "<=", $filters["max_price"]);
         }
 
         $products = $products
