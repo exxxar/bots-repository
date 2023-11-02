@@ -742,15 +742,16 @@ export default {
             this.$store.dispatch((this.pageForm.id == null ? "createPage" : "updatePage"), {
                 pageForm: data
             }).then((response) => {
-            /*    this.load = true
 
-                this.$nextTick(() => {
-                    this.load = false
+                if (this.pageForm.id == null) {
+                    this.load = true
 
-                    this.clearForm()
-                })*/
+                    this.$nextTick(() => {
+                        this.load = false
 
-
+                        this.clearForm()
+                    })
+                }
 
 
                 this.$emit("callback", response.data)
@@ -762,8 +763,8 @@ export default {
 
                 if (this.pageForm.id != null) {
                     this.$store.dispatch("loadPages", {
-                        dataObject:{
-                            botId:this.bot.id
+                        dataObject: {
+                            botId: this.bot.id
                         },
                         page: localStorage.getItem(`cashman_pagelist_${this.bot.id}_page_index`) || 0
 
@@ -810,7 +811,7 @@ export default {
             this.pageForm.content = data
         },
 
-        selectVideo(item){
+        selectVideo(item) {
             this.pageForm.video = item.file_id
         }
     }

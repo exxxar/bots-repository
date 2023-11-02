@@ -3,7 +3,10 @@
     <div class="deal-container">
         <div class="deal-wheel">
             <!-- блок с призами -->
+            <div class="outer-circle"></div>
+
             <ul class="spinner"></ul>
+
             <!-- язычок барабана -->
             <div class="ticker"></div>
             <!-- кнопка -->
@@ -217,6 +220,13 @@ export default {
 
     width:100%;
     height:100%;
+
+    background: #2e2e2e;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
+
+
 }
 /* общий блок для всех элементов */
 .deal-wheel {
@@ -243,6 +253,8 @@ export default {
     "trigger";
     /* устанавливаем размер шрифта */
     font-size: calc(var(--size) / 21);
+
+    transform: scale(0.9) translateX(-10px);
 }
 
 /* всё, что относится ко внутренним элементам главного блока, будет находиться в области сетки с названием spinner */
@@ -254,7 +266,24 @@ export default {
 .deal-wheel .btn-spin {
     grid-area: trigger;
     justify-self: center;
+
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: .5em 2em;
+    outline: none;
+    border-width: 2px 0;
+    border-style: solid none;
+    border-color: #FDBE33 #000 #D77206;
+    border-radius: 6px;
+    background: linear-gradient(#F3AE0F, #E38916) #E38916;
+    transition: 0.2s;
+
+
 }
+
+.deal-wheel .btn-spin:hover { background: linear-gradient(#f5ae00, #f59500) #f5ae00; }
+.deal-wheel .btn-spin:active { background: linear-gradient(#f59500, #f5ae00) #f59500; }
 
 /* сектор колеса */
 .spinner {
@@ -298,14 +327,15 @@ export default {
     /* запрещаем пользователю выделять мышкой текст на секторах */
     user-select: none;
 
+
     display: flex;
     justify-content: center;
     align-items: center;
 
     span {
         line-height: 100%;
-        //transform: rotate(45deg);
-        color: wheat;
+        color: #7f5300;
+        transform: translateX(25px);
     }
 }
 
@@ -315,12 +345,13 @@ export default {
     position: relative;
     /* устанавливаем размеры */
     left: calc(var(--size) / -15);
-    width: calc(var(--size) / 10);
+    width: calc(var(--size) / 7);
     height: calc(var(--size) / 20);
     /* фон язычка */
-    background: var(--lg);
+   // background: var(--lg);
+    background: linear-gradient(0deg, rgba(255,144,19,1) 0%, rgba(158,6,2,1) 100%);
     /* делаем так, чтобы язычок был выше колеса */
-    z-index: 1;
+    z-index: 6;
     /* форма язычка */
     clip-path: polygon(20% 0, 100% 50%, 20% 100%, 0% 50%);
     /* устанавливаем точку, относительно которой будет вращаться язычок при движении колеса */
@@ -402,5 +433,17 @@ export default {
     85% {
         transform: scale(1);
     }
+}
+
+.outer-circle {
+    padding: 15px;
+    box-sizing: border-box;
+    border: 17px #FFC107 solid;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px 2px #c19308 inset, 2px 2px 4px 2px #a07903;
+    position: absolute;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
 }
 </style>

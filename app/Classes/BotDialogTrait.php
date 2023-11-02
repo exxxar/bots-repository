@@ -216,8 +216,8 @@ trait BotDialogTrait
             }
 
             $channel = $botDialogCommand->result_channel  ??
-                $this->bot->main_channel ??
-                $this->bot->order_channel ?? null;
+                $this->bot->order_channel  ??
+                $this->bot->main_channel ?? null;
 
             $tmpMessage .= "Пользователь:\n"
                 ."-ТГ id: ".($botUser->telegram_chat_id ?? '-')."\n"
@@ -226,7 +226,9 @@ trait BotDialogTrait
                 ."-телефон: ".($botUser->phone ?? 'Номер телефона не указан')."\n"
                 ."-email: ".($botUser->email ?? 'Почта не указана')."\n";
 
-            $this->sendMessage($channel , $tmpMessage);
+            $thread = $bot->topics["questions"] ?? null;
+
+            $this->sendMessage($channel , $tmpMessage , $thread);
         }
     }
 }

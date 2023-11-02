@@ -121,18 +121,18 @@ export default {
                 let index = 0;
 
                 const colors = [
-                    "hsl(197 30% 43%)",
-                    "hsl(173 58% 39%)",
-                    "hsl(43 74% 66%)",
-                    "hsl(27 87% 67%)",
-                    "hsl(12 76% 61%)",
-                    "hsl(350 60% 52%)",
-                    "hsl(91 43% 54%)",
-                    "hsl(140 36% 74%)",
-                    "hsl(41 43% 54%)",
-                    "hsl(81 73% 74%)",
-                    "hsl(197 30% 43%)",
-                    "hsl(173 58% 39%)",
+                    "hsl(50,100%,50%)",
+                    "hsl(43,100%,50%)",
+                    "hsl(50,100%,50%)",
+                    "hsl(43,100%,50%)",
+                    "hsl(50,100%,50%)",
+                    "hsl(43,100%,50%)",
+                    "hsl(50,100%,50%)",
+                    "hsl(43,100%,50%)",
+                    "hsl(50,100%,50%)",
+                    "hsl(43,100%,50%)",
+                    "hsl(50,100%,50%)",
+                    "hsl(43,100%,50%)",
                 ]
 
                 this.rules = response.rules
@@ -148,6 +148,12 @@ export default {
 
                     index = (index < colors.length) ? index + 1 : 0
                 })
+
+                if (this.items.length % 2 !==0)
+                    this.items.push({
+                        text: "Не выиграл",
+                        color: colors[index],
+                    })
             })
         },
         submit() {
