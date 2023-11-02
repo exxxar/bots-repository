@@ -103,6 +103,10 @@ trait BotMethodsTrait
         return $this->sendPhoto($this->chatId, $caption, $path, is_null($menu) ? [] : $menu->menu);
     }
 
+    public function replyDice($type = 0)
+    {
+        return $this->sendDice($this->chatId, $type);
+    }
 
     public function replyLocation($lat, $lon)
     {

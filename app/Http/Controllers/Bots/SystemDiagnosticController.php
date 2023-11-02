@@ -23,6 +23,11 @@ class SystemDiagnosticController extends Controller
 {
     //
 
+    public function demodice(...$data){
+        BotManager::bot()
+            ->replyDice();
+    }
+
     public function getMyId(...$data)
     {
         BotManager::bot()
