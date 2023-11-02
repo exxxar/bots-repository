@@ -147,6 +147,7 @@ class StartCodesHandlerController extends Controller
 
     public function referralAction(...$data)
     {
+        Log::info("referralAction=>".print_r($data[0], true));
         $bot = BotManager::bot()
             ->getSelf();
 
@@ -169,6 +170,7 @@ class StartCodesHandlerController extends Controller
                 case "003":
                     $text = "Обратная связь с пользователем";
                     $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
+
                     break;
 
             }

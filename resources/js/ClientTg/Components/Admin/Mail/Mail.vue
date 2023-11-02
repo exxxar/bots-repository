@@ -7,62 +7,64 @@ import KeyboardList from "@/ClientTg/Components/Admin/Keyboards/KeyboardList.vue
     <form v-on:submit.prevent="submitMail" v-if="currentBot">
 
 
-            <div class="mb-3">
-                <button
-                    v-if="mailForm.channel!=null"
-                    type="button"
-                    class="btn btn-outline-info"
-                    @click="mailForm.channel = null"><i class="fa-solid fa-xmark"></i></button>
-                ,
-                <button
-                    type="button"
-                    class="btn"
-                    v-bind:class="{'btn-info':mailForm.channel === currentBot.main_channel, 'btn-outline-info':mailForm.channel !== currentBot.main_channel}"
-                    @click="mailForm.channel = currentBot.main_channel">Главный канал
-                </button>
-                ,
+        <div class="mb-3">
+            <button
+                v-if="mailForm.channel!=null"
+                type="button"
+                class="btn btn-outline-info"
+                @click="mailForm.channel = null"><i class="fa-solid fa-xmark"></i></button>
+            ,
+            <button
+                type="button"
+                class="btn"
+                v-bind:class="{'btn-info':mailForm.channel === currentBot.main_channel, 'btn-outline-info':mailForm.channel !== currentBot.main_channel}"
+                @click="mailForm.channel = currentBot.main_channel">Главный канал
+            </button>
+            ,
 
-                <button
-                    type="button"
-                    class="btn"
-                    v-bind:class="{'btn-info':mailForm.channel === currentBot.order_channel, 'btn-outline-info':mailForm.channel !== currentBot.order_channel}"
-                    @click="mailForm.channel = currentBot.order_channel">Канал заказов
-                </button>
+            <button
+                type="button"
+                class="btn"
+                v-bind:class="{'btn-info':mailForm.channel === currentBot.order_channel, 'btn-outline-info':mailForm.channel !== currentBot.order_channel}"
+                @click="mailForm.channel = currentBot.order_channel">Канал заказов
+            </button>
+        </div>
+        <div class="mb-3">
+            <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
+
+                <label class="form-label" id="bot-main-channel">Канал для постов</label>
+                <span @click="requestChannelId('channel')"><i
+                    class="fa-brands fa-telegram mr-2 color-blue2-dark"></i></span>
+                <Popper>
+                    <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                    <template #content>
+                        <div>Нужно
+                        </div>
+                    </template>
+                </Popper>
+
+
             </div>
-            <div class="mb-3">
-                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
-
-                    <label class="form-label" id="bot-main-channel">Канал для постов</label>
-                    <span @click="requestChannelId('channel')"><i class="fa-brands fa-telegram mr-2 color-blue2-dark"></i></span>
-                     <Popper>
-                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
-                        <template #content>
-                            <div>Нужно
-                            </div>
-                        </template>
-                    </Popper>
-
-
-                </div>
-                <input type="text" class="form-control"
-                       placeholder="id канала"
-                       aria-label="id канала"
-                       v-model="mailForm.channel"
-                       maxlength="255"
-                       aria-describedby="bot-main-channel" required>
-            </div>
+            <input type="text" class="form-control"
+                   placeholder="id канала"
+                   aria-label="id канала"
+                   v-model="mailForm.channel"
+                   maxlength="255"
+                   @blur="requestTelegramChannelId"
+                   aria-describedby="bot-main-channel" required>
+        </div>
 
 
         <div class="mb-2">
             <label class="form-label d-flex justify-content-between align-items-center mb-2" id="bot-domain">
                 Текстовое содержимое страницы
-                 <Popper>
-                        <i class="fa-solid font-10 fa-star color-red2-dark"></i>
-                        <template #content>
-                            <div>Нужно
-                            </div>
-                        </template>
-                    </Popper>
+                <Popper>
+                    <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                    <template #content>
+                        <div>Нужно
+                        </div>
+                    </template>
+                </Popper>
 
             </label>
 
@@ -161,21 +163,18 @@ import KeyboardList from "@/ClientTg/Components/Admin/Keyboards/KeyboardList.vue
                 :edited-keyboard="mailForm.inline_keyboard"/>
 
 
-
-
-
         </div>
 
 
         <button
-            type="submit" class="btn btn-m btn-full mb-1 rounded-s text-uppercase font-900 shadow-s bg-green2-dark w-100">
+            type="submit"
+            class="btn btn-m btn-full mb-1 rounded-s text-uppercase font-900 shadow-s bg-green2-dark w-100">
             Отправить сообщение в канал
         </button>
 
     </form>
 </template>
 <script>
-
 
 
 export default {
@@ -197,8 +196,9 @@ export default {
             },
         }
     },
-    computed:{
-        currentBot(){
+
+    computed: {
+        currentBot() {
             return window.currentBot
         }
     },
@@ -206,7 +206,7 @@ export default {
 
         window.addEventListener("select-telegram-channel-id", (e) => {
             this.mailForm[e.detail.param] = e.detail.channel
-        } );
+        });
     },
 
     methods: {
@@ -248,7 +248,7 @@ export default {
                 this.$botNotification.success(
                     "Отлично!",
                     "Сообщение успешно отправлено в канал!"
-                 );
+                );
             }).catch(err => {
                 this.$botNotification.warning(
                     "Упс...",
@@ -281,10 +281,39 @@ export default {
             for (let i = 0; i < files.length; i++)
                 this.photos.push(files[i])
         },
-        requestChannelId(param){
+        requestChannelId(param) {
             this.$botPages.telegramChannelHelper(param);
-        }
+        },
 
+        requestTelegramChannelId() {
+            const reg = new RegExp('^\d+$')
+
+            if (reg.test(this.mailForm.channel))
+                return;
+
+            if (this.mailForm.channel.indexOf("https://") !== -1)
+                this.mailForm.channel = "@" + (this.mailForm.channel.split("https://t.me/")[1])
+
+
+            this.$store.dispatch("requestTelegramChannelId", {
+                dataObject: {
+                    channel: this.mailForm.channel
+                }
+            }).then((resp) => {
+                if (resp.ok)
+                    this.mailForm.channel = resp.result.chat.id
+
+
+                if (resp.ok)
+                    this.$botNotification.success("Отлично", "Канал успешно найден!")
+                if (!resp.ok) {
+                    this.$botNotification.warning("Ошибочка!", "Неверно указанный канал")
+                    this.mailForm.channel = null
+                }
+            }).catch(() => {
+
+            })
+        },
 
     }
 }

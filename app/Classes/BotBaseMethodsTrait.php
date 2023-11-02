@@ -9,7 +9,33 @@ use Illuminate\Support\Facades\Log;
 trait BotBaseMethodsTrait
 {
 
-    public function sendMessage($chatId, $message,$messageThreadId = null)
+    public function replyToMessage($chatId, $replyToMessageId, $message, $messageThreadId = null)
+    {
+        $tmp = [
+            "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
+            "reply_to_message_id" => $replyToMessageId,
+            "text" => $message,
+            "parse_mode" => "HTML"
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $data = $this->bot->sendMessage($tmp);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+        return $this;
+    }
+
+    public function sendMessage($chatId, $message, $messageThreadId = null)
     {
         $tmp = [
             "chat_id" => $chatId,
@@ -116,6 +142,59 @@ trait BotBaseMethodsTrait
 
     }
 
+
+    public function forwardMessage($chatId, $fromChatId, $messageId)
+    {
+
+        $tmp = [
+            "chat_id" => $chatId,
+            "from_chat_id" => $fromChatId,
+            "message_id" => $messageId,
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->forwardMessage($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+        return $this;
+    }
+
+    public function sendDice($chatId, $type = 0)
+    {
+        $emojis = ["🎲", "🎯", "🏀", "⚽", "🎳", "🎰"];
+
+        $type = $type >= count($emojis) || $type < 0 ? 0 : $type;
+
+        $tmp = [
+            "chat_id" => $chatId,
+            "emoji" => $emojis[$type],
+            "parse_mode" => "HTML"
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->sendDice($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+        return $this;
+
+    }
+
     public function sendDocument($chatId, $caption, $path, $messageThreadId = null)
     {
         $tmp = [
@@ -143,7 +222,7 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendReplyKeyboard($chatId, $message, $keyboard,$messageThreadId = null)
+    public function sendReplyKeyboard($chatId, $message, $keyboard, $messageThreadId = null)
     {
 
 
@@ -323,8 +402,8 @@ trait BotBaseMethodsTrait
 
         } catch (\Exception $e) {
 
-           // unset($tmp['reply_markup']);
-           $this->sendMessage($chatId, $message);
+            // unset($tmp['reply_markup']);
+            $this->sendMessage($chatId, $message);
 
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
