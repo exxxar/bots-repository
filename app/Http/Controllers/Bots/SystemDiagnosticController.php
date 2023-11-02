@@ -219,13 +219,6 @@ class SystemDiagnosticController extends Controller
     {
         BotManager::bot()->stopBotDialog();
 
-        $messageId = $data[0]->message_id;
-
-
-        BotManager::bot()
-            ->replyToMessage(-1001945006002,$messageId,"test",15 );
-
-        Log::info("start action with param=>".print_r($data,true));
         StartCodesService::bot()->handler($data[3] ?? null);
 
         BotManager::bot()->pushCommand("/start");
