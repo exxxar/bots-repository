@@ -185,7 +185,8 @@ trait BotBaseMethodsTrait
         }
 
         try {
-            $this->bot->sendDice($tmp);
+            $data = $this->bot->sendDice($tmp);
+            Log::info("dice result=>".print_r($data, true));
         } catch (\Exception $e) {
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
