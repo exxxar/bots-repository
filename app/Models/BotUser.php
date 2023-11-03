@@ -84,11 +84,14 @@ class BotUser extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function cashBack(): hasOne
+    public function cashBack(): belongsTo
     {
-
-        return $this->hasOne(CashBack::class,"user_id","user_id")
-            ->where("bot_id", $this->bot_id);
+        $tmp = CashBack::query()
+            ->where("bot_id", $this->bot_id)
+            ->where("user_id", $this->user_id)
+            ->first();
+        return $tmp->belongsTo(CashBack::class);/*$this->belongsTo(CashBack::class,"user_id","user_id")
+            ->where("bot_id", $this->bot_id);*/
     }
 
     public function parent(): HasOne
