@@ -501,7 +501,9 @@ export default {
                     //document.getElementById('user-profile-info').scrollIntoView();
                 })
             }).catch(() => {
+                this.botUser = null
                 this.loading = false
+                this.reloadUsers = false
             })
         },
         loadCashBack(page = 0) {
