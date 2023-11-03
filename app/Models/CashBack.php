@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CashBack extends Model
 {
@@ -38,6 +39,8 @@ class CashBack extends Model
         'deleted_at' => 'timestamp',
     ];
 
+    public $with = ["subs"];
+
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
@@ -48,4 +51,8 @@ class CashBack extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function subs():HasMany
+    {
+        return $this->hasMany(CashBackSub::class,"cash_back_id","id");
+    }
 }

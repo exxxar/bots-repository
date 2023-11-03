@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\CashBack;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -12,6 +13,15 @@ class BotUserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if (is_null($this->cashBack)) {
+            $this->cashBack = CashBack::query()
+                ->create([
+                    'user_id' => $this->user_id,
+                    'bot_id' => $this->bot_id,
+                    'bot_user_id' => $this->id,
+                    'amount' => 0,
+                ]);
+        }
         return [
             'id' => $this->id,
             'bot_id' => $this->bot_id,

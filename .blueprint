@@ -1,14 +1,14 @@
 created:
-    - app/Http/Controllers/BotMediaController.php
-    - database/factories/BotMediaFactory.php
-    - database/migrations/2023_10_25_184149_create_bot_media_table.php
-    - app/Models/BotMedia.php
-    - database/seeders/BotMediaSeeder.php
-    - tests/Feature/Http/Controllers/BotMediaControllerTest.php
-    - app/Http/Requests/BotMediaStoreRequest.php
-    - app/Http/Requests/BotMediaUpdateRequest.php
-    - app/Http/Resources/BotMediaCollection.php
-    - app/Http/Resources/BotMediaResource.php
+    - app/Http/Controllers/CashBackSubController.php
+    - database/factories/CashBackSubFactory.php
+    - database/migrations/2023_11_03_191408_create_cash_back_subs_table.php
+    - app/Models/CashBackSub.php
+    - database/seeders/CashBackSubSeeder.php
+    - tests/Feature/Http/Controllers/CashBackSubControllerTest.php
+    - app/Http/Requests/CashBackSubStoreRequest.php
+    - app/Http/Requests/CashBackSubUpdateRequest.php
+    - app/Http/Resources/CashBackSubCollection.php
+    - app/Http/Resources/CashBackSubResource.php
 updated:
     - routes/api.php
 models:
@@ -47,3 +47,4 @@ models:
     BotExternalRequest: { bot_id: 'id foreign:bots', bot_user_id: 'id foreign:bot_users', command: 'nullable string:255', completed_at: 'timestamp nullable', relationships: { belongsTo: 'BotUser, Bot' } }
     BotWarning: { bot_id: 'id foreign:bots', rule_key: 'string:50', rule_value: 'integer default:0', is_active: 'boolean default:false', relationships: { belongsTo: Bot } }
     BotMedia: { bot_id: 'id foreign:bots', bot_user_id: 'id foreign:bot_users', rating: 'integer default:0', file_id: 'string:255 nullable', caption: 'longtext nullable', type: 'string:255', relationships: { belongsTo: 'Bot, BotUser' } }
+    CashBackSub: { cash_back_id: 'id foreign:cash_backs', title: 'string:255 nullable', amount: 'double default:0', relationships: { belongsTo: CashBack } }

@@ -1,17 +1,13 @@
 models:
-  BotMedia:
-    bot_id: id foreign:bots
-    bot_user_id: id foreign:bot_users
-    file_id: string:255 nullable
-    caption: longtext nullable
-    type: string:255
+  CashBackSub:
+    cash_back_id: id foreign:cash_backs
+    title: string:255 nullable
+    amount: double default:0
     relationships:
-      belongsTo: Bot, BotUser
+      belongsTo: CashBack
 
-
-
-seeders: BotMedia
+seeders: CashBackSub
 
 controllers:
-  BotMedia:
+  CashBackSub:
     resource: api

@@ -108,3 +108,6 @@ Route::apiResource('bot-warning', App\Http\Controllers\BotWarningController::cla
 
 
 Route::apiResource('bot-media', App\Http\Controllers\BotMediaController::class);
+
+
+Route::apiResource('cash-back-sub', App\Http\Controllers\CashBackSubController::class);
