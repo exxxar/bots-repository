@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Log;
 
 class BotUser extends Model
 {
@@ -85,8 +86,8 @@ class BotUser extends Model
 
     public function cashBack(): BelongsTo
     {
-        return $this->belongsTo(CashBack::class,"user_id","user_id")
-            ->where("bot_id", $this->bot_id);
+        Log::info("cashback=>".print_r($this->toArray(), true));
+        return $this->belongsTo(CashBack::class,"user_id","user_id");
     }
 
     public function parent(): HasOne
