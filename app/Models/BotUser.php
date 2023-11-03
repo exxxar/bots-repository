@@ -87,7 +87,8 @@ class BotUser extends Model
     public function cashBack(): hasOne
     {
 
-        return $this->hasOne(CashBack::class,"user_id","user_id");
+        return $this->hasOne(CashBack::class,"user_id","user_id")
+            ->where("bot_id", $this->bot_id);
     }
 
     public function parent(): HasOne
