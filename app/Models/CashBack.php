@@ -18,6 +18,7 @@ class CashBack extends Model
     protected $fillable = [
         'user_id',
         'bot_id',
+        'bot_user_id',
         'amount',
     ];
 
@@ -30,6 +31,7 @@ class CashBack extends Model
         'id' => 'integer',
         'user_id' => 'integer',
         'bot_id' => 'integer',
+        'bot_user_id' => 'integer',
         'amount' => 'double',
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
