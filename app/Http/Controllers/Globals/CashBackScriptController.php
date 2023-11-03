@@ -445,6 +445,12 @@ class CashBackScriptController extends SlugController
             ->where("user_id", $botUser->user_id)
             ->first();
 
+        if (is_null($cashBack->bot_user_id))
+        {
+            $cashBack->bot_user_id = $botUser->id;
+            $cashBack->save();
+        }
+
         $amount = is_null($cashBack) ? 0 : ($cashBack->amount ?? 0);
 
         $companyTitle = $bot->company->title ?? 'CashMan';

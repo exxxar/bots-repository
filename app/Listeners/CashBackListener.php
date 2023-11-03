@@ -78,7 +78,7 @@ class CashBackListener
         }
 
 
-        $cashBack = $this->prepareUserCashBack($event->userId, $event->botId);
+        $cashBack = $this->prepareUserCashBack($event->userId, $event->botId, $botUserUser->id);
 
         if ($event->directionEnum == CashBackDirectionEnum::Crediting) {
 
@@ -207,7 +207,7 @@ class CashBackListener
         if (is_null($user))
             return null;
 
-        $cashBack = $this->prepareUserCashBack($user->id, $botId);
+        $cashBack = $this->prepareUserCashBack($user->id, $botId, $userBotUser->id);
         $tmpAmount = $moneyAmount * ($levelPercent / 100);
         $cashBack->amount += $tmpAmount;
         $cashBack->save();
@@ -279,16 +279,18 @@ class CashBackListener
 
     }
 
-    private function prepareUserCashBack($userId, $botId)
+    private function prepareUserCashBack($userId, $botId, $botUserId)
     {
         $cashBack = CashBack::query()->where("bot_id", $botId)
             ->where("user_id", $userId)
+
             ->first();
 
         if (is_null($cashBack))
             $cashBack = CashBack::query()->create([
                 'user_id' => $userId,
                 'bot_id' => $botId,
+                'bot_user_id' => $botUserId,
                 'amount' => 0,
             ]);
 

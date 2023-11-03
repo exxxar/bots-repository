@@ -113,6 +113,7 @@ class BotManager extends BotCore
 
                 CashBack::query()->create([
                     'user_id' => $this->botUser->user_id,
+                    'bot_user_id' => $this->botUser->id,
                     'bot_id' => $this->getSelf()->id,
                     'amount' => 0,
                 ]);
@@ -123,6 +124,17 @@ class BotManager extends BotCore
         } else {
             $this->botUser->updated_at = Carbon::now();
             $this->botUser->save();
+
+            $cashback = CashBack::query()
+                ->where("user_id",$this->botUser->user_id)
+                ->where("bot_id",$this->getSelf()->id)
+                ->first();
+
+            if (!is_null($cashback))
+            {
+                $cashback->bot_user_id =  $this->botUser->id;
+                $cashback->save();
+            }
         }
 
 

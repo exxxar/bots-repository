@@ -149,11 +149,11 @@ export default {
                     index = (index < colors.length) ? index + 1 : 0
                 })
 
-                if (this.items.length % 2 !==0)
+                /*if (this.items.length % 2 !==0)
                     this.items.push({
                         text: "Не выиграл",
                         color: colors[index],
-                    })
+                    })*/
             })
         },
         submit() {

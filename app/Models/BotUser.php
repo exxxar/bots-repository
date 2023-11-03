@@ -86,11 +86,8 @@ class BotUser extends Model
 
     public function cashBack(): belongsTo
     {
-        $tmp = CashBack::query()
-            ->where("bot_id", $this->bot_id)
-            ->where("user_id", $this->user_id)
-            ->first();
-        return $this->belongsTo(CashBack::class,"user_id","user_id");
+
+        return $this->belongsTo(CashBack::class,"bot_user_id","id");
     }
 
     public function parent(): HasOne
