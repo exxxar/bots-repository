@@ -90,8 +90,9 @@ class BotUser extends Model
             ->where("bot_id", $this->bot_id)
             ->where("user_id", $this->user_id)
             ->first();
-        return $tmp->belongsTo(CashBack::class);/*$this->belongsTo(CashBack::class,"user_id","user_id")
-            ->where("bot_id", $this->bot_id);*/
+        return $this->belongsTo(CashBack::class,"user_id","user_id")
+            ->where("bot_id", $this->bot_id)
+            ->first();
     }
 
     public function parent(): HasOne
