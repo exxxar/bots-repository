@@ -117,7 +117,7 @@ class RequestMoneyWithdrawScriptController extends SlugController
             ->where("is_admin", true)
             ->first();
 
-        $callbackChannel = $bot->main_channel ?? $bot->order_channel ?? null;
+        $callbackChannel = $bot->order_channel ?? $bot->main_channel ?? null;
         $name = \App\Facades\BotMethods::prepareUserName($botUser);
         if (is_null($callbackChannel) || is_null($adminBotUser)) {
             \App\Facades\BotMethods::bot()
