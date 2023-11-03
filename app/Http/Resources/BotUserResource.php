@@ -15,13 +15,26 @@ class BotUserResource extends JsonResource
     {
         if (is_null($this->cashBack)) {
             $this->cashBack = CashBack::query()
-                ->create([
-                    'user_id' => $this->user_id,
-                    'bot_id' => $this->bot_id,
-                    'bot_user_id' => $this->id,
-                    'amount' => 0,
-                ]);
+                ->where("user_id", "$this->user_id")
+                ->where("bot_id", "$this->bot_id")
+                ->first();
+
+            if (!is_null($this->cashBack)) {
+                $this->cashBack->bot_user_id = $this->id;
+                $this->cashBack->save();
+            } else {
+                $this->cashBack = CashBack::query()
+                    ->create([
+                        'user_id' => $this->user_id,
+                        'bot_id' => $this->bot_id,
+                        'bot_user_id' => $this->id,
+                        'amount' => 0,
+                    ]);
+            }
+
         }
+
+
         return [
             'id' => $this->id,
             'bot_id' => $this->bot_id,
