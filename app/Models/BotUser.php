@@ -84,10 +84,10 @@ class BotUser extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function cashBack(): BelongsTo
+    public function cashBack(): hasOne
     {
-        Log::info("cashback=>".print_r($this->toArray(), true));
-        return $this->belongsTo(CashBack::class,"user_id","user_id");
+
+        return $this->hasOne(CashBack::class,"user_id","user_id");
     }
 
     public function parent(): HasOne
