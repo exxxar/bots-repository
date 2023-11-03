@@ -16,6 +16,7 @@ class CashBackResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'bot_id' => $this->bot_id,
+            'bot_user_id' => $this->bot_user_id,
             'amount' => $this->amount,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
