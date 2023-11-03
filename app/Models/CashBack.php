@@ -34,9 +34,9 @@ class CashBack extends Model
         'bot_id' => 'integer',
         'bot_user_id' => 'integer',
         'amount' => 'double',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp',
-        'deleted_at' => 'timestamp',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     public $with = ["subs"];
