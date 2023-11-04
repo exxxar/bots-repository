@@ -736,6 +736,11 @@ abstract class BotCore
     }
 
 
+    public function setBot($bot){
+        $this->bot = $bot;
+        return $this;
+    }
+
     public function pushPage($pageId, $botUser)
     {
 

@@ -468,6 +468,7 @@ class BotAdministrativeLogicFactory
         $name = BotMethods::prepareUserName($userBotUser);
 
         BotManager::bot()
+            ->setBot($this->bot)
             ->pushPage($page->id,  $userBotUser);
 
         BotMethods::bot()
