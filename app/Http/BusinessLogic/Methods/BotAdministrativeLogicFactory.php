@@ -452,7 +452,7 @@ class BotAdministrativeLogicFactory
             ->first();
 
         $page = BotPage::query()
-            ->where("bot_id","$this->bot->id")
+            ->where("bot_id",$this->bot->id)
             ->where("id","$pageId")
             ->first();
 
