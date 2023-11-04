@@ -232,6 +232,21 @@ class BotManager extends BotCore
             ->first();
     }
 
+    public function setBot($bot){
+        $this->domain = $bot->bot_domain;
+    }
+
+    public function pushPage($pageId, $botUser)
+    {
+
+        /* $this->botUser = $botUser;
+
+         $this->chatId = $botUser->telegram_chat_id;*/
+
+        $this->runPage($pageId, $botUser);
+
+    }
+
     protected function checkTemplatePageRules($page)
     {
         $rules = $page->rules_if;

@@ -21,6 +21,8 @@ class BotMethods
         return $this;
     }
 
+
+
     public function whereBot($bot)
     {
         if (is_null($bot))

@@ -736,21 +736,7 @@ abstract class BotCore
     }
 
 
-    public function setBot($bot){
-        $this->bot = $bot;
-        return $this;
-    }
 
-    public function pushPage($pageId, $botUser)
-    {
-
-       /* $this->botUser = $botUser;
-
-        $this->chatId = $botUser->telegram_chat_id;*/
-
-        $this->runPage($pageId, $botUser);
-
-    }
 
     public function runPage(int $pageId, $botUser = null): void
     {
@@ -758,7 +744,7 @@ abstract class BotCore
         $channel = is_null($botUser) ? $this->chatId : $botUser->telegram_chat_id;
 
         $page = BotPage::query()
-            ->where("bot_id", $this->bot->id)
+            ->where("bot_id", $this->getSelf()->id)
             ->where("id", $pageId)
             ->first();
 
