@@ -758,7 +758,7 @@ abstract class BotCore
         $channel = is_null($botUser) ? $this->chatId : $botUser->telegram_chat_id;
 
         $page = BotPage::query()
-            ->where("bot_id", $this->getSelf()->id)
+            ->where("bot_id", $this->bot->id)
             ->where("id", $pageId)
             ->first();
 
