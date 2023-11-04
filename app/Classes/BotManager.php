@@ -234,6 +234,7 @@ class BotManager extends BotCore
 
     public function setBot($bot){
         $this->domain = $bot->bot_domain;
+        return $this;
     }
 
     public function pushPage($pageId, $botUser)
