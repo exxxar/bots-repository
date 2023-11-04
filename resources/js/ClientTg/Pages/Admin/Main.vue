@@ -1,5 +1,5 @@
 <script setup>
-
+import PagesList from "@/ClientTg/Components/Admin/Pages/PagesList.vue";
 import UserInfo from '@/ClientTg/Components/UserInfo.vue';
 import Pagination from '@/ClientTg/Components/Pagination.vue'
 import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
@@ -340,7 +340,96 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                             :disabled="loading"
                             type="submit"
                             class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
-                            Подтвредить
+                            Подтвердить
+                        </button>
+                    </div>
+                </form>
+
+                <a
+                    href="javascript:void(0)"
+                    @click.prevent="openSection(2)"
+                    v-bind:class="{'bg-blue2-dark text-white':section===2, 'color-blue2-dark':section!==2}"
+                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Начислить
+                    CashBack</a>
+
+                <form v-on:submit.prevent="addCashBack" v-if="section===2">
+                    <p>У пользователя <strong>{{ botUser.cashBack.amount || 0 }} руб</strong> CashBack</p>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input"
+                               v-model="cashbackForm.need_custom_percents"
+                               type="checkbox" value="" id="need_custom_cashback_amount">
+                        <label class="form-check-label" for="need_custom_cashback_amount">
+                            Нужен нестандартный % CashBack
+                        </label>
+                    </div>
+
+                    <div class="mb-3" v-if="cashbackForm.need_custom_percents">
+                        <label for="bill-percent" class="form-label">% CashBack-а</label>
+                        <input type="number" min="0" class="form-control"
+                               id="bill-percent"
+                               v-model="cashbackForm.percent"
+                               placeholder="Значите %" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bill-amount" class="form-label">Сумма в чеке, руб</label>
+                        <input type="number" min="0" class="form-control"
+                               id="bill-amount"
+                               v-model="cashbackForm.amount"
+                               placeholder="Сумма" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bill-info" class="form-label">Информация о чеке, номер</label>
+                        <textarea class="form-control"
+                                  placeholder="Информация"
+                                  v-model="cashbackForm.info"
+                                  id="bill-info" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <button
+                            :disabled="loading"
+                            type="submit"
+                            class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
+                            Отправить
+                        </button>
+                    </div>
+                </form>
+
+
+                <a
+                    href="javascript:void(0)"
+                    @click.prevent="openSection(9)"
+                    v-bind:class="{'bg-blue2-dark text-white':section===9, 'color-blue2-dark':section!==9}"
+                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
+                    Отправить пользователю страницу
+                </a>
+
+                <form v-on:submit.prevent="sendPageToUser" v-if="section===9">
+                    <div class="mb-3">
+                        <label for="bill-info" class="form-label">Комментарий</label>
+                        <textarea class="form-control"
+                                  placeholder="Комментарий к запросу"
+                                  v-model="pageForm.info"
+                                  id="bill-info" rows="3" required></textarea>
+                    </div>
+
+                    <h6>Список доступных страниц:</h6>
+                    <p class="mb-2" v-if="pageForm.page_id">Вы выбрали #{{pageForm.page_id}}
+                        <span class="ml-2 text-danger custom-radio" @click="pageForm.page_id = null">убрать</span>
+                    </p>
+                    <PagesList
+                        :editor="false"
+                        v-on:callback="pageListCallback"/>
+
+                    <div class="mb-3">
+                        <button
+                            :disabled="loading&&!pageForm.page_id"
+                            type="submit"
+                            class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
+                            Отправить
                         </button>
                     </div>
                 </form>
@@ -384,6 +473,11 @@ export default {
 
             adminForm: {
                 info: null
+            },
+
+            pageForm:{
+              page_id:null,
+              info:null,
             },
 
             cashbackForm: {
@@ -460,6 +554,9 @@ export default {
 
 
     methods: {
+        pageListCallback(page){
+          this.pageForm.page_id = page.id
+        },
         updateUserInfo() {
 
             this.reloadUsers = true
@@ -608,6 +705,29 @@ export default {
                 this.loadCashBack()
                 this.$botNotification.success("Отлично!", "Вы успешно списали кэшбэк")
 
+            }).catch(() => {
+                this.loading = false
+                this.$botNotification.warning("Упс!", "Что-то пошло не так")
+            })
+        },
+        sendPageToUser(){
+            if (!this.request_telegram_chat_id) {
+                this.$botNotification.warning("Упс!", "Вы должны выбрать пользователя!")
+                return
+            }
+
+            this.loading = true;
+            this.$store.dispatch("sendPageToUser", {
+                dataObject: {
+                    user_telegram_chat_id: this.request_telegram_chat_id,
+                    ...this.pageForm
+                }
+            }).then((resp) => {
+                this.loading = false
+                this.pageForm.page_id = null
+                this.pageForm.info = null
+                this.loadReceiverUserData()
+                this.$botNotification.success("Отлично!", "Вы успешно отправили пользователю страницу")
             }).catch(() => {
                 this.loading = false
                 this.$botNotification.warning("Упс!", "Что-то пошло не так")

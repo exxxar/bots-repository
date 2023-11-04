@@ -149,6 +149,11 @@ Route::prefix("bot-client")
 
                 Route::post('/send-invoice', "sendInvoice")
                     ->middleware(["tgAuth.admin"]);
+
+                Route::post('/send-page-to-user', "sendPageToUser")
+                    ->middleware(["tgAuth.admin"]);
+
+
                 Route::post('/add', "addAdmin")
                     ->middleware(["tgAuth.admin"]);
                 Route::post('/send-approve', "sendApprove")

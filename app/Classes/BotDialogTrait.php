@@ -12,8 +12,10 @@ use Telegram\Bot\FileUpload\InputFile;
 
 trait BotDialogTrait
 {
-    private function sendDialogData($botDialogCommand): void
+    private function sendDialogData($botDialogCommand, $channel = null): void
     {
+
+        $channel = $this->getCurrentChatId() ?? $channel;
 
         if (is_null($botDialogCommand))
             return;
@@ -33,26 +35,26 @@ trait BotDialogTrait
                 ];
             }
 
-            $this->replyMediaGroup($media);
+            $this->sendMediaGroup($channel, $media);
 
             if (!is_null($botDialogCommand->inline_keyboard_id))
-                $this->replyInlineKeyboard($msg, $keyboard);
+                $this->sendInlineKeyboard($channel, $msg, $keyboard);
             else
-                $this->reply($msg);
+                $this->sendMessage($channel, $msg);
 
         } else if (count($botDialogCommand->images) === 1) {
-            $this->replyPhoto("<b>" . $msg,
+            $this->sendPhoto($channel, "<b>" . $msg,
                 InputFile::create(storage_path("app/public") . "/images-by-bot-id/" . $botDialogCommand->bot_id . "/" . $botDialogCommand->images[0]),
                 $keyboard
             );
 
         } else if (count($botDialogCommand->images) === 0) {
-            $this->reply($msg);
+            $this->sendMessage($channel, $msg);
         }
 
     }
 
-    public function startBotDialog($dialogCommandId): void
+    public function startBotDialog($dialogCommandId, $botUser = null): void
     {
 
         if (is_null($dialogCommandId))
@@ -65,7 +67,7 @@ trait BotDialogTrait
         if (is_null($botDialogCommand))
             return;
 
-        $botUser = $this->currentBotUser();
+        $botUser = is_null($botUser) ? $this->currentBotUser() : $botUser;
 
         if (is_null($botUser))
             return;
@@ -81,7 +83,7 @@ trait BotDialogTrait
             'completed_at' => null,
         ]);
 
-        $this->sendDialogData($botDialogCommand);
+        $this->sendDialogData($botDialogCommand, $botUser->telegram_chat_id ?? null);
     }
 
     private function validateInput($text, $pattern = null): bool
@@ -94,7 +96,7 @@ trait BotDialogTrait
 
         try {
             preg_match_all($pattern, $text, $matches);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
 
         }
 
@@ -102,14 +104,17 @@ trait BotDialogTrait
         return count($matches) > 0;
     }
 
-    public function nextBotDialog($text): void
+    public function nextBotDialog($text, $botUser = null): void
     {
-        $botUser = $this->currentBotUser();
+        $botUser = is_null($botUser) ? $this->currentBotUser() : $botUser;
+
+        // $botUser = $this->currentBotUser();
 
         if (trim(strtolower($text)) === "/start"
             || trim(strtolower($text)) === "/stop") {
-            $this->stopBotDialog();
-            $this->reply("Диалог преждевременно завершен!");
+            $this->stopBotDialog($botUser);
+            $this->sendMessage($botUser->telegram_chat_id ?? null,
+                "Диалог преждевременно завершен!");
         }
 
         $dialog = BotDialogResult::query()
@@ -124,7 +129,8 @@ trait BotDialogTrait
 
         $botDialogCommand = $dialog->botDialogCommand;
         if (!$this->validateInput($text, $botDialogCommand->input_pattern ?? null)) {
-            $this->reply($botDialogCommand->error_text ?? 'Ошибка ввода');
+            $this->sendMessage($botUser->telegram_chat_id ?? null,
+                $botDialogCommand->error_text ?? 'Ошибка ввода');
             return;
         }
 
@@ -136,7 +142,8 @@ trait BotDialogTrait
         $dialog->completed_at = Carbon::now();
         $dialog->save();
 
-        $this->reply($botDialogCommand->post_text ?? 'Данные успешно сохранены');
+        $this->sendMessage($botUser->telegram_chat_id ?? null,
+            $botDialogCommand->post_text ?? 'Данные успешно сохранены');
 
         if (!is_null($botDialogCommand) &&
             !is_null($botDialogCommand->next_bot_dialog_command_id ?? null)) {
@@ -151,7 +158,8 @@ trait BotDialogTrait
                 'completed_at' => null,
             ]);
 
-            $this->sendDialogData($nextBotDialogCommand ?? null);
+            $this->sendDialogData($nextBotDialogCommand ?? null,
+                $botUser->telegram_chat_id ?? null,);
 
         } else {
             $botUser->in_dialog_mode = false;
@@ -164,16 +172,16 @@ trait BotDialogTrait
 
     }
 
-    public function currentBotUserInDialog(): bool
+    public function currentBotUserInDialog($botUser = null): bool
     {
-        $botUser = $this->currentBotUser();
+        $botUser = is_null($botUser) ? $this->currentBotUser() : $botUser;
 
         return $botUser->in_dialog_mode ?? false;
     }
 
-    public function stopBotDialog(): void
+    public function stopBotDialog($botUser = null): void
     {
-        $botUser = $this->currentBotUser();
+        $botUser = is_null($botUser) ? $this->currentBotUser() : $botUser;
 
         $botUser->in_dialog_mode = false;
         $botUser->save();
@@ -215,20 +223,20 @@ trait BotDialogTrait
                 $step++;
             }
 
-            $channel = $botDialogCommand->result_channel  ??
-                $this->bot->order_channel  ??
+            $channel = $botDialogCommand->result_channel ??
+                $this->bot->order_channel ??
                 $this->bot->main_channel ?? null;
 
             $tmpMessage .= "Пользователь:\n"
-                ."-ТГ id: ".($botUser->telegram_chat_id ?? '-')."\n"
-                ."-имя из ТГ: ".($botUser->fio_from_telegram ?? 'Имя из телеграм не указано')."\n"
-                ."-введенное имя: ".($botUser->name ?? 'Введенное имя не указано')."\n"
-                ."-телефон: ".($botUser->phone ?? 'Номер телефона не указан')."\n"
-                ."-email: ".($botUser->email ?? 'Почта не указана')."\n";
+                . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
+                . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
+                . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
+                . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
+                . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n";
 
-            $thread = $bot->topics["questions"] ?? null;
+            $thread = $this->bot->topics["questions"] ?? null;
 
-            $this->sendMessage($channel , $tmpMessage , $thread);
+            $this->sendMessage($channel, $tmpMessage, $thread);
         }
     }
 }

@@ -15,6 +15,7 @@ use App\Models\ActionStatus;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
+use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
@@ -423,6 +424,63 @@ class BotAdministrativeLogicFactory
 
     }
 
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function sendPageToUser(array $data): void
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "user_telegram_chat_id" => "required",
+            "page_id" => "required|integer",
+            "info" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $info = $data["info"] ?? '-';
+        $pageId = $data["page_id"];
+
+        $userBotUser = BotUser::query()
+            ->where("telegram_chat_id", $data["user_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
+            ->first();
+
+        $page = BotPage::query()
+            ->where("bot_id","$this->bot->id")
+            ->where("id","$pageId")
+            ->first();
+
+        if (is_null($page))
+            throw new HttpException(404, "Страница не найден");
+
+        $adminBotUser = $this->botUser;
+
+        if (is_null($userBotUser))
+            throw new HttpException(404, "Пользователь не найден");
+
+
+        $name = BotMethods::prepareUserName($userBotUser);
+
+        BotManager::bot()
+            ->pushPage($page->id,  $userBotUser);
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $userBotUser->telegram_chat_id,
+                "Комментарий:\n", $info)
+            ->sendMessage(
+                $adminBotUser->telegram_chat_id,
+                "Вы отправили страницу #$page->id пользователю $name:\n$info"
+            );
+
+    }
 
     /**
      * @throws ValidationException

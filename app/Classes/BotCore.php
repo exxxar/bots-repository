@@ -54,7 +54,7 @@ abstract class BotCore
 
     protected abstract function getSelf();
 
-    protected abstract function prepareTemplatePage($page);
+    protected abstract function prepareTemplatePage($page, $channel = null);
 
     protected abstract function checkTemplatePageRules($page);
 
@@ -62,7 +62,7 @@ abstract class BotCore
 
     protected abstract function nextBotDialog($text): void;
 
-    protected abstract function startBotDialog($dialogCommandId): void;
+    protected abstract function startBotDialog($dialogCommandId, $botUser = null): void;
 
     protected abstract function currentBotUserInDialog(): bool;
 
@@ -599,7 +599,7 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-       Log::info(print_r($update, true));
+        Log::info(print_r($update, true));
 
         include_once base_path('routes/bot.php');
 
@@ -676,68 +676,81 @@ abstract class BotCore
         try {
 
 
-        $query = $item->message->text ??
-            $item->callback_query->data ?? '';
+            $query = $item->message->text ??
+                $item->callback_query->data ?? '';
 
-        $this->chatId = $message->chat->id;
+            $this->chatId = $message->chat->id;
 
-        $botStatus = $this->botStatusHandler();
+            $botStatus = $this->botStatusHandler();
 
-        if ($botStatus != BotStatusEnum::Working)
-            return;
+            if ($botStatus != BotStatusEnum::Working)
+                return;
 
-        if ($this->currentBotUserInDialog()) {
-            $this->nextBotDialog($query);
-            return;
-        }
+            if ($this->currentBotUserInDialog()) {
+                $this->nextBotDialog($query);
+                return;
+            }
 
-        $coords = !isset($update["message"]["location"]) ? null :
-            (object)[
-                "latitude" => $update["message"]["location"]["latitude"] ?? 0,
-                "longitude" => $update["message"]["location"]["longitude"] ?? 0
-            ];
+            $coords = !isset($update["message"]["location"]) ? null :
+                (object)[
+                    "latitude" => $update["message"]["location"]["latitude"] ?? 0,
+                    "longitude" => $update["message"]["location"]["longitude"] ?? 0
+                ];
 
-        if ($this->botLocationHandler($coords, $message))
-            return;
+            if ($this->botLocationHandler($coords, $message))
+                return;
 
-        if ($this->botTemplatePageHandler($message, $query))
-            return;
+            if ($this->botTemplatePageHandler($message, $query))
+                return;
 
-        /*   if ($this->botDialogStartHandler($message, $query))
-               return;*/
+            /*   if ($this->botDialogStartHandler($message, $query))
+                   return;*/
 
-        if ($this->botSlugHandler($message, $query))
-            return;
+            if ($this->botSlugHandler($message, $query))
+                return;
 
-        if ($this->botRouteHandler($message, $query))
-            return;
+            if ($this->botRouteHandler($message, $query))
+                return;
 
-        if ($this->botNextHandler($message))
-            return;
+            if ($this->botNextHandler($message))
+                return;
 
-        if ($this->botFallbackPhotoHandler($message))
-            return;
+            if ($this->botFallbackPhotoHandler($message))
+                return;
 
-        if ($this->botFallbackVideoHandler($message))
-            return;
+            if ($this->botFallbackVideoHandler($message))
+                return;
 
-        if ($this->botFallbackHandler($message))
-            return;
+            if ($this->botFallbackHandler($message))
+                return;
 
-        if ($this->adminNotificationHandler($query))
-            return;
+            if ($this->adminNotificationHandler($query))
+                return;
 
-        if (($update["message"]["chat"]["is_forum"] ?? 0) == 0)
-            $this->reply("Ошибка обработки данных!");
-        }catch (Exception $e){
-            Log::info("in handler function=>".$e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
+            if (($update["message"]["chat"]["is_forum"] ?? 0) == 0)
+                $this->reply("Ошибка обработки данных!");
+        } catch (Exception $e) {
+            Log::info("in handler function=>" . $e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
 
         }
     }
 
 
-    public function runPage(int $pageId): void
+    public function pushPage($pageId, $botUser)
     {
+
+        $this->botUser = $botUser;
+
+        $this->chatId = $botUser->telegram_chat_id;
+
+        $this->runPage($pageId, $botUser);
+
+    }
+
+    public function runPage(int $pageId, $botUser = null): void
+    {
+
+        $channel = is_null($botUser) ? $this->chatId : $botUser->telegram_chat_id;
 
         $page = BotPage::query()
             ->where("bot_id", $this->getSelf()->id)
@@ -745,12 +758,12 @@ abstract class BotCore
             ->first();
 
         if (is_null($page)) {
-            $this->reply("Страничка не найдена:(");
+            $this->sendMessage($channel, "Страничка не найдена:(");
             return;
         }
 
         try {
-            $this->prepareTemplatePage($page);
+            $this->prepareTemplatePage($page, $channel);
 
             if (!is_null($page->next_bot_menu_slug_id)) {
                 $slug = BotMenuSlug::query()
@@ -759,7 +772,7 @@ abstract class BotCore
                     ->first();
 
                 if (is_null($slug)) {
-                    $this->reply("Скрипт не найден");
+                    $this->sendMessage($channel, "Скрипт не найден");
                     return;
                 }
 
@@ -782,7 +795,7 @@ abstract class BotCore
             }
 
             if (!is_null($page->next_bot_dialog_command_id))
-                $this->startBotDialog($page->next_bot_dialog_command_id);
+                $this->startBotDialog($page->next_bot_dialog_command_id, $botUser);
 
         } catch (\Exception $e) {
 
@@ -820,7 +833,7 @@ abstract class BotCore
         if (mb_strlen($query) < 10)
             return false;
 
-        $channel = $this->getSelf()->order_channel?? $this->getSelf()->main_channel  ?? null;
+        $channel = $this->getSelf()->order_channel ?? $this->getSelf()->main_channel ?? null;
         if (!is_null($channel)) {
             $domain = $this->currentBotUser()->username ?? null;
             $name = $this->currentBotUser()->name ?? $this->currentBotUser()->fio_from_telegram ?? $this->currentBotUser()->telegram_chat_id;

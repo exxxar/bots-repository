@@ -147,6 +147,27 @@ class AdminBotController extends Controller
     }
 
 
+
+
+    /**
+     * @throws ValidationException
+     */
+    public function sendPageToUser(Request $request): \Illuminate\Http\Response
+    {
+        $request->validate([
+            "user_telegram_chat_id" => "required",
+            "info" => "required",
+            "page_id" => "required|integer",
+        ]);
+
+        BusinessLogic::administrative()
+            ->setBotUser($request->botUser ?? null)
+            ->setBot($request->bot ?? null)
+            ->sendPageToUser($request->all());
+
+        return response()->noContent();
+    }
+
     /**
      * @throws ValidationException
      */

@@ -61,6 +61,20 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async sendPageToUser(context, payload) {
+        let link = `${BASE_ADMINS_LINK}/send-page-to-user`
+
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async sendInvoice(context, payload) {
         let link = `${BASE_ADMINS_LINK}/send-invoice`
 
