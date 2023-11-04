@@ -739,9 +739,9 @@ abstract class BotCore
     public function pushPage($pageId, $botUser)
     {
 
-        $this->botUser = $botUser;
+       /* $this->botUser = $botUser;
 
-        $this->chatId = $botUser->telegram_chat_id;
+        $this->chatId = $botUser->telegram_chat_id;*/
 
         $this->runPage($pageId, $botUser);
 
