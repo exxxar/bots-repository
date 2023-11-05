@@ -214,6 +214,9 @@ trait BotDialogTrait
     private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void
     {
         /*     if (!is_null($botDialogCommand->result_channel)) */
+
+        $bot = $this->getSelf();
+
         $tmpMessage = "Диалог с пользователем <b>#$botUser->id</b> [<b>#$botDialogCommand->id</b>]: \n";
 
         $step = 1;
@@ -224,8 +227,8 @@ trait BotDialogTrait
         }
 
         $channel = $botDialogCommand->result_channel ??
-            $this->bot->order_channel ??
-            $this->bot->main_channel ?? null;
+            $bot->order_channel ??
+            $bot->main_channel ?? null;
 
         $tmpMessage .= "Пользователь:\n"
             . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
@@ -234,9 +237,9 @@ trait BotDialogTrait
             . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
             . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n";
 
-        $thread = $this->bot->topics["questions"] ?? null;
+        $thread = $bot->topics["questions"] ?? null;
 
-        Log::info("bot=>".print_r($this->bot->toArray(), true));
+        Log::info("bot=>".print_r($bot->toArray(), true));
         Log::info($tmpMessage);
         Log::info("channel $channel thread " . ($thread ?? '-'));
 
