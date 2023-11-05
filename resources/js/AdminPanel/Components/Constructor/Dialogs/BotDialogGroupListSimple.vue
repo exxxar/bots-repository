@@ -14,6 +14,7 @@ import DialogCommandCard from "@/AdminPanel/Components/Constructor/Cards/DialogC
                         <div class="col-md-6 col-lg-4 col-12 col-sm-6 mb-2 "
                              v-for="(command, index) in group.bot_dialog_commands">
                             <DialogCommandCard
+                                :bot="bot"
                                 v-on:select="selectDialog"
                                 :item="command"/>
                         </div>

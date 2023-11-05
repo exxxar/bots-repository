@@ -97,9 +97,12 @@ class FastRequestScriptController extends SlugController
         $birth = $botUser->birthday ?? 'Не указан';
         $age = $botUser->age ?? 'Не указан';
 
+        $thread = $bot->topics["questions"] ?? null;
+
         BotManager::bot()
-            ->sendMessage(($bot->main_channel ?? $bot->order_channel ?? null),
-            "Запрос от пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)"
+            ->sendMessage(($bot->order_channel ?? $bot->main_channel ?? null),
+            "Запрос от пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
+                $thread
 
         );
 

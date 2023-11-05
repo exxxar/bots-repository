@@ -214,10 +214,11 @@
                 </div>
 
                 <div class="mb-2" v-if="need_threads">
-                    <p class="mb-2 font-italic">Для того, чтоб узнать идентификатор топика в группе впишите в чат <strong>"Мой id"</strong></p>
+                    <p class="mb-2 font-italic">Для того, чтоб узнать идентификатор топика в группе впишите в чат
+                        <strong>"Мой id"</strong></p>
                     <ul class="list-group">
                         <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
-                            <p class="mb-0">{{ thread.title }} ({{thread.key}})</p>
+                            <p class="mb-0">{{ thread.title }} ({{ thread.key }})</p>
                             <input type="text" class="form-control"
                                    placeholder="Идентификатор топика"
                                    v-model="botForm.message_threads[index].value">
@@ -348,7 +349,7 @@
                 </div>
 
 
-                <div class="mb-2">
+                <div class="mb-2" >
 
                     <label class="form-label d-flex justify-content-between  align-items-center mt-2" id="bot-level-1">
                         Уровень 1 CashBack, %
@@ -399,6 +400,54 @@
 
                 </div>
 
+
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_cashback_config"
+                               type="checkbox"
+                               id="need-cashback-config">
+                        <label class="form-check-label" for="need-cashback-config">
+                            Необходимо настроить CashBack по категориям
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="mb-2" v-if="need_cashback_config">
+                    <h6>Настройка категорий CashBack-а</h6>
+
+
+                    <div class="d-flex justify-content-between mb-2 flex-wrap"
+                         :key="'social-link'+index"
+                         v-for="(item, index) in botForm.cashback_config">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <small>Название категории</small>
+
+                            <button
+                                type="button"
+                                @click="removeCashBackConfig(index)"
+                                class="btn btn-link text-danger"><i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                        <input type="text" class="form-control mb-2 w-100"
+                               placeholder="Название категории"
+                               aria-label="Название категории"
+                               maxlength="255"
+                               v-model="botForm.cashback_config[index].title"
+                               :aria-describedby="'bot-cashback-config-'+index" required>
+
+
+
+                    </div>
+                    <button
+                        type="button"
+                        @click="addCashBackConfig()"
+                        class="btn btn-border btn-m btn-full mb-2 rounded-sm text-uppercase font-900 border-green1-dark color-green1-dark bg-theme w-100">
+                        Добавить еще категорию
+                    </button>
+                    <div class="divider divider-small my-3 bg-highlight "></div>
+                </div>
 
                 <div class="mb-2">
                     <div class="form-group">
@@ -699,12 +748,13 @@
 export default {
     data() {
         return {
-            selected_warning:null,
+            selected_warning: null,
             load: false,
             need_payments: false,
             need_shop: false,
             bot: null,
-            need_threads:false,
+            need_threads: false,
+            need_cashback_config: false,
             warnings: [
                 {
                     title: "Сумма чека больше чем",
@@ -728,6 +778,7 @@ export default {
                 bot_token_dev: null,
                 order_channel: null,
                 message_threads: null,
+                cashback_config: null,
                 main_channel: null,
                 vk_shop_link: null,
                 callback_link: null,
@@ -752,7 +803,7 @@ export default {
             },
         }
     },
-    computed:{
+    computed: {
         filteredWarnings() {
             if (this.botForm.warnings.length === 0)
                 return this.warnings;
@@ -763,6 +814,7 @@ export default {
         }
     },
     watch: {
+
         'need_threads': function (oVal, nVal) {
             let threads = [
                 {
@@ -796,15 +848,15 @@ export default {
                     value: null,
                 }
             ];
-            if (this.need_threads && !this.botForm.message_threads ) {
+            if (this.need_threads && !this.botForm.message_threads) {
                 this.botForm.message_threads = threads
             }
 
-            if (this.need_threads && this.botForm.message_threads){
-                threads.forEach(item=>{
-                    let index = this.botForm.message_threads.findIndex(sub=>sub.key === item.key)
+            if (this.need_threads && this.botForm.message_threads) {
+                threads.forEach(item => {
+                    let index = this.botForm.message_threads.findIndex(sub => sub.key === item.key)
 
-                    if (index===-1)
+                    if (index === -1)
                         this.botForm.message_threads.push(item)
                 })
             }
@@ -814,6 +866,7 @@ export default {
                 this.botForm.auto_cashback_on_payments = false
             }
         },
+
     },
 
 
@@ -842,6 +895,7 @@ export default {
                     bot_token_dev: this.bot.bot_token_dev || null,
                     order_channel: this.bot.order_channel || null,
                     message_threads: this.bot.message_threads || null,
+                    cashback_config: this.bot.cashback_config || null,
 
                     main_channel: this.bot.main_channel || null,
                     balance: this.bot.balance || null,
@@ -878,6 +932,9 @@ export default {
 
                 if (this.botForm.vk_shop_link)
                     this.need_shop = true
+
+                if (this.botForm.cashback_config)
+                    this.need_cashback_config = true
             })
         },
 
@@ -958,6 +1015,7 @@ export default {
                         bot_token_dev: null,
                         order_channel: null,
                         message_threads: null,
+                        cashback_config: null,
                         main_channel: null,
                         balance: null,
                         tax_per_day: null,
@@ -1003,6 +1061,18 @@ export default {
         },
         removeWarning(index) {
             this.botForm.warnings.splice(index, 1)
+        },
+        removeCashBackConfig(index) {
+            this.botForm.cashback_config.splice(index, 1)
+        },
+        addCashBackConfig() {
+
+            this.botForm.cashback_config = this.botForm.cashback_config == null ? [] : this.botForm.cashback_config;
+
+            this.botForm.cashback_config.push({
+                title: null,
+            })
+
         },
         addWarning() {
 

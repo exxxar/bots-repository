@@ -244,7 +244,19 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     CashBack</a>
 
                 <form v-on:submit.prevent="addCashBack" v-if="section===2">
-                    <p>У пользователя <strong>{{ botUser.cashBack.amount || 0 }} руб</strong> CashBack</p>
+                    <p class="mb-2">У пользователя <strong>{{ botUser.cashBack.amount || 0 }} руб</strong> CashBack</p>
+                    <p class="mb-2" v-if="botUser.cashBack.subs" v-for="item in botUser.cashBack.subs">
+                        {{item.title || 'Без названия'}} - {{item.amount || 0}} руб.
+                    </p>
+
+                    <div v-if="currentBot.cashback_config">
+                        <h6>В боте поддерживается начисление CashBack по категориям</h6>
+                        <select class="form-control mb-2" v-model="cashbackForm.category">
+                            <option selected>Общий CashBack</option>
+                            <option :value="item.title" v-for="item in currentBot.cashback_config">{{item.title || 'Без названия'}}</option>
+                        </select>
+                        <em>Начисления по реферальной системе происходя только для общего CashBack-а. CashBack-по категориям не суммируется с общим и отображается пользователю отдельно.</em>
+                    </div>
 
                     <div class="form-check mb-3">
                         <input class="form-check-input"
@@ -345,59 +357,6 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     </div>
                 </form>
 
-                <a
-                    href="javascript:void(0)"
-                    @click.prevent="openSection(2)"
-                    v-bind:class="{'bg-blue2-dark text-white':section===2, 'color-blue2-dark':section!==2}"
-                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Начислить
-                    CashBack</a>
-
-                <form v-on:submit.prevent="addCashBack" v-if="section===2">
-                    <p>У пользователя <strong>{{ botUser.cashBack.amount || 0 }} руб</strong> CashBack</p>
-
-                    <div class="form-check mb-3">
-                        <input class="form-check-input"
-                               v-model="cashbackForm.need_custom_percents"
-                               type="checkbox" value="" id="need_custom_cashback_amount">
-                        <label class="form-check-label" for="need_custom_cashback_amount">
-                            Нужен нестандартный % CashBack
-                        </label>
-                    </div>
-
-                    <div class="mb-3" v-if="cashbackForm.need_custom_percents">
-                        <label for="bill-percent" class="form-label">% CashBack-а</label>
-                        <input type="number" min="0" class="form-control"
-                               id="bill-percent"
-                               v-model="cashbackForm.percent"
-                               placeholder="Значите %" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="bill-amount" class="form-label">Сумма в чеке, руб</label>
-                        <input type="number" min="0" class="form-control"
-                               id="bill-amount"
-                               v-model="cashbackForm.amount"
-                               placeholder="Сумма" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="bill-info" class="form-label">Информация о чеке, номер</label>
-                        <textarea class="form-control"
-                                  placeholder="Информация"
-                                  v-model="cashbackForm.info"
-                                  id="bill-info" rows="3" required></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <button
-                            :disabled="loading"
-                            type="submit"
-                            class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
-                            Отправить
-                        </button>
-                    </div>
-                </form>
-
 
                 <a
                     href="javascript:void(0)"
@@ -483,6 +442,7 @@ export default {
             cashbackForm: {
                 percent: null,
                 need_custom_percents: false,
+                category:null,
                 amount: null,
                 info: null
             }
