@@ -213,33 +213,33 @@ trait BotDialogTrait
 
     private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void
     {
-        if (!is_null($botDialogCommand->result_channel)) {
-            $tmpMessage = "Диалог с пользователем <b>#$botUser->id</b> [<b>#$botDialogCommand->id</b>]: \n";
+        /*     if (!is_null($botDialogCommand->result_channel)) */
+        $tmpMessage = "Диалог с пользователем <b>#$botUser->id</b> [<b>#$botDialogCommand->id</b>]: \n";
 
-            $step = 1;
-            foreach ($dialogData as $data) {
-                $tmpMessage .= "Шаг $step: $data \n";
+        $step = 1;
+        foreach ($dialogData as $data) {
+            $tmpMessage .= "Шаг $step: $data \n";
 
-                $step++;
-            }
-
-            $channel = $botDialogCommand->result_channel ??
-                $this->bot->order_channel ??
-                $this->bot->main_channel ?? null;
-
-            $tmpMessage .= "Пользователь:\n"
-                . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
-                . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
-                . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
-                . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
-                . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n";
-
-            $thread = $this->bot->topics["questions"] ?? null;
-
-            Log::info($tmpMessage);
-            Log::info("channel $channel thread ".($thread??'-'));
-
-            $this->sendMessage($channel, $tmpMessage, $thread);
+            $step++;
         }
+
+        $channel = $botDialogCommand->result_channel ??
+            $this->bot->order_channel ??
+            $this->bot->main_channel ?? null;
+
+        $tmpMessage .= "Пользователь:\n"
+            . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
+            . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
+            . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
+            . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
+            . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n";
+
+        $thread = $this->bot->topics["questions"] ?? null;
+
+        Log::info($tmpMessage);
+        Log::info("channel $channel thread " . ($thread ?? '-'));
+
+        $this->sendMessage($channel, $tmpMessage, $thread);
+
     }
 }
