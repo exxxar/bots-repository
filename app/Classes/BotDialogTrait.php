@@ -236,6 +236,9 @@ trait BotDialogTrait
 
             $thread = $this->bot->topics["questions"] ?? null;
 
+            Log::info($tmpMessage);
+            Log::info("channel $channel thread ".($thread??'-'));
+
             $this->sendMessage($channel, $tmpMessage, $thread);
         }
     }
