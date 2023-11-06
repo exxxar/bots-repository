@@ -468,14 +468,13 @@ class RestaurantBotController extends Controller
         $companyTitle = $bot->company->title ?? 'CashMan';
 
         $tmpSubsText = "";
-        Log::info(print_r($botUser->cashBack->toArray(), true));
+
         if (!is_null($botUser->cashBack->subs ?? null)) {
-            Log::info("we are here=>".count($botUser->cashBack->subs));
+
             if (count($botUser->cashBack->subs) > 0) {
-                Log::info("we are her 2=>".print_r($botUser->cashBack->subs, true));
                 $tmpSubsText = "У вас есть специальные начисления:\n";
                 foreach ($botUser->cashBack->subs as $sub) {
-                    $tmpSubsText .= $sub->title . " " . $sub->amount . " руб.\n";
+                    $tmpSubsText .= $sub->title . " <b>" . $sub->amount . " руб.</b>\n";
                 }
             }
 

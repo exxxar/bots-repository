@@ -399,8 +399,10 @@ class BotManager extends BotCore
                 ];
             }
 
+            Log::info(print_r($media, true));
+
             try {
-                $this->sendMediaGroup($channel, $media);
+                $this->replyMediaGroup($media);
             } catch (\Exception $e) {
                 $this->sendPhoto($channel, "Ошибочка с изображениями",
                     InputFile::create(public_path() . "/images/cashman2.jpg")
