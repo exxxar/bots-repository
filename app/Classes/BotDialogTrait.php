@@ -158,8 +158,11 @@ trait BotDialogTrait
         $dialog->completed_at = Carbon::now();
         $dialog->save();
 
-        $this->sendMessage($botUser->telegram_chat_id ?? null,
-            $botDialogCommand->post_text ?? 'Данные успешно сохранены');
+        $needStop = true;
+
+        if (!$botDialogCommand->is_empty)
+            $this->sendMessage($botUser->telegram_chat_id ?? null,
+                $botDialogCommand->post_text ?? 'Данные успешно сохранены');
 
         if (!is_null($botDialogCommand) &&
             !is_null($botDialogCommand->next_bot_dialog_command_id ?? null)) {
@@ -174,10 +177,16 @@ trait BotDialogTrait
                 'completed_at' => $botDialogCommand->is_empty ? Carbon::now() : null,
             ]);
 
-            $this->sendDialogData($nextBotDialogCommand ?? null,
-                $botUser->telegram_chat_id ?? null,);
+            $needStop = false;
 
-        } else {
+            $this->sendDialogData($nextBotDialogCommand ?? null,
+                $botUser->telegram_chat_id ?? null);
+
+            if ($botDialogCommand->is_empty)
+                $needStop = true;
+        }
+
+        if ($needStop) {
             $botUser->in_dialog_mode = false;
             $botUser->save();
 
