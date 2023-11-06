@@ -445,8 +445,7 @@ class CashBackScriptController extends SlugController
             ->where("user_id", $botUser->user_id)
             ->first();
 
-        if (is_null($cashBack->bot_user_id))
-        {
+        if (is_null($cashBack->bot_user_id)) {
             $cashBack->bot_user_id = $botUser->id;
             $cashBack->save();
         }
@@ -455,8 +454,21 @@ class CashBackScriptController extends SlugController
 
         $companyTitle = $bot->company->title ?? 'CashMan';
 
+
+        $tmpSubsText = "";
+        if (!is_null($botUser->cashBack->subs ?? null)) {
+            if (count($botUser->cashBack->subs) > 0) {
+                $tmpSubsText = "У вас есть специальные начисления:\n";
+                foreach ($botUser->cashBack->subs as $sub) {
+                    $tmpSubsText .= $sub->title . " " . $sub->amount . " руб.\n";
+                }
+            }
+
+        }
+
         \App\Facades\BotManager::bot()
             ->replyPhoto("У вас <b>$amount</b> руб.!\n
+$tmpSubsText
 Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>",
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 

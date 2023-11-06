@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\CashBackDirectionEnum;
 use App\Events\CashBackEvent;
+use App\Events\CashBackSubEvent;
 use App\Exports\BotStatisticExport;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
@@ -375,10 +376,22 @@ class BotAdministrativeLogicFactory
             throw new HttpException(404, "Пользователь не найден");
 
         if (!is_null($data["category"] ?? null)) {
-            BotMethods::bot()
+         /*   BotMethods::bot()
                 ->whereBot($this->bot)
-                ->sendMessage($adminBotUser->telegram_chat_id, "Попытка добавить CashBack в категорию. Данная возможность еще в разработке.");
+                ->sendMessage($adminBotUser->telegram_chat_id, "Попытка добавить CashBack в категорию. Данная возможность еще в разработке.");*/
+            event(new CashBackSubEvent(
+                $data["category"],
+                (int)$this->bot->id,
+                (int)$userBotUser->user_id,
+                (int)$adminBotUser->user_id,
+                ((float)$data["amount"] ?? 0),
+                $data["info"],
+                CashBackDirectionEnum::Crediting,
+                $percent
+            ));
+            return;
         }
+
 
         event(new CashBackEvent(
             (int)$this->bot->id,

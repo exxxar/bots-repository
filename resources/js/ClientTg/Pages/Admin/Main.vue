@@ -208,6 +208,19 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 
                 <form v-on:submit.prevent="removeCashBack" v-if="section===1">
                     <p>У пользователя <strong>{{ botUser.cashBack.amount || 0 }} руб</strong> CashBack</p>
+
+                    <p class="mb-2" v-if="botUser.cashBack.subs" v-for="item in botUser.cashBack.subs">
+                        {{item.title || 'Без названия'}} - {{item.amount || 0}} руб.
+                    </p>
+
+                    <div v-if="currentBot.cashback_config">
+                        <h6>В боте поддерживается списание CashBack по категориям</h6>
+                        <select class="form-control mb-2" v-model="cashbackForm.category" required>
+                            <option selected>Общий CashBack</option>
+                            <option :value="item.title" v-for="item in currentBot.cashback_config">{{item.title || 'Без названия'}}</option>
+                        </select>
+                    </div>
+
                     <div class="mb-3">
                         <label for="bill-amount" class="form-label">Сумма списания CashBack, руб</label>
                         <input type="number"
@@ -251,7 +264,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 
                     <div v-if="currentBot.cashback_config">
                         <h6>В боте поддерживается начисление CashBack по категориям</h6>
-                        <select class="form-control mb-2" v-model="cashbackForm.category">
+                        <select class="form-control mb-2" v-model="cashbackForm.category" required>
                             <option selected>Общий CashBack</option>
                             <option :value="item.title" v-for="item in currentBot.cashback_config">{{item.title || 'Без названия'}}</option>
                         </select>
