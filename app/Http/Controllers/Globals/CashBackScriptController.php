@@ -456,6 +456,7 @@ class CashBackScriptController extends SlugController
 
 
         $tmpSubsText = "";
+        Log::info(print_r($botUser->cashBack->toArray(), true));
         if (!is_null($botUser->cashBack->subs ?? null)) {
             Log::info("we are here=>".count($botUser->cashBack->subs));
             if (count($botUser->cashBack->subs) > 0) {
