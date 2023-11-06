@@ -91,7 +91,7 @@ class CashBackSubListener
 
 
         $cashBackSub = CashBackSub::query()->firstOrCreate([
-            'cash_back_id' => $cashBack,
+            'cash_back_id' => $cashBack->id,
             'title' => $event->title,
         ], [
             'amount' => 0,
