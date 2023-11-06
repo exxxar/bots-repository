@@ -458,16 +458,32 @@ class RestaurantBotController extends Controller
         $botUser = BotManager::bot()->currentBotUser();
 
         $cashBack = CashBack::query()
+            ->with(["subs"])
             ->where("bot_id", $bot->id)
-            ->where("user_id", $botUser->user_id)
+            ->where("bot_user_id", $botUser->id)
             ->first();
 
         $amount = is_null($cashBack) ? 0 : ($cashBack->amount ?? 0);
 
         $companyTitle = $bot->company->title ?? 'CashMan';
 
+        $tmpSubsText = "";
+        Log::info(print_r($botUser->cashBack->toArray(), true));
+        if (!is_null($botUser->cashBack->subs ?? null)) {
+            Log::info("we are here=>".count($botUser->cashBack->subs));
+            if (count($botUser->cashBack->subs) > 0) {
+                Log::info("we are her 2=>".print_r($botUser->cashBack->subs, true));
+                $tmpSubsText = "У вас есть специальные начисления:\n";
+                foreach ($botUser->cashBack->subs as $sub) {
+                    $tmpSubsText .= $sub->title . " " . $sub->amount . " руб.\n";
+                }
+            }
+
+        }
+
         \App\Facades\BotManager::bot()
             ->replyPhoto("У вас <b>$amount</b> руб.!\n
+$tmpSubsText
 Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>",
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
