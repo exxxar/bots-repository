@@ -679,7 +679,7 @@ abstract class BotCore
 
             $query = $item->message->text ??
                 $item->callback_query->data ??
-                $item->contact->phone_number ?? '';
+                $item->message->contact->phone_number ?? '';
 
             $this->chatId = $message->chat->id;
 
