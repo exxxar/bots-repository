@@ -457,7 +457,9 @@ class CashBackScriptController extends SlugController
 
         $tmpSubsText = "";
         if (!is_null($botUser->cashBack->subs ?? null)) {
+            Log::info("we are here=>".count($botUser->cashBack->subs));
             if (count($botUser->cashBack->subs) > 0) {
+                Log::info("we are her 2=>".print_r($botUser->cashBack->subs, true));
                 $tmpSubsText = "У вас есть специальные начисления:\n";
                 foreach ($botUser->cashBack->subs as $sub) {
                     $tmpSubsText .= $sub->title . " " . $sub->amount . " руб.\n";
