@@ -59,12 +59,12 @@ class BotDialogCommand extends Model
 
     public function inlineKeyboard(): BelongsTo
     {
-        return $this->belongsTo(BotMenuTemplate::class,"inline_keyboard_id","id");
+        return $this->belongsTo(BotMenuTemplate::class,"id","inline_keyboard_id");
     }
 
     public function replyKeyboard(): BelongsTo
     {
-        return $this->belongsTo(BotMenuTemplate::class,"reply_keyboard_id","id");
+        return $this->belongsTo(BotMenuTemplate::class,"id","reply_keyboard_id");
     }
 
     public function nextBotDialogCommand(): BelongsTo
