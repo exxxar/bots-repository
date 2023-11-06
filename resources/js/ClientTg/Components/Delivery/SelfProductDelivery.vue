@@ -57,12 +57,13 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             </div>
 
 
-            <!--            <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
-                           class="btn btn-m btn-full rounded-sm font-900 shadow-xl text-uppercase mb-3">
+                        <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
+                           class="btn btn-m btn-full rounded-sm font-900  text-uppercase mb-0">
                             <i class="fa-solid fa-chevron-down mr-2" v-if="isCollapsed"></i>
-                            <i class="fa-solid fa-filter  mr-2" v-else></i>
-                            <span class="font-14">Фильтры товара</span>
-                        </a>-->
+                            <i class="fa-solid fa-chevron-up  mr-2" v-else></i>
+                            <span class="font-14" v-if="isCollapsed">Найти товар</span>
+                            <span class="font-14" v-else>Скрыть фильтры</span>
+                        </a>
 
 
         </div>
@@ -204,7 +205,7 @@ export default {
     props: ["type"],
     data() {
         return {
-            isCollapsed: false,
+            isCollapsed: true,
             search: null,
             products: [],
             paginate: null,

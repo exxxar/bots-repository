@@ -21,8 +21,14 @@ trait BotDialogTrait
             return;
 
         $msg = $botDialogCommand->pre_text ?? 'Введите данные';
-        $menuTemplate = BotMenuTemplate::query()->find($botDialogCommand->inline_keyboard_id);
-        $keyboard = $menuTemplate->menu ?? [];
+        $inlineMenuTemplate = BotMenuTemplate::query()->find($botDialogCommand->inline_keyboard_id);
+        $inlineKeyboard = $inlineMenuTemplate->menu ?? [];
+
+        $replyMenuTemplate = BotMenuTemplate::query()->find($botDialogCommand->reply_keyboard_id);
+        $replyKeyboard = $replyMenuTemplate->menu ?? [];
+
+
+        $isSent = false;
 
         if (count($botDialogCommand->images) > 1) {
 
@@ -37,20 +43,28 @@ trait BotDialogTrait
 
             $this->sendMediaGroup($channel, $media);
 
+
             if (!is_null($botDialogCommand->inline_keyboard_id))
-                $this->sendInlineKeyboard($channel, $msg, $keyboard);
-            else
-                $this->sendMessage($channel, $msg);
+            {
+                $this->sendInlineKeyboard($channel, $msg, $inlineKeyboard);
+                $isSent = true;
+            }
 
         } else if (count($botDialogCommand->images) === 1) {
             $this->sendPhoto($channel, "<b>" . $msg,
                 InputFile::create(storage_path("app/public") . "/images-by-bot-id/" . $botDialogCommand->bot_id . "/" . $botDialogCommand->images[0]),
-                $keyboard
+                $inlineKeyboard
             );
-
-        } else if (count($botDialogCommand->images) === 0) {
-            $this->sendMessage($channel, $msg);
+            $isSent = true;
         }
+
+        if (!is_null($botDialogCommand->reply_keyboard_id)) {
+            $this->sendReplyKeyboard($channel, !$isSent?$msg:'Варианты ответов', $replyKeyboard);
+            $isSent = true;
+        }
+
+        if (!$isSent)
+            $this->sendMessage($channel, $msg);
 
     }
 

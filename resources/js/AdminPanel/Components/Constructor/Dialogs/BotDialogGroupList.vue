@@ -103,7 +103,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
     <div class="modal fade" id="link-modal"
          tabindex="-1"
     >
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">
@@ -134,7 +134,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
     <div class="modal fade" id="group-modal"
          tabindex="-1"
     >
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">
@@ -169,7 +169,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
     <div class="modal fade" id="group-create-modal"
          tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">
@@ -211,7 +211,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
     <div class="modal fade" id="dialog-create-modal"
          tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">

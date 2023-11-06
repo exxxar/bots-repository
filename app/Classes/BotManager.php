@@ -399,7 +399,6 @@ class BotManager extends BotCore
                 ];
             }
 
-            Log::info(print_r($media, true));
 
             try {
                 $this->replyMediaGroup($media);
@@ -411,7 +410,7 @@ class BotManager extends BotCore
 
 
             if (!empty($iMenu)) {
-                $this->replyInlineKeyboard($content ?? 'Меню', $iMenu);
+                $this->replyInlineKeyboard(($content ?? 'Меню'), $iMenu);
                 $needContentInReply = false;
             }
 
@@ -438,23 +437,23 @@ class BotManager extends BotCore
             }
 
             if (!empty($replyKeyboard))
-                $this->replyKeyboard(mb_strlen($content) >= 1024 ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $this->replyKeyboard(mb_strlen($content) >= 1024 ? $content ?? 'Хм, нечего отобразить...' : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             if (empty($replyKeyboard) && mb_strlen($content) >= 1024)
-                $this->reply( $content);
+                $this->reply( $content ?? 'Хм, нечего отобразить...');
         }
 
         if (count($images) === 0) {
             $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
 
             if (!$needContentInReply)
-                $this->replyInlineKeyboard( $content, $iMenu);
+                $this->replyInlineKeyboard( $content ?? 'Меню', $iMenu);
 
             if (!empty($replyKeyboard) && $needSendReplyMenu)
                 $this->replyKeyboard($needContentInReply ? ($content??'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             if ($needContentInReply && empty($replyKeyboard))
-                $this->reply($content);
+                $this->reply($content ?? 'Хм, нечего отобразить...');
         }
 
         if (!is_null($page->video)) {
