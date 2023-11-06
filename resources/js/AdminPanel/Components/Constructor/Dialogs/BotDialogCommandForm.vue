@@ -7,15 +7,21 @@ import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers
 <template>
     <form v-on:submit.prevent="submit">
 
-
-
         <div class="form-floating mb-2">
             <input type="text" class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
                    placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
             <label :for="'commandForm-pre-text-'+commandForm.id">Текст диалога</label>
         </div>
 
-        <div class="form-floating mb-2">
+        <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" v-model="commandForm.is_empty" id="need-empty-dialog" checked>
+            <label class="form-check-label" for="need-empty-dialog">
+                Диалог без ожидания ответа
+            </label>
+        </div>
+
+
+        <div class="form-floating mb-2" v-if="!commandForm.is_empty">
             <input type="text" class="form-control"
                    :id="'commandForm-post-text-'+commandForm.id"
                    placeholder="Начни с малого..." v-model="commandForm.post_text" required>
@@ -23,7 +29,7 @@ import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers
                 диалога</label>
         </div>
 
-        <div class="form-floating mb-2">
+        <div class="form-floating mb-2"  v-if="!commandForm.is_empty">
             <input type="text" class="form-control" :id="'commandForm-error-text-'+commandForm.id"
                    placeholder="Начни с малого..." v-model="commandForm.error_text" required>
             <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
@@ -31,7 +37,7 @@ import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers
         </div>
 
 
-        <div class="mb-2">
+        <div class="mb-2"  v-if="!commandForm.is_empty">
             <div class="d-flex justify-content-between">
                 <label class="form-label" :for="'commandForm-result-channel-'+commandForm.id">Регулярное выражение для
                     валидации данных
@@ -52,12 +58,6 @@ import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers
                    aria-describedby="commandForm-input-pattern">
         </div>
 
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" v-model="commandForm.is_empty" id="need-empty-dialog" checked>
-            <label class="form-check-label" for="need-empty-dialog">
-                Диалог без ожидания ответа
-            </label>
-        </div>
 
         <div class="mb-2">
             <div class="d-flex justify-content-between">

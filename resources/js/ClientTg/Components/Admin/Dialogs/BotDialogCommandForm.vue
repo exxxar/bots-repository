@@ -28,29 +28,6 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
         </div>
 
-        <div class="form-floating mb-2">
-            <label :for="'commandForm-post-text-'+commandForm.id">Текст после успешного завершения
-                диалога</label>
-            <textarea
-                style="min-height:200px;"
-                class="form-control"
-                :id="'commandForm-post-text-'+commandForm.id"
-                placeholder="Начни с малого..." v-model="commandForm.post_text" required>
-            </textarea>
-
-        </div>
-
-        <div class="form-floating mb-2">
-            <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
-                данных</label>
-            <textarea
-                style="min-height:200px;"
-                class="form-control" :id="'commandForm-error-text-'+commandForm.id"
-                placeholder="Начни с малого..." v-model="commandForm.error_text" required>
-            </textarea>
-
-        </div>
-
         <div class="mb-2">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox"
@@ -63,7 +40,32 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
         </div>
 
-            <div class="mb-2">
+        <div class="form-floating mb-2" v-if="!commandForm.is_empty">
+            <label :for="'commandForm-post-text-'+commandForm.id">Текст после успешного завершения
+                диалога</label>
+            <textarea
+                style="min-height:200px;"
+                class="form-control"
+                :id="'commandForm-post-text-'+commandForm.id"
+                placeholder="Начни с малого..." v-model="commandForm.post_text" required>
+            </textarea>
+
+        </div>
+
+        <div class="form-floating mb-2" v-if="!commandForm.is_empty">
+            <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
+                данных</label>
+            <textarea
+                style="min-height:200px;"
+                class="form-control" :id="'commandForm-error-text-'+commandForm.id"
+                placeholder="Начни с малого..." v-model="commandForm.error_text" required>
+            </textarea>
+
+        </div>
+
+
+
+        <div class="mb-2" v-if="!commandForm.is_empty">
 
 
             <div class="mb-2">
@@ -87,7 +89,7 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
                    aria-describedby="commandForm-input-pattern">
         </div>
 
-        <div class="mb-2">
+        <div class="mb-2" v-if="!commandForm.is_empty">
             <label :for="'next-dialog-select'+commandForm.id">Следующий диалог</label>
             <select :id="'next-dialog-select'+commandForm.id" class="form-select form-control"
                     aria-label="Default select example">
@@ -98,7 +100,6 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
             </select>
         </div>
-
 
         <div class="mb-2">
             <div class="d-flex justify-content-between">
@@ -129,14 +130,16 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
             </div>
 
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" v-model="need_inline_keyboard" id="need-dialog-menu-inline" checked>
+                <input class="form-check-input" type="checkbox" v-model="need_inline_keyboard"
+                       id="need-dialog-menu-inline" checked>
                 <label class="form-check-label" for="need-dialog-menu-inline">
                     В диалоге нужно меню к тексту
                 </label>
             </div>
 
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" v-model="need_reply_keyboard" id="need-dialog-menu-reply" checked>
+                <input class="form-check-input" type="checkbox" v-model="need_reply_keyboard"
+                       id="need-dialog-menu-reply" checked>
                 <label class="form-check-label" for="need-dialog-menu-reply">
                     В диалоге нужно нижнее меню
                 </label>
