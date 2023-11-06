@@ -465,6 +465,54 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     </div>
                 </div>
 
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_cashback_config"
+                               type="checkbox"
+                               id="need-cashback-config">
+                        <label class="form-check-label" for="need-cashback-config">
+                            Необходимо настроить CashBack по категориям
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="mb-2" v-if="need_cashback_config">
+                    <h6>Настройка категорий CashBack-а</h6>
+
+
+                    <div class="d-flex justify-content-between mb-2 flex-wrap"
+                         :key="'social-link'+index"
+                         v-for="(item, index) in botForm.cashback_config">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <small>Название категории</small>
+
+                            <button
+                                type="button"
+                                @click="removeCashBackConfig(index)"
+                                class="btn btn-link text-danger"><i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                        <input type="text" class="form-control mb-2 w-100"
+                               placeholder="Название категории"
+                               aria-label="Название категории"
+                               maxlength="255"
+                               v-model="botForm.cashback_config[index].title"
+                               :aria-describedby="'bot-cashback-config-'+index" required>
+
+
+
+                    </div>
+                    <button
+                        type="button"
+                        @click="addCashBackConfig()"
+                        class="btn mb-2 rounded-sm text-uppercase btn-outline-info w-100">
+                        Добавить еще категорию
+                    </button>
+                    <div class="divider divider-small my-3 bg-highlight "></div>
+                </div>
+
                 <div class="col-md-12 col-12 mb-2">
                     <div class="card border-warning">
                         <div class="card-body">
@@ -842,6 +890,7 @@ export default {
             loadPage: false,
             needPageListUpdate: false,
             need_threads: false,
+            need_cashback_config: false,
             need_payments: false,
             need_shop: false,
             command: null,
@@ -869,6 +918,7 @@ export default {
                 bot_token_dev: null,
                 order_channel: null,
                 message_threads: null,
+                cashback_config: null,
                 main_channel: null,
                 vk_shop_link: null,
                 callback_link: null,
@@ -981,6 +1031,7 @@ export default {
                     bot_token_dev: this.bot.bot_token_dev || null,
                     order_channel: this.bot.order_channel || null,
                     message_threads: this.bot.message_threads || null,
+                    cashback_config: this.bot.cashback_config || null,
                     main_channel: this.bot.main_channel || null,
                     balance: this.bot.balance || null,
                     tax_per_day: this.bot.tax_per_day || null,
@@ -1014,6 +1065,11 @@ export default {
 
                 if (this.botForm.payment_provider_token)
                     this.need_payments = true
+
+
+                if (this.botForm.cashback_config)
+                    this.need_cashback_config = true
+
 
                 this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
             })
@@ -1162,6 +1218,19 @@ export default {
 
             })
 
+
+        },
+
+        removeCashBackConfig(index) {
+            this.botForm.cashback_config.splice(index, 1)
+        },
+        addCashBackConfig() {
+
+            this.botForm.cashback_config = this.botForm.cashback_config == null ? [] : this.botForm.cashback_config;
+
+            this.botForm.cashback_config.push({
+                title: null,
+            })
 
         },
 
