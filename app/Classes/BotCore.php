@@ -642,6 +642,7 @@ abstract class BotCore
         $message = $item->message ??
             $item->edited_message ??
             $item->callback_query->message ??
+
             null;
 
         //если сообщения нет, то завершаем работу
@@ -677,7 +678,8 @@ abstract class BotCore
 
 
             $query = $item->message->text ??
-                $item->callback_query->data ?? '';
+                $item->callback_query->data ??
+                $item->contact->phone_number ?? '';
 
             $this->chatId = $message->chat->id;
 
