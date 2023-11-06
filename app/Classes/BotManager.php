@@ -318,7 +318,7 @@ class BotManager extends BotCore
         $bot = $this->getSelf();
 
         if ($page->is_external) {
-            $this->sendMessage($channel, "Передано на внешнее управление (тестовый режим)");
+            $this->reply("Передано на внешнее управление (тестовый режим)");
 
             $callbackUrl = $bot->callback_link ?? null;
 
@@ -339,7 +339,7 @@ class BotManager extends BotCore
                     "completed_at" => null
                 ]);
 
-            $this->sendChatAction($channel, "typing");
+            $this->replyAction("typing");
 
             try {
                 $data = Http::connectTimeout(3)->get($callbackUrl);
@@ -404,20 +404,20 @@ class BotManager extends BotCore
             try {
                 $this->replyMediaGroup($media);
             } catch (\Exception $e) {
-                $this->sendPhoto($channel, "Ошибочка с изображениями",
+                $this->replyPhoto("Ошибочка с изображениями",
                     InputFile::create(public_path() . "/images/cashman2.jpg")
                 );
             }
 
 
             if (!empty($iMenu)) {
-                $this->sendInlineKeyboard($channel, $content ?? 'Меню', $iMenu);
+                $this->replyInlineKeyboard($content ?? 'Меню', $iMenu);
                 $needContentInReply = false;
             }
 
 
             if (!empty($rMenu)) {
-                $this->sendReplyKeyboard($channel, $needContentInReply ? ($content ?? 'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $this->replyKeyboard($needContentInReply ? ($content ?? 'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
                 $needSendReplyMenu = false;
             }
 
@@ -426,39 +426,39 @@ class BotManager extends BotCore
 
         if (count($images) === 1) {
             try {
-                $this->sendPhoto($channel, mb_strlen($content) < 1024 ? $content : null,
+                $this->replyPhoto(mb_strlen($content) < 1024 ? $content : null,
                     InputFile::create(storage_path("app/public") . "/companies/" . $bot->company->slug . "/" . $images[0]),
                     $iMenu
                 );
             } catch (\Exception $e) {
                 Log::info($e);
-                $this->sendPhoto($channel, "Ошибочка у вас... напишите программисту:)",
+                $this->replyPhoto( "Ошибочка у вас... напишите программисту:)",
                     InputFile::create(public_path() . "/images/cashman2.jpg")
                 );
             }
 
             if (!empty($replyKeyboard))
-                $this->sendReplyKeyboard($channel, mb_strlen($content) >= 1024 ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $this->replyKeyboard(mb_strlen($content) >= 1024 ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             if (empty($replyKeyboard) && mb_strlen($content) >= 1024)
-                $this->sendMessage($channel, $content);
+                $this->reply( $content);
         }
 
         if (count($images) === 0) {
             $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
 
             if (!$needContentInReply)
-                $this->sendInlineKeyboard($channel, $content, $iMenu);
+                $this->replyInlineKeyboard( $content, $iMenu);
 
             if (!empty($replyKeyboard) && $needSendReplyMenu)
-                $this->sendReplyKeyboard($channel, $needContentInReply ? ($content??'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $this->replyKeyboard($needContentInReply ? ($content??'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             if ($needContentInReply && empty($replyKeyboard))
-                $this->sendMessage($channel, $content);
+                $this->reply($content);
         }
 
         if (!is_null($page->video)) {
-            $this->sendVideo($channel, null, $page->video);
+            $this->replyVideo( null, $page->video);
         }
 
         if (!is_null($page->next_page_id)) {
