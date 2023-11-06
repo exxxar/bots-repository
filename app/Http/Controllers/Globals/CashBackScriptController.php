@@ -441,8 +441,9 @@ class CashBackScriptController extends SlugController
             base64_encode($data);
 
         $cashBack = CashBack::query()
+            ->with(["subs"])
             ->where("bot_id", $bot->id)
-            ->where("user_id", $botUser->user_id)
+            ->where("bot_user_id", $botUser->id)
             ->first();
 
         if (is_null($cashBack->bot_user_id)) {
