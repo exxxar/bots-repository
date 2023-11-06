@@ -301,8 +301,11 @@ class BotDialogsLogicFactory
             'images' => $photos ?? [],
             'next_bot_dialog_command_id' => $data["next_bot_dialog_command_id"] ?? null,
             'bot_dialog_group_id' => $groupId,
+            'is_empty' =>($data["is_empty"] ?? false) == "true" ? 1 : 0,
             'result_channel' => $data["result_channel"] ?? null,
         ]);
+
+
 
         return new BotDialogCommandResource($command);
     }
@@ -362,8 +365,9 @@ class BotDialogsLogicFactory
             ]);
         }
 
-        $tmp->inline_keyboard_id =  $inlineKeyboard->id ?? $data["inline_keyboard_id"] ?? null;
-        $tmp->reply_keyboard_id = $replyKeyboard->id?? $data["reply_keyboard_id"] ??  null;
+        $tmp->inline_keyboard_id = $inlineKeyboard->id ?? $data["inline_keyboard_id"] ?? null;
+        $tmp->reply_keyboard_id = $replyKeyboard->id ?? $data["reply_keyboard_id"] ?? null;
+        $tmp->is_empty = ($data["is_empty"] ?? false) == "true" ? 1 : 0;
 
         $command = BotDialogCommand::query()->find($tmp->id);
         $command->update((array)$tmp);
