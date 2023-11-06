@@ -11,6 +11,7 @@ use App\Models\Bot;
 use App\Models\BotDialogCommand;
 use App\Models\BotDialogGroup;
 use App\Models\BotDialogResult;
+use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -270,6 +271,24 @@ class BotDialogsLogicFactory
             $groupId = $baseGroup->id;
         }
 
+        if (!is_null($data["reply_keyboard"] ?? null)) {
+            $replyKeyboardId = BotMenuTemplate::query()->create([
+                'bot_id' => $this->bot->id,
+                'type' => "reply",
+                'slug' => Str::uuid(),
+                'menu' => json_decode($data["reply_keyboard"] ?? '[]')
+            ]);
+        }
+
+        if (!is_null($data["inline_keyboard"] ?? null)) {
+            $inlineKeyboardId = BotMenuTemplate::query()->create([
+                'bot_id' => $this->bot->id,
+                'type' => "inline",
+                'slug' => Str::uuid(),
+                'menu' => json_decode($data["inline_keyboard"] ?? '[]')
+            ]);
+        }
+
         $command = BotDialogCommand::query()->create([
             'slug' => Str::uuid(),
             'pre_text' => $data["pre_text"],
@@ -277,8 +296,8 @@ class BotDialogsLogicFactory
             'error_text' => $data["error_text"],
             'bot_id' => $this->bot->id,
             'input_pattern' => $data["input_pattern"] ?? null,
-            'inline_keyboard_id' => $data["inline_keyboard_id"] ?? null,
-            'reply_keyboard_id' => $data["reply_keyboard_id"] ?? null,
+            'inline_keyboard_id' => $data["inline_keyboard_id"] ?? $inlineKeyboardId ?? null,
+            'reply_keyboard_id' => $data["reply_keyboard_id"] ?? $replyKeyboardId ?? null,
             'images' => $photos ?? [],
             'next_bot_dialog_command_id' => $data["next_bot_dialog_command_id"] ?? null,
             'bot_dialog_group_id' => $groupId,
@@ -324,6 +343,27 @@ class BotDialogsLogicFactory
 
         if (count($photos) > 0)
             $tmp->images = $photos;
+
+        if (!is_null($data["reply_keyboard"] ?? null)) {
+            $replyKeyboardId = BotMenuTemplate::query()->create([
+                'bot_id' => $this->bot->id,
+                'type' => "reply",
+                'slug' => Str::uuid(),
+                'menu' => json_decode($data["reply_keyboard"] ?? '[]')
+            ]);
+        }
+
+        if (!is_null($data["inline_keyboard"] ?? null)) {
+            $inlineKeyboardId = BotMenuTemplate::query()->create([
+                'bot_id' => $this->bot->id,
+                'type' => "inline",
+                'slug' => Str::uuid(),
+                'menu' => json_decode($data["inline_keyboard"] ?? '[]')
+            ]);
+        }
+
+        $tmp->inline_keyboard_id = $data["inline_keyboard_id"] ?? $inlineKeyboardId ?? null;
+        $tmp->reply_keyboard_id = $data["reply_keyboard_id"] ?? $replyKeyboardId ?? null;
 
         $command = BotDialogCommand::query()->find($tmp->id);
         $command->update((array)$tmp);
