@@ -374,10 +374,10 @@ class BotAdministrativeLogicFactory
         if (is_null($userBotUser))
             throw new HttpException(404, "Пользователь не найден");
 
-        if (!is_null($data["category"])){
+        if (!is_null($data["category"] ?? null)) {
             BotMethods::bot()
                 ->whereBot($this->bot)
-                ->sendMessage($adminBotUser->telegram_chat_id,"Попытка добавить CashBack в категорию. Данная возможность еще в разработке.");
+                ->sendMessage($adminBotUser->telegram_chat_id, "Попытка добавить CashBack в категорию. Данная возможность еще в разработке.");
         }
 
         event(new CashBackEvent(
@@ -458,8 +458,8 @@ class BotAdministrativeLogicFactory
             ->first();
 
         $page = BotPage::query()
-            ->where("bot_id",$this->bot->id)
-            ->where("id","$pageId")
+            ->where("bot_id", $this->bot->id)
+            ->where("id", "$pageId")
             ->first();
 
         if (is_null($page))
@@ -475,7 +475,7 @@ class BotAdministrativeLogicFactory
 
         BotManager::bot()
             ->setBot($this->bot)
-            ->pushPage($page->id,  $userBotUser);
+            ->pushPage($page->id, $userBotUser);
 
         BotMethods::bot()
             ->whereBot($this->bot)
