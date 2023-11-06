@@ -515,6 +515,50 @@ class SystemDiagnosticController extends Controller
 
     }
 
+    private function mediaPrint($tmp, $media) {
+
+        if (empty($media)) {
+
+            $tmp .= "Медиа-файлы не найдены!";
+            BotManager::bot()
+                ->reply($tmp);
+            return;
+        }
+
+
+        $keyboard = [];
+        $rowTmpKeyboard = [];
+        $index = 1;
+        foreach ($media as $item) {
+            $tmp .= "#$item->id " . ($item->caption ?? 'Описание не указано') . "\n";
+
+            if ($index % 4 != 0) {
+                $rowTmpKeyboard[] = [
+                    "text" => "#".$item->id,
+                    "callback_data" => "/show_media_file $item->id"
+                ];
+            } else {
+                $rowTmpKeyboard[] = [
+                    "text" => "#".$item->id,
+                    "callback_data" => "/show_media_file $item->id"
+                ];
+
+                $keyboard[] = $rowTmpKeyboard;
+                $rowTmpKeyboard = [];
+            }
+
+            $index++;
+        }
+
+
+        if (count($rowTmpKeyboard) > 0) {
+            $keyboard[] = $rowTmpKeyboard;
+        }
+
+        BotManager::bot()
+            ->replyInlineKeyboard("$tmp", $keyboard);
+    }
+
     public function getMedia(...$data)
     {
         $botUser = BotManager::bot()
@@ -535,12 +579,7 @@ class SystemDiagnosticController extends Controller
             ->get();
 
         $tmp = "Список доступных видео в медиа контенте:\n";
-        if (!empty($media)) {
-            foreach ($media as $item) {
-                $tmp .= "#$item->id " . ($item->caption ?? 'Описание не указано') . "\n";
-            }
-        } else
-            $tmp .= "Видео не найдено!\n";
+        $this->mediaPrint($tmp, $media);
 
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
@@ -548,15 +587,88 @@ class SystemDiagnosticController extends Controller
             ->get();
 
         $tmp .= "Список доступных фото в медиа контенте:\n";
-        if (!empty($media)) {
-            foreach ($media as $item) {
-                $tmp .= "#$item->id " . ($item->caption ?? 'Описание не указано') . "\n";
-            }
-        } else
-            $tmp .= "Фото не найдено!\n";
+        $this->mediaPrint($tmp, $media);
 
+
+    }
+
+    public function showMediaFile(...$data){
+
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $id = $data[3] ?? 0;
+
+        $media = BotMedia::query()
+            ->where("bot_id", $bot->id)
+            ->where("id", $id)
+            ->first();
+
+        if (is_null($media)){
+            BotManager::bot()
+                ->reply("Файл не найден!");
+            return;
+        }
+
+        $keyboard = [
+            [
+                ["text"=>"Удалить файл","callback_data"=>"/remove_media_file $media->id"]
+            ]
+        ];
+
+        if ($media->type == "photo")
+            BotManager::bot()
+                ->replyPhoto($media->caption??null, $media->file_id, $keyboard);
+
+        if ($media->type == "video")
+            BotManager::bot()
+                ->replyVideo($media->caption??null, $media->file_id, $keyboard);
+
+        if ($media->type == "video_note")
+            BotManager::bot()
+                ->replyVideoNote( $media->file_id, $keyboard);
+
+    }
+
+    public function removeMediaFile(...$data){
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $id = $data[3] ?? 0;
+
+        $media = BotMedia::query()
+            ->where("bot_id", $bot->id)
+            ->where("id", $id)
+            ->first();
+
+        if (is_null($media)){
+            BotManager::bot()
+                ->reply("Файл не найден!");
+            return;
+        }
+
+        $media->delete();
         BotManager::bot()
-            ->reply("$tmp");
-
+            ->replyInlineKeyboard("Файл успешно удален", [
+                [
+                    ["text"=>"Показать оставшиеся файлы","callback_data"=>"/media"]
+                ]
+            ]);
     }
 }
