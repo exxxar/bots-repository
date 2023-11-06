@@ -362,8 +362,8 @@ class BotDialogsLogicFactory
             ]);
         }
 
-        $tmp->inline_keyboard_id = $data["inline_keyboard_id"] ?? $inlineKeyboard->id ?? null;
-        $tmp->reply_keyboard_id = $data["reply_keyboard_id"] ?? $replyKeyboard->id?? null;
+        $tmp->inline_keyboard_id =  $inlineKeyboard->id ?? $data["inline_keyboard_id"] ?? null;
+        $tmp->reply_keyboard_id = $replyKeyboard->id?? $data["reply_keyboard_id"] ??  null;
 
         $command = BotDialogCommand::query()->find($tmp->id);
         $command->update((array)$tmp);
