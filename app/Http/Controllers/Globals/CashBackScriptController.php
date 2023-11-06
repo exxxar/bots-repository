@@ -400,6 +400,7 @@ class CashBackScriptController extends SlugController
 
     public function specialCashBackSystem(...$config)
     {
+        Log::info("specialCashBackSystem");
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
             ->first())["value"];
@@ -439,7 +440,6 @@ class CashBackScriptController extends SlugController
         $qr = "https://t.me/$botDomain?start=" .
             base64_encode($data);
 
-
         $cashBack = CashBack::query()
             ->where("bot_id", $bot->id)
             ->where("user_id", $botUser->user_id)
@@ -453,7 +453,6 @@ class CashBackScriptController extends SlugController
         $amount = is_null($cashBack) ? 0 : ($cashBack->amount ?? 0);
 
         $companyTitle = $bot->company->title ?? 'CashMan';
-
 
         $tmpSubsText = "";
         Log::info(print_r($botUser->cashBack->toArray(), true));
