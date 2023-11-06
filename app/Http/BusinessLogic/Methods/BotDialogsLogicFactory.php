@@ -239,6 +239,7 @@ class BotDialogsLogicFactory
             'bot_id' => "required",
             'input_pattern' => "",
             'inline_keyboard_id' => "",
+            'reply_keyboard_id' => "",
             'images' => "",
             'next_bot_dialog_command_id' => "",
             'result_channel' => ""
@@ -277,6 +278,7 @@ class BotDialogsLogicFactory
             'bot_id' => $this->bot->id,
             'input_pattern' => $data["input_pattern"] ?? null,
             'inline_keyboard_id' => $data["inline_keyboard_id"] ?? null,
+            'reply_keyboard_id' => $data["reply_keyboard_id"] ?? null,
             'images' => $photos ?? [],
             'next_bot_dialog_command_id' => $data["next_bot_dialog_command_id"] ?? null,
             'bot_dialog_group_id' => $groupId,
@@ -303,6 +305,7 @@ class BotDialogsLogicFactory
             'error_text' => "required",
             'input_pattern' => "",
             'inline_keyboard_id' => "",
+            'reply_keyboard_id' => "",
             'images' => "",
             'next_bot_dialog_command_id' => "",
             'bot_dialog_group_id' => "required",

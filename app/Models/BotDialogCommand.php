@@ -23,6 +23,7 @@ class BotDialogCommand extends Model
         'bot_id',
         'input_pattern',
         'inline_keyboard_id',
+        'reply_keyboard_id',
         'images',
         'next_bot_dialog_command_id',
         'bot_dialog_group_id',
@@ -39,6 +40,7 @@ class BotDialogCommand extends Model
         'id' => 'integer',
         'bot_id' => 'integer',
         'inline_keyboard_id' => 'integer',
+        'reply_keyboard_id' => 'integer',
         'images' => 'array',
         'next_bot_dialog_command_id' => 'integer',
     ];
@@ -56,6 +58,11 @@ class BotDialogCommand extends Model
     }
 
     public function inlineKeyboard(): BelongsTo
+    {
+        return $this->belongsTo(BotMenuTemplate::class);
+    }
+
+    public function replyKeyboard(): BelongsTo
     {
         return $this->belongsTo(BotMenuTemplate::class);
     }

@@ -118,9 +118,16 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
             </div>
 
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" v-model="need_keyboard" id="need-dialog-menu" checked>
-                <label class="form-check-label" for="need-dialog-menu">
-                    В диалоге нужно меню
+                <input class="form-check-input" type="checkbox" v-model="need_inline_keyboard" id="need-dialog-menu-inline" checked>
+                <label class="form-check-label" for="need-dialog-menu-inline">
+                    В диалоге нужно меню к тексту
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" v-model="need_reply_keyboard" id="need-dialog-menu-reply" checked>
+                <label class="form-check-label" for="need-dialog-menu-reply">
+                    В диалоге нужно нижнее меню
                 </label>
             </div>
         </div>
@@ -159,7 +166,7 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
         </div>
 
-        <div class=" mb-2" v-if="need_keyboard">
+        <div class=" mb-2" v-if="need_inline_keyboard">
 
             <h6>Кнопки к вопросу</h6>
 
@@ -167,6 +174,18 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
             <BotMenuConstructor
                 v-on:save="saveInlineKeyboard"
                 :edited-keyboard="commandForm.inline_keyboard"/>
+
+
+        </div>
+
+        <div class=" mb-2" v-if="need_reply_keyboard">
+
+            <h6>Кнопки нижнего меню к вопросу</h6>
+
+
+            <BotMenuConstructor
+                v-on:save="saveReplyKeyboard"
+                :edited-keyboard="commandForm.reply_keyboard"/>
 
 
         </div>
@@ -199,7 +218,8 @@ export default {
     data() {
         return {
             need_images: false,
-            need_keyboard: false,
+            need_inline_keyboard: false,
+            need_reply_keyboard: false,
             commands: [],
             expressions: [
                 {
@@ -248,11 +268,13 @@ export default {
                 bot_id: null,
                 input_pattern: null,
                 inline_keyboard_id: null,
+                reply_keyboard_id: null,
                 images: null,
                 next_bot_dialog_command_id: null,
                 bot_dialog_group_id: null,
                 result_channel: null,
                 inline_keyboard: null,
+                reply_keyboard: null,
             },
             photos: []
         }
@@ -278,18 +300,23 @@ export default {
 
                     input_pattern: this.item.input_pattern || null,
                     inline_keyboard_id: this.item.inline_keyboard_id || null,
+                    reply_keyboard_id: this.item.reply_keyboard_id || null,
                     images: this.item.images || [],
                     next_bot_dialog_command_id: this.item.next_bot_dialog_command_id || null,
                     bot_dialog_group_id: this.item.bot_dialog_group_id || null,
                     result_channel: this.item.result_channel || null,
                     inline_keyboard: this.item.inline_keyboard || null,
+                    reply_keyboard: this.item.reply_keyboard || null,
                 }
 
                 if (this.bot)
                     this.commandForm.bot_id = this.bot.id || null
 
                 if (this.commandForm.inline_keyboard_id != null)
-                    this.need_keyboard = true
+                    this.need_inline_keyboard = true
+
+                if (this.commandForm.reply_keyboard_id != null)
+                    this.need_reply_keyboard = true
 
                 if (this.commandForm.images.length > 0)
                     this.need_images = true
@@ -436,6 +463,11 @@ export default {
         saveInlineKeyboard(keyboard) {
             this.commandForm.inline_keyboard = keyboard
         },
+        saveReplyKeyboard(keyboard) {
+            this.commandForm.reply_keyboard = keyboard
+        },
+
+
         addTextTo(object = {param: null, text: null}) {
             this.commandForm[object.param] = object.text;
 
