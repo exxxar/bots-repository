@@ -20,7 +20,10 @@ trait BotDialogTrait
         if (is_null($botDialogCommand))
             return;
 
+
         $msg = $botDialogCommand->pre_text ?? 'Введите данные';
+
+
         $inlineMenuTemplate = BotMenuTemplate::query()->find($botDialogCommand->inline_keyboard_id);
         $inlineKeyboard = $inlineMenuTemplate->menu ?? [];
 
@@ -44,8 +47,7 @@ trait BotDialogTrait
             $this->sendMediaGroup($channel, $media);
 
 
-            if (!is_null($botDialogCommand->inline_keyboard_id))
-            {
+            if (!is_null($botDialogCommand->inline_keyboard_id)) {
                 $this->sendInlineKeyboard($channel, $msg, $inlineKeyboard);
                 $isSent = true;
             }
@@ -59,7 +61,7 @@ trait BotDialogTrait
         }
 
         if (!is_null($botDialogCommand->reply_keyboard_id)) {
-            $this->sendReplyKeyboard($channel, !$isSent?$msg:'Варианты ответов', $replyKeyboard);
+            $this->sendReplyKeyboard($channel, !$isSent ? $msg : 'Варианты ответов', $replyKeyboard);
             $isSent = true;
         }
 
@@ -169,7 +171,7 @@ trait BotDialogTrait
                 'bot_dialog_command_id' => $nextBotDialogCommand->id,
                 'current_input_data' => null,
                 'summary_input_data' => $dialog->summary_input_data ?? [],
-                'completed_at' => null,
+                'completed_at' => $botDialogCommand->is_empty ? Carbon::now() : null,
             ]);
 
             $this->sendDialogData($nextBotDialogCommand ?? null,

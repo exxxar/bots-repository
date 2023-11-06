@@ -52,6 +52,12 @@ import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers
                    aria-describedby="commandForm-input-pattern">
         </div>
 
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" v-model="commandForm.is_empty" id="need-empty-dialog" checked>
+            <label class="form-check-label" for="need-empty-dialog">
+                Диалог без ожидания ответа
+            </label>
+        </div>
 
         <div class="mb-2">
             <div class="d-flex justify-content-between">
@@ -188,6 +194,7 @@ export default {
                 images: null,
                 next_bot_dialog_command_id: null,
                 bot_dialog_group_id: null,
+                is_empty: false,
                 result_channel: null,
                 inline_keyboard: null,
                 reply_keyboard: null,
@@ -209,6 +216,7 @@ export default {
                     pre_text: this.item.pre_text || null,
                     post_text: this.item.post_text || null,
                     error_text: this.item.error_text || null,
+                    is_empty: this.item.is_empty || false,
 
                     input_pattern: this.item.input_pattern || null,
                     inline_keyboard_id: this.item.inline_keyboard_id || null,
@@ -290,6 +298,7 @@ export default {
                         bot_dialog_group_id: null,
                         result_channel: null,
                         inline_keyboard: null,
+                        is_empty: false,
                     }
 
                     this.photos = []
