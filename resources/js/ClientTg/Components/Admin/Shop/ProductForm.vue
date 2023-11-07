@@ -1,5 +1,39 @@
 <template>
 
+    <div class="card card-style">
+        <div class="content">
+            <h6>Управление категориями</h6>
+            <div class="d-flex flex-wrap" v-if="categories.length>0">
+                <p class="px-3 font-10 rounded mr-1 mb-1 cursor-pointer"
+                   v-for="(cat, index) in categories"
+                >
+                    <span>{{ cat.title }}</span>
+                    <i
+                        @click="removeCategory(cat.id)"
+                        class="fa-solid fa-trash ml-2 color-red2-dark"></i>
+
+                </p>
+
+
+            </div>
+
+
+            <div class="mb-2">
+
+                <label for="exampleDropdownFormEmail1" class="form-label">Новая категория</label>
+                <input type="text" class="form-control"
+                       v-model="categoryForm.label"
+                       id="exampleDropdownFormEmail1"
+                       placeholder="Название категории">
+
+            </div>
+
+            <button class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" type="button" @click="addCategory">Добавить
+                категорию
+            </button>
+
+        </div>
+    </div>
     <div class="card card-style bg-theme pb-0">
         <div class="content">
             <form
@@ -26,38 +60,21 @@
                 </div>
 
                 <div class="divider divider-small my-3 bg-highlight "></div>
-
+                <h6>Выбор категории</h6>
                 <div class="d-flex flex-wrap" v-if="categories.length>0">
-                       <p class="px-3 font-10 rounded mr-1 mb-1 cursor-pointer"
-                             v-bind:class="{'bg-info text-white':productCategories.indexOf(cat.id)!=-1}"
-                             v-for="(cat, index) in categories"
-                            >
-                           <span @click="selectCategory(cat)">{{ cat.title }}</span>
-                           <i
-                           @click="removeCategory(cat.id)"
-                           class="fa-solid fa-trash ml-2 color-red2-dark"></i>
-
-                       </p>
+                    <p class="px-3 font-10 rounded mr-1 mb-1 cursor-pointer"
+                       v-bind:class="{'bg-info text-white':productCategories.indexOf(cat.id)!=-1}"
+                       v-for="(cat, index) in categories"
+                    >
+                        <span @click="selectCategory(cat)">{{ cat.title }}</span>
+                    </p>
 
 
                 </div>
-
-
-                <div class="mb-2">
-
-                    <label for="exampleDropdownFormEmail1" class="form-label">Новая категория</label>
-                    <input type="text" class="form-control"
-                           v-model="categoryForm.label"
-                           id="exampleDropdownFormEmail1"
-                           placeholder="Название категории">
-
-                </div>
-
-                <button class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" type="button" @click="addCategory">Добавить
-                    категорию
-                </button>
 
                 <div class="divider divider-small my-3 bg-highlight "></div>
+
+
 
                 <div class="mb-2">
                     <label for="vk-product-id">Идентификатор товара VK</label>
@@ -78,7 +95,7 @@
 
 
                 <div class=" mb-2">
-                    <label for="title">Названи товара</label>
+                    <label for="title">Название товара</label>
                     <input type="text"
                            v-model="productForm.title"
                            class="form-control" id="title" placeholder="Название"/>
@@ -174,35 +191,45 @@
 
 
                     <div class="d-flex flex-wrap" v-if="sections.length>0">
-                        <p class="mb-0">Для удаления характеристики - нажми на неё</p>
- <span @click="removeSection(index)" class="px-3 text-white rounded bg-info mr-1 mb-1 cursor-pointer"
-       v-for="(section, index) in sections">{{ section }}</span>
+                 <span class="px-3 text-white rounded bg-info mr-1 mb-1 cursor-pointer font-12"
+                       v-for="(section, index) in sections">{{ section }}   <i
+                     @click="removeSection(index)"
+                     class="fa-solid fa-trash ml-2 color-red2-dark"></i></span>
                     </div>
-
+                    <div class="divider divider-small my-3 bg-highlight "></div>
 
                 </div>
 
                 <div class="mb-2" v-for="(option, index) in productForm.options">
 
                     <div class="form-floating mb-2">
+                        <label :for="'option-title-'+index" class="font-12 my-0 w-100 d-flex justify-content-between">
+                            Название характеристики
+                            <button type="button"
+                                    class="btn btn-link color-red2-light font-12 p-0"
+                                    @click="removeOption(index)">
+                                <i class="fa-solid fa-trash-can mr-1"></i>
+                            </button>
+                        </label>
                         <input type="text"
                                v-model="productForm.options[index].title"
                                class="form-control" :id="'option-title-'+index"
                                placeholder="Характеристика">
-                        <label :for="'option-title-'+index">Название характеристики</label>
+
                     </div>
 
                     <div class="form-floating mb-2">
+                        <label :for="'option-value-'+index" class="font-12 my-0">Значение характеристики</label>
                         <input type="text"
                                v-model="productForm.options[index].value"
                                class="form-control" :id="'option-value-'+index"
                                placeholder="Значение">
-                        <label :for="'option-value-'+index">Значение характеристики</label>
+
 
                     </div>
 
                     <div class="form-floating mb-2">
-
+                        <label :for="'option-section-'+index" class="font-12 my-0">Секция товара</label>
                         <select class="form-control font-12"
                                 v-model="productForm.options[index].section"
                                 :id="'option-section-'+index"
@@ -213,15 +240,10 @@
                                 }}
                             </option>
                         </select>
-                        <label :for="'option-section-'+index">Секция товара</label>
+
                     </div>
 
-                    <button type="button"
-                            class="btn btn-outline-danger w-100"
-                            @click="removeOption(index)">
-                        <i class="fa-solid fa-trash-can mr-1"></i>
-                        Удалить секцию товара
-                    </button>
+
 
 
                 </div>

@@ -44,6 +44,7 @@ class ProductController extends Controller
             ->setBot($bot)
             ->list(
                 $request->search ?? null,
+                null,
                 $request->get("size") ?? config('app.results_per_page')
             );
     }
