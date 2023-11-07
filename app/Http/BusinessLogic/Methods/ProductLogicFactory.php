@@ -190,7 +190,7 @@ class ProductLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function createOrUpdate(array $data, array $uploadedPhotos): ProductResource
+    public function createOrUpdate(array $data, array $uploadedPhotos = null): ProductResource
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -210,7 +210,9 @@ class ProductLogicFactory
 
         $slug = $this->bot->company->slug;
 
-        $photos = $this->uploadPhotos("/public/companies/$slug", $uploadedPhotos);
+
+        $photos = !is_null($uploadedPhotos)?
+            $this->uploadPhotos("/public/companies/$slug", $uploadedPhotos): [];
 
         $images = $data["images"] ?? null;
 
