@@ -73,6 +73,8 @@ class FastRequestScriptController extends SlugController
 
         $slugId = $data[3] ?? null;
 
+        Log::info("request from page".print_r($data, true));
+
         $slug = BotMenuSlug::query()->where("id", $slugId)
             ->first();
 
@@ -101,7 +103,7 @@ class FastRequestScriptController extends SlugController
 
         BotManager::bot()
             ->sendMessage(($bot->order_channel ?? $bot->main_channel ?? null),
-            "Запрос со страницы <b>$slug->command</b> от пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
+            "Запрос со страницы <b>$slug->command</b>\nот пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
                 $thread
 
         );
