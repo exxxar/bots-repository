@@ -112,7 +112,7 @@ class VKProductController extends Controller
             Inertia::setRootView("shop");
 
             return Inertia::render('Result', [
-                'message' => "Ошиюка добавления товаров!",
+                'message' => "Ошибка добавления товаров!",
             ]);
         }
 

@@ -8,6 +8,7 @@ use App\Http\Resources\ProductCategoryCollection;
 use App\Http\Resources\ProductCategoryResource;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
+use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -403,6 +404,14 @@ class ProductLogicFactory
 
         if (empty($products))
             throw new HttpException(404, "Продукты не найден");
+
+        $baskets = Basket::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (!empty($baskets))
+            foreach ($baskets as $basket)
+                $basket->delete();
 
         foreach ($products as $product) {
             $options = $product->productOptions;
