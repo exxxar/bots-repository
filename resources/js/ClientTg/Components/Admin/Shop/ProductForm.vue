@@ -28,7 +28,9 @@
 
             </div>
 
-            <button class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" type="button" @click="addCategory">Добавить
+            <button
+                class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100"
+                type="button" @click="addCategory">Добавить
                 категорию
             </button>
 
@@ -75,7 +77,6 @@
                 <div class="divider divider-small my-3 bg-highlight "></div>
 
 
-
                 <div class="mb-2">
                     <label for="vk-product-id">Идентификатор товара VK</label>
                     <input type="text"
@@ -91,7 +92,6 @@
                            v-model="productForm.article"
                            class="form-control" id="article" placeholder="Название артикула">
                 </div>
-
 
 
                 <div class=" mb-2">
@@ -138,7 +138,8 @@
 
                 <button
                     type="button"
-                    class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" @click="addVariant">Добавить вариант
+                    class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100"
+                    @click="addVariant">Добавить вариант
                 </button>
 
                 <div class="mb-2" v-for="(variant, index) in productForm.variants">
@@ -183,11 +184,12 @@
                                placeholder="Название секции"
                                aria-label="Recipient's username"
                                aria-describedby="button-addon2" required>
-                        <button class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" type="submit"
-                                id="button-addon2">Добавить секцию
+                        <button
+                            class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100"
+                            type="submit"
+                            id="button-addon2">Добавить секцию
                         </button>
                     </form>
-
 
 
                     <div class="d-flex flex-wrap" v-if="sections.length>0">
@@ -244,13 +246,12 @@
                     </div>
 
 
-
-
                 </div>
 
                 <button
                     type="button"
-                    class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100" @click="addOption">Добавить характеристику
+                    class="btn btn-border btn-m btn-full mb-0 rounded-sm text-uppercase font-900 border-green2-dark color-green2-dark bg-theme w-100"
+                    @click="addOption">Добавить характеристику
                 </button>
 
                 <div class="divider divider-small my-3 bg-highlight "></div>
@@ -288,7 +289,8 @@
 
                 <button
                     type="submit"
-                    class="btn btn-m btn-full mb-0 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark w-100">Сохранить
+                    class="btn btn-m btn-full mb-0 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark w-100">
+                    Сохранить
                 </button>
             </form>
 
@@ -300,7 +302,8 @@
                 @click="removeProduct"
                 v-if="productForm.id"
                 type="button"
-                class="btn btn-m btn-full mb-0 rounded-xs text-uppercase font-900 shadow-s bg-red2-dark w-100">Удалить товар
+                class="btn btn-m btn-full mb-0 rounded-xs text-uppercase font-900 shadow-s bg-red2-dark w-100">Удалить
+                товар
             </button>
         </div>
     </div>
@@ -400,10 +403,10 @@ export default {
             let cat = this.categories.find(item => item.value === category)
             return cat ? cat.label : category
         },
-        removeProduct(){
-            this.$store.dispatch("removeProductCategory",{
+        removeProduct() {
+            this.$store.dispatch("removeProductCategory", {
                 category_id: id
-            }).then(()=>{
+            }).then(() => {
                 this.loadProductCategories()
                 this.$botNotification.notification(
                     "Конструктор ботов",
@@ -411,15 +414,15 @@ export default {
                 );
             })
         },
-        removeCategory(id){
-            let index  = this.categories.findIndex(item=>item.id===id)||null
+        removeCategory(id) {
+            let index = this.categories.findIndex(item => item.id === id) || null
 
             if (index)
                 this.categories.splice(index, 1)
 
-            this.$store.dispatch("removeProductCategory",{
+            this.$store.dispatch("removeProductCategory", {
                 category_id: id
-            }).then(()=>{
+            }).then(() => {
                 this.loadProductCategories()
                 this.$botNotification.notification(
                     "Конструктор ботов",
@@ -430,14 +433,21 @@ export default {
         addCategory() {
             const category = this.categoryForm.label
             this.categoryForm.label = null
-            this.$store.dispatch("addProductCategory",{
+            this.$store.dispatch("addProductCategory", {
                 category: category
-            }).then(()=>{
+            }).then(() => {
                 this.loadProductCategories()
             })
         },
         selectCategory(item) {
-            this.productCategories.push(item.id)
+            if (!this.productCategories)
+                this.productCategories = []
+            
+            let index = this.productCategories.indexOf(item.id)
+            if (index !== -1)
+                this.productCategories.splice(index, 1)
+            else
+                this.productCategories.push(item.id)
         },
         submit() {
             let data = new FormData();

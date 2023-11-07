@@ -196,7 +196,7 @@ class ProductLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $validator = Validator::make($data, [
-            "article" => "required",
+            "article" => "",
             "title" => "required",
             "description" => "required",
             "type" => "required",
@@ -243,7 +243,7 @@ class ProductLogicFactory
         $productId = $data["id"] ?? null;
 
         $tmp = [
-            'article' => $data["article"],
+            'article' => $data["article"]?? null,
             'vk_product_id' => $data["vk_product_id"] ?? null,
             'title' => $data["title"] ?? null,
             'description' => $data["description"] ?? null,
