@@ -262,6 +262,7 @@ class VKProductController extends Controller
 
                 $productCategory = ProductCategory::query()
                     ->where("title", $vkCategory->name)
+                   // ->where("bot_id", $vkCategory->name)
                     ->first();
 
                 if (is_null($productCategory))

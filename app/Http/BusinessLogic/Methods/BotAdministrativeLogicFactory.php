@@ -295,7 +295,10 @@ class BotAdministrativeLogicFactory
 
         $url_link = "https://t.me/" . $this->bot->bot_domain . "?start=$code";
 
-        $adminBotUser = $this->botUser;
+        $adminBotUser = BotUser::query()
+            ->where("telegram_chat_id", $data["admin_telegram_chat_id"])
+            ->where("bot_id", $this->bot->id)
+            ->first();
 
         $userBotUser = BotUser::query()
             ->where("telegram_chat_id", $data["user_telegram_chat_id"])
