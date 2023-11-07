@@ -366,7 +366,6 @@
                            placeholder="%"
                            aria-label="уровень CashBack"
                            v-model="botForm.level_1"
-                           max="50"
                            min="0"
                            aria-describedby="bot-level-1" required>
 
@@ -380,7 +379,6 @@
                            placeholder="%"
                            aria-label="уровень CashBack"
                            v-model="botForm.level_2"
-                           max="50"
                            min="0"
                            aria-describedby="bot-level-2">
 
@@ -394,7 +392,6 @@
                            placeholder="%"
                            aria-label="уровень CashBack"
                            v-model="botForm.level_3"
-                           max="50"
                            min="0"
                            aria-describedby="bot-level-3">
 

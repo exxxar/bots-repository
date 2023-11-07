@@ -232,7 +232,7 @@ class CashBackListener
             'money_in_check' => $moneyAmount,
             'amount' => $tmpAmount,
             'level' => $levelIndex,
-            'description' => "Реферальное начислени CashBack $levelIndex уровня",
+            'description' => "Реферальное начисление CashBack $levelIndex уровня",
             'operation_type' => 1,
             'user_id' => $user->id,
             'bot_id' => $botId,

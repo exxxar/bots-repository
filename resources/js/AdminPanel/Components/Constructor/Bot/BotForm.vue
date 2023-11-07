@@ -433,7 +433,6 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                placeholder="%"
                                aria-label="уровень CashBack"
                                v-model="botForm.level_1"
-                               max="50"
                                min="0"
                                aria-describedby="bot-level-1" required>
                     </div>
@@ -446,7 +445,6 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                placeholder="%"
                                aria-label="уровень CashBack"
                                v-model="botForm.level_2"
-                               max="50"
                                min="0"
                                aria-describedby="bot-level-2">
                     </div>
@@ -459,7 +457,6 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                placeholder="%"
                                aria-label="уровень CashBack"
                                v-model="botForm.level_3"
-                               max="50"
                                min="0"
                                aria-describedby="bot-level-3">
                     </div>
@@ -608,7 +605,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                 </div>
                             </template>
                         </Popper>
-                        <label class="form-label" id="bot-level-3">Токен платежной системы
+                        <label class="form-label" id="payment_provider_token">Токен платежной системы
                             <a href="https://t.me/botfather" target="_blank">Подключить</a>
                         </label>
 
@@ -617,7 +614,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                placeholder="Токен"
                                aria-label="Токен"
                                v-model="botForm.payment_provider_token"
-                               aria-describedby="bot-level-3">
+                               aria-describedby="payment_provider_token">
                     </div>
 
 
@@ -645,7 +642,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                 </div>
                             </template>
                         </Popper>
-                        <label class="form-label" id="bot-level-3">Ссылка на группу ВК с товарами
+                        <label class="form-label" id="bot-vk_shop_link">Ссылка на группу ВК с товарами
                             <a href="https://vk.com/groups?w=groups_create" target="_blank">Создать</a>
                         </label>
 
