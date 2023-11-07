@@ -147,6 +147,7 @@ class VKProductController extends Controller
 
             $product = Product::query()
                 ->where("vk_product_id", $vkProduct->id)
+                ->where("bot_id",  $bot->id)
                 ->first();
 
             if (is_null($product)) {
@@ -262,7 +263,7 @@ class VKProductController extends Controller
 
                 $productCategory = ProductCategory::query()
                     ->where("title", $vkCategory->name)
-                   // ->where("bot_id", $vkCategory->name)
+                    ->where("bot_id",  $bot->id)
                     ->first();
 
                 if (is_null($productCategory))
@@ -277,6 +278,7 @@ class VKProductController extends Controller
 
                 $productCategorySection = ProductCategory::query()
                     ->where("title", $vkCategorySection->name)
+                    ->where("bot_id",  $bot->id)
                     ->first();
 
                 if (is_null($productCategorySection))
