@@ -139,7 +139,7 @@ class ProductLogicFactory
     /**
      * @throws HttpException
      */
-    public function categories($size = 100): ProductCategoryCollection
+    public function categories($size = null): ProductCategoryCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");

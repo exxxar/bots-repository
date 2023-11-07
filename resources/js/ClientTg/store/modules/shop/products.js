@@ -158,26 +158,15 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadCategories(context, payload = {page: 0, size: 5}) {
-        let tgData = window.Telegram.WebApp.initData || null
-        let botDomain = window.currentBot.bot_domain || null
-        let slugId = window.currentScript || null
-
-        let data = {
-            tgData: tgData,
-            slug_id: slugId,
-            botDomain: botDomain
-        }
+    async loadCategories(context, payload = {page: 0, size: 100}) {
 
         let page = payload.page || 0
         let size = payload.size || 5
 
-        console.log(size)
-
         let link = `${BASE_PRODUCTS_LINK}/categories?page=${page}&size=${size}`
         let method = 'POST'
 
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let _axios = util.makeAxiosFactory(link, method)
 
         return _axios.then((response) => {
             const dataObject = response.data
