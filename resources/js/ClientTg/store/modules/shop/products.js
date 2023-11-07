@@ -49,7 +49,7 @@ const actions = {
     },
 
     async saveProduct(context, payload = {productForm: null}) {
-        let link = `${BASE_PRODUCTS_LINK}/add-product"`
+        let link = `${BASE_PRODUCTS_LINK}/add-product`
 
         let _axios = util.makeAxiosFactory(link, "POST", payload.productForm)
 
