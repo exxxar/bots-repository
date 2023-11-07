@@ -101,7 +101,7 @@ class FastRequestScriptController extends SlugController
 
         BotManager::bot()
             ->sendMessage(($bot->order_channel ?? $bot->main_channel ?? null),
-            "Запрос от пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
+            "Запрос со страницы <b>$slug->command</b> от пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
                 $thread
 
         );

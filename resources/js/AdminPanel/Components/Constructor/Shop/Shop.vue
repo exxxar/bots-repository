@@ -8,8 +8,44 @@ import ProductList from "@/AdminPanel/Components/Constructor/Shop/ProductList.vu
             <h6>Управление магазином</h6>
         </div>
         <div class="card-body">
-            <div class="row" v-if="tab===1">
+            <div class="row">
                 <div class="col-12">
+                    <form
+                        v-on:submit.prevent="updateShopLink"
+                        class=" mb-2">
+
+
+                        <label class="form-label d-flex justify-content-between mt-2" id="bot-level-3">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Ссылка на страницу ВК с товарами для вашего магазина в боте
+                                        </div>
+                                    </template>
+                                </Popper>
+                                ВК-группа
+                            </div>
+
+                            <a href="https://vk.com/groups?w=groups_create" target="_blank">Создать</a>
+                        </label>
+
+
+                        <input type="url" class="form-control"
+                               placeholder="Ссылка на группу ВК"
+                               aria-label="ссылка на группу ВК"
+                               v-model="botForm.vk_shop_link"
+                               aria-describedby="vk_shop_link">
+
+                        <button
+                            :disabled="load"
+                            class="btn btn-outline-primary mt-2 mb-2 w-100">
+                            <i class="fa-regular fa-floppy-disk mr-2"></i> Сохранить
+                        </button>
+
+                    </form>
+                </div>
+<!--                <div class="col-12">
                     <form v-on:submit.prevent="updateProducts">
                         <div class="input-group mb-3">
                             <button
@@ -34,16 +70,23 @@ import ProductList from "@/AdminPanel/Components/Constructor/Shop/ProductList.vu
                     </div>
 
 
-                </div>
+                </div>-->
             </div>
             <div class="row mb-3">
                 <div class="col-md-3">
-                    <button
+                    <a
+                        target="_blank"
+                        :href="link"
+                        class="btn btn-primary w-100">
+                       Обновить товар
+                    </a>
+
+<!--                    <button
                         type="button"
                         @click="tab=1"
                         v-bind:class="{'btn-info text-white':tab===1}"
                         class="btn btn-outline-info w-100">Обновить товар из ВК
-                    </button>
+                    </button>-->
                 </div>
                 <div class="col-md-3">
                     <button class="btn btn-outline-info w-100">Экспорт в XLS</button>
@@ -95,6 +138,9 @@ export default {
             link: null,
             bot: null,
             selectedProduct: null,
+            botForm: {
+                vk_shop_link: null,
+            }
         }
     },
     computed: {
@@ -103,8 +149,26 @@ export default {
     },
     mounted() {
         this.bot = this.getCurrentBot
+        this.botForm.vk_shop_link = this.bot.vk_shop_link || null
+        this.updateProducts()
     },
     methods: {
+        updateShopLink() {
+            this.load = true
+            this.botForm.bot_id = this.bot.id
+            this.$store.dispatch("updateShopLink",{
+                botForm: this.botForm
+            }).then((resp) => {
+                this.load = false
+                this.updateProducts()
+                this.$notify({
+                    title: "Менеджер магазина",
+                    text: "Ссылка на источник в ВК обновлена"
+                });
+            }).catch(() => {
+                this.load = false
+            })
+        },
         refresh() {
             this.load = true
             this.selectedProduct = null
@@ -118,8 +182,6 @@ export default {
                 this.selectedProduct = product
                 this.load = false
             })
-
-            console.log(product)
         },
         updateProducts() {
 
@@ -130,7 +192,6 @@ export default {
                 }
             }).then((resp) => {
 
-                console.log(resp)
                 this.link = resp.data.url
                 this.load = false
                 this.url = null

@@ -43,13 +43,14 @@ import ProductList from "@/ClientTg/Components/Admin/Shop/ProductList.vue";
 
             </form>
             <div class="divider divider-small my-3 bg-highlight "></div>
-            <button
-                :disabled="!link&&load"
-                :href="link"
+            <a
+                @click="open(link)"
+
+                href="javascript:void(0)"
                 type="button"
                 class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme w-100">
                 <i class="fa-brands fa-vk mr-2"></i> Обновить товар из ВК
-            </button>
+            </a>
 
             <button
                 @click="exportOrders"
@@ -110,7 +111,11 @@ export default {
             }
         }
     },
-
+    computed:{
+        tg() {
+            return window.Telegram.WebApp;
+        },
+    },
     mounted() {
         this.updateProducts()
         this.botForm.vk_shop_link = window.currentBot.vk_shop_link || null
@@ -122,6 +127,7 @@ export default {
                 botForm: this.botForm
             }).then((resp) => {
                 this.load = false
+                this.updateProducts()
                 this.$botNotification.notification("Менеджер магазина", "Ссылка на источник в ВК обновлена");
             }).catch(() => {
                 this.load = false
@@ -171,7 +177,10 @@ export default {
                 this.load = false
             })
 
-        }
+        },
+        open(url) {
+            this.tg.openLink(url)
+        },
     }
 }
 </script>

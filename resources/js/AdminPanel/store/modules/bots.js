@@ -20,6 +20,18 @@ const getters = {
 }
 
 const actions = {
+    updateShopLink(context, payload = {botForm:null}){
+        let link = `${BASE_BOTS_LINK}/update-shop-link`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload.botForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadBots(context, payload = {dataObject: null, page: 0, size: 50}) {
         let page = payload.page || 0
         let size = payload.size || 50

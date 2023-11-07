@@ -84,6 +84,18 @@ export default createStore({
 
             context.commit("setCurrentBot", currentBot)
         },
+        async updateProductsFromVk(context) {
+            let link = `/admin/vk-auth-link`
+
+            let _axios = util.makeAxiosFactory(link, 'POST')
+
+            return _axios.then((response) => {
+                return Promise.resolve(response);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
     },
     mutations: {
         setCurrentCompany(state, payload) {

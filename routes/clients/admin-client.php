@@ -79,6 +79,7 @@ Route::prefix("admin")
             ->controller(BotController::class)
             ->group(function () {
                 Route::post("/", "index");
+                Route::post('/update-shop-link',"updateShopLink");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
                 Route::post("/bot-update", "updateBot");
                 Route::post("/user-status", "changeUserStatus");
