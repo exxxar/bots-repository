@@ -46,7 +46,7 @@ trait BotBaseMethodsTrait
 
       //  $client = new Api();
         $req =  new TelegramRequest();
-        $req->setAccessToken($this->getSelf()->bot_tpken);
+        $req->setAccessToken("1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4");
         $req->setMethod("setMyName");
         $req->setParams([
             "name"=>"TEEEEEEST"
