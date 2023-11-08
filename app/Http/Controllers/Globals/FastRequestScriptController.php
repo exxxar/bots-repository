@@ -71,6 +71,8 @@ class FastRequestScriptController extends SlugController
     public function requestCallback(...$data)
     {
 
+        Log::info("requestCallback".print_r($data, true));
+
         $slugId = $data[3] ?? null;
 
         $slug = BotMenuSlug::query()

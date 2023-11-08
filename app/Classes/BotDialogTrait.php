@@ -44,16 +44,16 @@ trait BotDialogTrait
                 ];
             }
 
-            $this->sendMediaGroup($channel, $media);
+            $this->replyMediaGroup($media);
 
 
             if (!is_null($botDialogCommand->inline_keyboard_id)) {
-                $this->sendInlineKeyboard($channel, $msg, $inlineKeyboard);
+                $this->replyInlineKeyboard($msg, $inlineKeyboard);
                 $isSent = true;
             }
 
         } else if (count($botDialogCommand->images) === 1) {
-            $this->sendPhoto($channel, "<b>" . $msg,
+            $this->replyPhoto("<b>" . $msg,
                 InputFile::create(storage_path("app/public") . "/images-by-bot-id/" . $botDialogCommand->bot_id . "/" . $botDialogCommand->images[0]),
                 $inlineKeyboard
             );
@@ -61,12 +61,13 @@ trait BotDialogTrait
         }
 
         if (!is_null($botDialogCommand->reply_keyboard_id)) {
-            $this->sendReplyKeyboard($channel, !$isSent ? $msg : 'Варианты ответов', $replyKeyboard);
+            $this->replyKeyboard(!$isSent ? $msg : 'Варианты ответов', $replyKeyboard);
             $isSent = true;
         }
 
         if (!$isSent)
-            $this->sendMessage($channel, $msg);
+            $this->reply($msg);
+
 
     }
 
@@ -158,6 +159,19 @@ trait BotDialogTrait
         $dialog->completed_at = Carbon::now();
         $dialog->save();
 
+        if (!is_null($botDialogCommand->store_to ?? null)) {
+            $tmp[$botDialogCommand->store_to] = $text ?? null;
+            $botUser->update($tmp);
+        }
+
+        if (!empty($botDialogCommand->result_flags ?? [])) {
+            $tmp = [];
+            foreach ($botDialogCommand->result_flag as $flag){
+                $tmp[$flag] = true;
+            }
+            $botUser->update($tmp);
+        }
+
         $needStop = false;
 
         if (!$botDialogCommand->is_empty)
@@ -177,10 +191,12 @@ trait BotDialogTrait
                 'completed_at' => $nextBotDialogCommand->is_empty ? Carbon::now() : null,
             ]);
 
+
             $needStop = false;
 
             $this->sendDialogData($nextBotDialogCommand ?? null,
                 $botUser->telegram_chat_id ?? null);
+
 
             if ($nextBotDialogCommand->is_empty)
                 $needStop = true;

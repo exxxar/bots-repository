@@ -31,6 +31,8 @@ class BotDialogCommandResource extends JsonResource
             'bot_dialog_group_id' => $this->bot_dialog_group_id,
             'bot_dialog_group' => $this->whenLoaded("botDialogGroup"),
             'result_channel' => $this->result_channel,
+            'result_flags' => $this->result_flags ?? [],
+            'store_to' => $this->store_to,
         ];
     }
 }

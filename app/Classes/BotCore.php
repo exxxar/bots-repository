@@ -297,7 +297,7 @@ abstract class BotCore
 
 
                             $this->tryCall($item, $message,
-                                $config, []);
+                                $config, [...$page->toArray()]);
 
                         }
                     }

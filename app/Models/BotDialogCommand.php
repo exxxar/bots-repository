@@ -29,6 +29,8 @@ class BotDialogCommand extends Model
         'next_bot_dialog_command_id',
         'bot_dialog_group_id',
         'result_channel',
+        'result_flags',
+        'store_to',
 
     ];
 
@@ -43,6 +45,7 @@ class BotDialogCommand extends Model
         'inline_keyboard_id' => 'integer',
         'reply_keyboard_id' => 'integer',
         'images' => 'array',
+        'result_flags' => 'array',
         'is_empty' => 'boolean',
         'next_bot_dialog_command_id' => 'integer',
     ];
