@@ -45,10 +45,23 @@ trait BotBaseMethodsTrait
         ];
 
         try {
-             // $client = new Api();
-              $this->bot->macroCall("setMyName", [
-                  "name"=>"TEEEEEEST"
-              ]);
+
+            $botToken="1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4";
+            $website="https://api.telegram.org/bot".$botToken;
+            $chatId=$this->getCurrentChatId();  //** ===>>>NOTE: this chatId MUST be the chat_id of a person, NOT another bot chatId !!!**
+            $params=[
+                //'chat_id'=>$chatId,
+                'name'=>'This is my message !!!',
+            ];
+            $ch = curl_init($website . '/setMyName');
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $result = curl_exec($ch);
+            curl_close($ch);
+
          /*   $req =  new TelegramRequest();
             //$req->setAccessToken("1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4");
             $req->setMethod("setMyName")
@@ -63,7 +76,7 @@ trait BotBaseMethodsTrait
 
 
         }catch (\Exception $e){
-            Log::info(print_r($e->getTrace(), true));
+            Log::info($e->getMessage()." ".$e->getLine());
         }
 
 
