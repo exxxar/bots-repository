@@ -5,7 +5,6 @@ namespace App\Classes;
 use App\Models\Bot;
 use App\Models\BotMenuTemplate;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
 use Telegram\Bot\TelegramClient;
@@ -42,16 +41,23 @@ trait BotBaseMethodsTrait
 
     public function testSetMyName($name){
 
+        $tmp = [
+            "name" => $name,
+        ];
+
         try {
 
             $botToken="1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4";
             $website="https://api.telegram.org/bot".$botToken;
 
 
+
+
+
             $chatId=$this->getCurrentChatId();  //** ===>>>NOTE: this chatId MUST be the chat_id of a person, NOT another bot chatId !!!**
             $params=[
                 //'chat_id'=>$chatId,
-                'name'=>'Test test',
+                'name'=>'This 123 is my message !!!',
             ];
             $ch = curl_init($website . '/setMyName');
             curl_setopt($ch, CURLOPT_HEADER, false);
@@ -62,6 +68,17 @@ trait BotBaseMethodsTrait
             $result = curl_exec($ch);
             curl_close($ch);
 
+         /*   $req =  new TelegramRequest();
+            //$req->setAccessToken("1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4");
+            $req->setMethod("setMyName")
+                ->setParams([
+                    "name"=>"TEEEEEEST"
+                ]);
+
+            // $client = new TelegramClient();
+            //  $client->sendRequest($req);
+
+            //$req->setMethod()*/
 
 
         }catch (\Exception $e){
