@@ -130,7 +130,6 @@
                            aria-describedby="bot-token" required>
                 </div>
 
-
                 <div class="mb-2">
                     <label class="form-label d-flex justify-content-between mt-2" id="bot-token-dev">Токен бота
                         (для тестирования)</label>
@@ -142,6 +141,114 @@
                            aria-describedby="bot-token-dev">
                 </div>
 
+                <div class="mb-2">
+                    <label class="form-label d-flex justify-content-between  align-items-center mt-2" id="bot-title">
+                        <div>
+                            <Popper>
+                                <i class="fa-regular fa-circle-question mr-1"></i>
+                                <template #content>
+                                    <div>Имя бота, которая отображается у всех пользователей в боте</div>
+                                </template>
+                            </Popper>
+                            Отображаемое имя бота
+                        </div>
+                        <Popper>
+                            <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                            <template #content>
+                                <div>Нужно
+                                </div>
+                            </template>
+                        </Popper>
+
+                    </label>
+                    <input type="text" class="form-control"
+                           placeholder="Отображаемое имя бота"
+                           aria-label="Отображаемое имя бота"
+                           v-model="botForm.title"
+                           maxlength="64"
+                           aria-describedby="bot-title" required>
+                </div>
+
+
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <label
+                            class="form-label d-flex justify-content-between  align-items-center mb-0  flex-wrap w-100"
+                            id="bot-short-description">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Описание бота, которое отобразится при переходе в бота по ссылке</div>
+                                    </template>
+                                </Popper>
+                                Короткое описание бота
+
+                            </div>
+                            <Popper>
+                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                <template #content>
+                                    <div>Нужно
+                                    </div>
+                                </template>
+                            </Popper>
+
+
+                        </label>
+
+                        <small class="text-gray-400 w-100" style="font-size:10px;"
+                               v-if="botForm.short_description">
+                            Длина текста {{ botForm.short_description.length }} / 120</small>
+                    </div>
+                    <textarea class="form-control font-12"
+                              placeholder="Короткое описание бота"
+                              aria-label="Короткое описание бота"
+                              v-model="botForm.short_description"
+                              maxlength="120"
+                              style="min-height:200px;"
+                              aria-describedby="short-description" required>
+                    </textarea>
+                </div>
+
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <label
+                            class="form-label d-flex justify-content-between  align-items-center mb-0  flex-wrap w-100"
+                            id="bot-short-description">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Данное описание отобразится при первом переходе в бота или после очистки бота пользователем</div>
+                                    </template>
+                                </Popper>
+                                Длинное описание бота
+
+                            </div>
+                            <Popper>
+                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                <template #content>
+                                    <div>Нужно
+                                    </div>
+                                </template>
+                            </Popper>
+
+
+                        </label>
+
+                        <small class="text-gray-400 w-100" style="font-size:10px;"
+                               v-if="botForm.long_description">
+                            Длина текста {{ botForm.long_description.length }} / 512</small>
+                    </div>
+                    <textarea class="form-control font-12"
+                              placeholder="Длинное описание бота"
+                              aria-label="Длинное описание бота"
+                              v-model="botForm.long_description"
+                              maxlength="512"
+                              style="min-height:200px;"
+                              aria-describedby="short-description" required>
+                    </textarea>
+                </div>
 
                 <div class="mb-2">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -767,6 +874,10 @@ export default {
                 }
             ],
             botForm: {
+                title:null,
+                short_description:null,
+                long_description:null,
+
                 is_template: false,
                 auto_cashback_on_payments: false,
                 template_description: null,
@@ -884,6 +995,12 @@ export default {
 
                 this.botForm = {
                     id: this.bot.id || null,
+
+                    title:this.bot.title || null,
+                    short_description:this.bot.short_description || null,
+                    long_description:this.bot.long_description || null,
+
+
                     is_template: this.bot.is_template || false,
                     auto_cashback_on_payments: this.bot.auto_cashback_on_payments || false,
                     template_description: this.bot.template_description || null,
@@ -1004,6 +1121,10 @@ export default {
 
                 if (this.bot == null)
                     this.botForm = {
+                        title:null,
+                        short_description:null,
+                        long_description:null,
+
                         is_template: false,
                         auto_cashback_on_payments: false,
                         template_description: null,

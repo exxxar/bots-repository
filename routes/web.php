@@ -33,9 +33,9 @@ use Inertia\Inertia;
 */
 
 Route::get("/bot-info", function (){
-    $bot = Bot::query()->find(2);
 
-    dd($bot->toArray());
+
+
 });
 
 Route::get("/test-statistic", function () {

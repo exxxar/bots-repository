@@ -15,6 +15,11 @@ class BotSecurityResource extends JsonResource
     {
         return [
             'id' => $this->id,
+
+            'title'=> $this->title ?? null,
+            'short_description'=> $this->short_description ?? null,
+            'long_description'=> $this->long_description ?? null,
+
             'bot_domain' => $this->bot_domain,
             'welcome_message' => $this->welcome_message,
             'image' => $this->image,

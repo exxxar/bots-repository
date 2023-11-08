@@ -244,7 +244,7 @@ class BotController extends Controller
 
         return BusinessLogic::bots()
             ->setBot($bot)
-            ->duplicate($request->company_id ?? null);
+            ->duplicate(["company_id"=>$request->company_id ?? null]);
     }
 
 

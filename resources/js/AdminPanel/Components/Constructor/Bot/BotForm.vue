@@ -204,6 +204,73 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     </div>
                 </div>
 
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Настройка параметров бота в BotFather</h6>
+
+
+                                   <div class="mb-3">
+                                       <label class="form-label d-flex justify-content-between align-items-center" id="bot-title">
+                                              <span>
+                                                  Название бота
+                                                  <small class="text-secondary" v-if="botForm.title!=null">Длина текста {{botForm.title.length}}/64</small>
+                                              </span>
+
+                                               <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                       </label>
+
+                                       <input type="text" class="form-control"
+                                              placeholder="Текст названия"
+                                              aria-label="Текст названия"
+                                              v-model="botForm.title"
+                                              maxlength="64"
+                                              aria-describedby="bot-title" required>
+                                   </div>
+
+                            <div class="mb-3">
+                                <label class="form-label d-flex justify-content-between align-items-center" id="bot-short-description">
+                                              <span>
+                                                  Короткое описание бота
+                                                  <small class="text-secondary" v-if="botForm.short_description!=null">Длина текста {{botForm.title.length}}/120</small>
+                                              </span>
+
+                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                </label>
+
+                                <textarea class="form-control"
+                                       placeholder="Короткий текст описания бота"
+                                       aria-label="Короткий текст описания бота"
+                                       v-model="botForm.short_description"
+                                       maxlength="120"
+                                       aria-describedby="bot-short-description" required>
+                                </textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label d-flex justify-content-between align-items-center" id="bot-long-description">
+                                              <span>
+                                                  Длинное описание бота
+                                                  <small class="text-secondary" v-if="botForm.long_description!=null">Длина текста {{botForm.title.length}}/512</small>
+                                              </span>
+
+                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                </label>
+
+                                <textarea class="form-control"
+                                          placeholder="Длинный текст описания бота"
+                                          aria-label="Длинный текст описания бота"
+                                          v-model="botForm.long_description"
+                                          maxlength="512"
+                                          aria-describedby="bot-long-description" required>
+                                </textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
                 <div
                     class="col-md-6 col-12">
                     <div class="mb-3">
@@ -879,6 +946,7 @@ export default {
     props: ["company", "bot", "editor"],
     data() {
         return {
+
             selected_warning: null,
             page: null,
             step: 0,
@@ -907,6 +975,10 @@ export default {
             ],
 
             botForm: {
+                title:null,
+                short_description:null,
+                long_description:null,
+
                 is_template: false,
                 auto_cashback_on_payments: false,
                 template_description: null,
@@ -1020,6 +1092,11 @@ export default {
 
                 this.botForm = {
                     id: this.bot.id || null,
+
+                    title:this.bot.title || null,
+                    short_description:this.bot.short_description || null,
+                    long_description:this.bot.long_description || null,
+
                     is_template: this.bot.is_template || false,
                     auto_cashback_on_payments: this.bot.auto_cashback_on_payments || false,
                     template_description: this.bot.template_description || null,
@@ -1174,6 +1251,9 @@ export default {
 
                 if (this.bot == null)
                     this.botForm = {
+                        title:null,
+                        short_description:null,
+                        long_description:null,
                         is_template: false,
                         auto_cashback_on_payments: false,
                         template_description: null,

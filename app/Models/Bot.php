@@ -20,6 +20,9 @@ class Bot extends Model
      * @var array
      */
     protected $fillable = [
+        'title',
+        'short_description',
+        'long_description',
         'company_id',
         'welcome_message',
         'bot_domain',

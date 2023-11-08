@@ -90,6 +90,7 @@ class BotLogicFactory
         return $this;
     }
 
+
     /**
      * @throws HttpException
      */
@@ -101,6 +102,7 @@ class BotLogicFactory
         $this->botUser = $botUser;
         return $this;
     }
+
 
     public function list($companyId = null, $search = null, $size = null): BotCollection
     {
@@ -158,7 +160,7 @@ class BotLogicFactory
      */
     public function duplicate(array $customParams = null): BotResource
     {
-        if (is_null($customParams["company_id"]))
+        if (is_null($customParams["company_id"]??null))
             throw new HttpException(403, "Идентификатор компании не должен быть пустым!");
 
         if (is_null($this->bot))
@@ -352,6 +354,56 @@ class BotLogicFactory
             }
 
         return new BotResource($newBot);
+    }
+
+
+    /**
+     * @throws HttpException
+     */
+    public function prepareBaseBotConfig(): void
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(400, "Не выполнено условие функции");
+
+        if ($this->bot->is_template)
+            return;
+
+        $botToken = $this->bot->bot_token;
+        $website = "https://api.telegram.org/bot" . $botToken;
+
+        if (!is_null($this->bot->title ?? null))
+            Http::post("$website/setMyName", [
+                'name' => $this->bot->title,
+            ]);
+
+        if (!is_null($this->bot->short_description ?? null))
+            Http::post("$website/setMyShortDescription", [
+                'short_description' => $this->bot->short_description,
+            ]);
+
+        if (!is_null($this->bot->long_description ?? null))
+            Http::post("$website/setMyDescription", [
+                'description' => $this->bot->long_description,
+            ]);
+
+
+        Http::post("$website/setMyCommands", [
+            'commands' => [
+                [
+                    "command" => "/start", "description" => "начни с этой команды"
+                ],
+                [
+                    "command" => "/admins", "description" => "доступные администраторы в системе"
+                ],
+                [
+                    "command" => "/help", "description" => "как использовать систему"
+                ],
+                [
+                    "command" => "/about", "description" => "о CashMan"
+                ]
+            ],
+        ]);
     }
 
     /**
@@ -991,8 +1043,11 @@ class BotLogicFactory
                     'is_active' => $warn->is_active ?? false,
                 ]);
 
-        if (env("APP_DEBUG") === false)
+        if (env("APP_DEBUG") === false) {
             BotManager::bot()->setWebhooks();
+
+            $this->prepareBaseBotConfig();
+        }
 
 
         return new BotResource($bot);
@@ -1204,8 +1259,11 @@ class BotLogicFactory
                     ]);
             }
 
-        if (env("APP_DEBUG") === false)
+        if (env("APP_DEBUG") === false) {
             BotManager::bot()->setWebhooks();
+
+            $this->prepareBaseBotConfig();
+        }
 
         return new BotResource($this->bot);
     }

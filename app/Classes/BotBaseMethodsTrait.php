@@ -5,6 +5,7 @@ namespace App\Classes;
 use App\Models\Bot;
 use App\Models\BotMenuTemplate;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
 use Telegram\Bot\TelegramClient;
@@ -50,10 +51,9 @@ trait BotBaseMethodsTrait
             $botToken="1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4";
             $website="https://api.telegram.org/bot".$botToken;
 
-
-
-
-
+            Http::post("$website/setMyDescription",[
+                'description'=>'This 123 is my message !!!',
+            ]);
             $chatId=$this->getCurrentChatId();  //** ===>>>NOTE: this chatId MUST be the chat_id of a person, NOT another bot chatId !!!**
             $params=[
                 //'chat_id'=>$chatId,

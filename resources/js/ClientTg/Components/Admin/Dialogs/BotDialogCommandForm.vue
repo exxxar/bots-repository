@@ -18,10 +18,10 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
 
         <div class="form-floating mb-2">
-            <label :for="'commandForm-pre-text-'+commandForm.id">Текст диалога</label>
+            <label :for="'commandForm-pre-text-'+commandForm.id" class="font-12">Текст диалога</label>
             <textarea
                 style="min-height:200px;"
-                class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
+                class="form-control font-12" :id="'commandForm-pre-text-'+commandForm.id"
                 placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
 
             </textarea>
@@ -33,7 +33,7 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
                 <input class="form-check-input" type="checkbox"
                        v-model="commandForm.is_empty"
                        id="need-empty-dialog" checked>
-                <label class="form-check-label" for="need-empty-dialog">
+                <label class="form-check-label font-12" for="need-empty-dialog">
                     Диалог без ожидания ответа
                 </label>
             </div>
@@ -41,11 +41,11 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
         </div>
 
         <div class="form-floating mb-2" v-if="!commandForm.is_empty">
-            <label :for="'commandForm-post-text-'+commandForm.id">Текст после успешного завершения
+            <label :for="'commandForm-post-text-'+commandForm.id" class="font-12">Текст после успешного завершения
                 диалога</label>
             <textarea
                 style="min-height:200px;"
-                class="form-control"
+                class="form-control font-12"
                 :id="'commandForm-post-text-'+commandForm.id"
                 placeholder="Начни с малого..." v-model="commandForm.post_text" required>
             </textarea>
@@ -53,11 +53,11 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
         </div>
 
         <div class="form-floating mb-2" v-if="!commandForm.is_empty">
-            <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
+            <label :for="'commandForm-error-text-'+commandForm.id" class="font-12">Текст на случай ошибки корректности
                 данных</label>
             <textarea
                 style="min-height:200px;"
-                class="form-control" :id="'commandForm-error-text-'+commandForm.id"
+                class="form-control font-12" :id="'commandForm-error-text-'+commandForm.id"
                 placeholder="Начни с малого..." v-model="commandForm.error_text" required>
             </textarea>
 
@@ -69,18 +69,18 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
 
             <div class="mb-2">
-                <label class="form-label" :for="'commandForm-result-channel-'+commandForm.id">Регулярное выражение для
+                <label class="form-label font-12" :for="'commandForm-result-channel-'+commandForm.id">Регулярное выражение для
                     автоматической проверки данных
 
                 </label>
-                <select id="next-dialog-select" class="form-select form-control" v-model="commandForm.input_pattern">
+                <select id="next-dialog-select" class="form-select form-control font-12" v-model="commandForm.input_pattern">
                     <option :value="item.expression"
                             v-for="item in expressions">{{ item.description || '-' }}
                     </option>
                 </select>
             </div>
 
-            <label :for="'custom-regular-expression'+commandForm.id">или впишите своё</label>
+            <label :for="'custom-regular-expression'+commandForm.id" class="font-12">или впишите своё</label>
             <input :id="'custom-regular-expression'+commandForm.id" type="text" class="form-control"
                    placeholder="Регулярное выражение"
                    aria-label="Регулярное выражение"
@@ -90,8 +90,8 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
         </div>
 
         <div class="mb-2" v-if="!commandForm.is_empty">
-            <label :for="'next-dialog-select'+commandForm.id">Следующий диалог</label>
-            <select :id="'next-dialog-select'+commandForm.id" class="form-select form-control"
+            <label :for="'next-dialog-select'+commandForm.id" class="font-12">Следующий диалог</label>
+            <select :id="'next-dialog-select'+commandForm.id" class="form-select form-control font-12"
                     aria-label="Default select example">
                 <option :value="null" selected>Не указан</option>
                 <option :value="command.id" v-for="(command, index) in commands">#{{ command.id }}
@@ -124,7 +124,7 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
                 <input class="form-check-input" type="checkbox"
                        v-model="need_images"
                        id="need-dialog-image" checked>
-                <label class="form-check-label" for="need-dialog-image">
+                <label class="form-check-label font-12" for="need-dialog-image">
                     В диалоге нужно изображение
                 </label>
             </div>
@@ -132,7 +132,7 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" v-model="need_inline_keyboard"
                        id="need-dialog-menu-inline" checked>
-                <label class="form-check-label" for="need-dialog-menu-inline">
+                <label class="form-check-label font-12" for="need-dialog-menu-inline">
                     В диалоге нужно меню к тексту
                 </label>
             </div>
@@ -140,7 +140,7 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" v-model="need_reply_keyboard"
                        id="need-dialog-menu-reply" checked>
-                <label class="form-check-label" for="need-dialog-menu-reply">
+                <label class="form-check-label font-12" for="need-dialog-menu-reply">
                     В диалоге нужно нижнее меню
                 </label>
             </div>
@@ -204,6 +204,36 @@ import BotMenuConstructor from "@/ClientTg/Components/Admin/Keyboards/KeyboardCo
 
         </div>
 
+
+        <div class=" mb-2">
+            <label class="form-check-label font-12" for="need-empty-dialog">
+                Сохранить в переменную
+            </label>
+            <select class="form-control font-12" v-model="commandForm.store_to">
+                <option selected>Не выбрано</option>
+                <option :value="item.key" v-for="item in store_variants">{{ item.title || 'Не указано' }}</option>
+            </select>
+
+        </div>
+
+        <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" v-model="need_set_flags" id="need-set-flags"
+                   checked>
+            <label class="form-check-label font-12" for="need-set-flags">
+                Установить флаги в соответствующее значение
+            </label>
+        </div>
+
+
+        <div class=" mb-2" v-if="need_set_flags">
+            <h6 class="my-3 ">Выберите необходимые флаги</h6>
+            <span class="badge mr-2"
+                  v-bind:class="{'bg-info text-white':commandForm.result_flags.indexOf(item.key)!=-1}"
+                  @click="selectFlag(item)"
+                  v-for="item in flags_variants">{{ item.title }}</span>
+
+        </div>
+
         <div class="mb-2">
             <button type="submit"
                     class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark w-100">
@@ -234,7 +264,66 @@ export default {
             need_images: false,
             need_inline_keyboard: false,
             need_reply_keyboard: false,
+            need_set_flags: false,
             commands: [],
+            //сохранить данные в параметр
+            //установить флаги
+            flags_variants: [
+                {
+                    title: 'Является VIP',
+                    key: 'is_vip',
+                    value: null,
+                },
+                {
+                    title: 'Является Админом',
+                    key: 'is_admin',
+                    value: null,
+                },
+                {
+                    title: 'За работой',
+                    key: 'is_work',
+                    value: null,
+                },
+                {
+                    title: 'Является менеджером',
+                    key: 'is_manager',
+                    value: null,
+                },
+            ],
+            store_variants: [
+                {
+                    title: 'Имя',
+                    key: 'name',
+                },
+                {
+                    title: 'Почта',
+                    key: 'email',
+                },
+                {
+                    title: 'Возраст',
+                    key: 'age',
+                },
+                {
+                    title: 'Город',
+                    key: 'city',
+                },
+                {
+                    title: 'Страна',
+                    key: 'country',
+                },
+                {
+                    title: 'Адрес',
+                    key: 'address',
+                },
+                {
+                    title: 'Телефон',
+                    key: 'phone',
+                },
+                {
+                    title: 'День рождение',
+                    key: 'birthday',
+                }
+            ],
             expressions: [
                 {
                     expression: null,
@@ -290,6 +379,8 @@ export default {
                 inline_keyboard: null,
                 reply_keyboard: null,
                 is_empty: false,
+                result_flags: [],
+                store_to: null,
             },
             photos: []
         }
@@ -323,6 +414,9 @@ export default {
                     result_channel: this.item.result_channel || null,
                     inline_keyboard: this.item.inline_keyboard || null,
                     reply_keyboard: this.item.reply_keyboard || null,
+
+                    result_flags: this.item.result_flags || [],
+                    store_to: this.item.store_to || null
                 }
 
                 if (this.bot)
@@ -336,6 +430,9 @@ export default {
 
                 if (this.commandForm.images.length > 0)
                     this.need_images = true
+
+                if (this.commandForm.result_flags.length > 0)
+                    this.need_set_flags = true
             })
         }
 
@@ -455,6 +552,8 @@ export default {
                         bot_dialog_group_id: null,
                         result_channel: null,
                         inline_keyboard: null,
+                        result_flags: [],
+                        store_to: null,
                     }
 
                     this.photos = []
@@ -489,7 +588,17 @@ export default {
             this.commandForm[object.param] = object.text;
 
         },
+        selectFlag(item) {
 
+            if (!this.commandForm.result_flags)
+                this.commandForm.result_flags = []
+
+            let index = this.commandForm.result_flags.indexOf(item.key)
+            if (index === -1)
+                this.commandForm.result_flags.push(item.key)
+            else
+                this.commandForm.result_flags.splice(index, 1)
+        }
 
     }
 }
