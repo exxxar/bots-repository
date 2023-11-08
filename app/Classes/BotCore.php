@@ -296,8 +296,9 @@ abstract class BotCore
                             ];
 
 
+                            Log::info("page on slug=>".print_r($slug->toArray(), true));
                             $this->tryCall($item, $message,
-                                $config, [...$page->toArray()]);
+                                $config, $page->toArray());
 
                         }
                     }
