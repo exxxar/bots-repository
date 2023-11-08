@@ -45,17 +45,21 @@ trait BotBaseMethodsTrait
         ];
 
       //  $client = new Api();
-        $req =  new TelegramRequest();
-       // $req->setAccessToken("1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4");
+        $req =  new TelegramRequest("1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4");
+      //$req->setAccessToken("1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4");
         $req->setMethod("setMyName");
         $req->setParams([
             "name"=>"TEEEEEEST"
         ]);
+
+        $client = new TelegramClient();
+        $client->sendRequest($req);
+
         //$req->setMethod()
 
-        $this->bot->getClient()->sendRequest(
+       /* $this->bot->getClient()->sendRequest(
             $req
-        );
+        );*/
 
     }
 
