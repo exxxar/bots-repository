@@ -5,6 +5,9 @@ namespace App\Classes;
 use App\Models\Bot;
 use App\Models\BotMenuTemplate;
 use Illuminate\Support\Facades\Log;
+use Telegram\Bot\Api;
+use Telegram\Bot\TelegramClient;
+use Telegram\Bot\TelegramRequest;
 
 trait BotBaseMethodsTrait
 {
@@ -41,7 +44,19 @@ trait BotBaseMethodsTrait
             "name" => $name,
         ];
 
-        $data = $this->bot->setMyName($tmp);
+      //  $client = new Api();
+        $req =  new TelegramRequest();
+        $req->setAccessToken($this->getSelf()->bot_tpken);
+        $req->setMethod("setMyName");
+        $req->setParams([
+            "name"=>"TEEEEEEST"
+        ]);
+        //$req->setMethod()
+
+        $this->bot->getClient()->sendRequest(
+            $req
+        );
+
     }
 
     public function sendMessage($chatId, $message, $messageThreadId = null)
