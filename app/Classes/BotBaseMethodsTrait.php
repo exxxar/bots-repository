@@ -57,9 +57,9 @@ trait BotBaseMethodsTrait
             $chatId=$this->getCurrentChatId();  //** ===>>>NOTE: this chatId MUST be the chat_id of a person, NOT another bot chatId !!!**
             $params=[
                 //'chat_id'=>$chatId,
-                'name'=>'This 123 is my message !!!',
+                'description'=>'This 123 is my message !!!',
             ];
-            $ch = curl_init($website . '/setMyName');
+            $ch = curl_init($website . '/setMyDescription');
             curl_setopt($ch, CURLOPT_HEADER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);
