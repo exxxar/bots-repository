@@ -71,7 +71,7 @@ class FastRequestScriptController extends SlugController
     public function requestCallback(...$data)
     {
 
-        Log::info("requestCallback".print_r($data, true));
+
 
         $slugId = $data[3] ?? null;
 
@@ -79,6 +79,8 @@ class FastRequestScriptController extends SlugController
             ->with(["page"])
             ->where("id", $slugId)
             ->first();
+
+        Log::info("slug config".print_r($slug->config, true));
 
         if (is_null($slug)) {
             BotManager::bot()->reply("Упс... у нас тут заминочка!");
