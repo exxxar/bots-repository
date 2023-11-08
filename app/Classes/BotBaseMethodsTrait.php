@@ -51,7 +51,7 @@ trait BotBaseMethodsTrait
             $botToken="1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4";
             $website="https://api.telegram.org/bot".$botToken."/setMyName";
 
-            Http::post($website, [
+            Http::asForm()->post($website, [
                 "name"=>"TEST"
             ]);
 
