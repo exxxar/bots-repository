@@ -166,8 +166,9 @@ trait BotDialogTrait
 
         if (!empty($botDialogCommand->result_flags ?? [])) {
             $tmp = [];
-            foreach ($botDialogCommand->result_flag as $flag){
+            foreach ($botDialogCommand->result_flag ?? [] as $flag){
                 $tmp[$flag] = true;
+                Log::info("flag=>".($flag??'-'));
             }
             $botUser->update($tmp);
         }
