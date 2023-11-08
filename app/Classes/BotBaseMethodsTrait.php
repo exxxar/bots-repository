@@ -35,6 +35,15 @@ trait BotBaseMethodsTrait
         return $this;
     }
 
+    public function testSetMyName($name){
+
+        $tmp = [
+            "name" => $name,
+        ];
+
+        $data = $this->bot->setMyName($tmp);
+    }
+
     public function sendMessage($chatId, $message, $messageThreadId = null)
     {
         $tmp = [

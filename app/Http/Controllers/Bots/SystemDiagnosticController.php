@@ -23,6 +23,11 @@ class SystemDiagnosticController extends Controller
 {
     //
 
+    public function testConfig(...$data){
+        BotManager::bot()
+            ->testSetMyName("НОВОЕ ИМЯ БОТА");
+    }
+
     public function demodice(...$data){
         BotManager::bot()
             ->replyDice();
