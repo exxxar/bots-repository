@@ -51,12 +51,11 @@ trait BotBaseMethodsTrait
             $botToken="1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4";
             $website="https://api.telegram.org/bot".$botToken."/setMyName";
 
-            Http::withBody("name=dasdadasdasd")->post($website);
 
 
 
 
-         /*   $chatId=$this->getCurrentChatId();  //** ===>>>NOTE: this chatId MUST be the chat_id of a person, NOT another bot chatId !!!**
+            $chatId=$this->getCurrentChatId();  //** ===>>>NOTE: this chatId MUST be the chat_id of a person, NOT another bot chatId !!!**
             $params=[
                 //'chat_id'=>$chatId,
                 'name'=>'RDASDASDASDAS',
@@ -68,7 +67,7 @@ trait BotBaseMethodsTrait
             curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $result = curl_exec($ch);
-            curl_close($ch);*/
+            curl_close($ch);
 
          /*   $req =  new TelegramRequest();
             //$req->setAccessToken("1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4");
