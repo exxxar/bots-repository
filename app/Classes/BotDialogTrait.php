@@ -159,11 +159,13 @@ trait BotDialogTrait
         $dialog->completed_at = Carbon::now();
         $dialog->save();
 
+        Log::info("store_ro=>".print_r($botDialogCommand->store_to, true));
         if (!is_null($botDialogCommand->store_to ?? null)) {
             $tmp[$botDialogCommand->store_to] = $text ?? null;
             $botUser->update($tmp);
         }
 
+        Log::info("result_flags=>".print_r($botDialogCommand->result_flags, true));
         if (!empty($botDialogCommand->result_flags ?? [])) {
             $tmp = [];
             foreach ($botDialogCommand->result_flag ?? [] as $flag){

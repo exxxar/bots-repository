@@ -599,7 +599,7 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-        Log::info(print_r($update, true));
+      //  Log::info(print_r($update, true));
 
         include_once base_path('routes/bot.php');
 
