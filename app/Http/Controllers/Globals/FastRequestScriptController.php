@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
+use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
@@ -72,15 +73,20 @@ class FastRequestScriptController extends SlugController
     {
 
 
-
         $slugId = $data[3] ?? null;
+        $parentPageId = $data[4] ?? null;
 
         $slug = BotMenuSlug::query()
             ->with(["page"])
             ->where("id", $slugId)
             ->first();
 
-        Log::info("slug config".print_r($slug->config, true));
+
+        $page = BotPage::query()
+            ->with(["slug"])
+            ->where("id", $parentPageId)
+            ->first();
+
 
         if (is_null($slug)) {
             BotManager::bot()->reply("Упс... у нас тут заминочка!");
@@ -97,6 +103,7 @@ class FastRequestScriptController extends SlugController
 
         $bot = BotManager::bot()->getSelf();
 
+        $from = $page->slug->command ?? 'Источник запроса не указан';
         $sex = $botUser->sex ? "Мужской":"Женский";
         $phone = $botUser->phone ?? 'Не указан';
         $city = $botUser->city ?? 'Не указан';
@@ -107,7 +114,7 @@ class FastRequestScriptController extends SlugController
 
         BotManager::bot()
             ->sendMessage(($bot->order_channel ?? $bot->main_channel ?? null),
-            "Запрос от пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
+            "Запрос из $from\nот пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
                 $thread
 
         );
@@ -120,6 +127,16 @@ class FastRequestScriptController extends SlugController
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
             ->first())["value"];
+
+        $slugId = (Collection::make($config[1])
+            ->where("key", "slug_id")
+            ->first())["value"];
+
+        $parentPageId = (Collection::make($config[1])
+            ->where("key", "parent_page_id")
+            ->first())["value"];
+
+
 
         $btnText = (Collection::make($config[1])
             ->where("key", "btn_text")
@@ -171,7 +188,7 @@ class FastRequestScriptController extends SlugController
                 ], [
                 'menu' => [
                     [
-                        ["text" => "$btnText", "callback_data" => "/request_callback $slugId"],
+                        ["text" => "$btnText", "callback_data" => "/request_callback $slugId $parentPageId" ],
                     ],
                 ],
             ]);

@@ -297,8 +297,8 @@ abstract class BotCore
 
 
                             $config[] = [
-                                "key" => "parent_page",
-                                "value" => $page->slug->command ?? null,
+                                "key" => "parent_page_id",
+                                "value" => $page->id ?? null,
                             ];
 
 
