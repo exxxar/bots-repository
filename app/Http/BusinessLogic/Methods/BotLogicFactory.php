@@ -366,9 +366,6 @@ class BotLogicFactory
         if (is_null($this->bot))
             throw new HttpException(400, "Не выполнено условие функции");
 
-        if ($this->bot->is_template)
-            return;
-
         $botToken = $this->bot->bot_token;
         $website = "https://api.telegram.org/bot" . $botToken;
 
