@@ -375,7 +375,7 @@ class BotAdministrativeLogicFactory
 
         $percent = $data["percent"] ?? null;
 
-        if (is_null($userBotUser))
+        if (is_null($userBotUser) || is_null($adminBotUser))
             throw new HttpException(404, "Пользователь не найден");
 
         if (!is_null($data["category"] ?? null)) {
@@ -442,6 +442,7 @@ class BotAdministrativeLogicFactory
             ((float)$data["amount"] ?? 0),
             $data["info"],
             CashBackDirectionEnum::Debiting
+
         ));
 
     }

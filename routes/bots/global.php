@@ -73,6 +73,12 @@ BotManager::bot()
     ->slug("global_cash_out_main", "moneyWithdrawScript");
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\InstantCashBackController::class)
+    ->route("/take_cashback_by_slug ([0-9]+)", "takeCashBack")
+    ->slug("global_start_cashback_bonus", "instantCashBack");
+
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\ManagerScriptController::class)
     ->route("/next_clients ([0-9]+)", "nextClient")
     ->route("/next_bots_all ([0-9]+)", "nextBot")

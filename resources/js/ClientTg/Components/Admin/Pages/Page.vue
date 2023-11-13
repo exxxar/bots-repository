@@ -224,10 +224,13 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                     </div>
 
                     <div class="mb-2" v-if="need_page_video">
+                        <p class="alert alert-danger mb-0">
+                            <strong>Внимание!</strong> не больше 10 видео на 1й странице!
+                        </p>
                         <BotMediaList
                             :need-video="true"
                             :need-video-note="true"
-                            :selected="pageForm.video"
+                            :selected="pageForm.videos"
                             v-on:select="selectVideo"></BotMediaList>
                     </div>
 
@@ -475,7 +478,7 @@ export default {
                 comment: null,
 
                 images: [],
-                video: null,
+                videos: [],
                 reply_keyboard_title: null,
                 reply_keyboard: null,
                 inline_keyboard: null,
@@ -513,7 +516,7 @@ export default {
         },
         'need_page_video': function (newVal, oldVal) {
             if (!this.need_page_video) {
-                this.pageForm.video = null
+                this.pageForm.videos = []
             }
 
         },
@@ -573,7 +576,7 @@ export default {
                 if (this.pageForm.rules_if != null)
                     this.need_rules = true
 
-                if (this.pageForm.video != null)
+                if (this.pageForm.videos != null)
                     this.need_page_video = true
 
                 this.need_clean = true
@@ -624,7 +627,7 @@ export default {
                 next_bot_dialog_command_id: page.next_bot_dialog_command_id || null,
                 next_bot_menu_slug_id: page.next_bot_menu_slug_id || null,
                 is_external: page.is_external || false,
-                video: page.video || null,
+                videos: page.videos || [],
 
                 rules_if: page.rules_if || null,
                 rules_else_page_id: page.rules_else_page_id || null,
@@ -699,7 +702,7 @@ export default {
                 inline_keyboard_id: null,
 
                 next_page_id: null,
-                video: null,
+                videos: [],
 
                 next_bot_dialog_command_id: null,
                 next_bot_menu_slug_id: null,
@@ -809,7 +812,15 @@ export default {
         },
 
         selectVideo(item) {
-            this.pageForm.video = item.file_id
+            if (!this.pageForm.videos)
+                this.pageForm.videos = []
+
+            if (this.pageForm.videos.length>=10)
+            {
+                this.$botNotification.warning("Внимание!", "Максимальное число видео, которые можно прикрепить, должно быть не больше 10!")
+                return;
+            }
+            this.pageForm.videos.push(item.file_id)
         }
 
     }

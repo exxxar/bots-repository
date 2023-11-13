@@ -21,7 +21,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
             <ul class="list-group">
                 <li @click="selectMedia(item)"
-                    v-bind:class="{'border-info':selected === item.file_id}"
+                    v-bind:class="{'border-info':selected.indexOf(item.file_id) !=-1 }"
                     class="list-group-item d-flex justify-content-between align-items-start"
                     v-for="(item, index) in media">
                     <div class="ms-2 me-auto">

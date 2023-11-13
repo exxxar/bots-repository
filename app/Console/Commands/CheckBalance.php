@@ -15,7 +15,7 @@ class CheckBalance extends Command
      *
      * @var string
      */
-    protected $signature = 'bot:check';
+    protected $signature = 'bot:balance-check';
 
     /**
      * The console command description.
@@ -29,6 +29,7 @@ class CheckBalance extends Command
      */
     public function handle(): void
     {
+        ini_set('max_execution_time', 30000);
         $bots = Bot::query()
             ->get();
 
@@ -55,5 +56,7 @@ class CheckBalance extends Command
 
 
         }
+
+        ini_set('max_execution_time', 300);
     }
 }

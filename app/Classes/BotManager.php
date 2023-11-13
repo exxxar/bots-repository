@@ -232,7 +232,8 @@ class BotManager extends BotCore
             ->first();
     }
 
-    public function setBot($bot){
+    public function setBot($bot)
+    {
         $this->domain = $bot->bot_domain;
         return $this;
     }
@@ -431,7 +432,7 @@ class BotManager extends BotCore
                 );
             } catch (\Exception $e) {
                 Log::info($e);
-                $this->replyPhoto( "Ошибочка у вас... напишите программисту:)",
+                $this->replyPhoto("Ошибочка у вас... напишите программисту:)",
                     InputFile::create(public_path() . "/images/cashman2.jpg")
                 );
             }
@@ -440,24 +441,40 @@ class BotManager extends BotCore
                 $this->replyKeyboard(mb_strlen($content) >= 1024 ? $content ?? 'Хм, нечего отобразить...' : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             if (empty($replyKeyboard) && mb_strlen($content) >= 1024)
-                $this->reply( $content ?? 'Хм, нечего отобразить...');
+                $this->reply($content ?? 'Хм, нечего отобразить...');
         }
 
         if (count($images) === 0) {
             $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
 
             if (!$needContentInReply)
-                $this->replyInlineKeyboard( $content ?? 'Меню', $iMenu);
+                $this->replyInlineKeyboard($content ?? 'Меню', $iMenu);
 
             if (!empty($replyKeyboard) && $needSendReplyMenu)
-                $this->replyKeyboard($needContentInReply ? ($content??'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $this->replyKeyboard($needContentInReply ? ($content ?? 'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             if ($needContentInReply && empty($replyKeyboard))
                 $this->reply($content ?? 'Хм, нечего отобразить...');
         }
 
-        if (!is_null($page->video)) {
-            $this->replyVideo( null, $page->video);
+        if (!is_null($page->videos)) {
+
+            if (count($page->videos) == 1)
+                $this->replyVideo(null, $page->videos[0]);
+
+            if (count($page->videos) > 1 && count($page->videos) < 10) {
+                $media = [];
+                foreach ($page->videos as $video) {
+                    $media[] = [
+                        "media" => $video,
+                        "type" => "video",
+                    ];
+                }
+
+                $this->replyMediaGroup($media);
+            }
+
+
         }
 
         if (!is_null($page->next_page_id)) {

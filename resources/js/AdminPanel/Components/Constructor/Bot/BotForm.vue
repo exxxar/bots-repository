@@ -47,13 +47,20 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-                        <li><a class="dropdown-item" href="#bot-menu-template" @click="setStep(1)"><i class="fa-solid fa-keyboard mr-2"></i>Все клавиатуры в боте</a></li>
-                        <li><a class="dropdown-item" href="#bot-slugs" @click="setStep(2)"><i class="fa-solid fa-scroll mr-2"></i>Все скрипты в боте</a></li>
-                        <li><a class="dropdown-item" href="#bot-dialogs" @click="setStep(6)"><i class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
-                        <li><a class="dropdown-item" href="#bot-users" @click="setStep(3)"><i class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
-                        <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i class="fa-regular fa-newspaper mr-2"></i> Новостной канал</a></li>
-                        <li><a class="dropdown-item" href="#bot-amo" @click="setStep(7)"><i class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
-                        <li><a class="dropdown-item" href="#bot-shop" @click="setStep(8)"><i class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
+                        <li><a class="dropdown-item" href="#bot-menu-template" @click="setStep(1)"><i
+                            class="fa-solid fa-keyboard mr-2"></i>Все клавиатуры в боте</a></li>
+                        <li><a class="dropdown-item" href="#bot-slugs" @click="setStep(2)"><i
+                            class="fa-solid fa-scroll mr-2"></i>Все скрипты в боте</a></li>
+                        <li><a class="dropdown-item" href="#bot-dialogs" @click="setStep(6)"><i
+                            class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
+                        <li><a class="dropdown-item" href="#bot-users" @click="setStep(3)"><i
+                            class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
+                        <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i
+                            class="fa-regular fa-newspaper mr-2"></i> Новостной канал</a></li>
+                        <li><a class="dropdown-item" href="#bot-amo" @click="setStep(7)"><i
+                            class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
+                        <li><a class="dropdown-item" href="#bot-shop" @click="setStep(8)"><i
+                            class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
                     </ul>
                 </div>
             </div>
@@ -210,48 +217,51 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                             <h6>Настройка параметров бота в BotFather</h6>
 
 
-                                   <div class="mb-3">
-                                       <label class="form-label d-flex justify-content-between align-items-center" id="bot-title">
+                            <div class="mb-3">
+                                <label class="form-label d-flex justify-content-between align-items-center"
+                                       id="bot-title">
                                               <span>
                                                   Название бота
-                                                  <small class="text-secondary" v-if="botForm.title!=null">Длина текста {{botForm.title.length}}/64</small>
+                                                  <small class="text-secondary" v-if="botForm.title!=null">Длина текста {{ botForm.title.length }}/64</small>
                                               </span>
 
-                                               <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                                       </label>
+                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                </label>
 
-                                       <input type="text" class="form-control"
-                                              placeholder="Текст названия"
-                                              aria-label="Текст названия"
-                                              v-model="botForm.title"
-                                              maxlength="64"
-                                              aria-describedby="bot-title" required>
-                                   </div>
+                                <input type="text" class="form-control"
+                                       placeholder="Текст названия"
+                                       aria-label="Текст названия"
+                                       v-model="botForm.title"
+                                       maxlength="64"
+                                       aria-describedby="bot-title" required>
+                            </div>
 
                             <div class="mb-3">
-                                <label class="form-label d-flex justify-content-between align-items-center" id="bot-short-description">
+                                <label class="form-label d-flex justify-content-between align-items-center"
+                                       id="bot-short-description">
                                               <span>
                                                   Короткое описание бота
-                                                  <small class="text-secondary" v-if="botForm.short_description!=null">Длина текста {{botForm.title.length}}/120</small>
+                                                  <small class="text-secondary" v-if="botForm.short_description!=null">Длина текста {{ botForm.title.length }}/120</small>
                                               </span>
 
                                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                                 </label>
 
                                 <textarea class="form-control"
-                                       placeholder="Короткий текст описания бота"
-                                       aria-label="Короткий текст описания бота"
-                                       v-model="botForm.short_description"
-                                       maxlength="120"
-                                       aria-describedby="bot-short-description" required>
+                                          placeholder="Короткий текст описания бота"
+                                          aria-label="Короткий текст описания бота"
+                                          v-model="botForm.short_description"
+                                          maxlength="120"
+                                          aria-describedby="bot-short-description" required>
                                 </textarea>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label d-flex justify-content-between align-items-center" id="bot-long-description">
+                                <label class="form-label d-flex justify-content-between align-items-center"
+                                       id="bot-long-description">
                                               <span>
                                                   Длинное описание бота
-                                                  <small class="text-secondary" v-if="botForm.long_description!=null">Длина текста {{botForm.title.length}}/512</small>
+                                                  <small class="text-secondary" v-if="botForm.long_description!=null">Длина текста {{ botForm.title.length }}/512</small>
                                               </span>
 
                                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
@@ -529,6 +539,27 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     </div>
                 </div>
 
+                <div class="col-md-12 col-12">
+                    <div class="mb-3">
+                        <label class="form-label" id="cashback-fired-period">Период сгорания CashBack</label>
+                        <select class="form-control" v-model="botForm.cashback_fire_period" id="cashback-fired-period">
+                            <option :value="item.value" v-for="item in cashback_fire_periods">
+                                {{ item.title || 'Не указано' }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3" v-if="botForm.cashback_fire_period>0">
+                        <label class="form-label" id="cashback-fired-level">Уровень сгорания CashBack, %</label>
+                        <input type="number" class="form-control"
+                               placeholder="%"
+                               aria-label="уровень сгорания CashBack"
+                               v-model="botForm.cashback_fire_percent"
+                               min="0"
+                               max="100"
+                               aria-describedby="cashback-fired-level">
+                    </div>
+                </div>
+
                 <div class="mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -566,7 +597,6 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                :aria-describedby="'bot-cashback-config-'+index" required>
 
 
-
                     </div>
                     <button
                         type="button"
@@ -576,6 +606,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     </button>
                     <div class="divider divider-small my-3 bg-highlight "></div>
                 </div>
+
 
                 <div class="col-md-12 col-12 mb-2">
                     <div class="card border-warning">
@@ -638,6 +669,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                         </div>
                     </div>
                 </div>
+
 
                 <div class="col-12 mb-2">
                     <div class="form-check">
@@ -891,9 +923,6 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
         </div>
 
 
-
-
-
         <div v-if="step===1">
             <KeyboardList
                 :select-mode="false"
@@ -973,11 +1002,49 @@ export default {
                     key: "cashback_down_sum_more_then"
                 }
             ],
+            cashback_fire_periods: [
+                {
+                    title: 'Не сгорает',
+                    value: 0,
+                },
+                {
+                    title: '7 дней',
+                    value: 7,
+                },
+                {
+                    title: '15 дней',
+                    value: 15,
+                },
+                {
+                    title: '30 дней',
+                    value: 30,
+                },
+                {
+                    title: '60 дней',
+                    value: 60,
+                },
+                {
+                    title: '60 дней',
+                    value: 90,
+                },
+                {
+                    title: '120 дней',
+                    value: 120,
+                },
+                {
+                    title: '180 дней',
+                    value: 180,
+                },
+                {
+                    title: '360 дней',
+                    value: 360,
+                }
+            ],
 
             botForm: {
-                title:null,
-                short_description:null,
-                long_description:null,
+                title: null,
+                short_description: null,
+                long_description: null,
 
                 is_template: false,
                 auto_cashback_on_payments: false,
@@ -995,6 +1062,8 @@ export default {
                 tax_per_day: null,
                 welcome_message: null,
                 image: null,
+                cashback_fire_percent: 0,
+                cashback_fire_period: 0,
                 description: null,
                 info_link: null,
                 social_links: [],
@@ -1093,9 +1162,9 @@ export default {
                 this.botForm = {
                     id: this.bot.id || null,
 
-                    title:this.bot.title || null,
-                    short_description:this.bot.short_description || null,
-                    long_description:this.bot.long_description || null,
+                    title: this.bot.title || null,
+                    short_description: this.bot.short_description || null,
+                    long_description: this.bot.long_description || null,
 
                     is_template: this.bot.is_template || false,
                     auto_cashback_on_payments: this.bot.auto_cashback_on_payments || false,
@@ -1111,7 +1180,8 @@ export default {
                     tax_per_day: this.bot.tax_per_day || null,
                     vk_shop_link: this.bot.vk_shop_link || null,
                     callback_link: this.bot.callback_link || null,
-
+                    cashback_fire_percent: this.bot.cashback_fire_percent || 0,
+                    cashback_fire_period: this.bot.cashback_fire_period || 0,
                     image: this.bot.image || null,
 
                     description: this.bot.description || null,
@@ -1251,9 +1321,9 @@ export default {
 
                 if (this.bot == null)
                     this.botForm = {
-                        title:null,
-                        short_description:null,
-                        long_description:null,
+                        title: null,
+                        short_description: null,
+                        long_description: null,
                         is_template: false,
                         auto_cashback_on_payments: false,
                         template_description: null,
@@ -1266,7 +1336,8 @@ export default {
                         balance: null,
                         tax_per_day: null,
                         callback_link: null,
-
+                        cashback_fire_percent: 0,
+                        cashback_fire_period: 0,
                         image: null,
 
                         description: null,

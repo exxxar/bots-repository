@@ -21,6 +21,7 @@ class CashBack extends Model
         'bot_id',
         'bot_user_id',
         'amount',
+        'fired_at',
     ];
 
     /**
@@ -34,6 +35,7 @@ class CashBack extends Model
         'bot_id' => 'integer',
         'bot_user_id' => 'integer',
         'amount' => 'double',
+        'fired_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
@@ -50,6 +52,12 @@ class CashBack extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function botUser(): BelongsTo
+    {
+        return $this->belongsTo(BotUser::class);
+    }
+
 
     public function subs():HasMany
     {

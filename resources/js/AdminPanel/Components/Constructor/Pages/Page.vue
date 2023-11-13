@@ -202,10 +202,13 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
             </div>
 
             <div class="col-12 mb-2" v-if="need_page_video">
+                <p class="alert alert-danger">
+                    <strong>Внимание!</strong> не больше 10 видео на 1й странице!
+                </p>
                 <BotMediaList
                     :need-video="true"
                     :need-video-note="true"
-                    :selected="pageForm.video"
+                    :selected="pageForm.videos"
                     v-on:select="selectVideo"></BotMediaList>
             </div>
 
@@ -457,7 +460,7 @@ export default {
                 slug: null,
                 comment: null,
 
-                video: null,
+                videos: [],
                 images: [],
                 reply_keyboard_title: null,
                 reply_keyboard: null,
@@ -488,7 +491,7 @@ export default {
         },
         'need_page_video': function (newVal, oldVal) {
             if (!this.need_page_video) {
-                this.pageForm.video = null
+                this.pageForm.videos = []
             }
 
         },
@@ -608,7 +611,7 @@ export default {
                 is_external: page.is_external || false,
                 rules_if: page.rules_if || null,
                 rules_else_page_id: page.rules_else_page_id || null,
-                video: page.video || null,
+                videos: page.videos || [],
 
                 rules_if_message: page.rules_if_message || null,
                 rules_else_message: page.rules_else_message || null,
@@ -680,7 +683,7 @@ export default {
                 reply_keyboard: null,
                 inline_keyboard: null,
                 is_external: false,
-                video: null,
+                videos: [],
                 reply_keyboard_title: null,
                 reply_keyboard_id: null,
                 inline_keyboard_id: null,
@@ -812,7 +815,11 @@ export default {
         },
 
         selectVideo(item) {
-            this.pageForm.video = item.file_id
+
+            if (!this.pageForm.videos)
+                this.pageForm.videos = []
+
+            this.pageForm.videos.push(item.file_id)
         }
     }
 }

@@ -219,7 +219,9 @@
                                 <Popper>
                                     <i class="fa-regular fa-circle-question mr-1"></i>
                                     <template #content>
-                                        <div>Данное описание отобразится при первом переходе в бота или после очистки бота пользователем</div>
+                                        <div>Данное описание отобразится при первом переходе в бота или после очистки
+                                            бота пользователем
+                                        </div>
                                     </template>
                                 </Popper>
                                 Длинное описание бота
@@ -456,7 +458,7 @@
                 </div>
 
 
-                <div class="mb-2" >
+                <div class="mb-2">
 
                     <label class="form-label d-flex justify-content-between  align-items-center mt-2" id="bot-level-1">
                         Уровень 1 CashBack, %
@@ -504,6 +506,25 @@
 
                 </div>
 
+                <div class="mb-2">
+                    <label class="form-label" id="cashback-fired-period">Период сгорания CashBack</label>
+                    <select class="form-control" v-model="botForm.cashback_fire_period" id="cashback-fired-period">
+                        <option :value="item.value" v-for="item in cashback_fire_periods">
+                            {{ item.title || 'Не указано' }}
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-3" v-if="botForm.cashback_fire_period>0">
+                    <label class="form-label" id="cashback-fired-level">Уровень сгорания CashBack, %</label>
+                    <input type="number" class="form-control"
+                           placeholder="%"
+                           aria-label="уровень сгорания CashBack"
+                           v-model="botForm.cashback_fire_percent"
+                           min="0"
+                           max="100"
+                           aria-describedby="cashback-fired-level">
+                </div>
+
 
                 <div class="mb-2">
                     <div class="form-check">
@@ -540,7 +561,6 @@
                                maxlength="255"
                                v-model="botForm.cashback_config[index].title"
                                :aria-describedby="'bot-cashback-config-'+index" required>
-
 
 
                     </div>
@@ -859,6 +879,44 @@ export default {
             bot: null,
             need_threads: false,
             need_cashback_config: false,
+            cashback_fire_periods: [
+                {
+                    title: 'Не сгорает',
+                    value: 0,
+                },
+                {
+                    title: '7 дней',
+                    value: 7,
+                },
+                {
+                    title: '15 дней',
+                    value: 15,
+                },
+                {
+                    title: '30 дней',
+                    value: 30,
+                },
+                {
+                    title: '60 дней',
+                    value: 60,
+                },
+                {
+                    title: '60 дней',
+                    value: 90,
+                },
+                {
+                    title: '120 дней',
+                    value: 120,
+                },
+                {
+                    title: '180 дней',
+                    value: 180,
+                },
+                {
+                    title: '360 дней',
+                    value: 360,
+                }
+            ],
             warnings: [
                 {
                     title: "Сумма чека больше чем",
@@ -874,9 +932,9 @@ export default {
                 }
             ],
             botForm: {
-                title:null,
-                short_description:null,
-                long_description:null,
+                title: null,
+                short_description: null,
+                long_description: null,
 
                 is_template: false,
                 auto_cashback_on_payments: false,
@@ -902,6 +960,8 @@ export default {
                 level_1: 10,
                 level_2: 0,
                 level_3: 0,
+                cashback_fire_percent: 0,
+                cashback_fire_period: 0,
                 photos: [],
                 selected_bot_template_id: null,
                 pages: [],
@@ -996,9 +1056,9 @@ export default {
                 this.botForm = {
                     id: this.bot.id || null,
 
-                    title:this.bot.title || null,
-                    short_description:this.bot.short_description || null,
-                    long_description:this.bot.long_description || null,
+                    title: this.bot.title || null,
+                    short_description: this.bot.short_description || null,
+                    long_description: this.bot.long_description || null,
 
 
                     is_template: this.bot.is_template || false,
@@ -1010,6 +1070,9 @@ export default {
                     order_channel: this.bot.order_channel || null,
                     message_threads: this.bot.message_threads || null,
                     cashback_config: this.bot.cashback_config || null,
+
+                    cashback_fire_percent: this.bot.cashback_fire_percent || 0,
+                    cashback_fire_period: this.bot.cashback_fire_period || 0,
 
                     main_channel: this.bot.main_channel || null,
                     balance: this.bot.balance || null,
@@ -1121,9 +1184,9 @@ export default {
 
                 if (this.bot == null)
                     this.botForm = {
-                        title:null,
-                        short_description:null,
-                        long_description:null,
+                        title: null,
+                        short_description: null,
+                        long_description: null,
 
                         is_template: false,
                         auto_cashback_on_payments: false,
@@ -1137,7 +1200,8 @@ export default {
                         main_channel: null,
                         balance: null,
                         tax_per_day: null,
-
+                        cashback_fire_percent: 0,
+                        cashback_fire_period: 0,
                         image: null,
 
                         description: null,

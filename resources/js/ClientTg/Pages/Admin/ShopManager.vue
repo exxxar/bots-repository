@@ -43,9 +43,15 @@ import ProductList from "@/ClientTg/Components/Admin/Shop/ProductList.vue";
 
             </form>
             <div class="divider divider-small my-3 bg-highlight "></div>
+            <p
+                v-if="!link"
+               class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme w-100">
+                <i class="fa-brands fa-vk mr-2"></i>  Подготовка ссылки
+                <span class="spinner-border color-blue2-dark font-12 ml-2" style="border-width: 2px; width: 1rem;height: 1rem;" role="status"></span>
+            </p>
             <a
                 @click="open(link)"
-
+                v-if="link"
                 href="javascript:void(0)"
                 type="button"
                 class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark color-blue2-dark bg-theme w-100">
@@ -170,7 +176,7 @@ export default {
 
             this.load = true
             this.$store.dispatch("updateProductsFromVk").then((resp) => {
-                this.link = resp.data.url
+                this.link = resp.data.url || null
                 this.load = false
                 this.url = null
             }).catch(() => {
@@ -179,6 +185,8 @@ export default {
 
         },
         open(url) {
+
+
             this.tg.openLink(url)
         },
     }

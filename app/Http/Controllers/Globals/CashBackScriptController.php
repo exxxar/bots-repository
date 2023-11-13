@@ -400,7 +400,7 @@ class CashBackScriptController extends SlugController
 
     public function specialCashBackSystem(...$config)
     {
-        Log::info("specialCashBackSystem");
+
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
             ->first())["value"];
@@ -469,9 +469,24 @@ class CashBackScriptController extends SlugController
 
         }
 
+        $percent = $bot->cashback_fire_percent ?? 0;
+        $period = $bot->cashback_fire_period ?? 0;
+
+        $tmpFiredText = "";
+
+        if ($period != 0 && $percent == 0)
+        {
+            $nextFired = Carbon::parse(Carbon::parse($cashBack->fired_at)
+                    ->addDays($period??0)->timestamp - Carbon::now()->timestamp)
+                ->format("Y-m-D H:i:s");
+
+            $tmpFiredText = "<strong>Внимание!</strong>$percent % CashBack сгорает каждые $period дней! Успей потратить!Следующее сгорание $nextFired";
+        }
+
         \App\Facades\BotManager::bot()
             ->replyPhoto("У вас <b>$amount</b> руб.!\n
 $tmpSubsText
+$tmpFiredText
 Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>",
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 

@@ -24,6 +24,8 @@ class Bot extends Model
         'short_description',
         'long_description',
         'company_id',
+        'cashback_fire_percent',
+        'cashback_fire_period',
         'welcome_message',
         'bot_domain',
         'bot_token',
@@ -62,6 +64,9 @@ class Bot extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
+        'cashback_fire_percent'=> 'integer',
+        'cashback_fire_period'=> 'integer',
+
         'balance' => 'double',
         'tax_per_day' => 'double',
         'social_links' => 'array',

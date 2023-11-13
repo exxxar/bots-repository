@@ -16,11 +16,10 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
     <form
         v-on:submit.prevent="startCheckout"
-        class="card card-style" v-if="cartProducts.length>0">
+        class="card card-style">
         <div class="content">
 
             <h4>Ваша корзина</h4>
-            <ProductItemSimple :item="item.product" v-for="(item, index) in cartProducts"/>
 
             <div class="divider mt-3"></div>
 
@@ -30,7 +29,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 и
                 зависит от расстояния.
             </p>
-            <div class="row mb-0" v-for="(item, index) in cartProducts">
+            <div class="row mb-0" v-for="(item, index) in cart">
 
                 <div class="col-6 text-left" v-if="item.product"><h6 class="font-600">
                     {{ item.product.title || 'Не указано' }}</h6></div>
