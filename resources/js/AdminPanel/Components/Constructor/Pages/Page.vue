@@ -819,7 +819,12 @@ export default {
             if (!this.pageForm.videos)
                 this.pageForm.videos = []
 
-            this.pageForm.videos.push(item.file_id)
+            let index = this.pageForm.videos.indexOf(item.file_id)
+
+            if (index !== -1)
+                this.pageForm.videos.splice(index, 1)
+            else
+                this.pageForm.videos.push(item.file_id)
         }
     }
 }
