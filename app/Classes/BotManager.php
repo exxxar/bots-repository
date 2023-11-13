@@ -469,6 +469,7 @@ class BotManager extends BotCore
                     $media[] = [
                         "media" => $video,
                         "type" => "video",
+                        "caption"=>"$video"
                     ];
                 }
 

@@ -12,6 +12,8 @@ import Settings from '@/ClientTg/Pages/Shop/Settings.vue';
 
 import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
 
+import FoodConstructors from '@/ClientTg/Pages/FoodConstructors.vue';
+
 //support pages
 import Terms from '@/ClientTg/Pages/Shop/Terms.vue';
 import OurTeam from '@/ClientTg/Pages/Shop/OurTeam.vue';
@@ -354,6 +356,15 @@ export const deliveryRoutes = [
         component: DeliveryMain,
         meta: { title: 'Доставка: Главная', hide_menu:true}
     },
+
+    {
+        name: 'FoodConstructors',
+        path: '/food-constructor-main',
+        component: FoodConstructors,
+        meta: { title: 'Конструктор еды: Главная', hide_menu:true}
+    },
+
+
 ];
 
 const router = createRouter({
