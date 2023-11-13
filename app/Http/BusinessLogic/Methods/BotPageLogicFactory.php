@@ -157,6 +157,8 @@ class BotPageLogicFactory
 
         $tmp->reply_keyboard_id = null;
         $tmp->inline_keyboard_id = null;
+        $tmp->videos = isset($data["videos"]) ? json_decode($data["videos"] ?? '[]') : null;
+
         $tmp->content = $tmp->content ?? "";
         $tmp->is_external = (bool)($tmp->is_external ?? false);
         $tmp->bot_id = $this->bot->id;
@@ -265,6 +267,7 @@ class BotPageLogicFactory
         $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
 
         $tmp = (object)$pageData;
+        $tmp->videos = isset($data["videos"]) ? json_decode($data["videos"] ?? '[]') : null;
         $tmp->is_external = (bool)($tmp->is_external ?? false);
         $tmp->content = $tmp->content ?? "";
 
