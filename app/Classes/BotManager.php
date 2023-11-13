@@ -459,6 +459,7 @@ class BotManager extends BotCore
 
         if (!is_null($page->videos)) {
 
+
             if (count($page->videos) == 1)
                 $this->replyVideo(null, $page->videos[0]);
 
