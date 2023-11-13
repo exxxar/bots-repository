@@ -562,7 +562,7 @@ export default {
                 if (this.pageForm.rules_if != null)
                     this.need_rules = true
 
-                if (this.pageForm.video != null)
+                if (this.pageForm.videos != null)
                     this.need_page_video = true
 
                 this.need_clean = true
