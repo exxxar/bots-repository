@@ -355,7 +355,9 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     <ul class="list-group">
                         <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
                             <p class="mb-0">{{ thread.title }} ({{ thread.key }})</p>
-                            <input type="text" class="form-control"
+                            <input type="number" class="form-control"
+                                   min="0"
+                                   max="10000"
                                    placeholder="Идентификатор топика"
                                    v-model="botForm.message_threads[index].value">
                         </li>
