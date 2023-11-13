@@ -337,7 +337,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                     </div>
                 </div>
 
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="botForm.order_channel">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_threads"
@@ -350,7 +350,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 
                 </div>
 
-                <div class="col-12 mb-2" v-if="need_threads">
+                <div class="col-12 mb-2" v-if="need_threads && botForm.order_channel">
                     <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
                     <ul class="list-group">
                         <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
@@ -1116,6 +1116,7 @@ export default {
                     value: null,
                 }
             ];
+
             if (this.need_threads && !this.botForm.message_threads) {
                 this.botForm.message_threads = threads
             }
