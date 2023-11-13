@@ -86,7 +86,7 @@ class InstantCashBackController extends SlugController
         }
 
     }
-    
+
     public function takeCashBack(...$data)
     {
 
@@ -210,7 +210,7 @@ class InstantCashBackController extends SlugController
             ->first())["value"] ?? "\xF0\x9F\x8E\xB2Получить";
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto(printf($mainText, $cashBackAmount),
+            ->replyPhoto(sprintf($mainText, $cashBackAmount),
                 InputFile::create(public_path() . "/images/cashman.jpg"),
                 [
                     [
