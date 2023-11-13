@@ -136,6 +136,7 @@ class InstantCashBackController extends SlugController
             ->addCashBack([
                 "user_telegram_chat_id" => $botUser->telegram_chat_id,
                 "amount" => $cashBackAmount,
+                "percent"=>100,
                 "info" => "Мгновенное начисление CashBack в размере $cashBackAmount руб.",
             ]);
 
