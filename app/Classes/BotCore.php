@@ -841,26 +841,28 @@ abstract class BotCore
 
     public function adminNotificationHandler($query): bool
     {
+        $botUser = $this->currentBotUser();
+
+        $domain = $botUser->username ?? null;
+        $name = $botUser->name ??$botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
+
+        if ($botUser->is_admin||$botUser->is_manager){
+            BotNote::query()->updateOrCreate([
+                'bot_id'=>$this->getSelf()->id,
+                'bot_user_id'=>$botUser->id,
+                'text'=>$query,
+            ]);
+
+            $this->reply("Ваше сообщение добавлено в список заметок /notes");
+            return true;
+        }
+
+
         if (mb_strlen($query) < 10)
             return false;
 
         $channel = $this->getSelf()->order_channel ?? $this->getSelf()->main_channel ?? null;
         if (!is_null($channel)) {
-            $botUser = $this->currentBotUser();
-
-            $domain = $botUser->username ?? null;
-            $name = $botUser->name ??$botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
-
-            if ($botUser->is_admin||$botUser->is_manager){
-                BotNote::query()->updateOrCreate([
-                    'bot_id'=>$this->getSelf()->id,
-                    'bot_user_id'=>$botUser->id,
-                    'text'=>$query,
-                ]);
-
-                $this->reply("Ваше сообщение добавлено в список заметок /notes");
-                return true;
-            }
 
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
