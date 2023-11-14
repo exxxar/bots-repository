@@ -283,7 +283,21 @@ trait BotDialogTrait
 
         $thread = $bot->topics["questions"] ?? null;
 
-        $this->sendMessage($channel, $tmpMessage, $thread);
+        $botDomain = $$bot->bot_domain;
+        $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $botUser->telegram_chat_id);
+
+
+        //$this->sendMessage($channel, $tmpMessage, $thread);
+
+        $this->sendInlineKeyboard($channel,
+            $tmpMessage,
+            [
+                [
+                    ["text" => "Написать пользователю ответ", "url" => $link]
+                ]
+            ],
+            $thread
+        );
 
     }
 }
