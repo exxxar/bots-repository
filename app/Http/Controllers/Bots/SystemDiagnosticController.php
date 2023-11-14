@@ -623,6 +623,11 @@ class SystemDiagnosticController extends Controller
             $keyboard[] = $rowTmpKeyboard;
         }
 
+        $keyboard[] = [[
+            "text" => "❌ Удалить все записи",
+            "callback_data" => "/clear_all_notes"
+        ]];
+
         BotManager::bot()
             ->replyInlineKeyboard("$tmp", $keyboard);
 
@@ -705,6 +710,39 @@ class SystemDiagnosticController extends Controller
             BotManager::bot()
                 ->replyVideoNote( $media->file_id, $keyboard);
 
+    }
+
+    public function clearAllNotes(...$data){
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+
+        $notes = BotNote::query()
+            ->where("bot_id", $bot->id)
+            ->where("bot_user_id", $botUser->id)
+            ->get();
+
+        if (empty($notes)){
+            BotManager::bot()
+                ->reply("Заметка не найдена!");
+            return;
+        }
+
+        foreach ($notes as $note){
+            $note->delete();
+        }
+
+
+        BotManager::bot()
+            ->reply("Заметки очищены");
     }
 
     public function removeNotes(...$data){
