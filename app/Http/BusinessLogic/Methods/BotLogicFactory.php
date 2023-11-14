@@ -10,6 +10,7 @@ use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\BotCollection;
 use App\Http\Resources\BotMenuTemplateResource;
+use App\Http\Resources\BotNoteResource;
 use App\Http\Resources\BotResource;
 use App\Http\Resources\BotSecurityCollection;
 use App\Http\Resources\BotSecurityResource;
@@ -26,6 +27,7 @@ use App\Models\BotDialogCommand;
 use App\Models\BotDialogGroup;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
+use App\Models\BotNote;
 use App\Models\BotPage;
 use App\Models\BotType;
 use App\Models\BotUser;
@@ -644,6 +646,24 @@ class BotLogicFactory
 
     }
 
+
+    /**
+     * @throws ValidationException
+     */
+    public function notes(): mixed
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $botNotes = BotNote::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("bot_user_id", $this->botUser->id)
+            ->orderBy("created_at","desc")
+            ->get();
+
+        return new BotNoteResource($botNotes);
+
+    }
 
     /**
      * @throws ValidationException

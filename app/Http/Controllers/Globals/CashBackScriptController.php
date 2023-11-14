@@ -36,6 +36,13 @@ class CashBackScriptController extends SlugController
                 "value" => 0
             ],
             [
+                "type" => "boolean",
+                "key" => "first_cashback_need_fail_message",
+                "value" => false,
+
+            ],
+
+            [
                 "type" => "text",
                 "key" => "display_type",
                 "value" => 0

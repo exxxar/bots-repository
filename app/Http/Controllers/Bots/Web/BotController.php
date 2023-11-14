@@ -139,6 +139,15 @@ class BotController extends Controller
     }
 
 
+    public function requestManagerNotes(Request $request){
+        return response()
+            ->json(
+                BusinessLogic::bots()
+                    ->setBotUser($request->botUser ?? null)
+                    ->setBot($request->bot ?? null)
+                    ->notes()
+            );
+    }
     /**
      * @throws ValidationException
      */

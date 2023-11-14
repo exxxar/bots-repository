@@ -31,6 +31,10 @@ Route::prefix("bot-client")
         Route::post("/telegram-channel-id", [BotController::class, "requestTelegramChannel"])
             ->middleware(["tgAuth.any"]);
 
+        Route::post("/manager-notes", [BotController::class, "requestManagerNotes"])
+            ->middleware(["tgAuth.admin"]);
+
+
         Route::post('/self', [BotController::class, "getSelf"])
             ->middleware(["tgAuth.any"]);
 

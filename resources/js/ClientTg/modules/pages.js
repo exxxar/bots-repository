@@ -56,7 +56,22 @@ export default {
                 param: param
             }
         }));
-    }
+    },
+    notes(param) {
+        window.dispatchEvent(new CustomEvent("open-notes-modal",{
+            detail: {
+                param: param
+            }
+        }));
+    },
+    selectNote(note, param) {
+        window.dispatchEvent(new CustomEvent("select-notes-event", {
+            detail: {
+                note: note,
+                param: param
+            }
+        }));
+    },
 
 
 }

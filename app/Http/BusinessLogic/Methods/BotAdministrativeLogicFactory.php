@@ -379,9 +379,9 @@ class BotAdministrativeLogicFactory
             throw new HttpException(404, "Пользователь не найден");
 
         if (!is_null($data["category"] ?? null)) {
-         /*   BotMethods::bot()
-                ->whereBot($this->bot)
-                ->sendMessage($adminBotUser->telegram_chat_id, "Попытка добавить CashBack в категорию. Данная возможность еще в разработке.");*/
+            /*   BotMethods::bot()
+                   ->whereBot($this->bot)
+                   ->sendMessage($adminBotUser->telegram_chat_id, "Попытка добавить CashBack в категорию. Данная возможность еще в разработке.");*/
             event(new CashBackSubEvent(
                 $data["category"],
                 (int)$this->bot->id,
@@ -844,6 +844,10 @@ class BotAdministrativeLogicFactory
             ->where("key", "first_cashback_granted")
             ->first())["value"] ?? null;
 
+        $needFailMessage = (Collection::make($this->slug->config)
+            ->where("key", "first_cashback_need_fail_message")
+            ->first())["value"] ?? false;
+
         Log::info("first_cashback_granted" . print_r($firstCashBackGranted ?? '-', true));
 
         $birthday = Carbon::parse($data["birthday"] ?? Carbon::now())->format("Y-m-d");
@@ -881,12 +885,14 @@ class BotAdministrativeLogicFactory
                     100
                 ));
             else {
-                BotMethods::bot()
-                    ->whereBot($this->bot)
-                    ->sendMessage(
-                        $this->botUser->telegram_chat_id,
-                        "Сейчас, к сожалению, нет администратора, но когда он появится вы сможете получить дополнительно <strong>$firstCashBackGranted руб.</strong> кэшбэка"
-                    );
+
+                if ($needFailMessage)
+                    BotMethods::bot()
+                        ->whereBot($this->bot)
+                        ->sendMessage(
+                            $this->botUser->telegram_chat_id,
+                            "Сейчас, к сожалению, нет администратора, но когда он появится вы сможете получить дополнительно <strong>$firstCashBackGranted руб.</strong> кэшбэка"
+                        );
             }
         }
 

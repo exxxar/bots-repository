@@ -49,6 +49,20 @@ export default createStore({
                 return Promise.reject(err);
             })
         },
+        async loadNotes(context){
+
+
+            let link = `/bot-client/manager-notes`
+
+            let _axios = util.makeAxiosFactory(link,'POST')
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
         async requestTelegramChannelId(context, payload = {dataObject:null}) {
 
 

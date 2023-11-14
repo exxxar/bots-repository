@@ -1666,6 +1666,14 @@ export default {
     },
 
     mounted() {
+
+        window.addEventListener("select-notes-event", (e) => {
+            let param = e.detail.param;
+            let note = e.detail.note;
+            eval(`${this}.${param}=${note}`)
+        } );
+
+
         if (this.start)
             this.step = this.start
     },

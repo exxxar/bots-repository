@@ -371,6 +371,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                 </form>
 
 
+<!--
                 <a
                     href="javascript:void(0)"
                     @click.prevent="openSection(9)"
@@ -378,6 +379,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                     class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
                     Отправить пользователю страницу
                 </a>
+-->
 
                 <form v-on:submit.prevent="sendPageToUser" v-if="section===9">
                     <div class="mb-3">
