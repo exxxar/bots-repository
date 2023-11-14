@@ -10,6 +10,7 @@ use App\Models\Bot;
 use App\Models\BotDialogCommand;
 use App\Models\BotMedia;
 use App\Models\BotMenuSlug;
+use App\Models\BotNote;
 use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\ReferralHistory;
@@ -564,6 +565,69 @@ class SystemDiagnosticController extends Controller
             ->replyInlineKeyboard("$tmp", $keyboard);
     }
 
+    public function getNotes(...$data){
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $notes = BotNote::query()
+            ->where("bot_id", $bot->id)
+            ->where("bot_user_id", $botUser->id)
+            ->orderBy("created_at","DESC")
+            ->get();
+
+        $tmp = "Список доступных заметок:\n";
+
+        if (empty($media)) {
+
+            $tmp .= "Заметки не найдены!";
+            BotManager::bot()
+                ->reply($tmp);
+            return;
+        }
+
+
+        $keyboard = [];
+        $rowTmpKeyboard = [];
+        $index = 1;
+        foreach ($notes as $item) {
+            $tmp .= "#$item->id " . ($item->text ?? 'Описание не указано') . "\n";
+
+            if ($index % 4 != 0) {
+                $rowTmpKeyboard[] = [
+                    "text" => "#".$item->id."❌",
+                    "callback_data" => "/remove_notes $item->id"
+                ];
+            } else {
+                $rowTmpKeyboard[] = [
+                    "text" => "#".$item->id."❌",
+                    "callback_data" => "/remove_notes $item->id"
+                ];
+
+                $keyboard[] = $rowTmpKeyboard;
+                $rowTmpKeyboard = [];
+            }
+
+            $index++;
+        }
+
+
+        if (count($rowTmpKeyboard) > 0) {
+            $keyboard[] = $rowTmpKeyboard;
+        }
+
+        BotManager::bot()
+            ->replyInlineKeyboard("$tmp", $keyboard);
+
+    }
+
     public function getMedia(...$data)
     {
         $botUser = BotManager::bot()
@@ -641,6 +705,40 @@ class SystemDiagnosticController extends Controller
             BotManager::bot()
                 ->replyVideoNote( $media->file_id, $keyboard);
 
+    }
+
+    public function removeNotes(...$data){
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $id = $data[3] ?? 0;
+
+        $note = BotNote::query()
+            ->where("bot_id", $bot->id)
+            ->where("id", $id)
+            ->first();
+
+        if (is_null($note)){
+            BotManager::bot()
+                ->reply("Заметка не найдена!");
+            return;
+        }
+
+        $note->delete();
+        BotManager::bot()
+            ->replyInlineKeyboard("Заметка успешно удалена", [
+                [
+                    ["text"=>"Показать оставшиеся заметки","callback_data"=>"/notes"]
+                ]
+            ]);
     }
 
     public function removeMediaFile(...$data){

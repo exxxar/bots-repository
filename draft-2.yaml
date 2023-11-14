@@ -1,4 +1,11 @@
 models:
+  CashBackSub:
+    cash_back_id: id foreign:cash_backs
+    title: string:255 nullable
+    amount: double default:0
+    relationships:
+      belongsTo: CashBack
+
   Bot:
     company_id: id foreign:companies
     bot_domain: unique string:190
@@ -270,10 +277,12 @@ models:
     relationships:
       belongsTo: Bot, User
 
-seeders: Company, BotMenuTemplate, Location, Bot, BotType, ImageMenu, CashBack, CashBackHistory, User, BotUser, Role, ReferralHistory, Product, ProductCategory, Basket, Order, Event, NotificationSchedule
+seeders: CashBackSub, Company, BotMenuTemplate, Location, Bot, BotType, ImageMenu, CashBack, CashBackHistory, User, BotUser, Role, ReferralHistory, Product, ProductCategory, Basket, Order, Event, NotificationSchedule
 
 
 controllers:
+  CashBackSub:
+    resource: api
   Company:
     resource: api
 

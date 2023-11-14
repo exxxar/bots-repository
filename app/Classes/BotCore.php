@@ -9,6 +9,7 @@ use App\Facades\BotManager;
 use App\Models\Basket;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
+use App\Models\BotNote;
 use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\Transaction;
@@ -845,8 +846,21 @@ abstract class BotCore
 
         $channel = $this->getSelf()->order_channel ?? $this->getSelf()->main_channel ?? null;
         if (!is_null($channel)) {
-            $domain = $this->currentBotUser()->username ?? null;
-            $name = $this->currentBotUser()->name ?? $this->currentBotUser()->fio_from_telegram ?? $this->currentBotUser()->telegram_chat_id;
+            $botUser = $this->currentBotUser();
+
+            $domain = $botUser->username ?? null;
+            $name = $botUser->name ??$botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
+
+            if ($botUser->is_admin||$botUser->is_manager){
+                BotNote::query()->updateOrCreate([
+                    'bot_id'=>$this->getSelf()->id,
+                    'bot_user_id'=>$botUser->id,
+                    'text'=>$query,
+                ]);
+
+                $this->reply("Ваше сообщение добавлено в список заметок /notes");
+                return true;
+            }
 
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);

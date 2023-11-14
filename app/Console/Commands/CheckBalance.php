@@ -38,17 +38,21 @@ class CheckBalance extends Command
                 $bot->balance -= $bot->tax_per_day;
                 $bot->save();
 
-                if ($bot->balance < 0) {
-                    $admin = BotUser::query()
-                        ->where("bot_id", $bot->id)
-                        ->where("is_admin", true)
-                        ->orderBy("updated_at", "desc")
-                        ->first();
 
-                    if (!is_null($admin))
-                        \App\Facades\BotMethods::bot()
-                            ->whereBot($bot)
-                            ->sendMessage($admin->telegram_chat_id, "Внимание!Ваш баланс составил $bot->balance руб. Текущий баланс системы ниже 0! Система не доступна для пользователей. Ваш тариф  $bot->tax_per_day руб\сутки");
+                $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+
+                if ($bot->balance > 0 && $bot->balance < 1000) {
+                    $daysBefore = round( $bot->balance  / $bot->tax_per_day);
+                    \App\Facades\BotMethods::bot()
+                        ->whereBot($bot)
+                        ->sendMessage($channel, "Внимание!Ваш баланс составил $bot->balance руб. Ваш тариф  $bot->tax_per_day руб\сутки. Необходимо произвести оплату в течении $daysBefore дней.");
+
+                }
+
+                if ($bot->balance < 0) {
+                    \App\Facades\BotMethods::bot()
+                        ->whereBot($bot)
+                        ->sendMessage($channel, "Внимание!Ваш баланс составил $bot->balance руб. Текущий баланс системы ниже 0! Система не доступна для пользователей. Ваш тариф  $bot->tax_per_day руб\сутки");
                 }
 
 

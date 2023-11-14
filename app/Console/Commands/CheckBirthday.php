@@ -39,11 +39,13 @@ class CheckBirthday extends Command
             ->get();
 
         $tmp = "Сегодня ДР у следующих пользователей:\n";
+        $count = 0;
         foreach ($botUsers as $botUser) {
 
             $daysBefore = abs(Carbon::parse($botUser->birthday)->timestamp - Carbon::now()->timestamp) / 86400;
 
             if ($daysBefore == 0) {
+
                 $name = \App\Facades\BotMethods::prepareUserName($botUser);
                 $tgId = $botUser->telegram_chat_id;
                 $username = $botUser->username ?? "ник не указан";
@@ -53,6 +55,7 @@ class CheckBirthday extends Command
 
                 $botUser->age = Carbon::now()->year - Carbon::parse($botUser->birthday)->year;
                 $botUser->save();
+                $count++;
             }
         }
 
@@ -62,7 +65,7 @@ class CheckBirthday extends Command
 
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
-        if (!is_null($channel))
+        if (!is_null($channel) && $count > 0)
             \App\Facades\BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage($channel, $tmp, $thread);
