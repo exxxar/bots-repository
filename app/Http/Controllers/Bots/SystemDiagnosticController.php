@@ -585,7 +585,7 @@ class SystemDiagnosticController extends Controller
 
         $tmp = "Список доступных заметок:\n";
 
-        if (empty($media)) {
+        if (empty($notes)) {
 
             $tmp .= "Заметки не найдены!";
             BotManager::bot()
