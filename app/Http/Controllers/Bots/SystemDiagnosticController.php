@@ -585,7 +585,7 @@ class SystemDiagnosticController extends Controller
 
         $tmp = "Список доступных заметок:\n";
 
-        if (empty($notes)) {
+        if (count($notes)==0) {
 
             $tmp .= "Заметки не найдены!";
             BotManager::bot()
@@ -624,7 +624,7 @@ class SystemDiagnosticController extends Controller
         }
 
         $keyboard[] = [[
-            "text" => "❌ Удалить все записи",
+            "text" => "🗑️ Удалить все записи",
             "callback_data" => "/clear_all_notes"
         ]];
 
