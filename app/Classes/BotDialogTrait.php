@@ -166,9 +166,11 @@ trait BotDialogTrait
         }
 
         Log::info("result_flags=>".print_r($botDialogCommand->result_flags, true));
-        if (count($botDialogCommand->result_flags)>0) {
+
+        $flags = json_decode($botDialogCommand->result_flags ?? '[]');
+        if (count($flags)>0) {
             $tmp = [];
-            foreach ($botDialogCommand->result_flag ?? [] as $flag){
+            foreach ($flags as $flag){
                 $tmp[$flag] = true;
                 Log::info("flag=>".($flag??'-'));
             }
