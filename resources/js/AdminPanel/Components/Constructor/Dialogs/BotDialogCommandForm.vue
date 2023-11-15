@@ -434,8 +434,10 @@ export default {
         },
         selectFlag(item) {
 
-            if (!this.commandForm.result_flags)
+            if (!this.commandForm.result_flags|| !Array.isArray(this.commandForm.result_flags))
                 this.commandForm.result_flags = []
+
+
 
             let index = this.commandForm.result_flags.indexOf(item.key)
             if (index === -1)
