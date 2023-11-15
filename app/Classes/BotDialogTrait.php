@@ -283,7 +283,7 @@ trait BotDialogTrait
 
         $thread = $bot->topics["questions"] ?? null;
 
-        $botDomain = $$bot->bot_domain;
+        $botDomain = $bot->bot_domain;
         $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $botUser->telegram_chat_id);
 
 
