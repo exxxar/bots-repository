@@ -49,7 +49,7 @@ Route::get("/push-command", function () {
 
 Route::get('/db-transfer', function (Request $request) {
 
-    $botId = 48;
+    $botId = 41;
 
     $users2 = DB::connection('mysql2')->table("users")
           ->get();
