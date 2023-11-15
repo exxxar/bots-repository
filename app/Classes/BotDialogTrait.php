@@ -166,13 +166,14 @@ trait BotDialogTrait
         }
 
         Log::info("result_flags=>".print_r($botDialogCommand->result_flags, true));
-        if (!empty($botDialogCommand->result_flags ?? [])) {
+        if (count($botDialogCommand->result_flags)>0) {
             $tmp = [];
             foreach ($botDialogCommand->result_flag ?? [] as $flag){
                 $tmp[$flag] = true;
                 Log::info("flag=>".($flag??'-'));
             }
-            $botUser->update($tmp);
+            $test = $botUser->update($tmp);
+            Log::info(print_r($test, true));
         }
 
         $needStop = false;
