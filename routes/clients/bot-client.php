@@ -130,7 +130,8 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post("/products", [ProductController::class, "index"]);
                 Route::post("/checkout", [ProductController::class, "checkout"]);
-                Route::post("/checkout-instruction", [ProductController::class, "checkoutInstruction"]);
+                Route::post("/checkout-instruction", [ProductController::class, "checkoutInstruction"])
+                    ->middleware(["slug"]);
                 Route::post("/products/by-ids", [ProductController::class, "getProductsByIds"]);
                 Route::post("/products/random", [ProductController::class, "randomProducts"]);
                 Route::post("/products/categories", [ProductController::class, "getCategories"]);

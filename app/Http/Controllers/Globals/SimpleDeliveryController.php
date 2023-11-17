@@ -30,12 +30,42 @@ class SimpleDeliveryController extends SlugController
             return;
 
 
+        $params = [
+
+            [
+                "type" => "text",
+                "key" => "payment_info",
+                "value" => "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>"
+            ],
+            [
+                "type" => "text",
+                "key" => "main_text",
+                "value" => "Наш магазин!",
+
+            ],
+
+            [
+                "type" => "text",
+                "key" => "btn_text",
+                "value" => "Перейти",
+
+            ],
+
+
+        ];
+
+        if (count($mainScript->config ?? []) != count($params)) {
+            $mainScript->config = $params;
+            $mainScript->save();
+        }
+
         BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_simple_delivery_main",
                 "bot_id" => $bot->id,
                 'is_global' => true,
             ],
+
             [
                 'command' => ".*Мини-доставка",
                 'comment' => "Скрипт добавляет возможность заказа товара на доставку",

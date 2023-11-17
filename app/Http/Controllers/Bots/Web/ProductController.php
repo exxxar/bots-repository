@@ -147,6 +147,7 @@ class ProductController extends Controller
         ]);
 
         BusinessLogic::products()
+            ->setSlug($request->slug ?? null)
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
             ->checkoutInformation($request->all());

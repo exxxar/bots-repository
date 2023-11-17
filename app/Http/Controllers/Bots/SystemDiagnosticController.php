@@ -24,12 +24,14 @@ class SystemDiagnosticController extends Controller
 {
     //
 
-    public function testConfig(...$data){
+    public function testConfig(...$data)
+    {
         BotManager::bot()
             ->testSetMyName("НОВОЕ ИМЯ БОТА");
     }
 
-    public function demodice(...$data){
+    public function demodice(...$data)
+    {
         BotManager::bot()
             ->replyDice();
     }
@@ -502,13 +504,13 @@ class SystemDiagnosticController extends Controller
             ->sendMessage($botUser->telegram_chat_id, "Спасибо! Ваш отзыв учтен!");
 
         $thread = $bot->topics["reviews"] ?? null;
-/*
-        if ($value <= 2)*/
-            BotManager::bot()
-                ->sendMessage($bot->order_channel ?? $bot->main_channel ?? null,
-                    "#отзыв\nПользователь $name ($tgId, $phone) оставил оценку за обслуживание " . ($emojis[$value] ?? "😡") . "!",
-                    $thread
-                );
+        /*
+                if ($value <= 2)*/
+        BotManager::bot()
+            ->sendMessage($bot->order_channel ?? $bot->main_channel ?? null,
+                "#отзыв\nПользователь $name ($tgId, $phone) оставил оценку за обслуживание " . ($emojis[$value] ?? "😡") . "!",
+                $thread
+            );
 
         $messageId = $data[0]->message_id ?? null;
 
@@ -521,7 +523,8 @@ class SystemDiagnosticController extends Controller
 
     }
 
-    private function mediaPrint($tmp, $media) {
+    private function mediaPrint($tmp, $media)
+    {
 
         if (empty($media)) {
 
@@ -540,12 +543,12 @@ class SystemDiagnosticController extends Controller
 
             if ($index % 4 != 0) {
                 $rowTmpKeyboard[] = [
-                    "text" => "#".$item->id,
+                    "text" => "#" . $item->id,
                     "callback_data" => "/show_media_file $item->id"
                 ];
             } else {
                 $rowTmpKeyboard[] = [
-                    "text" => "#".$item->id,
+                    "text" => "#" . $item->id,
                     "callback_data" => "/show_media_file $item->id"
                 ];
 
@@ -565,7 +568,8 @@ class SystemDiagnosticController extends Controller
             ->replyInlineKeyboard("$tmp", $keyboard);
     }
 
-    public function getNotes(...$data){
+    public function getNotes(...$data)
+    {
         $botUser = BotManager::bot()
             ->currentBotUser();
 
@@ -580,12 +584,12 @@ class SystemDiagnosticController extends Controller
         $notes = BotNote::query()
             ->where("bot_id", $bot->id)
             ->where("bot_user_id", $botUser->id)
-            ->orderBy("created_at","DESC")
+            ->orderBy("created_at", "DESC")
             ->get();
 
         $tmp = "Список доступных заметок:\n";
 
-        if (count($notes)==0) {
+        if (count($notes) == 0) {
 
             $tmp .= "Заметки не найдены!";
             BotManager::bot()
@@ -602,12 +606,12 @@ class SystemDiagnosticController extends Controller
 
             if ($index % 4 != 0) {
                 $rowTmpKeyboard[] = [
-                    "text" => "#".$item->id."❌",
+                    "text" => "#" . $item->id . "❌",
                     "callback_data" => "/remove_notes $item->id"
                 ];
             } else {
                 $rowTmpKeyboard[] = [
-                    "text" => "#".$item->id."❌",
+                    "text" => "#" . $item->id . "❌",
                     "callback_data" => "/remove_notes $item->id"
                 ];
 
@@ -666,7 +670,8 @@ class SystemDiagnosticController extends Controller
 
     }
 
-    public function showMediaFile(...$data){
+    public function showMediaFile(...$data)
+    {
 
         $botUser = BotManager::bot()
             ->currentBotUser();
@@ -686,7 +691,7 @@ class SystemDiagnosticController extends Controller
             ->where("id", $id)
             ->first();
 
-        if (is_null($media)){
+        if (is_null($media)) {
             BotManager::bot()
                 ->reply("Файл не найден!");
             return;
@@ -694,25 +699,26 @@ class SystemDiagnosticController extends Controller
 
         $keyboard = [
             [
-                ["text"=>"Удалить файл","callback_data"=>"/remove_media_file $media->id"]
+                ["text" => "Удалить файл", "callback_data" => "/remove_media_file $media->id"]
             ]
         ];
 
         if ($media->type == "photo")
             BotManager::bot()
-                ->replyPhoto($media->caption??null, $media->file_id, $keyboard);
+                ->replyPhoto($media->caption ?? null, $media->file_id, $keyboard);
 
         if ($media->type == "video")
             BotManager::bot()
-                ->replyVideo($media->caption??null, $media->file_id, $keyboard);
+                ->replyVideo($media->caption ?? null, $media->file_id, $keyboard);
 
         if ($media->type == "video_note")
             BotManager::bot()
-                ->replyVideoNote( $media->file_id, $keyboard);
+                ->replyVideoNote($media->file_id, $keyboard);
 
     }
 
-    public function clearAllNotes(...$data){
+    public function clearAllNotes(...$data)
+    {
         $botUser = BotManager::bot()
             ->currentBotUser();
 
@@ -730,13 +736,13 @@ class SystemDiagnosticController extends Controller
             ->where("bot_user_id", $botUser->id)
             ->get();
 
-        if (empty($notes)){
+        if (empty($notes)) {
             BotManager::bot()
                 ->reply("Заметка не найдена!");
             return;
         }
 
-        foreach ($notes as $note){
+        foreach ($notes as $note) {
             $note->delete();
         }
 
@@ -745,7 +751,8 @@ class SystemDiagnosticController extends Controller
             ->reply("Заметки очищены");
     }
 
-    public function removeNotes(...$data){
+    public function removeNotes(...$data)
+    {
         $botUser = BotManager::bot()
             ->currentBotUser();
 
@@ -764,7 +771,7 @@ class SystemDiagnosticController extends Controller
             ->where("id", $id)
             ->first();
 
-        if (is_null($note)){
+        if (is_null($note)) {
             BotManager::bot()
                 ->reply("Заметка не найдена!");
             return;
@@ -774,12 +781,13 @@ class SystemDiagnosticController extends Controller
         BotManager::bot()
             ->replyInlineKeyboard("Заметка успешно удалена", [
                 [
-                    ["text"=>"Показать оставшиеся заметки","callback_data"=>"/notes"]
+                    ["text" => "Показать оставшиеся заметки", "callback_data" => "/notes"]
                 ]
             ]);
     }
 
-    public function removeMediaFile(...$data){
+    public function removeMediaFile(...$data)
+    {
         $botUser = BotManager::bot()
             ->currentBotUser();
 
@@ -798,7 +806,7 @@ class SystemDiagnosticController extends Controller
             ->where("id", $id)
             ->first();
 
-        if (is_null($media)){
+        if (is_null($media)) {
             BotManager::bot()
                 ->reply("Файл не найден!");
             return;
@@ -808,8 +816,40 @@ class SystemDiagnosticController extends Controller
         BotManager::bot()
             ->replyInlineKeyboard("Файл успешно удален", [
                 [
-                    ["text"=>"Показать оставшиеся файлы","callback_data"=>"/media"]
+                    ["text" => "Показать оставшиеся файлы", "callback_data" => "/media"]
                 ]
             ]);
+    }
+
+    public function helpBot(...$data)
+    {
+        BotManager::bot()
+            ->reply("Раздел помощи временно недоступен, но скоро будет работать на полную силу!");
+    }
+
+    public function aboutBot(...$data)
+    {
+        $bot = BotManager::bot()->getSelf();
+        BotManager::bot()
+            ->replyPhoto("Хочешь такой же бот для своего бизнеса? ",
+                InputFile::create(public_path() . "/images/cashman.jpg"),
+                [
+                    [
+                        [
+                            "text" => "🔥Перейти в нашего бота для заявок",
+                            "url" => "https://t.me/cashman_dn_bot"
+                        ]
+                    ],
+                    [
+                        [
+                            "text" => "\xF0\x9F\x8D\x80Написать в тех. поддержку",
+                            "web_app" => [
+                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/about"
+                            ]
+                        ],
+                    ],
+
+                ]
+            );
     }
 }

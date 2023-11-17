@@ -211,8 +211,8 @@ class ProductLogicFactory
         $slug = $this->bot->company->slug;
 
 
-        $photos = !is_null($uploadedPhotos)?
-            $this->uploadPhotos("/public/companies/$slug", $uploadedPhotos): [];
+        $photos = !is_null($uploadedPhotos) ?
+            $this->uploadPhotos("/public/companies/$slug", $uploadedPhotos) : [];
 
         $images = $data["images"] ?? null;
 
@@ -245,7 +245,7 @@ class ProductLogicFactory
         $productId = $data["id"] ?? null;
 
         $tmp = [
-            'article' => $data["article"]?? null,
+            'article' => $data["article"] ?? null,
             'vk_product_id' => $data["vk_product_id"] ?? null,
             'title' => $data["title"] ?? null,
             'description' => $data["description"] ?? null,
@@ -500,7 +500,7 @@ class ProductLogicFactory
     public function checkoutInformation(array $data): void
     {
 
-        if (is_null($this->bot) || is_null($this->botUser))
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
             throw new HttpException(404, "Требования функции не выполнены!");
 
         $validator = Validator::make($data, [
@@ -543,25 +543,39 @@ class ProductLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
-        $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
+        $needPickup = $data["need_pickup"] ?? false;
+        $message .= (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n")
+            . "Итого: $summaryPrice руб. за $summaryCount ед.";
 
-        $userInfo = sprintf("Данные для доставки:\nФ.И.О.:%s\nНомер телефона:%s\nАдрес:%s\nДоп.инфо:%s\n",
-            $data["name"] ?? 'Не указано',
-            $data["phone"] ?? 'Не указано',
-            $data["address"] ?? 'Не указано',
-            $data["info"] ?? 'Не указано',
-        );
+
+        $userInfo = !$needPickup ?
+            sprintf("Данные для доставки:\nФ.И.О.:%s\nНомер телефона:%s\nАдрес:%s\nДоп.инфо:%s\n",
+                $data["name"] ?? 'Не указано',
+                $data["phone"] ?? 'Не указано',
+                $data["address"] ?? 'Не указано',
+                $data["info"] ?? 'Не указано',
+            ) : sprintf("Данные для самовывоза:\nФ.И.О.:%s\nНомер телефона:%s",
+                $data["name"] ?? 'Не указано',
+                $data["phone"] ?? 'Не указано',
+            );
 
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
+
+        $paymentInfo = sprintf((Collection::make($this->slug->config)
+            ->where("key", "payment_info")
+            ->first())["value"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
+            $userId);
+
+
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendMessage(
                 $this->bot->order_channel ?? $this->bot->main_channel ?? null,
-                "#заказдоставка\n\n$message\n\n$userInfo"
+                "$message\n\n$userInfo"
             )
             ->sendMessage(
                 $this->botUser->telegram_chat_id,
-                "Спасибо, ваш заказ появился в нашей системе:\n\n<em>$message</em>\n\nОплатите заказ по реквизитам:\nСбер 2222 2222 2222 2222 Егор Ш. или переводом по номеру +7(000)000-00-00 - указав номер  $userId\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>" ?? "Данные не найдены"
+                "Спасибо, ваш заказ появился в нашей системе:\n\n<em>$message</em>\n\n$paymentInfo" ?? "Данные не найдены"
             );
     }
 

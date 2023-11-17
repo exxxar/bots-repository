@@ -17,6 +17,8 @@ include_once "bots/global.php";
 BotManager::bot()
     ->controller(\App\Http\Controllers\Bots\SystemDiagnosticController::class)
     ->route("/.*Мой id|.*мой id", "getMyId")
+    ->route("/about", "aboutBot")
+    ->route("/help", "helpBot")
     ->route("/democircle", "democircle")
     ->route("/testdiсe", "demodice")
     ->route("/testconfig", "testConfig")
