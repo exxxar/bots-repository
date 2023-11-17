@@ -169,8 +169,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <input type="checkbox"
                        v-model="deliveryForm.need_pickup"
                        class="ios-input" id="toggle-id-2">
-                <label class="custom-control-label pl-5" for="toggle-id-2" v-if="deliveryForm.need_pickup">Нужна доставка</label>
-                <label class="custom-control-label pl-5" for="toggle-id-2" v-if="!deliveryForm.need_pickup">Самовывоз</label>
+                <label class="custom-control-label pl-5" for="toggle-id-2" v-if="!deliveryForm.need_pickup">Нужна доставка</label>
+                <label class="custom-control-label pl-5" for="toggle-id-2" v-if="deliveryForm.need_pickup">Самовывоз</label>
                 <i class="fa fa-check font-11 color-white"></i>
                 <i class="fa fa-times font-11 color-white"></i>
             </div>

@@ -543,7 +543,7 @@ class ProductLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
-        $needPickup = $data["need_pickup"] ?? false;
+        $needPickup = ($data["need_pickup"] ?? "false") == "true";
         $message .= (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n")
             . "Итого: $summaryPrice руб. за $summaryCount ед.";
 
