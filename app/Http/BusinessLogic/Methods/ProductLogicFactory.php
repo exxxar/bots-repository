@@ -492,7 +492,6 @@ class ProductLogicFactory
         return new ProductResource($newProduct);
     }
 
-
     /**
      * @throws ValidationException
      * @throws HttpException
@@ -566,7 +565,6 @@ class ProductLogicFactory
             ->where("key", "payment_info")
             ->first())["value"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
             $userId);
-
 
         BotMethods::bot()
             ->whereBot($this->bot)

@@ -106,6 +106,7 @@ class VKProductController extends Controller
             $response = $vk->market()->get($access_token, [
                 'owner_id' => "-$data->object_id",
                 'need_variants' => 1,
+                'count' => 200,
                 'extended' => 1
             ]);
         }catch (VKException $e){
