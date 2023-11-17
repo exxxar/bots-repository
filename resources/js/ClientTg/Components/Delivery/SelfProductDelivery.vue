@@ -168,15 +168,15 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <div class="custom-control ios-switch ios-switch-icon my-3">
                 <input type="checkbox"
                        v-model="deliveryForm.need_pickup"
-                       class="ios-input" id="toggle-id-2">
-                <label class="custom-control-label pl-5" for="toggle-id-2" v-if="!deliveryForm.need_pickup">Нужна доставка</label>
-                <label class="custom-control-label pl-5" for="toggle-id-2" v-if="deliveryForm.need_pickup">Самовывоз</label>
+                       class="ios-input" id="toggle-need-pickup">
+                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!deliveryForm.need_pickup">Нужна доставка</label>
+                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="deliveryForm.need_pickup">Самовывоз</label>
                 <i class="fa fa-check font-11 color-white"></i>
                 <i class="fa fa-times font-11 color-white"></i>
             </div>
 
             <div
-                v-if="deliveryForm.need_pickup"
+                v-if="!deliveryForm.need_pickup"
                 class="input-style input-style-2 has-icon">
                 <i class="input-icon fa-solid fa-phone"></i>
 
@@ -188,7 +188,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             </div>
 
             <div
-                v-if="deliveryForm.need_pickup"
+                v-if="!deliveryForm.need_pickup"
                 class="input-style input-style-2 has-icon">
                 <span class="input-style-1-active input-style-1-inactive">Информация для доставщика</span>
                 <i class="input-icon fa-solid fa-envelope-open-text"></i>
