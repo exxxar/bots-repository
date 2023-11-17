@@ -507,7 +507,7 @@ class ProductLogicFactory
             "products" => "required",
             "name" => "required",
             "phone" => "required",
-            "address" => "required",
+            "address" => "",
         ]);
 
         if ($validator->fails())
