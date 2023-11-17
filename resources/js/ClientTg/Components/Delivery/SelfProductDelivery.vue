@@ -171,8 +171,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                        class="ios-input" id="toggle-need-pickup">
                 <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!deliveryForm.need_pickup">Нужна доставка</label>
                 <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="deliveryForm.need_pickup">Самовывоз</label>
-                <i class="fa fa-check font-11 color-white"></i>
-                <i class="fa fa-times font-11 color-white"></i>
+                <i class="fa-solid fa-person-walking-luggage font-11 color-white"></i>
+                <i class="fa-solid fa-truck font-11 color-white"></i>
             </div>
 
             <div
