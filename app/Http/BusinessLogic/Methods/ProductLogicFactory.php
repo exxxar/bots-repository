@@ -522,7 +522,9 @@ class ProductLogicFactory
             ->whereIn("id", $ids)
             ->get();
 
-        $message = "";
+        $needPickup = ($data["need_pickup"] ?? "false") == "true";
+        $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
+
         $summaryPrice = 0;
         $summaryCount = 0;
         foreach ($products as $product) {
@@ -543,9 +545,8 @@ class ProductLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
-        $needPickup = ($data["need_pickup"] ?? "false") == "true";
-        $message .= (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n")
-            . "Итого: $summaryPrice руб. за $summaryCount ед.";
+
+        $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
 
 
         $userInfo = !$needPickup ?
