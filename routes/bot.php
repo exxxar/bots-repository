@@ -70,7 +70,7 @@ BotManager::bot()
             return;
         }
 
-        $caption = strtolower($caption);
+        $caption = mb_strtolower($caption);
 
         if (!str_contains($caption, "оплата")) {
             BotManager::bot()->reply("Фотография в описании должна содержать ключевое слово, например: оплата");
