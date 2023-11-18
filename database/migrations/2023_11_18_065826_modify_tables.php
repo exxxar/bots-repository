@@ -12,13 +12,8 @@ return new class extends Migration {
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('bot_id');
-            $table->dropColumn('user_id');
-            $table->dropColumn('receiver_get_id');
-        });
-
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('bot_id')
                 ->comment('из какого бота заказ')
                 ->constrained('bots');
@@ -30,7 +25,27 @@ return new class extends Migration {
                 ->nullable()
                 ->comment("пользователь, который сделал заказ")
                 ->constrained('bot_users');
+
+            $table->json('delivery_service_info')->nullable()->comment('Информация о сервисе доставки');
+            $table->json('deliveryman_info')->nullable()->comment('Берется из внешнего доверенного сервиса');
+            $table->json('product_details')->nullable()->comment('Дамп заказанных продуктов');
+            $table->integer('product_count')->default(0);
+            $table->double('summary_price')->default('0');
+            $table->double('delivery_price')->default('0');
+            $table->double('delivery_range')->default('0');
+            $table->double('deliveryman_latitude')->default('0');
+            $table->double('deliveryman_longitude')->default('0');
+            $table->longText('delivery_note')->nullable();
+            $table->string('receiver_name', 255)->nullable();
+            $table->string('receiver_phone', 255)->nullable();
+
+            $table->integer('status')->default(0);
+            $table->integer('order_type')->default(0);
+            $table->timestamp('payed_at')->nullable();
+            $table->timestamps();
         });
+
+
 
         Schema::enableForeignKeyConstraints();
 
