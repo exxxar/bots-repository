@@ -1,7 +1,46 @@
 created:
-    - database/factories/BotNoteFactory.php
-    - database/migrations/2023_11_14_155655_create_bot_notes_table.php
-    - app/Models/BotNote.php
+    - app/Http/Controllers/DocumentsController.php
+    - app/Http/Controllers/FoodConstructorController.php
+    - app/Http/Controllers/IngredientCategoryController.php
+    - app/Http/Controllers/IngredientController.php
+    - database/factories/FoodConstructorFactory.php
+    - database/factories/IngredientCategoryFactory.php
+    - database/factories/IngredientFactory.php
+    - database/factories/DocumentsFactory.php
+    - database/migrations/2023_11_18_085724_create_food_constructors_table.php
+    - database/migrations/2023_11_18_085725_create_ingredient_categories_table.php
+    - database/migrations/2023_11_18_085726_create_ingredients_table.php
+    - database/migrations/2023_11_18_085727_create_documents_table.php
+    - app/Models/FoodConstructor.php
+    - app/Models/IngredientCategory.php
+    - app/Models/Ingredient.php
+    - app/Models/Documents.php
+    - database/seeders/DocumentsSeeder.php
+    - database/seeders/FoodConstructorSeeder.php
+    - database/seeders/IngredientCategorySeeder.php
+    - database/seeders/IngredientSeeder.php
+    - tests/Feature/Http/Controllers/DocumentsControllerTest.php
+    - tests/Feature/Http/Controllers/FoodConstructorControllerTest.php
+    - tests/Feature/Http/Controllers/IngredientCategoryControllerTest.php
+    - tests/Feature/Http/Controllers/IngredientControllerTest.php
+    - app/Http/Requests/DocumentStoreRequest.php
+    - app/Http/Requests/DocumentUpdateRequest.php
+    - app/Http/Requests/FoodConstructorStoreRequest.php
+    - app/Http/Requests/FoodConstructorUpdateRequest.php
+    - app/Http/Requests/IngredientCategoryStoreRequest.php
+    - app/Http/Requests/IngredientCategoryUpdateRequest.php
+    - app/Http/Requests/IngredientStoreRequest.php
+    - app/Http/Requests/IngredientUpdateRequest.php
+    - app/Http/Resources/DocumentCollection.php
+    - app/Http/Resources/DocumentResource.php
+    - app/Http/Resources/FoodConstructorCollection.php
+    - app/Http/Resources/FoodConstructorResource.php
+    - app/Http/Resources/IngredientCategoryCollection.php
+    - app/Http/Resources/IngredientCategoryResource.php
+    - app/Http/Resources/IngredientCollection.php
+    - app/Http/Resources/IngredientResource.php
+updated:
+    - routes/api.php
 models:
     ActionStatus: { user_id: 'biginteger unsigned', bot_id: 'biginteger unsigned', max_attempts: 'integer default:0', current_attempts: 'integer default:0', completed_at: 'datetime nullable', data: 'text nullable', slug_id: 'biginteger unsigned' }
     AmoCrm: { bot_id: 'biginteger unsigned', client_id: string, client_secret: string, auth_code: 'string:1000', redirect_uri: string, subdomain: string }
@@ -40,3 +79,7 @@ models:
     BotMedia: { bot_id: 'id foreign:bots', bot_user_id: 'id foreign:bot_users', rating: 'integer default:0', file_id: 'string:255 nullable', caption: 'longtext nullable', type: 'string:255', relationships: { belongsTo: 'Bot, BotUser' } }
     CashBackSub: { cash_back_id: 'id foreign:cash_backs', title: 'string:255 nullable', amount: 'double default:0', relationships: { belongsTo: CashBack } }
     BotNote: { bot_id: 'id foreign:bots', bot_user_id: 'id foreign:bot_users', text: 'longtext nullable', relationships: { belongsTo: 'Bot, BotUser' } }
+    FoodConstructor: { bot_id: 'id foreign:bots', slug: 'string:255 nullable', title: 'string:255 nullable', relationships: { belongsTo: Bot } }
+    IngredientCategory: { title: 'string:255 nullable', image: 'string:255 nullable', bot_id: 'id foreign:bots', food_constructor_id: 'id foreign:food_constructors', relationships: { hasMany: 'FoodConstructor, Bot' } }
+    Ingredient: { title: 'string:255 nullable', description: 'longtext nullable', image: 'string:255 nullable', weight: 'string:255 nullable', price: 'string:255 nullable', bot_id: 'id foreign:bots', food_constructor_id: 'id foreign:food_constructors', sub: "json nullable comment:'дополнительные вложенные параметры'", ingredient_category_id: 'id foreign:ingredient_categories', is_checked: 'boolean default:false', is_disabled: 'boolean default:false', is_global: 'boolean default:false', relationships: { belongsTo: IngredientCategory } }
+    Documents: { title: 'string:255 nullable', description: 'longtext nullable', file_id: "string:255 nullable comment:'идентификатор файла в TG'", type: "integer default:0 comment:'Тип документа'", params: "json nullable comment:'выписанные параметры из документа'", bot_id: 'id foreign:bots', bot_user_id: 'id foreign:bot_users', verified_at: 'nullable timestamp', relationships: { belongsTo: 'Bot, BotUser' } }

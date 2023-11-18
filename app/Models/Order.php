@@ -17,7 +17,8 @@ class Order extends Model
      */
     protected $fillable = [
         'bot_id',
-        'user_id',
+        'deliveryman_id',
+        'customer_id',
         'delivery_service_info',
         'deliveryman_info',
         'product_details',
@@ -30,7 +31,7 @@ class Order extends Model
         'delivery_note',
         'receiver_name',
         'receiver_phone',
-        'receiver_get_id',
+
         'status',
         'order_type',
         'payed_at',
@@ -44,7 +45,8 @@ class Order extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
-        'user_id' => 'integer',
+        'deliveryman_id' => 'integer',
+        'customer_id' => 'integer',
         'delivery_service_info' => 'array',
         'deliveryman_info' => 'array',
         'product_details' => 'array',
@@ -53,7 +55,6 @@ class Order extends Model
         'delivery_range' => 'double',
         'deliveryman_latitude' => 'double',
         'deliveryman_longitude' => 'double',
-        'receiver_get_id' => 'integer',
         'payed_at' => 'timestamp',
     ];
 

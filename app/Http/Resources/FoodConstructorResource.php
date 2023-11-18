@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BotNoteResource extends JsonResource
+class FoodConstructorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -13,10 +13,10 @@ class BotNoteResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id ?? null,
-            'bot_id' => $this->bot_id ?? null,
-            'bot_user_id' => $this->bot_user_id ?? null,
-            'text' => $this->text ?? null,
+            'id' => $this->id,
+            'bot_id' => $this->bot_id,
+            'slug' => $this->slug,
+            'title' => $this->title,
         ];
     }
 }

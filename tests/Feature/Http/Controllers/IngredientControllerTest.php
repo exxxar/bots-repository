@@ -2,7 +2,10 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Bot;
+use App\Models\FoodConstructor;
 use App\Models\Ingredient;
+use App\Models\IngredientCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use JMac\Testing\Traits\AdditionalAssertions;
@@ -46,12 +49,35 @@ class IngredientControllerTest extends TestCase
      */
     public function store_saves(): void
     {
-        $response = $this->post(route('ingredient.store'));
+        $bot = Bot::factory()->create();
+        $food_constructor = FoodConstructor::factory()->create();
+        $ingredient_category = IngredientCategory::factory()->create();
+        $is_checked = $this->faker->boolean;
+        $is_disabled = $this->faker->boolean;
+        $is_global = $this->faker->boolean;
+
+        $response = $this->post(route('ingredient.store'), [
+            'bot_id' => $bot->id,
+            'food_constructor_id' => $food_constructor->id,
+            'ingredient_category_id' => $ingredient_category->id,
+            'is_checked' => $is_checked,
+            'is_disabled' => $is_disabled,
+            'is_global' => $is_global,
+        ]);
+
+        $ingredients = Ingredient::query()
+            ->where('bot_id', $bot->id)
+            ->where('food_constructor_id', $food_constructor->id)
+            ->where('ingredient_category_id', $ingredient_category->id)
+            ->where('is_checked', $is_checked)
+            ->where('is_disabled', $is_disabled)
+            ->where('is_global', $is_global)
+            ->get();
+        $this->assertCount(1, $ingredients);
+        $ingredient = $ingredients->first();
 
         $response->assertCreated();
         $response->assertJsonStructure([]);
-
-        $this->assertDatabaseHas(ingredients, [ /* ... */ ]);
     }
 
 
@@ -87,13 +113,33 @@ class IngredientControllerTest extends TestCase
     public function update_behaves_as_expected(): void
     {
         $ingredient = Ingredient::factory()->create();
+        $bot = Bot::factory()->create();
+        $food_constructor = FoodConstructor::factory()->create();
+        $ingredient_category = IngredientCategory::factory()->create();
+        $is_checked = $this->faker->boolean;
+        $is_disabled = $this->faker->boolean;
+        $is_global = $this->faker->boolean;
 
-        $response = $this->put(route('ingredient.update', $ingredient));
+        $response = $this->put(route('ingredient.update', $ingredient), [
+            'bot_id' => $bot->id,
+            'food_constructor_id' => $food_constructor->id,
+            'ingredient_category_id' => $ingredient_category->id,
+            'is_checked' => $is_checked,
+            'is_disabled' => $is_disabled,
+            'is_global' => $is_global,
+        ]);
 
         $ingredient->refresh();
 
         $response->assertOk();
         $response->assertJsonStructure([]);
+
+        $this->assertEquals($bot->id, $ingredient->bot_id);
+        $this->assertEquals($food_constructor->id, $ingredient->food_constructor_id);
+        $this->assertEquals($ingredient_category->id, $ingredient->ingredient_category_id);
+        $this->assertEquals($is_checked, $ingredient->is_checked);
+        $this->assertEquals($is_disabled, $ingredient->is_disabled);
+        $this->assertEquals($is_global, $ingredient->is_global);
     }
 
 

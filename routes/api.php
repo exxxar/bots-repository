@@ -111,3 +111,12 @@ Route::apiResource('bot-media', App\Http\Controllers\BotMediaController::class);
 
 
 Route::apiResource('cash-back-sub', App\Http\Controllers\CashBackSubController::class);
+
+
+Route::apiResource('documents', App\Http\Controllers\DocumentsController::class);
+
+Route::apiResource('food-constructor', App\Http\Controllers\FoodConstructorController::class);
+
+Route::apiResource('ingredient-category', App\Http\Controllers\IngredientCategoryController::class);
+
+Route::apiResource('ingredient', App\Http\Controllers\IngredientController::class);

@@ -661,6 +661,9 @@ class BotLogicFactory
             ->orderBy("created_at","desc")
             ->get();
 
+        if (count($botNotes)==0)
+            return null;
+
         return new BotNoteResource($botNotes);
 
     }

@@ -26,8 +26,8 @@ class BotUser extends Model
         'is_admin',
         'is_work',
         'is_manager',
+        'is_deliveryman',
         'in_dialog_mode',
-        'temporary',
 
         'user_in_location',
         'location_comment',

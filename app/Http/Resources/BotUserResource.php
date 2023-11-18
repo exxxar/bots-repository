@@ -59,17 +59,16 @@ class BotUserResource extends JsonResource
             'is_admin' => $this->is_admin ?? false,
             'is_work' => $this->is_work ?? false,
             'is_manager' => $this->is_manager ?? false,
+            'is_deliveryman' => $this->is_manager ?? false,
             'in_dialog_mode' => $this->in_dialog_mode ?? false,
             'cashBack' => !is_null($this->cashBack) ? new CashBackResource($this->cashBack) : null,
 
-            'is_deliveryman' => $this->is_deliveryman ?? false,
             'current_latitude' => $this->current_latitude ?? 0,
             'current_longitude' => $this->current_longitude ?? 0,
 
             'user' => $this->whenLoaded("user") ?? null,
             'manager' => $this->whenLoaded("manager") ?? null,
             'user_in_location' => $this->user_in_location,
-            'temporary' => $this->temporary ?? null,
 
             'blocked_at' => $this->blocked_at ?? null,
             'blocked_message' => $this->blocked_message ?? null,

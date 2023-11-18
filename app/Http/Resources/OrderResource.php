@@ -15,7 +15,7 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'bot_id' => $this->bot_id,
-            'user_id' => $this->user_id,
+            'deliveryman_id' => $this->deliveryman_id,
             'delivery_service_info' => $this->delivery_service_info,
             'deliveryman_info' => $this->deliveryman_info,
             'product_details' => $this->product_details,
@@ -28,7 +28,7 @@ class OrderResource extends JsonResource
             'delivery_note' => $this->delivery_note,
             'receiver_name' => $this->receiver_name,
             'receiver_phone' => $this->receiver_phone,
-            'receiver_location_id' => $this->receiver_location_id,
+            'customer_id' => $this->customer_id,
             'status' => $this->status,
             'order_type' => $this->order_type,
             'payed_at' => $this->payed_at,

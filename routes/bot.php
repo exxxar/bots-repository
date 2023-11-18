@@ -50,6 +50,7 @@ BotManager::bot()
         $bot = BotManager::bot()->getSelf();
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
+        Log::info("fallback photo");
         if ($botUser->is_admin || $botUser->is_manager){
             $media = \App\Models\BotMedia::query()->updateOrCreate([
                 'bot_id' => $bot->id,
@@ -79,7 +80,7 @@ BotManager::bot()
 
 
 
-        $channel = $bot->main_channel ?? $bot->order_channel ?? null;
+        $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
         if (is_null($photoToSend) || is_null($channel)) {
             BotManager::bot()->reply("Ошибка отправки фотографии!");

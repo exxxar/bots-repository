@@ -11,6 +11,8 @@ use App\Http\BusinessLogic\Methods\BotPageLogicFactory;
 use App\Http\BusinessLogic\Methods\BotSlugLogicFactory;
 use App\Http\BusinessLogic\Methods\BotUserLogicFactory;
 use App\Http\BusinessLogic\Methods\CompanyLogicFactory;
+use App\Http\BusinessLogic\Methods\DeliveryLogicFactory;
+use App\Http\BusinessLogic\Methods\GeoLogicFactory;
 use App\Http\BusinessLogic\Methods\KeyboardLogicFactory;
 use App\Http\BusinessLogic\Methods\ManagerLogicFactory;
 use App\Http\BusinessLogic\Methods\ProductLogicFactory;
@@ -29,6 +31,8 @@ class BusinessLogic
     protected KeyboardLogicFactory $keyboard;
     protected ManagerLogicFactory $manager;
     protected BotMediaLogicFactory $media;
+    protected GeoLogicFactory $geo;
+    protected DeliveryLogicFactory $delivery;
 
     public function __construct()
     {
@@ -44,6 +48,8 @@ class BusinessLogic
         $this->keyboard = new KeyboardLogicFactory();
         $this->manager = new ManagerLogicFactory();
         $this->media = new BotMediaLogicFactory();
+        $this->geo = new GeoLogicFactory();
+        $this->delivery = new DeliveryLogicFactory();
     }
 
     public function bots(): BotLogicFactory
@@ -51,9 +57,19 @@ class BusinessLogic
         return $this->bot;
     }
 
+    public function delivery(): DeliveryLogicFactory
+    {
+        return $this->delivery;
+    }
+
     public function amo(): AmoLogicFactory
     {
         return $this->amo;
+    }
+
+    public function geo(): GeoLogicFactory
+    {
+        return $this->geo;
     }
 
     public function media(): BotMediaLogicFactory

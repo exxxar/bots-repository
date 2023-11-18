@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Bot;
+use App\Models\FoodConstructor;
 use App\Models\IngredientCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -46,12 +48,23 @@ class IngredientCategoryControllerTest extends TestCase
      */
     public function store_saves(): void
     {
-        $response = $this->post(route('ingredient-category.store'));
+        $bot = Bot::factory()->create();
+        $food_constructor = FoodConstructor::factory()->create();
+
+        $response = $this->post(route('ingredient-category.store'), [
+            'bot_id' => $bot->id,
+            'food_constructor_id' => $food_constructor->id,
+        ]);
+
+        $ingredientCategories = IngredientCategory::query()
+            ->where('bot_id', $bot->id)
+            ->where('food_constructor_id', $food_constructor->id)
+            ->get();
+        $this->assertCount(1, $ingredientCategories);
+        $ingredientCategory = $ingredientCategories->first();
 
         $response->assertCreated();
         $response->assertJsonStructure([]);
-
-        $this->assertDatabaseHas(ingredientCategories, [ /* ... */ ]);
     }
 
 
@@ -87,13 +100,21 @@ class IngredientCategoryControllerTest extends TestCase
     public function update_behaves_as_expected(): void
     {
         $ingredientCategory = IngredientCategory::factory()->create();
+        $bot = Bot::factory()->create();
+        $food_constructor = FoodConstructor::factory()->create();
 
-        $response = $this->put(route('ingredient-category.update', $ingredientCategory));
+        $response = $this->put(route('ingredient-category.update', $ingredientCategory), [
+            'bot_id' => $bot->id,
+            'food_constructor_id' => $food_constructor->id,
+        ]);
 
         $ingredientCategory->refresh();
 
         $response->assertOk();
         $response->assertJsonStructure([]);
+
+        $this->assertEquals($bot->id, $ingredientCategory->bot_id);
+        $this->assertEquals($food_constructor->id, $ingredientCategory->food_constructor_id);
     }
 
 
