@@ -548,7 +548,9 @@ class ProductLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
-        $geo = BusinessLogic::geo()->getCoords([
+        $geo = BusinessLogic::geo()
+            ->setBot($this->bot ?? null)
+            ->getCoords([
             "address"=>$data["address"]
         ]);
         //сделать чек на оплату (pdf)

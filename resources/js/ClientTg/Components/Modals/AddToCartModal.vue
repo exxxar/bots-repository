@@ -7,11 +7,13 @@
             <h4 class="text-center font-700 mt-3 pt-1 px-4">{{product.title || 'Нет заголовка'}}</h4>
 
             <div class="row text-center mr-2 ml-2 mb-3" v-if="checkInCart>0">
+
+
                 <div class="col-4 mb-n2">
-                    <button type="button"
-                            @click="incProductCart"
-                            class="btn p-3 w-100 bg-highlight rounded-s shadow-l"><i
-                        class="fa-solid fa-plus font-22"></i></button>
+                    <button
+                        @click="decProductCart"
+                        type="button" class="btn p-3 w-100 bg-red1-dark rounded-s shadow-l"><i
+                        class="fa-solid fa-minus font-22"></i></button>
                 </div>
 
                 <div class="col-4 mb-n2 d-flex justify-content-center align-items-center">
@@ -19,10 +21,10 @@
                 </div>
 
                 <div class="col-4 mb-n2">
-                    <button
-                        @click="decProductCart"
-                        type="button" class="btn p-3 w-100 bg-red1-dark rounded-s shadow-l"><i
-                        class="fa-solid fa-minus font-22"></i></button>
+                    <button type="button"
+                            @click="incProductCart"
+                            class="btn p-3 w-100 bg-highlight rounded-s shadow-l"><i
+                        class="fa-solid fa-plus font-22"></i></button>
                 </div>
 
             </div>
