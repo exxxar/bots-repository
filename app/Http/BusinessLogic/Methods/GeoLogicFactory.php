@@ -32,7 +32,7 @@ class GeoLogicFactory
     /**
      * @throws ValidationException
      */
-    public function getCoords(array $data): mixed
+    public function getCoords(array $data): object
     {
         if (is_null($this->bot))
             throw new HttpException(403, "Не выполнены условия функции");
@@ -53,12 +53,22 @@ class GeoLogicFactory
             $data = $res->json();
 
             if (empty($data))
-                return [0,0];
+                return (object)[
+                    "latitude" => 0,
+                    "longitude" => 0,
+                ];
 
-            return [$data[0]->lat, $data[0]->lon];
+            return (object)[
+                "latitude" => $data[0]->lat,
+                "longitude" => $data[0]->lon,
+            ];
+
 
         } catch (\Exception $exception) {
-            return [0,0];
+            return (object)[
+                "latitude" => 0,
+                "longitude" => 0,
+            ];
         }
 
     }

@@ -2,7 +2,10 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Enums\OrderStatusEnum;
+use App\Enums\OrderTypeEnum;
 use App\Facades\BotMethods;
+use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\ProductCategoryCollection;
 use App\Http\Resources\ProductCategoryResource;
@@ -10,6 +13,7 @@ use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\Basket;
 use App\Models\Bot;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductOption;
@@ -544,6 +548,40 @@ class ProductLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
+        $geo = BusinessLogic::geo()->getCoords([
+            "address"=>$data["address"]
+        ]);
+        //сделать чек на оплату (pdf)
+        Order::query()->create([
+            'bot_id'=>$this->bot->id,
+            'deliveryman_id'=>null,
+            'customer_id'=>$this->botUser->id,
+            'delivery_service_info'=>null,//информация о сервисе доставки
+            'deliveryman_info'=>null,//информация о доставщике
+            'product_details'=>[
+                (object)[
+                    "from"=>$this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
+                    "products"=>$message
+                ]
+            ],//информация о продуктах и заведении, из которого сделан заказ
+            'product_count'=>$summaryCount,
+            'summary_price'=>$summaryPrice,
+            'delivery_price'=>0,
+            'delivery_range'=>0,
+            'deliveryman_latitude'=>0,
+            'deliveryman_longitude'=>0,
+            'delivery_note'=> $data["info"] ?? 'Не указано',
+            'receiver_name'=> $data["name"] ?? 'Нет имени',
+            'receiver_phone'=> $data["phone"] ?? 'Нет телефона',
+
+            'address'=> $data["address"] ?? 'Нет адреса',
+            'receiver_latitude'=> $geo->latitude,
+            'receiver_longitude'=> $geo->longitude,
+
+            'status'=>OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
+            'order_type'=>OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора
+            'payed_at'=>null,
+        ]);
 
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
 

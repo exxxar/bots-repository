@@ -77,9 +77,6 @@ BotManager::bot()
             return;
         }
 
-
-
-
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
         if (is_null($photoToSend) || is_null($channel)) {

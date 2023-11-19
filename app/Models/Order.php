@@ -31,7 +31,9 @@ class Order extends Model
         'delivery_note',
         'receiver_name',
         'receiver_phone',
-
+        "address",
+        "receiver_latitude",
+        "receiver_longitude",
         'status',
         'order_type',
         'payed_at',
@@ -53,6 +55,11 @@ class Order extends Model
         'summary_price' => 'double',
         'delivery_price' => 'double',
         'delivery_range' => 'double',
+
+
+        "receiver_latitude"=> 'double',
+        "receiver_longitude"=> 'double',
+
         'deliveryman_latitude' => 'double',
         'deliveryman_longitude' => 'double',
         'payed_at' => 'timestamp',

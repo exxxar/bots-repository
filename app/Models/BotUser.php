@@ -31,7 +31,6 @@ class BotUser extends Model
 
         'user_in_location',
         'location_comment',
-        'is_deliveryman',
         'current_latitude',
         'current_longitude',
 
@@ -67,6 +66,7 @@ class BotUser extends Model
         'is_work' => 'boolean',
         'is_vip' => 'boolean',
         'is_manager' => 'boolean',
+        'is_deliveryman' => 'boolean',
         'in_dialog_mode' => 'boolean',
         'sex' => 'boolean',
         'user_in_location' => 'boolean',
