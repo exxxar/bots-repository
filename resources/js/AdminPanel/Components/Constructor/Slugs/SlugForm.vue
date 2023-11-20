@@ -1,5 +1,6 @@
 <script setup>
 import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
+import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 </script>
 <template>
     <form v-on:submit.prevent="submit">
@@ -187,12 +188,19 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                         </div>
 
                         <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='image'">
-                            <input class="form-control" :id="'field-input-'+index"
-                                   type="url"
-                                   pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+
+                            <input class="form-control mb-2" :id="'field-input-'+index"
+                                   type="text"
+                                   disabled="true"
                                    v-model="filteredConfigs[index].value"
                                    placeholder="name@example.com" >
-                            <label :for="'field-input-'+index">URL ссылка на изображение</label>
+                            <label :for="'field-input-'+index">FileId ссылка на изображение</label>
+
+                            <BotMediaList
+                                :need-video="false"
+                                :need-photo="true"
+                                :selected="[filteredConfigs[index].value]"
+                                v-on:select="selectPhoto($event, index)"></BotMediaList>
                         </div>
 
 
@@ -418,6 +426,9 @@ export default {
             }
 
         },
+        selectPhoto(event, index){
+            this.filteredConfigs[index].value = event.file_id
+        }
     }
 }
 </script>

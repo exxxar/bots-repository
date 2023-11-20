@@ -1,3 +1,6 @@
+<script setup>
+import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
+</script>
 <template>
     <form id="slugForm" v-on:submit.prevent="submit">
         <div class="form-floating mb-2">
@@ -131,14 +134,18 @@
                 </div>
 
                 <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='image'">
-                    <label :for="'field-input-'+index">URL ссылка на изображение для
-                        <strong>{{ filteredConfigs[index].key }}</strong></label>
-                    <input class="form-control" :id="'field-input-'+index"
-                           type="url"
-                           pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+                    <label :for="'field-input-'+index">FileId ссылка на изображение</label>
+                    <input class="form-control mb-2" :id="'field-input-'+index"
+                           type="text"
+                           disabled="true"
                            v-model="filteredConfigs[index].value"
-                           placeholder="name@example.com">
+                           placeholder="name@example.com" >
 
+                    <BotMediaList
+                        :need-video="false"
+                        :need-photo="true"
+                        :selected="[filteredConfigs[index].value]"
+                        v-on:select="selectPhoto($event, index)"></BotMediaList>
                 </div>
 
                 <div class="divider divider-small my-3 bg-highlight "></div>
@@ -352,6 +359,9 @@ export default {
             }
 
         },
+        selectPhoto(event, index){
+            this.filteredConfigs[index].value = event.file_id
+        }
     }
 }
 </script>

@@ -24,7 +24,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     v-bind:class="{'border-info':selected.indexOf(item.file_id) !=-1 }"
                     class="list-group-item d-flex justify-content-between align-items-start"
                     v-for="(item, index) in media">
-                    <div class="ms-2 me-auto">
+                    <div class="ms-2 me-auto w-100">
                         <div class="fw-bold">{{ item.caption ?? 'Без подписи' }} <span
                             class="badge bg-info rounded-pill">{{ item.type }}</span></div>
                         <small class="w-100">{{ item.file_id }}</small>
@@ -34,7 +34,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             <a href="javascript:void(0)" class="btn btn-link p-0 my-2 text-danger" @click="remove(item.id)">Удалить</a>
                         </div>
                     </div>
-                    <span class="badge bg-primary rounded-pill">#{{ item.id }}</span>
+                    <span
+                        style="position: absolute;right: 10px;"
+                        class="badge bg-primary rounded-pill">#{{ item.id }}</span>
                 </li>
             </ul>
 

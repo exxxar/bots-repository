@@ -43,6 +43,12 @@ class SimpleDeliveryController extends SlugController
                 "value" => "Наш магазин!",
 
             ],
+            [
+                "type" => "image",
+                "key" => "main_image",
+                "value" => null,
+
+            ],
 
             [
                 "type" => "text",
@@ -90,16 +96,25 @@ class SimpleDeliveryController extends SlugController
             ->where("key", "slug_id")
             ->first())["value"];
 
-        \App\Facades\BotManager::bot()
-            ->replyInlineKeyboard("$mainText",
-                [
-                    [
-                        ["text" => "$btnText", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/delivery-main"
-                        ]],
-                    ],
+        $mainImage = (Collection::make($config[1])
+            ->where("key", "main_image")
+            ->first())["value"] ?? null;
+        //
+        $keyboard = [
+            [
+                ["text" => "$btnText", "web_app" => [
+                    "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/delivery-main"
+                ]],
+            ],
 
-                ]);
+        ];
+
+        if (is_null($mainImage))
+            \App\Facades\BotManager::bot()
+                ->replyInlineKeyboard("$mainText", $keyboard);
+        else
+            \App\Facades\BotManager::bot()
+                ->replyPhoto("$mainText", $mainImage, $keyboard);
 
     }
 }
