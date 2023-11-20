@@ -178,13 +178,24 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <div
                 v-if="!deliveryForm.need_pickup"
                 class="input-style input-style-2 has-icon">
-                <i class="input-icon fa-solid fa-phone"></i>
+                <i class="input-icon fa-solid fa-map-location-dot"></i>
 
                 <input class="form-control"
                        type="text"
                        v-model="deliveryForm.address"
                        placeholder="г.Краснодар, ул. Ленинина, 106"
                        required>
+            </div>
+
+            <div
+                v-if="!deliveryForm.need_pickup"
+                class="input-style input-style-2 has-icon">
+                <i class="input-icon fa-solid fa-door-open"></i>
+
+                <input class="form-control"
+                       type="text"
+                       v-model="deliveryForm.entrance_number"
+                       placeholder="Номер подъезда">
             </div>
 
             <div
@@ -231,6 +242,7 @@ export default {
                 name: null,
                 phone: null,
                 address: null,
+                entrance_number: null,
                 info: null,
                 need_pickup:false
             },

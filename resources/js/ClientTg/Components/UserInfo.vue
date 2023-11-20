@@ -90,6 +90,11 @@
 
         </tr>
         <tr>
+            <th scope="row">Доставщик</th>
+            <td class="font-weight-bold">{{ botUser.is_deliveryman ? 'Да' : 'Нет' }}</td>
+
+        </tr>
+        <tr>
             <th scope="row">На работе</th>
             <td class="font-weight-bold">{{ botUser.is_work ? 'Да' : 'Нет' }}</td>
 
@@ -204,6 +209,28 @@
                     type="button"
                     @click="botUserForm.is_vip = false"
                     v-bind:class="{'bg-blue1-dark text-white':!botUserForm.is_vip,'bg-theme border-green1-dark color-green1-dark':botUserForm.is_vip}"
+                    class="w-100 btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900">
+                    <i class="fa-solid fa-xmark mr-1"></i> Нет
+                </button>
+            </div>
+        </div>
+
+        <div class="row mb-0">
+            <p class="col-12 mb-0">Доставщик</p>
+            <div class="col-6">
+                <button
+                    type="button"
+                    @click="botUserForm.is_deliveryman = true"
+                    v-bind:class="{'bg-blue1-dark text-white':botUserForm.is_deliveryman,'bg-theme border-green1-dark color-green1-dark':!botUserForm.is_deliveryman}"
+                    class="w-100 btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900">
+                    <i class="fa-solid fa-check mr-1"></i> Да
+                </button>
+            </div>
+            <div class="col-6">
+                <button
+                    type="button"
+                    @click="botUserForm.is_deliveryman = false"
+                    v-bind:class="{'bg-blue1-dark text-white':!botUserForm.is_deliveryman,'bg-theme border-green1-dark color-green1-dark':botUserForm.is_deliveryman}"
                     class="w-100 btn btn-border btn-m btn-full mb-3 rounded-sm text-uppercase font-900">
                     <i class="fa-solid fa-xmark mr-1"></i> Нет
                 </button>
@@ -358,6 +385,7 @@ export default {
                 is_admin: false,
                 is_work: false,
                 is_manager: false,
+                is_deliveryman: false,
                 user_in_location: false,
                 name: null,
                 phone: null,
@@ -382,6 +410,7 @@ export default {
             this.botUserForm.is_admin = this.botUser.is_admin
             this.botUserForm.is_work = this.botUser.is_work
             this.botUserForm.is_manager = this.botUser.is_manager
+            this.botUserForm.is_deliveryman = this.botUser.is_deliveryman
             this.botUserForm.user_in_location = this.botUser.user_in_location
             this.botUserForm.name = this.botUser.name || this.botUser.username || this.botUser.id
             this.botUserForm.phone = this.botUser.phone
@@ -416,6 +445,7 @@ export default {
                     is_admin: false,
                     is_work: false,
                     is_manager: false,
+                    is_deliveryman: false,
                     user_in_location: false,
                     name: null,
                     phone: null,

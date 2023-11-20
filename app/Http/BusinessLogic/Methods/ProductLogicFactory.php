@@ -548,6 +548,7 @@ class ProductLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
+        $deliveryNote = ($data["info"] ?? 'Не указано')."\n"."Номер подъезда: ".($data["entrance_number"]??'Не указан');
         $geo = BusinessLogic::geo()
             ->setBot($this->bot ?? null)
             ->getCoords([
@@ -572,7 +573,7 @@ class ProductLogicFactory
             'delivery_range'=>0,
             'deliveryman_latitude'=>0,
             'deliveryman_longitude'=>0,
-            'delivery_note'=> $data["info"] ?? 'Не указано',
+            'delivery_note'=> $deliveryNote,
             'receiver_name'=> $data["name"] ?? 'Нет имени',
             'receiver_phone'=> $data["phone"] ?? 'Нет телефона',
 
@@ -589,10 +590,11 @@ class ProductLogicFactory
 
 
         $userInfo = !$needPickup ?
-            sprintf("Данные для доставки:\nФ.И.О.:%s\nНомер телефона:%s\nАдрес:%s\nДоп.инфо:%s\n",
+            sprintf("Данные для доставки:\nФ.И.О.:%s\nНомер телефона:%s\nАдрес:%s\nКод подъезда:%s\nДоп.инфо:%s\n",
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
+                $data["entrance_number"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
             ) : sprintf("Данные для самовывоза:\nФ.И.О.:%s\nНомер телефона:%s",
                 $data["name"] ?? 'Не указано',

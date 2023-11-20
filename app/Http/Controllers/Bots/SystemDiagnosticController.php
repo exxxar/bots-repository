@@ -13,8 +13,10 @@ use App\Models\BotMenuSlug;
 use App\Models\BotNote;
 use App\Models\BotPage;
 use App\Models\BotUser;
+use App\Models\Documents;
 use App\Models\ReferralHistory;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -526,7 +528,7 @@ class SystemDiagnosticController extends Controller
     private function mediaPrint($tmp, $media)
     {
 
-        if (empty($media)) {
+        if (count($media) == 0) {
 
             $tmp .= "Медиа-файлы не найдены!";
             BotManager::bot()
@@ -654,7 +656,7 @@ class SystemDiagnosticController extends Controller
             ->where("bot_id", $bot->id)
             ->where("type", "video")
             ->orWhere("type", "video_note")
-            ->get();
+            ->get() ?? [];
 
         $tmp = "Список доступных видео в медиа контенте:\n";
         $this->mediaPrint($tmp, $media);
@@ -667,6 +669,173 @@ class SystemDiagnosticController extends Controller
         $tmp .= "Список доступных фото в медиа контенте:\n";
         $this->mediaPrint($tmp, $media);
 
+
+    }
+
+    public function showDocument(...$data)
+    {
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $id = $data[3] ?? 0;
+
+        $document = Documents::query()
+            ->where("bot_id", $bot->id)
+            ->where("id", $id)
+            ->first();
+
+        if (is_null($document)) {
+            BotManager::bot()
+                ->reply("Файл не найден!");
+            return;
+        }
+
+        $keyboard = [
+            [
+                ["text" => "Подтвердить", "callback_data" => "/accept_verified_document $document->id"],
+                ["text" => "Отклонить", "callback_data" => "/decline_verified_document $document->id"]
+            ]
+        ];
+
+        BotManager::bot()
+            ->replyDocumentWithKeyboard($document->title ?? 'Не указан', $document->file_id, $keyboard);
+    }
+
+    public function acceptVerifiedDocument(...$data)
+    {
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $id = $data[3] ?? 0;
+
+        $document = Documents::query()
+            ->with(["botUser"])
+            ->where("bot_id", $bot->id)
+            ->where("id", $id)
+            ->first();
+
+        if (is_null($document)) {
+            BotManager::bot()
+                ->reply("Файл не найден!");
+            return;
+        }
+
+        $document->verified_at = Carbon::now();
+        $document->save();
+
+        $this->changeDeliverymanStatus($bot, $document->botUser);
+
+        $thread = $bot->topics["questions"] ?? null;
+        $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage(
+                $document->botUser->telegram_chat_id,
+                "Документ ".($document->title ?? 'Без названия')." одобрен администратором"
+            )
+            ->sendMessage($channel, "Проверен и одобрен документ #$document->id ".($document->title ?? 'Без названия'), $thread);
+
+    }
+
+    public function declineVerifiedDocument(...$data)
+    {
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $id = $data[3] ?? 0;
+
+        $document = Documents::query()
+            ->with(["botUser"])
+            ->where("bot_id", $bot->id)
+            ->where("id", $id)
+            ->first();
+
+        if (is_null($document)) {
+            BotManager::bot()
+                ->reply("Файл не найден!");
+            return;
+        }
+
+        $document->verified_at = null;
+        $document->save();
+
+        $thread = $bot->topics["questions"] ?? null;
+        $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage(
+                $document->botUser->telegram_chat_id,
+                "Документ ".($document->title ?? 'Без названия')." отклонен администратором"
+            )
+            ->sendMessage($channel, "Проверен и отклонен документ #$document->id ".($document->title ?? 'Без названия'), $thread);
+
+    }
+
+    protected function changeDeliverymanStatus($bot, $botUser)
+    {
+        if (is_null($botUser) || is_null($bot))
+            return;
+
+        $documents = Documents::query()
+            ->where("bot_user_id", "$botUser->id")
+            ->get();
+
+        $success = false;
+        foreach ($documents as $document) {
+            $success &= !is_null($document->verified_at);
+        }
+
+        $thread = $bot->topics["questions"] ?? null;
+        $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+
+        if ($botUser->is_deliveryman && !$success){
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $botUser->telegram_chat_id,
+                    "Внимание!Вас разжаловали из доставщиков по причине некорректности документов"
+                );
+        }
+
+        $botUser->is_deliveryman = $success;
+        $botUser->save();
+
+        $userName = BotMethods::prepareUserName($botUser);
+
+        if ($success)
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $botUser->telegram_chat_id,
+                    "Внимание!Вас назначили доставщиком"
+                )
+                ->sendMessage($channel, "Были проверены и одобрены все документы кандидата $userName в доставщики.", $thread);
 
     }
 

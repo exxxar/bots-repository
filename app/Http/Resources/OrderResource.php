@@ -28,7 +28,8 @@ class OrderResource extends JsonResource
             'delivery_note' => $this->delivery_note,
             'receiver_name' => $this->receiver_name,
             'receiver_phone' => $this->receiver_phone,
-
+            "service_rating"=> $this->service_rating,
+            "service_review"=> $this->service_review,
             "address"=> $this->address,
             "receiver_latitude"=> $this->receiver_latitude,
             "receiver_longitude"=> $this->receiver_longitude,

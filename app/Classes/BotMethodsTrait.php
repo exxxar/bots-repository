@@ -134,6 +134,15 @@ trait BotMethodsTrait
     }
 
 
+    public function replyDocumentWithKeyboard($caption,  $fileId, $keyboard = [], $messageThreadId = null)
+    {
+        return $this->sendDocumentWithKeyboard($this->chatId, $caption,
+            $fileId,
+            $keyboard,
+            $messageThreadId
+        );
+    }
+
     public function replyDocument($caption, $path, $filename = 'locations.pdf', $messageThreadId = null)
     {
         return $this->sendDocument($this->chatId, $caption,

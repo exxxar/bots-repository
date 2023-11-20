@@ -72,4 +72,57 @@ class GeoLogicFactory
         }
 
     }
+
+    /**
+     * @throws ValidationException
+     */
+    public function getDistance(array $data): object
+    {
+        if (is_null($this->bot))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "coords.*.lat" => "required",
+            "coords.*.lon" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $coords = $data["coords"] ?? [];
+
+        $tmpCoords = "";
+        $index = 0;
+        foreach ($coords as $point) {
+            $point = (object)$point;
+            $tmpCoords .= "$point->lon,$point->lat" . ($index == count($coords - 1) ? ";" : "");
+        }
+
+        try {
+            $res = Http::get("https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
+
+            $data = $res->json();
+
+            if ($data->code != "Ok")
+                return (object)[
+                    "duration"=>0,
+                    "distance"=>0,
+                ];
+
+
+            return (object)[
+                "duration"=>$data->routes[0]->duration ?? 0,
+                "distance"=>$data->routes[0]->distance ?? 0,
+            ];
+
+
+        } catch (\Exception $exception) {
+            return (object)[
+                "duration"=>0,
+                "distance"=>0,
+            ];
+        }
+
+    }
 }

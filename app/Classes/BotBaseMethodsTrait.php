@@ -249,6 +249,36 @@ trait BotBaseMethodsTrait
 
     }
 
+    public function sendDocumentWithKeyboard($chatId, $caption, $fileId, $keyboard = [],  $messageThreadId = null)
+    {
+        $tmp = [
+            "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
+            "document" => $fileId,
+            "caption" => $caption,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->sendDocument($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+
+    }
+
     public function sendDocument($chatId, $caption, $path, $messageThreadId = null)
     {
         $tmp = [

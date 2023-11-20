@@ -19,6 +19,7 @@ return new class extends Migration {
                 ->constrained('bots');
 
             $table->foreignId('deliveryman_id')
+                ->nullable()
                 ->constrained('bot_users');
 
             $table->foreignId('customer_id')

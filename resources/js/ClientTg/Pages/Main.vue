@@ -45,7 +45,7 @@ import Layout from "ClientTg@/Layouts/ShopLayout.vue";
                         {{ $route.meta.title || 'Меню' }}</a></h2>
                     <a
 
-                        href="#/home"
+                        href="javascript:void(0)"
                         class="bg-fade-gray1-dark shadow-xl d-flex justify-content-center align-items-center font-18 bot-avatar">
                         <img v-lazy="logo" style="width:50px;object-fit: cover; border-radius: 50%;" alt=""></a>
                 </div>

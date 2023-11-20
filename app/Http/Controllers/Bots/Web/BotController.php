@@ -96,9 +96,6 @@ class BotController extends Controller
     public function sendCallback(Request $request): Response
     {
         $request->validate([
-            "bot_domain" => "required",
-            "slug_id" => "required",
-            "telegram_chat_id" => "required",
             "name" => "required",
             "phone" => "required",
             "message" => "required",

@@ -337,7 +337,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                             :disabled="loading"
                             type="submit"
                             class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
-                            Подтвредить
+                            Подтвердить
                         </button>
                     </div>
                 </form>

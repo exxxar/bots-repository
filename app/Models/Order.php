@@ -28,6 +28,8 @@ class Order extends Model
         'delivery_range',
         'deliveryman_latitude',
         'deliveryman_longitude',
+        "service_rating",
+        "service_review",
         'delivery_note',
         'receiver_name',
         'receiver_phone',
