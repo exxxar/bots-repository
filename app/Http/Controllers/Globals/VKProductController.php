@@ -304,13 +304,16 @@ class VKProductController extends Controller
                                     'bot_id' => $bot->id,
                                 ]);
 
+                        Log::info("album".print_r($productCategoryAlbum->toArray(), true));
+
                         $product->productCategories()->sync([$productCategorySection->id, $productCategory->id,$productCategoryAlbum->id]);
                     }
                 }
 
             }
 
-        } catch (VKException $e) {
+        } catch (\Exception $e) {
+            Log::info($e->getMessage()." ".$e->getLine());
             Inertia::setRootView("shop");
 
             return Inertia::render('Result', [
