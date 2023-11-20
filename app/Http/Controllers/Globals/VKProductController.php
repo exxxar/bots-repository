@@ -118,6 +118,7 @@ class VKProductController extends Controller
             $vkAlbums = ((object)$response)->items;
             foreach ($vkAlbums as $album) {
 
+                $album = (object)$album;
                 $productCategoryAlbum = ProductCategory::query()
                     ->where("title", $album->title)
                     ->where("bot_id", $bot->id)
