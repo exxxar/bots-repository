@@ -118,18 +118,7 @@ class VKProductController extends Controller
             $vkAlbums = ((object)$response)->items;
             foreach ($vkAlbums as $album) {
 
-                $album = (object)$album;
-                $productCategoryAlbum = ProductCategory::query()
-                    ->where("title", $album->title)
-                    ->where("bot_id", $bot->id)
-                    ->first();
 
-                if (is_null($productCategoryAlbum))
-                    ProductCategory::query()
-                        ->create([
-                            'title' => $album->title,
-                            'bot_id' => $bot->id,
-                        ]);
 
                 $response = $vk->market()->get($access_token, [
                     'owner_id' => "-$data->object_id",
@@ -302,7 +291,20 @@ class VKProductController extends Controller
                                     'bot_id' => $bot->id,
                                 ]);
 
-                        $product->productCategories()->sync([$productCategorySection->id, $productCategory->id]);
+                        $album = (object)$album;
+                        $productCategoryAlbum = ProductCategory::query()
+                            ->where("title", $album->title)
+                            ->where("bot_id", $bot->id)
+                            ->first();
+
+                        if (is_null($productCategoryAlbum))
+                            $productCategoryAlbum = ProductCategory::query()
+                                ->create([
+                                    'title' => $album->title,
+                                    'bot_id' => $bot->id,
+                                ]);
+
+                        $product->productCategories()->sync([$productCategorySection->id, $productCategory->id,$productCategoryAlbum->id]);
                     }
                 }
 
