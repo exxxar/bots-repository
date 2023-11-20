@@ -119,6 +119,7 @@ class VKProductController extends Controller
             foreach ($vkAlbums as $album) {
 
 
+                $album = (object)$album;
 
                 $response = $vk->market()->get($access_token, [
                     'owner_id' => "-$data->object_id",
@@ -291,7 +292,6 @@ class VKProductController extends Controller
                                     'bot_id' => $bot->id,
                                 ]);
 
-                        $album = (object)$album;
                         $productCategoryAlbum = ProductCategory::query()
                             ->where("title", $album->title)
                             ->where("bot_id", $bot->id)
