@@ -78,7 +78,7 @@ class CashBackListener
         }
 
 
-        $cashBack = $this->prepareUserCashBack($event->userId, $event->botId, $botUserUser->id);
+        $cashBack = $this->prepareUserCashBack($event->botId, $botUserUser->id);
 
         if ($event->directionEnum == CashBackDirectionEnum::Crediting) {
 
@@ -137,11 +137,11 @@ class CashBackListener
                     ->whereId($event->botId)
                     ->sendMessage(
                         $botUserAdmin->telegram_chat_id,
-                        "На счету клиента недостаточно CashBack для списания.На балансе <b>$cashBack->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>"
+                        "На счету клиента недостаточно CashBack для списания. На балансе <b>$cashBack->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>"
                     )
                     ->sendMessage(
                         $botUserUser->telegram_chat_id,
-                        "На вашем счету недостаточно CashBack для списания.У вас <b>$cashBack->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>",
+                        "На вашем счету недостаточно CashBack для списания. У вас <b>$cashBack->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>",
                     );
 
                 return;
@@ -201,18 +201,18 @@ class CashBackListener
 
     private function prepareLevel($userBotUser, $adminBotUser, $botId, $moneyAmount, $levelPercent, $levelIndex)
     {
-        $user = $userBotUser->user;
-        $admin = $adminBotUser->user;
 
-        if (is_null($user))
+
+        if (is_null($userBotUser))
             return null;
 
-        $cashBack = $this->prepareUserCashBack($user->id, $botId, $userBotUser->id);
+        Log::info("cashback level=$levelIndex amount=$moneyAmount %=$levelPercent");
+        $cashBack = $this->prepareUserCashBack( $botId, $userBotUser->id);
         $tmpAmount = $moneyAmount * ($levelPercent / 100);
         $cashBack->amount += $tmpAmount;
         $cashBack->save();
 
-        $name = BotMethods::prepareUserName($user);
+        $name = BotMethods::prepareUserName($userBotUser);
 
         BotMethods::bot()
             ->whereId($botId)
@@ -234,9 +234,9 @@ class CashBackListener
             'level' => $levelIndex,
             'description' => "Реферальное начисление CashBack $levelIndex уровня",
             'operation_type' => 1,
-            'user_id' => $user->id,
+            'user_id' => $userBotUser->user_id,
             'bot_id' => $botId,
-            'employee_id' => $admin->id,
+            'employee_id' => $adminBotUser->id,
         ]);
 
 
@@ -279,16 +279,14 @@ class CashBackListener
 
     }
 
-    private function prepareUserCashBack($userId, $botId, $botUserId)
+    private function prepareUserCashBack( $botId, $botUserId)
     {
         $cashBack = CashBack::query()->where("bot_id", $botId)
-            ->where("user_id", $userId)
-
+            ->where("bot_user_id", $botUserId)
             ->first();
 
         if (is_null($cashBack))
             $cashBack = CashBack::query()->create([
-                'user_id' => $userId,
                 'bot_id' => $botId,
                 'bot_user_id' => $botUserId,
                 'amount' => 0,
