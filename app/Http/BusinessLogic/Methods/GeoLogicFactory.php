@@ -63,8 +63,8 @@ class GeoLogicFactory
 
 
             return (object)[
-                "latitude" => $data[0]->lat,
-                "longitude" => $data[0]->lon,
+                "latitude" => $data[0]["lat"],
+                "longitude" => $data[0]["lon"],
             ];
 
 
