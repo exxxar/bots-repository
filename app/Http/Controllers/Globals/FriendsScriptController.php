@@ -101,14 +101,14 @@ class FriendsScriptController extends SlugController
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
 
-        if (is_null($imgPath))
+  /*      if (is_null($imgPath))
             \App\Facades\BotManager::bot()
                 ->reply(sprintf($referralText, $qr));
         else
             \App\Facades\BotManager::bot()
                 ->replyPhoto(sprintf($referralText, $qr),
                     $imgPath
-                );
+                );*/
 
 
     }
