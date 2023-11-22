@@ -102,7 +102,7 @@ class FriendsScriptController extends SlugController
 
         try {
             $message = sprintf($referralText, $qr, $qr);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $message = "Упс, у вас что-то с параметрами сообщения";
         }
 
@@ -112,7 +112,7 @@ class FriendsScriptController extends SlugController
         else
             \App\Facades\BotManager::bot()
                 ->replyPhoto($message,
-                    $imgPath
+                    str_contains($imgPath, "http") ? InputFile::create($imgPath) : $imgPath
                 );
 
 
