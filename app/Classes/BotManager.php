@@ -403,6 +403,9 @@ class BotManager extends BotCore
 
             try {
                 $this->replyMediaGroup($media);
+
+                if (!is_null($content))
+                    $this->reply($content);
             } catch (\Exception $e) {
                 $this->replyPhoto("Ошибочка с изображениями",
                     InputFile::create(public_path() . "/images/cashman2.jpg")
@@ -469,7 +472,7 @@ class BotManager extends BotCore
                     $media[] = [
                         "media" => $video,
                         "type" => "video",
-                        "caption"=>"$video"
+                        "caption" => "$video"
                     ];
                 }
 
