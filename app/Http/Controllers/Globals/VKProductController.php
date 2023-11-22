@@ -202,6 +202,9 @@ class VKProductController extends Controller
 
                         foreach ($vkDimensions as $key => $value) {
 
+                            if ($value==0)
+                                continue;
+
                             $option = ProductOption::query()
                                 ->where("key", $key)
                                 ->where("product_id", $product->id)

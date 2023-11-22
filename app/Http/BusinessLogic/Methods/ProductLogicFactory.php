@@ -530,6 +530,8 @@ class ProductLogicFactory
 
         $summaryPrice = 0;
         $summaryCount = 0;
+
+        $tmpOrderProductInfo = [];
         foreach ($products as $product) {
 
             $tmpCount = array_values(array_filter($tmpProducts, function ($item) use ($product) {
@@ -544,6 +546,12 @@ class ProductLogicFactory
                 $tmpPrice
             );
 
+            $tmpOrderProductInfo[]=(object)[
+                "title"=> $product->title,
+                "count"=>$tmpCount,
+                "price"=>$tmpPrice
+            ];
+
             $summaryCount += $tmpCount;
             $summaryPrice += $tmpPrice;
         }
@@ -554,6 +562,7 @@ class ProductLogicFactory
             ->getCoords([
             "address"=>$data["address"]
         ]);
+
         //сделать чек на оплату (pdf)
         Order::query()->create([
             'bot_id'=>$this->bot->id,
@@ -564,7 +573,7 @@ class ProductLogicFactory
             'product_details'=>[
                 (object)[
                     "from"=>$this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
-                    "products"=>$message
+                    "products"=>json_encode($tmpOrderProductInfo)
                 ]
             ],//информация о продуктах и заведении, из которого сделан заказ
             'product_count'=>$summaryCount,

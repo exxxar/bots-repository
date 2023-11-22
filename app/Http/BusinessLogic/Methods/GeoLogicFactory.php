@@ -6,6 +6,7 @@ use App\Http\Resources\AmoCrmResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -52,11 +53,14 @@ class GeoLogicFactory
 
             $data = $res->json();
 
+            Log::info("coords=>".print_r($data, true));
+
             if (empty($data))
                 return (object)[
                     "latitude" => 0,
                     "longitude" => 0,
                 ];
+
 
             return (object)[
                 "latitude" => $data[0]->lat,
@@ -65,6 +69,9 @@ class GeoLogicFactory
 
 
         } catch (\Exception $exception) {
+
+            Log::info("coords=>".$exception);
+
             return (object)[
                 "latitude" => 0,
                 "longitude" => 0,
