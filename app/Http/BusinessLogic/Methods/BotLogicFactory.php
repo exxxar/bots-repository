@@ -1015,26 +1015,27 @@ class BotLogicFactory
         $bot = Bot::query()->create((array)$tmp);
 
         if (!is_null($pages))
-            foreach ($pages->data as $page) {
-                $page = (object)$page;
+            if (isset($pages->data))
+                foreach ($pages->data as $page) {
+                    $page = (object)$page;
 
-                $tmpSlug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
+                    $tmpSlug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
 
-                if (!is_null($tmpSlug)) {
-                    $tmpSlug = $tmpSlug->replicate();
-                    $tmpSlug->bot_id = $bot->id;
-                    $tmpSlug->save();
+                    if (!is_null($tmpSlug)) {
+                        $tmpSlug = $tmpSlug->replicate();
+                        $tmpSlug->bot_id = $bot->id;
+                        $tmpSlug->save();
 
-                    BotPage::query()->create([
-                        'bot_menu_slug_id' => $tmpSlug->id,
-                        'content' => $page->content,
-                        'images' => $page->images,
-                        'reply_keyboard_id' => $page->reply_keyboard_id,
-                        'inline_keyboard_id' => $page->inline_keyboard_id,
-                        'bot_id' => $bot->id,
-                    ]);
+                        BotPage::query()->create([
+                            'bot_menu_slug_id' => $tmpSlug->id,
+                            'content' => $page->content,
+                            'images' => $page->images,
+                            'reply_keyboard_id' => $page->reply_keyboard_id,
+                            'inline_keyboard_id' => $page->inline_keyboard_id,
+                            'bot_id' => $bot->id,
+                        ]);
+                    }
                 }
-            }
 
 
         if (!is_null($slugs))
