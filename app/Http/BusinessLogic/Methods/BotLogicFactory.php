@@ -162,7 +162,7 @@ class BotLogicFactory
      */
     public function duplicate(array $customParams = null): BotResource
     {
-        if (is_null($customParams["company_id"]??null))
+        if (is_null($customParams["company_id"] ?? null))
             throw new HttpException(403, "Идентификатор компании не должен быть пустым!");
 
         if (is_null($this->bot))
@@ -386,22 +386,21 @@ class BotLogicFactory
                 'description' => $this->bot->long_description,
             ]);
 
-
         Http::post("$website/setMyCommands", [
-            'commands' => [
-                [
-                    "command" => "/start", "description" => "начни с этой команды"
+            'commands' => $this->bot->commands ?? [
+                    [
+                        "command" => "/start", "description" => "начни с этой команды"
+                    ],
+                    [
+                        "command" => "/admins", "description" => "доступные администраторы в системе"
+                    ],
+                    [
+                        "command" => "/help", "description" => "как использовать систему"
+                    ],
+                    [
+                        "command" => "/about", "description" => "о CashMan"
+                    ]
                 ],
-                [
-                    "command" => "/admins", "description" => "доступные администраторы в системе"
-                ],
-                [
-                    "command" => "/help", "description" => "как использовать систему"
-                ],
-                [
-                    "command" => "/about", "description" => "о CashMan"
-                ]
-            ],
         ]);
     }
 
@@ -658,10 +657,10 @@ class BotLogicFactory
         $botNotes = BotNote::query()
             ->where("bot_id", $this->bot->id)
             ->where("bot_user_id", $this->botUser->id)
-            ->orderBy("created_at","desc")
+            ->orderBy("created_at", "desc")
             ->get();
 
-        if (count($botNotes)==0)
+        if (count($botNotes) == 0)
             return null;
 
         return new BotNoteResource($botNotes);
@@ -974,6 +973,7 @@ class BotLogicFactory
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
+        $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
 
         $tmp->bot_type_id = $botType->id;
         $tmp->cashback_fire_percent = $data["cashback_fire_percent"] ?? 0;
@@ -1176,6 +1176,7 @@ class BotLogicFactory
         $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
+        $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
 
         $tmp->bot_type_id = $botType->id;
         $tmp->is_active = true;

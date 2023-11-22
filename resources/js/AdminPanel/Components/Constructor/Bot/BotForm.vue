@@ -222,10 +222,12 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                        id="bot-title">
                                               <span>
                                                   Название бота
-                                                  <small class="text-secondary" v-if="botForm.title!=null">Длина текста {{ botForm.title.length }}/64</small>
+                                                  <small class="text-secondary" v-if="botForm.title!=null">Длина текста {{
+                                                          botForm.title.length
+                                                      }}/64</small>
                                               </span>
 
-                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                    <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                                 </label>
 
                                 <input type="text" class="form-control"
@@ -233,7 +235,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                        aria-label="Текст названия"
                                        v-model="botForm.title"
                                        maxlength="64"
-                                       aria-describedby="bot-title" required>
+                                       aria-describedby="bot-title">
                             </div>
 
                             <div class="mb-3">
@@ -241,10 +243,12 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                        id="bot-short-description">
                                               <span>
                                                   Короткое описание бота
-                                                  <small class="text-secondary" v-if="botForm.short_description!=null">Длина текста {{ botForm.title.length }}/120</small>
+                                                  <small class="text-secondary" v-if="botForm.short_description!=null">Длина текста {{
+                                                          botForm.title.length
+                                                      }}/120</small>
                                               </span>
 
-                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                    <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                                 </label>
 
                                 <textarea class="form-control"
@@ -252,7 +256,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                           aria-label="Короткий текст описания бота"
                                           v-model="botForm.short_description"
                                           maxlength="120"
-                                          aria-describedby="bot-short-description" required>
+                                          aria-describedby="bot-short-description">
                                 </textarea>
                             </div>
 
@@ -261,10 +265,12 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                        id="bot-long-description">
                                               <span>
                                                   Длинное описание бота
-                                                  <small class="text-secondary" v-if="botForm.long_description!=null">Длина текста {{ botForm.title.length }}/512</small>
+                                                  <small class="text-secondary" v-if="botForm.long_description!=null">Длина текста {{
+                                                          botForm.title.length
+                                                      }}/512</small>
                                               </span>
 
-                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                    <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                                 </label>
 
                                 <textarea class="form-control"
@@ -272,8 +278,50 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                                           aria-label="Длинный текст описания бота"
                                           v-model="botForm.long_description"
                                           maxlength="512"
-                                          aria-describedby="bot-long-description" required>
+                                          aria-describedby="bot-long-description">
                                 </textarea>
+                            </div>
+
+
+                            <div class="row"
+                                 :key="'commands-'+index"
+                                 v-for="(item, index) in botForm.commands">
+                                <div class="col-5">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control"
+                                               placeholder="Название команды"
+                                               aria-label="Название команды"
+                                               maxlength="255"
+                                               v-model="botForm.commands[index].command"
+                                               :aria-describedby="'bot-command-'+index" required>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control"
+                                               placeholder="Описание команды"
+                                               aria-label="Описание команды"
+                                               maxlength="255"
+                                               v-model="botForm.commands[index].description"
+                                               :aria-describedby="'bot-command-description-'+index" required>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <button
+                                        type="button"
+                                        @click="removeCommands(index)"
+                                        class="btn btn-outline-danger w-100"><i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button
+                                        type="button"
+                                        @click="addCommands()"
+                                        class="btn btn-outline-success w-100">Добавить еще команду
+                                    </button>
+                                </div>
                             </div>
 
                         </div>
@@ -1075,6 +1123,7 @@ export default {
                 level_2: 0,
                 level_3: 0,
                 photos: [],
+                commands: null,
                 selected_bot_template_id: null,
                 pages: [],
                 amo: null,
@@ -1158,273 +1207,351 @@ export default {
 
         if (this.bot)
             this.$nextTick(() => {
-                // this.loadSlugsByBotTemplate(this.bot.id)
-                //this.loadPagesByBotTemplate(this.bot.id)
+                    // this.loadSlugsByBotTemplate(this.bot.id)
+                    //this.loadPagesByBotTemplate(this.bot.id)
 
 
-                this.botForm = {
-                    id: this.bot.id || null,
-
-                    title: this.bot.title || null,
-                    short_description: this.bot.short_description || null,
-                    long_description: this.bot.long_description || null,
-
-                    is_template: this.bot.is_template || false,
-                    auto_cashback_on_payments: this.bot.auto_cashback_on_payments || false,
-                    template_description: this.bot.template_description || null,
-                    bot_domain: this.bot.bot_domain || null,
-                    bot_token: this.bot.bot_token || null,
-                    bot_token_dev: this.bot.bot_token_dev || null,
-                    order_channel: this.bot.order_channel || null,
-                    message_threads: this.bot.message_threads || null,
-                    cashback_config: this.bot.cashback_config || null,
-                    main_channel: this.bot.main_channel || null,
-                    balance: this.bot.balance || null,
-                    tax_per_day: this.bot.tax_per_day || null,
-                    vk_shop_link: this.bot.vk_shop_link || null,
-                    callback_link: this.bot.callback_link || null,
-                    cashback_fire_percent: this.bot.cashback_fire_percent || 0,
-                    cashback_fire_period: this.bot.cashback_fire_period || 0,
-                    image: this.bot.image || null,
-
-                    description: this.bot.description || null,
-
-                    info_link: this.bot.info_link || null,
-
-                    social_links: this.bot.social_links || [],
-
-                    maintenance_message: this.bot.maintenance_message || null,
-                    welcome_message: this.bot.welcome_message || null,
-                    payment_provider_token: this.bot.payment_provider_token || null,
-
-                    level_1: this.bot.level_1 || 10,
-                    level_2: this.bot.level_2 || 0,
-                    level_3: this.bot.level_3 || 0,
-
-                    photos: this.bot.photos || [],
-                    warnings: this.bot.warnings || [],
-
-                    amo: this.bot.amo || null,
-                }
-
-                if (this.botForm.message_threads)
-                    this.need_threads = true
-
-                if (this.botForm.payment_provider_token)
-                    this.need_payments = true
-
-
-                if (this.botForm.cashback_config)
-                    this.need_cashback_config = true
-
-
-                this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
-            })
-    },
-    methods: {
-        setStep(index) {
-            this.step = parseInt(index)
-            localStorage.setItem("cashman_set_botform_step_index", index)
-        },
-        addTextTo(object = {param: null, text: null}) {
-            this.botForm[object.param] = object.text;
-
-        },
-        loadSlugsByBotTemplate(botId) {
-
-            this.load = true
-
-            this.$store.dispatch("loadSlugs", {
-                dataObject: {
-                    botId: botId
-                },
-                size: 1000,
-            }).then((resp) => {
-
-                this.botForm.slugs = this.getSlugs
-
-                this.$nextTick(() => {
-                    this.load = false
-
-                });
-            })
-        },
-        loadPagesByBotTemplate(botId) {
-            this.$store.dispatch("loadBotPages", {
-                botId: botId
-            }).then((resp) => {
-                this.botForm.pages = resp
-            })
-        },
-        loadBotTemplates() {
-            this.$store.dispatch("loadTemplates").then((resp) => {
-                this.templates = resp.data
-
-            })
-        },
-        getPhoto(img) {
-            return {imageUrl: URL.createObjectURL(img)}
-        },
-        onChangePhotos(e) {
-            const files = e.target.files
-            this.botForm.image = null
-            for (let i = 0; i < files.length; i++)
-                this.botForm.photos.push(files[i])
-        },
-        addItem(name) {
-            this.botForm[name].push("")
-        },
-        addSocialLinks() {
-            this.botForm.social_links.push({
-                title: null,
-                url: null
-            })
-        },
-        removeItem(name, index) {
-            this.botForm[name].splice(index, 1)
-        },
-        removePhoto(index) {
-            if (index)
-                this.botForm.photos.splice(index, 1)
-            else
-                this.botForm.image = null
-        },
-        addBot() {
-
-            let data = new FormData();
-            Object.keys(this.botForm)
-                .forEach(key => {
-                    const item = this.botForm[key] || ''
-                    if (typeof item === 'object')
-                        data.append(key, JSON.stringify(item))
-                    else
-                        data.append(key, item)
-                });
-
-
-            if (this.company)
-                data.append("company_id", this.company.id)
-
-            for (let i = 0; i < this.botForm.photos.length; i++)
-                data.append('images[]', this.botForm.photos[i]);
-
-            data.delete("photos")
-
-            this.$store.dispatch((this.bot == null ? "createBot" : "updateBot"), {
-                botForm: data
-            }).then((response) => {
-
-                this.$emit("callback", response.data)
-
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
-                    type: 'success'
-                });
-
-                if (this.bot == null)
                     this.botForm = {
-                        title: null,
-                        short_description: null,
-                        long_description: null,
-                        is_template: false,
-                        auto_cashback_on_payments: false,
-                        template_description: null,
-                        bot_domain: null,
-                        bot_token: null,
-                        bot_token_dev: null,
-                        order_channel: null,
-                        message_threads: null,
-                        main_channel: null,
-                        balance: null,
-                        tax_per_day: null,
-                        callback_link: null,
-                        cashback_fire_percent: 0,
-                        cashback_fire_period: 0,
-                        image: null,
+                        id: this.bot.id || null,
 
-                        description: null,
+                        title: this.bot.title || null,
+                        short_description: this.bot.short_description || null,
+                        long_description: this.bot.long_description || null,
 
-                        info_link: null,
+                        is_template: this.bot.is_template || false,
+                        auto_cashback_on_payments: this.bot.auto_cashback_on_payments || false,
+                        template_description: this.bot.template_description || null,
+                        bot_domain: this.bot.bot_domain || null,
+                        bot_token: this.bot.bot_token || null,
+                        bot_token_dev: this.bot.bot_token_dev || null,
+                        order_channel: this.bot.order_channel || null,
+                        message_threads: this.bot.message_threads || null,
+                        cashback_config: this.bot.cashback_config || null,
+                        main_channel: this.bot.main_channel || null,
+                        balance: this.bot.balance || null,
+                        tax_per_day: this.bot.tax_per_day || null,
+                        vk_shop_link: this.bot.vk_shop_link || null,
+                        callback_link: this.bot.callback_link || null,
+                        cashback_fire_percent: this.bot.cashback_fire_percent || 0,
+                        cashback_fire_period: this.bot.cashback_fire_period || 0,
+                        image: this.bot.image || null,
+                        commands: this.bot.commands || null,
 
-                        social_links: [],
+                        description: this.bot.description || null,
 
-                        maintenance_message: null,
-                        payment_provider_token: null,
+                        info_link: this.bot.info_link || null,
 
-                        level_1: 10,
-                        level_2: 0,
-                        level_3: 0,
+                        social_links: this.bot.social_links || [],
 
-                        photos: [],
-                        warnings: [],
+                        maintenance_message: this.bot.maintenance_message || null,
+                        welcome_message: this.bot.welcome_message || null,
+                        payment_provider_token: this.bot.payment_provider_token || null,
 
-                        selected_bot_template_id: null,
+                        level_1: this.bot.level_1 || 10,
+                        level_2: this.bot.level_2 || 0,
+                        level_3: this.bot.level_3 || 0,
 
-                        pages: [],
+                        photos: this.bot.photos || [],
+                        warnings: this.bot.warnings || [],
 
-
+                        amo: this.bot.amo || null,
                     }
-            }).catch(err => {
 
-            })
+                    if (this.botForm.commands == null) {
+                        this.botForm.commands = [
+                            {
+                                command: "/start",
+                                description: "начни с этой команды"
+                            },
+                            {
+                                command: "/admins",
+                                description: "доступные администраторы в системе"
+                            },
+                            {
+                                command: "/help",
+                                description: "как использовать систему"
+                            },
+                            {
+                                command: "/about",
+                                description: "о CashMan"
+                            }
+                        ]
+                    }
 
+                    if (this.botForm.message_threads)
+                        this.need_threads = true
 
-        },
-
-        removeCashBackConfig(index) {
-            this.botForm.cashback_config.splice(index, 1)
-        },
-        addCashBackConfig() {
-
-            this.botForm.cashback_config = this.botForm.cashback_config == null ? [] : this.botForm.cashback_config;
-
-            this.botForm.cashback_config.push({
-                title: null,
-            })
-
-        },
-
-        pageListCallback(page) {
-            this.loadPage = true
-            this.page = page
-            this.$nextTick(() => {
-                this.loadPage = false
-
-            });
-        },
-        getWarning(key) {
-            let item = this.warnings.find(item => item.key === key)
+                    if (this.botForm.payment_provider_token)
+                        this.need_payments = true
 
 
-            return (!item) ? {
-                title: 'Не найдено'
-            } : item;
+                    if (this.botForm.cashback_config)
+                        this.need_cashback_config = true
 
-        },
-        removeWarning(index) {
-            this.botForm.warnings.splice(index, 1)
-        },
-        addWarning() {
 
-            const item = this.selected_warning
-
-            this.botForm.warnings.push({
-                rule_key: item.key,
-                rule_value: 0,
-                is_active: true,
-            })
-
-            this.selected_warning = null
-
-        },
-        pageCallback(page) {
-            this.loadPageList = true
-            this.$nextTick(() => {
-                this.loadPageList = false
-            });
-        }
+                    this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
+                }
+            )
+    },
+    methods
+:
+{
+    setStep(index)
+    {
+        this.step = parseInt(index)
+        localStorage.setItem("cashman_set_botform_step_index", index)
     }
+,
+    addTextTo(object = {param: null, text: null})
+    {
+        this.botForm[object.param] = object.text;
+
+    }
+,
+    removeCommands(index)
+    {
+        this.botForm.commands.splice(index, 1)
+    }
+,
+    addCommands()
+    {
+        if (!this.botForm.commands)
+            this.botForm.commands = [];
+
+        this.botForm.commands.push({
+            command: null,
+            description: null
+        })
+    }
+,
+    loadSlugsByBotTemplate(botId)
+    {
+
+        this.load = true
+
+        this.$store.dispatch("loadSlugs", {
+            dataObject: {
+                botId: botId
+            },
+            size: 1000,
+        }).then((resp) => {
+
+            this.botForm.slugs = this.getSlugs
+
+            this.$nextTick(() => {
+                this.load = false
+
+            });
+        })
+    }
+,
+    loadPagesByBotTemplate(botId)
+    {
+        this.$store.dispatch("loadBotPages", {
+            botId: botId
+        }).then((resp) => {
+            this.botForm.pages = resp
+        })
+    }
+,
+    loadBotTemplates()
+    {
+        this.$store.dispatch("loadTemplates").then((resp) => {
+            this.templates = resp.data
+
+        })
+    }
+,
+    getPhoto(img)
+    {
+        return {imageUrl: URL.createObjectURL(img)}
+    }
+,
+    onChangePhotos(e)
+    {
+        const files = e.target.files
+        this.botForm.image = null
+        for (let i = 0; i < files.length; i++)
+            this.botForm.photos.push(files[i])
+    }
+,
+    addItem(name)
+    {
+        this.botForm[name].push("")
+    }
+,
+    addSocialLinks()
+    {
+        this.botForm.social_links.push({
+            title: null,
+            url: null
+        })
+    }
+,
+    removeItem(name, index)
+    {
+        this.botForm[name].splice(index, 1)
+    }
+,
+    removePhoto(index)
+    {
+        if (index)
+            this.botForm.photos.splice(index, 1)
+        else
+            this.botForm.image = null
+    }
+,
+    addBot()
+    {
+
+        let data = new FormData();
+        Object.keys(this.botForm)
+            .forEach(key => {
+                const item = this.botForm[key] || ''
+                if (typeof item === 'object')
+                    data.append(key, JSON.stringify(item))
+                else
+                    data.append(key, item)
+            });
+
+
+        if (this.company)
+            data.append("company_id", this.company.id)
+
+        for (let i = 0; i < this.botForm.photos.length; i++)
+            data.append('images[]', this.botForm.photos[i]);
+
+        data.delete("photos")
+
+        this.$store.dispatch((this.bot == null ? "createBot" : "updateBot"), {
+            botForm: data
+        }).then((response) => {
+
+            this.$emit("callback", response.data)
+
+            this.$notify({
+                title: "Конструктор ботов",
+                text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
+                type: 'success'
+            });
+
+            if (this.bot == null)
+                this.botForm = {
+                    title: null,
+                    short_description: null,
+                    long_description: null,
+                    is_template: false,
+                    auto_cashback_on_payments: false,
+                    template_description: null,
+                    bot_domain: null,
+                    bot_token: null,
+                    bot_token_dev: null,
+                    order_channel: null,
+                    message_threads: null,
+                    main_channel: null,
+                    balance: null,
+                    tax_per_day: null,
+                    callback_link: null,
+                    cashback_fire_percent: 0,
+                    cashback_fire_period: 0,
+                    image: null,
+
+                    description: null,
+
+                    info_link: null,
+
+                    social_links: [],
+
+                    maintenance_message: null,
+                    payment_provider_token: null,
+
+                    level_1: 10,
+                    level_2: 0,
+                    level_3: 0,
+
+                    photos: [],
+                    warnings: [],
+
+                    selected_bot_template_id: null,
+
+                    pages: [],
+
+
+                }
+        }).catch(err => {
+
+        })
+
+
+    }
+,
+
+    removeCashBackConfig(index)
+    {
+        this.botForm.cashback_config.splice(index, 1)
+    }
+,
+    addCashBackConfig()
+    {
+
+        this.botForm.cashback_config = this.botForm.cashback_config == null ? [] : this.botForm.cashback_config;
+
+        this.botForm.cashback_config.push({
+            title: null,
+        })
+
+    }
+,
+
+    pageListCallback(page)
+    {
+        this.loadPage = true
+        this.page = page
+        this.$nextTick(() => {
+            this.loadPage = false
+
+        });
+    }
+,
+    getWarning(key)
+    {
+        let item = this.warnings.find(item => item.key === key)
+
+
+        return (!item) ? {
+            title: 'Не найдено'
+        } : item;
+
+    }
+,
+    removeWarning(index)
+    {
+        this.botForm.warnings.splice(index, 1)
+    }
+,
+    addWarning()
+    {
+
+        const item = this.selected_warning
+
+        this.botForm.warnings.push({
+            rule_key: item.key,
+            rule_value: 0,
+            is_active: true,
+        })
+
+        this.selected_warning = null
+
+    }
+,
+    pageCallback(page)
+    {
+        this.loadPageList = true
+        this.$nextTick(() => {
+            this.loadPageList = false
+        });
+    }
+}
 }
 </script>
 <style lang="scss">

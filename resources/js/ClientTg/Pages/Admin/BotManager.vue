@@ -152,13 +152,13 @@
                             </Popper>
                             Отображаемое имя бота
                         </div>
-                        <Popper>
-                            <i class="fa-solid font-10 fa-star color-red2-dark"></i>
-                            <template #content>
-                                <div>Нужно
-                                </div>
-                            </template>
-                        </Popper>
+                        <!--                        <Popper>
+                                                    <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                                    <template #content>
+                                                        <div>Нужно
+                                                        </div>
+                                                    </template>
+                                                </Popper>-->
 
                     </label>
                     <input type="text" class="form-control"
@@ -166,7 +166,7 @@
                            aria-label="Отображаемое имя бота"
                            v-model="botForm.title"
                            maxlength="64"
-                           aria-describedby="bot-title" required>
+                           aria-describedby="bot-title">
                 </div>
 
 
@@ -185,13 +185,13 @@
                                 Короткое описание бота
 
                             </div>
-                            <Popper>
-                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
-                                <template #content>
-                                    <div>Нужно
-                                    </div>
-                                </template>
-                            </Popper>
+                            <!--                            <Popper>
+                                                            <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                                            <template #content>
+                                                                <div>Нужно
+                                                                </div>
+                                                            </template>
+                                                        </Popper>-->
 
 
                         </label>
@@ -206,7 +206,7 @@
                               v-model="botForm.short_description"
                               maxlength="120"
                               style="min-height:200px;"
-                              aria-describedby="short-description" required>
+                              aria-describedby="short-description">
                     </textarea>
                 </div>
 
@@ -227,13 +227,13 @@
                                 Длинное описание бота
 
                             </div>
-                            <Popper>
-                                <i class="fa-solid font-10 fa-star color-red2-dark"></i>
-                                <template #content>
-                                    <div>Нужно
-                                    </div>
-                                </template>
-                            </Popper>
+                            <!--                            <Popper>
+                                                            <i class="fa-solid font-10 fa-star color-red2-dark"></i>
+                                                            <template #content>
+                                                                <div>Нужно
+                                                                </div>
+                                                            </template>
+                                                        </Popper>-->
 
 
                         </label>
@@ -248,9 +248,62 @@
                               v-model="botForm.long_description"
                               maxlength="512"
                               style="min-height:200px;"
-                              aria-describedby="short-description" required>
+                              aria-describedby="short-description">
                     </textarea>
                 </div>
+
+                <div class="divider divider-large my-4 "></div>
+                <h6>Команды в боте</h6>
+
+                <p v-if="!botForm.commands"><em>К сожалению, вы еще не добавили ни 1й команды в меню бота</em></p>
+
+                <p class="mb-2"><em>Например, команда <b>/start</b>, а описание к ней: <b>начало работы с системой</b></em></p>
+                <div class="mb-2"
+                     :key="'commands-'+index"
+                     v-for="(item, index) in botForm.commands">
+
+                    <div class="mb-2">
+                        <input type="text" class="form-control"
+                               placeholder="Название команды"
+                               aria-label="Название команды"
+                               maxlength="255"
+                               v-model="botForm.commands[index].command"
+                               :aria-describedby="'bot-command-'+index" required>
+                    </div>
+
+
+                    <div class="mb-2">
+                        <input type="text" class="form-control"
+                               placeholder="Описание команды"
+                               aria-label="Описание команды"
+                               maxlength="255"
+                               v-model="botForm.commands[index].description"
+                               :aria-describedby="'bot-command-description-'+index" required>
+                    </div>
+
+                    <button
+                        type="button"
+                        @click="removeCommands(index)"
+                        class="btn btn-outline-danger w-100">
+                        <i class="fa-regular fa-trash-can"></i>
+                        Удалить команду
+                    </button>
+                    <div class="divider divider-small my-4 bg-highlight "></div>
+                </div>
+                <div class="mb-2">
+
+                    <p class="mb-2"><em>Данные команды отображаются в кнопке <b>Меню</b> слева от поля ввода в боте</em></p>
+
+                    <button
+                            type="button"
+                            @click="addCommands()"
+                            class="btn btn-success w-100">Добавить еще команду
+                        </button>
+
+                </div>
+
+                <div class="divider divider-large my-4 "></div>
+
 
                 <div class="mb-2">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -954,6 +1007,7 @@ export default {
                 image: null,
                 description: null,
                 info_link: null,
+                commands: null,
                 social_links: [],
                 maintenance_message: null,
                 payment_provider_token: null,
@@ -1049,6 +1103,18 @@ export default {
 
     },
     methods: {
+        removeCommands(index) {
+            this.botForm.commands.splice(index, 1)
+        },
+        addCommands() {
+            if (this.botForm.commands == null)
+                this.botForm.commands = [];
+
+            this.botForm.commands.push({
+                command: null,
+                description: null
+            })
+        },
         loadBotAdminConfig() {
             this.$store.dispatch("loadBotAdminConfig").then((resp) => {
                 this.bot = resp.data
@@ -1070,6 +1136,7 @@ export default {
                     order_channel: this.bot.order_channel || null,
                     message_threads: this.bot.message_threads || null,
                     cashback_config: this.bot.cashback_config || null,
+                    commands: this.bot.commands || null,
 
                     cashback_fire_percent: this.bot.cashback_fire_percent || 0,
                     cashback_fire_period: this.bot.cashback_fire_period || 0,
@@ -1102,6 +1169,27 @@ export default {
 
                     amo: this.bot.amo || null,
                     is_active: this.bot.is_active || false,
+                }
+
+                if (this.botForm.commands == null ){
+                    this.botForm.commands = [
+                        {
+                            command:"/start",
+                            description:"начни с этой команды"
+                        },
+                        {
+                            command:"/admins",
+                            description:"доступные администраторы в системе"
+                        },
+                        {
+                            command:"/help",
+                            description:"как использовать систему"
+                        },
+                        {
+                            command:"/about",
+                            description:"о CashMan"
+                        }
+                    ]
                 }
 
                 if (this.botForm.payment_provider_token)
