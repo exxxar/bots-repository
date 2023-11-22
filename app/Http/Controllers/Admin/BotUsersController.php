@@ -22,6 +22,7 @@ class BotUsersController extends Controller
                 $request->get("size") ?? config('app.results_per_page'),
                 [
                     "need_admins"=>(($request->need_admins ?? false) == "true"),
+                    "need_deliveryman"=>(($request->need_deliveryman ?? false) == "true"),
                     "need_vip"=>(($request->need_vip ?? false) == "true"),
                     "need_not_vip"=>(($request->need_not_vip ?? false) == "true"),
                     "need_with_phone"=>(($request->need_with_phone ?? false) == "true"),

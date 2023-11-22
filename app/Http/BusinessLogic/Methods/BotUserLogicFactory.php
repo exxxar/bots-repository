@@ -119,7 +119,8 @@ class BotUserLogicFactory
                 ->where(function ($q) use ($search) {
                     $q->orWhere("name", 'like', "%$search%")
                         ->orWhere("phone", 'like', "%$search%")
-                        ->orWhere("fio_from_telegram", 'like', "%$search%");
+                        ->orWhere("fio_from_telegram", 'like', "%$search%")
+                        ->orWhere("telegram_chat_id", 'like', "%$search%");
                 });
 
         }
@@ -127,12 +128,18 @@ class BotUserLogicFactory
         $needAdmins = $params["need_admins"] ?? false;
         $needVip = $params["need_vip"] ?? false;
         $needNotVip = $params["need_not_vip"] ?? false;
+        $needDeliveryman = $params["need_deliveryman"] ?? false;
         $needWithPhone = $params["need_with_phone"] ?? false;
         $needWithoutPhone = $params["need_without_phone"] ?? false;
 
         if ($needAdmins)
             $botUsers = $botUsers
                 ->where("is_admin", true);
+
+
+        if ($needDeliveryman)
+            $botUsers = $botUsers
+                ->where("is_deliveryman", true);
 
         if ($needVip)
             $botUsers = $botUsers

@@ -40,6 +40,15 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                         <div class="fac fac-checkbox  py-2 my-2">
                             <span></span>
                             <input id="need-without-phone-checkbox"
+                                   v-model="need_deliveryman"
+                                   value="false"
+                                   type="checkbox">
+                            <label for="need-without-phone-checkbox">Только доставщики</label>
+                        </div>
+
+                        <div class="fac fac-checkbox  py-2 my-2">
+                            <span></span>
+                            <input id="need-without-phone-checkbox"
                                    v-model="need_without_phone"
                                    value="false"
                                    type="checkbox">
@@ -132,6 +141,7 @@ export default {
             need_not_vip: false,
             need_with_phone: false,
             need_without_phone: false,
+            need_deliveryman: false,
             users_paginate_object: null,
 
         }
@@ -181,6 +191,7 @@ export default {
                     need_admins: this.need_admins,
                     need_vip:  this.need_vip,
                     need_not_vip:  this.need_not_vip,
+                    need_deliveryman:  this.need_deliveryman,
                     need_with_phone:  this.need_with_phone,
                     need_without_phone:  this.need_without_phone,
                 },

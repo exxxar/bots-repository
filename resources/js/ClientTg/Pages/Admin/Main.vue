@@ -116,7 +116,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 
                 <form v-on:submit.prevent="requestUserMenu" v-if="section===8">
                     <div class="mb-3">
-                        <label for="bill-info" class="form-label">Комменатрий</label>
+                        <label for="bill-info" class="form-label">Комментарий</label>
                         <textarea class="form-control"
                                   placeholder="Комментарий к запросу"
                                   v-model="userDataForm.info"
@@ -143,7 +143,7 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
 
                 <form v-on:submit.prevent="requestUserData" v-if="section===7">
                     <div class="mb-3">
-                        <label for="bill-info" class="form-label">Комменатрий</label>
+                        <label for="bill-info" class="form-label">Комментарий</label>
                         <textarea class="form-control"
                                   placeholder="Комментарий к запросу"
                                   v-model="userDataForm.info"
