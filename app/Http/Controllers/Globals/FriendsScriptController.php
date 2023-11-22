@@ -103,10 +103,10 @@ class FriendsScriptController extends SlugController
 
         if (is_null($imgPath))
             \App\Facades\BotManager::bot()
-                ->reply(sprintf($referralText, $qr, $qr));
+                ->reply(sprintf($referralText, $qr));
         else
             \App\Facades\BotManager::bot()
-                ->replyPhoto(sprintf($referralText, $qr, $qr),
+                ->replyPhoto(sprintf($referralText, $qr),
                     $imgPath
                 );
 
