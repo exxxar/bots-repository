@@ -146,7 +146,8 @@ class SimpleDeliveryController extends SlugController
                     foreach ($detail->poducts as $product)
                         $products .= "$product->title x$product->count = $product->price\n";
                 } else
-                    $products .= "$detail->products\n";
+                    $products .= "Текст заказа: $detail->products\n";
+
             }
         }
 
