@@ -154,13 +154,13 @@ class SimpleDeliveryController extends SlugController
                 ["text" => "Следующая страница", "callback_data" => "/next_order " . ($page + 1)],
             ];
 
-        if ($page >= 1 && $page<$allOrdersCount)
+        if ($page >= 1 && $page+1<$allOrdersCount)
             $keyboard[] = [
                 ["text" => "⬅ " . ($page ) . "/$allOrdersCount", "callback_data" => "/next_order " . ($page - 1)],
                 ["text" => ($page + 2) . "/$allOrdersCount ➡", "callback_data" => "/next_order " . ($page + 1)],
             ];
 
-        if ($page == $allOrdersCount)
+        if ($page+1 == $allOrdersCount)
             $keyboard[] = [
                 ["text" => "Предыдущая страница", "callback_data" => "/next_order " . ($page - 1)],
             ];
