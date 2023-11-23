@@ -165,7 +165,7 @@ class SimpleDeliveryController extends SlugController
                 ["text" => "⬅ Предыдущая страница", "callback_data" => "/next_order " . ($page - 1)],
             ];
 
-        if ($order->status == OrderStatusEnum::InDelivery)
+        if ($order->status == OrderStatusEnum::InDelivery->value)
             $keyboard[] = [
                 ["text" => "🔎Где сейчас доставщик?", "callback_data" => "/watch_for_deliveryman " . ($order->id)],
             ];
@@ -210,7 +210,7 @@ class SimpleDeliveryController extends SlugController
             return;
         }
 
-        if (($order->status ?? OrderStatusEnum::Completed) == OrderStatusEnum::Completed) {
+        if (($order->status ?? OrderStatusEnum::Completed->value) == OrderStatusEnum::Completed->value) {
             BotManager::bot()
                 ->reply("Заказ уже доставлен, позиция доставщика не отслеживается");
             return;
