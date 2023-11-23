@@ -53,8 +53,6 @@ class GeoLogicFactory
 
             $data = $res->json();
 
-            Log::info("coords=>".print_r($data, true));
-
             if (empty($data))
                 return (object)[
                     "latitude" => 0,
@@ -69,9 +67,6 @@ class GeoLogicFactory
 
 
         } catch (\Exception $exception) {
-
-            Log::info("coords=>".$exception);
-
             return (object)[
                 "latitude" => 0,
                 "longitude" => 0,

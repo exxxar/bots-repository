@@ -150,3 +150,8 @@ BotManager::bot()
             ->reply("Видео добавлено в медиа пространство бота с идентификатором: <b>#$media->id</b>\n<em>$videoToSend</em>\nдля просмотра доступных медиа используйте /media ");
 
     });
+
+BotManager::bot()
+    ->location(function (...$data){
+        Log::info("location=>".print_r($data));
+    });
