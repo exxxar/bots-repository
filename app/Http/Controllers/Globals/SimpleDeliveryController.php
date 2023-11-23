@@ -106,7 +106,7 @@ class SimpleDeliveryController extends SlugController
             ->where("customer_id", $botUser->id)
             ->orderBy("updated_at", "DESC");
 
-        $allOrdersCount = $order->count();
+        $allOrdersCount = $order->count()+1;
 
         $order = $order
             ->skip($page * $count)
@@ -116,22 +116,10 @@ class SimpleDeliveryController extends SlugController
 
         if (is_null($order)) {
             BotManager::bot()
-                ->reply("Упс... Заказов еще нет:(");
+                ->reply("Упс... Заказов нет:(");
             return;
         }
 
-        /*     'product_details'=>[
-             (object)[
-                 "from"=>$this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
-                 "products"=>[
-                     [
-                         "title"=> $product->title,
-                         "count"=>$tmpCount,
-                         "price"=>$tmpPrice
-                     ]
-                 ]
-             ]
-         ]*/
 
         $from = "не указан источник";
         $products = "нет продуктов";
@@ -156,7 +144,7 @@ class SimpleDeliveryController extends SlugController
         }
 
 
-        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>\nДата заказа:".Carbon::parse($order->created_at)
+        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: ".Carbon::parse($order->created_at)
                 ->format("Y-m-d H:i:s");
 
         $keyboard = [];
