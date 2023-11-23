@@ -153,5 +153,5 @@ BotManager::bot()
 
 BotManager::bot()
     ->location(function (...$data){
-        Log::info("location=>".print_r($data));
+        Log::info("location=>".print_r($data, true));
     });
