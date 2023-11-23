@@ -156,7 +156,8 @@ class SimpleDeliveryController extends SlugController
         }
 
 
-        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>";
+        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>\nДата заказа:".Carbon::parse($order->created_at)
+                ->format("Y-m-d H:i:s");
 
         $keyboard = [];
 
@@ -167,8 +168,8 @@ class SimpleDeliveryController extends SlugController
 
         if ($page >= 1)
             $keyboard[] = [
-                ["text" => "⬅ " . ($page + 1) . "/$allOrdersCount", "callback_data" => "/next_order " . ($page - 1)],
-                ["text" => ($page + 3) . "/$allOrdersCount ➡", "callback_data" => "/next_order " . ($page + 1)],
+                ["text" => "⬅ " . ($page ) . "/$allOrdersCount", "callback_data" => "/next_order " . ($page - 1)],
+                ["text" => ($page + 2) . "/$allOrdersCount ➡", "callback_data" => "/next_order " . ($page + 1)],
             ];
 
         if (!is_null($messageId)) {
