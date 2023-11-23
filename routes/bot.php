@@ -54,7 +54,7 @@ BotManager::bot()
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
         Log::info("fallback photo");
-        if ($botUser->is_admin || $botUser->is_manager){
+        if ($botUser->is_admin || $botUser->is_manager) {
             $media = \App\Models\BotMedia::query()->updateOrCreate([
                 'bot_id' => $bot->id,
                 'bot_user_id' => $botUser->id,
@@ -109,10 +109,10 @@ BotManager::bot()
                 "Пользователь: $name\n" .
                 "Телефон: $phone\n",
                 $photoToSend, [
-                    [
-                        ["text" => "Работа с пользователем", "url" => $link]
-                    ]
-                ],
+                [
+                    ["text" => "Работа с пользователем", "url" => $link]
+                ]
+            ],
                 $thread
             );
 
@@ -152,6 +152,17 @@ BotManager::bot()
     });
 
 BotManager::bot()
-    ->location(function (...$data){
-        Log::info("location=>".print_r($data, true));
+    ->location(function (...$data) {
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        $coords = $data[1];
+
+        \App\Facades\BusinessLogic::delivery()
+            ->setBot($bot)
+            ->setBotUser($botUser)
+            ->storeCoordsToOrder($coords->lat ?? 0, $coords->lon ?? 0);
+
     });

@@ -168,6 +168,10 @@ class DeliveryLogicFactory
         return true;
     }
 
+    public function userOrders(){
+
+    }
+
     ///необходимо оповещать всех доставщиков, которые в работе когда заказ появился и когда заказ принят \ отменен
     public function acceptOrder($orderId): bool
     {

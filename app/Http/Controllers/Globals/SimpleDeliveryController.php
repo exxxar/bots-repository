@@ -6,12 +6,15 @@ use App\Classes\BotMethods;
 use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
+use App\Models\Order;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -77,8 +80,124 @@ class SimpleDeliveryController extends SlugController
                 'comment' => "Скрипт добавляет возможность заказа товара на доставку",
             ]);
 
+        BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_simple_delivery_my_orders",
+                "bot_id" => $bot->id,
+                'is_global' => true,
+            ],
+
+            [
+                'command' => ".*Мои заказы из мини-доставки",
+                'comment' => "Скрипт добавляет возможность просмотра истории своих заказов из мини-доставки",
+            ]);
+
     }
 
+    private function orderPage($page = 0, $messageId = null)
+    {
+        $count = 1;
+        $bot = BotManager::bot()->getSelf();
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $order = Order::query()
+            ->where("bot_id", $bot->id)
+            ->where("customer_id", $botUser->id)
+            ->orderBy("updated_at", "DESC");
+
+        $allOrdersCount = $order->count();
+
+        $order = $order
+            ->skip($page * $count)
+            ->take($count)
+            ->first();
+
+
+        if (is_null($order)) {
+            BotManager::bot()
+                ->reply("Упс... Заказов еще нет:(");
+            return;
+        }
+
+        /*     'product_details'=>[
+             (object)[
+                 "from"=>$this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
+                 "products"=>[
+                     [
+                         "title"=> $product->title,
+                         "count"=>$tmpCount,
+                         "price"=>$tmpPrice
+                     ]
+                 ]
+             ]
+         ]*/
+
+        $from = "не указан источник";
+        $products = "нет продуктов";
+        if (!empty($order->product_details)) {
+
+            $products = "";
+
+            foreach ($order->product_details as $detail) {
+                $from = $detail->from ?? 'Не указано';
+                if (is_array($detail->products)) {
+                    foreach ($detail->poducts as $product)
+                        $products .= "$product->title x$product->count = $product->price\n";
+                } else
+                    $products .= "$detail->products\n";
+            }
+        }
+
+
+        $text = "Заказ #$order->id\nПрислан из $from\n: <em>$products</em>";
+
+        $keyboard = [];
+
+        if ($page == 0)
+            $keyboard[] = [
+                ["text" => "Следующая страница", "callback_data" => "/next_order " . ($page + 1)],
+            ];
+
+        if ($page >= 1)
+            $keyboard[] = [
+                ["text" => "⬅ " . ($page + 1) . "/$allOrdersCount", "callback_data" => "/next_order " . ($page - 1)],
+                ["text" => ($page + 3) . "/$allOrdersCount ➡", "callback_data" => "/next_order " . ($page + 1)],
+            ];
+
+        if (!is_null($messageId)) {
+
+            BotManager::bot()
+                ->editMessageText(
+                    $botUser->telegram_chat_id,
+                    $messageId,
+                    $text,
+                    $keyboard
+                );
+
+            return;
+        }
+
+        BotManager::bot()
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                $text,
+                $keyboard);
+
+    }
+
+
+    public function nextOrders(...$data)
+    {
+        $pageId = $data[3] ?? null;
+        $messageId = $data[0]->message_id ?? null;
+        $this->orderPage($pageId, $messageId);
+    }
+
+    public function myOrders(...$config)
+    {
+        $this->orderPage();
+    }
 
     public function simpleDeliveryScript(...$config)
     {

@@ -433,6 +433,37 @@ trait BotBaseMethodsTrait
         return $this;
     }
 
+
+
+    public function editMessageText($chatId, $messageId, $text, $keyboard = [])
+    {
+        $tmp = [
+            "chat_id" => $chatId,
+            "message_id" => $messageId,
+            "text" => $text,
+            "parse_mode" => "HTML",
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $keyboard,
+            ])
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->editMessageText($tmp);
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+    }
+
     public function editMessageCaption($chatId, $messageId, $caption, $keyboard = [])
     {
         $tmp = [

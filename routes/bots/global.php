@@ -14,7 +14,9 @@ BotManager::bot()
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\SimpleDeliveryController::class)
-    ->slug("global_simple_delivery_main", "simpleDeliveryScript"); //колесо фортуны 2
+    ->route("/next_order ([0-9]+)", "nextOrders")
+    ->slug("global_simple_delivery_my_orders", "myOrders")
+    ->slug("global_simple_delivery_main", "simpleDeliveryScript");
 
 
 BotManager::bot()

@@ -573,7 +573,7 @@ class ProductLogicFactory
             'product_details'=>[
                 (object)[
                     "from"=>$this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
-                    "products"=>json_encode($tmpOrderProductInfo)
+                    "products"=>$tmpOrderProductInfo
                 ]
             ],//информация о продуктах и заведении, из которого сделан заказ
             'product_count'=>$summaryCount,
