@@ -106,7 +106,7 @@ class SimpleDeliveryController extends SlugController
             ->where("customer_id", $botUser->id)
             ->orderBy("updated_at", "DESC");
 
-        $allOrdersCount = $order->count()+1;
+        $allOrdersCount = $order->count();
 
         $order = $order
             ->skip($page * $count)
@@ -154,10 +154,15 @@ class SimpleDeliveryController extends SlugController
                 ["text" => "Следующая страница", "callback_data" => "/next_order " . ($page + 1)],
             ];
 
-        if ($page >= 1)
+        if ($page >= 1 && $page<$allOrdersCount)
             $keyboard[] = [
                 ["text" => "⬅ " . ($page ) . "/$allOrdersCount", "callback_data" => "/next_order " . ($page - 1)],
                 ["text" => ($page + 2) . "/$allOrdersCount ➡", "callback_data" => "/next_order " . ($page + 1)],
+            ];
+
+        if ($page == $allOrdersCount)
+            $keyboard[] = [
+                ["text" => "Предыдущая страница", "callback_data" => "/next_order " . ($page - 1)],
             ];
 
         if (!is_null($messageId)) {
