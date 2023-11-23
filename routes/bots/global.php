@@ -15,6 +15,7 @@ BotManager::bot()
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\SimpleDeliveryController::class)
     ->route("/next_order ([0-9]+)", "nextOrders")
+    ->route("/watch_for_deliveryman ([0-9]+)", "watchForDeliveryman")
     ->slug("global_simple_delivery_my_orders", "myOrders")
     ->slug("global_simple_delivery_main", "simpleDeliveryScript");
 

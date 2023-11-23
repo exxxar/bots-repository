@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Globals;
 
 use App\Classes\BotMethods;
 use App\Classes\SlugController;
+use App\Enums\OrderStatusEnum;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
 use App\Models\Basket;
@@ -131,8 +132,7 @@ class SimpleDeliveryController extends SlugController
                 $detail = (object)$detail;
                 $from = $detail->from ?? 'Не указано';
                 if (is_array($detail->products)) {
-                    foreach ($detail->products as $product)
-                    {
+                    foreach ($detail->products as $product) {
                         $product = (object)$product;
                         $products .= "$product->title x$product->count = $product->price ₽\n";
                     }
@@ -144,25 +144,30 @@ class SimpleDeliveryController extends SlugController
         }
 
 
-        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: ".Carbon::parse($order->created_at)
+        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
                 ->format("Y-m-d H:i:s");
 
         $keyboard = [];
 
         if ($page == 0)
             $keyboard[] = [
-                ["text" => "Следующая страница", "callback_data" => "/next_order " . ($page + 1)],
+                ["text" => "Следующая страница ➡", "callback_data" => "/next_order " . ($page + 1)],
             ];
 
-        if ($page >= 1 && $page+1<$allOrdersCount)
+        if ($page >= 1 && $page + 1 < $allOrdersCount)
             $keyboard[] = [
-                ["text" => "⬅ " . ($page ) . "/$allOrdersCount", "callback_data" => "/next_order " . ($page - 1)],
+                ["text" => "⬅ " . ($page) . "/$allOrdersCount", "callback_data" => "/next_order " . ($page - 1)],
                 ["text" => ($page + 2) . "/$allOrdersCount ➡", "callback_data" => "/next_order " . ($page + 1)],
             ];
 
-        if ($page+1 == $allOrdersCount)
+        if ($page + 1 == $allOrdersCount)
             $keyboard[] = [
-                ["text" => "Предыдущая страница", "callback_data" => "/next_order " . ($page - 1)],
+                ["text" => "⬅ Предыдущая страница", "callback_data" => "/next_order " . ($page - 1)],
+            ];
+
+        if ($order->status == OrderStatusEnum::InDelivery)
+            $keyboard[] = [
+                ["text" => "🔎Где сейчас доставщик?", "callback_data" => "/watch_for_deliveryman " . ($order->id)],
             ];
 
         if (!is_null($messageId)) {
@@ -186,6 +191,41 @@ class SimpleDeliveryController extends SlugController
 
     }
 
+
+    public function watchForDeliveryman(...$data)
+    {
+        $orderId = $data[3] ?? null;
+
+        if (is_null($orderId)) {
+            BotManager::bot()
+                ->reply("Упс... Заказ не найден!");
+            return;
+        }
+
+        $order = Order::query()->find($orderId);
+
+        if (is_null($order)) {
+            BotManager::bot()
+                ->reply("Упс... Заказ не найден!");
+            return;
+        }
+
+        if (($order->status ?? OrderStatusEnum::Completed) == OrderStatusEnum::Completed) {
+            BotManager::bot()
+                ->reply("Заказ уже доставлен, позиция доставщика не отслеживается");
+            return;
+        }
+
+        if (($order->deliveryman_latitude ?? 0) == 0 || ($order->deliveryman_longitude ?? 0) == 0) {
+            BotManager::bot()
+                ->reply("Заказ не отслеживается в данный момент");
+            return;
+        }
+
+        BotManager::bot()
+            ->replyLocation($order->deliveryman_latitude, $order->deliveryman_longitude);
+
+    }
 
     public function nextOrders(...$data)
     {
