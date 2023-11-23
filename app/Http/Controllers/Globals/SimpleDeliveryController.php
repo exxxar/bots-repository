@@ -144,7 +144,11 @@ class SimpleDeliveryController extends SlugController
                 $from = $detail->from ?? 'Не указано';
                 if (is_array($detail->products)) {
                     foreach ($detail->products as $product)
+                    {
+                        $product = (object)$product;
                         $products .= "$product->title x$product->count = $product->price\n";
+                    }
+
                 } else
                     $products .= "Текст заказа: $detail->products\n";
 
