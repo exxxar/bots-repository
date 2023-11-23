@@ -146,7 +146,7 @@ class SimpleDeliveryController extends SlugController
                     foreach ($detail->products as $product)
                     {
                         $product = (object)$product;
-                        $products .= "$product->title x$product->count = $product->price\n";
+                        $products .= "$product->title x$product->count = $product->price ₽\n";
                     }
 
                 } else
@@ -156,7 +156,7 @@ class SimpleDeliveryController extends SlugController
         }
 
 
-        $text = "Заказ #$order->id\nПрислан из $from\n: <em>$products</em>";
+        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>";
 
         $keyboard = [];
 
@@ -185,7 +185,7 @@ class SimpleDeliveryController extends SlugController
         }
 
         BotManager::bot()
-            ->sendMessage(
+            ->sendInlineKeyboard(
                 $botUser->telegram_chat_id,
                 $text,
                 $keyboard);
