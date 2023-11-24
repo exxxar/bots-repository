@@ -110,9 +110,10 @@ class CashBackListener
 
                 $nextBotUser = BotUser::query()
                     ->with(["user", "parent"])
-                    ->where("bot_id", $event->botId)
                     ->where("id", $nextBotUser->parent_id)
                     ->first();
+
+                Log::info("next bot user=".print_r($nextBotUser->toArray(), true));
 
                 if (is_null($nextBotUser))
                     break;
