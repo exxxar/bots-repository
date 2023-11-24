@@ -94,6 +94,9 @@ class CashBackListener
             $nextBotUser = $botUserUser;
             $index = 1;
             foreach ($levels as $level) {
+
+                Log::info("nextBotUser $nextBotUser->id botUserAdmin $botUserAdmin->id level=$level index=$index");
+
                 $this->prepareLevel(
                     $nextBotUser,
                     $botUserAdmin,
@@ -103,6 +106,7 @@ class CashBackListener
                     $index
                 );
 
+                Log::info("parent=".print_r($nextBotUser->parent_id, true));
 
                 $nextBotUser = BotUser::query()
                     ->with(["user", "parent"])
