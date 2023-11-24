@@ -93,6 +93,7 @@ class CashBackListener
 
             $nextBotUser = $botUserUser;
             $index = 1;
+            Log::info("levels=".print_r($levels, true));
             foreach ($levels as $level) {
 
                 Log::info("nextBotUser $nextBotUser->id botUserAdmin $botUserAdmin->id level=$level index=$index");
@@ -115,8 +116,11 @@ class CashBackListener
 
                 Log::info("next bot user=".print_r($nextBotUser->toArray(), true));
 
-                if (is_null($nextBotUser))
+                if (is_null($nextBotUser)) {
+                    Log::info("break");
                     break;
+                }
+
                 $index++;
             }
 
