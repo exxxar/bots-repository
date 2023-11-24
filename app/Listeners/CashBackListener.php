@@ -114,7 +114,6 @@ class CashBackListener
                     ->where("id", $nextBotUser->parent_id)
                     ->first();
 
-                Log::info("next bot user=".print_r($nextBotUser->toArray(), true));
 
                 if (is_null($nextBotUser)) {
                     Log::info("break");
