@@ -56,6 +56,9 @@ import ManagerClients from '@/ClientTg/Pages/Manager/Clients.vue';
 import ManagerProfile from '@/ClientTg/Pages/Manager/Profile.vue';
 import ManagerPartners from '@/ClientTg/Pages/Manager/Partners.vue';
 
+
+import DeliverymanForm from '@/ClientTg/Pages/Delivery/DeliveryManForm.vue';
+
 export const routes = [
 
     {
@@ -355,6 +358,13 @@ export const deliveryRoutes = [
         path: '/delivery-main',
         component: DeliveryMain,
         meta: { title: 'Доставка: Главная', hide_menu:true}
+    },
+
+    {
+        name: 'DeliverymanForm',
+        path: '/deliveryman-form',
+        component: DeliverymanForm,
+        meta: { title: 'Регистрация доставщика', hide_menu:true}
     },
 
     {

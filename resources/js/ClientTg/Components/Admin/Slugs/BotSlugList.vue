@@ -18,6 +18,7 @@ import Slug from '@/ClientTg/Components/Admin/Slugs/Slug.vue'
 
     <div class="mb-2" v-if="show">
         <GlobalSlugList :can-add="true"
+
                         v-if="bot"
                         :bot="bot"
                         v-on:callback="loadSlugs"/>
@@ -27,7 +28,7 @@ import Slug from '@/ClientTg/Components/Admin/Slugs/Slug.vue'
         <label for="floatingInput">Быстрый поиск команды</label>
         <input type="search"
                v-model="ownSearch"
-               class="form-control" id="floatingInput" placeholder="name@example.com">
+               class="form-control" id="floatingInput" placeholder="Название команды">
 
     </div>
 
@@ -43,8 +44,7 @@ import Slug from '@/ClientTg/Components/Admin/Slugs/Slug.vue'
     </div>
 
 
-
-    <div class="mb-3 "
+    <div class="mb-1 "
          v-if="slugs&&bot"
          v-for="(slug, index) in filteredSlugs">
         <Slug :item="slug"

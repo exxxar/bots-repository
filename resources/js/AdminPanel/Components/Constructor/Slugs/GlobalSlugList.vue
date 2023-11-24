@@ -48,7 +48,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
     <div class="row" v-else>
         <div class="col-12">
             <div class="alert alert-warning" role="alert">
-                К сожалению еще нет глоабльных скриптов
+                К сожалению еще нет глобальных скриптов
             </div>
         </div>
     </div>

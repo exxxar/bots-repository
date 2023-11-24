@@ -19,9 +19,9 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
             <h6>Создаем бот к компании {{ company.title || 'Не установлен' }}</h6>
         </div>
     </div>
-    <div class="row mb-3 bot-sub-menu" v-if="editor">
+    <div class="row mb-3 bot-sub-menu" v-if="editor" style="background: transparent;">
         <div class="col-12">
-            <div class="btn-group" role="group" aria-label="Basic outlined example">
+            <div class="btn-group" role="group" aria-label="Basic outlined example" style="background: white;">
                 <button type="button"
                         v-bind:class="{'btn-info text-white':step===0}"
                         @click="setStep(0)"

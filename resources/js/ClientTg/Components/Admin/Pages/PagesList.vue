@@ -22,19 +22,19 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
     <ul v-if="pages.length>0"
         class="list-group w-100">
 
-        <li class="list-group-item cursor-pointer page-menu-item btn btn-outline-info mb-1"
+        <li class="list-group-item cursor-pointer page-menu-item btn btn-outline-info mb-3"
 
             v-for="(page, index) in pages"
         >
             <div class=" d-flex justify-content-between align-items-center">
-                <strong @click="selectPage(page)">#{{ page.id || 'Не указано' }}
-                    <span v-if="page.slug">{{ page.slug.command || 'Не указано' }}</span>
+                <strong @click="selectPage(page)" class="font-12">#{{ page.id || 'Не указано' }}
+                    <span v-if="page.slug" >{{ page.slug.command || 'Не указано' }}</span>
                     <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
                 </strong>
 
                 <button
                     v-if="editor"
-                    class="btn btn-outline-secondary" type="button"
+                    class="btn" type="button"
                     @click="openPageMenuModal(page.id)"
                     aria-expanded="false">
                     <i class="fa-solid fa-ellipsis"></i>
@@ -128,6 +128,12 @@ export default {
 </script>
 <style lang="scss">
 .page-menu-item {
+    border-radius: 10px !important;
+    margin-bottom: 5px !important;
+    border: 1px green solid !important;
+    color: black;
+    padding: 5px !important;
+
     strong {
         text-overflow: clip;
         word-wrap: break-word;
@@ -136,4 +142,5 @@ export default {
         padding: 5px;
     }
 }
+
 </style>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bots;
 
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
+use App\Facades\BusinessLogic;
 use App\Facades\StartCodesService;
 use App\Http\Controllers\Controller;
 use App\Models\Bot;
@@ -44,6 +45,40 @@ class SystemDiagnosticController extends Controller
             ->reply("Ваш чат id: " . ($data[0]->chat->id ?? 'не указан') . "\nИдентификатор топика:" . ($data[0]->message_thread_id ?? 'Не указан'),
                 $data[0]->message_thread_id ?? null
             );
+    }
+
+    public function resetAllBotUsers(...$data){
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        $bot = BotManager::bot()->getSelf();
+
+        if (!$botUser->is_admin) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $value = $data[3] ?? 'no';
+
+        if ($value=='no'){
+            BotManager::bot()
+                ->reply("Операция отменена");
+            return;
+        }
+
+        BotManager::bot()
+            ->replyAction()
+            ->reply("Бот будет очищен через 3...2...1...")
+            ->replyAction()
+            ->reply("Бот очищен");
+
+        BusinessLogic::botUsers()
+            ->setBotUser($botUser)
+            ->setBot($bot)
+            ->resetAllBotUsers();
+
+
     }
 
     public function democircle(...$data)

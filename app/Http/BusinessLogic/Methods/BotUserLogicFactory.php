@@ -9,7 +9,17 @@ use App\Http\Resources\ActionStatusCollection;
 use App\Http\Resources\BotUserCollection;
 use App\Http\Resources\BotUserResource;
 use App\Models\ActionStatus;
+use App\Models\BotDialogResult;
+use App\Models\BotMedia;
+use App\Models\BotNote;
 use App\Models\BotUser;
+use App\Models\CashBack;
+use App\Models\CashBackHistory;
+use App\Models\Documents;
+use App\Models\Order;
+use App\Models\ReferralHistory;
+use App\Models\Review;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -162,6 +172,111 @@ class BotUserLogicFactory
             ->paginate($size);
 
         return new BotUserCollection($botUsers);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function resetAllBotUsers(): void
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Параметры не соответствуют условию!");
+
+        if (!$this->botUser->is_admin)
+            throw new HttpException(403, "Недостаточно прав!");
+
+
+        $medias = BotMedia::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($medias) > 0)
+            foreach ($medias as $media)
+                $media->forceDelete();
+
+        $notes = BotNote::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($notes) > 0)
+            foreach ($notes as $note)
+                $note->forceDelete();
+
+        $cashBacks = CashBack::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($cashBacks) > 0)
+            foreach ($cashBacks as $cashBack)
+                $cashBack->forceDelete();
+
+        $cashBackHistories = CashBackHistory::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($cashBackHistories) > 0)
+            foreach ($cashBackHistories as $history)
+                $history->forceDelete();
+
+        $documents = Documents::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($documents) > 0)
+            foreach ($documents as $document)
+                $document->forceDelete();
+
+        $orders = Order::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($orders) > 0)
+            foreach ($orders as $order)
+                $order->forceDelete();
+
+
+        $referrals = ReferralHistory::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($referrals) > 0)
+            foreach ($referrals as $referral)
+                $referral->forceDelete();
+
+        $reviews = Review::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($reviews) > 0)
+            foreach ($reviews as $review)
+                $review->forceDelete();
+
+        $transactions = Transaction::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($transactions) > 0)
+            foreach ($transactions as $transaction)
+                $transaction->forceDelete();
+
+        $botUsers = BotUser::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($botUsers) > 0)
+            foreach ($botUsers as $botUser) {
+                $dialogResults = BotDialogResult::query()
+                    ->where("bot_user_id", $botUser->id)
+                    ->get();
+
+                if (count($dialogResults) > 0)
+                    foreach ($dialogResults as $result)
+                        $result->forceDelete();
+
+                $botUser->forceDelete();
+            }
+
+
     }
 
     /**

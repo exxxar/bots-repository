@@ -1,14 +1,7 @@
-<script setup>
-defineProps({
-    bot: {
-        type: Object,
-    },
 
-});
-</script>
 <template>
-    <div v-if="botUser">
-        <div class="container pt-3 pb-3" v-if="!botUser.is_deliveryman">
+    <div >
+        <div class="container pt-3 pb-3">
             <form
                 v-if="step===0"
                 v-on:submit.prevent="nextStep" class="row">
@@ -213,7 +206,7 @@ defineProps({
                 </div>
             </form>
         </div>
-        <div class="container pt-3 pb-3" v-else>
+<!--        <div class="container pt-3 pb-3" v-else>
             <div class="row">
                 <div class="col-12">
                     <div class="card border-success">
@@ -229,7 +222,7 @@ defineProps({
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 
 </template>
@@ -264,28 +257,13 @@ export default {
         }
     },
     mounted() {
-        if (this.tgUser) {
-            this.loadBotUser()
-        }
+
     },
     methods: {
         nextStep(){
           this.step++;
         },
-        loadBotUser(){
-            this.loading = true;
-            this.$store.dispatch("loadCurrentBotUser", {
-                dataObject: {
-                    bot_id: this.bot.id,
-                    tg: this.tgUser,
-                }
-            }).then((resp) => {
-                this.loading = false
-                this.botUser = resp
-            }).catch(() => {
-                this.loading = false
-            })
-        },
+
         submit() {
             this.loading = true;
             this.$store.dispatch("saveDeliveryman", {

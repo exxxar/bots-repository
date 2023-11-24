@@ -4,14 +4,14 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
 <template>
 
 
-    <div class="list-group list-custom-large" v-if="filteredAllSlugs.length>0">
+    <div class="list-group list-custom-large d-flex flex-wrap" v-if="filteredAllSlugs.length>0">
 
         <div v-for="(item, index) in filteredAllSlugs" class="w-100">
             <a href="javascript:void(0)"
                v-if="item"
                @click="selectSlug(item)" class="d-block w-100" style="min-height: 70px;">
                 <i class=" font-14 fa-solid fa-scroll rounded-xl shadow-xl bg-blue2-dark"></i>
-                <span>{{item.command || 'Не указана'}}</span>
+                <span style="line-height: 100%;padding-top:10px;    padding-right: 51px;">{{item.command || 'Не указана'}}</span>
                 <strong>{{ item.slug }}</strong>
                 <span class="badge bg-red2-dark font-8">#{{item.id}}</span>
                 <i class="fa-solid fa-scroll"></i>
@@ -50,19 +50,24 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
             </form>
         </div>
 
+
+
     </div>
 
+
+    <Pagination
+
+        v-on:pagination_page="nextSlugs"
+        v-if="slugs_paginate_object"
+        :pagination="slugs_paginate_object"/>
 
     <div class="mb-2" v-else>
 
         <div class="alert alert-warning" role="alert">
-            К сожалению еще нет глоабльных скриптов
+            К сожалению еще нет глобальных скриптов
         </div>
 
     </div>
-
-
-    <p v-else>Глобальных скриптов не обноружено</p>
 
 
 </template>
@@ -89,7 +94,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getSlugs', 'getSlugsPaginateObject']),
+        ...mapGetters(['getGlobalSlugs', 'getGlobalSlugsPaginateObject']),
         filteredAllSlugs() {
             if (this.slugs.length === 0)
                 return [];
@@ -116,12 +121,13 @@ export default {
         loadAllSlugs(page = 0) {
             this.$store.dispatch("loadGlobalSlugs", {
                 dataObject:{
-                    search: this.search || null
+                    search: this.search || null,
+                    needGlobal: true,
                 },
                 page: page
             }).then(resp => {
-                this.slugs = this.getSlugs
-                this.slugs_paginate_object = this.getSlugsPaginateObject
+                this.slugs = this.getGlobalSlugs
+                this.slugs_paginate_object = this.getGlobalSlugsPaginateObject
             })
         },
         removeSlug(item) {

@@ -4,7 +4,7 @@ import SlugForm from '@/ClientTg/Components/Admin/Slugs/SlugForm.vue'
 </script>
 <template>
 
-    <div class="btn w-100 text-left border-blue2-light p-3" type="button">
+    <div class="btn w-100 text-left border-blue2-light p-2" type="button">
         <p @click="toggleMenu" class="w-100 mb-0">
             <i v-if="showMenu" class="fa-solid fa-chevron-up"></i>
             <i v-else class="fa-solid fa-chevron-down"></i>

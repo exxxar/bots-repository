@@ -20,15 +20,15 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         <div class="col-12 col-md-6 mb-3" v-for="(botUser, index) in bot_users">
             <div class="card">
                 <div class="card-body">
-                    <p>Ф.И.О. из телеграма: {{ botUser.fio_from_telegram || 'Не указано' }}
+                    <p class="mb-0"> Ф.И.О. из телеграмма: {{ botUser.fio_from_telegram || 'Не указано' }}
                         <span
                             v-if="botUser.is_admin"
                             class="badge rounded-pill text-bg-success">Администратор</span>
                     </p>
-                    <p>Имя пользователя: {{ botUser.name || 'Не указано' }}</p>
-                    <p>Телефон: {{ botUser.phone || 'Не указано' }}</p>
-                    <p>Почта: {{ botUser.email || 'Не указано' }}</p>
-                    <p>id чата: {{ botUser.telegram_chat_id || 'Не указано' }}</p>
+                    <p class="mb-0">Имя пользователя: {{ botUser.name || 'Не указано' }}</p>
+                    <p class="mb-0">Телефон: {{ botUser.phone || 'Не указано' }}</p>
+                    <p class="mb-0">Почта: {{ botUser.email || 'Не указано' }}</p>
+                    <p class="mb-0">id чата: {{ botUser.telegram_chat_id || 'Не указано' }}</p>
                 </div>
                 <div class="card-footer">
                     <button

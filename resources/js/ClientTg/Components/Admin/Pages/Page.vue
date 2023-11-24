@@ -224,7 +224,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                     </div>
 
                     <div class="mb-2" v-if="need_page_video">
-                        <p class="alert alert-danger mb-0">
+                        <p class="alert alert-danger mb-2 rounded-s">
                             Внимание! не больше 10 видео на 1й странице!
                         </p>
                         <BotMediaList

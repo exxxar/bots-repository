@@ -35,7 +35,7 @@ const actions = {
 
 
 
-    async loadGlobalSlugs(context, payload = {dataObject: { search:null}, page: 0, size: 12}) {
+    async loadGlobalSlugs(context, payload = {dataObject: { search:null, needGlobal: true}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12
 

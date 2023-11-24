@@ -39,11 +39,11 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
                         <div class="fac fac-checkbox  py-2 my-2">
                             <span></span>
-                            <input id="need-without-phone-checkbox"
+                            <input id="need-deliveryman"
                                    v-model="need_deliveryman"
                                    value="false"
                                    type="checkbox">
-                            <label for="need-without-phone-checkbox">Только доставщики</label>
+                            <label for="need-deliveryman">Только доставщики</label>
                         </div>
 
                         <div class="fac fac-checkbox  py-2 my-2">
@@ -194,6 +194,7 @@ export default {
                     need_deliveryman:  this.need_deliveryman,
                     need_with_phone:  this.need_with_phone,
                     need_without_phone:  this.need_without_phone,
+
                 },
                 page: page
             }).then(resp => {
