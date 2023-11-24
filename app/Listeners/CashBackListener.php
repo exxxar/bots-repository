@@ -236,7 +236,7 @@ class CashBackListener
             'operation_type' => 1,
             'user_id' => $userBotUser->user_id,
             'bot_id' => $botId,
-            'employee_id' => $adminBotUser->id,
+            'employee_id' => $adminBotUser->user_id,
         ]);
 
 
