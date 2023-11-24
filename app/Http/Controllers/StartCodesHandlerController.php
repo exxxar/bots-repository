@@ -215,8 +215,8 @@ class StartCodesHandlerController extends Controller
 
 
         $ref = ReferralHistory::query()
-            ->where("user_sender_id", $userBotUser->user_id)
-            ->where("user_recipient_id", $botUser->user_id)
+            ->where("user_sender_id", $userBotUser->user_id ?? null)
+            ->where("user_recipient_id", $botUser->user_id ?? null)
             ->where("bot_id", $botUser->bot_id)
             ->first();
 
