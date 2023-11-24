@@ -91,9 +91,11 @@ class BotManager extends BotCore
                     ->first();
 
                 if (is_null($existUserId))
-                    $user = User::query()->create([
-                        'name' => $username ?? $telegram_chat_id ?? "unknown",
+                    $user = User::query()->updateOrCreate([
                         'email' => "$telegram_chat_id@your-cashman.ru",
+
+                    ],[
+                        'name' => $username ?? $telegram_chat_id ?? "unknown",
                         'password' => bcrypt($telegram_chat_id),
                         'role_id' => $role->id,
                     ]);
