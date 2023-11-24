@@ -270,6 +270,15 @@ class BotUserLogicFactory
             foreach ($transactions as $transaction)
                 $transaction->forceDelete();
 
+        $statuses = ActionStatus::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($statuses) > 0)
+            foreach ($statuses as $status)
+                $status->forceDelete();
+
+
         $botUsers = BotUser::query()
             ->where("bot_id", $this->bot->id)
             ->get();
