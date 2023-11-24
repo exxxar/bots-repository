@@ -61,9 +61,9 @@ class SystemDiagnosticController extends Controller
 
         $value = $data[3] ?? 'no';
 
-        if ($value=='no'){
+        if ($value != 'yes'){
             BotManager::bot()
-                ->reply("Операция отменена");
+                ->reply("Впишите <b>yes</b> - удалить все данные в боте о пользователях");
             return;
         }
 

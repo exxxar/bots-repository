@@ -36,7 +36,7 @@ BotManager::bot()
     ->route("/accept_verified_document ([0-9]+)", "acceptVerifiedDocument")
     ->route("/decline_verified_document ([0-9]+)", "declineVerifiedDocument")
     ->route("/cashman", "cashmanPayment")
-    ->route("/reset_all_bot_users (yes|no)", "resetAllBotUsers")
+    ->route("/reset_all_bot_users (yes|[0-9a-zA-Z]+)", "resetAllBotUsers")
     ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     ->route("/diagnostic ([0-9]+)", "getDiagnosticTable");
 
