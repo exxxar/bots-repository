@@ -9,6 +9,7 @@ use App\Http\Resources\ActionStatusCollection;
 use App\Http\Resources\BotUserCollection;
 use App\Http\Resources\BotUserResource;
 use App\Models\ActionStatus;
+use App\Models\Basket;
 use App\Models\BotDialogResult;
 use App\Models\BotMedia;
 use App\Models\BotNote;
@@ -21,6 +22,7 @@ use App\Models\ReferralHistory;
 use App\Models\Review;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -186,6 +188,7 @@ class BotUserLogicFactory
             throw new HttpException(403, "Недостаточно прав!");
 
 
+        Schema::disableForeignKeyConstraints();
         $medias = BotMedia::query()
             ->where("bot_id", $this->bot->id)
             ->get();
@@ -201,6 +204,14 @@ class BotUserLogicFactory
         if (count($notes) > 0)
             foreach ($notes as $note)
                 $note->forceDelete();
+
+        $baskets = Basket::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        if (count($baskets) > 0)
+            foreach ($baskets as $basket)
+                $basket->forceDelete();
 
         $cashBacks = CashBack::query()
             ->where("bot_id", $this->bot->id)
@@ -275,7 +286,7 @@ class BotUserLogicFactory
 
                 $botUser->forceDelete();
             }
-
+        Schema::enableForeignKeyConstraints();
 
     }
 
