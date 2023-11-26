@@ -296,7 +296,7 @@ trait BotDialogTrait
             $tmpMessage,
             [
                 [
-                    ["text" => "Написать пользователю ответ", "url" => $link]
+                    ["text" => "✉Написать пользователю ответ", "url" => $link]
                 ]
             ],
             $thread

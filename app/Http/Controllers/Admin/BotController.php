@@ -22,6 +22,7 @@ use Illuminate\Validation\ValidationException;
 class BotController extends Controller
 {
 
+
     /**
      * @throws ValidationException
      */
@@ -46,6 +47,43 @@ class BotController extends Controller
             );
         return response()->noContent();
 
+    }
+
+    public function loadBotFields(Request $request, $botId): \App\Http\Resources\BotCustomFieldSettingCollection{
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $botId)
+            ->first();
+
+        return BusinessLogic::bots()
+            ->setBot($bot ?? null)
+            ->botFieldList();
+    }
+    /**
+     * @throws ValidationException
+     */
+    public function storeBotFields(Request $request): \App\Http\Resources\BotCustomFieldSettingCollection
+    {
+        $request->validate([
+            "fields.*.key" => "required",
+            "fields.*.label" => "required",
+            "fields.*.type" => "required",
+            "fields.*.description" => "required",
+            "fields.*.validate_pattern" => "",
+            "fields.*.is_active" => "",
+            "fields.*.required" => "",
+            "bot_id" => "required",
+        ]);
+
+
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->bot_id)
+            ->first();
+
+        return BusinessLogic::bots()
+            ->setBot($bot ?? null)
+            ->storeBotFields($request->all());
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\BotCustomFieldSetting;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -57,7 +58,9 @@ class BotResource extends JsonResource
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
             'company' => new CompanyResource($this->whenLoaded('company')),
-            'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
+            //'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
+            'field_settings' => !isset($this->fieldSettings) ? null : BotCustomFieldSettingResource::collection($this->whenLoaded('fieldSettings')),
+
             //'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),
         ];
     }

@@ -13,6 +13,34 @@ const getters = {
 }
 
 const actions = {
+    async loadCurrentBotFields(context){
+        let link = `${BASE_BOTS_LINK}/load-fields`
+        let method = 'GET'
+
+        let _axios = util.makeAxiosFactory(link, method)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async storeBotFields(context, payload = {dataObject: null}) {
+
+        let link = `${BASE_BOTS_LINK}/store-fields`
+        let method = 'POST'
+        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async createBotLazy(context, payload = {botForm: null}) {
         let link = `${BASE_BOTS_LINK}/bot-lazy`
 

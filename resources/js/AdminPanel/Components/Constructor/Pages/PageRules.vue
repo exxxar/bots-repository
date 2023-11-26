@@ -233,6 +233,32 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
         </li>
 
+<!--
+        <li class="list-group-item  d-flex justify-content-between align-items-center"
+            v-for="rule in rulesForCustomFields"
+            >
+
+            {{rule}}
+            <div>
+                <label class="form-label" id="bot-domain">
+                  {{ rule.title || 'Не указан'}}
+
+                </label>
+                <input type="text" class="form-control"
+                       placeholder="Возраст от"
+                       aria-label="Возраст от"
+                       v-model="rulesForm.rules_if.bot_user[rule.key]"
+                       maxlength="255"
+                       aria-describedby="bot-user-age">
+            </div>
+            <button
+                type="button"
+                class="btn btn-outline-info" @click="removeRule(rule.key)"><i class="fa-solid fa-trash-can"></i>
+            </button>
+        </li>
+-->
+
+
     </ul>
     <h6 class="mt-5" v-if="rulesForm.rules_if">Иначе</h6>
     <p class="d-flex justify-content-between"
@@ -272,7 +298,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 </template>
 <script>
 export default {
-    props:["bot","rulesForm"],
+    props: ["bot", "rulesForm"],
     data() {
         return {
             rules: [
@@ -352,12 +378,22 @@ export default {
             ],
         }
     },
-
+    computed:{
+        rulesForCustomFields(){
+            let rules = this.rules.filter(item=>item.key!=null)
+            console.log("filtered rules", rules)
+            return rules
+        }
+    },
+    mounted() {
+       // this.loadCurrentBotFields()
+    },
     methods: {
         hasRuleKey(key) {
             if (this.rulesForm.rules_if == null)
                 return false
 
+            console.log("key=>",(key||'-'))
             return Object.keys(this.rulesForm.rules_if.bot_user).find(item => item === key) != null
         },
         modifyChannel(params) {
@@ -383,7 +419,42 @@ export default {
 
             // this.rulesForm.rules_if[item.rules_block] = [...this.rulesForm.rules_if[item.rules_block], ...item.rule]
         },
-        attachPageToRule(item){
+        loadCurrentBotFields() {
+            return this.$store.dispatch("loadCurrentBotFields", {
+                bot_id: this.bot.id
+            }).then((response) => {
+
+                let fields = response.data || []
+
+
+                fields.forEach(item => {
+                    if (item.is_active) {
+                        this.rules.push({
+                            id: this.rules.length + 1,
+                            title: item.label,
+                            key: item.key,
+                            type: item.type,
+                            rules_block: 'bot_user',
+                            rule: {}
+                        })
+
+                        if (item.type === 0)
+                            this.rules[this.rules.length - 1].rule[item.key] = ''
+
+                        if (item.type === 1)
+                            this.rules[this.rules.length - 1].rule[item.key] = 0
+
+                        if (item.type === 2)
+                            this.rules[this.rules.length - 1].rule[item.key] = true
+                    }
+                })
+
+                console.log("new rules=>", this.rules)
+
+
+            })
+        },
+        attachPageToRule(item) {
             if (item.id != this.rulesForm.id)
                 this.rulesForm.rules_else_page_id = item.id
             else

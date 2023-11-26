@@ -93,10 +93,10 @@ class CashBackListener
 
             $nextBotUser = $botUserUser;
             $index = 1;
-            Log::info("levels=".print_r($levels, true));
+            //   Log::info("levels=".print_r($levels, true));
             foreach ($levels as $level) {
 
-                Log::info("nextBotUser $nextBotUser->id botUserAdmin $botUserAdmin->id level=$level index=$index");
+                //   Log::info("nextBotUser $nextBotUser->id botUserAdmin $botUserAdmin->id level=$level index=$index");
 
                 $this->prepareLevel(
                     $nextBotUser,
@@ -107,7 +107,7 @@ class CashBackListener
                     $index
                 );
 
-                Log::info("parent=".print_r($nextBotUser->parent_id, true));
+                // Log::info("parent=".print_r($nextBotUser->parent_id, true));
 
                 $nextBotUser = BotUser::query()
                     ->with(["user", "parent"])
@@ -211,12 +211,12 @@ class CashBackListener
     {
 
 
-        if (is_null($userBotUser))
+        if (is_null($userBotUser) || $moneyAmount == 0 || $levelPercent == 0)
             return null;
 
-        Log::info("cashback level=$levelIndex amount=$moneyAmount %=$levelPercent");
-        $cashBack = $this->prepareUserCashBack( $botId, $userBotUser->id);
         $tmpAmount = $moneyAmount * ($levelPercent / 100);
+        // Log::info("cashback level=$levelIndex amount=$moneyAmount %=$levelPercent");
+        $cashBack = $this->prepareUserCashBack($botId, $userBotUser->id);
         $cashBack->amount += $tmpAmount;
         $cashBack->save();
 
@@ -287,7 +287,7 @@ class CashBackListener
 
     }
 
-    private function prepareUserCashBack( $botId, $botUserId)
+    private function prepareUserCashBack($botId, $botUserId)
     {
         $cashBack = CashBack::query()->where("bot_id", $botId)
             ->where("bot_user_id", $botUserId)

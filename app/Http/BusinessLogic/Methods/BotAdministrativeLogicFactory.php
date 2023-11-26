@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\CashBackDirectionEnum;
+use App\Enums\CustomFieldTypeEnum;
 use App\Events\CashBackEvent;
 use App\Events\CashBackSubEvent;
 use App\Exports\BotStatisticExport;
@@ -20,6 +21,7 @@ use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
+use App\Models\CustomField;
 use App\Models\ManagerProfile;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -848,7 +850,6 @@ class BotAdministrativeLogicFactory
             ->where("key", "first_cashback_need_fail_message")
             ->first())["value"] ?? false;
 
-        Log::info("first_cashback_granted" . print_r($firstCashBackGranted ?? '-', true));
 
         $birthday = Carbon::parse($data["birthday"] ?? Carbon::now())->format("Y-m-d");
         $form = [
@@ -866,6 +867,29 @@ class BotAdministrativeLogicFactory
         ];
 
         $this->botUser->update($form);
+
+        $fields = $data["fields"] ?? null;//isset($data["fields"]) ? json_decode($data["fields"] ?? '[]') : null;
+
+        if (!is_null($fields)) {
+            foreach ($fields as $field) {
+                $field = (object)$field;
+                $value = null;
+
+                switch ($field->type){
+                    default:
+                    case CustomFieldTypeEnum::Text: $value = $field->value; break;
+                    case CustomFieldTypeEnum::Number: $value = floatval($field->value); break;
+                    case CustomFieldTypeEnum::Boolean: $value = (bool)$field->value; break;
+                }
+
+                $res = CustomField::query()->updateOrCreate([
+                    'bot_user_id' => $this->botUser->id,
+                    'bot_custom_field_setting_id' => $field->id,
+                ], [
+                    'value' => $value
+                ]);
+            }
+        }
 
         if (!is_null($firstCashBackGranted)) {
             $adminBotUser = BotUser::query()

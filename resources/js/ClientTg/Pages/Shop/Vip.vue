@@ -5,7 +5,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.vue";
 </script>
 <template>
-    <div v-if="botUser">
+    <div v-if="botUser"><!---->
         <div class="card card-style p-3" v-if="!botUser.is_vip&&settings.display_type==0">
             <form
                 v-on:submit.prevent="submit" class="row mb-0">
@@ -20,7 +20,8 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 <div class="col-12">
                     <p class="mb-3"><em>Приветствую Вас, <strong>Дорогой друг!</strong> Я хочу поздравить Вас и дать
                         возможность получать неограниченные преимущества нашего сервиса! Для начала нам нужно с Вами
-                        познакомиться - это поможет сделать использование сервиса более комфортным и взаимовыгодным!</em>
+                        познакомиться - это поможет сделать использование сервиса более комфортным и
+                        взаимовыгодным!</em>
                     </p>
                     <h6 class="text-center">Как мне к Вам обращаться?</h6>
                     <div class="input-style input-style-2">
@@ -108,6 +109,46 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                         </datalist>
                     </div>
                 </div>
+                <!-- -->
+                <div class="col-12"
+
+                     v-for="(field, index) in vipForm.fields"
+                >
+                    <div v-if="settings[field.key]">
+                        <h6 class="text-center">{{ field.description }}</h6>
+                        <div class="input-style input-style-2" v-if="field.type===0||field.type===1">
+                            <input :type="field.type===1?'number':'text'"
+                                   v-model="vipForm.fields[index].value"
+                                   class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                   :placeholder="field.title"
+                                   :pattern="vipForm.fields[index].pattern||''"
+                                   aria-label="vipForm-city" aria-describedby="vipForm-city"
+                                   :required="vipForm.fields[index].requried"
+                            >
+                        </div>
+
+                        <div class="row mb-0" v-if="field.type===2">
+                            <div class="col-6 p-3">
+                                <div
+                                    v-bind:class="{'bg-highlight':vipForm.fields[index].value}"
+                                    @click="vipForm.fields[index].value = true"
+                                    class="btn btn-border btn-m btn-full border-highlight rounded-s shadow-s w-100 p-3 d-flex justify-content-between flex-column align-items-center ">
+                                    <i class="fa-solid fa-check font-28"></i>
+                                    <span class="text-center text-uppercase my-2">Да</span>
+                                </div>
+                            </div>
+                            <div class="col-6 p-3">
+                                <div
+                                    v-bind:class="{'bg-highlight ':!vipForm.fields[index].value}"
+                                    @click="vipForm.fields[index].value = false"
+                                    class="btn btn-border btn-m btn-full border-highlight rounded-s  shadow-s w-100 p-3 d-flex justify-content-between flex-column align-items-center ">
+                                    <i class="fa-solid fa-xmark font-28"></i>
+                                    <span class="text-center text-uppercase my-2">Нет</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="col-12">
                     <p class="mb-3"><em>Отлично! Теперь, прежде чем закончить, пожалуйста, прочитайте условия
@@ -160,7 +201,8 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 <div class="col-12">
                     <p class="mb-3"><em>Приветствую Вас, <strong>Дорогой друг!</strong> Я хочу поздравить Вас и дать
                         возможность получать неограниченные преимушества нашего сервиса! Для начала нам нужно с Вами
-                        познакомиться - это поможет сделать использование сервиса более комфортным и взаимовыгодным!</em>
+                        познакомиться - это поможет сделать использование сервиса более комфортным и
+                        взаимовыгодным!</em>
                     </p>
                     <h6 class="text-center">Как мне к Вам обращаться?</h6>
                     <div class="input-style input-style-2">
@@ -338,7 +380,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     </div>
 
                 </div>
-                <div class="col-12" >
+                <div class="col-12">
                     <p class="mb-3"><em>Отлично! Теперь, прежде чем продолжить, пожалуйста, прочитайте мои условия
                         использования и дайте свое согласие на их принятие.</em></p>
                     <h6 class="text-center">Последний шаг</h6>
@@ -383,7 +425,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
         </div>
 
         <div class="card card-style p-3" v-if="botUser.is_vip">
-            Поздравляем! Вы являетесь нашим VIP-пользователеме! Вам доступны следующие возможности:
+            Поздравляем! Вы являетесь нашим VIP-пользователем! Вам доступны следующие возможности:
             <ul>
                 <li>Накопление CashBack за покупки</li>
                 <li>Оплата товаров через CashBak</li>
@@ -395,6 +437,17 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     <p class="mb-0">Город: {{ botUser.city || 'Не указано' }}</p>
                     <!--                    <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>-->
                     <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
+                    <p class="mb-0" v-for="field in vipForm.fields">
+                        {{ field.title }}:
+
+                        <span v-if="field.config.type===2">
+                            {{ field.value === false ? "Нет" : "Да" }}
+                        </span>
+
+                        <span v-if="field.config.type===0||field.config.type===1">
+                            {{ field.value }}
+                        </span>
+                    </p>
                 </li>
             </ul>
 
@@ -432,6 +485,7 @@ export default {
                 country: null,
                 address: null,
                 sex: true,
+                fields: []
 
             }
         }
@@ -449,7 +503,10 @@ export default {
                 country: this.botUser.country || null,
                 address: this.botUser.address || null,
                 sex: this.botUser.sex || true,
+                fields: [],
             }
+
+            this.loadCurrentBotFields();
 
         },
     },
@@ -470,6 +527,7 @@ export default {
                }
            })*/
 
+
         this.loadCashBackModuleData();
     },
 
@@ -484,6 +542,49 @@ export default {
         }
     },
     methods: {
+        getUserFieldValue(id) {
+            const result = {
+                value: null
+            }
+
+            if (!this.botUser.fields)
+                return result
+
+            return this.botUser.fields.find(item => item.bot_custom_field_setting_id === id) || result
+        },
+        loadCurrentBotFields() {
+            return this.$store.dispatch("loadCurrentBotFields")
+                .then((response) => {
+
+                    let fields = response.data || []
+
+                    fields.forEach(item => {
+
+                        if (item.is_active) {
+
+                            let field = this.getUserFieldValue(item.id)
+                            let value = field.value;
+                            let config = field.config;
+
+                            this.vipForm.fields.push({
+                                id: item.id,
+                                title: item.label,
+                                description: item.description,
+                                key: item.key,
+                                value: item.type === 2 ? (value === "1") : value,
+                                type: item.type,
+                                pattern: item.pattern,
+                                required: item.required,
+                                config: config
+                            })
+
+
+                        }
+                    })
+
+
+                })
+        },
         nextStep() {
             this.step++;
         },
@@ -493,14 +594,10 @@ export default {
             this.$store.dispatch("loadCashBackModuleData").then((resp) => {
                 this.loading = false
 
-                this.$nextTick(()=>{
-                    Object.keys(resp).forEach(item=>{
+                this.$nextTick(() => {
+                    Object.keys(resp).forEach(item => {
                         this.settings[item] = resp[item]
                     })
-              /*      this.settings.display_type = resp.display_type || 0
-                    this.settings.need_birthday = resp.need_birthday
-                    this.settings.need_age = resp.need_age
-                    this.settings.need_city = resp.need_city*/
                 })
 
             }).catch(() => {

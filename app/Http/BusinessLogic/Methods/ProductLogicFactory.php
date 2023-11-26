@@ -599,7 +599,7 @@ class ProductLogicFactory
 
 
         $userInfo = !$needPickup ?
-            sprintf("Данные для доставки:\nФ.И.О.:%s\nНомер телефона:%s\nАдрес:%s\nКод подъезда:%s\nДоп.инфо:%s\n",
+            sprintf("Данные для доставки:\nФ.И.О.:%s\nНомер телефона:%s\nАдрес:%s\nНомер подъезда:%s\nДоп.инфо:%s\n",
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
@@ -617,11 +617,21 @@ class ProductLogicFactory
             ->first())["value"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
             $userId);
 
+        $botDomain = $this->bot->bot_domain;
+        $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->botUser->telegram_chat_id);
+
+        $keyboard =  [
+            [
+                ["text" => "✉Написать пользователю ответ", "url" => $link]
+            ]
+        ];
+
         BotMethods::bot()
             ->whereBot($this->bot)
-            ->sendMessage(
+            ->sendInlineKeyboard(
                 $this->bot->order_channel ?? $this->bot->main_channel ?? null,
-                "$message\n\n$userInfo"
+                "$message\n\n$userInfo",
+                    $keyboard
             )
             ->sendMessage(
                 $this->botUser->telegram_chat_id,

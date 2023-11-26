@@ -283,6 +283,8 @@ Route::prefix("bot-client")
             ->group(function(){
                 Route::post("/simple-bot-list", "simpleList");
                 Route::post("/bot-lazy", "createBotLazy");
+                Route::post("/store-fields", "storeBotFields");
+                Route::get("/load-fields", "loadBotFields");
                 Route::post('/manager-switch-status',"switchBotStatusManager");
                 Route::post("/manager-bot-update", "updateBotByManager");
                 Route::delete("/remove-my-manager/{botId}", "destroyByManager");

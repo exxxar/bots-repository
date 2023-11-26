@@ -84,6 +84,8 @@ Route::prefix("admin")
                 Route::post("/bot-update", "updateBot");
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");
+                Route::post("/store-fields", "storeBotFields");
+                Route::get("/load-fields/{botId}", "loadBotFields");
                 Route::post("/duplicate", "duplicate");
                 Route::delete("/force/{botId}", "forceDelete");
                 Route::delete("/{botId}", "destroy");

@@ -120,3 +120,8 @@ Route::apiResource('food-constructor', App\Http\Controllers\FoodConstructorContr
 Route::apiResource('ingredient-category', App\Http\Controllers\IngredientCategoryController::class);
 
 Route::apiResource('ingredient', App\Http\Controllers\IngredientController::class);
+
+
+Route::apiResource('bot-custom-field-setting', App\Http\Controllers\BotCustomFieldSettingController::class);
+
+Route::apiResource('custom-field', App\Http\Controllers\CustomFieldController::class);

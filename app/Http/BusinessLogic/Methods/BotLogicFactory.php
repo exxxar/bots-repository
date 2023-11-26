@@ -9,6 +9,8 @@ use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\BotCollection;
+use App\Http\Resources\BotCustomFieldSettingCollection;
+use App\Http\Resources\BotCustomFieldSettingResource;
 use App\Http\Resources\BotMenuTemplateResource;
 use App\Http\Resources\BotNoteResource;
 use App\Http\Resources\BotResource;
@@ -23,6 +25,7 @@ use App\Http\Resources\ImageMenuResource;
 use App\Http\Resources\LocationResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
+use App\Models\BotCustomFieldSetting;
 use App\Models\BotDialogCommand;
 use App\Models\BotDialogGroup;
 use App\Models\BotMenuSlug;
@@ -546,6 +549,70 @@ class BotLogicFactory
         $this->bot->save();
 
         return new BotResource($this->bot);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function botFieldList(): BotCustomFieldSettingCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $fields = BotCustomFieldSetting::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        return new BotCustomFieldSettingCollection($fields);
+    }
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function storeBotFields(array $data): BotCustomFieldSettingCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "fields.*.key" => "required",
+            "fields.*.label" => "required",
+            "fields.*.type" => "required",
+            "fields.*.description" => "required",
+            "fields.*.required" => "",
+            "fields.*.validate_pattern" => "",
+            "fields.*.is_active" => "",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $fields = json_decode($data["fields"]);
+
+        foreach ($fields as $field) {
+            $field = (object)$field;
+
+            BotCustomFieldSetting::query()
+                ->updateOrCreate([
+                    'bot_id' => $this->bot->id,
+                    'key' => $field->key,
+                ], [
+                    'type' => $field->type,
+                    'label' => $field->label,
+                    'description' => $field->description,
+                    'required' => ($field->required ?? false) == "on" ? 1 : 0,
+                    'validate_pattern' => $field->validate_pattern,
+                    'is_active' => ($field->is_active ?? false) == "on" ? 1 : 0,
+                ]);
+        }
+
+        $fields = BotCustomFieldSetting::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        return new BotCustomFieldSettingCollection($fields);
+
     }
 
     /**
@@ -1564,6 +1631,13 @@ class BotLogicFactory
 
 
         $inlineKeyboard = json_decode($data["inline_keyboard"] ?? '[]');
+
+        $inlineKeyboard[] = [
+            [
+                "text" => "🤖Вернуться в бота",
+                "url" => "https://t.me/" . $this->bot->bot_domain
+            ]
+        ];
 
         //dd($inlineKeyboard);
 

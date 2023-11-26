@@ -12,6 +12,7 @@ import BotDialogGroupList from "@/AdminPanel/Components/Constructor/Dialogs/BotD
 import Shop from "@/AdminPanel/Components/Constructor/Shop/Shop.vue";
 import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
 import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
+import BotFields from "@/AdminPanel/Components/Constructor/Bot/BotFields.vue";
 </script>
 <template>
     <div class="row" v-if="company">
@@ -35,6 +36,13 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
                         class="btn btn-outline-info"><i class="fa-solid fa-file mr-2"></i> Страницы
                 </button>
 
+
+                <button type="button"
+                        :disabled="botForm.selected_bot_template_id===null"
+                        v-bind:class="{'btn-info text-white':step===10}"
+                        @click="setStep(10)"
+                        class="btn btn-outline-info"><i class="fa-solid fa-code mr-2"></i> Настраиваемые поля
+                </button>
 
                 <div class="dropdown">
                     <button
@@ -972,6 +980,11 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
             <Shop v-if="!load"/>
         </div>
 
+
+
+        <div v-if="step===10">
+            <BotFields v-if="!load"/>
+        </div>
 
         <div v-if="step===1">
             <KeyboardList

@@ -1,44 +1,24 @@
 created:
-    - app/Http/Controllers/DocumentsController.php
-    - app/Http/Controllers/FoodConstructorController.php
-    - app/Http/Controllers/IngredientCategoryController.php
-    - app/Http/Controllers/IngredientController.php
-    - database/factories/FoodConstructorFactory.php
-    - database/factories/IngredientCategoryFactory.php
-    - database/factories/IngredientFactory.php
-    - database/factories/DocumentsFactory.php
-    - database/migrations/2023_11_18_085724_create_food_constructors_table.php
-    - database/migrations/2023_11_18_085725_create_ingredient_categories_table.php
-    - database/migrations/2023_11_18_085726_create_ingredients_table.php
-    - database/migrations/2023_11_18_085727_create_documents_table.php
-    - app/Models/FoodConstructor.php
-    - app/Models/IngredientCategory.php
-    - app/Models/Ingredient.php
-    - app/Models/Documents.php
-    - database/seeders/DocumentsSeeder.php
-    - database/seeders/FoodConstructorSeeder.php
-    - database/seeders/IngredientCategorySeeder.php
-    - database/seeders/IngredientSeeder.php
-    - tests/Feature/Http/Controllers/DocumentsControllerTest.php
-    - tests/Feature/Http/Controllers/FoodConstructorControllerTest.php
-    - tests/Feature/Http/Controllers/IngredientCategoryControllerTest.php
-    - tests/Feature/Http/Controllers/IngredientControllerTest.php
-    - app/Http/Requests/DocumentStoreRequest.php
-    - app/Http/Requests/DocumentUpdateRequest.php
-    - app/Http/Requests/FoodConstructorStoreRequest.php
-    - app/Http/Requests/FoodConstructorUpdateRequest.php
-    - app/Http/Requests/IngredientCategoryStoreRequest.php
-    - app/Http/Requests/IngredientCategoryUpdateRequest.php
-    - app/Http/Requests/IngredientStoreRequest.php
-    - app/Http/Requests/IngredientUpdateRequest.php
-    - app/Http/Resources/DocumentCollection.php
-    - app/Http/Resources/DocumentResource.php
-    - app/Http/Resources/FoodConstructorCollection.php
-    - app/Http/Resources/FoodConstructorResource.php
-    - app/Http/Resources/IngredientCategoryCollection.php
-    - app/Http/Resources/IngredientCategoryResource.php
-    - app/Http/Resources/IngredientCollection.php
-    - app/Http/Resources/IngredientResource.php
+    - app/Http/Controllers/BotCustomFieldSettingController.php
+    - app/Http/Controllers/CustomFieldController.php
+    - database/factories/BotCustomFieldSettingFactory.php
+    - database/factories/CustomFieldFactory.php
+    - database/migrations/2023_11_24_230837_create_bot_custom_field_settings_table.php
+    - database/migrations/2023_11_24_230838_create_custom_fields_table.php
+    - app/Models/BotCustomFieldSetting.php
+    - app/Models/CustomField.php
+    - database/seeders/BotCustomFieldSettingSeeder.php
+    - database/seeders/CustomFieldSeeder.php
+    - tests/Feature/Http/Controllers/BotCustomFieldSettingControllerTest.php
+    - tests/Feature/Http/Controllers/CustomFieldControllerTest.php
+    - app/Http/Requests/BotCustomFieldSettingStoreRequest.php
+    - app/Http/Requests/BotCustomFieldSettingUpdateRequest.php
+    - app/Http/Requests/CustomFieldStoreRequest.php
+    - app/Http/Requests/CustomFieldUpdateRequest.php
+    - app/Http/Resources/BotCustomFieldSettingCollection.php
+    - app/Http/Resources/BotCustomFieldSettingResource.php
+    - app/Http/Resources/CustomFieldCollection.php
+    - app/Http/Resources/CustomFieldResource.php
 updated:
     - routes/api.php
 models:
@@ -83,3 +63,5 @@ models:
     IngredientCategory: { title: 'string:255 nullable', image: 'string:255 nullable', bot_id: 'id foreign:bots', food_constructor_id: 'id foreign:food_constructors', relationships: { hasMany: 'FoodConstructor, Bot' } }
     Ingredient: { title: 'string:255 nullable', description: 'longtext nullable', image: 'string:255 nullable', weight: 'string:255 nullable', price: 'string:255 nullable', bot_id: 'id foreign:bots', food_constructor_id: 'id foreign:food_constructors', sub: "json nullable comment:'дополнительные вложенные параметры'", ingredient_category_id: 'id foreign:ingredient_categories', is_checked: 'boolean default:false', is_disabled: 'boolean default:false', is_global: 'boolean default:false', relationships: { belongsTo: IngredientCategory } }
     Documents: { title: 'string:255 nullable', description: 'longtext nullable', file_id: "string:255 nullable comment:'идентификатор файла в TG'", type: "integer default:0 comment:'Тип документа'", params: "json nullable comment:'выписанные параметры из документа'", bot_id: 'id foreign:bots', bot_user_id: 'id foreign:bot_users', verified_at: 'nullable timestamp', relationships: { belongsTo: 'Bot, BotUser' } }
+    BotCustomFieldSetting: { bot_id: 'id foreign:bots', type: 'integer default:0 nullable', label: 'string:255 nullable', description: 'longtext nullable', required: 'boolean false', validate_pattern: 'string:255 nullable', relationships: { belongsTo: Bot } }
+    CustomField: { key: 'string:255 nullable', value: 'string:255 nullable', bot_user_id: 'id foreign:bot_users', bot_custom_field_setting_id: 'id foreign:bot_custom_field_settings', relationships: { belongsTo: 'BotCustomFieldSetting, BotUser' } }

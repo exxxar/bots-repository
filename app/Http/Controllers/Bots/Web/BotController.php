@@ -43,6 +43,33 @@ class BotController extends Controller
         return response()->noContent();
     }
 
+    public function loadBotFields(Request $request): \App\Http\Resources\BotCustomFieldSettingCollection{
+
+        return BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->botFieldList();
+    }
+    /**
+     * @throws ValidationException
+     */
+    public function storeBotFields(Request $request): \App\Http\Resources\BotCustomFieldSettingCollection
+    {
+        $request->validate([
+            "fields.*.key" => "required",
+            "fields.*.label" => "required",
+            "fields.*.type" => "required",
+            "fields.*.description" => "required",
+            "fields.*.validate_pattern" => "",
+            "fields.*.is_active" => "",
+            "fields.*.required" => "",
+        ]);
+
+        return BusinessLogic::bots()
+            ->setBot($request->bot  ?? null)
+            ->storeBotFields($request->all());
+    }
+
+
     /**
      * @throws ValidationException
      */

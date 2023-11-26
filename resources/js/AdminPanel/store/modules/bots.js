@@ -20,7 +20,35 @@ const getters = {
 }
 
 const actions = {
-    updateShopLink(context, payload = {botForm:null}){
+    async loadCurrentBotFields(context, payload = {bot_id:null}){
+            let link = `${BASE_BOTS_LINK}/load-fields/${payload.bot_id}`
+            let method = 'GET'
+
+            let _axios = util.makeAxiosFactory(link, method)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+    },
+    async storeBotFields(context, payload = {dataObject: null}) {
+
+        let link = `${BASE_BOTS_LINK}/store-fields`
+        let method = 'POST'
+        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async updateShopLink(context, payload = {botForm:null}){
         let link = `${BASE_BOTS_LINK}/update-shop-link`
 
         let _axios = util.makeAxiosFactory(link,"POST", payload.botForm)

@@ -65,8 +65,8 @@ class Bot extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
-        'cashback_fire_percent'=> 'integer',
-        'cashback_fire_period'=> 'integer',
+        'cashback_fire_percent' => 'integer',
+        'cashback_fire_period' => 'integer',
 
         'balance' => 'double',
         'tax_per_day' => 'double',
@@ -86,20 +86,20 @@ class Bot extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    protected $with = ["company","amo","warnings"];
+    protected $with = ["company", "amo", "warnings", "fieldSettings"];
     protected $appends = ['topics'];
 
-    public function getTopicsAttribute(){
+    public function getTopicsAttribute()
+    {
         if (is_null($this->message_threads))
             return null;
         $tmp = [];
         $messages = Collection::make($this->message_threads ?? [])
             ->all();
 
-        foreach ($messages as $message)
-        {
-            $key = $message["key"]?? $message->key ?? null;
-            $value = $message["value"]?? $message->key ?? null;
+        foreach ($messages as $message) {
+            $key = $message["key"] ?? $message->key ?? null;
+            $value = $message["value"] ?? $message->key ?? null;
             $tmp[$key] = $value;
         }
 
@@ -110,6 +110,11 @@ class Bot extends Model
     public function imageMenus(): HasMany
     {
         return $this->hasMany(ImageMenu::class);
+    }
+
+    public function fieldSettings(): HasMany
+    {
+        return $this->hasMany(BotCustomFieldSetting::class);
     }
 
     public function notificationSchedules(): HasMany
@@ -168,7 +173,8 @@ class Bot extends Model
         return $this->belongsTo(BotType::class);
     }
 
-    public function warnings():hasMany {
+    public function warnings(): hasMany
+    {
         return $this->hasMany(BotWarning::class);
     }
 

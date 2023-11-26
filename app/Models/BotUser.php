@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Log;
 
@@ -72,7 +73,12 @@ class BotUser extends Model
         'user_in_location' => 'boolean',
     ];
 
-    protected $with = ["cashBack","manager"];
+    protected $with = ["cashBack","manager","fields"];
+
+    public function fields(): HasMany
+    {
+        return $this->hasMany(CustomField::class);
+    }
 
     public function bot(): BelongsTo
     {

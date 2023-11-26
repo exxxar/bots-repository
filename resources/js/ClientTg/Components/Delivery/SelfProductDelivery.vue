@@ -57,13 +57,13 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             </div>
 
 
-                        <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
-                           class="btn btn-m btn-full rounded-sm font-900  text-uppercase mb-0">
-                            <i class="fa-solid fa-chevron-down mr-2" v-if="isCollapsed"></i>
-                            <i class="fa-solid fa-chevron-up  mr-2" v-else></i>
-                            <span class="font-14" v-if="isCollapsed">Найти товар</span>
-                            <span class="font-14" v-else>Скрыть фильтры</span>
-                        </a>
+            <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
+               class="btn btn-m btn-full rounded-sm font-900  text-uppercase mb-0">
+                <i class="fa-solid fa-chevron-down mr-2" v-if="isCollapsed"></i>
+                <i class="fa-solid fa-chevron-up  mr-2" v-else></i>
+                <span class="font-14" v-if="isCollapsed">Найти товар</span>
+                <span class="font-14" v-else>Скрыть фильтры</span>
+            </a>
 
 
         </div>
@@ -169,7 +169,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <input type="checkbox"
                        v-model="deliveryForm.need_pickup"
                        class="ios-input" id="toggle-need-pickup">
-                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!deliveryForm.need_pickup">Нужна доставка</label>
+                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!deliveryForm.need_pickup">Нужна
+                    доставка</label>
                 <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="deliveryForm.need_pickup">Самовывоз</label>
                 <i class="fa-solid fa-person-walking-luggage font-11 color-white" style="left:8px;"></i>
                 <i class="fa-solid fa-truck font-11 color-white" style="margin-left: 24px;"></i>
@@ -211,8 +212,18 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
             <button
                 type="submit"
+                :disabled="spent_time_counter>0"
                 class="btn btn-full btn-sm rounded-s bg-highlight font-800 text-uppercase w-100 mb-2">
-                <i class="fa-solid fa-file-invoice mr-2"></i><span class="color-white">Оформить</span>
+
+                <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
+                <i v-else class="fa-solid fa-hourglass  mr-2"></i>
+
+                <span
+                    v-if="spent_time_counter<=0"
+                    class="color-white">Оформить</span>
+                <span
+                    v-else
+                    class="color-white">Осталось ждать {{ spent_time_counter }} сек.</span>
             </button>
 
 
@@ -230,6 +241,8 @@ export default {
     props: ["type"],
     data() {
         return {
+            spent_time_counter: 0,
+            is_requested: false,
             isCollapsed: true,
             search: null,
             products: [],
@@ -244,7 +257,7 @@ export default {
                 address: null,
                 entrance_number: null,
                 info: null,
-                need_pickup:false
+                need_pickup: false
             },
         }
     },
@@ -257,15 +270,21 @@ export default {
 
             return this.products.filter(product => product.title.toLowerCase().trim().indexOf(this.search.toLowerCase().trim()) >= 0)
         },
-        activeCategories(){
+        activeCategories() {
             let tmp = [];
-            this.filteredProducts.forEach(item=>{
+            this.filteredProducts.forEach(item => {
                 tmp.push(item.categories.map(o => o['id']))
             })
             return [...new Set(tmp.map(item => item[0])), ...new Set(tmp.map(item => item[1]))];
         }
     },
     mounted() {
+
+        if (localStorage.getItem("cashman_self_product_delivery_counter") != null) {
+            this.is_requested = true;
+            this.startTimer(localStorage.getItem("cashman_self_product_delivery_counter"))
+        }
+
 
         this.clearCart();
 
@@ -275,6 +294,21 @@ export default {
             this.loadActualProducts()
     },
     methods: {
+        startTimer(time) {
+            this.spent_time_counter = time != null ? Math.min(time, 30) : 30;
+
+            let counterId = setInterval(() => {
+                    if (this.spent_time_counter > 0)
+                        this.spent_time_counter--
+                    else {
+                        clearInterval(counterId)
+                        this.is_requested = false
+                        this.spent_time_counter = null
+                    }
+                    localStorage.setItem("cashman_self_product_delivery_counter", this.spent_time_counter)
+                }, 1000
+            )
+        },
         clearCart() {
             this.$store.dispatch("clearCart").then(() => {
                 this.$botNotification.success("Корзина", "Корзина успешно очищена")
@@ -309,6 +343,12 @@ export default {
             })
         },
         startCheckout() {
+
+            if (this.is_requested) {
+                this.$botNotification.warning("Упс!", `Сделать повторный заказ можно через <strong>${this.spent_time_counter} сек.</strong>`)
+                return;
+            }
+
             let data = new FormData();
 
             this.sending = true
@@ -327,22 +367,26 @@ export default {
             this.$store.dispatch("startCheckout", {
                 deliveryForm: data
 
-            }).then((response) => {
+            })
+                .then((response) => {
 
-                this.deliveryForm = {
-                    message: null,
-                    name: null,
-                    phone: null,
-                }
+                    this.deliveryForm = {
+                        message: null,
+                        name: null,
+                        phone: null,
+                    }
 
-                this.$botNotification.success("Доставка", "Дальнейшая инструкция отправлена вам в бот!")
+                    this.$botNotification.success("Доставка", "Дальнейшая инструкция отправлена вам в бот!")
 
-                this.clearCart();
+                    this.clearCart();
 
-                this.sending = false
-            }).catch(err => {
+                    this.sending = false
+                }).catch(err => {
                 this.sending = false
             })
+
+            this.startTimer();
+            this.is_requested = true
         },
         loadActualProducts() {
             this.$store.dispatch("loadActualPriceInCart")

@@ -1,58 +1,29 @@
 models:
-  FoodConstructor:
+  BotCustomFieldSetting:
     bot_id: id foreign:bots
-    slug: string:255 nullable
-    title: string:255 nullable
+    type: integer default:0 nullable
+    label: string:255 nullable
+    description: longtext nullable
+    required: boolean false
+    validate_pattern: string:255 nullable
     relationships:
       belongsTo: Bot
 
-  IngredientCategory: #ингридиенты к товару
-    title: string:255 nullable
-    image: string:255 nullable
-    bot_id: id foreign:bots
-    food_constructor_id: id foreign:food_constructors
-    relationships:
-      hasMany: FoodConstructor, Bot
-
-  Ingredient:
-    title: string:255 nullable
-    description: longtext nullable
-    image: string:255 nullable
-    weight: string:255 nullable
-    price: string:255 nullable
-    bot_id: id foreign:bots
-    food_constructor_id: id foreign:food_constructors
-    sub: json nullable comment:'дополнительные вложенные параметры'
-    ingredient_category_id: id foreign:ingredient_categories
-    is_checked: boolean default:false
-    is_disabled: boolean default:false
-    is_global: boolean default:false
-    relationships:
-      belongsTo: IngredientCategory
-
-  Documents:
-    title: string:255 nullable
-    description: longtext nullable
-    file_id: string:255 nullable comment:'идентификатор файла в TG'
-    type: integer default:0 comment:'Тип документа'
-    params: json nullable comment:'выписанные параметры из документа'
-    bot_id: id foreign:bots
+  CustomField:
+    key: string:255 nullable
+    value: string:255 nullable
     bot_user_id: id foreign:bot_users
-    verified_at: nullable timestamp
+    bot_custom_field_setting_id: id foreign:bot_custom_field_settings
     relationships:
-      belongsTo: Bot, BotUser
+      belongsTo: BotCustomFieldSetting, BotUser
 
-seeders:   Documents,   FoodConstructor,   IngredientCategory,   Ingredient
+
+seeders:  BotCustomFieldSetting, CustomField
 
 controllers:
-  Documents:
+  BotCustomFieldSetting:
     resource: api
 
-  FoodConstructor:
+  CustomField:
     resource: api
 
-  IngredientCategory:
-    resource: api
-
-  Ingredient:
-    resource: api
