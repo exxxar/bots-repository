@@ -30,9 +30,6 @@ class AuthenticatedSessionController extends Controller
         $authBotDomain = env("AUTH_BOT_DOMAIN");
         $tgId = $request->get("id");
 
-        Log::info(print_r("$authBotDomain $tgId $authDate $hash", true));
-        Log::info(print_r($request->all(), true));
-
 
         $bot = Bot::query()
             ->where("bot_domain", $authBotDomain)
@@ -87,7 +84,7 @@ class AuthenticatedSessionController extends Controller
                 ->whereBot($bot)
                 ->sendMessage(
                     $tgId,
-                    "Пользователь не является сотрудником системы!");
+                    "Вы не являетесь сотрудником системы!");
             return response()->redirectToRoute("login");
         }
 
