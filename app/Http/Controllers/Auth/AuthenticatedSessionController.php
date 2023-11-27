@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Service\Utilities;
 use App\Http\Requests\Auth\LoginRequest;
@@ -27,6 +28,7 @@ class AuthenticatedSessionController extends Controller
         $hash = $request->hash;
         $authDate = $request->auth_date;
         $authBotDomain = env("AUTH_BOT_DOMAIN");
+        $tgId = $request->id;
 
         $bot = Bot::query()
             ->where("bot_domain", $authBotDomain)
@@ -39,10 +41,17 @@ class AuthenticatedSessionController extends Controller
             "hash" => $hash,
             "bot_token" => $bot->bot_token,
             "auth_date" => $authDate
-        ]))
-            return response()->redirectToRoute("login");
+        ])) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $tgId,
+                    "Ошибка проверки данных входа");
 
-        $tgId = $request->id;
+            return response()->redirectToRoute("login");
+        }
+
+
 
         Log::info("tgId=>$tgId");
 
@@ -50,22 +59,51 @@ class AuthenticatedSessionController extends Controller
             ->where("email", "$tgId@your-cashman.ru")
             ->first();
 
-        if (is_null($user))
+        if (is_null($user)) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $tgId,
+                    "Пользователь еще не зарегистрировался в системе!");
+
             return response()->redirectToRoute("login");
+        }
+
 
         $botUser = BotUser::query()
             ->where("bot_id",$bot->id)
             ->where("telegram_chat_id", $tgId)
             ->get();
 
-        if (is_null($botUser))
+        if (is_null($botUser)){
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $tgId,
+                    "Пользователь еще не зарегистрировался в системе!");
             return response()->redirectToRoute("login");
+        }
 
-        if (!$botUser->is_admin)
+
+        if (!$botUser->is_admin) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $tgId,
+                    "Пользователь не является сотрудником системы!");
             return response()->redirectToRoute("login");
+        }
+
 
         if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {
             $request->session()->regenerate();
+
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $tgId,
+                    "Отлично! Вы успешно авторизовались!");
+
             return redirect()->route('dashboard');
         }
 
