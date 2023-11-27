@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
         if (is_null($user))
             return response()->redirectTo("login");
 
-        Auth::attempt(['email' => $user->email]);
+        Auth::attempt(['email' => $user->email,'password'=>'']);
 
         $request->session()->regenerate();
 
