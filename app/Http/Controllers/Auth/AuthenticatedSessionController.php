@@ -30,6 +30,10 @@ class AuthenticatedSessionController extends Controller
         $authBotDomain = env("AUTH_BOT_DOMAIN");
         $tgId = $request->id;
 
+        Log::info(print_r("$authBotDomain", true));
+        Log::info(print_r($request->all(), true));
+
+
         $bot = Bot::query()
             ->where("bot_domain", $authBotDomain)
             ->first();
