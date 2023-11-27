@@ -173,8 +173,9 @@ class BotController extends Controller
     public function changeUserStatus(Request $request): Response
     {
         $request->validate([
-            "botUserId" => "required",
-            "status" => "required"
+            "bot_user_id" => "required",
+            "status" => "required",
+            "type" => "required",
         ]);
 
         BusinessLogic::bots()
@@ -193,7 +194,10 @@ class BotController extends Controller
 
         return BusinessLogic::botUsers()
             ->setBot($bot)
-            ->list();
+            ->list(
+                search: $request->search ?? null,
+                size:$request->size ?? null
+            );
     }
 
     public function loadBotsAsTemplate(Request $request): \Illuminate\Http\JsonResponse

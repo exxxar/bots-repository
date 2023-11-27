@@ -179,10 +179,10 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadBotUsers(context, payload = {dataObject: {botId: null, search: null}, page: 0, size: 12}) {
+    async loadBotUsers(context, payload = {dataObject: {botId: null, search: null}, page: 0, size: 100}) {
 
         let page = payload.page || 0
-        let size = 12
+        let size = payload.size || 12
 
         let link = `${BASE_BOTS_LINK}/users?page=${page}&size=${size}`
 

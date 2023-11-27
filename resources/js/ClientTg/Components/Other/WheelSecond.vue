@@ -164,6 +164,12 @@ export default {
 // функция выбора призового сектора
         const selectPrize = () => {
             const selected = Math.floor(rotation / prizeSlice);
+
+            if (selected<0||selected>=prizeNodes.length)
+            {
+                runTickerAnimation();
+                return;
+            }
             prizeNodes[selected].classList.add(selectedClass);
 
             this.$emit("callback", selected)

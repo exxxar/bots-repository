@@ -146,7 +146,7 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
             <div class="col-12 mb-2" v-if="need_page_images">
                 <div class="card mb-3">
                     <div class="card-header">
-                        <h6>Изображения на странице</h6>
+                        <h6>Загрузите изображения с файловой системы</h6>
                     </div>
                     <div class="card-body d-flex justify-content-start">
 
@@ -187,6 +187,22 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                     </div>
                 </div>
             </div>
+
+<!--            <div class="col-12 mb-2" v-if="need_page_images">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h6>... или выберите ранее загруженные в бота</h6>
+                    </div>
+                    <div class="card-body">
+                        <BotMediaList
+                            :need-photo="true"
+                            :selected="pageForm.images"
+                            v-on:select="selectPhoto"></BotMediaList>
+                    </div>
+                </div>
+
+            </div>-->
 
             <div class="col-12 mb-2">
                 <div class="form-check">
@@ -812,6 +828,18 @@ export default {
 
         onChange(data) {
             this.pageForm.content = data
+        },
+
+        selectPhoto(item) {
+            if (!this.pageForm.images)
+                this.pageForm.images = []
+
+            let index = this.pageForm.images.indexOf(item.file_id)
+
+            if (index !== -1)
+                this.pageForm.images.splice(index, 1)
+            else
+                this.pageForm.images.push(item.file_id)
         },
 
         selectVideo(item) {

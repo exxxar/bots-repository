@@ -2,16 +2,16 @@
 import Pagination from '@/AdminPanel/Components/Pagination.vue';
 </script>
 <template>
-    <!--    <div class="row mb-2">
-            <div class="col-12">
-                <button type="button"
-                        @click="show=!show"
-                        class="btn btn-outline-success p-3 w-100">
-                    <span v-if="!show"><i class="fa-solid fa-robot"></i> Открыть список ботов</span>
-                    <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть список ботов</span>
-                </button>
-            </div>
-        </div>-->
+    <!--      <div class="row mb-2">
+                <div class="col-12">
+                    <button type="button"
+                            @click="show=!show"
+                            class="btn btn-outline-success p-3 w-100">
+                        <span v-if="!show"><i class="fa-solid fa-robot"></i> Открыть список ботов</span>
+                        <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть список ботов</span>
+                    </button>
+                </div>
+            </div>-->
 
     <div v-if="show">
         <div class="row">
@@ -56,6 +56,13 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 </p>
             </div>
         </div>
+
+        <div class="row" v-if="bots_paginate_object">
+            <div class="col-12">
+                <p class="mb-0">Количество найденных ботов {{ bots_paginate_object.meta.total || 0 }}</p>
+                <p class="mb-0">Количество результатов на странице {{ filteredBots.length || 0 }}</p>
+            </div>
+        </div>
         <div class="row" v-if="bots.length>0">
             <div class="col-12 mb-3">
                 <button type="button" class="btn btn-outline-info"
@@ -78,8 +85,8 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                     class="fa-solid fa-robot mr-2"></i>
 
                                 {{
-                                        bot.bot_domain || 'Не указано'
-                                    }}
+                                    bot.bot_domain || 'Не указано'
+                                }}
                             </span>
                             <span class="badge bg-info"
                                   v-if="bot.is_template">{{

@@ -558,6 +558,26 @@ class SystemDiagnosticController extends Controller
                     $messageId,
                     []);
 
+   /*     if ($value==4){
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendInlineKeyboard(
+                    $botUser->telegram_chat_id,
+                    "Оставьте официанту чаевые CashBack-ом (От суммы начисления Вам)", [
+                        [
+                            ["text" => "0%", "callback_data" => "/send_tips 0"],
+                            ["text" => "5%", "callback_data" => "/send_tips 1"],
+                            ["text" => "10%", "callback_data" => "/send_tips 2"],
+                            ["text" => "20%", "callback_data" => "/send_tips 3"],
+                            ["text" => "30%", "callback_data" => "/send_tips 4"],
+                        ]
+                    ]
+                );
+        }*/
+    }
+
+    public function sendTips(...$data) {
+        $value = $data[3] ?? 0;
     }
 
     private function mediaPrint($tmp, $media)

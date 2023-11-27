@@ -29,6 +29,7 @@ BotManager::bot()
     ->route("/botpay", "payForBot")
     ->route("/pay_tax_fee ([0-9]+)", "payTaxFee")
     ->route("/send_review ([0-9]+)", "sendReview")
+    ->route("/send_tips ([0-9]+)", "sendTips")
     ->route("/remove_media_file ([0-9]+)", "removeMediaFile")
     ->route("/remove_notes ([0-9]+)", "removeNotes")
     ->route("/show_media_file ([0-9]+)", "showMediaFile")
@@ -54,7 +55,10 @@ BotManager::bot()
         $bot = BotManager::bot()->getSelf();
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
-        Log::info("fallback photo");
+
+        $tmp = "";
+        $count = 0;
+
         if ($botUser->is_admin || $botUser->is_manager) {
             $media = \App\Models\BotMedia::query()->updateOrCreate([
                 'bot_id' => $bot->id,
@@ -64,10 +68,12 @@ BotManager::bot()
                 'caption' => $caption,
                 'type' => "photo"
             ]);
-            BotManager::bot()
-                ->reply("Фотография добавлена в медиа пространство бота с идентификатором: <b>#$media->id</b> - для просмотра доступных медиа используйте /media");
 
+            $tmp = "<b>#$media->id</b>,";
+            $count++;
         }
+        BotManager::bot()
+            ->reply("Фотографии ($count шт.) добавлены в медиа пространство бота с идентификаторами: $tmp - для просмотра доступных медиа используйте /media");
 
         if (is_null($caption)) {
             BotManager::bot()->reply("Фотография в описании должна содержать подпись!");

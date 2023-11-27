@@ -798,8 +798,9 @@ class BotLogicFactory
     public function changeUserStatus(array $data): void
     {
         $validator = Validator::make($data, [
-            "botUserId" => "required", //todo: сделать bot_user_id
-            "status" => "required"
+            "bot_user_id" => "required", //todo: сделать bot_user_id
+            "status" => "required",
+            "type" => "required"
         ]);
 
         if ($validator->fails())
@@ -807,21 +808,28 @@ class BotLogicFactory
 
 
         $botUser = BotUser::query()
-            ->where("id", $data["botUserId"])
+            ->where("id", $data["bot_user_id"])
             ->first();
 
         if (is_null($botUser))
             throw new HttpException(404, "Пользователь бота не найден");
 
-        $botUser->is_admin = $data["status"] == 1;
-        $botUser->save();
+        $tmp[$data["type"]] = $data["status"] == 1;
+        $botUser->update($tmp);
 
-        $status = $botUser->is_admin ? "Администратор" : "Пользователь";
+        $status = match ($data["type"] ?? '') {
+            "is_admin" => $data["status"] == 1 ? "❌ Пользователь => ✅️Администратор" : "❌ Администратор => ✅️Пользователь",
+            "is_vip" => $data["status"] == 1 ? "❌ Обычный пользователь => ✅️VIP" : "❌ VIP => ✅️Обычный пользователь",
+            "is_manager" => $data["status"] == 1 ? "❌ Обычный пользователь => ✅️Менеджер" : "❌ Менеджер => ✅️Обычный пользователь",
+            "is_deliveryman" => $data["status"] == 1 ? "❌ Обычный пользователь=> ✅️Доставщик" : "❌ Доставщик => ✅️Обычный пользователь",
+            "is_work" => $data["status"] == 1 ? "✅️За работой" : "❌ Не работает",
+            default => "неизвестный статус",
+        };
+
         BotMethods::bot()
             ->whereId($botUser->bot_id)
-            ->sendSlugKeyboard($botUser->telegram_chat_id,
-                "Вам изменили статус учетной записи на \"$status\"",
-                ($botUser->is_admin ? "main_menu_restaurant_3" : "main_menu_restaurant_2")
+            ->sendMessage($botUser->telegram_chat_id,
+                "Вам изменили статус учетной записи на \"$status\""
             );
 
     }

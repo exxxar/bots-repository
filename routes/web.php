@@ -4,6 +4,7 @@ use App\Events\CashBackEvent;
 use App\Facades\BotManager;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\TelegramController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Models\Bot;
 use App\Models\BotUser;
 use App\Models\CashBack;
@@ -138,6 +139,8 @@ Route::get('/images-by-bot-id/{botId}/{fileName}',
 
 Route::get('/images/{companySlug}/{fileName}',
     [TelegramController::class, 'getFiles']);
+
+Route::post("/telegram/auth/callback", [AuthenticatedSessionController::class,"telegramAuth"]);
 
 Route::prefix("bot")
     ->group(function () {

@@ -14,16 +14,16 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 <button
                     v-if="mailForm.channel!=null"
                     type="button"
-                    class="btn btn-outline-info"
+                    class="btn btn-outline-info mr-2"
                     @click="mailForm.channel = null"><i class="fa-solid fa-xmark"></i></button>
-                ,
+
                 <button
                     type="button"
-                    class="btn"
+                    class="btn mr-2"
                     v-bind:class="{'btn-info':mailForm.channel === bot.main_channel, 'btn-outline-info':mailForm.channel !== bot.main_channel}"
                     @click="mailForm.channel = bot.main_channel">Главный канал
                 </button>
-                ,
+
 
                 <button
                     type="button"
