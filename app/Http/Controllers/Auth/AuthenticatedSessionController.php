@@ -52,9 +52,6 @@ class AuthenticatedSessionController extends Controller
         }
 
 
-
-        Log::info("tgId=>$tgId");
-
         $user = User::query()
             ->where("email", "$tgId@your-cashman.ru")
             ->first();
@@ -73,7 +70,7 @@ class AuthenticatedSessionController extends Controller
         $botUser = BotUser::query()
             ->where("bot_id",$bot->id)
             ->where("telegram_chat_id", $tgId)
-            ->get();
+            ->first();
 
         if (is_null($botUser)){
             BotMethods::bot()
