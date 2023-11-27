@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\Service\Utilities;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Bot;
+use App\Models\BotUser;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
@@ -16,8 +19,28 @@ use Inertia\Response;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function telegramAuth(Request $request){
-        Log::info(print_r($request->all(), true));
+    use Utilities;
+
+    public function telegramAuth(Request $request)
+    {
+
+        $hash = $request->hash;
+        $authDate = $request->auth_date;
+        $authBotDomain = env("AUTH_BOT_DOMAIN");
+
+        $bot = Bot::query()
+            ->where("bot_domain", $authBotDomain)
+            ->first();
+
+        if (is_null($bot))
+            return response()->redirectTo("login");
+
+        if (!$this->checkTelegramAuthorization([
+            "hash" => $hash,
+            "bot_token" => $bot->bot_token,
+            "auth_date" => $authDate
+        ]))
+            return response()->redirectTo("login");
 
         $tgId = $request->id;
 
@@ -30,18 +53,26 @@ class AuthenticatedSessionController extends Controller
         if (is_null($user))
             return response()->redirectTo("login");
 
-        Log::info("here 1");
+        $botUser = BotUser::query()
+            ->where("bot_id",$bot->id)
+            ->where("telegram_chat_id", $tgId)
+            ->get();
 
-        Auth::attempt(['email' => $user->email,'password'=>$tgId]);
+        if (is_null($botUser))
+            return response()->redirectTo("login");
 
-        Log::info("here 2");
+        if (!$botUser->is_admin)
+            return response()->redirectTo("login");
 
-        $request->session()->regenerate();
+        if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {
+            $request->session()->regenerate();
+            return redirect()->route('dashboard');
+        }
 
-        Log::info("here 3");
+        return response()->redirectTo("login");
 
-        return redirect()->route('dashboard');
     }
+
     /**
      * Display the login view.
      */
