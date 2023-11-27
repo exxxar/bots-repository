@@ -29,9 +29,8 @@ trait Utilities
 
     }
 
-    public function checkTelegramAuthorization($auth_data) {
+    public function checkTelegramAuthorization($auth_data,$bot_token) {
         $check_hash = $auth_data['hash'];
-        $bot_token = $auth_data["bot_token"];
 
         unset($auth_data['hash']);
         $data_check_arr = [];
