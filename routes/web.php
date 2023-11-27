@@ -140,7 +140,7 @@ Route::get('/images-by-bot-id/{botId}/{fileName}',
 Route::get('/images/{companySlug}/{fileName}',
     [TelegramController::class, 'getFiles']);
 
-Route::post("/telegram/auth/callback", [AuthenticatedSessionController::class,"telegramAuth"]);
+Route::post("/auth/telegram/callback", [AuthenticatedSessionController::class,"telegramAuth"]);
 
 Route::prefix("bot")
     ->group(function () {
