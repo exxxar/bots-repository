@@ -41,10 +41,7 @@ class AuthenticatedSessionController extends Controller
         if (is_null($bot))
             return response()->redirectToRoute("login");
 
-        if (!$this->checkTelegramAuthorization([
-            "hash" => $hash,
-            "auth_date" => $authDate
-        ], $bot->bot_token)) {
+        if (!$this->checkTelegramAuthorization($request->all(), $bot->bot_token)) {
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
