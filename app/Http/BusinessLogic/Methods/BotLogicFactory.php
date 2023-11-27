@@ -109,7 +109,7 @@ class BotLogicFactory
     }
 
 
-    public function list($companyId = null, $search = null, $size = null): BotCollection
+    public function list($companyId = null, $search = null, $size = null, $order = null, $direction = null): BotCollection
     {
 
         $size = $size ?? config('app.results_per_page');
@@ -122,10 +122,13 @@ class BotLogicFactory
             $bots = $bots->where("company_id", $companyId);
 
         if (!is_null($search))
-            $bots = $bots->where("bot_domain", 'like', "%$search%");
+            $bots = $bots->where(function ($q) use ($search) {
+               $q->where("bot_domain", 'like', "%$search%")
+                   ->orWhere("title", 'like', "%$search%");
+            });
 
         $bots = $bots
-            ->orderBy("updated_at", 'DESC')
+            ->orderBy($order ?? 'updated_at', $direction ?? 'DESC')
             ->paginate($size);
 
         return new BotCollection($bots);
@@ -565,6 +568,7 @@ class BotLogicFactory
 
         return new BotCustomFieldSettingCollection($fields);
     }
+
     /**
      * @throws ValidationException
      * @throws HttpException

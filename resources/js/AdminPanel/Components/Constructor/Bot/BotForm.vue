@@ -7,12 +7,13 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 import Page from "@/AdminPanel/Components/Constructor/Pages/Page.vue"
-import ImageMenu from "@/AdminPanel/Components/Constructor/ImageMenu.vue";
+import ImageMenu from "@/AdminPanel/Components/Constructor/Deprecated/ImageMenu.vue";
 import BotDialogGroupList from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import Shop from "@/AdminPanel/Components/Constructor/Shop/Shop.vue";
 import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
 import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 import BotFields from "@/AdminPanel/Components/Constructor/Bot/BotFields.vue";
+import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue";
 </script>
 <template>
     <div class="row" v-if="company">
@@ -69,6 +70,8 @@ import BotFields from "@/AdminPanel/Components/Constructor/Bot/BotFields.vue";
                             class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
                         <li><a class="dropdown-item" href="#bot-shop" @click="setStep(8)"><i
                             class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
+                        <li><a class="dropdown-item" href="#bot-media" @click="setStep(11)"><i
+                            class="fa-brands fa-shopify mr-2"></i> Медиа файлы бота</a></li>
                     </ul>
                 </div>
             </div>
@@ -975,6 +978,14 @@ import BotFields from "@/AdminPanel/Components/Constructor/Bot/BotFields.vue";
             v-if="!load"
         />
     </div>
+
+    <div v-if="step===11" class="pb-5 mb-5">
+        <BotMediaTable
+            v-if="!load"
+        />
+    </div>
+
+
 
     <div v-if="step===8" class="pb-5 mb-5">
         <Shop v-if="!load"/>

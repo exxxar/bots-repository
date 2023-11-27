@@ -1,6 +1,6 @@
 <script setup>
 import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
-import ImageMenu from "@/AdminPanel/Components/Constructor/ImageMenu.vue";
+import ImageMenu from "@/AdminPanel/Components/Constructor/Deprecated/ImageMenu.vue";
 
 
 </script>

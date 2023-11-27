@@ -266,7 +266,9 @@ class BotController extends Controller
             ->list(
                 $request->companyId ?? null,
                 $request->search ?? null,
-                $request->get("size") ?? config('app.results_per_page')
+                $request->get("size") ?? config('app.results_per_page'),
+                $request->order ?? null,
+                $request->direction ?? null
             );
     }
 

@@ -25,11 +25,8 @@ class AuthenticatedSessionController extends Controller
     public function telegramAuth(Request $request)
     {
 
-        $hash = $request->get("hash");
-        $authDate = $request->get("auth_date");
         $authBotDomain = env("AUTH_BOT_DOMAIN");
         $tgId = $request->get("id");
-
 
         $bot = Bot::query()
             ->where("bot_domain", $authBotDomain)
@@ -48,7 +45,6 @@ class AuthenticatedSessionController extends Controller
             return response()->redirectToRoute("login");
         }
 
-
         $user = User::query()
             ->where("email", "$tgId@your-cashman.ru")
             ->first();
@@ -65,11 +61,11 @@ class AuthenticatedSessionController extends Controller
 
 
         $botUser = BotUser::query()
-            ->where("bot_id",$bot->id)
+            ->where("bot_id", $bot->id)
             ->where("telegram_chat_id", $tgId)
             ->first();
 
-        if (is_null($botUser)){
+        if (is_null($botUser)) {
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
@@ -101,6 +97,12 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('dashboard');
         }
 
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage(
+                $tgId,
+                "Ошибка авторизации");
+
         return response()->redirectToRoute("login");
 
     }
@@ -110,11 +112,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        return view("admin.login");
-        /*return Inertia::render('Auth/Login', [
-            'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
-        ]);*/
+        $debug = env("APP_DEBUG");
+        if ($debug)
+            return Inertia::render('Auth/Login', [
+                'canResetPassword' => Route::has('password.request'),
+                'status' => session('status'),
+            ]);
+        else
+            return view("admin.login");
     }
 
     /**

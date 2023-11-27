@@ -226,6 +226,9 @@
         <div class="content">
             <h2>CashMan</h2>
             <div class="form">
+                <p style="color:white;">Вам необходимо зарегистрироваться в боте <a
+                        style="color:#2196F3;"
+                        href="https://t.me/{{env('AUTH_BOT_DOMAIN')??'exxxar'}}" target="_blank"> {{'@'.(env('AUTH_BOT_DOMAIN')??'exxxar')}}</a></p>
                 <script async src="https://telegram.org/js/telegram-widget.js?22"
                         data-telegram-login="cashman_login_bot" data-size="large"
                         data-radius="5"

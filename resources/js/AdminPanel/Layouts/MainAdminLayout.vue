@@ -1,6 +1,6 @@
 <script setup>
 
-import { Head } from '@inertiajs/vue3'
+import {Head} from '@inertiajs/vue3'
 
 </script>
 <template>
@@ -14,7 +14,12 @@ import { Head } from '@inertiajs/vue3'
 
 
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">CashMan</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 cursor-pointer align-items-center d-flex"
+           data-bs-toggle="modal" data-bs-target="#selected-company-bot-info">CashMan:
+            <span v-if="bot" style="font-size:12px;margin-left:10px;"><a :href="'https://t.me/'+(bot.bot_domain||'botfather')"
+                                target="_blank">{{ bot.bot_domain || 'Без имени' }}</a> </span>
+
+        </a>
         <button class="navbar-toggler position-absolute d-md-none collapsed"
                 type="button"
                 data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu"
@@ -22,7 +27,29 @@ import { Head } from '@inertiajs/vue3'
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <div class="navbar-nav d-flex justify-content-center align-items-center flex-row">
+
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3"
+                   @click="active=0"
+                   v-bind:class="{'border-bottom-active active':active==0}"
+                   href="/company-page"> <i class="fa-solid fa-mug-hot"></i> Клиенты</a>
+            </div>
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3"
+                   @click="active=1"
+                   v-bind:class="{'border-bottom-active active':active==1}"
+                   href="/bot-page"> <i class="fa-solid fa-robot"></i> Боты</a>
+            </div>
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3"
+                   @click="active=6"
+                   v-bind:class="{'border-bottom-active active':active==6}"
+                   href="/script-page"> <i class="fa-solid fa-scroll"></i> Скрипты</a>
+            </div>
+        </div>
         <div class="navbar-nav d-none d-md-block">
+
             <div class="nav-item text-nowrap">
                 <a class="nav-link px-3" href="/logout">Выход</a>
             </div>
@@ -31,125 +58,8 @@ import { Head } from '@inertiajs/vue3'
 
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar" style="">
-                <div class="position-sticky pt-3 sidebar-sticky">
-                    <ul class="nav flex-column">
 
-                        <li class="nav-item p-2" v-if="company">
-                            <div class="card border-info">
-                                <div class="card-body">
-                                    <p>У Вас выбран клиент:</p>
-                                    <div class="d-flex justify-content-between w-100">
-                                        <span>{{company.title || 'Без имени'}} </span>
-                                        <span @click="resetCompany"><i class="fa-solid fa-xmark"></i></span>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </li>
-
-                        <li class="nav-item p-2" v-if="bot">
-                           <div class="card border-info">
-                               <div class="card-body">
-                                   <p>У Вас выбран бот:</p>
-                                   <div class="d-flex justify-content-between w-100">
-                                       <span><a :href="'https://t.me/'+(bot.bot_domain||'botfather')" target="_blank">{{bot.bot_domain || 'Без имени'}}</a> </span>
-                                       <span @click="resetBot"><i class="fa-solid fa-xmark"></i></span>
-                                   </div>
-
-                               </div>
-                           </div>
-                        </li>
-
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               v-bind:class="{'active':active==3}"
-                               href="/dashboard"
-                               aria-current="page">
-                                <i class="fa-solid fa-house"></i>
-                                Главная страница
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               v-bind:class="{'active':active==0}"
-                               href="/company-page"
-                               aria-current="page">
-                                <i class="fa-solid fa-mug-hot"></i>
-                                Клиенты
-                            </a>
-                        </li>
-
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               v-bind:class="{'active':active==1}"
-                               href="/bot-page"
-                               aria-current="page">
-                                <i class="fa-solid fa-robot"></i>
-                                Боты
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               v-bind:class="{'active':active==6}"
-                               href="/script-page"
-                               aria-current="page">
-                                <i class="fa-solid fa-scroll"></i>
-                                Глобальные скрипты
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               v-bind:class="{'active':active==7}"
-                               href="/media-page"
-                               aria-current="page">
-                                <i class="fa-solid fa-photo-film"></i>
-                                Медиа файлы ботов
-                            </a>
-                        </li>
-
-                        <hr>
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               v-bind:class="{'active':active==5}"
-                               href="/visit-card-page"
-                               aria-current="page">
-                                <i class="fa-solid fa-file-contract"></i>
-                                Бриф для Визиток
-                            </a>
-                        </li>
-                        <hr>
-
-                        <li class="nav-item active">
-                            <a class="nav-link"
-                               v-bind:class="{'active':active==2}"
-                               href="/user-page"
-                               aria-current="page">
-                                <i class="fa-solid fa-users"></i>
-                                Пользователи
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               v-bind:class="{'active':active==4}"
-                               href="/mail-page"
-                               aria-current="page">
-                                <i class="fa-regular fa-paper-plane"></i>
-                                Рассылки сообщений
-                            </a>
-                        </li>
-
-                    </ul>
-                </div>
-            </nav>
-
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" >
+            <main class="col-md-12 ms-sm-auto col-lg-12 px-md-4">
                 <div class="pt-3 pb-2 mb-3">
                     <slot/>
                 </div>
@@ -157,21 +67,61 @@ import { Head } from '@inertiajs/vue3'
         </div>
     </div>
 
+    <div class="modal fade"
+         id="selected-company-bot-info" tabindex="-1" aria-labelledby="open-construct-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="open-construct-label">У вас выбрано</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card border-info mb-2" v-if="company">
+                        <div class="card-body">
+                            <p>У Вас выбран клиент:</p>
+                            <div class="d-flex justify-content-between w-100">
+                                <span>{{ company.title || 'Без имени' }} </span>
+                                <span @click="resetCompany"><i class="fa-solid fa-xmark"></i></span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card border-info" v-if="bot">
+                        <div class="card-body">
+                            <p>У Вас выбран бот:</p>
+                            <div class="d-flex justify-content-between w-100">
+                                <span><a :href="'https://t.me/'+(bot.bot_domain||'botfather')"
+                                         target="_blank">{{ bot.bot_domain || 'Без имени' }}</a> </span>
+                                <span @click="resetBot"><i class="fa-solid fa-xmark"></i></span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 import {mapGetters} from "vuex";
 
 export default {
-    props:["active"],
+    props: ["active"],
     data() {
         return {
             load: false,
-            bot:null,
-            company:null
+            bot: null,
+            company: null
         }
     },
     computed: {
-        ...mapGetters(['getErrors','getCurrentBot','getCurrentCompany']),
+        ...mapGetters(['getErrors', 'getCurrentBot', 'getCurrentCompany']),
     },
     watch: {
         getErrors: function (newVal, oldVal) {
@@ -199,36 +149,36 @@ export default {
         });
     },
 
-    methods:{
-        loadCurrentCompany(company = null){
+    methods: {
+        loadCurrentCompany(company = null) {
             this.$store.dispatch("updateCurrentCompany", {
                 company: company
-            }).then(()=>{
+            }).then(() => {
                 this.company = this.getCurrentCompany
             })
         },
-        loadCurrentBot(bot = null){
+        loadCurrentBot(bot = null) {
             this.$store.dispatch("updateCurrentBot", {
                 bot: bot
-            }).then(()=>{
+            }).then(() => {
                 this.bot = this.getCurrentBot
             })
         },
-        resetCompany(){
-            this.$store.dispatch("resetCurrentCompany").then(()=>{
+        resetCompany() {
+            this.$store.dispatch("resetCurrentCompany").then(() => {
                 this.company = null
 
                 window.dispatchEvent(new CustomEvent('store_current_company-change-event'));
             })
         },
-        resetBot(){
-            this.$store.dispatch("resetCurrentBot").then(()=>{
+        resetBot() {
+            this.$store.dispatch("resetCurrentBot").then(() => {
                 this.bot = null
 
                 window.dispatchEvent(new CustomEvent('store_current_bot-change-event'));
             })
         },
-        stopAllDialogs(){
+        stopAllDialogs() {
             this.$store.dispatch("stopDialogs").then((response) => {
                 this.$notify({
                     title: "Конструктор ботов",
@@ -239,20 +189,20 @@ export default {
             }).catch(err => {
             })
         },
-        reloadWebhooks(){
+        reloadWebhooks() {
             this.load = true
             this.$notify({
                 title: "Конструктор ботов",
                 text: "Процедура обновления зависимостей началась",
             });
-            axios.get("/bot/register-webhooks").then(()=>{
+            axios.get("/bot/register-webhooks").then(() => {
                 this.load = false
                 this.$notify({
                     title: "Конструктор ботов",
                     text: "Зависимости успешно обновлены!",
                     type: 'success'
                 });
-            }).catch(()=>{
+            }).catch(() => {
                 this.load = false
 
                 this.$notify({
@@ -385,13 +335,18 @@ body {
 
 
 .bot-label {
-    border-radius:5px;
-    border:1px white solid;
+    border-radius: 5px;
+    border: 1px white solid;
     height: 40px;
+
     p {
-        color:white;
+        color: white;
         padding: 10px;
         box-sizing: border-box;
     }
+}
+
+.border-bottom-active {
+    border-bottom:1px white solid;
 }
 </style>

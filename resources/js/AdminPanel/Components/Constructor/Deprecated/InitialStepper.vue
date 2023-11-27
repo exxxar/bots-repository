@@ -4,7 +4,7 @@ import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList
 import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
 import Location from "@/AdminPanel/Components/Constructor/Location/Location.vue";
 import Bot from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
-import ImageMenu from "@/AdminPanel/Components/Constructor/ImageMenu.vue";
+import ImageMenu from "@/AdminPanel/Components/Constructor/Deprecated/ImageMenu.vue";
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup>
 import Layout from "@/AdminPanel/Layouts/MainAdminLayout.vue";
-import VisitCardConstructor from "@/AdminPanel/Components/Constructor/VisitCardConstructor.vue";
+import VisitCardConstructor from "@/AdminPanel/Components/Constructor/Deprecated/VisitCardConstructor.vue";
 
 </script>
 

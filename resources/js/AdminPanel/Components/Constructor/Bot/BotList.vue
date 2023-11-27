@@ -61,6 +61,16 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             <div class="col-12">
                 <p class="mb-0">Количество найденных ботов {{ bots_paginate_object.meta.total || 0 }}</p>
                 <p class="mb-0">Количество результатов на странице {{ filteredBots.length || 0 }}</p>
+                <p>
+                    Тип отображения списка:
+                    <span v-on:click="displayType=0"
+                          v-bind:class="{'bg-success':displayType===0,'bg-secondary':displayType!==0}"
+                          class="badge cursor-pointer mr-2">Карточки</span>
+                    <span
+                        v-bind:class="{'bg-success':displayType===1,'bg-secondary':displayType!==1}"
+                        v-on:click="displayType=1"
+                        class="badge cursor-pointer mr-2">Таблица</span>
+                </p>
             </div>
         </div>
         <div class="row" v-if="bots.length>0">
@@ -70,7 +80,70 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         @click="selectBot(null)">Создать нового бота
                 </button>
             </div>
-            <div class="col-lg-4 col-12 mb-3" v-for="(bot, index) in filteredBots">
+
+            <div class="col-12 mb-3" v-if="displayType===1">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('id')">#</th>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('bot_domain')">Домен</th>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('title')">Название</th>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('template_description')">Шаблон</th>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('updated_at')">Дата изменения</th>
+                        <th scope="col">Действие</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(bot, index) in filteredBots"
+
+                        v-bind:class="{'border-info':bot.deleted_at==null,'border-danger':bot.deleted_at!=null}">
+                        <th scope="row">{{ bot.id }}</th>
+                        <td @click="selectBot(bot)"><i
+                            v-bind:class="{'text-danger':bot.deleted_at!=null}"
+                            class="fa-solid fa-robot mr-2"></i> {{ bot.bot_domain || 'Не указано' }}
+                        </td>
+                        <td @click="selectBot(bot)">{{ bot.title || 'Не указано' }}</td>
+                        <td>
+                            <span v-if="bot.is_template" class="badge bg-primary">
+                                {{ bot.template_description || 'Не указано' }}
+                            </span>
+                            <span v-else>Не является шаблоном</span>
+                        </td>
+                        <td>{{ $filters.current(bot.updated_at) }}</td>
+                        <td>
+                            <button class="btn btn-outline-info mr-2"
+                                    type="button"
+                                    @click="duplicate(bot.id)"
+                                    title="Дублировать">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                            <button class="btn btn-outline-info"
+                                    type="button"
+                                    @click="addToArchive(bot.id)"
+                                    title="В архив" v-if="bot.deleted_at==null"><i
+                                class="fa-solid fa-boxes-packing"></i></button>
+
+                            <button class="btn btn-outline-info mr-2"
+                                    @click="extractFromArchive(bot.id)"
+                                    title="Из архива" v-if="bot.deleted_at!=null"><i
+                                class="fa-solid fa-box-open"></i></button>
+
+                            <button class="btn btn-danger  mr-2 "
+                                    @click="forceDelete(bot.id)"
+                                    title="Удалить на совсем" v-if="bot.deleted_at!=null">
+                                <i class="fa-solid fa-trash-can text-white"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-lg-4 col-12 mb-3"
+                 v-if="displayType===0"
+                 v-for="(bot, index) in filteredBots">
                 <div class="card w-100"
                      v-bind:class="{'border-info':bot.deleted_at==null,'border-secondary':bot.deleted_at!=null}">
 
@@ -153,6 +226,9 @@ export default {
     props: ["companyId", "editor"],
     data() {
         return {
+            displayType: 1,
+            direction: 'desc',
+            order: 'updated_at',
             filters: [
                 {
                     name: 'Активные',
@@ -171,6 +247,11 @@ export default {
             bots: [],
             search: null,
             bots_paginate_object: null,
+        }
+    },
+    watch: {
+        'displayType': function (oldArg, newArg) {
+            localStorage.setItem("cashman_set_botlist_display_type", this.displayType)
         }
     },
     computed: {
@@ -223,6 +304,8 @@ export default {
     mounted() {
         this.loadBots();
         this.selectFilter('active')
+
+        this.displayType = parseInt(localStorage.getItem("cashman_set_botlist_display_type") || 0)
     },
     methods: {
         duplicate(id) {
@@ -287,14 +370,22 @@ export default {
         nextBots(index) {
             this.loadBots(index)
         },
+        loadAndOrder(order) {
+            this.order = order
+            this.direction = this.direction === 'desc' ? 'asc' : 'desc'
+            this.loadBots(0)
+        },
         loadBots(page = 0) {
             this.loading = true
             this.$store.dispatch("loadBots", {
                 dataObject: {
                     companyId: this.companyId || null,
-                    search: this.search
+                    search: this.search,
+                    order: this.order,
+                    direction: this.direction
                 },
-                page: page
+                page: page,
+                size:100
             }).then(resp => {
                 this.loading = false
                 this.bots = this.getBots
