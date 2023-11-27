@@ -25,12 +25,12 @@ class AuthenticatedSessionController extends Controller
     public function telegramAuth(Request $request)
     {
 
-        $hash = $request->hash;
-        $authDate = $request->auth_date;
+        $hash = $request->get("hash");
+        $authDate = $request->get("auth_date");
         $authBotDomain = env("AUTH_BOT_DOMAIN");
-        $tgId = $request->id;
+        $tgId = $request->get("id");
 
-        Log::info(print_r("$authBotDomain", true));
+        Log::info(print_r("$authBotDomain $tgId $authDate $hash", true));
         Log::info(print_r($request->all(), true));
 
 
