@@ -33,14 +33,14 @@ class AuthenticatedSessionController extends Controller
             ->first();
 
         if (is_null($bot))
-            return response()->redirectTo("login");
+            return response()->redirectToRoute("login");
 
         if (!$this->checkTelegramAuthorization([
             "hash" => $hash,
             "bot_token" => $bot->bot_token,
             "auth_date" => $authDate
         ]))
-            return response()->redirectTo("login");
+            return response()->redirectToRoute("login");
 
         $tgId = $request->id;
 
@@ -51,7 +51,7 @@ class AuthenticatedSessionController extends Controller
             ->first();
 
         if (is_null($user))
-            return response()->redirectTo("login");
+            return response()->redirectToRoute("login");
 
         $botUser = BotUser::query()
             ->where("bot_id",$bot->id)
@@ -59,17 +59,17 @@ class AuthenticatedSessionController extends Controller
             ->get();
 
         if (is_null($botUser))
-            return response()->redirectTo("login");
+            return response()->redirectToRoute("login");
 
         if (!$botUser->is_admin)
-            return response()->redirectTo("login");
+            return response()->redirectToRoute("login");
 
         if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {
             $request->session()->regenerate();
             return redirect()->route('dashboard');
         }
 
-        return response()->redirectTo("login");
+        return response()->redirectToRoute("login");
 
     }
 
