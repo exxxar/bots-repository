@@ -21,6 +21,8 @@ class AuthenticatedSessionController extends Controller
 
         $tgId = $request->id;
 
+        Log::info("tgId=>$tgId");
+
         $user = User::query()
             ->where("email", "$tgId@your-cashman.ru")
             ->first();
@@ -28,11 +30,17 @@ class AuthenticatedSessionController extends Controller
         if (is_null($user))
             return response()->redirectTo("login");
 
-        Auth::attempt(['email' => $user->email,'password'=>'']);
+        Log::info("here 1");
+
+        Auth::attempt(['email' => $user->email,'password'=>$tgId]);
+
+        Log::info("here 2");
 
         $request->session()->regenerate();
 
-        return redirect()->intended('dashboard');
+        Log::info("here 3");
+
+        return redirect()->route('dashboard');
     }
     /**
      * Display the login view.
