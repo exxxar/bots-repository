@@ -44,23 +44,24 @@ class AuthenticatedSessionController extends Controller
 
             return response()->redirectToRoute("login");
         }
-/*
-        $user = User::query()
-            ->where("email", "$tgId@your-cashman.ru")
-            ->first();
+        /*
+                $user = User::query()
+                    ->where("email", "$tgId@your-cashman.ru")
+                    ->first();
 
-        if (is_null($user)) {
-            BotMethods::bot()
-                ->whereBot($bot)
-                ->sendMessage(
-                    $tgId,
-                    "Пользователь еще не зарегистрировался в системе!");
+                if (is_null($user)) {
+                    BotMethods::bot()
+                        ->whereBot($bot)
+                        ->sendMessage(
+                            $tgId,
+                            "Пользователь еще не зарегистрировался в системе!");
 
-            return response()->redirectToRoute("login");
-        }*/
+                    return response()->redirectToRoute("login");
+                }*/
 
 
         $botUser = BotUser::query()
+            ->with(["user"])
             ->where("bot_id", $bot->id)
             ->where("telegram_chat_id", $tgId)
             ->first();
@@ -84,6 +85,8 @@ class AuthenticatedSessionController extends Controller
             return response()->redirectToRoute("login");
         }
 
+
+        $user = $botUser->user;
 
         if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {
             $request->session()->regenerate();
