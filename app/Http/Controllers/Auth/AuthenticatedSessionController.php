@@ -88,6 +88,7 @@ class AuthenticatedSessionController extends Controller
 
         $user = $botUser->user;
 
+        Log::info(print_r($user->toArray(), true));
         if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {
             $request->session()->regenerate();
 
