@@ -88,26 +88,29 @@ class AuthenticatedSessionController extends Controller
 
         $user = $botUser->user;
 
-        Log::info(print_r($user->toArray(), true));
-        if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {
-            $request->session()->regenerate();
+        /*Log::info(print_r($user->toArray(), true));
+        if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {*/
 
-            BotMethods::bot()
-                ->whereBot($bot)
-                ->sendMessage(
-                    $tgId,
-                    "Отлично! Вы успешно авторизовались!");
+        Auth::login($user);
 
-            return redirect()->route('dashboard');
-        }
+        $request->session()->regenerate();
 
         BotMethods::bot()
             ->whereBot($bot)
             ->sendMessage(
                 $tgId,
-                "Ошибка авторизации");
+                "Отлично! Вы успешно авторизовались!");
 
-        return response()->redirectToRoute("login");
+        return redirect()->route('dashboard');
+        /* }
+
+         BotMethods::bot()
+             ->whereBot($bot)
+             ->sendMessage(
+                 $tgId,
+                 "Ошибка авторизации");
+
+         return response()->redirectToRoute("login");*/
 
     }
 
