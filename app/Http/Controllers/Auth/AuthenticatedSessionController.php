@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
 
             return response()->redirectToRoute("login");
         }
-
+/*
         $user = User::query()
             ->where("email", "$tgId@your-cashman.ru")
             ->first();
@@ -57,7 +57,7 @@ class AuthenticatedSessionController extends Controller
                     "Пользователь еще не зарегистрировался в системе!");
 
             return response()->redirectToRoute("login");
-        }
+        }*/
 
 
         $botUser = BotUser::query()
