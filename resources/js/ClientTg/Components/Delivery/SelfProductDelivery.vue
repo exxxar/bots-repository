@@ -327,7 +327,7 @@ export default {
     },
     methods: {
         startTimer(time) {
-            this.spent_time_counter = time != null ? Math.min(time, 30) : 30;
+            this.spent_time_counter = time != null ? Math.min(time, 10) : 10;
 
             let counterId = setInterval(() => {
                     if (this.spent_time_counter > 0)
