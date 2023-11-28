@@ -293,6 +293,15 @@ export default {
             },
         }
     },
+    watch: {
+        'deliveryForm.cash': {
+            handler: function (newValue) {
+                if (!this.deliveryForm.cash)
+                    this.deliveryForm.money = null
+            },
+            deep: true
+        }
+    },
     computed: {
         ...mapGetters(['getProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice']),
         filteredProducts() {

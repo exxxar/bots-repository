@@ -31,7 +31,8 @@ class BotPageController extends Controller
             ->setBot(Bot::query()->find($request->botId ?? $request->bot_id ?? null))
             ->list(
                 $request->search ?? null,
-                $request->get("size") ?? config('app.results_per_page')
+                $request->get("size") ?? config('app.results_per_page'),
+                $request->needDeleted ?? $request->need_deleted ?? false
             );
 
     }

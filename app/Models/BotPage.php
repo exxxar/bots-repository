@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BotPage extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -55,6 +56,7 @@ class BotPage extends Model
         'next_page_id' => 'integer',
         'next_bot_dialog_command_id'=> 'integer',
         'next_bot_menu_slug_id'=> 'integer',
+        'deleted_at'=> 'timestamp',
     ];
 
     protected $with = ['slug','replyKeyboard','inlineKeyboard'];

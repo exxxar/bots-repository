@@ -35,6 +35,7 @@ class BotPageResource extends JsonResource
 
             'rules_if_message'=> $this->rules_if_message ?? null,
             'rules_else_message'=> $this->rules_else_message ?? null,
+            'deleted_at'=> $this->deleted_at ?? null,
         ];
     }
 }

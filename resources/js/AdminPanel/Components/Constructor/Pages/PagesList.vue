@@ -17,6 +17,16 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             </button>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="need_deleted"
+                       type="checkbox" id="needDeleted">
+                <label class="form-check-label" for="needDeleted">Отобразить удаленные</label>
+            </div>
+        </div>
+    </div>
 
     <div class="row" v-if="pages.length>0">
         <!--            <div class="col-12 mb-3">
@@ -35,11 +45,12 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             <ul class="list-group w-100">
 
                 <li class="list-group-item cursor-pointer page-menu-item btn btn-outline-info mb-1"
-
+                    v-bind:class="{'border border-warning':page.deleted_at!=null}"
                     v-for="(page, index) in pages"
                 >
-                    <div class=" d-flex justify-content-between">
-                        <strong @click="selectPage(page)">#{{ page.id || 'Не указано' }}
+                    <div class=" d-flex justify-content-between ">
+                        <strong
+                            @click="selectPage(page)">#{{ page.id || 'Не указано' }}
                             <span v-if="page.slug">{{ page.slug.command || 'Не указано' }}</span>
                             <span v-else>Не привязано к команде</span>
                             <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
@@ -96,6 +107,7 @@ export default {
         return {
             bot: null,
             current_page: 0,
+            need_deleted: true,
             loading: true,
             pages: [],
             search: null,
@@ -104,6 +116,9 @@ export default {
         }
     },
     watch: {
+        need_deleted: function (oldVal, newVal) {
+            this.nextPages(0)
+        },
         getPages: function (oldVal, newVal) {
             this.$nextTick(() => {
                 if (!this.search)
@@ -123,16 +138,14 @@ export default {
             this.current_page = localStorage.getItem(`cashman_pagelist_${this.bot.id}_page_index`) || 0
 
             this.loadPages();
-
-
-
         })
 
     },
     methods: {
         loadCurrentBot(bot = null) {
             return this.$store.dispatch("updateCurrentBot", {
-                bot: bot
+                bot: bot,
+
             }).then(() => {
                 this.bot = this.getCurrentBot
             })
@@ -179,7 +192,8 @@ export default {
             this.$store.dispatch("loadPages", {
                 dataObject: {
                     botId: this.bot.id || null,
-                    search: this.search || null
+                    search: this.search || null,
+                    needDeleted: this.need_deleted
                 },
                 page: this.current_page || 0
             }).then(resp => {

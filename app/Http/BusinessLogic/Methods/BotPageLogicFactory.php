@@ -42,15 +42,19 @@ class BotPageLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, $size = null): BotPageCollection
+    public function list($search = null, $size = null, $needDeleted = false): BotPageCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
         $size = $size ?? config('app.results_per_page');
 
-        $botPages = BotPage::query()
-            ->where("bot_id", $this->bot->id);
+        $botPages = BotPage::query();
+
+        if ($needDeleted)
+            $botPages = $botPages->withTrashed();
+
+        $botPages = $botPages->where("bot_id", $this->bot->id);
 
         if (!is_null($search))
             $botPages = $botPages
@@ -92,7 +96,7 @@ class BotPageLogicFactory
     /**
      * @throws HttpException
      */
-    public function destroy($pageId): BotPageResource
+    public function destroy($pageId, $force = false): BotPageResource
     {
         $botPage = BotPage::query()->where("id", $pageId)
             ->first();
@@ -100,22 +104,26 @@ class BotPageLogicFactory
         if (is_null($botPage))
             throw new HttpException(404, "Страница не найдена!");
 
-        $slug = BotMenuSlug::query()
-            ->find($botPage->bot_menu_slug_id);
+        if ($force) {
+            $slug = BotMenuSlug::query()
+                ->find($botPage->bot_menu_slug_id);
 
-        if (!is_null($slug))
-            $slug->delete();
+            if (!is_null($slug))
+                $slug->delete();
 
-        $tmp = $botPage;
+            $botPage->reply_keyboard_id = null;
+            $botPage->inline_keyboard_id = null;
+            $botPage->next_page_id = null;
+            $botPage->next_bot_dialog_command_id = null;
+            $botPage->next_bot_menu_slug_id = null;
+            $botPage->rules_else_page_id = null;
+            $botPage->bot_id = null;
+            $botPage->save();
 
-        $botPage->reply_keyboard_id = null;
-        $botPage->inline_keyboard_id = null;
-        $botPage->next_page_id = null;
-        $botPage->next_bot_dialog_command_id = null;
-        $botPage->next_bot_menu_slug_id = null;
-        $botPage->save();
+            $botPage->delete();
+        }
 
-        $botPage->forceDelete();
+        $tmp = $botPage->delete();
 
         return new BotPageResource($tmp);
     }
@@ -131,7 +139,7 @@ class BotPageLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $validator = Validator::make($pageData, [
-           // "content" => "required",
+            // "content" => "required",
             "command" => "required",
             "comment" => "required",
         ]);
@@ -240,7 +248,7 @@ class BotPageLogicFactory
 
         $validator = Validator::make($pageData, [
             "id" => "required",
-           // "content" => "required",
+            // "content" => "required",
             "command" => "required",
             "comment" => "required",
             "slug_id" => "required",
