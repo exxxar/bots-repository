@@ -64,9 +64,11 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <ul class="dropdown-menu">
+                                    <li v-if="page.deleted_at != null"><a class="dropdown-item" @click="restorePage(page.id)"><i
+                                        class="fa-solid fa-copy mr-1"></i>Восстановить</a></li>
                                     <li><a class="dropdown-item" @click="duplicatePage(page.id)"><i
                                         class="fa-solid fa-copy mr-1"></i>Дублировать</a></li>
-                                    <li><a class="dropdown-item" @click="removePage(page.id)"><i
+                                    <li v-if="page.deleted_at == null"><a class="dropdown-item" @click="removePage(page.id)"><i
                                         class="fa-solid fa-trash mr-1"></i>Удалить</a></li>
                                 </ul>
                             </div>
@@ -163,6 +165,19 @@ export default {
         duplicatePage(id) {
             this.loading = true
             this.$store.dispatch("duplicatePage", {
+                dataObject: {
+                    pageId: id
+                },
+            }).then(resp => {
+                this.loading = false
+                this.loadPages()
+            }).catch(() => {
+                this.loading = false
+            })
+        },
+        restorePage(id) {
+            this.loading = true
+            this.$store.dispatch("restorePage", {
                 dataObject: {
                     pageId: id
                 },

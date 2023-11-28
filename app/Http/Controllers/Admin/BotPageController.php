@@ -56,6 +56,15 @@ class BotPageController extends Controller
     }
 
     /**
+     * @throws \HttpException
+     */
+    public function restorePage($pageId): BotPageResource
+    {
+        return BusinessLogic::pages()
+            ->restore($pageId);
+    }
+
+    /**
      * @throws ValidationException
      * @throws \HttpException
      */

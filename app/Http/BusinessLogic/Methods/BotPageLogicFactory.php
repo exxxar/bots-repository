@@ -129,6 +129,25 @@ class BotPageLogicFactory
     }
 
     /**
+     * @throws HttpException
+     */
+    public function restore($pageId): BotPageResource
+    {
+        $botPage = BotPage::query()
+            ->withTrashed()
+            ->where("id", $pageId)
+            ->first();
+
+        if (is_null($botPage))
+            throw new HttpException(404, "Страница не найдена!");
+
+        $botPage->deleted_at = null;
+        $botPage->save();
+
+        return new BotPageResource($botPage);
+    }
+
+    /**
      * @param array{content: string, command: string, comment: string, bot_id: int} $pageData
      * @throws HttpException
      * @throws ValidationException
