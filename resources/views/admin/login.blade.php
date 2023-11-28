@@ -236,6 +236,12 @@
                         data-request-access="write">
 
                 </script>
+                <p style="color:white;">
+                <a
+                    id="logout"
+                    style="color:#2196F3;"
+                    href="#logout"> Сменить учетную запись</a>
+                </p>
             </div>
 
         </div>
@@ -243,7 +249,46 @@
     </div>
 
 </section> <!-- partial -->
+<script>
+    function setCookie(name, value, options = {}) {
 
+        options = {
+            path: '/',
+            // при необходимости добавьте другие значения по умолчанию
+            ...options
+        };
+
+        if (options.expires instanceof Date) {
+            options.expires = options.expires.toUTCString();
+        }
+
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+        for (let optionKey in options) {
+            updatedCookie += "; " + optionKey;
+            let optionValue = options[optionKey];
+            if (optionValue !== true) {
+                updatedCookie += "=" + optionValue;
+            }
+        }
+
+        document.cookie = updatedCookie;
+    }
+
+    // Пример использования:
+    function deleteCookie(name) {
+        setCookie(name, "", {
+            'max-age': -1
+        })
+    }
+
+    let logout = document.querySelector("#logout")
+
+    logout.onclick = function(){
+        deleteCookie("stel_token")
+        deleteCookie("stel_ssid")
+    }
+</script>
 </body>
 
 </html>

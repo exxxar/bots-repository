@@ -143,7 +143,7 @@ class ProductController extends Controller
             "products" => "required",
             "name"=>"required",
             "phone"=>"required",
-            "address"=>"",
+           // "address"=>"",
         ]);
 
         BusinessLogic::products()
