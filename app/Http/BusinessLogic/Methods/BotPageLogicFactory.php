@@ -123,7 +123,8 @@ class BotPageLogicFactory
             $botPage->delete();
         }
 
-        $tmp = $botPage->delete();
+        $tmp = $botPage;
+        $botPage->delete();
 
         return new BotPageResource($tmp);
     }
