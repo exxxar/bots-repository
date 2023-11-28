@@ -210,33 +210,32 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                           type="text" placeholder=""></textarea>
             </div>
 
-            <div
-                v-if="!deliveryForm.need_pickup"
-               >
 
-                <div class="custom-control ios-switch ios-switch-icon my-3">
-                    <input type="checkbox"
-                           v-model="deliveryForm.cash"
-                           class="ios-input" id="toggle-payment-cash">
-                    <label class="custom-control-label pl-5" for="toggle-payment-cash" v-if="!deliveryForm.cash">Карта</label>
-                    <label class="custom-control-label pl-5" for="toggle-payment-cash" v-if="deliveryForm.cash">Наличные</label>
+            <div class="custom-control ios-switch ios-switch-icon my-3">
+                <input type="checkbox"
+                       v-model="deliveryForm.cash"
+                       class="ios-input" id="toggle-payment-cash">
+                <label class="custom-control-label pl-5" for="toggle-payment-cash"
+                       v-if="!deliveryForm.cash">Карта</label>
+                <label class="custom-control-label pl-5" for="toggle-payment-cash"
+                       v-if="deliveryForm.cash">Наличные</label>
 
-                    <i class="fa-solid fa-money-bill-1-wave font-11 color-white" tyle="left:8px;"></i>
-                    <i class="fa-solid fa-credit-card  font-11 color-white" style="margin-left: 24px;"></i>
-                </div>
-
-                <div v-if="deliveryForm.cash">
-                    <h6>Мы можем подготовить для вас сдачу с:</h6>
-                    <div  class="d-flex justify-content-around flex-wrap py-2 mb-2">
-                        <button class="btn btn-outline-success"
-                                type="button"
-                                @click="deliveryForm.money=money"
-                                v-bind:class="{'btn-success text-white':deliveryForm.money===money}"
-                                v-for="money in moneyVariants">{{money}}₽</button>
-                    </div>
-                </div>
-
+                <i class="fa-solid fa-money-bill-1-wave font-11 color-white" tyle="left:8px;"></i>
+                <i class="fa-solid fa-credit-card  font-11 color-white" style="margin-left: 24px;"></i>
             </div>
+
+            <div v-if="deliveryForm.cash">
+                <h6>Мы можем подготовить для вас сдачу с:</h6>
+                <div class="d-flex justify-content-around flex-wrap py-2 mb-2">
+                    <button class="btn btn-outline-success"
+                            type="button"
+                            @click="deliveryForm.money=money"
+                            v-bind:class="{'btn-success text-white':deliveryForm.money===money}"
+                            v-for="money in moneyVariants">{{ money }}₽
+                    </button>
+                </div>
+            </div>
+
 
             <button
                 type="submit"
@@ -279,8 +278,8 @@ export default {
             sending: false,
             min_price: null,
             max_price: null,
-            moneyVariants:[
-              500, 1000, 2000, 5000
+            moneyVariants: [
+                500, 1000, 2000, 5000
             ],
             deliveryForm: {
                 name: null,
@@ -289,8 +288,8 @@ export default {
                 entrance_number: null,
                 info: null,
                 need_pickup: false,
-                money:null,
-                cash:true,
+                money: null,
+                cash: true,
             },
         }
     },
