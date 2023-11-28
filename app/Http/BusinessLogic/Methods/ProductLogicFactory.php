@@ -510,7 +510,7 @@ class ProductLogicFactory
             "products" => "required",
             "name" => "required",
             "phone" => "required",
-          //  "address" => "",
+            //  "address" => "",
         ]);
 
         if ($validator->fails())
@@ -546,53 +546,54 @@ class ProductLogicFactory
                 $tmpPrice
             );
 
-            $tmpOrderProductInfo[]=(object)[
-                "title"=> $product->title,
-                "count"=>$tmpCount,
-                "price"=>$tmpPrice
+            $tmpOrderProductInfo[] = (object)[
+                "title" => $product->title,
+                "count" => $tmpCount,
+                "price" => $tmpPrice
             ];
 
             $summaryCount += $tmpCount;
             $summaryPrice += $tmpPrice;
         }
 
-        $deliveryNote = ($data["info"] ?? 'Не указано')."\n"."Номер подъезда: ".($data["entrance_number"]??'Не указан');
-        $geo = BusinessLogic::geo()
-            ->setBot($this->bot ?? null)
-            ->getCoords([
-            "address"=>$data["address"]
-        ]);
+        $deliveryNote = ($data["info"] ?? 'Не указано') . "\n" . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан');
+        if (isset($data["address"]))
+            $geo = BusinessLogic::geo()
+                ->setBot($this->bot ?? null)
+                ->getCoords([
+                    "address" => $data["address"]
+                ]);
 
         //сделать чек на оплату (pdf)
         Order::query()->create([
-            'bot_id'=>$this->bot->id,
-            'deliveryman_id'=>null,
-            'customer_id'=>$this->botUser->id,
-            'delivery_service_info'=>null,//информация о сервисе доставки
-            'deliveryman_info'=>null,//информация о доставщике
-            'product_details'=>[
+            'bot_id' => $this->bot->id,
+            'deliveryman_id' => null,
+            'customer_id' => $this->botUser->id,
+            'delivery_service_info' => null,//информация о сервисе доставки
+            'deliveryman_info' => null,//информация о доставщике
+            'product_details' => [
                 (object)[
-                    "from"=>$this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
-                    "products"=>$tmpOrderProductInfo
+                    "from" => $this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
+                    "products" => $tmpOrderProductInfo
                 ]
             ],//информация о продуктах и заведении, из которого сделан заказ
-            'product_count'=>$summaryCount,
-            'summary_price'=>$summaryPrice,
-            'delivery_price'=>0,
-            'delivery_range'=>0,
-            'deliveryman_latitude'=>0,
-            'deliveryman_longitude'=>0,
-            'delivery_note'=> $deliveryNote,
-            'receiver_name'=> $data["name"] ?? 'Нет имени',
-            'receiver_phone'=> $data["phone"] ?? 'Нет телефона',
+            'product_count' => $summaryCount,
+            'summary_price' => $summaryPrice,
+            'delivery_price' => 0,
+            'delivery_range' => 0,
+            'deliveryman_latitude' => 0,
+            'deliveryman_longitude' => 0,
+            'delivery_note' => $deliveryNote,
+            'receiver_name' => $data["name"] ?? 'Нет имени',
+            'receiver_phone' => $data["phone"] ?? 'Нет телефона',
 
-            'address'=> $data["address"] ?? 'Нет адреса',
-            'receiver_latitude'=> $geo->latitude,
-            'receiver_longitude'=> $geo->longitude,
+            'address' => $data["address"] ?? 'Нет адреса',
+            'receiver_latitude' => $geo->latitude ?? 0,
+            'receiver_longitude' => $geo->longitude ?? 0,
 
-            'status'=>OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
-            'order_type'=>OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора
-            'payed_at'=>null,
+            'status' => OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
+            'order_type' => OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора
+            'payed_at' => null,
         ]);
 
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
@@ -620,7 +621,7 @@ class ProductLogicFactory
         $botDomain = $this->bot->bot_domain;
         $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->botUser->telegram_chat_id);
 
-        $keyboard =  [
+        $keyboard = [
             [
                 ["text" => "✉Написать пользователю ответ", "url" => $link]
             ]
@@ -631,7 +632,7 @@ class ProductLogicFactory
             ->sendInlineKeyboard(
                 $this->bot->order_channel ?? $this->bot->main_channel ?? null,
                 "$message\n\n$userInfo",
-                    $keyboard
+                $keyboard
             )
             ->sendMessage(
                 $this->botUser->telegram_chat_id,
