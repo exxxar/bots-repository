@@ -613,9 +613,11 @@ class ProductLogicFactory
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
-            ) : sprintf("Данные для самовывоза:\nФ.И.О.:%s\nНомер телефона:%s",
+            ) : sprintf("Данные для самовывоза:\nФ.И.О.:%s\nНомер телефона:%s\nТип оплаты:%s\nСдача с:%s\n",
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
+                ($cash ? "Наличкой" : "Картой"),
+                $data["money"] ?? 'Не указано',
             );
 
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
@@ -640,7 +642,10 @@ class ProductLogicFactory
                 $this->bot->order_channel ?? $this->bot->main_channel ?? null,
                 "$message\n\n$userInfo",
                 $keyboard
-            )
+            );
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
             ->sendMessage(
                 $this->botUser->telegram_chat_id,
                 "Спасибо, ваш заказ появился в нашей системе:\n\n<em>$message</em>\n\n$paymentInfo" ?? "Данные не найдены"
