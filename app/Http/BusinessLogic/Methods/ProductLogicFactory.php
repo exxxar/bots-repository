@@ -526,6 +526,7 @@ class ProductLogicFactory
             ->get();
 
         $needPickup = ($data["need_pickup"] ?? "false") == "true";
+        $cash = ($data["cash"] ?? "false") == "true";
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
 
         $summaryPrice = 0;
@@ -556,7 +557,11 @@ class ProductLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
-        $deliveryNote = ($data["info"] ?? 'Не указано') . "\n" . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан');
+        $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
+            . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
+            . "Тип оплаты: " . ($cash ? "Наличкой" : "Картой") . "\n"
+            . "Сдача с:" . ($data["money"] ?? 'Не указано');
+
         if (isset($data["address"]))
             $geo = BusinessLogic::geo()
                 ->setBot($this->bot ?? null)
@@ -600,11 +605,13 @@ class ProductLogicFactory
 
 
         $userInfo = !$needPickup ?
-            sprintf("Данные для доставки:\nФ.И.О.:%s\nНомер телефона:%s\nАдрес:%s\nНомер подъезда:%s\nДоп.инфо:%s\n",
+            sprintf("Данные для доставки:\nФ.И.О.:%s\nНомер телефона:%s\nАдрес:%s\nНомер подъезда:%s\nТип оплаты:%s\nСдача с:%s\nДоп.инфо:%s\n",
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
                 $data["entrance_number"] ?? 'Не указано',
+                ($cash ? "Наличкой" : "Картой"),
+                $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
             ) : sprintf("Данные для самовывоза:\nФ.И.О.:%s\nНомер телефона:%s",
                 $data["name"] ?? 'Не указано',
