@@ -465,14 +465,29 @@ class BotLogicFactory
 
             if (!is_null($adminBotUser)) {
 
-                $data = $result->object()->result;
-                $link = $data->invite_link ?? $data->username ?? null;
-                BotMethods::bot()
-                    ->whereBot($this->bot)
-                    ->sendMessage(
-                        $adminBotUser->telegram_chat_id,
-                        "Ссылка на канал: $chatId (для бота $botDomain) => $link"
-                    );
+                $data = $result->object();
+
+                if ($data->ok) {
+                    $link = $data->invite_link ?? $data->username ?? null;
+                    BotMethods::bot()
+                        ->whereBot($this->bot)
+                        ->sendMessage(
+                            $adminBotUser->telegram_chat_id,
+                            "Ссылка на канал: $chatId (для бота $botDomain) => $link"
+                        );
+                }
+
+                if (!$data->ok) {
+                    BotMethods::bot()
+                        ->whereBot($this->bot)
+                        ->sendMessage(
+                            $adminBotUser->telegram_chat_id,
+                            "Ошибка получения ссылки на канал: ".($data->description ?? 'Ошибка')
+                        );
+
+                    throw new HttpException(400, $data->description ?? 'Ошибка');
+                }
+
             }
         }
 
