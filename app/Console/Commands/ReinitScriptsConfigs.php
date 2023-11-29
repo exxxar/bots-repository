@@ -30,6 +30,7 @@ class ReinitScriptsConfigs extends Command
      */
     public function handle(): void
     {
+
         include_once base_path('routes/bot.php');
         $bot = Bot::query()
             ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
