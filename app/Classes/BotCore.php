@@ -911,14 +911,7 @@ abstract class BotCore
     {
         $this->controller = $controller;
 
-        try {
-            if (is_subclass_of($controller, SlugController::class)) {
-                app($controller)->config($this->getSelf());
-            }
 
-        } catch (\Exception $e) {
-            Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
-        }
         return $this;
     }
 

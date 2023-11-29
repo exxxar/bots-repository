@@ -168,6 +168,10 @@ class BotManager extends BotCore
         return BotStatusEnum::InMaintenance;
     }
 
+    public function getRoutes(){
+        return $this->routes;
+    }
+
     public function setWebhooks($botId = null)
     {
         $bots = Bot::query()
