@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -48,7 +49,7 @@ class BotSlugLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, $size = null, bool $needGlobal = null): BotMenuSlugCollection
+    public function list($search = null, $size = null, bool $needGlobal = null, $needDeleted = false): BotMenuSlugCollection
     {
 
         if (is_null($this->bot))
@@ -56,7 +57,12 @@ class BotSlugLogicFactory
 
         $size = $size ?? config('app.results_per_page');
 
-        $botMenuSlugs = BotMenuSlug::query()
+        $botMenuSlugs = BotMenuSlug::query();
+
+        if ($needDeleted)
+            $botMenuSlugs = $botMenuSlugs->withTrashed();
+
+        $botMenuSlugs = $botMenuSlugs
             ->where("bot_id", $this->bot->id);
 
         if (!is_null($needGlobal))
@@ -104,7 +110,7 @@ class BotSlugLogicFactory
         $slugRecipient = BotMenuSlug::query()
             ->find($data["slug_recipient_id"]);
 
-        if (is_null($slugSender)||is_null($slugRecipient))
+        if (is_null($slugSender) || is_null($slugRecipient))
             throw new HttpException(404, "Скрипт не найден!");
 
         $slugRecipient->config = $slugSender->config ?? [];
@@ -180,6 +186,23 @@ class BotSlugLogicFactory
 
     }
 
+    /**
+     * @throws HttpException
+     */
+    public function restore($slugId): BotMenuSlugResource
+    {
+
+        $botMenuSlug = BotMenuSlug::query()
+            ->withTrashed()
+            ->find($slugId);
+        if (is_null($botMenuSlug))
+            throw new HttpException(404, "Команда не найдена!");
+
+        $botMenuSlug->deleted_at = null;
+        $botMenuSlug->save();
+
+        return new BotMenuSlugResource($botMenuSlug);
+    }
 
     /**
      * @throws HttpException
@@ -231,6 +254,8 @@ class BotSlugLogicFactory
 
         $tmp->config = json_decode($tmp->config ?? '[]');
         $tmp->is_global = $tmp->is_global == "true";
+        $tmp->parent_slug_id = $tmp->id;
+        $tmp->slug = Str::uuid();
 
         $slug = BotMenuSlug::query()->create((array)$tmp);
 

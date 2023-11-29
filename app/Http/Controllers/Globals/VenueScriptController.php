@@ -22,43 +22,44 @@ class VenueScriptController extends SlugController
     public function config(Bot $bot)
     {
         $mainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_venue_main")
             ->first();
 
         if (is_null($mainScript))
             return;
 
-        if (empty($mainScript->config ?? [])) {
-            $mainScript->config = [
+        $params = [
 
-                [
-                    "type" => "geo",
-                    "key" => "coords",
-                    "value" => "00.000000,00.000000",
+            [
+                "type" => "geo",
+                "key" => "coords",
+                "value" => "00.000000,00.000000",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "title",
-                    "value" => "Заголовок",
+            ],
+            [
+                "type" => "text",
+                "key" => "title",
+                "value" => "Заголовок",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "address",
-                    "value" => "Адрес расположения",
+            ],
+            [
+                "type" => "text",
+                "key" => "address",
+                "value" => "Адрес расположения",
 
-                ],
+            ],
 
-            ];
+        ];
+
+        if (count($model->config ?? []) != count($params)) {
+            $mainScript->config = $params;
             $mainScript->save();
         }
 
         BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_venue_main",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [

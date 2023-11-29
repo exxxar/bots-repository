@@ -3,7 +3,7 @@ import Company from "@/AdminPanel/Components/Constructor/Company/CompanyForm.vue
 import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList.vue";
 import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
 import Location from "@/AdminPanel/Components/Constructor/Location/Location.vue";
-import Bot from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
+import Bot from "@/AdminPanel/Components/Constructor/Bot/BotSection.vue";
 import ImageMenu from "@/AdminPanel/Components/Constructor/Deprecated/ImageMenu.vue";
 </script>
 

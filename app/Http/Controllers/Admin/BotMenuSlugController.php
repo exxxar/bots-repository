@@ -63,7 +63,8 @@ class BotMenuSlugController extends Controller
             ->list(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page'),
-                $request->needGlobal ?? $request->isGlobal ?? null
+                $request->needGlobal ?? $request->isGlobal ?? null,
+                $request->needDeleted ?? $request->isDeleted ?? false
             );
     }
 
@@ -75,6 +76,12 @@ class BotMenuSlugController extends Controller
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page')
             );
+    }
+
+    public function restore(Request $request, $slugId): BotMenuSlugResource
+    {
+        return BusinessLogic::slugs()
+            ->restore($slugId);
     }
 
     public function destroy(Request $request, $slugId): BotMenuSlugResource

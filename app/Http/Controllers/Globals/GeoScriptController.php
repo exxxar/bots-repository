@@ -22,24 +22,25 @@ class GeoScriptController extends SlugController
     public function config(Bot $bot)
     {
         $mainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_geo_main")
             ->first();
 
         if (is_null($mainScript))
             return;
 
-        if (empty($mainScript->config ?? [])) {
-            $mainScript->config = [
+        $params = [
 
-                [
-                    "type" => "geo",
-                    "key" => "coords",
-                    "value" => "00.000000,00.000000",
+            [
+                "type" => "geo",
+                "key" => "coords",
+                "value" => "00.000000,00.000000",
 
-                ],
+            ],
 
-            ];
+        ];
+        if (count($model->config ?? []) != count($params)) {
+            $mainScript->config = $params;
             $mainScript->save();
         }
 

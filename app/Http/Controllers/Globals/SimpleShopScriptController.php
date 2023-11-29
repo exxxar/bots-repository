@@ -33,7 +33,7 @@ class SimpleShopScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_simple_shop")
             ->first();
 
@@ -44,7 +44,7 @@ class SimpleShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_clear_basket",
-                "bot_id" => $bot->id,
+
                 'is_global' => true,
             ],
             [
@@ -56,7 +56,7 @@ class SimpleShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_simple_shop",
-                "bot_id" => $bot->id,
+
                 'is_global' => true,
             ],
             [
@@ -102,7 +102,6 @@ class SimpleShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_products_categories",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [
@@ -128,7 +127,7 @@ class SimpleShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_products_menu",
-                "bot_id" => $bot->id,
+
                 'is_global' => true,
             ],
             [
@@ -139,7 +138,7 @@ class SimpleShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_product_basket",
-                "bot_id" => $bot->id,
+
                 'is_global' => true,
             ],
             [
@@ -150,7 +149,6 @@ class SimpleShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_products_in_basket",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [
@@ -161,7 +159,7 @@ class SimpleShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_order_history",
-                "bot_id" => $bot->id,
+
                 'is_global' => true,
             ],
             [
@@ -172,7 +170,7 @@ class SimpleShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_start_order",
-                "bot_id" => $bot->id,
+
                 'is_global' => true,
             ],
             [

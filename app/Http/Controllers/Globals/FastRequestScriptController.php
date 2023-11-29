@@ -23,36 +23,37 @@ class FastRequestScriptController extends SlugController
     public function config(Bot $bot)
     {
         $mainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_fast_request_main")
             ->first();
 
         if (is_null($mainScript))
             return;
 
-        if (empty($mainScript->config ?? [])) {
-            $mainScript->config = [
+        $params =  [
 
-                [
-                    "type" => "text",
-                    "key" => "btn_text",
-                    "value" => "Запросить обратную связь",
+            [
+                "type" => "text",
+                "key" => "btn_text",
+                "value" => "Запросить обратную связь",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "pre_text",
-                    "value" => "Если заинтересовало, жми!",
+            ],
+            [
+                "type" => "text",
+                "key" => "pre_text",
+                "value" => "Если заинтересовало, жми!",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "result_message",
-                    "value" => "%s, наш менеджер свяжется с вами в ближайшее время!",
+            ],
+            [
+                "type" => "text",
+                "key" => "result_message",
+                "value" => "%s, наш менеджер свяжется с вами в ближайшее время!",
 
-                ],
+            ],
 
-            ];
+        ];
+        if (count($model->config ?? []) != count($params)) {
+            $mainScript->config =$params;
             $mainScript->save();
         }
 

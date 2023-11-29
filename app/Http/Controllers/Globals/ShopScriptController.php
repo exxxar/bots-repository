@@ -21,7 +21,7 @@ class ShopScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_shop_main")
             ->first();
 
@@ -32,7 +32,6 @@ class ShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_shop_main",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [
@@ -40,23 +39,25 @@ class ShopScriptController extends SlugController
                 'comment' => "Модуль магазина",
             ]);
 
-        if (empty($model->config ?? [])) {
-            $model->config = [
-                [
-                    "type" => "text",
-                    "key" => "main_text",
-                    "value" => "Наш магазин товаров",
+        $params = [
+            [
+                "type" => "text",
+                "key" => "main_text",
+                "value" => "Наш магазин товаров",
 
-                ],
+            ],
 
-                [
-                    "type" => "text",
-                    "key" => "btn_text",
-                    "value" => "В магазин",
+            [
+                "type" => "text",
+                "key" => "btn_text",
+                "value" => "В магазин",
 
-                ],
+            ],
 
-            ];
+        ];
+
+        if (count($model->config ?? []) != count($params)) {
+            $model->config = $params;
             $model->save();
         }
 

@@ -21,7 +21,7 @@ class BonusProductScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_bonus_product")
             ->first();
 
@@ -40,69 +40,71 @@ class BonusProductScriptController extends SlugController
                 'comment' => "Накапливай бонусные товары и обменивай их на реальный!",
             ]);
 
-        if (empty($model->config ?? [])) {
-            $model->config = [
-                [
-                    "type" => "text",
-                    "key" => "max_attempts",
-                    "value" => 6,
+        $params =  [
+            [
+                "type" => "text",
+                "key" => "max_attempts",
+                "value" => 6,
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "current_attempt",
-                    "value" => 0,
+            ],
+            [
+                "type" => "text",
+                "key" => "current_attempt",
+                "value" => 0,
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "icon",
-                    "value" => "<i class='fa-solid fa-mug-hot'></i>",
+            ],
+            [
+                "type" => "text",
+                "key" => "icon",
+                "value" => "<i class='fa-solid fa-mug-hot'></i>",
 
-                ],
-                [
-                    "type" => "color",
-                    "key" => "icon_color",
-                    "value" => "#a52a2a",
+            ],
+            [
+                "type" => "color",
+                "key" => "icon_color",
+                "value" => "#a52a2a",
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "reloadable",
-                    "value" => true,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "reloadable",
+                "value" => true,
 
-                ],
-                [
-                    "type" => "channel",
-                    "key" => "callback_channel_id",
-                    "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
+            ],
+            [
+                "type" => "channel",
+                "key" => "callback_channel_id",
+                "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "rules_text",
-                    "value" => "Всё гениальное просто - делай фото по заданию и загружай их!",
+            ],
+            [
+                "type" => "text",
+                "key" => "rules_text",
+                "value" => "Всё гениальное просто - делай фото по заданию и загружай их!",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "main_text",
-                    "value" => "Принимай участие в наших квестах и получай ценные призы!",
+            ],
+            [
+                "type" => "text",
+                "key" => "main_text",
+                "value" => "Принимай участие в наших квестах и получай ценные призы!",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "win_message",
-                    "value" => "%s, вы приняли участие в квесте и скоро получите награду. Наш менеджер свяжется с вами в ближайшее время!",
+            ],
+            [
+                "type" => "text",
+                "key" => "win_message",
+                "value" => "%s, вы приняли участие в квесте и скоро получите награду. Наш менеджер свяжется с вами в ближайшее время!",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "btn_text",
-                    "value" => "К заданию",
+            ],
+            [
+                "type" => "text",
+                "key" => "btn_text",
+                "value" => "К заданию",
 
-                ],
-            ];
+            ],
+        ];
+
+        if (count($model->config ?? []) != count($params)) {
+            $model->config = $params;
             $model->save();
         }
 

@@ -22,6 +22,7 @@ class BotMenuSlugResource extends JsonResource
             'slug' => $this->slug,
             'page' => !is_null($this->page),
             'deprecated_at' => $this->deprecated_at ?? null,
+            'deleted_at' => $this->deleted_at ?? null,
 
         ];
     }

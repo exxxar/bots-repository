@@ -18,10 +18,9 @@ class SinglePaymentScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_single_payment_main")
             ->first();
-
 
         if (is_null($hasMainScript))
             return;
@@ -29,7 +28,6 @@ class SinglePaymentScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_single_payment_main",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [
@@ -37,99 +35,101 @@ class SinglePaymentScriptController extends SlugController
                 'comment' => "Модуль оплаты одной услуги или товара",
             ]);
 
-        if (empty($model->config ?? [])) {
-            $model->config = [
-                [
-                    "type" => "text",
-                    "key" => "product_price",
-                    "value" => 10000,
+        $params = [
+            [
+                "type" => "text",
+                "key" => "product_price",
+                "value" => 10000,
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "product_description",
-                    "value" => "Описание товара",
+            ],
+            [
+                "type" => "text",
+                "key" => "product_description",
+                "value" => "Описание товара",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "product_title",
-                    "value" => "Товар",
+            ],
+            [
+                "type" => "text",
+                "key" => "product_title",
+                "value" => "Товар",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "btn_text",
-                    "value" => "Оплатить",
+            ],
+            [
+                "type" => "text",
+                "key" => "btn_text",
+                "value" => "Оплатить",
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "need_name",
-                    "value" => true,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_name",
+                "value" => true,
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "need_phone_number",
-                    "value" => true,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_phone_number",
+                "value" => true,
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "need_email",
-                    "value" => false,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_email",
+                "value" => false,
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "need_shipping_address",
-                    "value" => false,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_shipping_address",
+                "value" => false,
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "need_send_email_to_provider",
-                    "value" => true,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_send_email_to_provider",
+                "value" => true,
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "need_send_phone_number_to_provider",
-                    "value" => true,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_send_phone_number_to_provider",
+                "value" => true,
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "is_flexible",
-                    "value" => false,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "is_flexible",
+                "value" => false,
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "tax_system_code",
-                    "value" => 1,
+            ],
+            [
+                "type" => "text",
+                "key" => "tax_system_code",
+                "value" => 1,
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "need_disable_notification",
-                    "value" => false,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_disable_notification",
+                "value" => false,
 
-                ],
-                [
-                    "type" => "boolean",
-                    "key" => "need_protect_content",
-                    "value" => false,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_protect_content",
+                "value" => false,
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "payload_data",
-                    "value" => "Товар",
+            ],
+            [
+                "type" => "text",
+                "key" => "payload_data",
+                "value" => "Товар",
 
-                ]
-            ];
+            ]
+        ];
+
+        if (count($model->config ?? []) != count($params)) {
+            $model->config = $params;
             $model->save();
         }
 

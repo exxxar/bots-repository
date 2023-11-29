@@ -911,8 +911,8 @@ abstract class BotCore
     {
         $this->controller = $controller;
 
+        Log::info("controller=>".print_r($controller, true));
         try {
-
 
             if (is_subclass_of($controller, SlugController::class)) {
                 app($controller)->config($this->getSelf());

@@ -23,7 +23,7 @@ class ManagerScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_manager_main")
             ->first();
 
@@ -35,7 +35,6 @@ class ManagerScriptController extends SlugController
         $hasMainScript = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_about_bot_main",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [
@@ -59,7 +58,6 @@ class ManagerScriptController extends SlugController
 
         BotMenuSlug::query()->updateOrCreate(
             [
-                'bot_id' => $bot->id,
                 'slug' => "global_manager_clients",
                 'is_global' => true,
             ],
@@ -70,7 +68,6 @@ class ManagerScriptController extends SlugController
 
         BotMenuSlug::query()->updateOrCreate(
             [
-                'bot_id' => $bot->id,
                 'slug' => "global_manager_bots",
                 'is_global' => true,
             ],
@@ -79,9 +76,8 @@ class ManagerScriptController extends SlugController
                 'comment' => "Отображение списка всех созданных менеджером ботов",
             ]);
 
-       $pertnerScript = BotMenuSlug::query()->updateOrCreate(
+       $partnerScript = BotMenuSlug::query()->updateOrCreate(
             [
-                'bot_id' => $bot->id,
                 'slug' => "global_manager_partners",
                 'is_global' => true,
             ],
@@ -99,14 +95,13 @@ class ManagerScriptController extends SlugController
 
         ];
 
-        if (count($pertnerScript->config ?? []) != count($params)) {
-            $pertnerScript->config = $params;
-            $pertnerScript->save();
+        if (count($partnerScript->config ?? []) != count($params)) {
+            $partnerScript->config = $params;
+            $partnerScript->save();
         }
 
         BotMenuSlug::query()->updateOrCreate(
             [
-                'bot_id' => $bot->id,
                 'slug' => "global_manager_profile",
                 'is_global' => true,
             ],

@@ -26,7 +26,7 @@ class InstantCashBackController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_start_cashback_bonus")
             ->first();
 
@@ -37,7 +37,6 @@ class InstantCashBackController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_start_cashback_bonus",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [

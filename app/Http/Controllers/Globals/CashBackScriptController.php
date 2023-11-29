@@ -22,7 +22,7 @@ class CashBackScriptController extends SlugController
     public function config(Bot $bot)
     {
         $mainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_cashback_main")
             ->first();
 
@@ -84,7 +84,7 @@ class CashBackScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_cashback_budget",
-                "bot_id" => $bot->id,
+
                 'is_global' => true,
             ],
             [
@@ -95,7 +95,7 @@ class CashBackScriptController extends SlugController
 
         BotMenuSlug::query()->updateOrCreate(
             [
-                'bot_id' => $bot->id,
+
                 'slug' => "global_cashback_request",
                 'is_global' => true,
             ],
@@ -106,7 +106,7 @@ class CashBackScriptController extends SlugController
 
         BotMenuSlug::query()->updateOrCreate(
             [
-                'bot_id' => $bot->id,
+
 
                 'slug' => "global_cashback_write_offs",
                 'is_global' => true,
@@ -118,7 +118,7 @@ class CashBackScriptController extends SlugController
 
         BotMenuSlug::query()->updateOrCreate(
             [
-                'bot_id' => $bot->id,
+
                 'slug' => "global_cashback_charges",
                 'is_global' => true,
             ],
@@ -129,7 +129,7 @@ class CashBackScriptController extends SlugController
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
-                'bot_id' => $bot->id,
+
 
                 'slug' => "global_cashback_book_table",
                 'is_global' => true,
@@ -168,7 +168,7 @@ class CashBackScriptController extends SlugController
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
-                    'bot_id' => $bot->id,
+
                     'type' => 'inline',
                     'slug' => "menu_admins_list_route",
 
@@ -207,7 +207,7 @@ class CashBackScriptController extends SlugController
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
-                    'bot_id' => $bot->id,
+
                     'type' => 'inline',
                     'slug' => "menu_booking_table_$slugId",
 
@@ -311,7 +311,7 @@ class CashBackScriptController extends SlugController
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
-                    'bot_id' => $bot->id,
+
                     'type' => 'reply',
                     'slug' => "menu_cashback_budget_$slugId",
 
@@ -359,7 +359,7 @@ class CashBackScriptController extends SlugController
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
-                    'bot_id' => $bot->id,
+
                     'type' => 'inline',
                     'slug' => "menu_cashback_request_$slugId",
 
@@ -502,7 +502,7 @@ class CashBackScriptController extends SlugController
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
-                    'bot_id' => $bot->id,
+
                     'type' => 'reply',
                     'slug' => "menu_cashback_$slugId",
 

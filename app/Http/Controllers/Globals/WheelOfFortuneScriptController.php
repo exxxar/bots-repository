@@ -25,7 +25,6 @@ class WheelOfFortuneScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
             ->where("slug", "global_wheel_of_fortune")
             ->first();
 
@@ -36,7 +35,6 @@ class WheelOfFortuneScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_wheel_of_fortune",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [
@@ -143,8 +141,9 @@ class WheelOfFortuneScriptController extends SlugController
 
             ],
         ];
+
         if (count($model->config ?? []) != count($params)) {
-            $model->config =
+            $model->config = $params;
             $model->save();
         }
 

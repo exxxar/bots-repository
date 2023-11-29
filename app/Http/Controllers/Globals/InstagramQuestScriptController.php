@@ -24,7 +24,7 @@ class InstagramQuestScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_instagram_quest")
             ->first();
 
@@ -35,7 +35,6 @@ class InstagramQuestScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_instagram_quest",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [
@@ -43,46 +42,50 @@ class InstagramQuestScriptController extends SlugController
                 'comment' => "Модуль создания задания для инстаграм",
             ]);
 
-        if (empty($model->config ?? [])) {
-            $model->config = [
-                [
-                    "type" => "text",
-                    "key" => "max_attempts",
-                    "value" => 2,
 
-                ],
-                [
-                    "type" => "channel",
-                    "key" => "callback_channel_id",
-                    "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "rules_text",
-                    "value" => "Всё гениальное просто - делай фото по заданию и загружай их!",
+        $params =  [
+            [
+                "type" => "text",
+                "key" => "max_attempts",
+                "value" => 2,
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "main_text",
-                    "value" => "Принимай участие в наших квестах и получай ценные призы!",
+            ],
+            [
+                "type" => "channel",
+                "key" => "callback_channel_id",
+                "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "result_message",
-                    "value" => "%s, вы приняли участие в квесте и скоро получите награду. Наш менеджер свяжется с вами в ближайшее время!",
+            ],
+            [
+                "type" => "text",
+                "key" => "rules_text",
+                "value" => "Всё гениальное просто - делай фото по заданию и загружай их!",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "btn_text",
-                    "value" => "К заданию",
+            ],
+            [
+                "type" => "text",
+                "key" => "main_text",
+                "value" => "Принимай участие в наших квестах и получай ценные призы!",
 
-                ],
+            ],
+            [
+                "type" => "text",
+                "key" => "result_message",
+                "value" => "%s, вы приняли участие в квесте и скоро получите награду. Наш менеджер свяжется с вами в ближайшее время!",
 
-            ];
+            ],
+            [
+                "type" => "text",
+                "key" => "btn_text",
+                "value" => "К заданию",
+
+            ],
+
+        ];
+
+        if (count($model->config ?? []) != count($params)) {
+            $model->config = $params;
             $model->save();
         }
 

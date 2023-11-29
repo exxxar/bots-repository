@@ -17,7 +17,7 @@ class FriendsScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_friends_main")
             ->first();
 
@@ -28,7 +28,6 @@ class FriendsScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_friends_main",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
             [
@@ -36,27 +35,29 @@ class FriendsScriptController extends SlugController
                 'comment' => "Реферальная программа",
             ]);
 
-        if (empty($model->config ?? [])) {
-            $model->config = [
-                [
-                    "type" => "text",
-                    "key" => "main_text",
-                    "value" => "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+        $params = [
+            [
+                "type" => "text",
+                "key" => "main_text",
+                "value" => "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
 Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой"
-                ],
-                [
-                    "type" => "image",
-                    "key" => "image_main",
-                    "value" => null,
+            ],
+            [
+                "type" => "image",
+                "key" => "image_main",
+                "value" => null,
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "referral_text",
-                    "value" => "Перешли эту ссылку друзьям:\n<a href=\"%s\">%s</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>",
+            ],
+            [
+                "type" => "text",
+                "key" => "referral_text",
+                "value" => "Перешли эту ссылку друзьям:\n<a href=\"%s\">%s</a>\n<span class=\"tg-spoiler\">И получи бонусные баллы <strong>CashBack</strong></span>",
 
-                ]
-            ];
+            ]
+        ];
+
+        if (count($model->config ?? []) != count($params)) {
+            $model->config = $params;
             $model->save();
         }
 

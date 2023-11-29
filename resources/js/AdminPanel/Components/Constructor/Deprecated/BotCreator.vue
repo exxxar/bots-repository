@@ -1,6 +1,6 @@
 <script setup>
 import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList.vue";
-import Bot from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
+import Bot from "@/AdminPanel/Components/Constructor/Bot/BotSection.vue";
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 import Page from "@/AdminPanel/Components/Constructor/Pages/Page.vue"
 </script>

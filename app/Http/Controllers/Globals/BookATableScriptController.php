@@ -22,7 +22,7 @@ class BookATableScriptController extends SlugController
     public function config(Bot $bot)
     {
         $mainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_cashback_book_table")
             ->first();
 
@@ -33,7 +33,7 @@ class BookATableScriptController extends SlugController
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
-                'bot_id' => $bot->id,
+
                 'slug' => "global_cashback_book_table",
                 'is_global' => true,
             ],
@@ -83,7 +83,7 @@ class BookATableScriptController extends SlugController
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
-                    'bot_id' => $bot->id,
+
                     'type' => 'inline',
                     'slug' => "menu_booking_table_$slugId",
 

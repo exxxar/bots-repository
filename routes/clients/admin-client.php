@@ -167,6 +167,7 @@ Route::prefix("admin")
                 Route::post("/duplicate/{slugId}", "duplicate");
                 Route::get("/reload-params/{slugId}", "reloadParams");
                 Route::delete("/{slugId}", "destroy");
+                Route::get("/restore/{slugId}", "restore");
             });
 
         Route::prefix("pages")

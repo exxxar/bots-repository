@@ -26,7 +26,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_wheel_of_fortune_custom")
             ->first();
 
@@ -39,7 +39,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_wheel_of_fortune_custom",
-                "bot_id" => $bot->id,
+
                 'is_global' => true,
             ],
             [

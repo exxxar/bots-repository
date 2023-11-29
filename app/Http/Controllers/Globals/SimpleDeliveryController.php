@@ -26,7 +26,7 @@ class SimpleDeliveryController extends SlugController
     public function config(Bot $bot)
     {
         $mainScript = BotMenuSlug::query()
-            ->where("bot_id", $bot->id)
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_simple_delivery_main")
             ->first();
 
@@ -72,7 +72,6 @@ class SimpleDeliveryController extends SlugController
         BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_simple_delivery_main",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
 
@@ -84,7 +83,6 @@ class SimpleDeliveryController extends SlugController
         BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_simple_delivery_my_orders",
-                "bot_id" => $bot->id,
                 'is_global' => true,
             ],
 

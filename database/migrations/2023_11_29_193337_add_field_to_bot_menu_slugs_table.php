@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::table('action_statuses', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->change();
-            $table->foreignId('bot_user_id')->constrained();
+        Schema::table('bot_menu_slugs', function (Blueprint $table) {
+            $table->foreignId('parent_slug_id')->nullable();
         });
-        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -24,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('action_statuses', function (Blueprint $table) {
+        Schema::table('bot_menu_slugs', function (Blueprint $table) {
             //
         });
     }

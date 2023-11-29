@@ -57,7 +57,7 @@ const actions = {
         })
     },
     async loadSlugs(context, payload = {
-        dataObject: {botId: null, search: null, needGlobal: false},
+        dataObject: {botId: null, search: null, needGlobal: false, needDeleted:false},
         page: 0,
         size: 12
     }) {
@@ -109,6 +109,18 @@ const actions = {
     async duplicateSlug(context, payload = {dataObject: {slugId: null}}) {
         let link = `${BASE_SLUGS_LINK}/duplicate/${payload.dataObject.slugId}`
         let _axios = util.makeAxiosFactory(link, 'POST')
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
+
+    async restoreSlug(context, payload = {dataObject: {slugId: null}}) {
+        let link = `${BASE_SLUGS_LINK}/restore/${payload.dataObject.slugId}`
+        let _axios = util.makeAxiosFactory(link, 'GET')
         return _axios.then((response) => {
             return Promise.resolve(response);
         }).catch(err => {

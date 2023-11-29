@@ -1,8 +1,9 @@
 <script setup>
 import Layout from "@/AdminPanel/Layouts/MainAdminLayout.vue";
-import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
+import BotSection from "@/AdminPanel/Components/Constructor/Bot/BotSection.vue";
 import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList.vue";
 import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
+import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
 
 </script>
 
@@ -54,9 +55,8 @@ import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
                 </div>
 
                 <div class="row" v-if="step===2">
-                    <BotForm v-if="bot&&!load"
+                    <BotSection v-if="bot&&!load"
                              :bot="bot"
-                             :editor="true"
                     />
                 </div>
             </div>
