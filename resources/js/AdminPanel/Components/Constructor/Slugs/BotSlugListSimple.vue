@@ -11,7 +11,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         <input type="text"
                                class="form-control mt-1 mb-1"
                                v-model="search"
-                               @keyup.enter="loadSlugs"
+                               @change="loadSlugs"
                                placeholder="Поиск нужного скрипта по описанию">
                     </div>
 

@@ -47,106 +47,108 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 'comment' => "Игровой модуль",
             ]);
 
-        if (empty($model->config ?? [])) {
-            $model->config = [
-                [
-                    "type" => "text",
-                    "key" => "max_attempts",
-                    "value" => 2,
+        $params = [
+            [
+                "type" => "text",
+                "key" => "max_attempts",
+                "value" => 2,
 
-                ],
-                [
-                    "type" => "channel",
-                    "key" => "callback_channel_id",
-                    "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
+            ],
+            [
+                "type" => "channel",
+                "key" => "callback_channel_id",
+                "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "rules_text",
-                    "value" => "Всё гениальное просто - делай фото по заданию и загружай их!",
+            ],
+            [
+                "type" => "text",
+                "key" => "rules_text",
+                "value" => "Всё гениальное просто - делай фото по заданию и загружай их!",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "main_text",
-                    "value" => "Принимай участие в наших квестах и получай ценные призы!",
+            ],
+            [
+                "type" => "text",
+                "key" => "main_text",
+                "value" => "Принимай участие в наших квестах и получай ценные призы!",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "win_message",
-                    "value" => "%s, вы приняли участие в квесте и скоро получите награду. Наш менеджер свяжется с вами в ближайшее время!",
+            ],
+            [
+                "type" => "text",
+                "key" => "win_message",
+                "value" => "%s, вы приняли участие в квесте и скоро получите награду. Наш менеджер свяжется с вами в ближайшее время!",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "callback_message",
-                    "value" => "Спасибо за ваше участие! Вы выиграли приз!
+            ],
+            [
+                "type" => "text",
+                "key" => "callback_message",
+                "value" => "Спасибо за ваше участие! Вы выиграли приз!
 Когда будете готовы сделать заказ, позвоните по номеру: +7 (999) 418-28-84 и при заказе, обязательно, уточните что вы выиграли в «Колесо Фортуны»",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "btn_text",
-                    "value" => "К заданию",
+            ],
+            [
+                "type" => "text",
+                "key" => "btn_text",
+                "value" => "К заданию",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "wheel_text",
-                    "value" => "№1",
+            ],
+            [
+                "type" => "text",
+                "key" => "wheel_text",
+                "value" => "№1",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "wheel_text",
-                    "value" => "№2",
+            ],
+            [
+                "type" => "text",
+                "key" => "wheel_text",
+                "value" => "№2",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "wheel_text",
-                    "value" => "№3",
+            ],
+            [
+                "type" => "text",
+                "key" => "wheel_text",
+                "value" => "№3",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "wheel_text",
-                    "value" => "№4",
+            ],
+            [
+                "type" => "text",
+                "key" => "wheel_text",
+                "value" => "№4",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "wheel_text",
-                    "value" => "№5",
+            ],
+            [
+                "type" => "text",
+                "key" => "wheel_text",
+                "value" => "№5",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "wheel_text",
-                    "value" => "№6",
+            ],
+            [
+                "type" => "text",
+                "key" => "wheel_text",
+                "value" => "№6",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "wheel_text",
-                    "value" => "№7",
+            ],
+            [
+                "type" => "text",
+                "key" => "wheel_text",
+                "value" => "№7",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "wheel_text",
-                    "value" => "№8",
+            ],
+            [
+                "type" => "text",
+                "key" => "wheel_text",
+                "value" => "№8",
 
-                ],
-                [
-                    "type" => "text",
-                    "key" => "wheel_text",
-                    "value" => "№9",
+            ],
+            [
+                "type" => "text",
+                "key" => "wheel_text",
+                "value" => "№9",
 
-                ],
-            ];
+            ],
+        ];
+
+        if (count($model->config ?? []) != count($params)) {
+            $model->config =$params;
             $model->save();
         }
 
