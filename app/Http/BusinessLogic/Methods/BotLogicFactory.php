@@ -468,7 +468,7 @@ class BotLogicFactory
                 $data = $result->object();
 
                 if ($data->ok) {
-                    $link = $data->invite_link ?? $data->username ?? null;
+                    $link = $data->result->invite_link ?? $data->result->username ?? null;
                     BotMethods::bot()
                         ->whereBot($this->bot)
                         ->sendMessage(
