@@ -20,18 +20,18 @@ const getters = {
 }
 
 const actions = {
-    async loadCurrentBotFields(context, payload = {bot_id:null}){
-            let link = `${BASE_BOTS_LINK}/load-fields/${payload.bot_id}`
-            let method = 'GET'
+    async loadCurrentBotFields(context, payload = {bot_id: null}) {
+        let link = `${BASE_BOTS_LINK}/load-fields/${payload.bot_id}`
+        let method = 'GET'
 
-            let _axios = util.makeAxiosFactory(link, method)
+        let _axios = util.makeAxiosFactory(link, method)
 
-            return _axios.then((response) => {
-                return Promise.resolve(response.data);
-            }).catch(err => {
-                context.commit("setErrors", err.response.data.errors || [])
-                return Promise.reject(err);
-            })
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
     },
     async storeBotFields(context, payload = {dataObject: null}) {
 
@@ -48,10 +48,35 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async updateShopLink(context, payload = {botForm:null}){
+
+    async loadChatInfo(context, payload = {dataObject: {chat_id: null, bot_id:null}}) {
+        let link = `${BASE_BOTS_LINK}/load-chat-info`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async createBotTopics(context, payload = {dataObject: {bot_id:null, topics: null}}) {
+        let link = `${BASE_BOTS_LINK}/create-bot-topics`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async updateShopLink(context, payload = {botForm: null}) {
         let link = `${BASE_BOTS_LINK}/update-shop-link`
 
-        let _axios = util.makeAxiosFactory(link,"POST", payload.botForm)
+        let _axios = util.makeAxiosFactory(link, "POST", payload.botForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response);
@@ -118,7 +143,7 @@ const actions = {
         })
     },
 
-    async duplicateBot(context, payload = {dataObject:{bot_id:null, company_id: null}}) {
+    async duplicateBot(context, payload = {dataObject: {bot_id: null, company_id: null}}) {
         let link = `${BASE_BOTS_LINK}/duplicate`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)

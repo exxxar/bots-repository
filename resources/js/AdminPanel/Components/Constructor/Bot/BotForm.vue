@@ -371,6 +371,9 @@ import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue
                            v-model="botForm.order_channel"
                            maxlength="255"
                            aria-describedby="bot-order-channel">
+                    <small><a
+                        @click="getChatLink(botForm.order_channel)"
+                        href="javascript:void(0)">Узнать ссылку</a>(будет отправлена в бота)</small>
                 </div>
 
 
@@ -394,6 +397,9 @@ import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue
                            v-model="botForm.main_channel"
                            maxlength="255"
                            aria-describedby="bot-main-channel">
+                    <small><a
+                        @click="getChatLink(botForm.main_channel)"
+                        href="javascript:void(0)">Узнать ссылку</a>(будет отправлена в бота)</small>
                 </div>
             </div>
 
@@ -411,7 +417,17 @@ import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue
             </div>
 
             <div class="col-12 mb-2" v-if="need_threads && botForm.order_channel">
-                <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
+
+                    <a class="btn btn-outline-info"
+                       @click="createBotTopics"
+                       href="javascript:void(0)">
+                        <i class="fa-solid fa-paperclip mr-2"></i>Создать топики автоматически
+                    </a>
+                </div>
+
                 <ul class="list-group">
                     <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
                         <p class="mb-0">{{ thread.title }} ({{ thread.key }})</p>
@@ -986,7 +1002,6 @@ import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue
     </div>
 
 
-
     <div v-if="step===8" class="pb-5 mb-5">
         <Shop v-if="!load"/>
     </div>
@@ -1313,231 +1328,250 @@ export default {
                 this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
             })
     },
-    methods:
-        {
-            setStep(index) {
-                this.step = parseInt(index)
-                localStorage.setItem("cashman_set_botform_step_index", index)
-            },
-            addTextTo(object = {param: null, text: null}) {
-                this.botForm[object.param] = object.text;
+    methods: {
+        createBotTopics(){
+            this.$store.dispatch("createBotTopics", {
+                dataObject: {
+                    topics: this.botForm.message_threads,
+                    bot_id: this.bot.id
+                },
+            }).then((resp) => {
+                this.botForm.message_threads = resp.data
+            })
+        },
+        getChatLink(chatId) {
+            this.$store.dispatch("loadChatInfo", {
+                dataObject: {
+                    chat_id: chatId,
+                    bot_id: this.bot.id
+                },
+            }).then((resp) => {
+                console.log("chat info", resp)
+            })
+        },
+        setStep(index) {
+            this.step = parseInt(index)
+            localStorage.setItem("cashman_set_botform_step_index", index)
+        },
+        addTextTo(object = {param: null, text: null}) {
+            this.botForm[object.param] = object.text;
 
-            },
-            removeCommands(index) {
-                this.botForm.commands.splice(index, 1)
-            },
-            addCommands() {
-                if (!this.botForm.commands)
-                    this.botForm.commands = [];
+        },
+        removeCommands(index) {
+            this.botForm.commands.splice(index, 1)
+        },
+        addCommands() {
+            if (!this.botForm.commands)
+                this.botForm.commands = [];
 
-                this.botForm.commands.push({
-                    command: null,
-                    description: null
-                })
-            }
-            , loadSlugsByBotTemplate(botId) {
-
-                this.load = true
-
-                this.$store.dispatch("loadSlugs", {
-                    dataObject: {
-                        botId: botId
-                    },
-                    size: 1000,
-                }).then((resp) => {
-
-                    this.botForm.slugs = this.getSlugs
-
-                    this.$nextTick(() => {
-                        this.load = false
-
-                    });
-                })
-            }
-            ,
-            loadPagesByBotTemplate(botId) {
-                this.$store.dispatch("loadBotPages", {
-                    botId: botId
-                }).then((resp) => {
-                    this.botForm.pages = resp
-                })
-            },
-            loadBotTemplates() {
-                this.$store.dispatch("loadTemplates").then((resp) => {
-                    this.templates = resp.data
-
-                })
-            },
-            getPhoto(img) {
-                return {imageUrl: URL.createObjectURL(img)}
-            },
-            onChangePhotos(e) {
-                const files = e.target.files
-                this.botForm.image = null
-                for (let i = 0; i < files.length; i++)
-                    this.botForm.photos.push(files[i])
-            },
-            addItem(name) {
-                this.botForm[name].push("")
-            },
-            addSocialLinks() {
-                this.botForm.social_links.push({
-                    title: null,
-                    url: null
-                })
-            },
-            removeItem(name, index) {
-                this.botForm[name].splice(index, 1)
-            },
-            removePhoto(index) {
-                if (index)
-                    this.botForm.photos.splice(index, 1)
-                else
-                    this.botForm.image = null
-            },
-            addBot() {
-
-                let data = new FormData();
-                Object.keys(this.botForm)
-                    .forEach(key => {
-                        const item = this.botForm[key] || ''
-                        if (typeof item === 'object')
-                            data.append(key, JSON.stringify(item))
-                        else
-                            data.append(key, item)
-                    });
-
-
-                if (this.company)
-                    data.append("company_id", this.company.id)
-
-                for (let i = 0; i < this.botForm.photos.length; i++)
-                    data.append('images[]', this.botForm.photos[i]);
-
-                data.delete("photos")
-
-                this.$store.dispatch((this.bot == null ? "createBot" : "updateBot"), {
-                    botForm: data
-                }).then((response) => {
-
-                    this.$emit("callback", response.data)
-
-                    this.$notify({
-                        title: "Конструктор ботов",
-                        text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
-                        type: 'success'
-                    });
-
-                    if (this.bot == null)
-                        this.botForm = {
-                            title: null,
-                            short_description: null,
-                            long_description: null,
-                            is_template: false,
-                            auto_cashback_on_payments: false,
-                            template_description: null,
-                            bot_domain: null,
-                            bot_token: null,
-                            bot_token_dev: null,
-                            order_channel: null,
-                            message_threads: null,
-                            main_channel: null,
-                            balance: null,
-                            tax_per_day: null,
-                            callback_link: null,
-                            cashback_fire_percent: 0,
-                            cashback_fire_period: 0,
-                            image: null,
-
-                            description: null,
-
-                            info_link: null,
-
-                            social_links: [],
-
-                            maintenance_message: null,
-                            payment_provider_token: null,
-
-                            level_1: 10,
-                            level_2: 0,
-                            level_3: 0,
-
-                            photos: [],
-                            warnings: [],
-
-                            selected_bot_template_id: null,
-
-                            pages: [],
-
-
-                        }
-                }).catch(err => {
-
-                })
-
-
-            }
-            ,
-
-            removeCashBackConfig(index) {
-                this.botForm.cashback_config.splice(index, 1)
-            }
-            ,
-            addCashBackConfig() {
-
-                this.botForm.cashback_config = this.botForm.cashback_config == null ? [] : this.botForm.cashback_config;
-
-                this.botForm.cashback_config.push({
-                    title: null,
-                })
-
-            }
-            ,
-
-            pageListCallback(page) {
-                this.loadPage = true
-                this.page = page
-                this.$nextTick(() => {
-                    this.loadPage = false
-
-                });
-            }
-            ,
-            getWarning(key) {
-                let item = this.warnings.find(item => item.key === key)
-
-
-                return (!item) ? {
-                    title: 'Не найдено'
-                } : item;
-
-            }
-            ,
-            removeWarning(index) {
-                this.botForm.warnings.splice(index, 1)
-            }
-            ,
-            addWarning() {
-
-                const item = this.selected_warning
-
-                this.botForm.warnings.push({
-                    rule_key: item.key,
-                    rule_value: 0,
-                    is_active: true,
-                })
-
-                this.selected_warning = null
-
-            }
-            ,
-            pageCallback(page) {
-                this.loadPageList = true
-                this.$nextTick(() => {
-                    this.loadPageList = false
-                });
-            }
+            this.botForm.commands.push({
+                command: null,
+                description: null
+            })
         }
+        , loadSlugsByBotTemplate(botId) {
+
+            this.load = true
+
+            this.$store.dispatch("loadSlugs", {
+                dataObject: {
+                    botId: botId
+                },
+                size: 1000,
+            }).then((resp) => {
+
+                this.botForm.slugs = this.getSlugs
+
+                this.$nextTick(() => {
+                    this.load = false
+
+                });
+            })
+        }
+        ,
+        loadPagesByBotTemplate(botId) {
+            this.$store.dispatch("loadBotPages", {
+                botId: botId
+            }).then((resp) => {
+                this.botForm.pages = resp
+            })
+        },
+        loadBotTemplates() {
+            this.$store.dispatch("loadTemplates").then((resp) => {
+                this.templates = resp.data
+
+            })
+        },
+        getPhoto(img) {
+            return {imageUrl: URL.createObjectURL(img)}
+        },
+        onChangePhotos(e) {
+            const files = e.target.files
+            this.botForm.image = null
+            for (let i = 0; i < files.length; i++)
+                this.botForm.photos.push(files[i])
+        },
+        addItem(name) {
+            this.botForm[name].push("")
+        },
+        addSocialLinks() {
+            this.botForm.social_links.push({
+                title: null,
+                url: null
+            })
+        },
+        removeItem(name, index) {
+            this.botForm[name].splice(index, 1)
+        },
+        removePhoto(index) {
+            if (index)
+                this.botForm.photos.splice(index, 1)
+            else
+                this.botForm.image = null
+        },
+        addBot() {
+
+            let data = new FormData();
+            Object.keys(this.botForm)
+                .forEach(key => {
+                    const item = this.botForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+
+            if (this.company)
+                data.append("company_id", this.company.id)
+
+            for (let i = 0; i < this.botForm.photos.length; i++)
+                data.append('images[]', this.botForm.photos[i]);
+
+            data.delete("photos")
+
+            this.$store.dispatch((this.bot == null ? "createBot" : "updateBot"), {
+                botForm: data
+            }).then((response) => {
+
+                this.$emit("callback", response.data)
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
+                    type: 'success'
+                });
+
+                if (this.bot == null)
+                    this.botForm = {
+                        title: null,
+                        short_description: null,
+                        long_description: null,
+                        is_template: false,
+                        auto_cashback_on_payments: false,
+                        template_description: null,
+                        bot_domain: null,
+                        bot_token: null,
+                        bot_token_dev: null,
+                        order_channel: null,
+                        message_threads: null,
+                        main_channel: null,
+                        balance: null,
+                        tax_per_day: null,
+                        callback_link: null,
+                        cashback_fire_percent: 0,
+                        cashback_fire_period: 0,
+                        image: null,
+
+                        description: null,
+
+                        info_link: null,
+
+                        social_links: [],
+
+                        maintenance_message: null,
+                        payment_provider_token: null,
+
+                        level_1: 10,
+                        level_2: 0,
+                        level_3: 0,
+
+                        photos: [],
+                        warnings: [],
+
+                        selected_bot_template_id: null,
+
+                        pages: [],
+
+
+                    }
+            }).catch(err => {
+
+            })
+
+
+        }
+        ,
+
+        removeCashBackConfig(index) {
+            this.botForm.cashback_config.splice(index, 1)
+        }
+        ,
+        addCashBackConfig() {
+
+            this.botForm.cashback_config = this.botForm.cashback_config == null ? [] : this.botForm.cashback_config;
+
+            this.botForm.cashback_config.push({
+                title: null,
+            })
+
+        }
+        ,
+
+        pageListCallback(page) {
+            this.loadPage = true
+            this.page = page
+            this.$nextTick(() => {
+                this.loadPage = false
+
+            });
+        }
+        ,
+        getWarning(key) {
+            let item = this.warnings.find(item => item.key === key)
+
+
+            return (!item) ? {
+                title: 'Не найдено'
+            } : item;
+
+        }
+        ,
+        removeWarning(index) {
+            this.botForm.warnings.splice(index, 1)
+        }
+        ,
+        addWarning() {
+
+            const item = this.selected_warning
+
+            this.botForm.warnings.push({
+                rule_key: item.key,
+                rule_value: 0,
+                is_active: true,
+            })
+
+            this.selected_warning = null
+
+        }
+        ,
+        pageCallback(page) {
+            this.loadPageList = true
+            this.$nextTick(() => {
+                this.loadPageList = false
+            });
+        }
+    }
 }
 </script>
 <style lang="scss">

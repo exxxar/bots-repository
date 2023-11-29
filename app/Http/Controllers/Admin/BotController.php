@@ -49,7 +49,43 @@ class BotController extends Controller
 
     }
 
-    public function loadBotFields(Request $request, $botId): \App\Http\Resources\BotCustomFieldSettingCollection{
+    public function createBotTopics(Request $request){
+        $request->validate([
+            "bot_id" => "required",
+            "topics.*.key" => "required",
+            "topics.*.title" => "required",
+        ]);
+
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->bot_id)
+            ->first();
+
+        return BusinessLogic::bots()
+            ->setBot($bot ?? null)
+            ->createBotTopics((array)$request->topics);
+    }
+
+    public function loadChatInfo(Request $request)
+    {
+
+        $request->validate([
+            "chat_id" => "required",
+            "bot_id" => "required",
+        ]);
+
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->bot_id)
+            ->first();
+
+        return BusinessLogic::bots()
+            ->setBot($bot ?? null)
+            ->getChat($request->chat_id ?? null);
+    }
+
+    public function loadBotFields(Request $request, $botId): \App\Http\Resources\BotCustomFieldSettingCollection
+    {
         $bot = Bot::query()
             ->with(["company"])
             ->where("id", $botId)
@@ -59,6 +95,7 @@ class BotController extends Controller
             ->setBot($bot ?? null)
             ->botFieldList();
     }
+
     /**
      * @throws ValidationException
      */
@@ -196,7 +233,7 @@ class BotController extends Controller
             ->setBot($bot)
             ->list(
                 search: $request->search ?? null,
-                size:$request->size ?? null
+                size: $request->size ?? null
             );
     }
 
@@ -288,7 +325,7 @@ class BotController extends Controller
 
         return BusinessLogic::bots()
             ->setBot($bot)
-            ->duplicate(["company_id"=>$request->company_id ?? null]);
+            ->duplicate(["company_id" => $request->company_id ?? null]);
     }
 
 

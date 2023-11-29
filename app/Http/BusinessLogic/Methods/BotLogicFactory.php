@@ -44,7 +44,9 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -123,8 +125,8 @@ class BotLogicFactory
 
         if (!is_null($search))
             $bots = $bots->where(function ($q) use ($search) {
-               $q->where("bot_domain", 'like', "%$search%")
-                   ->orWhere("title", 'like', "%$search%");
+                $q->where("bot_domain", 'like', "%$search%")
+                    ->orWhere("title", 'like', "%$search%");
             });
 
         $bots = $bots
@@ -364,6 +366,119 @@ class BotLogicFactory
         return new BotResource($newBot);
     }
 
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function createBotTopics(array $data): mixed
+    {
+        if (is_null($this->bot))
+            throw new HttpException(400, "Не выполнено условие функции");
+
+        $validator = Validator::make($data, [
+            "*.key" => "required",
+            "*.title" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $topics = $data;
+
+        $botToken = $this->bot->bot_token;
+        $chatId = $this->bot->order_channel;
+
+        $website = "https://api.telegram.org/bot" . $botToken;
+
+        $index = 0;
+        foreach ($topics as $item) {
+            $item = (object)$item;
+            $result = Http::post("$website/createForumTopic", [
+                'chat_id' => $chatId,
+                'name' => $item->title ?? $item->key,
+            ]);
+
+            if ($result->object()->ok)
+                $topics[$index]["value"] = $result->object()->result->message_thread_id ?? 0;
+
+            if (!$result->object()->ok) {
+
+                $adminBot = Bot::query()
+                    ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
+                    ->first();
+
+                if (!is_null($adminBot)) {
+                    $adminBotUser = BotUser::query()
+                        ->where("bot_id", $adminBot->id)
+                        ->where("user_id", Auth::user()->id)
+                        ->first();
+
+                    if (!is_null($adminBotUser)) {
+                        BotMethods::bot()
+                            ->whereBot($this->bot)
+                            ->sendMessage(
+                                $adminBotUser->telegram_chat_id,
+                                "Ошибка создания топиков в группе: " . ($result->object()->description ?? 'Ошибка')
+                            );
+                    }
+                }
+
+                throw new HttpException(400, $result->object()->description ?? 'Ошибка');
+            }
+
+
+            $index++;
+        }
+
+        $this->bot->message_threads = $topics;
+        $this->bot->save();
+
+        return $topics;
+    }
+
+
+    /**
+     * @throws HttpException
+     */
+    public function getChat($chatId = null): object|array
+    {
+        if (is_null($this->bot) || is_null($chatId))
+            throw new HttpException(400, "Не выполнено условие функции");
+
+        $botToken = $this->bot->bot_token;
+        $botDomain = $this->bot->bot_domain ?? 'не найден';
+        $website = "https://api.telegram.org/bot" . $botToken;
+
+        $result = Http::post("$website/getChat", [
+            'chat_id' => $chatId,
+        ]);
+
+        $adminBot = Bot::query()
+            ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
+            ->first();
+
+        if (!is_null($adminBot)) {
+            $adminBotUser = BotUser::query()
+                ->where("bot_id", $adminBot->id)
+                ->where("user_id", Auth::user()->id)
+                ->first();
+
+            if (!is_null($adminBotUser)) {
+
+                $data = $result->object()->result;
+                $link = $data->invite_link ?? $data->username ?? null;
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendMessage(
+                        $adminBotUser->telegram_chat_id,
+                        "Ссылка на канал: $chatId (для бота $botDomain) => $link"
+                    );
+            }
+        }
+
+
+        return $result->object();
+    }
 
     /**
      * @throws HttpException
