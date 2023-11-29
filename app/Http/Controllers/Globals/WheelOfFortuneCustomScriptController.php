@@ -233,12 +233,11 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "answered_by" => null,
         ];
 
-        Log::info("win_result=>".print_r($tmp,true));
-
         $action->data = $tmp;
 
         $link = "https://t.me/$bot->bot_domain?start=" . base64_encode("003$botUser->telegram_chat_id");
 
+        $action->max_attempts = $maxAttempts;
         $action->save();
 
         $thread = $bot->topics["actions"] ?? null;
@@ -316,8 +315,9 @@ class WheelOfFortuneCustomScriptController extends SlugController
                     'current_attempts' => 0
                 ]);
 
+        $action->max_attempts = $maxAttempts;
+
         if (is_null($action->data)) {
-            $action->max_attempts = $maxAttempts;
             $action->current_attempts = 0;
             $action->save();
         }
