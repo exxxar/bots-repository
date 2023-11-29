@@ -25,6 +25,8 @@ class WheelOfFortuneScriptController extends SlugController
     public function config(Bot $bot)
     {
         $hasMainScript = BotMenuSlug::query()
+            ->whereNull("bot_id")
+            ->whereNull("parent_slug_id")
             ->where("slug", "global_wheel_of_fortune")
             ->first();
 

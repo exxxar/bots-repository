@@ -25,6 +25,7 @@ class InstagramQuestScriptController extends SlugController
     {
         $hasMainScript = BotMenuSlug::query()
             ->whereNull("parent_slug_id")
+            ->whereNull("bot_id")
             ->where("slug", "global_instagram_quest")
             ->first();
 

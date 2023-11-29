@@ -22,6 +22,7 @@ class SendContactScriptController extends SlugController
     public function config(Bot $bot)
     {
         $mainScript = BotMenuSlug::query()
+            ->whereNull("bot_id")
             ->where("slug", "global_send_contact_main")
             ->whereNull("parent_slug_id")
             ->first();

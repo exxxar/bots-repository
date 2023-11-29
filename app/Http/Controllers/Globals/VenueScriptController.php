@@ -23,6 +23,7 @@ class VenueScriptController extends SlugController
     {
         $mainScript = BotMenuSlug::query()
             ->whereNull("parent_slug_id")
+            ->whereNull("bot_id")
             ->where("slug", "global_venue_main")
             ->first();
 

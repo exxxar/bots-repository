@@ -22,6 +22,7 @@ class BookATableScriptController extends SlugController
     public function config(Bot $bot)
     {
         $mainScript = BotMenuSlug::query()
+            ->whereNull("bot_id")
             ->whereNull("parent_slug_id")
             ->where("slug", "global_cashback_book_table")
             ->first();

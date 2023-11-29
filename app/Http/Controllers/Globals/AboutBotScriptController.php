@@ -18,6 +18,7 @@ class AboutBotScriptController extends SlugController
         $hasMainScript = BotMenuSlug::query()
             ->where("slug", "global_about_bot_main")
             ->whereNull("parent_slug_id")
+            ->whereNull("bot_id")
             ->first();
 
         if (is_null($hasMainScript))
