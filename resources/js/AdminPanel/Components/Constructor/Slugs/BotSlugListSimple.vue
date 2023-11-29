@@ -11,14 +11,14 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         <input type="text"
                                class="form-control mt-1 mb-1"
                                v-model="search"
-                               @change="loadSlugs"
+                               @keyup="loadSlugs"
                                placeholder="Поиск нужного скрипта по описанию">
                     </div>
 
                     <div
-                        v-if="filteredSlugs.length>0"
+                        v-if="slugs.length>0"
                         class="row">
-                        <div class="col-md-6 mb-2" v-for="(item, index) in filteredSlugs">
+                        <div class="col-md-6 mb-2" v-for="(item, index) in slugs">
                             <Slug
                                 :item="item"
                                 :bot="bot"

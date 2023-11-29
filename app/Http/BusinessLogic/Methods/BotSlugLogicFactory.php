@@ -66,9 +66,10 @@ class BotSlugLogicFactory
             $botMenuSlugs = $botMenuSlugs
                 ->where(function ($q) use ($search) {
                     $q->where("command", "like", "%$search%")
-                        ->orWhere("comment", "like", "%$search%")
-                        ->orWhere("id", "like", "%$search%");
-                });
+                        ->orWhere("comment", "like", "%$search%");
+
+                })
+                ->orWhere("id", "like", "%$search%");
 
         $botMenuSlugs = $botMenuSlugs
             ->orderBy("created_at", "desc")
