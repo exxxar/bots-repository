@@ -49,7 +49,7 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 
         <div class="mb-3 col-12 col-lg-4 col-md-6 col-sm-12"
              v-if="slugs&&bot"
-             v-for="(slug, index) in filteredSlugs">
+             v-for="(slug, index) in slugs">
             <Slug :item="slug"
                   :bot="bot"
                   v-on:callback="callbackSlugs"
@@ -67,9 +67,9 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 
         <div class="mb-3 col-md-12" v-if="filteredSlugs.length===0">
 
-                <div class="alert alert-danger" role="alert">
-                    У Вас еще нет добавленных скриптов!
-                </div>
+            <div class="alert alert-danger" role="alert">
+                У Вас еще нет добавленных скриптов!
+            </div>
 
         </div>
     </div>
@@ -80,14 +80,14 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 import {mapGetters} from "vuex";
 
 export default {
-    props: [ "command"],
+    props: ["command"],
     data() {
         return {
             bot: null,
-            need_global:true,
+            need_global: true,
             show: false,
-            slugs:[],
-            paginate:[],
+            slugs: [],
+            paginate: [],
             ownSearch: null,
             slugForm: {
                 command: null,
@@ -97,15 +97,18 @@ export default {
             }
         }
     },
-    watch:{
-      'need_global':function (oldV, newV){
-          this.loadSlugs()
+    watch: {
+        'ownSearch': function (oldV, newV) {
+            this.loadSlugs()
+        },
+        'need_global': function (oldV, newV) {
+            this.loadSlugs()
 
-      }
+        }
     },
     computed: {
 
-        ...mapGetters(['getCurrentBot', 'getSlugs','getSlugsPaginateObject']),
+        ...mapGetters(['getCurrentBot', 'getSlugs', 'getSlugsPaginateObject']),
 
         filteredSlugs() {
             if (this.slugs.length === 0)
@@ -146,9 +149,10 @@ export default {
         },
         loadSlugs(page = 0) {
             this.$store.dispatch("loadSlugs", {
-                dataObject:{
+                dataObject: {
                     botId: this.bot.id,
-                    needGlobal: this.need_global
+                    needGlobal: this.need_global,
+                    search: this.ownSearch
                 },
                 page: page
             }).then((resp) => {
@@ -166,7 +170,7 @@ export default {
             })
         },
 
-        callbackSlugs(){
+        callbackSlugs() {
             this.loadSlugs()
         },
         selectSlug(item) {
