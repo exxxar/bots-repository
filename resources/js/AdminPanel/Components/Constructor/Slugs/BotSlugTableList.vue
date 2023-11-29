@@ -105,6 +105,10 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
                                     Редактировать</a></li>
                                 <li><a class="dropdown-item cursor-pointer" @click="duplicateSlug(item)"><i
                                     class="fa-solid fa-clone mr-1"></i> Дублировать</a></li>
+                                <li><a class="dropdown-item cursor-pointer"
+                                       target="_blank"
+                                       :href="'/admin/slugs/action-data-export/'+item.id"><i
+                                    class="fa-solid fa-clone mr-1"></i> Скачать данные участников</a></li>
                                 <li v-if="item.deleted_at==null"><a class="dropdown-item cursor-pointer" @click="removeSlug(item)"> <i
                                     class="fa-regular fa-trash-can text-danger mr-1"></i> Удалить</a></li>
                                 <li v-if="item.deleted_at!=null"><a class="dropdown-item cursor-pointer" @click="restoreSlug(item)"> <i

@@ -17,9 +17,17 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BotMenuSlugController extends Controller
 {
+
+    public function actionDataExport(Request $request, $slugId){
+        $statuses = \App\Models\ActionStatus::query()
+            ->where("slug_id",$slugId)->get();
+        return Excel::download(new \App\Exports\ExportArrayData($statuses->toArray()), "action-statuses-data-$slugId.xlsx");
+    }
+
     /**
      * @throws ValidationException
      */

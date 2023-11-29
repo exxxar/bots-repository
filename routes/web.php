@@ -13,6 +13,7 @@ use App\Models\ReferralHistory;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +35,11 @@ use Inertia\Inertia;
 |
 */
 
+Route::get("/test-export", function (){
 
+    $statuses = \App\Models\ActionStatus::query()->where("bot_id",2)->get();
+    return Excel::download(new \App\Exports\ExportArrayData($statuses->toArray()), 'invoices.xlsx');
+});
 
 Route::get("/push-command", function () {
 
