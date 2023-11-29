@@ -62,7 +62,7 @@ const actions = {
         size: 12
     }) {
         let page = payload.page || 0
-        let size = 12
+        let size = payload.size || 12
 
         let link = `${BASE_SLUGS_LINK}?page=${page}&size=${size}`
         let method = 'POST'

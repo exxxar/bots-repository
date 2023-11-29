@@ -11,6 +11,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         <input type="text"
                                class="form-control mt-1 mb-1"
                                v-model="search"
+                               @keyup.enter="loadSlugs"
                                placeholder="Поиск нужного скрипта по описанию">
                     </div>
 
@@ -108,6 +109,7 @@ export default {
             this.$store.dispatch("loadSlugs", {
                 dataObject:{
                     botId: this.bot.id,
+                    search: this.search,
                     needGlobal: this.global
                 },
                 page:page
