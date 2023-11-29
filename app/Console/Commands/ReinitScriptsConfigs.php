@@ -39,12 +39,16 @@ class ReinitScriptsConfigs extends Command
             $this->info('Бот авторизации не найден в системе');
             return;
         }
+
+        $tmp = [];
         foreach (BotManager::bot()->getRoutes() as $route) {
             $action = $route;
             if (array_key_exists('controller', $action)) {
                 $controller = $action["controller"];
-                $this->info('Обрабатываем контроллер=>' . ($controller ?? '-'));
-                if (is_subclass_of($controller, SlugController::class)) {
+
+                if (is_subclass_of($controller, SlugController::class) && !in_array($controller, $tmp)) {
+                    $this->info('Обрабатываем контроллер=>' . ($controller ?? '-'));
+                    $tmp[] = $controller;
                     app($controller)->config($bot);
                 }
             }
