@@ -6,14 +6,13 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Telegram\Bot\FileUpload\InputFile;
 
-include_once base_path('routes/bots/cashback.php');
-include_once base_path('routes/bots/shop.php');
-include_once base_path('routes/bots/delivery.php');
-include_once base_path('routes/bots/funnel.php');
-include_once base_path('routes/bots/manages.php');
-include_once base_path('routes/bots/admin.php');
-include_once base_path('routes/bots/global.php');
-
+include_once "bots/cashback.php";
+include_once "bots/shop.php";
+include_once "bots/delivery.php";
+include_once "bots/funnel.php";
+include_once "bots/manages.php";
+include_once "bots/admin.php";
+include_once "bots/global.php";
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Bots\SystemDiagnosticController::class)

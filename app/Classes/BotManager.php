@@ -172,6 +172,10 @@ class BotManager extends BotCore
         return $this->routes;
     }
 
+    public function getSlugs(){
+        return $this->slugs;
+    }
+
     public function setWebhooks($botId = null)
     {
         $bots = Bot::query()

@@ -32,6 +32,7 @@ class ReinitScriptsConfigs extends Command
     {
 
         include_once base_path('routes/bot.php');
+
         $bot = Bot::query()
             ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
             ->first();
@@ -42,7 +43,9 @@ class ReinitScriptsConfigs extends Command
         }
 
         $tmp = [];
-        foreach (BotManager::bot()->getRoutes() as $route) {
+
+        $routes = [...BotManager::bot()->getRoutes(), ...BotManager::bot()->getSlugs()];
+        foreach ($routes as $route) {
             $action = $route;
             if (array_key_exists('controller', $action)) {
                 $controller = $action["controller"];
