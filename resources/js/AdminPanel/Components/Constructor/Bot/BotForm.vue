@@ -1506,7 +1506,11 @@ export default {
 
                     }
             }).catch(err => {
-
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Ошибочка...",
+                    type: 'error'
+                });
             })
 
 

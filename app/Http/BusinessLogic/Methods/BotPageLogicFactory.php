@@ -61,8 +61,11 @@ class BotPageLogicFactory
                 ->where(function ($q) use ($search) {
                     $q->whereHas("slug", function ($q) use ($search) {
                         $q->where("command", 'like', "%$search%");
-                    })->orWhere("content", 'like', "%$search%");
-                });
+                    })
+                        ->orWhere("content", 'like', "%$search%");
+
+                })
+                ->orWhere("id", 'like', "%$search%");
 
         return new BotPageCollection($botPages->paginate($size));
     }
