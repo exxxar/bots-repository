@@ -22,10 +22,10 @@ class AuthenticatedSessionController extends Controller
 {
     use Utilities;
 
-    public function telegramAuth(Request $request)
+    public function telegramAuth(Request $request, $domain)
     {
 
-        $authBotDomain = env("AUTH_BOT_DOMAIN");
+        $authBotDomain = $domain ?? env("AUTH_BOT_DOMAIN");
         $tgId = $request->get("id");
 
         $bot = Bot::query()

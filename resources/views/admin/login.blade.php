@@ -232,7 +232,7 @@
                 <script async src="https://telegram.org/js/telegram-widget.js?22"
                         data-telegram-login="cashman_login_bot" data-size="large"
                         data-radius="5"
-                        data-auth-url="/auth/telegram/callback"
+                        data-auth-url="/auth/telegram/{{env('AUTH_BOT_DOMAIN')}}/callback"
                         data-request-access="write">
 
                 </script>
