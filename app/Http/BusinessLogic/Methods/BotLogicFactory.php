@@ -415,7 +415,7 @@ class BotLogicFactory
 
                     if (!is_null($adminBotUser)) {
                         BotMethods::bot()
-                            ->whereBot($this->bot)
+                            ->whereBot($adminBot)
                             ->sendMessage(
                                 $adminBotUser->telegram_chat_id,
                                 "Ошибка создания топиков в группе: " . ($result->object()->description ?? 'Ошибка')
@@ -470,7 +470,7 @@ class BotLogicFactory
                 if ($data->ok) {
                     $link = $data->result->invite_link ?? $data->result->username ?? null;
                     BotMethods::bot()
-                        ->whereBot($this->bot)
+                        ->whereBot($adminBot)
                         ->sendMessage(
                             $adminBotUser->telegram_chat_id,
                             "Ссылка на канал: $chatId (для бота $botDomain) => $link"
@@ -482,7 +482,7 @@ class BotLogicFactory
                         ->whereBot($this->bot)
                         ->sendMessage(
                             $adminBotUser->telegram_chat_id,
-                            "Ошибка получения ссылки на канал: ".($data->description ?? 'Ошибка')
+                            "Ошибка получения ссылки на канал: " . ($data->description ?? 'Ошибка')
                         );
 
                     throw new HttpException(400, $data->description ?? 'Ошибка');
@@ -1276,13 +1276,6 @@ class BotLogicFactory
                     'is_active' => $warn->is_active ?? false,
                 ]);
 
-        if (env("APP_DEBUG") === false) {
-            BotManager::bot()->setWebhooks();
-
-            $this->prepareBaseBotConfig();
-        }
-
-
         return new BotResource($bot);
     }
 
@@ -1291,6 +1284,118 @@ class BotLogicFactory
      * @throws ValidationException
      */
     public function update(array $data, array $uploadedPhotos = null): BotResource
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "bot_domain" => "required",
+            "bot_token" => "required",
+
+            "balance" => "required",
+            "tax_per_day" => "required",
+            "description" => "required",
+
+            "social_links" => "required",
+            "maintenance_message" => "required",
+            "welcome_message" => "required",
+            "level_1" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $company = Company::query()->where("id", $this->bot->company_id)
+            ->first();
+
+        if (is_null($company))
+            throw new HttpException(404, "Компания не найдена");
+
+        $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
+
+
+        $tmp = (object)$data;
+
+        if (is_null($tmp->image))
+            $tmp->image = is_null($photos) ? null : ($photos[0] ?? null);
+
+        $tmp->level_2 = $data["level_2"] ?? 0;
+        $tmp->level_3 = $data["level_3"] ?? 0;
+        $tmp->cashback_fire_percent = $data["cashback_fire_percent"] ?? 0;
+        $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
+        $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
+        $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
+        $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
+
+        $tmp->is_active = true;
+        $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
+        $tmp->is_template = $data["is_template"] == "true";
+
+        $tmp->social_links = json_decode($tmp->social_links ?? '[]');
+
+        if (isset($data["keyboards"])) {
+            unset($tmp->keyboards);
+        }
+
+        if (isset($data["slugs"])) {
+            unset($tmp->slugs);
+        }
+
+        $warnings = null;
+        if (isset($data["warnings"])) {
+            $warnings = json_decode($data["warnings"]);
+            unset($tmp->warnings);
+        }
+
+        unset($tmp->selected_bot_template_id);
+
+        $this->bot->update((array)$tmp);
+
+        if (!is_null($warnings))
+            foreach ($warnings as $warn) {
+
+                $tmpWarn = BotWarning::query()
+                    ->where("rule_key", $warn->rule_key)
+                    ->where("bot_id", $this->bot->id)
+                    ->first();
+
+                if (!is_null($tmpWarn))
+                    $tmpWarn->update([
+                        'rule_key' => $warn->rule_key ?? null,
+                        'rule_value' => $warn->rule_value ?? null,
+                        'is_active' => $warn->is_active ?? false,
+                    ]);
+                else
+                    $rez = BotWarning::query()->create([
+                        'bot_id' => $this->bot->id,
+                        'rule_key' => $warn->rule_key ?? null,
+                        'rule_value' => $warn->rule_value ?? null,
+                        'is_active' => $warn->is_active ?? false,
+                    ]);
+            }
+
+        return new BotResource($this->bot);
+    }
+
+    public function updateWebHookAndConfig(): void
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        if (env("APP_DEBUG") === false) {
+            BotManager::bot()->setWebhooks();
+
+            $this->prepareBaseBotConfig();
+        }
+    }
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     * @deprecated
+     */
+    public function updateDeprecated(array $data, array $uploadedPhotos = null): BotResource
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");

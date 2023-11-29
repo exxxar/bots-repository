@@ -82,6 +82,7 @@ Route::prefix("admin")
                 Route::post('/update-shop-link',"updateShopLink");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
                 Route::post("/bot-update", "updateBot");
+                Route::post("/bot-webhook-update", "updateWebhook");
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");
                 Route::post("/store-fields", "storeBotFields");

@@ -601,6 +601,19 @@ class BotController extends Controller
             );
     }
 
+    public function updateWebhook(Request $request){
+        $request->validate([
+            "bot_id" => "required",
+        ]);
+
+        $bot = Bot::query()
+            ->where("id", $request->bot_id)
+            ->first();
+
+        return BusinessLogic::bots()
+            ->setBot($bot)
+            ->updateWebHookAndConfig();
+    }
     /**
      * @throws ValidationException
      */

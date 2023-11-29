@@ -19,6 +19,7 @@ class ActionStatus extends Model
      */
     protected $fillable = [
         'user_id',
+        'bot_user_id',
         'bot_id',
         'slug_id',
         'max_attempts',
@@ -35,13 +36,13 @@ class ActionStatus extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
+        'bot_user_id' => 'integer',
         'bot_id' => 'integer',
         'slug_id' => 'integer',
         'completed_at' => 'datetime:Y-m-d',
         'data' => 'array',
     ];
 
-    protected $appends = ["bot_user"];
 
     public function bot(): BelongsTo
     {
@@ -51,6 +52,11 @@ class ActionStatus extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function botUser(): BelongsTo
+    {
+        return $this->belongsTo(BotUser::class);
     }
 
     public function slug(): BelongsTo

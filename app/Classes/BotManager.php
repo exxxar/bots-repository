@@ -168,12 +168,17 @@ class BotManager extends BotCore
         return BotStatusEnum::InMaintenance;
     }
 
-    public function setWebhooks()
+    public function setWebhooks($botId = null)
     {
         $bots = Bot::query()
             ->withTrashed()
-            //->where("is_template", false)
             ->get();
+
+        if (!is_null($botId)){
+            $bots = $bots->where("id", $botId);
+        }
+
+        $bots = $bots->get();
 
         $result = [];
         foreach ($bots as $bot) {

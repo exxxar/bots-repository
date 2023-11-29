@@ -118,6 +118,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async updateBotWebhook(context, payload = {dataObject: {bot_id:null}}) {
+        let link = `${BASE_BOTS_LINK}/bot-webhook-update`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async testConnectionAmoCRM(context, payload = {dataObject: null}) {
         let link = `${BASE_BOTS_LINK}/test-amo`
 

@@ -1329,7 +1329,7 @@ export default {
             })
     },
     methods: {
-        createBotTopics(){
+        createBotTopics() {
             this.$store.dispatch("createBotTopics", {
                 dataObject: {
                     topics: this.botForm.message_threads,
@@ -1454,13 +1454,23 @@ export default {
                 botForm: data
             }).then((response) => {
 
-                this.$emit("callback", response.data)
+                let bot = response.data
+
+                console.log("bot", bot)
+
+                this.$emit("callback", bot)
 
                 this.$notify({
                     title: "Конструктор ботов",
                     text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
                     type: 'success'
                 });
+
+                this.$store.dispatch("updateBotWebhook", {
+                    dataObject: {
+                        bot_id: bot.id
+                    }
+                })
 
                 if (this.bot == null)
                     this.botForm = {
@@ -1505,6 +1515,7 @@ export default {
 
 
                     }
+
             }).catch(err => {
                 this.$notify({
                     title: "Конструктор ботов",
