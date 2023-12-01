@@ -17,19 +17,13 @@ class SinglePaymentScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_single_payment_main")
-            ->first();
-
-        if (is_null($hasMainScript))
-            return;
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_single_payment_main",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Оплата услуг",

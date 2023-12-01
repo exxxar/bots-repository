@@ -22,14 +22,18 @@ class FastRequestScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $mainScript = BotMenuSlug::query()
-            ->whereNull("bot_id")
-            ->whereNull("parent_slug_id")
-            ->where("slug", "global_fast_request_main")
-            ->first();
 
-        if (is_null($mainScript))
-            return;
+        $mainScript = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_fast_request_main",
+                'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
+            ],
+            [
+                'command' => ".*Быстрый запрос",
+                'comment' => "быстрый запрос к администрации бота",
+            ]);
 
         $params =  [
 
@@ -53,21 +57,10 @@ class FastRequestScriptController extends SlugController
             ],
 
         ];
-        if (count($model->config ?? []) != count($params)) {
+        if (count($mainScript->config ?? []) != count($params)) {
             $mainScript->config =$params;
             $mainScript->save();
         }
-
-        BotMenuSlug::query()->updateOrCreate(
-            [
-                "slug" => "global_fast_request_main",
-                "bot_id" => $bot->id,
-                'is_global' => true,
-            ],
-            [
-                'command' => ".*Быстрый запрос",
-                'comment' => "быстрый запрос к администрации бота",
-            ]);
 
     }
 

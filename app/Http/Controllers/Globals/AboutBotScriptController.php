@@ -15,19 +15,12 @@ class AboutBotScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
-            ->where("slug", "global_about_bot_main")
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->first();
-
-        if (is_null($hasMainScript))
-            return;
-
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_about_bot_main",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*О боте",

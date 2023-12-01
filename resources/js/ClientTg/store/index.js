@@ -10,6 +10,7 @@ import wheelOfFortune from "./modules/globals/wheelOfFortune";
 import wheelOfFortuneCustom from "./modules/globals/wheelOfFortuneCustom";
 import bonusProduct from "./modules/globals/bonusProduct";
 import instagramQuest from "./modules/globals/instagramQuest";
+import schedule from "./modules/globals/schedule";
 import cashOut from "./modules/globals/cashOut";
 import cart from "./modules/shop/cart";
 import self from "./modules/self";
@@ -108,6 +109,7 @@ export default createStore({
         wheelOfFortune,
         wheelOfFortuneCustom,
         instagramQuest,
+        schedule,
         cashOut,
         cart,
         self,

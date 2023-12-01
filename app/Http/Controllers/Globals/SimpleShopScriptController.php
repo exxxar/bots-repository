@@ -32,20 +32,12 @@ class SimpleShopScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_simple_shop")
-            ->first();
-
-
-        if (is_null($hasMainScript))
-            return;
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_clear_basket",
-
+                'parent_slug_id' => null,
+                'bot_id' => null,
                 'is_global' => true,
             ],
             [
@@ -57,7 +49,8 @@ class SimpleShopScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_simple_shop",
-
+                'parent_slug_id' => null,
+                'bot_id' => null,
                 'is_global' => true,
             ],
             [
@@ -104,6 +97,8 @@ class SimpleShopScriptController extends SlugController
             [
                 "slug" => "global_products_categories",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Категории товаров",

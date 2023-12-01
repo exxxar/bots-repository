@@ -216,7 +216,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                        v-model="deliveryForm.cash"
                        class="ios-input" id="toggle-payment-cash">
                 <label class="custom-control-label pl-5" for="toggle-payment-cash"
-                       v-if="!deliveryForm.cash">Карта</label>
+                       v-if="!deliveryForm.cash">Переводом</label>
                 <label class="custom-control-label pl-5" for="toggle-payment-cash"
                        v-if="deliveryForm.cash">Наличные</label>
 
@@ -233,6 +233,18 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                             v-bind:class="{'btn-success text-white':deliveryForm.money===money}"
                             v-for="money in moneyVariants">{{ money }}₽
                     </button>
+                </div>
+                <p class="mb-2"><em>или введите другую сумму...</em></p>
+
+                <div
+                    class="input-style input-style-2 has-icon">
+                    <i class="input-icon fa-solid fa-door-open"></i>
+
+                    <input class="form-control"
+                           type="number"
+                           min="0"
+                           v-model="deliveryForm.money"
+                           placeholder="С какой суммы нужна сдача">
                 </div>
             </div>
 

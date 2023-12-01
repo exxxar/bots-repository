@@ -16,20 +16,13 @@ class FriendsScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
-            ->whereNull("bot_id")
-            ->whereNull("parent_slug_id")
-            ->where("slug", "global_friends_main")
-            ->first();
-
-
-        if (is_null($hasMainScript))
-            return;
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_friends_main",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Мои друзья",

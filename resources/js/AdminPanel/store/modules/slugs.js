@@ -20,6 +20,16 @@ const getters = {
 }
 
 const actions = {
+    async reloadGlobalScripts(context){
+        let link = `${BASE_SLUGS_LINK}/reload-global-scripts`
+        let _axios = util.makeAxiosFactory(link, 'POST')
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadAllSlugs(context, payload = {botId: null}) {
 
         let link = `${BASE_SLUGS_LINK}/all-slugs/${payload.botId}`

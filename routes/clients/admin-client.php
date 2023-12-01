@@ -166,6 +166,7 @@ Route::prefix("admin")
                 Route::post("/slug-update", "updateSlug");
                 Route::post("/duplicate/{slugId}", "duplicate");
                 Route::get("/reload-params/{slugId}", "reloadParams");
+                Route::post("/reload-global-scripts", "reloadGlobalScripts");
                 Route::get("/action-data-export/{slugId}", "actionDataExport");
                 Route::delete("/{slugId}", "destroy");
                 Route::get("/restore/{slugId}", "restore");

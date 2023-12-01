@@ -107,7 +107,17 @@ import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
                            type="text" :id="'filtered-config-'+index+'-phone'">
 
                 </div>
-
+                <div
+                    v-if="filteredConfigs[index].type==='json'"
+                    class="form-floating mb-1 mt-2">
+                    <label class="form-label" id="bot-domain">JSON-код</label>
+                    <Vue3JsonEditor
+                        :mode="'code'"
+                        v-model="filteredConfigs[index].value"
+                        :show-btns="false"
+                        :expandedOnStart="true"
+                    />
+                </div>
 
                 <div
                     v-if="filteredConfigs[index].type==='color'"
@@ -172,8 +182,11 @@ import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
-
+import {Vue3JsonEditor} from 'vue3-json-editor'
 export default {
+    components: {
+        Vue3JsonEditor
+    },
     props: ["item"],
     data() {
         return {
@@ -213,6 +226,10 @@ export default {
                     title: 'Номер телефона',
                     type: 'phone',
                 },
+                {
+                    title: 'JSON',
+                    type: 'json',
+                }
                 /*
                    {
                       title: 'Цвет',
@@ -231,10 +248,7 @@ export default {
                       type: 'reply_menu',
                   },
 
-                  {
-                      title: 'JSON',
-                      type: 'json',
-                  }
+
                   */
             ],
             bot: null,

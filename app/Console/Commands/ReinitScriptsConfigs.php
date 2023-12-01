@@ -39,7 +39,12 @@ class ReinitScriptsConfigs extends Command
 
         if (is_null($bot)) {
             $this->info('Бот авторизации не найден в системе');
-            return;
+
+            if (!env("APP_DEBUG"))
+                return;
+
+            $bot = Bot::query()
+                ->first();
         }
 
         $tmp = [];

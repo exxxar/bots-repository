@@ -21,15 +21,18 @@ class CashBackScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $mainScript = BotMenuSlug::query()
-
-            ->whereNull("bot_id")
-            ->whereNull("parent_slug_id")
-            ->where("slug", "global_cashback_main")
-            ->first();
-
-        if (is_null($mainScript))
-            return;
+        
+        $mainScript = BotMenuSlug::query()->updateOrCreate(
+            [
+                'slug' => "global_cashback_main",
+                'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
+            ],
+            [
+                'command' => ".*Special CashBack System",
+                'comment' => "Система КэшБэка",
+            ]);
 
         $params = [
             [
@@ -86,7 +89,8 @@ class CashBackScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_cashback_budget",
-
+                'parent_slug_id' => null,
+                'bot_id' => null,
                 'is_global' => true,
             ],
             [
@@ -100,6 +104,8 @@ class CashBackScriptController extends SlugController
 
                 'slug' => "global_cashback_request",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Запросить CashBack",
@@ -112,6 +118,8 @@ class CashBackScriptController extends SlugController
 
                 'slug' => "global_cashback_write_offs",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Списания",
@@ -123,6 +131,8 @@ class CashBackScriptController extends SlugController
 
                 'slug' => "global_cashback_charges",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Начисления",
@@ -132,7 +142,8 @@ class CashBackScriptController extends SlugController
         $model = BotMenuSlug::query()->updateOrCreate(
             [
 
-
+                'parent_slug_id' => null,
+                'bot_id' => null,
                 'slug' => "global_cashback_book_table",
                 'is_global' => true,
             ],
@@ -483,10 +494,9 @@ class CashBackScriptController extends SlugController
 
         $tmpFiredText = "";
 
-        if ($period != 0 && $percent == 0)
-        {
+        if ($period != 0 && $percent == 0) {
             $nextFired = Carbon::parse(Carbon::parse($cashBack->fired_at)
-                    ->addDays($period??0)->timestamp - Carbon::now()->timestamp)
+                    ->addDays($period ?? 0)->timestamp - Carbon::now()->timestamp)
                 ->format("Y-m-D H:i:s");
 
             $tmpFiredText = "<strong>Внимание!</strong>$percent % CashBack сгорает каждые $period дней! Успей потратить!Следующее сгорание $nextFired";

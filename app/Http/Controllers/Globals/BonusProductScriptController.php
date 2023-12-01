@@ -20,21 +20,12 @@ class BonusProductScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_bonus_product")
-            ->first();
-
-
-        if (is_null($hasMainScript))
-            return;
-
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_bonus_product",
-                "bot_id" => $bot->id,
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Бонус за покупку",

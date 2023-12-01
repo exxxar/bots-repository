@@ -25,15 +25,21 @@ class SimpleDeliveryController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $mainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_simple_delivery_main")
-            ->first();
 
-        if (is_null($mainScript))
-            return;
 
+
+        $mainScript = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_simple_delivery_main",
+                'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
+            ],
+
+            [
+                'command' => ".*Мини-доставка",
+                'comment' => "Скрипт добавляет возможность заказа товара на доставку",
+            ]);
 
         $params = [
 
@@ -70,21 +76,13 @@ class SimpleDeliveryController extends SlugController
             $mainScript->save();
         }
 
-        BotMenuSlug::query()->updateOrCreate(
-            [
-                "slug" => "global_simple_delivery_main",
-                'is_global' => true,
-            ],
-
-            [
-                'command' => ".*Мини-доставка",
-                'comment' => "Скрипт добавляет возможность заказа товара на доставку",
-            ]);
 
         BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_simple_delivery_my_orders",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
 
             [

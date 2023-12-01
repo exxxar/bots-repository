@@ -25,22 +25,12 @@ class WheelOfFortuneCustomScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_wheel_of_fortune_custom")
-            ->first();
-
-
-        if (is_null($hasMainScript))
-            return;
-
-
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_wheel_of_fortune_custom",
-
+                'parent_slug_id' => null,
+                'bot_id' => null,
                 'is_global' => true,
             ],
             [
@@ -193,6 +183,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             $action = ActionStatus::query()
                 ->create([
                     'user_id' => $botUser->user_id,
+                    'bot_user_id'=>$botUser->id,
                     'bot_id' => $bot->id,
                     'slug_id' => $slug->id,
                     'max_attempts' => $maxAttempts,
@@ -312,7 +303,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
                     'bot_id' => $bot->id,
                     'slug_id' => $slug->id,
                     'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0
+                    'current_attempts' => 0,
+                    'bot_user_id'=>$botUser->id
                 ]);
 
         $action->max_attempts = $maxAttempts;

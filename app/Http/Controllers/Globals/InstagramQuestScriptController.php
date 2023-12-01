@@ -23,20 +23,13 @@ class InstagramQuestScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_instagram_quest")
-            ->first();
-
-
-        if (is_null($hasMainScript))
-            return;
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_instagram_quest",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Insta-квест",
@@ -147,7 +140,8 @@ class InstagramQuestScriptController extends SlugController
                     'bot_id' => $bot->id,
                     'slug_id' => $slug->id,
                     'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0
+                    'current_attempts' => 0,
+                    'bot_user_id'=>$botUser->id,
                 ]);
 
         $action->current_attempts++;
@@ -240,7 +234,8 @@ class InstagramQuestScriptController extends SlugController
                     'bot_id' => $bot->id,
                     'slug_id' => $slug->id,
                     'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0
+                    'current_attempts' => 0,
+                    'bot_user_id'=>$botUser->id,
                 ]);
 
         return response()->json([

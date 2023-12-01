@@ -101,6 +101,8 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+
     async removeSlug(context, payload= {dataObject: {slugId: null}}){
         let link = `${BASE_SLUGS_LINK}/${payload.dataObject.slugId}`
         let _axios = util.makeAxiosFactory(link, 'DELETE')

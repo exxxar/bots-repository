@@ -21,14 +21,18 @@ class VenueScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $mainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_venue_main")
-            ->first();
 
-        if (is_null($mainScript))
-            return;
+        $mainScript = BotMenuSlug::query()->updateOrCreate(
+            [
+                "slug" => "global_venue_main",
+                'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
+            ],
+            [
+                'command' => ".*Место проведения события",
+                'comment' => "Скрипт отображения карты с координатами, адресом и заголовком",
+            ]);
 
         $params = [
 
@@ -53,20 +57,10 @@ class VenueScriptController extends SlugController
 
         ];
 
-        if (count($model->config ?? []) != count($params)) {
+        if (count($mainScript->config ?? []) != count($params)) {
             $mainScript->config = $params;
             $mainScript->save();
         }
-
-        BotMenuSlug::query()->updateOrCreate(
-            [
-                "slug" => "global_venue_main",
-                'is_global' => true,
-            ],
-            [
-                'command' => ".*Место проведения события",
-                'comment' => "Скрипт отображения карты с координатами, адресом и заголовком",
-            ]);
 
     }
 

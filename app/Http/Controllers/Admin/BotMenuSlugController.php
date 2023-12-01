@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -21,6 +22,15 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class BotMenuSlugController extends Controller
 {
+
+    public function reloadGlobalScripts(Request $request){
+        try {
+            Artisan::call("bot:reinit-scripts-configs");
+            return \response()->noContent();
+        }catch (\Exception $exception){
+            return \response()->noContent(400);
+        }
+    }
 
     public function actionDataExport(Request $request, $slugId){
         $statuses = \App\Models\ActionStatus::query()

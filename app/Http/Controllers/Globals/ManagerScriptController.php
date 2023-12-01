@@ -22,21 +22,14 @@ class ManagerScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_manager_main")
-            ->first();
-
-
-        if (is_null($hasMainScript))
-            return;
 
 
         $hasMainScript = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_about_bot_main",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Кабинет менеджера",

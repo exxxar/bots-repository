@@ -167,6 +167,18 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                             <label :for="'filtered-config-'+index+'-phone'">Значение</label>
                         </div>
 
+                        <div
+                            v-if="filteredConfigs[index].type==='json'"
+                            class="form-floating mb-1 mt-2">
+                            <label class="form-label" id="bot-domain">JSON-код</label>
+                            <Vue3JsonEditor
+                                :mode="'form'"
+                                v-model="filteredConfigs[index].value"
+                                :show-btns="false"
+                                :expandedOnStart="true"
+                                @json-change="onJsonChange($event, index)"
+                            />
+                        </div>
 
                         <div
                             v-if="filteredConfigs[index].type==='color'"
@@ -230,9 +242,12 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
-
+import {Vue3JsonEditor} from 'vue3-json-editor'
 export default {
     props: ["item"],
+    components: {
+        Vue3JsonEditor
+    },
     data() {
         return {
             filters: [],
@@ -271,6 +286,10 @@ export default {
                     title: 'Номер телефона',
                     type: 'phone',
                 },
+                {
+                    title: 'JSON',
+                    type: 'json',
+                }
                 /*
                    {
                       title: 'Цвет',
@@ -289,10 +308,7 @@ export default {
                       type: 'reply_menu',
                   },
 
-                  {
-                      title: 'JSON',
-                      type: 'json',
-                  }
+
                   */
             ],
             bot: null,
@@ -394,6 +410,9 @@ export default {
 
             })
 
+        },
+        onJsonChange(e, index) {
+            this.filteredConfigs[index].value = e
         },
         addConfig(type) {
 

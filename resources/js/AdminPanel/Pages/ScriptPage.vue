@@ -14,33 +14,29 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
                             <button type="button"
                                     @click="step=0"
                                     v-bind:class="{'btn-primary':step===0,'btn-outline-primary':step!==0}"
-                                    class="btn">Добавление скрипта
-                            </button>
-                            <button type="button"
-                                    @click="step=1"
-                                    v-bind:class="{'btn-primary':step===1,'btn-outline-primary':step!==1}"
                                     class="btn">Поиск скрипта
                             </button>
                             <button type="button"
                                     :disabled="slug==null"
-                                    @click="step=2"
-                                    v-bind:class="{'btn-primary':step===2,'btn-outline-primary':step!==2}"
+                                    @click="step=1"
+                                    v-bind:class="{'btn-primary':step===1,'btn-outline-primary':step!==1}"
                                     class="btn">Редактирование скрипта
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="row" v-if="step===0">
-                    <SlugForm/>
-                </div>
 
-                <div  v-if="step===1">
+                <div  v-if="step===0">
+                    <a
+                        @click="reloadGlobalScripts"
+                        href="javascript:void()">Обновить глобальные скрипты</a>
                     <GlobalSlugList
+                        v-if="!load"
                         v-on:select="selectScript"/>
                 </div>
 
-                <div class="row" v-if="step===2">
+                <div class="row" v-if="step===1">
                     <SlugForm :item="slug"/>
                 </div>
             </div>
@@ -68,7 +64,31 @@ export default {
     methods: {
         selectScript(slug){
             this.slug = slug
-            this.step=2
+            this.step=1
+        },
+        reloadGlobalScripts(){
+            this.load = true
+
+            this.$store.dispatch("reloadGlobalScripts", {
+            }).then(resp => {
+                this.$notify({
+                    title: "Конструктор команд",
+                    text: "Глобальные скрипты успешно обновлены",
+                    type: 'success'
+                });
+
+                this.$nextTick(()=>{
+                    this.load = false
+                })
+            }).catch(()=>{
+                this.$notify({
+                    title: "Конструктор команд",
+                    text: "Ошибка обновления глобальных скриптов",
+                    type: 'error'
+                });
+            })
+
+
         }
 
     }

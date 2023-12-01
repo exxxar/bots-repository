@@ -8,6 +8,7 @@ import Favorites from '@/ClientTg/Pages/Shop/Favorites.vue';
 import Basket from '@/ClientTg/Pages/Shop/Basket.vue';
 import CheckOut from '@/ClientTg/Pages/Shop/CheckOut.vue';
 import Settings from '@/ClientTg/Pages/Shop/Settings.vue';
+import Schedule from '@/ClientTg/Pages/Shop/Schedule.vue';
 
 
 import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
@@ -76,6 +77,12 @@ export const routes = [
         path: '/vip',
         component: Vip,
         meta: { title: 'VIP-анкета', hide_menu:true }
+    },
+    {
+        name: 'schedule',
+        path: '/schedule-main',
+        component: Schedule,
+        meta: { title: 'График работы', hide_menu:true }
     },
     {
         name: 'cashOut',

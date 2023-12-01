@@ -26,19 +26,14 @@ class RequestMoneyWithdrawScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $mainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_cash_out_main")
-            ->first();
 
-        if (is_null($mainScript))
-            return;
 
-        BotMenuSlug::query()->updateOrCreate(
+        $mainScript = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_cash_out_main",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Вывод средств",

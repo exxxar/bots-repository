@@ -25,20 +25,13 @@ class InstantCashBackController extends SlugController
 {
     public function config(Bot $bot)
     {
-        $hasMainScript = BotMenuSlug::query()
-            ->whereNull("parent_slug_id")
-            ->whereNull("bot_id")
-            ->where("slug", "global_start_cashback_bonus")
-            ->first();
-
-
-        if (is_null($hasMainScript))
-            return;
 
         $model = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_start_cashback_bonus",
                 'is_global' => true,
+                'parent_slug_id' => null,
+                'bot_id' => null,
             ],
             [
                 'command' => ".*Получить CashBack мгновенно!",
@@ -189,7 +182,8 @@ class InstantCashBackController extends SlugController
                     'bot_id' => $bot->id,
                     'slug_id' => $slugId,
                     'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0
+                    'current_attempts' => 0,
+                    'bot_user_id'=>$botUser->id,
                 ]);
 
         if ($action->current_attempts >= $action->max_attempts) {
