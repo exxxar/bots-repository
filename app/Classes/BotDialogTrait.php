@@ -60,13 +60,17 @@ trait BotDialogTrait
             $isSent = true;
         }
 
-        if (!is_null($botDialogCommand->reply_keyboard_id)) {
+        $this->replyKeyboard(!$isSent ? $msg : 'Варианты ответов',
+            !is_null($botDialogCommand->reply_keyboard_id) ?
+                $replyKeyboard : []);
+
+     /*   if (!is_null($botDialogCommand->reply_keyboard_id)) {
             $this->replyKeyboard(!$isSent ? $msg : 'Варианты ответов', $replyKeyboard);
             $isSent = true;
-        }
+        }*/
 
-        if (!$isSent)
-            $this->reply($msg);
+    /*    if (!$isSent)
+            $this->reply($msg);*/
 
 
     }
@@ -159,20 +163,20 @@ trait BotDialogTrait
         $dialog->completed_at = Carbon::now();
         $dialog->save();
 
-        Log::info("store_ro=>".print_r($botDialogCommand->store_to, true));
+        Log::info("store_ro=>" . print_r($botDialogCommand->store_to, true));
         if (!is_null($botDialogCommand->store_to ?? null)) {
             $tmp[$botDialogCommand->store_to] = $text ?? null;
             $botUser->update($tmp);
         }
 
-        Log::info("result_flags=>".print_r($botDialogCommand->result_flags, true));
+        Log::info("result_flags=>" . print_r($botDialogCommand->result_flags, true));
 
         $flags = json_decode($botDialogCommand->result_flags ?? '[]');
-        if (count($flags)>0) {
+        if (count($flags) > 0) {
             $tmp = [];
-            foreach ($flags as $flag){
+            foreach ($flags as $flag) {
                 $tmp[$flag] = true;
-                Log::info("flag=>".($flag??'-'));
+                Log::info("flag=>" . ($flag ?? '-'));
             }
             $test = $botUser->update($tmp);
             Log::info(print_r($test, true));
