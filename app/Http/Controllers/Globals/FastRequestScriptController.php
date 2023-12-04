@@ -186,6 +186,7 @@ class FastRequestScriptController extends SlugController
             "/request_callback $slugId $parentPageId"));
 
 
+        Log::info(print_r($menu->menu, true));
         BotManager::bot()
             ->replyInlineKeyboard("$preText", $menu->menu);
 
