@@ -197,7 +197,7 @@ abstract class BotCore
                 continue;
             $slug = $item["path"];
 
-            // Log::info("botSlugHandler $slug ");
+             Log::info("botSlugHandler $slug ");
             $parentSlug = BotMenuSlug::query()
                 // ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
