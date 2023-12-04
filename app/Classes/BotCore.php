@@ -311,6 +311,8 @@ abstract class BotCore
                                 "value" => $slug->id,
                             ];
 
+                            Log::info("slug=>$slug->id page=>".print_r($page->toArray(),true));
+
 
                             $config[] = [
                                 "key" => "parent_page_id",
