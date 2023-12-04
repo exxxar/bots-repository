@@ -191,6 +191,7 @@ abstract class BotCore
         $matches = [];
         $arguments = [];
 
+        Log::info("botSlugHandler init");
         $find = false;
         foreach ($this->slugs as $item) {
             if (is_null($item["path"]) || $item["is_service"])
