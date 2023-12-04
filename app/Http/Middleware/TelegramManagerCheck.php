@@ -85,12 +85,12 @@ class TelegramManagerCheck
             return \response()->json(["error" => "Bot User not found"], 400);
 
         if (!$botUser->is_manager) {
-            BotMethods::bot()
+          /*  BotMethods::bot()
                 ->whereId($bot->id)
                 ->sendMessage(
                     $botUser->telegram_chat_id,
                     "Вы не являетесь менеджером в системе! Данное действие недоступно!"
-                );
+                );*/
 
             return \response()->json(["error" => "User is not manager"], 400);
         }
