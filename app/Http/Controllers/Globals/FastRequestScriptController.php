@@ -175,7 +175,7 @@ class FastRequestScriptController extends SlugController
                 ], [
                 'menu' => [
                     [
-                        ["text" => "$btnText", "callback_data" => "/request_callback $slugId"],
+                        ["text" => "$btnText", "callback_data" => "/request_callback $slugId $parentPageId"],
                     ],
                 ],
             ]);
