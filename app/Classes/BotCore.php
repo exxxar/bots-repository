@@ -203,7 +203,8 @@ abstract class BotCore
                 ->where("slug", $slug)
                 ->where("is_global", true)
                 ->first();
-           // Log::info("parentSlug " . print_r($parentSlug ?? null, true));
+
+            Log::info("$slug parentSlug" . print_r($parentSlug->id ?? null, true));
 
             $templates = BotMenuSlug::query()
                 ->where("bot_id", $this->getSelf()->id)
