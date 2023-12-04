@@ -69,7 +69,7 @@ class FastRequestScriptController extends SlugController
         $slugId = $data[3] ?? null;
         $parentPageId = $data[4] ?? null;
 
-
+        Log::info("slug=$slugId parent page=$parentPageId");
         $slug = BotMenuSlug::query()
             ->with(["page"])
             ->where("id", $slugId)
@@ -173,7 +173,10 @@ class FastRequestScriptController extends SlugController
                 ], [
                 'menu' => [
                     [
-                        ["text" => "$btnText", "callback_data" => "/request_callback $slugId $parentPageId"],
+                        ["text" => "$btnText", "callback_data" => is_null($parentPageId) ?
+                            "/request_callback_without_page $slugId" :
+                            "/request_callback $slugId $parentPageId"
+                        ],
                     ],
                 ],
             ]);
