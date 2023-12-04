@@ -205,17 +205,24 @@ abstract class BotCore
                 ->whereNull("bot_id")
                 ->first();
 
+            $templates = [];
 
-            $templates = !is_null($parentSlug) ? BotMenuSlug::query()
-                ->where("bot_id", $this->getSelf()->id)
-                ->where("parent_slug_id", $parentSlug->id)
-                ->orderBy("updated_at", "DESC")
-                ->get() :
-                BotMenuSlug::query()
+            if (!is_null($parentSlug)) {
+                $templates = BotMenuSlug::query()
                     ->where("bot_id", $this->getSelf()->id)
-                    ->where("slug", $slug)
+                    ->where("parent_slug_id", $parentSlug->id)
                     ->orderBy("updated_at", "DESC")
                     ->get();
+
+            }
+
+            if (count($templates) == 0)
+                $templates =
+                    BotMenuSlug::query()
+                        ->where("bot_id", $this->getSelf()->id)
+                        ->where("slug", $slug)
+                        ->orderBy("updated_at", "DESC")
+                        ->get();
 
             if (count($templates) == 0)
                 continue;
@@ -295,7 +302,7 @@ abstract class BotCore
                                 ->next_bot_menu_slug_id)
                             ->first();
 
-                        Log::info("page=====>".print_r($page->toArray(), true));
+                        Log::info("page=====>" . print_r($page->toArray(), true));
 
                         if (is_null($slug))
                             return true;
