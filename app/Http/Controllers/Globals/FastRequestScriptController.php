@@ -66,16 +66,17 @@ class FastRequestScriptController extends SlugController
 
     public function requestCallback(...$data)
     {
-
-
         $slugId = $data[3] ?? null;
         $parentPageId = $data[4] ?? null;
+
+        Log::info("requestCallback");
+        Log::info("slug $slugId");
+        Log::info("page $parentPageId");
 
         $slug = BotMenuSlug::query()
             ->with(["page"])
             ->where("id", $slugId)
             ->first();
-
 
         $page = BotPage::query()
               ->with(["slug"])
