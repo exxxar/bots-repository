@@ -315,10 +315,12 @@ trait BotBaseMethodsTrait
             "message_thread_id" => $messageThreadId,
             "text" => $message,
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
+            'reply_markup' => !is_null($keyboard)&&!empty($keyboard)?json_encode([
                 'keyboard' => $keyboard,
                 'resize_keyboard' => true,
                 'input_field_placeholder' => "Выбор действия"
+            ]):json_encode([
+                'remove_keyboard' => true,
             ])
         ];
 
