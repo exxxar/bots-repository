@@ -181,7 +181,7 @@ class FastRequestScriptController extends SlugController
                 ],
             ]);
 
-        Log::info("/request_callback $slugId $parentPageId");
+        Log::info("/request_callback slug=$slugId page=$parentPageId");
 
         BotManager::bot()
             ->replyInlineKeyboard("$preText", $menu->menu);
