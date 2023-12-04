@@ -117,6 +117,7 @@ class FastRequestScriptController extends SlugController
 
     public function fastRequest(...$config)
     {
+        Log::info("fastRequest start");
 
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
