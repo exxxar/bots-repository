@@ -206,7 +206,8 @@ abstract class BotCore
                 ->first();
 
 
-            Log::info("$slug parentSlug" . print_r($parentSlug->toArray(), true));
+            if (!is_null($parentSlug))
+                Log::info("$slug parentSlug" . print_r($parentSlug->toArray(), true));
 
 
             $templates = !is_null($parentSlug) ? BotMenuSlug::query()
