@@ -160,6 +160,7 @@ class FastRequestScriptController extends SlugController
 
                     ]);
 
+            Log::info( env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/vip");
             return;
         }
 
