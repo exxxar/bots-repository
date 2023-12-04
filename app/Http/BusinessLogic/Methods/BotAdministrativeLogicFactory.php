@@ -238,7 +238,7 @@ class BotAdministrativeLogicFactory
 
         $date = Carbon::now()->format("Y-m-d H-i-s");
 
-        Excel::store(new BotStatisticExport($statistics), "$name.xls", "public");
+        Excel::store(new BotStatisticExport($statistics), "$name.xls", "public",\Maatwebsite\Excel\Excel::XLSX);
 
         BotMethods::bot()
             ->whereBot($this->bot)

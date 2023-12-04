@@ -38,7 +38,7 @@ use Maatwebsite\Excel\Facades\Excel;
 Route::get("/test-export", function (){
 
     $statuses = \App\Models\ActionStatus::query()->where("bot_id",2)->get();
-    return Excel::download(new \App\Exports\ExportArrayData($statuses->toArray()), 'invoices.xlsx');
+    return Excel::download(new \App\Exports\ExportArrayData($statuses->toArray()), 'invoices.xlsx',\Maatwebsite\Excel\Excel::XLSX);
 });
 
 Route::get("/push-command", function () {

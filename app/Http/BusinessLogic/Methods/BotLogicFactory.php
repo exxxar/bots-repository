@@ -2014,7 +2014,7 @@ class BotLogicFactory
 
         $date = Carbon::now()->format("Y-m-d H-i-s");
 
-        Excel::store(new BotCashBackExport($statistics), "$name.xls", "public");
+        Excel::store(new BotCashBackExport($statistics), "$name.xls", "public", \Maatwebsite\Excel\Excel::XLSX);
 
         BotMethods::bot()
             ->whereBot($this->bot)
