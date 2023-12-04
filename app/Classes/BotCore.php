@@ -205,8 +205,8 @@ abstract class BotCore
                 ->whereNull("bot_id")
                 ->first();
 
-            if (!is_null($parentSlug))
-                Log::info("$slug parentSlug" . print_r($parentSlug->id, true));
+
+            Log::info("$slug parentSlug" . print_r($parentSlug->toArray(), true));
 
             $templates = BotMenuSlug::query()
                 ->where("bot_id", $this->getSelf()->id)
