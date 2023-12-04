@@ -179,8 +179,7 @@ class BotManager extends BotCore
     public function setWebhooks($botId = null)
     {
         $bots = Bot::query()
-            ->withTrashed()
-            ->get();
+            ->withTrashed();
 
         if (!is_null($botId)){
             $bots = $bots->where("id", $botId);
