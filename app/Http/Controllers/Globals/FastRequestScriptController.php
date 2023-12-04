@@ -69,7 +69,7 @@ class FastRequestScriptController extends SlugController
 
 
         $slugId = $data[3] ?? null;
-        //  $parentPageId = $data[4] ?? null;
+        $parentPageId = $data[4] ?? null;
 
         $slug = BotMenuSlug::query()
             ->with(["page"])
@@ -77,10 +77,10 @@ class FastRequestScriptController extends SlugController
             ->first();
 
 
-        /*  $page = BotPage::query()
+        $page = BotPage::query()
               ->with(["slug"])
               ->where("id", $parentPageId)
-              ->first();*/
+              ->first();
 
 
         if (is_null($slug)) {
@@ -98,7 +98,7 @@ class FastRequestScriptController extends SlugController
 
         $bot = BotManager::bot()->getSelf();
 
-        //  $from = $page->slug->command ?? 'Источник запроса не указан';
+        $from = $page->slug->command ?? 'Источник запроса не указан';
         $sex = $botUser->sex ? "Мужской" : "Женский";
         $phone = $botUser->phone ?? 'Не указан';
         $city = $botUser->city ?? 'Не указан';
@@ -109,7 +109,7 @@ class FastRequestScriptController extends SlugController
 
         BotManager::bot()
             ->sendMessage(($bot->order_channel ?? $bot->main_channel ?? null),
-                "Быстрый запрос\nот пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
+                "Быстрый запрос из $from\nот пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
                 $thread
 
             );
@@ -129,8 +129,6 @@ class FastRequestScriptController extends SlugController
             ->first())["value"] ?? null;
 
 
-        Log::info("fastRequest $slugId " . ($parentPageId ?? null));
-
         $btnText = (Collection::make($config[1])
             ->where("key", "btn_text")
             ->first())["value"] ?? "Запросить";
@@ -145,8 +143,6 @@ class FastRequestScriptController extends SlugController
             ->first())["value"] ?? "Текст";
 
         $bot = BotManager::bot()->getSelf();
-
-        $botDomain = $bot->bot_domain;
 
         $botUser = BotManager::bot()->currentBotUser();
 
