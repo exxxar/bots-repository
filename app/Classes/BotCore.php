@@ -312,6 +312,19 @@ abstract class BotCore
                             ->where("path", $slug->slug)
                             ->first();
 
+                        if (is_null($item)) {
+                            $slug = BotMenuSlug::query()
+                               ->find($slug->parent_slug_id);
+
+                            if (is_null($slug))
+                                return true;
+
+                             $item = Collection::make($this->slugs)
+                                 ->where("path", $slug->slug)
+                                 ->first();
+                        }
+
+
                         if (!is_null($item)) {
 
                             $config = $slug->config ?? [];
