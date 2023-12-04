@@ -199,9 +199,10 @@ abstract class BotCore
 
             // Log::info("botSlugHandler $slug ");
             $parentSlug = BotMenuSlug::query()
-                ->where("bot_id", $this->getSelf()->id)
+               // ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
                 ->where("is_global", true)
+                ->whereNull("bot_id")
                 ->first();
 
             if (!is_null($parentSlug))
