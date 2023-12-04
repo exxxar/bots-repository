@@ -60,6 +60,8 @@ trait BotDialogTrait
             $isSent = true;
         }
 
+        Log::info("menu=>$isSent m=$msg keyboard=".print_r($replyKeyboard, true));
+
         $this->replyKeyboard(!$isSent ? $msg : 'Варианты ответов',
             !is_null($botDialogCommand->reply_keyboard_id) ?
                 $replyKeyboard : []);
