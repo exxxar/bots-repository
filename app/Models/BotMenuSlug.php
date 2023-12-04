@@ -45,6 +45,8 @@ class BotMenuSlug extends Model
         return $this->belongsTo(Bot::class);
     }
 
+
+
     public function page(): HasOne
     {
         return $this->hasOne(BotPage::class,'bot_menu_slug_id','id');

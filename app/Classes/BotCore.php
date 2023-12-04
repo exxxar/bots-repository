@@ -196,9 +196,21 @@ abstract class BotCore
             if (is_null($item["path"]) || $item["is_service"])
                 continue;
             $slug = $item["path"];
-            $templates = BotMenuSlug::query()
+
+            Log::info("botSlugHandler $slug ");
+            $parentSlug = BotMenuSlug::query()
                 ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
+                ->where("is_global", true)
+                ->first();
+            Log::info("parentSlug " . print_r($parentSlug ?? null, true));
+
+            $templates = BotMenuSlug::query()
+                ->where("bot_id", $this->getSelf()->id)
+                ->where(function ($q) use ($parentSlug, $slug) {
+                    $q->where("parent_slug_id", $parentSlug ?? null)
+                        ->orWhere("slug", $slug);
+                })
                 ->orderBy("updated_at", "DESC")
                 ->get();
 
@@ -606,7 +618,7 @@ abstract class BotCore
 
         $update = $this->bot->getWebhookUpdate();
 
-       //Log::info(print_r($update, true));
+        //Log::info(print_r($update, true));
 
         include_once base_path('routes/bot.php');
 
@@ -745,8 +757,6 @@ abstract class BotCore
     }
 
 
-
-
     public function runPage(int $pageId, $botUser = null): void
     {
 
@@ -844,13 +854,13 @@ abstract class BotCore
         $botUser = $this->currentBotUser();
 
         $domain = $botUser->username ?? null;
-        $name = $botUser->name ??$botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
+        $name = $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
 
-        if ($botUser->is_admin||$botUser->is_manager){
+        if ($botUser->is_admin || $botUser->is_manager) {
             BotNote::query()->updateOrCreate([
-                'bot_id'=>$this->getSelf()->id,
-                'bot_user_id'=>$botUser->id,
-                'text'=>$query,
+                'bot_id' => $this->getSelf()->id,
+                'bot_user_id' => $botUser->id,
+                'text' => $query,
             ]);
 
             $this->reply("Ваше сообщение добавлено в список заметок /notes");
