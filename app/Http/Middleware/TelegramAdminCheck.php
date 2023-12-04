@@ -85,12 +85,12 @@ class TelegramAdminCheck
             return \response()->json(["error" => "Bot User not found"], 400);
 
         if (!$botUser->is_admin) {
-           /* BotMethods::bot()
+            BotMethods::bot()
                 ->whereId($bot->id)
                 ->sendMessage(
                     $botUser->telegram_chat_id,
                     "Вы не являетесь администратором данного бота! Данное действие недоступно!"
-                );*/
+                );
 
             return \response()->json(["error" => "User is not admin"], 400);
         }

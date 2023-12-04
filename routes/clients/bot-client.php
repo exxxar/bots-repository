@@ -32,7 +32,7 @@ Route::prefix("bot-client")
             ->middleware(["tgAuth.any"]);
 
         Route::post("/manager-notes", [BotController::class, "requestManagerNotes"])
-            ->middleware(["tgAuth.admin"]);
+            ->middleware(["tgAuth.any"]);
 
 
         Route::post('/self', [BotController::class, "getSelf"])
@@ -286,15 +286,21 @@ Route::prefix("bot-client")
 
         Route::prefix("bots")
             ->controller(BotController::class)
-            ->middleware(["tgAuth.manager"])
+            ->middleware(["tgAuth.any"])
             ->group(function(){
-                Route::post("/simple-bot-list", "simpleList");
-                Route::post("/bot-lazy", "createBotLazy");
-                Route::post("/store-fields", "storeBotFields");
+                Route::post("/simple-bot-list", "simpleList")
+                    ->middleware(["tgAuth.manager"]);
+                Route::post("/bot-lazy", "createBotLazy")
+                    ->middleware(["tgAuth.manager"]);
+                Route::post("/store-fields", "storeBotFields")
+                    ->middleware(["tgAuth.admin"]);
                 Route::get("/load-fields", "loadBotFields");
-                Route::post('/manager-switch-status',"switchBotStatusManager");
-                Route::post("/manager-bot-update", "updateBotByManager");
-                Route::delete("/remove-my-manager/{botId}", "destroyByManager");
+                Route::post('/manager-switch-status',"switchBotStatusManager")
+                    ->middleware(["tgAuth.manager"]);
+                Route::post("/manager-bot-update", "updateBotByManager")
+                    ->middleware(["tgAuth.manager"]);
+                Route::delete("/remove-my-manager/{botId}", "destroyByManager")
+                    ->middleware(["tgAuth.manager"]);
             });
 
         Route::prefix("slugs")

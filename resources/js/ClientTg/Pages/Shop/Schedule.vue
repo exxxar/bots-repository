@@ -118,3 +118,11 @@ export default {
 }
 
 </script>
+<style lang="scss">
+.working-hours {
+    p{
+        font-size: 12px;
+        line-height: 110%;
+    }
+}
+</style>
