@@ -197,19 +197,19 @@ abstract class BotCore
                 continue;
             $slug = $item["path"];
 
-           // Log::info("botSlugHandler $slug ");
+            // Log::info("botSlugHandler $slug ");
             $parentSlug = BotMenuSlug::query()
                 ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
                 ->where("is_global", true)
                 ->first();
 
-            Log::info("$slug parentSlug" . print_r($parentSlug->id ?? null, true));
+            if (!is_null($parentSlug))
+                Log::info("$slug parentSlug" . print_r($parentSlug->id, true));
 
             $templates = BotMenuSlug::query()
                 ->where("bot_id", $this->getSelf()->id)
                 ->where("parent_slug_id", $parentSlug->id)
-
                 ->orderBy("updated_at", "DESC")
                 ->get();
 
