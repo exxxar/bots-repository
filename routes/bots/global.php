@@ -57,7 +57,7 @@ BotManager::bot()
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\FastRequestScriptController::class)
-    ->route("/request_callback ([0-9]+) ([0-9]+)", "requestCallback")
+    ->route("/request_callback ([0-9]+)", "requestCallback")
     ->slug("global_fast_request_main", "fastRequest");
 
 BotManager::bot()

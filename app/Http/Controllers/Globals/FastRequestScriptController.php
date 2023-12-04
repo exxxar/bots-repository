@@ -69,7 +69,7 @@ class FastRequestScriptController extends SlugController
 
 
         $slugId = $data[3] ?? null;
-        $parentPageId = $data[4] ?? null;
+      //  $parentPageId = $data[4] ?? null;
 
         $slug = BotMenuSlug::query()
             ->with(["page"])
@@ -77,10 +77,10 @@ class FastRequestScriptController extends SlugController
             ->first();
 
 
-        $page = BotPage::query()
+      /*  $page = BotPage::query()
             ->with(["slug"])
             ->where("id", $parentPageId)
-            ->first();
+            ->first();*/
 
 
         if (is_null($slug)) {
@@ -98,7 +98,7 @@ class FastRequestScriptController extends SlugController
 
         $bot = BotManager::bot()->getSelf();
 
-        $from = $page->slug->command ?? 'Источник запроса не указан';
+      //  $from = $page->slug->command ?? 'Источник запроса не указан';
         $sex = $botUser->sex ? "Мужской":"Женский";
         $phone = $botUser->phone ?? 'Не указан';
         $city = $botUser->city ?? 'Не указан';
@@ -109,7 +109,7 @@ class FastRequestScriptController extends SlugController
 
         BotManager::bot()
             ->sendMessage(($bot->order_channel ?? $bot->main_channel ?? null),
-            "Запрос из $from\nот пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
+            "Быстрый запрос\nот пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
                 $thread
 
         );
@@ -119,17 +119,14 @@ class FastRequestScriptController extends SlugController
 
     public function fastRequest(...$config)
     {
-        $slugId = (Collection::make($config[1])
-            ->where("key", "slug_id")
-            ->first())["value"];
 
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
-            ->first())["value"];
+            ->first())["value"] ?? null;
 
-        $parentPageId = (Collection::make($config[1])
+      /*  $parentPageId = (Collection::make($config[1])
             ->where("key", "parent_page_id")
-            ->first())["value"];
+            ->first())["value"] ?? null;*/
 
 
 
@@ -138,9 +135,9 @@ class FastRequestScriptController extends SlugController
             ->first())["value"] ?? "Запросить";
 
 
-        $resultText = (Collection::make($config[1])
+       /* $resultText = (Collection::make($config[1])
             ->where("key", "result_message")
-            ->first())["value"] ?? "%s, Ваш запрос получен!";
+            ->first())["value"] ?? "%s, Ваш запрос получен!";*/
 
         $preText = (Collection::make($config[1])
             ->where("key", "pre_text")
@@ -170,7 +167,6 @@ class FastRequestScriptController extends SlugController
             return;
         }
 
-        $botUser = BotManager::bot()->currentBotUser();
 
 
         $menu = BotMenuTemplate::query()
@@ -183,7 +179,7 @@ class FastRequestScriptController extends SlugController
                 ], [
                 'menu' => [
                     [
-                        ["text" => "$btnText", "callback_data" => "/request_callback $slugId $parentPageId" ],
+                        ["text" => "$btnText", "callback_data" => "/request_callback $slugId" ],
                     ],
                 ],
             ]);
