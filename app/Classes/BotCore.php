@@ -295,6 +295,8 @@ abstract class BotCore
                                 ->next_bot_menu_slug_id)
                             ->first();
 
+                        Log::info("page=====>".print_r($page->toArray(), true));
+
                         if (is_null($slug))
                             return true;
 

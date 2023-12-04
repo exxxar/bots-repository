@@ -187,6 +187,7 @@ class FastRequestScriptController extends SlugController
 
 
         Log::info(print_r($menu->menu, true));
+
         BotManager::bot()
             ->replyInlineKeyboard("$preText", $menu->menu);
 
