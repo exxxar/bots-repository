@@ -235,8 +235,8 @@ class BotDialogsLogicFactory
 
         $validator = Validator::make($data, [
             'pre_text' => "required",
-            'post_text' => "required",
-            'error_text' => "required",
+          //  'post_text' => "required",
+           // 'error_text' => "required",
             'bot_id' => "required",
             'input_pattern' => "",
             'inline_keyboard_id' => "",
@@ -292,8 +292,8 @@ class BotDialogsLogicFactory
         $command = BotDialogCommand::query()->create([
             'slug' => Str::uuid(),
             'pre_text' => $data["pre_text"],
-            'post_text' => $data["post_text"],
-            'error_text' => $data["error_text"],
+            'post_text' => $data["post_text"] ?? "Спасибо!",
+            'error_text' => $data["error_text"] ?? "Ошибка",
             'bot_id' => $this->bot->id,
             'input_pattern' => $data["input_pattern"] ?? null,
             'inline_keyboard_id' => $data["inline_keyboard_id"] ?? $inlineKeyboard->id ?? null,

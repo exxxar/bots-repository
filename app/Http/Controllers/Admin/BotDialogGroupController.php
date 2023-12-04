@@ -133,8 +133,8 @@ class BotDialogGroupController extends Controller
     {
         $request->validate([
             'pre_text' => "required",
-            'post_text' => "required",
-            'error_text' => "required",
+           // 'post_text' => "required",
+           // 'error_text' => "required",
             'bot_id' => "required",
             'input_pattern' => "",
             'inline_keyboard_id' => "",
