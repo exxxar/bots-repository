@@ -372,7 +372,7 @@ class CashBackScriptController extends SlugController
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
-                    "bot_id", $bot->id,
+                    "bot_id"=> $bot->id,
                     'type' => 'inline',
                     'slug' => "menu_cashback_request_$slugId",
 
