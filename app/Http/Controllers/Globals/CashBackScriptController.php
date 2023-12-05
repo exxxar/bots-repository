@@ -21,7 +21,7 @@ class CashBackScriptController extends SlugController
 {
     public function config(Bot $bot)
     {
-        
+
         $mainScript = BotMenuSlug::query()->updateOrCreate(
             [
                 'slug' => "global_cashback_main",
@@ -372,7 +372,7 @@ class CashBackScriptController extends SlugController
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
-
+                    "bot_id", $bot->id,
                     'type' => 'inline',
                     'slug' => "menu_cashback_request_$slugId",
 
