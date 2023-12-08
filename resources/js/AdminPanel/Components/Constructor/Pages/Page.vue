@@ -565,13 +565,13 @@ export default {
 
         },
         'need_page_audios': function (newVal, oldVal) {
-            if (!this.need_page_audios()) {
+            if (!this.need_page_audios) {
                 this.pageForm.audios = []
             }
 
         },
         'need_page_documents': function (newVal, oldVal) {
-            if (!this.need_page_documents()) {
+            if (!this.need_page_documents) {
                 this.pageForm.documents = []
             }
 
