@@ -271,7 +271,7 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                     <strong>Внимание!</strong> не больше 10 документов на 1й странице!
                 </p>
                 <BotMediaList
-                    :need-documents="true"
+                    :need-document="true"
                     :selected="pageForm.documents"
                     v-on:select="selectDocument"></BotMediaList>
             </div>

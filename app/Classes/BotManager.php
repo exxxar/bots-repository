@@ -498,13 +498,14 @@ class BotManager extends BotCore
 
         if (!is_null($page->documents)) {
 
+            $documents = $page->documents ?? [];
 
-            if (count($page->documents) == 1)
-                $this->replyDocument(null, $page->documents[0]);
+            if (count($documents) == 1)
+                $this->replyDocument(null, $documents[0]);
 
-            if (count($page->documents) > 1 && count($page->documents) < 10) {
+            if (count($documents) > 1 && count($documents) < 10) {
                 $media = [];
-                foreach ($page->documents as $document) {
+                foreach ($documents as $document) {
                     $media[] = [
                         "media" => $document,
                         "type" => "document",
@@ -520,13 +521,14 @@ class BotManager extends BotCore
 
         if (!is_null($page->audios)) {
 
+            $audios = $page->audios ?? [];
 
-            if (count($page->audios) == 1)
-                $this->replyAudio(null, $page->audios[0]);
+            if (count($audios) == 1)
+                $this->replyAudio(null, $audios[0]);
 
-            if (count($page->audios) > 1 && count($page->audios) < 10) {
+            if (count($audios) > 1 && count($audios) < 10) {
                 $media = [];
-                foreach ($page->audios as $audio) {
+                foreach ($audios as $audio) {
                     $media[] = [
                         "media" => $audio,
                         "type" => "audio",

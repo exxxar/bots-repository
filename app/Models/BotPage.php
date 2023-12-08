@@ -49,6 +49,8 @@ class BotPage extends Model
         'bot_menu_slug_id' => 'integer',
         'images' => 'array',
         'videos' => 'array',
+        'audios' => 'array',
+        'documents' => 'array',
         'rules_if' => 'array',
         'rules_else_page_id' => 'integer',
         'reply_keyboard_id' => 'integer',
