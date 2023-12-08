@@ -509,7 +509,7 @@ class BotManager extends BotCore
                     $media[] = [
                         "media" => $document,
                         "type" => "document",
-                        "caption" => "$document"
+                        "caption" =>null
                     ];
                 }
 
@@ -532,7 +532,7 @@ class BotManager extends BotCore
                     $media[] = [
                         "media" => $audio,
                         "type" => "audio",
-                        "caption" => "$audio"
+                        "caption" => null
                     ];
                 }
 
