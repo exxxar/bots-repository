@@ -76,6 +76,7 @@ class BotMediaLogicFactory
                 if (!$value)
                     continue;
 
+                Log::info("type=$key $value=$value");
                 $q = $q->where("type", $key);
             }
         } : null;
