@@ -297,7 +297,7 @@ trait BotBaseMethodsTrait
         }
 
         try {
-            $this->bot->sendDocument($tmp);
+            $this->bot->sendAudio($tmp);
         } catch (\Exception $e) {
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .

@@ -277,12 +277,6 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
             </div>
 
 
-
-
-
-
-
-
             <div class="col-12 mb-2">
                 <div class="form-check">
                     <input class="form-check-input"
