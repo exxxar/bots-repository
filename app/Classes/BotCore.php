@@ -476,6 +476,54 @@ abstract class BotCore
         return $find;
     }
 
+    private function botFallbackAudioHandler($message): bool
+    {
+        $audio = $message->audio  ?? $message->voice ?? null;
+        $caption = $message->caption ?? $message->audio->title ?? $message->audio->file_name ?? null;
+
+        $type =  "audio";
+
+
+        if (is_null($audio))
+            return false;
+
+        $find = false;
+        foreach ($this->routes as $item) {
+
+            if (is_null($item["path"]))
+                continue;
+
+            if ($item["path"] === "fallback_audio") {
+                $find = $this->tryCall($item, $message, null, ($caption ?? null), $audio, $type);
+            }
+        }
+        return $find;
+    }
+
+    private function botFallbackDocumentHandler($message): bool
+    {
+        $document= $message->document  ?? $message->animation ?? null;
+        $caption = $message->caption ?? $message->document->file_name ?? $message->animation->file_name ?? null;
+
+        $type =  "document";
+
+
+        if (is_null($document))
+            return false;
+
+        $find = false;
+        foreach ($this->routes as $item) {
+
+            if (is_null($item["path"]))
+                continue;
+
+            if ($item["path"] === "fallback_document") {
+                $find = $this->tryCall($item, $message, null, ($caption ?? null), $document, $type);
+            }
+        }
+        return $find;
+    }
+
     private function botFallbackPhotoHandler($message): bool
     {
         $photos = $message->photo ?? null;
@@ -768,6 +816,12 @@ abstract class BotCore
             if ($this->botFallbackVideoHandler($message))
                 return;
 
+            if ($this->botFallbackAudioHandler($message))
+                return;
+
+            if ($this->botFallbackDocumentHandler($message))
+                return;
+
             if ($this->botFallbackHandler($message))
                 return;
 
@@ -1005,6 +1059,30 @@ abstract class BotCore
         $this->routes[] = [
             "controller" => $this->controller ?? null,
             "path" => "fallback_photo",
+            "is_service" => true,
+            "function" => $function
+        ];
+
+        return $this;
+    }
+
+    public function fallbackAudio($function)
+    {
+        $this->routes[] = [
+            "controller" => $this->controller ?? null,
+            "path" => "fallback_audio",
+            "is_service" => true,
+            "function" => $function
+        ];
+
+        return $this;
+    }
+
+    public function fallbackDocument($function)
+    {
+        $this->routes[] = [
+            "controller" => $this->controller ?? null,
+            "path" => "fallback_document",
             "is_service" => true,
             "function" => $function
         ];

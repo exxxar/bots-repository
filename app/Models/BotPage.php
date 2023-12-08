@@ -22,6 +22,8 @@ class BotPage extends Model
         'content',
         'images',
         'videos',
+        'audios',
+        'documents',
         'reply_keyboard_title',
         'reply_keyboard_id',
         'inline_keyboard_id',

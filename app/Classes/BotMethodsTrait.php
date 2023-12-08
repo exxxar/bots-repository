@@ -143,10 +143,18 @@ trait BotMethodsTrait
         );
     }
 
-    public function replyDocument($caption, $path, $filename = 'locations.pdf', $messageThreadId = null)
+    public function replyDocument($caption, $fileId, $messageThreadId = null)
     {
         return $this->sendDocument($this->chatId, $caption,
-            InputFile::createFromContents($path, $filename),
+            $fileId,
+            $messageThreadId
+        );
+    }
+
+    public function replyAudio($caption, $fileId, $messageThreadId = null)
+    {
+        return $this->sendAudio($this->chatId, $caption,
+            $fileId,
             $messageThreadId
         );
     }

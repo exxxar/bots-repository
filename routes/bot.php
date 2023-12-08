@@ -39,7 +39,12 @@ BotManager::bot()
     ->route("/cashman", "cashmanPayment")
     ->route("/reset_all_bot_users (yes|[0-9a-zA-Z]+)", "resetAllBotUsers")
     ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
-    ->route("/diagnostic ([0-9]+)", "getDiagnosticTable");
+    ->route("/diagnostic ([0-9]+)", "getDiagnosticTable")
+    ->fallbackDocument("uploadAnyKindOfMedia")
+    ->fallbackAudio("uploadAnyKindOfMedia")
+    ->fallbackVideo("uploadAnyKindOfMedia");
+
+
 
 
 BotManager::bot()
@@ -124,38 +129,6 @@ BotManager::bot()
             );
 
         BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
-    });
-
-BotManager::bot()
-    ->fallbackVideo(function (...$data) {
-        $caption = $data[2] ?? null;
-        $video = $data[3] ?? null;
-        $type = $data[4] ?? "video";
-
-        $botUser = BotManager::bot()->currentBotUser();
-
-
-        if (!$botUser->is_admin && !$botUser->is_manager) {
-            BotManager::bot()->reply("Данная опция доступна только персоналу бота!");
-            return;
-        }
-
-        $videoToSend = $video->file_id ?? null;
-
-        $bot = BotManager::bot()->getSelf();
-
-        $media = \App\Models\BotMedia::query()->updateOrCreate([
-            'bot_id' => $bot->id,
-            'bot_user_id' => $botUser->id,
-            'file_id' => $videoToSend,
-        ], [
-            'caption' => $caption,
-            'type' => $type
-        ]);
-
-        BotManager::bot()
-            ->reply("Видео добавлено в медиа пространство бота с идентификатором: <b>#$media->id</b>\n<em>$videoToSend</em>\nдля просмотра доступных медиа используйте /media ");
-
     });
 
 BotManager::bot()

@@ -496,6 +496,50 @@ class BotManager extends BotCore
 
         }
 
+        if (!is_null($page->documents)) {
+
+
+            if (count($page->documents) == 1)
+                $this->replyDocument(null, $page->documents[0]);
+
+            if (count($page->documents) > 1 && count($page->documents) < 10) {
+                $media = [];
+                foreach ($page->documents as $document) {
+                    $media[] = [
+                        "media" => $document,
+                        "type" => "document",
+                        "caption" => "$document"
+                    ];
+                }
+
+                $this->replyMediaGroup($media);
+            }
+
+
+        }
+
+        if (!is_null($page->audios)) {
+
+
+            if (count($page->audios) == 1)
+                $this->replyAudio(null, $page->audios[0]);
+
+            if (count($page->audios) > 1 && count($page->audios) < 10) {
+                $media = [];
+                foreach ($page->audios as $audio) {
+                    $media[] = [
+                        "media" => $audio,
+                        "type" => "audio",
+                        "caption" => "$audio"
+                    ];
+                }
+
+                $this->replyMediaGroup($media);
+            }
+
+
+        }
+
         if (!is_null($page->next_page_id)) {
             $next = BotPage::query()
                 ->find($page->next_page_id);

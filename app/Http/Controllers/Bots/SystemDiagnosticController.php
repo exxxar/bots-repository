@@ -39,6 +39,37 @@ class SystemDiagnosticController extends Controller
             ->replyDice();
     }
 
+    public function uploadAnyKindOfMedia(...$data){
+        $caption = $data[2] ?? null;
+        $doc = $data[3] ?? null;
+        $type = $data[4] ?? "document";
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()->reply("Данная опция доступна только персоналу бота!");
+            return;
+        }
+
+        $docToSend = $doc->file_id ?? null;
+
+        $bot = BotManager::bot()->getSelf();
+
+        $media = \App\Models\BotMedia::query()->updateOrCreate([
+            'bot_id' => $bot->id,
+            'bot_user_id' => $botUser->id,
+            'file_id' => $docToSend,
+        ], [
+            'caption' => $caption,
+            'type' => $type
+        ]);
+
+        BotManager::bot()
+            ->reply("Медиа-файл добавлен в медиа пространство бота с идентификатором: <b>#$media->id</b>\n<em>$docToSend</em>\nдля просмотра доступных медиа используйте /media ");
+
+    }
+
     public function getMyId(...$data)
     {
         BotManager::bot()
@@ -724,6 +755,21 @@ class SystemDiagnosticController extends Controller
         $tmp .= "Список доступных фото в медиа контенте:\n";
         $this->mediaPrint($tmp, $media);
 
+        $media = BotMedia::query()
+            ->where("bot_id", $bot->id)
+            ->where("type", "document")
+            ->get() ?? [];
+
+        $tmp = "Список доступных документов в медиа контенте:\n";
+        $this->mediaPrint($tmp, $media);
+
+        $media = BotMedia::query()
+            ->where("bot_id", $bot->id)
+            ->where("type", "audio")
+            ->get() ?? [];
+
+        $tmp = "Список доступных аудио-файлов в медиа контенте:\n";
+        $this->mediaPrint($tmp, $media);
 
     }
 

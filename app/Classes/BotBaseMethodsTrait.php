@@ -279,12 +279,42 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendDocument($chatId, $caption, $path, $messageThreadId = null)
+
+
+    public function sendAudio($chatId, $caption, $fileId, $messageThreadId = null)
     {
         $tmp = [
             "chat_id" => $chatId,
             "message_thread_id" => $messageThreadId,
-            "document" => $path,
+            "audio" => $fileId,
+            "caption" => $caption,
+            "parse_mode" => "HTML"
+        ];
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $this->bot->sendDocument($tmp);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+        }
+
+        return $this;
+
+    }
+
+
+    public function sendDocument($chatId, $caption, $fileId, $messageThreadId = null)
+    {
+        $tmp = [
+            "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
+            "document" => $fileId,
             "caption" => $caption,
             "parse_mode" => "HTML"
         ];
