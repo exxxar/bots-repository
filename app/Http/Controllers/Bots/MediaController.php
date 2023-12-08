@@ -11,13 +11,6 @@ class MediaController extends Controller
 {
     public function media(Request $request)
     {
-        Log::info("pre-media".print_r([
-            "video" => $request->needVideo ?? null,
-            "video_note" => $request->needVideo ?? null,
-            "photo" => $request->needPhoto ?? null,
-            "audio" => $request->needAudio ?? null,
-            "document" => $request->needDocument ?? null,
-        ],true));
         return BusinessLogic::media()
             ->setBot($request->bot ?? null)
             ->list([
