@@ -54,6 +54,7 @@ class BotMediaLogicFactory
     public function list($filters = null, $search = null, $size = null): BotMediaCollection
     {
 
+        Log::info("filter".print_r($filters, true));
         $size = $size ?? config('app.results_per_page');
 
         $media = BotMedia::query();
