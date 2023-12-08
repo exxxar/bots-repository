@@ -189,6 +189,8 @@ class BotPageLogicFactory
         $tmp->reply_keyboard_id = null;
         $tmp->inline_keyboard_id = null;
         $tmp->videos = isset($pageData["videos"]) ? json_decode($pageData["videos"] ?? '[]') : null;
+        $tmp->audios = isset($pageData["audios"]) ? json_decode($pageData["audios"] ?? '[]') : null;
+        $tmp->documents = isset($pageData["documents"]) ? json_decode($pageData["documents"] ?? '[]') : null;
 
         $tmp->content = $tmp->content ?? "";
         $tmp->is_external = (bool)($tmp->is_external ?? false);
@@ -299,6 +301,8 @@ class BotPageLogicFactory
 
         $tmp = (object)$pageData;
         $tmp->videos = isset($pageData["videos"]) ? json_decode($pageData["videos"] ?? '[]') : null;
+        $tmp->documents = isset($pageData["documents"]) ? json_decode($pageData["documents"] ?? '[]') : null;
+        $tmp->audios = isset($pageData["audios"]) ? json_decode($pageData["audios"] ?? '[]') : null;
         $tmp->is_external = (bool)($tmp->is_external ?? false);
         $tmp->content = $tmp->content ?? "";
 
