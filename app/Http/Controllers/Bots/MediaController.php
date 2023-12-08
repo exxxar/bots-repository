@@ -5,11 +5,19 @@ namespace App\Http\Controllers\Bots;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MediaController extends Controller
 {
     public function media(Request $request)
     {
+        Log::info("pre-media".print_r([
+            "video" => $request->needVideo ?? null,
+            "video_note" => $request->needVideo ?? null,
+            "photo" => $request->needPhoto ?? null,
+            "audio" => $request->needAudio ?? null,
+            "document" => $request->needDocument ?? null,
+        ],true));
         return BusinessLogic::media()
             ->setBot($request->bot ?? null)
             ->list([
