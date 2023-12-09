@@ -20,6 +20,21 @@ const getters = {
 }
 
 const actions = {
+    async getMe(context, payload = {bot_token: null}) {
+        let link = `${BASE_BOTS_LINK}/get-me`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method, {
+            bot_token: payload.bot_token
+        })
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadCurrentBotFields(context, payload = {bot_id: null}) {
         let link = `${BASE_BOTS_LINK}/load-fields/${payload.bot_id}`
         let method = 'GET'

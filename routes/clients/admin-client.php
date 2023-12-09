@@ -45,6 +45,12 @@ Route::middleware(['auth', 'verified'])
             return Inertia::render('MailPage');
         })->name('mail-page');
 
+        Route::get('/manager-page', function () {
+            Inertia::setRootView("app");
+
+            return Inertia::render('ManagerMainPage');
+        })->name('manager-main-page');
+
         Route::get('/bot-page', function () {
             Inertia::setRootView("app");
 
@@ -79,6 +85,7 @@ Route::prefix("admin")
             ->controller(BotController::class)
             ->group(function () {
                 Route::post("/", "index");
+                Route::post('/get-me',"getMe");
                 Route::post('/update-shop-link',"updateShopLink");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
                 Route::post("/bot-update", "updateBot");

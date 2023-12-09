@@ -48,41 +48,15 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 <p>Для создания бота в Телеграм воспользуйтесь <a
                     href="https://telegra.ph/Sozdanie-telegram-bota-06-12" target="_blank">инструкцией</a></p>
             </div>
-            <div class="col-12">
-                <div class="mb-3">
-                    <label class="form-label" id="bot-domain">
-                        <Popper>
-                            <i class="fa-regular fa-circle-question mr-1"></i>
-                            <template #content>
-                                <div>Строго взять из BotFather! ТО что при создании с окончанием на "bot"</div>
-                            </template>
-                        </Popper>
-                        Доменное имя бота из BotFather
-                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                    </label>
-                    <input type="text" class="form-control"
-                           placeholder="Имя бота"
-                           aria-label="Имя бота"
-                           v-model="botForm.bot_domain"
-                           maxlength="255"
-                           aria-describedby="bot-domain" required>
-                    <p v-if="botForm.bot_domain">Проверить работу бота <a :href="'https://t.me/'+botForm.bot_domain"
-                                                                          target="_blank">@{{
-                            botForm.bot_domain
-                        }}</a>
-                    </p>
-                </div>
-            </div>
 
-
-            <div class="col-md-6 col-12">
+            <div class="col-md-12 col-12">
                 <div class="mb-3">
                     <label class="form-label d-flex justify-content-between" id="bot-token">
                         <div>
                             <Popper>
                                 <i class="fa-regular fa-circle-question mr-1"></i>
                                 <template #content>
-                                    <div>Взять из BotFater при создании бота! Длинная нечитаемая подсвеченная
+                                    <div>Взять из BotFather при создании бота! Длинная нечитаемая подсвеченная
                                         строка!
                                     </div>
                                 </template>
@@ -103,20 +77,45 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
             </div>
 
-
-            <div class="col-md-6 col-12">
+            <div class="col-12" v-if="botForm.bot_token">
                 <div class="mb-3">
-                    <label class="form-label" id="bot-token-dev">Токен бота (для тестирования)</label>
+                    <label class="form-label" id="bot-domain">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Строго взять из BotFather! ТО что при создании с окончанием на "bot"</div>
+                            </template>
+                        </Popper>
+                        Доменное имя бота (загружается автоматически)
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                    </label>
                     <input type="text" class="form-control"
-                           placeholder="Токен"
-                           aria-label="Токен"
-                           v-model="botForm.bot_token_dev"
+                           placeholder="Имя бота"
+                           aria-label="Имя бота"
+                           v-model="botForm.bot_domain"
                            maxlength="255"
-                           aria-describedby="bot-token-dev">
+                           aria-describedby="bot-domain" required>
+                    <p v-if="botForm.bot_domain">Проверить работу бота <a :href="'https://t.me/'+botForm.bot_domain"
+                                                                          target="_blank">@{{
+                            botForm.bot_domain
+                        }}</a>
+                    </p>
                 </div>
             </div>
 
-            <div class="col-12">
+            <!--            <div class="col-md-6 col-12">
+                            <div class="mb-3">
+                                <label class="form-label" id="bot-token-dev">Токен бота (для тестирования)</label>
+                                <input type="text" class="form-control"
+                                       placeholder="Токен"
+                                       aria-label="Токен"
+                                       v-model="botForm.bot_token_dev"
+                                       maxlength="255"
+                                       aria-describedby="bot-token-dev">
+                            </div>
+                        </div>-->
+
+            <div class="col-12" v-if="botForm.bot_token">
                 <div class="card">
                     <div class="card-body">
                         <h6>Настройка параметров бота в BotFather</h6>
@@ -127,7 +126,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                    id="bot-title">
                                               <span>
                                                   Название бота
-                                                  <small class="text-secondary" v-if="botForm.title!=null">Длина текста {{
+                                                  <small class="text-secondary" v-if="botForm.title.length>0">Длина текста {{
                                                           botForm.title.length
                                                       }}/64</small>
                                               </span>
@@ -148,8 +147,9 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                    id="bot-short-description">
                                               <span>
                                                   Короткое описание бота
-                                                  <small class="text-secondary" v-if="botForm.short_description!=null">Длина текста {{
-                                                          botForm.title.length
+                                                  <small class="text-secondary"
+                                                         v-if="botForm.short_description.length>0">Длина текста {{
+                                                          botForm.short_description.length
                                                       }}/120</small>
                                               </span>
 
@@ -170,8 +170,9 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                    id="bot-long-description">
                                               <span>
                                                   Длинное описание бота
-                                                  <small class="text-secondary" v-if="botForm.long_description!=null">Длина текста {{
-                                                          botForm.title.length
+                                                  <small class="text-secondary"
+                                                         v-if="botForm.long_description.length>0">Длина текста {{
+                                                          botForm.long_description.length
                                                       }}/512</small>
                                               </span>
 
@@ -235,6 +236,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
 
             <div
+                v-if="botForm.bot_token"
                 class="col-md-6 col-12">
                 <div class="mb-3">
                     <div class="d-flex justify-content-between align-items-center">
@@ -273,7 +275,9 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
             </div>
 
 
-            <div class="col-md-6 col-12">
+            <div
+                v-if="botForm.bot_token"
+                class="col-md-6 col-12">
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
                         <label class="form-label" id="bot-main-channel">Канал для постов (id,рекламный)</label>
@@ -296,7 +300,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
             </div>
 
-            <div class="col-12 mb-2" v-if="botForm.order_channel">
+            <div class="col-12 mb-2" v-if="botForm.order_channel&&botForm.bot_token">
                 <div class="form-check">
                     <input class="form-check-input"
                            v-model="need_threads"
@@ -954,9 +958,9 @@ export default {
             ],
 
             botForm: {
-                title: null,
-                short_description: null,
-                long_description: null,
+                title: '',
+                short_description: '',
+                long_description: '',
 
                 is_template: false,
                 auto_cashback_on_payments: false,
@@ -994,6 +998,13 @@ export default {
         }
     },
     watch: {
+        'botForm.bot_token': {
+            handler(val) {
+                if (this.botForm.bot_token)
+                    this.getMe()
+            },
+            deep: true
+        },
         'need_threads': function (oVal, nVal) {
             let threads = [
                 {
@@ -1065,9 +1076,9 @@ export default {
                 this.botForm = {
                     id: this.bot.id || null,
 
-                    title: this.bot.title || null,
-                    short_description: this.bot.short_description || null,
-                    long_description: this.bot.long_description || null,
+                    title: this.bot.title || '',
+                    short_description: this.bot.short_description || '',
+                    long_description: this.bot.long_description || '',
 
                     is_template: this.bot.is_template || false,
                     auto_cashback_on_payments: this.bot.auto_cashback_on_payments || false,
@@ -1140,7 +1151,7 @@ export default {
                     this.need_cashback_config = true
 
 
-             //   this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
+                //   this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
             })
     },
     methods: {
@@ -1152,6 +1163,15 @@ export default {
                 },
             }).then((resp) => {
                 this.botForm.message_threads = resp.data
+            })
+        },
+
+        getMe() {
+            this.$store.dispatch("getMe", {
+                bot_token: this.botForm.bot_token,
+            }).then((resp) => {
+                this.botForm.bot_domain = resp.username || null
+                this.botForm.title = resp.first_name || null
             })
         },
         getChatLink(chatId) {
@@ -1254,9 +1274,9 @@ export default {
 
                 if (this.bot == null)
                     this.botForm = {
-                        title: null,
-                        short_description: null,
-                        long_description: null,
+                        title: '',
+                        short_description: '',
+                        long_description: '',
                         is_template: false,
                         auto_cashback_on_payments: false,
                         template_description: null,

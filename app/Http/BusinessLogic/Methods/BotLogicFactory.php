@@ -440,6 +440,23 @@ class BotLogicFactory
     /**
      * @throws HttpException
      */
+    public function getMe(string $botToken = null): object|array|null
+    {
+        if (is_null($botToken))
+            throw new HttpException(400, "Не выполнено условие функции");
+
+        $website = "https://api.telegram.org/bot" . $botToken;
+
+
+        $result = Http::post("$website/getMe");
+
+        return $result->object()->ok ? $result->object()->result : null;
+
+    }
+
+    /**
+     * @throws HttpException
+     */
     public function getChat($chatId = null): object|array
     {
         if (is_null($this->bot) || is_null($chatId))
@@ -1390,6 +1407,7 @@ class BotLogicFactory
             $this->prepareBaseBotConfig();
         }
     }
+
     /**
      * @throws HttpException
      * @throws ValidationException

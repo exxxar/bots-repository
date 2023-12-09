@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-    <Layout :active="4">
+    <Layout :active="4" :need-menu="true">
         <template #default>
             <div class="container">
                 <div class="row">

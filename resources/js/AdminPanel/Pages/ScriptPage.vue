@@ -5,7 +5,7 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
 </script>
 
 <template>
-    <Layout :active="6">
+    <Layout :active="6" :need-menu="true">
         <template #default>
             <div class="container">
                 <div class="row mb-2">

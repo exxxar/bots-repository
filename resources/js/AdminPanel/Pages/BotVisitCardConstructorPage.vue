@@ -5,7 +5,7 @@ import VisitCardConstructor from "@/AdminPanel/Components/Constructor/Deprecated
 </script>
 
 <template>
-    <Layout :active="5">
+    <Layout :active="5" :need-menu="true">
         <template #default>
             <VisitCardConstructor/>
         </template>

@@ -6,7 +6,7 @@ import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList
 </script>
 
 <template>
-    <Layout :active="0">
+    <Layout :active="0" :need-menu="true">
         <template #default>
             <div class="container">
                 <div class="row mb-2">

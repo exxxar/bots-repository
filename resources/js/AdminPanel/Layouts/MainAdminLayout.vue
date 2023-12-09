@@ -13,7 +13,9 @@ import {Head} from '@inertiajs/vue3'
     <notifications position="top right"/>
 
 
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <header
+        v-if="needMenu"
+        class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 cursor-pointer align-items-center d-flex"
            data-bs-toggle="modal" data-bs-target="#selected-company-bot-info">CashMan:
             <span v-if="bot" style="font-size:12px;margin-left:10px;"><a :href="'https://t.me/'+(bot.bot_domain||'botfather')"
@@ -112,7 +114,7 @@ import {Head} from '@inertiajs/vue3'
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["active"],
+    props: ["active","needMenu"],
     data() {
         return {
             load: false,

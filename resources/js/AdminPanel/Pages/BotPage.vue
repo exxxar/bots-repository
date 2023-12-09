@@ -8,7 +8,7 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
 </script>
 
 <template>
-    <Layout :active="1">
+    <Layout :active="1" :need-menu="true">
         <template #default>
             <div class="container">
                 <div class="row mb-2">

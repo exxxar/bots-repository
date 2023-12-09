@@ -23,6 +23,18 @@ class BotController extends Controller
 {
 
 
+    public function getMe(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            "bot_token" => "required",
+        ]);
+
+        $result = BusinessLogic::bots()
+            ->getMe($request->bot_token ?? null);
+
+        return response()->json($result);
+    }
+
     /**
      * @throws ValidationException
      */
@@ -49,7 +61,8 @@ class BotController extends Controller
 
     }
 
-    public function createBotTopics(Request $request){
+    public function createBotTopics(Request $request)
+    {
         $request->validate([
             "bot_id" => "required",
             "topics.*.key" => "required",
@@ -601,7 +614,8 @@ class BotController extends Controller
             );
     }
 
-    public function updateWebhook(Request $request){
+    public function updateWebhook(Request $request)
+    {
         $request->validate([
             "bot_id" => "required",
         ]);
@@ -614,6 +628,7 @@ class BotController extends Controller
             ->setBot($bot)
             ->updateWebHookAndConfig();
     }
+
     /**
      * @throws ValidationException
      */
