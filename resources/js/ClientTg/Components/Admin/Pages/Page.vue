@@ -260,7 +260,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
 
                     <div class="mb-2" v-if="need_page_audios">
                         <p class="alert alert-danger">
-                            <strong>Внимание!</strong> не больше 10 аудио (audio) на 1й странице! Или 1 голосовое (voice)
+                            Внимание! не больше 10 аудио (audio) на 1й странице! Или 1 голосовое (voice)
                         </p>
                         <BotMediaList
                             :need-audio="true"
@@ -283,7 +283,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
 
                     <div class="mb-2" v-if="need_page_documents">
                         <p class="alert alert-danger">
-                            <strong>Внимание!</strong> не больше 10 документов на 1й странице!
+                            Внимание! не больше 10 документов на 1й странице!
                         </p>
                         <BotMediaList
                             :need-document="true"

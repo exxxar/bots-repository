@@ -137,11 +137,11 @@
       "_index.es-ce2063b4.js"
     ]
   },
-  "_ShopLayout-14a8b574.js": {
+  "_ShopLayout-ecd3ebcb.js": {
     "css": [
       "assets/ShopLayout-5ac8cdc0.css"
     ],
-    "file": "assets/ShopLayout-14a8b574.js",
+    "file": "assets/ShopLayout-ecd3ebcb.js",
     "imports": [
       "_index.es-ce2063b4.js",
       "_index-490ab070.js",
@@ -191,17 +191,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-edd7b9a5.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-edd7b9a5.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-edd7b9a5.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-deadc92f.js",
@@ -512,12 +512,12 @@
       "assets/Main-507604a0.css",
       "assets/TelegramChannelHelper-5ad24a6a.css"
     ],
-    "file": "assets/Main-09c3bb9d.js",
+    "file": "assets/Main-334a9127.js",
     "imports": [
       "_MapModal.vue_vue_type_style_index_0_lang-23d58701.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-ce2063b4.js",
-      "_ShopLayout-14a8b574.js",
+      "_ShopLayout-ecd3ebcb.js",
       "_index-490ab070.js",
       "resources/js/ClientTg/app.js",
       "_TelegramChannelHelper-03e7b968.js",
@@ -531,9 +531,9 @@
     "css": [
       "assets/TelegramChannelHelper-5ad24a6a.css"
     ],
-    "file": "assets/Result-a7437235.js",
+    "file": "assets/Result-acf91dfe.js",
     "imports": [
-      "_ShopLayout-14a8b574.js",
+      "_ShopLayout-ecd3ebcb.js",
       "resources/js/ClientTg/app.js",
       "_index.es-ce2063b4.js",
       "_index-490ab070.js",
@@ -588,7 +588,7 @@
       "resources/js/ClientTg/Pages/Shop/AboutUs.vue",
       "resources/js/ClientTg/Pages/SimpleMain.vue"
     ],
-    "file": "assets/app-f1eb05fc.js",
+    "file": "assets/app-04ad854b.js",
     "imports": [
       "_index.es-ce2063b4.js",
       "__plugin-vue_export-helper-c27b6911.js",

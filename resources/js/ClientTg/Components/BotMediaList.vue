@@ -23,7 +23,7 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
     <div class="mb-2" v-if="media.length>0">
 
         <div class="card card-style mx-0 my-1 rounded-s "
-             v-bind:class="{'border-info':selected === item.file_id}"
+             v-bind:class="{'border-green2-dark bordered':selected.indexOf(item.file_id) !=-1}"
              @click="selectMedia(item)"
              v-for="(item, index) in media"
         >
@@ -34,15 +34,37 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
 
                     <i
                         v-if="item.type==='photo'"
-                        class="fa-solid p-2 mr-2 font-14 fa-camera  rounded-xl shadow-xl bg-blue1-dark"></i>
-                    {{ item.caption ?? 'Без подписи' }}
+                        class="fa-solid p-2 mr-2 font-14 fa-camera  rounded-xl shadow-xl bg-blue2-dark"></i>
+
+                    <i
+                        v-if="item.type==='audio'"
+                        class="fa-solid p-2 mr-2 font-14 fa-circle-play  rounded-xl shadow-xl bg-blue2-dark"></i>
+
+                    <i
+                        v-if="item.type==='voice'"
+                        class="fa-solid p-2 mr-2 font-14 fa-microphone-lines rounded-xl shadow-xl bg-blue2-dark"></i>
+
+
+                    <i
+                        v-if="item.type==='document'"
+                        class="fa-solid p-2 mr-2 font-14 fa-file-word rounded-xl shadow-xl bg-blue2-dark"></i>
+
+
+
+                          {{ item.caption ?? 'Без подписи' }}
+                    <small>({{ item.type ?? 'Без подписи' }})</small>
+
+
+
 
                 </h6>
-                <p class="font-10 mb-2" style="line-height: 110%;">
-                    {{ item.file_id }}
+                <p class="font-6 mb-1">Идентификатор в системе: <strong>#{{item.id}}</strong></p>
+                <p class="font-10 mb-1" style="line-height: 110%;">
+                  {{ item.file_id }}
                 </p>
 
                 <div class="d-flex justify-content-start">
+
                     <a href="javascript:void(0)"
                        class="btn btn-outline-info px-2 "
                        style="min-width: 40px;"
