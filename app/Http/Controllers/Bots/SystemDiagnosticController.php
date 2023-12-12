@@ -975,6 +975,7 @@ class SystemDiagnosticController extends Controller
 
         $id = $data[3] ?? 0;
 
+        Log::info("preshow".print_r($bot->toArray(),true));
         Log::info("showMediaFile bot=>$bot->id and media = $id");
 
         $media = BotMedia::query()
