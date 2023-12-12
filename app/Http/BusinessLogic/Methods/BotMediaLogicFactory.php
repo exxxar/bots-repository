@@ -73,8 +73,8 @@ class BotMediaLogicFactory
                 if (is_null($value))
                     continue;
 
-                if (!$value)
-                    continue;
+           /*     if (!$value)
+                    continue;*/
 
                 $q = $q->orWhere("type", $key);
             }

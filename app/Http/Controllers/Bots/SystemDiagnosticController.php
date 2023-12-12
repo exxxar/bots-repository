@@ -39,7 +39,8 @@ class SystemDiagnosticController extends Controller
             ->replyDice();
     }
 
-    public function uploadAnyKindOfMedia(...$data){
+    public function uploadAnyKindOfMedia(...$data)
+    {
         $caption = $data[2] ?? null;
         $doc = $data[3] ?? null;
         $type = $data[4] ?? "document";
@@ -78,7 +79,8 @@ class SystemDiagnosticController extends Controller
             );
     }
 
-    public function resetAllBotUsers(...$data){
+    public function resetAllBotUsers(...$data)
+    {
         $botUser = BotManager::bot()
             ->currentBotUser();
 
@@ -92,7 +94,7 @@ class SystemDiagnosticController extends Controller
 
         $value = $data[3] ?? 'no';
 
-        if ($value != 'yes'){
+        if ($value != 'yes') {
             BotManager::bot()
                 ->reply("Впишите <b>yes</b> - удалить все данные в боте о пользователях");
             return;
@@ -589,25 +591,26 @@ class SystemDiagnosticController extends Controller
                     $messageId,
                     []);
 
-   /*     if ($value==4){
-            BotMethods::bot()
-                ->whereBot($bot)
-                ->sendInlineKeyboard(
-                    $botUser->telegram_chat_id,
-                    "Оставьте официанту чаевые CashBack-ом (От суммы начисления Вам)", [
-                        [
-                            ["text" => "0%", "callback_data" => "/send_tips 0"],
-                            ["text" => "5%", "callback_data" => "/send_tips 1"],
-                            ["text" => "10%", "callback_data" => "/send_tips 2"],
-                            ["text" => "20%", "callback_data" => "/send_tips 3"],
-                            ["text" => "30%", "callback_data" => "/send_tips 4"],
-                        ]
-                    ]
-                );
-        }*/
+        /*     if ($value==4){
+                 BotMethods::bot()
+                     ->whereBot($bot)
+                     ->sendInlineKeyboard(
+                         $botUser->telegram_chat_id,
+                         "Оставьте официанту чаевые CashBack-ом (От суммы начисления Вам)", [
+                             [
+                                 ["text" => "0%", "callback_data" => "/send_tips 0"],
+                                 ["text" => "5%", "callback_data" => "/send_tips 1"],
+                                 ["text" => "10%", "callback_data" => "/send_tips 2"],
+                                 ["text" => "20%", "callback_data" => "/send_tips 3"],
+                                 ["text" => "30%", "callback_data" => "/send_tips 4"],
+                             ]
+                         ]
+                     );
+             }*/
     }
 
-    public function sendTips(...$data) {
+    public function sendTips(...$data)
+    {
         $value = $data[3] ?? 0;
     }
 
@@ -744,32 +747,41 @@ class SystemDiagnosticController extends Controller
             ->orWhere("type", "video_note")
             ->get() ?? [];
 
-        $tmp = "Список доступных видео в медиа контенте:\n";
-        $this->mediaPrint($tmp, $media);
+        if (count($media) > 0) {
+            $tmp = "Список доступных видео в медиа контенте:\n";
+            $this->mediaPrint($tmp, $media);
+        }
 
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
             ->where("type", "photo")
             ->get();
 
-        $tmp .= "Список доступных фото в медиа контенте:\n";
-        $this->mediaPrint($tmp, $media);
+        if (count($media) > 0) {
+            $tmp .= "Список доступных фото в медиа контенте:\n";
+            $this->mediaPrint($tmp, $media);
+        }
 
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
             ->where("type", "document")
             ->get() ?? [];
 
-        $tmp = "Список доступных документов в медиа контенте:\n";
-        $this->mediaPrint($tmp, $media);
+        if (count($media) > 0) {
+            $tmp = "Список доступных документов в медиа контенте:\n";
+            $this->mediaPrint($tmp, $media);
+        }
 
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
             ->where("type", "audio")
             ->get() ?? [];
 
-        $tmp = "Список доступных аудио-файлов в медиа контенте:\n";
-        $this->mediaPrint($tmp, $media);
+        if (count($media) > 0) {
+            $tmp = "Список доступных аудио-файлов в медиа контенте:\n";
+            $this->mediaPrint($tmp, $media);
+        }
+
 
     }
 
@@ -849,9 +861,9 @@ class SystemDiagnosticController extends Controller
             ->whereBot($bot)
             ->sendMessage(
                 $document->botUser->telegram_chat_id,
-                "Документ ".($document->title ?? 'Без названия')." одобрен администратором"
+                "Документ " . ($document->title ?? 'Без названия') . " одобрен администратором"
             )
-            ->sendMessage($channel, "Проверен и одобрен документ #$document->id ".($document->title ?? 'Без названия'), $thread);
+            ->sendMessage($channel, "Проверен и одобрен документ #$document->id " . ($document->title ?? 'Без названия'), $thread);
 
     }
 
@@ -892,9 +904,9 @@ class SystemDiagnosticController extends Controller
             ->whereBot($bot)
             ->sendMessage(
                 $document->botUser->telegram_chat_id,
-                "Документ ".($document->title ?? 'Без названия')." отклонен администратором"
+                "Документ " . ($document->title ?? 'Без названия') . " отклонен администратором"
             )
-            ->sendMessage($channel, "Проверен и отклонен документ #$document->id ".($document->title ?? 'Без названия'), $thread);
+            ->sendMessage($channel, "Проверен и отклонен документ #$document->id " . ($document->title ?? 'Без названия'), $thread);
 
     }
 
@@ -915,7 +927,7 @@ class SystemDiagnosticController extends Controller
         $thread = $bot->topics["questions"] ?? null;
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
-        if ($botUser->is_deliveryman && !$success){
+        if ($botUser->is_deliveryman && !$success) {
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
@@ -976,6 +988,14 @@ class SystemDiagnosticController extends Controller
         if ($media->type == "photo")
             BotManager::bot()
                 ->replyPhoto($media->caption ?? null, $media->file_id, $keyboard);
+
+        if ($media->type == "audio")
+            BotManager::bot()
+                ->replyAudio($media->caption ?? null, $media->file_id, $keyboard);
+
+        if ($media->type == "document")
+            BotManager::bot()
+                ->replyDocumentWithKeyboard($media->caption ?? null, $media->file_id, $keyboard);
 
         if ($media->type == "video")
             BotManager::bot()

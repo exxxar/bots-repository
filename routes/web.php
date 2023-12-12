@@ -52,12 +52,12 @@ Route::get("/yclients",function (){
 
         $userToken = $response->object()->data->user_token ?? null;
 
-
+/*
     $response = Http::withHeaders([
         'Authorization' => "Bearer $tokenPartner, User $userToken",
         'Content-Type' => 'application/json',
         'Accept' => "application/vnd.yclients.v2+json"
-    ])->asJson()->get('https://api.yclients.com/api/v1/companies?my=1');
+    ])->asJson()->delete('https://api.yclients.com/api/v1/company/963541');*/
 
     dd($response->object());
 /*
