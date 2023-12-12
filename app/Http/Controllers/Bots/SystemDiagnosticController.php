@@ -783,12 +783,12 @@ class SystemDiagnosticController extends Controller
 
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
-            ->where("type", "audio", "audio")
+            ->where("type", "audio" )
             ->get() ?? [];
 
         if (count($media) > 0) {
             $tmp = "Список доступных аудио-файлов в медиа контенте:\n";
-            $this->mediaPrint($tmp, $media);
+            $this->mediaPrint($tmp, $media,"audio");
         }
 
 

@@ -67,10 +67,10 @@ class BotMediaLogicFactory
         if (!is_null($search))
             $media = $media->where("caption", 'like', "%$search%");
 
-        Log::info("media files");
+
         $func = !is_null($filters) ? function ($q) use ($filters) {
             foreach ($filters as $key => $value) {
-                Log::info("key=>$key");
+
                 if (is_null($value))
                     continue;
 
