@@ -244,6 +244,53 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                             </label>
                         </div>
                     </div>
+
+                    <div class="mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   v-model="need_page_audios"
+                                   type="checkbox"
+                                   id="need-page-audio">
+                            <label class="form-check-label" for="need-page-audio">
+                                Звук к странице
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="mb-2" v-if="need_page_audios">
+                        <p class="alert alert-danger">
+                            <strong>Внимание!</strong> не больше 10 аудио (audio) на 1й странице! Или 1 голосовое (voice)
+                        </p>
+                        <BotMediaList
+                            :need-audio="true"
+                            :selected="pageForm.audios"
+                            v-on:select="selectAudio"></BotMediaList>
+                    </div>
+
+                    <div class="mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   v-model="need_page_documents"
+                                   type="checkbox"
+                                   id="need-page-document">
+                            <label class="form-check-label" for="need-page-document">
+                                Документ \ презентацию к странице \ картинку в оригинале
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="mb-2" v-if="need_page_documents">
+                        <p class="alert alert-danger">
+                            <strong>Внимание!</strong> не больше 10 документов на 1й странице!
+                        </p>
+                        <BotMediaList
+                            :need-document="true"
+                            :selected="pageForm.documents"
+                            v-on:select="selectDocument"></BotMediaList>
+                    </div>
+
                     <div class="mb-2" v-if="need_reply_menu">
 
                         <h6>Конструктор нижнего меню</h6>
@@ -460,6 +507,8 @@ export default {
             showReplyTemplateSelector: false,
             showInlineTemplateSelector: false,
 
+            need_page_audios: false,
+            need_page_documents: false,
             need_page_video: false,
             need_page_images: false,
             need_rules: false,
@@ -479,6 +528,8 @@ export default {
 
                 images: [],
                 videos: [],
+                audios: [],
+                documents: [],
                 reply_keyboard_title: null,
                 reply_keyboard: null,
                 inline_keyboard: null,
@@ -504,6 +555,18 @@ export default {
                 this.pageForm.rules_else_page_id = null
                 this.pageForm.rules_if_message = null
                 this.pageForm.rules_else_message = null
+            }
+
+        },
+        'need_page_audios': function (newVal, oldVal) {
+            if (!this.need_page_audios) {
+                this.pageForm.audios = []
+            }
+
+        },
+        'need_page_documents': function (newVal, oldVal) {
+            if (!this.need_page_documents) {
+                this.pageForm.documents = []
             }
 
         },
@@ -579,6 +642,12 @@ export default {
                 if (this.pageForm.videos != null)
                     this.need_page_video = true
 
+                if (this.pageForm.audios.length > 0)
+                    this.need_page_audios = true
+
+                if (this.pageForm.documents.length > 0)
+                    this.need_page_documents = true
+
                 this.need_clean = true
             },
             deep: true
@@ -628,7 +697,8 @@ export default {
                 next_bot_menu_slug_id: page.next_bot_menu_slug_id || null,
                 is_external: page.is_external || false,
                 videos: page.videos || [],
-
+                audios: page.audios || [],
+                documents: page.documents || [],
                 rules_if: page.rules_if || null,
                 rules_else_page_id: page.rules_else_page_id || null,
 
@@ -703,7 +773,8 @@ export default {
 
                 next_page_id: null,
                 videos: [],
-
+                audios: [],
+                documents: [],
                 next_bot_dialog_command_id: null,
                 next_bot_menu_slug_id: null,
 
@@ -725,6 +796,8 @@ export default {
             this.need_attach_dialog = false
             this.need_attach_slug = false
             this.need_rules = false
+            this.need_page_audios = false
+            this.need_page_documents = false
 
             this.$nextTick(() => {
                 this.need_clean = false
@@ -815,12 +888,47 @@ export default {
             if (!this.pageForm.videos)
                 this.pageForm.videos = []
 
-            if (this.pageForm.videos.length>=10)
-            {
-                this.$botNotification.warning("Внимание!", "Максимальное число видео, которые можно прикрепить, должно быть не больше 10!")
+            let index = this.pageForm.videos.indexOf(item.file_id)
+
+            if (index !== -1)
+                this.pageForm.videos.splice(index, 1)
+            else
+                this.pageForm.videos.push(item.file_id)
+        },
+        selectAudio(item) {
+
+            if (!this.pageForm.audios)
+                this.pageForm.audios = []
+
+            let index = this.pageForm.audios.indexOf(item.file_id)
+
+            if (item.type === "voice") {
+
+                if (index !== -1) {
+                    this.pageForm.audios.splice(index, 1)
+                    return;
+                }
+
+                this.pageForm.audios = [item.file_id]
                 return;
             }
-            this.pageForm.videos.push(item.file_id)
+
+            if (index !== -1)
+                this.pageForm.audios.splice(index, 1)
+            else
+                this.pageForm.audios.push(item.file_id)
+        },
+        selectDocument(item) {
+
+            if (!this.pageForm.documents)
+                this.pageForm.documents = []
+
+            let index = this.pageForm.documents.indexOf(item.file_id)
+
+            if (index !== -1)
+                this.pageForm.documents.splice(index, 1)
+            else
+                this.pageForm.documents.push(item.file_id)
         }
 
     }
