@@ -64,7 +64,9 @@ class YClientLogicFactory
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
-        $yClient = YClients::query()->find($this->bot->id);
+        $yClient = YClients::query()
+            ->where("bot_id",$this->bot->id)
+            ->first();
 
         $validator = Validator::make($data, [
             "title" => "required",

@@ -142,9 +142,9 @@ export default {
             this.$store.dispatch("saveYClients", {
                 yClientsForm: data
             }).then((response) => {
-                this.$botNotification.success("Работа с YClients", "Данные CRM успешно сохранены");
+                this.$botNotification.success("Работа с YClients", "Данные успешно сохранены");
             }).catch(err => {
-
+                this.$botNotification.warning("Работа с YClients", "Ошибочка");
             })
         }
     }
