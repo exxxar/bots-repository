@@ -530,7 +530,6 @@ class BotManager extends BotCore
                 $media = [];
 
                 foreach ($audios as $audio) {
-                    Log::info("audios=>$audio");
                     $media[] = [
                         "media" => $audio,
                         "type" => "audio",

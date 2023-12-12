@@ -198,7 +198,7 @@ abstract class BotCore
                 continue;
             $slug = $item["path"];
 
-             Log::info("botSlugHandler $slug ");
+            Log::info("botSlugHandler $slug ");
             $parentSlug = BotMenuSlug::query()
                 // ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
@@ -314,14 +314,14 @@ abstract class BotCore
 
                         if (is_null($item)) {
                             $slug = BotMenuSlug::query()
-                               ->find($slug->parent_slug_id);
+                                ->find($slug->parent_slug_id);
 
                             if (is_null($slug))
                                 return true;
 
-                             $item = Collection::make($this->slugs)
-                                 ->where("path", $slug->slug)
-                                 ->first();
+                            $item = Collection::make($this->slugs)
+                                ->where("path", $slug->slug)
+                                ->first();
                         }
 
 
@@ -478,10 +478,10 @@ abstract class BotCore
 
     private function botFallbackAudioHandler($message): bool
     {
-        $audio = $message->audio  ?? $message->voice ?? null;
+        $audio = $message->audio ?? $message->voice ?? null;
         $caption = $message->caption ?? $message->audio->title ?? $message->audio->file_name ?? null;
 
-        $type =   $message->audio? "audio":"voice";
+        $type = !is_null($message->audio ?? null) ? "audio" : "voice";
 
 
         if (is_null($audio))
@@ -502,10 +502,10 @@ abstract class BotCore
 
     private function botFallbackDocumentHandler($message): bool
     {
-        $document= $message->document  ?? $message->animation ?? null;
+        $document = $message->document ?? $message->animation ?? null;
         $caption = $message->caption ?? $message->document->file_name ?? $message->animation->file_name ?? null;
 
-        $type =  "document";
+        $type = "document";
 
 
         if (is_null($document))
