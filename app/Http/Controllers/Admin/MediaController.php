@@ -24,6 +24,7 @@ class MediaController extends Controller
                 "video_note" => $request->needVideo ?? null,
                 "photo" => $request->needPhoto ?? null,
                 "audio" => $request->needAudio ?? null,
+                "voice" => $request->needAudio ?? null,
                 "document" => $request->needDocument ?? null,
             ],
                 $request->search ?? null,

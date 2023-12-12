@@ -936,6 +936,11 @@ export default {
             if (!this.pageForm.audios)
                 this.pageForm.audios = []
 
+            if (item.type==="voice") {
+                this.pageForm.audios = [item.file_id]
+                return;
+            }
+
             let index = this.pageForm.audios.indexOf(item.file_id)
 
             if (index !== -1)
