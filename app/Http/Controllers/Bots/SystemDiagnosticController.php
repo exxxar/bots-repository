@@ -626,7 +626,6 @@ class SystemDiagnosticController extends Controller
         }
 
 
-        Log::info("media=>".print_r($media, true));
         $keyboard = [];
         $rowTmpKeyboard = [];
         $index = 1;
@@ -748,12 +747,13 @@ class SystemDiagnosticController extends Controller
 
         $bot = BotManager::bot()->getSelf();
 
+        Log::info(print_r($bot->toArray(),true));
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
             ->where("type", "video")
             ->orWhere("type", "video_note")
             ->get() ?? [];
-
+        Log::info(print_r($media->toArray(),true));
         if (count($media) > 0) {
             $tmp = "Список доступных видео в медиа контенте:\n";
             $this->mediaPrint($tmp, $media, "video");
