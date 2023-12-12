@@ -25,6 +25,7 @@ use App\Models\CashBackHistory;
 use App\Models\CustomField;
 use App\Models\ManagerProfile;
 use App\Models\Transaction;
+use App\Models\YClients;
 use Carbon\Carbon;
 use Exception;
 
@@ -898,7 +899,11 @@ class BotAdministrativeLogicFactory
             }
         }
 
-        if (!is_null($this->bot->YClients)) {
+        $yClients = YClients::query()
+            ->where("bot_id",$this->bot->id)
+            ->first();
+
+        if (!is_null($yClients)) {
             try {
                 \App\Facades\BusinessLogic::yClients()
                     ->setBot($this->bot)
