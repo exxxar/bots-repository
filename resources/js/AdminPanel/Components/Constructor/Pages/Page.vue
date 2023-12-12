@@ -188,21 +188,21 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                 </div>
             </div>
 
-<!--            <div class="col-12 mb-2" v-if="need_page_images">
+            <!--            <div class="col-12 mb-2" v-if="need_page_images">
 
-                <div class="card">
-                    <div class="card-header">
-                        <h6>... или выберите ранее загруженные в бота</h6>
-                    </div>
-                    <div class="card-body">
-                        <BotMediaList
-                            :need-photo="true"
-                            :selected="pageForm.images"
-                            v-on:select="selectPhoto"></BotMediaList>
-                    </div>
-                </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6>... или выберите ранее загруженные в бота</h6>
+                                </div>
+                                <div class="card-body">
+                                    <BotMediaList
+                                        :need-photo="true"
+                                        :selected="pageForm.images"
+                                        v-on:select="selectPhoto"></BotMediaList>
+                                </div>
+                            </div>
 
-            </div>-->
+                        </div>-->
 
             <div class="col-12 mb-2">
                 <div class="form-check">
@@ -227,7 +227,6 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                     :selected="pageForm.videos"
                     v-on:select="selectVideo"></BotMediaList>
             </div>
-
 
 
             <div class="col-12 mb-2">
@@ -936,12 +935,18 @@ export default {
             if (!this.pageForm.audios)
                 this.pageForm.audios = []
 
-            if (item.type==="voice") {
+            let index = this.pageForm.audios.indexOf(item.file_id)
+
+            if (item.type === "voice") {
+
+                if (index !== -1) {
+                    this.pageForm.audios.splice(index, 1)
+                    return;
+                }
+
                 this.pageForm.audios = [item.file_id]
                 return;
             }
-
-            let index = this.pageForm.audios.indexOf(item.file_id)
 
             if (index !== -1)
                 this.pageForm.audios.splice(index, 1)
