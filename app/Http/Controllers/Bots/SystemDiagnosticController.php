@@ -614,7 +614,7 @@ class SystemDiagnosticController extends Controller
         $value = $data[3] ?? 0;
     }
 
-    private function mediaPrint($tmp, $media)
+    private function mediaPrint($tmp, $media, $type = null)
     {
 
         if (count($media) == 0) {
@@ -654,6 +654,11 @@ class SystemDiagnosticController extends Controller
         if (count($rowTmpKeyboard) > 0) {
             $keyboard[] = $rowTmpKeyboard;
         }
+
+        if (!is_null($type))
+            $keyboard[] = [
+                ["text" => "Удалить все медиа в группе", "callback_data" => "/remove_all_media_file $type"]
+            ];
 
         BotManager::bot()
             ->replyInlineKeyboard("$tmp", $keyboard);
@@ -749,7 +754,7 @@ class SystemDiagnosticController extends Controller
 
         if (count($media) > 0) {
             $tmp = "Список доступных видео в медиа контенте:\n";
-            $this->mediaPrint($tmp, $media);
+            $this->mediaPrint($tmp, $media, "video");
         }
 
         $media = BotMedia::query()
@@ -759,7 +764,7 @@ class SystemDiagnosticController extends Controller
 
         if (count($media) > 0) {
             $tmp .= "Список доступных фото в медиа контенте:\n";
-            $this->mediaPrint($tmp, $media);
+            $this->mediaPrint($tmp, $media, "photo");
         }
 
         $media = BotMedia::query()
@@ -769,12 +774,12 @@ class SystemDiagnosticController extends Controller
 
         if (count($media) > 0) {
             $tmp = "Список доступных документов в медиа контенте:\n";
-            $this->mediaPrint($tmp, $media);
+            $this->mediaPrint($tmp, $media, "document");
         }
 
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
-            ->where("type", "audio")
+            ->where("type", "audio", "audio")
             ->get() ?? [];
 
         if (count($media) > 0) {
@@ -1074,6 +1079,39 @@ class SystemDiagnosticController extends Controller
                     ["text" => "Показать оставшиеся заметки", "callback_data" => "/notes"]
                 ]
             ]);
+    }
+
+    public function removeAllMediaFileByType(...$data)
+    {
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin && !$botUser->is_manager) {
+            BotManager::bot()
+                ->reply("У вас недостаточно прав для выполнения данной команды");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        $type = $data[3] ?? 0;
+
+        $medias = BotMedia::query()
+            ->where("bot_id", $bot->id)
+            ->where("type", $type)
+            ->get();
+
+        if (count($medias) == 0) {
+            BotManager::bot()
+                ->reply("Группа файлов пуста");
+            return;
+        }
+
+        foreach ($medias as $media)
+            $media->delete();
+
+        BotManager::bot()
+            ->reply("Файлы успешно удалены");
     }
 
     public function removeMediaFile(...$data)
