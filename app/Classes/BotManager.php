@@ -528,7 +528,9 @@ class BotManager extends BotCore
 
             if (count($audios) > 1 && count($audios) < 10) {
                 $media = [];
+
                 foreach ($audios as $audio) {
+                    Log::info("audios=>$audio");
                     $media[] = [
                         "media" => $audio,
                         "type" => "audio",

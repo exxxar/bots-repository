@@ -791,6 +791,15 @@ class SystemDiagnosticController extends Controller
             $this->mediaPrint($tmp, $media,"audio");
         }
 
+        $media = BotMedia::query()
+            ->where("bot_id", $bot->id)
+            ->where("type", "voice" )
+            ->get() ?? [];
+
+        if (count($media) > 0) {
+            $tmp = "Список доступных голосовых-файлов в медиа контенте:\n";
+            $this->mediaPrint($tmp, $media,"voice");
+        }
 
     }
 

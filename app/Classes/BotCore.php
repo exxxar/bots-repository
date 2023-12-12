@@ -481,7 +481,7 @@ abstract class BotCore
         $audio = $message->audio  ?? $message->voice ?? null;
         $caption = $message->caption ?? $message->audio->title ?? $message->audio->file_name ?? null;
 
-        $type =  "audio";
+        $type =   $message->audio? "audio":"voice";
 
 
         if (is_null($audio))
