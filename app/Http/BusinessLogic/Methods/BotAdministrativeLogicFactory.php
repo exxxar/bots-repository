@@ -912,6 +912,7 @@ class BotAdministrativeLogicFactory
                     ]);
             } catch (Exception $exception) {
                 Log::info("Ошибка создания клиента YClients");
+                Log::info(print_r($exception, true));
             }
 
         }
