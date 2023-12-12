@@ -750,8 +750,10 @@ class SystemDiagnosticController extends Controller
         Log::info(print_r($bot->toArray(),true));
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
-            ->where("type", "video")
-            ->orWhere("type", "video_note")
+            ->where(function($q){
+               $q->where("type", "video")
+                   ->orWhere("type", "video_note");
+            })
             ->get() ?? [];
         Log::info(print_r($media->toArray(),true));
         if (count($media) > 0) {
