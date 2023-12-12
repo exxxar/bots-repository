@@ -626,10 +626,12 @@ class SystemDiagnosticController extends Controller
         }
 
 
+        Log::info("media=>".print_r($media, true));
         $keyboard = [];
         $rowTmpKeyboard = [];
         $index = 1;
         foreach ($media as $item) {
+
             $tmp .= "#$item->id " . ($item->caption ?? 'Описание не указано') . "\n";
 
             if ($index % 4 != 0) {
