@@ -53,6 +53,7 @@ class BotResource extends JsonResource
             'blocked_message' => $this->blocked_message,
             'payment_provider_token' => $this->payment_provider_token ?? null,
             'amo' => new AmoCrmResource($this->whenLoaded("amo")),
+            'y_clients' => new YClientResource($this->whenLoaded("YClients")),
             'blocked_at' => $this->blocked_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

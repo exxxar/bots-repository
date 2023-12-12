@@ -9,6 +9,7 @@ use App\Events\CashBackSubEvent;
 use App\Exports\BotStatisticExport;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
+use App\Http\BusinessLogic\BusinessLogic;
 use App\Http\Resources\BotUserCollection;
 use App\Http\Resources\BotUserResource;
 use App\Http\Resources\CashBackHistoryCollection;
@@ -238,7 +239,7 @@ class BotAdministrativeLogicFactory
 
         $date = Carbon::now()->format("Y-m-d H-i-s");
 
-        Excel::store(new BotStatisticExport($statistics), "$name.xls", "public",\Maatwebsite\Excel\Excel::XLSX);
+        Excel::store(new BotStatisticExport($statistics), "$name.xls", "public", \Maatwebsite\Excel\Excel::XLSX);
 
         BotMethods::bot()
             ->whereBot($this->bot)
@@ -875,11 +876,17 @@ class BotAdministrativeLogicFactory
                 $field = (object)$field;
                 $value = null;
 
-                switch ($field->type){
+                switch ($field->type) {
                     default:
-                    case CustomFieldTypeEnum::Text: $value = $field->value; break;
-                    case CustomFieldTypeEnum::Number: $value = floatval($field->value); break;
-                    case CustomFieldTypeEnum::Boolean: $value = (bool)$field->value; break;
+                    case CustomFieldTypeEnum::Text:
+                        $value = $field->value;
+                        break;
+                    case CustomFieldTypeEnum::Number:
+                        $value = floatval($field->value);
+                        break;
+                    case CustomFieldTypeEnum::Boolean:
+                        $value = (bool)$field->value;
+                        break;
                 }
 
                 $res = CustomField::query()->updateOrCreate([
@@ -889,6 +896,24 @@ class BotAdministrativeLogicFactory
                     'value' => $value
                 ]);
             }
+        }
+
+        if (!is_null($this->bot->YClients)) {
+            try {
+                \App\Facades\BusinessLogic::yClients()
+                    ->setBot($this->bot)
+                    ->createClient([
+                        "name" => $data["name"] ?? null,
+                        "phone" => $data["phone"] ?? null,
+                        "email" => $data["email"] ?? null,
+                        "sex_id" => ($data["sex"] ?? false) == "on" ? 1 : 2,
+                        "birth_date" => $birthday ?? null,
+                        "comment" => "Прохождение VIP-анкетирования в боте",
+                    ]);
+            } catch (Exception $exception) {
+                Log::info("Ошибка создания клиента YClients");
+            }
+
         }
 
         if (!is_null($firstCashBackGranted)) {

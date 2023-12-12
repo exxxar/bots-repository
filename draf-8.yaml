@@ -1,0 +1,29 @@
+models:
+  BotCustomFieldSetting:
+    bot_id: id foreign:bots
+    type: integer default:0 nullable
+    label: string:255 nullable
+    description: longtext nullable
+    required: boolean false
+    validate_pattern: string:255 nullable
+    relationships:
+      belongsTo: Bot
+
+  CustomField:
+    key: string:255 nullable
+    value: string:255 nullable
+    bot_user_id: id foreign:bot_users
+    bot_custom_field_setting_id: id foreign:bot_custom_field_settings
+    relationships:
+      belongsTo: BotCustomFieldSetting, BotUser
+
+
+seeders:  BotCustomFieldSetting, CustomField
+
+controllers:
+  BotCustomFieldSetting:
+    resource: api
+
+  CustomField:
+    resource: api
+

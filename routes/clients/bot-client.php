@@ -9,6 +9,7 @@ use App\Http\Controllers\Bots\Web\BotPageController;
 use App\Http\Controllers\Bots\Web\BotUsersController;
 use App\Http\Controllers\Bots\Web\CompanyController;
 use App\Http\Controllers\Bots\Web\ProductController;
+use App\Http\Controllers\Bots\Web\YClientsController;
 use App\Http\Controllers\Globals\AboutBotScriptController;
 use App\Http\Controllers\Globals\BonusProductScriptController;
 use App\Http\Controllers\Globals\InstagramQuestScriptController;
@@ -257,6 +258,7 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
+                Route::post("/save-y-clients", [YClientsController::class, "saveYClients"]);
                 Route::post("/load-amo-fields", [AmoCrmController::class, "loadAmoFields"]);
                 Route::post("/sync-amo", [AmoCrmController::class, "syncAmoCrm"]);
                 Route::post("/bot-update", "updateBot");

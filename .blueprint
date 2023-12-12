@@ -1,24 +1,14 @@
 created:
-    - app/Http/Controllers/BotCustomFieldSettingController.php
-    - app/Http/Controllers/CustomFieldController.php
-    - database/factories/BotCustomFieldSettingFactory.php
-    - database/factories/CustomFieldFactory.php
-    - database/migrations/2023_11_24_230837_create_bot_custom_field_settings_table.php
-    - database/migrations/2023_11_24_230838_create_custom_fields_table.php
-    - app/Models/BotCustomFieldSetting.php
-    - app/Models/CustomField.php
-    - database/seeders/BotCustomFieldSettingSeeder.php
-    - database/seeders/CustomFieldSeeder.php
-    - tests/Feature/Http/Controllers/BotCustomFieldSettingControllerTest.php
-    - tests/Feature/Http/Controllers/CustomFieldControllerTest.php
-    - app/Http/Requests/BotCustomFieldSettingStoreRequest.php
-    - app/Http/Requests/BotCustomFieldSettingUpdateRequest.php
-    - app/Http/Requests/CustomFieldStoreRequest.php
-    - app/Http/Requests/CustomFieldUpdateRequest.php
-    - app/Http/Resources/BotCustomFieldSettingCollection.php
-    - app/Http/Resources/BotCustomFieldSettingResource.php
-    - app/Http/Resources/CustomFieldCollection.php
-    - app/Http/Resources/CustomFieldResource.php
+    - app/Http/Controllers/YClientsController.php
+    - database/factories/YClientsFactory.php
+    - database/migrations/2023_12_10_211715_create_y_clients_table.php
+    - app/Models/YClients.php
+    - database/seeders/YClientsSeeder.php
+    - tests/Feature/Http/Controllers/YClientsControllerTest.php
+    - app/Http/Requests/YClientStoreRequest.php
+    - app/Http/Requests/YClientUpdateRequest.php
+    - app/Http/Resources/YClientCollection.php
+    - app/Http/Resources/YClientResource.php
 updated:
     - routes/api.php
 models:
@@ -65,3 +55,4 @@ models:
     Documents: { title: 'string:255 nullable', description: 'longtext nullable', file_id: "string:255 nullable comment:'идентификатор файла в TG'", type: "integer default:0 comment:'Тип документа'", params: "json nullable comment:'выписанные параметры из документа'", bot_id: 'id foreign:bots', bot_user_id: 'id foreign:bot_users', verified_at: 'nullable timestamp', relationships: { belongsTo: 'Bot, BotUser' } }
     BotCustomFieldSetting: { bot_id: 'id foreign:bots', type: 'integer default:0 nullable', label: 'string:255 nullable', description: 'longtext nullable', required: 'boolean false', validate_pattern: 'string:255 nullable', relationships: { belongsTo: Bot } }
     CustomField: { key: 'string:255 nullable', value: 'string:255 nullable', bot_user_id: 'id foreign:bot_users', bot_custom_field_setting_id: 'id foreign:bot_custom_field_settings', relationships: { belongsTo: 'BotCustomFieldSetting, BotUser' } }
+    YClients: { bot_id: 'id foreign:bots', login: 'string:255 nullable', password: 'string:255 nullable', partner_token: 'string:255 nullable', need_debug: 'boolean default:false', debug_log_file: 'string:255 nullable', throttle: "integer default:0 comment:'максимальное число запросов к API YCLIENTS в секунду'", relationships: { belongsTo: Bot } }

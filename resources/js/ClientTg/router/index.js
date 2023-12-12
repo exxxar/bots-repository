@@ -47,6 +47,7 @@ import AdminBotSlug from '@/ClientTg/Pages/Admin/BotManager/Slugs.vue';
 import AdminBotDialog from '@/ClientTg/Pages/Admin/BotManager/Dialogs.vue';
 import AdminBotKeyboard from '@/ClientTg/Pages/Admin/BotManager/Keyboards.vue';
 import AdminBotAmo from '@/ClientTg/Pages/Admin/BotManager/Amo.vue';
+import AdminBotYClients from '@/ClientTg/Pages/Admin/BotManager/YClients.vue';
 import AdminBonusProduct from '@/ClientTg/Pages/Admin/BonusProduct.vue';
 import AdminMessageToUser from '@/ClientTg/Pages/Admin/MessageToUser.vue';
 
@@ -254,6 +255,13 @@ export const adminRoutes = [
         path: '/admin-bot-amo',
         component: AdminBotAmo,
         meta: { title: 'AMO CRM', hide_menu:true, need_admin_menu:true }
+    },
+
+    {
+        name: 'AdminBotYClients',
+        path: '/admin-bot-y-clients',
+        component: AdminBotYClients,
+        meta: { title: 'YClients', hide_menu:true, need_admin_menu:true }
     },
 
     {

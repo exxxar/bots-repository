@@ -9,9 +9,11 @@ import Page from "@/AdminPanel/Components/Constructor/Pages/Page.vue"
 import BotDialogGroupList from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import Shop from "@/AdminPanel/Components/Constructor/Shop/Shop.vue";
 import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
+import YClientsForm from "@/AdminPanel/Components/Constructor/YClients/YClientsForm.vue";
 import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 import BotFields from "@/AdminPanel/Components/Constructor/Bot/BotFields.vue";
 import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue";
+
 </script>
 <template>
     <div class="row" v-if="company">
@@ -63,6 +65,8 @@ import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue
                             class="fa-regular fa-newspaper mr-2"></i> Новостной канал</a></li>
                         <li><a class="dropdown-item" href="#bot-amo" @click="setStep(7)"><i
                             class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
+                        <li><a class="dropdown-item" href="#bot-y-clients" @click="setStep(12)"><i
+                            class="fa-solid fa-list-check mr-2"></i> YClients</a></li>
                         <li><a class="dropdown-item" href="#bot-shop" @click="setStep(8)"><i
                             class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
                         <li><a class="dropdown-item" href="#bot-media" @click="setStep(11)"><i
@@ -82,7 +86,14 @@ import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue
 
     <div v-if="step===7" class="pb-5 mb-5">
         <AmoForm
-            :data="botForm.amo"
+            :data="bot.amo"
+            v-if="!load"
+        />
+    </div>
+
+    <div v-if="step===12" class="pb-5 mb-5">
+        <YClientsForm
+            :data="bot.y_clients"
             v-if="!load"
         />
     </div>

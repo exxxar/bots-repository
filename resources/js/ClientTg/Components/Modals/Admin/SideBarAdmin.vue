@@ -156,6 +156,15 @@
                 <i class="fa fa-circle"></i>
             </router-link>
 
+            <router-link
+                id="nav-out-team"
+                :active-class="'nav-item-active'"
+                :tag="'a'" :to="'/admin-bot-y-clients'">
+                <i class="fa-solid fa-people-roof" style="color:#9603ff;"></i>
+                <span>YClients</span>
+                <i class="fa fa-circle"></i>
+            </router-link>
+
 
             <router-link
                 id="nav-basket"

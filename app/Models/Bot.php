@@ -86,7 +86,7 @@ class Bot extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    protected $with = ["company", "amo", "warnings", "fieldSettings"];
+    protected $with = ["company", "amo", "warnings", "fieldSettings",'YClients'];
     protected $appends = ['topics'];
 
     public function getTopicsAttribute()
@@ -167,6 +167,12 @@ class Bot extends Model
     {
         return $this->hasOne(AmoCrm::class);
     }
+
+    public function YClients(): HasOne
+    {
+        return $this->hasOne(YClients::class);
+    }
+
 
     public function botType(): BelongsTo
     {

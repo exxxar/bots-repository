@@ -1,29 +1,19 @@
 models:
-  BotCustomFieldSetting:
+  YClients:
     bot_id: id foreign:bots
-    type: integer default:0 nullable
-    label: string:255 nullable
-    description: longtext nullable
-    required: boolean false
-    validate_pattern: string:255 nullable
+    login: string:255 nullable
+    password: string:255 nullable
+    partner_token: string:255 nullable
+    need_debug: boolean default:false
+    debug_log_file: string:255 nullable
+    throttle: integer default:0 comment:'максимальное число запросов к API YCLIENTS в секунду'
     relationships:
       belongsTo: Bot
 
-  CustomField:
-    key: string:255 nullable
-    value: string:255 nullable
-    bot_user_id: id foreign:bot_users
-    bot_custom_field_setting_id: id foreign:bot_custom_field_settings
-    relationships:
-      belongsTo: BotCustomFieldSetting, BotUser
 
-
-seeders:  BotCustomFieldSetting, CustomField
+seeders: YClients
 
 controllers:
-  BotCustomFieldSetting:
-    resource: api
-
-  CustomField:
+  YClients:
     resource: api
 

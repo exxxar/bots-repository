@@ -125,3 +125,6 @@ Route::apiResource('ingredient', App\Http\Controllers\IngredientController::clas
 Route::apiResource('bot-custom-field-setting', App\Http\Controllers\BotCustomFieldSettingController::class);
 
 Route::apiResource('custom-field', App\Http\Controllers\CustomFieldController::class);
+
+
+Route::apiResource('y-clients', \App\Http\Controllers\Bots\Web\YClientsController::class);

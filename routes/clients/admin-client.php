@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Admin\BotPageController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\YClientsController;
 use App\Http\Controllers\AmoCrmController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -86,6 +87,7 @@ Route::prefix("admin")
             ->group(function () {
                 Route::post("/", "index");
                 Route::post('/get-me',"getMe");
+                Route::post("/save-y-clients", [YClientsController::class, "saveYClients"]);
                 Route::post('/update-shop-link',"updateShopLink");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
                 Route::post("/bot-update", "updateBot");
