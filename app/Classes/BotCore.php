@@ -312,15 +312,15 @@ abstract class BotCore
                                 ->first();
                         }
                         else {
-                            $slug = BotMenuSlug::query()
+                            $parentSlug = BotMenuSlug::query()
                                 ->find($slug->parent_slug_id);
 
-                            if (is_null($slug))
+                            if (is_null($parentSlug))
                                 return true;
 
 
                             $item = Collection::make($this->slugs)
-                                ->where("path", $slug->slug)
+                                ->where("path", $parentSlug->slug)
                                 ->first();
                         }
 
