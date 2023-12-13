@@ -140,7 +140,7 @@ export default {
             this.loading = true
             this.$store.dispatch("loadMedia", {
                 dataObject: {
-                    botId: this.bot.id || null,
+                    bot_id: this.bot.id || null,
                     search: this.search,
                     needVideo: true,
                     needVideoNote: true,

@@ -502,6 +502,7 @@ class BotManager extends BotCore
 
             $documents = $page->documents ?? [];
 
+            Log::info("page" . print_r($page->toArray(), true));
             Log::info("documents" . print_r($documents, true));
             if (count($documents) == 1)
                 $this->replyDocument(null, $documents[0]);

@@ -29,7 +29,9 @@ const actions = {
             search:null,
             needPhoto:false,
             needVideo:false,
-            needVideoNote:false
+            needVideoNote:false,
+            needAudio:false,
+            needDocument:false,
         }, page: 0, size: 12})
     {
 
