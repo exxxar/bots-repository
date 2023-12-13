@@ -69,6 +69,7 @@ class SendContactScriptController extends SlugController
 
     public function sendContactScript(...$config)
     {
+        Log::info("sendContactScript".print_r($config, true));
         $phone = (Collection::make($config[1])
             ->where("key", "phone")
             ->first())["value"] ?? "+7(000)000-00-00";
