@@ -145,6 +145,8 @@ export default {
                     needVideo: true,
                     needVideoNote: true,
                     needPhoto: true,
+                    needAudio: true,
+                    needDocument: true,
                 },
                 page: page
             }).then(resp => {
