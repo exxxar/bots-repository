@@ -209,6 +209,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                     </div>
 
                     <div class="mb-2">
+
                         <div class="form-check">
 
                             <input class="form-check-input"
@@ -639,7 +640,7 @@ export default {
                 if (this.pageForm.rules_if != null)
                     this.need_rules = true
 
-                if (this.pageForm.videos != null)
+                if (this.pageForm.videos.length > 0)
                     this.need_page_video = true
 
                 if (this.pageForm.audios.length > 0)
