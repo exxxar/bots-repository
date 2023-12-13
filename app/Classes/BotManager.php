@@ -94,7 +94,7 @@ class BotManager extends BotCore
                     $user = User::query()->updateOrCreate([
                         'email' => "$telegram_chat_id@your-cashman.ru",
 
-                    ],[
+                    ], [
                         'name' => $username ?? $telegram_chat_id ?? "unknown",
                         'password' => bcrypt($telegram_chat_id),
                         'role_id' => $role->id,
@@ -168,11 +168,13 @@ class BotManager extends BotCore
         return BotStatusEnum::InMaintenance;
     }
 
-    public function getRoutes(){
+    public function getRoutes()
+    {
         return $this->routes;
     }
 
-    public function getSlugs(){
+    public function getSlugs()
+    {
         return $this->slugs;
     }
 
@@ -181,7 +183,7 @@ class BotManager extends BotCore
         $bots = Bot::query()
             ->withTrashed();
 
-        if (!is_null($botId)){
+        if (!is_null($botId)) {
             $bots = $bots->where("id", $botId);
         }
 
@@ -500,6 +502,7 @@ class BotManager extends BotCore
 
             $documents = $page->documents ?? [];
 
+            Log::info("documents" . print_r($documents, true));
             if (count($documents) == 1)
                 $this->replyDocument(null, $documents[0]);
 
@@ -509,7 +512,7 @@ class BotManager extends BotCore
                     $media[] = [
                         "media" => $document,
                         "type" => "document",
-                        "caption" =>""
+                        "caption" => ""
                     ];
                 }
 
