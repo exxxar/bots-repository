@@ -303,21 +303,21 @@ abstract class BotCore
                                 ->next_bot_menu_slug_id)
                             ->first();
 
-                        Log::info("page=====>" . print_r($page->toArray(), true));
-
                         if (is_null($slug))
                             return true;
 
-                        $item = Collection::make($this->slugs)
-                            ->where("path", $slug->slug)
-                            ->first();
-
-                        if (is_null($item)) {
+                        if (is_null($slug->parent_slug_id)) {
+                            $item = Collection::make($this->slugs)
+                                ->where("path", $slug->slug)
+                                ->first();
+                        }
+                        else {
                             $slug = BotMenuSlug::query()
                                 ->find($slug->parent_slug_id);
 
                             if (is_null($slug))
                                 return true;
+
 
                             $item = Collection::make($this->slugs)
                                 ->where("path", $slug->slug)
@@ -861,6 +861,8 @@ abstract class BotCore
                         ->next_bot_menu_slug_id)
                     ->first();
 
+
+
                 if (is_null($slug)) {
                     $this->sendMessage($channel, "Скрипт не найден");
                     return;
@@ -870,7 +872,7 @@ abstract class BotCore
                     ->where("path", $slug->slug)
                     ->first();
 
-                Log::info("script start=>$slug->id");
+
 
                 if (!is_null($item)) {
                     $config = $slug->config ?? [];
