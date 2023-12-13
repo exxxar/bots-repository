@@ -870,6 +870,8 @@ abstract class BotCore
                     ->where("path", $slug->slug)
                     ->first();
 
+                Log::info("script start=>$slug->id");
+
                 if (!is_null($item)) {
                     $config = $slug->config ?? [];
                     $config[] = [
@@ -877,7 +879,7 @@ abstract class BotCore
                         "value" => $slug->id,
                     ];
 
-                    Log::info("script start=>$slug->id");
+
                     $this->tryCall($item, [],
                         $config, []);
 
