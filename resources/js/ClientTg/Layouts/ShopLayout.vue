@@ -102,10 +102,11 @@ import {Head} from '@inertiajs/vue3'
 
             <router-link
                 :active-class="'active-nav'"
-                :tag="'a'" :to="'/admin-actions'">
-                <i class="fa-solid fa-bolt"></i><span class="color-white">События</span>
-                <strong v-if="$route.path=='/admin-actions'"></strong>
+                :tag="'a'" :to="'/admin-bot-manager'">
+                <i class="fa-solid fa-robot"></i><span class="color-white">Настройка</span>
+                <strong v-if="$route.path=='/admin-bot-manager'"></strong>
             </router-link>
+
 
             <router-link
                 :active-class="'active-nav'"
@@ -123,10 +124,10 @@ import {Head} from '@inertiajs/vue3'
 
             <router-link
                 :active-class="'active-nav'"
-                :tag="'a'" :to="'/admin-work-status'">
-                <i class="fa-solid fa-briefcase"></i><span class="color-white">Работа</span>
+                :tag="'a'" :to="'/admin-bot-page'">
+                <i class="fa-solid fa-file-lines"></i><span class="color-white">Страницы</span>
 
-                <strong v-if="$route.path=='/admin-work-status'"></strong>
+                <strong v-if="$route.path=='/admin-bot-page'"></strong>
             </router-link>
 
 
