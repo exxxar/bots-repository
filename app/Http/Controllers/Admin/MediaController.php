@@ -11,10 +11,6 @@ class MediaController extends Controller
 {
     public function media(Request $request): \App\Http\Resources\BotMediaCollection
     {
-        $request->validate([
-            "bot_id" => "required"
-        ]);
-
         $botId = $request->botId ?? $request->bot_id ?? null;
         $bot = Bot::query()->find($botId);
 
