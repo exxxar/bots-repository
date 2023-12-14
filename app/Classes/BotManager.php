@@ -437,12 +437,13 @@ class BotManager extends BotCore
             if (!empty($rMenu)) {
                 $this->replyKeyboard($needContentInReply ? ($content ?? 'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
                 $needSendReplyMenu = false;
+                $needContentInReply = false;
             }
 
 
-            if (!is_null($content) && $needSendReplyMenu) {
+            if (!is_null($content) && $needContentInReply) {
                 $this->reply($content);
-                $needSendReplyMenu = false;
+                $needContentInReply = false;
             }
 
         }
