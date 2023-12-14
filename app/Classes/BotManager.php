@@ -420,7 +420,6 @@ class BotManager extends BotCore
             try {
                 $this->replyMediaGroup($media);
 
-                $needSendReplyMenu = false;
             } catch (\Exception $e) {
                 $this->replyPhoto("Ошибочка с изображениями",
                     InputFile::create(public_path() . "/images/cashman2.jpg")
@@ -429,7 +428,8 @@ class BotManager extends BotCore
 
 
             if (!empty($iMenu)) {
-                $this->replyInlineKeyboard(($content ?? 'Меню'), $iMenu);
+
+                $this->replyInlineKeyboard($needContentInReply ? ($content ?? 'Меню') : 'Меню', $iMenu);
                 $needContentInReply = false;
             }
 
@@ -440,7 +440,7 @@ class BotManager extends BotCore
             }
 
 
-            if (!is_null($content)&&$needSendReplyMenu) {
+            if (!is_null($content) && $needSendReplyMenu) {
                 $this->reply($content);
                 $needSendReplyMenu = false;
             }
