@@ -118,155 +118,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 </div>
 
             </div>
-            <div class="col-12 mb-2" v-if="need_page_images" >
-                <div class="form-check styled-label">
-                    <input class="form-check-input"
-                           v-model="need_page_images"
-                           type="checkbox"
-                           id="need-page-images">
-                    <label class="form-check-label" for="need-page-images" >
-                        Изображения на странице (максимум 10)
-                    </label>
-                </div>
-
-            </div>
-            <div class="col-12 mb-2" v-if="need_page_images">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h6>Загрузите изображения с файловой системы</h6>
-                    </div>
-                    <div class="card-body d-flex justify-content-start">
-
-                        <label for="photos" style="margin-right: 10px;" class="photo-loader ml-2">
-                            +
-                            <input type="file" id="photos"
-                                   multiple
-                                   accept="image/*" @change="onChangePhotos"
-                                   style="display:none;"/>
-
-                        </label>
-                        <div class="row">
-                            <div class="col-12 d-flex flex-wrap" v-if="photos.length>0">
-                                <div class="mb-2 img-preview" style="margin-right: 10px;"
-                                     v-for="(img, index) in photos">
-                                    <img v-lazy="getPhoto(img).imageUrl"/>
-
-                                    <div class="remove">
-                                        <a @click="removePhoto(index)">Удалить</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <h6 v-if="pageForm.images.length>0">Ранее загруженные фотографии</h6>
-                            <div class="col-12 d-flex flex-wrap" v-if="pageForm.images.length>0">
-
-                                <div class="mb-2 img-preview" style="margin-right: 10px;"
-                                     v-for="(img, index) in pageForm.images">
-                                    <img
-                                        v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
-                                    <div class="remove">
-                                        <a @click="removeImage(index)">Удалить</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-12 mb-2" v-if="need_page_video">
-                <div class="form-check styled-label" >
-                    <input class="form-check-input"
-                           v-model="need_page_video"
-                           type="checkbox"
-                           id="need-page-video">
-                    <label class="form-check-label" for="need-page-video">
-                        Видео к странице
-                    </label>
-                </div>
-
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_page_video">
-                <p class="alert alert-danger">
-                    <strong>Внимание!</strong> не больше 10 видео на 1й странице!
-                </p>
-                <BotMediaList
-                    :need-video="true"
-                    :need-video-note="true"
-                    :selected="pageForm.videos"
-                    v-on:select="selectVideo"></BotMediaList>
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_page_sticker">
-                <div class="form-check styled-label">
-                    <input class="form-check-input"
-                           v-model="need_page_sticker"
-                           type="checkbox"
-                           id="need-page-sticker">
-                    <label class="form-check-label" for="need-page-sticker">
-                        Стикер к странице
-                    </label>
-                </div>
-
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_page_sticker">
-                <BotMediaList
-                    :need-sticker="true"
-                    :selected="[pageForm.sticker]"
-                    v-on:select="selectSticker"></BotMediaList>
-            </div>
-
-
-            <div class="col-12 mb-2" v-if="need_page_audios">
-                <div class="form-check styled-label">
-                    <input class="form-check-input"
-                           v-model="need_page_audios"
-                           type="checkbox"
-                           id="need-page-audio">
-                    <label class="form-check-label" for="need-page-audio">
-                        Звук к странице
-                    </label>
-                </div>
-
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_page_audios">
-                <p class="alert alert-danger">
-                    <strong>Внимание!</strong> не больше 10 аудио на 1й странице!
-                </p>
-                <BotMediaList
-                    :need-audio="true"
-                    :selected="pageForm.audios"
-                    v-on:select="selectAudio"></BotMediaList>
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_page_documents">
-                <div class="form-check styled-label" >
-                    <input class="form-check-input"
-                           v-model="need_page_documents"
-                           type="checkbox"
-                           id="need-page-document">
-                    <label class="form-check-label" for="need-page-document">
-                        Документ \ презентацию к странице \ картинку в оригинале
-                    </label>
-                </div>
-
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_page_documents">
-                <p class="alert alert-danger">
-                    <strong>Внимание!</strong> не больше 10 документов на 1й странице!
-                </p>
-                <BotMediaList
-                    :need-document="true"
-                    :selected="pageForm.documents"
-                    v-on:select="selectDocument"></BotMediaList>
-            </div>
-
 
             <div class="col-12 mb-2" v-if="need_reply_menu">
                 <div class="form-check styled-label" >
@@ -385,6 +236,151 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
             </div>
 
+
+            <div class="col-12 mb-2" v-if="need_page_images" >
+                <div class="form-check styled-label">
+                    <input class="form-check-input"
+                           v-model="need_page_images"
+                           type="checkbox"
+                           id="need-page-images">
+                    <label class="form-check-label" for="need-page-images" >
+                        Изображения на странице (максимум 10)
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-12 mb-2" v-if="need_page_images">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h6>Загрузите изображения с файловой системы</h6>
+                    </div>
+                    <div class="card-body d-flex justify-content-start">
+
+                        <label for="photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                            +
+                            <input type="file" id="photos"
+                                   multiple
+                                   accept="image/*" @change="onChangePhotos"
+                                   style="display:none;"/>
+
+                        </label>
+                        <div class="row">
+                            <div class="col-12 d-flex flex-wrap" v-if="photos.length>0">
+                                <div class="mb-2 img-preview" style="margin-right: 10px;"
+                                     v-for="(img, index) in photos">
+                                    <img v-lazy="getPhoto(img).imageUrl"/>
+
+                                    <div class="remove">
+                                        <a @click="removePhoto(index)">Удалить</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <h6 v-if="pageForm.images.length>0">Ранее загруженные фотографии</h6>
+                            <div class="col-12 d-flex flex-wrap" v-if="pageForm.images.length>0">
+
+                                <div class="mb-2 img-preview" style="margin-right: 10px;"
+                                     v-for="(img, index) in pageForm.images">
+                                    <img
+                                        v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
+                                    <div class="remove">
+                                        <a @click="removeImage(index)">Удалить</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 mb-2" v-if="need_page_video">
+                <div class="form-check styled-label" >
+                    <input class="form-check-input"
+                           v-model="need_page_video"
+                           type="checkbox"
+                           id="need-page-video">
+                    <label class="form-check-label" for="need-page-video">
+                        Видео к странице
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-12 mb-2" v-if="need_page_video">
+                <p class="alert alert-danger">
+                    <strong>Внимание!</strong> не больше 10 видео на 1й странице!
+                </p>
+                <BotMediaList
+                    :need-video="true"
+                    :need-video-note="true"
+                    :selected="pageForm.videos"
+                    v-on:select="selectVideo"></BotMediaList>
+            </div>
+
+            <div class="col-12 mb-2" v-if="need_page_sticker">
+                <div class="form-check styled-label">
+                    <input class="form-check-input"
+                           v-model="need_page_sticker"
+                           type="checkbox"
+                           id="need-page-sticker">
+                    <label class="form-check-label" for="need-page-sticker">
+                        Стикер к странице
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-12 mb-2" v-if="need_page_sticker">
+                <BotMediaList
+                    :need-sticker="true"
+                    :selected="[pageForm.sticker]"
+                    v-on:select="selectSticker"></BotMediaList>
+            </div>
+
+            <div class="col-12 mb-2" v-if="need_page_audios">
+                <div class="form-check styled-label">
+                    <input class="form-check-input"
+                           v-model="need_page_audios"
+                           type="checkbox"
+                           id="need-page-audio">
+                    <label class="form-check-label" for="need-page-audio">
+                        Звук к странице
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-12 mb-2" v-if="need_page_audios">
+                <p class="alert alert-danger">
+                    <strong>Внимание!</strong> не больше 10 аудио на 1й странице!
+                </p>
+                <BotMediaList
+                    :need-audio="true"
+                    :selected="pageForm.audios"
+                    v-on:select="selectAudio"></BotMediaList>
+            </div>
+
+            <div class="col-12 mb-2" v-if="need_page_documents">
+                <div class="form-check styled-label" >
+                    <input class="form-check-input"
+                           v-model="need_page_documents"
+                           type="checkbox"
+                           id="need-page-document">
+                    <label class="form-check-label" for="need-page-document">
+                        Документ \ презентацию к странице \ картинку в оригинале
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-12 mb-2" v-if="need_page_documents">
+                <p class="alert alert-danger">
+                    <strong>Внимание!</strong> не больше 10 документов на 1й странице!
+                </p>
+                <BotMediaList
+                    :need-document="true"
+                    :selected="pageForm.documents"
+                    v-on:select="selectDocument"></BotMediaList>
+            </div>
+
             <div class="col-12 mb-2" v-if="need_attach_page">
                 <div class="form-check styled-label">
                     <input class="form-check-input"
@@ -396,8 +392,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     </label>
                 </div>
             </div>
-
-
             <div class="col-12 mb-2" v-if="need_attach_page">
                 <p v-if="pageForm.next_page_id">Связано со страницей #{{ pageForm.next_page_id }} <a
                     class="btn btn-link"
@@ -419,8 +413,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     </label>
                 </div>
             </div>
-
-
             <div class="col-12 mb-2" v-if="need_attach_slug">
                 <p v-if="pageForm.next_bot_menu_slug_id">Связано со скриптом #{{ pageForm.next_bot_menu_slug_id }} <a
                     class="btn btn-link"
@@ -442,8 +434,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     </label>
                 </div>
             </div>
-
-
             <div class="col-12 mb-2" v-if="need_attach_dialog">
                 <p v-if="pageForm.next_bot_dialog_command_id">Связано с диалогом #{{
                         pageForm.next_bot_dialog_command_id
@@ -455,7 +445,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                           v-on:select-dialog="associateDialog"
                                           :bot="bot"/>
             </div>
-
         </div>
 
         <div class="row" >
@@ -490,16 +479,22 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
         </button>
         <ul v-if="showMenu" class="component-menu">
             <li
+                @click="need_reply_menu=!need_reply_menu"
+                v-bind:class="{'active':need_reply_menu}">
+                <i class="fa-regular fa-keyboard"></i>
+                <span>Нижнее меню</span>
+            </li>
+            <li
+                @click="need_inline_menu=!need_inline_menu"
+                v-bind:class="{'active':need_inline_menu}">
+                <i class="fa-solid fa-ellipsis"></i>
+                <span>Меню под текстом</span>
+            </li>
+            <li
                 @click="need_page_images=!need_page_images"
                 v-bind:class="{'active':need_page_images}">
                 <i class="fa-regular fa-images"></i>
                 <span>Изображения</span>
-            </li>
-            <li
-                @click="need_page_sticker=!need_page_sticker"
-                v-bind:class="{'active':need_page_sticker}">
-                <i class="fa-regular fa-note-sticky"></i>
-                <span>Стикеры</span>
             </li>
             <li
                 @click="need_page_video=!need_page_video"
@@ -507,6 +502,13 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 <i class="fa-solid fa-photo-film"></i>
                 <span>Видео</span>
             </li>
+            <li
+                @click="need_page_sticker=!need_page_sticker"
+                v-bind:class="{'active':need_page_sticker}">
+                <i class="fa-regular fa-note-sticky"></i>
+                <span>Стикеры</span>
+            </li>
+
             <li
                 @click="need_page_audios=!need_page_audios"
                 v-bind:class="{'active':need_page_audios}">
@@ -543,18 +545,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 <i class="fa-solid fa-scale-balanced"></i>
                 <span>Правила</span>
             </li>
-            <li
-                @click="need_reply_menu=!need_reply_menu"
-                v-bind:class="{'active':need_reply_menu}">
-                <i class="fa-regular fa-keyboard"></i>
-                <span>Нижнее меню</span>
-            </li>
-            <li
-                @click="need_inline_menu=!need_inline_menu"
-                v-bind:class="{'active':need_inline_menu}">
-                <i class="fa-solid fa-ellipsis"></i>
-                <span>Меню под текстом</span>
-            </li>
+
         </ul>
     </div>
     <!-- Modal -->
