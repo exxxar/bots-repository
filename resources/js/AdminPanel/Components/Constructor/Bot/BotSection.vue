@@ -188,7 +188,7 @@ export default {
 <style>
 .custom-dropdown {
     display: inline-block;
-    position: sticky;
+    position: sticky !important;
     top: 50px;
     background: white;
     z-index:101;

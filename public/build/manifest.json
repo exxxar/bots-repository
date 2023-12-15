@@ -1,6 +1,6 @@
 {
   "BotList.css": {
-    "file": "assets/BotList-fdf64584.css",
+    "file": "assets/BotList-c0a1298b.css",
     "src": "BotList.css"
   },
   "CompanyForm.css": {
@@ -35,12 +35,12 @@
     "file": "assets/InlineInjectionsHelper-5ad24a6a.css",
     "src": "TelegramChannelHelper.css"
   },
-  "_BotList-b2f97a76.js": {
+  "_BotList-4f2e0511.js": {
     "css": [
-      "assets/BotList-fdf64584.css",
+      "assets/BotList-c0a1298b.css",
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/BotList-b2f97a76.js",
+    "file": "assets/BotList-4f2e0511.js",
     "imports": [
       "_index.es-ce2063b4.js",
       "_GlobalSlugList-2a12a96c.js",
@@ -51,11 +51,11 @@
       "_Mail-64f7d125.js"
     ]
   },
-  "_BotSection-f8432fd6.js": {
-    "file": "assets/BotSection-f8432fd6.js",
+  "_BotSection-e050ae90.js": {
+    "file": "assets/BotSection-e050ae90.js",
     "imports": [
       "_Mail-64f7d125.js",
-      "_BotList-b2f97a76.js",
+      "_BotList-4f2e0511.js",
       "_index.es-ce2063b4.js"
     ]
   },
@@ -191,17 +191,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-edd7b9a5.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-edd7b9a5.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-edd7b9a5.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-deadc92f.js",
@@ -272,12 +272,12 @@
     "css": [
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/BotPage-d7e3be41.js",
+    "file": "assets/BotPage-0f088c78.js",
     "imports": [
       "_MainAdminLayout-343de68e.js",
-      "_BotSection-f8432fd6.js",
+      "_BotSection-e050ae90.js",
       "_CompanyList-2ca7e2ee.js",
-      "_BotList-b2f97a76.js",
+      "_BotList-4f2e0511.js",
       "_index-490ab070.js",
       "_index.es-ce2063b4.js",
       "_Mail-64f7d125.js",
@@ -352,15 +352,15 @@
       "assets/CompanyForm-28f51984.css",
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/Dashboard-d4b571b3.js",
+    "file": "assets/Dashboard-68eeb9bd.js",
     "imports": [
       "_CompanyList-2ca7e2ee.js",
-      "_BotList-b2f97a76.js",
+      "_BotList-4f2e0511.js",
       "_Mail-64f7d125.js",
       "_index-490ab070.js",
       "_index.es-ce2063b4.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_BotSection-f8432fd6.js",
+      "_BotSection-e050ae90.js",
       "_CompanyForm-97757aee.js",
       "_Pagination-e8ce4012.js",
       "_GlobalSlugList-2a12a96c.js",
@@ -409,11 +409,11 @@
     "css": [
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/ManagerMainPage-bb43b353.js",
+    "file": "assets/ManagerMainPage-be438ba4.js",
     "imports": [
       "_MainAdminLayout-343de68e.js",
       "_Mail-64f7d125.js",
-      "_BotList-b2f97a76.js",
+      "_BotList-4f2e0511.js",
       "_index-490ab070.js",
       "_CompanyList-2ca7e2ee.js",
       "_index.es-ce2063b4.js",
@@ -486,7 +486,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-953ab08b.js",
+    "file": "assets/app-40ecbd59.js",
     "imports": [
       "_index.es-ce2063b4.js",
       "_index-490ab070.js"
