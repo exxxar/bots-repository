@@ -236,6 +236,30 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                     </div>
 
                     <div class="mb-2">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   v-model="need_page_sticker"
+                                   type="checkbox"
+                                   id="need-page-sticker">
+
+                            <label class="form-check-label" for="need-page-sticker">
+                                Стикер к странице
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <div class="mb-2" v-if="need_page_sticker">
+                        <BotMediaList
+                            :need-sticker="true"
+                            :selected="[pageForm.sticker]"
+                            v-on:select="selectSticker"></BotMediaList>
+                    </div>
+
+
+                    <div class="mb-2">
                         <div class="form-check">
                             <input class="form-check-input"
                                    v-model="need_reply_menu"
@@ -508,6 +532,7 @@ export default {
             showReplyTemplateSelector: false,
             showInlineTemplateSelector: false,
 
+            need_page_sticker:false,
             need_page_audios: false,
             need_page_documents: false,
             need_page_video: false,
@@ -526,6 +551,7 @@ export default {
                 command: null,
                 slug: null,
                 comment: null,
+                sticker: null,
 
                 images: [],
                 videos: [],
@@ -568,6 +594,12 @@ export default {
         'need_page_documents': function (newVal, oldVal) {
             if (!this.need_page_documents) {
                 this.pageForm.documents = []
+            }
+
+        },
+        'need_page_sticker': function (newVal, oldVal) {
+            if (!this.need_page_sticker) {
+                this.pageForm.sticker = null
             }
 
         },
@@ -649,6 +681,9 @@ export default {
                 if (this.pageForm.documents.length > 0)
                     this.need_page_documents = true
 
+                if (this.pageForm.sticker)
+                    this.need_page_sticker = true
+
                 this.need_clean = true
             },
             deep: true
@@ -699,6 +734,7 @@ export default {
                 is_external: page.is_external || false,
                 videos: page.videos || [],
                 audios: page.audios || [],
+                sticker: page.sticker || null,
                 documents: page.documents || [],
                 rules_if: page.rules_if || null,
                 rules_else_page_id: page.rules_else_page_id || null,
@@ -763,6 +799,7 @@ export default {
                 command: null,
                 slug: null,
                 comment: null,
+                sticker: null,
                 images: [],
                 reply_keyboard_title: null,
                 reply_keyboard: null,
@@ -789,6 +826,7 @@ export default {
             this.showInlineTemplateSelector = false
 
 
+            this.need_page_sticker = false
             this.need_page_video = false
             this.need_page_images = false
             this.need_inline_menu = false
@@ -918,6 +956,9 @@ export default {
                 this.pageForm.audios.splice(index, 1)
             else
                 this.pageForm.audios.push(item.file_id)
+        },
+        selectSticker(item){
+            this.pageForm.sticker = item.file_id
         },
         selectDocument(item) {
 

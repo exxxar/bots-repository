@@ -405,6 +405,10 @@ class BotManager extends BotCore
 
         $replyMenuTitle = $page->reply_keyboard_title ?? null;
 
+        if (!is_null($page->sticker)) {
+            $this->replySticker($page->sticker);
+        }
+
         if (count($images) > 1) {
 
             $media = [];

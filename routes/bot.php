@@ -43,6 +43,7 @@ BotManager::bot()
     ->route("/diagnostic ([0-9]+)", "getDiagnosticTable")
     ->fallbackDocument("uploadAnyKindOfMedia")
     ->fallbackAudio("uploadAnyKindOfMedia")
+    ->fallbackSticker("uploadAnyKindOfMedia")
     ->fallbackVideo("uploadAnyKindOfMedia");
 
 
@@ -75,7 +76,7 @@ BotManager::bot()
                 'type' => "photo"
             ]);
 
-            $tmp = "<b>#$media->id</b>,";
+            $tmp = "<b>#$media->id</b> (<code>$photoToSend</code>),";
             $count++;
         }
         BotManager::bot()

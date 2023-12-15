@@ -51,6 +51,11 @@ trait BotMethodsTrait
         return $this->sendMessage($this->chatId, $message, $messageThreadId);
     }
 
+    public function replySticker($sticker,  $messageThreadId = null)
+    {
+        return $this->sendSticker($this->chatId, $sticker, $messageThreadId);
+    }
+
     public function replyPhoto($caption, $path, $keyboard = [], $messageThreadId = null)
     {
         return $this->sendPhoto($this->chatId, $caption, $path, $keyboard, $messageThreadId);

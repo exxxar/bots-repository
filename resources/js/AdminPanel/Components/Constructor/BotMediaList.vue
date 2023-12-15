@@ -64,7 +64,14 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["selected","needVideo", "needVideoNote", "needPhoto","needAudio", "needDocument"],
+    props: ["selected",
+        "needVideo",
+        "needVideoNote",
+        "needPhoto",
+        "needAudio",
+        "needDocument",
+        "needSticker"
+    ],
     data() {
         return {
             bot: null,
@@ -141,6 +148,7 @@ export default {
                     needPhoto: this.needPhoto|| false,
                     needAudio: this.needAudio|| false,
                     needDocument: this.needDocument|| false,
+                    needSticker: this.needSticker|| false,
                 },
                 page: page
             }).then(resp => {

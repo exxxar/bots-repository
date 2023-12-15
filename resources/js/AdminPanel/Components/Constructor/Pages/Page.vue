@@ -228,6 +228,26 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                     v-on:select="selectVideo"></BotMediaList>
             </div>
 
+            <div class="col-12 mb-2">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_page_sticker"
+                           type="checkbox"
+                           id="need-page-sticker">
+                    <label class="form-check-label" for="need-page-sticker">
+                        Стикер к странице
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="col-12 mb-2" v-if="need_page_sticker">
+                <BotMediaList
+                    :need-sticker="true"
+                    :selected="[pageForm.sticker]"
+                    v-on:select="selectSticker"></BotMediaList>
+            </div>
+
 
             <div class="col-12 mb-2">
                 <div class="form-check">
@@ -507,6 +527,7 @@ export default {
             showReplyTemplateSelector: false,
             showInlineTemplateSelector: false,
 
+            need_page_sticker: false,
             need_page_audios: false,
             need_page_documents: false,
             need_page_video: false,
@@ -530,6 +551,7 @@ export default {
                 images: [],
                 audios: [],
                 documents: [],
+                sticker: null,
                 reply_keyboard_title: null,
                 reply_keyboard: null,
                 inline_keyboard: null,
@@ -566,6 +588,12 @@ export default {
         'need_page_documents': function (newVal, oldVal) {
             if (!this.need_page_documents) {
                 this.pageForm.documents = []
+            }
+
+        },
+        'need_page_sticker': function (newVal, oldVal) {
+            if (!this.need_page_sticker) {
+                this.pageForm.sticker = null
             }
 
         },
@@ -651,6 +679,9 @@ export default {
                 if (this.pageForm.documents.length > 0)
                     this.need_page_documents = true
 
+                if (this.pageForm.sticker)
+                    this.need_page_sticker = true
+
                 this.need_clean = true
             },
             deep: true
@@ -685,6 +716,7 @@ export default {
                 slug: page.slug ? page.slug.slug : null,
                 comment: page.slug ? page.slug.comment : null,
                 images: page.images || [],
+                sticker: page.sticker || null,
                 reply_keyboard_title: page.reply_keyboard_title || null,
                 reply_keyboard_id: page.reply_keyboard_id || null,
                 inline_keyboard_id: page.inline_keyboard_id || null,
@@ -767,6 +799,7 @@ export default {
                 command: null,
                 slug: null,
                 comment: null,
+                sticker: null,
                 images: [],
                 reply_keyboard: null,
                 inline_keyboard: null,
@@ -803,6 +836,7 @@ export default {
             this.need_rules = false
             this.need_page_audios = false
             this.need_page_documents = false
+            this.need_page_sticker = false
 
             this.$nextTick(() => {
                 this.need_clean = false
@@ -918,6 +952,9 @@ export default {
                 this.pageForm.images.push(item.file_id)
         },
 
+        selectSticker(item){
+            this.pageForm.sticker = item.file_id
+        },
         selectVideo(item) {
 
             if (!this.pageForm.videos)

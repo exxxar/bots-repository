@@ -500,6 +500,30 @@ abstract class BotCore
         return $find;
     }
 
+    private function botFallbackStickerHandler($message): bool
+    {
+        $sticker = $message->sticker  ?? null;
+        $caption = $message->caption ??  null;
+
+        $type =  "sticker";
+
+
+        if (is_null($sticker))
+            return false;
+
+        $find = false;
+        foreach ($this->routes as $item) {
+
+            if (is_null($item["path"]))
+                continue;
+
+            if ($item["path"] === "fallback_sticker") {
+                $find = $this->tryCall($item, $message, null, ($caption ?? null), $sticker, $type);
+            }
+        }
+        return $find;
+    }
+
     private function botFallbackDocumentHandler($message): bool
     {
         $document = $message->document ?? $message->animation ?? null;
@@ -810,6 +834,9 @@ abstract class BotCore
             if ($this->botNextHandler($message))
                 return;
 
+             if ($this->botFallbackStickerHandler($message))
+                 return;
+
             if ($this->botFallbackPhotoHandler($message))
                 return;
 
@@ -1075,6 +1102,18 @@ abstract class BotCore
         $this->routes[] = [
             "controller" => $this->controller ?? null,
             "path" => "fallback_audio",
+            "is_service" => true,
+            "function" => $function
+        ];
+
+        return $this;
+    }
+
+    public function fallbackSticker($function)
+    {
+        $this->routes[] = [
+            "controller" => $this->controller ?? null,
+            "path" => "fallback_sticker",
             "is_service" => true,
             "function" => $function
         ];

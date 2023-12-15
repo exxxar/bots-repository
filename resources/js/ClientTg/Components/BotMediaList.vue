@@ -49,9 +49,12 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
                         v-if="item.type==='document'"
                         class="fa-solid p-2 mr-2 font-14 fa-file-word rounded-xl shadow-xl bg-blue2-dark"></i>
 
+                    <i
+                        v-if="item.type==='sticker'"
+                        class="fa-solid p-2 mr-2 font-14 fa-note-sticky rounded-xl shadow-xl bg-blue2-dark"></i>
 
 
-                          {{ item.caption ?? 'Без подписи' }}
+                    {{ item.caption ?? 'Без подписи' }}
                     <small>({{ item.type ?? 'Без подписи' }})</small>
 
 
@@ -97,7 +100,7 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["selected", "needVideo", "needVideoNote", "needPhoto", "needDocument", "needAudio"],
+    props: ["selected", "needVideo", "needVideoNote", "needPhoto", "needDocument", "needAudio","needSticker"],
     data() {
         return {
             bot: null,
@@ -164,6 +167,7 @@ export default {
                     needPhoto: this.needPhoto || false,
                     needAudio: this.needAudio || false,
                     needDocument: this.needDocument || false,
+                    needSticker: this.needSticker || false,
                 },
                 page: page
             }).then(resp => {

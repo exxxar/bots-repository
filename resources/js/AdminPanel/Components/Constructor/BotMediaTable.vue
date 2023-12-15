@@ -147,6 +147,7 @@ export default {
                     needPhoto: true,
                     needAudio: true,
                     needDocument: true,
+                    needSticker: true,
                 },
                 page: page
             }).then(resp => {

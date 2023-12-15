@@ -31,7 +31,7 @@ class InlineBotController extends Controller
                 ->get();
 
 
-        if (!empty($botUsers))
+        if (count($botUsers)>0)
             foreach ($botUsers as $botUser) {
 
                 $tmp_user_id = (string)$botUser->telegram_chat_id;
@@ -73,7 +73,7 @@ class InlineBotController extends Controller
 
             }
 
-        if (empty($button_list)){
+        if (count($button_list)==0){
 
             $button_list[] =  [
                 'type' => 'article',

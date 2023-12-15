@@ -24,6 +24,7 @@ class BotPage extends Model
         'videos',
         'audios',
         'documents',
+        'sticker',
         'reply_keyboard_title',
         'reply_keyboard_id',
         'inline_keyboard_id',
