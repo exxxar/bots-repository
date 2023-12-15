@@ -21,31 +21,13 @@ import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue
         <button
             style="min-width: 50px;min-height: 50px;"
             type="button"
-            class="btn btn-outline-info dropdown-toggle" href="#" role="button"
+            class="btn btn-outline-primary dropdown-toggle mb-3" href="#" role="button"
             id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-bars"></i>
+            <i class="fa-solid fa-screwdriver-wrench mr-2"></i> Инструменты бота
         </button>
 
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-            <!--                        <button type="button"
-                                            v-bind:class="{'btn-info text-white':step===0}"
-                                            @click="setStep(0)"
-                                            class="btn btn-outline-info"><i class="fa-solid fa-info mr-1"></i> Информация о боте
-                                    </button>
-
-                                    <button type="button"
-                                            v-bind:class="{'btn-info text-white':step===4}"
-                                            @click="setStep(4)"
-                                            class="btn btn-outline-info"><i class="fa-solid fa-file mr-2"></i> Страницы
-                                    </button>
-
-
-                                    <button type="button"
-                                            v-bind:class="{'btn-info text-white':step===10}"
-                                            @click="setStep(10)"
-                                            class="btn btn-outline-info"><i class="fa-solid fa-code mr-2"></i> Настраиваемые поля
-                                    </button>-->
             <li><a class="dropdown-item" href="#bot-info" @click="setStep(0)">
                 <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
 

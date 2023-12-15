@@ -30,6 +30,7 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
                                     v-bind:class="{'btn-primary':step===2,'btn-outline-primary':step!==2}"
                                     class="btn">Редактирование бота
                             </button>
+
                         </div>
                     </div>
                 </div>
@@ -55,7 +56,8 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
                 </div>
 
                 <div v-if="step===2">
-                    <BotSection v-if="bot&&!load"
+                    <BotSection
+                        v-if="bot&&!load"
                              :bot="bot"
                     />
                 </div>

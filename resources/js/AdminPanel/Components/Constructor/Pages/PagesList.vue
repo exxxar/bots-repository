@@ -49,12 +49,15 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     v-for="(page, index) in pages"
                 >
                     <div class=" d-flex justify-content-between ">
+
                         <strong
                             @click="selectPage(page)">#{{ page.id || 'Не указано' }}
                             <span v-if="page.slug">{{ page.slug.command || 'Не указано' }}</span>
                             <span v-else>Не привязано к команде</span>
                             <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
                         </strong>
+
+
 
                         <div v-if="editor">
 
@@ -64,11 +67,13 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li v-if="page.deleted_at != null"><a class="dropdown-item" @click="restorePage(page.id)"><i
+                                    <li v-if="page.deleted_at != null"><a class="dropdown-item"
+                                                                          @click="restorePage(page.id)"><i
                                         class="fa-solid fa-copy mr-1"></i>Восстановить</a></li>
                                     <li><a class="dropdown-item" @click="duplicatePage(page.id)"><i
                                         class="fa-solid fa-copy mr-1"></i>Дублировать</a></li>
-                                    <li v-if="page.deleted_at == null"><a class="dropdown-item" @click="removePage(page.id)"><i
+                                    <li v-if="page.deleted_at == null"><a class="dropdown-item"
+                                                                          @click="removePage(page.id)"><i
                                         class="fa-solid fa-trash mr-1"></i>Удалить</a></li>
                                 </ul>
                             </div>
@@ -77,7 +82,54 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
                     </div>
 
-
+                    <ul
+                       v-if="page"
+                        class="component-icons">
+                        <li
+                            v-if="(page.images||[]).length>0">
+                            <i class="fa-regular fa-images"></i>
+                        </li>
+                        <li
+                            v-if="page.sticker">
+                            <i class="fa-regular fa-note-sticky"></i>
+                        </li>
+                        <li
+                            v-if="(page.videos||[]).length>0">
+                            <i class="fa-solid fa-photo-film"></i>
+                        </li>
+                        <li
+                            v-if="(page.audios||[]).length>0">
+                            <i class="fa-regular fa-file-audio"></i>
+                        </li>
+                        <li
+                            v-if="(page.documents||[]).length>0">
+                            <i class="fa-regular fa-file-word"></i>
+                        </li>
+                        <li
+                            v-if="page.next_page_id">
+                            <i class="fa-solid fa-link"></i>
+                        </li>
+                        <li
+                            v-if="page.next_bot_menu_slug_id">
+                            <i class="fa-solid fa-scroll"></i>
+                        </li>
+                        <li
+                            v-if="page.next_bot_dialog_command_id">
+                            <i class="fa-regular fa-comment-dots"></i>
+                        </li>
+                        <li
+                            v-if="page.rules_if">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </li>
+                        <li
+                            v-if="page.reply_keyboard_id">
+                            <i class="fa-regular fa-keyboard"></i>
+                        </li>
+                        <li
+                            v-if="page.inline_keyboard_id">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </li>
+                    </ul>
                 </li>
             </ul>
 
@@ -218,7 +270,7 @@ export default {
                 this.pages_paginate_object = this.getPagesPaginateObject
 
                 if (this.pages.length === 0)
-                    localStorage.setItem(`cashman_pagelist_${this.bot.id}_page_index`,0)
+                    localStorage.setItem(`cashman_pagelist_${this.bot.id}_page_index`, 0)
 
             }).catch(() => {
                 this.loading = false
@@ -235,6 +287,26 @@ export default {
         text-align: left;
         width: 200px;
         padding: 5px;
+    }
+}
+
+.component-icons {
+    display: flex;
+    justify-content: start;
+    // border-radius: 0px 5px 5px 0px;
+    padding: 0;
+
+    li {
+        padding: 5px;
+        cursor: pointer;
+        display: flex;
+        border: none;
+        background-color: #088f4d;
+        color: white;
+        margin-right: 3px;
+        font-size: 14px;
+        border-radius: 0px;
+
     }
 }
 </style>

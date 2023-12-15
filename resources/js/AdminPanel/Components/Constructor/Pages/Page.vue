@@ -15,43 +15,9 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
         id="page-construct"
         v-on:submit.prevent="openSaveModal">
 
-        <div class="d-flex justify-content-end" style="position:sticky;top:50px;z-index:100;">
-
-            <div class="btn-group"
-                 style="background:white;"
-                 role="group" aria-label="Basic example">
-
-                <button type="submit" v-if="pageForm.id||need_clean"
-                        title="Сохранить страницу"
-                        class="btn btn-outline-primary min-menu-btn">
-                    <i class="fa-regular fa-floppy-disk"></i>
-                </button>
-                <button type="button" @click="clearForm"
-                        title="Очистить \ Новая страница"
-                        v-if="pageForm.id||need_clean"
-                        class="btn btn-outline-primary min-menu-btn">
-                    <i class="fa-solid fa-xmark text-danger"></i>
-                </button>
-                <button type="button"
-                        title="Список страниц"
-                        data-bs-toggle="modal" data-bs-target="#pages-modal"
-                        class="btn btn-outline-primary min-menu-btn">
-                    <i class="fa-solid fa-list-ol"></i>
-                </button>
-            </div>
-
-
-        </div>
 
         <div class="row">
-            <div class="col-12 mb-2 ">
-                <h6 class="d-flex justify-between">
-                    <span>Вы создаете страницу для {{ bot.bot_domain }}</span>
-
-                </h6>
-            </div>
-
-            <div class="col-12 mb-2">
+            <div class="col-8 mb-2">
                 <label class="form-label" id="bot-domain">
                     <Popper>
                         <i class="fa-regular fa-circle-question mr-1"></i>
@@ -70,6 +36,31 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                        v-model="pageForm.command"
                        maxlength="255"
                        aria-describedby="bot-domain" required>
+            </div>
+
+            <div class="col-4 mb-2 d-flex justify-content-end align-items-end">
+                <div class="btn-group"
+                     style="background:white;"
+                     role="group" aria-label="Basic example">
+
+                    <button type="submit" v-if="pageForm.id||need_clean"
+                            title="Сохранить страницу"
+                            class="btn btn-primary min-menu-btn">
+                        <i class="fa-regular fa-floppy-disk"></i>
+                    </button>
+                    <button type="button" @click="clearForm"
+                            title="Очистить \ Новая страница"
+                            v-if="pageForm.id||need_clean"
+                            class="btn btn-outline-primary min-menu-btn">
+                        <i class="fa-solid fa-xmark text-danger"></i>
+                    </button>
+                    <button type="button"
+                            title="Список страниц"
+                            data-bs-toggle="modal" data-bs-target="#pages-modal"
+                            class="btn btn-outline-primary min-menu-btn">
+                        <i class="fa-solid fa-list-ol"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="col-12 mb-2">
@@ -557,9 +548,19 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form v-on:submit.prevent="submitPage">
+                    <div class="row" v-if="bot">
+                        <div class="col-12 mb-2 ">
+                            <h6 class="d-flex justify-between">
+                                <span>Вы создаете страницу для {{ bot.bot_domain }}</span>
+
+                            </h6>
+                        </div>
+                    </div>
+
+
+                    <form v-on:submit.prevent="submitPage" class="row">
                         <div class="col-12 mb-2">
-                            <h6>На странице выбраны следующий разделы</h6>
+                            <h6>На странице выбраны следующие разделы</h6>
                             <ul class="mini-pics">
                                 <li
                                     v-bind:class="{'active':need_page_images}">
@@ -651,9 +652,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </textarea>
                         </div>
 
-                        <button type="submit"
-                                class="btn btn-primary w-100 p-3">Сохранить
-                        </button>
+                        <div class="col-12">
+                            <button type="submit"
+                                    class="btn btn-primary w-100 p-3">Сохранить
+                            </button>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -1289,5 +1292,11 @@ export default {
     }
 
 
+}
+
+.custom-menu {
+    position:sticky;
+    top:50px;
+    z-index:100;
 }
 </style>
