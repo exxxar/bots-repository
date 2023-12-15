@@ -54,7 +54,7 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
                         v-on:callback="botListCallback"/>
                 </div>
 
-                <div class="row" v-if="step===2">
+                <div v-if="step===2">
                     <BotSection v-if="bot&&!load"
                              :bot="bot"
                     />

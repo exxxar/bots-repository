@@ -1,56 +1,62 @@
 <script setup>
 import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardConstructor.vue";
 import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
-import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
+
 import BotSlugListSimple from "@/AdminPanel/Components/Constructor/Slugs/BotSlugListSimple.vue";
 import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
 import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
-
+import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 </script>
 <template>
     <form
         v-if="bot"
-        v-on:submit.prevent="submitPage">
+        id="page-construct"
+        v-on:submit.prevent="openSaveModal">
+
+        <div class="d-flex justify-content-end" style="position:sticky;top:50px;z-index:100;">
+
+            <div class="btn-group"
+                 style="background:white;"
+                 role="group" aria-label="Basic example">
+
+                <button type="submit" v-if="pageForm.id||need_clean"
+                        title="Сохранить страницу"
+                        class="btn btn-outline-primary min-menu-btn">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                </button>
+                <button type="button" @click="clearForm"
+                        title="Очистить \ Новая страница"
+                        v-if="pageForm.id||need_clean"
+                        class="btn btn-outline-primary min-menu-btn">
+                    <i class="fa-solid fa-xmark text-danger"></i>
+                </button>
+                <button type="button"
+                        title="Список страниц"
+                        data-bs-toggle="modal" data-bs-target="#pages-modal"
+                        class="btn btn-outline-primary min-menu-btn">
+                    <i class="fa-solid fa-list-ol"></i>
+                </button>
+            </div>
+
+
+        </div>
 
         <div class="row">
             <div class="col-12 mb-2 ">
                 <h6 class="d-flex justify-between">
                     <span>Вы создаете страницу для {{ bot.bot_domain }}</span>
-                    <a href="#clear-form"
-                       v-if="pageForm.id||need_clean"
-                       @click="clearForm">очистить форму</a>
+
                 </h6>
             </div>
 
-            <div class="col-12 mb-2" v-if="pageForm.id">
-                <div class="form-check">
-                    <input class="form-check-input"
-                           v-model="need_show_qr_and_link"
-                           type="checkbox"
-                           id="need-show-qr-and-link">
-                    <label class="form-check-label" for="need-show-qr-and-link">
-                        Показать ссылку на страницу и QR-код
-                    </label>
-                </div>
-            </div>
-
-            <div class="col-12 mb-2" v-if="pageForm.id&&need_show_qr_and_link">
-                <p>Ссылка на текущую страницу: <span class="bg-secondary font-bold cursor-pointer"
-                                                     @click="copyToClipBoard(pageLink)">{{
-                        pageLink
-                    }}</span></p>
-                <div class="d-flex justify-content-center">
-                    <img v-lazy="qr" style="width:200px;height:200px;">
-                </div>
-            </div>
             <div class="col-12 mb-2">
                 <label class="form-label" id="bot-domain">
                     <Popper>
                         <i class="fa-regular fa-circle-question mr-1"></i>
                         <template #content>
-                            <div> Команда должна начинаться с символва . и *<br>
+                            <div> Команда должна начинаться с символа . и *<br>
                                 Например: .*Меню<br>
                             </div>
                         </template>
@@ -77,30 +83,11 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                 </div>
             </div>
 
-            <div class="col-12 mb-2">
-                <label class="form-label" id="bot-domain">
-                    <Popper>
-                        <i class="fa-regular fa-circle-question mr-1"></i>
-                        <template #content>
-                            <div>Напишите для себя пояснение для чего нужна данная страница.
-                                Это поможет другим менеджерам лучше понять Вас.
-                            </div>
-                        </template>
-                    </Popper>
-                    Описание страницы
-                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                </label>
-                <textarea type="text" class="form-control"
-                          placeholder="Описание страницы"
-                          aria-label="Описание страницы"
-                          v-model="pageForm.comment"
-                          maxlength="255"
-                          aria-describedby="bot-domain" required>
-            </textarea>
-            </div>
+
         </div>
 
         <div class="row" v-if="!pageForm.is_external">
+
             <div class="col-12 mb-2">
                 <label class="form-label d-flex justify-content-between align-items-center mb-0" id="bot-domain">
                     <div>
@@ -125,19 +112,19 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                                           v-model="pageForm.content"
                                           maxlength="4096"
                                           placeholder="Введите текст"
-                                          id="floatingTextarea2" style="min-height: 100px"></textarea>
+                                          id="floatingTextarea2" style="min-height: 300px"></textarea>
                     <label for="floatingTextarea2">Содержимое страницы <span
                         v-if="pageForm.content">{{ pageForm.content.length }}/4096 </span></label>
                 </div>
 
             </div>
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_page_images" >
+                <div class="form-check styled-label">
                     <input class="form-check-input"
                            v-model="need_page_images"
                            type="checkbox"
                            id="need-page-images">
-                    <label class="form-check-label" for="need-page-images">
+                    <label class="form-check-label" for="need-page-images" >
                         Изображения на странице (максимум 10)
                     </label>
                 </div>
@@ -188,24 +175,9 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                 </div>
             </div>
 
-            <!--            <div class="col-12 mb-2" v-if="need_page_images">
 
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6>... или выберите ранее загруженные в бота</h6>
-                                </div>
-                                <div class="card-body">
-                                    <BotMediaList
-                                        :need-photo="true"
-                                        :selected="pageForm.images"
-                                        v-on:select="selectPhoto"></BotMediaList>
-                                </div>
-                            </div>
-
-                        </div>-->
-
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_page_video">
+                <div class="form-check styled-label" >
                     <input class="form-check-input"
                            v-model="need_page_video"
                            type="checkbox"
@@ -228,8 +200,8 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                     v-on:select="selectVideo"></BotMediaList>
             </div>
 
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_page_sticker">
+                <div class="form-check styled-label">
                     <input class="form-check-input"
                            v-model="need_page_sticker"
                            type="checkbox"
@@ -249,8 +221,8 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
             </div>
 
 
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_page_audios">
+                <div class="form-check styled-label">
                     <input class="form-check-input"
                            v-model="need_page_audios"
                            type="checkbox"
@@ -272,8 +244,8 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                     v-on:select="selectAudio"></BotMediaList>
             </div>
 
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_page_documents">
+                <div class="form-check styled-label" >
                     <input class="form-check-input"
                            v-model="need_page_documents"
                            type="checkbox"
@@ -296,8 +268,8 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
             </div>
 
 
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_reply_menu">
+                <div class="form-check styled-label" >
                     <input class="form-check-input"
                            v-model="need_reply_menu"
                            type="checkbox" id="need-reply-menu">
@@ -365,8 +337,8 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 
             </div>
 
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_inline_menu">
+                <div class="form-check styled-label">
                     <input class="form-check-input"
                            v-model="need_inline_menu"
                            type="checkbox" id="need-inline-menu">
@@ -413,8 +385,8 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 
             </div>
 
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_attach_page">
+                <div class="form-check styled-label">
                     <input class="form-check-input"
                            v-model="need_attach_page"
                            type="checkbox"
@@ -436,13 +408,13 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                     :editor="false"/>
             </div>
 
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_attach_slug">
+                <div class="form-check styled-label" >
                     <input class="form-check-input"
                            v-model="need_attach_slug"
                            type="checkbox"
                            id="need-slug-attach">
-                    <label class="form-check-label" for="need-slug-attach">
+                    <label class="form-check-label  text-white" for="need-slug-attach">
                         Привязать скрипт
                     </label>
                 </div>
@@ -459,8 +431,8 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
                                    :bot="bot"/>
             </div>
 
-            <div class="col-12 mb-2">
-                <div class="form-check">
+            <div class="col-12 mb-2" v-if="need_attach_dialog">
+                <div class="form-check styled-label">
                     <input class="form-check-input"
                            v-model="need_attach_dialog"
                            type="checkbox"
@@ -486,9 +458,9 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 
         </div>
 
-        <div class="row">
-            <div class="col-12 mb-2">
-                <div class="form-check">
+        <div class="row" >
+            <div class="col-12 mb-2" v-if="need_rules">
+                <div class="form-check styled-label" >
                     <input class="form-check-input"
                            v-model="need_rules"
                            type="checkbox" id="need-rules">
@@ -505,27 +477,237 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 mb-2">
-                <button class="btn btn-outline-primary w-100 p-3">Сохранить страницу</button>
+
+    </form>
+
+    <div class="fixed-left-menu">
+        <button
+            @click="showMenu=!showMenu"
+            class="btn btn-outline-primary p-2 fixed-menu-btn">
+<!--            <i class="fa-solid fa-ellipsis-vertical"></i>-->
+            <i class="fa-solid fa-caret-right" v-if="!showMenu"></i>
+            <i class="fa-solid fa-caret-left" v-else></i>
+        </button>
+        <ul v-if="showMenu" class="component-menu">
+            <li
+                @click="need_page_images=!need_page_images"
+                v-bind:class="{'active':need_page_images}">
+                <i class="fa-regular fa-images"></i>
+                <span>Изображения</span>
+            </li>
+            <li
+                @click="need_page_sticker=!need_page_sticker"
+                v-bind:class="{'active':need_page_sticker}">
+                <i class="fa-regular fa-note-sticky"></i>
+                <span>Стикеры</span>
+            </li>
+            <li
+                @click="need_page_video=!need_page_video"
+                v-bind:class="{'active':need_page_video}">
+                <i class="fa-solid fa-photo-film"></i>
+                <span>Видео</span>
+            </li>
+            <li
+                @click="need_page_audios=!need_page_audios"
+                v-bind:class="{'active':need_page_audios}">
+                <i class="fa-regular fa-file-audio"></i>
+                <span>Аудио</span>
+            </li>
+            <li
+                @click="need_page_documents=!need_page_documents"
+                v-bind:class="{'active':need_page_documents}">
+                <i class="fa-regular fa-file-word"></i>
+                <span>Документы</span>
+            </li>
+            <li
+                @click="need_attach_page=!need_attach_page"
+                v-bind:class="{'active':need_attach_page}">
+                <i class="fa-solid fa-link"></i>
+                <span>Другая страница</span>
+            </li>
+            <li
+                @click="need_attach_slug=!need_attach_slug"
+                v-bind:class="{'active':need_attach_slug}">
+                <i class="fa-solid fa-scroll"></i>
+                <span>Скрипт</span>
+            </li>
+            <li
+                @click="need_attach_dialog=!need_attach_dialog"
+                v-bind:class="{'active':need_attach_dialog}">
+                <i class="fa-regular fa-comment-dots"></i>
+                <span>Начало диалога</span>
+            </li>
+            <li
+                @click="need_rules=!need_rules"
+                v-bind:class="{'active':need_rules}">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span>Правила</span>
+            </li>
+            <li
+                @click="need_reply_menu=!need_reply_menu"
+                v-bind:class="{'active':need_reply_menu}">
+                <i class="fa-regular fa-keyboard"></i>
+                <span>Нижнее меню</span>
+            </li>
+            <li
+                @click="need_inline_menu=!need_inline_menu"
+                v-bind:class="{'active':need_inline_menu}">
+                <i class="fa-solid fa-ellipsis"></i>
+                <span>Меню под текстом</span>
+            </li>
+        </ul>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="save-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Сохранение страницы</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form v-on:submit.prevent="submitPage">
+                        <div class="col-12 mb-2">
+                            <h6>На странице выбраны следующий разделы</h6>
+                            <ul class="mini-pics">
+                                <li
+                                    v-bind:class="{'active':need_page_images}">
+                                    <i class="fa-regular fa-images"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_page_sticker}">
+                                    <i class="fa-regular fa-note-sticky"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_page_video}">
+                                    <i class="fa-solid fa-photo-film"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_page_audios}">
+                                    <i class="fa-regular fa-file-audio"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_page_documents}">
+                                    <i class="fa-regular fa-file-word"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_attach_page}">
+                                    <i class="fa-solid fa-link"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_attach_slug}">
+                                    <i class="fa-solid fa-scroll"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_attach_dialog}">
+                                    <i class="fa-regular fa-comment-dots"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_rules}">
+                                    <i class="fa-solid fa-scale-balanced"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_reply_menu}">
+                                    <i class="fa-regular fa-keyboard"></i>
+                                </li>
+                                <li
+                                    v-bind:class="{'active':need_inline_menu}">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-12 mb-2" v-if="pageForm.id">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="need_show_qr_and_link"
+                                       type="checkbox"
+                                       id="need-show-qr-and-link">
+                                <label class="form-check-label" for="need-show-qr-and-link">
+                                    Показать ссылку на страницу и QR-код
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-2" v-if="pageForm.id&&need_show_qr_and_link">
+                            <p>Ссылка на текущую страницу: <span class="bg-secondary font-bold cursor-pointer"
+                                                                 @click="copyToClipBoard(pageLink)">{{
+                                    pageLink
+                                }}</span></p>
+                            <div class="d-flex justify-content-center">
+                                <img v-lazy="qr" style="width:200px;height:200px;">
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-2">
+                            <label class="form-label" id="bot-domain">
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Напишите для себя пояснение для чего нужна данная страница.
+                                            Это поможет другим менеджерам лучше понять Вас.
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Описание страницы
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
+                            <textarea type="text" class="form-control"
+                                      placeholder="Описание страницы"
+                                      aria-label="Описание страницы"
+                                      v-model="pageForm.comment"
+                                      maxlength="255"
+                                      aria-describedby="bot-domain" required>
+            </textarea>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary w-100 p-3">Сохранить
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Не сохранять</button>
+
+                </div>
             </div>
         </div>
-    </form>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="pages-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <PagesList
+                        :editor="true"
+                        v-on:callback="pageListCallback"/>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 
 import {mapGetters} from "vuex";
 
+
+
 export default {
-    props: ["page"],
     data() {
         return {
+            saveModal:null,
+            page: null,
             need_show_qr_and_link: false,
             need_clean: false,
             load: false,
             photos: [],
             showReplyTemplateSelector: false,
             showInlineTemplateSelector: false,
+
+            showMenu: false,
 
             need_page_sticker: false,
             need_page_audios: false,
@@ -706,6 +888,20 @@ export default {
     },
     mounted() {
         if (this.page) {
+            this.preparePageForm()
+        } else
+            this.clearForm()
+
+
+        this.loadCurrentBot().then(() => {
+            this.saveModal =new bootstrap.Modal(document.getElementById('save-modal'), {})
+        })
+
+
+    },
+
+    methods: {
+        preparePageForm() {
             let page = this.page
             this.photos = []
             this.pageForm = {
@@ -736,16 +932,7 @@ export default {
                 rules_if_message: page.rules_if_message || null,
                 rules_else_message: page.rules_else_message || null,
             }
-        } else
-            this.clearForm()
-
-
-        this.loadCurrentBot().then(() => {
-
-        })
-    },
-
-    methods: {
+        },
         copyToClipBoard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 this.$notify({
@@ -844,6 +1031,9 @@ export default {
 
             })
         },
+        openSaveModal() {
+            this.saveModal.show()
+        },
         submitPage() {
 
             let data = new FormData();
@@ -882,6 +1072,7 @@ export default {
                     })
                 }
 
+                this.saveModal.hide()
 
                 this.$emit("callback", response.data)
                 this.$notify({
@@ -952,7 +1143,7 @@ export default {
                 this.pageForm.images.push(item.file_id)
         },
 
-        selectSticker(item){
+        selectSticker(item) {
             this.pageForm.sticker = item.file_id
         },
         selectVideo(item) {
@@ -1001,7 +1192,111 @@ export default {
                 this.pageForm.documents.splice(index, 1)
             else
                 this.pageForm.documents.push(item.file_id)
-        }
+        },
+        pageListCallback(page) {
+            this.load = true
+            this.page = page
+            this.preparePageForm()
+            this.$nextTick(() => {
+                this.load = false
+            });
+        },
+
     }
 }
 </script>
+<style lang="scss">
+.min-menu-btn {
+    min-width: 50px;
+    min-height: 50px;
+}
+
+.styled-label {
+    background: #008cba;
+    padding:10px 10px 10px 30px;
+    box-sizing:border-box;
+    label {
+        color:white;
+    }
+}
+
+.mini-pics {
+    display: flex;
+    background-color: white;
+    justify-content: space-around;
+    // border-radius: 0px 5px 5px 0px;
+    padding: 0;
+    li {
+        padding: 10px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 1px lightgray solid;
+
+        &.active {
+            background-color: #008cba;
+            color: white;
+        }
+
+    }
+}
+.component-menu {
+
+        display: flex;
+        position: absolute;
+        top: 0;
+        border: 1px lightgray solid;
+        left: 30px;
+        background-color: white;
+        padding: 0;
+       // border-radius: 0px 5px 5px 0px;
+
+        li {
+            padding: 5px 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            span {
+                margin-top: 3px;
+                font-size: 8px;
+                text-align: center;
+                line-height: 100%;
+            }
+
+            &.active,
+            &:hover {
+                background-color: #008cba;
+                color: white;
+            }
+
+            &.divider {
+                padding: 0;
+                width: 2px;
+                background: #e2e2e2;
+
+                &:hover {
+                    background: #e2e2e2;
+                }
+            }
+        }
+    }
+
+.fixed-left-menu {
+    position: fixed;
+    z-index: 1000;
+    left: 20px;
+    top: 40%;
+
+    .fixed-menu-btn {
+        height: 52px;
+        border: 1px lightgray solid;
+    }
+
+
+}
+</style>

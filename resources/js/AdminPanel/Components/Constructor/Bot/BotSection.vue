@@ -16,66 +16,72 @@ import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue
 
 </script>
 <template>
+
+    <div class="dropdown custom-dropdown">
+        <button
+            style="min-width: 50px;min-height: 50px;"
+            type="button"
+            class="btn btn-outline-info dropdown-toggle" href="#" role="button"
+            id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+            <!--                        <button type="button"
+                                            v-bind:class="{'btn-info text-white':step===0}"
+                                            @click="setStep(0)"
+                                            class="btn btn-outline-info"><i class="fa-solid fa-info mr-1"></i> Информация о боте
+                                    </button>
+
+                                    <button type="button"
+                                            v-bind:class="{'btn-info text-white':step===4}"
+                                            @click="setStep(4)"
+                                            class="btn btn-outline-info"><i class="fa-solid fa-file mr-2"></i> Страницы
+                                    </button>
+
+
+                                    <button type="button"
+                                            v-bind:class="{'btn-info text-white':step===10}"
+                                            @click="setStep(10)"
+                                            class="btn btn-outline-info"><i class="fa-solid fa-code mr-2"></i> Настраиваемые поля
+                                    </button>-->
+            <li><a class="dropdown-item" href="#bot-info" @click="setStep(0)">
+                <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
+
+            <li><a class="dropdown-item" href="#bot-pages" @click="setStep(4)">
+                <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>
+
+            <li><a class="dropdown-item" href="#bot-custom-fields" @click="setStep(10)">
+                <i class="fa-solid fa-code mr-2"></i>Настраиваемые поля</a></li>
+
+            <li><a class="dropdown-item" href="#bot-menu-template" @click="setStep(1)"><i
+                class="fa-solid fa-keyboard mr-2"></i>Все клавиатуры в боте</a></li>
+            <li><a class="dropdown-item" href="#bot-slugs" @click="setStep(2)"><i
+                class="fa-solid fa-scroll mr-2"></i>Все скрипты в боте</a></li>
+            <li><a class="dropdown-item" href="#bot-dialogs" @click="setStep(6)"><i
+                class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
+            <li><a class="dropdown-item" href="#bot-users" @click="setStep(3)"><i
+                class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
+            <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i
+                class="fa-regular fa-newspaper mr-2"></i> Новостной канал</a></li>
+            <li><a class="dropdown-item" href="#bot-amo" @click="setStep(7)"><i
+                class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
+            <li><a class="dropdown-item" href="#bot-y-clients" @click="setStep(12)"><i
+                class="fa-solid fa-list-check mr-2"></i> YClients</a></li>
+            <li><a class="dropdown-item" href="#bot-shop" @click="setStep(8)"><i
+                class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
+            <li><a class="dropdown-item" href="#bot-media" @click="setStep(11)"><i
+                class="fa-brands fa-shopify mr-2"></i> Медиа файлы бота</a></li>
+        </ul>
+    </div>
+
     <div class="row" v-if="company">
         <div class="col-12">
             <h6>Создаем бот к компании {{ company.title || 'Не установлен' }}</h6>
         </div>
     </div>
-    <div class="row mb-3 bot-sub-menu"  style="background: transparent;">
-        <div class="col-12">
-            <div class="btn-group" role="group" aria-label="Basic outlined example" style="background: white;">
-                <button type="button"
-                        v-bind:class="{'btn-info text-white':step===0}"
-                        @click="setStep(0)"
-                        class="btn btn-outline-info"><i class="fa-solid fa-info mr-1"></i> Информация о боте
-                </button>
 
-                <button type="button"
-                        v-bind:class="{'btn-info text-white':step===4}"
-                        @click="setStep(4)"
-                        class="btn btn-outline-info"><i class="fa-solid fa-file mr-2"></i> Страницы
-                </button>
-
-
-                <button type="button"
-                        v-bind:class="{'btn-info text-white':step===10}"
-                        @click="setStep(10)"
-                        class="btn btn-outline-info"><i class="fa-solid fa-code mr-2"></i> Настраиваемые поля
-                </button>
-
-                <div class="dropdown">
-                    <button
-                        type="button"
-                        class="btn btn-outline-info dropdown-toggle custom-group-dropdown-btn" href="#" role="button"
-                        id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-
-                        <li><a class="dropdown-item" href="#bot-menu-template" @click="setStep(1)"><i
-                            class="fa-solid fa-keyboard mr-2"></i>Все клавиатуры в боте</a></li>
-                        <li><a class="dropdown-item" href="#bot-slugs" @click="setStep(2)"><i
-                            class="fa-solid fa-scroll mr-2"></i>Все скрипты в боте</a></li>
-                        <li><a class="dropdown-item" href="#bot-dialogs" @click="setStep(6)"><i
-                            class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
-                        <li><a class="dropdown-item" href="#bot-users" @click="setStep(3)"><i
-                            class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
-                        <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i
-                            class="fa-regular fa-newspaper mr-2"></i> Новостной канал</a></li>
-                        <li><a class="dropdown-item" href="#bot-amo" @click="setStep(7)"><i
-                            class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
-                        <li><a class="dropdown-item" href="#bot-y-clients" @click="setStep(12)"><i
-                            class="fa-solid fa-list-check mr-2"></i> YClients</a></li>
-                        <li><a class="dropdown-item" href="#bot-shop" @click="setStep(8)"><i
-                            class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
-                        <li><a class="dropdown-item" href="#bot-media" @click="setStep(11)"><i
-                            class="fa-brands fa-shopify mr-2"></i> Медиа файлы бота</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div v-if="step===0" class="pb-5 mb-5">
         <BotForm
@@ -136,19 +142,19 @@ import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue
     </div>
 
     <div class="row pb-5 mb-5" v-if="step===4">
-        <div class="col-12 col-md-8" v-if="!load">
+        <div class="col-12 col-md-12" v-if="!load">
             <Page
                 v-if="!loadPage"
                 :page="page"
                 v-on:callback="pageCallback"/>
         </div>
 
-        <div class="col-12 col-md-4" v-if="!load">
+<!--        <div class="col-12 col-md-4" v-if="!load">
             <PagesList
                 :editor="true"
                 v-on:callback="pageListCallback"/>
 
-        </div>
+        </div>-->
     </div>
 
     <div v-if="step===9" class="pb-5 mb-5">
@@ -197,3 +203,12 @@ export default {
 }
 </script>
 
+<style>
+.custom-dropdown {
+    display: inline-block;
+    position: sticky;
+    top: 50px;
+    background: white;
+    z-index:101;
+}
+</style>

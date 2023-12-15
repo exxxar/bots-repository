@@ -18,7 +18,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <div
                         v-if="slugs.length>0"
                         class="row">
-                        <div class="col-md-6 mb-2" v-for="(item, index) in slugs">
+                        <div class="col-md-4 mb-2" v-for="(item, index) in slugs">
                             <Slug
                                 :item="item"
                                 :bot="bot"
