@@ -109,7 +109,7 @@ import 'vue3-audio-player/dist/style.css'
                     </div>
 
                     <div class="d-flex justify-content-center mt-5">
-                        <a href="cashman.pdf" target="_blank" class="btn btn-outline-light p-3 shadow" style="min-width: 300px;">
+                        <a href="/cashman.pdf" target="_blank" class="btn btn-outline-light p-3 shadow" style="min-width: 300px;">
                             Скачать презентацию
                         </a>
                     </div>
