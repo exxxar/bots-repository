@@ -1349,7 +1349,7 @@ export default {
 
 
     &:hover {
-        background-color: white;
+        background-color: white !important;
         cursor: pointer;
         i,
         p {
