@@ -109,9 +109,9 @@ import 'vue3-audio-player/dist/style.css'
                     </div>
 
                     <div class="d-flex justify-content-center mt-5">
-                        <button type="button" class="btn btn-outline-light p-3 shadow" style="min-width: 300px;">
+                        <a href="cashman.pdf" target="_blank" class="btn btn-outline-light p-3 shadow" style="min-width: 300px;">
                             Скачать презентацию
-                        </button>
+                        </a>
                     </div>
                 </div>
             </aside>
@@ -729,7 +729,7 @@ import 'vue3-audio-player/dist/style.css'
                 <div class="container px-5">
                     <div class="row gx-5 align-items-center justify-content-center justify-content-lg-center">
                         <div class="col-12 col-lg-8">
-                            <h2 class="display-4 lh-1 mb-4">Интеграции с другими системами</h2>
+                            <h2 class="display-4 lh-1 mb-4 text-center">Интеграции с другими системами</h2>
                             <p class="lead fw-normal text-muted mb-5 mb-lg-0">Наши программисты готовы подключить любую
                                 интересующую вас систему,
                                 которая уже есть у нас, или же добавить абсолютно новую интеграцию и всё это в рамках
@@ -785,11 +785,10 @@ import 'vue3-audio-player/dist/style.css'
                         <div class="col-xxl-8">
                             <div class="text-center my-5"><h2 class="display-5 fw-bolder"><span
                                 class="text-gradient d-inline">Наши тарифы</span></h2>
-                                <p class="lead fw-light mb-4">My name is Start Bootstrap and I help brands grow.</p>
-                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                    Fugit dolorum itaque qui unde quisquam consequatur autem. Eveniet quasi nobis
-                                    aliquid cumque officiis sed rem iure ipsa! Praesentium ratione atque
-                                    dolorem?</p>
+                                <p class="lead fw-light mb-4">Хотим предоставить наиболее удобные тарифы для каждого</p>
+                                <p class="text-muted">Наша команда окажется каждому клиенту полный комплекс наших услуг и индивидуальный подход.
+                                Менеджеры помогут собрать Вашу систему на нашей платформе. А программисты воплотят самые смелые Ваши идеи.
+                                </p>
 
                             </div>
                         </div>
@@ -1316,7 +1315,7 @@ export default {
     background: transparent;
     border: 1px white solid;
     margin-bottom: 5px;
-    min-height: 220px;
+    height: 220px !important;
     overflow: hidden;
     text-decoration: none;
 
@@ -1331,7 +1330,23 @@ export default {
             font-size: 40px;
             color: white;
         }
+
+        img {
+            width: 100%;
+            object-fit: cover;
+            height: 130px;
+        }
+
+        p {
+            padding: 10px;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
     }
+
 
     &:hover {
         background-color: white;
@@ -1340,19 +1355,6 @@ export default {
         p {
             color: black;
         }
-    }
-
-    img {
-        object-fit: contain;
-    }
-
-    p {
-        padding: 10px;
-        text-align: center;
-        color: white;
-        font-size: 12px;
-        word-wrap: break-word;
-        word-break: break-word;
     }
 }
 </style>
