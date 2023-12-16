@@ -1,0 +1,19 @@
+models:
+  YClients:
+    bot_id: id foreign:bots
+    login: string:255 nullable
+    password: string:255 nullable
+    partner_token: string:255 nullable
+    need_debug: boolean default:false
+    debug_log_file: string:255 nullable
+    throttle: integer default:0 comment:'максимальное число запросов к API YCLIENTS в секунду'
+    relationships:
+      belongsTo: Bot
+
+
+seeders: YClients
+
+controllers:
+  YClients:
+    resource: api
+

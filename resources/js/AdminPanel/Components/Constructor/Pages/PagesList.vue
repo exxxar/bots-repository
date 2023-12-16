@@ -285,7 +285,7 @@ export default {
         text-overflow: clip;
         word-wrap: break-word;
         text-align: left;
-        width: 200px;
+        //width: 200px;
         padding: 5px;
     }
 }

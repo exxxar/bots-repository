@@ -136,6 +136,25 @@ class BotLogicFactory
         return new BotCollection($bots);
     }
 
+    public function landingCollections($search = null,  $size = null): BotSecurityCollection
+    {
+
+        $size = $size ?? config('app.results_per_page');
+
+        $bots = Bot::query();
+
+        if (!is_null($search))
+            $bots = $bots->where("bot_domain", 'like', "%$search%");
+
+        $bots = $bots
+            ->whereNotNull("bot_token")
+            ->orderBy("updated_at", 'DESC')
+            ->paginate($size);
+
+        return new BotSecurityCollection($bots);
+    }
+
+
     public function simple($companyId = null, $search = null, $needSelfBots = false, $size = null): BotSecurityCollection
     {
         if (is_null($this->botUser))
@@ -818,6 +837,45 @@ class BotLogicFactory
 
         return new BotResource($bot);
     }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function sendLandingRequest(array $data): void
+    {
+        if (is_null($this->bot))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "name" => "required",
+            "phone" => "required",
+            "message" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $callbackChannel = $this->bot->order_channel ?? $this->bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
+
+        $typeText = "#заявкаслендинга";
+
+        $adminMessage = "$typeText\n -имя: %s \n -телефон: %s\n -почта: %s\nСообщение: %s\n";
+
+        $thread = $this->bot->topics["orders"] ?? null;
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage($callbackChannel,
+                sprintf($adminMessage,
+                    $data["name"] ?? '-',
+                    $data["phone"] ?? '-',
+                    $data["email"] ?? '-',
+                    $data["message"] ?? '-'
+                ),$thread);
+
+    }
+
 
     /**
      * @throws ValidationException
@@ -1953,6 +2011,7 @@ class BotLogicFactory
 
 
     }
+
 
 
     /**

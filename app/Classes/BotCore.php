@@ -584,7 +584,7 @@ abstract class BotCore
             ->first();
 
         if (is_null($transaction)) {
-            $this->answerPreCheckoutQuery($preCheckoutQueryId, false, 'Транзакция не надена!');
+            $this->answerPreCheckoutQuery($preCheckoutQueryId, false, 'Транзакция не найдена!');
             return;
         }
 

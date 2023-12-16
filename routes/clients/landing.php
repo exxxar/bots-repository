@@ -1,9 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\BotController;
-use App\Http\Controllers\Admin\BotPageController;
-use App\Http\Controllers\Admin\CompanyController;
-use App\Http\Controllers\AmoCrmController;
+use App\Http\Controllers\Landing\BotController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
+
+Route::prefix("landing")
+    ->group(function () {
+        Route::post("/send-to-channel", [BotController::class, "sendToChannel"]);
+
+        Route::prefix("bots")
+            ->controller(BotController::class)
+            ->group(function () {
+                Route::post("simple-bot-list", "simpleList");
+            });
+    });

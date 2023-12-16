@@ -36,16 +36,16 @@ import {Head} from '@inertiajs/vue3'
 
 
 
-                    <li class="nav-item"><a class="nav-link me-lg-3" href="#constructor">Конструктор</a></li>
+                    <li class="nav-item"><a class="nav-link me-lg-3" href="#cases">Кейсы</a></li>
                     <li class="nav-item"><a class="nav-link me-lg-3" href="#prices">Тарифы</a></li>
-                    <li class="nav-item"><a class="nav-link me-lg-3" href="#employes">Сотрудничество</a></li>
+                    <li class="nav-item"><a class="nav-link me-lg-3" href="#lets-start">Сотрудничество</a></li>
 
                     <li class="nav-item" style="border-left:2px #efefef solid">
-                        <a class="nav-link me-lg-3 text-gradient ml-2" href="#!"><i class="fa-brands fa-vk"></i></a>
+                        <a class="nav-link me-lg-3 text-gradient ml-2" href="https://vk.com/nextgroupit" target="_blank"><i class="fa-brands fa-vk"></i></a>
                     </li>
 
                     <li class="nav-item" style="border-right:2px #efefef solid">
-                        <a class="nav-link me-lg-3 text-gradient" href="#!"><i class="fa-brands fa-instagram"></i></a>
+                        <a class="nav-link me-lg-3 text-gradient" href="https://t.me/nextitgroup_bot" target="_blank"><i class="fa-brands fa-telegram"></i></a>
 
                     </li>
                 </ul>

@@ -552,16 +552,26 @@ class BotAdministrativeLogicFactory
 
         $providerToken = $this->bot->payment_provider_token;
         $currency = "RUB";
+        $payloadData = $data["payload_data"] ?? null;
+
+        /*
+         * (object)[
+         *  "type"=>"payed_link",
+         *  "id"=>11// из таблицы payed_link
+         * ]
+         *
+         */
 
         Transaction::query()->create([
             'user_id' => $userBotUser->user_id,
+            'bot_user_id' => $userBotUser->id,
             'bot_id' => $this->bot->id,
             'payload' => $payload,
             'currency' => $currency,
             'total_amount' => $amount,
             'status' => 0,
             'products_info' => (object)[
-                "payload" => $payloadData ?? null,
+                "payload" =>$payloadData,
                 "prices" => $prices,
             ],
         ]);

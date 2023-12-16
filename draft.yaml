@@ -1,5 +1,5 @@
 models:
-  YClients:
+  PayedLink:
     bot_id: id foreign:bots
     login: string:255 nullable
     password: string:255 nullable

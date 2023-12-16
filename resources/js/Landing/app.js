@@ -15,6 +15,7 @@ import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
 import mitt from 'mitt'
 import Popper from "vue3-popper";
 
+import store from './store'
 
 const eventBus = mitt()
 
@@ -44,6 +45,7 @@ createInertiaApp({
             .use(VueTheMask)
             .use(Notifications)
             .use(Popper)
+            .use(store)
             .use(PerfectScrollbar)
             .use(ZiggyVue, Ziggy)
             .use(VueLazyLoad,
