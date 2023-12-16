@@ -1312,8 +1312,8 @@ export default {
 }
 
 .bot-card {
-    background: transparent;
-    border: 1px white solid;
+    background: transparent !important;
+    border: 1px white solid !important;
     margin-bottom: 5px;
     height: 220px !important;
     overflow: hidden;

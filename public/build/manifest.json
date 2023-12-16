@@ -184,17 +184,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-959056f6.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-959056f6.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-959056f6.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-5f750aa6.js",
@@ -600,14 +600,14 @@
     "src": "resources/js/Landing/Pages/ChatWindow.vue"
   },
   "resources/js/Landing/Pages/LandingPage.css": {
-    "file": "assets/LandingPage-39346b90.css",
+    "file": "assets/LandingPage-afd274db.css",
     "src": "resources/js/Landing/Pages/LandingPage.css"
   },
   "resources/js/Landing/Pages/LandingPage.vue": {
     "css": [
-      "assets/LandingPage-39346b90.css"
+      "assets/LandingPage-afd274db.css"
     ],
-    "file": "assets/LandingPage-6bfe89ca.js",
+    "file": "assets/LandingPage-48ddf048.js",
     "imports": [
       "_index.es-77235f88.js"
     ],
@@ -619,7 +619,7 @@
       "resources/js/Landing/Pages/ChatWindow.vue",
       "resources/js/Landing/Pages/LandingPage.vue"
     ],
-    "file": "assets/app-4035e07b.js",
+    "file": "assets/app-559608ce.js",
     "imports": [
       "_index.es-77235f88.js",
       "_vue3-perfect-scrollbar-334a543e.js"
