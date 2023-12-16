@@ -91,7 +91,7 @@ import 'vue3-audio-player/dist/style.css'
             <!-- Quote/testimonial aside-->
             <aside class="text-center bg-gradient-primary-to-secondary">
                 <div class="container px-5">
-                    <div class="row gx-5 justify-content-center">
+                    <div class="row gx-5 justify-content-center m-0">
                         <div class="col-xl-8">
                             <h1 class="text-white mb-5 custom-h1-1">Наши преимущества</h1>
                             <div class="custom-text-list mb-4">
@@ -118,7 +118,7 @@ import 'vue3-audio-player/dist/style.css'
 
             <section class="bg-light py-5">
                 <div class="container px-5">
-                    <div class="row gx-5 justify-content-center">
+                    <div class="row gx-5 justify-content-center m-0">
                         <div class="col-xxl-8">
                             <div class="text-center my-5">
                                 <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">РЕФЕРАЛЬНАЯ ПРОГРАММА</span>
@@ -159,7 +159,7 @@ import 'vue3-audio-player/dist/style.css'
                         <h1 class="display-5 fw-bolder mb-0"><span
                             class="text-gradient d-inline">Кейсы</span></h1>
                     </div>
-                    <div class="row gx-5 justify-content-center">
+                    <div class="row gx-5 justify-content-center m-0">
                         <div class="col-lg-11 col-xl-9 col-xxl-8">
                             <!-- Project Card 1-->
                             <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
@@ -477,10 +477,10 @@ import 'vue3-audio-player/dist/style.css'
 
                     <div class="row gx-5 justify-content-center mt-5">
                         <div class="col-md-6">
-                            <div class="card shadow" style="border-radius:75px;">
+                            <div class="card shadow" style="border-radius:25px;">
                                 <div class="card-body">
                                     <h3 class="text-gradient text-center">Срок создания бота</h3>
-                                    <p class="text-gradient text-center" style="font-size: 56px;line-height: 100%;">до
+                                    <p class="text-gradient text-center" style="font-size: 36px;line-height: 100%;">до
                                         <strong>7</strong> дней</p>
                                 </div>
                             </div>
@@ -503,12 +503,12 @@ import 'vue3-audio-player/dist/style.css'
                         <h1 class="display-5 fw-bolder mb-0"><span
                             class="text-gradient">Инструменты маркетинга</span></h1>
                     </div>
-                    <div class="row gx-5 justify-content-center">
+                    <div class="row gx-5 justify-content-center m-0">
                         <div class="col-lg-8">
                             <div class="d-flex justify-content-center">
                                 <div class="d-flex flex-column align-items-center justify-content-center">
                                     <h2 class="fw-bolder">Колесо фортуны</h2>
-                                    <ul style="list-style:none;text-align:center;">
+                                    <ul style="list-style:none;text-align:center;padding:0;">
                                         <li>Увеличивает конверсию рекламы в 10 раз</li>
                                         <li>Клиенты рекомендуют друзьям</li>
                                         <li>С помощью разовых скидок и КэшБэка приводит клиента и делает его
@@ -531,7 +531,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="d-flex justify-content-center">
                                 <div class="d-flex flex-column align-items-center justify-content-center">
                                     <h2 class="fw-bolder">Магазин в телеге</h2>
-                                    <ul style="list-style:none;text-align:center;">
+                                    <ul style="list-style:none;text-align:center;padding:0;">
                                         <li>Выбор товара или услуг</li>
                                         <li>Оплата + доставка</li>
                                         <li>Автоматизированное управление</li>
@@ -543,7 +543,7 @@ import 'vue3-audio-player/dist/style.css'
                                     </ul>
 
                                     <img class="img-fluid"
-                                         style="max-width:500px;"
+                                         style="max-width:500px;width: 100%;"
                                          src="landing/images/11-телефон с магазином.png"
                                          alt="...">
                                 </div>
@@ -632,7 +632,7 @@ import 'vue3-audio-player/dist/style.css'
                         <div class="col-lg-8 order-lg-1 mb-5 mb-lg-0">
                             <div class="container-fluid px-5">
                                 <h1 class="text-center mb-4 text-gradient">ЭФФЕКТИВНОСТЬ СИСТЕМЫ ЛОЯЛЬНОСТИ</h1>
-                                <h4 class="text-center">от <img src="/landing/images/18-лого в эффективности.png"
+                                <h4 class="text-center d-none d-sm-block">от <img src="/landing/images/18-лого в эффективности.png"
                                                                 style="width:200px;" class="mx-5" alt=""> в цифрах </h4>
                                 <div class="row gx-5">
                                     <div class="col-md-6 mb-5">
@@ -781,7 +781,7 @@ import 'vue3-audio-player/dist/style.css'
             <section id="prices">
                 <div class="container px-5">
 
-                    <div class="row gx-5 justify-content-center">
+                    <div class="row gx-5 justify-content-center m-0">
                         <div class="col-xxl-8">
                             <div class="text-center my-5"><h2 class="display-5 fw-bolder"><span
                                 class="text-gradient d-inline">Наши тарифы</span></h2>
@@ -1294,12 +1294,14 @@ export default {
         font-size: 24px;
         font-weight: 100;
         color: white;
+        padding: 0;
     }
 }
 
 .custom-h1-1 {
     font-weight: 100;
-    font-size: 54px;
+    font-size: 40px;
+    text-align: center;
 }
 
 .ps-container {
