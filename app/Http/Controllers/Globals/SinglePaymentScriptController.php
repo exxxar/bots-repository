@@ -182,6 +182,7 @@ class SinglePaymentScriptController extends SlugController
 
         Transaction::query()->create([
             'user_id' => $botUser->user_id,
+            'bot_user_id' => $botUser->id,
             'bot_id' => $bot->id,
             'payload' => $payload,
             'currency' => $currency,
@@ -244,6 +245,8 @@ class SinglePaymentScriptController extends SlugController
                 ]
             ]
         ];
+
+        Log::info("provider=>$providerToken");
 
         \App\Facades\BotManager::bot()
             ->replyInvoice(

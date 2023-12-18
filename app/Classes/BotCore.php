@@ -677,6 +677,10 @@ abstract class BotCore
             $basket->save();
         }
 
+        $this->reply("Ваша покупка:".print_r($transaction->products_info, true));
+
+
+
         $transaction->update([
             'status' => 2,
             'order_info' => $orderInfo,
