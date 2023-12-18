@@ -677,7 +677,10 @@ abstract class BotCore
             $basket->save();
         }
 
-        $this->reply("Ваша покупка:".print_r($transaction->products_info, true));
+
+        \App\Facades\BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage($botUser->telegram_chat_id, "Ваша покупка:".print_r($transaction->products_info, true));
 
 
 
