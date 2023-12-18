@@ -1284,7 +1284,8 @@ export default {
     position: fixed;
     z-index: 1000;
     left: 20px;
-    top: 40%;
+    top: 25%;
+    background: white;
 
     .fixed-menu-btn {
         height: 52px;
