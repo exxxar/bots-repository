@@ -69,6 +69,16 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async forceRemovePage(context, payload= {dataObject: {pageId: null}}){
+        let link = `${BASE_PAGES_LINK}/force/${payload.dataObject.pageId}`
+        let _axios = util.makeAxiosFactory(link, 'DELETE')
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async restorePage(context, payload= {dataObject: {pageId: null}}){
         let link = `${BASE_PAGES_LINK}/restore/${payload.dataObject.pageId}`
         let _axios = util.makeAxiosFactory(link, 'GET')

@@ -73,13 +73,19 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 
                     v-bind:class="{'border-info':item.deleted_at==null,'border-danger':item.deleted_at!=null}"
                     v-for="(item, index) in slugs">
-                    <th scope="row" v-bind:class="{'text-danger':item.deleted_at!=null}"> {{ item.id || 'Нет идентификатора' }}</th>
+                    <th scope="row" v-bind:class="{'text-danger':item.deleted_at!=null}">
+                        {{ item.id || 'Нет идентификатора' }}
+                    </th>
                     <td
                         @click="selectSlug(item)"
                         data-bs-toggle="modal"
                         data-bs-target="#edit-table-slug"
-                        v-bind:class="{'text-danger':item.deleted_at!=null}">  {{ item.command || 'Нет команды' }}</td>
-                    <td v-bind:class="{'text-danger':item.deleted_at!=null}">  {{ item.comment || 'Пояснение не указано' }}</td>
+                        v-bind:class="{'text-danger':item.deleted_at!=null}"> {{ item.command || 'Нет команды' }}
+                    </td>
+                    <td v-bind:class="{'text-danger':item.deleted_at!=null}"> {{
+                            item.comment || 'Пояснение не указано'
+                        }}
+                    </td>
                     <td>
                         <span
                             v-if="item.is_global"><i class="fa-solid fa-check text-success"></i></span>
@@ -89,19 +95,22 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
                                 <i class="fa-solid fa-ellipsis"></i>
                             </button>
                             <ul class="dropdown-menu">
                                 <li v-if="canSelect"><a
                                     @click="selectSlug(item)"
                                     title="Выбрать команду"
-                                    class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i> Выбрать команду
+                                    class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i>
+                                    Выбрать команду
                                 </a></li>
                                 <hr v-if="canSelect">
                                 <li @click="selectSlug(item)"><a class="dropdown-item cursor-pointer"
-                                       data-bs-toggle="modal"
-                                       data-bs-target="#edit-table-slug"> <i class="fa-regular fa-pen-to-square mr-1"></i>
+                                                                 data-bs-toggle="modal"
+                                                                 data-bs-target="#edit-table-slug"> <i
+                                    class="fa-regular fa-pen-to-square mr-1"></i>
                                     Редактировать</a></li>
                                 <li><a class="dropdown-item cursor-pointer" @click="duplicateSlug(item)"><i
                                     class="fa-solid fa-clone mr-1"></i> Дублировать</a></li>
@@ -109,9 +118,11 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
                                        target="_blank"
                                        :href="'/admin/slugs/action-data-export/'+item.id">
                                     <i class="fa-regular fa-file-excel mr-1"></i> Скачать данные участников</a></li>
-                                <li v-if="item.deleted_at==null"><a class="dropdown-item cursor-pointer" @click="removeSlug(item)"> <i
+                                <li v-if="item.deleted_at==null"><a class="dropdown-item cursor-pointer"
+                                                                    @click="removeSlug(item)"> <i
                                     class="fa-regular fa-trash-can text-danger mr-1"></i> Удалить</a></li>
-                                <li v-if="item.deleted_at!=null"><a class="dropdown-item cursor-pointer" @click="restoreSlug(item)"> <i
+                                <li v-if="item.deleted_at!=null"><a class="dropdown-item cursor-pointer"
+                                                                    @click="restoreSlug(item)"> <i
                                     class="fa-regular fa-trash-can text-danger mr-1"></i> Восстановить</a></li>
 
                             </ul>
@@ -141,15 +152,18 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content" v-if="selectedSlug&&!load">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Редактирование команды #<span>{{ selectedSlug.id }}</span>
+                    <h5 class="modal-title" id="exampleModalLabel">Редактирование команды #<span>{{
+                            selectedSlug.id
+                        }}</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-8">
-                            <SlugForm :item="selectedSlug"
-                                      v-on:callback="slugFormCallback"
+                            <SlugForm
+                                :item="selectedSlug"
+                                v-on:callback="slugFormCallback"
                             />
                         </div>
                         <div class="col-4">
@@ -159,7 +173,8 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
                                     class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-bold">Набор параметров скрипта</div>
-                                        <p v-if="(selectedSlug.config||[]).length>0" v-for="param in selectedSlug.config">
+                                        <p v-if="(selectedSlug.config||[]).length>0"
+                                           v-for="param in selectedSlug.config">
                                             <strong>{{ param.key || 'Ключ не найден' }}:</strong>{{
                                                 param.value || 'Не указано'
                                             }}
@@ -195,7 +210,8 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
                                                     {{ slug.slug || 'Не указан' }}
                                                 </option>
                                             </select>
-                                            <p class="my-2"><em>Перенос данных затирает текущие данные в данном скрипте</em></p>
+                                            <p class="my-2"><em>Перенос данных затирает текущие данные в данном
+                                                скрипте</em></p>
                                             <button
                                                 :disabled="relocated_slug_id == null"
                                                 class="btn btn-outline-warning w-100">
@@ -222,7 +238,7 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["command","canSelect"],
+    props: ["command", "canSelect"],
     data() {
         return {
             bot: null,
@@ -230,10 +246,10 @@ export default {
             need_global: true,
             need_show_deleted: true,
             show: false,
-            load:false,
+            load: false,
             slugs: [],
             paginate: [],
-            selectedSlug:null,
+            selectedSlug: null,
             ownSearch: null,
             slugForm: {
                 command: null,
@@ -277,7 +293,7 @@ export default {
             this.loadSlugs(index)
         },
         loadSlugs(page = 0) {
-            this.$store.dispatch("loadSlugs", {
+            return this.$store.dispatch("loadSlugs", {
                 dataObject: {
                     botId: this.bot.id,
                     needGlobal: this.need_global,
@@ -319,8 +335,15 @@ export default {
         },
         slugFormCallback() {
             this.load = true
+            const tmpSelectSlug = this.selectedSlug
+            this.loadSlugs().then(() => {
+                let slug = this.slugs.find(item => item.id === tmpSelectSlug.id)
+                this.selectSlug(slug ? slug : null)
+            })
+
             this.$emit("callback")
             this.$nextTick(() => {
+
                 this.load = false
             })
         },
@@ -370,7 +393,7 @@ export default {
         },
         submitRelocateData() {
             this.$store.dispatch("relocateSlugActionData", {
-                slug_sender_id:  this.relocated_slug_id,
+                slug_sender_id: this.relocated_slug_id,
                 slug_recipient_id: this.item.id,
                 bot_id: this.bot.id
             }).then((response) => {
@@ -389,7 +412,7 @@ export default {
             })
 
         },
-        restoreSlug(item){
+        restoreSlug(item) {
             this.load = true
             this.$store.dispatch("restoreSlug", {
                 dataObject: {

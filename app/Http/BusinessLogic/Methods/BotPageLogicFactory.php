@@ -101,8 +101,12 @@ class BotPageLogicFactory
      */
     public function destroy($pageId, $force = false): BotPageResource
     {
-        $botPage = BotPage::query()->where("id", $pageId)
-            ->first();
+
+        $botPage = !$force ?
+            BotPage::query()->where("id", $pageId)
+                ->first() :
+            BotPage::query()->withTrashed()->where("id", $pageId)
+                ->first();
 
         if (is_null($botPage))
             throw new HttpException(404, "Страница не найдена!");
@@ -120,10 +124,10 @@ class BotPageLogicFactory
             $botPage->next_bot_dialog_command_id = null;
             $botPage->next_bot_menu_slug_id = null;
             $botPage->rules_else_page_id = null;
-            $botPage->bot_id = null;
+           // $botPage->bot_id = null;
             $botPage->save();
 
-            $botPage->delete();
+            $botPage->forceDelete();
         }
 
         $tmp = $botPage;
@@ -131,6 +135,7 @@ class BotPageLogicFactory
 
         return new BotPageResource($tmp);
     }
+
 
     /**
      * @throws HttpException

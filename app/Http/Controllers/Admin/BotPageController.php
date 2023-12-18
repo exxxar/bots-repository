@@ -58,6 +58,15 @@ class BotPageController extends Controller
     /**
      * @throws \HttpException
      */
+    public function forceDestroy($pageId): BotPageResource
+    {
+        return BusinessLogic::pages()
+            ->destroy($pageId, true);
+    }
+
+    /**
+     * @throws \HttpException
+     */
     public function restorePage($pageId): BotPageResource
     {
         return BusinessLogic::pages()
@@ -71,7 +80,7 @@ class BotPageController extends Controller
     public function createPage(Request $request): BotPageResource
     {
         $request->validate([
-          //  "content" => "required",
+            //  "content" => "required",
             "command" => "required",
             "comment" => "required",
             "bot_id" => "required",
@@ -92,7 +101,7 @@ class BotPageController extends Controller
     {
         $request->validate([
             "id" => "required",
-           // "content" => "required",
+            // "content" => "required",
             "command" => "required",
             "comment" => "required",
             "bot_id" => "required",

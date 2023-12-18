@@ -189,6 +189,7 @@ Route::prefix("admin")
                 Route::post("/page-update", "updatePage");
                 Route::post("/duplicate/{pageId}", "duplicate");
                 Route::get("/restore/{pageId}", "restorePage");
+                Route::delete("/force/{pageId}", "forceDestroy");
                 Route::delete("/{pageId}", "destroy");
             });
 

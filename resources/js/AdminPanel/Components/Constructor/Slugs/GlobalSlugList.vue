@@ -3,14 +3,25 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 </script>
 <template>
 
+    <div class="row">
+        <div class="col-12">
+            <div class="form-floating mb-3">
+                <input type="search"
+                       v-model="search"
+                       class="form-control" id="floatingInput" placeholder="Название команды">
+                <label for="floatingInput">Быстрый поиск команды</label>
+            </div>
+        </div>
+    </div>
 
-    <div class="row" v-if="filteredAllSlugs.length>0">
+    <div class="row" v-if="slugs.length>0">
+
         <div class="col-12 mb-3">
             <ul class="list-group w-100">
 
                 <li class="list-group-item cursor-pointer btn mb-1 d-flex  align-items-center justify-between"
                     v-bind:class="{'btn-outline-info':item.deleted_at==null,'btn-outline-danger border-danger':item.deleted_at!=null}"
-                    v-for="(item, index) in filteredAllSlugs"
+                    v-for="(item, index) in slugs"
                 >
                     <strong
                         @click="selectSlug(item)"
@@ -54,9 +65,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
     </div>
 
 
-    <p v-else>Глобальных скриптов не обноружено</p>
+    <p v-else>Глобальных скриптов не обнаружено</p>
     <form v-on:submit.prevent="addSlug"
-          v-if="canAdd&&filteredAllSlugs.length>0"
+          v-if="canAdd&&slugs.length>0"
           class="card mb-3">
         <div class="card-body">
 
@@ -119,7 +130,7 @@ export default {
     },
     computed: {
         ...mapGetters(['getGlobalSlugs', 'getGlobalSlugsPaginateObject']),
-        filteredAllSlugs() {
+    /*    filteredAllSlugs() {
             if (this.slugs.length === 0)
                 return [];
 
@@ -136,6 +147,11 @@ export default {
                     slug.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
             })
 
+        },*/
+    },
+    watch: {
+        'search': function (oldV, newV) {
+            this.loadAllSlugs()
         },
     },
     mounted() {
@@ -146,6 +162,7 @@ export default {
             this.$store.dispatch("loadGlobalSlugs", {
                 dataObject: {
                     needGlobal: true,
+                    search: this.search
                    /// botId: this.bot.id
                 },
                 page: page
