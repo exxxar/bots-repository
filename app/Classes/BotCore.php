@@ -678,10 +678,11 @@ abstract class BotCore
         }
 
 
+        $product = $transaction->products_info["payload"] ?? 'не указан продавцов';
+
         \App\Facades\BotMethods::bot()
             ->whereBot($bot)
-            ->sendMessage($botUser->telegram_chat_id, "Ваша покупка:".print_r($transaction->products_info, true));
-
+            ->sendMessage($botUser->telegram_chat_id, "Ваша покупка:\n$product");
 
 
         $transaction->update([
