@@ -46,6 +46,204 @@ class VKProductController extends Controller
         ]);
     }
 
+    protected function importProducts($vkProducts, $bot, $album, &$results)
+    {
+        foreach ($vkProducts as $vkProduct) {
+
+            $variants = [];
+
+            $results->total_product_count++;
+
+            $vkVariants = $vkProduct->property_values ?? null;
+            if (!is_null($vkVariants))
+                foreach ($vkVariants as $variant) {
+                    $variant = (object)$variant;
+                    $variants[] = (object)[
+                        "key" => $variant->property_name,
+                        "value" => $variant->variant_name
+                    ];
+                }
+
+            $vkProduct = (object)$vkProduct;
+
+            $product = Product::query()
+                ->where("vk_product_id", $vkProduct->id)
+                ->where("bot_id", $bot->id)
+                ->first();
+
+            if (is_null($product)) {
+                $product = Product::query()->create([
+                    'article' => $vkProduct->sku ?? null,
+                    'vk_product_id' => $vkProduct->id,
+                    'title' => $vkProduct->title,
+                    'description' => $vkProduct->description,
+                    'images' => [
+                        $vkProduct->thumb_photo
+                    ],
+                    'type' => 0,
+                    'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
+                    'current_price' => $vkProduct->price["amount"] / 100,
+                    'variants' => empty($variants) ? null : $variants,
+                    'in_stop_list_at' => $vkProduct->availability == 0 ? Carbon::now() : null,
+                    'bot_id' => $bot->id,
+                ]);
+
+                $results->created_product_count++;
+            } else {
+                $product->update([
+                    'article' => $vkProduct->sku ?? null,
+                    'title' => $vkProduct->title,
+                    'description' => $vkProduct->description,
+                    'images' => [
+                        $vkProduct->thumb_photo
+                    ],
+                    'type' => 0,
+                    'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
+                    'current_price' => $vkProduct->price["amount"] / 100,
+                    'variants' => empty($variants) ? null : $variants,
+                    'in_stop_list_at' => $vkProduct->availability == 0 ? Carbon::now() : null,
+                ]);
+
+                $results->updated_product_count++;
+            }
+
+            $vkDimensions = $vkProduct->dimensions ?? null;
+
+            if (!is_null($vkDimensions)) {
+                $titles = [
+                    "width" => "Ширина, мм",
+                    "height" => "Высота, мм",
+                    "length" => "Длина, мм",
+                ];
+
+                foreach ($vkDimensions as $key => $value) {
+
+                    if ($value == 0)
+                        continue;
+
+                    $option = ProductOption::query()
+                        ->where("key", $key)
+                        ->where("product_id", $product->id)
+                        ->first();
+
+                    if (is_null($option))
+                        ProductOption::query()->create([
+                            'key' => $key,
+                            'title' => $titles[$key],
+                            'value' => $value,
+                            'section' => "Габариты",
+                            'product_id' => $product->id,
+                        ]);
+                    else {
+                        $option->value = $value;
+                        $option->save();
+                    }
+                }
+
+            }
+
+            $vkWeight = $vkProduct->weight ?? null;
+
+            if (!is_null($vkWeight)) {
+
+                $option = ProductOption::query()
+                    ->where("key", "weight")
+                    ->where("product_id", $product->id)
+                    ->first();
+
+                if (is_null($option))
+                    ProductOption::query()->create([
+                        'key' => "weight",
+                        'title' => "Вес, грамм",
+                        'value' => $vkWeight,
+                        'section' => "Вес",
+                        'product_id' => $product->id,
+                    ]);
+                else {
+                    $option->value = $vkWeight;
+                    $option->save();
+                }
+            }
+
+            $vkPhotos = $vkProduct->photos ?? null;
+
+            if (!is_null($vkPhotos)) {
+                $images = [];
+
+                foreach ($vkPhotos as $photo) {
+                    $photo = (object)$photo;
+                    $images[] = $photo->sizes[count($photo->sizes) - 1]["url"];
+                }
+
+                $product->images = $images;
+                $product->save();
+            }
+
+            $vkCategory = $vkProduct->category ?? null;
+
+            if (!is_null($vkCategory)) {
+                $vkCategory = (object)$vkCategory;
+                $tmpCategoryForSync = [];
+
+                $productCategory = ProductCategory::query()
+                    ->where("title", $vkCategory->name)
+                    ->where("bot_id", $bot->id)
+                    ->first();
+
+                if (is_null($productCategory)) {
+                    $productCategory = ProductCategory::query()
+                        ->create([
+                            'title' => $vkCategory->name,
+                            'bot_id' => $bot->id,
+                        ]);
+
+                    $tmpCategoryForSync[] = $productCategory->id;
+                }
+
+
+                $vkCategorySection = (object)$vkCategory->section;
+
+                $productCategorySection = ProductCategory::query()
+                    ->where("title", $vkCategorySection->name)
+                    ->where("bot_id", $bot->id)
+                    ->first();
+
+                if (is_null($productCategorySection)) {
+                    $productCategorySection = ProductCategory::query()
+                        ->create([
+                            'title' => $vkCategorySection->name,
+                            'bot_id' => $bot->id,
+                        ]);
+
+                    $tmpCategoryForSync[] = $productCategorySection->id;
+                }
+
+                if (!is_null($album)) {
+                    $productCategoryAlbum = ProductCategory::query()
+                        ->where("title", $album->title)
+                        ->where("bot_id", $bot->id)
+                        ->first();
+
+                    if (is_null($productCategoryAlbum)) {
+                        $productCategoryAlbum = ProductCategory::query()
+                            ->create([
+                                'title' => $album->title,
+                                'bot_id' => $bot->id,
+                            ]);
+
+                        $tmpCategoryForSync[] = $productCategoryAlbum->id;
+                    }
+
+
+                    Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
+                }
+
+
+                $product->productCategories()->sync($tmpCategoryForSync);
+            }
+        }
+    }
+
     public function callback(Request $request)
     {
         ini_set('max_execution_time', '30000');
@@ -119,15 +317,29 @@ class VKProductController extends Controller
 
             $vkAlbums = ((object)$response)->items;
 
-            Log::info("vkAlbums".print_r($vkAlbums, true));
-            foreach ($vkAlbums as $album) {
+            if (count($vkAlbums) > 0)
+                foreach ($vkAlbums as $album) {
 
 
-                $album = (object)$album;
+                    $album = (object)$album;
 
+                    $response = $vk->market()->get($access_token, [
+                        'owner_id' => "-$data->object_id",
+                        'album_id' => $album->id,
+                        'need_variants' => 1,
+                        'count' => 200,
+                        'extended' => 1
+                    ]);
+
+
+                    $vkProducts = ((object)$response)->items;
+
+                    $this->importProducts($vkProducts, $bot, $album, $results);
+
+                }
+            else{
                 $response = $vk->market()->get($access_token, [
                     'owner_id' => "-$data->object_id",
-                    'album_id' => $album->id,
                     'need_variants' => 1,
                     'count' => 200,
                     'extended' => 1
@@ -136,187 +348,7 @@ class VKProductController extends Controller
 
                 $vkProducts = ((object)$response)->items;
 
-                foreach ($vkProducts as $vkProduct) {
-
-                    $variants = [];
-
-                    $results->total_product_count++;
-
-                    $vkVariants = $vkProduct->property_values ?? null;
-                    if (!is_null($vkVariants))
-                        foreach ($vkVariants as $variant) {
-                            $variant = (object)$variant;
-                            $variants[] = (object)[
-                                "key" => $variant->property_name,
-                                "value" => $variant->variant_name
-                            ];
-                        }
-
-                    $vkProduct = (object)$vkProduct;
-
-                    $product = Product::query()
-                        ->where("vk_product_id", $vkProduct->id)
-                        ->where("bot_id", $bot->id)
-                        ->first();
-
-                    if (is_null($product)) {
-                        $product = Product::query()->create([
-                            'article' => $vkProduct->sku ?? null,
-                            'vk_product_id' => $vkProduct->id,
-                            'title' => $vkProduct->title,
-                            'description' => $vkProduct->description,
-                            'images' => [
-                                $vkProduct->thumb_photo
-                            ],
-                            'type' => 0,
-                            'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
-                            'current_price' => $vkProduct->price["amount"] / 100,
-                            'variants' => empty($variants) ? null : $variants,
-                            'in_stop_list_at' => $vkProduct->availability == 0 ? Carbon::now() : null,
-                            'bot_id' => $bot->id,
-                        ]);
-
-                        $results->created_product_count++;
-                    } else {
-                        $product->update([
-                            'article' => $vkProduct->sku ?? null,
-                            'title' => $vkProduct->title,
-                            'description' => $vkProduct->description,
-                            'images' => [
-                                $vkProduct->thumb_photo
-                            ],
-                            'type' => 0,
-                            'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
-                            'current_price' => $vkProduct->price["amount"] / 100,
-                            'variants' => empty($variants) ? null : $variants,
-                            'in_stop_list_at' => $vkProduct->availability == 0 ? Carbon::now() : null,
-                        ]);
-
-                        $results->updated_product_count++;
-                    }
-
-                    $vkDimensions = $vkProduct->dimensions ?? null;
-
-                    if (!is_null($vkDimensions)) {
-                        $titles = [
-                            "width" => "Ширина, мм",
-                            "height" => "Высота, мм",
-                            "length" => "Длина, мм",
-                        ];
-
-                        foreach ($vkDimensions as $key => $value) {
-
-                            if ($value == 0)
-                                continue;
-
-                            $option = ProductOption::query()
-                                ->where("key", $key)
-                                ->where("product_id", $product->id)
-                                ->first();
-
-                            if (is_null($option))
-                                ProductOption::query()->create([
-                                    'key' => $key,
-                                    'title' => $titles[$key],
-                                    'value' => $value,
-                                    'section' => "Габариты",
-                                    'product_id' => $product->id,
-                                ]);
-                            else {
-                                $option->value = $value;
-                                $option->save();
-                            }
-                        }
-
-                    }
-
-                    $vkWeight = $vkProduct->weight ?? null;
-
-                    if (!is_null($vkWeight)) {
-
-                        $option = ProductOption::query()
-                            ->where("key", "weight")
-                            ->where("product_id", $product->id)
-                            ->first();
-
-                        if (is_null($option))
-                            ProductOption::query()->create([
-                                'key' => "weight",
-                                'title' => "Вес, грамм",
-                                'value' => $vkWeight,
-                                'section' => "Вес",
-                                'product_id' => $product->id,
-                            ]);
-                        else {
-                            $option->value = $vkWeight;
-                            $option->save();
-                        }
-                    }
-
-                    $vkPhotos = $vkProduct->photos ?? null;
-
-                    if (!is_null($vkPhotos)) {
-                        $images = [];
-
-                        foreach ($vkPhotos as $photo) {
-                            $photo = (object)$photo;
-                            $images[] = $photo->sizes[count($photo->sizes) - 1]["url"];
-                        }
-
-                        $product->images = $images;
-                        $product->save();
-                    }
-
-                    $vkCategory = $vkProduct->category ?? null;
-
-                    if (!is_null($vkCategory)) {
-                        $vkCategory = (object)$vkCategory;
-
-                        $productCategory = ProductCategory::query()
-                            ->where("title", $vkCategory->name)
-                            ->where("bot_id", $bot->id)
-                            ->first();
-
-                        if (is_null($productCategory))
-                            $productCategory = ProductCategory::query()
-                                ->create([
-                                    'title' => $vkCategory->name,
-                                    'bot_id' => $bot->id,
-                                ]);
-
-
-                        $vkCategorySection = (object)$vkCategory->section;
-
-                        $productCategorySection = ProductCategory::query()
-                            ->where("title", $vkCategorySection->name)
-                            ->where("bot_id", $bot->id)
-                            ->first();
-
-                        if (is_null($productCategorySection))
-                            $productCategorySection = ProductCategory::query()
-                                ->create([
-                                    'title' => $vkCategorySection->name,
-                                    'bot_id' => $bot->id,
-                                ]);
-
-                        $productCategoryAlbum = ProductCategory::query()
-                            ->where("title", $album->title)
-                            ->where("bot_id", $bot->id)
-                            ->first();
-
-                        if (is_null($productCategoryAlbum))
-                            $productCategoryAlbum = ProductCategory::query()
-                                ->create([
-                                    'title' => $album->title,
-                                    'bot_id' => $bot->id,
-                                ]);
-
-                        Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
-
-                        $product->productCategories()->sync([$productCategorySection->id, $productCategory->id, $productCategoryAlbum->id]);
-                    }
-                }
-
+                $this->importProducts($vkProducts, $bot, null, $results);
             }
 
         } catch (\Exception $e) {
