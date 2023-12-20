@@ -25,10 +25,12 @@ class VKProductController extends Controller
 
     public function getVKAuthLink(Request $request)
     {
-        $bot = $request->bot;
+        $bot = $request->bot ?? null;
 
         // $this->vkUrl = $request->url ?? null;
-        $botDomain = $bot->bot_domain ?? $request->bot_domain ?? null;
+        $botDomain = is_null($bot) ?
+            $request->bot_domain ?? $request->botDomain ?? null :
+            $bot->bot_domain ?? null;
 
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");
@@ -202,7 +204,7 @@ class VKProductController extends Controller
 
                         foreach ($vkDimensions as $key => $value) {
 
-                            if ($value==0)
+                            if ($value == 0)
                                 continue;
 
                             $option = ProductOption::query()
@@ -307,16 +309,16 @@ class VKProductController extends Controller
                                     'bot_id' => $bot->id,
                                 ]);
 
-                        Log::info("album".print_r($productCategoryAlbum->toArray(), true));
+                        Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
 
-                        $product->productCategories()->sync([$productCategorySection->id, $productCategory->id,$productCategoryAlbum->id]);
+                        $product->productCategories()->sync([$productCategorySection->id, $productCategory->id, $productCategoryAlbum->id]);
                     }
                 }
 
             }
 
         } catch (\Exception $e) {
-            Log::info($e->getMessage()." ".$e->getLine());
+            Log::info($e->getMessage() . " " . $e->getLine());
             Inertia::setRootView("shop");
 
             return Inertia::render('Result', [
