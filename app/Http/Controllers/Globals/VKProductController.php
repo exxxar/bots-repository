@@ -181,6 +181,7 @@ class VKProductController extends Controller
 
             $vkCategory = $vkProduct->category ?? null;
 
+            Log::info("categories=>".print_r($vkCategory, true));
             if (!is_null($vkCategory)) {
                 $vkCategory = (object)$vkCategory;
                 $tmpCategoryForSync = [];
@@ -238,8 +239,11 @@ class VKProductController extends Controller
                     Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
                 }
 
-                Log::info("tmpCategoryForSync=>".print_r($tmpCategoryForSync,true));
-                $product->productCategories()->sync($tmpCategoryForSync);
+                if (count($tmpCategoryForSync)>0) {
+                    Log::info("tmpCategoryForSync=>".print_r($tmpCategoryForSync,true));
+                    $product->productCategories()->sync($tmpCategoryForSync);
+                }
+
             }
         }
     }
