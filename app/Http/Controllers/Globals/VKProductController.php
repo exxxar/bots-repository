@@ -50,6 +50,8 @@ class VKProductController extends Controller
     {
         foreach ($vkProducts as $vkProduct) {
 
+            $tmpCategoryForSync = [];
+
             $variants = [];
 
             $results->total_product_count++;
@@ -184,7 +186,7 @@ class VKProductController extends Controller
             Log::info("categories=>".print_r($vkCategory, true));
             if (!is_null($vkCategory)) {
                 $vkCategory = (object)$vkCategory;
-                $tmpCategoryForSync = [];
+
 
                 $productCategory = ProductCategory::query()
                     ->where("title", $vkCategory->name)
