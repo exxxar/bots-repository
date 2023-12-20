@@ -27,7 +27,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
             <ul v-if="action.data" class="m-0 p-0">
                 <li v-for="item in action.data" class="d-flex flex-column mb-2">
-                    <span>Название приза <strong>{{ item.description || 'Отсуствует' }}</strong></span>
+                    <span>Название приза <strong>{{ item.description || 'Отсутствует' }}</strong></span>
                     <span>Победитель  <strong>{{ item.name || 'Не указано' }}</strong></span>
                     <span>Телефон  <strong>{{ item.phone || 'Не указано' }}</strong></span>
                 </li>
@@ -46,7 +46,6 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     Испытай удачу
                 </template>
             </WheelSecond>
-
 
 
         </div>
@@ -70,7 +69,6 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
 </template>
 <script>
-
 
 
 export default {
@@ -137,7 +135,7 @@ export default {
 
                 this.rules = response.rules
                 this.winResultMessage = response.callback_message
-                const wheels = response.wheels
+                const wheels = this.shuffle(response.wheels)
 
                 this.items = []
                 wheels.forEach(item => {
@@ -156,6 +154,19 @@ export default {
                     })*/
             })
         },
+        shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            // While there remain elements to shuffle.
+            while (currentIndex > 0) {
+                // Pick a remaining element.
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                // And swap it with the current element.
+                [array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        },
         submit() {
             let data = new FormData();
 
@@ -168,6 +179,8 @@ export default {
                         data.append(key, item)
                 });
             const winResult = this.winForm.win || null
+
+            data.append("description", this.items[winResult].text || 'Без описания')
 
             this.$store.dispatch("wheelOfFortuneCustomWin", {
                 winForm: data
@@ -182,7 +195,7 @@ export default {
             })
 
 
-            this.$botNotification.success("Вы выиграли!", "Вы выиграли приз "+(winResult?this.items[winResult].text:'Что-то интересное...'))
+            this.$botNotification.success("Вы выиграли!", "Вы выиграли приз " + (winResult ? this.items[winResult].text : 'Что-то интересное...'))
         },
 
 

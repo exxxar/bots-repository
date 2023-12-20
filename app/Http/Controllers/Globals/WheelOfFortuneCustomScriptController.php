@@ -198,6 +198,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $winNumber = $request->win ?? 0;
         $winnerName = $request->name ??  $botUser->name ?? 'Имя не указано';
         $winnerPhone = $request->phone ??    $botUser->phone ?? 'Телефон не указан';
+        $winnerDescription = $request->description ?? 'Без описания';
 
         $botUser->name = $botUser->name ?? $winnerName;
         $botUser->phone = $botUser->phone ?? $winnerPhone;
@@ -208,17 +209,17 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $tmp = $action->data ?? [];
 
 
-        $wheelText = Collection::make($slug->config)
+        /*$wheelText = Collection::make($slug->config)
             ->where("key", "wheel_text")
             ->pluck("value")
-            ->toArray();
-
-        $description = $wheelText[$winNumber] ?? 'Без описания';
+            ->toArray();*/
+/*
+        $description = $wheelText[$winNumber] ?? 'Без описания';*/
 
         $tmp[] = (object)[
             "name" => $winnerName,
             "win" => $winNumber,
-            "description" => $description,
+            "description" => $winnerDescription,
             "phone" => $winnerPhone,
             "answered_at" => null,
             "answered_by" => null,
@@ -238,9 +239,9 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->sendMessage($botUser
                 ->telegram_chat_id,
                 str_contains($winMessage, "%s") ?
-                    sprintf($winMessage, $winnerName, $winNumber, $description) : $winMessage)
+                    sprintf($winMessage, $winnerName, $winNumber, $winnerDescription) : $winMessage)
             ->sendInlineKeyboard($callbackChannel,
-                "Участник $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $description ) - свяжитесь с ним для дальнейших указаний", [
+                "Участник $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $winnerDescription ) - свяжитесь с ним для дальнейших указаний", [
                     [
                         ["text" => "Написать пользователю ответ", "url" => $link]
                     ]

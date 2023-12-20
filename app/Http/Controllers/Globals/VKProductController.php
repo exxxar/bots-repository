@@ -28,7 +28,7 @@ class VKProductController extends Controller
         $bot = $request->bot;
 
         // $this->vkUrl = $request->url ?? null;
-        $botDomain = $bot->bot_domain ?? null;
+        $botDomain = $bot->bot_domain ?? $request->bot_domain ?? null;
 
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");

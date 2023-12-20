@@ -188,7 +188,7 @@ export default {
             this.load = true
             this.$store.dispatch("updateProductsFromVk", {
                 dataObject: {
-                    botDomain: this.getCurrentBot.bot_domain
+                    bot_domain: this.getCurrentBot.bot_domain
                 }
             }).then((resp) => {
 

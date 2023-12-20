@@ -84,10 +84,10 @@ export default createStore({
 
             context.commit("setCurrentBot", currentBot)
         },
-        async updateProductsFromVk(context) {
+        async updateProductsFromVk(context,payload = {dataObject:{bot_domain:null}}) {
             let link = `/admin/vk-auth-link`
 
-            let _axios = util.makeAxiosFactory(link, 'POST')
+            let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 
             return _axios.then((response) => {
                 return Promise.resolve(response);
