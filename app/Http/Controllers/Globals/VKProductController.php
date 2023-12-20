@@ -238,7 +238,7 @@ class VKProductController extends Controller
                     Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
                 }
 
-
+                Log::info("tmpCategoryForSync=>".print_r($tmpCategoryForSync,true));
                 $product->productCategories()->sync($tmpCategoryForSync);
             }
         }
