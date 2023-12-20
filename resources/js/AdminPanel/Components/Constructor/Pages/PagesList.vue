@@ -54,7 +54,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             @click="selectPage(page)">#{{ page.id || 'Не указано' }}
                             <span v-if="page.slug">{{ page.slug.command || 'Не указано' }}</span>
                             <span v-else>Не привязано к команде</span>
-                            <span v-if="current&&current===page.id"><i class="fa-solid fa-lock"></i></span>
+                            <span v-if="current&&current==page.id"><i class="fa-solid fa-lock"></i></span>
                         </strong>
 
 

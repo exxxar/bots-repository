@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-if="!editor">
         <div class="row">
             <div class="col-12 d-flex justify-content-between">
                 <div>
@@ -242,6 +242,7 @@
         </div>
     </div>
 
+
     <!-- Modal -->
    </template>
 <script>
@@ -250,6 +251,7 @@ import {v4 as uuidv4} from "uuid";
 
 export default {
     props: ["editedKeyboard", "type"],
+
     components: {
         Vue3JsonEditor
     },
@@ -268,6 +270,7 @@ export default {
     },
     data() {
         return {
+            editor:false,
             showCode: false,
             showAssign: false,
             selectedRow: null,
@@ -411,7 +414,7 @@ export default {
 
             this.select.row = rowIndex
             this.select.col = colIndex
-            this.select.text = this.keyboard[rowIndex][colIndex].text
+            this.select.text = this.keyboard[rowIndex][colIndex].text || ''
 
             this.load = true
             this.$nextTick(() => {
@@ -438,5 +441,6 @@ export default {
     background-color: rgba(173, 216, 230, 0.30);
 
 }
+
 
 </style>

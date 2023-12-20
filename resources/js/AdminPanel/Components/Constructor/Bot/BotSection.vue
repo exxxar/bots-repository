@@ -176,6 +176,7 @@ export default {
             });
         },
         pageCallback(page) {
+            this.page = page
             this.loadPageList = true
             this.$nextTick(() => {
                 this.loadPageList = false

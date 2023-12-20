@@ -183,7 +183,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                        >
                         <a
                             v-bind:class="{'active':tab===0}"
-                            class="nav-link d-flex flex-column justify-content-center align-items-center"
+                            class="nav-link d-flex flex-column justify-content-center align-items-center font-12"
                            href="javascript:void(0)">
                             <i class="fa-regular fa-keyboard"></i>
                             <span>Нижнее меню</span>
@@ -195,7 +195,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                       >
                         <a
                             v-bind:class="{'active':tab===1}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-solid fa-ellipsis"></i>
                             <span>Меню под текстом</span>
                         </a>
@@ -206,7 +206,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         >
                         <a
                             v-bind:class="{'active':tab===2}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-regular fa-images"></i>
                             <span>Изображения</span>
                         </a>
@@ -217,7 +217,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                        >
                         <a
                             v-bind:class="{'active':tab===3}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-solid fa-photo-film"></i>
                             <span>Видео</span>
                         </a>
@@ -228,7 +228,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                        >
                         <a
                             v-bind:class="{'active':tab===4}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-regular fa-note-sticky"></i>
                             <span>Стикеры</span>
                         </a>
@@ -240,7 +240,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                        >
                         <a
                             v-bind:class="{'active':tab===5}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-regular fa-file-audio"></i>
                             <span>Аудио</span>
                         </a>
@@ -251,7 +251,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                       >
                         <a
                             v-bind:class="{'active':tab===6}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-regular fa-file-word"></i>
                             <span>Документы</span>
                         </a>
@@ -262,7 +262,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                        >
                         <a
                             v-bind:class="{'active':tab===7}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-solid fa-link"></i>
                             <span>Другая страница</span>
                         </a>
@@ -273,7 +273,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         >
                         <a
                             v-bind:class="{'active':tab===8}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-solid fa-scroll"></i>
                             <span>Скрипт</span>
                         </a>
@@ -283,7 +283,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         @click="tab=9">
                         <a
                             v-bind:class="{'active':tab===9}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-regular fa-comment-dots"></i>
                             <span>Начало диалога</span>
                         </a>
@@ -294,7 +294,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         >
                         <a
                             v-bind:class="{'active':tab===10}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
                             <i class="fa-solid fa-scale-balanced"></i>
                             <span>Правила</span>
                         </a>
@@ -890,6 +890,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 <div class="modal-body">
                     <PagesList
                         :editor="true"
+                        :current="page"
                         v-on:callback="pageListCallback"/>
                 </div>
 
@@ -1576,4 +1577,13 @@ export default {
         }
     }
 }
+
+.font-12 {
+    font-size: 12px;
+}
+
+.font-10 {
+    font-size: 10px;
+}
+
 </style>

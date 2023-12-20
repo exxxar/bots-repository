@@ -2,7 +2,7 @@
 import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardConstructor.vue";
 </script>
 <template>
-    <div class="card">
+    <div class="card" v-if="!is_edited">
 
         <div v-if="selectMode" class="card-header d-flex justify-content-between align-items-center">
           <div>
@@ -16,7 +16,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
               </button>
 
               <button
-                  data-bs-toggle="modal" :data-bs-target="'#open-construct-'+uuid"
+                  @click="is_edited=true"
                   :disabled="load"
                   type="button"
                   title="Редактировать клавиатуру"
@@ -43,7 +43,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
             <div>
                 <strong class="mr-2">#{{keyboard.id}}</strong>
                 <button
-                    data-bs-toggle="modal" :data-bs-target="'#open-construct-'+uuid"
+                    @click="is_edited=true"
                     :disabled="load"
                     type="button"
                     title="Редактировать клавиатуру"
@@ -137,8 +137,31 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 
         </div>
     </div>
+    <div class="card" v-if="is_edited">
+        <div class="card-header d-flex justify-content-between align-items-center">
 
-    <!-- Modal -->
+                <button
+                    @click="updateKeyboard"
+                    type="button"
+                    title="Обновить клавиатуру"
+                    :disabled="load||!is_edited"
+                    class="btn btn-outline-primary mr-2"
+                    v-bind:class="{'have-change':is_edited}"
+                >
+                    <i class="fa-regular fa-floppy-disk"></i>
+                </button>
+
+        </div>
+        <div class="card-body">
+            <BotMenuConstructor
+                v-if="keyboardForm"
+                v-on:save="saveKeyboard"
+                :edited-keyboard="keyboardForm"/>
+        </div>
+
+    </div>
+
+<!--    &lt;!&ndash; Modal &ndash;&gt;
     <div class="modal fade"
          :id="'open-construct-'+uuid" tabindex="-1" aria-labelledby="open-construct-label" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
@@ -158,7 +181,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 </template>
 <script>
