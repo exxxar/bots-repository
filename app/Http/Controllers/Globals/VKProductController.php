@@ -118,6 +118,8 @@ class VKProductController extends Controller
             ]);
 
             $vkAlbums = ((object)$response)->items;
+
+            Log::info("vkAlbums".print_r($vkAlbums, true));
             foreach ($vkAlbums as $album) {
 
 
