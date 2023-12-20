@@ -289,6 +289,7 @@ export default {
         if (this.editedKeyboard) {
             this.$nextTick(() => {
                 this.keyboard = this.editedKeyboard.menu
+                console.log("keyboard", this.keyboard)
             })
         }
     },
