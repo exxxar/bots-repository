@@ -193,16 +193,14 @@ class VKProductController extends Controller
                     ->where("bot_id", $bot->id)
                     ->first();
 
-                if (is_null($productCategory)) {
+                if (is_null($productCategory))
                     $productCategory = ProductCategory::query()
                         ->create([
                             'title' => $vkCategory->name,
                             'bot_id' => $bot->id,
                         ]);
 
-                    $tmpCategoryForSync[] = $productCategory->id;
-                }
-
+                $tmpCategoryForSync[] = $productCategory->id;
 
                 $vkCategorySection = (object)$vkCategory->section;
 
@@ -211,7 +209,7 @@ class VKProductController extends Controller
                     ->where("bot_id", $bot->id)
                     ->first();
 
-                if (is_null($productCategorySection)) {
+                if (is_null($productCategorySection))
                     $productCategorySection = ProductCategory::query()
                         ->create([
                             'title' => $vkCategorySection->name,
@@ -219,7 +217,7 @@ class VKProductController extends Controller
                         ]);
 
                     $tmpCategoryForSync[] = $productCategorySection->id;
-                }
+
 
                 if (!is_null($album)) {
                     $productCategoryAlbum = ProductCategory::query()
@@ -227,22 +225,21 @@ class VKProductController extends Controller
                         ->where("bot_id", $bot->id)
                         ->first();
 
-                    if (is_null($productCategoryAlbum)) {
+                    if (is_null($productCategoryAlbum))
                         $productCategoryAlbum = ProductCategory::query()
                             ->create([
                                 'title' => $album->title,
                                 'bot_id' => $bot->id,
                             ]);
 
-                        $tmpCategoryForSync[] = $productCategoryAlbum->id;
-                    }
 
+                    $tmpCategoryForSync[] = $productCategoryAlbum->id;
 
-                    Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
+                //    Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
                 }
 
                 if (count($tmpCategoryForSync)>0) {
-                    Log::info("tmpCategoryForSync=>".print_r($tmpCategoryForSync,true));
+                    //Log::info("tmpCategoryForSync=>".print_r($tmpCategoryForSync,true));
                     $product->productCategories()->sync($tmpCategoryForSync);
                 }
 
