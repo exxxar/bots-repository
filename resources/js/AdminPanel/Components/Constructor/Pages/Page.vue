@@ -1579,11 +1579,11 @@ export default {
 }
 
 .font-12 {
-    font-size: 12px;
+    font-size: 12px !important;
 }
 
 .font-10 {
-    font-size: 10px;
+    font-size: 10px !important;
 }
 
 </style>
