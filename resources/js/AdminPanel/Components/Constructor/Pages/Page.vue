@@ -15,7 +15,68 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
         id="page-construct"
         v-on:submit.prevent="openSaveModal">
 
-
+        <div class="row">
+            <div class="col-12 mb-2">
+                <h6>На странице выбраны следующие разделы</h6>
+                <ul class="mini-pics justify-content-start">
+                    <li
+                        title="Изображения"
+                        v-bind:class="{'active':need_page_images}">
+                        <i class="fa-regular fa-images"></i>
+                    </li>
+                    <li
+                        title="Стикеры"
+                        v-bind:class="{'active':need_page_sticker}">
+                        <i class="fa-regular fa-note-sticky"></i>
+                    </li>
+                    <li
+                        title="Видео"
+                        v-bind:class="{'active':need_page_video}">
+                        <i class="fa-solid fa-photo-film"></i>
+                    </li>
+                    <li
+                        title="Аудио"
+                        v-bind:class="{'active':need_page_audios}">
+                        <i class="fa-regular fa-file-audio"></i>
+                    </li>
+                    <li
+                        title="Документы"
+                        v-bind:class="{'active':need_page_documents}">
+                        <i class="fa-regular fa-file-word"></i>
+                    </li>
+                    <li
+                        title="Страницы"
+                        v-bind:class="{'active':need_attach_page}">
+                        <i class="fa-solid fa-link"></i>
+                    </li>
+                    <li
+                        title="Скрипты"
+                        v-bind:class="{'active':need_attach_slug}">
+                        <i class="fa-solid fa-scroll"></i>
+                    </li>
+                    <li
+                        title="Диалоги"
+                        v-bind:class="{'active':need_attach_dialog}">
+                        <i class="fa-regular fa-comment-dots"></i>
+                    </li>
+                    <li
+                        title="Правила"
+                        v-bind:class="{'active':need_rules}">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </li>
+                    <li
+                        title="Нижнее меню"
+                        v-bind:class="{'active':need_reply_menu}">
+                        <i class="fa-regular fa-keyboard"></i>
+                    </li>
+                    <li
+                        title="Текстовое меню"
+                        v-bind:class="{'active':need_inline_menu}">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="row">
             <div class="col-8 mb-2">
                 <label class="form-label" id="bot-domain">
@@ -77,7 +138,10 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
         </div>
 
+
+
         <div class="row" v-if="!pageForm.is_external">
+
 
             <div class="col-12 mb-2">
                 <label class="form-label d-flex justify-content-between align-items-center mb-0" id="bot-domain">
@@ -110,361 +174,513 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
             </div>
 
-            <div class="col-12 mb-2" v-if="need_reply_menu">
-                <div class="form-check styled-label" >
-                    <input class="form-check-input"
-                           v-model="need_reply_menu"
-                           type="checkbox" id="need-reply-menu">
-                    <label class="form-check-label" for="need-reply-menu">
-                        Нижнее меню страницы
-                    </label>
-                </div>
-            </div>
-            <div class="col-12 mb-2" v-if="need_reply_menu">
-                <div class="card">
-                    <div class="card-header d-flex justify-between align-items-center">
-                        <h6>Конструктор нижнего меню</h6>
+            <div class="col-12 mb-2">
+                <ul class="nav nav-tabs justify-content-center">
 
-                        <button class="btn " type="button"
-                                v-bind:class="{'btn-outline-primary':!showReplyTemplateSelector,'btn-primary':showReplyTemplateSelector}"
-                                @click="showReplyTemplateSelector = !showReplyTemplateSelector"
+                    <li
+                        class="nav-item "
+                        @click="tab=0"
+                       >
+                        <a
+                            v-bind:class="{'active':tab===0}"
+                            class="nav-link d-flex flex-column justify-content-center align-items-center"
+                           href="javascript:void(0)">
+                            <i class="fa-regular fa-keyboard"></i>
+                            <span>Нижнее меню</span>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item "
+                        @click="tab=1"
+                      >
+                        <a
+                            v-bind:class="{'active':tab===1}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-solid fa-ellipsis"></i>
+                            <span>Меню под текстом</span>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item "
+                        @click="tab=2"
                         >
+                        <a
+                            v-bind:class="{'active':tab===2}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-regular fa-images"></i>
+                            <span>Изображения</span>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item "
+                        @click="tab=3"
+                       >
+                        <a
+                            v-bind:class="{'active':tab===3}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-solid fa-photo-film"></i>
+                            <span>Видео</span>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item "
+                        @click="tab=4"
+                       >
+                        <a
+                            v-bind:class="{'active':tab===4}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-regular fa-note-sticky"></i>
+                            <span>Стикеры</span>
+                        </a>
+                    </li>
 
-                            <span v-if="!showReplyTemplateSelector">  Открыть шаблоны меню</span>
-                            <span v-else> Скрыть шаблоны меню</span>
-                        </button>
-
-
-                    </div>
-
-
-                    <div class="card-body">
-
-                        <div class="col-12 mb-2">
-                            <label class="form-label" id="bot-domain">
-                                <Popper>
-                                    <i class="fa-regular fa-circle-question mr-1"></i>
-                                    <template #content>
-                                        <div> Заголовок для нижнего меню
-                                        </div>
-                                    </template>
-                                </Popper>
-                                Заголовок
-                                <!--                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
-                            </label>
-                            <input type="text" class="form-control"
-                                   placeholder="Заголовок меню"
-                                   aria-label="Заголовок меню"
-                                   v-model="pageForm.reply_keyboard_title"
-                                   maxlength="255"
-                                   aria-describedby="bot-domain">
-                        </div>
-
-
-                        <KeyboardList
-                            class="mb-2"
-                            :type="'reply'"
-                            v-if="showReplyTemplateSelector"
-                            v-on:select="selectReplyKeyboard"
-                            :select-mode="true"/>
-
-                        <BotMenuConstructor
-                            v-else
-                            :type="'reply'"
-                            v-on:save="saveReplyKeyboard"
-                            :edited-keyboard="pageForm.reply_keyboard"/>
-                    </div>
-                </div>
-
-
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_inline_menu">
-                <div class="form-check styled-label">
-                    <input class="form-check-input"
-                           v-model="need_inline_menu"
-                           type="checkbox" id="need-inline-menu">
-                    <label class="form-check-label" for="need-inline-menu">
-                        Меню под текстом страницы
-                    </label>
-                </div>
-            </div>
-            <div class="col-12 mb-2" v-if="need_inline_menu">
-                <div class="card">
-
-
-                    <div class="card-header d-flex justify-between align-items-center">
-                        <h6>Конструктор меню в сообщении</h6>
-                        <button class="btn " type="button"
-                                v-bind:class="{'btn-outline-primary':!showInlineTemplateSelector,'btn-primary':showInlineTemplateSelector}"
-                                @click="showInlineTemplateSelector = !showInlineTemplateSelector"
+                    <li
+                        class="nav-item "
+                        @click="tab=5"
+                       >
+                        <a
+                            v-bind:class="{'active':tab===5}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-regular fa-file-audio"></i>
+                            <span>Аудио</span>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item "
+                        @click="tab=6"
+                      >
+                        <a
+                            v-bind:class="{'active':tab===6}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-regular fa-file-word"></i>
+                            <span>Документы</span>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item "
+                        @click="tab=7"
+                       >
+                        <a
+                            v-bind:class="{'active':tab===7}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-solid fa-link"></i>
+                            <span>Другая страница</span>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item "
+                        @click="tab=8"
                         >
+                        <a
+                            v-bind:class="{'active':tab===8}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-solid fa-scroll"></i>
+                            <span>Скрипт</span>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item "
+                        @click="tab=9">
+                        <a
+                            v-bind:class="{'active':tab===9}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-regular fa-comment-dots"></i>
+                            <span>Начало диалога</span>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item "
+                        @click="tab=10"
+                        >
+                        <a
+                            v-bind:class="{'active':tab===10}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center" href="javascript:void(0)">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                            <span>Правила</span>
+                        </a>
+                    </li>
 
-                            <span v-if="!showInlineTemplateSelector">  Открыть шаблоны меню</span>
-                            <span v-else> Скрыть шаблоны меню</span>
-                        </button>
-                    </div>
-
-
-                    <div class="card-body">
-                        <KeyboardList
-                            class="mb-2"
-                            :type="'inline'"
-                            v-if="showInlineTemplateSelector"
-                            v-on:select="selectInlineKeyboard"
-                            :select-mode="true"/>
-
-                        <BotMenuConstructor
-                            :type="'inline'"
-                            v-else
-                            v-on:save="saveInlineKeyboard"
-                            :edited-keyboard="pageForm.inline_keyboard"/>
-
-
-                    </div>
-                </div>
-
-
+                </ul>
             </div>
 
-
-            <div class="col-12 mb-2" v-if="need_page_images" >
-                <div class="form-check styled-label">
-                    <input class="form-check-input"
-                           v-model="need_page_images"
-                           type="checkbox"
-                           id="need-page-images">
-                    <label class="form-check-label" for="need-page-images" >
-                        Изображения на странице (максимум 10)
-                    </label>
-                </div>
-
-            </div>
-            <div class="col-12 mb-2" v-if="need_page_images">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h6>Загрузите изображения с файловой системы</h6>
-                    </div>
-                    <div class="card-body d-flex justify-content-start">
-
-                        <label for="photos" style="margin-right: 10px;" class="photo-loader ml-2">
-                            +
-                            <input type="file" id="photos"
-                                   multiple
-                                   accept="image/*" @change="onChangePhotos"
-                                   style="display:none;"/>
-
+            <div v-if="tab===0">
+                <div class="col-12 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_reply_menu"
+                               type="checkbox" id="need-reply-menu">
+                        <label class="form-check-label" for="need-reply-menu">
+                            Нижнее меню страницы
                         </label>
-                        <div class="row">
-                            <div class="col-12 d-flex flex-wrap" v-if="photos.length>0">
-                                <div class="mb-2 img-preview" style="margin-right: 10px;"
-                                     v-for="(img, index) in photos">
-                                    <img v-lazy="getPhoto(img).imageUrl"/>
+                    </div>
+                </div>
+                <div class="col-12 mb-2" v-if="need_reply_menu">
+                    <div class="card">
+                        <div class="card-header d-flex justify-between align-items-center">
+                            <h6>Конструктор нижнего меню</h6>
 
-                                    <div class="remove">
-                                        <a @click="removePhoto(index)">Удалить</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <h6 v-if="pageForm.images.length>0">Ранее загруженные фотографии</h6>
-                            <div class="col-12 d-flex flex-wrap" v-if="pageForm.images.length>0">
+                            <button class="btn " type="button"
+                                    v-bind:class="{'btn-outline-primary':!showReplyTemplateSelector,'btn-primary':showReplyTemplateSelector}"
+                                    @click="showReplyTemplateSelector = !showReplyTemplateSelector"
+                            >
 
-                                <div class="mb-2 img-preview" style="margin-right: 10px;"
-                                     v-for="(img, index) in pageForm.images">
-                                    <img
-                                        v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
-                                    <div class="remove">
-                                        <a @click="removeImage(index)">Удалить</a>
-                                    </div>
-                                </div>
-                            </div>
+                                <span v-if="!showReplyTemplateSelector">  Открыть шаблоны меню</span>
+                                <span v-else> Скрыть шаблоны меню</span>
+                            </button>
+
+
                         </div>
 
 
+                        <div class="card-body">
+
+                            <div class="col-12 mb-2">
+                                <label class="form-label" id="bot-domain">
+                                    <Popper>
+                                        <i class="fa-regular fa-circle-question mr-1"></i>
+                                        <template #content>
+                                            <div> Заголовок для нижнего меню
+                                            </div>
+                                        </template>
+                                    </Popper>
+                                    Заголовок
+                                    <!--                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
+                                </label>
+                                <input type="text" class="form-control"
+                                       placeholder="Заголовок меню"
+                                       aria-label="Заголовок меню"
+                                       v-model="pageForm.reply_keyboard_title"
+                                       maxlength="255"
+                                       aria-describedby="bot-domain">
+                            </div>
+
+
+                            <KeyboardList
+                                class="mb-2"
+                                :type="'reply'"
+                                v-if="showReplyTemplateSelector"
+                                v-on:select="selectReplyKeyboard"
+                                :select-mode="true"/>
+
+                            <BotMenuConstructor
+                                v-else
+                                :type="'reply'"
+                                v-on:save="saveReplyKeyboard"
+                                :edited-keyboard="pageForm.reply_keyboard"/>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <div v-if="tab===1">
+                <div class="col-12 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_inline_menu"
+                               type="checkbox" id="need-inline-menu">
+                        <label class="form-check-label" for="need-inline-menu">
+                            Меню под текстом страницы
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 mb-2" v-if="need_inline_menu">
+                    <div class="card">
+
+
+                        <div class="card-header d-flex justify-between align-items-center">
+                            <h6>Конструктор меню в сообщении</h6>
+                            <button class="btn " type="button"
+                                    v-bind:class="{'btn-outline-primary':!showInlineTemplateSelector,'btn-primary':showInlineTemplateSelector}"
+                                    @click="showInlineTemplateSelector = !showInlineTemplateSelector"
+                            >
+
+                                <span v-if="!showInlineTemplateSelector">  Открыть шаблоны меню</span>
+                                <span v-else> Скрыть шаблоны меню</span>
+                            </button>
+                        </div>
+
+
+                        <div class="card-body">
+                            <KeyboardList
+                                class="mb-2"
+                                :type="'inline'"
+                                v-if="showInlineTemplateSelector"
+                                v-on:select="selectInlineKeyboard"
+                                :select-mode="true"/>
+
+                            <BotMenuConstructor
+                                :type="'inline'"
+                                v-else
+                                v-on:save="saveInlineKeyboard"
+                                :edited-keyboard="pageForm.inline_keyboard"/>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <div v-if="tab===2">
+                <div class="col-12 mb-2" >
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_page_images"
+                               type="checkbox"
+                               id="need-page-images">
+                        <label class="form-check-label" for="need-page-images">
+                            Изображения на странице (максимум 10)
+                        </label>
+                    </div>
+
+                </div>
+                <div class="col-12 mb-2" v-if="need_page_images">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6>Загрузите изображения с файловой системы</h6>
+                        </div>
+                        <div class="card-body d-flex justify-content-start">
+
+                            <label for="photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                                +
+                                <input type="file" id="photos"
+                                       multiple
+                                       accept="image/*" @change="onChangePhotos"
+                                       style="display:none;"/>
+
+                            </label>
+                            <div class="row">
+                                <div class="col-12 d-flex flex-wrap" v-if="photos.length>0">
+                                    <div class="mb-2 img-preview" style="margin-right: 10px;"
+                                         v-for="(img, index) in photos">
+                                        <img v-lazy="getPhoto(img).imageUrl"/>
+
+                                        <div class="remove">
+                                            <a @click="removePhoto(index)">Удалить</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h6 v-if="pageForm.images.length>0">Ранее загруженные фотографии</h6>
+                                <div class="col-12 d-flex flex-wrap" v-if="pageForm.images.length>0">
+
+                                    <div class="mb-2 img-preview" style="margin-right: 10px;"
+                                         v-for="(img, index) in pageForm.images">
+                                        <img
+                                            v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
+                                        <div class="remove">
+                                            <a @click="removeImage(index)">Удалить</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <div v-if="tab===3">
+                <div class="col-12 mb-2" >
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_page_video"
+                               type="checkbox"
+                               id="need-page-video">
+                        <label class="form-check-label" for="need-page-video">
+                            Видео к странице
+                        </label>
+                    </div>
 
-            <div class="col-12 mb-2" v-if="need_page_video">
-                <div class="form-check styled-label" >
-                    <input class="form-check-input"
-                           v-model="need_page_video"
-                           type="checkbox"
-                           id="need-page-video">
-                    <label class="form-check-label" for="need-page-video">
-                        Видео к странице
-                    </label>
                 </div>
-
-            </div>
-            <div class="col-12 mb-2" v-if="need_page_video">
-                <p class="alert alert-danger">
-                    <strong>Внимание!</strong> не больше 10 видео на 1й странице!
-                </p>
-                <BotMediaList
-                    :need-video="true"
-                    :need-video-note="true"
-                    :selected="pageForm.videos"
-                    v-on:select="selectVideo"></BotMediaList>
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_page_sticker">
-                <div class="form-check styled-label">
-                    <input class="form-check-input"
-                           v-model="need_page_sticker"
-                           type="checkbox"
-                           id="need-page-sticker">
-                    <label class="form-check-label" for="need-page-sticker">
-                        Стикер к странице
-                    </label>
-                </div>
-
-            </div>
-            <div class="col-12 mb-2" v-if="need_page_sticker">
-                <BotMediaList
-                    :need-sticker="true"
-                    :selected="[pageForm.sticker]"
-                    v-on:select="selectSticker"></BotMediaList>
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_page_audios">
-                <div class="form-check styled-label">
-                    <input class="form-check-input"
-                           v-model="need_page_audios"
-                           type="checkbox"
-                           id="need-page-audio">
-                    <label class="form-check-label" for="need-page-audio">
-                        Звук к странице
-                    </label>
-                </div>
-
-            </div>
-            <div class="col-12 mb-2" v-if="need_page_audios">
-                <p class="alert alert-danger">
-                    <strong>Внимание!</strong> не больше 10 аудио на 1й странице!
-                </p>
-                <BotMediaList
-                    :need-audio="true"
-                    :selected="pageForm.audios"
-                    v-on:select="selectAudio"></BotMediaList>
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_page_documents">
-                <div class="form-check styled-label" >
-                    <input class="form-check-input"
-                           v-model="need_page_documents"
-                           type="checkbox"
-                           id="need-page-document">
-                    <label class="form-check-label" for="need-page-document">
-                        Документ \ презентацию к странице \ картинку в оригинале
-                    </label>
-                </div>
-
-            </div>
-            <div class="col-12 mb-2" v-if="need_page_documents">
-                <p class="alert alert-danger">
-                    <strong>Внимание!</strong> не больше 10 документов на 1й странице!
-                </p>
-                <BotMediaList
-                    :need-document="true"
-                    :selected="pageForm.documents"
-                    v-on:select="selectDocument"></BotMediaList>
-            </div>
-
-            <div class="col-12 mb-2" v-if="need_attach_page">
-                <div class="form-check styled-label">
-                    <input class="form-check-input"
-                           v-model="need_attach_page"
-                           type="checkbox"
-                           id="need-page-attach">
-                    <label class="form-check-label" for="need-page-attach">
-                        Связать с другой страницей
-                    </label>
+                <div class="col-12 mb-2" v-if="need_page_video">
+                    <p class="alert alert-danger">
+                        <strong>Внимание!</strong> не больше 10 видео на 1й странице!
+                    </p>
+                    <BotMediaList
+                        :need-video="true"
+                        :need-video-note="true"
+                        :selected="pageForm.videos"
+                        v-on:select="selectVideo"></BotMediaList>
                 </div>
             </div>
-            <div class="col-12 mb-2" v-if="need_attach_page">
-                <p v-if="pageForm.next_page_id">Связано со страницей #{{ pageForm.next_page_id }} <a
-                    class="btn btn-link"
-                    @click="pageForm.next_page_id = null">Очистить</a></p>
-                <PagesList
-                    :current="pageForm.id"
-                    v-on:callback="attachPage"
-                    :editor="false"/>
-            </div>
 
-            <div class="col-12 mb-2" v-if="need_attach_slug">
-                <div class="form-check styled-label" >
-                    <input class="form-check-input"
-                           v-model="need_attach_slug"
-                           type="checkbox"
-                           id="need-slug-attach">
-                    <label class="form-check-label  text-white" for="need-slug-attach">
-                        Привязать скрипт
-                    </label>
+            <div v-if="tab===4">
+                <div class="col-12 mb-2" >
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_page_sticker"
+                               type="checkbox"
+                               id="need-page-sticker">
+                        <label class="form-check-label" for="need-page-sticker">
+                            Стикер к странице
+                        </label>
+                    </div>
+
+                </div>
+                <div class="col-12 mb-2" v-if="need_page_sticker">
+                    <BotMediaList
+                        :need-sticker="true"
+                        :selected="[pageForm.sticker]"
+                        v-on:select="selectSticker"></BotMediaList>
                 </div>
             </div>
-            <div class="col-12 mb-2" v-if="need_attach_slug">
-                <p v-if="pageForm.next_bot_menu_slug_id">Связано со скриптом #{{ pageForm.next_bot_menu_slug_id }} <a
-                    class="btn btn-link"
-                    @click="pageForm.next_bot_menu_slug_id = null">Очистить</a></p>
-                <BotSlugListSimple v-if="bot"
-                                   :global="true"
-                                   v-on:callback="associateSlug"
-                                   :bot="bot"/>
-            </div>
 
-            <div class="col-12 mb-2" v-if="need_attach_dialog">
-                <div class="form-check styled-label">
-                    <input class="form-check-input"
-                           v-model="need_attach_dialog"
-                           type="checkbox"
-                           id="need-dialog-attach">
-                    <label class="form-check-label" for="need-dialog-attach">
-                        Привязать начало диалога
-                    </label>
+
+            <div v-if="tab===5">
+                <div class="col-12 mb-2" >
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_page_audios"
+                               type="checkbox"
+                               id="need-page-audio">
+                        <label class="form-check-label" for="need-page-audio">
+                            Звук к странице
+                        </label>
+                    </div>
+
+                </div>
+                <div class="col-12 mb-2" v-if="need_page_audios">
+                    <p class="alert alert-danger">
+                        <strong>Внимание!</strong> не больше 10 аудио на 1й странице!
+                    </p>
+                    <BotMediaList
+                        :need-audio="true"
+                        :selected="pageForm.audios"
+                        v-on:select="selectAudio"></BotMediaList>
                 </div>
             </div>
-            <div class="col-12 mb-2" v-if="need_attach_dialog">
-                <p v-if="pageForm.next_bot_dialog_command_id">Связано с диалогом #{{
-                        pageForm.next_bot_dialog_command_id
-                    }}
-                    <a
+
+            <div v-if="tab===6">
+                <div class="col-12 mb-2" >
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_page_documents"
+                               type="checkbox"
+                               id="need-page-document">
+                        <label class="form-check-label" for="need-page-document">
+                            Документ \ презентацию к странице \ картинку в оригинале
+                        </label>
+                    </div>
+
+                </div>
+                <div class="col-12 mb-2" v-if="need_page_documents">
+                    <p class="alert alert-danger">
+                        <strong>Внимание!</strong> не больше 10 документов на 1й странице!
+                    </p>
+                    <BotMediaList
+                        :need-document="true"
+                        :selected="pageForm.documents"
+                        v-on:select="selectDocument"></BotMediaList>
+                </div>
+            </div>
+
+            <div v-if="tab===7">
+                <div class="col-12 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_attach_page"
+                               type="checkbox"
+                               id="need-page-attach">
+                        <label class="form-check-label" for="need-page-attach">
+                            Связать с другой страницей
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 mb-2" v-if="need_attach_page">
+                    <p v-if="pageForm.next_page_id">Связано со страницей #{{ pageForm.next_page_id }} <a
                         class="btn btn-link"
-                        @click="pageForm.next_bot_dialog_command_id = null">Очистить</a></p>
-                <BotDialogGroupListSimple v-if="bot"
-                                          v-on:select-dialog="associateDialog"
-                                          :bot="bot"/>
-            </div>
-        </div>
-
-        <div class="row" >
-            <div class="col-12 mb-2" v-if="need_rules">
-                <div class="form-check styled-label" >
-                    <input class="form-check-input"
-                           v-model="need_rules"
-                           type="checkbox" id="need-rules">
-                    <label class="form-check-label" for="need-rules">
-                        Нужны правила загрузки страницы
-                    </label>
+                        @click="pageForm.next_page_id = null">Очистить</a></p>
+                    <PagesList
+                        :current="pageForm.id"
+                        v-on:callback="attachPage"
+                        :editor="false"/>
                 </div>
             </div>
-            <div class="col-12 mb-2" v-if="need_rules">
-                <PageRules
-                    :bot="bot"
-                    :rules-form="pageForm"
-                />
+
+
+            <div v-if="tab===8">
+                <div class="col-12 mb-2" >
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_attach_slug"
+                               type="checkbox"
+                               id="need-slug-attach">
+                        <label class="form-check-label" for="need-slug-attach">
+                            Привязать скрипт
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 mb-2" v-if="need_attach_slug">
+                    <p v-if="pageForm.next_bot_menu_slug_id">Связано со скриптом #{{ pageForm.next_bot_menu_slug_id }}
+                        <a
+                            class="btn btn-link"
+                            @click="pageForm.next_bot_menu_slug_id = null">Очистить</a></p>
+                    <BotSlugListSimple v-if="bot"
+                                       :global="true"
+                                       v-on:callback="associateSlug"
+                                       :bot="bot"/>
+                </div>
+            </div>
+
+
+            <div v-if="tab===9">
+                <div class="col-12 mb-2" >
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_attach_dialog"
+                               type="checkbox"
+                               id="need-dialog-attach">
+                        <label class="form-check-label" for="need-dialog-attach">
+                            Привязать начало диалога
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 mb-2" v-if="need_attach_dialog">
+                    <p v-if="pageForm.next_bot_dialog_command_id">Связано с диалогом #{{
+                            pageForm.next_bot_dialog_command_id
+                        }}
+                        <a
+                            class="btn btn-link"
+                            @click="pageForm.next_bot_dialog_command_id = null">Очистить</a></p>
+                    <BotDialogGroupListSimple v-if="bot"
+                                              v-on:select-dialog="associateDialog"
+                                              :bot="bot"/>
+                </div>
+            </div>
+
+            <div v-if="tab===10">
+                <div class="col-12 mb-2" >
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_rules"
+                               type="checkbox" id="need-rules">
+                        <label class="form-check-label" for="need-rules">
+                            Нужны правила загрузки страницы
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 mb-2" v-if="need_rules">
+                    <PageRules
+                        :bot="bot"
+                        :rules-form="pageForm"
+                    />
+                </div>
             </div>
         </div>
-
 
     </form>
 
-    <div class="fixed-left-menu">
+<!--    <div class="fixed-left-menu">
         <button
             @click="showMenu=!showMenu"
-            class="btn btn-outline-primary p-2 fixed-menu-btn">
-<!--            <i class="fa-solid fa-ellipsis-vertical"></i>-->
+            class="btn btn-outline-primary fixed-menu-btn">
+            &lt;!&ndash;            <i class="fa-solid fa-ellipsis-vertical"></i>&ndash;&gt;
             <i class="fa-solid fa-caret-right" v-if="!showMenu"></i>
             <i class="fa-solid fa-caret-left" v-else></i>
         </button>
@@ -538,7 +754,9 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </li>
 
         </ul>
-    </div>
+
+
+    </div>-->
     <!-- Modal -->
     <div class="modal fade" id="save-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -552,11 +770,9 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         <div class="col-12 mb-2 ">
                             <h6 class="d-flex justify-between">
                                 <span>Вы создаете страницу для {{ bot.bot_domain }}</span>
-
                             </h6>
                         </div>
                     </div>
-
 
                     <form v-on:submit.prevent="submitPage" class="row">
                         <div class="col-12 mb-2">
@@ -661,7 +877,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Не сохранять</button>
-
                 </div>
             </div>
         </div>
@@ -688,11 +903,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 import {mapGetters} from "vuex";
 
 
-
 export default {
     data() {
         return {
-            saveModal:null,
+            tab: 0,
+            saveModal: null,
             page: null,
             need_show_qr_and_link: false,
             need_clean: false,
@@ -888,7 +1103,7 @@ export default {
 
 
         this.loadCurrentBot().then(() => {
-            this.saveModal =new bootstrap.Modal(document.getElementById('save-modal'), {})
+            this.saveModal = new bootstrap.Modal(document.getElementById('save-modal'), {})
         })
 
 
@@ -1207,10 +1422,11 @@ export default {
 
 .styled-label {
     background: #008cba;
-    padding:10px 10px 10px 30px;
-    box-sizing:border-box;
+    padding: 10px 10px 10px 30px;
+    box-sizing: border-box;
+
     label {
-        color:white;
+        color: white;
     }
 }
 
@@ -1220,14 +1436,16 @@ export default {
     justify-content: space-around;
     // border-radius: 0px 5px 5px 0px;
     padding: 0;
+
     li {
-        padding: 10px;
+        padding: 5px;
+        font-size: 12px;
         cursor: pointer;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        border: 1px lightgray solid;
+        border: 1px #f9f9f9 solid;
 
         &.active {
             background-color: #008cba;
@@ -1236,68 +1454,126 @@ export default {
 
     }
 }
+
 .component-menu {
+    display: flex;
+    position: absolute;
+    top: 30px;
+    flex-direction: column;
+    border: 1px lightgray solid;
+    left: 0px;
+    background-color: white;
 
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    // border-radius: 0px 5px 5px 0px;
+
+
+    li {
+        padding: 5px 10px;
+        cursor: pointer;
         display: flex;
-        position: absolute;
-        top: 0;
-        border: 1px lightgray solid;
-        left: 30px;
-        background-color: white;
-        padding: 0;
-       // border-radius: 0px 5px 5px 0px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 45px;
 
-        li {
-            padding: 5px 10px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        span {
+            margin-top: 3px;
+            font-size: 8px;
+            text-align: center;
+            line-height: 100%;
+        }
 
-            span {
-                margin-top: 3px;
-                font-size: 8px;
-                text-align: center;
-                line-height: 100%;
-            }
+        &.active,
+        &:hover {
+            background-color: #008cba;
+            color: white;
+        }
 
-            &.active,
+        &.divider {
+            padding: 0;
+            width: 2px;
+            background: #e2e2e2;
+
             &:hover {
-                background-color: #008cba;
-                color: white;
-            }
-
-            &.divider {
-                padding: 0;
-                width: 2px;
                 background: #e2e2e2;
-
-                &:hover {
-                    background: #e2e2e2;
-                }
             }
         }
     }
+
+
+}
 
 .fixed-left-menu {
     position: fixed;
     z-index: 1000;
     left: 20px;
-    top: 25%;
+    top: 105px;
     background: white;
 
     .fixed-menu-btn {
-        height: 52px;
+        width: 75px;
+        height: 30px;
         border: 1px lightgray solid;
+        padding: 0px;
     }
 
 
 }
 
 .custom-menu {
-    position:sticky;
-    top:50px;
-    z-index:100;
+    position: sticky;
+    top: 50px;
+    z-index: 100;
+}
+
+.custom-menu-2 {
+    display: flex;
+    top: 30px;
+    flex-direction: column;
+    border: 1px lightgray solid;
+    left: 0px;
+    background-color: white;
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    // border-radius: 0px 5px 5px 0px;
+
+
+    li {
+        padding: 5px 10px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 45px;
+
+        span {
+            margin-top: 3px;
+            font-size: 8px;
+            text-align: center;
+            line-height: 100%;
+        }
+
+        &.active,
+        &:hover {
+            background-color: #008cba;
+            color: white;
+        }
+
+        &.divider {
+            padding: 0;
+            width: 2px;
+            background: #e2e2e2;
+
+            &:hover {
+                background: #e2e2e2;
+            }
+        }
+    }
 }
 </style>

@@ -97,105 +97,126 @@
                                 v-model="keyboard[rowIndex][colIndex].text"
                             />
                             <button type="button"
-                                    class="btn btn-outline-primary dropdown-toggle
-                                 dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                                    data-bs-toggle="modal" :data-bs-target="'#button-menu-btn-row-'+rowIndex+'col-'+colIndex"
+                                    class="btn btn-outline-primary" aria-expanded="false"
                                     data-bs-reference="parent">
-                                <span class="visually-hidden">Toggle Dropdown</span>
+                                <i class="fa-solid fa-bars"></i>
                             </button>
-                            <ul class="dropdown-menu w-100" style="min-width:350px;">
-                                <form class="px-4 py-3">
-                                    <div class="alert alert-danger" role="alert">
-                                        Возможно выбрать только 1 тип действия
-                                    </div>
 
 
-                                    <div class="mb-3">
-                                        <label :for="'command-row-'+rowIndex+'-col-'+colIndex"
-                                               class="form-label">Команда (для меню в сообщении)</label>
-                                        <input type="text"
-                                               @change="needRemoveField( 'callback_data', rowIndex, colIndex)"
-                                               v-model="keyboard[rowIndex][colIndex].callback_data"
-                                               class="form-control"
-                                               :id="'command-row-'+rowIndex+'-col-'+colIndex"
-                                               placeholder="/start">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label :for="'switch-inline-query-row-'+rowIndex+'-col-'+colIndex"
-                                               class="form-label">Ссылка на аккаунт в ТЕЛЕГРАММ</label>
-                                        <input type="text" class="form-control"
-                                               @change="needRemoveField( 'switch_inline_query',rowIndex, colIndex)"
-                                               v-model="keyboard[rowIndex][colIndex].switch_inline_query"
-                                               :id="'switch-inline-query-row-'+rowIndex+'-col-'+colIndex"
-                                               placeholder="@YourAccountLink">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label :for="'url-row-'+rowIndex+'-col-'+colIndex"
-                                               class="form-label">Внешняя URL-ссылка</label>
-                                        <input type="text" class="form-control"
-                                               @change="needRemoveField( 'url',rowIndex, colIndex)"
-                                               v-model="keyboard[rowIndex][colIndex].url"
-                                               :id="'url-row-'+rowIndex+'-col-'+colIndex"
-                                               placeholder="https://t.me/example">
-                                    </div>
+                            <div class="modal fade" :id="'button-menu-btn-row-'+rowIndex+'col-'+colIndex" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <form class="px-4 py-3">
+                                                <div class="alert alert-danger" role="alert">
+                                                    Возможно выбрать только 1 тип действия
+                                                </div>
 
-                                    <div class="mb-3">
-                                        <label :for="'switch-inline-query-current-chat-row-'+rowIndex+'-col-'+colIndex"
-                                               class="form-label">Команда всплывающего меню бота</label>
-                                        <input type="text" class="form-control"
-                                               @change="needRemoveField( 'switch_inline_query_current_chat',rowIndex, colIndex)"
-                                               v-model="keyboard[rowIndex][colIndex].switch_inline_query_current_chat"
-                                               :id="'witch-inline-query-current-chat-row-'+rowIndex+'-col-'+colIndex"
-                                               placeholder="команда">
-                                    </div>
+                                                <div class="mb-3">
+                                                    <label :for="'command-title-'+rowIndex+'-col-'+colIndex"
+                                                           class="form-label">Название кнопки</label>
+
+                                                    <input
+                                                        type="text"
+                                                        :id="'command-title-'+rowIndex+'-col-'+colIndex"
+                                                        class="form-control w-100"
+                                                        v-model="keyboard[rowIndex][colIndex].text"
+                                                    />
+                                                </div>
+                                                <hr>
+
+                                                <div class="mb-3">
+                                                    <label :for="'command-row-'+rowIndex+'-col-'+colIndex"
+                                                           class="form-label">Команда (для меню в сообщении)</label>
+                                                    <input type="text"
+                                                           @change="needRemoveField( 'callback_data', rowIndex, colIndex)"
+                                                           v-model="keyboard[rowIndex][colIndex].callback_data"
+                                                           class="form-control"
+                                                           :id="'command-row-'+rowIndex+'-col-'+colIndex"
+                                                           placeholder="/start">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label :for="'switch-inline-query-row-'+rowIndex+'-col-'+colIndex"
+                                                           class="form-label">Ссылка на аккаунт в ТЕЛЕГРАММ</label>
+                                                    <input type="text" class="form-control"
+                                                           @change="needRemoveField( 'switch_inline_query',rowIndex, colIndex)"
+                                                           v-model="keyboard[rowIndex][colIndex].switch_inline_query"
+                                                           :id="'switch-inline-query-row-'+rowIndex+'-col-'+colIndex"
+                                                           placeholder="@YourAccountLink">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label :for="'url-row-'+rowIndex+'-col-'+colIndex"
+                                                           class="form-label">Внешняя URL-ссылка</label>
+                                                    <input type="text" class="form-control"
+                                                           @change="needRemoveField( 'url',rowIndex, colIndex)"
+                                                           v-model="keyboard[rowIndex][colIndex].url"
+                                                           :id="'url-row-'+rowIndex+'-col-'+colIndex"
+                                                           placeholder="https://t.me/example">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label :for="'switch-inline-query-current-chat-row-'+rowIndex+'-col-'+colIndex"
+                                                           class="form-label">Команда всплывающего меню бота</label>
+                                                    <input type="text" class="form-control"
+                                                           @change="needRemoveField( 'switch_inline_query_current_chat',rowIndex, colIndex)"
+                                                           v-model="keyboard[rowIndex][colIndex].switch_inline_query_current_chat"
+                                                           :id="'witch-inline-query-current-chat-row-'+rowIndex+'-col-'+colIndex"
+                                                           placeholder="команда">
+                                                </div>
 
 
-                                    <div class="form-check">
-                                        <input type="radio"
-                                               @change="needRemoveField( null,rowIndex, colIndex)"
-                                               name="request-radio"
-                                               class="form-check-input"
-                                               :id="'no-action-row-'+rowIndex+'-col-'+colIndex">
-                                        <label class="form-check-label"
-                                               :for="'no-action-row-'+rowIndex+'-col-'+colIndex">
-                                            Без действий
-                                        </label>
-                                    </div>
-                                    <div class="form-check" v-if="rowIndex===0">
-                                        <input type="radio"
-                                               @change="needRemoveField( 'pay',rowIndex, colIndex)"
-                                               @click="keyboard[rowIndex][colIndex].pay = true"
-                                               name="request-radio"
-                                               class="form-check-input"
-                                               :id="'pay-action-row-'+rowIndex+'-col-'+colIndex">
-                                        <label class="form-check-label"
-                                               :for="'pay-action-row-'+rowIndex+'-col-'+colIndex">
-                                            Кнопка оплаты
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="radio"
-                                               @change="needRemoveField( 'request_contact',rowIndex, colIndex)"
-                                               @click="keyboard[rowIndex][colIndex].request_contact = true"
-                                               name="request-radio"
-                                               class="form-check-input" :id="'phone-row-'+rowIndex+'-col-'+colIndex">
-                                        <label class="form-check-label" :for="'phone-row-'+rowIndex+'-col-'+colIndex">
-                                            Запросить телефон (для нижнего меню)
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="radio"
-                                               name="request-radio"
-                                               @change="needRemoveField( 'request_location',rowIndex, colIndex)"
-                                               @click="keyboard[rowIndex][colIndex].request_location = true"
-                                               class="form-check-input" :id="'location-row-'+rowIndex+'-col-'+colIndex">
-                                        <label class="form-check-label"
-                                               :for="'location-row-'+rowIndex+'-col-'+colIndex">
-                                            Запросить локацию (для нижнего меню)
-                                        </label>
-                                    </div>
+                                                <div class="form-check">
+                                                    <input type="radio"
+                                                           @change="needRemoveField( null,rowIndex, colIndex)"
+                                                           name="request-radio"
+                                                           class="form-check-input"
+                                                           :id="'no-action-row-'+rowIndex+'-col-'+colIndex">
+                                                    <label class="form-check-label"
+                                                           :for="'no-action-row-'+rowIndex+'-col-'+colIndex">
+                                                        Без действий
+                                                    </label>
+                                                </div>
+<!--                                                <div class="form-check" v-if="rowIndex===0">
+                                                    <input type="radio"
+                                                           @change="needRemoveField( 'pay',rowIndex, colIndex)"
+                                                           @click="keyboard[rowIndex][colIndex].pay = true"
+                                                           name="request-radio"
+                                                           class="form-check-input"
+                                                           :id="'pay-action-row-'+rowIndex+'-col-'+colIndex">
+                                                    <label class="form-check-label"
+                                                           :for="'pay-action-row-'+rowIndex+'-col-'+colIndex">
+                                                        Кнопка оплаты
+                                                    </label>
+                                                </div>-->
+                                                <div class="form-check">
+                                                    <input type="radio"
+                                                           @change="needRemoveField( 'request_contact',rowIndex, colIndex)"
+                                                           @click="keyboard[rowIndex][colIndex].request_contact = true"
+                                                           name="request-radio"
+                                                           class="form-check-input" :id="'phone-row-'+rowIndex+'-col-'+colIndex">
+                                                    <label class="form-check-label" :for="'phone-row-'+rowIndex+'-col-'+colIndex">
+                                                        Запросить телефон (для нижнего меню)
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio"
+                                                           name="request-radio"
+                                                           @change="needRemoveField( 'request_location',rowIndex, colIndex)"
+                                                           @click="keyboard[rowIndex][colIndex].request_location = true"
+                                                           class="form-check-input" :id="'location-row-'+rowIndex+'-col-'+colIndex">
+                                                    <label class="form-check-label"
+                                                           :for="'location-row-'+rowIndex+'-col-'+colIndex">
+                                                        Запросить локацию (для нижнего меню)
+                                                    </label>
+                                                </div>
 
-                                </form>
-                            </ul>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
 
@@ -220,7 +241,9 @@
             </div>
         </div>
     </div>
-</template>
+
+    <!-- Modal -->
+   </template>
 <script>
 import {Vue3JsonEditor} from 'vue3-json-editor'
 import {v4 as uuidv4} from "uuid";
