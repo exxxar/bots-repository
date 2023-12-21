@@ -61,7 +61,7 @@
 
 
             </div>
-            <div class="col-12">
+            <div class="col-12" v-if="keyboard.length>0">
                 <div class="row" v-for="(row, rowIndex) in keyboard">
                     <div class="col-2 d-flex justify-content-around p-2">
                         <button
@@ -371,7 +371,6 @@ export default {
             this.keyboard[index] = tmpRow
 
             this.selectedRow = index
-            console.log("tmpRow", tmpRow)
         },
         addRowBelow() {
             this.addRow(false)

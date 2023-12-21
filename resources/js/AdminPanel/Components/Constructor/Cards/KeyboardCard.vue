@@ -296,10 +296,10 @@ export default {
                     this.is_edited = false
                 })
 
-
                 this.$emit("callback")
             }).catch(() => {
-                this.is_edited = true
+                this.is_edited = false
+                this.$emit("callback")
             })
         },
     }

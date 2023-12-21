@@ -410,7 +410,6 @@ class BotController extends Controller
 
         $bot = Bot::query()->find($request->bot_id ?? null);
 
-        Log::info(print_r($request->all(), true));
         return BusinessLogic::keyboards()
             ->setBot($bot)
             ->update($request->all());

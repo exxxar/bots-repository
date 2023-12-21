@@ -68,7 +68,7 @@ import KeyboardCard from "@/AdminPanel/Components/Constructor/Cards/KeyboardCard
         <div class="col-12 mb-3"
              v-if="keyboards&&bot"
              v-for="(keyboard, index) in filteredKeyboard">
-            {{keyboard}}
+
             <KeyboardCard
                 :select-mode="selectMode"
                 v-if="!keyboard.deleted_at"

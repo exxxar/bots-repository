@@ -43,7 +43,7 @@ class KeyboardLogicFactory
 
         $keyboards = BotMenuTemplate::query()
             ->where("bot_id", $this->bot->id)
-            ->orderBy("updated_at","desc")
+            ->orderBy("updated_at", "desc")
             ->get();
 
         return new BotMenuTemplateCollection($keyboards);
@@ -106,14 +106,22 @@ class KeyboardLogicFactory
         if (is_null($botMenuTemplate))
             throw new HttpException(404, "Клавиатура не найдена");
 
+        $menu = json_decode($data["menu"]);
 
-        $botMenuTemplate
+
+        if (isset($menu->menu))
+            $menu = $menu->menu;
+
+
+
+       $botMenuTemplate
             ->update([
                 "slug" => $data["slug"] ?? Str::uuid(),
-                "menu" => json_decode($data["menu"]),
+                "menu" => $menu,
                 "type" => $data["type"],
                 "bot_id" => $this->bot->id,
             ]);
+
 
         return new BotMenuTemplateResource($botMenuTemplate);
     }
