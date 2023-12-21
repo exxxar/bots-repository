@@ -152,11 +152,14 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
                 </button>
 
         </div>
-        <div class="card-body">
+        <div class="card-body" v-if="keyboardForm.length>0">
             <BotMenuConstructor
                 v-if="keyboardForm"
                 v-on:save="saveKeyboard"
                 :edited-keyboard="keyboardForm"/>
+        </div>
+        <div class="card-body" v-else>
+            <p>Ошибка!</p>
         </div>
 
     </div>
@@ -212,9 +215,14 @@ export default {
     mounted() {
         const tmpKeyboard = this.keyboard
 
+
         this.keyboardForm = tmpKeyboard
         this.$nextTick(() => {
             this.is_edited = false
+
+            if (!Array.isArray(tmpKeyboard.menu)){
+                this.updateKeyboard()
+            }
         })
 
     },

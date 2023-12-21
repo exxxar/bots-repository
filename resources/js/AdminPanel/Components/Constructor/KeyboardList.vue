@@ -63,7 +63,7 @@ import KeyboardCard from "@/AdminPanel/Components/Constructor/Cards/KeyboardCard
         <div
             v-if="keyboards&&bot"
             class="col-12">
-            <p>В списке клавиатур <span class="badge bg-warning">{{filteredKeyboard.length}}  ед.</span></p>
+            <p>В списке клавиатур <span class="badge bg-warning">{{ filteredKeyboard.length }}  ед.</span></p>
         </div>
         <div class="col-12 mb-3"
              v-if="keyboards&&bot"
@@ -78,7 +78,7 @@ import KeyboardCard from "@/AdminPanel/Components/Constructor/Cards/KeyboardCard
                 :keyboard="keyboard"/>
             <div class="card" v-else>
                 <div class="card-body">
-                    <p>Удаленная клавиатура #{{keyboard.id}}</p>
+                    <p>Удаленная клавиатура #{{ keyboard.id }}</p>
                 </div>
             </div>
         </div>
@@ -92,17 +92,16 @@ import KeyboardCard from "@/AdminPanel/Components/Constructor/Cards/KeyboardCard
     </div>
 
 
-
 </template>
 <script>
 import {v4 as uuidv4} from "uuid";
 import {mapGetters} from "vuex";
 
 export default {
-    props:["selectMode", "type"],
+    props: ["selectMode", "type"],
     data() {
         return {
-            keyboards:[],
+            keyboards: [],
             load: false,
             bot: null,
             editedKeyboard: null,
@@ -113,42 +112,43 @@ export default {
                 slug: null,
                 menu: [],
             },
-          /*  editedButton: {
-                oldTextVal: null,
-                newTextVal: null,
-                keyboardIndex: null,
-                rowIndex: null,
-                colIndex: null,
+            /*  editedButton: {
+                  oldTextVal: null,
+                  newTextVal: null,
+                  keyboardIndex: null,
+                  rowIndex: null,
+                  colIndex: null,
 
-            }*/
+              }*/
         }
     },
     computed: {
         ...mapGetters(['getCurrentBot']),
-        filteredKeyboard(){
+        filteredKeyboard() {
 
             if (!this.type)
                 return this.keyboards
 
 
-            return this.keyboards.filter(item=>item.type==this.type)
+            return this.keyboards.filter(item => item.type == this.type)
         }
     },
     mounted() {
-        this.loadCurrentBot().then(()=>{
+        this.loadCurrentBot().then(() => {
             this.loadMenusByBotTemplate()
 
             this.generateSlug();
         })
     },
     methods: {
-        selectCard(keyboardCard){
-          this.$emit("select", keyboardCard)
+        selectCard(keyboardCard) {
+            this.$emit("select", keyboardCard)
         },
-        keyboardCallbackAction(templateId){
-            let keyboard = this.keyboards.find(item=>item.id===templateId)
+        keyboardCallbackAction(templateId) {
+            let keyboard = this.keyboards.find(item => item.id === templateId)
 
-            keyboard.deleted_at = new Date();
+            if (keyboard)
+                keyboard.deleted_at = new Date();
 
             this.loadMenusByBotTemplate();
         },
@@ -160,7 +160,7 @@ export default {
             })
         },
         loadCurrentBot(bot = null) {
-           return this.$store.dispatch("updateCurrentBot", {
+            return this.$store.dispatch("updateCurrentBot", {
                 bot: bot
             }).then(() => {
                 this.bot = this.getCurrentBot
@@ -206,40 +206,40 @@ export default {
         changeKeyboardFormMenu(keyboard) {
             this.keyboardForm.menu = keyboard
         },
-      /*  saveKeyboard(keyboard) {
-            this.keyboards[this.selectMenuIndex].menu = keyboard
-        },*/
-      /*  editKeyboard(keyboard, index) {
-            this.load = true
-            this.$nextTick(() => {
-                this.selectMenuIndex = index
-                this.editedKeyboard = keyboard
-                this.load = false
-            })
+        /*  saveKeyboard(keyboard) {
+              this.keyboards[this.selectMenuIndex].menu = keyboard
+          },*/
+        /*  editKeyboard(keyboard, index) {
+              this.load = true
+              this.$nextTick(() => {
+                  this.selectMenuIndex = index
+                  this.editedKeyboard = keyboard
+                  this.load = false
+              })
 
-        },*/
-      /*  removeKeyboard(index) {
-            this.$emit("remove", index)
-        },
-        editBtn(keyboardIndex, rowIndex, colIndex) {
-            this.editedButton.oldTextVal = this.keyboards[keyboardIndex].menu[rowIndex][colIndex].text
-            this.editedButton.colIndex = colIndex
-            this.editedButton.rowIndex = rowIndex
-            this.editedButton.keyboardIndex = keyboardIndex
-
-
-            this.$emit("edit", {
-                command: this.editedButton.oldTextVal
-            })
+          },*/
+        /*  removeKeyboard(index) {
+              this.$emit("remove", index)
+          },
+          editBtn(keyboardIndex, rowIndex, colIndex) {
+              this.editedButton.oldTextVal = this.keyboards[keyboardIndex].menu[rowIndex][colIndex].text
+              this.editedButton.colIndex = colIndex
+              this.editedButton.rowIndex = rowIndex
+              this.editedButton.keyboardIndex = keyboardIndex
 
 
-            /!*  Object
-                  .keys(this.keyboards[keyboardIndex].menu[rowIndex][colIndex])
-                  .forEach(item=>{
-                      console.log("item", this.keyboards[keyboardIndex].menu[rowIndex][colIndex][item])
-                  })*!/
-            //console.log()
-        },*/
+              this.$emit("edit", {
+                  command: this.editedButton.oldTextVal
+              })
+
+
+              /!*  Object
+                    .keys(this.keyboards[keyboardIndex].menu[rowIndex][colIndex])
+                    .forEach(item=>{
+                        console.log("item", this.keyboards[keyboardIndex].menu[rowIndex][colIndex][item])
+                    })*!/
+              //console.log()
+          },*/
 
     }
 }
