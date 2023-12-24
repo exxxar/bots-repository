@@ -33,23 +33,10 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                         data-bs-toggle="modal" :data-bs-target="'#dialog-command-modal-'+item.id"
                         title="Редактирование параметров карточки"
                         class="dropdown-item cursor-pointer"> <i class="fa-solid fa-sliders mr-1"></i> Настройка диалога </a></li>
-                    <li><a
-                        @click="linkEvent"
-                        title="Диалог связывания с другой командой"
-                        class="dropdown-item cursor-pointer"> <i class="fa-solid fa-arrows-turn-to-dots mr-1"></i> Редактирование связей </a></li>
-                    <li><a
-                        @click="changeGroup"
-                        title="Диалог смены группы команды"
-                        class="dropdown-item cursor-pointer">  <i class="fa-solid fa-arrows-up-down mr-1"></i> Смена диалоговой группы </a></li>
-                    <li><a
+                      <li><a
                         title="Дублирование команды"
                         @click="duplicate"
                         class="dropdown-item cursor-pointer"> <i class="fa-solid fa-clone mr-1"></i> Дублирование диалога </a></li>
-                    <li><a
-                        @click="unlinkCommand"
-                        title="Убирает связь команды с другой командой по цепочке"
-                        class="dropdown-item cursor-pointer"> <i class="fa-solid fa-link-slash mr-1"></i> Удаление связей диалога </a></li>
-
                     <li><a
                         @click="removeCommand"
                         title="Удаление команды"

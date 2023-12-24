@@ -6,210 +6,147 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 </script>
 <template>
 
-    <div class="row">
-        <div class="input-group mb-3">
-            <input type="search" class="form-control"
-                   placeholder="Поиск группы"
-                   aria-label="Поиск группы"
-                   v-model="search"
-                   aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary"
-                    @click="loadGroups"
-                    type="button"
-                    id="button-addon2">Найти
-            </button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 col-12">
-            <button type="button"
-                    title="Создать новую группу"
-                    data-bs-toggle="modal" data-bs-target="#group-create-modal"
-                    class="btn btn-outline-success p-3 mb-2 mr-2">
-                <i class="fa-solid fa-layer-group"></i>
-            </button>
 
+    <div class="row">
+        <div class="col-md-2 col-12">
             <button
                 type="button"
-                data-bs-toggle="modal" data-bs-target="#dialog-create-modal"
-                class="btn btn-outline-success p-3 mb-2">
-                <i class="fa-regular fa-comment-dots" style="margin-right:10px;"></i>Создать новый диалоговый скрипт
+                @click="openEditor(null)"
+                data-bs-toggle="modal" data-bs-target="#dialog-command-modal-editor"
+                class="btn btn-outline-success mb-2 w-100">
+                <i class="fa-regular fa-comment-dots" style="margin-right:10px;"></i>Новый диалог
             </button>
+        </div>
+        <div class="col-md-10 col-12">
+            <div class="input-group mb-3">
+                <input type="search" class="form-control"
+                       placeholder="Поиск диалога"
+                       aria-label="Поиск диалога"
+                       v-model="search"
+                       aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary"
+                        @click="loadDialogs(0)"
+                        type="button"
+                        id="button-addon2">Найти
+                </button>
+            </div>
         </div>
     </div>
 
+    <div class="row" v-if="dialog_commands.length>0">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="text-center" scope="col">#</th>
+                    <th class="text-center" scope="col">Текст диалога</th>
+                    <th class="text-center" scope="col">Связь</th>
+                    <th class="text-center" scope="col">Текст успеха</th>
+                    <th class="text-center" scope="col">Текст ошибки</th>
+                    <th class="text-center" scope="col">Канал результата</th>
+                    <th class="text-center" scope="col">Флаги</th>
+                    <th class="text-center" scope="col">Сохранить в</th>
+                    <th class="text-center" scope="col">Есть изображения</th>
+                    <th class="text-center" scope="col">Есть паттерны</th>
+                    <th class="text-center" scope="col">Пустой</th>
+                    <th class="text-center" scope="col">Есть кнопки</th>
+                    <th class="text-center" scope="col">Есть меню</th>
+                    <th class="text-center" scope="col">Команды</th>
 
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(command,index) in dialog_commands">
+                    <th scope="row">{{ command.id }}</th>
+                    <td class="text-center"><a
+                        data-bs-toggle="modal"
+                        @click="openEditor(command)"
+                        data-bs-target="#dialog-command-modal-editor"
+                        href="javascript:void(0)">{{ command.pre_text || '-' }}</a></td>
+                    <td class="text-center">
+                            <span v-if="command.next_bot_dialog_command_id"
+                                  class="badge bg-primary">#{{ command.next_bot_dialog_command_id || '-' }}</span>
+                        <span v-else>
+                              <i class="fa-solid fa-xmark text-danger"></i>
+                        </span>
+                    </td>
+                    <td class="text-center">{{ command.post_text || '-' }}</td>
+                    <td class="text-center">{{ command.error_text || '-' }}</td>
+                    <td class="text-center">{{ command.result_channel || '-' }}</td>
+                    <td class="text-center">
+                        <p v-if="command.result_flags.length > 0">
+                            <span v-for="flag in command.result_flags">{{ flag || '-' }}</span>
+                        </p>
 
-    <div class="row" v-if="dialog_groups.length>0">
-        <div class="col-12 mb-3">
-            <div class="card mb-2" v-for="(group, index) in dialog_groups">
-                <div class="card-header">
-                    <h6> #{{ group.id }} - {{ group.title || 'Не указано ' }}
-                        <button
-                            @click="removeGroup(group.id)"
-                            type="button" class="btn btn-outline-danger">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </h6>
+                    </td>
+                    <td class="text-center">{{ command.store_to || '-' }}</td>
+                    <td class="text-center">
+                        <i class="fa-solid fa-check text-success" v-if="command.images.length > 0"></i>
+                        <i class="fa-solid fa-xmark text-danger" v-else></i>
+                    </td>
+                    <td class="text-center">{{ command.input_pattern || '-' }}</td>
+                    <td class="text-center">
+                        <i class="fa-solid fa-check text-success" v-if="command.is_empty"></i>
+                        <i class="fa-solid fa-xmark text-danger" v-else></i>
+                    </td>
+                    <td class="text-center">
+                        <i class="fa-solid fa-check text-success" v-if="command.inline_keyboard_id != null"></i>
+                        <i class="fa-solid fa-xmark text-danger" v-else></i>
+                    </td>
+                    <td class="text-center">
+                        <i class="fa-solid fa-check text-success" v-if="command.reply_keyboard_id != null"></i>
+                        <i class="fa-solid fa-xmark text-danger" v-else></i>
+                    </td>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button
+                                :disabled="loading"
+                                class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a
+                                    @click="selectDialog(command)"
+                                    title="Выбрать диалог"
+                                    class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i>
+                                    Выбрать диалог </a></li>
+                                <hr>
 
-
-
-                </div>
-                <div class="card-body">
-                    <div class="row" v-if="group.bot_dialog_commands.length>0">
-                        <div class="col-md-12 col-lg-4 col-12 col-sm-12 mb-2"
-                             v-for="(command, index) in group.bot_dialog_commands">
-                            <DialogCommandCard
-                                v-if="bot"
-                                :bot="bot"
-                                v-on:callback="loadGroups"
-                                v-on:select="selectDialog"
-                                v-on:swap="swapGroupInit"
-
-                                v-on:link="tryLink"
-                                :item="command"/>
+                                <li><a
+                                    title="Дублирование команды"
+                                    @click="duplicate(command.id)"
+                                    class="dropdown-item cursor-pointer"> <i class="fa-solid fa-clone mr-1"></i>
+                                    Дублирование диалога </a></li>
+                                <li><a
+                                    @click="removeCommand(command.id)"
+                                    title="Удаление команды"
+                                    class="dropdown-item cursor-pointer"> <i class="fa-solid fa-trash-can mr-1"></i>
+                                    Удаление диалога </a></li>
+                            </ul>
                         </div>
-                    </div>
-                    <div class="row" v-else>
-                        <div class="col-12">
-                            <p>Диалоговых скриптов не найдено</p>
-                        </div>
-                    </div>
+                    </td>
+                </tr>
 
-                </div>
+                </tbody>
+            </table>
 
-            </div>
-
-
-        </div>
-
-
-        <div class="col-12">
             <Pagination
-                v-on:pagination_page="nextGroups"
-                v-if="dialog_groups_paginate_object"
-                :pagination="dialog_groups_paginate_object"/>
+                v-on:pagination_page="nextDialogs"
+                v-if="dialog_commands_paginate_object"
+                :pagination="dialog_commands_paginate_object"/>
         </div>
-
     </div>
     <div class="row" v-else>
         <div class="col-12">
-            <div class="alert alert-warning" role="alert">
-                У выбранного бота нет созданных диалоговых групп
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="link-modal"
-         tabindex="-1"
-    >
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                        Диалог связывания
-                    </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" v-if="link">
-                    <p>Вы выбрали диалоговую команду #{{ link.id }}</p>
-                    <h6>Связать её с:</h6>
-                    <div class="row">
-                        <div class="col-md-2 mb-1" v-for="(command, index) in filteredCommands">
-                            <button type="button"
-                                    @click="doCommandLink(command.id)"
-                                    v-bind:class="{'btn-primary text-white':link.current_next_id == command.id}"
-                                    class="btn btn-outline-primary w-100">#{{command.id }} {{ command.pre_text || 'Без текста' }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="group-modal"
-         tabindex="-1"
-    >
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                        Диалог перемещения между группами
-                    </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" v-if="group">
-                    <p>Вы выбрали диалоговую команду #{{ group.command_id }}</p>
-                    <h6>Переместить её в группу</h6>
-                    <div class="row" v-if="!loading">
-                        <div class="col-md-6 mb-1" v-for="(item, index) in dialog_groups">
-                            <button type="button"
-                                    @click="doSwapGroup(item.id )"
-                                    v-bind:class="{'btn-primary text-white':item.id == group.group_id}"
-                                    class="btn btn-outline-primary w-100">#{{ item.id }} {{item.title || 'Без названия'}}
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row" v-else>
-                        <div class="col-12">
-                            <h6>Перемещаем-с...</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="group-create-modal"
-         tabindex="-1">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                        Диалог создания группы
-                    </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-warning" role="alert">
-                        Группировка имеет исключительно логическое значение! Группа помогает Вам ориентироваться в
-                        цепочках диалогов
-                    </div>
-
-                    <form v-on:submit.prevent="addGroup">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput"
-                                   maxlength="255"
-                                   pattern="[a-zA-Z0-9_]+"
-                                   v-model="groupForm.slug" required>
-                            <label for="floatingInput">Мнемоническое имя (англ)</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput"
-                                   maxlength="255"
-                                   v-model="groupForm.title" required>
-                            <label for="floatingInput">Название группы</label>
-                        </div>
-                        <button type="submit" class="btn btn-outline-primary w-100 p-3">Создать</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                </div>
+            <div class="alert alert-danger" role="alert">
+               Не найдено ни одного диалога!
             </div>
         </div>
     </div>
 
 
-    <div class="modal fade" id="dialog-create-modal"
+    <div class="modal fade" id="dialog-command-modal-editor"
          tabindex="-1">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
@@ -221,8 +158,9 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 </div>
                 <div class="modal-body">
                     <BotDialogCommandForm
-                        v-if="bot"
-                        v-on:callback="loadGroups"
+                        :item="selected"
+                        v-if="bot&&!loading"
+                        v-on:callback="loadDialogs"
                         :bot="bot"/>
                 </div>
                 <div class="modal-footer">
@@ -241,40 +179,78 @@ export default {
 
     data() {
         return {
-            bot:null,
-            groupForm: {
-                slug: null,
-                title: null,
-                bot_id: null,
-
-            },
+            bot: null,
+            selected: null,
             loading: true,
-            dialog_groups: [],
+            dialog_commands: [],
             search: null,
-            dialog_groups_paginate_object: null,
-            link: null,
-            group: null,
+            dialog_commands_paginate_object: null,
+
         }
     },
     computed: {
-        ...mapGetters(['getDialogGroups','getCurrentBot','getDialogGroupsPaginateObject']),
-        filteredCommands() {
-            if (!this.link)
-                return [];
-
-            let group = this.dialog_groups.find(group => group.id === this.link.group_id)
-
-            return group.bot_dialog_commands.filter(command => command.id != this.link.id)
-
-        }
+        ...mapGetters(['getDialogCommands', 'getCurrentBot', 'getDialogCommandsPaginateObject']),
     },
     mounted() {
 
-        this.loadCurrentBot().then(()=>{
-            this.loadGroups();
+        this.loadCurrentBot().then(() => {
+            this.loadDialogs();
         })
     },
     methods: {
+        openEditor(command) {
+            this.loading = true
+            this.$nextTick(() => {
+                this.selected = command
+                this.loading = false
+            })
+        },
+        removeCommand(commandId) {
+            this.loading = true
+
+            this.$store.dispatch("removeDialogCommand", {
+                dataObject: {
+                    dialogCommandId: commandId
+                }
+            }).then((response) => {
+                this.loading = false
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Диалоговая команда успешно удалена!",
+                    type: 'success'
+                });
+
+                this.loadDialogs();
+
+                this.$emit("callback")
+            }).catch(err => {
+                this.loading = false
+            })
+        },
+        duplicate(commandId) {
+            this.loading = true
+
+            this.$store.dispatch("duplicateDialogCommand", {
+                dataObject: {
+                    dialogCommandId: commandId
+                }
+            }).then((response) => {
+                this.loading = false
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Диалоговая команда успешно продублирована!",
+                    type: 'success'
+                });
+
+                this.loadDialogs();
+
+                this.$emit("callback")
+            }).catch(err => {
+                this.loading = false
+            })
+        },
         loadCurrentBot(bot = null) {
             return this.$store.dispatch("updateCurrentBot", {
                 bot: bot
@@ -282,137 +258,36 @@ export default {
                 this.bot = this.getCurrentBot
             })
         },
-        removeGroup(dialogGroupId){
-            this.loading = true
-
-            this.$store.dispatch("removeDialogGroup", {
-                dataObject: {
-                    dialogGroupId:dialogGroupId
-                }
-            }).then((response) => {
-                this.loading = false
-                this.$notify("Диалоговая группа успешно удалена");
-                this.loadGroups();
-            }).catch(err => {
-                this.loading = false
-            })
-
-        },
-        addGroup() {
-            this.loading = true
-            this.groupForm.bot_id = this.bot.id
-
-            let data = new FormData();
-            Object.keys(this.groupForm)
-                .forEach(key => {
-                    const item = this.groupForm[key] || ''
-                    if (typeof item === 'object')
-                        data.append(key, JSON.stringify(item))
-                    else
-                        data.append(key, item)
-                });
-
-
-            this.$store.dispatch("createDialogGroup", {
-                dialogGroupForm: data
-            }).then((response) => {
-                // this.$emit("callback", response.data)
-                this.loading = false
-                this.$notify("Диалоговая группа успешно создана");
-
-                this.groupForm = {
-                    slug: null,
-                    title: null,
-                }
-
-                this.loadGroups();
-            }).catch(err => {
-                this.loading = false
-            })
-
-        },
-        doSwapGroup(groupId){
-            this.loading = true
-
-            this.$store.dispatch("swapDialogGroup", {
-                swapForm: {
-                    dialogCommandId:this.group.command_id,
-                    dialogGroupId:groupId
-                }
-            }).then((response) => {
-                this.loading = false
-
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Диалоговая команда успешно перемещена в другую группу!",
-                    type: 'success'
-                });
-                this.loadGroups();
-                this.group.group_id = groupId
-            }).catch(err => {
-                this.loading = false
-            })
-        },
-        doCommandLink(commandId){
-            this.loading = true
-
-            this.$store.dispatch("swapDialogCommand", {
-                swapForm: {
-                    dialogCommandFromId:commandId,
-                    dialogCommandToId:this.link.id,
-                }
-            }).then((response) => {
-                this.loading = false
-
-                this.$notify({
-                    title: "Конструктор ботов",
-                    text: "Диалоговая команда успешно слинкована!",
-                    type: 'success'
-                });
-                this.loadGroups();
-                this.link.current_next_id = commandId
-
-            }).catch(err => {
-                this.loading = false
-            })
-        },
-        swapGroupInit(command) {
-            this.group = command
-
-            const groups = new bootstrap.Modal('#group-modal', {})
-            groups.show()
-
-        },
-
-        tryLink(command) {
-            this.link = command
-
-            const links = new bootstrap.Modal('#link-modal', {})
-            links.show()
-        },
         selectDialog(command) {
             this.$emit("select-dialog", command)
             this.$notify("Вы выбрали диалог из списка!");
         },
-        selectGroup(group) {
-            this.$emit("select-group", group)
-            this.$notify("Вы выбрали группу из списка!");
+        nextDialogs(index) {
+            this.loadDialogs(index)
         },
-        nextGroups(index) {
-            this.loadGroups(index)
-        },
-        loadGroups(page = 0) {
-            this.loading = true
-            this.$store.dispatch("loadDialogGroups", {
+        loadDialogs(page = 0) {
+
+
+            this.$store.dispatch("loadDialogCommands", {
                 dataObject: {
                     botId: this.bot.id || null,
                     search: this.search
                 },
                 page: page
             }).then(resp => {
-                this.loading = false
-                this.dialog_groups = this.getDialogGroups
-                this.dialog_groups_paginate_object = this.getDialogGroupsPaginateObject
+                const tmpSelected = this.selected
+                this.dialog_commands = this.getDialogCommands
+                this.dialog_commands_paginate_object = this.getDialogCommandsPaginateObject
+
+                this.loading = true
+                this.$nextTick(() => {
+                    if (tmpSelected)
+                        this.selected = this.dialog_commands.find(command => command.id === tmpSelected.id) || null
+                    this.loading = false
+
+                })
+
+
             }).catch(() => {
                 this.loading = false
             })

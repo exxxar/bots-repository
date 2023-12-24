@@ -45,6 +45,39 @@ class BotDialogsLogicFactory
      * @throws HttpException
      */
 
+    public function commandList($search = null, $size = null): BotDialogCommandCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $size = $size ?? config('app.results_per_page');
+
+
+        $botDialogCommands = BotDialogCommand::query()
+            ->where("bot_id", $this->bot->id);
+
+        if (!is_null($search))
+            $botDialogCommands = $botDialogCommands
+                ->where(function ($q) use ($search) {
+                    $q->where("pre_text", 'like', "%$search%")
+                        ->orWhere("slug", 'like', "%$search%")
+                        ->orWhere("post_text", 'like', "%$search%");
+
+                });
+
+        $botDialogCommands = $botDialogCommands
+            ->orderBy("created_at", "desc")
+            ->paginate($size);
+
+        return new BotDialogCommandCollection($botDialogCommands);
+
+    }
+
+
+    /**
+     * @throws HttpException
+     */
+
     public function list($search = null, $size = null, bool $simple = false): BotDialogCommandCollection|BotDialogGroupCollection
     {
         if (is_null($this->bot))
@@ -80,7 +113,11 @@ class BotDialogsLogicFactory
 
         if (!is_null($search))
             $botDialogGroups = $botDialogGroups
-                ->where("slug", 'like', "%$search%");
+                ->whereHas("botDialogCommands", function ($q) use ($search) {
+                    $q->where("pre_text", 'like', "%$search%")
+                        ->orWhere("slug", 'like', "%$search%")
+                        ->orWhere("post_text", 'like', "%$search%");
+                });
 
         $botDialogGroups = $botDialogGroups
             ->orderBy("created_at", "desc")
@@ -235,8 +272,8 @@ class BotDialogsLogicFactory
 
         $validator = Validator::make($data, [
             'pre_text' => "required",
-          //  'post_text' => "required",
-           // 'error_text' => "required",
+            //  'post_text' => "required",
+            // 'error_text' => "required",
             'bot_id' => "required",
             'input_pattern' => "",
             'inline_keyboard_id' => "",
@@ -299,12 +336,12 @@ class BotDialogsLogicFactory
             'inline_keyboard_id' => $data["inline_keyboard_id"] ?? $inlineKeyboard->id ?? null,
             'reply_keyboard_id' => $data["reply_keyboard_id"] ?? $replyKeyboard->id ?? null,
             'images' => $photos ?? [],
+            'result_flags' => json_decode($data["result_flags"] ?? '[]'),
             'next_bot_dialog_command_id' => $data["next_bot_dialog_command_id"] ?? null,
             'bot_dialog_group_id' => $groupId,
-            'is_empty' =>($data["is_empty"] ?? false) == "true" ? 1 : 0,
+            'is_empty' => ($data["is_empty"] ?? false) == "true" ? 1 : 0,
             'result_channel' => $data["result_channel"] ?? null,
         ]);
-
 
 
         return new BotDialogCommandResource($command);
@@ -368,6 +405,7 @@ class BotDialogsLogicFactory
         $tmp->inline_keyboard_id = $inlineKeyboard->id ?? $data["inline_keyboard_id"] ?? null;
         $tmp->reply_keyboard_id = $replyKeyboard->id ?? $data["reply_keyboard_id"] ?? null;
         $tmp->is_empty = ($data["is_empty"] ?? false) == "true" ? 1 : 0;
+        $tmp->result_flags = json_decode($data["result_flags"] ?? '[]');
 
         $command = BotDialogCommand::query()->find($tmp->id);
         $command->update((array)$tmp);

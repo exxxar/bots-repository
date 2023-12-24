@@ -7,6 +7,7 @@ use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BotDialogGroupStoreRequest;
 use App\Http\Requests\BotDialogGroupUpdateRequest;
+use App\Http\Resources\BotDialogCommandCollection;
 use App\Http\Resources\BotDialogCommandResource;
 use App\Http\Resources\BotDialogGroupCollection;
 use App\Http\Resources\BotDialogGroupResource;
@@ -25,6 +26,22 @@ use Illuminate\Validation\ValidationException;
 
 class BotDialogGroupController extends Controller
 {
+    public function commandList(Request $request): BotDialogCommandCollection
+    {
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->botId ?? $request->bot_id ?? null)
+            ->first();
+
+        return BusinessLogic::dialogs()
+            ->setBot($bot)
+            ->commandList(
+                $request->search ?? null,
+                $request->get("size") ?? config('app.results_per_page'),
+
+            );
+    }
+
     public function index(Request $request): BotDialogGroupCollection
     {
         $bot = Bot::query()

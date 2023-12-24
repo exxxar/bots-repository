@@ -3,7 +3,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
 
 import BotSlugListSimple from "@/AdminPanel/Components/Constructor/Slugs/BotSlugListSimple.vue";
-import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupListSimple.vue";
+import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
@@ -139,7 +139,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
         </div>
 
 
-
         <div class="row" v-if="!pageForm.is_external">
 
 
@@ -180,11 +179,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=0"
-                       >
+                    >
                         <a
                             v-bind:class="{'active':tab===0}"
                             class="nav-link d-flex flex-column justify-content-center align-items-center font-12"
-                           href="javascript:void(0)">
+                            href="javascript:void(0)">
                             <i class="fa-regular fa-keyboard"></i>
                             <span>Нижнее меню</span>
                         </a>
@@ -192,10 +191,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=1"
-                      >
+                    >
                         <a
                             v-bind:class="{'active':tab===1}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-solid fa-ellipsis"></i>
                             <span>Меню под текстом</span>
                         </a>
@@ -203,10 +203,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=2"
-                        >
+                    >
                         <a
                             v-bind:class="{'active':tab===2}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-regular fa-images"></i>
                             <span>Изображения</span>
                         </a>
@@ -214,10 +215,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=3"
-                       >
+                    >
                         <a
                             v-bind:class="{'active':tab===3}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-solid fa-photo-film"></i>
                             <span>Видео</span>
                         </a>
@@ -225,10 +227,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=4"
-                       >
+                    >
                         <a
                             v-bind:class="{'active':tab===4}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-regular fa-note-sticky"></i>
                             <span>Стикеры</span>
                         </a>
@@ -237,10 +240,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=5"
-                       >
+                    >
                         <a
                             v-bind:class="{'active':tab===5}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-regular fa-file-audio"></i>
                             <span>Аудио</span>
                         </a>
@@ -248,10 +252,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=6"
-                      >
+                    >
                         <a
                             v-bind:class="{'active':tab===6}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-regular fa-file-word"></i>
                             <span>Документы</span>
                         </a>
@@ -259,10 +264,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=7"
-                       >
+                    >
                         <a
                             v-bind:class="{'active':tab===7}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-solid fa-link"></i>
                             <span>Другая страница</span>
                         </a>
@@ -270,10 +276,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=8"
-                        >
+                    >
                         <a
                             v-bind:class="{'active':tab===8}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-solid fa-scroll"></i>
                             <span>Скрипт</span>
                         </a>
@@ -283,7 +290,8 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         @click="tab=9">
                         <a
                             v-bind:class="{'active':tab===9}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-regular fa-comment-dots"></i>
                             <span>Начало диалога</span>
                         </a>
@@ -291,10 +299,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <li
                         class="nav-item "
                         @click="tab=10"
-                        >
+                    >
                         <a
                             v-bind:class="{'active':tab===10}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12" href="javascript:void(0)">
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
                             <i class="fa-solid fa-scale-balanced"></i>
                             <span>Правила</span>
                         </a>
@@ -334,26 +343,27 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
                         <div class="card-body">
 
-                            <div class="col-12 mb-2">
-                                <label class="form-label" id="bot-domain">
-                                    <Popper>
-                                        <i class="fa-regular fa-circle-question mr-1"></i>
-                                        <template #content>
-                                            <div> Заголовок для нижнего меню
-                                            </div>
-                                        </template>
-                                    </Popper>
-                                    Заголовок
-                                    <!--                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
-                                </label>
-                                <input type="text" class="form-control"
-                                       placeholder="Заголовок меню"
-                                       aria-label="Заголовок меню"
-                                       v-model="pageForm.reply_keyboard_title"
-                                       maxlength="255"
-                                       aria-describedby="bot-domain">
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <label class="form-label" id="bot-domain">
+                                        <Popper>
+                                            <i class="fa-regular fa-circle-question mr-1"></i>
+                                            <template #content>
+                                                <div> Заголовок для нижнего меню
+                                                </div>
+                                            </template>
+                                        </Popper>
+                                        Заголовок
+                                        <!--                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
+                                    </label>
+                                    <input type="text" class="form-control"
+                                           placeholder="Заголовок меню"
+                                           aria-label="Заголовок меню"
+                                           v-model="pageForm.reply_keyboard_title"
+                                           maxlength="255"
+                                           aria-describedby="bot-domain">
+                                </div>
                             </div>
-
 
                             <KeyboardList
                                 class="mb-2"
@@ -427,7 +437,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
 
             <div v-if="tab===2">
-                <div class="col-12 mb-2" >
+                <div class="col-12 mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_images"
@@ -486,7 +496,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
             <div v-if="tab===3">
-                <div class="col-12 mb-2" >
+                <div class="col-12 mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_video"
@@ -511,7 +521,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
             <div v-if="tab===4">
-                <div class="col-12 mb-2" >
+                <div class="col-12 mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_sticker"
@@ -533,7 +543,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
 
             <div v-if="tab===5">
-                <div class="col-12 mb-2" >
+                <div class="col-12 mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_audios"
@@ -557,7 +567,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
             <div v-if="tab===6">
-                <div class="col-12 mb-2" >
+                <div class="col-12 mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_documents"
@@ -605,7 +615,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
 
             <div v-if="tab===8">
-                <div class="col-12 mb-2" >
+                <div class="col-12 mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_attach_slug"
@@ -630,7 +640,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
 
             <div v-if="tab===9">
-                <div class="col-12 mb-2" >
+                <div class="col-12 mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_attach_dialog"
@@ -655,7 +665,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
             <div v-if="tab===10">
-                <div class="col-12 mb-2" >
+                <div class="col-12 mb-2">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_rules"
@@ -676,87 +686,87 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
     </form>
 
-<!--    <div class="fixed-left-menu">
-        <button
-            @click="showMenu=!showMenu"
-            class="btn btn-outline-primary fixed-menu-btn">
-            &lt;!&ndash;            <i class="fa-solid fa-ellipsis-vertical"></i>&ndash;&gt;
-            <i class="fa-solid fa-caret-right" v-if="!showMenu"></i>
-            <i class="fa-solid fa-caret-left" v-else></i>
-        </button>
-        <ul v-if="showMenu" class="component-menu">
-            <li
-                @click="need_reply_menu=!need_reply_menu"
-                v-bind:class="{'active':need_reply_menu}">
-                <i class="fa-regular fa-keyboard"></i>
-                <span>Нижнее меню</span>
-            </li>
-            <li
-                @click="need_inline_menu=!need_inline_menu"
-                v-bind:class="{'active':need_inline_menu}">
-                <i class="fa-solid fa-ellipsis"></i>
-                <span>Меню под текстом</span>
-            </li>
-            <li
-                @click="need_page_images=!need_page_images"
-                v-bind:class="{'active':need_page_images}">
-                <i class="fa-regular fa-images"></i>
-                <span>Изображения</span>
-            </li>
-            <li
-                @click="need_page_video=!need_page_video"
-                v-bind:class="{'active':need_page_video}">
-                <i class="fa-solid fa-photo-film"></i>
-                <span>Видео</span>
-            </li>
-            <li
-                @click="need_page_sticker=!need_page_sticker"
-                v-bind:class="{'active':need_page_sticker}">
-                <i class="fa-regular fa-note-sticky"></i>
-                <span>Стикеры</span>
-            </li>
+    <!--    <div class="fixed-left-menu">
+            <button
+                @click="showMenu=!showMenu"
+                class="btn btn-outline-primary fixed-menu-btn">
+                &lt;!&ndash;            <i class="fa-solid fa-ellipsis-vertical"></i>&ndash;&gt;
+                <i class="fa-solid fa-caret-right" v-if="!showMenu"></i>
+                <i class="fa-solid fa-caret-left" v-else></i>
+            </button>
+            <ul v-if="showMenu" class="component-menu">
+                <li
+                    @click="need_reply_menu=!need_reply_menu"
+                    v-bind:class="{'active':need_reply_menu}">
+                    <i class="fa-regular fa-keyboard"></i>
+                    <span>Нижнее меню</span>
+                </li>
+                <li
+                    @click="need_inline_menu=!need_inline_menu"
+                    v-bind:class="{'active':need_inline_menu}">
+                    <i class="fa-solid fa-ellipsis"></i>
+                    <span>Меню под текстом</span>
+                </li>
+                <li
+                    @click="need_page_images=!need_page_images"
+                    v-bind:class="{'active':need_page_images}">
+                    <i class="fa-regular fa-images"></i>
+                    <span>Изображения</span>
+                </li>
+                <li
+                    @click="need_page_video=!need_page_video"
+                    v-bind:class="{'active':need_page_video}">
+                    <i class="fa-solid fa-photo-film"></i>
+                    <span>Видео</span>
+                </li>
+                <li
+                    @click="need_page_sticker=!need_page_sticker"
+                    v-bind:class="{'active':need_page_sticker}">
+                    <i class="fa-regular fa-note-sticky"></i>
+                    <span>Стикеры</span>
+                </li>
 
-            <li
-                @click="need_page_audios=!need_page_audios"
-                v-bind:class="{'active':need_page_audios}">
-                <i class="fa-regular fa-file-audio"></i>
-                <span>Аудио</span>
-            </li>
-            <li
-                @click="need_page_documents=!need_page_documents"
-                v-bind:class="{'active':need_page_documents}">
-                <i class="fa-regular fa-file-word"></i>
-                <span>Документы</span>
-            </li>
-            <li
-                @click="need_attach_page=!need_attach_page"
-                v-bind:class="{'active':need_attach_page}">
-                <i class="fa-solid fa-link"></i>
-                <span>Другая страница</span>
-            </li>
-            <li
-                @click="need_attach_slug=!need_attach_slug"
-                v-bind:class="{'active':need_attach_slug}">
-                <i class="fa-solid fa-scroll"></i>
-                <span>Скрипт</span>
-            </li>
-            <li
-                @click="need_attach_dialog=!need_attach_dialog"
-                v-bind:class="{'active':need_attach_dialog}">
-                <i class="fa-regular fa-comment-dots"></i>
-                <span>Начало диалога</span>
-            </li>
-            <li
-                @click="need_rules=!need_rules"
-                v-bind:class="{'active':need_rules}">
-                <i class="fa-solid fa-scale-balanced"></i>
-                <span>Правила</span>
-            </li>
+                <li
+                    @click="need_page_audios=!need_page_audios"
+                    v-bind:class="{'active':need_page_audios}">
+                    <i class="fa-regular fa-file-audio"></i>
+                    <span>Аудио</span>
+                </li>
+                <li
+                    @click="need_page_documents=!need_page_documents"
+                    v-bind:class="{'active':need_page_documents}">
+                    <i class="fa-regular fa-file-word"></i>
+                    <span>Документы</span>
+                </li>
+                <li
+                    @click="need_attach_page=!need_attach_page"
+                    v-bind:class="{'active':need_attach_page}">
+                    <i class="fa-solid fa-link"></i>
+                    <span>Другая страница</span>
+                </li>
+                <li
+                    @click="need_attach_slug=!need_attach_slug"
+                    v-bind:class="{'active':need_attach_slug}">
+                    <i class="fa-solid fa-scroll"></i>
+                    <span>Скрипт</span>
+                </li>
+                <li
+                    @click="need_attach_dialog=!need_attach_dialog"
+                    v-bind:class="{'active':need_attach_dialog}">
+                    <i class="fa-regular fa-comment-dots"></i>
+                    <span>Начало диалога</span>
+                </li>
+                <li
+                    @click="need_rules=!need_rules"
+                    v-bind:class="{'active':need_rules}">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <span>Правила</span>
+                </li>
 
-        </ul>
+            </ul>
 
 
-    </div>-->
+        </div>-->
     <!-- Modal -->
     <div class="modal fade" id="save-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

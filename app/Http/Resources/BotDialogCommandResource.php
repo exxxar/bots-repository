@@ -20,7 +20,7 @@ class BotDialogCommandResource extends JsonResource
             'error_text' => $this->error_text,
             'is_empty' => $this->is_empty ?? false,
             'bot_id' => $this->bot_id,
-            'bot' => $this->whenLoaded('bot'),
+           /* 'bot' => $this->whenLoaded('bot'),*/
             'input_pattern' => $this->input_pattern,
             'inline_keyboard_id' => $this->inline_keyboard_id,
             'reply_keyboard_id' => $this->reply_keyboard_id,

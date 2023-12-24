@@ -4,15 +4,19 @@ const BASE_DIALOG_GROUPS_LINK = '/admin/dialog-groups'
 
 let state = {
     dialog_groups: [],
+    dialog_commands: [],
     dialog_groups_paginate_object: null,
+    dialog_commands_paginate_object: null,
 }
 
 const getters = {
     getDialogGroups: state => state.dialog_groups || [],
+    getDialogCommands: state => state.dialog_commands || [],
     getDialogGroupById: (state) => (id) => {
         return state.dialog_groups.find(item => item.id === id)
     },
     getDialogGroupsPaginateObject: state => state.dialog_groups_paginate_object || null,
+    getDialogCommandsPaginateObject: state => state.dialog_commands_paginate_object || null,
 }
 
 const actions = {
@@ -31,6 +35,27 @@ const actions = {
             context.commit("setDialogGroups", dataObject.data)
             delete dataObject.data
             context.commit('setDialogGroupsPaginateObject', dataObject)
+            return Promise.resolve();
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadDialogCommands(context, payload = {dataObject: {botId: null, search:null}, page: 0, size: 30}) {
+        let page = payload.page || 0
+        let size = payload.size || 30
+
+        let link = `${BASE_DIALOG_GROUPS_LINK}/commands?page=${page}&size=${size}`
+        let method = 'POST'
+        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            context.commit("setDialogCommands", dataObject.data)
+            delete dataObject.data
+            context.commit('setDialogCommandsPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
@@ -182,6 +207,14 @@ const mutations = {
     setDialogGroupsPaginateObject(state, payload) {
         state.dialog_groups_paginate_object = payload || [];
         localStorage.setItem('cashman_dialog_groups_paginate_object', JSON.stringify(payload));
+    },
+    setDialogCommands(state, payload) {
+        state.dialog_commands = payload || [];
+        localStorage.setItem('cashman_dialog_commands', JSON.stringify(payload));
+    },
+    setDialogCommandsPaginateObject(state, payload) {
+        state.dialog_commands_paginate_object = payload || [];
+        localStorage.setItem('cashman_dialog_commands_paginate_object', JSON.stringify(payload));
     }
 }
 

@@ -2,6 +2,7 @@
 import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardConstructor.vue";
 import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
 import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers/RegularExpressionHelper.vue";
+import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
 </script>
 <template>
@@ -195,8 +196,47 @@ import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers
 
         </div>
 
+        <div class="mb-2" v-if="commandForm.id">
+            <div class="row" v-if="filteredCommands.length>0">
+                <div class="col-12">
+                    <p>Доступные для связывания диалоги:</p>
+                </div>
+
+                <div class="col-md-12 mb-1" v-for="(command, index) in filteredCommands">
+                    <button type="button"
+                            class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
+                            style="text-align:left;">
+                        <span @click="doCommandLink(command.id)">
+                            <i class="fa-solid fa-link mr-2 text-success"
+                               v-if="commandForm.next_bot_dialog_command_id == command.id"></i> #{{
+                                command.id
+                            }} {{ command.pre_text || 'Без текста' }}
+                        </span>
+
+
+                        <i class="fa-solid fa-unlink text-danger"
+                           @click="doCommandLink(null)"
+                           v-if="commandForm.next_bot_dialog_command_id == command.id"></i>
+
+                    </button>
+                </div>
+
+                <Pagination
+                    v-on:pagination_page="nextDialogs"
+                    v-if="dialog_commands_paginate_object"
+                    :pagination="dialog_commands_paginate_object"/>
+            </div>
+            <div class="row" v-else>
+                <div class="col-12">
+                    <div class="alert alert-danger" role="alert">
+                        Диалогов для связывания нет
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
         <div class="mb-2">
-            <button type="submit" class="btn btn-outline-primary p-3 w-100">
+            <button type="submit" class="btn btn-outline-success p-3 w-100">
                 <span v-if="commandForm.id">Обновить диалог</span>
                 <span v-else>Добавить диалог</span>
             </button>
@@ -206,10 +246,15 @@ import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers
 <script>
 
 
+import {mapGetters} from "vuex";
+
 export default {
     props: ["item", "bot"],
     data() {
         return {
+            loading: true,
+            dialog_commands: [],
+            dialog_commands_paginate_object: null,
             need_images: false,
             need_inline_keyboard: false,
             need_reply_keyboard: false,
@@ -297,7 +342,16 @@ export default {
             photos: []
         }
     },
+    computed: {
+        ...mapGetters(['getDialogCommands', 'getDialogCommandsPaginateObject']),
+        filteredCommands() {
+            if (!this.dialog_commands)
+                return []
 
+            return this.dialog_commands.filter(command => command.id != this.commandForm.id)
+
+        }
+    },
     mounted() {
 
         if (this.item) {
@@ -346,8 +400,39 @@ export default {
                 this.commandForm.bot_id = this.bot.id
             })
 
+        if (this.item) {
+            this.dialog_commands = this.getDialogCommands
+            this.dialog_commands_paginate_object = this.getDialogCommandsPaginateObject
+        }
+        /*else
+            this.loadGroups();*/
 
-    }, methods: {
+    },
+    methods: {
+        nextDialogs(index) {
+            this.loadDialogs(index)
+        },
+        loadDialogs(page = 0) {
+            this.loading = true
+            this.$store.dispatch("loadDialogCommands", {
+                dataObject: {
+                    botId: this.bot.id || null,
+                    search: this.search
+                },
+                page: page
+            }).then(resp => {
+                this.loading = false
+                this.dialog_commands = this.getDialogCommands
+                this.dialog_commands_paginate_object = this.getDialogCommandsPaginateObject
+            }).catch(() => {
+                this.loading = false
+            })
+        },
+        doCommandLink(commandId) {
+            this.loading = true
+
+            this.commandForm.next_bot_dialog_command_id = commandId
+        },
         submit() {
             this.loading = true
 
@@ -434,9 +519,8 @@ export default {
         },
         selectFlag(item) {
 
-            if (!this.commandForm.result_flags|| !Array.isArray(this.commandForm.result_flags))
+            if (!this.commandForm.result_flags || !Array.isArray(this.commandForm.result_flags))
                 this.commandForm.result_flags = []
-
 
 
             let index = this.commandForm.result_flags.indexOf(item.key)
