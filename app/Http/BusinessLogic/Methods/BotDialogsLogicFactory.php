@@ -353,6 +353,24 @@ class BotDialogsLogicFactory
         return new BotDialogCommandResource($command);
     }
 
+    public function recursiveChain($commandId, &$refs)
+    {
+        $command = BotDialogCommand::query()
+            ->where("id", $commandId)
+            ->first();
+
+        $refs = is_null($refs) ? [] : $refs;
+
+        if (!in_array( $commandId , $refs))
+            $refs[] = $commandId;
+
+        if (!is_null($command->next_bot_dialog_command_id)) {
+            $refs[] = $command->next_bot_dialog_command_id;
+            $this->recursiveChain($command->next_bot_dialog_command_id, $refs);
+        }
+
+    }
+
     /**
      * @throws ValidationException
      * @throws HttpException

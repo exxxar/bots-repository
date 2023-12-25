@@ -15,7 +15,9 @@ class BotDialogCommandResource extends JsonResource
     {
         $chain = [];
 
-        $this->recursiveChain($this->id, $chain);
+        $step = 0;
+
+        $this->recursiveChain($this->id, $chain, $step);
 
         return [
             'id' => $this->id,
@@ -42,7 +44,7 @@ class BotDialogCommandResource extends JsonResource
         ];
     }
 
-    protected function recursiveChain($commandId, &$refs)
+    protected function recursiveChain($commandId, &$refs, &$step)
     {
         $command = BotDialogCommand::query()
             ->where("id", $commandId)
@@ -50,12 +52,17 @@ class BotDialogCommandResource extends JsonResource
 
         $refs = is_null($refs) ? [] : $refs;
 
-        if (!in_array( $commandId , $refs))
+        if (!in_array($commandId, $refs))
             $refs[] = $commandId;
+
+        if ($step >= 10)
+            return;
+
+        $step++;
 
         if (!is_null($command->next_bot_dialog_command_id)) {
             $refs[] = $command->next_bot_dialog_command_id;
-            $this->recursiveChain($command->next_bot_dialog_command_id, $refs);
+            $this->recursiveChain($command->next_bot_dialog_command_id, $refs, $step);
         }
 
     }

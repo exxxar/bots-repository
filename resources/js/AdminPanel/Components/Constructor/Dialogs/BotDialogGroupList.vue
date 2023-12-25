@@ -75,7 +75,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                     <td class="text-center">{{ command.result_channel || '-' }}</td>
                     <td class="text-center">
                         <p v-if="command.result_flags.length > 0">
-                            <span v-for="flag in command.result_flags" class="badge bg-primary">{{ flag || '-' }}</span>,
+                            <span v-for="flag in command.result_flags" class="badge bg-primary">{{ flag || '-' }}</span>
                         </p>
 
                     </td>
