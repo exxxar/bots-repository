@@ -65,7 +65,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                         href="javascript:void(0)">{{ command.pre_text || '-' }}</a></td>
                     <td class="text-center">
                             <span v-if="command.next_bot_dialog_command_id"
-                                  class="badge bg-primary">#{{ command.next_bot_dialog_command_id || '-' }}[{{command.chain.length||0}}]</span>
+                                  class="badge bg-primary">#{{ command.next_bot_dialog_command_id || '-' }} ({{command.chain.length||0}})</span>
                         <span v-else>
                               <i class="fa-solid fa-xmark text-danger"></i>
                         </span>
@@ -75,7 +75,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                     <td class="text-center">{{ command.result_channel || '-' }}</td>
                     <td class="text-center">
                         <p v-if="command.result_flags.length > 0">
-                            <span v-for="flag in command.result_flags">{{ flag || '-' }}</span>
+                            <span v-for="flag in command.result_flags" class="badge bg-primary">{{ flag || '-' }}</span>,
                         </p>
 
                     </td>
