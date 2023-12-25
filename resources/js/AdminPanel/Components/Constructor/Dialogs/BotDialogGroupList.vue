@@ -65,7 +65,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                         href="javascript:void(0)">{{ command.pre_text || '-' }}</a></td>
                     <td class="text-center">
                             <span v-if="command.next_bot_dialog_command_id"
-                                  class="badge bg-primary">#{{ command.next_bot_dialog_command_id || '-' }}</span>
+                                  class="badge bg-primary">#{{ command.next_bot_dialog_command_id || '-' }}[{{command.chain.length||0}}]</span>
                         <span v-else>
                               <i class="fa-solid fa-xmark text-danger"></i>
                         </span>
