@@ -70,9 +70,24 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                               <i class="fa-solid fa-xmark text-danger"></i>
                         </span>
                     </td>
-                    <td class="text-center">{{ command.post_text || '-' }}</td>
-                    <td class="text-center">{{ command.error_text || '-' }}</td>
-                    <td class="text-center">{{ command.result_channel || '-' }}</td>
+                    <td class="text-center">
+                        <p v-if="command.post_text">{{ command.post_text }}</p>
+                        <p v-else>
+                            <i class="fa-solid fa-xmark text-danger"></i>
+                        </p>
+                    </td>
+                    <td class="text-center">
+                        <p v-if="command.error_text">{{ command.error_text }}</p>
+                        <p v-else>
+                            <i class="fa-solid fa-xmark text-danger"></i>
+                        </p>
+                    </td>
+                    <td class="text-center">
+                        <p v-if="command.result_channel">{{ command.result_channel }}</p>
+                        <p v-else>
+                            <i class="fa-solid fa-xmark text-danger"></i>
+                        </p>
+                    </td>
                     <td class="text-center">
                         <p v-if="command.result_flags.length > 0">
                             <span v-for="flag in command.result_flags" class="badge bg-primary">{{ flag || '-' }}</span>
@@ -81,12 +96,22 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                             <i class="fa-solid fa-xmark text-danger"></i>
                         </p>
                     </td>
-                    <td class="text-center">{{ command.store_to || '-' }}</td>
+                    <td class="text-center">
+                        <p v-if="command.store_to">{{ command.store_to }}</p>
+                        <p v-else>
+                            <i class="fa-solid fa-xmark text-danger"></i>
+                        </p>
+                    </td>
                     <td class="text-center">
                         <i class="fa-solid fa-check text-success" v-if="command.images.length > 0"></i>
                         <i class="fa-solid fa-xmark text-danger" v-else></i>
                     </td>
-                    <td class="text-center">{{ command.input_pattern || '-' }}</td>
+                    <td class="text-center">
+                        <p v-if="command.input_pattern">{{ command.input_pattern }}</p>
+                        <p v-else>
+                            <i class="fa-solid fa-xmark text-danger"></i>
+                        </p>
+                    </td>
                     <td class="text-center">
                         <i class="fa-solid fa-check text-success" v-if="command.is_empty"></i>
                         <i class="fa-solid fa-xmark text-danger" v-else></i>
