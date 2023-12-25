@@ -7,7 +7,18 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 </script>
 <template>
     <form v-on:submit.prevent="submit">
+        <div class="mb-2 d-flex justify-content-start flex-wrap" v-if="commandForm.next_bot_dialog_command_id">
+            <p>Связь цепочек: </p>
+            <div v-for="(element, index) in item.chain">
+                <span class="badge cursor-pointer"
+                      @click="selectElementById(element)"
+                      v-bind:class="{'bg-success':commandForm.id==element,'bg-primary':commandForm.id!=element}">
+                    {{ element }}
+                </span>
+                <i class="fa-solid fa-arrow-right font-12" v-if="index<item.chain.length-1"></i>
+            </div>
 
+        </div>
         <div class="form-floating mb-2">
             <input type="text" class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
                    placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
@@ -516,6 +527,9 @@ export default {
         addTextTo(object = {param: null, text: null}) {
             this.commandForm[object.param] = object.text;
 
+        },
+        selectElementById(id){
+          this.$emit("select-element", id)
         },
         selectFlag(item) {
 

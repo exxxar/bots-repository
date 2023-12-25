@@ -40,7 +40,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 <tr>
                     <th class="text-center" scope="col">#</th>
                     <th class="text-center" scope="col">Текст диалога</th>
-                    <th class="text-center" scope="col">Связь</th>
+                    <th class="text-center" scope="col">Цепочки</th>
                     <th class="text-center" scope="col">Текст успеха</th>
                     <th class="text-center" scope="col">Текст ошибки</th>
                     <th class="text-center" scope="col">Канал результата</th>
@@ -161,6 +161,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                         :item="selected"
                         v-if="bot&&!loading"
                         v-on:callback="loadDialogs"
+                        v-on:select-element="selectElement"
                         :bot="bot"/>
                 </div>
                 <div class="modal-footer">
@@ -264,6 +265,13 @@ export default {
         },
         nextDialogs(index) {
             this.loadDialogs(index)
+        },
+        selectElement(id){
+            this.loading = true
+            this.$nextTick(() => {
+                this.selected = this.dialog_commands.find(command => command.id === id) || null
+                this.loading = false
+            })
         },
         loadDialogs(page = 0) {
 
