@@ -533,7 +533,7 @@ class ProductLogicFactory
         $summaryPrice = 0;
         $summaryCount = 0;
 
-        $disabilities = $data["disabilities"] ?? [];
+        $disabilities = json_decode($data["disabilities"] ?? '[]');
 
         if ($hasDisability){
             $message .= "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
