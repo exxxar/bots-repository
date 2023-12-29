@@ -13,6 +13,7 @@ use App\Http\BusinessLogic\Methods\BotDialogsLogicFactory as DialogLogic;
 use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory as AdminLogic;
 use App\Http\BusinessLogic\Methods\CompanyLogicFactory as CompanyLogic;
 use App\Http\BusinessLogic\Methods\AmoLogicFactory as AmoLogic;
+use App\Http\BusinessLogic\Methods\AppointmentLogicFactory as AppointmentLogic;
 use App\Http\BusinessLogic\Methods\YClientLogicFactory as YClientsLogic;
 use App\Http\BusinessLogic\Methods\BotUserLogicFactory as BotUserLogic;
 use App\Http\BusinessLogic\Methods\KeyboardLogicFactory as KeyboardLogic;
@@ -30,6 +31,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static CompanyLogic companies()
  * @method static BotUserLogic botUsers()
  * @method static AmoLogic amo()
+ * @method static AppointmentLogic appointment()
  * @method static KeyboardLogic keyboards()
  * @method static ManagerLogic manager()
  * @method static MediaLogic media()

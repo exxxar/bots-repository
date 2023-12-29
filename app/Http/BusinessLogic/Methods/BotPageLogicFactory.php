@@ -126,8 +126,9 @@ class BotPageLogicFactory
             $botPage->rules_else_page_id = null;
            // $botPage->bot_id = null;
             $botPage->save();
-
+            $tmp = $botPage;
             $botPage->forceDelete();
+            return new BotPageResource($tmp);
         }
 
         $tmp = $botPage;

@@ -19,9 +19,6 @@ class BotDialogCommandResource extends JsonResource
 
         $this->recursiveChain($this->id, $chain, $step);
 
-        if (count(array_unique($chain)) != count($chain))
-            $chain = ["Ошибка связи цепочки (на шаге $step)"];
-
         return [
             'id' => $this->id,
             'slug' => $this->slug,
@@ -58,8 +55,11 @@ class BotDialogCommandResource extends JsonResource
         if (!in_array($commandId, $refs))
             $refs[] = $commandId;
 
-        if (count(array_unique($refs)) != count($refs))
+        if (count(array_unique($refs)) != count($refs)){
+            $refs = ["Ошибка связи цепочки (на шаге $step)"];
             return;
+        }
+
 
         $step++;
 

@@ -526,11 +526,22 @@ class ProductLogicFactory
             ->get();
 
         $needPickup = ($data["need_pickup"] ?? "false") == "true";
+        $hasDisability = ($data["has_disability"] ?? "false") == "true";
         $cash = ($data["cash"] ?? "false") == "true";
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
 
         $summaryPrice = 0;
         $summaryCount = 0;
+
+        $disabilities = $data["disabilities"] ?? [];
+
+        if ($hasDisability){
+            $message .= "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
+
+            foreach ($disabilities as $disability)
+                $message .= "-<em>$disability</em>\n";
+        }
+
 
         $tmpOrderProductInfo = [];
         foreach ($products as $product) {
@@ -605,7 +616,8 @@ class ProductLogicFactory
 
 
         $userInfo = !$needPickup ?
-            sprintf("Данные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nНомер подъезда: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
+            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nНомер подъезда: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
+                $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
@@ -613,7 +625,8 @@ class ProductLogicFactory
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
-            ) : sprintf("Данные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\n",
+            ) : sprintf("Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\n",
+                $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),

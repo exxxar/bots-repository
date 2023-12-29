@@ -128,3 +128,14 @@ Route::apiResource('custom-field', App\Http\Controllers\CustomFieldController::c
 
 
 Route::apiResource('y-clients', \App\Http\Controllers\Bots\Web\YClientsController::class);
+
+
+Route::apiResource('appointment', \App\Http\Controllers\Admin\AppointmentController::class);
+
+Route::apiResource('appointment-event', App\Http\Controllers\AppointmentEventController::class);
+
+Route::apiResource('appointment-schedule', App\Http\Controllers\AppointmentScheduleController::class);
+
+Route::apiResource('appointment-service', App\Http\Controllers\AppointmentServiceController::class);
+
+Route::apiResource('appointment-review', App\Http\Controllers\AppointmentReviewController::class);

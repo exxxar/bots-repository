@@ -169,9 +169,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <input type="checkbox"
                        v-model="deliveryForm.need_pickup"
                        class="ios-input" id="toggle-need-pickup">
-                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!deliveryForm.need_pickup">Нужна
-                    доставка</label>
-                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="deliveryForm.need_pickup">Самовывоз</label>
+                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!deliveryForm.need_pickup">Включить режим самовывоза</label>
+                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="deliveryForm.need_pickup">Включить режим доставки</label>
                 <i class="fa-solid fa-person-walking-luggage font-11 color-white" style="left:8px;"></i>
                 <i class="fa-solid fa-truck font-11 color-white" style="margin-left: 24px;"></i>
             </div>
@@ -210,6 +209,73 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                           type="text" placeholder=""></textarea>
             </div>
 
+            <div class="custom-control ios-switch ios-switch-icon my-3" v-if="!deliveryForm.need_pickup">
+                <input type="checkbox"
+                       v-model="deliveryForm.has_disability"
+                       class="ios-input" id="toggle-has-disability">
+                <label class="custom-control-label pl-5"
+                       v-if="deliveryForm.has_disability"
+                       for="toggle-has-disability">У меня есть ограничения по здоровью</label>
+                <label class="custom-control-label pl-5"
+                       v-if="!deliveryForm.has_disability"
+                       for="toggle-has-disability">Нет ограничений по здоровью</label>
+                <i class="fa-solid fa-hand-holding-heart font-11 color-white" style="left:8px;"></i>
+                <i class="fa-solid fa-hand-holding-heart font-11 color-white" style="margin-left: 24px;"></i>
+
+            </div>
+
+            <div class="list-group list-custom-small" v-if="deliveryForm.has_disability">
+                <a class="border-0" href="javascript:void(0)">
+                    <i class="fa-solid rounded-sm font-14 fa-head-side-mask shadow-s bg-red1-dark"></i>
+                    <span>Болею</span>
+                    <div class="custom-control scale-switch ios-switch">
+                        <input type="checkbox"
+                               value="болею"
+                               v-model="deliveryForm.disabilities" class="ios-input" id="switch-1">
+                        <label class="custom-control-label" for="switch-1"></label>
+                    </div>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+
+                <a class="border-0" href="javascript:void(0)">
+                    <i class="fa-solid rounded-sm font-14 fa-eye shadow-s bg-red1-dark"></i>
+                    <span>Слабовидящий</span>
+                    <div class="custom-control scale-switch ios-switch">
+                        <input type="checkbox"
+                               value="слабовидящий"
+                               v-model="deliveryForm.disabilities" class="ios-input" id="switch-2">
+                        <label class="custom-control-label" for="switch-2"></label>
+                    </div>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+
+                <a class="border-0" href="javascript:void(0)">
+                    <i class="fa-solid rounded-sm font-14 fa-wheelchair shadow-s bg-red1-dark"></i>
+                    <span>Ограничения мобильности</span>
+                    <div class="custom-control scale-switch ios-switch">
+                        <input type="checkbox"
+                               value="ограничения мобильности"
+                               v-model="deliveryForm.disabilities" class="ios-input" id="switch-3">
+                        <label class="custom-control-label" for="switch-3"></label>
+                    </div>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+
+                <a class="border-0" href="javascript:void(0)">
+                    <i class="fa-solid rounded-sm font-14 fa-ear-deaf shadow-s bg-red1-dark"></i>
+                    <span>Плохо слышит \ говорит</span>
+                    <div class="custom-control scale-switch ios-switch">
+                        <input type="checkbox"
+                               value="проблемы со слухом \ голосом"
+                               v-model="deliveryForm.disabilities" class="ios-input" id="switch-4">
+                        <label class="custom-control-label" for="switch-4"></label>
+                    </div>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+
+
+
 
             <div class="custom-control ios-switch ios-switch-icon my-3">
                 <input type="checkbox"
@@ -220,7 +286,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <label class="custom-control-label pl-5" for="toggle-payment-cash"
                        v-if="deliveryForm.cash">Наличные</label>
 
-                <i class="fa-solid fa-money-bill-1-wave font-11 color-white" tyle="left:8px;"></i>
+                <i class="fa-solid fa-money-bill-1-wave font-11 color-white" style="left:8px;"></i>
                 <i class="fa-solid fa-credit-card  font-11 color-white" style="margin-left: 24px;"></i>
             </div>
 
@@ -300,6 +366,8 @@ export default {
                 entrance_number: null,
                 info: null,
                 need_pickup: false,
+                has_disability: false,
+                disabilities:[],
                 money: null,
                 cash: true,
             },

@@ -112,6 +112,32 @@ Route::prefix("admin")
                 Route::delete('/remove/{id}', "remove");
             });
 
+        Route::prefix("appointments")
+            ->controller(\App\Http\Controllers\Admin\AppointmentController::class)
+            ->group(function () {
+                Route::post("/event-list", "eventList");
+                Route::post("/add-event", "addEvent");
+                Route::post("/duplicate-event/{id}", "duplicateEvent");
+                Route::put("/update-event", "updateEvent");
+                Route::delete("/remove-event/{id}", "removeEvent");
+                Route::delete("/force-remove-event/{id}", "forceRemoveEvent");
+                Route::get("/restore-event/{id}", "restoreEvent");
+
+                Route::post("/time-list/{eventId}", "timeList");
+                Route::post("/add-time", "addTime");
+                Route::put("/update-time", "updateTime");
+                Route::delete("/remove-time", "removeTime");
+
+                Route::post("/service-list/{eventId}", "serviceList");
+                Route::post("/add-service", "addService");
+                Route::put("/update-service", "updateService");
+                Route::delete("/remove-service", "removeService");
+
+                Route::post("/appointment-list/{eventId?}", "appointmentList");
+                Route::post("/add-appointment", "addAppointment");
+                Route::put("/update-appointment", "updateAppointment");
+                Route::delete("/remove-appointment", "removeAppointment");
+            });
 
         Route::prefix("dialog-groups")
             ->controller(\App\Http\Controllers\Admin\BotDialogGroupController::class)

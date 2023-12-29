@@ -8,6 +8,7 @@ import dialogGroups from './modules/dialog_groups';
 import slugs from './modules/slugs';
 import products from './modules/products';
 import media from './modules/media';
+import appointments from './modules/appointments';
 import util from "@/AdminPanel/store/modules/utilites";
 
 
@@ -116,6 +117,7 @@ export default createStore({
     },
     modules: {
         templates,
+        appointments,
         companies,
         bots,
         pages,
