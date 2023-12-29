@@ -540,6 +540,8 @@ class ProductLogicFactory
 
             foreach ($disabilities as $disability)
                 $message .= "-<em>$disability</em>\n";
+
+            $message .= "\n";
         }
 
 

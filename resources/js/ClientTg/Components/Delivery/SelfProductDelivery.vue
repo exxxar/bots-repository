@@ -215,7 +215,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                        class="ios-input" id="toggle-has-disability">
                 <label class="custom-control-label pl-5"
                        v-if="deliveryForm.has_disability"
-                       for="toggle-has-disability">У меня есть ограничения по здоровью</label>
+                       for="toggle-has-disability">Есть ограничения по здоровью</label>
                 <label class="custom-control-label pl-5"
                        v-if="!deliveryForm.has_disability"
                        for="toggle-has-disability">Нет ограничений по здоровью</label>
