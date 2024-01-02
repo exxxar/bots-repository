@@ -148,6 +148,24 @@ class StartCodesHandlerController extends Controller
 
     }
 
+    public function orderAction(...$data)
+    {
+        $bot = BotManager::bot()
+            ->getSelf();
+
+        $code = $data[1] ?? null;
+        $request_id = $data[2] ?? null;
+        $order_id = $data[3] ?? null;
+
+        if ($code != "001")
+            return;
+
+
+        $this->userOrder($request_id,$order_id);
+
+
+    }
+
     public function referralAction(...$data)
     {
 
@@ -176,9 +194,7 @@ class StartCodesHandlerController extends Controller
 
                     break;
 
-                case "011":
-                    $this->lastUserOrder($request_id);
-                    return;
+
 
             }
 
@@ -267,7 +283,7 @@ class StartCodesHandlerController extends Controller
 
     }
 
-    private function lastUserOrder($telegramChatId)
+    private function userOrder($telegramChatId, $orderId)
     {
 
         $bot = BotManager::bot()->getSelf();
@@ -287,6 +303,7 @@ class StartCodesHandlerController extends Controller
         $order = Order::query()
             ->where("bot_id", $bot->id)
             ->where("customer_id", $botUser->id)
+            ->where("id", $orderId)
             ->orderBy("updated_at", "DESC")
             ->first();
 

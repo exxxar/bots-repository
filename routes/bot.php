@@ -2,6 +2,7 @@
 
 use App\Facades\BotManager;
 use App\Http\Controllers\Bots\InlineBotController;
+use App\Models\Order;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Telegram\Bot\FileUpload\InputFile;
@@ -112,8 +113,21 @@ BotManager::bot()
         $link = "https://t.me/$bot->bot_domain?start=" .
             base64_encode("001" . $botUser->telegram_chat_id);
 
+        $order = Order::query()
+            ->where("bot_id", $bot->id)
+            ->where("customer_id", $botUser->id)
+            ->orderBy("updated_at", "DESC")
+            ->first();
+
+
+        if (is_null($order)) {
+            BotManager::bot()
+                ->reply("Упс... Заказов нет:(");
+            return;
+        }
+
         $historyLink = "https://t.me/$bot->bot_domain?start=" .
-            base64_encode("011" . $botUser->telegram_chat_id);
+            base64_encode("001" . $botUser->telegram_chat_id."O".$order->id);
 
         $thread = $bot->topics["orders"] ?? null;
 
@@ -126,7 +140,7 @@ BotManager::bot()
                 "Телефон: $phone\n",
                 $photoToSend, [
                 [
-                    ["text" => "📜Последний заказ пользователя", "url" => $historyLink]
+                    ["text" => "📜Заказ пользователя", "url" => $historyLink]
                 ],
                 [
                     ["text" => "👩🏻‍💻Работа с пользователем", "url" => $link]
