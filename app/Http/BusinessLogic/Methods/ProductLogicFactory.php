@@ -530,20 +530,21 @@ class ProductLogicFactory
         $cash = ($data["cash"] ?? "false") == "true";
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
 
+
         $summaryPrice = 0;
         $summaryCount = 0;
 
         $disabilities = json_decode($data["disabilities"] ?? '[]');
 
-        if ($hasDisability){
-            $message .= "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
+        if ($hasDisability) {
+
+            $disabilitiesText = "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
 
             foreach ($disabilities as $disability)
-                $message .= "-<em>$disability</em>\n";
+                $disabilitiesText .= "-<em>$disability</em>\n";
 
-            $message .= "\n";
+            $message .= $disabilitiesText . "\n";
         }
-
 
         $tmpOrderProductInfo = [];
         foreach ($products as $product) {
@@ -573,7 +574,8 @@ class ProductLogicFactory
         $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
             . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
             . "Тип оплаты: " . ($cash ? "Наличкой" : "Картой") . "\n"
-            . "Сдача с:" . ($data["money"] ?? 'Не указано');
+            . "Сдача с:" . ($data["money"] ?? 'Не указано') . "\n"
+            . "Ограничения пользователя:\n" . ($disabilitiesText ?? 'не указаны');
 
         if (isset($data["address"]))
             $geo = BusinessLogic::geo()

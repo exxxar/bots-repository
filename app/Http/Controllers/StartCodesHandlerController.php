@@ -161,7 +161,7 @@ class StartCodesHandlerController extends Controller
             return;
 
 
-        $this->userOrder($request_id,$order_id);
+        $this->userOrder($request_id, $order_id);
 
 
     }
@@ -193,7 +193,6 @@ class StartCodesHandlerController extends Controller
                     $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
 
                     break;
-
 
 
             }
@@ -293,8 +292,7 @@ class StartCodesHandlerController extends Controller
             ->where("bot_id", $bot->id)
             ->first();
 
-        if (is_null($botUser))
-        {
+        if (is_null($botUser)) {
             BotManager::bot()
                 ->reply("Упс... Клиент не найден");
             return;
@@ -337,8 +335,23 @@ class StartCodesHandlerController extends Controller
         }
 
 
+        $statuses = ["Новый заказ", "В процессе доставки", "Завершен", "Отменен"];
+
+        $address = $order->address ?? 'не указан';
+        $name = $order->receiver_name ?? 'не указан';
+        $phone = $order->receiver_phone ?? 'не указан';
+        $status = $statuses[$order->status ?? 0];
+
+        $note = sprintf("Имя заказчика:%s\nАдрес доставки:%s\nТелефон:%s\nСтатус:%s\nЗаметки к заказу:%s\n",
+            $name,
+            $address,
+            $phone,
+            $status,
+            $order->delivery_note ?? 'не указана'
+        );
+
         $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
-                ->format("Y-m-d H:i:s");
+                ->format("Y-m-d H:i:s") . "\nЗаметка для доставщика:\n$note";
 
 
         BotManager::bot()
