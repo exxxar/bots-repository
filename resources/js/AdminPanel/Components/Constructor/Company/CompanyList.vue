@@ -59,7 +59,10 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             <div class="col-12 mb-3">
                 <ul class="list-group w-100">
                     <li class="list-group-item btn  mb-1 d-flex justify-between"
-                        v-bind:class="{'btn-outline-info':company.deleted_at==null,'btn-outline-danger border-danger':company.deleted_at!=null}"
+                        v-bind:class="{'btn-outline-info':company.deleted_at==null,
+                        'btn-outline-danger border-danger':company.deleted_at!=null,
+                        'bg-success':selected==company.id
+                        }"
                         v-for="(company, index) in filteredCompanies"
                       >
 
@@ -102,6 +105,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
+    props:['selected'],
     data() {
         return {
             show: true,
@@ -214,7 +218,7 @@ export default {
 
             this.show = false
 
-            this.$notify("Вы выбрали компанию из спика! Все остальные действия будут производится для этой компании.");
+            this.$notify("Вы выбрали клиента из списка! Все остальные действия будут производится для этой компании.");
         },
         nextCompanies(index) {
             this.loadCompanies(index)

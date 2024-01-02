@@ -36,14 +36,8 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
                 </div>
 
                 <div class="row" v-if="step===0">
-                    <div class="col-12" v-if="!company">
-                        <CompanyList
-                            v-if="!load"
-                            v-on:callback="companyListCallback"/>
-                    </div>
                     <div class="col-12">
-                        <BotForm v-if="company&&!load"
-                                 :company="company"
+                        <BotForm v-if="!load"
                         />
                     </div>
                 </div>
@@ -74,14 +68,13 @@ export default {
             load: false,
             step: 0,
             bot: null,
-            company: null
         }
     },
     computed: {
-        ...mapGetters(['getCurrentBot', 'getCurrentCompany']),
+        ...mapGetters(['getCurrentBot']),
     },
     mounted() {
-        this.loadCurrentCompany()
+
         this.loadCurrentBot()
 
         this.setStep(localStorage.getItem("cashman_set_botpage_step_index") || 0)
@@ -91,9 +84,7 @@ export default {
             this.step = this.bot ? 2 : 1;
         });
 
-        window.addEventListener('store_current_company-change-event', (event) => {
-            this.company = this.getCurrentCompany
-        });
+
     },
     methods: {
         setStep(index) {
@@ -109,25 +100,11 @@ export default {
 
             })
         },
-        loadCurrentCompany(company = null) {
-            this.$store.dispatch("updateCurrentCompany", {
-                company: company
-            }).then(() => {
-                this.company = this.getCurrentCompany
-            })
-        },
-        companyListCallback(company) {
-            this.load = true
-            this.loadCurrentCompany(company)
-            this.$nextTick(() => {
-                this.load = false
-            })
 
-        },
         botListCallback(bot) {
             this.load = true
 
-            this. setStep(2)
+            this.setStep(2)
             this.loadCurrentBot(bot)
 
             this.$nextTick(() => {

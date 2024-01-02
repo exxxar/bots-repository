@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnum;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Models\Bot;
 use App\Models\BotUser;
+use App\Models\Order;
 use App\Models\ReferralHistory;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -173,6 +176,10 @@ class StartCodesHandlerController extends Controller
 
                     break;
 
+                case "011":
+                    $this->lastUserOrder($request_id);
+                    return;
+
             }
 
 
@@ -257,6 +264,70 @@ class StartCodesHandlerController extends Controller
 
         BotManager::bot()->reply($message);
 
+
+    }
+
+    private function lastUserOrder($telegramChatId)
+    {
+
+        $bot = BotManager::bot()->getSelf();
+
+        $botUser = BotUser::query()
+            ->where("telegram_chat_id", $telegramChatId)
+            ->where("bot_id", $bot->id)
+            ->first();
+
+        if (is_null($botUser))
+        {
+            BotManager::bot()
+                ->reply("Упс... Клиент не найден");
+            return;
+        }
+
+        $order = Order::query()
+            ->where("bot_id", $bot->id)
+            ->where("customer_id", $botUser->id)
+            ->orderBy("updated_at", "DESC")
+            ->first();
+
+
+        if (is_null($order)) {
+            BotManager::bot()
+                ->reply("Упс... Заказов нет:(");
+            return;
+        }
+
+
+        $from = "не указан источник";
+        $products = "нет продуктов";
+        if (!empty($order->product_details)) {
+
+            $products = "";
+
+            foreach ($order->product_details as $detail) {
+                $detail = (object)$detail;
+                $from = $detail->from ?? 'Не указано';
+                if (is_array($detail->products)) {
+                    foreach ($detail->products as $product) {
+                        $product = (object)$product;
+                        $products .= "$product->title x$product->count = $product->price ₽\n";
+                    }
+
+                } else
+                    $products .= "Текст заказа: $detail->products\n";
+
+            }
+        }
+
+
+        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
+                ->format("Y-m-d H:i:s");
+
+
+        BotManager::bot()
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                $text);
 
     }
 }

@@ -1,12 +1,43 @@
 <script setup>
+import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList.vue";
 import TextHelper from "@/AdminPanel/Components/Constructor/Helpers/TextHelper.vue";
 import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
 </script>
 <template>
+
+
     <form
         class="pb-5 mb-5"
         v-on:submit.prevent="addBot">
         <div class="row">
+            <div class="col-md-12 col-12">
+                <p class="alert alert-danger" v-if="botForm.company_id==null">Внимание! Вы не выбрали клиента!</p>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox"
+                           :value="need_company_select"
+                           v-model="need_company_select" id="bot-is-template">
+                    <label class="form-check-label" for="bot-is-template">
+                        Отобразить список клиентов (выбор клиента для бота)
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="col-md-12 col-12" v-if="need_company_select">
+
+                <CompanyList
+                    v-if="!load"
+                    :selected="botForm.company_id"
+                    v-on:callback="companyListCallback"/>
+
+            </div>
+
+            <div class="col-md-12 col-12" v-if="company">
+                <div class="card alert alert-success" >
+                    Выбранный клиент #{{ company.id }} {{ company.title }}
+                </div>
+            </div>
+
             <div class="col-md-12 col-12">
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox"
@@ -43,6 +74,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
             </div>
         </div>
+
+
         <div class="row">
             <div class="col-12">
                 <p>Для создания бота в Телеграм воспользуйтесь <a
@@ -124,7 +157,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                         <div class="mb-3">
                             <label class="form-label d-flex justify-content-between align-items-center"
                                    id="bot-title">
-                                              <span>
+                                              <span v-if="botForm.title">
                                                   Название бота
                                                   <small class="text-secondary" v-if="botForm.title.length>0">Длина текста {{
                                                           botForm.title.length
@@ -888,10 +921,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["company", "bot"],
+    props: ["bot"],
     data() {
         return {
-
+            need_company_select: false,
             selected_warning: null,
             page: null,
             step: 0,
@@ -900,10 +933,12 @@ export default {
             loadPage: false,
             needPageListUpdate: false,
             need_threads: false,
+            need_company: false,
             need_cashback_config: false,
             need_payments: false,
             need_shop: false,
             command: null,
+            company: null,
             warnings: [
                 {
                     title: "Сумма чека больше чем",
@@ -967,6 +1002,7 @@ export default {
                 template_description: null,
                 bot_domain: null,
                 bot_token: null,
+                company_id: null,
                 bot_token_dev: null,
                 order_channel: null,
                 message_threads: null,
@@ -1060,7 +1096,7 @@ export default {
 
     },
     computed: {
-        ...mapGetters(['getSlugs']),
+        ...mapGetters(['getSlugs', 'getCurrentCompany']),
         filteredWarnings() {
             if (this.botForm.warnings.length === 0)
                 return this.warnings;
@@ -1071,6 +1107,12 @@ export default {
         }
     },
     mounted() {
+        //this.loadCurrentCompany()
+
+        window.addEventListener('store_current_company-change-event', (event) => {
+            this.company = this.getCurrentCompany
+        });
+
         if (this.bot)
             this.$nextTick(() => {
                 this.botForm = {
@@ -1112,6 +1154,7 @@ export default {
                     level_1: this.bot.level_1,
                     level_2: this.bot.level_2,
                     level_3: this.bot.level_3,
+                    company_id: this.bot.company_id,
 
                     photos: this.bot.photos || [],
                     warnings: this.bot.warnings || [],
@@ -1151,6 +1194,8 @@ export default {
                     this.need_cashback_config = true
 
 
+                if (this.bot.company)
+                    this.company = this.bot.company
                 //   this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
             })
     },
@@ -1256,8 +1301,6 @@ export default {
 
                 let bot = response.data
 
-                console.log("bot", bot)
-
                 this.$emit("callback", bot)
 
                 this.$notify({
@@ -1351,6 +1394,23 @@ export default {
         ,
         removeWarning(index) {
             this.botForm.warnings.splice(index, 1)
+        },
+       /* loadCurrentCompany(company = null) {
+            this.$store.dispatch("updateCurrentCompany", {
+                company: company
+            }).then(() => {
+                this.company = this.getCurrentCompany
+            })
+        },*/
+        companyListCallback(company) {
+            this.load = true
+            this.botForm.company_id = company.id
+            this.need_company_select = false
+            //this.loadCurrentCompany(company)
+            this.$nextTick(() => {
+                this.load = false
+            })
+
         },
         addWarning() {
 

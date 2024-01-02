@@ -7,15 +7,45 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
 <template>
 
-    <div class="card card-style">
-        <div class="content">
 
+    <div class="card card-style">
+
+        <div class="content" v-if="products.length>0">
+            <div v-if="paginate">
+                <div class="d-flex justify-content-between">
+                    <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
+                       class="btn btn-border btn-m bg-red2-dark btn-full mb-3  text-uppercase font-900 color-blue2-dark mr-2">
+                        <i class="fa-solid fa-magnifying-glass" v-if="isCollapsed"></i>
+                        <i class="fa-solid fa-chevron-up" v-else></i>
+                        <span class="font-14" v-if="isCollapsed"></span>
+                        <span class="font-14" v-else></span>
+                    </a>
+                    <div class="d-flex">
+                        <a href="javascript:void(0)"
+                           @click="selectProductTypeDisplay(0)"
+                           v-bind:class="{'bg-blue2-dark':product_type_display==0}"
+                           class="btn btn-border btn-m btn-full mb-3  text-uppercase font-900 color-blue2-dark mr-2">
+                            <i class="fa-solid fa-list"></i>
+                        </a>
+                        <a href="javascript:void(0)"
+                           @click="selectProductTypeDisplay(1)"
+                           v-bind:class="{'bg-blue2-dark':product_type_display==1}"
+                           class="btn btn-border btn-m btn-full mb-3  text-uppercase font-900  color-blue2-dark ">
+                            <i class="fa-regular fa-address-card"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+
+            </div>
 
             <div v-if="!isCollapsed">
 
                 <div class="input-style input-style-2 has-icon input-required">
                     <i class="input-icon fa-solid fa-magnifying-glass" @click="loadProducts(0)"></i>
-                    <input class="form-control" v-model="search" type="search" placeholder="Найди товар на странице">
+                    <input class="form-control" v-model="search" type="search"
+                           placeholder="Название товара">
                 </div>
                 <p class="mb-0">Цена товара</p>
                 <div class="row mb-0">
@@ -39,53 +69,36 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     </div>
                 </div>
 
-                <!--                <div class="d-flex scrolled-list" v-if="categories.length>0">
-                                       <span
-                                             class="badge badge-info mr-2 mb-2 mt-0"
-                                             v-for="(item, index) in categories">{{item.title || 'не указано'}} <i class="ml-1 fa-solid fa-xmark text-white" @click="removeCategory(index)"></i></span>
-
-                                </div>-->
-
-
                 <button
                     @click="loadProducts(0)"
                     class="btn btn-full btn-sm rounded-s bg-highlight font-800 text-uppercase w-100 mb-2">
                     <i class="fa-solid fa-file-invoice mr-2"></i><span class="color-white">Найти товар</span>
                 </button>
 
+                <p class="mb-0 d-flex justify-content-between">Категории товара <a
+                    @click="resetCategories()"
+                    v-if="categories.length>0"
+                    href="javascript:void(0)">Сбросить</a></p>
+                <div class="row">
+                    <div class="col-12">
+                        <CategoryList
+                            :size="100"
+                            :active="activeCategories"
+                            :selected="categories"
+                            v-on:select="selectCategory"/>
+                    </div>
+                </div>
+
+                <p class="mb-2 text-center"><small>Всего товаров найдено ({{ paginate.meta.total }})</small></p>
+
 
             </div>
 
 
-            <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
-               class="btn btn-m btn-full rounded-sm font-900  text-uppercase mb-0">
-                <i class="fa-solid fa-chevron-down mr-2" v-if="isCollapsed"></i>
-                <i class="fa-solid fa-chevron-up  mr-2" v-else></i>
-                <span class="font-14" v-if="isCollapsed">Найти товар</span>
-                <span class="font-14" v-else>Скрыть фильтры</span>
-            </a>
-
-
-        </div>
-    </div>
-
-    <div class="card card-style">
-        <div class="content">
-            <CategoryList
-                :size="100"
-                :active="activeCategories"
-                :selected="categories"
-                v-on:select="selectCategory"/>
-        </div>
-    </div>
-
-    <div class="card card-style">
-        <div class="content" v-if="paginate">
-            <p class="mb-0 text-center"><small>Всего товаров найдено ({{ paginate.meta.total }})</small></p>
-
-        </div>
-        <div class="content" v-if="products.length>0">
-            <ProductItemSimple :item="product" v-for="(product, index) in filteredProducts"/>
+            <ProductItemSimple
+                :display-type="product_type_display"
+                :item="product"
+                v-for="(product, index) in filteredProducts"/>
 
             <Pagination
                 :simple="true"
@@ -164,13 +177,13 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                        placeholder="+7(000)000-00-00"
                        required>
             </div>
-
+            <p class="mb-0 text-left">Как хотите получить заказ?</p>
             <div class="custom-control ios-switch ios-switch-icon my-3">
                 <input type="checkbox"
                        v-model="deliveryForm.need_pickup"
                        class="ios-input" id="toggle-need-pickup">
-                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!deliveryForm.need_pickup">Включить режим самовывоза</label>
-                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="deliveryForm.need_pickup">Включить режим доставки</label>
+                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!deliveryForm.need_pickup">Доставка</label>
+                <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="deliveryForm.need_pickup">Самовывоз</label>
                 <i class="fa-solid fa-person-walking-luggage font-11 color-white" style="left:8px;"></i>
                 <i class="fa-solid fa-truck font-11 color-white" style="margin-left: 24px;"></i>
             </div>
@@ -209,16 +222,17 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                           type="text" placeholder=""></textarea>
             </div>
 
+            <p class="mb-0 text-left " v-if="!deliveryForm.need_pickup">Ограничения по здоровью</p>
             <div class="custom-control ios-switch ios-switch-icon my-3" v-if="!deliveryForm.need_pickup">
                 <input type="checkbox"
                        v-model="deliveryForm.has_disability"
                        class="ios-input" id="toggle-has-disability">
                 <label class="custom-control-label pl-5"
                        v-if="deliveryForm.has_disability"
-                       for="toggle-has-disability">Есть ограничения по здоровью</label>
+                       for="toggle-has-disability">Есть</label>
                 <label class="custom-control-label pl-5"
                        v-if="!deliveryForm.has_disability"
-                       for="toggle-has-disability">Нет ограничений по здоровью</label>
+                       for="toggle-has-disability">Нет</label>
                 <i class="fa-solid fa-hand-holding-heart font-11 color-white" style="left:8px;"></i>
                 <i class="fa-solid fa-hand-holding-heart font-11 color-white" style="margin-left: 24px;"></i>
 
@@ -274,9 +288,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 </a>
             </div>
 
-
-
-
+            <p class="mb-0 text-left">Способы оплаты</p>
             <div class="custom-control ios-switch ios-switch-icon my-3">
                 <input type="checkbox"
                        v-model="deliveryForm.cash"
@@ -346,6 +358,7 @@ export default {
     props: ["type"],
     data() {
         return {
+            product_type_display: 1,
             spent_time_counter: 0,
             is_requested: false,
             isCollapsed: true,
@@ -367,7 +380,7 @@ export default {
                 info: null,
                 need_pickup: false,
                 has_disability: false,
-                disabilities:[],
+                disabilities: [],
                 money: null,
                 cash: true,
             },
@@ -406,6 +419,28 @@ export default {
             this.startTimer(localStorage.getItem("cashman_self_product_delivery_counter"))
         }
 
+        if (localStorage.getItem("cashman_self_product_type_display") != null) {
+            this.product_type_display = parseInt(localStorage.getItem("cashman_self_product_type_display") || 0)
+        }
+
+
+        this.deliveryForm.name = localStorage.getItem("cashman_self_product_delivery_form_name") != null ?
+            localStorage.getItem("cashman_self_product_delivery_form_name") : null
+
+        this.deliveryForm.phone = localStorage.getItem("cashman_self_product_delivery_form_phone") != null ?
+            localStorage.getItem("cashman_self_product_delivery_form_phone") : null
+
+        this.deliveryForm.address = localStorage.getItem("cashman_self_product_delivery_form_address") != null ?
+            localStorage.getItem("cashman_self_product_delivery_form_address") : null
+
+        this.deliveryForm.entrance_number = localStorage.getItem("cashman_self_product_delivery_form_entrance_number") != null ?
+            localStorage.getItem("cashman_self_product_delivery_form_entrance_number") : null
+
+        this.deliveryForm.disabilities = localStorage.getItem("cashman_self_product_delivery_form_entrance_disabilities") != null ?
+            JSON.parse(localStorage.getItem("cashman_self_product_delivery_form_entrance_disabilities")) : []
+
+        if (this.deliveryForm.disabilities.length > 0)
+            this.deliveryForm.has_disability = true
 
         this.clearCart();
 
@@ -415,6 +450,10 @@ export default {
             this.loadActualProducts()
     },
     methods: {
+        selectProductTypeDisplay(type) {
+            this.product_type_display = type
+            localStorage.setItem("cashman_self_product_type_display", this.product_type_display)
+        },
         startTimer(time) {
             this.spent_time_counter = time != null ? Math.min(time, 10) : 10;
 
@@ -435,6 +474,10 @@ export default {
                 this.$botNotification.success("Корзина", "Корзина успешно очищена")
             })
 
+        },
+        resetCategories() {
+            this.categories = []
+            this.loadProducts(0)
         },
         selectCategory(item) {
             let index = this.categories.findIndex(category => category.id === item.id)
@@ -469,6 +512,13 @@ export default {
                 this.$botNotification.warning("Упс!", `Сделать повторный заказ можно через <strong>${this.spent_time_counter} сек.</strong>`)
                 return;
             }
+
+
+            localStorage.setItem("cashman_self_product_delivery_form_name", this.deliveryForm.name || '')
+            localStorage.setItem("cashman_self_product_delivery_form_phone", this.deliveryForm.phone || '')
+            localStorage.setItem("cashman_self_product_delivery_form_address", this.deliveryForm.address || '')
+            localStorage.setItem("cashman_self_product_delivery_form_entrance_number", this.deliveryForm.entrance_number || '')
+            localStorage.setItem("cashman_self_product_delivery_form_entrance_disabilities", JSON.stringify(this.deliveryForm.disabilities || []))
 
             let data = new FormData();
 

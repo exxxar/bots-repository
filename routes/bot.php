@@ -108,10 +108,12 @@ BotManager::bot()
 
         $phone = $botUser->phone ?? 'Не указан';
 
-        $data = "001" . $botUser->telegram_chat_id;
 
         $link = "https://t.me/$bot->bot_domain?start=" .
-            base64_encode($data);
+            base64_encode("001" . $botUser->telegram_chat_id);
+
+        $historyLink = "https://t.me/$bot->bot_domain?start=" .
+            base64_encode("011" . $botUser->telegram_chat_id);
 
         $thread = $bot->topics["orders"] ?? null;
 
@@ -124,7 +126,10 @@ BotManager::bot()
                 "Телефон: $phone\n",
                 $photoToSend, [
                 [
-                    ["text" => "Работа с пользователем", "url" => $link]
+                    ["text" => "📜Последний заказ пользователя", "url" => $historyLink]
+                ],
+                [
+                    ["text" => "👩🏻‍💻Работа с пользователем", "url" => $link]
                 ]
             ],
                 $thread

@@ -1,4 +1,5 @@
 <script setup>
+
 import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
 import BotSlugList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugTableList.vue";
 import BotUserList from "@/AdminPanel/Components/Constructor/BotUserList.vue";
@@ -61,12 +62,6 @@ import AppointmentEventTable from "@/AdminPanel/Components/Constructor/Appointme
         </ul>
     </div>
 
-    <div class="row" v-if="company">
-        <div class="col-12">
-            <h6>Создаем бот к компании {{ company.title || 'Не установлен' }}</h6>
-        </div>
-    </div>
-
     <div v-if="step===13" class="pb-5 mb-5">
         <AppointmentEventTable
             :bot="bot"
@@ -75,6 +70,8 @@ import AppointmentEventTable from "@/AdminPanel/Components/Constructor/Appointme
     </div>
 
     <div v-if="step===0" class="pb-5 mb-5">
+
+
         <BotForm
             :bot="bot"
             v-if="!load"
@@ -159,7 +156,7 @@ import AppointmentEventTable from "@/AdminPanel/Components/Constructor/Appointme
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["company", "bot"],
+    props: [ "bot"],
     data() {
         return {
             page: null,
@@ -168,6 +165,8 @@ export default {
             loadPage: false,
         }
     },
+
+
     mounted() {
         this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
     },
@@ -190,7 +189,22 @@ export default {
             this.$nextTick(() => {
                 this.loadPageList = false
             });
-        }
+        },
+        loadCurrentCompany(company = null) {
+            this.$store.dispatch("updateCurrentCompany", {
+                company: company
+            }).then(() => {
+                this.company = this.getCurrentCompany
+            })
+        },
+        companyListCallback(company) {
+            this.load = true
+            this.loadCurrentCompany(company)
+            this.$nextTick(() => {
+                this.load = false
+            })
+
+        },
     }
 }
 </script>
