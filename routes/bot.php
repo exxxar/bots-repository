@@ -3,6 +3,7 @@
 use App\Facades\BotManager;
 use App\Http\Controllers\Bots\InlineBotController;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Telegram\Bot\FileUpload\InputFile;
@@ -46,8 +47,6 @@ BotManager::bot()
     ->fallbackAudio("uploadAnyKindOfMedia")
     ->fallbackSticker("uploadAnyKindOfMedia")
     ->fallbackVideo("uploadAnyKindOfMedia");
-
-
 
 
 BotManager::bot()
@@ -127,9 +126,49 @@ BotManager::bot()
         }
 
         $historyLink = "https://t.me/$bot->bot_domain?start=" .
-            base64_encode("001" . $botUser->telegram_chat_id."O".$order->id);
+            base64_encode("001" . $botUser->telegram_chat_id . "O" . $order->id);
 
         $thread = $bot->topics["orders"] ?? null;
+
+
+        $order = Order::query()
+            ->where("bot_id", $bot->id)
+            ->where("customer_id", $botUser->id)
+            ->orderBy("updated_at", "DESC")
+            ->first();
+
+
+        if (is_null($order)) {
+            BotManager::bot()
+                ->reply("Упс... Заказов нет:(");
+            return;
+        }
+
+        $from = "не указан источник";
+        $products = "нет продуктов";
+        if (!empty($order->product_details)) {
+
+            $products = "";
+
+            foreach ($order->product_details as $detail) {
+                $detail = (object)$detail;
+                $from = $detail->from ?? 'Не указано';
+                if (is_array($detail->products)) {
+                    foreach ($detail->products as $product) {
+                        $product = (object)$product;
+                        $products .= "$product->title x$product->count = $product->price ₽\n";
+                    }
+
+                } else
+                    $products .= "Текст заказа: $detail->products\n";
+
+            }
+        }
+
+
+        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
+                ->format("Y-m-d H:i:s");
+
 
         BotManager::bot()
             ->sendPhoto(
@@ -137,7 +176,8 @@ BotManager::bot()
                 "#оплатачеком\n" .
                 "Идентификатор: $id\n" .
                 "Пользователь: $name\n" .
-                "Телефон: $phone\n",
+                "Телефон: $phone\n" .
+                "Параметры заказа:\n $text \n",
                 $photoToSend, [
                 [
                     ["text" => "📜Заказ пользователя", "url" => $historyLink]
