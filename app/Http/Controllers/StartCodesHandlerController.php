@@ -342,7 +342,7 @@ class StartCodesHandlerController extends Controller
         $phone = $order->receiver_phone ?? 'не указан';
         $status = $statuses[$order->status ?? 0];
 
-        $note = sprintf("Имя заказчика:%s\nАдрес доставки:%s\nТелефон:%s\nСтатус:%s\nЗаметки к заказу:%s\n",
+        $note = sprintf("Имя заказчика: %s\nАдрес доставки: %s\nТелефон: %s\nСтатус: %s\nЗаметки к заказу: %s\n",
             $name,
             $address,
             $phone,
@@ -351,7 +351,7 @@ class StartCodesHandlerController extends Controller
         );
 
         $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
-                ->format("Y-m-d H:i:s") . "\nЗаметка для доставщика:\n$note";
+                ->format("Y-m-d H:i:s") . "\n\n<b>Заметка для доставщика:</b>\n$note";
 
 
         BotManager::bot()
