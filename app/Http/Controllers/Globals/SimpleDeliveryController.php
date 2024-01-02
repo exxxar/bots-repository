@@ -27,7 +27,6 @@ class SimpleDeliveryController extends SlugController
     {
 
 
-
         $mainScript = BotMenuSlug::query()->updateOrCreate(
             [
                 "slug" => "global_simple_delivery_main",
@@ -52,6 +51,18 @@ class SimpleDeliveryController extends SlugController
                 "type" => "text",
                 "key" => "main_text",
                 "value" => "Наш магазин!",
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "is_disabled",
+                "value" => false,
+
+            ],
+            [
+                "type" => "text",
+                "key" => "disabled_text",
+                "value" => "Магазин временно не доступен",
 
             ],
             [
@@ -244,6 +255,14 @@ class SimpleDeliveryController extends SlugController
             ->where("key", "main_text")
             ->first())["value"] ?? "Сервис доставки";
 
+        $disabledText = (Collection::make($config[1])
+            ->where("key", "disabled_text")
+            ->first())["value"] ?? "Сервис доставки недоступен";
+
+        $isDisabled = (Collection::make($config[1])
+            ->where("key", "is_disabled")
+            ->first())["value"] ?? false;
+
         $btnText = (Collection::make($config[1])
             ->where("key", "btn_text")
             ->first())["value"] ?? "\xF0\x9F\x8E\xB2Открыть магазин";
@@ -267,10 +286,10 @@ class SimpleDeliveryController extends SlugController
 
         if (is_null($mainImage))
             \App\Facades\BotManager::bot()
-                ->replyInlineKeyboard("$mainText", $keyboard);
+                ->replyInlineKeyboard($isDisabled ? "$disabledText" : "$mainText", $isDisabled ? [] : $keyboard);
         else
             \App\Facades\BotManager::bot()
-                ->replyPhoto("$mainText", $mainImage, $keyboard);
+                ->replyPhoto($isDisabled ? "$disabledText" : "$mainText", $mainImage, $isDisabled ? [] : $keyboard);
 
     }
 }

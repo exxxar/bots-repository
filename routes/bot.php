@@ -176,8 +176,8 @@ BotManager::bot()
                 "#оплатачеком\n" .
                 "Идентификатор: $id\n" .
                 "Пользователь: $name\n" .
-                "Телефон: $phone\n" .
-                "Параметры заказа:\n $text \n",
+                "Телефон: $phone\n\n" .
+                "Параметры заказа:\n$text\n",
                 $photoToSend, [
                 [
                     ["text" => "📜Заказ пользователя", "url" => $historyLink]
