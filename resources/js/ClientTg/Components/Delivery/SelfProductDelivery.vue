@@ -578,6 +578,12 @@ export default {
     overflow-x: auto;
 }
 
+.card-style {
+    margin: 0px 5px 15px 5px !important;
+}
 
+.content {
+    margin: 10px 10px 10px 10px !important;
+}
 
 </style>

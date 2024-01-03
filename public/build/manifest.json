@@ -132,11 +132,11 @@
       "_index.es-77235f88.js"
     ]
   },
-  "_ShopLayout-4b9326c4.js": {
+  "_ShopLayout-f467c571.js": {
     "css": [
       "assets/SimpleMain-5ac8cdc0.css"
     ],
-    "file": "assets/ShopLayout-4b9326c4.js",
+    "file": "assets/ShopLayout-f467c571.js",
     "imports": [
       "_index.es-77235f88.js",
       "resources/js/ClientTg/app.js"
@@ -185,17 +185,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-959056f6.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-959056f6.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-959056f6.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-5f750aa6.js",
@@ -496,12 +496,12 @@
       "assets/Main-507604a0.css",
       "assets/TelegramChannelHelper-5ad24a6a.css"
     ],
-    "file": "assets/Main-8cc63279.js",
+    "file": "assets/Main-9548f181.js",
     "imports": [
       "_MapModal.vue_vue_type_style_index_0_lang-336eb716.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-77235f88.js",
-      "_ShopLayout-4b9326c4.js",
+      "_ShopLayout-f467c571.js",
       "resources/js/ClientTg/app.js",
       "_TelegramChannelHelper-587b5dac.js",
       "_v4-a960c1f4.js",
@@ -515,9 +515,9 @@
     "css": [
       "assets/TelegramChannelHelper-5ad24a6a.css"
     ],
-    "file": "assets/Result-cde5001a.js",
+    "file": "assets/Result-2104dc21.js",
     "imports": [
-      "_ShopLayout-4b9326c4.js",
+      "_ShopLayout-f467c571.js",
       "resources/js/ClientTg/app.js",
       "_index.es-77235f88.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -556,12 +556,12 @@
     "src": "resources/js/ClientTg/Pages/SimpleMain.vue"
   },
   "resources/js/ClientTg/app.css": {
-    "file": "assets/app-2edcfda7.css",
+    "file": "assets/app-9ef5f4ab.css",
     "src": "resources/js/ClientTg/app.css"
   },
   "resources/js/ClientTg/app.js": {
     "css": [
-      "assets/app-2edcfda7.css",
+      "assets/app-9ef5f4ab.css",
       "assets/TelegramChannelHelper-5ad24a6a.css"
     ],
     "dynamicImports": [
@@ -571,7 +571,7 @@
       "resources/js/ClientTg/Pages/Shop/AboutUs.vue",
       "resources/js/ClientTg/Pages/SimpleMain.vue"
     ],
-    "file": "assets/app-140ec850.js",
+    "file": "assets/app-2be537de.js",
     "imports": [
       "_index.es-77235f88.js",
       "__plugin-vue_export-helper-c27b6911.js",
