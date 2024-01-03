@@ -404,11 +404,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a href="https://telegra.ph/Nizhnee-menyu-bota-01-03" target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                            >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -484,11 +484,12 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a href="https://telegra.ph/Menyu-k-tekstu-01-03"
+                               target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                            >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -574,11 +575,12 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a href="https://telegra.ph/Dobavlenie-izobrazhenij-01-03"
+                               target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                            >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -625,11 +627,12 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a href="https://telegra.ph/Dobavlenie-video-na-stranicu-01-03"
+                               target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                            >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -675,11 +678,12 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a href="https://telegra.ph/Dobavlenie-stikera-na-stranicu-01-03"
+                               target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                                >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -729,11 +733,12 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a href="https://telegra.ph/Dobavlenie-audio-na-stranicu-01-03"
+                               target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                                >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -782,11 +787,12 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a href="https://telegra.ph/Dobavlenie-dokumenta-01-03"
+                               target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                            >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -835,11 +841,12 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a  href="https://telegra.ph/Svyazyvanie-so-stranicej-01-03"
+                                target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                            >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -890,11 +897,11 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                            <a href="https://telegra.ph/Svyazyvanie-so-skriptom-01-03"
+                               target="_blank"
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill">
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -946,11 +953,12 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a href="https://telegra.ph/Dobavlenie-dialoga-01-03"
+                               target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                            >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -995,11 +1003,12 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <button
+                            <a href="https://telegra.ph/Pravila-na-stranice-01-03"
+                               target="_blank"
                                 class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                type="button">
+                            >
                                 Подробнее
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>

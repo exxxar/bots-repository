@@ -13,7 +13,9 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
         <div class="content" v-if="products.length>0">
             <div v-if="paginate">
                 <div class="d-flex justify-content-between">
-                    <a href="javascript:void(0)" @click="isCollapsed = !isCollapsed"
+                    <a href="javascript:void(0)"
+                       style="border-radius: 10px !important;"
+                       @click="isCollapsed = !isCollapsed"
                        class="btn btn-border btn-m bg-red2-dark btn-full mb-3  text-uppercase font-900 color-blue2-dark mr-2">
                         <i class="fa-solid fa-magnifying-glass" v-if="isCollapsed"></i>
                         <i class="fa-solid fa-chevron-up" v-else></i>
@@ -22,12 +24,14 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     </a>
                     <div class="d-flex">
                         <a href="javascript:void(0)"
+                           style="border-radius: 10px !important;"
                            @click="selectProductTypeDisplay(0)"
                            v-bind:class="{'bg-blue2-dark':product_type_display==0}"
                            class="btn btn-border btn-m btn-full mb-3  text-uppercase font-900 color-blue2-dark mr-2">
                             <i class="fa-solid fa-list"></i>
                         </a>
                         <a href="javascript:void(0)"
+                           style="border-radius: 10px !important;"
                            @click="selectProductTypeDisplay(1)"
                            v-bind:class="{'bg-blue2-dark':product_type_display==1}"
                            class="btn btn-border btn-m btn-full mb-3  text-uppercase font-900  color-blue2-dark ">

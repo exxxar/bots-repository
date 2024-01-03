@@ -3,7 +3,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 </script>
 <template>
 
-    <div class="row">
+    <div class="row mt-2">
         <div class="input-group mb-3">
             <input type="search" class="form-control"
                    placeholder="Поиск пользователя"
