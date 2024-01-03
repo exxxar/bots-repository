@@ -109,6 +109,8 @@ import {Head} from '@inertiajs/vue3'
             </div>
         </div>
     </div>
+
+
 </template>
 <script>
 import {mapGetters} from "vuex";

@@ -15,7 +15,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
         id="page-construct"
         v-on:submit.prevent="openSaveModal">
 
-        <div class="row">
+        <div class="row" v-if="hasParts">
             <div class="col-12 mb-2">
                 <h6>На странице выбраны следующие разделы</h6>
                 <ul class="mini-pics justify-content-start">
@@ -313,7 +313,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
             <div v-if="tab===0">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_reply_menu">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_reply_menu"
@@ -382,11 +382,41 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
 
                 </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Нижнее меню</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Создание и настройка нижнего меню страницы бота. Добавление и редактирование функций кнопок
+                            бота на странице.
+                            Данное меню отображается пользователю всегда.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_reply_menu"
+                                @click="need_reply_menu=true"
+                                v-bind:class="{'btn-primary':!need_reply_menu,'btn-outline-secondary':need_reply_menu}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
             <div v-if="tab===1">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_inline_menu">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_inline_menu"
@@ -433,11 +463,40 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
 
                 </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Меню под текстом</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            В отличии от нижнего меню, которое отображается всегда, меню под текстом показывается под
+                            контентом только в момент отображения этого контента.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_inline_menu"
+                                @click="need_inline_menu=true"
+                                v-bind:class="{'btn-primary':!need_inline_menu,'btn-outline-secondary':need_inline_menu}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
             <div v-if="tab===2">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_page_images">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_images"
@@ -493,10 +552,40 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         </div>
                     </div>
                 </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Изображения</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Вы можете добавить к одной странице от <b>1</b> до <b>10</b> изображений. Изображения (от
+                            2х) будут собраны в группу и показаны под текстовым содержимым страницы.
+                            Если изображение одно, то текст будет отображен под ним.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_page_images"
+                                @click="need_page_images=true"
+                                v-bind:class="{'btn-primary':!need_page_images,'btn-outline-secondary':need_page_images}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div v-if="tab===3">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_page_video">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_video"
@@ -509,19 +598,45 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
                 </div>
                 <div class="col-12 mb-2" v-if="need_page_video">
-                    <p class="alert alert-danger">
-                        <strong>Внимание!</strong> не больше 10 видео на 1й странице!
-                    </p>
                     <BotMediaList
                         :need-video="true"
                         :need-video-note="true"
                         :selected="pageForm.videos"
                         v-on:select="selectVideo"></BotMediaList>
                 </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Видео</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Вы можете добавить к одной странице от <b>1</b> до <b>10</b> видео. Ролики (от 2х) будут
+                            собраны в группу и показаны под текстовым содержимым страницы.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_page_video"
+                                @click="need_page_video=true"
+                                v-bind:class="{'btn-primary':!need_page_video,'btn-outline-secondary':need_page_video}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div v-if="tab===4">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_page_sticker">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_sticker"
@@ -539,11 +654,40 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         :selected="[pageForm.sticker]"
                         v-on:select="selectSticker"></BotMediaList>
                 </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Стикеры</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Вы можете переслать любой стикер в бота (от лица администратора) и затем этот стикер
+                            использовать для взаимодействия с пользователем.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_page_sticker"
+                                @click="need_page_sticker=true"
+                                v-bind:class="{'btn-primary':!need_page_sticker,'btn-outline-secondary':need_page_sticker}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
             <div v-if="tab===5">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_page_audios">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_audios"
@@ -556,18 +700,47 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
                 </div>
                 <div class="col-12 mb-2" v-if="need_page_audios">
-                    <p class="alert alert-danger">
-                        <strong>Внимание!</strong> не больше 10 аудио на 1й странице!
-                    </p>
                     <BotMediaList
                         :need-audio="true"
                         :selected="pageForm.audios"
                         v-on:select="selectAudio"></BotMediaList>
                 </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Аудио</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Вы можете добавить к одной странице от <b>1</b> до <b>10</b> аудио. Музыка (от 2х) будет
+                            собрана в группу и показана под текстовым содержимым страницы.
+                            Если вы хотите использовать <b class="text-danger">голосовое</b>, то можно использовать
+                            максимум <b class="text-danger">одну запись</b>. Или же, вы можете конвертировать её в mp3 и
+                            залить как музыкальный файл в бота.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_page_audios"
+                                @click="need_page_audios=true"
+                                v-bind:class="{'btn-primary':!need_page_audios,'btn-outline-secondary':need_page_audios}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div v-if="tab===6">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_page_documents">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_page_documents"
@@ -580,18 +753,47 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
                 </div>
                 <div class="col-12 mb-2" v-if="need_page_documents">
-                    <p class="alert alert-danger">
-                        <strong>Внимание!</strong> не больше 10 документов на 1й странице!
-                    </p>
                     <BotMediaList
                         :need-document="true"
                         :selected="pageForm.documents"
                         v-on:select="selectDocument"></BotMediaList>
                 </div>
+
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Документы</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Вы можете добавить к одной странице от <b>1</b> до <b>10</b> документов. Документы (от 2х)
+                            будут собраны в группу и показана под текстовым содержимым страницы.
+                            В качестве файлов вы можете использовать текстовые документы, презентации, файлы-pdf,
+                            изображения в оригинальном размере.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_page_documents"
+                                @click="need_page_documents=true"
+                                v-bind:class="{'btn-primary':!need_page_documents,'btn-outline-secondary':need_page_documents}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div v-if="tab===7">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_attach_page">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_attach_page"
@@ -611,11 +813,41 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         v-on:callback="attachPage"
                         :editor="false"/>
                 </div>
+
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Связь со страницей</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Вы можете привязать вызов другой страницы непосредственно после вызова текущей. Это позволит
+                            выводить контент по цепочке для пользователя.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_attach_page"
+                                @click="need_attach_page=true"
+                                v-bind:class="{'btn-primary':!need_attach_page,'btn-outline-secondary':need_attach_page}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
             <div v-if="tab===8">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_attach_slug">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_attach_slug"
@@ -636,11 +868,41 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                        v-on:callback="associateSlug"
                                        :bot="bot"/>
                 </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Скрипты</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Скрипты содержат основной функционал системы.
+                            Вы можете к каждой странице привязать один скрипт, который будет вызван после вывода
+                            основного содержимого страницы.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_attach_slug"
+                                @click="need_attach_slug=true"
+                                v-bind:class="{'btn-primary':!need_attach_slug,'btn-outline-secondary':need_attach_slug}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
             <div v-if="tab===9">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_attach_dialog">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_attach_dialog"
@@ -662,10 +924,40 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                               v-on:select-dialog="associateDialog"
                                               :bot="bot"/>
                 </div>
+
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Диалоги</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Диалоги страницы - это инструмент запроса данных от пользователя. Вы можете привязать начало
+                            диалога к странице, а сам диалог будет вызван по цепочке.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_attach_dialog"
+                                @click="need_attach_dialog=true"
+                                v-bind:class="{'btn-primary':!need_attach_dialog,'btn-outline-secondary':need_attach_dialog}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div v-if="tab===10">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2" v-if="need_rules">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_rules"
@@ -681,92 +973,42 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         :rules-form="pageForm"
                     />
                 </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Правила отображения страницы</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Вы можете создать правила, согласно которым будет отображена та или иная страница. Вы можете
+                            перенаправить пользователя с одной страницы на другую, в случае если ваше условие не
+                            выполнено.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_rules"
+                                @click="need_rules=true"
+                                v-bind:class="{'btn-primary':!need_rules,'btn-outline-secondary':need_rules}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <button
+                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                                type="button">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
     </form>
 
-    <!--    <div class="fixed-left-menu">
-            <button
-                @click="showMenu=!showMenu"
-                class="btn btn-outline-primary fixed-menu-btn">
-                &lt;!&ndash;            <i class="fa-solid fa-ellipsis-vertical"></i>&ndash;&gt;
-                <i class="fa-solid fa-caret-right" v-if="!showMenu"></i>
-                <i class="fa-solid fa-caret-left" v-else></i>
-            </button>
-            <ul v-if="showMenu" class="component-menu">
-                <li
-                    @click="need_reply_menu=!need_reply_menu"
-                    v-bind:class="{'active':need_reply_menu}">
-                    <i class="fa-regular fa-keyboard"></i>
-                    <span>Нижнее меню</span>
-                </li>
-                <li
-                    @click="need_inline_menu=!need_inline_menu"
-                    v-bind:class="{'active':need_inline_menu}">
-                    <i class="fa-solid fa-ellipsis"></i>
-                    <span>Меню под текстом</span>
-                </li>
-                <li
-                    @click="need_page_images=!need_page_images"
-                    v-bind:class="{'active':need_page_images}">
-                    <i class="fa-regular fa-images"></i>
-                    <span>Изображения</span>
-                </li>
-                <li
-                    @click="need_page_video=!need_page_video"
-                    v-bind:class="{'active':need_page_video}">
-                    <i class="fa-solid fa-photo-film"></i>
-                    <span>Видео</span>
-                </li>
-                <li
-                    @click="need_page_sticker=!need_page_sticker"
-                    v-bind:class="{'active':need_page_sticker}">
-                    <i class="fa-regular fa-note-sticky"></i>
-                    <span>Стикеры</span>
-                </li>
 
-                <li
-                    @click="need_page_audios=!need_page_audios"
-                    v-bind:class="{'active':need_page_audios}">
-                    <i class="fa-regular fa-file-audio"></i>
-                    <span>Аудио</span>
-                </li>
-                <li
-                    @click="need_page_documents=!need_page_documents"
-                    v-bind:class="{'active':need_page_documents}">
-                    <i class="fa-regular fa-file-word"></i>
-                    <span>Документы</span>
-                </li>
-                <li
-                    @click="need_attach_page=!need_attach_page"
-                    v-bind:class="{'active':need_attach_page}">
-                    <i class="fa-solid fa-link"></i>
-                    <span>Другая страница</span>
-                </li>
-                <li
-                    @click="need_attach_slug=!need_attach_slug"
-                    v-bind:class="{'active':need_attach_slug}">
-                    <i class="fa-solid fa-scroll"></i>
-                    <span>Скрипт</span>
-                </li>
-                <li
-                    @click="need_attach_dialog=!need_attach_dialog"
-                    v-bind:class="{'active':need_attach_dialog}">
-                    <i class="fa-regular fa-comment-dots"></i>
-                    <span>Начало диалога</span>
-                </li>
-                <li
-                    @click="need_rules=!need_rules"
-                    v-bind:class="{'active':need_rules}">
-                    <i class="fa-solid fa-scale-balanced"></i>
-                    <span>Правила</span>
-                </li>
-
-            </ul>
-
-
-        </div>-->
     <!-- Modal -->
     <div class="modal fade" id="save-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -1093,6 +1335,19 @@ export default {
         ...mapGetters(['getCurrentBot']),
         qr() {
             return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.link
+        },
+        hasParts() {
+            return this.need_page_sticker ||
+                this.need_page_audios ||
+                this.need_page_documents ||
+                this.need_page_video ||
+                this.need_page_images ||
+                this.need_inline_menu ||
+                this.need_reply_menu ||
+                this.need_attach_page ||
+                this.need_attach_dialog ||
+                this.need_attach_slug ||
+                this.need_rules
         },
         pageLink() {
             if (!this.pageForm.id)

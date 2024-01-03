@@ -18,48 +18,62 @@ import AppointmentEventTable from "@/AdminPanel/Components/Constructor/Appointme
 </script>
 <template>
 
-    <div class="dropdown custom-dropdown">
-        <button
-            style="min-width: 50px;min-height: 50px;"
-            type="button"
-            class="btn btn-outline-primary dropdown-toggle mb-3" href="#" role="button"
-            id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-screwdriver-wrench mr-2"></i> Инструменты бота
-        </button>
+    <div class="d-flex custom-dropdown justify-content-between align-items-center" >
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary text-primary"
+                    v-bind:class="{'bg-danger text-white':step==0}"
+                    @click="setStep(0)"><i class="fa-solid fa-info mr-2"></i>Информация о боте</button>
+            <button type="button" class="btn btn-primary text-primary"
+                    v-bind:class="{'bg-danger text-white':step==4}"
+                    @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы</button>
+        </div>
 
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <div class="dropdown ">
+            <button
+                type="button"
+                class="btn btn-primary dropdown-toggle text-primary p-2" href="#" role="button"
+                id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-screwdriver-wrench mr-2"></i>
+            </button>
 
-            <li><a class="dropdown-item" href="#bot-info" @click="setStep(0)">
-                <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
 
-            <li><a class="dropdown-item" href="#bot-pages" @click="setStep(4)">
-                <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>
 
-            <li><a class="dropdown-item" href="#bot-appointments" @click="setStep(13)">
-                <i class="fa-regular fa-calendar-days  mr-2"></i>Запись на событие (прием)</a></li>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-            <li><a class="dropdown-item" href="#bot-custom-fields" @click="setStep(10)">
-                <i class="fa-solid fa-code mr-2"></i>Настраиваемые поля</a></li>
+<!--                <li><a class="dropdown-item" href="#bot-info" @click="setStep(0)">
+                    <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
 
-            <li><a class="dropdown-item" href="#bot-menu-template" @click="setStep(1)"><i
-                class="fa-solid fa-keyboard mr-2"></i>Все клавиатуры в боте</a></li>
-            <li><a class="dropdown-item" href="#bot-slugs" @click="setStep(2)"><i
-                class="fa-solid fa-scroll mr-2"></i>Все скрипты в боте</a></li>
-            <li><a class="dropdown-item" href="#bot-dialogs" @click="setStep(6)"><i
-                class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
-            <li><a class="dropdown-item" href="#bot-users" @click="setStep(3)"><i
-                class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
-            <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i
-                class="fa-regular fa-newspaper mr-2"></i> Новостной канал</a></li>
-            <li><a class="dropdown-item" href="#bot-amo" @click="setStep(7)"><i
-                class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
-            <li><a class="dropdown-item" href="#bot-y-clients" @click="setStep(12)"><i
-                class="fa-solid fa-list-check mr-2"></i> YClients</a></li>
-            <li><a class="dropdown-item" href="#bot-shop" @click="setStep(8)"><i
-                class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
-            <li><a class="dropdown-item" href="#bot-media" @click="setStep(11)"><i
-                class="fa-brands fa-shopify mr-2"></i> Медиа файлы бота</a></li>
-        </ul>
+                <li><a class="dropdown-item" href="#bot-pages" @click="setStep(4)">
+                    <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>-->
+
+                <li><a class="dropdown-item" href="#bot-appointments" @click="setStep(13)">
+                    <i class="fa-regular fa-calendar-days  mr-2"></i>Запись на событие (прием)</a></li>
+
+                <li><a class="dropdown-item" href="#bot-custom-fields" @click="setStep(10)">
+                    <i class="fa-solid fa-code mr-2"></i>Настраиваемые поля</a></li>
+
+                <li><a class="dropdown-item" href="#bot-menu-template" @click="setStep(1)"><i
+                    class="fa-solid fa-keyboard mr-2"></i>Все клавиатуры в боте</a></li>
+                <li><a class="dropdown-item" href="#bot-slugs" @click="setStep(2)"><i
+                    class="fa-solid fa-scroll mr-2"></i>Все скрипты в боте</a></li>
+                <li><a class="dropdown-item" href="#bot-dialogs" @click="setStep(6)"><i
+                    class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
+                <li><a class="dropdown-item" href="#bot-users" @click="setStep(3)"><i
+                    class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
+                <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i
+                    class="fa-regular fa-newspaper mr-2"></i> Новостной канал</a></li>
+                <li><a class="dropdown-item" href="#bot-amo" @click="setStep(7)"><i
+                    class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
+                <li><a class="dropdown-item" href="#bot-y-clients" @click="setStep(12)"><i
+                    class="fa-solid fa-list-check mr-2"></i> YClients</a></li>
+                <li><a class="dropdown-item" href="#bot-shop" @click="setStep(8)"><i
+                    class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
+                <li><a class="dropdown-item" href="#bot-media" @click="setStep(11)"><i
+                    class="fa-brands fa-shopify mr-2"></i> Медиа файлы бота</a></li>
+            </ul>
+        </div>
+
+
     </div>
 
     <div v-if="step===13" class="pb-5 mb-5">
@@ -209,12 +223,15 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .custom-dropdown {
     display: inline-block;
     position: sticky !important;
     top: 50px;
-    background: white;
     z-index:101;
+
+    .btn {
+        background: white;
+    }
 }
 </style>
