@@ -312,7 +312,6 @@ class StartCodesHandlerController extends Controller
             return;
         }
 
-
         $from = "не указан источник";
         $products = "нет продуктов";
         if (!empty($order->product_details)) {
@@ -340,24 +339,22 @@ class StartCodesHandlerController extends Controller
         $address = $order->address ?? 'не указан';
         $name = $order->receiver_name ?? 'не указан';
         $phone = $order->receiver_phone ?? 'не указан';
-        $status = $statuses[$order->status ?? 0];
+        $status = $statuses[$order->status ?? 0] ?? 'без статуса';
 
         $note = sprintf("Имя заказчика: %s\nАдрес доставки: %s\nТелефон: %s\nСтатус: %s\nЗаметки к заказу: %s\n",
             $name,
             $address,
             $phone,
             $status,
-            $order->delivery_note ?? 'не указана'
+            ($order->delivery_note ?? 'не указана')
         );
 
         $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
-                ->format("Y-m-d H:i:s") . "\n\n<b>Заметка для доставщика:</b>\n$note";
+                ->format("Y-m-d H:i:s") . "\n<b>Заметка для доставщика:</b>\n$note";
 
 
         BotManager::bot()
-            ->sendMessage(
-                $botUser->telegram_chat_id,
-                $text);
+            ->reply($text);
 
     }
 }
