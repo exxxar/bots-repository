@@ -48,11 +48,11 @@ import Rating from "ClientTg@/Components/Shop/Helpers/Rating.vue";
                 Показать описание
             </a>
 
-            <div v-if="item.simplify">
+<!--            <div v-if="item.simplify">
                 <p class="mb-n1 font-10">Рейтинг</p>
                 <h6 class="float-left">{{item.rating}}</h6>
                 <Rating :rating="item.rating"/>
-            </div>
+            </div>-->
             <p v-if="item.simplify">{{item.description || 'Нет описания'}}</p>
 
             <div v-if="item.images.length>1&&item.simplify">

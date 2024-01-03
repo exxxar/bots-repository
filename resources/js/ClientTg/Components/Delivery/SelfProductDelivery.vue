@@ -304,13 +304,16 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
             <div v-if="deliveryForm.cash">
                 <h6>Мы можем подготовить для вас сдачу с:</h6>
-                <div class="d-flex justify-content-around flex-wrap py-2 mb-2">
-                    <button class="btn btn-outline-success"
-                            type="button"
-                            @click="deliveryForm.money=money"
-                            v-bind:class="{'btn-success text-white':deliveryForm.money===money}"
-                            v-for="money in moneyVariants">{{ money }}₽
-                    </button>
+                <div class="row row-cols-2 mb-0">
+                    <div class="col"  v-for="money in moneyVariants">
+                        <button class="btn btn-outline-success w-100 mb-2 rounded-xl"
+                                type="button"
+                                @click="deliveryForm.money=money"
+                                v-bind:class="{'btn-success text-white':deliveryForm.money===money}"
+                               >{{ money }}₽
+                        </button>
+                    </div>
+
                 </div>
                 <p class="mb-2"><em>или введите другую сумму...</em></p>
 
@@ -574,4 +577,7 @@ export default {
     width: 100%;
     overflow-x: auto;
 }
+
+
+
 </style>
