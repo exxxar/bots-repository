@@ -6,9 +6,13 @@
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     <meta name="token" content="{{csrf_token()}}">
+
+    <meta name="bot-user" content="{{Session::get("bot_user")}}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -18,7 +22,8 @@
 
     <!-- Scripts -->
     @routes
-    @vite(['resources/js/AdminPanel/app.js','resources/css/AdminPanel/app.css', "resources/js/AdminPanel/Pages/{$page['component']}.vue"])
+    @vite(['resources/js/AdminPanel/app.js','resources/css/AdminPanel/app.css',
+    "resources/js/AdminPanel/Pages/{$page['component']}.vue"])
     @inertiaHead
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -28,14 +33,12 @@
 </head>
 <script>
 
-    let theme =  localStorage.getItem("cashman_global_admin_theme") || null
+    let theme = localStorage.getItem("cashman_global_admin_theme") || null
 
-    if (theme)
-    {
+    if (theme) {
         let changeTheme = document.querySelector("#theme")
         changeTheme.href = theme
     }
-
 
 
 </script>
@@ -44,7 +47,6 @@
 <body class="font-sans antialiased theme-light" style="overflow-y: auto;">
 
 @inertia
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"

@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -76,7 +77,7 @@ class AuthenticatedSessionController extends Controller
         }
 
 
-        if (!$botUser->is_admin) {
+        if (!$botUser->is_admin||!$botUser->is_manager) {
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
@@ -92,6 +93,8 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {*/
 
         Auth::login($user);
+
+        Session::put("bot_user", $botUser);
 
         $request->session()->regenerate();
 
@@ -120,12 +123,20 @@ class AuthenticatedSessionController extends Controller
     public function create()
     {
         $debug = env("APP_DEBUG");
-        if ($debug)
+        if ($debug) {
+
+            $botUser = BotUser::query()
+                ->where("is_admin", true)
+                ->first();
+
+            Session::put("bot_user", $botUser);
+
+
             return Inertia::render('Auth/Login', [
                 'canResetPassword' => Route::has('password.request'),
                 'status' => session('status'),
             ]);
-        else
+        } else
             return view("admin.login");
     }
 
@@ -136,6 +147,14 @@ class AuthenticatedSessionController extends Controller
     {
 
         $request->authenticate();
+
+        if (env("app_debug")) {
+            $botUser = BotUser::query()
+                ->where("is_admin", true)
+                ->first();
+
+            Session::put("bot_user", $botUser);
+        }
 
         $request->session()->regenerate();
 
@@ -149,7 +168,10 @@ class AuthenticatedSessionController extends Controller
     {
         Auth::guard('web')->logout();
 
+        Session::remove("bot_user");
+
         $request->session()->invalidate();
+
 
         $request->session()->regenerateToken();
 

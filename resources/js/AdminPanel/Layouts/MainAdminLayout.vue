@@ -43,7 +43,9 @@ import {Head} from '@inertiajs/vue3'
                    v-bind:class="{'border-bottom-active active':active==1}"
                    href="/bot-page"> <i class="fa-solid fa-robot"></i> Боты</a>
             </div>
-            <div class="nav-item text-nowrap">
+            <div
+                v-if="hasRole('is_admin')"
+                class="nav-item text-nowrap">
                 <a class="nav-link px-3"
                    @click="active=6"
                    v-bind:class="{'border-bottom-active active':active==6}"
@@ -266,6 +268,9 @@ export default {
     },
 
     methods: {
+        hasRole(role){
+            return window.hasRole(role) || false
+        },
         switchTheme(index){
             let changeTheme = document.querySelector("#theme")
             changeTheme.href = this.themes[index].href //`./theme${index}.bootstrap.min.css`

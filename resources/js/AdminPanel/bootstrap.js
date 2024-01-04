@@ -5,8 +5,28 @@
  */
 
 import axios from 'axios';
+
 window.axios = axios;
 
+
+window.hasRole = function (arg) {
+    let botUser = document.querySelector("meta[name='bot-user']").content || null
+
+    if (!botUser)
+        return false
+
+    botUser = JSON.parse(botUser)
+
+    if (arg === "is_admin" && botUser.is_admin)
+        return true;
+
+    if (arg === "is_manager" && (botUser.is_admin ||  botUser.is_manager))
+        return true;
+
+    return false;
+}
+
+console.log("hasRole", window.hasRole("is_manager"))
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 

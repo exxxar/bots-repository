@@ -28,7 +28,7 @@ import AppointmentEventTable from "@/AdminPanel/Components/Constructor/Appointme
                     @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы</button>
         </div>
 
-        <div class="dropdown ">
+        <div class="dropdown" v-if="hasRole('is_admin')">
             <button
                 type="button"
                 class="btn btn-primary dropdown-toggle text-primary p-2" href="#" role="button"
@@ -185,6 +185,9 @@ export default {
         this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
     },
     methods: {
+        hasRole(role){
+            return window.hasRole(role) || false
+        },
         setStep(index) {
             this.step = parseInt(index)
             localStorage.setItem("cashman_set_botform_step_index", index)
