@@ -110,7 +110,40 @@ import {Head} from '@inertiajs/vue3'
         </div>
     </div>
 
+    <div class="theme-switcher">
+        <button id="switch-theme"
+                data-bs-toggle="modal" data-bs-target="#theme-switch-modal"
+                class="btn btn-primary">
+            <i class="fa-solid fa-palette"></i>
+        </button>
+    </div>
 
+    <div class="modal"
+         id="theme-switch-modal"
+         tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Выбор темы оформления</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group" v-if="currentTheme">
+                        <button type="button"
+                                @click="switchTheme(index)"
+                                v-for="(theme, index) in themes"
+                                v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
+                                class="list-group-item list-group-item-action " aria-current="true">
+                            {{theme.title || '-'}}
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -121,7 +154,75 @@ export default {
         return {
             load: false,
             bot: null,
-            company: null
+            currentTheme:null,
+            company: null,
+            themes:[
+                {
+                    title:'Тема 1',
+                    href: '/theme1.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 2',
+                    href: '/theme2.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 3',
+                    href: '/theme3.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 4',
+                    href: '/theme4.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 5',
+                    href: '/theme5.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 6',
+                    href: '/theme6.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 7',
+                    href: '/theme7.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 8',
+                    href: '/theme8.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 9',
+                    href: '/theme9.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 10',
+                    href: '/theme10.bootstrap.min.css',
+                }
+                ,
+                {
+                    title:'Тема 11',
+                    href: '/theme11.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 12',
+                    href: '/theme12.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 13',
+                    href: '/theme13.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 14',
+                    href: '/theme14.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 15',
+                    href: '/theme15.bootstrap.min.css',
+                },
+                {
+                    title:'Тема 16',
+                    href: '/theme16.bootstrap.min.css',
+                }
+            ]
         }
     },
     computed: {
@@ -144,6 +245,15 @@ export default {
         this.loadCurrentBot()
 
 
+        let theme =  localStorage.getItem("cashman_global_admin_theme") || null
+
+        if (theme)
+        {
+           this.currentTheme = theme
+            console.log("current theme", theme)
+        }
+
+
         window.addEventListener('store_current_bot-change-event', (event) => {
             this.bot = this.getCurrentBot
         });
@@ -154,6 +264,18 @@ export default {
     },
 
     methods: {
+        switchTheme(index){
+            let changeTheme = document.querySelector("#theme")
+            changeTheme.href = this.themes[index].href //`./theme${index}.bootstrap.min.css`
+            localStorage.setItem("cashman_global_admin_theme", changeTheme.href)
+
+
+            this.$nextTick(()=>{
+                this.currentTheme = changeTheme.href
+            })
+
+
+        },
         loadCurrentCompany(company = null) {
             this.$store.dispatch("updateCurrentCompany", {
                 company: company
@@ -352,5 +474,18 @@ body {
 
 .border-bottom-active {
     border-bottom:1px white solid;
+}
+
+.theme-switcher {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    background: white;
+    /* border-radius: 50%; */
+    padding: 7px;
+    z-index: 1000;
+    border: 1px #f7f7f7 solid;
+    box-shadow: 0px 0px 1px 0px #dadada;
+    border-radius: 10px;
 }
 </style>

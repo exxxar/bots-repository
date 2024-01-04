@@ -18,7 +18,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
         <div class="row" v-if="hasParts">
             <div class="col-12 mb-2">
                 <h6>На странице выбраны следующие разделы</h6>
-                <ul class="mini-pics justify-content-start">
+                <ul class="mini-pics justify-content-start d-inline-flex">
                     <li
                         title="Изображения"
                         v-bind:class="{'active':need_page_images}">

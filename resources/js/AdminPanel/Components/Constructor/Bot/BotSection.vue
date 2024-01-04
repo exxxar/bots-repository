@@ -21,10 +21,10 @@ import AppointmentEventTable from "@/AdminPanel/Components/Constructor/Appointme
     <div class="d-flex custom-dropdown justify-content-between align-items-center" >
         <div class="btn-group">
             <button type="button" class="btn btn-primary text-primary"
-                    v-bind:class="{'bg-danger text-white':step==0}"
+                    v-bind:class="{'bg-primary text-white':step==0}"
                     @click="setStep(0)"><i class="fa-solid fa-info mr-2"></i>Информация о боте</button>
             <button type="button" class="btn btn-primary text-primary"
-                    v-bind:class="{'bg-danger text-white':step==4}"
+                    v-bind:class="{'bg-primary text-white':step==4}"
                     @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы</button>
         </div>
 

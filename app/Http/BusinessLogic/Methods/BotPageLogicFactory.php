@@ -93,6 +93,7 @@ class BotPageLogicFactory
         $newBotPage->bot_menu_slug_id = $slug->id;
         $newBotPage->save();
 
+
         return new BotPageResource($newBotPage);
     }
 
@@ -265,6 +266,9 @@ class BotPageLogicFactory
 
         $page = BotPage::query()->create((array)$tmp);
 
+        $this->bot->updated_at = Carbon::now();
+        $this->bot->save();
+
         return new BotPageResource($page);
     }
 
@@ -401,6 +405,9 @@ class BotPageLogicFactory
             $tmp->rules_if = json_decode($tmp->rules_if);
 
         $page->update((array)$tmp);
+
+        $this->bot->updated_at = Carbon::now();
+        $this->bot->save();
 
         return new BotPageResource($page);
     }
