@@ -154,7 +154,7 @@ export default {
         return {
             load: false,
             bot: null,
-            currentTheme:null,
+            currentTheme:'',
             company: null,
             themes:[
                 {
@@ -249,9 +249,11 @@ export default {
 
         if (theme)
         {
-           this.currentTheme = theme
-            console.log("current theme", theme)
+            this.$nextTick(()=>{
+                this.currentTheme = theme
+            })
         }
+
 
 
         window.addEventListener('store_current_bot-change-event', (event) => {
