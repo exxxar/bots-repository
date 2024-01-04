@@ -2,18 +2,6 @@
 import Pagination from '@/AdminPanel/Components/Pagination.vue';
 </script>
 <template>
-    <!--      <div class="row mb-2">
-                <div class="col-12">
-                    <button type="button"
-                            @click="show=!show"
-                            class="btn btn-outline-success p-3 w-100">
-                        <span v-if="!show"><i class="fa-solid fa-robot"></i> Открыть список ботов</span>
-                        <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть список ботов</span>
-                    </button>
-                </div>
-            </div>-->
-
-
     <div v-if="show">
         <div class="row" v-if="favorites.length>0">
             <div class="col-md-12">
