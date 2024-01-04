@@ -58,7 +58,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                     <i class="fa-regular fa-star"></i>
                                 </button>
                                 <button
-                                    v-if="favorites.length>0"
+                                    v-if="favorites.length>1"
                                     class="btn btn-outline-primary mr-2"
                                     type="button"
                                     @click="moveOrderFavBot(bot.id, 1)"
@@ -66,7 +66,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
                                 <button
-                                    v-if="favorites.length>0"
+                                    v-if="favorites.length>1"
                                     class="btn btn-outline-primary mr-2"
                                     type="button"
                                     @click="moveOrderFavBot(bot.id,0)"
