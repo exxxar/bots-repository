@@ -23,11 +23,11 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     class="table mb-5">
                     <thead>
                     <tr>
-                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('id')">#</th>
-                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('bot_domain')">Домен</th>
-                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('title')">Название</th>
-                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('template_description')">Шаблон</th>
-                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('updated_at')">Дата изменения</th>
+                        <th scope="col">#</th>
+                        <th scope="col">Домен</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Шаблон</th>
+                        <th scope="col">Дата изменения</th>
                         <th scope="col">Действие</th>
                     </tr>
                     </thead>
@@ -127,8 +127,8 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
         <div class="row" v-if="bots_paginate_object">
             <div class="col-12">
+                <h4>Все боты</h4>
                 <p class="mb-0">Количество найденных ботов {{ bots_paginate_object.meta.total || 0 }}</p>
-
                 <p class="mb-0">Количество результатов на странице {{ filteredBots.length || 0 }}</p>
                 <p>
                     Тип отображения списка:
@@ -153,7 +153,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             <div class="col-12 mb-3" v-if="displayType===1">
 
 
-                <h4>Все боты</h4>
+
                 <table class="table">
                     <thead>
                     <tr>
