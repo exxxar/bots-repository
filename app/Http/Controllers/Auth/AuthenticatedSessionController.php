@@ -77,7 +77,7 @@ class AuthenticatedSessionController extends Controller
         }
 
 
-        if (!$botUser->is_admin||!$botUser->is_manager) {
+        if (!$botUser->is_admin&&!$botUser->is_manager) {
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
