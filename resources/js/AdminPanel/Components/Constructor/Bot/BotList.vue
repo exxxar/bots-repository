@@ -17,7 +17,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
     <div v-if="show">
         <div class="row" v-if="favorites.length>0">
             <div class="col-md-12">
-                <h4 >Боты в работе</h4>
+                <h4>Боты в работе</h4>
                 <p class="mb-0">Количество ботов в работе {{ favorites.length || 0 }}</p>
                 <table
                     class="table mb-5">
@@ -57,16 +57,20 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                         title="Добавить в избранное">
                                     <i class="fa-regular fa-star"></i>
                                 </button>
-                                <button class="btn btn-outline-primary mr-2"
-                                        type="button"
-                                        @click="moveOrderFavBot(bot.id, 1)"
-                                        title="Переместить вниз">
+                                <button
+                                    v-if="favorites.length>0"
+                                    class="btn btn-outline-primary mr-2"
+                                    type="button"
+                                    @click="moveOrderFavBot(bot.id, 1)"
+                                    title="Переместить вниз">
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
-                                <button class="btn btn-outline-primary mr-2"
-                                        type="button"
-                                        @click="moveOrderFavBot(bot.id,0)"
-                                        title="Переместить вверх">
+                                <button
+                                    v-if="favorites.length>0"
+                                    class="btn btn-outline-primary mr-2"
+                                    type="button"
+                                    @click="moveOrderFavBot(bot.id,0)"
+                                    title="Переместить вверх">
                                     <i class="fa-solid fa-chevron-up"></i>
                                 </button>
                             </div>
@@ -151,7 +155,6 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             </div>
 
             <div class="col-12 mb-3" v-if="displayType===1">
-
 
 
                 <table class="table">
