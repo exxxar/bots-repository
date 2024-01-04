@@ -128,7 +128,7 @@ import {Head} from '@inertiajs/vue3'
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="list-group" v-if="currentTheme">
+                    <div class="list-group">
                         <button type="button"
                                 @click="switchTheme(index)"
                                 v-for="(theme, index) in themes"
