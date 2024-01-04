@@ -310,6 +310,18 @@ class BotController extends Controller
             );
     }
 
+
+    public function listByIds(Request $request): \App\Http\Resources\BotCollection
+    {
+        $request->validate([
+           "ids"=>"required|array"
+        ]);
+
+        return BusinessLogic::bots()
+            ->listByIds(
+                $request->ids ?? null,
+            );
+    }
     public function index(Request $request): \App\Http\Resources\BotCollection
     {
 

@@ -110,6 +110,22 @@ class BotLogicFactory
         return $this;
     }
 
+    public function listByIds(array $ids): BotCollection
+    {
+        $bots = Bot::query()
+            ->with(["amo"])
+            ->whereIn("id", $ids)
+            ->get();
+
+        $tmpBots = [];
+
+        foreach ($ids as $id){
+            foreach ($bots as $bot)
+                if ($bot->id == $id)
+                    $tmpBots[] = $bot;
+        }
+        return new BotCollection($tmpBots);
+    }
 
     public function list($companyId = null, $search = null, $size = null, $order = null, $direction = null): BotCollection
     {
@@ -136,7 +152,7 @@ class BotLogicFactory
         return new BotCollection($bots);
     }
 
-    public function landingCollections($search = null,  $size = null): BotSecurityCollection
+    public function landingCollections($search = null, $size = null): BotSecurityCollection
     {
 
         $size = $size ?? config('app.results_per_page');
@@ -872,7 +888,7 @@ class BotLogicFactory
                     $data["phone"] ?? '-',
                     $data["email"] ?? '-',
                     $data["message"] ?? '-'
-                ),$thread);
+                ), $thread);
 
     }
 
@@ -2011,7 +2027,6 @@ class BotLogicFactory
 
 
     }
-
 
 
     /**

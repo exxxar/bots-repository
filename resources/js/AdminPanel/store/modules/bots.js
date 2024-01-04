@@ -134,6 +134,23 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async loadBotsByIds(context, payload = {ids:null}) {
+        let page = payload.page || 0
+        let size = payload.size || 50
+
+        let link = `${BASE_BOTS_LINK}/ids`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method, payload)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            return Promise.resolve(dataObject.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async updateBot(context, payload = {botForm: null}) {
         let link = `${BASE_BOTS_LINK}/bot-update`
 

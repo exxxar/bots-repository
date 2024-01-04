@@ -3,6 +3,7 @@ import {createStore} from 'vuex'
 import templates from './modules/templates';
 import companies from './modules/companies';
 import bots from './modules/bots';
+import botFavorites from './modules/bot_favorites';
 import pages from './modules/pages';
 import dialogGroups from './modules/dialog_groups';
 import slugs from './modules/slugs';
@@ -120,6 +121,7 @@ export default createStore({
         appointments,
         companies,
         bots,
+        botFavorites,
         pages,
         dialogGroups,
         slugs,

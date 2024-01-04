@@ -13,6 +13,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 </div>
             </div>-->
 
+
     <div v-if="show">
         <div class="row">
             <div class="col-md-12 d-flex flex-column">
@@ -48,7 +49,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     </div>
                 </div>
                 <p v-if="selectedFilters.length>0" class="mt-2">
-                    <span class="badge bg-info mr-1" v-for="filter in selectedFilters">{{ filter.name || 'не указан' }}
+                    <span class="badge bg-primary mr-1" v-for="filter in selectedFilters">{{
+                            filter.name || 'не указан'
+                        }}
                      <a
                          @click="removeSelectedFilter(filter.slug)"
                          class="ml-1 text-white" href="#filter"><i class="fa-solid fa-xmark"></i></a>
@@ -64,10 +67,10 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 <p>
                     Тип отображения списка:
                     <span v-on:click="displayType=0"
-                          v-bind:class="{'bg-success':displayType===0,'bg-secondary':displayType!==0}"
+                          v-bind:class="{'bg-primary':displayType===0,'bg-secondary':displayType!==0}"
                           class="badge cursor-pointer mr-2">Карточки</span>
                     <span
-                        v-bind:class="{'bg-success':displayType===1,'bg-secondary':displayType!==1}"
+                        v-bind:class="{'bg-primary':displayType===1,'bg-secondary':displayType!==1}"
                         v-on:click="displayType=1"
                         class="badge cursor-pointer mr-2">Таблица</span>
                 </p>
@@ -82,6 +85,68 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             </div>
 
             <div class="col-12 mb-3" v-if="displayType===1">
+                <h4 v-if="favorites.length>0">Боты в работе</h4>
+                <table
+                    v-if="favorites.length>0"
+                    class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('id')">#</th>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('bot_domain')">Домен</th>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('title')">Название</th>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('template_description')">Шаблон</th>
+                        <th scope="col" class="cursor-pointer" @click="loadAndOrder('updated_at')">Дата изменения</th>
+                        <th scope="col">Действие</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(bot, index) in favorites"
+
+                        v-bind:class="{'border-info':bot.deleted_at==null,'border-danger':bot.deleted_at!=null}">
+                        <th scope="row">{{ bot.id }}</th>
+                        <td @click="selectBot(bot)"><i
+                            v-bind:class="{'text-danger':bot.deleted_at!=null}"
+                            class="fa-solid fa-robot mr-2"></i> {{ bot.bot_domain || 'Не указано' }}
+                        </td>
+                        <td @click="selectBot(bot)">{{ bot.title || 'Не указано' }}</td>
+                        <td>
+                            <span v-if="bot.is_template" class="badge bg-primary">
+                                {{ bot.template_description || 'Не указано' }}
+                            </span>
+                            <span v-else>Не является шаблоном</span>
+                        </td>
+                        <td>{{ $filters.current(bot.updated_at) }}</td>
+                        <td>
+                            <div class="d-flex">
+                                <button class="btn btn-outline-danger mr-2"
+                                        type="button"
+                                        v-bind:class="{'btn-danger text-white':inBotFav(bot.id)}"
+                                        @click="addToFavorite(bot.id)"
+                                        title="Добавить в избранное">
+                                    <i class="fa-regular fa-star"></i>
+                                </button>
+                                <button class="btn btn-outline-primary mr-2"
+                                        type="button"
+                                        @click="moveOrderFavBot(bot.id, 1)"
+                                        title="Переместить вниз">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </button>
+                                <button class="btn btn-outline-primary mr-2"
+                                        type="button"
+                                        @click="moveOrderFavBot(bot.id,0)"
+                                        title="Переместить вверх">
+                                    <i class="fa-solid fa-chevron-up"></i>
+                                </button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+
+                    </tbody>
+                </table>
+
+                <h4>Все боты</h4>
                 <table class="table">
                     <thead>
                     <tr>
@@ -111,28 +176,38 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         </td>
                         <td>{{ $filters.current(bot.updated_at) }}</td>
                         <td>
-                            <button class="btn btn-outline-info mr-2"
-                                    type="button"
-                                    @click="duplicate(bot.id)"
-                                    title="Дублировать">
-                                <i class="fa-regular fa-copy"></i>
-                            </button>
-                            <button class="btn btn-outline-info"
-                                    type="button"
-                                    @click="addToArchive(bot.id)"
-                                    title="В архив" v-if="bot.deleted_at==null"><i
-                                class="fa-solid fa-boxes-packing"></i></button>
+                            <div class="d-flex">
+                                <button class="btn btn-outline-danger mr-2"
+                                        type="button"
+                                        v-bind:class="{'btn-danger text-white':inBotFav(bot.id)}"
+                                        @click="addToFavorite(bot.id)"
+                                        title="Добавить в избранное">
+                                    <i class="fa-regular fa-star"></i>
+                                </button>
+                                <button class="btn btn-outline-info mr-2"
+                                        type="button"
+                                        @click="duplicate(bot.id)"
+                                        title="Дублировать">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                                <button class="btn btn-outline-info"
+                                        type="button"
+                                        @click="addToArchive(bot.id)"
+                                        title="В архив" v-if="bot.deleted_at==null"><i
+                                    class="fa-solid fa-boxes-packing"></i></button>
 
-                            <button class="btn btn-outline-info mr-2"
-                                    @click="extractFromArchive(bot.id)"
-                                    title="Из архива" v-if="bot.deleted_at!=null"><i
-                                class="fa-solid fa-box-open"></i></button>
+                                <button class="btn btn-outline-info mr-2"
+                                        @click="extractFromArchive(bot.id)"
+                                        title="Из архива" v-if="bot.deleted_at!=null"><i
+                                    class="fa-solid fa-box-open"></i></button>
 
-                            <button class="btn btn-danger  mr-2 "
-                                    @click="forceDelete(bot.id)"
-                                    title="Удалить на совсем" v-if="bot.deleted_at!=null">
-                                <i class="fa-solid fa-trash-can text-white"></i>
-                            </button>
+                                <button class="btn btn-danger  mr-2 "
+                                        @click="forceDelete(bot.id)"
+                                        title="Удалить на совсем" v-if="bot.deleted_at!=null">
+                                    <i class="fa-solid fa-trash-can text-white"></i>
+                                </button>
+                            </div>
+
                         </td>
                     </tr>
 
@@ -245,6 +320,7 @@ export default {
             show: true,
             loading: true,
             bots: [],
+            favorites: [],
             search: null,
             bots_paginate_object: null,
         }
@@ -255,7 +331,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getBots', 'getBotsPaginateObject', 'getCurrentCompany']),
+        ...mapGetters(['getBots', 'getBotsPaginateObject', 'getCurrentCompany', 'getBotFavorites', 'inBotFav']),
         filteredBots() {
             if (!this.bots)
                 return [];
@@ -303,11 +379,53 @@ export default {
     },
     mounted() {
         this.loadBots();
+
         this.selectFilter('active')
 
         this.displayType = parseInt(localStorage.getItem("cashman_set_botlist_display_type") || 0)
     },
     methods: {
+        loadBotsByIds() {
+            if (this.getBotFavorites.length == 0)
+                return;
+
+            this.loading = true
+            this.$store.dispatch("loadBotsByIds", {
+                ids: this.getBotFavorites
+            }).then(resp => {
+                this.loading = false
+                this.favorites = resp
+            }).catch(() => {
+                this.loading = false
+            })
+        },
+        prepareFavorites() {
+            this.$store.dispatch("loadBotFavs").then(resp => {
+                this.loadBotsByIds()
+            })
+        },
+        moveOrderFavBot(id, direction) {
+            this.$store.dispatch("swapBotInFav", {
+                id: id,
+                direction: direction
+            }).then(resp => {
+                this.loadBotsByIds()
+            })
+        },
+        addToFavorite(id) {
+            if (this.inBotFav(id)) {
+                this.$store.dispatch("removeFromBotFavorites", id).then(resp => {
+                    this.$notify("Указанный бот успешно удален из избранного");
+
+                    this.loadBotsByIds()
+                })
+                return;
+            }
+            this.$store.dispatch("addBotToFavorites", id).then(resp => {
+                this.$notify("Указанный бот успешно добавлен в избранное");
+                this.loadBotsByIds()
+            })
+        },
         duplicate(id) {
             if (!this.getCurrentCompany) {
                 this.$notify("У Вас не выбран клиент!");
@@ -385,11 +503,13 @@ export default {
                     direction: this.direction
                 },
                 page: page,
-                size:100
+                size: 100
             }).then(resp => {
                 this.loading = false
                 this.bots = this.getBots
                 this.bots_paginate_object = this.getBotsPaginateObject
+
+                this.prepareFavorites()
             }).catch(() => {
                 this.loading = false
             })

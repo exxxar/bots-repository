@@ -86,6 +86,7 @@ Route::prefix("admin")
             ->controller(BotController::class)
             ->group(function () {
                 Route::post("/", "index");
+                Route::post("/ids", "listByIds");
                 Route::post('/get-me',"getMe");
                 Route::post("/save-y-clients", [YClientsController::class, "saveYClients"]);
                 Route::post('/update-shop-link',"updateShopLink");
