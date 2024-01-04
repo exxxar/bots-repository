@@ -15,80 +15,12 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
 
     <div v-if="show">
-        <div class="row">
-            <div class="col-md-12 d-flex flex-column">
-
-                <div class="d-flex">
-                    <div class="dropdown mr-2">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            Фильтры
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li v-for="item in filters"><a class="dropdown-item"
-                                                           @click="selectFilter(item.slug)"
-                                                           href="#filter"><i
-                                v-bind:class="item.icon"
-                                class="mr-2"></i> {{ item.name || 'Не указано' }}</a></li>
-
-                        </ul>
-                    </div>
-
-
-                    <div class="input-group mb-3">
-                        <input type="search" class="form-control "
-                               placeholder="Поиск бота"
-                               aria-label="Поиск бота"
-                               v-model="search"
-                               aria-describedby="button-addon2">
-                        <button class="btn btn-outline-secondary "
-                                @click="loadBots"
-                                type="button"
-                                id="button-addon2">Найти
-                        </button>
-                    </div>
-                </div>
-                <p v-if="selectedFilters.length>0" class="mt-2">
-                    <span class="badge bg-primary mr-1" v-for="filter in selectedFilters">{{
-                            filter.name || 'не указан'
-                        }}
-                     <a
-                         @click="removeSelectedFilter(filter.slug)"
-                         class="ml-1 text-white" href="#filter"><i class="fa-solid fa-xmark"></i></a>
-                    </span>
-                </p>
-            </div>
-        </div>
-
-        <div class="row" v-if="bots_paginate_object">
-            <div class="col-12">
-                <p class="mb-0">Количество найденных ботов {{ bots_paginate_object.meta.total || 0 }}</p>
-                <p class="mb-0">Количество результатов на странице {{ filteredBots.length || 0 }}</p>
-                <p>
-                    Тип отображения списка:
-                    <span v-on:click="displayType=0"
-                          v-bind:class="{'bg-primary':displayType===0,'bg-secondary':displayType!==0}"
-                          class="badge cursor-pointer mr-2">Карточки</span>
-                    <span
-                        v-bind:class="{'bg-primary':displayType===1,'bg-secondary':displayType!==1}"
-                        v-on:click="displayType=1"
-                        class="badge cursor-pointer mr-2">Таблица</span>
-                </p>
-            </div>
-        </div>
-        <div class="row" v-if="bots.length>0">
-            <div class="col-12 mb-3">
-                <button type="button" class="btn btn-outline-info"
-                        v-if="!editor"
-                        @click="selectBot(null)">Создать нового бота
-                </button>
-            </div>
-
-            <div class="col-12 mb-3" v-if="displayType===1">
-                <h4 v-if="favorites.length>0">Боты в работе</h4>
+        <div class="row" v-if="favorites.length>0">
+            <div class="col-md-12">
+                <h4 >Боты в работе</h4>
+                <p class="mb-0">Количество ботов в работе {{ favorites.length || 0 }}</p>
                 <table
-                    v-if="favorites.length>0"
-                    class="table">
+                    class="table mb-5">
                     <thead>
                     <tr>
                         <th scope="col" class="cursor-pointer" @click="loadAndOrder('id')">#</th>
@@ -145,6 +77,81 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
                     </tbody>
                 </table>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 d-flex flex-column">
+
+                <div class="d-flex">
+                    <div class="dropdown mr-2">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Фильтры
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li v-for="item in filters"><a class="dropdown-item"
+                                                           @click="selectFilter(item.slug)"
+                                                           href="#filter"><i
+                                v-bind:class="item.icon"
+                                class="mr-2"></i> {{ item.name || 'Не указано' }}</a></li>
+
+                        </ul>
+                    </div>
+
+
+                    <div class="input-group mb-3">
+                        <input type="search" class="form-control "
+                               placeholder="Поиск бота"
+                               aria-label="Поиск бота"
+                               v-model="search"
+                               aria-describedby="button-addon2">
+                        <button class="btn btn-outline-secondary "
+                                @click="loadBots"
+                                type="button"
+                                id="button-addon2">Найти
+                        </button>
+                    </div>
+                </div>
+                <p v-if="selectedFilters.length>0" class="mt-2">
+                    <span class="badge bg-primary mr-1" v-for="filter in selectedFilters">{{
+                            filter.name || 'не указан'
+                        }}
+                     <a
+                         @click="removeSelectedFilter(filter.slug)"
+                         class="ml-1 text-white" href="#filter"><i class="fa-solid fa-xmark"></i></a>
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <div class="row" v-if="bots_paginate_object">
+            <div class="col-12">
+                <p class="mb-0">Количество найденных ботов {{ bots_paginate_object.meta.total || 0 }}</p>
+
+                <p class="mb-0">Количество результатов на странице {{ filteredBots.length || 0 }}</p>
+                <p>
+                    Тип отображения списка:
+                    <span v-on:click="displayType=0"
+                          v-bind:class="{'bg-primary':displayType===0,'bg-secondary':displayType!==0}"
+                          class="badge cursor-pointer mr-2">Карточки</span>
+                    <span
+                        v-bind:class="{'bg-primary':displayType===1,'bg-secondary':displayType!==1}"
+                        v-on:click="displayType=1"
+                        class="badge cursor-pointer mr-2">Таблица</span>
+                </p>
+            </div>
+        </div>
+        <div class="row" v-if="bots.length>0">
+            <div class="col-12 mb-3">
+                <button type="button" class="btn btn-outline-info"
+                        v-if="!editor"
+                        @click="selectBot(null)">Создать нового бота
+                </button>
+            </div>
+
+            <div class="col-12 mb-3" v-if="displayType===1">
+
 
                 <h4>Все боты</h4>
                 <table class="table">
@@ -386,8 +393,10 @@ export default {
     },
     methods: {
         loadBotsByIds() {
-            if (this.getBotFavorites.length == 0)
-                return;
+            if (this.getBotFavorites.length == 0) {
+                this.favorites = []
+                return
+            }
 
             this.loading = true
             this.$store.dispatch("loadBotsByIds", {
