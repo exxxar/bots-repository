@@ -28,6 +28,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Mpdf\Mpdf;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Telegram\Bot\FileUpload\InputFile;
 
 class ProductLogicFactory
 {
@@ -699,9 +700,17 @@ class ProductLogicFactory
 
         $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
 
-        Storage::put("order-$number.pdf", $file);
+       // Storage::put("order-$number.pdf", $file);
 
-        Storage::delete("order-$number.pdf");
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendDocument(
+                $this->botUser->telegram_chat_id,
+                "Чек",
+                InputFile::createFromContents($file,"invoice.pdf")
+            );
+
+       // Storage::delete("order-$number.pdf");
 
 
 
