@@ -333,7 +333,7 @@ class BotController extends Controller
 
         $logic = BusinessLogic::bots();
 
-        if ($request->botUser->is_manager)
+        if ($request->botUser->is_manager&&!$request->botUser->is_admin)
             $logic = $logic->setBotUser($request->botUser);
 
         return $logic
