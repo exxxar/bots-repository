@@ -588,7 +588,7 @@ class ProductLogicFactory
                 ]);
 
         //сделать чек на оплату (pdf)
-        Order::query()->create([
+       $order = Order::query()->create([
             'bot_id' => $this->bot->id,
             'deliveryman_id' => null,
             'customer_id' => $this->botUser->id,
@@ -673,34 +673,26 @@ class ProductLogicFactory
 
 
         $mpdf = new Mpdf();
-        $current_date = Carbon::now("+3:00");
+        $current_date = Carbon::now("+3:00")->format("Y-m-d H-i-s");
 
         $number = Str::uuid();
         $mpdf->WriteHTML(view("pdf.order",[
-            "title"=>"TEST TITLE",
-            "number"=>"123",
-            "name"=>"123",
-            "phone"=>"344",
-            "address"=>"12312",
-            "message"=>"3123",
-            "totalPrice"=>"3123",
-            "totalCount"=>"3123",
-            "currentDate"=>"31231",
-            "code"=>"12312",
-            "promoCount"=>"1231",
-            "products"=>[
-                [
-                    "id"=>1,
-                    "title"=>"test",
-                    "current_price"=>"test",
-                    "count"=>"test"
-                ]
-            ],
+            "title"=>$this->bot->title ?? $this->bot->bot_domain ?? 'CashMan',
+            "uniqNumber"=>$number,
+            "orderId"=>$order->id,
+            "name"=>$order->receiver_name,
+            "phone"=>$order->receiver_phone,
+            "address"=>$order->address,
+            "message"=>$deliveryNote,
+            "totalPrice"=>$summaryPrice,
+            "totalCount"=>$summaryCount,
+            "currentDate"=>$current_date,
+            "code"=>"Без промокода",
+            "promoCount"=>"0",
+            "products"=>$tmpOrderProductInfo,
         ]));
 
         $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
-
-       // Storage::put("order-$number.pdf", $file);
 
         BotMethods::bot()
             ->whereBot($this->bot)
@@ -709,8 +701,6 @@ class ProductLogicFactory
                 "Чек",
                 InputFile::createFromContents($file,"invoice.pdf")
             );
-
-       // Storage::delete("order-$number.pdf");
 
 
 

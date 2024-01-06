@@ -36,7 +36,7 @@
 </style>
 <body>
 <h1>Счет на оплату</h1>
-<h6>Уникальный идентификатор заказа <strong style='color:darkred'>{{$number}}</strong></h6>
+<h6>Уникальный идентификатор заказа #{{$orderId}}(<strong style='color:darkred'>{{$uniqNumber}}</strong>)</h6>
 <h3>Сервис "{{$title}}"</h3>
 <hr>
 <ul>
@@ -73,8 +73,9 @@
 </table>
 @endif
 <hr>
-<h3>Ваш промокод для участия в акциях:</h3>
-<p>{{$code}} - всего доступно <strong>{{$promoCount}}</strong> активаций </p>
+
+<!--<h3>Ваш промокод для участия в акциях:</h3>
+<p>{{$code}} - всего доступно <strong>{{$promoCount}}</strong> активаций </p>-->
 <h4>Команда <span style='color:red'>{{$title}}</span> благодарит Вас за использование нашего сервиса! Мы стараемся быть лучше для Вас!</h4>
 </body>
 </html>
