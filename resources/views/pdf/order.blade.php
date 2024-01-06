@@ -43,7 +43,9 @@
     <li>Имя заказчика <strong>{{$name}}</strong></li>
     <li>Телефон заказчика <strong>{{$phone}}</strong></li>
     <li>Адрес заказчика <strong>{{$address}}</strong></li>
-    <li>Дополнительная информация от заказчика <strong>{{$message}}</strong></li>
+    <li>Дополнительная информация от заказчика<br>
+        {!! $message !!}
+    </li>
     <li>Сумма заказа <strong>{{$totalPrice }} руб.</strong></li>
     <li>Количество позиций в заказе <strong>{{$totalCount}} ед.</strong></li>
     <li>Дата и время осуществления заказа <strong>{{$currentDate}}!</strong></li>
