@@ -673,9 +673,11 @@ class ProductLogicFactory
 
 
         $mpdf = new Mpdf();
-        $current_date = Carbon::now("+3:00")->format("Y-m-d H-i-s");
+        $current_date = Carbon::now("+3:00")->format("Y-m-d H:i:s");
 
         $number = Str::uuid();
+
+
         $mpdf->WriteHTML(view("pdf.order",[
             "title"=>$this->bot->title ?? $this->bot->bot_domain ?? 'CashMan',
             "uniqNumber"=>$number,
@@ -683,12 +685,17 @@ class ProductLogicFactory
             "name"=>$order->receiver_name,
             "phone"=>$order->receiver_phone,
             "address"=>$order->address,
-            "message"=>$deliveryNote,
+            "message"=>($data["info"] ?? 'Не указано'),
+            "entranceNumber"=>($data["entrance_number"] ?? 'Не указано'),
+            "cashType"=>($cash ? "Наличкой" : "Картой"),
+            "money"=>($data["money"] ?? 'Не указано'),
+            "disabilitiesText"=> ($disabilitiesText ?? 'не указаны'),
             "totalPrice"=>$summaryPrice,
             "totalCount"=>$summaryCount,
             "currentDate"=>$current_date,
             "code"=>"Без промокода",
             "promoCount"=>"0",
+            "paymentInfo"=>$paymentInfo,
             "products"=>$tmpOrderProductInfo,
         ]));
 

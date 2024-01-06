@@ -43,6 +43,11 @@
     <li>Имя заказчика <strong>{{$name}}</strong></li>
     <li>Телефон заказчика <strong>{{$phone}}</strong></li>
     <li>Адрес заказчика <strong>{{$address}}</strong></li>
+    <li>Номер подъезда <strong>{{$entranceNumber}}</strong></li>
+    <li>Тип оплаты <strong>{{$cashType}}</strong></li>
+    <li>Сдача с <strong>{{$money}}</strong></li>
+    <li>Ограничения по здоровью <strong>{{$disabilitiesText}}</strong></li>
+
     <li>Дополнительная информация от заказчика<br>
         {!! $message !!}
     </li>
@@ -63,9 +68,9 @@
         <td><strong>Количество, шт</strong></td>
     </tr>
 
-    @foreach($products as $product)
+    @foreach($products as $index=>$product)
         <tr>
-            <td><strong>{{$product->id ?? 'не указан'}}</strong></td>
+            <td><strong>{{$index ?? 'не указан'}}</strong></td>
             <td><strong>{{$product->title ?? 'не указан'}}</strong></td>
             <td><strong>{{$product->price ?? 'не указан'}}</strong></td>
             <td><strong>{{$product->count ?? 'не указан'}}</strong></td>
@@ -75,7 +80,8 @@
 </table>
 @endif
 <hr>
-
+<h3>Как оплатить</h3>
+<p>{{$paymentInfo}}</p>
 <!--<h3>Ваш промокод для участия в акциях:</h3>
 <p>{{$code}} - всего доступно <strong>{{$promoCount}}</strong> активаций </p>-->
 <h4>Команда <span style='color:red'>{{$title}}</span> благодарит Вас за использование нашего сервиса! Мы стараемся быть лучше для Вас!</h4>
