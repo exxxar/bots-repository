@@ -22,9 +22,11 @@ use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Mpdf\Mpdf;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ProductLogicFactory
@@ -667,6 +669,42 @@ class ProductLogicFactory
                 $this->botUser->telegram_chat_id,
                 "Спасибо, ваш заказ появился в нашей системе:\n\n<em>$message</em>\n\n$paymentInfo" ?? "Данные не найдены"
             );
+
+
+        $mpdf = new Mpdf();
+        $current_date = Carbon::now("+3:00");
+
+        $number = Str::uuid();
+        $mpdf->WriteHTML(view("pdf.order",[
+            "title"=>"TEST TITLE",
+            "number"=>"123",
+            "name"=>"123",
+            "phone"=>"344",
+            "address"=>"12312",
+            "message"=>"3123",
+            "totalPrice"=>"3123",
+            "totalCount"=>"3123",
+            "currentDate"=>"31231",
+            "code"=>"12312",
+            "promoCount"=>"1231",
+            "products"=>[
+                [
+                    "id"=>1,
+                    "title"=>"test",
+                    "current_price"=>"test",
+                    "count"=>"test"
+                ]
+            ],
+        ]));
+
+        $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
+
+        Storage::put("order-$number.pdf", $file);
+
+        Storage::delete("order-$number.pdf");
+
+
+
     }
 
     /**
