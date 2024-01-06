@@ -588,7 +588,7 @@ class ProductLogicFactory
                 ]);
 
         //сделать чек на оплату (pdf)
-       $order = Order::query()->create([
+        $order = Order::query()->create([
             'bot_id' => $this->bot->id,
             'deliveryman_id' => null,
             'customer_id' => $this->botUser->id,
@@ -678,25 +678,25 @@ class ProductLogicFactory
         $number = Str::uuid();
 
 
-        $mpdf->WriteHTML(view("pdf.order",[
-            "title"=>$this->bot->title ?? $this->bot->bot_domain ?? 'CashMan',
-            "uniqNumber"=>$number,
-            "orderId"=>$order->id,
-            "name"=>$order->receiver_name,
-            "phone"=>$order->receiver_phone,
-            "address"=>$order->address,
-            "message"=>($data["info"] ?? 'Не указано'),
-            "entranceNumber"=>($data["entrance_number"] ?? 'Не указано'),
-            "cashType"=>($cash ? "Наличкой" : "Картой"),
-            "money"=>($data["money"] ?? 'Не указано'),
-            "disabilitiesText"=> ($disabilitiesText ?? 'не указаны'),
-            "totalPrice"=>$summaryPrice,
-            "totalCount"=>$summaryCount,
-            "currentDate"=>$current_date,
-            "code"=>"Без промокода",
-            "promoCount"=>"0",
-            "paymentInfo"=>$paymentInfo,
-            "products"=>$tmpOrderProductInfo,
+        $mpdf->WriteHTML(view("pdf.order", [
+            "title" => $this->bot->title ?? $this->bot->bot_domain ?? 'CashMan',
+            "uniqNumber" => $number,
+            "orderId" => $order->id,
+            "name" => $order->receiver_name,
+            "phone" => $order->receiver_phone,
+            "address" => $order->address,
+            "message" => ($data["info"] ?? 'Не указано'),
+            "entranceNumber" => ($data["entrance_number"] ?? 'Не указано'),
+            "cashType" => ($cash ? "Наличкой" : "Картой"),
+            "money" => ($data["money"] ?? 'Не указано'),
+            "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),
+            "totalPrice" => $summaryPrice,
+            "totalCount" => $summaryCount,
+            "currentDate" => $current_date,
+            "code" => "Без промокода",
+            "promoCount" => "0",
+            "paymentInfo" => $paymentInfo,
+            "products" => $tmpOrderProductInfo,
         ]));
 
         $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
@@ -705,10 +705,9 @@ class ProductLogicFactory
             ->whereBot($this->bot)
             ->sendDocument(
                 $this->botUser->telegram_chat_id,
-                "Счет на оплату",
-                InputFile::createFromContents($file,"счёт на оплату $order->id.pdf")
+                "Счет на оплату заказа #" . ($order->id ?? 'не указан'),
+                InputFile::createFromContents($file, "invoice.pdf")
             );
-
 
 
     }
