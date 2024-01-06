@@ -996,7 +996,7 @@ abstract class BotCore
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
 
-            $thread = $this->getSelf()->topics["questions"] ?? null;
+            $thread = $this->getSelf()->topics["response"] ?? null;
 
             if (strlen($channel) > 6 && str_starts_with($channel, "-")) {
                 $this->sendInlineKeyboard($channel,

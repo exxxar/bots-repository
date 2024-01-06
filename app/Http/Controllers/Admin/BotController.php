@@ -62,6 +62,9 @@ class BotController extends Controller
 
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function createBotTopics(Request $request)
     {
         $request->validate([

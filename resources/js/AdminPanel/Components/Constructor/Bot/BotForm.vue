@@ -1096,6 +1096,21 @@ export default {
                     title: 'Вывод средств',
                     key: 'ask-money',
                     value: null,
+                },
+                {
+                    title: 'Доставка',
+                    key: 'delivery',
+                    value: null,
+                },
+                {
+                    title: 'Ответы',
+                    key: 'response',
+                    value: null,
+                },
+                {
+                    title: 'Обратная связь',
+                    key: 'callback',
+                    value: null,
                 }
             ];
 

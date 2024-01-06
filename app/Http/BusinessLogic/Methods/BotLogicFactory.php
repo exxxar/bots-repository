@@ -944,6 +944,8 @@ class BotLogicFactory
 
         $adminMessage = "$typeText\nБот: %s\nСкрипт: #%s (название скрипта: %s) \nПользователь: \n -tg id: %s \n -имя: %s \n -телефон: %s)\nСообщение: %s\n";
 
+        $thread = $this->bot->topics["callback"] ?? null;
+
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendMessage($callbackChannel,
@@ -955,7 +957,7 @@ class BotLogicFactory
                     $data["name"] ?? '-',
                     $data["phone"] ?? '-',
                     $data["message"] ?? '-'
-                ));
+                ), $thread);
 
     }
 
