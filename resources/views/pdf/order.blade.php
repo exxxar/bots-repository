@@ -48,8 +48,7 @@
     <li>Сдача с <strong>{{$money}}</strong></li>
     <li>Ограничения по здоровью <strong>{{$disabilitiesText}}</strong></li>
 
-    <li>Дополнительная информация от заказчика<br>
-        {!! $message !!}
+    <li>Дополнительная информация от заказчика <strong>{!! $message !!}</strong>
     </li>
     <li>Сумма заказа <strong>{{$totalPrice }} руб.</strong></li>
     <li>Количество позиций в заказе <strong>{{$totalCount}} ед.</strong></li>
