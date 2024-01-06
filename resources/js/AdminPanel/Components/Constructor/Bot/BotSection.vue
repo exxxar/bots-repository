@@ -28,7 +28,7 @@ import AppointmentEventTable from "@/AdminPanel/Components/Constructor/Appointme
                     @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы</button>
         </div>
 
-        <div class="dropdown" v-if="hasRole('is_admin')">
+        <div class="dropdown" v-if="hasRole('admin')">
             <button
                 type="button"
                 class="btn btn-primary dropdown-toggle text-primary p-2" href="#" role="button"

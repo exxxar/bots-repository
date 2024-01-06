@@ -1,6 +1,6 @@
 <script setup>
 import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList.vue";
-import TextHelper from "@/AdminPanel/Components/Constructor/Helpers/TextHelper.vue";
+/*import TextHelper from "@/AdminPanel/Components/Constructor/Helpers/TextHelper.vue";*/
 import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
 </script>
 <template>
@@ -17,8 +17,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox"
                            :value="need_company_select"
-                           v-model="need_company_select" id="bot-is-template">
-                    <label class="form-check-label" for="bot-is-template">
+                           v-model="need_company_select" id="bot-select-company">
+                    <label class="form-check-label" for="bot-select-company">
                         Отобразить список клиентов (выбор клиента для бота)
                     </label>
                 </div>
@@ -43,7 +43,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
             <div class="col-md-12 col-12">
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox"
-                           :value="botForm.is_template"
+                           :value="botForm.is_template||false"
                            v-model="botForm.is_template" id="bot-is-template">
                     <label class="form-check-label" for="bot-is-template">
                         Сделать шаблоном
@@ -118,7 +118,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </h6>
 
                 <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
-                    <label for="bot-photos" style="margin-right: 10px;" class="photo-loader ml-2" v-if="botForm.photos">
+                    <label for="bot-photos" style="margin-right: 10px;"
+                           class="photo-loader ml-2 bg-primary text-white shadow-md" v-if="botForm.photos">
                         <span>+</span>
                         <input type="file" id="bot-photos" accept="image/*"
                                @change="onChangePhotos"
@@ -749,10 +750,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                 Длина текста {{ botForm.welcome_message.length }}</small>
                         </label>
 
-                        <TextHelper
+<!--                        <TextHelper
                             :param="'welcome_message'"
                             v-on:callback="addTextTo"
-                        />
+                        />-->
                     </div>
                     <textarea type="text" class="form-control"
                               style="min-height:400px;"
@@ -781,10 +782,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                 Длина текста {{ botForm.description.length }}</small>
                         </label>
 
-                        <TextHelper
+<!--                        <TextHelper
                             :param="'description'"
                             v-on:callback="addTextTo"
-                        />
+                        />-->
                     </div>
 
                     <textarea type="text" class="form-control"
@@ -807,10 +808,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                    v-if="botForm.maintenance_message">
                                 Длина текста {{ botForm.maintenance_message.length }}</small>
                         </label>
-                        <TextHelper
+<!--                        <TextHelper
                             :param="'maintenance_message'"
                             v-on:callback="addTextTo"
-                        />
+                        />-->
                     </div>
                     <textarea type="text" class="form-control"
                               placeholder="Текстовое сообщение"
@@ -1224,7 +1225,7 @@ export default {
     },
     methods: {
         alert(msg, tab = null) {
-            if (tab!=null)
+            if (tab != null)
                 this.tab = tab
             this.messages.push(msg)
         },
@@ -1242,11 +1243,19 @@ export default {
             })
         },
         getMe() {
+            let token = this.botForm.bot_token || ''
+            if (token.length<40)
+                return;
+
             this.$store.dispatch("getMe", {
-                bot_token: this.botForm.bot_token,
+                bot_token: token,
             }).then((resp) => {
-                this.botForm.bot_domain = resp.username || null
-                this.botForm.title = resp.first_name || null
+                let username = resp.username || null
+                let title = resp.first_name || null
+                if (username)
+                    this.botForm.bot_domain = username
+                if (title)
+                    this.botForm.title = title
             })
         },
         getChatLink(chatId) {

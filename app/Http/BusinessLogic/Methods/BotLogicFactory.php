@@ -114,12 +114,16 @@ class BotLogicFactory
     {
         $bots = Bot::query()
             ->with(["amo"])
-            ->whereIn("id", $ids)
-            ->get();
+            ->whereIn("id", $ids);
+
+        if (!is_null($this->botUser))
+            $bots = $bots->where("creator_id", $this->botUser->user_id);
+
+        $bots = $bots->get();
 
         $tmpBots = [];
 
-        foreach ($ids as $id){
+        foreach ($ids as $id) {
             foreach ($bots as $bot)
                 if ($bot->id == $id)
                     $tmpBots[] = $bot;
@@ -127,17 +131,26 @@ class BotLogicFactory
         return new BotCollection($tmpBots);
     }
 
-    public function list($companyId = null, $search = null, $size = null, $order = null, $direction = null): BotCollection
+    public function list($companyId = null, $search = null, $size = null, $order = null, $direction = null, $filters = []): BotCollection
     {
 
         $size = $size ?? config('app.results_per_page');
 
         $bots = Bot::query()
-            ->with(["amo"])
-            ->withTrashed();
+            ->with(["amo"]);
+
+
+        if (in_array("archive", $filters )||count($filters)==0)
+            $bots = $bots->withTrashed();
+
+        if (in_array("archive", $filters )&&count($filters)==1)
+            $bots = $bots->whereNotNull("deleted_at");
 
         if (!is_null($companyId))
             $bots = $bots->where("company_id", $companyId);
+
+        if (!is_null($this->botUser))
+            $bots = $bots->where("creator_id", $this->botUser->user_id);
 
         if (!is_null($search))
             $bots = $bots->where(function ($q) use ($search) {
@@ -170,7 +183,6 @@ class BotLogicFactory
         return new BotSecurityCollection($bots);
     }
 
-
     public function simple($companyId = null, $search = null, $needSelfBots = false, $size = null): BotSecurityCollection
     {
         if (is_null($this->botUser))
@@ -180,11 +192,15 @@ class BotLogicFactory
 
         $bots = Bot::query();
 
-        if ($needSelfBots)
-            $bots = $bots->whereHas("company", function ($q) {
-                $q->where("creator_id", $this->botUser->id)
-                    ->orderBy("updated_at", 'DESC');
-            });
+        if ($needSelfBots) {
+            /* $bots = $bots->whereHas("company", function ($q) {
+                 $q->where("creator_id", $this->botUser->id)
+                     ->orderBy("updated_at", 'DESC');
+             });*/
+
+            $bots = $bots->where("creator_id", $this->botUser->user_id);
+        }
+
 
         if (!is_null($companyId))
             $bots = $bots->where("company_id", $companyId);
@@ -205,6 +221,9 @@ class BotLogicFactory
      */
     public function duplicate(array $customParams = null): BotResource
     {
+        if (is_null($this->botUser))
+            throw new HttpException(403, "Условия функции не выполнены");
+
         if (is_null($customParams["company_id"] ?? null))
             throw new HttpException(403, "Идентификатор компании не должен быть пустым!");
 
@@ -227,6 +246,9 @@ class BotLogicFactory
         $newBot->main_channel = $customParams["main_channel"] ?? null;
         $newBot->order_channel = $customParams["order_channel"] ?? null;
         $newBot->company_id = $customParams["company_id"] ?? null;
+        $newBot->is_template = false;
+        $newBot->template_description = null;
+        $newBot->creator_id = $this->botUser->user_id ?? null;
 
         $newBot->save();
 
@@ -1064,8 +1086,9 @@ class BotLogicFactory
     {
         $bots = Bot::query()
             ->where("is_template", true)
-            ->select("bot_domain", "id", "template_description")
+            ->select("title", "description", "bot_domain", "id", "template_description")
             ->get();
+
 
         return $bots->toArray();
     }
@@ -1234,6 +1257,8 @@ class BotLogicFactory
      */
     public function create(array $data, array $uploadedPhotos = null): BotResource
     {
+        if (is_null($this->botUser))
+            throw new HttpException(403, "Условия функции не выполнены");
 
         $validator = Validator::make($data, [
             "bot_domain" => "required|unique:bots,bot_domain",
@@ -1283,6 +1308,9 @@ class BotLogicFactory
         $tmp->is_template = $data["is_template"] == "true";
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
+
+
+        $tmp->creator_id = !$tmp->is_template ? $this->botUser->user_id : null;
 
         $keyboards = null;
         if (isset($data["keyboards"])) {
@@ -1376,8 +1404,8 @@ class BotLogicFactory
      */
     public function update(array $data, array $uploadedPhotos = null): BotResource
     {
-        if (is_null($this->bot))
-            throw new HttpException(404, "Бот не найден!");
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Условия функции не выполнены!");
 
         $validator = Validator::make($data, [
             "bot_domain" => "required",
@@ -1424,6 +1452,8 @@ class BotLogicFactory
         $tmp->is_template = $data["is_template"] == "true";
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
+
+        $tmp->creator_id = $tmp->is_template ? null : ($tmp->creator_id ?? null);
 
         if (isset($data["keyboards"])) {
             unset($tmp->keyboards);

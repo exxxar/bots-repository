@@ -55,6 +55,7 @@ class Bot extends Model
         'blocked_at',
         'is_template',
         'template_description',
+        'creator_id',
     ];
 
     /**

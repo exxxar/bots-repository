@@ -121,7 +121,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             <div class="col-12">
                 <h4>Все боты</h4>
                 <p class="mb-0">Количество найденных ботов {{ bots_paginate_object.meta.total || 0 }}</p>
-                <p class="mb-0">Количество результатов на странице {{ filteredBots.length || 0 }}</p>
+                <p class="mb-0">Количество результатов на странице {{ bots.length || 0 }}</p>
                 <p>
                     Тип отображения списка:
                     <span v-on:click="displayType=0"
@@ -157,7 +157,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(bot, index) in filteredBots"
+                    <tr v-for="(bot, index) in bots"
 
                         v-bind:class="{'border-info':bot.deleted_at==null,'border-danger':bot.deleted_at!=null}">
                         <th scope="row">{{ bot.id }}</th>
@@ -191,17 +191,17 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                 <button class="btn btn-outline-info"
                                         type="button"
                                         @click="addToArchive(bot.id)"
-                                        title="В архив" v-if="bot.deleted_at==null"><i
+                                        title="В архив" v-if="bot.deleted_at==null&&hasRole('admin')"><i
                                     class="fa-solid fa-boxes-packing"></i></button>
 
                                 <button class="btn btn-outline-info mr-2"
                                         @click="extractFromArchive(bot.id)"
-                                        title="Из архива" v-if="bot.deleted_at!=null"><i
+                                        title="Из архива" v-if="bot.deleted_at!=null&&hasRole('admin')"><i
                                     class="fa-solid fa-box-open"></i></button>
 
                                 <button class="btn btn-danger  mr-2 "
                                         @click="forceDelete(bot.id)"
-                                        title="Удалить на совсем" v-if="bot.deleted_at!=null">
+                                        title="Удалить на совсем" v-if="bot.deleted_at!=null&&hasRole('admin')">
                                     <i class="fa-solid fa-trash-can text-white"></i>
                                 </button>
                             </div>
@@ -216,7 +216,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
             <div class="col-lg-4 col-12 mb-3"
                  v-if="displayType===0"
-                 v-for="(bot, index) in filteredBots">
+                 v-for="(bot, index) in bots">
                 <div class="card w-100"
                      v-bind:class="{'border-info':bot.deleted_at==null,'border-secondary':bot.deleted_at!=null}">
 
@@ -254,17 +254,17 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         <button class="btn btn-outline-info"
                                 type="button"
                                 @click="addToArchive(bot.id)"
-                                title="В архив" v-if="bot.deleted_at==null"><i
+                                title="В архив" v-if="bot.deleted_at==null&&hasRole('admin')"><i
                             class="fa-solid fa-boxes-packing"></i></button>
 
                         <button class="btn btn-outline-info mr-2"
                                 @click="extractFromArchive(bot.id)"
-                                title="Из архива" v-if="bot.deleted_at!=null"><i
+                                title="Из архива" v-if="bot.deleted_at!=null&&hasRole('admin')"><i
                             class="fa-solid fa-box-open"></i></button>
 
                         <button class="btn btn-danger  mr-2 "
                                 @click="forceDelete(bot.id)"
-                                title="Удалить на совсем" v-if="bot.deleted_at!=null">
+                                title="Удалить на совсем" v-if="bot.deleted_at!=null&&hasRole('admin')">
                             <i class="fa-solid fa-trash-can text-white"></i>
                         </button>
 
@@ -326,11 +326,17 @@ export default {
     watch: {
         'displayType': function (oldArg, newArg) {
             localStorage.setItem("cashman_set_botlist_display_type", this.displayType)
+        },
+        selectedFilters: {
+            handler: function(newValue) {
+                this.loadBots();
+            },
+            deep: true
         }
     },
     computed: {
         ...mapGetters(['getBots', 'getBotsPaginateObject', 'getCurrentCompany', 'getBotFavorites', 'inBotFav']),
-        filteredBots() {
+            filteredBots() {
             if (!this.bots)
                 return [];
 
@@ -376,13 +382,16 @@ export default {
         }
     },
     mounted() {
-        this.loadBots();
+        //this.loadBots();
 
         this.selectFilter('active')
 
         this.displayType = parseInt(localStorage.getItem("cashman_set_botlist_display_type") || 0)
     },
     methods: {
+        hasRole(role) {
+            return window.hasRole(role) || false
+        },
         loadBotsByIds() {
             if (this.getBotFavorites.length == 0) {
                 this.favorites = []
@@ -447,6 +456,8 @@ export default {
                 botId: id
             }).then(resp => {
                 let currentPage = this.bots_paginate_object.meta.current_page || 0
+                this.$store.dispatch("resetCurrentBot")
+
                 this.loadBots(currentPage)
                 this.$notify("Указанный бот успешно перемещен в архив");
             })
@@ -456,6 +467,8 @@ export default {
                 botId: id
             }).then(resp => {
                 let currentPage = this.bots_paginate_object.meta.current_page || 0
+                this.$store.dispatch("resetCurrentBot")
+
                 this.loadBots(currentPage)
                 this.$notify("Указанный бот успешно перемещен из архива");
             })
@@ -500,10 +513,11 @@ export default {
                     companyId: this.companyId || null,
                     search: this.search,
                     order: this.order,
-                    direction: this.direction
+                    direction: this.direction,
+                    filters: this.selectedFilters.map(o => o["slug"])
                 },
                 page: page,
-                size: 100
+                size: 20
             }).then(resp => {
                 this.loading = false
                 this.bots = this.getBots

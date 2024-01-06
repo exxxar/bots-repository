@@ -58,7 +58,6 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         </strong>
 
 
-
                         <div v-if="editor">
 
                             <div class="dropdown">
@@ -87,7 +86,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     </div>
 
                     <ul
-                       v-if="page"
+                        v-if="page"
                         class="component-icons">
                         <li
                             v-if="(page.images||[]).length>0">
@@ -192,8 +191,8 @@ export default {
     },
     mounted() {
         this.loadCurrentBot().then(() => {
-
-            this.current_page = localStorage.getItem(`cashman_pagelist_${this.bot.id}_page_index`) || 0
+            if (this.bot)
+                this.current_page = localStorage.getItem(`cashman_pagelist_${this.bot.id}_page_index`) || 0
 
             this.loadPages();
         })
@@ -215,7 +214,8 @@ export default {
         nextPages(index) {
 
             this.current_page = index
-            localStorage.setItem(`cashman_pagelist_${this.bot.id}_page_index`, this.current_page)
+            if (this.bot)
+                localStorage.setItem(`cashman_pagelist_${this.bot.id}_page_index`, this.current_page)
             this.loadPages()
         },
         duplicatePage(id) {
@@ -231,7 +231,7 @@ export default {
                 this.loading = false
             })
         },
-        forceRemovePage(id){
+        forceRemovePage(id) {
             this.loading = true
             this.$store.dispatch("forceRemovePage", {
                 dataObject: {
@@ -239,6 +239,7 @@ export default {
                 },
             }).then(resp => {
                 this.loading = false
+
                 this.loadPages()
             }).catch(() => {
                 this.loading = false

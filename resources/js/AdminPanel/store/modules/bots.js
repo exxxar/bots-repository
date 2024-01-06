@@ -114,6 +114,7 @@ const actions = {
         })
     },
     async loadBots(context, payload = {dataObject: null, page: 0, size: 50}) {
+
         let page = payload.page || 0
         let size = payload.size || 50
 
@@ -287,19 +288,19 @@ const actions = {
 const mutations = {
     setBots(state, payload) {
         state.bots = payload || [];
-        localStorage.setItem('cashman_bots', JSON.stringify(payload));
+       // localStorage.setItem('cashman_bots', JSON.stringify(payload));
     },
     setBotUsers(state, payload) {
         state.bot_users = payload || [];
-        localStorage.setItem('cashman_bot_users', JSON.stringify(payload));
+       // localStorage.setItem('cashman_bot_users', JSON.stringify(payload));
     },
     setBotUsersPaginateObject(state, payload) {
         state.bot_users_paginate_object = payload || [];
-        localStorage.setItem('cashman_bot_users_paginate_object', JSON.stringify(payload));
+     //   localStorage.setItem('cashman_bot_users_paginate_object', JSON.stringify(payload));
     },
     setBotsPaginateObject(state, payload) {
         state.bots_paginate_object = payload || [];
-        localStorage.setItem('cashman_bots_paginate_object', JSON.stringify(payload));
+      //  localStorage.setItem('cashman_bots_paginate_object', JSON.stringify(payload));
     }
 }
 

@@ -44,7 +44,7 @@ import {Head} from '@inertiajs/vue3'
                    href="/bot-page"> <i class="fa-solid fa-robot"></i> Боты</a>
             </div>
             <div
-                v-if="hasRole('is_admin')"
+                v-if="hasRole('admin')"
                 class="nav-item text-nowrap">
                 <a class="nav-link px-3"
                    @click="active=6"

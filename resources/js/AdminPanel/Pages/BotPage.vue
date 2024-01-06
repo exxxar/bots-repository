@@ -35,7 +35,30 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
                     </div>
                 </div>
 
-                <div class="row" v-if="step===0">
+                <div class="row mt-3" v-if="step===0">
+                    <div class="col-12" v-if="getCurrentCompany">
+                        <h5>Основные шаблоны ботов</h5>
+                        <Carousel :itemsToShow="3.95" :wrapAround="true" :transition="500">
+                            <Slide v-for="template in templates" :key="template.id">
+                                <div class="carousel__item p-2 w-100">
+                                    <div class="card w-100">
+                                        <div class="card-body w-100">
+                                            <h5 class="card-title">
+                                                {{ template.title || template.bot_domain || 'Без названия' }}</h5>
+                                            <p class="card-text">{{ template.template_description || '-' }}</p>
+                                            <a href="javascript:void(0)"
+                                               @click="duplicateAndEdit(template.id)"
+                                               class="btn btn-primary">Создать из шаблона</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Slide>
+
+                            <template #addons>
+                                <Navigation/>
+                            </template>
+                        </Carousel>
+                    </div>
                     <div class="col-12">
                         <BotForm v-if="!load"
                         />
@@ -52,7 +75,7 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
                 <div v-if="step===2">
                     <BotSection
                         v-if="bot&&!load"
-                             :bot="bot"
+                        :bot="bot"
                     />
                 </div>
             </div>
@@ -61,19 +84,30 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
+import 'vue3-carousel/dist/carousel.css'
+import {Carousel, Slide, Pagination, Navigation} from 'vue3-carousel'
 
 export default {
+    components: {
+        Carousel,
+        Slide,
+        Pagination,
+        Navigation,
+    },
     data() {
         return {
+            templates: [],
             load: false,
             step: 0,
             bot: null,
         }
     },
     computed: {
-        ...mapGetters(['getCurrentBot']),
+        ...mapGetters(['getCurrentBot', 'getCurrentCompany', 'getBotFavorites', 'inBotFav']),
     },
     mounted() {
+
+        this.loadTemplates();
 
         this.loadCurrentBot()
 
@@ -87,6 +121,40 @@ export default {
 
     },
     methods: {
+        openForEdit() {
+
+        },
+        duplicateAndEdit(botId) {
+            if (!this.getCurrentCompany) {
+                this.$notify("У Вас не выбран клиент!");
+                return;
+            }
+            this.$store.dispatch("duplicateBot", {
+                dataObject: {
+                    bot_id: botId,
+                    company_id: this.getCurrentCompany.id
+                }
+            }).then(resp => {
+                this.bot = resp.data
+                this.load = true
+
+                if (!this.inBotFav(this.bot.id))
+                    this.$store.dispatch("addBotToFavorites", this.bot.id)
+
+                this.setStep(2)
+
+                this.$nextTick(() => {
+                    this.load = false
+                })
+                this.$notify("Указанный бот успешно продублирован");
+            })
+        },
+        loadTemplates() {
+            this.$store.dispatch("loadTemplates").then(resp => {
+                this.templates = resp.data
+                console.log(resp.data)
+            })
+        },
         setStep(index) {
             this.step = parseInt(index)
             localStorage.setItem("cashman_set_botpage_step_index", index)
@@ -115,3 +183,44 @@ export default {
     }
 }
 </script>
+<style scoped>
+.carousel__slide {
+    padding: 5px;
+}
+
+.carousel__viewport {
+    perspective: 2000px;
+}
+
+.carousel__track {
+    transform-style: preserve-3d;
+}
+
+.carousel__slide--sliding {
+    transition: 0.5s;
+}
+
+.carousel__slide {
+    opacity: 0.9;
+    transform: rotateY(-20deg) scale(0.9);
+}
+
+.carousel__slide--active ~ .carousel__slide {
+    transform: rotateY(20deg) scale(0.9);
+}
+
+.carousel__slide--prev {
+    opacity: 1;
+    transform: rotateY(-10deg) scale(0.95);
+}
+
+.carousel__slide--next {
+    opacity: 1;
+    transform: rotateY(10deg) scale(0.95);
+}
+
+.carousel__slide--active {
+    opacity: 1;
+    transform: rotateY(0) scale(1.1);
+}
+</style>

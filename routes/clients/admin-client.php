@@ -84,6 +84,7 @@ Route::prefix("admin")
 
         Route::prefix("bots")
             ->controller(BotController::class)
+            ->middleware(["role:manager"])
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/ids", "listByIds");
@@ -100,21 +101,23 @@ Route::prefix("admin")
                 Route::post("/load-chat-info", "loadChatInfo");
                 Route::post("/create-bot-topics", "createBotTopics");
                 Route::post("/duplicate", "duplicate");
-                Route::delete("/force/{botId}", "forceDelete");
-                Route::delete("/{botId}", "destroy");
-                Route::get("/restore/{botId}", "restore");
+                Route::delete("/force/{botId}", "forceDelete")->middleware(["role:admin"]);
+                Route::delete("/{botId}", "destroy")->middleware(["role:admin"]);
+                Route::get("/restore/{botId}", "restore")->middleware(["role:admin"]);
             });
 
         Route::prefix("media")
             ->controller(\App\Http\Controllers\Admin\MediaController::class)
+            ->middleware(["role:manager"])
             ->group(function () {
                 Route::post('/', "media");
                 Route::get('/preview/{id}', "preview");
-                Route::delete('/remove/{id}', "remove");
+                Route::delete('/remove/{id}', "remove")->middleware(["role:admin"]);
             });
 
         Route::prefix("appointments")
             ->controller(\App\Http\Controllers\Admin\AppointmentController::class)
+            ->middleware(["role:manager"])
             ->group(function () {
                 Route::post("/event-list", "eventList");
                 Route::post("/add-event", "addEvent");
@@ -142,6 +145,7 @@ Route::prefix("admin")
 
         Route::prefix("dialog-groups")
             ->controller(\App\Http\Controllers\Admin\BotDialogGroupController::class)
+            ->middleware(["role:manager"])
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/commands", "commandList");
@@ -151,16 +155,17 @@ Route::prefix("admin")
                 Route::post("/add-group", "addGroup");
                 Route::post("/add-dialog", "addDialog");
                 Route::post("/duplicate-dialog", "duplicateDialog");
-                Route::post("/stop-dialogs", "stopDialogs");
+                Route::post("/stop-dialogs", "stopDialogs")->middleware(["role:admin"]);
                 Route::post("/update-group", "updateGroup");
                 Route::post("/update-dialog", "updateDialog");
-                Route::delete("/remove-group/{groupId}", "removeGroup");
-                Route::delete("/remove-dialog/{dialogId}", "removeDialog");
+                Route::delete("/remove-group/{groupId}", "removeGroup")->middleware(["role:admin"]);
+                Route::delete("/remove-dialog/{dialogId}", "removeDialog")->middleware(["role:admin"]);
             });
 
 
         Route::prefix("templates")
             ->controller(BotController::class)
+            ->middleware(["role:manager"])
             ->group(function () {
                 Route::get("/bots", "loadBotsAsTemplate");
 
@@ -170,7 +175,7 @@ Route::prefix("admin")
 
                 Route::post("/keyboard-template", "createKeyboardTemplate");
                 Route::post("/edit-keyboard-template", "editKeyboardTemplate");
-                Route::delete("/remove-keyboard-template/{templateId}", "removeKeyboardTemplate");
+                Route::delete("/remove-keyboard-template/{templateId}", "removeKeyboardTemplate")->middleware(["role:admin"]);
                 Route::get("/slugs/{botId}", "loadSlugs");
                 Route::get("/pages/{botId}", "loadPages");
 
@@ -184,52 +189,57 @@ Route::prefix("admin")
 
         Route::prefix("companies")
             ->controller(CompanyController::class)
+            ->middleware(["role:manager"])
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/company", "createCompany");
                 Route::post("/company-update", "editCompany");
-                Route::delete("/{companyId}", "destroy");
+                Route::delete("/{companyId}", "destroy")->middleware(["role:admin"]);
                 Route::get("/restore/{companyId}", "restore");
             });
 
         Route::prefix("slugs")
             ->controller(\App\Http\Controllers\Admin\BotMenuSlugController::class)
+            ->middleware(["role:manager"])
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/global-list", "globalList");
-                Route::post("/relocate-actions-data", "relocateData");
+                Route::post("/relocate-actions-data", "relocateData")->middleware(["role:admin"]);
                 Route::post("/slug", "createSlug");
                 Route::post("/all-slugs/{botId}", "allSlugList");
                 Route::post("/slug-update", "updateSlug");
                 Route::post("/duplicate/{slugId}", "duplicate");
                 Route::get("/reload-params/{slugId}", "reloadParams");
                 Route::post("/reload-global-scripts", "reloadGlobalScripts");
-                Route::get("/action-data-export/{slugId}", "actionDataExport");
-                Route::delete("/{slugId}", "destroy");
-                Route::get("/restore/{slugId}", "restore");
+                Route::get("/action-data-export/{slugId}", "actionDataExport")->middleware(["role:admin"]);
+                Route::delete("/{slugId}", "destroy")->middleware(["role:admin"]);
+                Route::get("/restore/{slugId}", "restore")->middleware(["role:admin"]);
             });
 
         Route::prefix("pages")
             ->controller(BotPageController::class)
+            ->middleware(["role:manager"])
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/page", "createPage");
                 Route::post("/page-update", "updatePage");
                 Route::post("/duplicate/{pageId}", "duplicate");
-                Route::get("/restore/{pageId}", "restorePage");
-                Route::delete("/force/{pageId}", "forceDestroy");
-                Route::delete("/{pageId}", "destroy");
+                Route::get("/restore/{pageId}", "restorePage")->middleware(["role:admin"]);
+                Route::delete("/force/{pageId}", "forceDestroy")->middleware(["role:admin"]);
+                Route::delete("/{pageId}", "destroy")->middleware(["role:admin"]);
             });
 
 
         Route::prefix("users")
             ->controller(\App\Http\Controllers\Admin\BotUsersController::class)
+            ->middleware(["role:admin"])
             ->group(function () {
                 Route::post("/search", "loadBotUsers");
 
             });
 
         Route::prefix("shop")
+            ->middleware(["role:manager"])
             ->group(function () {
                 Route::post("/products", [\App\Http\Controllers\Admin\ProductController::class, "index"]);
                 Route::post("/products/categories", [\App\Http\Controllers\Admin\ProductController::class, "getCategories"]);

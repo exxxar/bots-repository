@@ -35,6 +35,11 @@ use Yclients\YclientsApi;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get("/test-role", function (){
+   return "success";
+})->middleware(["role:manager"]);
+
 Route::get("/yclients",function (){
 
         $login = 79161506189;

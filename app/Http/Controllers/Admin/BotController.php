@@ -314,24 +314,36 @@ class BotController extends Controller
     public function listByIds(Request $request): \App\Http\Resources\BotCollection
     {
         $request->validate([
-           "ids"=>"required|array"
+            "ids" => "required|array"
         ]);
 
-        return BusinessLogic::bots()
+        $logic = BusinessLogic::bots();
+
+        if ($request->botUser->is_manager)
+            $logic = $logic->setBotUser($request->botUser);
+
+        return $logic
             ->listByIds(
                 $request->ids ?? null,
             );
     }
+
     public function index(Request $request): \App\Http\Resources\BotCollection
     {
 
-        return BusinessLogic::bots()
+        $logic = BusinessLogic::bots();
+
+        if ($request->botUser->is_manager)
+            $logic = $logic->setBotUser($request->botUser);
+
+        return $logic
             ->list(
                 $request->companyId ?? null,
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page'),
                 $request->order ?? null,
-                $request->direction ?? null
+                $request->direction ?? null,
+                $request->filters ?? []
             );
     }
 
@@ -346,11 +358,14 @@ class BotController extends Controller
             "bot_id" => "required"
         ]);
 
+        $botUser = $request->botUser ?? null;
+
         $bot = Bot::query()
             ->find($request->bot_id ?? null);
 
         return BusinessLogic::bots()
             ->setBot($bot)
+            ->setBotUser($botUser)
             ->duplicate(["company_id" => $request->company_id ?? null]);
     }
 
@@ -620,7 +635,10 @@ class BotController extends Controller
             "company_id" => "required",
         ]);
 
+        $botUser = $request->botUser ?? null;
+
         return BusinessLogic::bots()
+            ->setBotUser($botUser)
             ->create(
                 $request->all(),
                 $request->hasFile('images') ? $request->file('images') : null
@@ -663,12 +681,17 @@ class BotController extends Controller
         ]);
 
 
+        $botUser = $request->botUser ?? null;
+
         $bot = Bot::query()
             ->where("id", $request->id)
             ->first();
 
+        //dd($request->id);
+
         return BusinessLogic::bots()
             ->setBot($bot)
+            ->setBotUser($botUser)
             ->update(
                 $request->all(),
                 $request->hasFile('images') ? $request->file('images') : null
