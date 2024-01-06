@@ -705,8 +705,8 @@ class ProductLogicFactory
             ->whereBot($this->bot)
             ->sendDocument(
                 $this->botUser->telegram_chat_id,
-                "Чек",
-                InputFile::createFromContents($file,"invoice.pdf")
+                "Счет на оплату",
+                InputFile::createFromContents($file,"счёт на оплату $order->id.pdf")
             );
 
 
