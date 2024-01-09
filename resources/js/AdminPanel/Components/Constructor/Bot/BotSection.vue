@@ -14,7 +14,7 @@ import YClientsForm from "@/AdminPanel/Components/Constructor/YClients/YClientsF
 import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 import BotFields from "@/AdminPanel/Components/Constructor/Bot/BotFields.vue";
 import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue";
-import AppointmentEventTable from "@/AdminPanel/Components/Constructor/Appointment/AppointmentEventTable.vue";
+import Appointment from "@/AdminPanel/Components/Constructor/Appointment/Appointment.vue";
 </script>
 <template>
 
@@ -77,7 +77,7 @@ import AppointmentEventTable from "@/AdminPanel/Components/Constructor/Appointme
     </div>
 
     <div v-if="step===13" class="pb-5 mb-5">
-        <AppointmentEventTable
+        <Appointment
             :bot="bot"
             v-if="!load"
         />

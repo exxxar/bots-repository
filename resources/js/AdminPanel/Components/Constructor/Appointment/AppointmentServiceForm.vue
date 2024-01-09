@@ -30,7 +30,7 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                     Ранее созданные категории:
                     <span
                         @click="serviceForm.category = category"
-                        class="badge bg-primary" v-for="category in categories">{{category}}</span>
+                        class="badge bg-primary mr-1 cursor-pointer" v-for="category in categories">{{category}}</span>
                 </p>
                 <label class="form-label"
                        id="service-category">
@@ -67,15 +67,56 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                     Описание услуги
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                     <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="serviceForm.description">
-                        Длина текста {{ serviceForm.description.length }}</small>
+                        Длина текста {{ serviceForm.description.length }} / 255</small>
                 </label>
                 <textarea type="text" class="form-control"
                           placeholder="Описание услуги"
                           aria-label="Описание услуги"
+                          maxlength="255"
                           v-model="serviceForm.description"
                           aria-describedby="service-description" required>
                     </textarea>
 
+            </div>
+
+            <div class="col-12 col-md-6 mb-3">
+                <label class="form-label" id="service-title">
+                    <Popper
+                        content="Цена оказываемой услуги">
+                        <i class="fa-regular fa-circle-question mr-1"></i>
+                    </Popper>
+                    Цена услуги, руб
+
+                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+
+
+                </label>
+                <input type="number" class="form-control"
+                       placeholder="Цена"
+                       aria-label="Цена"
+                       min="0"
+                       v-model="serviceForm.price"
+                       aria-describedby="price" required>
+            </div>
+
+            <div class="col-12 col-md-6 mb-3">
+                <label class="form-label" id="service-title">
+                    <Popper
+                        content="Цена скидки на оказываемую услугу">
+                        <i class="fa-regular fa-circle-question mr-1"></i>
+                    </Popper>
+                    Цена скидки на услугу, руб
+
+                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+
+
+                </label>
+                <input type="number" class="form-control"
+                       placeholder="Цена"
+                       aria-label="Цена"
+                       min="0"
+                       v-model="serviceForm.discount_price"
+                       aria-describedby="price" required>
             </div>
 
 
@@ -125,13 +166,14 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 
 <script>
 export default {
-    props: ["service", "bot"],
+    props: ["eventId", "bot","service"],
     data() {
         return {
             load: false,
             need_reset: false,
-            event_services: [],
+            categories: [],
             serviceForm: {
+                id:null,
                 title: null,
                 appointment_event_id: null,
                 description: null,
@@ -143,16 +185,7 @@ export default {
             }
         }
     },
-    computed: {
-        categories() {
-            if (this.event_services.length == 0)
-                return []
 
-          return this.event_services.map(function(obj) {
-                return obj["category"];
-            });
-        }
-    },
     watch: {
         serviceForm: {
             handler(val) {
@@ -162,7 +195,9 @@ export default {
         }
     },
     mounted() {
+        this.loadAppointmentServiceCategories()
 
+        console.log("Service form", this.service)
         if (this.service)
             this.$nextTick(() => {
                 this.serviceForm = {
@@ -181,6 +216,16 @@ export default {
 
     },
     methods: {
+        loadAppointmentServiceCategories(){
+          this.$store.dispatch("loadAppointmentServiceCategories",{
+              dataObject: {
+                  bot_id: this.bot.id || null,
+                  event_id: this.eventId || null,
+              }
+          }).then(resp=>{
+              this.categories = resp
+          })
+        },
         selectPhotos(item) {
             if (!this.serviceForm.images)
                 this.serviceForm.images = []
@@ -208,6 +253,7 @@ export default {
                 });
 
             data.append('bot_id', this.bot.id);
+            data.append('appointment_event_id', this.eventId);
 
             this.$store.dispatch(this.serviceForm.id === null ?
                     "addAppointmentService" :

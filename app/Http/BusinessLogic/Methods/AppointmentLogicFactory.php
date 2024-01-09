@@ -27,6 +27,7 @@ use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotPage;
 use App\Models\Company;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -196,10 +197,64 @@ class AppointmentLogicFactory
         $tmp->bot_id = $this->bot->id;
         $tmp->images = json_decode($tmp->images ?? '[]');
 
-        $event = AppointmentEvent::query()->update((array)$tmp);
+        $event = AppointmentEvent::query()->find($tmp->id);
+        $event->update((array)$tmp);
 
         return new AppointmentEventResource($event);
 
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function removeReview($reviewId, $force = false): AppointmentReviewResource
+    {
+        $review = !$force ?
+            AppointmentReview::query()->where("id", $reviewId)
+                ->first() :
+            AppointmentReview::query()->withTrashed()->where("id", $reviewId)
+                ->first();
+
+        if (is_null($review))
+            throw new HttpException(404, "Отзыв не найден");
+
+        $tmp = $review;
+
+        if ($force) {
+            $review->forceDelete();
+            return new AppointmentReviewResource($tmp);
+        }
+
+        $review->delete();
+
+        return new AppointmentReviewResource($tmp);
+    }
+
+
+    /**
+     * @throws HttpException
+     */
+    public function removeSchedule($scheduleId, $force = false): AppointmentScheduleResource
+    {
+        $schedule = !$force ?
+            AppointmentSchedule::query()->where("id", $scheduleId)
+                ->first() :
+            AppointmentEvent::query()->withTrashed()->where("id", $scheduleId)
+                ->first();
+
+        if (is_null($schedule))
+            throw new HttpException(404, "Событие не найдено");
+
+        $tmp = $schedule;
+
+        if ($force) {
+            $schedule->forceDelete();
+            return new AppointmentScheduleResource($tmp);
+        }
+
+        $schedule->delete();
+
+        return new AppointmentScheduleResource($tmp);
     }
 
     /**
@@ -272,6 +327,122 @@ class AppointmentLogicFactory
         $event->save();
 
         return new AppointmentEventResource($event);
+    }
+
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function storeSchedule(array $data): AppointmentScheduleCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(400, "Условия функции не выполнены!");
+
+        $validator = Validator::make($data, [
+            'appointment_event_id' => "required",
+            'schedule' => "required|array",
+            'schedule.*.start_time' => "required",
+            'schedule.*.day' => "required",
+            'schedule.*.week' => "required",
+            'schedule.*.month' => "required",
+            'schedule.*.year' => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $schedule = (object)$data["schedule"];
+        $tmpSchedule = [];
+
+        foreach ($schedule as $item) {
+            $item = (object)$item;
+
+            unset($item->appointment);
+
+            $item->appointment_event_id = $data["appointment_event_id"];
+
+
+            $tmp = AppointmentSchedule::query()->find($item->id ?? null);
+
+            if (!is_null($tmp)) {
+                $tmp->update((array)$item);
+                $tmpSchedule[] = $tmp;
+            } else
+                $tmpSchedule[] = AppointmentSchedule::query()->create((array)$item);
+
+        }
+
+
+        return new AppointmentScheduleCollection($tmpSchedule);
+
+    }
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function addService(array $data): AppointmentServiceResource
+    {
+        if (is_null($this->bot))
+            throw new HttpException(400, "Условия функции не выполнены!");
+
+        $validator = Validator::make($data, [
+            'appointment_event_id' => "required",
+            'title' => "required",
+            'description' => "required",
+            'category' => "required",
+            'images' => "required",
+            'price' => "required",
+            //'services.*.discount_price'=> "required",
+            //'services.*.need_prepayment'=> "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $tmp = (object)$data;
+        $tmp->need_prepayment = (bool)($tmp->need_prepayment ?? false);
+
+        $service = AppointmentService::query()->create((array)$tmp);
+
+
+        return new AppointmentServiceResource($service);
+
+    }
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function updateService(array $data): AppointmentServiceResource
+    {
+        if (is_null($this->bot))
+            throw new HttpException(400, "Условия функции не выполнены!");
+
+        $validator = Validator::make($data, [
+            'appointment_event_id' => "required",
+            'title' => "required",
+            'description' => "required",
+            'category' => "required",
+            'images' => "required",
+            'price' => "required",
+            //'services.*.discount_price'=> "required",
+            //'services.*.need_prepayment'=> "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $tmp = (object)$data;
+        $tmp->need_prepayment = (bool)($tmp->need_prepayment ?? false);
+
+        $service = AppointmentService::query()->find($tmp->id);
+        $service->update((array)$tmp);
+
+
+        return new AppointmentServiceResource($service);
+
     }
 
     /**
@@ -349,7 +520,7 @@ class AppointmentLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
-    public function addAppointment(array $data): AppointmentResource
+    public function storeAppointment(array $data): AppointmentResource
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(400, "Условия функции не выполнены!");
@@ -385,16 +556,21 @@ class AppointmentLogicFactory
             ->where("bot_id", $this->bot->id)
             ->first());
 
-        if ($hasAppointment)
+        if ($hasAppointment && is_null($data["id"]))
             throw new HttpException(403, "На данное время уже есть запись");
 
         $appointment = (object)$data;
 
         $appointment->bot_id = $this->bot->id;
         $appointment->bot_user_id = $this->botUser->id;
-        $appointment->status = 0;
+        $appointment->status = $appointment->status ?? 0;
 
-        $tmpAppointment = Appointment::query()->create((array)$appointment);
+
+        $tmpAppointment = Appointment::query()->find($appointment->id);
+        if (is_null($tmpAppointment))
+            $tmpAppointment = Appointment::query()->create((array)$appointment);
+
+        $tmpAppointment->update((array)$appointment);
 
         return new AppointmentResource($tmpAppointment);
 
@@ -427,9 +603,9 @@ class AppointmentLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
-    public function addReview(array $data): AppointmentReviewResource
+    public function storeReview(array $data): AppointmentReviewResource
     {
-        if (is_null($this->botUser))
+        if (is_null($this->botUser) || is_null($this->bot))
             throw new HttpException(400, "Условия функции не выполнены!");
 
         $validator = Validator::make($data, [
@@ -449,26 +625,35 @@ class AppointmentLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->first();
 
-        if (!is_null($appointment))
-            throw new HttpException(403, "Вы не посещали данное мероприятие");
+        if (is_null($appointment)) {
+            $appointment = Appointment::query()->create([
+                'bot_id' => $this->bot->id,
+                'appointment_event_id' => $data["appointment_event_id"],
+                'bot_user_id' => $this->botUser->id,
+                'appointment_schedule_id' => $data["appointment_schedule_id"],
+                'status' => AppointmentStatusEnum::Complete->value,
+            ]);
+            // throw new HttpException(403, "Вы не посещали данное мероприятие");
+        }
 
         if ($appointment->status != AppointmentStatusEnum::Complete->value)
             throw new HttpException(403, "Вы еще не посетили данное мероприятие");
 
-        $hasReview = !is_null(AppointmentReview::query()
-            ->where("appointment_event_id", $data["appointment_event_id"])
-            ->where("appointment_schedule_id", $data["appointment_schedule_id"])
-            ->where("bot_user_id", $this->botUser->id)
-            ->first());
+        /*   $hasReview = !is_null(AppointmentReview::query()
+               ->where("appointment_event_id", $data["appointment_event_id"])
+               ->where("appointment_schedule_id", $data["appointment_schedule_id"])
+               ->where("bot_user_id", $this->botUser->id)
+               ->first());
 
-        if ($hasReview)
-            throw new HttpException(400, "Отзыв уже добавлен");
+           if ($hasReview)
+               throw new HttpException(400, "Отзыв уже добавлен");*/
 
         $review = (object)$data;
 
         $review->bot_user_id = $this->botUser->id;
+        unset($review->bot_id);
 
-        $tmpReview = AppointmentReview::query()->create((array)$review);
+        $tmpReview = AppointmentReview::query()->updateOrCreate((array)$review);
 
         return new AppointmentReviewResource($tmpReview);
 
@@ -550,6 +735,19 @@ class AppointmentLogicFactory
         return new AppointmentResource($tmp);
     }
 
+    public function serviceCategoryList($appointmentEventId)
+    {
+
+        $categories = AppointmentService::query()
+            ->withTrashed()
+            ->where("appointment_event_id", $appointmentEventId)
+            ->get()
+            ->unique("category")
+            ->pluck("category");
+
+        return $categories->toArray();
+    }
+
     public function serviceList($appointmentEventId, $search = null, $size = null, $order = null, $direction = null): AppointmentServiceCollection
     {
 
@@ -575,15 +773,27 @@ class AppointmentLogicFactory
 
     }
 
-    public function scheduleList($appointmentEventId, $size = null, $order = null, $direction = null): AppointmentScheduleCollection
+    public function scheduleList($appointmentEventId, $date = null, $size = null, $order = null, $direction = null): AppointmentScheduleCollection
     {
         $size = $size ?? config('app.results_per_page');
 
         $times = AppointmentSchedule::query()
             ->withTrashed()
-            ->where("appointment_event_id", $appointmentEventId)
-            ->orderBy($order ?? 'updated_at', $direction ?? 'DESC')
-            ->paginate($size);
+            ->with(["appointment"])
+            ->where("appointment_event_id", $appointmentEventId);
+
+        $date = !is_null($date) ? Carbon::parse($date) : Carbon::now("+3");
+        $week = $date->weekOfYear;
+        $month = $date->month;
+        $year = $date->year;
+
+        $times = $times->where("week", $week)
+            ->where("month", $month - 1)
+            ->where("year", $year);
+
+
+        $times = $times->orderBy($order ?? 'updated_at', $direction ?? 'DESC')
+            ->get();
 
         return new AppointmentScheduleCollection($times);
     }
@@ -593,7 +803,7 @@ class AppointmentLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $times = AppointmentReview::query()
-            ->withTrashed()
+            //->withTrashed()
             ->where("appointment_event_id", $appointmentEventId)
             ->orderBy($order ?? 'updated_at', $direction ?? 'DESC')
             ->paginate($size);
@@ -613,7 +823,7 @@ class AppointmentLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $events = AppointmentEvent::query()
-            ->withTrashed()
+           // ->withTrashed()
             ->where("bot_id", $this->bot->id)
             ->where("is_group", $isGroup);
 
@@ -632,7 +842,7 @@ class AppointmentLogicFactory
         return new AppointmentEventCollection($events);
     }
 
-    public function appointmentList($status = null): AppointmentCollection
+    public function appointmentList($eventId = null, $status = null): AppointmentCollection
     {
         if (is_null($this->bot))
             throw new HttpException(400, "Не все условия функции выполнены!");
@@ -641,7 +851,11 @@ class AppointmentLogicFactory
 
         $appointments = Appointment::query()
             ->withTrashed()
+            ->with(["schedule"])
             ->where("bot_id", $this->bot->id);
+
+        if (!is_null($eventId))
+            $appointments = $appointments->where("appointment_event_id", $eventId);
 
         if (!is_null($status))
             $appointments = $appointments->where("status", $status);

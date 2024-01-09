@@ -37,6 +37,7 @@ createInertiaApp({
             current(date) {
                 return moment(date).format("YYYY-MM-DD")
             },
+
         }
 
         app

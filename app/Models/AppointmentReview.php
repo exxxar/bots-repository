@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AppointmentReview extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -36,13 +37,21 @@ class AppointmentReview extends Model
         'bot_user_id' => 'integer',
     ];
 
-    public function appointmentEvents(): BelongsToMany
+    protected $with = ["schedule","botUser"];
+
+
+    public function schedule(): BelongsTo
     {
-        return $this->belongsToMany(AppointmentEvent::class);
+        return $this->belongsTo(AppointmentSchedule::class,"appointment_schedule_id","id");
+    }
+
+    public function botUser(): BelongsTo
+    {
+        return $this->belongsTo(BotUser::class,"bot_user_id","id");
     }
 
     public function appointmentEvent(): BelongsTo
     {
-        return $this->belongsTo(AppointmentEvent::class);
+        return $this->belongsTo(AppointmentEvent::class,"appointment_event_id","id");
     }
 }

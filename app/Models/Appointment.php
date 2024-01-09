@@ -24,6 +24,9 @@ class Appointment extends Model
         'bot_user_id',
         'appointment_schedule_id',
         'status',
+        'name',
+        'phone',
+        'info',
     ];
 
     /**
@@ -39,27 +42,30 @@ class Appointment extends Model
         'appointment_event_id' => 'integer',
     ];
 
+    protected $with = ["botUser"];
+
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
     }
 
+    public function schedule(): BelongsTo
+    {
+        return $this->belongsTo(AppointmentSchedule::class,"appointment_schedule_id","id");
+    }
+
     public function botUser(): BelongsTo
     {
-        return $this->belongsTo(BotUser::class);
+        return $this->belongsTo(BotUser::class,"bot_user_id","id");
     }
 
-    public function appointmentSchedule(): BelongsTo
-    {
-        return $this->belongsTo(AppointmentSchedule::class);
-    }
 
-    public function appointmentEvent(): HasOne
+    public function event(): HasOne
     {
         return $this->hasOne(AppointmentEvent::class);
     }
 
-    public function appointmentServices(): HasMany
+    public function services(): HasMany
     {
         return $this->hasMany(AppointmentService::class);
     }

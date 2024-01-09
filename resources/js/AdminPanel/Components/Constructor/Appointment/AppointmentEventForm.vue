@@ -62,11 +62,12 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
                     Описание события
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                     <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="eventForm.description">
-                        Длина текста {{ eventForm.description.length }}</small>
+                        Длина текста {{ eventForm.description.length }}/255</small>
                 </label>
                 <textarea type="text" class="form-control"
                           placeholder="Описание мероприятия"
                           aria-label="Описание мероприятия"
+                          maxlength="255"
                           v-model="eventForm.description"
                           aria-describedby="event-description" required>
                     </textarea>
@@ -87,12 +88,13 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
                     Текст при записи на событие
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                     <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="eventForm.on_start_appointment">
-                        Длина текста {{ eventForm.on_start_appointment.length }}</small>
+                        Длина текста {{ eventForm.on_start_appointment.length }}/255</small>
                 </label>
                 <textarea type="text" class="form-control"
                           placeholder="Текст при записи на событие"
                           aria-label="Текст при записи на событие"
                           v-model="eventForm.on_start_appointment"
+                          maxlength="255"
                           aria-describedby="event-on_start_appointment" required>
                     </textarea>
 
@@ -112,12 +114,13 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
                     Текст при отмене записи на событие
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                     <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="eventForm.on_cancel_appointment">
-                        Длина текста {{ eventForm.on_cancel_appointment.length }}</small>
+                        Длина текста {{ eventForm.on_cancel_appointment.length }}/255</small>
                 </label>
                 <textarea type="text" class="form-control"
                           placeholder="Текст при отмене записи на событие"
                           aria-label="Текст при отмене записи на событие"
                           v-model="eventForm.on_cancel_appointment"
+                          maxlength="255"
                           aria-describedby="event-on_cancel_appointment" required>
                     </textarea>
 
@@ -137,12 +140,13 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
                     Текст после прохождения события
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                     <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="eventForm.on_after_appointment">
-                        Длина текста {{ eventForm.on_after_appointment.length }}</small>
+                        Длина текста {{ eventForm.on_after_appointment.length }}/255</small>
                 </label>
                 <textarea type="text" class="form-control"
                           placeholder="Текст после прохождения события"
                           aria-label="Текст после прохождения события"
                           v-model="eventForm.on_after_appointment"
+                          maxlength="255"
                           aria-describedby="event-on_after_appointment" required>
                     </textarea>
 
@@ -162,12 +166,13 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
                     Текст при повторной записи на событие
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                     <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="eventForm.on_repeat_appointment">
-                        Длина текста {{ eventForm.on_repeat_appointment.length }}</small>
+                        Длина текста {{ eventForm.on_repeat_appointment.length }}/255</small>
                 </label>
                 <textarea type="text" class="form-control"
                           placeholder=" Текст при повторной записи на событие"
                           aria-label=" Текст при повторной записи на событие"
                           v-model="eventForm.on_repeat_appointment"
+                          maxlength="255"
                           aria-describedby="event-on_repeat_appointment" required>
                     </textarea>
 
@@ -248,22 +253,6 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 mb-3">
-                <div class="form-check">
-                    <input class="form-check-input"
-                           v-model="need_services"
-                           type="checkbox" id="need-services">
-                    <label class="form-check-label" for="need-services">
-                        Нужно добавить сервисы
-                    </label>
-                </div>
-            </div>
-            <div class="col-12 mb-3" v-if="need_services">
-                <AppointmentServiceForm
-                    :bot="bot"/>
-            </div>
-        </div>
         <div class="row">
             <div class="col-12">
                 <button

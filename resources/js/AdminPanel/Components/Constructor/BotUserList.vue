@@ -18,7 +18,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         </div>
     </div>
     <div class="row" v-if="bot_users.length>0">
-        <div class="col-12 col-md-12 mb-3" >
+        <div class="col-12 col-md-12 mb-3">
 
             <table class="table">
                 <thead>
@@ -29,26 +29,29 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <th scope="col">Домен</th>
                     <th scope="col">Телефон</th>
                     <th scope="col">TG id</th>
-                    <th scope="col">Админ</th>
-                    <th scope="col">VIP</th>
-                    <th scope="col">Доставщик</th>
-                    <th scope="col">Менеджер</th>
-                    <th scope="col">За работой</th>
+                    <th scope="col" v-if="!simple">Админ</th>
+                    <th scope="col" v-if="!simple">VIP</th>
+                    <th scope="col" v-if="!simple">Доставщик</th>
+                    <th scope="col" v-if="!simple">Менеджер</th>
+                    <th scope="col" v-if="!simple">За работой</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(botUser, index) in bot_users">
-                    <th scope="row">{{botUser.id}}</th>
+                <tr
+                    @click="selectUser(botUser)"
+                    v-for="(botUser, index) in bot_users">
+                    <th scope="row">{{ botUser.id }}</th>
                     <td>{{ botUser.fio_from_telegram || 'Не указано' }}</td>
                     <td>{{ botUser.name || 'Не указано' }}</td>
                     <td>
-                        <a :href="'https://t.me/'+ botUser.username" target="_blank" v-if="botUser.username">@{{ botUser.username }}</a>
+                        <a :href="'https://t.me/'+ botUser.username" target="_blank"
+                           v-if="botUser.username">@{{ botUser.username }}</a>
                         <span v-else>Не указано</span>
                     </td>
 
                     <td>{{ botUser.phone || 'Не указано' }}</td>
                     <td>{{ botUser.telegram_chat_id || 'Не указано' }}</td>
-                    <td>
+                    <td v-if="!simple">
                         <span
                             @click="changeUserStatus(index, 0, 'is_admin')"
                             v-if="botUser.is_admin"><i class="fa-solid fa-check text-success"></i></span>
@@ -56,7 +59,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             @click="changeUserStatus(index, 1, 'is_admin')"
                             v-else><i class="fa-solid fa-xmark text-danger"></i></span>
                     </td>
-                    <td>
+                    <td v-if="!simple">
                         <span
                             @click="changeUserStatus(index, 0, 'is_vip')"
                             v-if="botUser.is_vip"><i class="fa-solid fa-check text-success"></i></span>
@@ -64,7 +67,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             @click="changeUserStatus(index, 1, 'is_vip')"
                             v-else><i class="fa-solid fa-xmark text-danger"></i></span>
                     </td>
-                    <td>
+                    <td v-if="!simple">
                         <span
                             @click="changeUserStatus(index, 0, 'is_deliveryman')"
                             v-if="botUser.is_deliveryman"><i class="fa-solid fa-check text-success"></i></span>
@@ -72,7 +75,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             @click="changeUserStatus(index, 1, 'is_deliveryman')"
                             v-else><i class="fa-solid fa-xmark text-danger"></i></span>
                     </td>
-                    <td>
+                    <td v-if="!simple">
                         <span
                             @click="changeUserStatus(index, 0, 'is_manager')"
                             v-if="botUser.is_manager"><i class="fa-solid fa-check text-success"></i></span>
@@ -80,7 +83,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             @click="changeUserStatus(index, 1, 'is_manager')"
                             v-else><i class="fa-solid fa-xmark text-danger"></i></span>
                     </td>
-                    <td>
+                    <td v-if="!simple">
                         <span
                             @click="changeUserStatus(index, 0, 'is_work')"
                             v-if="botUser.is_work"><i class="fa-solid fa-check text-success"></i></span>
@@ -116,9 +119,10 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
+    props: ["simple"],
     data() {
         return {
-            bot:null,
+            bot: null,
             loading: true,
             bot_users: [],
             search: null,
@@ -126,15 +130,18 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getBotUsers', 'getBotUsersPaginateObject','getCurrentBot']),
+        ...mapGetters(['getBotUsers', 'getBotUsersPaginateObject', 'getCurrentBot']),
     },
     mounted() {
-        this.loadCurrentBot().then(()=>{
+        this.loadCurrentBot().then(() => {
             this.loadUsers();
         })
 
     },
     methods: {
+        selectUser(botUser) {
+            this.$emit("select", botUser)
+        },
         loadCurrentBot(bot = null) {
             return this.$store.dispatch("updateCurrentBot", {
                 bot: bot
@@ -142,7 +149,7 @@ export default {
                 this.bot = this.getCurrentBot
             })
         },
-        changeUserStatus(index, status, type="is_admin") {
+        changeUserStatus(index, status, type = "is_admin") {
 
 
             this.bot_users[index][type] = status === 1
@@ -176,7 +183,7 @@ export default {
             this.loading = true
             this.$store.dispatch("loadBotUsers", {
                 dataObject: {
-                    botId: this.bot.id|| null,
+                    botId: this.bot.id || null,
                     search: this.search
                 },
                 size: 100,

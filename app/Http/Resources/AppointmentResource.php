@@ -18,8 +18,12 @@ class AppointmentResource extends JsonResource
             'bot_user_id' => $this->bot_user_id,
             'appointment_schedule_id' => $this->appointment_schedule_id,
             'status' => $this->status,
-            'appointmentSchedule' => AppointmentScheduleResource::make($this->whenLoaded('appointmentSchedule')),
-            'appointmentServices' => AppointmentServiceCollection::make($this->whenLoaded('appointmentServices')),
+            'name' => $this->name,
+            'phone' => $this->phone,
+            'info' => $this->info,
+            'schedule' => $this->whenLoaded('schedule') ?? null,
+            'botUser' => $this->whenLoaded('botUser') ?? null,
+            'services' => AppointmentServiceCollection::make($this->whenLoaded('services')),
         ];
     }
 }

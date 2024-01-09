@@ -21,6 +21,9 @@ class AppointmentSchedule extends Model
         'start_time',
         'end_time',
         'day',
+        'year',
+        'month',
+        'week',
     ];
 
     /**
@@ -31,12 +34,27 @@ class AppointmentSchedule extends Model
     protected $casts = [
         'id' => 'integer',
         'appointment_event_id' => 'integer',
+        'day'=> 'integer',
+        'year'=> 'integer',
+        'month'=> 'integer',
+        'week'=> 'integer',
     ];
+
+   // protected $appends = ["has_appointment"];
+   // protected $with = ["appointment"];
 
     public function appointmentEvent(): BelongsTo
     {
         return $this->belongsTo(AppointmentEvent::class);
     }
 
+    public function appointment(): BelongsTo
+    {
+        return $this->belongsTo(Appointment::class,"id","appointment_schedule_id");
+    }
+
+    public function getHasAppointmentAttribute(){
+        return true;//!is_null($this->appointment());
+    }
 
 }

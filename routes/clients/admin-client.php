@@ -122,24 +122,27 @@ Route::prefix("admin")
                 Route::post("/event-list", "eventList");
                 Route::post("/add-event", "addEvent");
                 Route::post("/duplicate-event/{id}", "duplicateEvent");
-                Route::put("/update-event", "updateEvent");
+                Route::post("/update-event", "updateEvent");
                 Route::delete("/remove-event/{id}", "removeEvent");
                 Route::delete("/force-remove-event/{id}", "forceRemoveEvent");
                 Route::get("/restore-event/{id}", "restoreEvent");
 
-                Route::post("/time-list/{eventId}", "timeList");
-                Route::post("/add-time", "addTime");
-                Route::put("/update-time", "updateTime");
-                Route::delete("/remove-time", "removeTime");
+                Route::post("/store-schedule", "storeSchedule");
+                Route::post("/schedule-list/{eventId}", "scheduleList");
+                Route::delete("/remove-schedule/{scheduleId}", "removeSchedule");
 
+                Route::post("/store-review", "storeReview");
+                Route::post("/review-list/{eventId}", "reviewList");
+                Route::delete("/remove-review/{reviewId}", "removeReview");
+
+                Route::post("/service-category-list/{eventId}", "serviceCategoryList");
                 Route::post("/service-list/{eventId}", "serviceList");
                 Route::post("/add-service", "addService");
-                Route::put("/update-service", "updateService");
-                Route::delete("/remove-service", "removeService");
+                Route::post("/update-service", "updateService");
+                Route::delete("/remove-service/{serviceId}", "removeService");
 
-                Route::post("/appointment-list/{eventId?}", "appointmentList");
-                Route::post("/add-appointment", "addAppointment");
-                Route::put("/update-appointment", "updateAppointment");
+                Route::post("/appointment-list/{eventId}", "appointmentList");
+                Route::post("/store-appointment", "storeAppointment");
                 Route::delete("/remove-appointment", "removeAppointment");
             });
 

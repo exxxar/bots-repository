@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('appointment_event_id')->nullable()->constrained();
             $table->foreignId('appointment_schedule_id')->nullable()->constrained();
             $table->foreignId('bot_user_id')->nullable()->constrained();
-            $table->integer('rating')->default(0);
+            $table->double('rating')->default(0);
             $table->longText('text')->nullable();
             $table->timestamps();
             $table->softDeletes();
