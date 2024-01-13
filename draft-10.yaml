@@ -1,0 +1,69 @@
+models:
+  Appointment:
+    bot_id: id foreign:bots
+    bot_user_id: foreign:bot_users
+    appointment_schedule_id: foreign:appointment_schedules
+    status: integer default:0
+    relationships:
+      belongsTo: Bot
+      hasOne: BotUser, AppointmentSchedule
+      hasMany: AppointmentService
+
+  AppointmentEvent:
+    bot_id: id foreign:bots
+    title: string:255 nullable
+    subtitle: string:255 nullable
+    description: longtext nullable
+    images: json nullable
+    is_group: boolean default:false
+    max_people: integer default:0 nullable
+    mix_people: integer default:0 nullable
+    on_start_appointment: longtext nullable
+    on_cancel_appointment: longtext nullable
+    on_after_appointment: longtext nullable
+    on_repeat_appointment: longtext nullable
+    relationships:
+      belongsTo: Bot
+
+  AppointmentSchedule:
+    appointment_event_id: id foreign:appointment_events
+    start_time: string:5 nullable
+    end_time: string:5 nullable
+    day: short default:1
+    relationships:
+      belongsTo: AppointmentEvent
+
+  AppointmentService:
+    appointment_event_id: id foreign:appointment_events
+    title: string:255 nullable
+    description: longtext nullable
+    category: string:255 nullable
+    images: json nullable
+    price: double default:0
+    discount_price: double default:0
+    need_prepayment: boolean default:false
+    relationships:
+      hasMany: Appointment
+      belongsToMany: AppointmentEvent
+
+  AppointmentReview:
+    appointment_event_id: id foreign:appointment_events
+    rating: integer default:0
+    images: json nullable
+    text: longtext nullable
+    relationships:
+      belongsToMany: AppointmentEvent
+
+seeders:   Appointment,   AppointmentEvent,    AppointmentSchedule,   AppointmentService,   AppointmentReview
+
+controllers:
+  Appointment:
+    resource: api
+  AppointmentEvent:
+    resource: api
+  AppointmentSchedule:
+    resource: api
+  AppointmentService:
+    resource: api
+  AppointmentReview:
+    resource: api

@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic;
 
 use App\Http\BusinessLogic\Methods\AmoLogicFactory;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory;
+use App\Http\BusinessLogic\Methods\QuizLogicFactory;
 use App\Http\BusinessLogic\Methods\YClientLogicFactory;
 use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory;
 use App\Http\BusinessLogic\Methods\BotDialogsLogicFactory;
@@ -23,6 +24,7 @@ use App\Http\BusinessLogic\Methods\ProductLogicFactory;
 class BusinessLogic
 {
     protected AmoLogicFactory $amo;
+    protected QuizLogicFactory $quiz;
     protected AppointmentLogicFactory $appointment;
     protected YClientLogicFactory $yClient;
     protected BotLogicFactory $bot;
@@ -42,6 +44,7 @@ class BusinessLogic
     public function __construct()
     {
         $this->amo = new AmoLogicFactory();
+        $this->quiz = new QuizLogicFactory();
         $this->appointment = new AppointmentLogicFactory();
         $this->yClient = new YClientLogicFactory();
         $this->bot = new BotLogicFactory();
@@ -62,6 +65,11 @@ class BusinessLogic
     public function bots(): BotLogicFactory
     {
         return $this->bot;
+    }
+
+    public function quiz(): QuizLogicFactory
+    {
+        return $this->quiz;
     }
 
     public function yClients(): YClientLogicFactory

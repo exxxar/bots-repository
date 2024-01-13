@@ -15,6 +15,7 @@ import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 import BotFields from "@/AdminPanel/Components/Constructor/Bot/BotFields.vue";
 import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue";
 import Appointment from "@/AdminPanel/Components/Constructor/Appointment/Appointment.vue";
+import Quizzes from "@/AdminPanel/Components/Constructor/Quiz/Quizzes.vue";
 </script>
 <template>
 
@@ -48,6 +49,8 @@ import Appointment from "@/AdminPanel/Components/Constructor/Appointment/Appoint
 
                 <li><a class="dropdown-item" href="#bot-appointments" @click="setStep(13)">
                     <i class="fa-regular fa-calendar-days  mr-2"></i>Запись на событие (прием)</a></li>
+                <li><a class="dropdown-item" href="#bot-quizzes" @click="setStep(14)">
+                    <i class="fa-solid fa-q mr-2"></i>Квизы</a></li>
 
                 <li><a class="dropdown-item" href="#bot-custom-fields" @click="setStep(10)">
                     <i class="fa-solid fa-code mr-2"></i>Настраиваемые поля</a></li>
@@ -74,6 +77,14 @@ import Appointment from "@/AdminPanel/Components/Constructor/Appointment/Appoint
         </div>
 
 
+    </div>
+
+
+    <div v-if="step===14" class="pb-5 mb-5">
+        <Quizzes
+            :bot="bot"
+            v-if="!load"
+        />
     </div>
 
     <div v-if="step===13" class="pb-5 mb-5">

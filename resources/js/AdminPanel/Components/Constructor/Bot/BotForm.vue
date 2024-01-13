@@ -928,11 +928,12 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
             </div>
             <div class="col-12">
                 <button type="submit"
-                        :disabled="!botForm.bot_token"
+                        :disabled="!botForm.bot_token||!can_create"
                         title="Сохранение бота"
                         class="btn btn-primary min-menu-btn w-100">
                     <span v-if="!bot">Добавить бота</span>
                     <span v-else>Обновить бота</span>
+                    <span class="ml-2" v-if="!can_create">{{spent_time_counter}} сек.</span>
                 </button>
             </div>
         </div>
@@ -947,6 +948,8 @@ export default {
     data() {
         return {
             tab: 0,
+            spent_time_counter:0,
+            can_create:true,
             messages: [],
             need_company_select: false,
             selected_warning: null,
@@ -1147,6 +1150,10 @@ export default {
     },
     mounted() {
         //this.loadCurrentCompany()
+        if (localStorage.getItem("cashman_admin_bot_creator_counter") != null) {
+            this.can_create = false;
+            this.startTimer(localStorage.getItem("cashman_admin_bot_creator_counter"))
+        }
 
         window.addEventListener('store_current_company-change-event', (event) => {
             this.company = this.getCurrentCompany
@@ -1239,6 +1246,21 @@ export default {
             })
     },
     methods: {
+        startTimer(time) {
+            this.spent_time_counter = time != null ? Math.min(time, 10) : 10;
+
+            let counterId = setInterval(() => {
+                    if (this.spent_time_counter > 0)
+                        this.spent_time_counter--
+                    else {
+                        clearInterval(counterId)
+                        this.can_create = true
+                        this.spent_time_counter = null
+                    }
+                    localStorage.setItem("cashman_admin_bot_creator_counter", this.spent_time_counter)
+                }, 1000
+            )
+        },
         alert(msg, tab = null) {
             if (tab != null)
                 this.tab = tab
@@ -1360,6 +1382,9 @@ export default {
                     text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
                     type: 'success'
                 });
+
+                this.startTimer();
+                this.can_create = false
 
                 this.$store.dispatch("updateBotWebhook", {
                     dataObject: {

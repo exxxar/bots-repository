@@ -11,53 +11,81 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                        placeholder="Поиск события"
                        aria-label="Поиск события"
                        v-model="search"
-                       aria-describedby="appointment-search-event">
+                       aria-describedby="quiz-search-quiz">
                 <button class="btn btn-outline-secondary "
-                        @click="loadAppointmentEvents(0)"
+                        @click="loadQuizzes(0)"
                         type="button"
-                        id="appointment-search-event">Найти
+                        id="quiz-search-quiz">Найти
                 </button>
             </div>
         </div>
         <div class="col-12">
-            <table class="table" v-if="events.length>0">
+            <table class="table" v-if="quizzes.length>0">
                 <thead>
-
 
                 <tr>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('id')">#</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('title')">Название</th>
-                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('subtitle')">Подзаголовок</th>
+                    <th scope="col">Число вопросов</th>
+                    <th scope="col">Число команд</th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('image')">Изображение к квизу</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('description')">Описание</th>
-                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('is_group')">Групповое</th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('completed_at')">Квиз пройден</th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('start_at')">Дата и время начала</th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('end_at')">Дата и время завершения</th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('display_type')">Тип отображения</th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('show_answers')">Показывать ответы по
+                        окончанию раунда
+                    </th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('updated_at')">Дата изменения</th>
                     <th scope="col">Действие</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(event, index) in events"
-
-                    v-bind:class="{'border-info':event.deleted_at==null,'border-danger':event.deleted_at!=null}">
-                    <th scope="row">{{ event.id }}</th>
-                    <td @click="selectEvent(event)">{{ event.title || 'Не указано' }}
+                <tr v-for="(quiz, index) in quizzes"
+                    v-bind:class="{'border-info':quiz.deleted_at==null,'border-danger':quiz.deleted_at!=null}">
+                    <th scope="row">{{ quiz.id }}</th>
+                    <td @click="selectEvent(quiz)">{{ quiz.title || 'Не указано' }}
                     </td>
-                    <td>{{ event.subtitle || 'Не указано' }}</td>
-                    <td>{{ event.description || 'Не указано' }}</td>
+                    <td>{{ (quiz.questions || [] ).length }}</td>
+                    <td>{{ (quiz.commands || [] ).length }}</td>
+                    <td>{{ quiz.image || 'Не указано' }}</td>
+                    <td>{{ quiz.description || 'Не указано' }}</td>
                     <td>
-                        <i class="fa-solid fa-chevron-down text-success" v-if="event.is_group"></i>
+                        <p v-if="quiz.completed_at" class="mb-0"> {{ $filters.currentFull(quiz.completed_at) }}</p>
+                        <p v-else>Не задано</p>
+
+                    </td>
+                    <td>
+                        <p v-if="quiz.start_at" class="mb-0"> {{ $filters.currentFull(quiz.start_at) }}</p>
+                        <p v-else>Не задано</p>
+                    </td>
+                    <td>
+                        <p v-if="quiz.end_at" class="mb-0"> {{ $filters.currentFull(quiz.end_at) }}</p>
+                        <p v-else>Не задано</p>
+                    </td>
+                    <td>
+                        {{ quiz.display_type }}
+                    </td>
+                    <td>
+                        {{ quiz.time_limit }}
+                    </td>
+
+                    <td>
+                        <i class="fa-solid fa-chevron-down text-success" v-if="quiz.show_answers"></i>
                         <i class="fa-solid  fa-xmark text-danger" v-else></i>
                     </td>
-                    <td>{{ $filters.current(event.updated_at) }}</td>
+                    <td>{{ $filters.current(quiz.updated_at) }}</td>
                     <td>
-                        <div class="dropdown" v-if="event.id">
+                        <div class="dropdown" v-if="quiz.id">
                             <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                 <i class="fa-solid fa-ellipsis"></i>
                             </button>
                             <ul class="dropdown-menu">
-                                <li v-if="event.deleted_at==null">
+                                <li v-if="quiz.deleted_at==null">
                                     <a class="dropdown-item"
-                                       @click="removeAppointmentEvent(event.id)"
+                                       @click="removeQuiz(quiz.id)"
                                        href="javascript:void(0)">Удалить</a></li>
                             </ul>
                         </div>
@@ -72,7 +100,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         </div>
         <div class="col-12">
             <Pagination
-                v-on:pagination_page="nextAppointmentEvents"
+                v-on:pagination_page="nextQuizzes"
                 v-if="paginate_object"
                 :pagination="paginate_object"/>
         </div>
@@ -89,32 +117,29 @@ export default {
             direction: 'desc',
             order: 'updated_at',
             show: true,
-            is_group: false,
             loading: true,
-            events: [],
+            quizzes: [],
             search: null,
             paginate_object: null,
         }
     },
 
     computed: {
-        ...mapGetters(['getAppointmentEvents', 'getAppointmentEventsPaginateObject']),
+        ...mapGetters(['getQuizzes', 'getQuizzesPaginateObject']),
 
     },
     mounted() {
-        this.loadAppointmentEvents();
+        this.loadQuizzes();
     },
     methods: {
-
-        removeAppointmentEvent(id){
+        removeQuiz(id) {
             this.loading = true
-            this.$store.dispatch("removeAppointmentEvent", {
-                dataObject: {
-                    appointmentEventId: id,
-                },
+            this.$store.dispatch("removeQuiz", {
+                quizId: id
+
             }).then(resp => {
                 this.loading = false
-                this.loadAppointmentEvents(0)
+                this.loadQuizzes(0)
                 this.$notify("Событие успешно удалено");
             }).catch(() => {
                 this.loading = false
@@ -122,24 +147,24 @@ export default {
             })
         },
 
-        nextAppointmentEvents(index) {
-            this.loadAppointmentEvents(index)
+
+        nextQuizzes(index) {
+            this.loadQuizzes(index)
         },
-        selectEvent(event){
-          this.$emit("select", event)
+        selectEvent(quiz) {
+            this.$emit("select", quiz)
         },
         loadAndOrder(order) {
             this.order = order
             this.direction = this.direction === 'desc' ? 'asc' : 'desc'
-            this.loadAppointmentEvents(0)
+            this.loadQuizzes(0)
         },
-        loadAppointmentEvents(page = 0) {
+        loadQuizzes(page = 0) {
             this.loading = true
-            this.$store.dispatch("loadAppointmentEvents", {
+            this.$store.dispatch("loadQuizzes", {
                 dataObject: {
                     bot_id: this.bot.id || null,
                     search: this.search,
-                    is_group: this.is_group,
                     order: this.order,
                     direction: this.direction
                 },
@@ -147,8 +172,8 @@ export default {
                 size: 20
             }).then(resp => {
                 this.loading = false
-                this.events = this.getAppointmentEvents
-                this.paginate_object = this.getAppointmentEventsPaginateObject
+                this.quizzes = this.getQuizzes
+                this.paginate_object = this.getQuizzesPaginateObject
             }).catch(() => {
                 this.loading = false
             })

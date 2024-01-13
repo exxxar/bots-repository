@@ -139,3 +139,14 @@ Route::apiResource('appointment-schedule', App\Http\Controllers\AppointmentSched
 Route::apiResource('appointment-service', App\Http\Controllers\AppointmentServiceController::class);
 
 Route::apiResource('appointment-review', App\Http\Controllers\AppointmentReviewController::class);
+
+
+Route::apiResource('quiz', \App\Http\Controllers\Admin\QuizController::class);
+
+Route::apiResource('quiz-command', App\Http\Controllers\QuizCommandController::class);
+
+Route::apiResource('quiz-result', App\Http\Controllers\QuizResultController::class);
+
+Route::apiResource('quiz-question', App\Http\Controllers\QuizQuestionController::class);
+
+Route::apiResource('quiz-answer', App\Http\Controllers\QuizAnswerController::class);

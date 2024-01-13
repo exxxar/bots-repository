@@ -1,69 +1,66 @@
 models:
-  Appointment:
+  Quiz:
+    title: string:255 nullable
+    image: string:255 nullable
+    description: longtext nullable
+    completed_at: timestamp nullable
+    start_at: timestamp nullable
+    end_at: timestamp nullable
+    display_type: integer default:0
+    time_limit: double default:0
+    show_answers: boolean default:false
     bot_id: id foreign:bots
-    bot_user_id: foreign:bot_users
-    appointment_schedule_id: foreign:appointment_schedules
-    status: integer default:0
     relationships:
       belongsTo: Bot
-      hasOne: BotUser, AppointmentSchedule
-      hasMany: AppointmentService
+      belongsToMany: QuizCommand
 
-  AppointmentEvent:
-    bot_id: id foreign:bots
-    title: string:255 nullable
-    subtitle: string:255 nullable
-    description: longtext nullable
-    images: json nullable
-    is_group: boolean default:false
-    max_people: integer default:0 nullable
-    mix_people: integer default:0 nullable
-    on_start_appointment: longtext nullable
-    on_cancel_appointment: longtext nullable
-    on_after_appointment: longtext nullable
-    on_repeat_appointment: longtext nullable
-    relationships:
-      belongsTo: Bot
-
-  AppointmentSchedule:
-    appointment_event_id: id foreign:appointment_events
-    start_time: string:5 nullable
-    end_time: string:5 nullable
-    day: short default:1
-    relationships:
-      belongsTo: AppointmentEvent
-
-  AppointmentService:
-    appointment_event_id: id foreign:appointment_events
+  QuizCommand:
     title: string:255 nullable
     description: longtext nullable
-    category: string:255 nullable
-    images: json nullable
-    price: double default:0
-    discount_price: double default:0
-    need_prepayment: boolean default:false
+    logo: string:255 nullable
     relationships:
-      hasMany: Appointment
-      belongsToMany: AppointmentEvent
+      belongsToMany: BotUser, Quiz
 
-  AppointmentReview:
-    appointment_event_id: id foreign:appointment_events
-    rating: integer default:0
-    images: json nullable
+  QuizResult:
+    quiz_id: id foreign:quizs
+    quiz_command_id: id foreign:quiz_commands
+    points: double default:0
+    time: double default:0
+    result: json nullable
+    relationships:
+      belongsTo: Quiz, QuizCommand
+
+  QuizQuestion:
     text: longtext nullable
+    media_content: json nullable
+    content_type: integer default:0
+    is_multiply: boolean default:false
+    is_open: boolean default:false
+    round: integer default:0
     relationships:
-      belongsToMany: AppointmentEvent
+      belongsToMany: Quiz
+      hasMany: QuizAnswer
 
-seeders:   Appointment,   AppointmentEvent,    AppointmentSchedule,   AppointmentService,   AppointmentReview
+  QuizAnswer:
+    quiz_question_id: id foreign:quiz_questions
+    text: longtext nullable
+    media_content: json nullable
+    content_type: integer default:0
+    is_right_answer: boolean default:false
+    points: double default:0
+    relationships:
+      hasOne: QuizQuestion
+
+seeders:     Quiz,     QuizCommand,      QuizResult,      QuizQuestion, QuizAnswer
 
 controllers:
-  Appointment:
+  Quiz:
     resource: api
-  AppointmentEvent:
+  QuizCommand:
     resource: api
-  AppointmentSchedule:
+  QuizResult:
     resource: api
-  AppointmentService:
+  QuizQuestion:
     resource: api
-  AppointmentReview:
+  QuizAnswer:
     resource: api

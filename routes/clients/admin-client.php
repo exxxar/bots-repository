@@ -115,6 +115,25 @@ Route::prefix("admin")
                 Route::delete('/remove/{id}', "remove")->middleware(["role:admin"]);
             });
 
+        Route::prefix("quizzes")
+            ->controller(\App\Http\Controllers\Admin\QuizController::class)
+            ->middleware(["role:manager"])
+            ->group(function () {
+                Route::post("/list-of-quiz", "listOfQuiz");
+                Route::post("/list-of-quiz-questions/{quizId}", "listOfQuizQuestions");
+                Route::post("/list-of-quiz-commands/{quizId}", "listOfQuizCommands");
+                Route::post("/list-of-results", "listOfResults");
+                Route::post("/quiz-store", "quizStore");
+                Route::post("/quiz-question-store", "quizQuestionStore");
+                Route::post("/quiz-command-store", "quizCommandStore");
+                Route::delete("/remove-quiz/{id}", "removeQuiz");
+                Route::delete("/remove-quiz-question/{id}", "removeQuestionQuiz");
+                Route::delete("/remove-quiz-answer/{id}", "removeQuizAnswer");
+                Route::delete("/remove-quiz-command/{id}", "removeQuizCommand");
+                Route::get("/restore-quiz/{id}", "restoreQuiz");
+
+            });
+
         Route::prefix("appointments")
             ->controller(\App\Http\Controllers\Admin\AppointmentController::class)
             ->middleware(["role:manager"])

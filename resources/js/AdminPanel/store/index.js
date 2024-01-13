@@ -10,6 +10,7 @@ import slugs from './modules/slugs';
 import products from './modules/products';
 import media from './modules/media';
 import appointments from './modules/appointments';
+import quizzes from './modules/quiz';
 import util from "@/AdminPanel/store/modules/utilites";
 
 
@@ -126,6 +127,7 @@ export default createStore({
         dialogGroups,
         slugs,
         products,
+        quizzes,
         media
     }
 })

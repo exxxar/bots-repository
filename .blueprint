@@ -1,56 +1,57 @@
 created:
-    - app/Http/Controllers/AppointmentController.php
-    - app/Http/Controllers/AppointmentEventController.php
-    - app/Http/Controllers/AppointmentScheduleController.php
-    - app/Http/Controllers/AppointmentServiceController.php
-    - app/Http/Controllers/AppointmentReviewController.php
-    - database/factories/AppointmentFactory.php
-    - database/factories/AppointmentEventFactory.php
-    - database/factories/AppointmentScheduleFactory.php
-    - database/factories/AppointmentServiceFactory.php
-    - database/factories/AppointmentReviewFactory.php
-    - database/migrations/2023_12_26_215258_create_appointments_table.php
-    - database/migrations/2023_12_26_215259_create_appointment_events_table.php
-    - database/migrations/2023_12_26_215300_create_appointment_schedules_table.php
-    - database/migrations/2023_12_26_215301_create_appointment_services_table.php
-    - database/migrations/2023_12_26_215302_create_appointment_reviews_table.php
-    - database/migrations/2023_12_26_215303_create_appointment_event_appointment_service_table.php
-    - database/migrations/2023_12_26_215304_create_appointment_event_appointment_review_table.php
-    - app/Models/Appointment.php
-    - app/Models/AppointmentEvent.php
-    - app/Models/AppointmentSchedule.php
-    - app/Models/AppointmentService.php
-    - app/Models/AppointmentReview.php
-    - database/seeders/AppointmentSeeder.php
-    - database/seeders/AppointmentEventSeeder.php
-    - database/seeders/AppointmentScheduleSeeder.php
-    - database/seeders/AppointmentServiceSeeder.php
-    - database/seeders/AppointmentReviewSeeder.php
-    - tests/Feature/Http/Controllers/AppointmentControllerTest.php
-    - tests/Feature/Http/Controllers/AppointmentEventControllerTest.php
-    - tests/Feature/Http/Controllers/AppointmentScheduleControllerTest.php
-    - tests/Feature/Http/Controllers/AppointmentServiceControllerTest.php
-    - tests/Feature/Http/Controllers/AppointmentReviewControllerTest.php
-    - app/Http/Requests/AppointmentStoreRequest.php
-    - app/Http/Requests/AppointmentUpdateRequest.php
-    - app/Http/Requests/AppointmentEventStoreRequest.php
-    - app/Http/Requests/AppointmentEventUpdateRequest.php
-    - app/Http/Requests/AppointmentScheduleStoreRequest.php
-    - app/Http/Requests/AppointmentScheduleUpdateRequest.php
-    - app/Http/Requests/AppointmentServiceStoreRequest.php
-    - app/Http/Requests/AppointmentServiceUpdateRequest.php
-    - app/Http/Requests/AppointmentReviewStoreRequest.php
-    - app/Http/Requests/AppointmentReviewUpdateRequest.php
-    - app/Http/Resources/AppointmentCollection.php
-    - app/Http/Resources/AppointmentResource.php
-    - app/Http/Resources/AppointmentEventCollection.php
-    - app/Http/Resources/AppointmentEventResource.php
-    - app/Http/Resources/AppointmentScheduleCollection.php
-    - app/Http/Resources/AppointmentScheduleResource.php
-    - app/Http/Resources/AppointmentServiceCollection.php
-    - app/Http/Resources/AppointmentServiceResource.php
-    - app/Http/Resources/AppointmentReviewCollection.php
-    - app/Http/Resources/AppointmentReviewResource.php
+    - app/Http/Controllers/QuizController.php
+    - app/Http/Controllers/QuizCommandController.php
+    - app/Http/Controllers/QuizResultController.php
+    - app/Http/Controllers/QuizQuestionController.php
+    - app/Http/Controllers/QuizAnswerController.php
+    - database/factories/QuizFactory.php
+    - database/factories/QuizCommandFactory.php
+    - database/factories/QuizResultFactory.php
+    - database/factories/QuizQuestionFactory.php
+    - database/factories/QuizAnswerFactory.php
+    - database/migrations/2024_01_13_120211_create_quizzes_table.php
+    - database/migrations/2024_01_13_120212_create_quiz_commands_table.php
+    - database/migrations/2024_01_13_120213_create_quiz_results_table.php
+    - database/migrations/2024_01_13_120214_create_quiz_questions_table.php
+    - database/migrations/2024_01_13_120215_create_quiz_answers_table.php
+    - database/migrations/2024_01_13_120216_create_quiz_quiz_command_table.php
+    - database/migrations/2024_01_13_120217_create_bot_user_quiz_command_table.php
+    - database/migrations/2024_01_13_120218_create_quiz_quiz_question_table.php
+    - app/Models/Quiz.php
+    - app/Models/QuizCommand.php
+    - app/Models/QuizResult.php
+    - app/Models/QuizQuestion.php
+    - app/Models/QuizAnswer.php
+    - database/seeders/QuizSeeder.php
+    - database/seeders/QuizCommandSeeder.php
+    - database/seeders/QuizResultSeeder.php
+    - database/seeders/QuizQuestionSeeder.php
+    - database/seeders/QuizAnswerSeeder.php
+    - tests/Feature/Http/Controllers/QuizControllerTest.php
+    - tests/Feature/Http/Controllers/QuizCommandControllerTest.php
+    - tests/Feature/Http/Controllers/QuizResultControllerTest.php
+    - tests/Feature/Http/Controllers/QuizQuestionControllerTest.php
+    - tests/Feature/Http/Controllers/QuizAnswerControllerTest.php
+    - app/Http/Requests/QuizStoreRequest.php
+    - app/Http/Requests/QuizUpdateRequest.php
+    - app/Http/Requests/QuizCommandStoreRequest.php
+    - app/Http/Requests/QuizCommandUpdateRequest.php
+    - app/Http/Requests/QuizResultStoreRequest.php
+    - app/Http/Requests/QuizResultUpdateRequest.php
+    - app/Http/Requests/QuizQuestionStoreRequest.php
+    - app/Http/Requests/QuizQuestionUpdateRequest.php
+    - app/Http/Requests/QuizAnswerStoreRequest.php
+    - app/Http/Requests/QuizAnswerUpdateRequest.php
+    - app/Http/Resources/QuizCollection.php
+    - app/Http/Resources/QuizResource.php
+    - app/Http/Resources/QuizCommandCollection.php
+    - app/Http/Resources/QuizCommandResource.php
+    - app/Http/Resources/QuizResultCollection.php
+    - app/Http/Resources/QuizResultResource.php
+    - app/Http/Resources/QuizQuestionCollection.php
+    - app/Http/Resources/QuizQuestionResource.php
+    - app/Http/Resources/QuizAnswerCollection.php
+    - app/Http/Resources/QuizAnswerResource.php
 updated:
     - routes/api.php
 models:
@@ -103,3 +104,8 @@ models:
     AppointmentSchedule: { appointment_event_id: 'id foreign:appointment_events', start_time: 'string:5 nullable', end_time: 'string:5 nullable', day: 'short default:1', relationships: { belongsTo: AppointmentEvent } }
     AppointmentService: { appointment_event_id: 'id foreign:appointment_events', title: 'string:255 nullable', description: 'longtext nullable', category: 'string:255 nullable', images: 'json nullable', price: 'double default:0', discount_price: 'double default:0', need_prepayment: 'boolean default:false', relationships: { hasMany: Appointment, belongsToMany: AppointmentEvent } }
     AppointmentReview: { appointment_event_id: 'id foreign:appointment_events', rating: 'integer default:0', images: 'json nullable', text: 'longtext nullable', relationships: { belongsToMany: AppointmentEvent } }
+    Quiz: { title: 'string:255 nullable', image: 'string:255 nullable', description: 'longtext nullable', completed_at: 'timestamp nullable', start_at: 'timestamp nullable', end_at: 'timestamp nullable', display_type: 'integer default:0', time_limit: 'double default:0', show_answers: 'boolean default:false', bot_id: 'id foreign:bots', relationships: { belongsTo: Bot, belongsToMany: QuizCommand } }
+    QuizCommand: { title: 'string:255 nullable', description: 'longtext nullable', logo: 'string:255 nullable', relationships: { belongsToMany: 'BotUser, Quiz' } }
+    QuizResult: { quiz_id: 'id foreign:quizs', quiz_command_id: 'id foreign:quiz_commands', points: 'double default:0', time: 'double default:0', result: 'json nullable', relationships: { belongsTo: 'Quiz, QuizCommand' } }
+    QuizQuestion: { text: 'longtext nullable', media_content: 'json nullable', content_type: 'integer default:0', is_multiply: 'boolean default:false', is_open: 'boolean default:false', round: 'integer default:0', relationships: { belongsToMany: Quiz, hasMany: QuizAnswer } }
+    QuizAnswer: { quiz_question_id: 'id foreign:quiz_questions', text: 'longtext nullable', media_content: 'json nullable', content_type: 'integer default:0', is_right_answer: 'boolean default:false', points: 'double default:0', relationships: { hasOne: QuizQuestion } }

@@ -14,6 +14,7 @@ use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory as AdminLogic;
 use App\Http\BusinessLogic\Methods\CompanyLogicFactory as CompanyLogic;
 use App\Http\BusinessLogic\Methods\AmoLogicFactory as AmoLogic;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory as AppointmentLogic;
+use App\Http\BusinessLogic\Methods\QuizLogicFactory as QuizLogic;
 use App\Http\BusinessLogic\Methods\YClientLogicFactory as YClientsLogic;
 use App\Http\BusinessLogic\Methods\BotUserLogicFactory as BotUserLogic;
 use App\Http\BusinessLogic\Methods\KeyboardLogicFactory as KeyboardLogic;
@@ -38,6 +39,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static GeoLogic geo()
  * @method static DeliveryLogic delivery()
  * @method static YClientsLogic yClients()
+ * @method static QuizLogic quiz()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade
