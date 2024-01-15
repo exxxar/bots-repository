@@ -636,6 +636,9 @@ class BotController extends Controller
             "welcome_message" => "required",
             "level_1" => "required",
             "company_id" => "required",
+        ],[
+            "company_id"=>"Вы не указали идентификатор Клиента (Компании)",
+            "bot_domain"=>"Доменное имя должно быть уникальным!",
         ]);
 
         $botUser = $request->botUser ?? null;

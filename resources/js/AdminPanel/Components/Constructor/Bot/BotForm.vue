@@ -928,6 +928,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
             </div>
             <div class="col-12">
                 <button type="submit"
+                        @click="messages = []"
                         :disabled="!botForm.bot_token||!can_create"
                         title="Сохранение бота"
                         class="btn btn-primary min-menu-btn w-100">
@@ -1020,9 +1021,9 @@ export default {
             ],
 
             botForm: {
-                title: '',
-                short_description: '',
-                long_description: '',
+                title: 'Название бота',
+                short_description: 'Короткое описание',
+                long_description: 'Длинное описание',
 
                 is_template: false,
                 auto_cashback_on_payments: false,
@@ -1037,16 +1038,16 @@ export default {
                 main_channel: null,
                 vk_shop_link: null,
                 callback_link: null,
-                balance: null,
-                tax_per_day: null,
-                welcome_message: null,
+                balance: 3000,
+                tax_per_day: 10,
+                welcome_message: "Приветствую!",
                 image: null,
                 cashback_fire_percent: 0,
                 cashback_fire_period: 0,
-                description: null,
+                description: "Это ваш бот! Вот такое вот описание у него.",
                 info_link: null,
                 social_links: [],
-                maintenance_message: null,
+                maintenance_message: "Технические работы",
                 payment_provider_token: null,
                 level_1: 10,
                 level_2: 0,
@@ -1390,6 +1391,8 @@ export default {
                     dataObject: {
                         bot_id: bot.id
                     }
+                }).catch(error=>{
+                    this.alert(error.response.data.message)
                 })
 
                 if (this.bot == null)
@@ -1436,7 +1439,8 @@ export default {
 
                     }
 
-            }).catch(err => {
+            }).catch(error => {
+                this.alert(error.response.data.message)
                 this.$notify({
                     title: "Конструктор ботов",
                     text: "Ошибочка...",

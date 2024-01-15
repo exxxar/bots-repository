@@ -1283,6 +1283,7 @@ class BotLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
+
         $company = Company::query()->where("id", $data["company_id"])
             ->first();
 
@@ -1310,7 +1311,6 @@ class BotLogicFactory
         $tmp->is_template = $data["is_template"] == "true";
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
-
 
         $tmp->creator_id = !$tmp->is_template ? $this->botUser->user_id : null;
 
@@ -1341,6 +1341,9 @@ class BotLogicFactory
 
         if (!is_null($tmp->selected_bot_template_id))
             unset($tmp->selected_bot_template_id);
+
+
+
 
         $bot = Bot::query()->create((array)$tmp);
 
