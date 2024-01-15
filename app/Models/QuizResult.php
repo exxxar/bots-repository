@@ -37,12 +37,14 @@ class QuizResult extends Model
         'result' => 'array',
     ];
 
+    protected $with = ["quiz", "command"];
+
     public function quiz(): BelongsTo
     {
         return $this->belongsTo(Quiz::class);
     }
 
-    public function quizCommand(): BelongsTo
+    public function command(): BelongsTo
     {
         return $this->belongsTo(QuizCommand::class);
     }

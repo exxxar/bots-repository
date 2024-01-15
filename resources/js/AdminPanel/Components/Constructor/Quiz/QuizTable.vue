@@ -8,8 +8,8 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         <div class="col-12">
             <div class="input-group mb-3">
                 <input type="search" class="form-control "
-                       placeholder="Поиск события"
-                       aria-label="Поиск события"
+                       placeholder="Поиск квиза"
+                       aria-label="Поиск квиза"
                        v-model="search"
                        aria-describedby="quiz-search-quiz">
                 <button class="btn btn-outline-secondary "
@@ -96,9 +96,41 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
                 </tbody>
             </table>
-            <p v-else>На текущий момент нет событий в вашем списке</p>
+
+            <div v-else>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Внимание!</strong> Вы еще не добавили ни одного квиза!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                    <div class="d-flex justify-content-center mb-3">
+                        <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                    </div>
+
+
+                    <h1 class="text-body-emphasis">Создание Квиза</h1>
+                    <p class="col-lg-8 mx-auto fs-5 text-muted">
+                        Квиз - это игра. Создавайте игры и делитесь с клиентами ссылкой на игру. Формируйте команды, начисляйте баллы, меняйте баллы на вкусные призы. Всё в ваших руках.
+                    </p>
+                    <div class="d-inline-flex gap-2 mb-5">
+                        <button
+                            @click="createQuiz"
+                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-primary" type="button">
+                            Добавить
+                        </button>
+                        <a href="https://telegra.ph/Sozdanie-Kviza-01-13"
+                           target="_blank"
+                           class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                        >
+                            Подробнее
+                        </a>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" v-if="quizzes.length>0">
             <Pagination
                 v-on:pagination_page="nextQuizzes"
                 v-if="paginate_object"
@@ -147,7 +179,9 @@ export default {
             })
         },
 
-
+        createQuiz(){
+          this.$emit("create")
+        },
         nextQuizzes(index) {
             this.loadQuizzes(index)
         },

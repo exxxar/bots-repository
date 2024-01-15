@@ -5,25 +5,26 @@ const BASE_QUIZ_LINK = '/admin/quizzes'
 
 let state = {
     quizzes: [],
-    quizzes_results: [],
     quiz_questions: [],
     quiz_commands: [],
+    quiz_results: [],
     quizzes_paginate_object: null,
     quiz_questions_paginate_object: null,
     quiz_commands_paginate_object: null,
-    quizzes_results_paginate_object: null,
+    quiz_results_paginate_object: null,
+
 }
 
 const getters = {
     getQuizzes: state => state.quizzes || [],
-    getQuizzesResults: state => state.quizzes_results || [],
+    getQuizResults: state => state.quiz_results || [],
     getQuizQuestions: state => state.quiz_questions || [],
     getQuizCommands: state => state.quiz_commands || [],
     getQuizById: (state) => (id) => {
         return state.quizzes.find(item => item.id === id)
     },
     getQuizzesPaginateObject: state => state.quizzes_paginate_object || null,
-    getQuizzesResultsPaginateObject: state => state.quizzes_results_paginate_object || null,
+    getQuizResultsPaginateObject: state => state.quiz_results_paginate_object || null,
     getQuizQuestionsPaginateObject: state => state.quiz_questions_paginate_object || null,
     getQuizCommandsPaginateObject: state => state.quiz_commands_paginate_object || null,
 }
@@ -94,7 +95,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadQuizzesResults(context, payload = {dataObject: null, page: 0, size: 50}) {
+    async loadQuizResults(context, payload = {dataObject: null, page: 0, size: 50}) {
         let page = payload.page || 0
         let size = payload.size || 50
 
@@ -106,9 +107,9 @@ const actions = {
 
         return _axios.then((response) => {
             let dataObject = response.data
-            context.commit("setQuizzesResults", dataObject.data)
+            context.commit("setQuizResults", dataObject.data)
             delete dataObject.data
-            context.commit('setQuizzesResultsPaginateObject', dataObject)
+            context.commit('setQuizResultsPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
@@ -226,13 +227,13 @@ const mutations = {
         state.quiz_commands = payload || [];
         localStorage.setItem('cashman_quiz_commands', JSON.stringify(payload));
     },
-    setQuizzesResults(state, payload) {
-        state.quizzes_results = payload || [];
-        localStorage.setItem('cashman_quizzes_results', JSON.stringify(payload));
+    setQuizResults(state, payload) {
+        state.quiz_results = payload || [];
+        localStorage.setItem('cashman_quiz_results', JSON.stringify(payload));
     },
-    setQuizzesResultsPaginateObject(state, payload) {
-        state.quizzes_results_paginate_object = payload || [];
-        localStorage.setItem('cashman_quizzes_results_paginate_object', JSON.stringify(payload));
+    setQuizResultsPaginateObject(state, payload) {
+        state.quiz_results_paginate_object = payload || [];
+        localStorage.setItem('cashman_quiz_results_paginate_object', JSON.stringify(payload));
     },
     setQuizzesPaginateObject(state, payload) {
         state.quizzes_paginate_object = payload || [];

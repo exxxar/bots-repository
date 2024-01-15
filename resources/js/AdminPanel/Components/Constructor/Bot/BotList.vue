@@ -244,7 +244,13 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     </div>
 
                     <div class="card-footer d-flex">
-
+                        <button class="btn btn-outline-danger mr-2"
+                                type="button"
+                                v-bind:class="{'btn-danger text-white':inBotFav(bot.id)}"
+                                @click="addToFavorite(bot.id)"
+                                title="Добавить в избранное">
+                            <i class="fa-regular fa-star"></i>
+                        </button>
                         <button class="btn btn-outline-info mr-2"
                                 type="button"
                                 @click="duplicate(bot.id)"

@@ -19,6 +19,8 @@ class QuizResultResource extends JsonResource
             'points' => $this->points,
             'time' => $this->time,
             'result' => $this->result,
+            'quiz' => new  QuizResource($this->whenLoaded('quiz')),
+            'command' =>new QuizCommandResource($this->whenLoaded('command')),
         ];
     }
 }

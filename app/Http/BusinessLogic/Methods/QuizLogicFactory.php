@@ -12,6 +12,7 @@ use App\Http\Resources\QuizCommandResource;
 use App\Http\Resources\QuizQuestionCollection;
 use App\Http\Resources\QuizQuestionResource;
 use App\Http\Resources\QuizResource;
+use App\Http\Resources\QuizResultCollection;
 use App\Models\AmoCrm;
 use App\Models\AppointmentEvent;
 use App\Models\AppointmentReview;
@@ -20,6 +21,7 @@ use App\Models\Quiz;
 use App\Models\QuizAnswer;
 use App\Models\QuizCommand;
 use App\Models\QuizQuestion;
+use App\Models\QuizResult;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -142,9 +144,27 @@ class QuizLogicFactory
         return new QuizCollection($events);
     }
 
-    public function listOfResults()
+    public function listOfResults($quizId, $size = null, $order = null, $direction = null): QuizResultCollection
     {
+        if (is_null($this->bot))
+            throw new HttpException(400, "Не все условия функции выполнены!");
 
+        $size = $size ?? config('app.results_per_page');
+
+        $quiz = Quiz::query()
+            ->find($quizId);
+
+        if (is_null($quiz))
+            throw new HttpException(404, "Квиз не найден!");
+
+
+        $results = QuizResult::query()
+            // ->withTrashed()
+            ->where("quiz_id", $quizId)
+            ->orderBy($order ?? 'updated_at', $direction ?? 'DESC')
+            ->paginate($size);
+
+        return new QuizResultCollection($results);
     }
 
 

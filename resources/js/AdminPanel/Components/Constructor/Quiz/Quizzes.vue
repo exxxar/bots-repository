@@ -5,6 +5,7 @@ import QuizQuestionForm from "@/AdminPanel/Components/Constructor/Quiz/QuizQuest
 import QuizQuestionTable from "@/AdminPanel/Components/Constructor/Quiz/QuizQuestionTable.vue";
 import QuizCommandForm from "@/AdminPanel/Components/Constructor/Quiz/QuizCommandForm.vue";
 import QuizCommandTable from "@/AdminPanel/Components/Constructor/Quiz/QuizCommandTable.vue";
+import QuizResultTable from "@/AdminPanel/Components/Constructor/Quiz/QuizResultTable.vue";
 </script>
 <template>
 
@@ -22,6 +23,7 @@ import QuizCommandTable from "@/AdminPanel/Components/Constructor/Quiz/QuizComma
 
         <QuizTable
             v-if="!loadTable"
+            v-on:create="createQuiz"
             v-on:select="selectQuiz"
             :bot="bot"></QuizTable>
     </div>
@@ -136,22 +138,14 @@ import QuizCommandTable from "@/AdminPanel/Components/Constructor/Quiz/QuizComma
         </div>
 
         <div class="row" v-if="tab===3">
-            <div class="col-12">
-                <!--                <AppointmentForm
-                                    v-if="!loadAppointmentForm"
-                                    :bot="bot"
-                                    v-on:callback="callbackAppointment"
-                                    :event-id="selectedEvent.id"
-                                    :appointment="selectedAppointment"></AppointmentForm>-->
-            </div>
+
             <div class="col-12 py-3">
                 <h4>Статистика</h4>
-                <!--                <AppointmentsTable
-                                    v-if="!loadAppointments"
-                                    :event-id="selectedEvent.id"
-                                    v-on:select="selectAppointment"
+                                <QuizResultTable
+                                    :quiz-id="selectedQuiz.id"
+                                    v-on:select="selectQuizResult"
                                     :bot="bot">
-                                </AppointmentsTable>-->
+                                </QuizResultTable>
             </div>
         </div>
 
@@ -195,11 +189,13 @@ export default {
             loadQuizQuestion: false,
             loadQuizQuestionTable: false,
             loadQuizCommandTable: false,
+            loadQuizResult: false,
 
             loadForm: false,
             selectedQuiz: null,
             selectedQuizQuestion: null,
             selectedQuizCommand: null,
+            selectedQuizResult: null,
 
         }
     },
@@ -228,6 +224,14 @@ export default {
         },
         createQuiz() {
             this.part = 2
+        },
+        selectQuizResult(result) {
+            this.loadQuizResult = true
+            this.$nextTick(() => {
+                this.loadQuizResult = false
+                this.selectedQuizResult = result
+
+            })
         },
         selectQuizCommand(command) {
             this.loadQuizCommand = true

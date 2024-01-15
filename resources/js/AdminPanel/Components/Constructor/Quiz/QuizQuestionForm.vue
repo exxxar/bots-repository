@@ -228,7 +228,7 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                         :need-video-note="true"
                         :need-audio="true"
                         :need-photo="true"
-                        :selected="[questionForm.answers[selectedQuestionIndex].media_content]"
+                        :selected="[questionForm.answers[selectedQuestionIndex||0].media_content||'']"
                         v-on:select="selectMediaForAnswer"></BotMediaList>
                 </div>
                 <div class="modal-footer">

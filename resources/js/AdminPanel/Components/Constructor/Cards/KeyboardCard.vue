@@ -152,7 +152,8 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
                 </button>
 
         </div>
-        <div class="card-body" v-if="keyboardForm.length>0">
+        <div class="card-body" v-if="keyboardForm.menu.length>0">
+
             <BotMenuConstructor
                 v-if="keyboardForm"
                 v-on:save="saveKeyboard"
