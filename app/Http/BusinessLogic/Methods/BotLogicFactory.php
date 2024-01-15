@@ -140,10 +140,10 @@ class BotLogicFactory
             ->with(["amo"]);
 
 
-        if (in_array("archive", $filters )||count($filters)==0)
+        if (in_array("archive", $filters) || count($filters) == 0)
             $bots = $bots->withTrashed();
 
-        if (in_array("archive", $filters )&&count($filters)==1)
+        if (in_array("archive", $filters) && count($filters) == 1)
             $bots = $bots->whereNotNull("deleted_at");
 
         if (!is_null($companyId))
@@ -1284,6 +1284,20 @@ class BotLogicFactory
             throw new ValidationException($validator);
 
 
+        $findBot = Bot::query()
+            ->withTrashed()
+            ->where("bot_domain", $data["bot_domain"])->first();
+
+        if (!is_null($findBot)) {
+            throw new HttpException(409,
+                !is_null($findBot->deleted_at) ?
+                    "Бот с именем " . $data["bot_domain"] . " уже существует в удаленных ботах!" :
+                    "Бот с именем " . $data["bot_domain"] . " уже существует!"
+            );
+
+        }
+
+
         $company = Company::query()->where("id", $data["company_id"])
             ->first();
 
@@ -1341,8 +1355,6 @@ class BotLogicFactory
 
         if (!is_null($tmp->selected_bot_template_id))
             unset($tmp->selected_bot_template_id);
-
-
 
 
         $bot = Bot::query()->create((array)$tmp);

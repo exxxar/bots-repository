@@ -97,6 +97,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                placeholder="Поиск бота"
                                aria-label="Поиск бота"
                                v-model="search"
+                               @keydown.enter="loadBots"
                                aria-describedby="button-addon2">
                         <button class="btn btn-outline-secondary "
                                 @click="loadBots"
