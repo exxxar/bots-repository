@@ -152,16 +152,25 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
                 </button>
 
         </div>
-        <div class="card-body" v-if="keyboardForm.menu.length>0">
+        <div class="card-body">
 
             <BotMenuConstructor
                 v-if="keyboardForm"
                 v-on:save="saveKeyboard"
                 :edited-keyboard="keyboardForm"/>
+
+
+
+            <Vue3JsonEditor
+                :mode="'code'"
+                v-model="keyboardForm"
+                :show-btns="false"
+                :expandedOnStart="true"
+                @json-change="onJsonChange"
+            />
+
         </div>
-        <div class="card-body" v-else>
-            <p>Ошибка!</p>
-        </div>
+
 
     </div>
 
@@ -191,6 +200,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 <script>
 
 import {v4 as uuidv4} from "uuid";
+import {Vue3JsonEditor} from "vue3-json-editor";
 
 
 export default {
@@ -200,6 +210,9 @@ export default {
         load: false,
         keyboardForm: null,
     }),
+    components: {
+        Vue3JsonEditor
+    },
     computed: {
         uuid() {
             return uuidv4();
@@ -228,6 +241,10 @@ export default {
 
     },
     methods: {
+        onJsonChange(value) {
+            this.keyboardForm = value
+
+        },
         removeKeyboard() {
             this.$store.dispatch("removeKeyboardTemplate", {
                 templateId: this.keyboardForm.id

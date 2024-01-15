@@ -3,7 +3,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 import KeyboardCard from "@/AdminPanel/Components/Constructor/Cards/KeyboardCard.vue";
 </script>
 <template>
-    <div class="row mb-2" v-if="!selectMode">
+    <div class="row mb-2 py-3" v-if="!selectMode">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
