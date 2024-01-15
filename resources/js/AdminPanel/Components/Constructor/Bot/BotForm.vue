@@ -14,6 +14,9 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         <div class="row">
             <div class="col-md-12 col-12">
                 <p class="alert alert-danger" v-if="botForm.company_id==null">Внимание! Вы не выбрали клиента!</p>
+                <p class="card alert alert-success" v-else>
+                    Выбранный клиент #{{ company.id }} {{ company.title }}
+                </p>
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox"
                            :value="need_company_select"
@@ -34,11 +37,11 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
             </div>
 
-            <div class="col-md-12 col-12" v-if="company">
+<!--            <div class="col-md-12 col-12" v-if="company">
                 <div class="card alert alert-success">
                     Выбранный клиент #{{ company.id }} {{ company.title }}
                 </div>
-            </div>
+            </div>-->
 
             <div class="col-md-12 col-12">
                 <div class="form-check mb-3">
@@ -1156,9 +1159,9 @@ export default {
             this.startTimer(localStorage.getItem("cashman_admin_bot_creator_counter"))
         }
 
-        window.addEventListener('store_current_company-change-event', (event) => {
+   /*     window.addEventListener('store_current_company-change-event', (event) => {
             this.company = this.getCurrentCompany
-        });
+        });*/
 
         if (this.bot)
             this.$nextTick(() => {
@@ -1485,6 +1488,7 @@ export default {
          },*/
         companyListCallback(company) {
             this.load = true
+            this.company = company
             this.botForm.company_id = company.id
             this.need_company_select = false
             //this.loadCurrentCompany(company)
