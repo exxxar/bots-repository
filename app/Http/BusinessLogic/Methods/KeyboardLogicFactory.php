@@ -67,16 +67,29 @@ class KeyboardLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
+        $menu = json_decode($data["menu"]);
+
+        $menu = $this->recursiveFix((array)$menu);
 
         $botMenuTemplate = BotMenuTemplate::query()
             ->create([
                 "slug" => $request->slug ?? Str::uuid(),
-                "menu" => json_decode($data["menu"]),
+                "menu" => $menu,
                 "type" => $data["type"],
                 "bot_id" => $this->bot->id,
             ]);
 
         return new BotMenuTemplateResource($botMenuTemplate);
+    }
+
+    protected function recursiveFix($menu): array
+    {
+        $menu = (array)$menu;
+        if (isset($menu["menu"])) {
+            return $this->recursiveFix($menu["menu"]);
+        }
+
+        return $menu;
     }
 
     /**
@@ -109,12 +122,9 @@ class KeyboardLogicFactory
         $menu = json_decode($data["menu"]);
 
 
-        if (isset($menu->menu))
-            $menu = $menu->menu;
+        $menu = $this->recursiveFix((array)$menu);
 
-
-
-       $botMenuTemplate
+        $botMenuTemplate
             ->update([
                 "slug" => $data["slug"] ?? Str::uuid(),
                 "menu" => $menu,
