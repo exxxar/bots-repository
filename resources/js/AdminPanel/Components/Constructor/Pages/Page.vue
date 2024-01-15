@@ -312,7 +312,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 </ul>
             </div>
 
-            <div v-if="tab===0">
+            <div v-show="tab===0">
                 <div class="col-12 mb-2" v-if="need_reply_menu">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -415,7 +415,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
 
-            <div v-if="tab===1">
+            <div v-show="tab===1">
                 <div class="col-12 mb-2" v-if="need_inline_menu">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -496,7 +496,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
 
-            <div v-if="tab===2">
+            <div v-show="tab===2">
                 <div class="col-12 mb-2" v-if="need_page_images">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -586,7 +586,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 </div>
             </div>
 
-            <div v-if="tab===3">
+            <div v-show="tab===3">
                 <div class="col-12 mb-2" v-if="need_page_video">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -638,7 +638,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 </div>
             </div>
 
-            <div v-if="tab===4">
+            <div v-show="tab===4">
                 <div class="col-12 mb-2" v-if="need_page_sticker">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -690,7 +690,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
 
-            <div v-if="tab===5">
+            <div v-show="tab===5">
                 <div class="col-12 mb-2" v-if="need_page_audios">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -744,7 +744,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 </div>
             </div>
 
-            <div v-if="tab===6">
+            <div v-show="tab===6">
                 <div class="col-12 mb-2" v-if="need_page_documents">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -798,7 +798,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 </div>
             </div>
 
-            <div v-if="tab===7">
+            <div v-show="tab===7">
                 <div class="col-12 mb-2" v-if="need_attach_page">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -853,7 +853,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
 
-            <div v-if="tab===8">
+            <div v-show="tab===8">
                 <div class="col-12 mb-2" v-if="need_attach_slug">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -908,7 +908,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
 
-            <div v-if="tab===9">
+            <div v-show="tab===9">
                 <div class="col-12 mb-2" v-if="need_attach_dialog">
                     <div class="form-check">
                         <input class="form-check-input"
@@ -964,7 +964,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 </div>
             </div>
 
-            <div v-if="tab===10">
+            <div v-show="tab===10">
                 <div class="col-12 mb-2" v-if="need_rules">
                     <div class="form-check">
                         <input class="form-check-input"
