@@ -21,6 +21,8 @@ class QuizQuestionResource extends JsonResource
             'is_multiply' => $this->is_multiply,
             'is_open' => $this->is_open,
             'round' => $this->round,
+            "success_message"=> $this->success_message,
+            "failure_message"=> $this->failure_message,
             'quizzes' => QuizCollection::make($this->whenLoaded('quizzes')),
             'answers' => QuizAnswerResource::collection($this->whenLoaded('answers')),
         ];

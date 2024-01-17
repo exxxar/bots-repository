@@ -91,8 +91,16 @@ class FriendsScriptController extends SlugController
             ->where("bot_id", $bot->id)
             ->count();
 
+
+        try {
+            $text = sprintf($mainText, $friendCount);
+        } catch (\Exception $e) {
+            $text = sprintf("Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой", $friendCount);
+        }
+
         \App\Facades\BotManager::bot()
-            ->replyPhoto(sprintf($mainText, $friendCount),
+            ->replyPhoto($text,
                 InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
 
         try {

@@ -24,6 +24,8 @@ class QuizQuestion extends Model
         'is_multiply',
         'is_open',
         'round',
+        "success_message",
+        "failure_message",
     ];
 
     /**

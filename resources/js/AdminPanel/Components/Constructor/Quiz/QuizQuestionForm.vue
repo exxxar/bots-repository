@@ -112,6 +112,58 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                     </label>
                 </div>
             </div>
+
+            <div class="col-12 mb-3">
+
+                <label class="form-label " id="quiz-description">
+                    <Popper>
+                        <i class="fa-regular fa-circle-question mr-1"></i>
+                        <template #content>
+                            <div>
+                                Текст при выборе правильного ответа
+                            </div>
+                        </template>
+                    </Popper>
+                    Текст при выборе правильного ответа
+                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                    <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="questionForm.success_message">
+                        Длина текста {{ questionForm.success_message.length }}/255</small>
+                </label>
+                <textarea class="form-control"
+                          placeholder="Текст при правильном ответе"
+                          aria-label="Текст при правильном ответе"
+                          maxlength="255"
+                          v-model="questionForm.success_message"
+                          aria-describedby="quiz-question-success_message" required>
+                    </textarea>
+
+            </div>
+
+            <div class="col-12 mb-3">
+
+                <label class="form-label " id="quiz-description">
+                    <Popper>
+                        <i class="fa-regular fa-circle-question mr-1"></i>
+                        <template #content>
+                            <div>
+                                Текст в выбора неправильного ответа
+                            </div>
+                        </template>
+                    </Popper>
+                    Текст при выборе неправильного ответа
+                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                    <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="questionForm.failure_message">
+                        Длина текста {{ questionForm.failure_message.length }}/255</small>
+                </label>
+                <textarea class="form-control"
+                          placeholder="Текст при неправильном ответе"
+                          aria-label="Текст при неправильном ответе"
+                          maxlength="255"
+                          v-model="questionForm.failure_message"
+                          aria-describedby="quiz-question-success_message" required>
+                    </textarea>
+
+            </div>
         </div>
 
         <div class="row">
@@ -259,6 +311,8 @@ export default {
                 is_multiply: false,
                 is_open: false,
                 answers: [],
+                success_message: null,
+                failure_message: null,
 
             }
         }
@@ -284,6 +338,8 @@ export default {
                     is_multiply: this.question.is_multiply || false,
                     is_open: this.question.is_open || false,
                     answers: this.question.answers || [],
+                    success_message: this.question.success_message ||null,
+                    failure_message: this.question.failure_message ||null,
                 }
             })
 
@@ -318,7 +374,9 @@ export default {
                 content_type: null,
                 is_multiply: false,
                 is_open: false,
-                answers: []
+                answers: [],
+                success_message: null,
+                failure_message: null,
             }
         },
         addNewAnswer() {

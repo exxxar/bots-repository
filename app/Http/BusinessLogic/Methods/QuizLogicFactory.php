@@ -255,6 +255,8 @@ class QuizLogicFactory
                 'content_type' => $data["content_type"] ?? null,
                 'is_multiply' => ($data["is_multiply"] ?? false) == "true",
                 'is_open' => ($data["is_open"] ?? false) == "true",
+                'success_message' => $data["success_message"] ?? null,
+                'failure_message' => $data["failure_message"] ?? null,
             ]);
 
         if (is_null($data["id"] ?? null))
@@ -300,6 +302,9 @@ class QuizLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
+        $success = json_decode($data['success_message']??'[]');
+        $failure = json_decode($data['failure_message']??'[]');
+
 
         $result = Quiz::query()->updateOrCreate(
             [
@@ -315,6 +320,13 @@ class QuizLogicFactory
                 'display_type' => $data["display_type"] ?? 0,
                 'time_limit' => $data["time_limit"] ?? 30,
                 'show_answers' => ($data["show_answers"] ?? false) == "true",
+                "polling_mode"=> $data["polling_mode"]??false,
+                "try_count"=> $data["show_answers"]??1,
+                "is_active"=> $data["show_answers"]??true,
+                "success_percent"=> $data["show_answers"]??50,
+                "success_message"=> $success,
+                "failure_message"=> $failure,
+
             ]);
 
         return new QuizResource($result);
