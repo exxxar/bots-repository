@@ -9,6 +9,7 @@ import Basket from '@/ClientTg/Pages/Shop/Basket.vue';
 import CheckOut from '@/ClientTg/Pages/Shop/CheckOut.vue';
 import Settings from '@/ClientTg/Pages/Shop/Settings.vue';
 import Schedule from '@/ClientTg/Pages/Shop/Schedule.vue';
+import Quiz from '@/ClientTg/Pages/Quiz/Quiz.vue';
 
 
 import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
@@ -78,6 +79,12 @@ export const routes = [
         path: '/vip',
         component: Vip,
         meta: { title: 'VIP-анкета', hide_menu:true }
+    },
+    {
+        name: 'quiz',
+        path: '/quiz',
+        component: Quiz,
+        meta: { title: 'Квиз', hide_menu:true }
     },
     {
         name: 'schedule',
@@ -391,6 +398,7 @@ export const deliveryRoutes = [
 
 
 ];
+
 
 const router = createRouter({
    history: createWebHashHistory(),

@@ -35,6 +35,10 @@ use Yclients\YclientsApi;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::any("/integrations/1c/callback", function (Request $request){
+    Log::info("integrations".print_r($request->all(),true));
+    return "success";
+});
 
 Route::get("/test-role", function (){
    return "success";
