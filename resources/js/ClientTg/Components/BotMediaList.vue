@@ -15,15 +15,15 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
         <button
             v-if="search"
             class="btn btn-outline-secondary w-100"
-                @click="loadMedia(0)"
-                type="button"
-                id="button-addon2">Найти
+            @click="loadMedia(0)"
+            type="button"
+            id="button-addon2">Найти
         </button>
     </div>
     <div class="mb-2" v-if="media.length>0">
 
         <div class="card card-style mx-0 my-1 rounded-s "
-             v-bind:class="{'border-green2-dark bordered':selected.indexOf(item.file_id) !=-1}"
+             v-bind:class="{'border-green2-dark bordered':(selected||[]).indexOf(item.file_id) !=-1}"
              @click="selectMedia(item)"
              v-for="(item, index) in media"
         >
@@ -58,12 +58,10 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
                     <small>({{ item.type ?? 'Без подписи' }})</small>
 
 
-
-
                 </h6>
-                <p class="font-6 mb-1">Идентификатор в системе: <strong>#{{item.id}}</strong></p>
+                <p class="font-6 mb-1">Идентификатор в системе: <strong>#{{ item.id }}</strong></p>
                 <p class="font-10 mb-1" style="line-height: 110%;">
-                  {{ item.file_id }}
+                    {{ item.file_id }}
                 </p>
 
                 <div class="d-flex justify-content-start">
@@ -100,7 +98,7 @@ import Pagination from '@/ClientTg/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["selected", "needVideo", "needVideoNote", "needPhoto", "needDocument", "needAudio","needSticker"],
+    props: ["selected", "needVideo", "needVideoNote", "needPhoto", "needDocument", "needAudio", "needSticker"],
     data() {
         return {
             bot: null,

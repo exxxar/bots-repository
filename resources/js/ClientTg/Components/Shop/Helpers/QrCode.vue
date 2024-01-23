@@ -8,14 +8,14 @@ export default {
         code: {
             type: String,
             default: '001'
-        }
+        },
     },
     computed: {
         self() {
             return window.self
         },
-        script(){
-          return   window.currentScript;
+        script() {
+            return window.currentScript;
         },
         currentBot() {
             return window.currentBot
@@ -24,11 +24,17 @@ export default {
             return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.link
         },
         link() {
-            switch(this.code) {
-                default:
-                case '001':  return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa((this.code||'001') + this.self.telegram_chat_id);
-                case '002':  return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa("002" + this.self.telegram_chat_id + "S"+this.script);
-            }
+
+                switch (this.code) {
+
+                    case '001':
+                        return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa((this.code || '001') + this.self.telegram_chat_id);
+                    case '002':
+                        return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa("002" + this.self.telegram_chat_id + "S" + this.script);
+                    default:
+                        return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa(this.code);
+                }
+
 
         }
     },

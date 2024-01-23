@@ -16,6 +16,7 @@ use App\Http\Resources\QuizResultCollection;
 use App\Models\AmoCrm;
 use App\Models\AppointmentEvent;
 use App\Models\AppointmentReview;
+use App\Models\AppointmentService;
 use App\Models\Bot;
 use App\Models\Quiz;
 use App\Models\QuizAnswer;
@@ -46,6 +47,33 @@ class QuizLogicFactory
         $this->bot = $bot;
         return $this;
     }
+
+
+    /**
+     * @throws HttpException
+     */
+    public function listOfQuizRounds($quizId): array
+    {
+        if (is_null($this->bot))
+            throw new HttpException(400, "Не все условия функции выполнены!");
+
+
+        $quiz = Quiz::query()
+            ->with(["questions"])
+            ->find($quizId);
+
+        if (is_null($quiz))
+            throw new HttpException(404, "Квиз не найден!");
+
+
+        $questions = $quiz->questions
+            ->unique("round")
+            ->pluck("round");
+
+
+        return $questions->toArray();
+    }
+
 
 
     /**
@@ -110,8 +138,13 @@ class QuizLogicFactory
             $questions = $questions->where("text", 'like', "%$search%");
 
         $questions = $questions
-            ->orderBy($order ?? 'updated_at', $direction ?? 'DESC')
-            ->paginate($size);
+            ->orderBy($order ?? 'updated_at', $direction ?? 'DESC');
+
+
+        if ($size == -1)
+            $questions = $questions->get();
+        else
+            $questions = $questions->paginate($size);
 
         return new QuizQuestionCollection($questions);
     }
@@ -196,12 +229,16 @@ class QuizLogicFactory
                 ->create([
                     'title' => $data["title"] ?? null,
                     'description' => $data["description"] ?? null,
+                    'creator_id' => $data["creator_id"] ?? null,
+                    'captain_id' => $data["captain_id"] ?? null,
                 ]);
         else {
             $command = QuizCommand::query()->find($data["id"]);
             $command->update([
                 'title' => $data["title"] ?? null,
                 'description' => $data["description"] ?? null,
+                'creator_id' => $data["creator_id"] ?? null,
+                'captain_id' => $data["captain_id"] ?? null,
             ]);
         }
 
@@ -247,39 +284,55 @@ class QuizLogicFactory
         if (is_null($quiz))
             throw new HttpException(404, "Квиз не найден");
 
-        $result = QuizQuestion::query()->updateOrCreate(
-            [
-                'text' => $data["text"] ?? null,
-                'round' => $data["round"] ?? null,
-                'media_content' => $data["media_content"] ?? null,
-                'content_type' => $data["content_type"] ?? null,
-                'is_multiply' => ($data["is_multiply"] ?? false) == "true",
-                'is_open' => ($data["is_open"] ?? false) == "true",
-                'success_message' => $data["success_message"] ?? null,
-                'failure_message' => $data["failure_message"] ?? null,
-            ]);
+        $tmp = [
+            'text' => $data["text"] ?? null,
+            'round' => $data["round"] ?? null,
+            'media_content' => $data["media_content"] ?? null,
+            'content_type' => $data["content_type"] ?? null,
+            'is_multiply' => ($data["is_multiply"] ?? false) == "true",
+            'is_open' => ($data["is_open"] ?? false) == "true",
+            'success_message' => $data["success_message"] ?? null,
+            'failure_message' => $data["failure_message"] ?? null,
+            'success_media_content' => $data["success_media_content"] ?? null,
+            'failure_media_content' => $data["failure_media_content"] ?? null,
+            'success_media_content_type' => $data["success_media_content_type"] ?? null,
+            'failure_media_content_type' => $data["failure_media_content_type"] ?? null,
+
+        ];
+
+
+        if (!is_null($data["id"])) {
+            $question = QuizQuestion::query()
+                ->where("id", $data["id"])
+                ->first();
+
+            $question->update($tmp);
+        } else
+            $question = QuizQuestion::query()->create($tmp);
 
         if (is_null($data["id"] ?? null))
-            $quiz->questions()->attach($result->id);
+            $quiz->questions()->attach($question->id);
 
         if (isset($data["answers"])) {
             $answers = json_decode($data["answers"] ?? '[]');
 
             foreach ($answers as $answer) {
-                $answer->quiz_question_id = $result->id;
+                $answer = (object)$answer;
+                $answer->quiz_question_id = $question->id;
 
                 if (!is_null($answer->id ?? null)) {
-                    $answer = QuizAnswer::query()->find($answer->id);
-                    $answer->update((array)$answer);
+                    $result = QuizAnswer::query()->find($answer->id);
+                    $result->update((array)$answer);
+                   // dd($answer);
                 } else
                     QuizAnswer::query()
                         ->create((array)$answer);
             }
         }
 
-        $result = $result->refresh();
+        $question = $question->refresh();
 
-        return new QuizQuestionResource($result);
+        return new QuizQuestionResource($question);
     }
 
     /**
@@ -302,8 +355,8 @@ class QuizLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
-        $success = json_decode($data['success_message']??'[]');
-        $failure = json_decode($data['failure_message']??'[]');
+        $success = json_decode($data['success_message'] ?? '[]');
+        $failure = json_decode($data['failure_message'] ?? '[]');
 
 
         $result = Quiz::query()->updateOrCreate(
@@ -320,12 +373,13 @@ class QuizLogicFactory
                 'display_type' => $data["display_type"] ?? 0,
                 'time_limit' => $data["time_limit"] ?? 30,
                 'show_answers' => ($data["show_answers"] ?? false) == "true",
-                "polling_mode"=> $data["polling_mode"]??false,
-                "try_count"=> $data["show_answers"]??1,
-                "is_active"=> $data["show_answers"]??true,
-                "success_percent"=> $data["show_answers"]??50,
-                "success_message"=> $success,
-                "failure_message"=> $failure,
+                "polling_mode" => ($data["polling_mode"] ?? false) == "true",
+                "round_mode" => ($data["round_mode"] ?? false) == "true",
+                "try_count" => $data["try_count"] ?? 1,
+                "is_active" => $data["is_active"] ?? true,
+                "success_percent" => $data["success_percent"] ?? 50,
+                "success_message" => $success,
+                "failure_message" => $failure,
 
             ]);
 

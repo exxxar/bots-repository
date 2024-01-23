@@ -1,0 +1,17 @@
+models:
+  ChatLog:
+    text: longtext nullable
+    media_content: json nullable
+    content_type: integer default:0
+    bot_id: id foreign:bots
+    form_bot_user_id: id foreign:bot_users
+    to_bot_user_id: id foreign:bot_users
+    relationships:
+      belongsTo: Bot, BotUser
+
+seeders:       ChatLog
+
+controllers:
+  ChatLog:
+    resource: api
+

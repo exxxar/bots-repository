@@ -18,6 +18,21 @@ use Illuminate\Validation\ValidationException;
 class QuizController extends Controller
 {
 
+    public function listOfQuizRounds(Request $request, $quizId) {
+        $request->validate([
+            "bot_id" => "required",
+        ]);
+
+        $bot = Bot::query()
+            ->where("id", $request->bot_id ?? null)
+            ->first();
+
+        return BusinessLogic::quiz()
+            ->setBot($bot ?? null)
+            ->listOfQuizRounds(
+                $quizId
+            );
+    }
 
     public function listOfQuizCommands(Request $request, $quizId): \App\Http\Resources\QuizCommandCollection
     {
@@ -61,6 +76,7 @@ class QuizController extends Controller
                 $request->direction ?? "desc"
             );
     }
+
     public function listOfQuiz(Request $request): QuizCollection
     {
         $request->validate([

@@ -22,8 +22,8 @@ class Quiz extends Model
         'image',
         'description',
         'completed_at',
-        "try_count",
         "polling_mode",
+        "round_mode",
         "try_count",
         "is_active",
         "success_percent",
@@ -50,6 +50,8 @@ class Quiz extends Model
         'time_limit' => 'double',
         'show_answers' => 'boolean',
         'bot_id' => 'integer',
+        "success_message"=> 'array',
+        "failure_message"=> 'array',
     ];
 
     protected $with = ["questions","commands"];

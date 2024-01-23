@@ -26,6 +26,17 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
             </div>
 
             <div class="col-12 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_media"
+                           type="checkbox" id="need_media">
+                    <label class="form-check-label" for="need_media">
+                        Нужен медиа-контент
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3" v-if="need_media">
                 <label class="form-label" id="quiz-images">
                     <Popper>
                         <i class="fa-regular fa-circle-question mr-1"></i>
@@ -114,6 +125,17 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                            type="checkbox" id="is_active">
                     <label class="form-check-label" for="is_active">
                         Квиз виден пользователям
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="quizForm.round_mode"
+                           type="checkbox" id="round_mode">
+                    <label class="form-check-label" for="round_mode">
+                        Использовать систему раундов
                     </label>
                 </div>
             </div>
@@ -380,6 +402,7 @@ export default {
             load: false,
             need_reset: false,
             need_services: false,
+            need_media:false,
             types: [
                 "По порядку",
                 "Перемешать всё",
@@ -398,6 +421,7 @@ export default {
                 time_limit: 30,
                 show_answers: false,
                 polling_mode: false,
+                round_mode: false,
                 is_active: false,
                 try_count: 1,
                 success_percent: 50,
@@ -424,13 +448,14 @@ export default {
                     title: this.quiz.title || null,
                     image: this.quiz.image || null,
                     description: this.quiz.description || null,
-                    completed_at: this.$filters.currentFull(this.quiz.completed_at || null),
-                    start_at: this.$filters.currentFull(this.quiz.start_at || null),
-                    end_at: this.$filters.currentFull(this.quiz.end_at || null),
+                    completed_at: this.quiz.completed_at? this.$filters.currentFull(this.quiz.completed_at) : null,
+                    start_at: this.quiz.start_at?  this.$filters.currentFull(this.quiz.start_at ): null,
+                    end_at: this.quiz.end_at? this.$filters.currentFull(this.quiz.end_at ): null,
                     display_type: this.quiz.display_type || 0,
                     time_limit: this.quiz.time_limit || 30,
                     show_answers: this.quiz.show_answers || false,
                     polling_mode: this.quiz.polling_mode || false,
+                    round_mode: this.quiz.round_mode || false,
                     is_active: this.quiz.is_active || false,
                     try_count: this.quiz.try_count || 1,
                     success_percent: this.quiz.success_percent || 50,
@@ -482,6 +507,7 @@ export default {
                     time_limit: 30,
                     show_answers: false,
                     polling_mode: false,
+                    round_mode: false,
                     is_active: false,
                     try_count: 1,
                     success_percent: 50,

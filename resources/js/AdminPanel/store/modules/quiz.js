@@ -31,7 +31,22 @@ const getters = {
 
 const actions = {
 
+    async loadQuizRounds(context, payload = {dataObject: null}) {
 
+        let link = `${BASE_QUIZ_LINK}/list-of-quiz-rounds/${payload.dataObject.quiz_id}`
+        let method = 'POST'
+        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            return Promise.resolve(dataObject);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadQuizCommands(context, payload = {dataObject: null, page: 0, size: 50}) {
         let page = payload.page || 0
         let size = payload.size || 50

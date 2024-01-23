@@ -15,7 +15,12 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
         <div class="row">
 
             <div class="col-12 mb-3">
-
+                <p v-if="rounds.length>0">
+                    Ранее созданные раунды:
+                    <span
+                        @click="questionForm.round = round"
+                        class="badge bg-primary mr-1 cursor-pointer" v-for="round in rounds">{{ round }}</span>
+                </p>
                 <label class="form-label " id="quiz-round">
                     <Popper>
                         <i class="fa-regular fa-circle-question mr-1"></i>
@@ -67,6 +72,17 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
             </div>
 
             <div class="col-12 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_media"
+                           type="checkbox" id="need_media">
+                    <label class="form-check-label" for="need_media">
+                        Нужен медиа-контент
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3" v-if="need_media">
                 <label class="form-label" id="quiz-images">
                     <Popper>
                         <i class="fa-regular fa-circle-question mr-1"></i>
@@ -140,6 +156,28 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
             </div>
 
             <div class="col-12 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_media_for_success"
+                           type="checkbox" id="need_media_for_success">
+                    <label class="form-check-label" for="need_media_for_success">
+                        Нужен медиа-контент при правильном ответе
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3" v-if="need_media_for_success">
+                <BotMediaList
+
+                    :need-video="true"
+                    :need-video-note="true"
+                    :need-audio="true"
+                    :need-photo="true"
+                    :selected="[questionForm.success_media_content]"
+                    v-on:select="selectMediaForSuccess"></BotMediaList>
+            </div>
+
+            <div class="col-12 mb-3">
 
                 <label class="form-label " id="quiz-description">
                     <Popper>
@@ -164,7 +202,31 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                     </textarea>
 
             </div>
+
+            <div class="col-12 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_media_for_failed"
+                           type="checkbox" id="need_media_for_failed">
+                    <label class="form-check-label" for="need_media_for_failed">
+                        Нужен медиа-контент при неправильном ответе
+                    </label>
+                </div>
+            </div>
+            <div class="col-12 mb-3" v-if="need_media_for_failed">
+                <BotMediaList
+
+                    :need-video="true"
+                    :need-video-note="true"
+                    :need-audio="true"
+                    :need-photo="true"
+                    :selected="[questionForm.failure_media_content]"
+                    v-on:select="selectMediaForFailure"></BotMediaList>
+            </div>
         </div>
+
+
+
 
         <div class="row">
             <div class="col-12">
@@ -302,6 +364,10 @@ export default {
             step: 0,
             load: false,
             selectedQuestionIndex: null,
+            need_media: false,
+            need_media_for_success: false,
+            need_media_for_failed: false,
+            rounds: [],
             questionForm: {
                 id: null,
                 text: null,
@@ -313,6 +379,10 @@ export default {
                 answers: [],
                 success_message: null,
                 failure_message: null,
+                success_media_content:  null,
+                failure_media_content:  null,
+                success_media_content_type:  null,
+                failure_media_content_type:  null,
 
             }
         }
@@ -323,11 +393,33 @@ export default {
                 this.need_reset = true
             },
             deep: true
-        }
-    },
-    mounted() {
+        },
+        'need_media': function (newVal, oldVal) {
+            if (!this.need_page_images) {
+                this.questionForm.media_content = null
+                this.questionForm.content_type = null
+            }
 
-        if (this.question)
+        },
+        'need_media_for_success': function (newVal, oldVal) {
+            if (!this.need_page_images) {
+                this.questionForm.success_media_content = null
+                this.questionForm.success_media_content_type = null
+            }
+
+        },
+        'need_media_for_failed': function (newVal, oldVal) {
+            if (!this.need_page_images) {
+                this.questionForm.failure_media_content = null
+                this.questionForm.failure_media_content_type = null
+            }
+
+        },
+    },
+
+    mounted() {
+        this.loadQuizRounds()
+        if (this.question) {
             this.$nextTick(() => {
                 this.questionForm = {
                     id: this.question.id || null,
@@ -338,13 +430,45 @@ export default {
                     is_multiply: this.question.is_multiply || false,
                     is_open: this.question.is_open || false,
                     answers: this.question.answers || [],
-                    success_message: this.question.success_message ||null,
-                    failure_message: this.question.failure_message ||null,
+                    success_message: this.question.success_message || null,
+                    failure_message: this.question.failure_message || null,
+                    success_media_content: this.question.success_media_content || null,
+                    failure_media_content: this.question.failure_media_content || null,
+                    success_media_content_type: this.question.success_media_content_type || null,
+                    failure_media_content_type: this.question.failure_media_content_type || null,
                 }
+
+                if (this.questionForm.media_content!=null)
+                    this.need_media = true
+
+                if (this.questionForm.success_media_content!=null)
+                    this.need_media_for_success = true
+
+                if (this.questionForm.failure_media_content!=null)
+                    this.need_media_for_failed = true
             })
+
+
+
+        }
+
+
+
 
     },
     methods: {
+
+        loadQuizRounds() {
+            this.$store.dispatch("loadQuizRounds", {
+                dataObject: {
+                    bot_id: this.bot.id || null,
+                    quiz_id: this.quizId || null,
+                }
+            }).then(resp => {
+                this.rounds = resp
+            })
+        },
+
         chooseMediaContent(index) {
 
 
@@ -356,6 +480,15 @@ export default {
             const mc = new bootstrap.Modal(document.getElementById('chooseMediaContent'), {})
             mc.show()
 
+        },
+
+        selectMediaForFailure(item){
+            this.questionForm.failure_media_content= item.file_id
+            this.questionForm.failure_media_content_type = item.type
+        },
+        selectMediaForSuccess(item){
+            this.questionForm.success_media_content= item.file_id
+            this.questionForm.success_media_content_type = item.type
         },
         selectMediaForAnswer(item) {
             this.questionForm.answers[this.selectedQuestionIndex].media_content = item.file_id
@@ -377,6 +510,12 @@ export default {
                 answers: [],
                 success_message: null,
                 failure_message: null,
+                success_media_content: null,
+                failure_media_content: null,
+                success_media_content_type: null,
+                failure_media_content_type: null,
+
+
             }
         },
         addNewAnswer() {
@@ -424,7 +563,7 @@ export default {
                 this.$emit("callback", response.data)
                 this.$notify("Вопрос успешно создан");
                 this.clearQuestionForm()
-
+                this.loadQuizRounds()
             }).catch(err => {
                 this.$notify("Ошибка создания вопроса");
             })

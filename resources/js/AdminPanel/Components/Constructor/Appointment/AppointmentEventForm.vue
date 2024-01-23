@@ -179,6 +179,17 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
             </div>
 
             <div class="col-12 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_media"
+                           type="checkbox" id="need_media">
+                    <label class="form-check-label" for="need_media">
+                       Нужно изображение к событию
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3" v-if="need_media">
                 <label class="form-label" id="event-images">
                     <Popper>
                         <i class="fa-regular fa-circle-question mr-1"></i>
@@ -274,6 +285,7 @@ export default {
             load: false,
             need_reset: false,
             need_services:false,
+            need_media:false,
             eventForm: {
                 id:null,
                 title: null,

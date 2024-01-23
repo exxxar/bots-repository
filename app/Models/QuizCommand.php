@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class QuizCommand extends Model
 {
@@ -19,6 +20,9 @@ class QuizCommand extends Model
         'title',
         'description',
         'logo',
+        'captain_id',
+        'creator_id'
+
     ];
 
     /**
@@ -30,11 +34,21 @@ class QuizCommand extends Model
         'id' => 'integer',
     ];
 
-    protected $with = ["players"];
+    protected $with = ["players",/*"captain","creator"*/];
 
     public function players(): BelongsToMany
     {
         return $this->belongsToMany(BotUser::class);
+    }
+
+    public function captain(): HasOne
+    {
+        return $this->hasOne(BotUser::class);
+    }
+
+    public function creator(): HasOne
+    {
+        return $this->hasOne(BotUser::class);
     }
 
     public function quizzes(): BelongsToMany

@@ -25,6 +25,12 @@ BotManager::bot()
     ->slug("global_bonus_product", "bonusProduct");
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\QuizScriptController::class)
+    ->slug("global_start_quiz", "startQuiz");
+
+
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\InstagramQuestScriptController::class)
     ->slug("global_instagram_quest", "instagramQuest"); //колесо фортуны
 

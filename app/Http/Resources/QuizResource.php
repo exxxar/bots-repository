@@ -19,6 +19,7 @@ class QuizResource extends JsonResource
             'description' => $this->description,
             'completed_at' => $this->completed_at,
             "polling_mode"=> $this->polling_mode,
+            "round_mode"=> $this->round_mode,
             "try_count"=> $this->try_count,
             "is_active"=> $this->is_active,
             "success_percent"=> $this->success_percent,

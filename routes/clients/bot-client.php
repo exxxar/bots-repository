@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\TelegramController;
 use App\Http\Controllers\Bots\Web\AdminBotController;
 use App\Http\Controllers\Bots\Web\AmoCrmController;
 use App\Http\Controllers\Bots\Web\BotController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Globals\ShopScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneCustomScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::prefix("bot-client")
     ->group(function () {
@@ -75,6 +77,27 @@ Route::prefix("bot-client")
                 Route::post('/', "media");
                 Route::get('/preview/{id}', "preview");
                 Route::delete('/remove/{id}', "remove");
+            });
+
+
+        Route::prefix("quizzes")
+            ->controller(\App\Http\Controllers\Globals\QuizScriptController::class)
+            ->middleware(["tgAuth.any", "slug"])
+            ->group(function () {
+                Route::post("/quiz-command-store", "quizCommandStore");
+                Route::post('/list-of-quiz', "loadQuizList");
+                Route::post('/check-answer', "checkAnswers");
+                Route::post('/check-quiz-command', "checkQuizCommand");
+                Route::post("/list-of-quiz-commands/{quizId}", "listOfQuizCommands");
+                Route::post('/list-of-results/{quizId}', "loadQuizResultList");
+                Route::post('/list-of-quiz-questions/{quizId}', "listOfQuizQuestions");
+
+             /*   Route::post('/check', "check")
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/exchange', "exchange")
+                    ->middleware(["tgAuth.admin"]);
+                Route::post('/load-action-data', "loadActionData")
+                    ->middleware(["tgAuth.admin"]);*/
             });
 
         Route::prefix("bonus-product")

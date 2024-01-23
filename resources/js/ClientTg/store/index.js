@@ -24,6 +24,7 @@ import dialogs from "./modules/dialogs";
 import slugs from "./modules/slugs";
 import botUsers from "./modules/bot_users";
 import media from "./modules/media";
+import quiz from "./modules/quiz";
 
 import util from "./modules/utilites";
 
@@ -124,6 +125,7 @@ export default createStore({
         slugs,
         botUsers,
         media,
-        ingredients
+        ingredients,
+        quiz
     }
 })

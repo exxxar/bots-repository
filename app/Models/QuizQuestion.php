@@ -26,6 +26,10 @@ class QuizQuestion extends Model
         'round',
         "success_message",
         "failure_message",
+        "success_media_content",
+        "failure_media_content",
+        "success_media_content_type",
+        "failure_media_content_type",
     ];
 
     /**

@@ -117,7 +117,7 @@ import Quizzes from "@/AdminPanel/Components/Constructor/Quiz/Quizzes.vue";
         />
     </div>
 
-    <div v-if="step===11" class="pb-5 mb-5">
+    <div v-if="step===11" class="pb-5 pt-2 mb-5">
         <BotMediaTable
             v-if="!load"
         />
@@ -128,7 +128,7 @@ import Quizzes from "@/AdminPanel/Components/Constructor/Quiz/Quizzes.vue";
         <Shop v-if="!load"/>
     </div>
 
-    <div v-if="step===10" class="pb-5 mb-5">
+    <div v-if="step===10" class="pb-5 mb-5 pt-2">
         <BotFields v-if="!load"/>
     </div>
 
@@ -138,18 +138,18 @@ import Quizzes from "@/AdminPanel/Components/Constructor/Quiz/Quizzes.vue";
             v-if="!load"/>
     </div>
 
-    <div v-if="step===6" class="pb-5 mb-5">
+    <div v-if="step===6" class="pb-5 mb-5 pt-2">
         <BotDialogGroupList
             v-if="!load"/>
     </div>
 
-    <div v-if="step===2" class="pb-5 mb-5">
+    <div v-if="step===2" class="pb-5 mb-5 pt-2">
         <BotSlugList
             v-if="!load"
         />
     </div>
 
-    <div v-if="step===3" class="pb-5 mb-5">
+    <div v-if="step===3" class="pb-5 mb-5 pt-2">
         <BotUserList
             v-if="!load"/>
     </div>

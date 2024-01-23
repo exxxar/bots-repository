@@ -19,26 +19,38 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
     <div class="row" v-if="media.length>0">
         <div class="col-12 col-md-12 mb-3">
 
-            <ul class="list-group">
-                <li @click="selectMedia(item)"
-                    v-bind:class="{'border-info':selected.indexOf(item.file_id) !=-1 }"
-                    class="list-group-item d-flex justify-content-between align-items-start"
+            <div class="row">
+                <div @click="selectMedia(item)"
+                    class="col-md-4"
                     v-for="(item, index) in media">
-                    <div class="ms-2 me-auto w-100">
-                        <div class="fw-bold">{{ item.caption ?? 'Без подписи' }} <span
-                            class="badge bg-info rounded-pill">{{ item.type }}</span></div>
-                        <small class="w-100">{{ item.file_id }}</small>
 
-                        <div class="d-flex justify-content-between">
-                            <a href="javascript:void(0)" class="btn btn-link p-0 my-2" @click="showPreview(item.id)">Показать превью</a>
-                            <a href="javascript:void(0)" class="btn btn-link p-0 my-2 text-danger" @click="remove(item.id)">Удалить</a>
+                    <div class="card mb-2" v-bind:class="{'border-info':(selected||[]).indexOf(item.file_id) !=-1 }">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <p class="badge bg-primary rounded-pill mb-0">#{{ item.id }}</p>
+                            <span class="badge bg-info rounded-pill">{{ item.type }}</span>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="fw-bold">{{ item.caption ?? 'Без подписи' }}
+
+                            </div>
+
+                            <small class="w-100">{{ item.file_id }}</small>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <div>
+                                <a href="javascript:void(0)" class="btn btn-info mr-2" @click="showPreview(item)"><i class="fa-solid fa-eye"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-info" @click="showPreviewInTg(item.id)"><i class="fa-brands fa-telegram"></i></a>
+                            </div>
+
+                            <a href="javascript:void(0)" class="btn btn-outline-danger text-danger" @click="remove(item.id)"><i class="fa-solid fa-trash"></i></a>
                         </div>
                     </div>
-                    <span
-                        style="position: absolute;right: 10px;"
-                        class="badge bg-primary rounded-pill">#{{ item.id }}</span>
-                </li>
-            </ul>
+
+
+                </div>
+            </div>
 
         </div>
 
@@ -59,6 +71,46 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         </div>
     </div>
 
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="preview-modal" tabindex="-1" aria-labelledby="preview-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div v-if="previewContent!=null" class="d-flex justify-content-center align-items-center">
+                        <div class="video-circle" v-if="previewContent.type=='video_note'">
+                            <video
+                                v-if="previewContent.type==='video'||previewContent.type=='video_note'"
+                                controls
+                                poster="/images/load.gif">
+                                <source
+                                    :src="'/file-by-file-id/'+ previewContent.file_id"
+                                    type="video/mp4"/>
+                            </video>
+                        </div>
+
+                        <div v-if="previewContent.type==='video'">
+                            <video
+                                controls
+                                poster="/images/load.gif">
+                                <source
+                                    :src="'/file-by-file-id/'+ previewContent.file_id"
+                                    type="video/mp4"/>
+                            </video>
+                        </div>
+
+                        <img v-if="previewContent.type=='photo'" v-lazy="'/file-by-file-id/'+ previewContent.file_id" alt="">
+                        <audio v-if="previewContent.type==='audio'||previewContent.type==='voice'" controls
+                               :src="'/file-by-file-id/'+ previewContent.file_id"></audio>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -75,7 +127,7 @@ export default {
     data() {
         return {
             bot: null,
-
+            previewContent:null,
             loading: true,
             media: [],
             search: null,
@@ -123,7 +175,17 @@ export default {
 
             })
         },
-        showPreview(mediaId) {
+        showPreview(media) {
+            this.previewContent = null
+            this.$nextTick(()=>{
+                this.previewContent = media
+
+                const previewModal = new bootstrap.Modal('#preview-modal', {})
+                previewModal.show()
+            })
+
+        },
+        showPreviewInTg(mediaId) {
             this.$store.dispatch("showMediaPreview", {
                 dataObject: {
                     mediaId: mediaId,
@@ -134,7 +196,10 @@ export default {
                     text: 'Отправлено в бота'
                 })
             }).catch(() => {
-
+                this.$notify({
+                    title: 'Превью медиа-контента',
+                    text: 'Ошибка отправки в канал!'
+                })
             })
         },
         loadMedia(page = 0) {

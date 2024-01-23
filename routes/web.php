@@ -35,6 +35,24 @@ use Yclients\YclientsApi;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get("/get-images", function (){
+    $data = Http::get("https://api.telegram.org/bot1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4/getFile?file_id=BAACAgIAAxkBAAKYpWU6oDpLJpmTtqwxImoaucn2bJFrAALYNAACIJC4SRlfbOLWrPPlMAQ");
+
+    $data = $data->json();
+    //dd($data["result"]["file_path"]);
+
+    $type = explode("/",$data["result"]["file_path"]);
+
+    dd($type);
+    $data = Http::get("https://api.telegram.org/file/bot1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4/".$data["result"]["file_path"]);
+
+    return response($data)->withHeaders([
+        'Content-disposition' => 'attachment; filename=' . "Test.mpeg",
+        'Access-Control-Expose-Headers' => 'Content-Disposition',
+        'Content-Type' => "video/mpeg",
+    ]);
+});
+
 Route::any("/integrations/1c/callback", function (Request $request){
     Log::info("integrations".print_r($request->all(),true));
     return "success";
@@ -214,6 +232,9 @@ Route::post('/remove-file',
 
 Route::get('/companies/{company}/{fileName}',
     [TelegramController::class, 'getStorageFile']);
+
+Route::get('/file-by-file-id/{fileId}',
+    [TelegramController::class, 'getFileByMediaContentId']);
 
 Route::get('/images-by-company-id/{companyId}/{fileName}',
     [TelegramController::class, 'getFilesByCompanyId']);

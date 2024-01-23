@@ -50,8 +50,16 @@ export default {
           }
       }
     },
+    computed:{
+        self(){
+            return window.self
+        }
+    },
     mounted() {
         baseJS.handler()
+
+        this.form.name = this.self.fio_from_telegram || this.self.name
+        this.form.phone = this.self.phone || null
     },
     methods:{
         submit(){

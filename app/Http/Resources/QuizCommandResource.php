@@ -17,8 +17,12 @@ class QuizCommandResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'captain_id'=> $this->captain_id,
+            'creator_id'=> $this->creator_id,
             'quizzes' => QuizCollection::make($this->whenLoaded('quizzes')),
             'players' => BotUserResource::collection($this->whenLoaded('players')),
+            'captain' => BotUserResource::make($this->whenLoaded('captain')),
+            'creator' => BotUserResource::make($this->whenLoaded('creator')),
         ];
     }
 }

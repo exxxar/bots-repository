@@ -75,8 +75,15 @@ export default {
             },
         }
     },
+    computed:{
+      self(){
+          return window.self
+      }
+    },
     mounted() {
 
+        this.callbackForm.name = this.self.fio_from_telegram || this.self.name
+        this.callbackForm.phone = this.self.phone || null
 
         if (this.type === 'booking')
             this.callbackForm.message = 'Добрый день! Я хочу забронировать столик! Перезвоните мне.'

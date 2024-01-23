@@ -7,7 +7,7 @@ import QrCode from "@/ClientTg/Components/Shop/Helpers/QrCode.vue";
          data-menu-effect="menu-over">
 
         <div class="w-100 p-3" v-if="code">
-            <p class="mb-0 text-center">Дайте отсканировать этот QR-код для начисления или обмена бонусов:)</p>
+            <p class="mb-0 text-center">Дайте отсканировать этот QR-код</p>
             <QrCode :code="code"></QrCode>
         </div>
 

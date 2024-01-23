@@ -23,6 +23,11 @@ class QuizQuestionResource extends JsonResource
             'round' => $this->round,
             "success_message"=> $this->success_message,
             "failure_message"=> $this->failure_message,
+            "success_media_content"=> $this->success_media_content ,
+            "failure_media_content"=> $this->failure_media_content ,
+            "success_media_content_type"=> $this->success_media_content_type,
+            "failure_media_content_type"=> $this->failure_media_content_type ,
+
             'quizzes' => QuizCollection::make($this->whenLoaded('quizzes')),
             'answers' => QuizAnswerResource::collection($this->whenLoaded('answers')),
         ];

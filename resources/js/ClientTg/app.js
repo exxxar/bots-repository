@@ -48,6 +48,9 @@ createInertiaApp({
             current(date) {
                 return moment(date).format("YYYY-MM-DD")
             },
+            currentFull(date) {
+                return moment(date).format("YYYY-MM-DD hh:mm:ss")
+            },
         }
 
         app.config.globalProperties.$botNotification = BotNotification

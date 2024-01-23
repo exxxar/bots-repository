@@ -1,68 +1,37 @@
 <script setup>
 import CallbackForm from "@/ClientTg/Components/Shop/CallbackForm.vue";
-import PlayerForm from "@/ClientTg/Components/Shop/PlayerForm.vue";
-import WheelSecond from "@/ClientTg/Components/Other/WheelSecond.vue";
-import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
+import QuizList from "@/ClientTg/Components/Quiz/QuizList.vue";
+import QuizQuestionList from "@/ClientTg/Components/Quiz/QuizQuestionList.vue";
+import QuizCommands from "@/ClientTg/Components/Quiz/QuizCommands.vue";
 </script>
 <template>
 
-    <div class="card card-style" v-if="rules">
+    <div class="card card-style" v-if="step===0">
         <div class="content">
-            <h4>Правила данной игры</h4>
-            <p v-html="rules">
-            </p>
+            <QuizList
+                v-on:start="startQuiz"></QuizList>
 
-            <p v-if="canPlay" class="mb-2">Ваши попытки: <strong>{{
-                    action.current_attempts || 0
-                }}</strong> из <strong>{{
-                    action.max_attempts || 1
-                }}</strong></p>
-            <div
-                @click="lose"
-                v-else>
-
-                <p style="font-weight:900; color:red;" class="mb-2">Вы израсходовали все ваши попытки</p>
-
-            </div>
-
-            <ul v-if="action.data" class="m-0 p-0">
-                <li v-for="item in action.data" class="d-flex flex-column mb-2">
-                    <span>Название приза <strong>{{ item.description || 'Отсутствует' }}</strong></span>
-                    <span>Победитель  <strong>{{ item.name || 'Не указано' }}</strong></span>
-                    <span>Телефон  <strong>{{ item.phone || 'Не указано' }}</strong></span>
-                </li>
-            </ul>
         </div>
     </div>
 
-    <div class="card card-style" v-if="canPlay&&hasProfileData">
+
+<!--    <QuizCommands
+        :quiz-id="selectedQuiz.id"
+        v-if="step===1">
+    </QuizCommands>-->
+
+    <QuizQuestionList
+        v-if="step===1"
+        :time="selectedQuiz.time_limit"
+        :quiz-id="selectedQuiz.id"></QuizQuestionList>
+
+<!--    <div class="card card-style">
         <div class="content d-flex justify-content-center flex-wrap">
 
 
-            <WheelSecond
-                :items="items"
-                v-on:callback="wheelEndedCallback">
-                <template #baseContent>
-                    Испытай удачу
-                </template>
-            </WheelSecond>
-
-
         </div>
-    </div>
+    </div>-->
 
-    <PlayerForm v-if="canPlay&&!hasProfileData"
-                v-on:callback="callbackPlayerForm">
-        <template v-slot:head>
-            <h3>Анкета участника акции</h3>
-
-            <p>
-                Для участия в конкурсе и дальнейшего получения приза необходимо заполнить данную анкету! Укажите своё
-                имя и номер телефона чтоб менеджер
-                мог выдать Вам приз по итогу.
-            </p>
-        </template>
-    </PlayerForm>
 
     <CallbackForm/>
 
@@ -76,160 +45,28 @@ export default {
 
     data() {
         return {
-            winResultMessage: "Наш менеджер свяжется с вами для дальнейших инструкций.",
-            rules: null,
-            rouletteKey: 0,
-            action: null,
-            hasProfileData: false,
-            winForm: {
-                win: null,
-            },
+            step:0,
+            selectedQuiz:null
 
-            items: [],
         };
     },
     computed: {
-        canPlay() {
 
-            if (!this.action)
-                return false
-
-            return this.action.current_attempts < this.action.max_attempts
-        },
     },
     mounted() {
-        this.loadServiceData().then(() => {
-            this.prepareUserData()
-        })
+
     }
     ,
     methods: {
-        lose() {
-            this.$botNotification.warning("Упс!", "Вы израсходовали все попытки!")
-        },
-        prepareUserData() {
-            return this.$store.dispatch("wheelOfFortuneCustomPrepare").then((response) => {
-                this.action = response.action
-
-            })
-        },
-
-        loadServiceData() {
-            return this.$store.dispatch("wheelOfFortuneCustomLoadData").then((response) => {
-                let index = 0;
-
-                const colors = [
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                ]
-
-                this.rules = response.rules
-                this.winResultMessage = response.callback_message
-                const wheels = this.shuffle(response.wheels)
-
-                this.items = []
-                wheels.forEach(item => {
-                    this.items.push({
-                        text: item.value,
-                        color: colors[index],
-                    })
-
-                    index = (index < colors.length) ? index + 1 : 0
-                })
-
-                /*if (this.items.length % 2 !==0)
-                    this.items.push({
-                        text: "Не выиграл",
-                        color: colors[index],
-                    })*/
-            })
-        },
-        shuffle(array) {
-            let currentIndex = array.length, randomIndex;
-            // While there remain elements to shuffle.
-            while (currentIndex > 0) {
-                // Pick a remaining element.
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                // And swap it with the current element.
-                [array[currentIndex], array[randomIndex]] = [
-                    array[randomIndex], array[currentIndex]];
-            }
-            return array;
-        },
-        submit() {
-            let data = new FormData();
-
-            Object.keys(this.winForm)
-                .forEach(key => {
-                    const item = this.winForm[key] || ''
-                    if (typeof item === 'object')
-                        data.append(key, JSON.stringify(item))
-                    else
-                        data.append(key, item)
-                });
-            const winResult = this.winForm.win || null
-
-            data.append("description", this.items[winResult].text || 'Без описания')
-
-            this.$store.dispatch("wheelOfFortuneCustomWin", {
-                winForm: data
-            }).then((response) => {
-                this.winForm.win = null
-                this.winForm.name = null
-                this.winForm.phone = null
-
-                this.prepareUserData()
-            }).catch(err => {
-
-            })
-
-
-            this.$botNotification.success("Вы выиграли!", "Вы выиграли приз " + (winResult ? this.items[winResult].text : 'Что-то интересное...'))
-        },
-
-
-        callbackPlayerForm(form) {
-
-            this.winForm = {...this.winForm, ...form}
-
-            this.hasProfileData = true
-        },
-        wheelEndedCallback(evt) {
-            if (!evt)
-                return;
-            const win = evt
-            console.log("win number=>", evt)
-            setTimeout(() => {
-                this.winForm.win = win
-                this.submit()
-                this.hasProfileData = false
-            }, 2000)
-
-        },
-    },
+        startQuiz(item){
+            this.selectedQuiz = item
+            this.step = 1
+        }
+    }
 }
 ;
 </script>
 <style>
-.wheel-base-container .wheel-base-indicator {
-    left: 45px !important;
-}
 
-.wheel .content {
-    font-size: 14px;
-    font-weight: 900;
-    margin: 0 !important;
-}
 
 </style>

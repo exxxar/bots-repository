@@ -37,10 +37,15 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             {{ item.type }}
                         </span>
                     </td>
-                    <td>{{ item.caption ?? 'Без подписи' }}</td>
-                    <td><a href="#file" @click="showPreview(item.id)">{{ item.file_id }}</a></td>
+                    <td><p style="word-break: break-all;">{{ item.caption ?? 'Без подписи' }}</p></td>
+                    <td><p style="word-break: break-all;">{{ item.file_id }}</p></td>
                     <td>
-                        <a href="javascript:void(0)" class="btn btn-link p-0 my-2 text-danger" @click="remove(item.id)">Удалить</a>
+                        <div style="min-width:200px;">
+                            <a href="javascript:void(0)" class="btn btn-info mr-2" @click="showPreview(item)"><i class="fa-solid fa-eye"></i></a>
+                            <a href="javascript:void(0)" class="btn btn-info mr-2" @click="showPreviewInTg(item.id)"><i class="fa-brands fa-telegram"></i></a>
+                            <a href="javascript:void(0)" class="btn btn-outline-danger text-danger" @click="remove(item.id)"><i class="fa-solid fa-trash"></i></a>
+                        </div>
+
                     </td>
                 </tr>
 
@@ -66,6 +71,46 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         </div>
     </div>
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="preview-modal" tabindex="-1" aria-labelledby="preview-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div v-if="previewContent!=null" class="d-flex justify-content-center align-items-center">
+                        <div class="video-circle" v-if="previewContent.type=='video_note'">
+                            <video
+                                v-if="previewContent.type==='video'||previewContent.type=='video_note'"
+                                controls
+                                poster="/images/load.gif">
+                                <source
+                                    :src="'/file-by-file-id/'+ previewContent.file_id"
+                                    type="video/mp4"/>
+                            </video>
+                        </div>
+
+                        <div v-if="previewContent.type==='video'">
+                            <video
+                                controls
+                                poster="/images/load.gif">
+                                <source
+                                    :src="'/file-by-file-id/'+ previewContent.file_id"
+                                    type="video/mp4"/>
+                            </video>
+                        </div>
+
+                        <img v-if="previewContent.type=='photo'" v-lazy="'/file-by-file-id/'+ previewContent.file_id" alt="">
+                        <audio v-if="previewContent.type==='audio'||previewContent.type==='voice'" controls
+                               :src="'/file-by-file-id/'+ previewContent.file_id"></audio>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -74,7 +119,7 @@ export default {
     data() {
         return {
             bot: null,
-
+            previewContent:null,
             loading: true,
             media: [],
             search: null,
@@ -123,7 +168,17 @@ export default {
 
             })
         },
-        showPreview(mediaId) {
+        showPreview(media) {
+            this.previewContent = null
+            this.$nextTick(()=>{
+                this.previewContent = media
+
+                const previewModal = new bootstrap.Modal('#preview-modal', {})
+                previewModal.show()
+            })
+
+        },
+        showPreviewInTg(mediaId) {
             this.$store.dispatch("showMediaPreview", {
                 dataObject: {
                     mediaId: mediaId,

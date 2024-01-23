@@ -121,6 +121,7 @@ Route::prefix("admin")
             ->group(function () {
                 Route::post("/list-of-quiz", "listOfQuiz");
                 Route::post("/list-of-quiz-questions/{quizId}", "listOfQuizQuestions");
+                Route::post("/list-of-quiz-rounds/{quizId}", "listOfQuizRounds");
                 Route::post("/list-of-quiz-commands/{quizId}", "listOfQuizCommands");
                 Route::post("/list-of-results/{quizId}", "listOfResults");
                 Route::post("/quiz-store", "quizStore");

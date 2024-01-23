@@ -37,6 +37,8 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('show_answers')">Показывать ответы по
                         окончанию раунда
                     </th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('is_active')">Активный
+                    </th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('updated_at')">Дата изменения</th>
                     <th scope="col">Действие</th>
                 </tr>
@@ -49,7 +51,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     </td>
                     <td>{{ (quiz.questions || [] ).length }}</td>
                     <td>{{ (quiz.commands || [] ).length }}</td>
-                    <td>{{ quiz.image || 'Не указано' }}</td>
+                    <td>  <img style="width:50px;height:50px;" v-if="quiz.image!=null" v-lazy="'/file-by-file-id/'+quiz.image" alt=""> <p v-else>не указано</p></td>
                     <td>{{ quiz.description || 'Не указано' }}</td>
                     <td>
                         <p v-if="quiz.completed_at" class="mb-0"> {{ $filters.currentFull(quiz.completed_at) }}</p>
@@ -73,6 +75,10 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
                     <td>
                         <i class="fa-solid fa-chevron-down text-success" v-if="quiz.show_answers"></i>
+                        <i class="fa-solid  fa-xmark text-danger" v-else></i>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-chevron-down text-success" v-if="quiz.is_multiply"></i>
                         <i class="fa-solid  fa-xmark text-danger" v-else></i>
                     </td>
                     <td>{{ $filters.current(quiz.updated_at) }}</td>
