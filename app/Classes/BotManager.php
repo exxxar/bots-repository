@@ -416,7 +416,7 @@ class BotManager extends BotCore
                 $media[] = [
                     "media" => env("APP_URL") . "/images-by-bot-id/" . $bot->id . "/" . $image,
                     "type" => "photo",
-                    "caption" => null
+                    "caption" => ""
                 ];
             }
 
