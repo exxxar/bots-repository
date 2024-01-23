@@ -41,7 +41,9 @@ import Layout from "ClientTg@/Layouts/ShopLayout.vue";
                 class="page-content" style="min-height: 667px;">
 
                 <div class="page-title page-title-small">
-                    <h2><a @click="$router.back()"><i class="fa fa-arrow-left"></i>
+                    <h2><a
+                        href="javascript:void(0)"
+                        @click="$router.back()"><i class="fa fa-arrow-left"></i>
                         {{ $route.meta.title || 'Меню' }}</a></h2>
                     <a
 

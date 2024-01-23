@@ -28,8 +28,8 @@
     "src": "Pagination.css"
   },
   "ShopLayout.css": {
-    "file": "assets/ShopLayout-5ac8cdc0.css",
-    "src": "resources/js/ClientTg/Pages/SimpleMain.css"
+    "file": "assets/SimpleMain-5ac8cdc0.css",
+    "src": "ShopLayout.css"
   },
   "TelegramChannelHelper.css": {
     "file": "assets/InlineInjectionsHelper-5ad24a6a.css",
@@ -133,11 +133,11 @@
       "_index.es-1f9fc4ae.js"
     ]
   },
-  "_ShopLayout-4e96bdb7.js": {
+  "_ShopLayout-186601cf.js": {
     "css": [
-      "assets/ShopLayout-5ac8cdc0.css"
+      "assets/SimpleMain-5ac8cdc0.css"
     ],
-    "file": "assets/ShopLayout-4e96bdb7.js",
+    "file": "assets/ShopLayout-186601cf.js",
     "imports": [
       "_index.es-1f9fc4ae.js",
       "resources/js/ClientTg/app.js"
@@ -502,12 +502,12 @@
       "assets/Main-507604a0.css",
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/Main-c8466368.js",
+    "file": "assets/Main-5ef10309.js",
     "imports": [
       "_MapModal.vue_vue_type_style_index_0_lang-2e058f81.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-1f9fc4ae.js",
-      "_ShopLayout-4e96bdb7.js",
+      "_ShopLayout-186601cf.js",
       "resources/js/ClientTg/app.js",
       "_TelegramChannelHelper-e4f15f29.js",
       "_v4-a960c1f4.js",
@@ -521,9 +521,9 @@
     "css": [
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/Result-588bdfc3.js",
+    "file": "assets/Result-3be7296a.js",
     "imports": [
-      "_ShopLayout-4e96bdb7.js",
+      "_ShopLayout-186601cf.js",
       "resources/js/ClientTg/app.js",
       "_index.es-1f9fc4ae.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -545,14 +545,14 @@
     "src": "resources/js/ClientTg/Pages/Shop/AboutUs.vue"
   },
   "resources/js/ClientTg/Pages/SimpleMain.css": {
-    "file": "assets/ShopLayout-5ac8cdc0.css",
-    "src": "resources/js/ClientTg/Pages/SimpleMain.css"
+    "file": "assets/SimpleMain-5ac8cdc0.css",
+    "src": "ShopLayout.css"
   },
   "resources/js/ClientTg/Pages/SimpleMain.vue": {
     "css": [
-      "assets/ShopLayout-5ac8cdc0.css"
+      "assets/SimpleMain-5ac8cdc0.css"
     ],
-    "file": "assets/SimpleMain-df692815.js",
+    "file": "assets/SimpleMain-7c0630dc.js",
     "imports": [
       "_MapModal.vue_vue_type_style_index_0_lang-2e058f81.js",
       "_index.es-1f9fc4ae.js",
@@ -577,7 +577,7 @@
       "resources/js/ClientTg/Pages/Shop/AboutUs.vue",
       "resources/js/ClientTg/Pages/SimpleMain.vue"
     ],
-    "file": "assets/app-f7f165ff.js",
+    "file": "assets/app-d439f0cf.js",
     "imports": [
       "_index.es-1f9fc4ae.js",
       "__plugin-vue_export-helper-c27b6911.js",

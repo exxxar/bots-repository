@@ -684,6 +684,7 @@ export default {
                 this.locationForm.info = null
                 this.locationForm.content = null
                 this.locationForm.content_type = null
+                this.locationForm.need_media_content = false
                 this.$botNotification.success("Отлично!", "Вы отметили пользователя в заведении и отправили ему сообщение")
             }).catch(() => {
                 this.loading = false
