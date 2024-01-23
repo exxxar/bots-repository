@@ -4,6 +4,7 @@ import UserInfo from '@/ClientTg/Components/UserInfo.vue';
 import Pagination from '@/ClientTg/Components/Pagination.vue'
 import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue";
+import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
 //todo: добавить историю кэшбека, добавить сумму кэшбэка на текущий момент
 </script>
 <template>
@@ -94,6 +95,28 @@ import UserSearchForm from "@/ClientTg/Components/Shop/Users/UserSearchForm.vue"
                                   placeholder="Текст сообщения"
                                   v-model="locationForm.info"
                                   id="bill-info" rows="3" required></textarea>
+                    </div>
+
+                    <div class="custom-control ios-switch ios-switch-icon my-3">
+                        <input type="checkbox"
+                               v-model="locationForm.need_media_content"
+                               class="ios-input" id="toggle-need-pickup">
+                        <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!locationForm.need_media_content">Нужен медиа контент</label>
+                        <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="locationForm.need_media_content">Не нужен</label>
+                        <i class="fa-solid fa-font font-11 color-white" style="left:8px;"></i>
+                        <i class="fa-solid fa-photo-film font-11 color-white" style="margin-left: 24px;"></i>
+                    </div>
+
+                    <div class="mb-3" v-if="locationForm.need_media_content">
+                        <BotMediaList
+                            :need-audio="true"
+                            :need-video-note="true"
+                            :need-video="true"
+                            :need-photo="true"
+                            v-on:select="selectMediaForMessage"
+                            :selected="[locationForm.content]">
+
+                        </BotMediaList>
                     </div>
 
                     <div class="mb-3">
@@ -443,6 +466,9 @@ export default {
             },
             locationForm: {
                 info: null,
+                content:null,
+                content_type:null,
+                need_media_content: false,
             },
 
             adminForm: {
@@ -493,6 +519,7 @@ export default {
             }
             this.locationForm = {
                 info: null,
+                need_media_content: false,
             }
 
             this.adminForm = {
@@ -655,7 +682,9 @@ export default {
             }).then((resp) => {
                 this.loading = false
                 this.locationForm.info = null
-                this.$botNotification.success("Отлично!", "Вы отметили пользователя в заведении")
+                this.locationForm.content = null
+                this.locationForm.content_type = null
+                this.$botNotification.success("Отлично!", "Вы отметили пользователя в заведении и отправили ему сообщение")
             }).catch(() => {
                 this.loading = false
                 this.$botNotification.warning("Упс!", "Что-то пошло не так")
@@ -747,6 +776,11 @@ export default {
                 this.loading = false
                 this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
+        },
+        selectMediaForMessage(item){
+          this.locationForm.content = item.file_id || null
+          this.locationForm.content_type = item.type || null
+
         },
         addAdmin() {
             this.loading = true;

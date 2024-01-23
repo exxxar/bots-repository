@@ -1,57 +1,14 @@
 created:
-    - app/Http/Controllers/QuizController.php
-    - app/Http/Controllers/QuizCommandController.php
-    - app/Http/Controllers/QuizResultController.php
-    - app/Http/Controllers/QuizQuestionController.php
-    - app/Http/Controllers/QuizAnswerController.php
-    - database/factories/QuizFactory.php
-    - database/factories/QuizCommandFactory.php
-    - database/factories/QuizResultFactory.php
-    - database/factories/QuizQuestionFactory.php
-    - database/factories/QuizAnswerFactory.php
-    - database/migrations/2024_01_13_120211_create_quizzes_table.php
-    - database/migrations/2024_01_13_120212_create_quiz_commands_table.php
-    - database/migrations/2024_01_13_120213_create_quiz_results_table.php
-    - database/migrations/2024_01_13_120214_create_quiz_questions_table.php
-    - database/migrations/2024_01_13_120215_create_quiz_answers_table.php
-    - database/migrations/2024_01_13_120216_create_quiz_quiz_command_table.php
-    - database/migrations/2024_01_13_120217_create_bot_user_quiz_command_table.php
-    - database/migrations/2024_01_13_120218_create_quiz_quiz_question_table.php
-    - app/Models/Quiz.php
-    - app/Models/QuizCommand.php
-    - app/Models/QuizResult.php
-    - app/Models/QuizQuestion.php
-    - app/Models/QuizAnswer.php
-    - database/seeders/QuizSeeder.php
-    - database/seeders/QuizCommandSeeder.php
-    - database/seeders/QuizResultSeeder.php
-    - database/seeders/QuizQuestionSeeder.php
-    - database/seeders/QuizAnswerSeeder.php
-    - tests/Feature/Http/Controllers/QuizControllerTest.php
-    - tests/Feature/Http/Controllers/QuizCommandControllerTest.php
-    - tests/Feature/Http/Controllers/QuizResultControllerTest.php
-    - tests/Feature/Http/Controllers/QuizQuestionControllerTest.php
-    - tests/Feature/Http/Controllers/QuizAnswerControllerTest.php
-    - app/Http/Requests/QuizStoreRequest.php
-    - app/Http/Requests/QuizUpdateRequest.php
-    - app/Http/Requests/QuizCommandStoreRequest.php
-    - app/Http/Requests/QuizCommandUpdateRequest.php
-    - app/Http/Requests/QuizResultStoreRequest.php
-    - app/Http/Requests/QuizResultUpdateRequest.php
-    - app/Http/Requests/QuizQuestionStoreRequest.php
-    - app/Http/Requests/QuizQuestionUpdateRequest.php
-    - app/Http/Requests/QuizAnswerStoreRequest.php
-    - app/Http/Requests/QuizAnswerUpdateRequest.php
-    - app/Http/Resources/QuizCollection.php
-    - app/Http/Resources/QuizResource.php
-    - app/Http/Resources/QuizCommandCollection.php
-    - app/Http/Resources/QuizCommandResource.php
-    - app/Http/Resources/QuizResultCollection.php
-    - app/Http/Resources/QuizResultResource.php
-    - app/Http/Resources/QuizQuestionCollection.php
-    - app/Http/Resources/QuizQuestionResource.php
-    - app/Http/Resources/QuizAnswerCollection.php
-    - app/Http/Resources/QuizAnswerResource.php
+    - app/Http/Controllers/ChatLogController.php
+    - database/factories/ChatLogFactory.php
+    - database/migrations/2024_01_23_222006_create_chat_logs_table.php
+    - app/Models/ChatLog.php
+    - database/seeders/ChatLogSeeder.php
+    - tests/Feature/Http/Controllers/ChatLogControllerTest.php
+    - app/Http/Requests/ChatLogStoreRequest.php
+    - app/Http/Requests/ChatLogUpdateRequest.php
+    - app/Http/Resources/ChatLogCollection.php
+    - app/Http/Resources/ChatLogResource.php
 updated:
     - routes/api.php
 models:
@@ -109,3 +66,4 @@ models:
     QuizResult: { quiz_id: 'id foreign:quizs', quiz_command_id: 'id foreign:quiz_commands', points: 'double default:0', time: 'double default:0', result: 'json nullable', relationships: { belongsTo: 'Quiz, QuizCommand' } }
     QuizQuestion: { text: 'longtext nullable', media_content: 'json nullable', content_type: 'integer default:0', is_multiply: 'boolean default:false', is_open: 'boolean default:false', round: 'integer default:0', relationships: { belongsToMany: Quiz, hasMany: QuizAnswer } }
     QuizAnswer: { quiz_question_id: 'id foreign:quiz_questions', text: 'longtext nullable', media_content: 'json nullable', content_type: 'integer default:0', is_right_answer: 'boolean default:false', points: 'double default:0', relationships: { hasOne: QuizQuestion } }
+    ChatLog: { text: 'longtext nullable', media_content: 'json nullable', content_type: 'integer default:0', bot_id: 'id foreign:bots', form_bot_user_id: 'id foreign:bot_users', to_bot_user_id: 'id foreign:bot_users', relationships: { belongsTo: 'Bot, BotUser' } }

@@ -12,6 +12,7 @@ use App\Models\BotMenuTemplate;
 use App\Models\BotNote;
 use App\Models\BotPage;
 use App\Models\BotUser;
+use App\Models\ChatLog;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -159,7 +160,6 @@ abstract class BotCore
         $this->reply("Ошибка обработки данных!");
         return response()->json($this->webMessages);
     }
-
 
     private function botLocationHandler($coords, $message): bool
     {
@@ -1010,6 +1010,15 @@ abstract class BotCore
                     ],
                     $thread
                 );
+
+                ChatLog::query()->create([
+                    'text'=>$query,
+                    'media_content'=>null,
+                    'content_type'=>null,
+                    'bot_id'=>$this->getSelf()->id,
+                    'form_bot_user_id'=>$botUser->id,
+                    'to_bot_user_id'=>null
+                ]);
 
                 $this->reply("Ваше сообщение успешно доставлено администратору бота");
                 return true;

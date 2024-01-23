@@ -22,6 +22,7 @@ use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
+use App\Models\ChatLog;
 use App\Models\CustomField;
 use App\Models\ManagerProfile;
 use App\Models\Transaction;
@@ -571,7 +572,7 @@ class BotAdministrativeLogicFactory
             'total_amount' => $amount,
             'status' => 0,
             'products_info' => (object)[
-                "payload" =>$payloadData,
+                "payload" => $payloadData,
                 "prices" => $prices,
             ],
         ]);
@@ -910,7 +911,7 @@ class BotAdministrativeLogicFactory
         }
 
         $yClients = YClients::query()
-            ->where("bot_id",$this->bot->id)
+            ->where("bot_id", $this->bot->id)
             ->first();
 
         if (!is_null($yClients)) {
@@ -989,6 +990,8 @@ class BotAdministrativeLogicFactory
             throw new ValidationException($validator);
 
         $info = $data["info"] ?? '-';
+        $content = $data["content"] ?? null;
+        $contentType = $data["content_type"] ?? null;
 
         $userBotUser = BotUser::query()
             ->with(["user"])
@@ -1015,9 +1018,61 @@ class BotAdministrativeLogicFactory
             )
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
-                "Вы отправили пользователяю $name в сообщение."
+                "Вы отправили пользователю $name в сообщение."
             );
 
+        if (!is_null($content)) {
+            switch ($contentType) {
+                case "video":
+                    BotMethods::bot()
+                        ->whereBot($this->bot)
+                        ->sendVideo(
+                            $userBotUser->telegram_chat_id,
+                            "Видео от администратора",
+                            $content
+                        );
+                    break;
+
+                case "video_note":
+                    BotMethods::bot()
+                        ->whereBot($this->bot)
+                        ->sendVideoNote(
+                            $userBotUser->telegram_chat_id,
+                            $content
+                        );
+                    break;
+                case "photo":
+                    BotMethods::bot()
+                        ->whereBot($this->bot)
+                        ->sendPhoto(
+                            $userBotUser->telegram_chat_id,
+                            "Фотография от администратора",
+                            $content
+                        );
+                    break;
+                case "audio":
+                case "voice":
+                    BotMethods::bot()
+                        ->whereBot($this->bot)
+                        ->sendAudio(
+                            $userBotUser->telegram_chat_id,
+                            "Аудиофайл от администратора",
+                            $content
+                        );
+                    break;
+            }
+
+        }
+
+
+        ChatLog::query()->create([
+            'text' => $info,
+            'media_content' => $content,
+            'content_type' => $contentType,
+            'bot_id' => $this->bot->id,
+            'form_bot_user_id' => $adminBotUser->id,
+            'to_bot_user_id' => $userBotUser->id
+        ]);
     }
 
     /**

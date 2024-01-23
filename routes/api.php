@@ -150,3 +150,6 @@ Route::apiResource('quiz-result', App\Http\Controllers\QuizResultController::cla
 Route::apiResource('quiz-question', App\Http\Controllers\QuizQuestionController::class);
 
 Route::apiResource('quiz-answer', App\Http\Controllers\QuizAnswerController::class);
+
+
+Route::apiResource('chat-log', App\Http\Controllers\ChatLogController::class);
