@@ -5,17 +5,16 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
 <template>
     <div class="card card-style">
-        <div class="content " v-if="history.length>0">
-            <div v-for="message in history" class="mt-5 pt-3">
-                <div class="speech-bubble speech-right color-black" v-if="message.from_bot_user_id == botUserId">
+        <div class="content d-flex flex-wrap" v-if="history.length>0">
+            <div v-for="message in history" class="mt-5 pt-3 w-100 ">
+                <div class="speech-bubble color-black" v-if="message.from_bot_user_id == botUserId">
                     {{message.text || 'Текст сообщения'}}
                 </div>
-                <div class="clearfix"></div>
-                <div class="speech-bubble speech-left bg-highlight" v-if="message.from_bot_user_id != botUserId">
+                <div class="speech-bubble color-white bg-highlight" v-if="message.from_bot_user_id != botUserId">
                     {{message.text || 'Текст сообщения'}}
                 </div>
 
-                <div class="speech-bubble speach-image speech-left bg-highlight" v-if="message.media_content">
+                <div class="speech-left" v-if="message.media_content">
                     <BotMediaObject
                         :content="message.media_content"
                         :type="message.content_type"></BotMediaObject>
