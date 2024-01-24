@@ -18,7 +18,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                 <div class="speech-bubble speach-image speech-left bg-highlight" v-if="message.media_content">
                     <BotMediaObject
                         :content="message.media_content"
-                        :type="message.type"></BotMediaObject>
+                        :type="message.content_type"></BotMediaObject>
                 </div>
 
             </div>
