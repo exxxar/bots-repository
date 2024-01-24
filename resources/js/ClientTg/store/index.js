@@ -7,6 +7,7 @@ import products from './modules/shop/products';
 import ingredients from './modules/ingrediens';
 
 import wheelOfFortune from "./modules/globals/wheelOfFortune";
+import chatHistory from "./modules/chat_history";
 import wheelOfFortuneCustom from "./modules/globals/wheelOfFortuneCustom";
 import bonusProduct from "./modules/globals/bonusProduct";
 import instagramQuest from "./modules/globals/instagramQuest";
@@ -126,6 +127,7 @@ export default createStore({
         botUsers,
         media,
         ingredients,
-        quiz
+        quiz,
+        chatHistory
     }
 })

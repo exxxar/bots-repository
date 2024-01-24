@@ -86,9 +86,16 @@ import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
                     href="javascript:void(0)"
                     @click.prevent="openSection(5)"
                     v-bind:class="{'bg-blue2-dark text-white':section===5, 'color-blue2-dark':section!==5}"
-                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Написать пользователю сообщение</a>
+                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">Написать
+                    пользователю сообщение</a>
 
                 <form v-on:submit.prevent="acceptUserInLocation" v-if="section===5">
+                    <div class="mb-3">
+                        <a href="javascript:void(0)"
+                           class="btn btn-link"
+                           @click="goToUserChatHistory"
+                        >Глянуть историю переписки с пользователем</a>
+                    </div>
                     <div class="mb-3">
                         <label for="bill-info" class="form-label">Написать сообщение</label>
                         <textarea class="form-control"
@@ -101,8 +108,10 @@ import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
                         <input type="checkbox"
                                v-model="locationForm.need_media_content"
                                class="ios-input" id="toggle-need-pickup">
-                        <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="!locationForm.need_media_content">Нужен медиа контент</label>
-                        <label class="custom-control-label pl-5" for="toggle-need-pickup" v-if="locationForm.need_media_content">Не нужен</label>
+                        <label class="custom-control-label pl-5" for="toggle-need-pickup"
+                               v-if="!locationForm.need_media_content">Нужен медиа контент</label>
+                        <label class="custom-control-label pl-5" for="toggle-need-pickup"
+                               v-if="locationForm.need_media_content">Не нужен</label>
                         <i class="fa-solid fa-font font-11 color-white" style="left:8px;"></i>
                         <i class="fa-solid fa-photo-film font-11 color-white" style="margin-left: 24px;"></i>
                     </div>
@@ -184,7 +193,6 @@ import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
                 </form>
 
 
-
                 <a
                     href="javascript:void(0)"
                     @click.prevent="openSection(6)"
@@ -233,14 +241,16 @@ import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
                     <p>У пользователя <strong>{{ botUser.cashBack.amount || 0 }} руб</strong> CashBack</p>
 
                     <p class="mb-2" v-if="botUser.cashBack.subs" v-for="item in botUser.cashBack.subs">
-                        {{item.title || 'Без названия'}} - {{item.amount || 0}} руб.
+                        {{ item.title || 'Без названия' }} - {{ item.amount || 0 }} руб.
                     </p>
 
                     <div v-if="currentBot.cashback_config">
                         <h6>В боте поддерживается списание CashBack по категориям</h6>
                         <select class="form-control mb-2" v-model="cashbackForm.category" required>
                             <option selected>Общий CashBack</option>
-                            <option :value="item.title" v-for="item in currentBot.cashback_config">{{item.title || 'Без названия'}}</option>
+                            <option :value="item.title" v-for="item in currentBot.cashback_config">
+                                {{ item.title || 'Без названия' }}
+                            </option>
                         </select>
                     </div>
 
@@ -282,16 +292,19 @@ import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
                 <form v-on:submit.prevent="addCashBack" v-if="section===2">
                     <p class="mb-2">У пользователя <strong>{{ botUser.cashBack.amount || 0 }} руб</strong> CashBack</p>
                     <p class="mb-2" v-if="botUser.cashBack.subs" v-for="item in botUser.cashBack.subs">
-                        {{item.title || 'Без названия'}} - {{item.amount || 0}} руб.
+                        {{ item.title || 'Без названия' }} - {{ item.amount || 0 }} руб.
                     </p>
 
                     <div v-if="currentBot.cashback_config">
                         <h6>В боте поддерживается начисление CashBack по категориям</h6>
                         <select class="form-control mb-2" v-model="cashbackForm.category" required>
                             <option selected>Общий CashBack</option>
-                            <option :value="item.title" v-for="item in currentBot.cashback_config">{{item.title || 'Без названия'}}</option>
+                            <option :value="item.title" v-for="item in currentBot.cashback_config">
+                                {{ item.title || 'Без названия' }}
+                            </option>
                         </select>
-                        <em>Начисления по реферальной системе происходя только для общего CashBack-а. CashBack-по категориям не суммируется с общим и отображается пользователю отдельно.</em>
+                        <em>Начисления по реферальной системе происходя только для общего CashBack-а. CashBack-по
+                            категориям не суммируется с общим и отображается пользователю отдельно.</em>
                     </div>
 
                     <div class="form-check mb-3">
@@ -394,15 +407,15 @@ import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
                 </form>
 
 
-<!--
-                <a
-                    href="javascript:void(0)"
-                    @click.prevent="openSection(9)"
-                    v-bind:class="{'bg-blue2-dark text-white':section===9, 'color-blue2-dark':section!==9}"
-                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
-                    Отправить пользователю страницу
-                </a>
--->
+                <!--
+                                <a
+                                    href="javascript:void(0)"
+                                    @click.prevent="openSection(9)"
+                                    v-bind:class="{'bg-blue2-dark text-white':section===9, 'color-blue2-dark':section!==9}"
+                                    class="btn btn-border btn-m btn-full mb-1 rounded-sm text-uppercase font-900 border-blue2-dark ">
+                                    Отправить пользователю страницу
+                                </a>
+                -->
 
                 <form v-on:submit.prevent="sendPageToUser" v-if="section===9">
                     <div class="mb-3">
@@ -414,7 +427,7 @@ import BotMediaList from "@/ClientTg/Components/BotMediaList.vue";
                     </div>
 
                     <h6>Список доступных страниц:</h6>
-                    <p class="mb-2" v-if="pageForm.page_id">Вы выбрали #{{pageForm.page_id}}
+                    <p class="mb-2" v-if="pageForm.page_id">Вы выбрали #{{ pageForm.page_id }}
                         <span class="ml-2 text-danger custom-radio" @click="pageForm.page_id = null">убрать</span>
                     </p>
                     <PagesList
@@ -466,8 +479,8 @@ export default {
             },
             locationForm: {
                 info: null,
-                content:null,
-                content_type:null,
+                content: null,
+                content_type: null,
                 need_media_content: false,
             },
 
@@ -475,15 +488,15 @@ export default {
                 info: null
             },
 
-            pageForm:{
-              page_id:null,
-              info:null,
+            pageForm: {
+                page_id: null,
+                info: null,
             },
 
             cashbackForm: {
                 percent: null,
                 need_custom_percents: false,
-                category:null,
+                category: null,
                 amount: null,
                 info: null
             }
@@ -556,8 +569,8 @@ export default {
 
 
     methods: {
-        pageListCallback(page){
-          this.pageForm.page_id = page.id
+        pageListCallback(page) {
+            this.pageForm.page_id = page.id
         },
         updateUserInfo() {
 
@@ -656,6 +669,9 @@ export default {
                 this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
         },
+        goToUserChatHistory() {
+            this.$router.push({name: 'AdminChatLog', params: {botUserId: this.botUser.id}});
+        },
         requestUserData() {
             this.loading = true;
             this.$store.dispatch("requestUserData", {
@@ -715,7 +731,7 @@ export default {
                 this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
         },
-        sendPageToUser(){
+        sendPageToUser() {
             if (!this.request_telegram_chat_id) {
                 this.$botNotification.warning("Упс!", "Вы должны выбрать пользователя!")
                 return
@@ -778,9 +794,9 @@ export default {
                 this.$botNotification.warning("Упс!", "Что-то пошло не так")
             })
         },
-        selectMediaForMessage(item){
-          this.locationForm.content = item.file_id || null
-          this.locationForm.content_type = item.type || null
+        selectMediaForMessage(item) {
+            this.locationForm.content = item.file_id || null
+            this.locationForm.content_type = item.type || null
 
         },
         addAdmin() {

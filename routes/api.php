@@ -152,4 +152,4 @@ Route::apiResource('quiz-question', App\Http\Controllers\QuizQuestionController:
 Route::apiResource('quiz-answer', App\Http\Controllers\QuizAnswerController::class);
 
 
-Route::apiResource('chat-log', App\Http\Controllers\ChatLogController::class);
+Route::apiResource('chat-log', \App\Http\Controllers\Bots\Web\ChatLogController::class);

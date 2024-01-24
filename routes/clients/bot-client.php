@@ -79,6 +79,13 @@ Route::prefix("bot-client")
                 Route::delete('/remove/{id}', "remove");
             });
 
+        Route::prefix("chat-history")
+            ->controller(\App\Http\Controllers\Bots\Web\ChatLogController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function () {
+                Route::post('/', "history");
+            });
+
 
         Route::prefix("quizzes")
             ->controller(\App\Http\Controllers\Globals\QuizScriptController::class)

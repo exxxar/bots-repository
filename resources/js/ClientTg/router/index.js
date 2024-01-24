@@ -34,6 +34,7 @@ import Vip from '@/ClientTg/Pages/Shop/Vip.vue';
 import Categories from '@/ClientTg/Pages/Shop/Categories.vue';
 
 import AdminMain from '@/ClientTg/Pages/Admin/Main.vue';
+import AdminChatLog from '@/ClientTg/Pages/Admin/ChatHistory.vue';
 import AdminPromotion from '@/ClientTg/Pages/Admin/Promotion.vue';
 import AdminStatistic from '@/ClientTg/Pages/Admin/Statistic.vue';
 import AdminWorkStatus from '@/ClientTg/Pages/Admin/WorkStatus.vue';
@@ -225,6 +226,14 @@ export const adminRoutes = [
         component: AdminMain,
         meta: { title: 'Админ панель: Главная', hide_menu:true, need_admin_menu:true }
     },
+    {
+        name: 'AdminChatLog',
+        path: '/admin-chat-history/:botUserId',
+        component: AdminChatLog,
+        meta: { title: 'Админ панель: История чата', hide_menu:true, need_admin_menu:true }
+    },
+
+
     {
         name: 'AdminPromotion',
         path: '/admin-promotion',
