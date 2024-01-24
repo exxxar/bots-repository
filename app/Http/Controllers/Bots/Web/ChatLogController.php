@@ -29,6 +29,7 @@ class ChatLogController extends Controller
                 $q->where("form_bot_user_id", $botUserId)
                     ->orWhere("to_bot_user_id", $botUserId);
             })
+            ->orderBy("created_at","desc")
             ->paginate(20);
 
         return new ChatLogCollection($chatLogs);

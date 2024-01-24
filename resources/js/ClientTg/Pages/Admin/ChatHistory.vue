@@ -4,8 +4,8 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
 <template>
     <div class="card card-style">
-        <div class="content mt-5 pt-3" v-if="history.length>0">
-            <div v-for="message in history">
+        <div class="content " v-if="history.length>0">
+            <div v-for="message in history" class="mt-5 pt-3">
                 <div class="speech-bubble speech-right color-black" v-if="message.from_bot_user_id == botUserId">
                     {{message.text || 'Текст сообщения'}}
                 </div>
@@ -14,6 +14,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                     {{message.text || 'Текст сообщения'}}
                 </div>
             </div>
+
 <!--            <div class="speech-bubble speech-right color-black" >
                 These are chat bubbles, right? They look awesome don't they?
             </div>
@@ -66,7 +67,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
             </div>
             <div class="clearfix"></div>
             <em class="speech-read mb-3">Delivered &amp; Read - 07:18 PM</em>-->
-            <div class="divider"></div>
+            <div class="divider my-5"></div>
 
 
             <Pagination
@@ -78,6 +79,9 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 
             <ReturnToBot/>
 
+        </div>
+        <div class="content" v-else>
+            <p>Переписка с данным пользователем еще не сохранена</p>
         </div>
     </div>
 
