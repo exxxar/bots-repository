@@ -6,7 +6,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 <template>
     <div class="card card-style">
         <div class="content d-flex flex-wrap" v-if="history.length>0">
-            <div v-for="message in history" class="mt-5 pt-3 w-100 ">
+            <div v-for="message in history" class="mt-2 pt-2 w-100 ">
                 <div class="speech-bubble color-black" v-if="message.from_bot_user_id == botUserId">
                     {{message.text || 'Текст сообщения'}}
                 </div>
@@ -74,9 +74,10 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
             </div>
             <div class="clearfix"></div>
             <em class="speech-read mb-3">Delivered &amp; Read - 07:18 PM</em>-->
-            <div class="divider my-5"></div>
 
 
+        </div>
+        <div class="content" v-if="history.length>0">
             <Pagination
                 class="mt-4"
                 :simple="true"
@@ -85,7 +86,6 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                 :pagination="paginate_object"/>
 
             <ReturnToBot/>
-
         </div>
         <div class="content" v-else>
             <p>Переписка с данным пользователем еще не сохранена</p>
