@@ -1,5 +1,6 @@
 <script setup>
 import Pagination from "ClientTg@/Components/Pagination.vue";
+import BotMediaObject from "@/ClientTg/Components/BotMediaObject.vue";
 import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 </script>
 <template>
@@ -13,6 +14,13 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                 <div class="speech-bubble speech-left bg-highlight" v-if="message.from_bot_user_id != botUserId">
                     {{message.text || 'Текст сообщения'}}
                 </div>
+
+                <div class="speech-bubble speach-image speech-left bg-highlight" v-if="message.media_content">
+                    <BotMediaObject
+                        :content="message.media_content"
+                        :type="message.type"></BotMediaObject>
+                </div>
+
             </div>
 
 <!--            <div class="speech-bubble speech-right color-black" >
