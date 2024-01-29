@@ -21,12 +21,9 @@
     </div>
 </template>
 <script>
-import VueCoreVideoPlayer from 'vue-core-video-player'
+
 export default {
     props: ["type", "content"],
-    components:{
-        VueCoreVideoPlayer
-    }
 }
 </script>
 <style lang="scss">
