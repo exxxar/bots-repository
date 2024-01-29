@@ -1,9 +1,7 @@
 <template>
     <div class="d-flex justify-content-center">
-        <vue-core-video-player
-            v-if="type=='video'||type=='video_note'"
-            :src="'/file-by-file-id/'+content"></vue-core-video-player>
-<!--        <video
+
+        <video
             v-if="type=='video'||type=='video_note'"
             class="w-100"
             v-bind:class="{'video-circle':type=='video_note'}"
@@ -12,7 +10,7 @@
             <source
                 :src="'/file-by-file-id/'+content"
                 type="video/mp4"/>
-        </video>-->
+        </video>
 
         <img v-if="type=='photo'"
              class="w-100"
