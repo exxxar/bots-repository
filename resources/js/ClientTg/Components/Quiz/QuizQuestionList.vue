@@ -112,8 +112,9 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
                     </a>
                 </div>
                 <div v-if="prepare&&step==index">
-                    <h6 class="text-center my-2" v-if="points[index]">
-                        {{ points[index].question.message || 'Смотрим результат' }}</h6>
+                    <h6 class="text-center my-2">
+                        А вот и результат
+                    </h6>
                     <div v-if="points[index]">
                         <BotMediaObject
                             v-if="points[index].question.content" class="mb-2"

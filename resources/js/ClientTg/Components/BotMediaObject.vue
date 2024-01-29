@@ -1,33 +1,27 @@
 <template>
     <div class="d-flex justify-content-center">
-    <div class="video-circle" v-if="type=='video_note'">
         <video
             v-if="type=='video'||type=='video_note'"
+            class="w-100"
+            v-bind:class="{'video-circle':type=='video_note'}"
             autoplay
             poster="/images/load.gif">
             <source
                 :src="'/file-by-file-id/'+content"
                 type="video/mp4"/>
         </video>
-    </div>
-    <div v-if="type=='video'">
-        <video
-            autoplay
-            poster="/images/load.gif">
-            <source
-                :src="'/file-by-file-id/'+content"
-                type="video/mp4"/>
-        </video>
-    </div>
-    <img v-if="type=='photo'" v-lazy="'/file-by-file-id/'+content"
-         alt="">
-    <audio v-if="type=='audio'" controls autoplay
-           :src="'/file-by-file-id/'+content"></audio>
+
+        <img v-if="type=='photo'"
+             class="w-100"
+             v-lazy="'/file-by-file-id/'+content"
+             alt="">
+        <audio v-if="type=='audio'" controls autoplay
+               :src="'/file-by-file-id/'+content"></audio>
     </div>
 </template>
 <script>
 export default {
-    props:["type","content"]
+    props: ["type", "content"]
 }
 </script>
 <style lang="scss">
@@ -46,8 +40,5 @@ export default {
     align-items: center;
     box-shadow: 0px 0px 4px 1px #d9d9d9;
 
-    video {
-        width: 100%;
-    }
 }
 </style>
