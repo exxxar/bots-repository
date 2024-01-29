@@ -449,15 +449,16 @@ export default {
     mounted() {
         this.loadQuizRounds()
         if (this.question) {
+            if (this.question.media_content!=null)
+                this.need_media = true
+
+            if (this.question.success_media_content!=null)
+                this.need_media_for_success = true
+
+            if (this.question.failure_media_content!=null)
+                this.need_media_for_failed = true
+
             this.$nextTick(() => {
-                if (this.question.media_content!=null)
-                    this.need_media = true
-
-                if (this.question.success_media_content!=null)
-                    this.need_media_for_success = true
-
-                if (this.question.failure_media_content!=null)
-                    this.need_media_for_failed = true
 
                 this.questionForm = {
                     id: this.question.id || null,
