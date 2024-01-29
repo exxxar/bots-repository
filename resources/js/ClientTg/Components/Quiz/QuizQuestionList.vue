@@ -14,8 +14,10 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
     </div>
     <div class="card card-style"
          v-if="questions.length>0&&step<questions.length">
-        <div class="content" v-for="(question, index) in questions">
-            <div v-if="!prepare&&step==index">
+        <div class="content"
+             v-if="step==index"
+             v-for="(question, index) in questions">
+            <div v-if="!prepare">
                 <a href="javascript:void(0)" class="chip chip-small bg-gray1-dark">
                     <i class="fa fa-check bg-green1-dark"></i>
                     <strong class="color-black font-400">Раунд {{ question.round || 1 }}</strong>
@@ -109,7 +111,7 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
                     Проверить
                 </a>
             </div>
-            <div v-if="prepare&&step==index">
+            <div v-if="prepare">
                 <h6 class="text-center my-2" v-if="points[index]">
                     {{ points[index].question.message || 'Смотрим результат' }}</h6>
                 <div v-if="points[index]">
