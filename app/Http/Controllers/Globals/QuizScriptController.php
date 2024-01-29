@@ -50,7 +50,7 @@ class QuizScriptController extends SlugController
             [
                 "type" => "text",
                 "key" => "quiz_id",
-                "value" => "Открывать сразу казанный квиз",
+                "value" => null,
 
             ],
             [

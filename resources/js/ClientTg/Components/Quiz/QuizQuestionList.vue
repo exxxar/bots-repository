@@ -15,137 +15,130 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
     <div class="card card-style"
          v-if="questions.length>0&&step<questions.length"
          v-for="(question, index) in questions">
-        <div v-if="step==index" class="content">
+        <div class="content" v-if="!prepare&&step==index">
+            <a href="javascript:void(0)" class="chip chip-small bg-gray1-dark">
+                <i class="fa fa-check bg-green1-dark"></i>
+                <strong class="color-black font-400">Раунд {{ question.round || 1 }}</strong>
+            </a>
+            <p class="mb-0">{{ question.text || 'не указан' }}</p>
 
-            <div v-if="!prepare">
-                <a href="javascript:void(0)" class="chip chip-small bg-gray1-dark">
-                    <i class="fa fa-check bg-green1-dark"></i>
-                    <strong class="color-black font-400">Раунд {{ question.round || 1 }}</strong>
-                </a>
-                <p class="mb-0">{{ question.text || 'не указан' }}</p>
-
-                <BotMediaObject
-                    v-if="question.media_content" class="mb-2"
-                    :type="question.content_type"
-                    :content="question.media_content">
-                </BotMediaObject>
+            <BotMediaObject
+                v-if="question.media_content" class="mb-2"
+                :type="question.content_type"
+                :content="question.media_content">
+            </BotMediaObject>
 
 
-                <div v-if="question.answers">
-                    <p class="mb-0" v-if="question.is_multiply">Вы можете выбрать несколько ответов</p>
+            <div v-if="question.answers">
+                <p class="mb-0 font-weight-bold text-center" v-if="question.is_multiply">Вы можете выбрать несколько
+                    ответов</p>
 
-                    <div v-if="!question.is_open">
-                        <label
-                            v-if="!question.is_multiply"
-                            v-bind:class="{'bg-green2-dark border-green2-dark color-white':answers.indexOf(answer.id)!=-1}"
-                            class="btn btn-border btn-m btn-full  rounded-l mb-1 text-uppercase font-900 border-green2-dark d-flex justify-content-center align-items-center"
-                            :for="'question-'+index+'-answer-'+answerIndex"
-                            v-for="(answer, answerIndex) in question.answers">
-                            {{ answer.text }}
-                            <input type="radio" name="quiz"
-                                   class="d-none"
-                                   v-model="answers[index]"
-                                   :id="'question-'+index+'-answer-'+answerIndex" :value="answer.id">
+                <div v-if="!question.is_open">
+                    <label
+                        v-if="!question.is_multiply"
+                        v-bind:class="{'bg-green2-dark border-green2-dark color-white':answers.indexOf(answer.id)!=-1}"
+                        class="btn btn-border btn-m btn-full  rounded-l mb-1 text-uppercase font-900 border-green2-dark d-flex justify-content-center align-items-center"
+                        :for="'question-'+index+'-answer-'+answerIndex"
+                        v-for="(answer, answerIndex) in question.answers">
+                        {{ answer.text }}
+                        <input type="radio" name="quiz"
+                               class="d-none"
+                               v-model="answers[index]"
+                               :id="'question-'+index+'-answer-'+answerIndex" :value="answer.id">
+                    </label>
+
+                    <button
+                        v-if="question.is_multiply"
+                        v-bind:class="{'bg-red1-dark color-white':answers[index].indexOf(answer.id)!=-1}"
+                        class="btn btn-border btn-m btn-full mb-1 rounded-l text-uppercase font-900 border-red2-dark  w-100 d-flex justify-content-center align-items-center"
+                        v-for="(answer, answerIndex) in question.answers"
+                        @click="toggleAnswer(index, answer.id)"
+                        type="button">
+                        {{ answer.text }}
+                    </button>
+                </div>
+                <div v-else>
+                    <p class="mb-0"><small>Открытый вопрос</small></p>
+
+
+                    <div class="form-field form-name" v-for="(open, openIndex) in answers[index]">
+                        <label class="contactNameField color-theme d-flex justify-content-between"
+                               for="command-title">
+                            Ответ #{{ openIndex + 1 }}
+                            <a href="javascript:void(0)"
+                               v-if="answers[index].length>1"
+                               @click="removeOpenAnswer(index, openIndex)">удалить</a>
                         </label>
-
-                        <button
-                            v-if="question.is_multiply"
-                            v-bind:class="{'bg-red1-dark color-white':answers[index].indexOf(answer.id)!=-1}"
-                            class="btn btn-border btn-m btn-full mb-1 rounded-l text-uppercase font-900 border-red2-dark  w-100 d-flex justify-content-center align-items-center"
-                            v-for="(answer, answerIndex) in question.answers"
-                            @click="toggleAnswer(index, answer.id)"
-                            type="button">
-                            {{ answer.text }}
-                        </button>
-                    </div>
-                    <div v-else>
-                        <p class="mb-0"><small>Открытый вопрос</small></p>
-
-
-                        <div class="form-field form-name" v-for="(open, openIndex) in answers[index]">
-                            <label class="contactNameField color-theme d-flex justify-content-between"
-                                   for="command-title">
-                                Ответ #{{ openIndex + 1 }}
-                                <a href="javascript:void(0)"
-                                   v-if="answers[index].length>1"
-                                   @click="removeOpenAnswer(index, openIndex)">удалить</a>
-                            </label>
-                            <input type="text" name="contactNameField" maxlength="255"
-                                   v-model="answers[index][openIndex]"
-                                   placeholder="Например 'Новые люди'"
-                                   class="contactField round-small requiredField"
-                                   id="command-title" required>
-                        </div>
-
-
-                        <a href="javascript:void(0)" class="text-center w-100 d-block"
-                           @click="addMoreOpenAnswer(index)">Добавить еще ответ</a>
-
+                        <input type="text" name="contactNameField" maxlength="255"
+                               v-model="answers[index][openIndex]"
+                               placeholder="Например 'Новые люди'"
+                               class="contactField round-small requiredField"
+                               id="command-title" required>
                     </div>
 
 
+                    <a href="javascript:void(0)" class="text-center w-100 d-block"
+                       @click="addMoreOpenAnswer(index)">Добавить еще ответ</a>
+
                 </div>
 
-                <div class="divider divider-small my-3 bg-highlight "></div>
 
-
-                <div class="d-flex justify-content-center font-24">
-                    <countdown :time="time * 1000"
-                               @finish="finish"
-                               format="mm:ss">
-                        <template #="{ resolved }">
-                            <span class="countdown-item">{{ resolved.mm }}</span> :
-                            <span class="countdown-item">{{ resolved.ss }}</span>
-                        </template>
-                    </countdown>
-                </div>
-
-                <small class="text-center w-100 d-block">У вас осталось времени</small>
-                <div class="divider divider-small my-3 bg-highlight "></div>
-
-                <a href="javascript:void(0)"
-
-                   @click="checkAnswer(question.id,index)"
-                   class="btn btn-m btn-full mb-2 rounded-m text-uppercase font-900 shadow-s bg-blue2-dark">
-                    Проверить
-                </a>
             </div>
 
+            <div class="divider divider-small my-3 bg-highlight "></div>
 
-            <div v-if="prepare">
-                <h6 class="text-center my-2" v-if="points[index]">
-                    {{ points[index].question.message || 'Смотрим результат' }}</h6>
-                <div v-if="points[index]">
-                    <BotMediaObject
-                        v-if="points[index].question.content" class="mb-2"
-                        :type="points[index].question.type"
-                        :content="points[index].question.content">
-                    </BotMediaObject>
-                </div>
 
-                <p class="text-center my-3" v-if="(points[index] || {}).question">
-                    <strong>{{ points[index].question.message || 'Отлично! Идем дальше' }}</strong></p>
-
-                <a href="javascript:void(0)"
-                   @click="next"
-                   v-if="step<questions.length-1"
-                   class="btn btn-m btn-full mb-2 rounded-m text-uppercase font-900 shadow-s bg-green2-dark">
-
-                   Следующий вопрос
-                </a>
-
-                <a href="javascript:void(0)"
-                   @click="finish"
-                   v-else
-                   class="btn btn-m btn-full mb-2 rounded-m text-uppercase font-900 shadow-s bg-green2-dark">
-                  Перейти к баллам
-                </a>
-
+            <div class="d-flex justify-content-center font-24">
+                <countdown :time="time * 1000"
+                           @finish="finish"
+                           format="mm:ss">
+                    <template #="{ resolved }">
+                        <span class="countdown-item">{{ resolved.mm }}</span> :
+                        <span class="countdown-item">{{ resolved.ss }}</span>
+                    </template>
+                </countdown>
             </div>
+
+            <small class="text-center w-100 d-block">У вас осталось времени</small>
+            <div class="divider divider-small my-3 bg-highlight "></div>
+
+            <a href="javascript:void(0)"
+
+               @click="checkAnswer(question.id,index)"
+               class="btn btn-m btn-full mb-2 rounded-m text-uppercase font-900 shadow-s bg-blue2-dark">
+                Проверить
+            </a>
+        </div>
+        <div class="content" v-if="prepare&&step==index">
+            <h6 class="text-center my-2" v-if="points[index]">
+                {{ points[index].question.message || 'Смотрим результат' }}</h6>
+            <div v-if="points[index]">
+                <BotMediaObject
+                    v-if="points[index].question.content" class="mb-2"
+                    :type="points[index].question.type"
+                    :content="points[index].question.content">
+                </BotMediaObject>
+            </div>
+
+            <p class="text-center my-3" v-if="(points[index] || {}).question">
+                <strong>{{ points[index].question.message || 'Отлично! Идем дальше' }}</strong></p>
+
+            <a href="javascript:void(0)"
+               @click="next"
+               v-if="step<questions.length-1"
+               class="btn btn-m btn-full mb-2 rounded-m text-uppercase font-900 shadow-s bg-green2-dark">
+
+                Следующий вопрос
+            </a>
+
+            <a href="javascript:void(0)"
+               @click="finish"
+               v-else
+               class="btn btn-m btn-full mb-2 rounded-m text-uppercase font-900 shadow-s bg-green2-dark">
+                Перейти к баллам
+            </a>
 
         </div>
-
-
     </div>
 
     <div class="card card-style" v-if="is_finish">
@@ -168,7 +161,8 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
             <h6 class="my-2">Вы набрали {{ summaryPoints }} баллов</h6>
             <a href="javascript:void(0)"
                @click="completeAndExit"
-               class="btn btn-m btn-full mt-3 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">Завершить и выйти</a>
+               class="btn btn-m btn-full mt-3 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">Завершить
+                и выйти</a>
         </div>
     </div>
     <!--
@@ -193,7 +187,7 @@ export default {
             order: 'updated_at',
             show: true,
             step: 0,
-            is_finish:false,
+            is_finish: false,
             is_group: false,
             loading: true,
             questions: [],
@@ -222,7 +216,7 @@ export default {
         this.loadQuizQuestions();
     },
     methods: {
-        completeAndExit(){
+        completeAndExit() {
             this.$store.dispatch("completeQuiz", {
                 quiz_id: this.quizId,
             }).then(resp => {
@@ -234,7 +228,7 @@ export default {
         },
         finish() {
             this.step++;
-            if (this.step>=this.questions.length)
+            if (this.step >= this.questions.length)
                 this.is_finish = true
         },
         next() {
@@ -356,31 +350,32 @@ export default {
     background: #979794;
     box-sizing: border-box;
     position: relative;
-    border-radius:8px;
+    border-radius: 8px;
     perspective: 1000px;
 }
 
-.loader:before{
+.loader:before {
     content: '';
     position: absolute;
     left: 10px;
     right: 10px;
     top: 10px;
     bottom: 10px;
-    border-radius:8px;
-    background: #f5f5f5  no-repeat;
+    border-radius: 8px;
+    background: #f5f5f5 no-repeat;
     background-size: 60px 10px;
-    background-image: 	linear-gradient(#ddd 100px, transparent 0) ,
+    background-image: linear-gradient(#ddd 100px, transparent 0),
     linear-gradient(#ddd 100px, transparent 0),
     linear-gradient(#ddd 100px, transparent 0),
     linear-gradient(#ddd 100px, transparent 0),
     linear-gradient(#ddd 100px, transparent 0),
     linear-gradient(#ddd 100px, transparent 0);
 
-    background-position: 15px 30px , 15px 60px , 15px 90px,
-    105px 30px , 105px 60px , 105px 90px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+    background-position: 15px 30px, 15px 60px, 15px 90px,
+    105px 30px, 105px 60px, 105px 90px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
 }
+
 .loader:after {
     content: '';
     position: absolute;
@@ -394,8 +389,8 @@ export default {
     background-image: linear-gradient(#ddd 100px, transparent 0),
     linear-gradient(#ddd 100px, transparent 0),
     linear-gradient(#ddd 100px, transparent 0);
-    background-position: 50% 30px ,50% 60px , 50%  90px;
-    transform: rotateY(0deg );
+    background-position: 50% 30px, 50% 60px, 50% 90px;
+    transform: rotateY(0deg);
     transform-origin: left center;
     animation: paging 1s linear infinite;
 }
@@ -403,7 +398,7 @@ export default {
 
 @keyframes paging {
     to {
-        transform: rotateY( -180deg );
+        transform: rotateY(-180deg);
     }
 }
 
