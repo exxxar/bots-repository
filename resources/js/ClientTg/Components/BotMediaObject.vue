@@ -1,6 +1,5 @@
 <template>
     <div class="d-flex justify-content-center">
-
         <vue-core-video-player
             v-if="type=='video'||type=='video_note'"
             :src="'/file-by-file-id/'+content"></vue-core-video-player>
@@ -24,10 +23,10 @@
     </div>
 </template>
 <script>
-import VueCoreVideoPlayer from 'vue-core-video-player';
+import VueCoreVideoPlayer from 'vue-core-video-player'
 export default {
     props: ["type", "content"],
-    components: {
+    components:{
         VueCoreVideoPlayer
     }
 }

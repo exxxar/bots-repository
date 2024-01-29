@@ -138,7 +138,7 @@ class QuizLogicFactory
             $questions = $questions->where("text", 'like', "%$search%");
 
         $questions = $questions
-            ->orderBy($order ?? 'updated_at', $direction ?? 'DESC');
+            ->orderBy($order ?? 'round', $direction ?? 'ASC');
 
 
         if ($size == -1)
