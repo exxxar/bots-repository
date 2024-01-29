@@ -450,6 +450,15 @@ export default {
         this.loadQuizRounds()
         if (this.question) {
             this.$nextTick(() => {
+                if (this.question.media_content!=null)
+                    this.need_media = true
+
+                if (this.question.success_media_content!=null)
+                    this.need_media_for_success = true
+
+                if (this.question.failure_media_content!=null)
+                    this.need_media_for_failed = true
+
                 this.questionForm = {
                     id: this.question.id || null,
                     text: this.question.text || null,
@@ -467,14 +476,7 @@ export default {
                     failure_media_content_type: this.question.failure_media_content_type || null,
                 }
 
-                if (this.questionForm.media_content!=null)
-                    this.need_media = true
 
-                if (this.questionForm.success_media_content!=null)
-                    this.need_media_for_success = true
-
-                if (this.questionForm.failure_media_content!=null)
-                    this.need_media_for_failed = true
             })
 
 
