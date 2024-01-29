@@ -1,20 +1,25 @@
 <template>
     <div class="d-flex justify-content-center">
         <video
-            v-if="type=='video'||type=='video_note'"
+            v-if="(type=='video'||type=='video_note')&&content.indexOf('http')==-1"
             class="w-100"
             v-bind:class="{'video-circle':type=='video_note'}"
             autoplay
             poster="/images/load.gif">
             <source
-                v-if="content.indexOf('http')==-1"
+
                 :src="'/file-by-file-id/'+content"
                 type="video/mp4"/>
-            <source
-                v-else
-                :src="content"
-                type="video/mp4"/>
+
         </video>
+
+        <iframe class="w-100"
+                v-if="content.indexOf('http')!=-1"
+                style="min-height:300px;" :src="content"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+
+        </iframe>
 
         <img v-if="type=='photo'&&content.indexOf('http')==-1"
              class="w-100"
