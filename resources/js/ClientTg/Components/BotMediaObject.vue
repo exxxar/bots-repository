@@ -1,6 +1,5 @@
 <template>
     <div class="d-flex justify-content-center">
-
         <video
             v-if="type=='video'||type=='video_note'"
             class="w-100"
@@ -8,15 +7,26 @@
             autoplay
             poster="/images/load.gif">
             <source
+                v-if="content.indexOf('http')==-1"
                 :src="'/file-by-file-id/'+content"
+                type="video/mp4"/>
+            <source
+                v-else
+                :src="content"
                 type="video/mp4"/>
         </video>
 
-        <img v-if="type=='photo'"
+        <img v-if="type=='photo'&&content.indexOf('http')==-1"
              class="w-100"
              v-lazy="'/file-by-file-id/'+content"
              alt="">
-        <audio v-if="type=='audio'" controls autoplay
+        <img v-if="type=='photo'&&content.indexOf('http')!=-1"
+             class="w-100"
+             v-lazy="content"
+             alt="">
+        <audio v-if="type=='audio'&&content.indexOf('http')!=-1" controls autoplay
+               :src="content"></audio>
+        <audio v-if="type=='audio'&&content.indexOf('http')==-1" controls autoplay
                :src="'/file-by-file-id/'+content"></audio>
     </div>
 </template>

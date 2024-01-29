@@ -1,6 +1,6 @@
 <script setup>
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
-
+import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant.vue";
 </script>
 <template>
     <div class="row py-3">
@@ -82,6 +82,8 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                 </div>
             </div>
 
+
+
             <div class="col-12 mb-3" v-if="need_media">
                 <label class="form-label" id="quiz-images">
                     <Popper>
@@ -98,6 +100,13 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                     }}</span>
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                 </label>
+                <h6>Вставьте ссылку на контент...</h6>
+                <BotMediaVariant
+                    v-model:type="questionForm.media_content"
+                    v-model:value="questionForm.content_type"
+                >
+                </BotMediaVariant>
+                <h6>...или выберите из доступных</h6>
                 <BotMediaList
                     :need-video="true"
                     :need-video-note="true"
@@ -167,6 +176,15 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
             </div>
 
             <div class="col-12 mb-3" v-if="need_media_for_success">
+                <h6>Вставьте ссылку на контент...</h6>
+
+                <BotMediaVariant
+                    v-model:type="questionForm.success_media_content_type"
+                    v-model:value="questionForm.success_media_content"
+                >
+                </BotMediaVariant>
+
+                <h6>...или выберите из доступных</h6>
                 <BotMediaList
 
                     :need-video="true"
@@ -214,6 +232,16 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                 </div>
             </div>
             <div class="col-12 mb-3" v-if="need_media_for_failed">
+                <h6>Вставьте ссылку на контент...</h6>
+
+                <BotMediaVariant
+                    v-model:type="questionForm.failure_media_content_type"
+                    v-model:value="questionForm.failure_media_content"
+                >
+                </BotMediaVariant>
+
+                <h6>...или выберите из доступных</h6>
+
                 <BotMediaList
 
                     :need-video="true"
@@ -364,6 +392,7 @@ export default {
             step: 0,
             load: false,
             selectedQuestionIndex: null,
+
             need_media: false,
             need_media_for_success: false,
             need_media_for_failed: false,

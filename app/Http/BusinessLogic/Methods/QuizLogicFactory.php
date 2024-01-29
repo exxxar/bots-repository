@@ -140,7 +140,6 @@ class QuizLogicFactory
         $questions = $questions
             ->orderBy($order ?? 'updated_at', $direction ?? 'desc');
 
-
         if ($size == -1)
             $questions = $questions->get();
         else
