@@ -362,8 +362,8 @@ class QuizScriptController extends SlugController
                 $quizId,
                 $request->search ?? null,
                 $request->size ?? 12,
-                $request->order ?? "updated_at",
-                $request->direction ?? "desc"
+                $request->order ?? "round",
+                $request->direction ?? "asc"
             );
     }
 
