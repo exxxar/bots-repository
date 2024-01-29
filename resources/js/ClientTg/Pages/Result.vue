@@ -28,8 +28,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                             v-if="statistic"
                             class="color-white boxed-text-l text-center opacity-60 mt-n1 mb-3 d-flex flex-column">
                             <span>Всего товаров затронуто <strong>{{ statistic.total_product_count || 0 }}</strong></span>
-                            <span>Созданое новых товаров <strong>{{ statistic.created_product_count || 0 }}</strong></span>
-                            <span>Обновелно товаров <strong>{{ statistic.updated_product_count || 0 }}</strong></span>
+                            <span>Создано новых товаров <strong>{{ statistic.created_product_count || 0 }}</strong></span>
+                            <span>Обновлено товаров <strong>{{ statistic.updated_product_count || 0 }}</strong></span>
                         </p>
 
                         <div class="px-3">

@@ -94,7 +94,10 @@ Route::prefix("bot-client")
                 Route::post("/quiz-command-store", "quizCommandStore");
                 Route::post('/list-of-quiz', "loadQuizList");
                 Route::post('/check-answer', "checkAnswers");
+                Route::post('/quiz-complete', "completeQuiz");
+                Route::post('/start-quiz', "startQuiz");
                 Route::post('/check-quiz-command', "checkQuizCommand");
+                Route::post('/load-single-quiz', "loadSingleQuiz");
                 Route::post("/list-of-quiz-commands/{quizId}", "listOfQuizCommands");
                 Route::post('/list-of-results/{quizId}', "loadQuizResultList");
                 Route::post('/list-of-quiz-questions/{quizId}', "listOfQuizQuestions");

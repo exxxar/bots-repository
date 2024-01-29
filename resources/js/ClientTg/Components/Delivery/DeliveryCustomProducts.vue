@@ -85,7 +85,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <input class="form-control"
                        type="text"
                        v-model="deliveryForm.address"
-                       placeholder="г.Краснодар, ул. Ленинина, 106"
+                       placeholder="г.Краснодар, ул. Героя Яцкова, 9к1, кв 35"
                        required>
             </div>
 

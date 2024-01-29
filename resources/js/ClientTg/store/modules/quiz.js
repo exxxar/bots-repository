@@ -144,7 +144,42 @@ const actions = {
         })
     },
 
+    async completeQuiz(context, payload = {quiz_id: null}) {
+        let link = `${BASE_QUIZ_LINK}/quiz-complete`
 
+        let _axios = util.makeAxiosFactory(link,"POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async startQuiz(context, payload = {quiz_id: null}) {
+        let link = `${BASE_QUIZ_LINK}/start-quiz`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadSingleQuiz(context, payload = {quiz_id: null}) {
+        let link = `${BASE_QUIZ_LINK}/load-single-quiz`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async checkQuizCommand(context, payload = {quiz_id: null}) {
         let link = `${BASE_QUIZ_LINK}/check-quiz-command`
 

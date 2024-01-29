@@ -101,7 +101,7 @@ export default {
         return {
             botUserId:null,
             loading: false,
-            history: null,
+            history: [],
             paginate_object: null
         }
     },

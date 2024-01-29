@@ -30,6 +30,7 @@ class QuizResource extends JsonResource
             'display_type' => $this->display_type,
             'time_limit' => $this->time_limit,
             'show_answers' => $this->show_answers,
+            'personal_info' => $this->personal_info ?? null,
             'bot_id' => $this->bot_id,
             'questions' => QuizQuestionResource::collection($this->whenLoaded('questions')),
             'commands' => QuizCommandResource::collection($this->whenLoaded('commands')),

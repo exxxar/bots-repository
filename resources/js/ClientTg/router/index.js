@@ -9,7 +9,8 @@ import Basket from '@/ClientTg/Pages/Shop/Basket.vue';
 import CheckOut from '@/ClientTg/Pages/Shop/CheckOut.vue';
 import Settings from '@/ClientTg/Pages/Shop/Settings.vue';
 import Schedule from '@/ClientTg/Pages/Shop/Schedule.vue';
-import Quiz from '@/ClientTg/Pages/Quiz/Quiz.vue';
+import Quizzes from '@/ClientTg/Pages/Quiz/Quizzes.vue';
+import SingleQuiz from '@/ClientTg/Pages/Quiz/SingleQuiz.vue';
 
 
 import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
@@ -82,9 +83,15 @@ export const routes = [
         meta: { title: 'VIP-анкета', hide_menu:true }
     },
     {
+        name: 'quizzes',
+        path: '/quizzes',
+        component: Quizzes,
+        meta: { title: 'Квиз', hide_menu:true }
+    },
+    {
         name: 'quiz',
-        path: '/quiz',
-        component: Quiz,
+        path: '/quiz/:quizId',
+        component: SingleQuiz,
         meta: { title: 'Квиз', hide_menu:true }
     },
     {
@@ -230,7 +237,7 @@ export const adminRoutes = [
         name: 'AdminChatLog',
         path: '/admin-chat-history/:botUserId',
         component: AdminChatLog,
-        meta: { title: 'Админ панель: История чата', hide_menu:true, need_admin_menu:true }
+        meta: { title: 'История чата', hide_menu:true, need_admin_menu:true }
     },
 
 

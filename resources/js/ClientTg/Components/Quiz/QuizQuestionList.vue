@@ -4,6 +4,14 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
 </script>
 <template>
 
+    <div class="card card-style" v-if="questions.length===0">
+        <div class="content d-flex justify-content-center align-items-center flex-wrap" style="min-height:300px;">
+            <div>
+                <p class="text-center w-100 font-weight-bold">Мы загружаем квиз!</p>
+                <div class="loader"></div>
+            </div>
+        </div>
+    </div>
     <div class="card card-style"
          v-if="questions.length>0&&step<questions.length"
          v-for="(question, index) in questions">
@@ -115,15 +123,22 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
                     </BotMediaObject>
                 </div>
 
-                <p class="text-center my-3" v-if="points[index].question">
+                <p class="text-center my-3" v-if="(points[index] || {}).question">
                     <strong>{{ points[index].question.message || 'Отлично! Идем дальше' }}</strong></p>
-
 
                 <a href="javascript:void(0)"
                    @click="next"
+                   v-if="step<questions.length-1"
                    class="btn btn-m btn-full mb-2 rounded-m text-uppercase font-900 shadow-s bg-green2-dark">
-                    <span v-if="step>=questions.length-1">Перейти к баллам</span>
-                    <span v-else> Следующий вопрос</span>
+
+                   Следующий вопрос
+                </a>
+
+                <a href="javascript:void(0)"
+                   @click="finish"
+                   v-else
+                   class="btn btn-m btn-full mb-2 rounded-m text-uppercase font-900 shadow-s bg-green2-dark">
+                  Перейти к баллам
                 </a>
 
             </div>
@@ -133,7 +148,7 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
 
     </div>
 
-    <div class="card card-style" v-if="step>=questions.length">
+    <div class="card card-style" v-if="is_finish">
         <div class="content">
             <p>Поздравляю! Вы прошли данный квиз! Ваш результат:</p>
             <ol class="list-group list-group-numbered" v-if="points.length>0">
@@ -152,7 +167,8 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
             </ol>
             <h6 class="my-2">Вы набрали {{ summaryPoints }} баллов</h6>
             <a href="javascript:void(0)"
-               class="btn btn-m btn-full mt-3 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">Завершить</a>
+               @click="completeAndExit"
+               class="btn btn-m btn-full mt-3 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">Завершить и выйти</a>
         </div>
     </div>
     <!--
@@ -177,6 +193,7 @@ export default {
             order: 'updated_at',
             show: true,
             step: 0,
+            is_finish:false,
             is_group: false,
             loading: true,
             questions: [],
@@ -205,8 +222,20 @@ export default {
         this.loadQuizQuestions();
     },
     methods: {
+        completeAndExit(){
+            this.$store.dispatch("completeQuiz", {
+                quiz_id: this.quizId,
+            }).then(resp => {
+
+            }).catch(() => {
+
+            })
+            this.$emit("complete")
+        },
         finish() {
             this.step++;
+            if (this.step>=this.questions.length)
+                this.is_finish = true
         },
         next() {
             this.prepare = false
@@ -223,7 +252,8 @@ export default {
             this.loading = true
             this.prepare = true
             this.$store.dispatch("checkQuizQuestionAnswer", {
-                quizQuestionId: questionId,
+                quiz_question_id: questionId,
+                quiz_id: this.quizId,
                 answers: JSON.stringify(this.answers[index]),
 
             }).then(resp => {
@@ -311,11 +341,70 @@ export default {
     }
 }
 </script>
-<style>
+<style lang="scss">
 .countdown-item {
     padding: 3px 6px;
     border-radius: 3px;
     color: #fff;
     background-color: #c00;
 }
+
+
+.loader {
+    width: 200px;
+    height: 140px;
+    background: #979794;
+    box-sizing: border-box;
+    position: relative;
+    border-radius:8px;
+    perspective: 1000px;
+}
+
+.loader:before{
+    content: '';
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
+    border-radius:8px;
+    background: #f5f5f5  no-repeat;
+    background-size: 60px 10px;
+    background-image: 	linear-gradient(#ddd 100px, transparent 0) ,
+    linear-gradient(#ddd 100px, transparent 0),
+    linear-gradient(#ddd 100px, transparent 0),
+    linear-gradient(#ddd 100px, transparent 0),
+    linear-gradient(#ddd 100px, transparent 0),
+    linear-gradient(#ddd 100px, transparent 0);
+
+    background-position: 15px 30px , 15px 60px , 15px 90px,
+    105px 30px , 105px 60px , 105px 90px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+}
+.loader:after {
+    content: '';
+    position: absolute;
+    width: calc(50% - 10px);
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
+    border-radius: 8px;
+    background: #fff no-repeat;
+    background-size: 60px 10px;
+    background-image: linear-gradient(#ddd 100px, transparent 0),
+    linear-gradient(#ddd 100px, transparent 0),
+    linear-gradient(#ddd 100px, transparent 0);
+    background-position: 50% 30px ,50% 60px , 50%  90px;
+    transform: rotateY(0deg );
+    transform-origin: left center;
+    animation: paging 1s linear infinite;
+}
+
+
+@keyframes paging {
+    to {
+        transform: rotateY( -180deg );
+    }
+}
+
 </style>

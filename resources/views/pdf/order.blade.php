@@ -44,6 +44,7 @@
     <li>Телефон заказчика <strong>{{$phone}}</strong></li>
     <li>Адрес заказчика <strong>{{$address}}</strong></li>
     <li>Номер подъезда <strong>{{$entranceNumber}}</strong></li>
+    <li>Номер этажа <strong>{{$floorNumber}}</strong></li>
     <li>Тип оплаты <strong>{{$cashType}}</strong></li>
     <li>Сдача с <strong>{{$money}}</strong></li>
     <li>Ограничения по здоровью <strong>{!! $disabilitiesText !!}</strong></li>

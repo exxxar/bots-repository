@@ -576,6 +576,7 @@ class ProductLogicFactory
 
         $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
             . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
+            . "Номер этажа: " . ($data["floor_number"] ?? 'Не указан') . "\n"
             . "Тип оплаты: " . ($cash ? "Наличкой" : "Картой") . "\n"
             . "Сдача с:" . ($data["money"] ?? 'Не указано') . "\n"
             . "Ограничения пользователя:\n" . ($disabilitiesText ?? 'не указаны');
@@ -623,12 +624,13 @@ class ProductLogicFactory
 
 
         $userInfo = !$needPickup ?
-            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nНомер подъезда: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
+            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
                 $data["entrance_number"] ?? 'Не указано',
+                $data["floor_number"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
@@ -690,6 +692,7 @@ class ProductLogicFactory
             "address" => $order->address,
             "message" => ($data["info"] ?? 'Не указано'),
             "entranceNumber" => ($data["entrance_number"] ?? 'Не указано'),
+            "floorNumber" => ($data["floor_number"] ?? 'Не указано'),
             "cashType" => ($cash ? "Наличкой" : "Картой"),
             "money" => ($data["money"] ?? 'Не указано'),
             "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),

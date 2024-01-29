@@ -26,7 +26,7 @@ BotManager::bot()
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\QuizScriptController::class)
-    ->slug("global_start_quiz", "startQuiz");
+    ->slug("global_start_quiz", "startQuizForm");
 
 
 
