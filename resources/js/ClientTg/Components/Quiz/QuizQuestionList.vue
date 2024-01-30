@@ -189,8 +189,8 @@ export default {
     data() {
         return {
             points: [],
-            direction: 'desc',
-            order: 'updated_at',
+            direction: 'asc',
+            order: 'round',
             show: true,
             step: 0,
             is_finish: false,
