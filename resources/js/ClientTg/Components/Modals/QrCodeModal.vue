@@ -25,11 +25,9 @@ export default {
     },
     mounted() {
         window.addEventListener("show-qr-code", (e) => {
-            this.code = e.detail.code || null
-
-
+            this.code = null
             this.$nextTick(() => {
-
+                this.code = e.detail.code || null
                 $('#qr-code').showMenu();
             })
         });
