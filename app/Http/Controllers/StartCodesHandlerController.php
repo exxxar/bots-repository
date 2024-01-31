@@ -220,6 +220,7 @@ class StartCodesHandlerController extends Controller
         }
 
         if ($code == "005") {
+            Log::info("try run script $request_id");
             BotManager::bot()->runSlug($request_id);
             return;
         }
