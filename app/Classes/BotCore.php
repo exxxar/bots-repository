@@ -888,13 +888,21 @@ abstract class BotCore
                 return;
             }
 
+            if (!is_null($slug->parent_slug_id)){
+                $config = $slug->config ?? [];
+
+                $slug = BotMenuSlug::query()
+                    ->where("id", $slug->parent_slug_id)
+                    ->first();
+            }
+
             $item = Collection::make($this->slugs)
                 ->where("path", $slug->slug)
                 ->first();
 
 
             if (!is_null($item)) {
-                $config = $slug->config ?? [];
+               // $config = $slug->config ?? [];
                 $config[] = [
                     "key" => "slug_id",
                     "value" => $slug->id,

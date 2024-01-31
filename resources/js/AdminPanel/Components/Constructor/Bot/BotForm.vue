@@ -451,18 +451,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                            aria-describedby="cashback-fired-level">
                 </div>
             </div>
-            <div class="mb-2">
-                <div class="form-check">
-                    <input class="form-check-input"
-                           v-model="need_cashback_config"
-                           type="checkbox"
-                           id="need-cashback-config">
-                    <label class="form-check-label" for="need-cashback-config">
-                        Необходимо настроить CashBack по категориям
-                    </label>
-                </div>
 
-            </div>
             <div class="col-12 mb-2">
                 <div class="form-check">
                     <input class="form-check-input"
@@ -541,6 +530,19 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                            v-model="botForm.vk_shop_link"
                            aria-describedby="vk_shop_link">
                 </div>
+            </div>
+
+            <div class="mb-2">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_cashback_config"
+                           type="checkbox"
+                           id="need-cashback-config">
+                    <label class="form-check-label" for="need-cashback-config">
+                        Необходимо настроить CashBack по категориям
+                    </label>
+                </div>
+
             </div>
             <div class="mb-2" v-if="need_cashback_config">
                 <h6>Настройка категорий CashBack-а</h6>
