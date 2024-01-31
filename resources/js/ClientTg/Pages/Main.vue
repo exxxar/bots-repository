@@ -158,9 +158,11 @@ export default {
         }
     },
     created() {
-        window.currentBot = this.bot.data
 
-        window.currentScript = this.slug_id || null
+        this.$nextTick(()=>{
+            window.currentScript = this.slug_id || null
+            window.currentBot = this.bot.data
+        })
 
         this.$store.dispatch("loadSelf").then(() => {
             window.self = this.getSelf
