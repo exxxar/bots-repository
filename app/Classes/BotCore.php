@@ -310,8 +310,7 @@ abstract class BotCore
                             $item = Collection::make($this->slugs)
                                 ->where("path", $slug->slug)
                                 ->first();
-                        }
-                        else {
+                        } else {
                             $parentSlug = BotMenuSlug::query()
                                 ->find($slug->parent_slug_id);
 
@@ -502,10 +501,10 @@ abstract class BotCore
 
     private function botFallbackStickerHandler($message): bool
     {
-        $sticker = $message->sticker  ?? null;
-        $caption = $message->caption ??  null;
+        $sticker = $message->sticker ?? null;
+        $caption = $message->caption ?? null;
 
-        $type =  "sticker";
+        $type = "sticker";
 
 
         if (is_null($sticker))
@@ -842,8 +841,8 @@ abstract class BotCore
             if ($this->botNextHandler($message))
                 return;
 
-             if ($this->botFallbackStickerHandler($message))
-                 return;
+            if ($this->botFallbackStickerHandler($message))
+                return;
 
             if ($this->botFallbackPhotoHandler($message))
                 return;
@@ -872,6 +871,47 @@ abstract class BotCore
     }
 
 
+    public function runSlug(int $slugId, $botUser = null): void
+    {
+
+        $channel = is_null($botUser) ? $this->chatId : $botUser->telegram_chat_id;
+
+
+        try {
+
+            $slug = BotMenuSlug::query()
+                ->where("id", $slugId)
+                ->first();
+
+            if (is_null($slug)) {
+                $this->sendMessage($channel, "Скрипт не найден");
+                return;
+            }
+
+            $item = Collection::make($this->slugs)
+                ->where("path", $slug->slug)
+                ->first();
+
+
+            if (!is_null($item)) {
+                $config = $slug->config ?? [];
+                $config[] = [
+                    "key" => "slug_id",
+                    "value" => $slug->id,
+                ];
+
+
+                $this->tryCall($item, [],
+                    $config, []);
+
+            }
+
+
+        } catch (\Exception $e) {
+
+        }
+    }
+
     public function runPage(int $pageId, $botUser = null): void
     {
 
@@ -897,7 +937,6 @@ abstract class BotCore
                     ->first();
 
 
-
                 if (is_null($slug)) {
                     $this->sendMessage($channel, "Скрипт не найден");
                     return;
@@ -906,7 +945,6 @@ abstract class BotCore
                 $item = Collection::make($this->slugs)
                     ->where("path", $slug->slug)
                     ->first();
-
 
 
                 if (!is_null($item)) {
@@ -1012,12 +1050,12 @@ abstract class BotCore
                 );
 
                 ChatLog::query()->create([
-                    'text'=>$query,
-                    'media_content'=>null,
-                    'content_type'=>null,
-                    'bot_id'=>$this->getSelf()->id,
-                    'form_bot_user_id'=>$botUser->id,
-                    'to_bot_user_id'=>null
+                    'text' => $query,
+                    'media_content' => null,
+                    'content_type' => null,
+                    'bot_id' => $this->getSelf()->id,
+                    'form_bot_user_id' => $botUser->id,
+                    'to_bot_user_id' => null
                 ]);
 
                 $this->reply("Ваше сообщение успешно доставлено администратору бота");

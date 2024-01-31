@@ -101,7 +101,7 @@ export default {
         },
         openLinkModal() {
             let slugId = window.currentScript || null
-            this.$cashback.qr("004000000"+slugId )
+            this.$cashback.qr("005000000"+slugId )
         },
     }
 }

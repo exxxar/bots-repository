@@ -219,6 +219,11 @@ class StartCodesHandlerController extends Controller
             return;
         }
 
+        if ($code == "005") {
+            BotManager::bot()->runSlug($request_id);
+            return;
+        }
+
 
         if (BotManager::bot()->currentBotUser()->telegram_chat_id == $request_id) {
             BotManager::bot()
