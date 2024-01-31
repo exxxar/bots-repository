@@ -89,11 +89,11 @@ class ShopScriptController extends SlugController
             ->where("bot_id", $bot->id)
             ->first();
 
-      /*  if (is_null($slug))
+        if (is_null($slug))
             $slug = BotMenuSlug::query()
                 ->where("parent_slug_id", $scriptId)
                 ->where("bot_id", $bot->id)
-                ->first();*/
+                ->first();
 
         if (is_null($slug)) {
             Inertia::setRootView("shop");
