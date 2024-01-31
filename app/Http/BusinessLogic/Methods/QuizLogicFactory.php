@@ -187,14 +187,14 @@ class QuizLogicFactory
                 ]);
 
 
-    /*    if (!is_null($action->data["questions"] ?? null)) {
-            $action->current_attempts = 0;
-            $action->data = [
-                "start_at" => Carbon::now()->format('Y-m-d H:i:s')
-            ];
+        /*    if (!is_null($action->data["questions"] ?? null)) {
+                $action->current_attempts = 0;
+                $action->data = [
+                    "start_at" => Carbon::now()->format('Y-m-d H:i:s')
+                ];
 
-            $action->save();
-        }*/
+                $action->save();
+            }*/
 
 
         return new ActionStatusResource($action);
@@ -703,31 +703,38 @@ class QuizLogicFactory
         $failure = json_decode($data['failure_message'] ?? '[]');
 
 
-        $result = Quiz::query()->updateOrCreate(
-            [
-                'bot_id' => $this->bot->id,
-            ],
-            [
-                'title' => $data["title"] ?? null,
-                'image' => $data["image"] ?? null,
-                'description' => $data["description"] ?? null,
-                'completed_at' => is_null($data["completed_at"] ?? null) ? null : Carbon::parse($data["completed_at"]),
-                'start_at' => is_null($data["start_at"] ?? null) ? null : Carbon::parse($data["start_at"]),
-                'end_at' => is_null($data["end_at"] ?? null) ? null : Carbon::parse($data["end_at"]),
-                'display_type' => $data["display_type"] ?? 0,
-                'time_limit' => $data["time_limit"] ?? 30,
-                'show_answers' => ($data["show_answers"] ?? false) == "true",
-                "polling_mode" => ($data["polling_mode"] ?? false) == "true",
-                "round_mode" => ($data["round_mode"] ?? false) == "true",
-                "try_count" => $data["try_count"] ?? 1,
-                "is_active" => $data["is_active"] ?? true,
-                "success_percent" => $data["success_percent"] ?? 50,
-                "success_message" => $success,
-                "failure_message" => $failure,
+        $tmp = [
+            'bot_id' => $this->bot->id,
+            'title' => $data["title"] ?? null,
+            'image' => $data["image"] ?? null,
+            'description' => $data["description"] ?? null,
+            'completed_at' => is_null($data["completed_at"] ?? null) ? null : Carbon::parse($data["completed_at"]),
+            'start_at' => is_null($data["start_at"] ?? null) ? null : Carbon::parse($data["start_at"]),
+            'end_at' => is_null($data["end_at"] ?? null) ? null : Carbon::parse($data["end_at"]),
+            'display_type' => $data["display_type"] ?? 0,
+            'time_limit' => $data["time_limit"] ?? 30,
+            'show_answers' => ($data["show_answers"] ?? false) == "true",
+            "polling_mode" => ($data["polling_mode"] ?? false) == "true",
+            "round_mode" => ($data["round_mode"] ?? false) == "true",
+            "try_count" => $data["try_count"] ?? 1,
+            "is_active" => $data["is_active"] ?? true,
+            "success_percent" => $data["success_percent"] ?? 50,
+            "success_message" => $success,
+            "failure_message" => $failure,
 
-            ]);
+        ];
 
-        return new QuizResource($result);
+        if (is_null($data["id"] ?? null))
+        {
+            $quiz = Quiz::query()->create($tmp);
+        }
+        else
+        {
+            $quiz = Quiz::query()->find($data["id"]);
+            $quiz->update($tmp);
+        }
+
+        return new QuizResource($quiz);
     }
 
 

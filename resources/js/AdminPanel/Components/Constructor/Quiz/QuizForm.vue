@@ -206,9 +206,10 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
             <div class="col-12 py-2">
                 <button class="btn btn-outline-info rounded-5"
                         type="button"
-                        @click="addMessage('success_message',null)">Добавить еще вариант текста</button>
+                        @click="addMessage('success_message',null)">Добавить еще вариант текста
+                </button>
             </div>
-            <div class="col-12 mb-3"  v-for="(message, index) in quizForm.success_message">
+            <div class="col-12 mb-3" v-for="(message, index) in quizForm.success_message">
 
                 <div class="row">
                     <div class="col-10">
@@ -223,7 +224,8 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                             </Popper>
                             Текст при победе
                             <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                            <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="quizForm.success_message[index]">
+                            <small class="text-gray-400 ml-3" style="font-size:10px;"
+                                   v-if="quizForm.success_message[index]">
                                 Длина текста {{ quizForm.success_message[index].length }}/255</small>
                         </label>
                         <textarea class="form-control"
@@ -238,7 +240,8 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                     <div class="col-2 d-flex align-items-center justify-content-center">
                         <button class="btn btn-outline-danger"
                                 :disabled="quizForm.success_message.length<=1"
-                                @click="removeMessage('success_message', index)">Удалить</button>
+                                @click="removeMessage('success_message', index)">Удалить
+                        </button>
                     </div>
                 </div>
 
@@ -249,7 +252,8 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
             <div class="col-12 py-2">
                 <button class="btn btn-outline-info rounded-5"
                         type="button"
-                        @click="addMessage('failure_message',null)">Добавить еще вариант текста</button>
+                        @click="addMessage('failure_message',null)">Добавить еще вариант текста
+                </button>
             </div>
             <div class="col-12 mb-3" v-for="(message, index) in quizForm.failure_message">
 
@@ -266,7 +270,8 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                             </Popper>
                             Текст при проигрыше
                             <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                            <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="quizForm.failure_message[index]">
+                            <small class="text-gray-400 ml-3" style="font-size:10px;"
+                                   v-if="quizForm.failure_message[index]">
                                 Длина текста {{ quizForm.failure_message[index].length }}/255</small>
                         </label>
                         <textarea class="form-control"
@@ -280,13 +285,13 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                     <div class="col-2 d-flex align-items-center justify-content-center">
                         <button class="btn btn-outline-danger"
                                 :disabled="quizForm.failure_message.length<=1"
-                                @click="removeMessage('failure_message', index)">Удалить</button>
+                                @click="removeMessage('failure_message', index)">Удалить
+                        </button>
                     </div>
                 </div>
 
 
             </div>
-
 
 
         </div>
@@ -402,7 +407,7 @@ export default {
             load: false,
             need_reset: false,
             need_services: false,
-            need_media:false,
+            need_media: false,
             types: [
                 "По порядку",
                 "Перемешать всё",
@@ -425,7 +430,7 @@ export default {
                 is_active: false,
                 try_count: 1,
                 success_percent: 50,
-                success_message: ["Задание успешно пройдено!"] ,
+                success_message: ["Задание успешно пройдено!"],
                 failure_message: ["К сожалению вы не прошли задание!"],
 
             }
@@ -448,9 +453,9 @@ export default {
                     title: this.quiz.title || null,
                     image: this.quiz.image || null,
                     description: this.quiz.description || null,
-                    completed_at: this.quiz.completed_at? this.$filters.currentFull(this.quiz.completed_at) : null,
-                    start_at: this.quiz.start_at?  this.$filters.currentFull(this.quiz.start_at ): null,
-                    end_at: this.quiz.end_at? this.$filters.currentFull(this.quiz.end_at ): null,
+                    completed_at: this.quiz.completed_at ? this.$filters.currentFull(this.quiz.completed_at) : null,
+                    start_at: this.quiz.start_at ? this.$filters.currentFull(this.quiz.start_at) : null,
+                    end_at: this.quiz.end_at ? this.$filters.currentFull(this.quiz.end_at) : null,
                     display_type: this.quiz.display_type || 0,
                     time_limit: this.quiz.time_limit || 30,
                     show_answers: this.quiz.show_answers || false,
@@ -470,11 +475,11 @@ export default {
         selectPhoto(item) {
             this.quizForm.image = item.file_id
         },
-        removeMessage(field, index){
-            this.quizForm[field||'success_message'].splice(index, 1)
+        removeMessage(field, index) {
+            this.quizForm[field || 'success_message'].splice(index, 1)
         },
-        addMessage(field, message){
-          this.quizForm[field||'success_message'].push(message)
+        addMessage(field, message) {
+            this.quizForm[field || 'success_message'].push(message)
         },
         submitForm() {
             let data = new FormData();
@@ -493,7 +498,6 @@ export default {
                 {
                     quizForm: data
                 }).then((response) => {
-                this.$emit("callback", response.data)
 
                 this.quizForm = {
                     id: null,
@@ -511,10 +515,11 @@ export default {
                     is_active: false,
                     try_count: 1,
                     success_percent: 50,
-                    success_message: ["Задание успешно пройдено!"] ,
+                    success_message: ["Задание успешно пройдено!"],
                     failure_message: ["К сожалению вы не прошли задание!"],
                 }
 
+                this.$emit("callback", response.data)
                 this.$notify("Событие успешно создано");
             }).catch(err => {
                 this.$notify("Ошибка создания события");

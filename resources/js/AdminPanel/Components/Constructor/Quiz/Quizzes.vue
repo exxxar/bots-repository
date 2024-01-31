@@ -218,6 +218,7 @@ export default {
         },
         callbackForm() {
             this.loadTable = true
+            this.part = 0
             this.$nextTick(() => {
                 this.loadTable = false
             })
