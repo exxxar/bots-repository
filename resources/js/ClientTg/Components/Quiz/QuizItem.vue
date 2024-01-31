@@ -20,7 +20,7 @@
                     class="fa-solid fa-person-circle-question"></i> Число команд {{ (quiz.commands || []).length }}
                 </li>
                 <li class="list-group-item" v-if="!quiz.polling_mode"><i class="fa-solid fa-link"></i>
-                    <a href="javascript:void(0)" @click="openLinkModal(quiz.id)">Поделиться ссылкой</a>
+                    <a href="javascript:void(0)" @click="openLinkModal">Поделиться ссылкой</a>
                 </li>
             </ul>
             <div class="card-body" v-if="!isCompleted">
@@ -99,8 +99,9 @@ export default {
 
             this.$emit("select", item)
         },
-        openLinkModal(id) {
-            this.$cashback.qr("007quiz" + id)
+        openLinkModal() {
+            let slugId = window.currentScript || null
+            this.$cashback.qr("004000000"+slugId )
         },
     }
 }
