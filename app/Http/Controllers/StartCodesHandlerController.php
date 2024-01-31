@@ -225,6 +225,12 @@ class StartCodesHandlerController extends Controller
         }
 
 
+        if ($code != "011")
+        {
+            BotManager::bot()->reply($message);
+            return;
+        }
+
         if (BotManager::bot()->currentBotUser()->telegram_chat_id == $request_id) {
             BotManager::bot()
                 ->reply(
@@ -269,7 +275,7 @@ class StartCodesHandlerController extends Controller
                 )
                 ->sendMessage(
                     $botUser->telegram_chat_id,
-                    "Вас и вашего друга $userName2 теперь обьеденяет еще и CashBack;)"
+                    "Вас и вашего друга $userName2 теперь объеденяет еще и CashBack;)"
                 );
         }
 
