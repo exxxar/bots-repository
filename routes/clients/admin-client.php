@@ -123,7 +123,7 @@ Route::prefix("admin")
                 Route::post("/list-of-quiz-questions/{quizId}", "listOfQuizQuestions");
                 Route::post("/list-of-quiz-rounds/{quizId}", "listOfQuizRounds");
                 Route::post("/list-of-quiz-commands/{quizId}", "listOfQuizCommands");
-                Route::post("/list-of-results/{quizId}", "listOfResults");
+                Route::post("/list-of-results", "listOfResults");
                 Route::post("/quiz-store", "quizStore");
                 Route::post("/quiz-question-store", "quizQuestionStore");
                 Route::post("/quiz-command-store", "quizCommandStore");

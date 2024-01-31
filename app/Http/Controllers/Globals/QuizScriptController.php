@@ -74,177 +74,81 @@ class QuizScriptController extends SlugController
     }
 
 
-    public function startQuiz(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function startQuiz(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
             "quiz_id" => "required",
         ]);
 
-        $quiz = Quiz::query()->find($request->quiz_id);
-
-        if (is_null($quiz))
-            return response()->noContent(404);
-
         $bot = $request->bot;
         $botUser = $request->botUser;
         $slug = $request->slug;
 
-        $maxAttempts = $quiz->try_count ?? 1;
-
-        $action = ActionStatus::query()
-            ->where("bot_user_id", $botUser->id)
-            ->where("bot_id", $bot->id)
-            ->where("slug_id", $slug->id)
-            ->first();
-
-        if (is_null($action))
-            $action = ActionStatus::query()
-                ->create([
-                    'bot_id' => $bot->id,
-                    'slug_id' => $slug->id,
-                    'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0,
-                    'bot_user_id' => $botUser->id,
-                    "data"=>[
-                        "start_at"=>Carbon::now()->format('Y-m-d H:i:s')
-                    ]
-                ]);
-
-        if (is_null($action->data)) {
-            $action->current_attempts = 0;
-            $action->save();
-        }
-
+        $action = BusinessLogic::quiz()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser ?? null)
+            ->setSlug($slug ?? null)
+            ->startQuiz($request->all());
 
         return response()->json([
-            "action" => new ActionStatusResource($action),
+            "action" => $action,
 
         ]);
     }
 
-    public function completeQuiz(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function completeQuiz(Request $request): \Illuminate\Http\JsonResponse
     {
 
         $request->validate([
             "quiz_id" => "required",
         ]);
 
-        $quiz = Quiz::query()->find($request->quiz_id);
-
-        if (is_null($quiz))
-            return response()->noContent(404);
-
         $bot = $request->bot;
         $botUser = $request->botUser;
         $slug = $request->slug;
 
-        $maxAttempts = $quiz->try_count ?? 1;
-
-        $callbackChannel = (Collection::make($slug->config)
-            ->where("key", "callback_channel_id")
-            ->first())["value"] ??
-            $bot->order_channel ??
-            $bot->main_channel ??
-            env("BASE_ADMIN_CHANNEL");
-
-
-        $action = ActionStatus::query()
-            ->where("bot_user_id", $botUser->id)
-            ->where("bot_id", $bot->id)
-            ->where("slug_id", $slug->id)
-            ->first();
-
-        if (is_null($action))
-            $action = ActionStatus::query()
-                ->create([
-                    'user_id' => $botUser->user_id,
-                    'bot_user_id' => $botUser->id,
-                    'bot_id' => $bot->id,
-                    'slug_id' => $slug->id,
-                    'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0
-                ]);
-
-        $action->current_attempts++;
-        if ($action->current_attempts >= $maxAttempts)
-            $action->completed_at = Carbon::now();
-
-        $action->max_attempts = $maxAttempts;
-        $action->save();
-
-        $command = QuizCommand::query()->create([
-            'title'=>$botUser->fio_from_telegram ?? $botUser->telegram_chat_id ?? '-',
-            'description'=>null,
-            'captain_id'=>$botUser->id,
-            'creator_id'=>$botUser->id,
-        ]);
-
-        $points = 0;
-        $data = $action->data ?? [];
-
-        if (!empty($data["questions"] ?? []))
-            foreach ($data["questions"] as $q)
-                $points += $q["points"] ?? 0;
-
-        $time = $data["start_at"]??null;
-
-        $time = is_null($time)?Carbon::now():Carbon::parse($time);
-
-        $time = Carbon::now()->sub($time);
-
-        QuizResult::query()
-            ->create([
-                'quiz_id'=>$quiz->id,
-                'quiz_command_id'=>$command->id,
-                'points'=>$points,
-                'time'=>$time->second,
-                'result'=>$data["questions"] ?? [],
-            ]);
+        $action = BusinessLogic::quiz()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser ?? null)
+            ->setSlug($slug ?? null)
+            ->completeQuiz($request->all());
 
         return response()->json([
-            "action" => new ActionStatusResource($action),
+            "action" => $action,
         ]);
 
     }
 
-    public function loadSingleQuiz(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function loadSingleQuiz(Request $request): QuizResource
     {
         $request->validate([
             "quiz_id" => "required",
         ]);
 
-
-        $quiz = Quiz::query()->find($request->quiz_id);
-
         $bot = $request->bot;
         $botUser = $request->botUser;
         $slug = $request->slug;
 
-        $action = ActionStatus::query()
-            ->where("bot_user_id", $botUser->id)
-            ->where("bot_id", $bot->id)
-            ->where("slug_id", $slug->id)
-            ->first();
-
-        $points = 0;
-        $data = $action->data ?? [];
-
-        if (!empty($data["questions"] ?? []))
-            foreach ($data["questions"] as $q)
-                $points += $q["points"] ?? 0;
-
-
-        $quiz->personal_info = (object)[
-            "completed_at" => $action->completed_at ?? null,
-            "max_attempts" => $action->max_attempts ?? 1,
-            "current_attempts" => $action->current_attempts ?? 0,
-            "result_points" => $points
-        ];
-
-        return new QuizResource($quiz);
+        return BusinessLogic::quiz()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser ?? null)
+            ->setSlug($slug ?? null)
+            ->loadSingleQuiz($request->all());
     }
 
-    public function checkAnswers(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function checkAnswers(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
             "quiz_question_id" => "required",
@@ -252,102 +156,17 @@ class QuizScriptController extends SlugController
             "answers" => "required"
         ]);
 
-
-        $question = QuizQuestion::query()
-            ->with(["answers"])
-            ->where("id", $request->quiz_question_id)
-            ->first();
-
-        if (is_null($question))
-            return response()->noContent(404);
-
-        if (is_null($question->answers ?? null))
-            return response()->noContent(403);
-
-        $answerPool = json_decode($request->answers ?? '[]');
-
-        $points = 0;
-        $hasRightAnswer = false;
-        foreach ($question->answers as $answer) {
-            if (is_null($answer))
-                continue;
-
-            if (in_array($question->is_open ? $answer->text : $answer->id, is_array($answerPool) ? $answerPool : [$answerPool])) {
-
-
-                $points += $answer->points;
-
-                if ($answer->is_right_answer)
-                    $hasRightAnswer = true;
-
-                if (!$question->is_multiply)
-                    break;
-            }
-
-        }
-
-        $quiz = Quiz::query()->find($request->quiz_id);
-
-        if (is_null($quiz))
-            return response()->noContent(404);
-
         $bot = $request->bot;
         $botUser = $request->botUser;
         $slug = $request->slug;
 
-        $maxAttempts = $quiz->try_count ?? 1;
+        $result = BusinessLogic::quiz()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser ?? null)
+            ->setSlug($slug ?? null)
+            ->checkAnswers($request->all());
 
-        $action = ActionStatus::query()
-            ->where("bot_user_id", $botUser->id)
-            ->where("bot_id", $bot->id)
-            ->where("slug_id", $slug->id)
-            ->first();
-
-        if (is_null($action))
-            $action = ActionStatus::query()
-                ->create([
-                    'user_id' => $botUser->user_id,
-                    'bot_user_id' => $botUser->id,
-                    'bot_id' => $bot->id,
-                    'slug_id' => $slug->id,
-                    'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0
-                ]);
-
-        $tmp = $action->data ?? [];
-        $tmpQuestionsResult = $tmp["questions"] ?? [];
-        $tmpQuestionsResult[] = (object)[
-            "question_id" => $question->id,
-            "points" => $points,
-            "is_right" => $hasRightAnswer,
-        ];
-
-        $action->data = (object)[
-            "questions" => $tmpQuestionsResult,
-        ];
-
-        $action->save();
-
-        /*  QuizResult::query()->create([
-              'quiz_id',
-              'quiz_command_id',
-              'points',
-              'time',
-              'result',
-          ]);*/
-
-
-        return response()->json([
-            "question" => (object)[
-                "id" => $question->id,
-                "text" => $question->text,
-                "message" => $hasRightAnswer ? $question->success_message : $question->failure_message,
-                "content" => $hasRightAnswer ? $question->success_media_content : $question->failure_media_content,
-                "type" => $hasRightAnswer ? $question->success_media_content_type : $question->failure_media_content_type,
-            ],
-            "points" => $points,
-            "is_right" => $hasRightAnswer,
-        ]);
+        return response()->json($result);
 
 
     }

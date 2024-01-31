@@ -2,6 +2,7 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Http\Resources\ActionStatusResource;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\AppointmentEventCollection;
 use App\Http\Resources\AppointmentReviewResource;
@@ -13,6 +14,7 @@ use App\Http\Resources\QuizQuestionCollection;
 use App\Http\Resources\QuizQuestionResource;
 use App\Http\Resources\QuizResource;
 use App\Http\Resources\QuizResultCollection;
+use App\Models\ActionStatus;
 use App\Models\AmoCrm;
 use App\Models\AppointmentEvent;
 use App\Models\AppointmentReview;
@@ -25,6 +27,7 @@ use App\Models\QuizQuestion;
 use App\Models\QuizResult;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -32,10 +35,15 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class QuizLogicFactory
 {
     protected $bot;
+    protected $botUser;
+    protected $slug;
 
     public function __construct()
     {
         $this->bot = null;
+        $this->botUser = null;
+        $this->slug = null;
+
 
     }
 
@@ -45,6 +53,28 @@ class QuizLogicFactory
             throw new HttpException(400, "Бот не задан!");
 
         $this->bot = $bot;
+        return $this;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function setSlug($slug = null): static
+    {
+        if (is_null($slug))
+            throw new HttpException(400, "Команда не задана!");
+
+        $this->slug = $slug;
+        return $this;
+    }
+
+
+    public function setBotUser($botUser): static
+    {
+        if (is_null($botUser))
+            throw new HttpException(400, "Пользователь бота не задан!");
+
+        $this->botUser = $botUser;
         return $this;
     }
 
@@ -73,7 +103,6 @@ class QuizLogicFactory
 
         return $questions->toArray();
     }
-
 
 
     /**
@@ -111,6 +140,319 @@ class QuizLogicFactory
         return new QuizCommandCollection($commands);
     }
 
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function startQuiz(array $data): ActionStatusResource
+    {
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(400, "Не все условия функции выполнены!");
+
+        $validator = Validator::make($data, [
+            'quiz_id' => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $quiz = Quiz::query()->find($data["quiz_id"]);
+
+        if (is_null($quiz))
+            throw new HttpException(404, "Квиз не найден");
+
+        $bot = $this->bot;
+        $botUser = $this->botUser;
+        $slug = $this->slug;
+
+        $maxAttempts = $quiz->try_count ?? 1;
+
+        $action = ActionStatus::query()
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->where("slug_id", $slug->id)
+            ->first();
+
+        if (is_null($action))
+            $action = ActionStatus::query()
+                ->create([
+                    'bot_id' => $bot->id,
+                    'slug_id' => $slug->id,
+                    'max_attempts' => $maxAttempts,
+                    'current_attempts' => 0,
+                    'bot_user_id' => $botUser->id,
+                    "data" => [
+                        "start_at" => Carbon::now()->format('Y-m-d H:i:s')
+                    ]
+                ]);
+
+
+    /*    if (!is_null($action->data["questions"] ?? null)) {
+            $action->current_attempts = 0;
+            $action->data = [
+                "start_at" => Carbon::now()->format('Y-m-d H:i:s')
+            ];
+
+            $action->save();
+        }*/
+
+
+        return new ActionStatusResource($action);
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function completeQuiz(array $data): ActionStatusResource
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(400, "Не все условия функции выполнены!");
+
+        $validator = Validator::make($data, [
+            'quiz_id' => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $quiz = Quiz::query()->find($data["quiz_id"]);
+
+        if (is_null($quiz))
+            throw new HttpException(404, "Квиз не найден");
+
+        $bot = $this->bot;
+        $botUser = $this->botUser;
+        $slug = $this->slug;
+
+        $maxAttempts = $quiz->try_count ?? 1;
+
+
+        $action = ActionStatus::query()
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->where("slug_id", $slug->id)
+            ->first();
+
+        if (is_null($action))
+            $action = ActionStatus::query()
+                ->create([
+                    'user_id' => $botUser->user_id,
+                    'bot_user_id' => $botUser->id,
+                    'bot_id' => $bot->id,
+                    'slug_id' => $slug->id,
+                    'max_attempts' => $maxAttempts,
+                    'current_attempts' => 0
+                ]);
+
+        $action->current_attempts++;
+        if ($action->current_attempts >= $maxAttempts)
+            $action->completed_at = Carbon::now();
+
+        $action->max_attempts = $maxAttempts;
+        $action->save();
+
+        $command = QuizCommand::query()->create([
+            'title' => $botUser->fio_from_telegram ?? $botUser->telegram_chat_id ?? '-',
+            'description' => null,
+            'captain_id' => $botUser->id,
+            'creator_id' => $botUser->id,
+        ]);
+
+        $points = 0;
+        $data = $action->data ?? [];
+
+        if (!empty($data["questions"] ?? []))
+            foreach ($data["questions"] as $q)
+                $points += $q["points"] ?? 0;
+
+        $time = $data["start_at"] ?? null;
+
+        $time = is_null($time) ? Carbon::now() : Carbon::parse($time);
+
+        $time = Carbon::now()->sub($time);
+
+        QuizResult::query()
+            ->create([
+                'quiz_id' => $quiz->id,
+                'quiz_command_id' => $command->id,
+                'points' => $points,
+                'time' => $time->second,
+                'result' => $data["questions"] ?? [],
+            ]);
+
+        return new ActionStatusResource($action);
+
+    }
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function loadSingleQuiz(array $data): QuizResource
+    {
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(400, "Не все условия функции выполнены!");
+
+        $validator = Validator::make($data, [
+            'quiz_id' => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $quiz = Quiz::query()->find($data["quiz_id"]);
+
+        if (is_null($quiz))
+            throw new HttpException(404, "Квиз не найден");
+
+        $bot = $this->bot;
+        $botUser = $this->botUser;
+        $slug = $this->slug;
+
+
+        $action = ActionStatus::query()
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->where("slug_id", $slug->id)
+            ->first();
+
+        $points = 0;
+        $data = $action->data ?? [];
+
+        if (!empty($data["questions"] ?? []))
+            foreach ($data["questions"] as $q)
+                $points += $q["points"] ?? 0;
+
+
+        $quiz->personal_info = (object)[
+            "completed_at" => $action->completed_at ?? null,
+            "max_attempts" => $action->max_attempts ?? 1,
+            "current_attempts" => $action->current_attempts ?? 0,
+            "result_points" => $points
+        ];
+
+        return new QuizResource($quiz);
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function checkAnswers(array $data): object
+    {
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(400, "Не все условия функции выполнены!");
+
+        $validator = Validator::make($data, [
+            "quiz_question_id" => "required",
+            "quiz_id" => "required",
+            "answers" => "required"
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $question = QuizQuestion::query()
+            ->with(["answers"])
+            ->where("id", $data["quiz_question_id"])
+            ->first();
+
+        if (is_null($question))
+            throw new HttpException(404, "Вопрос не найден");
+
+        if (is_null($question->answers ?? null))
+            throw new HttpException(403, "Ошибка в ответах..");
+
+        $answerPool = json_decode($request->answers ?? '[]');
+
+        $points = 0;
+        $hasRightAnswer = false;
+        foreach ($question->answers as $answer) {
+            if (is_null($answer))
+                continue;
+
+            if (in_array($question->is_open ? $answer->text : $answer->id, is_array($answerPool) ? $answerPool : [$answerPool])) {
+
+
+                $points += $answer->points;
+
+                if ($answer->is_right_answer)
+                    $hasRightAnswer = true;
+
+                if (!$question->is_multiply)
+                    break;
+            }
+
+        }
+
+        $quiz = Quiz::query()->find($data["quiz_id"]);
+
+        if (is_null($quiz))
+            throw new HttpException(404, "Квиз не найден");
+
+        $bot = $this->bot;
+        $botUser = $this->botUser;
+        $slug = $this->slug;
+
+        $maxAttempts = $quiz->try_count ?? 1;
+
+        $action = ActionStatus::query()
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->where("slug_id", $slug->id)
+            ->first();
+
+        if (is_null($action))
+            $action = ActionStatus::query()
+                ->create([
+                    'user_id' => $botUser->user_id,
+                    'bot_user_id' => $botUser->id,
+                    'bot_id' => $bot->id,
+                    'slug_id' => $slug->id,
+                    'max_attempts' => $maxAttempts,
+                    'current_attempts' => 0
+                ]);
+
+        $tmp = $action->data ?? [];
+        $tmpQuestionsResult = $tmp["questions"] ?? [];
+        $tmpQuestionsResult[] = (object)[
+            "question_id" => $question->id,
+            "points" => $points,
+            "is_right" => $hasRightAnswer,
+        ];
+
+        $action->data = (object)[
+            "questions" => $tmpQuestionsResult,
+        ];
+
+        $action->save();
+
+        /*  QuizResult::query()->create([
+              'quiz_id',
+              'quiz_command_id',
+              'points',
+              'time',
+              'result',
+          ]);*/
+
+
+        return (object)[
+            "question" => (object)[
+                "id" => $question->id,
+                "text" => $question->text,
+                "message" => $hasRightAnswer ? $question->success_message : $question->failure_message,
+                "content" => $hasRightAnswer ? $question->success_media_content : $question->failure_media_content,
+                "type" => $hasRightAnswer ? $question->success_media_content_type : $question->failure_media_content_type,
+            ],
+            "points" => $points,
+            "is_right" => $hasRightAnswer,
+        ];
+
+
+    }
 
     /**
      * @throws HttpException
@@ -322,7 +664,7 @@ class QuizLogicFactory
                 if (!is_null($answer->id ?? null)) {
                     $result = QuizAnswer::query()->find($answer->id);
                     $result->update((array)$answer);
-                   // dd($answer);
+                    // dd($answer);
                 } else
                     QuizAnswer::query()
                         ->create((array)$answer);

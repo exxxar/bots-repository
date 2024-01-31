@@ -7,10 +7,10 @@ import QuizCommands from "@/ClientTg/Components/Quiz/QuizCommands.vue";
 </script>
 <template>
 
-        <QuizItem
-            class="p-1"
-            v-if="quiz&&step===0"
-            :quiz="quiz" v-on:select="step++"></QuizItem>
+    <QuizItem
+        class="p-1"
+        v-if="quiz&&step===0"
+        :quiz="quiz" v-on:select="step++"></QuizItem>
 
     <QuizQuestionList
         v-if="quiz&&step===1"

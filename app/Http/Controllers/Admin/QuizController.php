@@ -97,10 +97,11 @@ class QuizController extends Controller
             );
     }
 
-    public function listOfResults(Request $request, $quizId): \App\Http\Resources\QuizResultCollection
+    public function listOfResults(Request $request): \App\Http\Resources\QuizResultCollection
     {
 
         $request->validate([
+            "quiz_id" => "required",
             "bot_id" => "required",
         ]);
 
@@ -111,7 +112,7 @@ class QuizController extends Controller
         return BusinessLogic::quiz()
             ->setBot($bot ?? null)
             ->listOfResults(
-                $quizId,
+                $request->quiz_id,
                 $request->size ?? 12,
                 $request->order ?? "updated_at",
                 $request->direction ?? "desc"
