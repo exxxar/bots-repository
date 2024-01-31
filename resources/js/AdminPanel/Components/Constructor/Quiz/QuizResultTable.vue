@@ -24,13 +24,13 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 <tr v-for="(result, index) in results"
                     v-bind:class="{'border-info':result.deleted_at==null,'border-danger':result.deleted_at!=null}">
                     <th scope="row">{{ result.id }}</th>
-                    <td @click="selectQuizResult(result)">{{ result.title || 'Не указано' }}
+                    <td @click="selectQuizResult(result)">{{ result.quiz.title || 'Не указано' }}
                     </td>
-                    <td>{{ result.quiz.title || 'Не указано' }}</td>
-                    <td>{{ result.command.title || 'Не указано' }}</td>
+                    <td><span v-if="result.command">{{ result.command.title || 'Не указано' }}</span></td>
                     <td>{{ (result.command.players || []).length }}</td>
                     <td>{{ result.points || 'Не указано' }}</td>
                     <td>{{ result.times || 'Не указано' }}</td>
+                    <td>-</td>
                     <td>
                         <div class="dropdown" v-if="result.id">
                             <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown"

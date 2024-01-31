@@ -41,12 +41,12 @@ class QuizResult extends Model
 
     public function quiz(): BelongsTo
     {
-        return $this->belongsTo(Quiz::class);
+        return $this->belongsTo(Quiz::class,"quiz_id","id");
     }
 
     public function command(): BelongsTo
     {
-        return $this->belongsTo(QuizCommand::class);
+        return $this->belongsTo(QuizCommand::class , "quiz_command_id","id");
     }
 
 

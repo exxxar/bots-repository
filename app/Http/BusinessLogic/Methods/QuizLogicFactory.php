@@ -536,6 +536,7 @@ class QuizLogicFactory
 
 
         $results = QuizResult::query()
+            ->with(["command"])
             // ->withTrashed()
             ->where("quiz_id", $quizId)
             ->orderBy($order ?? 'updated_at', $direction ?? 'DESC')
