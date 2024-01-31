@@ -302,9 +302,11 @@ class SystemDiagnosticController extends Controller
     {
         BotManager::bot()->stopBotDialog();
 
-        StartCodesService::bot()->handler($data[3] ?? null);
+        $startCommand = $data[3] ?? null;
+        StartCodesService::bot()->handler($startCommand);
 
-        BotManager::bot()->pushCommand("/start");
+        if (is_null($startCommand))
+            BotManager::bot()->pushCommand("/start");
 
     }
 
@@ -747,15 +749,15 @@ class SystemDiagnosticController extends Controller
 
         $bot = BotManager::bot()->getSelf();
 
-        Log::info(print_r($bot->toArray(),true));
+        Log::info(print_r($bot->toArray(), true));
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
-            ->where(function($q){
-               $q->where("type", "video")
-                   ->orWhere("type", "video_note");
+            ->where(function ($q) {
+                $q->where("type", "video")
+                    ->orWhere("type", "video_note");
             })
             ->get() ?? [];
-        Log::info(print_r($media->toArray(),true));
+        Log::info(print_r($media->toArray(), true));
         if (count($media) > 0) {
             $tmp = "Список доступных видео в медиа контенте:\n";
             $this->mediaPrint($tmp, $media, "video");
@@ -783,22 +785,22 @@ class SystemDiagnosticController extends Controller
 
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
-            ->where("type", "audio" )
+            ->where("type", "audio")
             ->get() ?? [];
 
         if (count($media) > 0) {
             $tmp = "Список доступных аудио-файлов в медиа контенте:\n";
-            $this->mediaPrint($tmp, $media,"audio");
+            $this->mediaPrint($tmp, $media, "audio");
         }
 
         $media = BotMedia::query()
             ->where("bot_id", $bot->id)
-            ->where("type", "voice" )
+            ->where("type", "voice")
             ->get() ?? [];
 
         if (count($media) > 0) {
             $tmp = "Список доступных голосовых-файлов в медиа контенте:\n";
-            $this->mediaPrint($tmp, $media,"voice");
+            $this->mediaPrint($tmp, $media, "voice");
         }
 
     }
@@ -986,7 +988,7 @@ class SystemDiagnosticController extends Controller
 
         $id = $data[3] ?? 0;
 
-        Log::info("preshow".print_r($bot->toArray(),true));
+        Log::info("preshow" . print_r($bot->toArray(), true));
         Log::info("showMediaFile bot=>$bot->id and media = $id");
 
         $media = BotMedia::query()

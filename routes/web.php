@@ -35,118 +35,17 @@ use Yclients\YclientsApi;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get("/get-images", function (){
-    $data = Http::get("https://api.telegram.org/bot1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4/getFile?file_id=BAACAgIAAxkBAAKYpWU6oDpLJpmTtqwxImoaucn2bJFrAALYNAACIJC4SRlfbOLWrPPlMAQ");
 
-    $data = $data->json();
-    //dd($data["result"]["file_path"]);
-
-    $type = explode("/",$data["result"]["file_path"]);
-
-    dd($type);
-    $data = Http::get("https://api.telegram.org/file/bot1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4/".$data["result"]["file_path"]);
-
-    return response($data)->withHeaders([
-        'Content-disposition' => 'attachment; filename=' . "Test.mpeg",
-        'Access-Control-Expose-Headers' => 'Content-Disposition',
-        'Content-Type' => "video/mpeg",
-    ]);
-});
 
 Route::any("/integrations/1c/callback", function (Request $request){
     Log::info("integrations".print_r($request->all(),true));
     return "success";
 });
 
-Route::get("/test-role", function (){
-   return "success";
-})->middleware(["role:manager"]);
-
-Route::get("/yclients",function (){
-
-        $login = 79161506189;
-        $password =  916150;
-        $tokenPartner =  "2w3y7mtfs7n63m79w42c";//"b4e0f3da4ef997e998f7956998e0a61d";
-
-        $response = Http::withHeaders([
-            'Authorization' => "Bearer $tokenPartner",
-            'Content-Type' => 'application/json',
-            'Accept' => "application/vnd.yclients.v2+json"
-        ])->asJson()->post('https://api.yclients.com/api/v1/auth', [
-            "login"=>"$login",
-            "password"=>"$password",
-        ]);
-
-        $userToken = $response->object()->data->user_token ?? null;
-
-/*
-    $response = Http::withHeaders([
-        'Authorization' => "Bearer $tokenPartner, User $userToken",
-        'Content-Type' => 'application/json',
-        'Accept' => "application/vnd.yclients.v2+json"
-    ])->asJson()->delete('https://api.yclients.com/api/v1/company/963541');*/
-
-    dd($response->object());
-/*
-    $response = Http::withHeaders([
-        'Authorization' => "Bearer $tokenPartner, User $userToken",
-        'Content-Type' => 'application/json',
-        'Accept' => "application/vnd.yclients.v2+json"
-    ])->asJson()->post('https://api.yclients.com/api/v1/companies', [
-        "title"=>"CashMan",
-        "country_id"=>"1",
-        "city_id"=>"1",
-        "address"=>"1",
-        "site"=>"1",
-        "coordinate_lat"=>"1",
-        "coordinate_lot"=>"1",
-        "short_descr"=>"1",
-    ]);*/
-
-/*    $response = Http::withHeaders([
-        'Authorization' => "Bearer $tokenPartner, User $userToken",
-        'Content-Type' => 'application/json',
-        'Accept' => "application/vnd.yclients.v2+json"
-    ])->asJson()->post('https://api.yclients.com/api/v1/clients/963540', [
-        "name"=>"CashMan",
-        "surname"=>"1",
-        "patronymic"=>"1",
-        "phone"=>"+79490000000",
-        "email"=>"1",
-        "sex_id"=>"1",
-        "importance_id"=>"1",
-        "discount"=>"1",
-        "card"=>"1",
-        "birth_date"=>"1",
-        "comment"=>"1",
-        "spent"=>"1",
-        "balance"=>"1",
-        "sms_check"=>"1",
-        "sms_not"=>"1",
-        "categories"=>"1",
-        "custom_fields"=>"1",
-    ]);*/
-    //963540 - при первом запуске сохранить id компании
-    dd($response->object());
-
-});
-
 Route::get("/test-export", function (){
 
     $statuses = \App\Models\ActionStatus::query()->where("bot_id",2)->get();
     return Excel::download(new \App\Exports\ExportArrayData($statuses->toArray()), 'invoices.xlsx',\Maatwebsite\Excel\Excel::XLSX);
-});
-
-Route::get("/push-command", function () {
-
-    $botUser = BotUser::query()
-        ->where("bot_id", 2)
-        ->where("telegram_chat_id", "484698703")
-        ->first();
-    \App\Facades\BotManager::bot()
-        ->setBotUser($botUser)
-        ->setApiToken("isushibot")
-        ->pushCommand("/diagnostic");
 });
 
 
@@ -214,11 +113,6 @@ Route::get('/db-transfer', function (Request $request) {
       }
       ini_set('max_execution_time', '300');*/
 
-});
-
-
-Route::any('/crm/amo/flera_hus_bot', function (Request $request) {
-    Log::info("callback" . print_r($request->all(), true));
 });
 
 

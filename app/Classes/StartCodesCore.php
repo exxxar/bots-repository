@@ -81,8 +81,6 @@ class StartCodesCore
         if (is_null($data))
             return $this;
 
-
-
         include_once base_path('routes/codes.php');
 
         $result = $this->regularExpressionHandler(base64_decode($data));

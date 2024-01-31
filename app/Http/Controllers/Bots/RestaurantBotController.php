@@ -116,7 +116,7 @@ class RestaurantBotController extends Controller
         $companyDomain = $bot->company->slug;
 
         $qr = "https://t.me/$botDomain?start=" .
-            base64_encode("001" . BotManager::bot()->getCurrentChatId());
+            base64_encode("011" . BotManager::bot()->getCurrentChatId());
 
         $friendCount = ReferralHistory::query()
             ->where("user_sender_id", $botUser->user_id)
