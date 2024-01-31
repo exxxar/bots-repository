@@ -261,6 +261,9 @@ class QuizLogicFactory
             'creator_id' => $botUser->id,
         ]);
 
+        $command->players->sync([$botUser->id]);
+        $quiz->commands->sync([$command->id]);
+
         $points = 0;
         $data = $action->data ?? [];
 

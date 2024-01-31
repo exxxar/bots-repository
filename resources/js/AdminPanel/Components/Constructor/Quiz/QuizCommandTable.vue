@@ -44,7 +44,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
                 </tbody>
             </table>
-            <p v-else>На текущий момент нет ни одного созданного вопроса</p>
+            <p v-else>На текущий момент нет ни одной созданной команды</p>
         </div>
         <div class="col-12">
             <Pagination
@@ -122,8 +122,6 @@ export default {
             }).then(resp => {
                 this.loading = false
                 this.commands = this.getQuizCommands
-
-
                 this.paginate_object = this.getQuizCommandsPaginateObject
             }).catch(() => {
                 this.loading = false
