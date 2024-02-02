@@ -191,14 +191,12 @@ abstract class BotCore
         $matches = [];
         $arguments = [];
 
-        Log::info("botSlugHandler init");
         $find = false;
         foreach ($this->slugs as $item) {
             if (is_null($item["path"]) || $item["is_service"])
                 continue;
             $slug = $item["path"];
 
-            Log::info("botSlugHandler $slug ");
             $parentSlug = BotMenuSlug::query()
                 // ->where("bot_id", $this->getSelf()->id)
                 ->where("slug", $slug)
@@ -357,11 +355,8 @@ abstract class BotCore
                 }
             } catch (\Exception $e) {
                 Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
-                return $find;
+                return false;
             }
-
-            if ($find)
-                return true;
 
         }
         return $find;
