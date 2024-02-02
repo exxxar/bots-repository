@@ -18,53 +18,63 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
         <div class="row" v-if="hasParts">
             <div class="col-12 mb-2">
                 <h6>На странице выбраны следующие разделы</h6>
-                <ul class="mini-pics justify-content-start d-inline-flex">
+                <ul class="mini-pics justify-content-start d-inline-flex text-primary">
                     <li
+                        class="mr-1 "
                         title="Изображения"
                         v-bind:class="{'active':need_page_images}">
                         <i class="fa-regular fa-images"></i>
                     </li>
                     <li
+                        class="mr-1"
                         title="Стикеры"
                         v-bind:class="{'active':need_page_sticker}">
                         <i class="fa-regular fa-note-sticky"></i>
                     </li>
                     <li
+                        class="mr-1"
                         title="Видео"
                         v-bind:class="{'active':need_page_video}">
                         <i class="fa-solid fa-photo-film"></i>
                     </li>
                     <li
+                        class="mr-1"
                         title="Аудио"
                         v-bind:class="{'active':need_page_audios}">
                         <i class="fa-regular fa-file-audio"></i>
                     </li>
                     <li
+                        class="mr-1"
                         title="Документы"
                         v-bind:class="{'active':need_page_documents}">
                         <i class="fa-regular fa-file-word"></i>
                     </li>
                     <li
+                        class="mr-1"
                         title="Страницы"
                         v-bind:class="{'active':need_attach_page}">
                         <i class="fa-solid fa-link"></i>
                     </li>
                     <li
+                        class="mr-1"
                         title="Скрипты"
                         v-bind:class="{'active':need_attach_slug}">
                         <i class="fa-solid fa-scroll"></i>
                     </li>
                     <li
+                        class="mr-1"
                         title="Диалоги"
                         v-bind:class="{'active':need_attach_dialog}">
                         <i class="fa-regular fa-comment-dots"></i>
                     </li>
                     <li
+                        class="mr-1"
                         title="Правила"
                         v-bind:class="{'active':need_rules}">
                         <i class="fa-solid fa-scale-balanced"></i>
                     </li>
                     <li
+                        class="mr-1"
                         title="Нижнее меню"
                         v-bind:class="{'active':need_reply_menu}">
                         <i class="fa-regular fa-keyboard"></i>
@@ -118,7 +128,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <button type="button"
                             title="Список страниц"
                             data-bs-toggle="modal" data-bs-target="#pages-modal"
-                            class="btn btn-outline-primary min-menu-btn">
+                            class="btn btn-outline-primary text-primary  min-menu-btn">
                         <i class="fa-solid fa-list-ol"></i>
                     </button>
                 </div>
@@ -405,7 +415,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 Добавить
                             </button>
                             <a href="https://telegra.ph/Nizhnee-menyu-bota-01-03" target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
                             </a>
@@ -486,7 +496,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             </button>
                             <a href="https://telegra.ph/Menyu-k-tekstu-01-03"
                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
                             </a>
@@ -577,7 +587,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             </button>
                             <a href="https://telegra.ph/Dobavlenie-izobrazhenij-01-03"
                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
                             </a>
@@ -629,7 +639,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             </button>
                             <a href="https://telegra.ph/Dobavlenie-video-na-stranicu-01-03"
                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
                             </a>
@@ -680,8 +690,8 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             </button>
                             <a href="https://telegra.ph/Dobavlenie-stikera-na-stranicu-01-03"
                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                >
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                            >
                                 Подробнее
                             </a>
                         </div>
@@ -735,8 +745,8 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             </button>
                             <a href="https://telegra.ph/Dobavlenie-audio-na-stranicu-01-03"
                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
-                                >
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                            >
                                 Подробнее
                             </a>
                         </div>
@@ -789,7 +799,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             </button>
                             <a href="https://telegra.ph/Dobavlenie-dokumenta-01-03"
                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
                             </a>
@@ -841,9 +851,9 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
-                            <a  href="https://telegra.ph/Svyazyvanie-so-stranicej-01-03"
-                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                            <a href="https://telegra.ph/Svyazyvanie-so-stranicej-01-03"
+                               target="_blank"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
                             </a>
@@ -899,7 +909,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             </button>
                             <a href="https://telegra.ph/Svyazyvanie-so-skriptom-01-03"
                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill">
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill">
                                 Подробнее
                             </a>
                         </div>
@@ -955,7 +965,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             </button>
                             <a href="https://telegra.ph/Dobavlenie-dialoga-01-03"
                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
                             </a>
@@ -1005,7 +1015,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             </button>
                             <a href="https://telegra.ph/Pravila-na-stranice-01-03"
                                target="_blank"
-                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
                             </a>
@@ -1030,7 +1040,8 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <div class="row" v-if="bot">
                         <div class="col-12 mb-2 ">
                             <h6 class="d-flex justify-between">
-                                <span>Вы создаете страницу для {{ bot.bot_domain }}</span>
+                                <span>Вы создаете страницу для <a :href="'https://t.me/'+bot.bot_domain"
+                                                                  target="_blank">{{ bot.bot_domain }}</a></span>
                             </h6>
                         </div>
                     </div>
@@ -1038,7 +1049,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <form v-on:submit.prevent="submitPage" class="row">
                         <div class="col-12 mb-2">
                             <h6>На странице выбраны следующие разделы</h6>
-                            <ul class="mini-pics">
+                            <ul class="mini-pics text-primary">
                                 <li
                                     v-bind:class="{'active':need_page_images}">
                                     <i class="fa-regular fa-images"></i>
@@ -1131,7 +1142,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
                         <div class="col-12">
                             <button type="submit"
-                                    class="btn btn-primary w-100 p-3">Сохранить
+                                    class="btn btn-success w-100 p-3">Сохранить
                             </button>
                         </div>
                     </form>
@@ -1516,6 +1527,9 @@ export default {
             })
         },
         openSaveModal() {
+            if ((this.pageForm.comment || '').length === 0)
+                this.pageForm.comment = this.pageForm.command
+
             this.saveModal.show()
         },
         submitPage() {
@@ -1707,7 +1721,7 @@ export default {
 
 .mini-pics {
     display: flex;
-    background-color: white;
+    //background-color: white;
     justify-content: space-around;
     // border-radius: 0px 5px 5px 0px;
     padding: 0;
@@ -1721,6 +1735,7 @@ export default {
         justify-content: center;
         align-items: center;
         border: 1px #f9f9f9 solid;
+        background-color: white;
 
         &.active {
             background-color: #008cba;

@@ -224,9 +224,6 @@ class BotLogicFactory
         if (is_null($this->botUser))
             throw new HttpException(403, "Условия функции не выполнены");
 
-        if (is_null($customParams["company_id"] ?? null))
-            throw new HttpException(403, "Идентификатор компании не должен быть пустым!");
-
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
@@ -238,17 +235,32 @@ class BotLogicFactory
         if (!is_null($tmpBot))
             throw new HttpException(403, "Указанный бот уже существует в системе");
 
+        if (is_null($customParams["company_id"] ?? null)) {
+            $company = Company::query()->create([
+                'title' => "Новый клиент",
+                'slug' => Str::uuid(),
+                'description' => "Автоматические создание нового клиента при дублировании бота от " . Carbon::now("+3")->format("Y-m-d H:i:s"),
+                'creator_id' => $this->botUser->user_id ?? null,
+            ]);
+        } else
+            $company = Company::query()->find($customParams["company_id"]);
+
+        if (is_null($company))
+            throw new HttpException(403, "Ошибка автоматического создания клиента");
+
         $newBot = $this->bot->replicate();
         $newBot->deleted_at = null;
-        $newBot->bot_domain = $botDomain ?? "duplicate_" . $newBot->bot_domain . "_" . Carbon::now()->format("Y-m-d H:i:s");
+        $newBot->bot_domain = $botDomain ?? "duplicate_" . $newBot->bot_domain . "_" . Carbon::now("+3")->format("Y-m-d H:i:s");
         $newBot->bot_token = $customParams["bot_token"] ?? null;
         $newBot->bot_token_dev = $customParams["bot_token_dev"] ?? null;
         $newBot->main_channel = $customParams["main_channel"] ?? null;
         $newBot->order_channel = $customParams["order_channel"] ?? null;
-        $newBot->company_id = $customParams["company_id"] ?? null;
+        $newBot->company_id = $company->id;
         $newBot->is_template = false;
         $newBot->template_description = null;
         $newBot->creator_id = $this->botUser->user_id ?? null;
+        $newBot->balance = 70;
+        $newBot->tax_per_day = 10;
 
         $newBot->save();
 
@@ -419,6 +431,9 @@ class BotLogicFactory
                 $newDialog->save();
 
             }
+
+
+        $newBot = $newBot->fresh();
 
         return new BotResource($newBot);
     }
@@ -1268,16 +1283,16 @@ class BotLogicFactory
 
             "balance" => "required",
             "tax_per_day" => "required",
-            "description" => "required",
+            //"description" => "required",
 
             "maintenance_message" => "required",
-            "welcome_message" => "required",
+           // "welcome_message" => "required",
             "level_1" => "required",
             // "selected_bot_template_id" => "required",
             //"slugs" => "required",
             //"pages" => "required",
             //"keyboards" => "required",
-            "company_id" => "required",
+            //"company_id" => "required",
         ]);
 
         if ($validator->fails())
@@ -1297,12 +1312,19 @@ class BotLogicFactory
 
         }
 
-
-        $company = Company::query()->where("id", $data["company_id"])
-            ->first();
+        if (is_null($customParams["company_id"] ?? null)) {
+            $company = Company::query()->create([
+                'title' => "Новый клиент",
+                'slug' => Str::uuid(),
+                'description' => "Автоматические создание нового клиента при дублировании бота от " . Carbon::now("+3")->format("Y-m-d H:i:s"),
+                'creator_id' => $this->botUser->user_id ?? null,
+            ]);
+        } else
+            $company = Company::query()->find($customParams["company_id"]);
 
         if (is_null($company))
-            throw new HttpException(404, "Компания не найдена");
+            throw new HttpException(403, "Ошибка автоматического создания клиента");
+
 
         $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
 
@@ -1317,6 +1339,7 @@ class BotLogicFactory
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
         $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
 
+        $tmp->company_id = $company->id;
         $tmp->bot_type_id = $botType->id;
         $tmp->cashback_fire_percent = $data["cashback_fire_percent"] ?? 0;
         $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
@@ -1411,6 +1434,8 @@ class BotLogicFactory
                     'rule_value' => $warn->rule_value ?? null,
                     'is_active' => $warn->is_active ?? false,
                 ]);
+
+        $bot = $bot->fresh();
 
         return new BotResource($bot);
     }

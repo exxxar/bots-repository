@@ -1,5 +1,6 @@
 <script setup>
 import Pagination from '@/AdminPanel/Components/Pagination.vue';
+import CompanyForm from "@/AdminPanel/Components/Constructor/Company/CompanyForm.vue";
 </script>
 <template>
 
@@ -66,23 +67,33 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         v-for="(company, index) in filteredCompanies"
                       >
 
+
                         <span
                             @click="selectCompany(company)"
                             v-bind:class="{'text-danger':company.deleted_at!=null}">
+                            #{{company.id || '-'}}
                             {{ company.title || 'Не указано' }}
                         ({{ company.slug || 'Не указано' }})
 
                         </span>
-                        <button class="btn btn-outline-info"
-                                type="button"
-                                @click="addToArchive(company.id)"
-                                title="В архив" v-if="company.deleted_at==null"><i
-                            class="fa-solid fa-boxes-packing"></i></button>
-                        <button class="btn btn-outline-info"
-                                type="button"
-                                @click="extractFromArchive(company.id)"
-                                title="Из архива" v-if="company.deleted_at!=null"><i
-                            class="fa-solid fa-box-open"></i></button>
+
+                        <div>
+                            <button class="btn btn-info mr-1"
+                                    type="button"
+                                    @click="editClient(company)"
+                                    title="В архив"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="btn btn-outline-info"
+                                    type="button"
+                                    @click="addToArchive(company.id)"
+                                    title="В архив" v-if="company.deleted_at==null"><i
+                                class="fa-solid fa-boxes-packing"></i></button>
+                            <button class="btn btn-outline-info"
+                                    type="button"
+                                    @click="extractFromArchive(company.id)"
+                                    title="Из архива" v-if="company.deleted_at!=null"><i
+                                class="fa-solid fa-box-open"></i></button>
+                        </div>
+
                     </li>
                 </ul>
 
@@ -100,6 +111,34 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
     </div>
 
 
+    <!-- Modal -->
+    <div class="modal fade" id="edit-company-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Сохранение клиента</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" v-if="selectedCompany">
+                        <div class="col-12 mb-2 ">
+                            <CompanyForm
+                                :company="selectedCompany"
+                                :editor="false"
+                                v-on:callback="companyCallback"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Не сохранять</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -112,6 +151,7 @@ export default {
             loading: true,
             companies: [],
             search: null,
+            editCompanyModal:null,
             filters: [
                 {
                     name: 'Активные',
@@ -126,6 +166,7 @@ export default {
             ],
             selectedFilters: [],
             companies_paginate_object: null,
+            selectedCompany:null,
         }
     },
     computed: {
@@ -177,8 +218,18 @@ export default {
     mounted() {
         this.loadCompanies();
         this.selectFilter('active')
+
+        this.editCompanyModal = new bootstrap.Modal(document.getElementById('edit-company-modal'), {})
     },
     methods: {
+        companyCallback(company) {
+            this.selectedCompany = null
+            this.editCompanyModal.hide();
+        },
+        editClient(company){
+            this.selectedCompany = company
+            this.editCompanyModal.show();
+        },
         addToArchive(id) {
             this.$store.dispatch("removeCompany", {
                 companyId: id

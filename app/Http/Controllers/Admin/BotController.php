@@ -357,7 +357,6 @@ class BotController extends Controller
     public function duplicate(Request $request): BotResource
     {
         $request->validate([
-            "company_id" => "required",
             "bot_id" => "required"
         ]);
 
@@ -631,14 +630,14 @@ class BotController extends Controller
             "bot_token" => "required",
             "balance" => "required",
             "tax_per_day" => "required",
-            "description" => "required",
+            //"description" => "required",
             "maintenance_message" => "required",
-            "welcome_message" => "required",
+            //"welcome_message" => "required",
             "level_1" => "required",
-            "company_id" => "required",
+           // "company_id" => "required",
         ],[
-            "company_id"=>"Вы не указали идентификатор Клиента (Компании)",
-            "bot_domain"=>"Доменное имя должно быть уникальным!",
+            //"company_id"=>"Вы не указали идентификатор Клиента (Компании)",
+            "bot_domain"=>"Доменное имя не должно быть пустым и должно быть уникальным!",
         ]);
 
         $botUser = $request->botUser ?? null;

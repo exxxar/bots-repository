@@ -12,20 +12,20 @@ import Location from "@/AdminPanel/Components/Constructor/Location/Location.vue"
         </div>
     </div>
 
-    <div class="row bot-sub-menu mb-2" v-if="editor">
+    <div class="row mb-2" v-if="editor">
         <div class="col-12">
 
 
-            <div class="btn-group w-100" role="group" aria-label="Basic outlined example">
+            <div class="btn-group w-100" role="group" aria-label="Basic outlined example" >
 
                 <button type="button"
 
-                        v-bind:class="{'btn-primary text-white':step===0}"
+                        v-bind:class="{'btn-primary border-white text-white':step===0}"
                         @click="step=0"
                         class="btn btn-outline-primary">Информация о компании
                 </button>
                 <button type="button"
-                        v-bind:class="{'btn-primary text-white':step===1}"
+                        v-bind:class="{'btn-primary border-white text-white':step===1}"
                         @click="step=1"
                         class="btn btn-outline-primary">Информация о расположении
                 </button>
@@ -194,7 +194,7 @@ import Location from "@/AdminPanel/Components/Constructor/Location/Location.vue"
                             </div>
                             <div class="card-body d-flex justify-content-start">
 
-                                <label for="photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                                <label for="photos" style="margin-right: 10px;" class="photo-loader text-primary ml-2">
                                     +
                                     <input type="file" id="photos"
                                            accept="image/*" @change="onChangePhotos"

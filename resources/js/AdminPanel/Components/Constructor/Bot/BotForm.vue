@@ -4,8 +4,6 @@ import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList
 import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
 </script>
 <template>
-
-
     <form
         class="py-3 mb-5"
         v-on:submit.prevent="addBot">
@@ -13,7 +11,9 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         <div class="row">
             <div class="col-12">
                 <p>Для создания бота в Телеграм воспользуйтесь <a
-                    href="https://telegra.ph/Sozdanie-telegram-bota-06-12" target="_blank">инструкцией</a></p>
+                    href="https://telegra.ph/Sozdanie-telegram-bota-02-02"
+                    class=" text-success font-bold"
+                    target="_blank"><i class="fa-solid fa-triangle-exclamation mr-1"></i>инструкцией</a></p>
             </div>
             <div class="col-md-12 col-12">
                 <div class="mb-3">
@@ -56,12 +56,16 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     <li class="nav-item" @click="tab=1">
                         <a class="nav-link"
                            v-bind:class="{'active':tab===1}"
-                           href="javascript:void(0)">Оплата и Кэшбэк</a>
+                           href="javascript:void(0)">Кэшбэк</a>
                     </li>
-                    <li class="nav-item" @click="tab=2">
+                    <li class="nav-item" v-if="botForm.id!=null" @click="tab=2">
                         <a class="nav-link"
                            v-bind:class="{'active':tab===2}"
                            href="javascript:void(0)">Обратная связь</a>
+                    </li>
+                    <li class="nav-item" v-if="botForm.id==null">
+                        <a class="nav-link text-secondary"
+                           href="javascript:void(0)"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Обратная связь</a>
                     </li>
                     <li class="nav-item" @click="tab=3">
                         <a class="nav-link"
@@ -76,7 +80,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     <li class="nav-item" @click="tab=5">
                         <a class="nav-link text-danger"
                            v-bind:class="{'active':tab===5}"
-                           href="javascript:void(0)">Устаревшие настройки</a>
+                           href="javascript:void(0)"><i class="fa-solid fa-skull-crossbones mr-1"></i> Устаревшие
+                            настройки</a>
                     </li>
                 </ul>
             </div>
@@ -92,9 +97,13 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                         Выбрать клиента из списка
                     </label>
                 </div>
-                <p class="alert alert-danger" v-if="botForm.company_id==null">Внимание! Вы не выбрали клиента!</p>
-                <p class="card alert alert-success" v-else>
-                    Выбранный клиент #{{ company.id }} {{ company.title }}
+                <p class="alert alert-danger"
+                   @click="need_company_select=true"
+                   v-if="botForm.company_id==null">Внимание! Вы не выбрали клиента!</p>
+                <p class="card alert alert-success cursor-pointer"
+                   @click="need_company_select=true"
+                   v-else>
+                    Выбран клиент <span v-if="company" class="font-bold">#{{ company.id }} {{ company.title }}</span>
                 </p>
             </div>
             <div class="col-md-12 col-12" v-if="need_company_select">
@@ -243,6 +252,14 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                         <div class="row"
                              :key="'commands-'+index"
                              v-for="(item, index) in botForm.commands">
+                            <div class="col-12" v-if="botForm.commands[index].command==='/adminmenu'">
+                                <div class="alert alert-primary" role="alert">
+                                    <strong>Внимание!</strong> Отображать пользователю команду <strong
+                                    class="text-danger">/adminmenu</strong> плохая идея. Команда доступна только
+                                    администраторам системы, а обычный пользователь будет видеть ошибку. Это создаст
+                                    негативное восприятие от работы сервиса.
+                                </div>
+                            </div>
                             <div class="col-5">
                                 <div class="mb-3">
                                     <input type="text" class="form-control"
@@ -289,10 +306,17 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     </div>
                 </div>
             </div>
-
-
-        </div>
-        <div class="row py-3" v-show="tab===1&&botForm.bot_token">
+            <div class="col-12 mt-2">
+                <div class="alert alert-primary" role="alert">
+                    <strong>Внимание!</strong> Внесите сумму, которую вам дал Клиент! Эта сумма будет балансом Клиента
+                    для работы бота! Укажите тариф бота - это сумма, которую система будет списывать с клиента каждый
+                    день пока баланс бота не будет равен 0.
+                    <br>
+                    <strong>Внимание!</strong> Вы можете начислить какую-то небольшую сумму для того чтобы клиент
+                    протестировал работу бота. При достижении нулевого баланса клиент будет оповещен об этом и должен
+                    будет пополнить счёт бота!
+                </div>
+            </div>
             <div class="col-md-6 col-12">
                 <div class="mb-3">
                     <label class="form-label" id="bot-balance">
@@ -335,6 +359,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                            aria-describedby="bot-tax-per-day" required>
                 </div>
             </div>
+
+        </div>
+        <div class="row py-3" v-show="tab===1&&botForm.bot_token">
+
             <div class="col-md-6 col-12">
                 <div class="mb-3">
                     <label class="form-label" id="bot-level-1">
@@ -372,7 +400,20 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                            aria-describedby="bot-level-3">
                 </div>
             </div>
-            <div class="col-md-12 col-12">
+
+            <div class="mb-2">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_cashback_fired"
+                           type="checkbox"
+                           id="need-cashback-fired">
+                    <label class="form-check-label" for="need-cashback-fired">
+                        Необходимо настроить период сгорания CashBack
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-md-12 col-12" v-if="need_cashback_fired">
                 <div class="mb-3">
                     <label class="form-label" id="cashback-fired-period">Период сгорания CashBack</label>
                     <select class="form-control" v-model="botForm.cashback_fire_period" id="cashback-fired-period">
@@ -406,7 +447,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
             </div>
             <div class="col-md-12 col-12" v-if="need_payments">
-                <div class="form-check mb-3">
+                <div class="form-check mb-3 ml-3">
                     <input class="form-check-input" type="checkbox"
                            :value="botForm.auto_cashback_on_payments"
                            v-model="botForm.auto_cashback_on_payments"
@@ -511,111 +552,32 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
 
                 </div>
+                <div class="alert alert-primary" role="alert">
+                    Категории CashBack - это возможность разделить накопления и траты CashBack пользователями бота на
+                    указанные цели, например, кофейня может создать категории: на кофе, на десерты - и начислять баллы
+                    за купленный кофе отдельно от баллов за купленный десерт
+                </div>
                 <button
                     type="button"
                     @click="addCashBackConfig()"
-                    class="btn mb-2 rounded-sm text-uppercase btn-outline-info w-100">
-                    Добавить еще категорию
+                    class="btn mb-2 rounded-sm btn-outline-info w-100">
+                    Добавить категорию
                 </button>
                 <div class="divider divider-small my-3 bg-highlight "></div>
             </div>
-        </div>
-        <div class="row py-3" v-show="tab===2&&botForm.bot_token">
-            <div class="col-md-6 col-12">
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label class="form-label d-flex justify-content-between" id="bot-order-channel">
-                            <div>
-                                <Popper>
-                                    <i class="fa-regular fa-circle-question mr-1"></i>
-                                    <template #content>
-                                        <div>Ввести адрес ссылки на канал в форму после добавления тоукена
-                                        </div>
-                                    </template>
-                                </Popper>
-                                Канал для заказов (id)
-                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                            </div>
-                        </label>
-
-                        <TelegramChannelHelper
-                            :token="botForm.bot_token"
-                            :param="'order_channel'"
-                            v-on:callback="addTextTo"
-                        />
-                    </div>
-                    <input type="text" class="form-control"
-                           placeholder="id канала"
-                           aria-label="id канала"
-                           v-model="botForm.order_channel"
-                           maxlength="255"
-                           aria-describedby="bot-order-channel">
-                    <small><a
-                        @click="getChatLink(botForm.order_channel)"
-                        href="javascript:void(0)">Узнать ссылку</a>(будет отправлена в бота)</small>
-                </div>
-
-
-            </div>
-            <div class="col-md-6 col-12">
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between">
-                        <label class="form-label" id="bot-main-channel">Канал для постов (id,рекламный)</label>
-
-                        <TelegramChannelHelper
-                            :token="botForm.bot_token"
-                            :param="'main_channel'"
-                            v-on:callback="addTextTo"
-                        />
-                    </div>
-                    <input type="text" class="form-control"
-                           placeholder="id канала"
-                           aria-label="id канала"
-                           v-model="botForm.main_channel"
-                           maxlength="255"
-                           aria-describedby="bot-main-channel">
-                    <small><a
-                        @click="getChatLink(botForm.main_channel)"
-                        href="javascript:void(0)">Узнать ссылку</a>(будет отправлена в бота)</small>
-                </div>
-            </div>
-            <div class="col-12 mb-2" v-if="botForm.order_channel">
+            <div class="mb-2">
                 <div class="form-check">
                     <input class="form-check-input"
-                           v-model="need_threads"
+                           v-model="need_cashback_rules"
                            type="checkbox"
-                           id="need-payments">
-                    <label class="form-check-label" for="need-payments">
-                        Необходимо добавить рассылку по топикам для канала заказов (он же системный канал)
+                           id="need-cashback-rules">
+                    <label class="form-check-label" for="need-cashback-rules">
+                        Необходимо настроить оповещения под CashBack
                     </label>
                 </div>
 
             </div>
-            <div class="col-12 mb-2" v-if="need_threads && botForm.order_channel">
-
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
-
-                    <button class="btn btn-outline-info"
-                       @click="createBotTopics"
-                       :disabled="!can_create_topics"
-                      type="button">
-                        <i class="fa-solid fa-paperclip mr-2"></i>Создать топики автоматически
-                    </button>
-                </div>
-
-                <ul class="list-group">
-                    <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
-                        <p class="mb-0">{{ thread.title }} ({{ thread.key }})</p>
-                        <input type="number" class="form-control"
-                               min="0"
-                               max="10000"
-                               placeholder="Идентификатор топика"
-                               v-model="botForm.message_threads[index].value">
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-12 col-12 mb-2">
+            <div class="col-md-12 col-12 mb-2" v-if="need_cashback_rules">
                 <div class="card border-warning">
                     <div class="card-body">
                         <div class="form-group">
@@ -677,6 +639,117 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
             </div>
         </div>
+        <div class="row py-3" v-show="tab===2&&botForm.bot_token">
+            <div class="col-12">
+                <div class="alert alert-primary" role="alert">
+                    <strong>Внимание!</strong> Для того чтобы узнать ID канала сперва создайте Канал или Группу в
+                    телеграм, добавьте в него вашего <strong>сохраненного бота</strong>,
+                    назначьте бота администратором Канала или Группы, а только после этого впишите команду "Мой id" в
+                    бота.
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label d-flex justify-content-between" id="bot-order-channel">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Ввести адрес ссылки на канал в форму после добавления тоукена
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Канал для заказов (id)
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </div>
+                        </label>
+
+                        <TelegramChannelHelper
+                            :token="botForm.bot_token"
+                            :param="'order_channel'"
+                            v-on:callback="addTextTo"
+                        />
+                    </div>
+                    <input type="text" class="form-control"
+                           placeholder="id канала"
+                           aria-label="id канала"
+                           v-model="botForm.order_channel"
+                           maxlength="255"
+                           aria-describedby="bot-order-channel">
+                    <small><a
+                        @click="getChatLink(botForm.order_channel)"
+                        href="javascript:void(0)">Узнать ссылку</a>(будет отправлена в бота)</small>
+                </div>
+
+
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label" id="bot-main-channel">Канал для постов (id,рекламный)</label>
+
+                        <TelegramChannelHelper
+                            :token="botForm.bot_token"
+                            :param="'main_channel'"
+                            v-on:callback="addTextTo"
+                        />
+                    </div>
+                    <input type="text" class="form-control"
+                           placeholder="id канала"
+                           aria-label="id канала"
+                           v-model="botForm.main_channel"
+                           maxlength="255"
+                           aria-describedby="bot-main-channel">
+                    <small><a
+                        @click="getChatLink(botForm.main_channel)"
+                        href="javascript:void(0)">Узнать ссылку</a>(будет отправлена в бота)</small>
+                </div>
+            </div>
+            <div class="col-12" v-if="botForm.order_channel">
+                <div class="alert alert-primary" role="alert">
+                    <strong>Внимание!</strong> Топики работают только в Группах телеграм с включенным режимом "Топики" в
+                    настройках Группы! В каналах топиков нет.
+                </div>
+            </div>
+            <div class="col-12 mb-2" v-if="botForm.order_channel">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_threads"
+                           type="checkbox"
+                           id="need-topics-mailing">
+                    <label class="form-check-label" for="need-topics-mailing">
+                        Необходимо добавить рассылку по топикам для канала заказов (он же системный канал)
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-12 mb-2" v-if="need_threads && botForm.order_channel">
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
+
+                    <button class="btn btn-outline-info"
+                            @click="createBotTopics"
+                            :disabled="!can_create_topics"
+                            type="button">
+                        <i class="fa-solid fa-paperclip mr-2"></i>Создать топики автоматически
+                    </button>
+                </div>
+
+                <ul class="list-group">
+                    <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
+                        <p class="mb-0">{{ thread.title }} ({{ thread.key }})</p>
+                        <input type="number" class="form-control"
+                               min="0"
+                               max="10000"
+                               placeholder="Идентификатор топика"
+                               v-model="botForm.message_threads[index].value">
+                    </li>
+                </ul>
+            </div>
+
+        </div>
         <div class="row py-3" v-show="tab===3&&botForm.bot_token">
 
             <div class="col-12">
@@ -707,6 +780,11 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
             </div>
         </div>
         <div class="row py-3" v-show="tab===4&&botForm.bot_token">
+            <div class="col-12">
+                <div class="alert alert-primary" role="alert">
+                    Системная иконка нужна только для красивого отображения и узнаваемости бота на Landing-е системы.
+                </div>
+            </div>
             <div class="col-12 mb-3">
                 <h6>Системная иконка бота
                     <span class="badge rounded-pill text-bg-warning m-0">желательно</span>
@@ -741,6 +819,14 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
                 </div>
 
+            </div>
+            <div class="col-12">
+                <div class="alert alert-primary" role="alert">
+                    Внешний сервис находится в эксперементальном режиме. Он нужен для связывания команд (страниц) бота с
+                    программой Клиента (если есть такая необходимость).
+                    Если на странице бота выбрано "внешнее управление", то все запросы будут переадесрованы на указанную
+                    ниже ссылку.
+                </div>
             </div>
             <div class="col-md-12 col-12">
                 <div class="mb-3">
@@ -982,6 +1068,8 @@ export default {
             need_threads: false,
             need_company: false,
             need_cashback_config: false,
+            need_cashback_rules: false,
+            need_cashback_fired: false,
             need_payments: false,
             need_shop: false,
             command: null,
@@ -1057,7 +1145,7 @@ export default {
                 main_channel: null,
                 vk_shop_link: null,
                 callback_link: null,
-                balance: 3000,
+                balance: 70,
                 tax_per_day: 10,
                 welcome_message: "Приветствую!",
                 image: null,
@@ -1172,13 +1260,13 @@ export default {
         //this.loadCurrentCompany()
         if (localStorage.getItem("cashman_admin_bot_creator_counter") != null) {
             this.can_create = false;
-            this.startTimer(localStorage.getItem("cashman_admin_bot_creator_counter"))
+            let time = localStorage.getItem("cashman_admin_bot_creator_counter")
+            this.startTimer(time === "null" || time == null ? 0 : time)
         }
 
-
-        /*     window.addEventListener('store_current_company-change-event', (event) => {
-                 this.company = this.getCurrentCompany
-             });*/
+        window.addEventListener('store_current_company-change-event', (event) => {
+            this.company = this.getCurrentCompany
+        });
 
         if (this.bot)
             this.$nextTick(() => {
@@ -1229,26 +1317,8 @@ export default {
                     amo: this.bot.amo || null,
                 }
 
-                if (this.botForm.commands == null) {
-                    this.botForm.commands = [
-                        {
-                            command: "/start",
-                            description: "начни с этой команды"
-                        },
-                        {
-                            command: "/admins",
-                            description: "доступные администраторы в системе"
-                        },
-                        {
-                            command: "/help",
-                            description: "как использовать систему"
-                        },
-                        {
-                            command: "/about",
-                            description: "о CashMan"
-                        }
-                    ]
-                }
+                if (this.botForm.commands == null)
+                    this.autoAddCommands();
 
                 if (this.botForm.message_threads)
                     this.need_threads = true
@@ -1256,17 +1326,48 @@ export default {
                 if (this.botForm.payment_provider_token)
                     this.need_payments = true
 
-
                 if (this.botForm.cashback_config)
                     this.need_cashback_config = true
 
+                if (this.botForm.warnings.length > 0)
+                    this.need_cashback_rules = true
+
+                if (this.botForm.cashback_fire_period > 0)
+                    this.need_cashback_fired = true
 
                 if (this.bot.company)
                     this.company = this.bot.company
                 //   this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
             })
+        else {
+            if (this.botForm.commands == null)
+                this.autoAddCommands();
+        }
+
     },
     methods: {
+        autoAddCommands() {
+
+            this.botForm.commands = [
+                {
+                    command: "/start",
+                    description: "начни с этой команды"
+                },
+                {
+                    command: "/admins",
+                    description: "доступные администраторы в системе"
+                },
+                {
+                    command: "/help",
+                    description: "как использовать систему"
+                },
+                {
+                    command: "/about",
+                    description: "о CashMan"
+                }
+            ]
+
+        },
         startTimer(time) {
             this.spent_time_counter = time != null ? Math.min(time, 10) : 10;
 
@@ -1299,14 +1400,13 @@ export default {
                 },
             }).then((resp) => {
                 this.botForm.message_threads = resp.data
-                this.can_create_topics = true
 
                 this.$notify({
                     title: "Конструктор ботов",
                     text: "Топики успешно созданы!",
                     type: 'success'
                 });
-            }).catch(()=>{
+            }).catch(() => {
                 this.can_create_topics = true
 
                 this.$notify({
@@ -1400,9 +1500,9 @@ export default {
 
             if (this.company)
                 data.append("company_id", this.company.id)
-            else {
+           /* else {
                 this.alert('Вы не выбрали клиента', 0)
-            }
+            }*/
 
             for (let i = 0; i < this.botForm.photos.length; i++)
                 data.append('images[]', this.botForm.photos[i]);
@@ -1416,6 +1516,7 @@ export default {
                 let bot = response.data
 
                 this.$emit("callback", bot)
+
 
                 this.$notify({
                     title: "Конструктор ботов",

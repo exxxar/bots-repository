@@ -108,7 +108,7 @@
                             <div class="col-12 mb-3">
                                 <h6>Фотографии локаций</h6>
                                 <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
-                                    <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                                    <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2 text-primary">
                                         <span>+</span>
                                         <input type="file" id="location-photos" multiple accept="image/*"
                                                @change="onChangePhotos"

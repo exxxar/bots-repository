@@ -36,6 +36,18 @@ use Yclients\YclientsApi;
 |
 */
 
+Route::get("/test-word",function (){
+
+    $path = storage_path()."/app/public";
+    if(!file_exists($path."/document.docx")){
+        $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($path."/demo.docx");
+        $templateProcessor->setValue('name', 'Akbarali');
+        $templateProcessor->setValue('time','13.02.2021');
+        $templateProcessor->setValue('month', 'January');
+        $templateProcessor->setValue('state','Uzbekistan');
+        $templateProcessor->saveAs($path."/document.docx");
+    }
+});
 
 Route::any("/integrations/1c/callback", function (Request $request){
     Log::info("integrations".print_r($request->all(),true));

@@ -39,24 +39,27 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
 
                     <div class="col-12">
                         <BotForm v-if="!load"
+                                 v-on:callback="loadCurrentBot"
                         />
                     </div>
                 </div>
 
                 <div class="row" v-if="step===1">
-                    <div class="col-12" >
+                    <div class="col-12">
                         <h5>Создать бота из шаблона</h5>
                         <Carousel :itemsToShow="3.95" :wrapAround="true" :transition="500">
-                            <Slide v-for="template in templates" :key="template.id">
+                            <Slide v-for="(template, index) in templates" :key="template.id">
                                 <div class="carousel__item p-2 w-100">
                                     <div class="card w-100">
                                         <div class="card-body w-100">
                                             <h5 class="card-title">
                                                 {{ template.title || template.bot_domain || 'Без названия' }}</h5>
                                             <p class="card-text">{{ template.template_description || '-' }}</p>
-                                            <a href="javascript:void(0)"
-                                               @click="duplicateAndEdit(template.id)"
-                                               class="btn btn-primary">Создать из шаблона</a>
+                                            <button
+                                                :disabled="template.in_use||false"
+                                                type="button"
+                                               @click="duplicateAndEdit(index, template.id)"
+                                               class="btn btn-primary">Создать из шаблона</button>
                                         </div>
                                     </div>
                                 </div>
@@ -126,19 +129,25 @@ export default {
         openForEdit() {
 
         },
-        duplicateAndEdit(botId) {
-            if (!this.getCurrentCompany) {
-                this.$notify("У Вас не выбран клиент!");
-                return;
-            }
+        duplicateAndEdit(index, botId) {
+            /* if (!this.getCurrentCompany) {
+                 this.$notify("У Вас не выбран клиент!");
+                 return;
+             }*/
+
+            this.templates[index].in_use = true
             this.$store.dispatch("duplicateBot", {
                 dataObject: {
                     bot_id: botId,
-                    company_id: this.getCurrentCompany.id
+                    company_id: this.getCurrentCompany ? this.getCurrentCompany.id : null
                 }
             }).then(resp => {
                 this.bot = resp.data
                 this.load = true
+                this.templates[index].in_use = false
+
+                this.loadCurrentBot(this.bot)
+                localStorage.setItem("cashman_set_botform_step_index", 0)
 
                 if (!this.inBotFav(this.bot.id))
                     this.$store.dispatch("addBotToFavorites", this.bot.id)
@@ -149,6 +158,8 @@ export default {
                     this.load = false
                 })
                 this.$notify("Указанный бот успешно продублирован");
+
+
             })
         },
         loadTemplates() {
@@ -166,8 +177,6 @@ export default {
                 bot: bot
             }).then(() => {
                 this.bot = this.getCurrentBot
-
-
             })
         },
 
