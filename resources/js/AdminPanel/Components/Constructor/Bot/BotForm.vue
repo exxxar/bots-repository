@@ -10,76 +10,6 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         class="py-3 mb-5"
         v-on:submit.prevent="addBot">
 
-
-        <div class="row">
-            <div class="col-md-12 col-12">
-                <p class="alert alert-danger" v-if="botForm.company_id==null">Внимание! Вы не выбрали клиента!</p>
-                <p class="card alert alert-success" v-else>
-                    Выбранный клиент #{{ company.id }} {{ company.title }}
-                </p>
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox"
-                           :value="need_company_select"
-                           v-model="need_company_select" id="bot-select-company">
-                    <label class="form-check-label" for="bot-select-company">
-                        Отобразить список клиентов (выбор клиента для бота)
-                    </label>
-                </div>
-
-            </div>
-
-            <div class="col-md-12 col-12" v-if="need_company_select">
-
-                <CompanyList
-                    v-if="!load"
-                    :selected="botForm.company_id"
-                    v-on:callback="companyListCallback"/>
-
-            </div>
-
-<!--            <div class="col-md-12 col-12" v-if="company">
-                <div class="card alert alert-success">
-                    Выбранный клиент #{{ company.id }} {{ company.title }}
-                </div>
-            </div>-->
-
-            <div class="col-md-12 col-12">
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox"
-                           :value="botForm.is_template||false"
-                           v-model="botForm.is_template" id="bot-is-template">
-                    <label class="form-check-label" for="bot-is-template">
-                        Сделать шаблоном
-                    </label>
-                </div>
-
-            </div>
-
-            <div
-                v-if="botForm.is_template"
-                class="col-md-12 col-12">
-                <div class="mb-3">
-                    <label class="form-label" id="bot-template-description">
-                        <Popper>
-                            <i class="fa-regular fa-circle-question mr-1"></i>
-                            <template #content>
-                                <div>Если Вы создаете шаблон, а не реального бота
-                                </div>
-                            </template>
-                        </Popper>
-                        Название шаблона бота
-                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                    </label>
-                    <input type="text" class="form-control"
-                           placeholder="Название \ описание шаблона"
-                           aria-label="Описание шаблона"
-                           v-model="botForm.template_description"
-                           maxlength="255"
-                           @invalid="alert('Вы не ввели название шаблона!')"
-                           aria-describedby="bot-template-description" required>
-                </div>
-            </div>
-        </div>
         <div class="row">
             <div class="col-12">
                 <p>Для создания бота в Телеграм воспользуйтесь <a
@@ -114,43 +44,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
             </div>
         </div>
-        <div class="row" v-if="botForm.bot_token">
-            <div class="col-12 mb-3">
-                <h6>Аватар для бота
-                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                </h6>
 
-                <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
-                    <label for="bot-photos" style="margin-right: 10px;"
-                           class="photo-loader ml-2 bg-primary text-white shadow-md" v-if="botForm.photos">
-                        <span>+</span>
-                        <input type="file" id="bot-photos" accept="image/*"
-                               @change="onChangePhotos"
-                               style="display:none;"/>
-
-                    </label>
-
-                    <div class="mb-2 img-preview" style="margin-right: 10px;"
-                         v-for="(img, index) in botForm.photos"
-                         v-if="botForm.photos">
-                        <img v-lazy="getPhoto(img).imageUrl">
-                        <div class="remove">
-                            <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
-                        </div>
-                    </div>
-
-                    <div class="mb-2 img-preview" style="margin-right: 10px;"
-                         v-else>
-                        <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+botForm.image">
-                        <div class="remove">
-                            <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
         <div class="row" v-if="botForm.bot_token">
             <div class="col-12">
                 <ul class="nav nav-tabs justify-content-center">
@@ -179,10 +73,72 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                            v-bind:class="{'active':tab===4}"
                            href="javascript:void(0)">Другие настройки</a>
                     </li>
+                    <li class="nav-item" @click="tab=5">
+                        <a class="nav-link text-danger"
+                           v-bind:class="{'active':tab===5}"
+                           href="javascript:void(0)">Устаревшие настройки</a>
+                    </li>
                 </ul>
             </div>
         </div>
         <div class="row py-3" v-show="tab===0&&botForm.bot_token">
+            <div class="col-md-12 col-12">
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox"
+                           :value="need_company_select"
+                           v-model="need_company_select" id="bot-select-company">
+                    <label class="form-check-label" for="bot-select-company">
+                        Выбрать клиента из списка
+                    </label>
+                </div>
+                <p class="alert alert-danger" v-if="botForm.company_id==null">Внимание! Вы не выбрали клиента!</p>
+                <p class="card alert alert-success" v-else>
+                    Выбранный клиент #{{ company.id }} {{ company.title }}
+                </p>
+            </div>
+            <div class="col-md-12 col-12" v-if="need_company_select">
+
+                <CompanyList
+                    v-if="!load"
+                    :selected="botForm.company_id"
+                    v-on:callback="companyListCallback"/>
+
+            </div>
+            <div class="col-md-12 col-12">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox"
+                           :value="botForm.is_template||false"
+                           v-model="botForm.is_template" id="bot-is-template">
+                    <label class="form-check-label" for="bot-is-template">
+                        Сделать шаблоном
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-md-12 col-12"
+                 v-if="botForm.is_template">
+                <div class="mb-3">
+                    <label class="form-label" id="bot-template-description">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Если Вы создаете шаблон, а не реального бота
+                                </div>
+                            </template>
+                        </Popper>
+                        Название шаблона бота
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                    </label>
+                    <input type="text" class="form-control"
+                           placeholder="Название \ описание шаблона"
+                           aria-label="Описание шаблона"
+                           v-model="botForm.template_description"
+                           maxlength="255"
+                           @invalid="alert('Вы не ввели название шаблона!')"
+                           aria-describedby="bot-template-description" required>
+                </div>
+            </div>
             <div class="col-md-12 col-12">
                 <div class="mb-3">
                     <label class="form-label" id="bot-domain">
@@ -193,11 +149,11 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             </template>
                         </Popper>
                         Доменное имя бота (загружается автоматически)
-                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                     </label>
                     <input type="text" class="form-control"
                            placeholder="Имя бота"
                            aria-label="Имя бота"
+                           :disabled="true"
                            name='bot_domain'
                            @invalid="alert('Вы не ввели доменное имя бота!', 0)"
                            v-model="botForm.bot_domain"
@@ -245,7 +201,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                                   <small class="text-secondary"
                                                          v-if="botForm.short_description.length>0">Длина текста {{
                                                           botForm.short_description.length
-                                                      }}/120</small>
+                                                      }}/100</small>
                                               </span>
 
                                 <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
@@ -255,7 +211,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                       placeholder="Короткий текст описания бота"
                                       aria-label="Короткий текст описания бота"
                                       v-model="botForm.short_description"
-                                      maxlength="120"
+                                      maxlength="100"
                                       aria-describedby="bot-short-description">
                                 </textarea>
                         </div>
@@ -268,7 +224,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                                   <small class="text-secondary"
                                                          v-if="botForm.long_description.length>0">Длина текста {{
                                                           botForm.long_description.length
-                                                      }}/512</small>
+                                                      }}/500</small>
                                               </span>
 
                                 <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
@@ -278,7 +234,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                       placeholder="Длинный текст описания бота"
                                       aria-label="Длинный текст описания бота"
                                       v-model="botForm.long_description"
-                                      maxlength="512"
+                                      maxlength="500"
                                       aria-describedby="bot-long-description">
                                 </textarea>
                         </div>
@@ -322,7 +278,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                 <button
                                     type="button"
                                     @click="addCommands()"
-                                    class="btn btn-outline-success w-100">Добавить еще команду
+                                    class="btn btn-outline-success w-100">
+                                    <span v-if="(botForm.commands||[]).length>0"> Добавить еще команду</span>
+                                    <span v-else> Добавить системное меню</span>
+
                                 </button>
                             </div>
                         </div>
@@ -330,26 +289,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-12">
-                <div class="mb-3">
-                    <Popper>
-                        <i class="fa-regular fa-circle-question mr-1"></i>
-                        <template #content>
-                            <div>Ссылка на внешний сервис обработки данных
-                            </div>
-                        </template>
-                    </Popper>
-                    <label class="form-label" id="callback_link">Ссылка на внешний сервис обработки данных
-                    </label>
 
 
-                    <input type="url" class="form-control"
-                           placeholder="Ссылка на внешний сервис"
-                           aria-label="ссылка на внешний сервис"
-                           v-model="botForm.callback_link"
-                           aria-describedby="callback_link">
-                </div>
-            </div>
         </div>
         <div class="row py-3" v-show="tab===1&&botForm.bot_token">
             <div class="col-md-6 col-12">
@@ -655,11 +596,12 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
 
-                    <a class="btn btn-outline-info"
+                    <button class="btn btn-outline-info"
                        @click="createBotTopics"
-                       href="javascript:void(0)">
+                       :disabled="!can_create_topics"
+                      type="button">
                         <i class="fa-solid fa-paperclip mr-2"></i>Создать топики автоматически
-                    </a>
+                    </button>
                 </div>
 
                 <ul class="list-group">
@@ -736,6 +678,102 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
             </div>
         </div>
         <div class="row py-3" v-show="tab===3&&botForm.bot_token">
+
+            <div class="col-12">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label" id="bot-maintenance-message">Сообщение для режима тех.
+                            работ
+                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+
+                            <small class="text-gray-400 ml-3" style="font-size:10px;"
+                                   v-if="botForm.maintenance_message">
+                                Длина текста {{ botForm.maintenance_message.length }}</small>
+                        </label>
+                        <!--                        <TextHelper
+                                                    :param="'maintenance_message'"
+                                                    v-on:callback="addTextTo"
+                                                />-->
+                    </div>
+                    <textarea type="text" class="form-control"
+                              placeholder="Текстовое сообщение"
+                              aria-label="Текстовое сообщение"
+                              v-model="botForm.maintenance_message"
+                              maxlength="255"
+                              @invalid="alert('Вы не ввели сообщение для технических работ бота!', 3)"
+                              aria-describedby="bot-maintenance-message" required>
+                    </textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row py-3" v-show="tab===4&&botForm.bot_token">
+            <div class="col-12 mb-3">
+                <h6>Системная иконка бота
+                    <span class="badge rounded-pill text-bg-warning m-0">желательно</span>
+                </h6>
+
+                <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
+                    <label for="bot-photos" style="margin-right: 10px;"
+                           class="photo-loader ml-2 bg-primary text-white shadow-md" v-if="botForm.photos">
+                        <span>+</span>
+                        <input type="file" id="bot-photos" accept="image/*"
+                               @change="onChangePhotos"
+                               style="display:none;"/>
+
+                    </label>
+
+                    <div class="mb-2 img-preview" style="margin-right: 10px;"
+                         v-for="(img, index) in botForm.photos"
+                         v-if="botForm.photos">
+                        <img v-lazy="getPhoto(img).imageUrl">
+                        <div class="remove">
+                            <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 img-preview" style="margin-right: 10px;"
+                         v-else>
+                        <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+botForm.image">
+                        <div class="remove">
+                            <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-md-12 col-12">
+                <div class="mb-3">
+                    <Popper>
+                        <i class="fa-regular fa-circle-question mr-1"></i>
+                        <template #content>
+                            <div>Ссылка на внешний сервис обработки данных
+                            </div>
+                        </template>
+                    </Popper>
+                    <label class="form-label" id="callback_link">Ссылка на внешний сервис обработки данных
+                    </label>
+
+
+                    <input type="url" class="form-control"
+                           placeholder="Ссылка на внешний сервис"
+                           aria-label="ссылка на внешний сервис"
+                           v-model="botForm.callback_link"
+                           aria-describedby="callback_link">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row py-3" v-show="tab===5&&botForm.bot_token">
+
+            <div class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    Внимание! Данный блок настроек больше не поддерживается и со временем эти настройки будут удалены из
+                    системы.
+                </div>
+            </div>
+
             <div class="col-12">
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
@@ -755,10 +793,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                 Длина текста {{ botForm.welcome_message.length }}</small>
                         </label>
 
-<!--                        <TextHelper
-                            :param="'welcome_message'"
-                            v-on:callback="addTextTo"
-                        />-->
+                        <!--                        <TextHelper
+                                                    :param="'welcome_message'"
+                                                    v-on:callback="addTextTo"
+                                                />-->
                     </div>
                     <textarea type="text" class="form-control"
                               style="min-height:400px;"
@@ -787,10 +825,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                 Длина текста {{ botForm.description.length }}</small>
                         </label>
 
-<!--                        <TextHelper
-                            :param="'description'"
-                            v-on:callback="addTextTo"
-                        />-->
+                        <!--                        <TextHelper
+                                                    :param="'description'"
+                                                    v-on:callback="addTextTo"
+                                                />-->
                     </div>
 
                     <textarea type="text" class="form-control"
@@ -802,34 +840,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     </textarea>
                 </div>
             </div>
-            <div class="col-12">
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between">
-                        <label class="form-label" id="bot-maintenance-message">Сообщение для режима тех.
-                            работ
-                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
 
-                            <small class="text-gray-400 ml-3" style="font-size:10px;"
-                                   v-if="botForm.maintenance_message">
-                                Длина текста {{ botForm.maintenance_message.length }}</small>
-                        </label>
-<!--                        <TextHelper
-                            :param="'maintenance_message'"
-                            v-on:callback="addTextTo"
-                        />-->
-                    </div>
-                    <textarea type="text" class="form-control"
-                              placeholder="Текстовое сообщение"
-                              aria-label="Текстовое сообщение"
-                              v-model="botForm.maintenance_message"
-                              maxlength="255"
-                              @invalid="alert('Вы не ввели сообщение для технических работ бота!', 3)"
-                              aria-describedby="bot-maintenance-message" required>
-                    </textarea>
-                </div>
-            </div>
-        </div>
-        <div class="row py-3" v-show="tab===4&&botForm.bot_token">
             <div class="col-12 ">
                 <div class="card mb-3">
                     <div class="card-header">
@@ -916,7 +927,9 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     </div>
                 </div>
             </div>
+
         </div>
+
 
         <div class="row">
             <div class="col-12">
@@ -939,7 +952,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                         class="btn btn-primary min-menu-btn w-100">
                     <span v-if="!bot">Добавить бота</span>
                     <span v-else>Обновить бота</span>
-                    <span class="ml-2" v-if="!can_create">{{spent_time_counter}} сек.</span>
+                    <span class="ml-2" v-if="!can_create">{{ spent_time_counter }} сек.</span>
                 </button>
             </div>
         </div>
@@ -954,8 +967,9 @@ export default {
     data() {
         return {
             tab: 0,
-            spent_time_counter:0,
-            can_create:true,
+            spent_time_counter: 0,
+            can_create: true,
+            can_create_topics: true,
             messages: [],
             need_company_select: false,
             selected_warning: null,
@@ -1161,9 +1175,10 @@ export default {
             this.startTimer(localStorage.getItem("cashman_admin_bot_creator_counter"))
         }
 
-   /*     window.addEventListener('store_current_company-change-event', (event) => {
-            this.company = this.getCurrentCompany
-        });*/
+
+        /*     window.addEventListener('store_current_company-change-event', (event) => {
+                 this.company = this.getCurrentCompany
+             });*/
 
         if (this.bot)
             this.$nextTick(() => {
@@ -1276,6 +1291,7 @@ export default {
             this.messages.splice(index, 1)
         },
         createBotTopics() {
+            this.can_create_topics = false
             this.$store.dispatch("createBotTopics", {
                 dataObject: {
                     topics: this.botForm.message_threads,
@@ -1283,11 +1299,26 @@ export default {
                 },
             }).then((resp) => {
                 this.botForm.message_threads = resp.data
+                this.can_create_topics = true
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Топики успешно созданы!",
+                    type: 'success'
+                });
+            }).catch(()=>{
+                this.can_create_topics = true
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Ошибка создания топиков",
+                    type: 'error'
+                });
             })
         },
         getMe() {
             let token = this.botForm.bot_token || ''
-            if (token.length<40)
+            if (token.length < 40)
                 return;
 
             this.$store.dispatch("getMe", {
@@ -1369,6 +1400,9 @@ export default {
 
             if (this.company)
                 data.append("company_id", this.company.id)
+            else {
+                this.alert('Вы не выбрали клиента', 0)
+            }
 
             for (let i = 0; i < this.botForm.photos.length; i++)
                 data.append('images[]', this.botForm.photos[i]);
@@ -1396,7 +1430,7 @@ export default {
                     dataObject: {
                         bot_id: bot.id
                     }
-                }).catch(error=>{
+                }).catch(error => {
                     this.alert(error.response.data.message)
                 })
 

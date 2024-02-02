@@ -36,8 +36,16 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
                 </div>
 
                 <div class="row mt-3" v-if="step===0">
-                    <div class="col-12" v-if="getCurrentCompany">
-                        <h5>Основные шаблоны ботов</h5>
+
+                    <div class="col-12">
+                        <BotForm v-if="!load"
+                        />
+                    </div>
+                </div>
+
+                <div class="row" v-if="step===1">
+                    <div class="col-12" >
+                        <h5>Создать бота из шаблона</h5>
                         <Carousel :itemsToShow="3.95" :wrapAround="true" :transition="500">
                             <Slide v-for="template in templates" :key="template.id">
                                 <div class="carousel__item p-2 w-100">
@@ -59,13 +67,7 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
                             </template>
                         </Carousel>
                     </div>
-                    <div class="col-12">
-                        <BotForm v-if="!load"
-                        />
-                    </div>
-                </div>
 
-                <div class="row" v-if="step===1">
                     <BotList
                         v-if="!load"
                         :editor="true"

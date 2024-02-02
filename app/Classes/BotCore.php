@@ -876,7 +876,6 @@ abstract class BotCore
 
         $channel = is_null($botUser) ? $this->chatId : $botUser->telegram_chat_id;
 
-
         try {
 
             $slug = BotMenuSlug::query()
@@ -908,13 +907,10 @@ abstract class BotCore
                     "value" => $slug->id,
                 ];
 
-
                 $this->tryCall($item, [],
                     $config, []);
 
             }
-
-
         } catch (\Exception $e) {
 
         }
