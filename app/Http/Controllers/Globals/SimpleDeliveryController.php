@@ -170,7 +170,7 @@ class SimpleDeliveryController extends SlugController
 
         if ($page + 1 == $allOrdersCount)
             $keyboard[] = [
-                ["text" => "⬅ Предыдущая страница", "callback_data" => "/next_order " . ($page - 1)],
+                ["text" => "⬅ Предыдущая страница", "callback_data" => "/next_order " . ($page > 0 ? $page - 1 : 0)],
             ];
 
         if ($order->status == OrderStatusEnum::InDelivery->value)
