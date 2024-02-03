@@ -229,7 +229,7 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
             </div>
         </div>
 
-        <button class="btn btn-outline-primary w-100 mt-2 p-3">
+        <button class="btn btn-primary text-white w-100 mt-2 p-3">
             <span v-if="slugForm.id==null">
                 Сохранить команду
             </span>

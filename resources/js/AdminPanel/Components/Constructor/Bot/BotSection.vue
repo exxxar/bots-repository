@@ -26,7 +26,7 @@ import Quizzes from "@/AdminPanel/Components/Constructor/Quiz/Quizzes.vue";
                     @click="setStep(0)"><i class="fa-solid fa-info mr-2"></i>Информация о боте</button>
             <button type="button" class="btn btn-primary text-primary"
                     v-bind:class="{'bg-primary text-white':step==4}"
-                    @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы</button>
+                    @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы (кнопки бота)</button>
         </div>
 
         <div class="dropdown" v-if="hasRole('admin')">
