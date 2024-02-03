@@ -64,9 +64,9 @@ import Layout from "ClientTg@/Layouts/ShopLayout.vue";
 
                 <!-- footer and footer card-->
 
-                <div class="footer">
+                <div class="footer" v-if="currentBot">
                     <div class="card card-style mb-0">
-                        <a href="#" class="footer-title p-4">{{ currentBot.company.title || 'CashMan:Shopify' }}</a>
+                        <a href="#" class="footer-title p-4" >{{ currentBot.company.title || 'CashMan:Shopify' }}</a>
                         <p class="text-center font-12 mt-n1 mb-3 opacity-70">
                             Добавь <span class="color-highlight">красок</span> в свою жизнь
                         </p>
@@ -158,11 +158,8 @@ export default {
         }
     },
     created() {
-
-        this.$nextTick(()=>{
-            window.currentScript = this.slug_id || null
-            window.currentBot = this.bot.data
-        })
+        window.currentScript = this.slug_id || null
+        window.currentBot = this.bot.data
 
         this.$store.dispatch("loadSelf").then(() => {
             window.self = this.getSelf
