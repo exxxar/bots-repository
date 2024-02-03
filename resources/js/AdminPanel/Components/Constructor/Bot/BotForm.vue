@@ -9,12 +9,36 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         v-on:submit.prevent="addBot">
 
         <div class="row">
-            <div class="col-12">
+            <div class="col-12" v-if="(botForm.id||null)!=null">
                 <p>Для создания бота в Телеграм воспользуйтесь <a
                     href="https://telegra.ph/Sozdanie-telegram-bota-02-02"
                     class=" text-success font-bold"
                     target="_blank"><i class="fa-solid fa-triangle-exclamation mr-1"></i>инструкцией</a></p>
             </div>
+            <div class="col-12 mb-2" v-else>
+                <div class="position-relative p-4 text-center text-muted bg-body border border-dashed rounded-2">
+                    <div class="d-flex justify-content-center mb-3">
+                        <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                    </div>
+                    <h1 class="text-body-emphasis">Создание бота</h1>
+                    <p class="col-lg-8 mx-auto fs-5 text-muted">
+                     Если вы решили создать бота с самого начала, без заготовленных страниц, скриптов и т.д., то воспользуйтесь данным разделом и предложенной ниже инструкцией.
+                    </p>
+                    <div class="d-inline-flex gap-2">
+                        <a
+                            href="https://t.me/botfather" target="_blank"
+                            class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill">
+                            Создать бота в Телеграм
+                        </a>
+                        <a href="https://telegra.ph/Nizhnee-menyu-bota-01-03" target="_blank"
+                           class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                        >
+                            Инструкция
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-md-12 col-12">
                 <div class="mb-3">
                     <label class="form-label d-flex justify-content-between" id="bot-token">
@@ -31,8 +55,6 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                         </div>
 
-
-                        <a href="https://t.me/botfather" target="_blank">Создать нового бота в ТГ</a>
                     </label>
                     <input type="text" class="form-control"
                            placeholder="Токен"
@@ -65,7 +87,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     </li>
                     <li class="nav-item" v-if="botForm.id==null">
                         <a class="nav-link text-secondary"
-                           href="javascript:void(0)"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Обратная связь</a>
+                           href="javascript:void(0)"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Обратная
+                            связь</a>
                     </li>
                     <li class="nav-item" @click="tab=3">
                         <a class="nav-link"
@@ -206,21 +229,25 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             <label class="form-label d-flex justify-content-between align-items-center"
                                    id="bot-short-description">
                                               <span>
-                                                  Короткое описание бота
+                                                  Описание в шапке бота
                                                   <small class="text-secondary"
                                                          v-if="botForm.short_description.length>0">Длина текста {{
                                                           botForm.short_description.length
-                                                      }}/100</small>
+                                                      }}/105</small>
                                               </span>
 
                                 <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                             </label>
 
+                            <div class="alert alert-info" role="alert">
+                              Данное описание видно в момент, когда пользователь делится ссылкой на бота, а также при нажатии на иконку бота.
+                            </div>
+
                             <textarea class="form-control"
-                                      placeholder="Короткий текст описания бота"
-                                      aria-label="Короткий текст описания бота"
+                                      placeholder="Описание в шапке бота"
+                                      aria-label="Описание в шапке бота"
                                       v-model="botForm.short_description"
-                                      maxlength="100"
+                                      maxlength="105"
                                       aria-describedby="bot-short-description">
                                 </textarea>
                         </div>
@@ -229,21 +256,32 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             <label class="form-label d-flex justify-content-between align-items-center"
                                    id="bot-long-description">
                                               <span>
-                                                  Длинное описание бота
+                                                 Описание возможностей бота
                                                   <small class="text-secondary"
                                                          v-if="botForm.long_description.length>0">Длина текста {{
                                                           botForm.long_description.length
-                                                      }}/500</small>
+                                                      }}/505</small>
                                               </span>
 
                                 <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                             </label>
 
+                            <div class="alert alert-info" role="alert">
+                               Данное описание видно при первом запуске бота, оно должно содержать информацию о возможностях бота:
+                                <ul class="m-0 pl-2">
+                                    <li>- система лояльности</li>
+                                    <li>- колесо фортуны</li>
+                                    <li>- интернет-магазин</li>
+                                    <li>- реферальная система</li>
+                                </ul>
+                                и т.д.
+                            </div>
+
                             <textarea class="form-control"
-                                      placeholder="Длинный текст описания бота"
-                                      aria-label="Длинный текст описания бота"
+                                      placeholder="Описание возможностей бота"
+                                      aria-label="Описание возможностей бота"
                                       v-model="botForm.long_description"
-                                      maxlength="500"
+                                      maxlength="505"
                                       aria-describedby="bot-long-description">
                                 </textarea>
                         </div>
@@ -1129,8 +1167,8 @@ export default {
 
             botForm: {
                 title: 'Название бота',
-                short_description: 'Короткое описание',
-                long_description: 'Длинное описание',
+                short_description: 'Описание в шапке бота',
+                long_description: 'Описание при первом запуске бота',
 
                 is_template: false,
                 auto_cashback_on_payments: false,
@@ -1500,9 +1538,9 @@ export default {
 
             if (this.company)
                 data.append("company_id", this.company.id)
-           /* else {
-                this.alert('Вы не выбрали клиента', 0)
-            }*/
+            /* else {
+                 this.alert('Вы не выбрали клиента', 0)
+             }*/
 
             for (let i = 0; i < this.botForm.photos.length; i++)
                 data.append('images[]', this.botForm.photos[i]);
