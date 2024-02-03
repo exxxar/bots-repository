@@ -1,7 +1,7 @@
 <script setup>
 import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardConstructor.vue";
 import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
-
+import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlugList.vue";
 import BotSlugListSimple from "@/AdminPanel/Components/Constructor/Slugs/BotSlugListSimple.vue";
 import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
@@ -865,6 +865,27 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
             <div v-show="tab===8">
                 <div class="col-12 mb-2" v-if="need_attach_slug">
+
+                    <div class="alert alert-info" role="alert">
+                        Если в вашем боте нет каких-то предустановленных скриптов вы можете найти их в глобальном
+                        магазине скриптов
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_show_global_slug_list"
+                               type="checkbox"
+                               id="need-show-global-slug-list">
+                        <label class="form-check-label" for="need-show-global-slug-list">
+                            Добавить скрипты из глобального магазина?
+                        </label>
+                    </div>
+
+                    <GlobalSlugList :can-add="true"
+                                    v-if="bot&&need_show_global_slug_list"
+                                    :bot="bot"
+                                    v-on:callback="loadSlugs"/>
+                </div>
+                <div class="col-12 mb-2" v-if="need_attach_slug">
                     <div class="form-check">
                         <input class="form-check-input"
                                v-model="need_attach_slug"
@@ -876,12 +897,21 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     </div>
                 </div>
                 <div class="col-12 mb-2" v-if="need_attach_slug">
-                    <p v-if="pageForm.next_bot_menu_slug_id">Связано со скриптом #{{ pageForm.next_bot_menu_slug_id }}
+
+                    <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert"
+                         v-if="pageForm.next_bot_menu_slug_id">
+                        Связано со скриптом #{{ pageForm.next_bot_menu_slug_id }}
+
+
                         <a
-                            class="btn btn-link"
-                            @click="pageForm.next_bot_menu_slug_id = null">Очистить</a></p>
-                    <BotSlugListSimple v-if="bot"
+                            class="btn btn-link text-danger"
+                            @click="pageForm.next_bot_menu_slug_id = null">Очистить</a>
+                    </div>
+
+
+                    <BotSlugListSimple v-if="bot&&load_slug_simple_list"
                                        :global="true"
+                                       :selected="[pageForm.next_bot_menu_slug_id]"
                                        v-on:callback="associateSlug"
                                        :bot="bot"/>
                 </div>
@@ -1183,12 +1213,14 @@ export default {
             saveModal: null,
             page: null,
             need_show_qr_and_link: false,
+            need_show_global_slug_list: false,
             need_clean: false,
             load: false,
             photos: [],
             showReplyTemplateSelector: false,
             showInlineTemplateSelector: false,
 
+            load_slug_simple_list: true,
             showMenu: false,
 
             need_page_sticker: false,
@@ -1396,6 +1428,14 @@ export default {
     },
 
     methods: {
+        loadSlugs() {
+            this.load_slug_simple_list = false
+            this.need_show_global_slug_list = false
+            this.$nextTick(() => {
+                this.load_slug_simple_list = true
+
+            })
+        },
         preparePageForm() {
             let page = this.page
             this.photos = []
@@ -1494,7 +1534,7 @@ export default {
                 inline_keyboard_id: null,
 
                 next_page_id: null,
-
+                next_menu_slug: null,
                 next_bot_dialog_command_id: null,
                 next_bot_menu_slug_id: null,
 

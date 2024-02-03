@@ -5,7 +5,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 <template>
     <div class="row">
         <div class="col-12" >
-                <div class="card-body">
+
                     <h6>Добавление нового скрипта в бота</h6>
                     <div>
                         <input type="text"
@@ -18,8 +18,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <div
                         v-if="slugs.length>0"
                         class="row">
-                        <div class="col-md-4 mb-2" v-for="(item, index) in slugs">
+                        <div class="col-md-6 col-lg-4 col-sm-6 col-12 mb-2" v-for="(item, index) in slugs">
                             <Slug
+                                :is-active="(selected||[]).indexOf(item.id)!=-1"
                                 :item="item"
                                 :bot="bot"
                                 v-on:callback="callbackSlugs"
@@ -41,7 +42,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     </div>
 
 
-                </div>
+
 
 
         </div>
@@ -53,7 +54,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["bot","global"],
+    props: ["bot","global","selected"],
     data() {
         return {
             load: false,

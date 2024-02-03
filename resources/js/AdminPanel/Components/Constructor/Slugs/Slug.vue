@@ -4,46 +4,52 @@ import SlugForm from '@/AdminPanel/Components/Constructor/Slugs/SlugForm.vue'
 </script>
 <template>
     <div class="card"
-         v-bind:class="{'deprecated-slug':item.deprecated_at!=null,'global-slug':item.is_global}">
-        <div class="card-header d-flex justify-content-between">
-
-
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-ellipsis"></i>
+         v-bind:class="{'deprecated-slug':item.deprecated_at!=null,'global-slug':item.is_global, 'bg-success text-white':isActive}">
+        <div class="card-header d-flex justify-content-between  align-items-center">
+            <div class="d-flex">
+                <button
+                    @click="selectSlug"
+                    type="button"
+                    title="Выбрать команду"
+                    class="btn btn-outline-primary mr-2"
+                    v-bind:class="{'text-white':isActive}"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
                 </button>
-                <ul class="dropdown-menu">
-                    <li><a
-                        @click="selectSlug"
-                        title="Выбрать команду"
-                        class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i> Выбрать команду
-                    </a></li>
-                    <hr>
-                    <li><a class="dropdown-item cursor-pointer"
-                           @click="editSlug"
-                           data-bs-toggle="modal"
-                           :data-bs-target="'#edit-slug-'+item.id"> <i class="fa-regular fa-pen-to-square mr-1"></i>
-                        Редактировать</a></li>
-                    <li><a class="dropdown-item cursor-pointer" @click="duplicateSlug"><i
-                        class="fa-solid fa-clone mr-1"></i> Дублировать</a></li>
-                    <li><a class="dropdown-item cursor-pointer" @click="removeSlug"> <i
-                        class="fa-regular fa-trash-can text-danger mr-1"></i> Удалить</a></li>
+                <div class="dropdown">
+                    <button
+                        v-bind:class="{'text-white border-white':isActive}"
+                        class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+                    <ul class="dropdown-menu">
 
-                </ul>
+                        <li><a class="dropdown-item cursor-pointer"
+                               @click="editSlug"
+                               data-bs-toggle="modal"
+                               :data-bs-target="'#edit-slug-'+item.id"> <i class="fa-regular fa-pen-to-square mr-1"></i>
+                            Редактировать</a></li>
+                        <li><a class="dropdown-item cursor-pointer" @click="duplicateSlug"><i
+                            class="fa-solid fa-clone mr-1"></i> Дублировать</a></li>
+                        <li><a class="dropdown-item cursor-pointer" @click="removeSlug"> <i
+                            class="fa-regular fa-trash-can text-danger mr-1"></i> Удалить</a></li>
+
+                    </ul>
+                </div>
             </div>
-
-
+            <span>
+                <small><strong>#{{ item.id }}</strong></small>
+            </span>
             <button
                 type="button"
                 @click="simple=!simple"
+                v-bind:class="{'text-white border-white':isActive}"
                 class="btn btn-outline-primary ml-2"
 
             >
                 <i v-if="simple" class="fa-solid fa-arrow-up-short-wide"></i>
                 <i v-else class="fa-solid fa-arrow-down-short-wide"></i>
             </button>
-
-
         </div>
         <div class="card-body">
             <div class="row">
@@ -168,7 +174,7 @@ import SlugForm from '@/AdminPanel/Components/Constructor/Slugs/SlugForm.vue'
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["item", "bot", "selectMode"],
+    props: ["item", "bot", "selectMode", "isActive"],
     data() {
         return {
             selected_slug_id: null,
@@ -251,7 +257,7 @@ export default {
         },
         submitRelocateData() {
             this.$store.dispatch("relocateSlugActionData", {
-                slug_sender_id:  this.selected_slug_id,
+                slug_sender_id: this.selected_slug_id,
                 slug_recipient_id: this.item.id,
                 bot_id: this.bot.id
             }).then((response) => {

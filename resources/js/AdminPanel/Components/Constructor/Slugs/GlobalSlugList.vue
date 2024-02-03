@@ -14,36 +14,39 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         </div>
     </div>
 
+
+
+
     <div class="row" v-if="slugs.length>0">
 
-        <div class="col-12 mb-3">
-            <ul class="list-group w-100">
+        <div class="col-lg-3 col-md-6 col-12 mb-3"
 
-                <li class="list-group-item cursor-pointer btn mb-1 d-flex  align-items-center justify-between"
-                    v-bind:class="{'btn-outline-info':item.deleted_at==null,'btn-outline-danger border-danger':item.deleted_at!=null}"
-                    v-for="(item, index) in slugs"
-                >
-                    <strong
-                        @click="selectSlug(item)"
-                        style="word-wrap: break-word;"><i
-                        v-bind:class="{'text-danger':item.deleted_at!=null}"
-                        class="fa-solid fa-scroll"></i>
-                        {{ item.command }} (<span>{{ item.slug }}</span>)
-                    </strong>
+             v-for="(item, index) in slugs">
 
-                    <span class="badge bg-info"
-                          v-if="item.comment">{{ item.comment || 'Пояснение не указано' }}
-                    </span>
+            <div class="card"
+                 style="min-height:160px;"
+                 @click="selectSlug(item)"
+                 v-bind:class="{'btn-outline-info':item.deleted_at==null,'btn-outline-danger border-danger':item.deleted_at!=null}"
+            >
+                <div class="card-body">
+                    <p  style="word-wrap: break-word;" class="mb-0">
+                        <i class="fa-solid fa-scroll"></i>
+                        {{ item.command }}
+                    </p>
+
+                    <p class="mb-2">
+                        <small><strong><em>{{ item.slug }}</em></strong></small>
+                    </p>
+                    <p>
+                        {{ item.comment || 'Пояснение не указано' }}
+                    </p>
+    <!--                    <p class="mb-0">
+                           <span class="badge bg-info">{{(item.config ||[]).length}}</span> настраиваемых параметра
+                        </p>-->
 
 
-                    <button class="btn btn-outline-danger"
-                            @click="removeSlug(item)" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-
-
-                </li>
-            </ul>
+                </div>
+            </div>
 
         </div>
 
@@ -66,45 +69,60 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
 
     <p v-else>Глобальных скриптов не обнаружено</p>
-    <form v-on:submit.prevent="addSlug"
-          v-if="canAdd&&slugs.length>0"
-          class="card mb-3">
-        <div class="card-body">
 
-            <div class="mb-3">
-                <label class="form-label" id="bot-domain">
-                    <Popper>
-                        <i class="fa-regular fa-circle-question mr-1"></i>
-                        <template #content>
-                            <div>Измените только текст команды,<br>
-                                если хотите чтоб скрипт вызывался по кнопке из меню. <br>
-                                Или оставьте как есть. <br>
-                                Текст скрипта нужно также указать в качестве пункта меню.
-                            </div>
-                        </template>
-                    </Popper>
-                    Команда
-                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                </label>
-                <input type="text" class="form-control"
-                       placeholder="Команда"
-                       aria-label="Команда"
-                       v-model="slugForm.command"
-                       maxlength="255"
-                       aria-describedby="bot-domain" required>
+    <!-- Modal -->
+    <div class="modal fade"
+         v-if="canAdd"
+         id="add-slug-to-bot" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form v-on:submit.prevent="addSlug"
+                          v-if="canAdd&&slugs.length>0">
+                        <p>Идентификатор скрипта #{{slugForm.id || 'Не указан'}}</p>
+                        <div class="mb-3">
+                            <label class="form-label" id="bot-domain">
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Измените только текст команды,<br>
+                                            если хотите чтоб скрипт вызывался по кнопке из меню. <br>
+                                            Или оставьте как есть. <br>
+                                            Текст скрипта нужно также указать в качестве пункта меню.
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Команда
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </label>
+                            <input type="text" class="form-control"
+                                   placeholder="Команда"
+                                   aria-label="Команда"
+                                   v-model="slugForm.command"
+                                   maxlength="255"
+                                   aria-describedby="bot-domain" required>
+                        </div>
+                        <p>
+                            <small><em>{{slugForm.comment || 'Не указан'}}</em></small>
+                        </p>
+                        <div class="alert alert-info" role="alert">
+                          При добавлении вы можете указать любое имя, которое вам нравится. Не обязательно использовать стандартное.
+                        </div>
+
+                        <button
+                            :disabled="slugForm.slug==null"
+                            class="btn btn-outline-success mt-2 mb-2 w-100 p-3">Добавить скрипт в бота
+                        </button>
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Не добавлять</button>
+                </div>
             </div>
-
-
-            <button
-                :disabled="slugForm.slug==null"
-                class="btn btn-outline-success mt-2 mb-2 w-100 p-3">Добавить скрипт в бота
-            </button>
-
         </div>
-
-
-    </form>
-
+    </div>
 </template>
 <script>
 
@@ -118,6 +136,7 @@ export default {
             search: null,
             slugs: [],
             slugs_paginate_object: null,
+            addSlugModal:null,
             slugForm: {
                 command: null,
                 comment: null,
@@ -156,6 +175,8 @@ export default {
     },
     mounted() {
         this.loadAllSlugs()
+
+        this.addSlugModal = new bootstrap.Modal(document.getElementById('add-slug-to-bot'), {})
     },
     methods: {
         loadAllSlugs(page = 0) {
@@ -200,6 +221,8 @@ export default {
             this.slugForm.is_global = item.is_global || false
 
             this.$emit("select", item)
+
+            this.addSlugModal.show()
         },
         addSlug() {
 
@@ -225,8 +248,8 @@ export default {
             ).then((response) => {
 
                 this.$notify({
-                    title: "Конструктор команд",
-                    text: "Команда успешно обновлена",
+                    title: "Скрипты",
+                    text: "Скрипт успешно добавлен",
                     type: 'success'
                 });
 
@@ -241,6 +264,8 @@ export default {
 
 
                 this.$emit("callback")
+
+                this.addSlugModal.hide()
             }).catch(err => {
 
             })

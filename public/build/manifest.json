@@ -35,15 +35,15 @@
     "file": "assets/TelegramChannelHelper-5ad24a6a.css",
     "src": "InlineInjectionsHelper.css"
   },
-  "_BotList-aa7bdd4c.js": {
+  "_BotList-3f79ca42.js": {
     "css": [
       "assets/BotList-b9db7160.css",
       "assets/TelegramChannelHelper-5ad24a6a.css"
     ],
-    "file": "assets/BotList-aa7bdd4c.js",
+    "file": "assets/BotList-3f79ca42.js",
     "imports": [
       "_index.es-71d37bd0.js",
-      "_GlobalSlugList-73259d76.js",
+      "_GlobalSlugList-e4e95745.js",
       "_Pagination-c0ff4992.js",
       "_CompanyList-66581a10.js",
       "_TelegramChannelHelper-d5723a62.js",
@@ -51,13 +51,13 @@
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_BotSection-9d1f72c4.js": {
-    "file": "assets/BotSection-9d1f72c4.js",
+  "_BotSection-b8a3d43e.js": {
+    "file": "assets/BotSection-b8a3d43e.js",
     "imports": [
       "_Mail-55bbc290.js",
-      "_BotList-aa7bdd4c.js",
+      "_BotList-3f79ca42.js",
       "_index.es-71d37bd0.js",
-      "_GlobalSlugList-73259d76.js",
+      "_GlobalSlugList-e4e95745.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
@@ -72,8 +72,8 @@
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_GlobalSlugList-73259d76.js": {
-    "file": "assets/GlobalSlugList-73259d76.js",
+  "_GlobalSlugList-e4e95745.js": {
+    "file": "assets/GlobalSlugList-e4e95745.js",
     "imports": [
       "_index.es-71d37bd0.js",
       "_TelegramChannelHelper-d5723a62.js",
@@ -181,17 +181,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-d7cefb0d.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-d7cefb0d.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-d7cefb0d.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-8ec90ee2.js",
@@ -267,18 +267,18 @@
       "assets/BotPage-f1a201b5.css",
       "assets/TelegramChannelHelper-5ad24a6a.css"
     ],
-    "file": "assets/BotPage-c48d5bca.js",
+    "file": "assets/BotPage-1f70425b.js",
     "imports": [
       "_MainAdminLayout-6c1947e4.js",
-      "_BotSection-9d1f72c4.js",
+      "_BotSection-b8a3d43e.js",
       "_CompanyList-66581a10.js",
-      "_BotList-aa7bdd4c.js",
+      "_BotList-3f79ca42.js",
       "_index.es-71d37bd0.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_Mail-55bbc290.js",
       "_TelegramChannelHelper-d5723a62.js",
       "_v4-a960c1f4.js",
-      "_GlobalSlugList-73259d76.js",
+      "_GlobalSlugList-e4e95745.js",
       "_Pagination-c0ff4992.js"
     ],
     "isDynamicEntry": true,
@@ -339,15 +339,15 @@
       "assets/Dashboard-db3e581c.css",
       "assets/TelegramChannelHelper-5ad24a6a.css"
     ],
-    "file": "assets/Dashboard-fcac701b.js",
+    "file": "assets/Dashboard-8288b168.js",
     "imports": [
       "_CompanyList-66581a10.js",
-      "_BotList-aa7bdd4c.js",
+      "_BotList-3f79ca42.js",
       "_Mail-55bbc290.js",
-      "_GlobalSlugList-73259d76.js",
+      "_GlobalSlugList-e4e95745.js",
       "_index.es-71d37bd0.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_BotSection-9d1f72c4.js",
+      "_BotSection-b8a3d43e.js",
       "_Pagination-c0ff4992.js",
       "_TelegramChannelHelper-d5723a62.js",
       "_v4-a960c1f4.js"
@@ -386,12 +386,12 @@
     "css": [
       "assets/TelegramChannelHelper-5ad24a6a.css"
     ],
-    "file": "assets/ManagerMainPage-28907342.js",
+    "file": "assets/ManagerMainPage-2473da41.js",
     "imports": [
       "_MainAdminLayout-6c1947e4.js",
       "_Mail-55bbc290.js",
-      "_BotList-aa7bdd4c.js",
-      "_GlobalSlugList-73259d76.js",
+      "_BotList-3f79ca42.js",
+      "_GlobalSlugList-e4e95745.js",
       "_index.es-71d37bd0.js",
       "_CompanyList-66581a10.js",
       "_TelegramChannelHelper-d5723a62.js",
@@ -412,10 +412,10 @@
     "src": "resources/js/AdminPanel/Pages/MediaPage.vue"
   },
   "resources/js/AdminPanel/Pages/ScriptPage.vue": {
-    "file": "assets/ScriptPage-cd04cb9c.js",
+    "file": "assets/ScriptPage-3c3b4077.js",
     "imports": [
       "_MainAdminLayout-6c1947e4.js",
-      "_GlobalSlugList-73259d76.js",
+      "_GlobalSlugList-e4e95745.js",
       "_index.es-71d37bd0.js",
       "_TelegramChannelHelper-d5723a62.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -456,7 +456,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-462a72bd.js",
+    "file": "assets/app-eb2f85f9.js",
     "imports": [
       "_index.es-71d37bd0.js",
       "_index-4a291d06.js"

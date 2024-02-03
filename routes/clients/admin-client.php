@@ -247,9 +247,9 @@ Route::prefix("admin")
                 Route::post("/page", "createPage");
                 Route::post("/page-update", "updatePage");
                 Route::post("/duplicate/{pageId}", "duplicate");
-                Route::get("/restore/{pageId}", "restorePage")->middleware(["role:admin"]);
-                Route::delete("/force/{pageId}", "forceDestroy")->middleware(["role:admin"]);
-                Route::delete("/{pageId}", "destroy")->middleware(["role:admin"]);
+                Route::get("/restore/{pageId}", "restorePage");
+                Route::delete("/force/{pageId}", "forceDestroy");
+                Route::delete("/{pageId}", "destroy");
             });
 
 

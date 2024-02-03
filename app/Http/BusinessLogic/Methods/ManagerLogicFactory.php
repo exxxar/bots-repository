@@ -233,7 +233,6 @@ class ManagerLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
-
         $birthday = Carbon::parse($data["birthday"] ?? Carbon::now())->format("Y-m-d");
         $form1 = [
             "birthday" => $birthday,
@@ -286,12 +285,10 @@ class ManagerLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->first();
 
-
         if (is_null($manager))
             ManagerProfile::query()->create($form2);
         else
             $manager->update($form2);
-
 
         BotMethods::bot()
             ->whereBot($this->bot)
