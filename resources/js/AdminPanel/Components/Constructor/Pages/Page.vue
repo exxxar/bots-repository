@@ -10,9 +10,21 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 </script>
 <template>
+
+    <div class="row pt-3" v-if="pageForm.id">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <strong>Внимание!</strong> Вы в режиме редактирования страницы (кнопки) <strong style="font-size:16px;">{{
+                    page.slug ? page.slug.command : 'Без названия'
+                }}</strong>, если хотите создать новую нажмите <a
+                href="javascript:void(0)" class="btn btn-primary ml-2" @click="clearForm">Создать новую страницу</a>
+            </div>
+        </div>
+    </div>
     <form
         v-if="bot"
         id="page-construct"
+        class="py-3"
         v-on:submit.prevent="openSaveModal">
 
         <div class="row" v-if="hasParts">
@@ -88,7 +100,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
         </div>
         <div class="row">
-            <div class="col-8 mb-2">
+            <div class="col-md-8 col-12 mb-2">
                 <label class="form-label" id="bot-domain">
                     <Popper>
                         <i class="fa-regular fa-circle-question mr-1"></i>
@@ -109,13 +121,14 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                        aria-describedby="bot-domain" required>
             </div>
 
-            <div class="col-4 mb-2 d-flex justify-content-end align-items-end">
+            <div class="col-md-4 col-12 mb-2 d-flex justify-content-end align-items-end">
                 <div class="btn-group"
                      style="background:white;"
                      role="group" aria-label="Basic example">
 
                     <button type="submit" v-if="pageForm.id||need_clean"
                             title="Сохранить страницу"
+                            id="save-page-btn"
                             class="btn btn-primary min-menu-btn">
                         <i class="fa-regular fa-floppy-disk"></i>
                     </button>
@@ -127,21 +140,10 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     </button>
                     <button type="button"
                             title="Список страниц"
-                            data-bs-toggle="modal" data-bs-target="#pages-modal"
+                            data-bs-toggle="offcanvas" data-bs-target="#offcanvas"
                             class="btn btn-outline-primary text-primary  min-menu-btn">
                         <i class="fa-solid fa-list-ol"></i>
                     </button>
-                </div>
-            </div>
-
-            <div class="col-12 mb-2">
-                <div class="form-check">
-                    <input class="form-check-input"
-                           v-model="pageForm.is_external"
-                           type="checkbox" id="is-external">
-                    <label class="form-check-label" for="is-external">
-                        Внешнее управление страницей
-                    </label>
                 </div>
             </div>
 
@@ -149,7 +151,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
         </div>
 
 
-        <div class="row" v-if="!pageForm.is_external">
+        <div class="row" v-show="!pageForm.is_external">
 
 
             <div class="col-12 mb-2">
@@ -176,7 +178,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                           v-model="pageForm.content"
                                           maxlength="4096"
                                           placeholder="Введите текст"
-                                          id="floatingTextarea2" style="min-height: 300px"></textarea>
+                                          id="floatingTextarea2" style="min-height: 150px"></textarea>
                     <label for="floatingTextarea2">Содержимое страницы <span
                         v-if="pageForm.content">{{ pageForm.content.length }}/4096 </span></label>
                 </div>
@@ -1057,6 +1059,21 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
     </form>
 
+    <div class="row">
+        <div class="col-12">
+
+            <div class="alert alert-info" role="alert">
+                <h6>Страница поддерживает комбинации клавиш:</h6>
+                <ul class="mb-0 mr-0 p-0">
+                    <li><strong>Ctrl+S</strong> - открыть\закрыть окно сохранения</li>
+                    <li><strong>Ctrl+пробел</strong> - открыть\закрыть список страниц</li>
+                    <li><strong>Ctrl+backspace</strong> - очистить страницу\новая страница</li>
+                    <li><strong>Ctrl+стрелка вправо</strong> - переключение между вкладка вперед</li>
+                    <li><strong>Ctrl+стрелка влево</strong> - переключение между вкладка назад</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="save-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1067,6 +1084,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+
                     <div class="row" v-if="bot">
                         <div class="col-12 mb-2 ">
                             <h6 class="d-flex justify-between">
@@ -1171,11 +1189,34 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         </div>
 
                         <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="pageForm.is_external"
+                                       type="checkbox" id="is-external">
+                                <label class="form-check-label" for="is-external">
+                                    Внешнее управление страницей
+                                </label>
+                            </div>
+                            <div class="alert alert-danger" role="alert" v-if="pageForm.is_external">
+                                Обработка ссылок передана на внешний адрес, указанный в настройках бота! Все запросы
+                                по данной кнопке будут отправлены на указанный URL-адрес:
+                                <strong>{{ bot.callback_link || 'не указано' }}.</strong>
+                                <p class="mb-0" v-if="!bot.callback_link">Внешня ссылка не установлена! Перейдите в
+                                    раздел <strong>"Информация о боте"</strong>, затем <strong>Другие
+                                        настройки</strong> и установите ссылку для внешнего управления в поле
+                                    <strong>"Ссылка на внешний сервис обработки данных"</strong>!</p>
+                            </div>
+
+                        </div>
+
+                        <div class="col-12">
                             <button type="submit"
+                                    id="submit-page"
                                     class="btn btn-success w-100 p-3">Сохранить
                             </button>
                         </div>
                     </form>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Не сохранять</button>
@@ -1185,20 +1226,44 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="pages-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
+    <!--
+        <div class="modal fade" id="pages-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
 
-                <div class="modal-body">
+                    <div class="modal-body">
+                        <PagesList
+                            :editor="true"
+                            :current="page"
+                            v-on:callback="pageListCallback"/>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    -->
+
+
+    <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas" data-bs-keyboard="true"
+         data-bs-backdrop="true">
+        <div class="offcanvas-header">
+            <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Ваши страницы (кнопки)</h6>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="row">
+                <div class="col-12">
                     <PagesList
+                        v-if="loaded_page_list"
                         :editor="true"
                         :current="page"
                         v-on:callback="pageListCallback"/>
                 </div>
-
             </div>
+
         </div>
     </div>
+
 
 </template>
 <script>
@@ -1211,6 +1276,7 @@ export default {
         return {
             tab: 0,
             saveModal: null,
+            pageModal: null,
             page: null,
             need_show_qr_and_link: false,
             need_show_global_slug_list: false,
@@ -1219,7 +1285,7 @@ export default {
             photos: [],
             showReplyTemplateSelector: false,
             showInlineTemplateSelector: false,
-
+            loaded_page_list: true,
             load_slug_simple_list: true,
             showMenu: false,
 
@@ -1424,6 +1490,57 @@ export default {
             this.saveModal = new bootstrap.Modal(document.getElementById('save-modal'), {})
         })
 
+        this.pageModal = new bootstrap.Offcanvas(document.getElementById('offcanvas'), {})
+
+        window.addEventListener("keydown", (e) => {
+
+            if (e.ctrlKey && e.keyCode == 8) {
+                e.preventDefault();
+
+                this.clearForm()
+            }
+
+
+            if (e.ctrlKey && e.keyCode == 32) {
+                e.preventDefault();
+                this.pageModal.toggle()
+            }
+
+            if (e.ctrlKey && e.code == 'KeyS') {
+                e.preventDefault();
+
+                const formSubmit = document.querySelector("#save-page-btn")
+
+                if (!formSubmit)
+                    this.$notify({
+                        title: "Конструктор страниц",
+                        text: "Вы еще не начали создавать страницу!",
+                        type: 'warning'
+                    });
+                else
+                    formSubmit.click();
+            }
+
+
+            if (e.ctrlKey && e.keyCode == 39) {
+                e.preventDefault();
+                if (this.tab === 10)
+                    this.tab = 0
+                else
+                    this.tab++;
+            }
+
+
+            if (e.ctrlKey && e.keyCode == 37) {
+                e.preventDefault();
+                if (this.tab === 0)
+                    this.tab = 10
+                else
+                    this.tab--;
+            }
+
+
+        });
 
     },
 
@@ -1562,8 +1679,6 @@ export default {
 
             this.$nextTick(() => {
                 this.need_clean = false
-
-
             })
         },
         openSaveModal() {
@@ -1609,6 +1724,12 @@ export default {
                         this.clearForm()
                     })
                 }
+
+                this.loaded_page_list = false
+
+                this.$nextTick(() => {
+                    this.loaded_page_list = true
+                })
 
                 this.saveModal.hide()
 
