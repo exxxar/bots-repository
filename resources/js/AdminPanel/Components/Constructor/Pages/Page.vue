@@ -1244,7 +1244,9 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
     -->
 
 
-    <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas" data-bs-keyboard="true"
+    <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas"
+         data-bs-keyboard="true"
+         data-bs-scroll="true"
          data-bs-backdrop="true">
         <div class="offcanvas-header">
             <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Ваши страницы (кнопки)</h6>
@@ -1490,7 +1492,9 @@ export default {
             this.saveModal = new bootstrap.Modal(document.getElementById('save-modal'), {})
         })
 
-        this.pageModal = new bootstrap.Offcanvas(document.getElementById('offcanvas'), {})
+        this.pageModal = new bootstrap.Offcanvas(document.getElementById('offcanvas'), {
+            scroll:true,
+        })
 
         window.addEventListener("keydown", (e) => {
 
