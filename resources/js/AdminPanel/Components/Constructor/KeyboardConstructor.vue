@@ -1,4 +1,8 @@
+<script setup>
+import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
+</script>
 <template>
+
     <div v-if="!editor&&mode===0">
         <div class="row">
             <div class="col-12 d-flex justify-content-between">
@@ -61,7 +65,7 @@
 
 
             </div>
-            <div class="col-12" v-if="keyboard.length>0">
+            <div class="col-12" v-if="(keyboard||[]).length>0">
                 <div class="row" v-for="(row, rowIndex) in keyboard">
                     <div class="col-2 d-flex justify-content-around p-2">
                         <button
@@ -144,19 +148,32 @@
                 </div>
 
                 <div class="mb-3">
+
                     <label :for="'command-title-'+select.row+'-col-'+select.сol"
                            class="form-label">Название кнопки</label>
+                    <div class="input-group">
 
-                    <input
-                        type="text"
-                        :id="'command-title-'+select.row+'-col-'+select.col"
-                        class="form-control w-100"
-                        v-model="keyboard[select.row][select.col].text"
-                    />
+
+                        <input
+                            type="text"
+                            :id="'command-title-'+select.row+'-col-'+select.col"
+                            class="form-control"
+                            v-model="keyboard[select.row][select.col].text"
+                        />
+
+                        <button type="button"
+                               @click="openPageModal"
+                                class="btn btn-outline-primary" aria-expanded="false">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+
+                    </div>
+
+
                 </div>
                 <hr>
 
-                <div class="mb-3">
+                <div class="mb-3" v-if="type==='inline'">
                     <label :for="'command-row-'+select.row+'-col-'+select.col"
                            class="form-label">Команда (для меню в сообщении)</label>
                     <input type="text"
@@ -166,7 +183,7 @@
                            :id="'command-row-'+select.row+'-col-'+select.col"
                            placeholder="/start">
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" v-if="type==='inline'">
                     <label :for="'switch-inline-query-row-'+select.row+'-col-'+select.col"
                            class="form-label">Ссылка на аккаунт в ТЕЛЕГРАММ</label>
                     <input type="text" class="form-control"
@@ -175,7 +192,7 @@
                            :id="'switch-inline-query-row-'+select.row+'-col-'+select.col"
                            placeholder="@YourAccountLink">
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" v-if="type==='inline'">
                     <label :for="'url-row-'+select.row+'-col-'+select.col"
                            class="form-label">Внешняя URL-ссылка</label>
                     <input type="text" class="form-control"
@@ -185,7 +202,7 @@
                            placeholder="https://t.me/example">
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3" v-if="type==='inline'">
                     <label :for="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
                            class="form-label">Команда всплывающего меню бота</label>
                     <input type="text" class="form-control"
@@ -196,7 +213,7 @@
                 </div>
 
 
-                <div class="form-check">
+                <div class="form-check" v-if="type==='reply'">
                     <input type="radio"
                            @change="needRemoveField( null,select.row, select.col)"
                            name="request-radio"
@@ -219,17 +236,17 @@
                                                                         Кнопка оплаты
                                                                     </label>
                                                                 </div>-->
-                <div class="form-check">
+                <div class="form-check" v-if="type==='reply'">
                     <input type="radio"
                            @change="needRemoveField( 'request_contact',select.row, select.col)"
                            @click="keyboard[select.row][select.col].request_contact = true"
                            name="request-radio"
                            class="form-check-input" :id="'phone-row-'+select.row+'-col-'+select.col">
                     <label class="form-check-label" :for="'phone-row-'+select.row+'-col-'+select.col">
-                        Запросить телефон (для нижнего меню)
+                        Запросить телефон
                     </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check" v-if="type==='reply'">
                     <input type="radio"
                            name="request-radio"
                            @change="needRemoveField( 'request_location',select.row, select.col)"
@@ -237,14 +254,29 @@
                            class="form-check-input" :id="'location-row-'+select.row+'-col-'+select.col">
                     <label class="form-check-label"
                            :for="'location-row-'+select.row+'-col-'+select.col">
-                        Запросить локацию (для нижнего меню)
+                        Запросить локацию
                     </label>
                 </div>
 
             </form>
         </div>
+
     </div>
 
+
+    <div class="modal fade" :id="'page-list-in-keyboard-'+uuid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <PagesList
+                        v-on:callback="attachPage"
+                        :editor="false"/>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <!-- Modal -->
 </template>
 <script>
@@ -259,7 +291,8 @@ export default {
     },
     computed: {
         uuid() {
-            return uuidv4();
+            const data = uuidv4();
+            return data
         }
     },
     watch: {
@@ -272,6 +305,8 @@ export default {
     },
     data() {
         return {
+
+            pageModal: null,
             mode: 0,
             editor: false,
             showCode: false,
@@ -281,21 +316,46 @@ export default {
             rowCount: 1,
             keyboard: [],
             select: {
-                row: -1,
-                col: -1,
+                row: 0,
+                col: 0,
                 type: this.type || 'reply'
             }
         }
     },
 
     mounted() {
+        this.pageModal = new bootstrap.Modal(document.getElementById('page-list-in-keyboard-'+  this.uuid), {})
+
+
         if (this.editedKeyboard) {
             this.$nextTick(() => {
                 this.keyboard = this.editedKeyboard.menu
             })
         }
+
+
     },
     methods: {
+        openPageModal(){
+          this.pageModal.show()
+        },
+        attachPage(item) {
+
+            let command = (item.slug.command || 'Нет команды').replace(".*","")
+
+            this.keyboard[this.select.row][this.select.col].text = command
+
+
+            this.$notify({
+                title: "Конструктор страниц",
+                text: "Вы успешно выбрали страницу",
+                type: 'success'
+            });
+
+            if (this.type==='inline')
+                this.keyboard[this.select.row][this.select.col].callback_data = command
+
+        },
         reset() {
             this.selectedRow = null
             this.select = {
@@ -395,18 +455,18 @@ export default {
             if (this.selectedRow == null) {
                 if (this.keyboard)
                     this.keyboard.push([{
-                        text: "No Text"
+                        text: "Нет команды"
                     }])
                 else
                     this.keyboard = [[{
-                        text: "No Text"
+                        text: "Нет команды"
                     }]]
 
                 this.selectedRow = null
             } else {
                 let index = !above ? this.selectedRow + 1 : this.selectedRow
                 this.keyboard.splice(index, 0, [{
-                    text: "No Text"
+                    text: "Нет команды"
                 }])
             }
 
@@ -415,7 +475,7 @@ export default {
 
         addColToRow(index) {
             this.keyboard[index].push({
-                text: "No Text"
+                text: "Нет команды"
             })
 
 

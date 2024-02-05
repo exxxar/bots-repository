@@ -6,11 +6,14 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\YClientsController;
 use App\Http\Controllers\AmoCrmController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified'])
     ->group(function () {
+
+
         Route::get('/dashboard', function () {
             Inertia::setRootView("app");
             return Inertia::render('MainPage');
@@ -22,6 +25,12 @@ Route::middleware(['auth', 'verified'])
 
             return Inertia::render('CompanyPage');
         })->name('company-page');
+
+        Route::get('/manager-page', function () {
+            Inertia::setRootView("app");
+
+            return Inertia::render('ManagerPage');
+        })->name('manager-page');
 
         Route::get('/media-page', function () {
             Inertia::setRootView("app");
@@ -46,11 +55,6 @@ Route::middleware(['auth', 'verified'])
             return Inertia::render('MailPage');
         })->name('mail-page');
 
-        Route::get('/manager-page', function () {
-            Inertia::setRootView("app");
-
-            return Inertia::render('ManagerMainPage');
-        })->name('manager-main-page');
 
         Route::get('/bot-page', function () {
             Inertia::setRootView("app");
@@ -69,11 +73,9 @@ Route::middleware(['auth', 'verified'])
         })->name('visit-card-page');
 
 
-
     });
 
 Route::post("/send-to-channel", [\App\Http\Controllers\Admin\BotController::class, "sendToChannel"]);
-
 
 
 Route::prefix("admin")
@@ -88,9 +90,9 @@ Route::prefix("admin")
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/ids", "listByIds");
-                Route::post('/get-me',"getMe");
+                Route::post('/get-me', "getMe");
                 Route::post("/save-y-clients", [YClientsController::class, "saveYClients"]);
-                Route::post('/update-shop-link',"updateShopLink");
+                Route::post('/update-shop-link', "updateShopLink");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
                 Route::post("/bot-update", "updateBot");
                 Route::post("/bot-webhook-update", "updateWebhook");

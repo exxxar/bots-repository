@@ -811,28 +811,8 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
             <div v-show="tab===7">
-                <div class="col-12 mb-2" v-if="need_attach_page">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               v-model="need_attach_page"
-                               type="checkbox"
-                               id="need-page-attach">
-                        <label class="form-check-label" for="need-page-attach">
-                            Связать с другой страницей
-                        </label>
-                    </div>
-                </div>
-                <div class="col-12 mb-2" v-if="need_attach_page">
-                    <p v-if="pageForm.next_page_id">Связано со страницей #{{ pageForm.next_page_id }} <a
-                        class="btn btn-link"
-                        @click="pageForm.next_page_id = null">Очистить</a></p>
-                    <PagesList
-                        :current="pageForm.id"
-                        v-on:callback="attachPage"
-                        :editor="false"/>
-                </div>
 
-                <div class="col-12 mb-2" v-else>
+                <div class="col-12 mb-2">
                     <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
 
                         <div class="d-flex justify-content-center mb-3">
@@ -845,21 +825,33 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             Вы можете привязать вызов другой страницы непосредственно после вызова текущей. Это позволит
                             выводить контент по цепочке для пользователя.
                         </p>
+                        <p class="my-3 text-success font-bold" v-if="pageForm.next_page_id">Связано со страницей #{{ pageForm.next_page_id }} </p>
                         <div class="d-inline-flex gap-2 mb-5">
+
                             <button
-                                :disabled="need_attach_page"
-                                @click="need_attach_page=true"
-                                v-bind:class="{'btn-primary':!need_attach_page,'btn-outline-secondary':need_attach_page}"
-                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
-                                Добавить
+                                v-if="pageForm.next_page_id"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-danger" type="button"
+                                @click="pageForm.next_page_id = null">Очистить</button>
+                            <button
+                                v-else
+                                data-bs-toggle="modal" data-bs-target="#page-list-modal"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-primary" type="button">
+                                Связать
                             </button>
+
+
                             <a href="https://telegra.ph/Svyazyvanie-so-stranicej-01-03"
                                target="_blank"
                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
                             </a>
+
+
+
                         </div>
+
+
                     </div>
                 </div>
             </div>
@@ -1075,6 +1067,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
         </div>
     </div>
 
+
     <!-- Modal -->
     <div class="modal fade" id="save-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -1226,22 +1219,22 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
     </div>
 
     <!-- Modal -->
-    <!--
-        <div class="modal fade" id="pages-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+        <div class="modal fade" id="page-list-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
 
                     <div class="modal-body">
                         <PagesList
-                            :editor="true"
-                            :current="page"
-                            v-on:callback="pageListCallback"/>
+                            :current="pageForm.id"
+                            v-on:callback="attachPage"
+                            :editor="false"/>
                     </div>
 
                 </div>
             </div>
         </div>
-    -->
+
 
 
     <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas"
@@ -1619,8 +1612,15 @@ export default {
 
         attachPage(item) {
 
-            if (item.id != this.pageForm.id)
+            if (item.id != this.pageForm.id) {
+                this.$notify({
+                    title: "Конструктор страниц",
+                    text: "Вы успешно связали страницы!",
+                    type: 'success'
+                });
                 this.pageForm.next_page_id = item.id
+            }
+
             else
                 this.$notify({
                     title: "Конструктор страниц",
@@ -1857,6 +1857,7 @@ export default {
                 this.pageForm.documents.push(item.file_id)
         },
         pageListCallback(page) {
+            this.$notify("Вы выбрали страницу из списка! Все остальные действия будут производится для этой страницы");
             this.load = true
             this.page = page
             this.preparePageForm()

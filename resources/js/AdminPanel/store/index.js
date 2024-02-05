@@ -34,6 +34,7 @@ export default createStore({
 
             return state.current_bot || currentBot || null
         },
+
     },
     actions: {
         async sendToChannel(context, payload = {mailForm: null}) {
@@ -101,6 +102,10 @@ export default createStore({
         },
     },
     mutations: {
+        setCurrentBotUser(state, payload) {
+            state.current_bot_user = payload || null;
+            localStorage.setItem('store_current_bot_user', JSON.stringify(payload));
+        },
         setCurrentCompany(state, payload) {
             state.current_company = payload || null;
             localStorage.setItem('store_current_company', JSON.stringify(payload));
