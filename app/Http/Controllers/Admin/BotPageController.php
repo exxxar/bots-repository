@@ -32,7 +32,8 @@ class BotPageController extends Controller
             ->list(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page'),
-                $request->needDeleted ?? $request->need_deleted ?? false
+                $request->needDeleted ?? $request->need_deleted ?? false,
+                $request->needNewFirst ?? $request->need_new_first ?? false
             );
 
     }

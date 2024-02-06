@@ -825,17 +825,21 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             Вы можете привязать вызов другой страницы непосредственно после вызова текущей. Это позволит
                             выводить контент по цепочке для пользователя.
                         </p>
-                        <p class="my-3 text-success font-bold" v-if="pageForm.next_page_id">Связано со страницей #{{ pageForm.next_page_id }} </p>
+                        <p class="my-3 text-success font-bold" v-if="pageForm.next_page_id">Связано со страницей
+                            #{{ pageForm.next_page_id }} </p>
                         <div class="d-inline-flex gap-2 mb-5">
 
                             <button
                                 v-if="pageForm.next_page_id"
-                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-danger" type="button"
-                                @click="pageForm.next_page_id = null">Очистить</button>
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-danger"
+                                type="button"
+                                @click="pageForm.next_page_id = null">Очистить
+                            </button>
                             <button
                                 v-else
                                 data-bs-toggle="modal" data-bs-target="#page-list-modal"
-                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-primary" type="button">
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-primary"
+                                type="button">
                                 Связать
                             </button>
 
@@ -846,7 +850,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                             >
                                 Подробнее
                             </a>
-
 
 
                         </div>
@@ -1203,6 +1206,17 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         </div>
 
                         <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="need_stay_after_save"
+                                       type="checkbox" id="need-stay-after-save">
+                                <label class="form-check-label" for="need-stay-after-save">
+                                    Остаться на текущей странице после сохранения
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
                             <button type="submit"
                                     id="submit-page"
                                     class="btn btn-success w-100 p-3">Сохранить
@@ -1220,21 +1234,20 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
     <!-- Modal -->
 
-        <div class="modal fade" id="page-list-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
+    <div class="modal fade" id="page-list-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-                    <div class="modal-body">
-                        <PagesList
-                            :current="pageForm.id"
-                            v-on:callback="attachPage"
-                            :editor="false"/>
-                    </div>
-
+                <div class="modal-body">
+                    <PagesList
+                        :current="pageForm.id"
+                        v-on:callback="attachPage"
+                        :editor="false"/>
                 </div>
+
             </div>
         </div>
-
+    </div>
 
 
     <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas"
@@ -1274,6 +1287,7 @@ export default {
             pageModal: null,
             page: null,
             need_show_qr_and_link: false,
+            need_stay_after_save: true,
             need_show_global_slug_list: false,
             need_clean: false,
             load: false,
@@ -1476,7 +1490,7 @@ export default {
     },
     mounted() {
         if (this.page) {
-            this.preparePageForm()
+            this.preparePageForm(this.page)
         } else
             this.clearForm()
 
@@ -1486,7 +1500,7 @@ export default {
         })
 
         this.pageModal = new bootstrap.Offcanvas(document.getElementById('offcanvas'), {
-            scroll:true,
+            scroll: true,
         })
 
         window.addEventListener("keydown", (e) => {
@@ -1550,37 +1564,42 @@ export default {
 
             })
         },
-        preparePageForm() {
-            let page = this.page
+        preparePageForm(page) {
+
+            this.page = page
             this.photos = []
-            this.pageForm = {
-                id: page.id,
-                slug_id: page.slug ? page.slug.id : null,
-                content: page.content,
-                command: page.slug ? page.slug.command : null,
-                slug: page.slug ? page.slug.slug : null,
-                comment: page.slug ? page.slug.comment : null,
-                images: page.images || [],
-                sticker: page.sticker || null,
-                reply_keyboard_title: page.reply_keyboard_title || null,
-                reply_keyboard_id: page.reply_keyboard_id || null,
-                inline_keyboard_id: page.inline_keyboard_id || null,
-                reply_keyboard: page.replyKeyboard || null,
-                inline_keyboard: page.inlineKeyboard || null,
-                next_page_id: page.next_page_id || null,
-                next_bot_dialog_command_id: page.next_bot_dialog_command_id || null,
-                next_bot_menu_slug_id: page.next_bot_menu_slug_id || null,
+            this.$nextTick(()=>{
+                this.pageForm = {
+                    id: page.id,
+                    slug_id: page.slug ? page.slug.id : null,
+                    content: page.content,
+                    command: page.slug ? page.slug.command : null,
+                    slug: page.slug ? page.slug.slug : null,
+                    comment: page.slug ? page.slug.comment : null,
+                    images: page.images || [],
+                    sticker: page.sticker || null,
+                    reply_keyboard_title: page.reply_keyboard_title || null,
+                    reply_keyboard_id: page.reply_keyboard_id || null,
+                    inline_keyboard_id: page.inline_keyboard_id || null,
+                    reply_keyboard: page.replyKeyboard || null,
+                    inline_keyboard: page.inlineKeyboard || null,
+                    next_page_id: page.next_page_id || null,
+                    next_bot_dialog_command_id: page.next_bot_dialog_command_id || null,
+                    next_bot_menu_slug_id: page.next_bot_menu_slug_id || null,
 
-                is_external: page.is_external || false,
-                rules_if: page.rules_if || null,
-                rules_else_page_id: page.rules_else_page_id || null,
-                audios: page.audios || [],
-                documents: page.documents || [],
-                videos: page.videos || [],
+                    is_external: page.is_external || false,
+                    rules_if: page.rules_if || null,
+                    rules_else_page_id: page.rules_else_page_id || null,
+                    audios: page.audios || [],
+                    documents: page.documents || [],
+                    videos: page.videos || [],
 
-                rules_if_message: page.rules_if_message || null,
-                rules_else_message: page.rules_else_message || null,
-            }
+                    rules_if_message: page.rules_if_message || null,
+                    rules_else_message: page.rules_else_message || null,
+                }
+            })
+
+
         },
         copyToClipBoard(text) {
             navigator.clipboard.writeText(text).then(() => {
@@ -1619,9 +1638,7 @@ export default {
                     type: 'success'
                 });
                 this.pageForm.next_page_id = item.id
-            }
-
-            else
+            } else
                 this.$notify({
                     title: "Конструктор страниц",
                     text: "Вы не можете связать данную страницу с собой",
@@ -1720,6 +1737,18 @@ export default {
             }).then((response) => {
 
                 if (this.pageForm.id == null) {
+
+                    this.preparePageForm(response.data)
+                  /*  this.pageForm.id = response.data.id|| null
+                    this.pageForm.slug_id = response.data.slug.id|| null
+                    this.pageForm.slug = response.data.slug|| null
+                    this.pageForm.command = response.data.slug.command|| null
+                    this.pageForm.comment = response.data.slug.comment || null*/
+
+                }
+
+
+                if (!this.need_stay_after_save) {
                     this.load = true
 
                     this.$nextTick(() => {
@@ -1744,15 +1773,17 @@ export default {
                     type: 'success'
                 });
 
-                if (this.pageForm.id != null) {
-                    this.$store.dispatch("loadPages", {
-                        dataObject: {
-                            botId: this.bot.id
-                        },
-                        page: localStorage.getItem(`cashman_pagelist_${this.bot.id}_page_index`) || 0
 
-                    })
-                }
+                this.$store.dispatch("loadPages", {
+                    dataObject: {
+                        botId: this.bot.id,
+                        needNewFirst: true,
+
+                    },
+                    page: localStorage.getItem(`cashman_pagelist_${this.bot.id}_page_index`) || 0
+
+                })
+
             }).catch(err => {
 
             })
@@ -1859,8 +1890,7 @@ export default {
         pageListCallback(page) {
             this.$notify("Вы выбрали страницу из списка! Все остальные действия будут производится для этой страницы");
             this.load = true
-            this.page = page
-            this.preparePageForm()
+            this.preparePageForm(page)
             this.$nextTick(() => {
                 this.load = false
             });

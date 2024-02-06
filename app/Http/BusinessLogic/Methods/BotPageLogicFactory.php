@@ -42,7 +42,7 @@ class BotPageLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, $size = null, $needDeleted = false): BotPageCollection
+    public function list($search = null, $size = null, $needDeleted = false, $needNewFirst = false): BotPageCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -66,6 +66,8 @@ class BotPageLogicFactory
 
                 })
                 ->orWhere("id", 'like', "%$search%");
+
+        $botPages = $botPages->orderBy("updated_at", $needNewFirst? "DESC":"ASC");
 
         return new BotPageCollection($botPages->paginate($size));
     }
@@ -268,6 +270,8 @@ class BotPageLogicFactory
 
         $this->bot->updated_at = Carbon::now();
         $this->bot->save();
+
+        $page = BotPage::query()->find($page->id);
 
         return new BotPageResource($page);
     }

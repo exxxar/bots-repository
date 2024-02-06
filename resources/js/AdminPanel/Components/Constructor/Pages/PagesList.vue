@@ -21,6 +21,14 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         <div class="col-12">
             <div class="form-check">
                 <input class="form-check-input"
+                       v-model="need_new_first"
+                       type="checkbox" id="need-new-first">
+                <label class="form-check-label" for="need-new-first">Сперва новые</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-check">
+                <input class="form-check-input"
                        v-model="need_deleted"
                        type="checkbox" id="needDeleted">
                 <label class="form-check-label" for="needDeleted">Отобразить удаленные</label>
@@ -165,6 +173,7 @@ export default {
             bot: null,
             current_page: 0,
             need_deleted: false,
+            need_new_first: true,
             loading: true,
             pages: [],
             search: null,
@@ -279,7 +288,8 @@ export default {
                 dataObject: {
                     botId: this.bot.id || null,
                     search: this.search || null,
-                    needDeleted: this.need_deleted
+                    needDeleted: this.need_deleted,
+                    needNewFirst: this.need_new_first
                 },
                 page: this.current_page || 0
             }).then(resp => {
