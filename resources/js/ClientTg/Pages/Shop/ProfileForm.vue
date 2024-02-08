@@ -358,7 +358,7 @@ export default {
             this.loading = true;
 
             this.$store.dispatch("saveProfileFormData", {
-                ...this.vipForm
+                dataObject:this.vipForm
             }).then((resp) => {
                 this.loading = false
                 this.tg.close()

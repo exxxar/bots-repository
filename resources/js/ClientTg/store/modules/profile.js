@@ -26,7 +26,7 @@ const actions = {
     async saveProfileFormData(context, payload = {dataObject:null}) {
         let link = `${BASE_PROFILE_FORM_LINK}/store-profile-data`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', data.dataObject)
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
