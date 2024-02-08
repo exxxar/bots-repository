@@ -241,6 +241,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                            @change="needRemoveField( 'request_contact',select.row, select.col)"
                            @click="keyboard[select.row][select.col].request_contact = true"
                            name="request-radio"
+                           v-model="keyboard[select.row][select.col].request_contact"
                            class="form-check-input" :id="'phone-row-'+select.row+'-col-'+select.col">
                     <label class="form-check-label" :for="'phone-row-'+select.row+'-col-'+select.col">
                         Запросить телефон
@@ -249,6 +250,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 <div class="form-check" v-if="type==='reply'">
                     <input type="radio"
                            name="request-radio"
+                           v-model="keyboard[select.row][select.col].request_location"
                            @change="needRemoveField( 'request_location',select.row, select.col)"
                            @click="keyboard[select.row][select.col].request_location = true"
                            class="form-check-input" :id="'location-row-'+select.row+'-col-'+select.col">
