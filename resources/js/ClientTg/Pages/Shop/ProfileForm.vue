@@ -44,7 +44,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     <div class="input-style input-style-2">
                         <input type="email" class="form-control text-center font-14 p-3 rounded-s border-theme"
                                v-model="vipForm.email"
-                               placeholder="+7(000)000-00-00"
+                               placeholder="example@test.com"
                                aria-label="vipForm-phone" aria-describedby="vipForm-phone" required>
 
                     </div>

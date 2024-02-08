@@ -434,12 +434,12 @@ class RestaurantBotController extends Controller
         $bot = BotManager::bot()->getSelf();
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto("Заполни эту анкету и получит достук к системе CashBack",
-                InputFile::create(public_path() . "/images/cashman2.jpg"),
+            ->replyPhoto("Заполни эту анкету и получи доступ к системе CashBack",
+                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
                 [
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                            "url" => env("APP_URL") . "/restaurant/vip-form/$bot->bot_domain"
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/vip"
                         ]],
                     ],
 
