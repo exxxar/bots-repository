@@ -426,7 +426,7 @@ class CashBackScriptController extends SlugController
 
     public function specialCashBackSystem(...$config)
     {
-
+        Log::info("specialCashBackSystem start");
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
             ->first())["value"];
@@ -442,13 +442,15 @@ class CashBackScriptController extends SlugController
         $botUser = BotManager::bot()->currentBotUser();
 
         if (!$botUser->is_vip) {
+
+            Log::info("specialCashBackSystem not is_vip");
             $bot = BotManager::bot()->getSelf();
 
             $scriptFormId = (Collection::make($config[1])
                 ->where("key", "custom_profile_form_script_id")
                 ->first())["value"] ?? null;
 
-            Log::info("script ".($scriptFormId??'-'));
+            Log::info("specialCashBackSystem script =>$scriptFormId");
             if (!is_null($scriptFormId)) {
                 BotManager::bot()
                     ->runSlug($scriptFormId);
@@ -467,7 +469,7 @@ class CashBackScriptController extends SlugController
 
             return;
         }
-
+        Log::info("specialCashBackSystem after checking");
         $botUser = BotManager::bot()->currentBotUser();
 
         $data = "001" . $botUser->telegram_chat_id;
