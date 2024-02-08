@@ -28,7 +28,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12">
-                    <p class="mb-3" v-if="vipForm.name"><em>- Отлично, <strong>{{ vipForm.name }}</strong>! А теперь,
+                    <p class="mb-3" v-if="settings.ne"><em>- Отлично, <strong>{{ vipForm.name }}</strong>! А теперь,
                         чтобы Вы могли
                         пользоваться всеми моими функциями, мне нужен Ваш номер телефона. Можете ввести его?</em>
                     </p>
@@ -222,6 +222,7 @@ export default {
                 need_age: true,
                 need_city: true,
                 need_sex: true,
+                need_phone: true,
                 need_profile_form_image: true,
                 form_image: null,
                 pre_birthday_text: null,

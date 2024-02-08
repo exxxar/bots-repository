@@ -274,9 +274,12 @@ trait BotDialogTrait
             $step++;
         }
 
+
+
         $channel = $botDialogCommand->result_channel ??
             $bot->order_channel ??
             $bot->main_channel ?? null;
+        Log::info("!!!!!!!!channel ".($channel??'-'));
 
         $tmpMessage .= "Пользователь:\n"
             . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
