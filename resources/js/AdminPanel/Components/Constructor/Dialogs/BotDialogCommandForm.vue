@@ -353,6 +353,35 @@ export default {
             photos: []
         }
     },
+    watch: {
+
+        'need_inline_keyboard': function (newVal, oldVal) {
+            if (!this.need_inline_keyboard) {
+                this.commandForm.inline_keyboard_id = null
+                this.commandForm.inline_keyboard = null
+            }
+
+        },
+        'need_reply_keyboard': function (newVal, oldVal) {
+            if (!this.need_reply_keyboard) {
+                this.commandForm.reply_keyboard_id = null
+                this.commandForm.reply_keyboard = null
+            }
+
+        },
+        'need_set_flags': function (newVal, oldVal) {
+            if (!this.need_set_flags) {
+                this.commandForm.result_flags = []
+            }
+
+        },
+        'need_images': function (newVal, oldVal) {
+            if (!this.need_images) {
+              this.commandForm.images = null
+            }
+
+        },
+    },
     computed: {
         ...mapGetters(['getDialogCommands', 'getDialogCommandsPaginateObject']),
         filteredCommands() {
