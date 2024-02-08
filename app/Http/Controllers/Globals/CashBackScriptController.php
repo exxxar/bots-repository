@@ -448,6 +448,7 @@ class CashBackScriptController extends SlugController
                 ->where("key", "custom_profile_form_script_id")
                 ->first())["value"] ?? null;
 
+            Log::info("script ".($scriptFormId??'-'));
             if (!is_null($scriptFormId)) {
                 BotManager::bot()
                     ->runSlug($scriptFormId);
