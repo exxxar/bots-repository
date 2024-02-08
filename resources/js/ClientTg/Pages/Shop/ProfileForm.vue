@@ -16,7 +16,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
                 </div>
                 <div class="col-12">
-                    <p class="mb-3 text-center" v-if="settings.pre_name_text" v-html="settings.pre_name_text"></p>
+                    <h6 class="mb-3 text-center" v-if="settings.pre_name_text" v-html="settings.pre_name_text"></h6>
                     <div class="input-style input-style-2">
 
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
@@ -28,7 +28,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12" v-if="settings.need_phone">
-                    <p class="mb-3 text-center" v-if="settings.pre_phone_text" v-html="settings.pre_phone_text"></p>
+                    <h6 class="mb-3 text-center" v-if="settings.pre_phone_text" v-html="settings.pre_phone_text"></h6>
                     <div class="input-style input-style-2">
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
                                v-mask="['+7(###)###-##-##','+38(###)###-##-##']"
@@ -40,7 +40,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12" v-if="settings.need_email">
-                    <p class="mb-3 text-center" v-if="settings.pre_email_text" v-html="settings.pre_email_text"></p>
+                    <h6 class="mb-3 text-center" v-if="settings.pre_email_text" v-html="settings.pre_email_text"></h6>
                     <div class="input-style input-style-2">
                         <input type="email" class="form-control text-center font-14 p-3 rounded-s border-theme"
                                v-model="vipForm.email"
@@ -51,7 +51,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12" v-if="settings.need_sex">
-                    <p class="mb-3 text-center" v-if="settings.pre_sex_text" v-html="settings.pre_sex_text"></p>
+                    <h6 class="mb-3 text-center" v-if="settings.pre_sex_text" v-html="settings.pre_sex_text"></h6>
                     <div class="row mb-0">
                         <div class="col-6 p-3">
                             <div
@@ -75,7 +75,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12" v-if="settings.need_birthday">
-                    <p class="mb-3 text-center" v-if="settings.pre_birthday_text" v-html="settings.pre_birthday_text"></p>
+                    <h6 class="mb-3 text-center" v-if="settings.pre_birthday_text" v-html="settings.pre_birthday_text"></h6>
                     <div class="input-style input-style-2">
                         <input type="date" class="form-control text-center font-14 p-3 rounded-s border-theme"
                                v-model="vipForm.birthday"
@@ -84,7 +84,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12" v-if="settings.need_city">
-                    <p class="mb-3 text-center" v-if="settings.pre_city_text" v-html="settings.pre_city_text"></p>
+                    <h6 class="mb-3 text-center" v-if="settings.pre_city_text" v-html="settings.pre_city_text"></h6>
                     <div class="input-style input-style-2">
                         <input type="text"
                                v-model="vipForm.city"
