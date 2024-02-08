@@ -50,6 +50,9 @@ class BotDialogCommandResource extends JsonResource
             ->where("id", $commandId)
             ->first();
 
+        if (is_null($command))
+            return;
+
         $refs = is_null($refs) ? [] : $refs;
 
         if (!in_array($commandId, $refs))
