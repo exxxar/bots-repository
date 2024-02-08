@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Globals;
 
 use App\Classes\SlugController;
 use App\Facades\BotManager;
+use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
@@ -15,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Telegram\Bot\FileUpload\InputFile;
 
 class ProfileFormScriptController extends SlugController
@@ -35,6 +37,38 @@ class ProfileFormScriptController extends SlugController
             ]);
 
         $params = [
+
+
+            [
+            "type" => "text",
+            "key" => "pre_name_text",
+            "value" => "Введите ваше имя"
+        ],
+            [
+                "type" => "text",
+                "key" => "pre_phone_text",
+                "value" => "Введите ваш номер телефона"
+            ],
+            [
+                "type" => "text",
+                "key" => "pre_email_text",
+                "value" => "Введите ваш адрес электронной почты"
+            ],
+            [
+                "type" => "text",
+                "key" => "pre_sex_text",
+                "value" => "Выберите ваш пол"
+            ],
+            [
+                "type" => "text",
+                "key" => "pre_birthday_text",
+                "value" => "Введите вашу дату рождения"
+            ],
+            [
+                "type" => "text",
+                "key" => "pre_city_text",
+                "value" => "Введите ваш город проживания"
+            ],
             [
                 "type" => "text",
                 "key" => "main_script_text",
@@ -93,11 +127,6 @@ class ProfileFormScriptController extends SlugController
                 "value" => true,
             ],
             [
-                "type" => "boolean",
-                "key" => "need_age",
-                "value" => true,
-            ],
-            [
                 "type" => "form_image",
                 "key" => "image",
                 "value" => null,
@@ -118,8 +147,27 @@ class ProfileFormScriptController extends SlugController
 
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function updateProfileFormData(Request $request){
+        $request->validate([
+            "name" => "required",
+            "phone" => "required",
+            // "birthday" => "required",
+            //  "city" => "required",
+            //"country" => "required",
+            //"address" => "required",
+            "sex" => "required",
+        ]);
 
+        BusinessLogic::administrative()
+            ->setBotUser($request->botUser ?? null)
+            ->setBot($request->bot ?? null)
+            ->setSlug($request->slug ?? null)
+            ->vipStore($request->all());
+
+        return response()->noContent();
     }
 
     public function loadProfileFormData(Request $request)
@@ -149,12 +197,7 @@ class ProfileFormScriptController extends SlugController
                 'need_profile_form_image' => (Collection::make($slug->config)
                         ->where("key", "need_profile_form_image")
                         ->first())["value"] ?? true,
-                'pre_age_text' => (Collection::make($slug->config)
-                        ->where("key", "pre_age_text")
-                        ->first())["value"] ?? 'Укажите ваш возраст',
-                'need_age' => (Collection::make($slug->config)
-                        ->where("key", "need_age")
-                        ->first())["value"] ?? true,
+
                 'pre_city_text' => (Collection::make($slug->config)
                         ->where("key", "pre_city_text")
                         ->first())["value"] ?? 'Укажите ваш город',
@@ -166,6 +209,12 @@ class ProfileFormScriptController extends SlugController
                         ->first())["value"] ?? 'Укажите ваш пол',
                 'need_sex' => (Collection::make($slug->config)
                         ->where("key", "need_sex")
+                        ->first())["value"] ?? true,
+                'pre_phone_text' => (Collection::make($slug->config)
+                        ->where("key", "pre_phone_text")
+                        ->first())["value"] ?? 'Укажите ваш номер телефона',
+                'need_phone' => (Collection::make($slug->config)
+                        ->where("key", "need_phone")
                         ->first())["value"] ?? true,
 
             ]

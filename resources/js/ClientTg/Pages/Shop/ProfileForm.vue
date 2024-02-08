@@ -27,27 +27,31 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     </div>
                 </div>
 
-                <div class="col-12">
-                    <p class="mb-3" v-if="settings.ne"><em>- Отлично, <strong>{{ vipForm.name }}</strong>! А теперь,
-                        чтобы Вы могли
-                        пользоваться всеми моими функциями, мне нужен Ваш номер телефона. Можете ввести его?</em>
-                    </p>
-                    <h6 class="text-center">Введите свой номер телефона</h6>
+                <div class="col-12" v-if="settings.need_phone">
+                    <p class="mb-3 text-center" v-if="settings.pre_phone_text" v-html="settings.pre_phone_text"></p>
                     <div class="input-style input-style-2">
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               v-mask="'+7(###)###-##-##'"
+                               v-mask="['+7(###)###-##-##','+38(###)###-##-##']"
                                v-model="vipForm.phone"
                                placeholder="+7(000)000-00-00"
                                aria-label="vipForm-phone" aria-describedby="vipForm-phone" required>
 
                     </div>
+                </div>
 
+                <div class="col-12" v-if="settings.need_email">
+                    <p class="mb-3 text-center" v-if="settings.pre_email_text" v-html="settings.pre_email_text"></p>
+                    <div class="input-style input-style-2">
+                        <input type="email" class="form-control text-center font-14 p-3 rounded-s border-theme"
+                               v-model="vipForm.email"
+                               placeholder="+7(000)000-00-00"
+                               aria-label="vipForm-phone" aria-describedby="vipForm-phone" required>
+
+                    </div>
                 </div>
 
                 <div class="col-12" v-if="settings.need_sex">
-                    <p class="mb-3"><em>Чтобы я мог обращаться к Вам правильно, скажи мне, какого Вы пола?</em></p>
-                    <h6 class="text-center">Вы мужчина или женщина?</h6>
-
+                    <p class="mb-3 text-center" v-if="settings.pre_sex_text" v-html="settings.pre_sex_text"></p>
                     <div class="row mb-0">
                         <div class="col-6 p-3">
                             <div
@@ -71,9 +75,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12" v-if="settings.need_birthday">
-                    <p class="mb-3"><em>Для того, чтобы я мог поздравлять Вас с днем рождения и сделать Вам приятно, мне
-                        нужно знать, когда он у Вас</em></p>
-                    <h6 class="text-center">Введите свой день рождения</h6>
+                    <p class="mb-3 text-center" v-if="settings.pre_birthday_text" v-html="settings.pre_birthday_text"></p>
                     <div class="input-style input-style-2">
                         <input type="date" class="form-control text-center font-14 p-3 rounded-s border-theme"
                                v-model="vipForm.birthday"
@@ -82,24 +84,13 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 </div>
 
                 <div class="col-12" v-if="settings.need_city">
-                    <p class="mb-3"><em>Чтобы я мог показывать Вам информацию, актуальную для Вашего города, мне нужно
-                        знать
-                        город Вашего проживания.</em></p>
-                    <h6 class="text-center">Какой у Вас город?</h6>
+                    <p class="mb-3 text-center" v-if="settings.pre_city_text" v-html="settings.pre_city_text"></p>
                     <div class="input-style input-style-2">
                         <input type="text"
                                v-model="vipForm.city"
-                               list="datalistCityOptions"
                                class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               placeholder="Краснодар"
+                               placeholder="Ваш город"
                                aria-label="vipForm-city" aria-describedby="vipForm-city" required>
-                        <datalist id="datalistCityOptions">
-                            <option value="Краснодар"/>
-                            <option value="Ростов-на-Дону"/>
-                            <option value="Таганрог"/>
-                            <option value="Донецк"/>
-                            <option value="Москва"/>
-                        </datalist>
                     </div>
                 </div>
                 <!-- -->
@@ -184,11 +175,11 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
             <h6>Ваши данные:</h6>
             <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
-            <p class="mb-0">Телефон: {{ botUser.phone || 'Не указано' }}</p>
-            <p class="mb-0">Email: {{ botUser.email || 'Не указано' }}</p>
-            <p class="mb-0">Город: {{ botUser.city || 'Не указано' }}</p>
-            <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
-            <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
+            <p class="mb-0" v-if="settings.need_phone">Телефон: {{ botUser.phone || 'Не указано' }}</p>
+            <p class="mb-0" v-if="settings.need_email">Email: {{ botUser.email || 'Не указано' }}</p>
+            <p class="mb-0" v-if="settings.need_city">Город: {{ botUser.city || 'Не указано' }}</p>
+            <p class="mb-0" v-if="settings.need_birthday">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
+            <p class="mb-0" v-if="settings.need_sex">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
             <p class="mb-0" v-for="field in vipForm.fields">
                 {{ field.title }}:
 
@@ -223,6 +214,7 @@ export default {
                 need_city: true,
                 need_sex: true,
                 need_phone: true,
+                need_email: true,
                 need_profile_form_image: true,
                 form_image: null,
                 pre_birthday_text: null,
@@ -231,6 +223,7 @@ export default {
                 pre_city_text: null,
                 pre_sex_text: null,
                 pre_name_text: null,
+                pre_phone_text: null,
             },
             load: false,
             confirm: false,
@@ -345,10 +338,6 @@ export default {
 
                 })
         },
-        nextStep() {
-            this.step++;
-        },
-
         loadProfileFormData() {
             this.loading = true;
             this.$store.dispatch("loadProfileFormData").then((resp) => {
@@ -368,7 +357,7 @@ export default {
         submit() {
             this.loading = true;
 
-            this.$store.dispatch("saveVip", {
+            this.$store.dispatch("saveProfileFormData", {
                 ...this.vipForm
             }).then((resp) => {
                 this.loading = false

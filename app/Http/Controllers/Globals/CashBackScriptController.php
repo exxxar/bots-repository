@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Globals;
 
 use App\Classes\SlugController;
 use App\Facades\BotManager;
+use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
@@ -35,6 +36,11 @@ class CashBackScriptController extends SlugController
             ]);
 
         $params = [
+            [
+                "type" => "text",
+                "key" => "custom_profile_form_script_id",
+                "value" => null
+            ],
             [
                 "type" => "text",
                 "key" => "first_cashback_granted",
@@ -372,7 +378,7 @@ class CashBackScriptController extends SlugController
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
-                    "bot_id"=> $bot->id,
+                    "bot_id" => $bot->id,
                     'type' => 'inline',
                     'slug' => "menu_cashback_request_$slugId",
 
@@ -438,17 +444,25 @@ class CashBackScriptController extends SlugController
         if (!$botUser->is_vip) {
             $bot = BotManager::bot()->getSelf();
 
-            \App\Facades\BotManager::bot()
-                ->replyPhoto("Заполни эту анкету и получи доступ к системе CashBack",
-                    InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
-                    [
-                        [
-                            ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/vip"
-                            ]],
-                        ],
+            $scriptFormId = (Collection::make($config[1])
+                ->where("key", "custom_profile_form_script_id")
+                ->first())["value"] ?? null;
 
-                    ]);
+            if (!is_null($scriptFormId)) {
+                BotManager::bot()
+                    ->runSlug($scriptFormId);
+            } else
+                \App\Facades\BotManager::bot()
+                    ->replyPhoto("Заполни эту анкету и получи доступ к системе CashBack",
+                        InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                        [
+                            [
+                                ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                                    "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/vip"
+                                ]],
+                            ],
+
+                        ]);
 
             return;
         }

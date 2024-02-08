@@ -845,10 +845,10 @@ class BotAdministrativeLogicFactory
 
         $validator = Validator::make($data, [
             "name" => "required",
-            "phone" => "required",
+           // "phone" => "required",
             //"birthday" => "required",
             //"city" => "required",
-            "sex" => "required",
+            //"sex" => "required",
         ]);
 
         if ($validator->fails())
