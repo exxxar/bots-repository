@@ -74,12 +74,6 @@ class BotDialogsLogicFactory
     }
 
 
-
-
-
-
-
-
     /**
      * @throws HttpException
      */
@@ -361,7 +355,7 @@ class BotDialogsLogicFactory
 
         $refs = is_null($refs) ? [] : $refs;
 
-        if (!in_array( $commandId , $refs))
+        if (!in_array($commandId, $refs))
             $refs[] = $commandId;
 
         if (!is_null($command->next_bot_dialog_command_id)) {
@@ -510,6 +504,13 @@ class BotDialogsLogicFactory
             throw new HttpException(404, "Диалоговая команда не найден!");
 
         $tmpCommand = $command;
+
+        $command->inline_keyboard_id = null;
+        $command->reply_keyboard_id = null;
+        $command->next_bot_dialog_command_id = null;
+        $command->bot_dialog_group_id = null;
+        $command->save();
+
         $command->delete();
 
         return new BotDialogCommandResource($tmpCommand);

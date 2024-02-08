@@ -16,6 +16,22 @@ const getters = {
 }
 
 const actions = {
+    async loadPageChains(context, payload = {dataObject: {start_page_id: null}}) {
+
+        let link = `${BASE_PAGES_LINK}/load-chains`
+        let method = 'POST'
+        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            return Promise.resolve(dataObject);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadPages(context, payload = {dataObject: {botId: null, search:null}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12
@@ -32,6 +48,17 @@ const actions = {
             delete dataObject.data
             context.commit('setPagesPaginateObject', dataObject)
             return Promise.resolve();
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async storePageChains(context, payload= {dataObject:{start_page_id:null, links: []}}){
+        let link = `${BASE_PAGES_LINK}/update-chains`
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+        return _axios.then((response) => {
+
+            return Promise.resolve(response.data);
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);

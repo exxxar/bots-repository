@@ -833,7 +833,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 v-if="pageForm.next_page_id"
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-danger"
                                 type="button"
-                                @click="pageForm.next_page_id = null">Очистить
+                                @click="clearLinks">Очистить
                             </button>
                             <button
                                 v-else
@@ -851,6 +851,33 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                 Подробнее
                             </a>
 
+
+                        </div>
+
+                        <h6 class="mb-3">Конструктор цепочек</h6>
+                        <div class="d-flex justify-content-center align-items-center flex-wrap">
+                            <span class="px-2">Текущая страница</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <div class="d-flex justify-content-center align-items-center px-3 py-2"
+                                 v-for="(item, index) in links">
+                                <button type="button"
+                                        @click="removeLink(index)"
+                                        v-bind:class="{'btn-danger':chainCollapseTest(item)}"
+                                        class="btn btn-primary position-relative rounded-5">
+                                    {{ item.slug.command || '-' }}
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    #{{ item.id }}
+                                  </span>
+                                </button>
+                                <i class="fa-solid fa-arrow-right ml-2" v-if="index<links.length-1"></i>
+                            </div>
+                            <i class="fa-solid fa-arrow-right" v-if="links.length>0"></i>
+                            <button type="button"
+                                    data-bs-toggle="modal" data-bs-target="#page-list-modal"
+                                    class="btn btn-outline-secondary position-relative rounded-5 ml-5">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
 
                         </div>
 
@@ -1241,6 +1268,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 <div class="modal-body">
                     <PagesList
                         :current="pageForm.id"
+                        :selected="selectedLinkIds"
                         v-on:callback="attachPage"
                         :editor="false"/>
                 </div>
@@ -1283,6 +1311,7 @@ export default {
     data() {
         return {
             tab: 0,
+            links: [],
             saveModal: null,
             pageModal: null,
             page: null,
@@ -1463,6 +1492,13 @@ export default {
         qr() {
             return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.link
         },
+        selectedLinkIds() {
+            let links = this.links.map(o => o["id"])
+            if (this.page == null)
+                return links
+
+            return this.page.id != null ? [this.page.id, ...links] : links;
+        },
         hasParts() {
             return this.need_page_sticker ||
                 this.need_page_audios ||
@@ -1556,6 +1592,23 @@ export default {
     },
 
     methods: {
+        chainCollapseTest(item) {
+            return this.page == null ?
+                this.links.filter(link => link.id == item.id).length > 1 :
+                [this.page, ...this.links].filter(link => link.id == item.id).length > 1
+        },
+        loadPageChains() {
+            return this.$store.dispatch("loadPageChains", {
+                dataObject: {
+                    start_page_id: this.page.id
+                }
+            }).then((response) => {
+                this.links = response.data
+            })
+        },
+        removeLink(index) {
+            this.links.splice(index, 1)
+        },
         loadSlugs() {
             this.load_slug_simple_list = false
             this.need_show_global_slug_list = false
@@ -1566,9 +1619,10 @@ export default {
         },
         preparePageForm(page) {
 
+            this.links = []
             this.page = page
             this.photos = []
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.pageForm = {
                     id: page.id,
                     slug_id: page.slug ? page.slug.id : null,
@@ -1597,8 +1651,10 @@ export default {
                     rules_if_message: page.rules_if_message || null,
                     rules_else_message: page.rules_else_message || null,
                 }
-            })
 
+                if (this.pageForm.id != null && this.pageForm.next_page_id != null)
+                    this.loadPageChains()
+            })
 
         },
         copyToClipBoard(text) {
@@ -1629,21 +1685,33 @@ export default {
             })
         },
 
+        clearLinks() {
+            this.links = []
+            this.pageForm.next_page_id = null
+        },
         attachPage(item) {
+            if (this.links.length == 0) {
+                if (item.id != this.pageForm.id) {
+                    this.$notify({
+                        title: "Конструктор страниц",
+                        text: "Вы успешно связали страницы!",
+                        type: 'success'
+                    });
+                    this.pageForm.next_page_id = item.id
+                } else
+                    this.$notify({
+                        title: "Конструктор страниц",
+                        text: "Вы не можете связать данную страницу с собой",
+                        type: 'error'
+                    });
+            }
 
-            if (item.id != this.pageForm.id) {
-                this.$notify({
-                    title: "Конструктор страниц",
-                    text: "Вы успешно связали страницы!",
-                    type: 'success'
-                });
-                this.pageForm.next_page_id = item.id
-            } else
-                this.$notify({
-                    title: "Конструктор страниц",
-                    text: "Вы не можете связать данную страницу с собой",
-                    type: 'error'
-                });
+            let inLinks = this.page == null ?
+                this.links.findIndex(link => link.id === item.id) != -1 :
+                this.links.findIndex(link => link.id === item.id) != -1 || item.id === this.page.id
+
+            if (!inLinks)
+                this.links.push(item)
         },
         injectContent(data) {
             if (this.pageForm.content)
@@ -1698,6 +1766,8 @@ export default {
             this.need_page_documents = false
             this.need_page_sticker = false
 
+            this.links = [];
+
             this.$nextTick(() => {
                 this.need_clean = false
             })
@@ -1739,14 +1809,21 @@ export default {
                 if (this.pageForm.id == null) {
 
                     this.preparePageForm(response.data)
-                  /*  this.pageForm.id = response.data.id|| null
-                    this.pageForm.slug_id = response.data.slug.id|| null
-                    this.pageForm.slug = response.data.slug|| null
-                    this.pageForm.command = response.data.slug.command|| null
-                    this.pageForm.comment = response.data.slug.comment || null*/
+                    /*  this.pageForm.id = response.data.id|| null
+                      this.pageForm.slug_id = response.data.slug.id|| null
+                      this.pageForm.slug = response.data.slug|| null
+                      this.pageForm.command = response.data.slug.command|| null
+                      this.pageForm.comment = response.data.slug.comment || null*/
 
                 }
 
+                if (this.links.length > 0)
+                    this.$store.dispatch("storePageChains", {
+                        dataObject: {
+                            start_page_id: response.data.id,
+                            links: this.links.map(o => o["id"])
+                        }
+                    })
 
                 if (!this.need_stay_after_save) {
                     this.load = true

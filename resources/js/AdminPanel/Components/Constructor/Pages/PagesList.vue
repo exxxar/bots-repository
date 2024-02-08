@@ -62,7 +62,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             @click="selectPage(page)">#{{ page.id || 'Не указано' }}
                             <span v-if="page.slug">{{ page.slug.command || 'Не указано' }}</span>
                             <span v-else>Не привязано к команде</span>
-                            <span v-if="current&&current==page.id" title="Вы не можете выбрать данную страницу"><i class="fa-solid fa-lock ml-2 text-danger"></i></span>
+                            <span v-if="(current&&current==page.id)||(selected||[]).indexOf(page.id)!=-1"
+                                  title="Вы не можете выбрать данную страницу"><i
+                                class="fa-solid fa-lock ml-2 text-danger"></i></span>
                         </strong>
 
 
@@ -167,7 +169,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["editor", "current"],
+    props: ["editor", "current", "selected"],
     data() {
         return {
             bot: null,
@@ -182,6 +184,9 @@ export default {
         }
     },
     watch: {
+        need_new_first: function (oldVal, newVal) {
+            this.nextPages(0)
+        },
         need_deleted: function (oldVal, newVal) {
             this.nextPages(0)
         },

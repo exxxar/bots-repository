@@ -21,6 +21,10 @@ BotManager::bot()
 
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\ProfileFormScriptController::class)
+    ->slug("global_profile_form_main", "profileFormMain");
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\BonusProductScriptController::class)
     ->slug("global_bonus_product", "bonusProduct");
 

@@ -22,6 +22,71 @@ use Illuminate\Validation\ValidationException;
 
 class BotPageController extends Controller
 {
+
+    public function loadChains(Request $request)
+    {
+        $request->validate([
+            "start_page_id"=>"required",
+        ]);
+
+        $pages = [];
+
+
+
+        $page = BotPage::query()
+            ->find($request->start_page_id);
+
+        if (is_null($page))
+            return response()->noContent(404);
+
+        $ids = [];
+        while(true){
+            $page = BotPage::query()
+                ->find($page->next_page_id);
+
+            if (is_null($page))
+                break;
+
+            $pages[] = $page;
+
+            if (in_array($page->id, $ids))
+                break;
+
+            $ids[] = $page->id;
+
+            if (is_null($page->next_page_id))
+                break;
+        }
+
+        return new BotPageCollection($pages);
+
+    }
+    public function updateChains(Request $request){
+
+        $request->validate([
+            "start_page_id"=>"required",
+            "links"=>"required"
+        ]);
+
+
+        $links = [$request->start_page_id, ...($request->links ?? [])];
+
+
+        for ($index=0;$index<count($links)-1;$index++)
+        {
+            $page = BotPage::query()
+                ->find($links[$index]);
+
+            if (is_null($page))
+                continue;
+
+            $page->next_page_id = $links[$index+1];
+            $page->save();
+        }
+
+        return \response()->noContent();
+
+    }
     /**
      * @throws \HttpException
      */

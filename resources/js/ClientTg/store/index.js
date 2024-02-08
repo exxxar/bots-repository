@@ -7,6 +7,7 @@ import products from './modules/shop/products';
 import ingredients from './modules/ingrediens';
 
 import wheelOfFortune from "./modules/globals/wheelOfFortune";
+import wheelOfFortune from "./modules/globals/wheelOfFortune";
 import chatHistory from "./modules/chat_history";
 import wheelOfFortuneCustom from "./modules/globals/wheelOfFortuneCustom";
 import bonusProduct from "./modules/globals/bonusProduct";
@@ -26,6 +27,7 @@ import slugs from "./modules/slugs";
 import botUsers from "./modules/bot_users";
 import media from "./modules/media";
 import quiz from "./modules/quiz";
+import profileForm from "./modules/profile";
 
 import util from "./modules/utilites";
 
@@ -128,6 +130,7 @@ export default createStore({
         media,
         ingredients,
         quiz,
-        chatHistory
+        chatHistory,
+        profileForm
     }
 })

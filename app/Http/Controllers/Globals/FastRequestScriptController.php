@@ -14,6 +14,7 @@ use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
@@ -50,6 +51,27 @@ class FastRequestScriptController extends SlugController
 
             ],
             [
+                "type" => "boolean",
+                "key" => "need_birthday",
+                "value" => true,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_city",
+                "value" => true,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_sex",
+                "value" => true,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_age",
+                "value" => true,
+            ],
+            [
                 "type" => "text",
                 "key" => "result_message",
                 "value" => "%s, наш менеджер свяжется с вами в ближайшее время!",
@@ -64,6 +86,30 @@ class FastRequestScriptController extends SlugController
 
     }
 
+    public function loadData(Request $request)
+    {
+        $slug = $request->slug;
+
+        return response()->json(
+            [
+                'display_type' => (Collection::make($slug->config)
+                        ->where("key", "display_type")
+                        ->first())["value"] ?? 0,
+                'need_birthday' => (Collection::make($slug->config)
+                        ->where("key", "need_birthday")
+                        ->first())["value"] ?? true,
+                'need_age' => (Collection::make($slug->config)
+                        ->where("key", "need_age")
+                        ->first())["value"] ?? true,
+                'need_city' => (Collection::make($slug->config)
+                        ->where("key", "need_city")
+                        ->first())["value"] ?? true,
+                'need_sex' => (Collection::make($slug->config)
+                        ->where("key", "need_sex")
+                        ->first())["value"] ?? true,
+            ]
+        );
+    }
     public function requestCallback(...$data)
     {
         $slugId = $data[3] ?? null;
@@ -181,13 +227,6 @@ class FastRequestScriptController extends SlugController
                     ],
                 ],
             ]);
-
-        Log::info("info=".(is_null($parentPageId) ?
-            "/request_callback_without_page $slugId" :
-            "/request_callback $slugId $parentPageId"));
-
-
-        Log::info(print_r($menu->menu, true));
 
         BotManager::bot()
             ->replyInlineKeyboard("$preText", $menu->menu);

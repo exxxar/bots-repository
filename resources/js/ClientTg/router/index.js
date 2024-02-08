@@ -31,6 +31,7 @@ import Empty from '@/ClientTg/Pages/Shop/Empty.vue';
 import Booking from '@/ClientTg/Pages/Shop/Booking.vue';
 import Admins from '@/ClientTg/Pages/Shop/Admins.vue';
 import Vip from '@/ClientTg/Pages/Shop/Vip.vue';
+import ProfileForm from '@/ClientTg/Pages/Shop/ProfileForm.vue';
 
 import Categories from '@/ClientTg/Pages/Shop/Categories.vue';
 
@@ -81,6 +82,12 @@ export const routes = [
         path: '/vip',
         component: Vip,
         meta: { title: 'VIP-анкета', hide_menu:true }
+    },
+    {
+        name: 'profileForm',
+        path: '/profile-form',
+        component: ProfileForm,
+        meta: { title: 'Анкета', hide_menu:true }
     },
     {
         name: 'quizzes',

@@ -14,6 +14,7 @@ use App\Http\Controllers\Bots\Web\YClientsController;
 use App\Http\Controllers\Globals\AboutBotScriptController;
 use App\Http\Controllers\Globals\BonusProductScriptController;
 use App\Http\Controllers\Globals\InstagramQuestScriptController;
+use App\Http\Controllers\Globals\ProfileFormScriptController;
 use App\Http\Controllers\Globals\ShopScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneCustomScriptController;
 use App\Http\Controllers\Globals\WheelOfFortuneScriptController;
@@ -244,6 +245,17 @@ Route::prefix("bot-client")
                 Route::post("/update-bot-user", "updateBotUser")
                     ->middleware(["tgAuth.admin"]);
 
+            });
+
+
+        Route::prefix("profile-form")
+            ->middleware(["tgAuth.any"])
+            ->controller(ProfileFormScriptController::class)
+            ->group(function () {
+                Route::post("/load-profile-data", "loadProfileFormData")
+                    ->middleware(["slug"]);
+                Route::post("/store-profile-data", "updateProfileFormData")
+                    ->middleware(["slug"]);
             });
 
         Route::prefix("cashback")

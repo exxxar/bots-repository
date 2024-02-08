@@ -247,6 +247,8 @@ Route::prefix("admin")
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/page", "createPage");
+                Route::post("/update-chains", "updateChains");
+                Route::post("/load-chains", "loadChains");
                 Route::post("/page-update", "updatePage");
                 Route::post("/duplicate/{pageId}", "duplicate");
                 Route::get("/restore/{pageId}", "restorePage");
