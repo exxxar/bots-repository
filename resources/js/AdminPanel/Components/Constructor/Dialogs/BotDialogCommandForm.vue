@@ -160,6 +160,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             </div>
             <div class="card-body">
                 <BotMenuConstructor
+                    :type="'inline'"
                     v-on:save="saveInlineKeyboard"
                     :edited-keyboard="commandForm.inline_keyboard"/>
             </div>
@@ -172,6 +173,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             </div>
             <div class="card-body">
                 <BotMenuConstructor
+                    :type="'reply'"
                     v-on:save="saveReplyKeyboard"
                     :edited-keyboard="commandForm.reply_keyboard"/>
             </div>
