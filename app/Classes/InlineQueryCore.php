@@ -70,7 +70,7 @@ class InlineQueryCore
                 ];
 
 
-            $this
+            \App\Facades\BotMethods::bot()
                 ->sendAnswerInlineQuery($id, $button_list);
         }
 
