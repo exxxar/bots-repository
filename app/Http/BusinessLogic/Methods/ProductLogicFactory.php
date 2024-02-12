@@ -22,6 +22,7 @@ use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -613,6 +614,8 @@ class ProductLogicFactory
                         ],
                     ]
                 ]);
+
+            Log::info("distance".print_r($distance, true));
         }
         //сделать чек на оплату (pdf)
         $order = Order::query()->create([
@@ -630,7 +633,7 @@ class ProductLogicFactory
             'product_count' => $summaryCount,
             'summary_price' => $summaryPrice,
             'delivery_price' => 0,
-            'delivery_range' => $distance ?? 0,
+            'delivery_range' =>  0,
             'deliveryman_latitude' => 0,
             'deliveryman_longitude' => 0,
             'delivery_note' => $deliveryNote,
