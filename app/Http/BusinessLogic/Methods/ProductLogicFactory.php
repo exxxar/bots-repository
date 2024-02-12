@@ -598,11 +598,11 @@ class ProductLogicFactory
             ->first())["value"] ?? null;
 
 
-        if (!is_null($shopCoords)&&!$needPickup) {
+        if (!is_null($shopCoords) && !$needPickup) {
             $coords = explode(',', $shopCoords);
-            Log::info("shop coords ".print_r($shopCoords, true));
-            Log::info("shop 2 coords ".print_r($coords, true));
-            Log::info("geo coords ".print_r($geo, true));
+            Log::info("shop coords " . print_r($shopCoords, true));
+            Log::info("shop 2 coords " . print_r($coords, true));
+            Log::info("geo coords " . print_r($geo, true));
             $data = [
                 "coords" => [
                     (object)[
@@ -615,12 +615,14 @@ class ProductLogicFactory
                     ],
                 ]
             ];
-            Log::info("pre-data=>".print_r($data, true));
+            Log::info("pre-data=>" . print_r($data, true));
             $distanceObject = BusinessLogic::geo()
                 ->setBot($this->bot ?? null)
                 ->getDistance($data);
 
-            Log::info("distance=>".print_r($distanceObject, true));
+            $distance = $distanceObject->distance ?? 0;
+
+            Log::info("distance=>" . print_r($distanceObject, true));
         }
         //сделать чек на оплату (pdf)
         $order = Order::query()->create([
@@ -638,7 +640,7 @@ class ProductLogicFactory
             'product_count' => $summaryCount,
             'summary_price' => $summaryPrice,
             'delivery_price' => 0,
-            'delivery_range' =>  0,
+            'delivery_range' => $distance ?? 0,
             'deliveryman_latitude' => 0,
             'deliveryman_longitude' => 0,
             'delivery_note' => $deliveryNote,
@@ -662,7 +664,7 @@ class ProductLogicFactory
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
-                 0, //$distance
+                $distance ?? 0, //$distance
                 $data["entrance_number"] ?? 'Не указано',
                 $data["floor_number"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
@@ -732,7 +734,7 @@ class ProductLogicFactory
             "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),
             "totalPrice" => $summaryPrice,
             "totalCount" => $summaryCount,
-            "distance" =>  0, //$distance
+            "distance" => $distance ?? 0, //$distance
             "currentDate" => $current_date,
             "code" => "Без промокода",
             "promoCount" => "0",
@@ -750,14 +752,13 @@ class ProductLogicFactory
                     "Счет на оплату заказа #" . ($order->id ?? 'не указан'),
                     InputFile::createFromContents($file, "invoice.pdf")
                 );
-        else
-        {
+        else {
             BusinessLogic::payment()
                 ->setBot($this->bot)
                 ->setBotUser($this->botUser)
                 ->setSlug($this->slug)
                 ->checkout([
-                    "products"=>$tmpProducts
+                    "products" => $tmpProducts
                 ]);
         }
 

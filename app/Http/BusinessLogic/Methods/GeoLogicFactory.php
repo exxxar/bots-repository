@@ -118,8 +118,8 @@ class GeoLogicFactory
 
 
             return (object)[
-                "duration"=>$data->routes[0]->duration ?? 0,
-                "distance"=>$data->routes[0]->distance ?? 0,
+                "duration"=>$data->routes[0]["duration"] ?? 0,
+                "distance"=>$data->routes[0]["distance"] ?? 0,
             ];
 
 
