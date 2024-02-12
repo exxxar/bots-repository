@@ -91,8 +91,11 @@ class GeoLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
+        Log::info("data in func =>". print_r($data, true));
 
         $coords = $data["coords"] ?? [];
+
+
 
         $tmpCoords = "";
         $index = 0;
