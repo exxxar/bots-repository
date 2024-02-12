@@ -603,20 +603,22 @@ class ProductLogicFactory
             Log::info("shop coords ".print_r($shopCoords, true));
             Log::info("shop 2 coords ".print_r($coords, true));
             Log::info("geo coords ".print_r($geo, true));
+            $data = [
+                "coords" => [
+                    (object)[
+                        "lat" => $geo->latitude ?? 0,
+                        "lon" => $geo->longitude ?? 0,
+                    ],
+                    (object)[
+                        "lat" => $coords[0] ?? 0,
+                        "lon" => $coords[1] ?? 0,
+                    ],
+                ]
+            ];
+            Log::info("pre-data=>".print_r($data, true));
             $distanceObject = BusinessLogic::geo()
                 ->setBot($this->bot ?? null)
-                ->getDistance([
-                    "coords" => [
-                        (object)[
-                            "lat" => $geo->latitude ?? 0,
-                            "lon" => $geo->longitude ?? 0,
-                        ],
-                        (object)[
-                            "lat" => $coords[0] ?? 0,
-                            "lon" => $coords[1] ?? 0,
-                        ],
-                    ]
-                ]);
+                ->getDistance($data);
 
             Log::info("distance=>".print_r($distanceObject, true));
         }

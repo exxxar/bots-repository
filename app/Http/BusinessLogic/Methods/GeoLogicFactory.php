@@ -80,19 +80,21 @@ class GeoLogicFactory
      */
     public function getDistance(array $data): object
     {
+        Log::info("data in func =>". print_r($data, true));
+
         if (is_null($this->bot))
             throw new HttpException(403, "Не выполнены условия функции");
 
-        $validator = Validator::make($data, [
+       /* $validator = Validator::make($data, [
             "coords.*" => "required",
             "coords.*.lat" => "required",
             "coords.*.lon" => "required",
         ]);
 
         if ($validator->fails())
-            throw new ValidationException($validator);
+            throw new ValidationException($validator);*/
 
-        Log::info("data in func =>". print_r($data, true));
+
 
         $coords = $data["coords"] ?? [];
 
