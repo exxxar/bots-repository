@@ -38,7 +38,8 @@ class InlineBotController extends Controller
 
                 ]
             ],
-            'thumb_url' => "/images/cashman2.jpg",
+            'thumb_url' => env("APP_URL")
+                ."/images/cashman2.jpg",
             //'url' => env("APP_URL"),
             'description' => "информация от администратора",
             'hide_url' => false
@@ -62,7 +63,8 @@ class InlineBotController extends Controller
 
                 ]
             ],
-            'thumb_url' => "/images/cashman.jpg",
+            'thumb_url' => env("APP_URL")
+                ."/images/cashman.jpg",
             //'url' => env("APP_URL"),
             'description' => "информация от администратора 2",
             'hide_url' => false
