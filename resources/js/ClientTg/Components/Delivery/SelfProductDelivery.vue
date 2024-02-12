@@ -79,25 +79,27 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     <i class="fa-solid fa-file-invoice mr-2"></i><span class="color-white">Найти товар</span>
                 </button>
 
-                <p class="mb-0 d-flex justify-content-between">Категории товара <a
-                    @click="resetCategories()"
-                    v-if="categories.length>0"
-                    href="javascript:void(0)">Сбросить</a></p>
-                <div class="row">
-                    <div class="col-12">
-                        <CategoryList
-                            :size="100"
-                            :active="activeCategories"
-                            :selected="categories"
-                            v-on:select="selectCategory"/>
-                    </div>
-                </div>
-
-                <p class="mb-2 text-center"><small>Всего товаров найдено ({{ paginate.meta.total }})</small></p>
 
 
             </div>
 
+            <div class="row">
+                <div class="col-12">
+                    <p class="mb-0 d-flex justify-content-between">Категории товара <a
+                        @click="resetCategories()"
+                        v-if="categories.length>0"
+                        href="javascript:void(0)">Сбросить</a></p>
+
+
+                    <p class="mb-2 text-center"><small>Всего товаров найдено ({{ paginate.meta.total }})</small></p>
+
+                    <CategoryList
+                        :size="100"
+                        :active="activeCategories"
+                        :selected="categories"
+                        v-on:select="selectCategory"/>
+                </div>
+            </div>
 
             <ProductItemSimple
                 :display-type="product_type_display"
@@ -116,7 +118,10 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
     </div>
 
 
+
+
     <form
+        id="basket"
         v-on:submit.prevent="startCheckout"
         class="card card-style" v-if="cartProducts.length>0">
         <div class="content">
@@ -155,7 +160,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
             <button
                 @click="clearCart"
-                class="btn btn-full btn-sm rounded-s bg-red1-dark font-800 text-uppercase w-100">
+                class="btn btn-full btn-sm rounded-l bg-red1-dark font-800 text-uppercase w-100">
                 <i class="fa-solid  fa-trash-can mr-2"></i><span class="color-white">Очистить корзину</span>
             </button>
 
@@ -347,7 +352,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <button
                 type="submit"
                 :disabled="spent_time_counter>0"
-                class="btn btn-full btn-sm rounded-s bg-highlight font-800 text-uppercase w-100 mb-2">
+                class="btn btn-full btn-sm rounded-l bg-highlight font-800 text-uppercase w-100 mb-2">
 
                 <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
                 <i v-else class="fa-solid fa-hourglass  mr-2"></i>
@@ -363,6 +368,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
         </div>
     </form>
+
 
 </template>
 <script>
@@ -587,7 +593,7 @@ export default {
     }
 }
 </script>
-<style>
+<style lang="scss">
 .scrolled-list {
     width: 100%;
     overflow-x: auto;
@@ -600,5 +606,15 @@ export default {
 .content {
     margin: 10px 10px 10px 10px !important;
 }
-
+.go-to-cart {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
 </style>

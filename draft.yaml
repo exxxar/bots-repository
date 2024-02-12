@@ -1,66 +1,30 @@
 models:
-  Quiz:
-    title: string:255 nullable
-    image: string:255 nullable
+  InlineQuerySlug:
+    bot_id: id foreign:bots
+    command: string:255 nullable
     description: longtext nullable
+
+    image: string:255 nullable
+
     completed_at: timestamp nullable
     start_at: timestamp nullable
     end_at: timestamp nullable
     display_type: integer default:0
     time_limit: double default:0
     show_answers: boolean default:false
-    bot_id: id foreign:bots
+
     relationships:
       belongsTo: Bot
-      belongsToMany: QuizCommand
+      hasMany: InlineQueryResult
 
-  QuizCommand:
-    title: string:255 nullable
-    description: longtext nullable
-    logo: string:255 nullable
-    relationships:
-      belongsToMany: BotUser, Quiz
+  InlineQueryResult:
 
-  QuizResult:
-    quiz_id: id foreign:quizs
-    quiz_command_id: id foreign:quiz_commands
-    points: double default:0
-    time: double default:0
-    result: json nullable
-    relationships:
-      belongsTo: Quiz, QuizCommand
 
-  QuizQuestion:
-    text: longtext nullable
-    media_content: json nullable
-    content_type: integer default:0
-    is_multiply: boolean default:false
-    is_open: boolean default:false
-    round: integer default:0
-    relationships:
-      belongsToMany: Quiz
-      hasMany: QuizAnswer
 
-  QuizAnswer:
-    quiz_question_id: id foreign:quiz_questions
-    text: longtext nullable
-    media_content: json nullable
-    content_type: integer default:0
-    is_right_answer: boolean default:false
-    points: double default:0
-    relationships:
-      hasOne: QuizQuestion
 
-seeders:     Quiz,     QuizCommand,      QuizResult,      QuizQuestion, QuizAnswer
+seeders:     Quiz
 
 controllers:
   Quiz:
     resource: api
-  QuizCommand:
-    resource: api
-  QuizResult:
-    resource: api
-  QuizQuestion:
-    resource: api
-  QuizAnswer:
-    resource: api
+

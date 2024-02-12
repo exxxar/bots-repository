@@ -797,13 +797,14 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendAnswerInlineQuery($inlineQueryId, $buttons = [])
+    public function sendAnswerInlineQuery($inlineQueryId, $buttons = [], $nextOffset = null)
     {
 
         try {
             $this->bot->answerInlineQuery([
                 'cache_time' => 300,
                 'is_personal' => true,
+                'next_offset' => $nextOffset,
                 "inline_query_id" => $inlineQueryId,
                 "results" => json_encode($buttons)
             ]);

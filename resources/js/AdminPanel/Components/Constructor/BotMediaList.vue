@@ -21,7 +21,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
             <div class="row">
                 <div @click="selectMedia(item)"
-                    class="col-md-4"
+                    class="col-lg-6  col-12"
                     v-for="(item, index) in media">
 
                     <div class="card mb-2" v-bind:class="{'border-info':(selected||[]).indexOf(item.file_id) !=-1 }">

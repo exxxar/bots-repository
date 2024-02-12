@@ -1,6 +1,6 @@
 <template>
     <div id="menu-product-info" class="menu menu-box-bottom menu-box-detached rounded-m d-block"
-         style="height:220px; display:block;"
+         style="height:220px; display:block;overflow:auto;"
          data-menu-effect="menu-over">
 
         <div class="w-100" v-if="product">

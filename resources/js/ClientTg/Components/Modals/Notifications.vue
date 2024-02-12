@@ -16,7 +16,7 @@
     </div>
 
     <div id="menu-success-1" class="menu menu-box-bottom menu-box-detached rounded-m"
-         data-menu-height="305" data-menu-effect="menu-over" style="display: block; height: 305px;">
+         data-menu-height="305" data-menu-effect="menu-over" style="display: block; height: 305px;overflow:auto;">
         <h1 class="text-center mt-4"><i class="fa fa-3x fa-check-circle color-green1-dark"></i></h1>
         <h1 class="text-center mt-3 text-uppercase font-700">{{title || 'Системное'}} </h1>
         <p class="boxed-text-l" v-html="text">
@@ -24,7 +24,9 @@
         <a data-dismiss="menu-success-1" class="close-menu btn btn-m btn-center-m button-s shadow-l rounded-s text-uppercase font-900 bg-green1-light">Хорошо</a>
     </div>
 
-    <div id="menu-warning-1" class="menu menu-box-bottom menu-box-detached rounded-m" data-menu-height="305" data-menu-effect="menu-over" style="display: block; height: 305px;">
+    <div id="menu-warning-1" class="menu menu-box-bottom menu-box-detached rounded-m"
+         data-menu-height="305" data-menu-effect="menu-over"
+         style="display: block; height: 305px;overflow:auto;">
         <h1 class="text-center mt-4"><i class="fa fa-3x fa-times color-red2-dark"></i></h1>
         <h1 class="text-center mt-3 text-uppercase font-700">{{title || 'Системное'}} </h1>
         <p class="boxed-text-l" v-html="text">

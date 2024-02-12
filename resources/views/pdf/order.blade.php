@@ -52,6 +52,9 @@
     <li>Дополнительная информация от заказчика <strong>{!! $message !!}</strong>
     </li>
     <li>Сумма заказа <strong>{{$totalPrice }} руб.</strong></li>
+    @if($distance>0)
+    <li>Дистанция доставки <strong>{{$distance }} км</strong></li>
+    @endif
     <li>Количество позиций в заказе <strong>{{$totalCount}} ед.</strong></li>
     <li>Дата и время осуществления заказа <strong>{{$currentDate}}!</strong></li>
 </ul>

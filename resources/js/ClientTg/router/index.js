@@ -402,7 +402,7 @@ export const deliveryRoutes = [
         name: 'DeliveryMain',
         path: '/delivery-main',
         component: DeliveryMain,
-        meta: { title: 'Доставка: Главная', hide_menu:true}
+        meta: { title: 'Доставка: Главная', hide_menu:true, show_cart:true}
     },
 
     {

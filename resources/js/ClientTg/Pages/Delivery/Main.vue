@@ -3,6 +3,7 @@ import DeliveryRequestForm from "@/ClientTg/Components/Delivery/SelfProductDeliv
 </script>
 <template>
     <DeliveryRequestForm></DeliveryRequestForm>
+
 </template>
 <script>
 export default {

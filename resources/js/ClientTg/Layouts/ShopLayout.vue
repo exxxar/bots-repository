@@ -143,6 +143,19 @@ import {Head} from '@inertiajs/vue3'
 
         </div>
 
+
+        <div id="footer-bar"
+             v-if="$route.meta.show_cart&&cartTotalCount>0"
+             class="footer-bar-5 bg-transparent mb-2 ml-2 mr-2 rounded-m">
+            <button type="button"
+                    @click="scrollToBasket"
+                    class="btn btn-m btn-full mb-3 rounded-l text-uppercase font-900 shadow-s bg-green2-dark position-relative w-100">
+                Перейти в корзину <span class="badge badge-danger" style="margin-top:12px;">{{cartTotalCount}}</span>
+            </button>
+        </div>
+
+
+
         <slot/>
 
         <slot name="modals"></slot>
@@ -190,6 +203,11 @@ export default {
         closeShop() {
             this.tg.close()
         },
+        scrollToBasket(){
+            document.querySelector("#basket").scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
 
     },
 

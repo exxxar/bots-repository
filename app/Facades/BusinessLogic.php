@@ -5,6 +5,7 @@ namespace App\Facades;
 
 use App\Http\BusinessLogic\Methods\BotMediaLogicFactory as MediaLogic;
 use App\Http\BusinessLogic\Methods\BotPageLogicFactory as PageLogic;
+use App\Http\BusinessLogic\Methods\PaymentLogicFactory as PaymentLogic;
 use App\Http\BusinessLogic\Methods\BotLogicFactory as BotLogic;
 use App\Http\BusinessLogic\Methods\BotSlugLogicFactory as SlugLogic;
 use App\Http\BusinessLogic\Methods\ManagerLogicFactory as ManagerLogic;
@@ -40,6 +41,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static DeliveryLogic delivery()
  * @method static YClientsLogic yClients()
  * @method static QuizLogic quiz()
+ * @method static PaymentLogic payment()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

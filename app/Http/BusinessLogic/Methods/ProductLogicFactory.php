@@ -524,6 +524,10 @@ class ProductLogicFactory
         $ids = Collection::make($tmpProducts)
             ->pluck("id");
 
+        $usePaymentSystem = (Collection::make($this->slug->config)
+            ->where("key", "use_payment_system")
+            ->first())["value"] ?? false;
+
         $products = Product::query()
             ->whereIn("id", $ids)
             ->get();
@@ -588,6 +592,28 @@ class ProductLogicFactory
                     "address" => $data["address"]
                 ]);
 
+        $shopCoords = (Collection::make($this->slug->config)
+            ->where("key", "shop_coords")
+            ->first())["value"] ?? null;
+
+
+        if (!is_null($shopCoords)&&!$needPickup) {
+            $coords = explode(',', $shopCoords);
+            $distance = BusinessLogic::geo()
+                ->setBot($this->bot ?? null)
+                ->getDistance([
+                    "coords" => [
+                        (object)[
+                            "lat" => $geo->latitude ?? 0,
+                            "lon" => $geo->longitude ?? 0,
+                        ],
+                        (object)[
+                            "lat" => $coords[0] ?? 0,
+                            "lon" => $coords[1] ?? 0,
+                        ],
+                    ]
+                ]);
+        }
         //сделать чек на оплату (pdf)
         $order = Order::query()->create([
             'bot_id' => $this->bot->id,
@@ -604,7 +630,7 @@ class ProductLogicFactory
             'product_count' => $summaryCount,
             'summary_price' => $summaryPrice,
             'delivery_price' => 0,
-            'delivery_range' => 0,
+            'delivery_range' => $distance ?? 0,
             'deliveryman_latitude' => 0,
             'deliveryman_longitude' => 0,
             'delivery_note' => $deliveryNote,
@@ -622,13 +648,13 @@ class ProductLogicFactory
 
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
 
-
         $userInfo = !$needPickup ?
-            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
+            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция: %s км\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
+                $distance ?? 0,
                 $data["entrance_number"] ?? 'Не указано',
                 $data["floor_number"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
@@ -698,6 +724,7 @@ class ProductLogicFactory
             "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),
             "totalPrice" => $summaryPrice,
             "totalCount" => $summaryCount,
+            "distance" => $distance ?? 0,
             "currentDate" => $current_date,
             "code" => "Без промокода",
             "promoCount" => "0",
@@ -707,13 +734,24 @@ class ProductLogicFactory
 
         $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
 
-        BotMethods::bot()
-            ->whereBot($this->bot)
-            ->sendDocument(
-                $this->botUser->telegram_chat_id,
-                "Счет на оплату заказа #" . ($order->id ?? 'не указан'),
-                InputFile::createFromContents($file, "invoice.pdf")
-            );
+        if (!$usePaymentSystem)
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendDocument(
+                    $this->botUser->telegram_chat_id,
+                    "Счет на оплату заказа #" . ($order->id ?? 'не указан'),
+                    InputFile::createFromContents($file, "invoice.pdf")
+                );
+        else
+        {
+            BusinessLogic::payment()
+                ->setBot($this->bot)
+                ->setBotUser($this->botUser)
+                ->setSlug($this->slug)
+                ->checkout([
+                    "products"=>$tmpProducts
+                ]);
+        }
 
 
     }

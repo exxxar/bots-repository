@@ -60,6 +60,12 @@ class SimpleDeliveryController extends SlugController
 
             ],
             [
+                "type" => "boolean",
+                "key" => "use_payment_system",
+                "value" => false,
+
+            ],
+            [
                 "type" => "text",
                 "key" => "disabled_text",
                 "value" => "Магазин временно не доступен",
@@ -76,6 +82,91 @@ class SimpleDeliveryController extends SlugController
                 "type" => "text",
                 "key" => "btn_text",
                 "value" => "Перейти",
+
+            ],
+
+            [
+                "type" => "boolean",
+                "key" => "need_name",
+                "value" => true,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_phone_number",
+                "value" => true,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_email",
+                "value" => false,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_shipping_address",
+                "value" => false,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_send_email_to_provider",
+                "value" => true,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_send_phone_number_to_provider",
+                "value" => true,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "is_flexible",
+                "value" => false,
+
+            ],
+            [
+                "type" => "text",
+                "key" => "tax_system_code",
+                "value" => 1,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_disable_notification",
+                "value" => false,
+
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_protect_content",
+                "value" => false,
+
+            ],
+            [
+                "type" => "text",
+                "key" => "btn_payment_text",
+                "value" => "Оплатить заказ",
+
+            ],
+            [
+                "type" => "text",
+                "key" => "checkout_description",
+                "value" => "Описание товара",
+
+            ],
+            [
+                "type" => "text",
+                "key" => "checkout_title",
+                "value" => "Товар",
+
+            ],
+            [
+                "type" => "geo",
+                "key" => "shop_coords",
+                "value" => null,
 
             ],
 

@@ -11,6 +11,8 @@ class InlineBotController extends Controller
     public function inlineHandler(...$data) {
         $inlineQueryId = $data[2] ?? null;
 
+        Log::info("inlineHandler=>".print_r($data, true));
+
 
         if (is_null($inlineQueryId))
             return;
