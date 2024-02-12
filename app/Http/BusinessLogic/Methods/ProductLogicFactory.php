@@ -657,7 +657,7 @@ class ProductLogicFactory
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
-                $distance ?? 0,
+                 0, //$distance
                 $data["entrance_number"] ?? 'Не указано',
                 $data["floor_number"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
