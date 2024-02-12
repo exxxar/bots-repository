@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class InlineBotController extends Controller
 {
-    public function baseMenu(){
+    public function baseMenu(...$data){
         $command = $data[3] ?? null;
         $offset = $data[4] ?? null;
         $inlineQueryId = $data[0] ?? null;
