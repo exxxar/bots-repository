@@ -84,7 +84,7 @@ class InlineQueryCore
                         ."/images/error.png",
                     //'url' => env("APP_URL"),
                     'description' => "Сожалеем, но на текущий момент по вашему запросу нет никакой информации! Возможно, она появится позже...",
-                    'hide_url' => false
+                    'hide_url' => true
                 ];
 
 
