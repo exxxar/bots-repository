@@ -106,8 +106,8 @@ class InlineBotController extends Controller
             'id' => uniqid(),
             'photo_url' => env("APP_URL")
                 ."/images/photo_2023-04-05_17-32-43.jpg",
-            'title' => "Наше основное меню 3",
-            'caption' => "Наше основное меню (заголовок) 3",
+            'title' => "Наше основное меню 3яя",
+            'caption' => "Наше основное меню (заголовок) сс3",
             'input_message_content' => [
                 'message_text' => "test " ,
             ],
@@ -135,10 +135,10 @@ class InlineBotController extends Controller
             'id' => uniqid(),
             'photo_url' => env("APP_URL")
                 ."/images/deliveryman.jpg",
-            'title' => "Наше основное меню 3",
-            'caption' => "Наше основное меню (заголовок) 3",
+            'title' => "Наше основное меню 34",
+            'caption' => "Наше основное меню (заголовок) 311",
             'input_message_content' => [
-                'message_text' => "test " ,
+                'message_text' => "test фывфы" ,
             ],
             'reply_markup' => [
                 'inline_keyboard' => [
