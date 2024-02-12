@@ -1,14 +1,24 @@
 created:
-    - app/Http/Controllers/ChatLogController.php
-    - database/factories/ChatLogFactory.php
-    - database/migrations/2024_01_23_222006_create_chat_logs_table.php
-    - app/Models/ChatLog.php
-    - database/seeders/ChatLogSeeder.php
-    - tests/Feature/Http/Controllers/ChatLogControllerTest.php
-    - app/Http/Requests/ChatLogStoreRequest.php
-    - app/Http/Requests/ChatLogUpdateRequest.php
-    - app/Http/Resources/ChatLogCollection.php
-    - app/Http/Resources/ChatLogResource.php
+    - app/Http/Controllers/InlineQuerySlugController.php
+    - app/Http/Controllers/InlineQueryItemController.php
+    - database/factories/InlineQuerySlugFactory.php
+    - database/factories/InlineQueryItemFactory.php
+    - database/migrations/2024_02_12_221127_create_inline_query_slugs_table.php
+    - database/migrations/2024_02_12_221128_create_inline_query_items_table.php
+    - app/Models/InlineQuerySlug.php
+    - app/Models/InlineQueryItem.php
+    - database/seeders/InlineQuerySlugSeeder.php
+    - database/seeders/InlineQueryItemSeeder.php
+    - tests/Feature/Http/Controllers/InlineQuerySlugControllerTest.php
+    - tests/Feature/Http/Controllers/InlineQueryItemControllerTest.php
+    - app/Http/Requests/InlineQuerySlugStoreRequest.php
+    - app/Http/Requests/InlineQuerySlugUpdateRequest.php
+    - app/Http/Requests/InlineQueryItemStoreRequest.php
+    - app/Http/Requests/InlineQueryItemUpdateRequest.php
+    - app/Http/Resources/InlineQuerySlugCollection.php
+    - app/Http/Resources/InlineQuerySlugResource.php
+    - app/Http/Resources/InlineQueryItemCollection.php
+    - app/Http/Resources/InlineQueryItemResource.php
 updated:
     - routes/api.php
 models:
@@ -67,3 +77,5 @@ models:
     QuizQuestion: { text: 'longtext nullable', media_content: 'json nullable', content_type: 'integer default:0', is_multiply: 'boolean default:false', is_open: 'boolean default:false', round: 'integer default:0', relationships: { belongsToMany: Quiz, hasMany: QuizAnswer } }
     QuizAnswer: { quiz_question_id: 'id foreign:quiz_questions', text: 'longtext nullable', media_content: 'json nullable', content_type: 'integer default:0', is_right_answer: 'boolean default:false', points: 'double default:0', relationships: { hasOne: QuizQuestion } }
     ChatLog: { text: 'longtext nullable', media_content: 'json nullable', content_type: 'integer default:0', bot_id: 'id foreign:bots', form_bot_user_id: 'id foreign:bot_users', to_bot_user_id: 'id foreign:bot_users', relationships: { belongsTo: 'Bot, BotUser' } }
+    InlineQuerySlug: { bot_id: 'id foreign:bots', command: 'string:255 nullable', description: 'longtext nullable', relationships: { belongsTo: Bot, hasMany: InlineQueryResult } }
+    InlineQueryItem: { inline_query_slug_id: 'id foreign:inline_query_slugs', type: 'integer default:0', title: 'string:255 nullable', description: 'longtext nullable', input_message_content: 'json nullable', inline_keyboard_id: 'id foreign:bot_menu_templates', custom_settings: 'json nullable', relationships: { belongsTo: 'InlineQuerySlug, BotMenuTemplate' } }

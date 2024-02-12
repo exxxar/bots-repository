@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bots;
 
 use App\Facades\BotManager;
+use App\Facades\InlineQueryService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 
@@ -266,6 +267,10 @@ class InlineBotController extends Controller
         $inlineQueryId = $data[0] ?? null;
 
 
+       // $inlineSlugs =   InlineQuerySlug::query()
+      /*  InlineQueryService::inline()
+            ->getInlineQueryItem()*/
+
 
 
         $tmp_button = [
@@ -295,11 +300,7 @@ class InlineBotController extends Controller
 
 
         BotManager::bot()
-            ->sendAnswerInlineQuery($inlineQueryId, $result_list, $offset, [
-                "text"=>"TEST 122",
-                //"web_app"
-                "start_parameter"=>"test123"
-            ]);
+            ->sendAnswerInlineQuery($inlineQueryId, $result_list, $offset);
         //BotManager::bot()->reply("test inline");
     }
 }

@@ -153,3 +153,8 @@ Route::apiResource('quiz-answer', App\Http\Controllers\QuizAnswerController::cla
 
 
 Route::apiResource('chat-log', \App\Http\Controllers\Bots\Web\ChatLogController::class);
+
+
+Route::apiResource('inline-query-slug', App\Http\Controllers\InlineQuerySlugController::class);
+
+Route::apiResource('inline-query-item', App\Http\Controllers\InlineQueryItemController::class);
