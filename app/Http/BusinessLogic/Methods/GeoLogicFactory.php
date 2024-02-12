@@ -98,7 +98,7 @@ class GeoLogicFactory
         $index = 0;
         foreach ($coords as $point) {
             $point = (object)$point;
-            $tmpCoords .= "$point->lon,$point->lat" . ($index == count($coords - 1) ? ";" : "");
+            $tmpCoords .= "$point->lon,$point->lat" . ($index == count($coords )-1 ? ";" : "");
         }
 
         try {

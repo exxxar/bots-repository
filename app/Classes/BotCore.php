@@ -6,6 +6,7 @@ use App\Enums\BotStatusEnum;
 use App\Enums\CashBackDirectionEnum;
 use App\Events\CashBackEvent;
 use App\Facades\BotManager;
+use App\Facades\InlineQueryService;
 use App\Models\Basket;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
@@ -107,13 +108,19 @@ abstract class BotCore
             return;
 
 
-        $id = $data["inline_query"]["id"] ?? null;
+        $inlineData = $data["inline_query"];
+
+        $this->chatId = $data["from"]["id"] ?? null;
+
+/*        $id = $data["inline_query"]["id"] ?? null;
         $query = $data["inline_query"]["query"] ?? null;
+        $offset = $data["inline_query"]["offset"] ?? null;
 
-        $this->chatId = $data["inline_query"]["from"]["id"] ?? null;
+        $this->chatId = $data["inline_query"]["from"]["id"] ?? null;*/
 
+        InlineQueryService::bot()->handler($inlineData);
 
-        $this->tryCall($this->inline, $query, null, $id);
+      //  $this->tryCall($this->inline, $query, null, $id, $offset);
     }
 
     public function webHandler($domain, $data): \Illuminate\Http\JsonResponse
