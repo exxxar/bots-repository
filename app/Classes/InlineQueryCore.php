@@ -2,6 +2,7 @@
 
 namespace App\Classes;
 
+use App\Facades\BotManager;
 use Illuminate\Support\Facades\Log;
 
 class InlineQueryCore
@@ -30,7 +31,9 @@ class InlineQueryCore
         if (is_null($data))
             return $this;
 
-        //$id = $data["id"] ?? null;
+        $find = false;
+
+        $id = $data["id"] ?? null;
         $query = $data["query"] ?? null;
       //  $offset = $data["offset"] ?? null;
 
@@ -48,6 +51,28 @@ class InlineQueryCore
 
         }
 
+        if (!$find)
+        {
+
+                $button_list[] =  [
+                    'type' => 'article',
+                    'id' => uniqid(),
+                    'title' => "УПС!",
+                    'input_message_content' => [
+                        'message_text' => "По вашему запросу ничего не найдено....",
+                    ],
+
+                    'thumb_url' => env("APP_URL")
+                        ."/images/error.png",
+                    //'url' => env("APP_URL"),
+                    'description' => "Сожалеем, но на текущий момент по вашему запросу нет никакой информации! Возможно, она появится позже...",
+                    'hide_url' => false
+                ];
+
+
+            $this
+                ->sendAnswerInlineQuery($id, $button_list);
+        }
 
         return $this;
 
