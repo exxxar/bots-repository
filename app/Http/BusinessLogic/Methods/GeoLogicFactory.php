@@ -84,6 +84,7 @@ class GeoLogicFactory
             throw new HttpException(403, "Не выполнены условия функции");
 
         $validator = Validator::make($data, [
+            "coords.*" => "required",
             "coords.*.lat" => "required",
             "coords.*.lon" => "required",
         ]);
