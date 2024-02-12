@@ -70,6 +70,33 @@ class InlineBotController extends Controller
             'hide_url' => false
         ];
 
+        $tmp_button = [
+            'type' => 'photo',
+            'id' => uniqid(),
+            'photo_url' => env("APP_URL")
+                ."/images/cashman.jpg",
+            'title' => "Наше основное меню 3",
+            'caption' => "Наше основное меню (заголовок) 3",
+            'input_message_content' => [
+                'message_text' => "test " ,
+            ],
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [
+                        ['text' => "\xF0\x9F\x91\x89Запросить CashBack у администратора 2",
+                            "url" => "https://vk.com/exxxar"],
+                    ],
+
+                ]
+            ],
+            'thumb_url' => env("APP_URL")
+                ."/images/cashman.jpg",
+            //'url' => env("APP_URL"),
+            'description' => "информация от администратора 2",
+            'hide_url' => false
+        ];
+
+
         $button_list[] = $tmp_button;
 
 
