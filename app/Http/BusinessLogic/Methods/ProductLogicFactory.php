@@ -727,7 +727,7 @@ class ProductLogicFactory
             "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),
             "totalPrice" => $summaryPrice,
             "totalCount" => $summaryCount,
-            "distance" => $distance ?? 0,
+            "distance" =>  0, //$distance
             "currentDate" => $current_date,
             "code" => "Без промокода",
             "promoCount" => "0",
