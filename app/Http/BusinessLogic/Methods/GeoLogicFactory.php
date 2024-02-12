@@ -85,26 +85,21 @@ class GeoLogicFactory
         if (is_null($this->bot))
             throw new HttpException(403, "Не выполнены условия функции");
 
-       /* $validator = Validator::make($data, [
-            "coords.*" => "required",
-            "coords.*.lat" => "required",
-            "coords.*.lon" => "required",
-        ]);
-
-        if ($validator->fails())
-            throw new ValidationException($validator);*/
-
-
 
         $coords = $data["coords"] ?? [];
 
-
+        if (count($coords)==0)
+            return (object)[
+                "duration"=>0,
+                "distance"=>0,
+            ];
 
         $tmpCoords = "";
         $index = 0;
         foreach ($coords as $point) {
             $point = (object)$point;
             $tmpCoords .= "$point->lon,$point->lat" . ($index != count($coords )-1 ? ";" : "");
+            $index++;
         }
 
         try {
