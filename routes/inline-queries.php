@@ -6,4 +6,5 @@ use App\Http\Controllers\Bots\InlineBotController;
     ->controller(InlineBotController::class)
     ->query("меню", "baseMenu")
     ->query("тест", "baseMenu")
+    ->query("кнопки", "buttons")
     ->query("админы", "inlineHandler");

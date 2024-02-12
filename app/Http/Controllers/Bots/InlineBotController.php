@@ -259,4 +259,32 @@ class InlineBotController extends Controller
             ->sendAnswerInlineQuery($inlineQueryId, $button_list);
         //BotManager::bot()->reply("test inline");
     }
+
+    public function buttons(...$data) {
+        $command = $data[3] ?? null;
+        $offset = $data[4] ?? null;
+        $inlineQueryId = $data[0] ?? null;
+
+
+
+        $button_list[] = [
+            "text"=>"TEST 1",
+            //"web_app"
+            //"start_parameter"
+        ];
+
+        $button_list[] = [
+            "text"=>"TEST 2",
+            //"web_app"
+            //"start_parameter"
+        ];
+
+
+
+
+
+        BotManager::bot()
+            ->sendAnswerInlineQuery($inlineQueryId, $button_list);
+        //BotManager::bot()->reply("test inline");
+    }
 }

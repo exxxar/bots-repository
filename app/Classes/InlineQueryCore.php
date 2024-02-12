@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class InlineQueryCore
 {
+    use InlineQueryMethodsTrait;
 
     protected $controller = null;
 
