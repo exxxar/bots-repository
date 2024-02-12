@@ -52,7 +52,7 @@ class InlineQueryCore
         $find = false;
 
         $id = $data["id"] ?? null;
-        $query = $data["query"] ?? null;
+        $query = $data["query"] ?? "";
       //  $offset = $data["offset"] ?? null;
 
         include_once base_path('routes/inline-queries.php');
