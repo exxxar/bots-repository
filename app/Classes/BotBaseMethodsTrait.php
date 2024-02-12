@@ -806,7 +806,7 @@ trait BotBaseMethodsTrait
                 'next_offset' => $nextOffset,
                 "inline_query_id" => $inlineQueryId,
                 "results" => json_encode($results),
-                "button" => !is_null($button) ? $button : null,
+                "button" => $button,
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage() . " " .
