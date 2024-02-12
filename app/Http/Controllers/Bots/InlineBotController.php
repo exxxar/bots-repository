@@ -296,7 +296,7 @@ class InlineBotController extends Controller
 
         BotManager::bot()
             ->sendAnswerInlineQuery($inlineQueryId, $result_list, $offset, [
-                "text"=>"TEST 1",
+                "text"=>"TEST 122",
                 //"web_app"
                 "start_parameter"=>"test123"
             ]);
