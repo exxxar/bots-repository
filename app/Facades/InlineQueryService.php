@@ -7,7 +7,7 @@ use App\Classes\InlineQueryCore as Service;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static Service bot()
+ * @method static Service inline()
  * @see \Illuminate\Log\Logger
  */
 class InlineQueryService extends Facade

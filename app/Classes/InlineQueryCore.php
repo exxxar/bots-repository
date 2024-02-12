@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Facades\BotManager;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class InlineQueryCore
 {
@@ -12,7 +13,24 @@ class InlineQueryCore
 
     protected $routes = [];
 
-    public function bot(){
+    protected $bot;
+
+    public function __construct()
+    {
+        $this->bot = null;
+
+    }
+
+    public function setBot($bot): InlineQueryCore
+    {
+        if (is_null($bot))
+            throw new HttpException(400, "Бот не задан!");
+
+        $this->bot = $bot;
+        return $this;
+    }
+
+    public function inline(){
         return $this;
     }
 
@@ -71,6 +89,7 @@ class InlineQueryCore
 
 
             \App\Facades\BotMethods::bot()
+                ->whereBot($this->bot)
                 ->sendAnswerInlineQuery($id, $button_list);
         }
 

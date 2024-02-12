@@ -2,6 +2,6 @@
 
 use App\Http\Controllers\Bots\InlineBotController;
 
-\App\Facades\InlineQueryService::bot()
+\App\Facades\InlineQueryService::inline()
     ->controller(InlineBotController::class)
     ->query("меню", "inlineHandler");
