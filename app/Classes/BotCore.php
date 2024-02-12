@@ -119,7 +119,7 @@ abstract class BotCore
         $this->chatId = $data["inline_query"]["from"]["id"] ?? null;*/
 
         InlineQueryService::inline()
-            ->setBot($this->bot)
+            ->setBot($this->getSelf())
             ->handler($inlineData);
 
       //  $this->tryCall($this->inline, $query, null, $id, $offset);
