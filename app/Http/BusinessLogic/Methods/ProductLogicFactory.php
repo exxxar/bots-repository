@@ -600,9 +600,7 @@ class ProductLogicFactory
 
         if (!is_null($shopCoords) && !$needPickup) {
             $coords = explode(',', $shopCoords);
-            Log::info("shop coords " . print_r($shopCoords, true));
-            Log::info("shop 2 coords " . print_r($coords, true));
-            Log::info("geo coords " . print_r($geo, true));
+
             $data = [
                 "coords" => [
                     (object)[
@@ -615,14 +613,13 @@ class ProductLogicFactory
                     ],
                 ]
             ];
-            Log::info("pre-data=>" . print_r($data, true));
+
             $distanceObject = BusinessLogic::geo()
                 ->setBot($this->bot ?? null)
                 ->getDistance($data);
 
             $distance = $distanceObject->distance ?? 0;
 
-            Log::info("distance=>" . print_r($distanceObject, true));
         }
         //сделать чек на оплату (pdf)
         $order = Order::query()->create([
@@ -659,7 +656,7 @@ class ProductLogicFactory
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
 
         $userInfo = !$needPickup ?
-            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция: %s км\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
+            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция: %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',

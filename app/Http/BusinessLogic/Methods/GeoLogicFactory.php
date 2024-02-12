@@ -80,7 +80,7 @@ class GeoLogicFactory
      */
     public function getDistance(array $data): object
     {
-        Log::info("data in func =>". print_r($data, true));
+
 
         if (is_null($this->bot))
             throw new HttpException(403, "Не выполнены условия функции");
@@ -104,12 +104,10 @@ class GeoLogicFactory
 
         try {
 
-            Log::info("distance route "."https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
             $res = Http::get("https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
 
             $data = (object)$res->json();
 
-            Log::info("distance request to api=>".print_r($data, true));
             if ($data->code != "Ok")
                 return (object)[
                     "duration"=>0,
