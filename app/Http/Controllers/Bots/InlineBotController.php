@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Log;
 class InlineBotController extends Controller
 {
     public function inlineHandler(...$data) {
-        $command = $data[0] ?? null;
-        $offset = $data[3] ?? null;
-        $inlineQueryId = $data[2] ?? null;
+        $command = $data[3] ?? null;
+        $offset = $data[4] ?? null;
+        $inlineQueryId = $data[0] ?? null;
 
         Log::info("inlineHandler=>".print_r($data, true));
 
