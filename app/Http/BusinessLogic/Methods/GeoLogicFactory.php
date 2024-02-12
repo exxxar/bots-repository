@@ -107,7 +107,7 @@ class GeoLogicFactory
             Log::info("distance route "."https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
             $res = Http::get("https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
 
-            $data = $res->json();
+            $data = (object)$res->json();
 
             Log::info("distance request to api=>".print_r($data, true));
             if ($data->code != "Ok")
