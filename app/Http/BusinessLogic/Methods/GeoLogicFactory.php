@@ -106,6 +106,7 @@ class GeoLogicFactory
 
             $data = $res->json();
 
+            Log::info("distance request to api=>".print_r($data, true));
             if ($data->code != "Ok")
                 return (object)[
                     "duration"=>0,

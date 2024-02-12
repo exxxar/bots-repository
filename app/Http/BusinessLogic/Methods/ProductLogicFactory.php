@@ -600,7 +600,7 @@ class ProductLogicFactory
 
         if (!is_null($shopCoords)&&!$needPickup) {
             $coords = explode(',', $shopCoords);
-            $distance = BusinessLogic::geo()
+            $distanceObject = BusinessLogic::geo()
                 ->setBot($this->bot ?? null)
                 ->getDistance([
                     "coords" => [
@@ -615,7 +615,7 @@ class ProductLogicFactory
                     ]
                 ]);
 
-            Log::info("distance".print_r($distance, true));
+            Log::info("distance=>".print_r($distanceObject, true));
         }
         //сделать чек на оплату (pdf)
         $order = Order::query()->create([
