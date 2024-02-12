@@ -600,7 +600,9 @@ class ProductLogicFactory
 
         if (!is_null($shopCoords) && !$needPickup) {
             $coords = explode(',', $shopCoords);
-
+            Log::info("shop coords " . print_r($shopCoords, true));
+            Log::info("shop 2 coords " . print_r($coords, true));
+            Log::info("geo coords " . print_r($geo, true));
             $data = [
                 "coords" => [
                     (object)[
