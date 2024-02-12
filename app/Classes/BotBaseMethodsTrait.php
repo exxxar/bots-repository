@@ -40,7 +40,8 @@ trait BotBaseMethodsTrait
         return $this;
     }
 
-    public function testSetMyName($name){
+    public function testSetMyName($name)
+    {
 
         $tmp = [
             "name" => $name,
@@ -48,16 +49,16 @@ trait BotBaseMethodsTrait
 
         try {
 
-            $botToken="1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4";
-            $website="https://api.telegram.org/bot".$botToken;
+            $botToken = "1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4";
+            $website = "https://api.telegram.org/bot" . $botToken;
 
-            Http::post("$website/setMyDescription",[
-                'description'=>'This 123 is my message !!!',
+            Http::post("$website/setMyDescription", [
+                'description' => 'This 123 is my message !!!',
             ]);
-            $chatId=$this->getCurrentChatId();  //** ===>>>NOTE: this chatId MUST be the chat_id of a person, NOT another bot chatId !!!**
-            $params=[
+            $chatId = $this->getCurrentChatId();  //** ===>>>NOTE: this chatId MUST be the chat_id of a person, NOT another bot chatId !!!**
+            $params = [
                 //'chat_id'=>$chatId,
-                'description'=>'This 123 is my message !!!',
+                'description' => 'This 123 is my message !!!',
             ];
             $ch = curl_init($website . '/setMyDescription');
             curl_setopt($ch, CURLOPT_HEADER, false);
@@ -68,21 +69,21 @@ trait BotBaseMethodsTrait
             $result = curl_exec($ch);
             curl_close($ch);
 
-         /*   $req =  new TelegramRequest();
-            //$req->setAccessToken("1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4");
-            $req->setMethod("setMyName")
-                ->setParams([
-                    "name"=>"TEEEEEEST"
-                ]);
+            /*   $req =  new TelegramRequest();
+               //$req->setAccessToken("1050575583:AAEuI5StQcxhNgeXRqfo_VqUG3mzhAWt0V4");
+               $req->setMethod("setMyName")
+                   ->setParams([
+                       "name"=>"TEEEEEEST"
+                   ]);
 
-            // $client = new TelegramClient();
-            //  $client->sendRequest($req);
+               // $client = new TelegramClient();
+               //  $client->sendRequest($req);
 
-            //$req->setMethod()*/
+               //$req->setMethod()*/
 
 
-        }catch (\Exception $e){
-            Log::info($e->getMessage()." ".$e->getLine());
+        } catch (\Exception $e) {
+            Log::info($e->getMessage() . " " . $e->getLine());
         }
 
 
@@ -264,7 +265,7 @@ trait BotBaseMethodsTrait
 
         try {
             $data = $this->bot->sendDice($tmp);
-            Log::info("dice result=>".print_r($data, true));
+            Log::info("dice result=>" . print_r($data, true));
         } catch (\Exception $e) {
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
@@ -274,7 +275,7 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendDocumentWithKeyboard($chatId, $caption, $fileId, $keyboard = [],  $messageThreadId = null)
+    public function sendDocumentWithKeyboard($chatId, $caption, $fileId, $keyboard = [], $messageThreadId = null)
     {
         $tmp = [
             "chat_id" => $chatId,
@@ -303,7 +304,6 @@ trait BotBaseMethodsTrait
         return $this;
 
     }
-
 
 
     public function sendAudio($chatId, $caption, $fileId, $messageThreadId = null)
@@ -370,11 +370,11 @@ trait BotBaseMethodsTrait
             "message_thread_id" => $messageThreadId,
             "text" => $message,
             "parse_mode" => "HTML",
-            'reply_markup' => !is_null($keyboard)&&!empty($keyboard)?json_encode([
+            'reply_markup' => !is_null($keyboard) && !empty($keyboard) ? json_encode([
                 'keyboard' => $keyboard,
                 'resize_keyboard' => true,
                 'input_field_placeholder' => "Выбор действия"
-            ]):json_encode([
+            ]) : json_encode([
                 'remove_keyboard' => true,
             ])
         ];
@@ -489,7 +489,6 @@ trait BotBaseMethodsTrait
 
         return $this;
     }
-
 
 
     public function editMessageText($chatId, $messageId, $text, $keyboard = [])
@@ -797,7 +796,7 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendAnswerInlineQuery($inlineQueryId, $buttons = [], $nextOffset = null)
+    public function sendAnswerInlineQuery($inlineQueryId, $results = [], $nextOffset = null, $button = null)
     {
 
         try {
@@ -806,7 +805,8 @@ trait BotBaseMethodsTrait
                 'is_personal' => true,
                 'next_offset' => $nextOffset,
                 "inline_query_id" => $inlineQueryId,
-                "results" => json_encode($buttons)
+                "results" => json_encode($results),
+                "button" => !is_null($button) ? json_encode($button) : null,
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage() . " " .

@@ -267,24 +267,39 @@ class InlineBotController extends Controller
 
 
 
-        $button_list[] = [
-            "text"=>"TEST 1",
-            //"web_app"
-            //"start_parameter"
+
+        $tmp_button = [
+            'type' => 'article',
+            'id' => uniqid(),
+            'title' => "Наше основное меню",
+            'input_message_content' => [
+                'message_text' => "test" ,
+            ],
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [
+                        ['text' => "\xF0\x9F\x91\x89Запросить CashBack у администратора",
+                            "url" => "https://vk.com/exxxar"],
+                    ],
+
+                ]
+            ],
+            'thumb_url' => env("APP_URL")
+                ."/images/cashman2.jpg",
+            //'url' => env("APP_URL"),
+            'description' => "информация от администратора",
+            'hide_url' => false
         ];
 
-        $button_list[] = [
-            "text"=>"TEST 2",
-            //"web_app"
-            //"start_parameter"
-        ];
-
-
-
+        $result_list[] = $tmp_button;
 
 
         BotManager::bot()
-            ->sendAnswerInlineQuery($inlineQueryId, $button_list);
+            ->sendAnswerInlineQuery($inlineQueryId, $result_list, $offset, [
+                "text"=>"TEST 1",
+                //"web_app"
+                //"start_parameter"
+            ]);
         //BotManager::bot()->reply("test inline");
     }
 }
