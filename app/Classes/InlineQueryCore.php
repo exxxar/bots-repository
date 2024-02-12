@@ -101,7 +101,7 @@ class InlineQueryCore
     {
 
         $this->routes[] = [
-            "path" => $command,
+            "path" => $command ?? "",
             "controller" => $this->controller ?? null,
             "function" => $action,
         ];
