@@ -603,7 +603,7 @@ class ProductLogicFactory
             Log::info("shop coords " . print_r($shopCoords, true));
             Log::info("shop 2 coords " . print_r($coords, true));
             Log::info("geo coords " . print_r($geo, true));
-            $data = [
+            $coordsData = [
                 "coords" => [
                     (object)[
                         "lat" => $geo->latitude ?? 0,
@@ -618,7 +618,7 @@ class ProductLogicFactory
 
             $distanceObject = BusinessLogic::geo()
                 ->setBot($this->bot ?? null)
-                ->getDistance($data);
+                ->getDistance($coordsData);
 
             $distance = $distanceObject->distance ?? 0;
 
@@ -658,20 +658,24 @@ class ProductLogicFactory
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
 
         $userInfo = !$needPickup ?
-            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nДоп.инфо: %s\n",
+            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция: %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
                 $distance ?? 0, //$distance
-                $deliveryNote,
+                $data["entrance_number"] ?? 'Не указано',
+                $data["floor_number"] ?? 'Не указано',
+                ($cash ? "Наличкой" : "Картой"),
+                $data["money"] ?? 'Не указано',
+                $data["info"] ?? 'Не указано',
             ) : sprintf("Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
-                $deliveryNote
+                $data["info"] ?? 'Не указано'
             );
 
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
