@@ -658,16 +658,12 @@ class ProductLogicFactory
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
 
         $userInfo = !$needPickup ?
-            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция: %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
+            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nДоп.инфо: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $data["address"] ?? 'Не указано',
                 $distance ?? 0, //$distance
-                $data["entrance_number"] ?? 'Не указано',
-                $data["floor_number"] ?? 'Не указано',
-                ($cash ? "Наличкой" : "Картой"),
-                $data["money"] ?? 'Не указано',
                 $deliveryNote,
             ) : sprintf("Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
                 $this->botUser->telegram_chat_id,
