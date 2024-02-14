@@ -16,6 +16,7 @@ import BotFields from "@/AdminPanel/Components/Constructor/Bot/BotFields.vue";
 import BotMediaTable from "@/AdminPanel/Components/Constructor/BotMediaTable.vue";
 import Appointment from "@/AdminPanel/Components/Constructor/Appointment/Appointment.vue";
 import Quizzes from "@/AdminPanel/Components/Constructor/Quiz/Quizzes.vue";
+import InlineQuery from "@/AdminPanel/Components/Constructor/InlineQuery/InlineQuery.vue";
 </script>
 <template>
 
@@ -51,6 +52,8 @@ import Quizzes from "@/AdminPanel/Components/Constructor/Quiz/Quizzes.vue";
                     <i class="fa-regular fa-calendar-days  mr-2"></i>Запись на событие (прием)</a></li>
                 <li><a class="dropdown-item" href="#bot-quizzes" @click="setStep(14)">
                     <i class="fa-solid fa-q mr-2"></i>Квизы</a></li>
+                <li><a class="dropdown-item" href="#bot-inline-queries" @click="setStep(15)">
+                    <i class="fa-solid fa-clipboard-list mr-2"></i>Встраиваемые запросы</a></li>
 
                 <li><a class="dropdown-item" href="#bot-custom-fields" @click="setStep(10)">
                     <i class="fa-solid fa-code mr-2"></i>Настраиваемые поля</a></li>
@@ -98,6 +101,13 @@ import Quizzes from "@/AdminPanel/Components/Constructor/Quiz/Quizzes.vue";
 
 
         <BotForm
+            :bot="bot"
+            v-if="!load"
+        />
+    </div>
+
+    <div v-if="step===15" class="pb-5 mb-5">
+        <InlineQuery
             :bot="bot"
             v-if="!load"
         />

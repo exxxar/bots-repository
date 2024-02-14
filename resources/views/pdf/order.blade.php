@@ -57,6 +57,7 @@
     @endif
     <li>Количество позиций в заказе <strong>{{$totalCount}} ед.</strong></li>
     <li>Дата и время осуществления заказа <strong>{{$currentDate}}!</strong></li>
+    <li>Другая информация от вас <strong>{{$info}}!</strong></li>
 </ul>
 
 @if(!empty($products))

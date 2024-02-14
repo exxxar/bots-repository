@@ -668,13 +668,14 @@ class ProductLogicFactory
                 $data["floor_number"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
-                $data["info"] ?? 'Не указано',
-            ) : sprintf("Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\n",
+                $deliveryNote,
+            ) : sprintf("Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
+                $deliveryNote
             );
 
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
@@ -739,6 +740,7 @@ class ProductLogicFactory
             "promoCount" => "0",
             "paymentInfo" => $paymentInfo,
             "products" => $tmpOrderProductInfo,
+            "info" => $data["info"] ?? 'Не указано',
         ]));
 
         $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
