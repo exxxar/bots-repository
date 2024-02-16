@@ -177,17 +177,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-ecc1bdb2.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-ecc1bdb2.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-ecc1bdb2.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-8ec90ee2.js",
@@ -384,15 +384,15 @@
     "src": "resources/js/AdminPanel/Pages/MainPage.vue"
   },
   "resources/js/AdminPanel/Pages/ManagerPage.css": {
-    "file": "assets/ManagerPage-b9cdd7f1.css",
+    "file": "assets/ManagerPage-3837aa38.css",
     "src": "resources/js/AdminPanel/Pages/ManagerPage.css"
   },
   "resources/js/AdminPanel/Pages/ManagerPage.vue": {
     "css": [
-      "assets/ManagerPage-b9cdd7f1.css",
+      "assets/ManagerPage-3837aa38.css",
       "assets/ChatMini-5a929b50.css"
     ],
-    "file": "assets/ManagerPage-59aa5f6b.js",
+    "file": "assets/ManagerPage-d39627b0.js",
     "imports": [
       "_MainAdminLayout-19787917.js",
       "_index.es-71d37bd0.js",
@@ -465,7 +465,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-b3591451.js",
+    "file": "assets/app-8b850d84.js",
     "imports": [
       "_index.es-71d37bd0.js",
       "_index-4a291d06.js"

@@ -131,7 +131,9 @@
 
                 </div>
             </div>
-            <div class="col-md-9" v-if="tab>0">
+            <div class="col-md-9"
+                 v-bind:class="{'col-md-12':!botUser.manager}"
+                 v-if="tab>0">
                 <div class="row mt-2">
                     <div class="col-12">
                         <ul class="nav nav-tabs">
@@ -199,7 +201,7 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <label class="mb-3">Загрузи свой персональное фото, мы же должны знать в лицо наших
+                                    <label class="mb-3">Загрузи своё персональное фото, мы же должны знать в лицо наших
                                         сотрудников</label>
                                     <div class="card d-inline-flex justify-content-center flex-wrap ">
                                         <div class="card-body">
