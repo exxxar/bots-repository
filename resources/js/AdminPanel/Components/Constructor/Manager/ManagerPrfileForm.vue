@@ -217,13 +217,26 @@
 
 
                                     </div>
-                                    <div class="card d-inline-flex justify-content-center flex-wrap mt-2">
-                                        <div class="card-body" v-if="managerForm.image">
+                                    <div class="card d-inline-flex justify-content-center flex-wrap mt-2"
+                                         v-if="managerForm.image">
+                                        <div class="card-body">
                                             <div class="img-preview"
                                                  style="margin-right: 10px;">
-                                                <img v-lazy="getPhoto(managerForm.image).imageUrl">
+                                                <img v-lazy="botUser.manager.image">
                                                 <div class="remove">
-                                                    <a @click="removePhoto()" class="cursor-pointer"><i
+                                                    <a @click="removePhoto('image')" class="cursor-pointer"><i
+                                                        class="fa-regular fa-trash-can"></i> удалить фото</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card d-inline-flex justify-content-center flex-wrap mt-2" v-if="photo">
+                                        <div class="card-body">
+                                            <div class="img-preview"
+                                                 style="margin-right: 10px;">
+                                                <img v-lazy="getPhoto(photo).imageUrl">
+                                                <div class="remove">
+                                                    <a @click="removePhoto('photo')" class="cursor-pointer"><i
                                                         class="fa-regular fa-trash-can"></i> удалить фото</a>
                                                 </div>
                                             </div>
@@ -569,6 +582,7 @@ export default {
             botUser: null,
             isEdit: false,
             messages: [],
+            photo: null,
             botUserForm: {
                 id: null,
                 is_vip: false,
@@ -690,13 +704,16 @@ export default {
         getPhoto(img) {
             return {imageUrl: URL.createObjectURL(img)}
         },
-        removePhoto(index) {
+        removePhoto(type = 'photo') {
+            if (type === 'photo')
+                this.photo = null
 
-            this.managerForm.image = null
+            if (type === 'image')
+                this.managerForm.image = null
         },
         onChangePhotos(e) {
             const files = e.target.files
-            this.managerForm.image = files[0]
+            this.photo = files[0]
         },
         nextStep() {
             this.step++;
@@ -749,10 +766,15 @@ export default {
         submitManager() {
             this.loading = true;
 
-            const photo = this.managerForm.image || null
-            delete this.managerForm.image
+            const photo = this.photo || null
 
             let data = new FormData();
+
+            if (photo) {
+                delete this.managerForm.image
+                data.append('images[]', photo);
+            }
+
             Object.keys(this.managerForm)
                 .forEach(key => {
                     const item = this.managerForm[key] || ''
@@ -763,8 +785,7 @@ export default {
                 });
 
 
-            if (photo)
-                data.append('images[]', photo);
+
             data.append('bot_id', this.bot.id);
             data.append('bot_user_id', this.botUser.id);
 
