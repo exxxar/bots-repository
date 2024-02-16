@@ -46,19 +46,18 @@
                  v-bind:class="{'col-md-12':!botUser.manager}"
                  v-if="tab===0">
                 <div class="row">
-                    <!--                    <div class="col-12 mt-3">
-                                            <div class="card text-center">
+                    <div class="col-12 mt-3" v-if="!botUser.manager">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3>Для начал заведите профиль</h3>
+                                <h5 class="card-title">Редактирование профиля менеджера</h5>
+                                <p class="card-text">Внесите информацию о себе и получите более расширенный доступ к
+                                    системе</p>
+                                <a @click="tab++" class="btn btn-outline-primary p-3">Перейти к разделу</a>
+                            </div>
 
-                                                <div class="card-body">
-                                                    <h3> Работа с профилем</h3>
-                                                    <h5 class="card-title">Редактирование профиля менеджера</h5>
-                                                    <p class="card-text"><strong>Основные функции</strong>: <em>управление собственным профилем</em>,
-                                                        <em>работа со списком своих клиентов</em>, <em>управление ботами</em></p>
-                                                    <a @click="tab++" class="btn btn-outline-primary p-3">Перейти к разделу</a>
-                                                </div>
-
-                                            </div>
-                                        </div>-->
+                        </div>
+                    </div>
                     <div class="col-12 my-3">
                         <div class="card text-center">
                             <div class="card-body">
