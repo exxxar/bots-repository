@@ -23,11 +23,11 @@ class ManagerProfileResource extends JsonResource
             'educations' => $this->educations,
             'social_links' => $this->social_links,
             'skills' => $this->skills,
-            'stable_personal_discount' => $this->stable_personal_discount,
-            'permanent_personal_discount' => $this->permanent_personal_discount,
-            'max_company_slot_count' => $this->max_company_slot_count,
-            'max_bot_slot_count' => $this->max_bot_slot_count,
-            'balance' => $this->balance,
+            'stable_personal_discount' => $this->stable_personal_discount ?? 0,
+            'permanent_personal_discount' => $this->permanent_personal_discount ?? 0,
+            'max_company_slot_count' => $this->max_company_slot_count ?? 0,
+            'max_bot_slot_count' => $this->max_bot_slot_count ?? 0,
+            'balance' => $this->balance ?? 0,
             'verified_at' => $this->verified_at,
         ];
     }

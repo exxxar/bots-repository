@@ -1,13 +1,13 @@
 <script setup>
-
+import ManagerProfile from "@/AdminPanel/Components/Constructor/Manager/ManagerProfile.vue";
 import {Head} from '@inertiajs/vue3'
-
+import Chat from "@/AdminPanel/Components/Chat/ChatMini.vue";
 </script>
 <template>
 
     <Head>
-        <title>Административная панель</title>
-        <meta name="description" content="Административная панель<">
+        <title>Кабинет администратора</title>
+        <meta name="description" content="Кабинет администратора<">
     </Head>
 
     <notifications position="top right"/>
@@ -30,7 +30,12 @@ import {Head} from '@inertiajs/vue3'
         </button>
 
         <div class="navbar-nav d-flex justify-content-center align-items-center flex-row">
-
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3"
+                   data-bs-toggle="offcanvas"
+                   role="button"
+                   href="#profile-sidebar"><i class="fa-solid fa-user"></i> Профиль</a>
+            </div>
             <div class="nav-item text-nowrap">
                 <a class="nav-link px-3"
                    @click="active=0"
@@ -146,6 +151,39 @@ import {Head} from '@inertiajs/vue3'
             </div>
         </div>
     </div>
+    <!-- Modal -->
+<!--    <div class="modal fade" id="chat-window" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <Chat v-if="bot" :domain="'cashman_login_bot'"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-dialog-btn">
+        <button class="btn btn-primary text-white"
+                data-bs-toggle="modal" data-bs-target="#chat-window"
+        >
+            <i class="fa-regular fa-comments"></i>
+        </button>
+    </div>-->
+
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="profile-sidebar" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Ваш профиль</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div>
+                <ManagerProfile
+                    v-if="bot"
+                    :bot="bot"></ManagerProfile>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -156,6 +194,7 @@ export default {
         return {
             load: false,
             bot: null,
+            is_chat_open:false,
             currentTheme:'',
             company: null,
             themes:[
@@ -229,6 +268,7 @@ export default {
     },
     computed: {
         ...mapGetters(['getErrors', 'getCurrentBot', 'getCurrentCompany']),
+
     },
     watch: {
         getErrors: function (newVal, oldVal) {
@@ -245,6 +285,7 @@ export default {
     mounted() {
         this.loadCurrentCompany()
         this.loadCurrentBot()
+
 
 
         let theme =  localStorage.getItem("cashman_global_admin_theme") || null
@@ -495,4 +536,19 @@ body {
     box-shadow: 0px 0px 1px 0px #dadada;
     border-radius: 10px;
 }
+
+.chat-dialog-btn {
+    position: fixed;
+    bottom: 120px;
+    right: 50px;
+    background: white;
+    /* border-radius: 50%; */
+    padding: 7px;
+    z-index: 1000;
+    border: 1px #f7f7f7 solid;
+    box-shadow: 0px 0px 1px 0px #dadada;
+    border-radius: 10px;
+}
+
+
 </style>

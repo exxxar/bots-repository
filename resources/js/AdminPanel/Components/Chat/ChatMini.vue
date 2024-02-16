@@ -141,16 +141,24 @@ export default {
             });
         },
     },
-
+    computed: {
+        getSelf() {
+            return window.profile
+        },
+    },
     data() {
         return {
             loaded: true,
             canEnter: false,
             messages: [],
             buttons: [],
+            botUser: null,
             dataForm: {
                 message: null,
                 query: null,
+                chat:{
+                    type:'chat'
+                },
                 user: {
                     id: null,
                     first_name: null,
@@ -158,6 +166,21 @@ export default {
                     username: null,
                 }
             }
+        }
+    },
+    mounted() {
+        this.botUser = this.getSelf
+        if (this.botUser) {
+            this.$nextTick(() => {
+                this.canEnter = true
+                this.dataForm.user.id = this.botUser.telegram_chat_id
+                this.dataForm.user.first_name = this.botUser.fio_from_telegram
+                this.dataForm.user.last_name = "12312";
+                this.dataForm.user.username = this.botUser.username || this.botUser.name || null
+
+                this.login()
+            })
+
         }
     },
     methods: {
@@ -169,7 +192,6 @@ export default {
         send(action = null, type = 0) {
 
             this.loaded = false
-            console.log(action)
 
             let text = action || this.dataForm.message
 
@@ -224,15 +246,14 @@ export default {
                             created_at: item.created_at || null
                         });
 
-                        this.$nextTick(() => {
-                            this.loaded = true
-                        })
-                    }).catch(() => {
-                        this.$nextTick(() => {
-                            this.loaded = true
-                        })
+
+                        this.loaded = true
+
                     })
-                })
+                }).catch(() => {
+
+                    this.loaded = true
+            })
         },
     }
 }
@@ -254,9 +275,11 @@ export default {
 
 .chat-window {
     position: relative;
-    height: 100vh;
     padding: 18px 0;
     margin: 0;
+    //height: 400px;
+    min-width: 300px;
+
     box-sizing: border-box;
 
     .ps-container {
@@ -284,7 +307,7 @@ export default {
 
             .message-card-body {
                 padding: 5px;
-                font-size: 10px;
+                font-size: 14px;
 
                 p {
                     margin: 0;

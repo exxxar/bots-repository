@@ -37,6 +37,19 @@ export default createStore({
 
     },
     actions: {
+        async saveManager(context, payload) {
+            
+            let link = `/admin/manager/register`
+
+            let _axios = util.makeAxiosFactory(link, 'POST', payload)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
         async sendToChannel(context, payload = {mailForm: null}) {
 
             let link = `/send-to-channel`

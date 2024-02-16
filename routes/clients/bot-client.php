@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\TelegramController;
 use App\Http\Controllers\Bots\Web\AdminBotController;
 use App\Http\Controllers\Bots\Web\AmoCrmController;
 use App\Http\Controllers\Bots\Web\BotController;
@@ -323,7 +322,7 @@ Route::prefix("bot-client")
             });
 
         Route::prefix("manager")
-            ->controller(\App\Http\Controllers\ManagerProfileController::class)
+            ->controller(\App\Http\Controllers\Bots\Web\ManagerProfileController::class)
             ->middleware(["tgAuth.any"])
             ->group(function(){
                 Route::post("/register", "registerManager");

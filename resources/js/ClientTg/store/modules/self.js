@@ -56,11 +56,6 @@ const actions = {
         })
     },
     async saveManager(context, payload) {
-
-        let data = {
-            ...payload
-        }
-
         let link = `${BASE_SELF_LINK}/manager/register`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload)

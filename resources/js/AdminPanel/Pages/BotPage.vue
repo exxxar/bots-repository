@@ -105,16 +105,35 @@ export default {
             load: false,
             step: 0,
             bot: null,
+            botUser: null,
         }
     },
     computed: {
         ...mapGetters(['getCurrentBot', 'getCurrentCompany', 'getBotFavorites', 'inBotFav']),
+        getSelf() {
+            return window.profile
+        },
+        isManagerVerified() {
+
+            if (!this.botUser)
+                return false;
+
+            if (!this.botUser.manager)
+                return false;
+
+            /* if (!this.botUser.manager.verified_at)
+                 return false*/
+
+            return true
+        }
     },
     mounted() {
 
         this.loadTemplates();
 
         this.loadCurrentBot()
+
+        this.botUser = this.getSelf
 
         this.setStep(localStorage.getItem("cashman_set_botpage_step_index") || 0)
 

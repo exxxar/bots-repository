@@ -19,6 +19,7 @@ class ManagerProfile extends Model
         'bot_user_id',
         'info',
         'referral',
+        'image',
         'strengths',
         'weaknesses',
         'educations',

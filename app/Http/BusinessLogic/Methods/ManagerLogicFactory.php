@@ -42,6 +42,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -219,7 +220,7 @@ class ManagerLogicFactory
             "birthday" => "required",
             "city" => "required",
             // "country" => "required",
-            "address" => "required",
+            // "address" => "required",
             "sex" => "required",
             "referral" => "",
             "info" => "",
@@ -257,7 +258,8 @@ class ManagerLogicFactory
         $imageName = $data["image"] ?? null;
 
         if (!is_null($uploadedPhoto))
-            $imageName = $this->uploadPhoto("/public/companies/" . $this->bot->company->slug, $uploadedPhoto);
+            $imageName = $this->uploadPhotos("/public/companies/" . $this->bot->company->slug, $uploadedPhoto)[0];
+
 
         $referral = $data["referral"] ?? null;
 
@@ -275,20 +277,29 @@ class ManagerLogicFactory
             'max_company_slot_count' => 1,
             'max_bot_slot_count' => 1,
             'balance' => 0,
-            'image' => $imageName,
             'verified_at' => null
         ];
 
         $this->botUser->update($form1);
 
-        $manager = ManagerProfile::query()
-            ->where("bot_user_id", $this->botUser->id)
-            ->first();
+        if (!is_null($data["id"] ?? null))
+            $manager = ManagerProfile::query()
+                ->where("bot_user_id", $this->botUser->id)
+                ->where("id", $data["id"])
+                ->first();
 
-        if (is_null($manager))
-            ManagerProfile::query()->create($form2);
+
+        if (is_null($manager ?? null))
+            $manager = ManagerProfile::query()->create($form2);
         else
             $manager->update($form2);
+
+
+        $manager->image = $imageName;
+        $manager->save();
+
+        $botUser = $this->botUser->refresh();
+        Session::put("bot_user", $botUser);
 
         BotMethods::bot()
             ->whereBot($this->bot)
@@ -397,11 +408,13 @@ class ManagerLogicFactory
         $bot->save();
     }
 
-    public function createVisitCardBot(){
+    public function createVisitCardBot()
+    {
 
     }
 
-    public function createBusinessBot(){
+    public function createBusinessBot()
+    {
 
     }
 

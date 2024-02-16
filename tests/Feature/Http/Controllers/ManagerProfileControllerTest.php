@@ -10,7 +10,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\ManagerProfileController
+ * @see \App\Http\Controllers\Bots\Web\ManagerProfileController
  */
 class ManagerProfileControllerTest extends TestCase
 {
@@ -36,7 +36,7 @@ class ManagerProfileControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ManagerProfileController::class,
+            \App\Http\Controllers\Bots\Web\ManagerProfileController::class,
             'store',
             \App\Http\Requests\ManagerProfileStoreRequest::class
         );
@@ -99,7 +99,7 @@ class ManagerProfileControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\ManagerProfileController::class,
+            \App\Http\Controllers\Bots\Web\ManagerProfileController::class,
             'update',
             \App\Http\Requests\ManagerProfileUpdateRequest::class
         );

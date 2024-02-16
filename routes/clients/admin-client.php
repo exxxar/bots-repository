@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\YClientsController;
 use App\Http\Controllers\AmoCrmController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -16,7 +15,7 @@ Route::middleware(['auth', 'verified'])
 
         Route::get('/dashboard', function () {
             Inertia::setRootView("app");
-            return Inertia::render('MainPage');
+            return Inertia::render('ManagerPage');
         })
             ->name('dashboard');
 
@@ -81,6 +80,16 @@ Route::post("/send-to-channel", [\App\Http\Controllers\Admin\BotController::clas
 Route::prefix("admin")
     ->middleware(['auth', 'verified'])
     ->group(function () {
+
+        Route::prefix("manager")
+            ->controller(\App\Http\Controllers\Admin\ManagerProfileController::class)
+            ->middleware(["role:manager"])
+            ->group(function(){
+                Route::post("/register", "registerManager");
+                Route::post('/load-data', [\App\Http\Controllers\Globals\ManagerScriptController::class,"loadData"]);
+                Route::post('/friends-web', [\App\Http\Controllers\Globals\ManagerScriptController::class,"getFriendList"]);
+            });
+
 
         Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"]);
 

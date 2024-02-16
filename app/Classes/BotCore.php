@@ -166,7 +166,11 @@ abstract class BotCore
         if ($this->botFallbackHandler($data))
             return response()->json($this->webMessages);
 
+       /* if ($this->adminNotificationHandler($data->message, $query))
+            return response()->json($this->webMessages);*/
+
         $this->reply("Ошибка обработки данных!");
+
         return response()->json($this->webMessages);
     }
 

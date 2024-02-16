@@ -101,8 +101,8 @@ class BotUser extends Model
         return $this->hasOne(BotUser::class,'id','parent_id');
     }
 
-    public function manager(): HasOne
+    public function manager(): belongsTo
     {
-        return $this->hasOne(ManagerProfile::class,'bot_user_id','id');
+        return $this->belongsTo(ManagerProfile::class,'id','bot_user_id');
     }
 }

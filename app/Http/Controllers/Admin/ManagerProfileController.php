@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Facades\BusinessLogic;
-use App\Http\Requests\ManagerProfileStoreRequest;
-use App\Http\Requests\ManagerProfileUpdateRequest;
-use App\Http\Resources\ManagerProfileCollection;
-use App\Http\Resources\ManagerProfileResource;
-use App\Models\ManagerProfile;
+use App\Http\Controllers\Controller;
+use App\Models\Bot;
+use App\Models\BotUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
@@ -20,13 +18,14 @@ class ManagerProfileController extends Controller
      */
     public function registerManager(Request $request): Response
     {
+
         $request->validate([
             "name" => "required",
             "phone" => "required",
             "birthday" => "required",
             "city" => "required",
             // "country" => "required",
-            "address" => "required",
+           // "address" => "required",
             "sex" => "required",
             "referral" => "",
             "info" => "",
@@ -35,13 +34,19 @@ class ManagerProfileController extends Controller
             "educations" => "required",
             "social_links" => "required",
             "skills" => "required",
+            "bot_id" => "required",
+            "bot_user_id" => "required",
         ]);
 
+        $bot = Bot::query()->find($request->bot_id);
+        $botUser = BotUser::query()->find($request->bot_user_id);
+
+
         BusinessLogic::manager()
-            ->setBot($request->bot ?? null)
-            ->setBotUser($request->botUser ?? null)
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser ?? null)
             ->managerRegister($request->all(),
-                $request->hasFile('image') ? $request->file('photo') : null
+                $request->hasFile('images') ? $request->file('images') : null
             );
 
         return response()->noContent();
