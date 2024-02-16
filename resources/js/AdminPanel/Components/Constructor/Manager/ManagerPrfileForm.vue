@@ -7,7 +7,7 @@
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <img
                         class="rounded-circle mt-5" style="width:150px; height:150px; object-fit:cover;"
-                        v-lazy="botUser.manager.image?'/images-by-bot-id/'+bot.id+'/'+botUser.manager.image:'../images/manager.png'">
+                        v-lazy="botUser.manager.image?botUser.manager.image:'../images/manager.png'">
 
                     <p class="text-white" v-if="botUser.manager.verified_at!=null">
                         Учетная запись менеджера <strong class="text-uppercase">активирована!</strong>
