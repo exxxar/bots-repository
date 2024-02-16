@@ -775,7 +775,6 @@ export default {
             let data = new FormData();
 
             if (photo) {
-                delete this.managerForm.image
                 data.append('images[]', photo);
             }
 
