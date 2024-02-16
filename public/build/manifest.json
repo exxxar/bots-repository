@@ -384,15 +384,15 @@
     "src": "resources/js/AdminPanel/Pages/MainPage.vue"
   },
   "resources/js/AdminPanel/Pages/ManagerPage.css": {
-    "file": "assets/ManagerPage-4eff2324.css",
+    "file": "assets/ManagerPage-a401519b.css",
     "src": "resources/js/AdminPanel/Pages/ManagerPage.css"
   },
   "resources/js/AdminPanel/Pages/ManagerPage.vue": {
     "css": [
-      "assets/ManagerPage-4eff2324.css",
+      "assets/ManagerPage-a401519b.css",
       "assets/ChatMini-5a929b50.css"
     ],
-    "file": "assets/ManagerPage-49f80d22.js",
+    "file": "assets/ManagerPage-694988d2.js",
     "imports": [
       "_MainAdminLayout-19787917.js",
       "_index.es-71d37bd0.js",
@@ -465,7 +465,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-774edaff.js",
+    "file": "assets/app-9c9a8d92.js",
     "imports": [
       "_index.es-71d37bd0.js",
       "_index-4a291d06.js"

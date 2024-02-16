@@ -4,7 +4,9 @@
     <div class="container shadow-lg border  mt-1 mb-1" v-if="botUser">
         <div class="row">
             <div class="col-md-3 border-right bg-primary" v-if="botUser.manager">
-                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <div
+                    style="position:sticky;top:0px;"
+                    class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <img
                         class="rounded-circle mt-5" style="width:150px; height:150px; object-fit:cover;"
                         v-lazy="botUser.manager.image?botUser.manager.image:'../images/manager.png'">
