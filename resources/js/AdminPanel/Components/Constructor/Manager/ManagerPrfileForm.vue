@@ -222,7 +222,7 @@
                                         <div class="card-body">
                                             <div class="img-preview"
                                                  style="margin-right: 10px;">
-                                                <img v-lazy="botUser.manager.image">
+                                                <img v-lazy="managerForm.image">
                                                 <div class="remove">
                                                     <a @click="removePhoto('image')" class="cursor-pointer"><i
                                                         class="fa-regular fa-trash-can"></i> удалить фото</a>
@@ -230,7 +230,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card d-inline-flex justify-content-center flex-wrap mt-2" v-if="photo">
+                                    <div class="card d-inline-flex justify-content-center flex-wrap mt-2"
+                                         v-if="photo">
                                         <div class="card-body">
                                             <div class="img-preview"
                                                  style="margin-right: 10px;">
@@ -655,8 +656,6 @@ export default {
         prepareManager() {
             this.botUser = this.getSelf
 
-            if (this.botUser.manager)
-                this.managerForm.id = this.botUser.manager.id || null
 
             this.managerForm.name = this.botUser.name || this.botUser.fio_from_telegram || null
             this.managerForm.phone = this.botUser.phone || null
@@ -667,7 +666,9 @@ export default {
             this.managerForm.address = this.botUser.address || null
             this.managerForm.sex = this.botUser.sex || true
 
+
             if (this.botUser.manager) {
+                this.managerForm.id = this.botUser.manager.id || null
                 this.managerForm.social_links = this.botUser.manager.social_links || [""]
                 this.managerForm.skills = this.botUser.manager.skills || [{
                     title: null,
@@ -676,6 +677,7 @@ export default {
                 this.managerForm.weaknesses = this.botUser.manager.weaknesses || [""]
                 this.managerForm.educations = this.botUser.manager.educations || [""]
                 this.managerForm.strengths = this.botUser.manager.strengths || [""]
+                this.managerForm.image = this.botUser.manager.image || null
             }
             this.botUserForm.id = this.botUser.id
             this.botUserForm.is_vip = this.botUser.is_vip
