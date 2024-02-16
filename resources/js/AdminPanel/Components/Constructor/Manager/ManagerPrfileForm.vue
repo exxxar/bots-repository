@@ -13,7 +13,7 @@
                         Учетная запись менеджера <strong class="text-uppercase">активирована!</strong>
                     </p>
                     <p class="text-white" v-else>
-                        Учетная запись менеджера <strong class="text-uppercase">отключена!</strong>
+                        Учетная запись менеджера <strong class="text-uppercase">не активна!</strong>
                     </p>
                     <p class="mb-0">Имя: <strong class="text-white">{{ botUser.name || 'Не указано' }}</strong></p>
                     <p class="mb-0">Телефон: <strong class="text-white">{{ botUser.phone || 'Не указано' }}</strong></p>

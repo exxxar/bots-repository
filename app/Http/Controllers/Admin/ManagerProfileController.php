@@ -38,7 +38,9 @@ class ManagerProfileController extends Controller
             "bot_user_id" => "required",
         ]);
 
-        $bot = Bot::query()->find($request->bot_id);
+        $bot = Bot::query()
+            ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
+            ->first();
         $botUser = BotUser::query()->find($request->bot_user_id);
 
 
