@@ -251,7 +251,7 @@
                                 <div class="col-12 mt-3">
                                     <label>Введите свой номер телефона</label>
                                     <input type="text"
-                                           class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                           class="form-control font-14 p-3 rounded-s border-theme"
                                            v-mask="'+7(###)###-##-##'"
                                            v-model="managerForm.phone"
                                            placeholder="+7(000)000-00-00"
@@ -263,7 +263,7 @@
                                 <div class="col-12">
                                     <label>Введите свой email адрес</label>
                                     <input type="email"
-                                           class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                           class="form-control font-14 p-3 rounded-s border-theme"
                                            v-model="managerForm.email"
                                            placeholder="inbox@your-cashman.com"
                                            aria-label="managerForm-phone" aria-describedby="managerForm-email"
@@ -276,7 +276,7 @@
                                     <div class="input-group position-relative mb-2"
                                          v-for="(item, index) in managerForm.social_links">
                                         <input type="url"
-                                               class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                               class="form-control  font-14 p-3 rounded-s border-theme"
                                                v-model="managerForm.social_links[index]"
                                                placeholder="Ссылка на соц. сеть"
                                                :aria-label="'managerForm-social-links-'+index"
@@ -327,7 +327,7 @@
                                     <label>Введите дату своего рождения</label>
                                     <div class="input-style input-style-2">
                                         <input type="date"
-                                               class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                               class="form-control font-14 p-3 rounded-s border-theme"
                                                v-model="managerForm.birthday"
                                                aria-label="managerForm-birthday" aria-describedby="managerForm-birthday"
                                                required>
@@ -340,7 +340,7 @@
                                         <input type="text"
                                                v-model="managerForm.city"
                                                list="datalistCityOptions"
-                                               class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                               class="form-control font-14 p-3 rounded-s border-theme"
                                                placeholder="Город проживания"
                                                aria-label="managerForm-city" aria-describedby="managerForm-city"
                                                required>
