@@ -1277,6 +1277,7 @@ class BotLogicFactory
         if (is_null($this->botUser))
             throw new HttpException(403, "Условия функции не выполнены");
 
+
         $validator = Validator::make($data, [
             "bot_domain" => "required|unique:bots,bot_domain",
             "bot_token" => "required",
@@ -1436,6 +1437,9 @@ class BotLogicFactory
                 ]);
 
         $bot = $bot->fresh();
+
+
+
 
         return new BotResource($bot);
     }

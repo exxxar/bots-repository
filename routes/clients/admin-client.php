@@ -111,7 +111,8 @@ Route::prefix("admin")
                 Route::get("/load-fields/{botId}", "loadBotFields");
                 Route::post("/load-chat-info", "loadChatInfo");
                 Route::post("/create-bot-topics", "createBotTopics");
-                Route::post("/duplicate", "duplicate");
+                Route::post("/duplicate", "duplicate")
+                    ->middleware(["bot.slots"]);
                 Route::delete("/force/{botId}", "forceDelete")->middleware(["role:admin"]);
                 Route::delete("/{botId}", "destroy")->middleware(["role:admin"]);
                 Route::get("/restore/{botId}", "restore")->middleware(["role:admin"]);
@@ -216,7 +217,8 @@ Route::prefix("admin")
                 Route::post("/location", "createLocation");
                 Route::get("/location/{companyId}", "loadLocations");
                 Route::get("/image-menu/{botId}", "loadImageMenu");
-                Route::post("/bot", "createBot");
+                Route::post("/bot", "createBot")
+                    ->middleware(["bot.slots"]);
                 Route::post("/bot-lazy", "createBotLazy");
                 Route::post("/image-menu", "createImageMenu");
             });
