@@ -295,7 +295,7 @@ class ManagerLogicFactory
             $manager->update($form2);
 
 
-        $manager->image = "/images-by-bot-id/".$this->bot->id.'/'.$imageName;
+        $manager->image = !is_null($uploadedPhoto)?"/images-by-bot-id/".$this->bot->id.'/'.$imageName : $imageName;
         $manager->save();
 
         $botUser = $this->botUser->refresh();
