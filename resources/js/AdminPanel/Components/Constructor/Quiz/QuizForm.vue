@@ -82,6 +82,17 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
             </div>
 
             <div class="col-12 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="quizForm.polling_mode"
+                           type="checkbox" id="polling_mode">
+                    <label class="form-check-label" for="polling_mode">
+                        Квиз в режиме опроса (без команд и таймеров)
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3" v-if="!quizForm.polling_mode">
 
                 <label class="form-label " id="quiz-time_limit">
                     <Popper>
@@ -129,7 +140,7 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                 </div>
             </div>
 
-            <div class="col-12 mb-3">
+            <div class="col-12 mb-3" v-if="!quizForm.polling_mode">
                 <div class="form-check">
                     <input class="form-check-input"
                            v-model="quizForm.round_mode"
@@ -140,16 +151,7 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                 </div>
             </div>
 
-            <div class="col-12 mb-3">
-                <div class="form-check">
-                    <input class="form-check-input"
-                           v-model="quizForm.polling_mode"
-                           type="checkbox" id="polling_mode">
-                    <label class="form-check-label" for="polling_mode">
-                        Квиз в режиме опроса (без команд)
-                    </label>
-                </div>
-            </div>
+
 
             <div class="col-12 mb-3">
 
@@ -311,7 +313,7 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
             </div>
         </div>
 
-        <div class="row" v-if="!quizForm.polling_mode">
+<!--        <div class="row" v-if="!quizForm.polling_mode">
             <div class="col-12 mb-3">
 
                 <label class="form-label " id="quiz-time_limit">
@@ -384,7 +386,7 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 
 
             </div>
-        </div>
+        </div>-->
 
         <div class="row">
             <div class="col-12">
@@ -426,7 +428,7 @@ export default {
                 time_limit: 30,
                 show_answers: false,
                 polling_mode: false,
-                round_mode: false,
+                round_mode: true,
                 is_active: false,
                 try_count: 1,
                 success_percent: 50,
@@ -440,6 +442,12 @@ export default {
         quizForm: {
             handler(val) {
                 this.need_reset = true
+            },
+            deep: true
+        },
+        'quizForm.polling_mode': {
+            handler(val) {
+                this.quizForm.round_mode = false
             },
             deep: true
         }

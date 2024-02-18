@@ -4,7 +4,7 @@
             v-if="(type=='video'||type=='video_note')&&content.indexOf('http')==-1"
             class="w-100"
             v-bind:class="{'video-circle':type=='video_note'}"
-            autoplay
+            controls
             poster="/images/load.gif">
             <source
 

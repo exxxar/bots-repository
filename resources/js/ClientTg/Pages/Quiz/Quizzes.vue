@@ -2,7 +2,7 @@
 import QuizItem from "@/ClientTg/Components/Quiz/QuizItem.vue";
 import CallbackForm from "@/ClientTg/Components/Shop/CallbackForm.vue";
 import QuizList from "@/ClientTg/Components/Quiz/QuizList.vue";
-import QuizQuestionList from "@/ClientTg/Components/Quiz/QuizQuestionList.vue";
+import QuizQuestionList from "@/ClientTg/Components/Quiz/QuizRoundQuestionList.vue";
 import QuizCommands from "@/ClientTg/Components/Quiz/QuizCommands.vue";
 </script>
 <template>

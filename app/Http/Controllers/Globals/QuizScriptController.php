@@ -171,6 +171,31 @@ class QuizScriptController extends SlugController
 
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function checkAllAnswers(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            "quiz_id" => "required",
+            "answers" => "required"
+        ]);
+
+        $bot = $request->bot;
+        $botUser = $request->botUser;
+        $slug = $request->slug;
+
+        $result = BusinessLogic::quiz()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser ?? null)
+            ->setSlug($slug ?? null)
+            ->checkAllAnswers($request->all());
+
+        return response()->json($result);
+
+
+    }
+
     public function listOfQuizQuestions(Request $request, $quizId): \App\Http\Resources\QuizQuestionCollection
     {
         $bot = $request->bot;

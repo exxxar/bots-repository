@@ -90,18 +90,21 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
                     <div class="divider divider-small my-3 bg-highlight "></div>
 
 
-                    <div class="d-flex justify-content-center font-24">
-                        <countdown :time="time * 1000"
-                                   @finish="finish"
-                                   format="mm:ss">
-                            <template #="{ resolved }">
-                                <span class="countdown-item">{{ resolved.mm }}</span> :
-                                <span class="countdown-item">{{ resolved.ss }}</span>
-                            </template>
-                        </countdown>
+                    <div v-if="!quiz.polling_mode">
+                        <div class="d-flex justify-content-center font-24" >
+                            <countdown :time="(quiz.time_limit||30) * 1000"
+                                       @finish="finish"
+                                       format="mm:ss">
+                                <template #="{ resolved }">
+                                    <span class="countdown-item">{{ resolved.mm }}</span> :
+                                    <span class="countdown-item">{{ resolved.ss }}</span>
+                                </template>
+                            </countdown>
+                        </div>
+
+                        <small class="text-center w-100 d-block">У вас осталось времени</small>
                     </div>
 
-                    <small class="text-center w-100 d-block">У вас осталось времени</small>
                     <div class="divider divider-small my-3 bg-highlight "></div>
 
                     <a href="javascript:void(0)"
@@ -184,7 +187,7 @@ import {mapGetters} from "vuex";
 import Countdown from 'vue3-countdown'
 
 export default {
-    props: ["quizId", "time"],
+    props: ["quiz"],
     components: {Countdown},
     data() {
         return {
@@ -224,7 +227,7 @@ export default {
     methods: {
         completeAndExit() {
             this.$store.dispatch("completeQuiz", {
-                quiz_id: this.quizId,
+                quiz_id: this.quiz.id,
             }).then(resp => {
 
             }).catch(() => {
@@ -253,7 +256,7 @@ export default {
             this.prepare = true
             this.$store.dispatch("checkQuizQuestionAnswer", {
                 quiz_question_id: questionId,
-                quiz_id: this.quizId,
+                quiz_id: this.quiz.id,
                 answers: JSON.stringify(this.answers[index]),
 
             }).then(resp => {
@@ -302,7 +305,7 @@ export default {
             this.loading = true
             this.$store.dispatch("loadQuizQuestions", {
                 dataObject: {
-                    quiz_id: this.quizId,
+                    quiz_id: this.quiz.id,
                     search: this.search,
                     order: this.order,
                     direction: this.direction

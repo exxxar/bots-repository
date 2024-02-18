@@ -53,6 +53,22 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async checkAndCompleteFullQuiz(context, payload = {quizQuestionId: null, answers: null}) {
+
+        let link = `${BASE_QUIZ_LINK}/check-all-answers`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method, payload)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            return Promise.resolve(dataObject);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async checkQuizQuestionAnswer(context, payload = {quizQuestionId: null, answers: null}) {
 
         let link = `${BASE_QUIZ_LINK}/check-answer`

@@ -10,8 +10,13 @@
 
             </div>
             <ul class="list-group list-group-flush">
+                <li class="list-group-item text-center text-danger" v-if="!quiz.is_active">Квиз недоступен</li>
                 <li class="list-group-item"><i class="fa-solid fa-shuffle"></i> {{ types[quiz.display_type] }}</li>
-                <li class="list-group-item"><i class="fa-solid fa-stopwatch-20"></i> на вопрос {{ quiz.time_limit }} сек
+                <li class="list-group-item" v-if="quiz.round_mode"><i class="fa-solid fa-stopwatch-20"></i> на вопрос {{ quiz.time_limit }} сек
+                </li>
+                <li class="list-group-item" v-if="quiz.round_mode">Режим викторины (квиза)
+                </li>
+                <li class="list-group-item" v-if="quiz.polling_mode">Режим опроса
                 </li>
                 <li class="list-group-item" v-if="(quiz.questions || [] ).length>0"><i
                     class="fa-regular fa-circle-question"></i> Число вопросов {{ (quiz.questions || []).length }}
@@ -24,10 +29,12 @@
                 </li>
             </ul>
             <div class="card-body" v-if="!isCompleted">
-                <a href="javascript:void(0)"
-                   v-if="(quiz.questions || [] ).length>0"
-                   @click="selectQuiz(quiz)"
-                   class="btn btn-m btn-full mb-3 rounded-xl text-uppercase font-900 shadow-s bg-blue1-dark">Начать</a>
+                <button type="button"
+                        v-if="(quiz.questions || [] ).length>0"
+                        @click="selectQuiz(quiz)"
+                        :disabled="!quiz.is_active"
+                        class="btn btn-m w-100 btn-full mb-3 rounded-xl text-uppercase font-900 shadow-s bg-blue1-dark">Начать
+                </button>
                 <div class="alert alert-warning" v-else>Вы не можете сейчас начать квиз! В нём нет вопросов!</div>
                 <div class="divider divider-small my-3 bg-highlight " v-if="needReturn"></div>
                 <a href="javascript:void(0)"
@@ -79,7 +86,7 @@ export default {
     },
     computed: {
         isCompleted() {
-            //return false;
+           // return false;
             let current_attempts = this.quiz.personal_info.current_attempts
             let max_attempts = this.quiz.personal_info.current_attempts
 
@@ -101,7 +108,7 @@ export default {
         },
         openLinkModal() {
             let slugId = window.currentScript || null
-            this.$cashback.qr("005000000"+slugId )
+            this.$cashback.qr("005000000" + slugId)
         },
     }
 }

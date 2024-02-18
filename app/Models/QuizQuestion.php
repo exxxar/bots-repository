@@ -45,6 +45,21 @@ class QuizQuestion extends Model
 
     protected $with = ["answers"];
 
+    protected $appends = ["max_points"];
+
+    public function getMaxPointsAttribute(){
+        if (is_null($this->answers()))
+            return 0;
+
+        $sum = 0;
+
+        $answers = $this->answers()->get();
+        foreach ($answers as $answer)
+            $sum += ($answer->points ?? 0);
+
+        return $sum;
+
+    }
     public function quizzes(): BelongsToMany
     {
         return $this->belongsToMany(Quiz::class);

@@ -2,6 +2,7 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Facades\BotMethods;
 use App\Http\Resources\ActionStatusResource;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\AppointmentEventCollection;
@@ -203,6 +204,7 @@ class QuizLogicFactory
     /**
      * @throws ValidationException
      * @throws HttpException
+     * @throws \Exception
      */
     public function completeQuiz(array $data): ActionStatusResource
     {
@@ -213,6 +215,7 @@ class QuizLogicFactory
         $validator = Validator::make($data, [
             'quiz_id' => "required",
         ]);
+
 
         if ($validator->fails())
             throw new ValidationException($validator);
@@ -267,6 +270,12 @@ class QuizLogicFactory
         $points = 0;
         $data = $action->data ?? [];
 
+
+        $maxResult = 0;
+
+        foreach ($quiz->questions as $question)
+            $maxResult += $question->max_points ?? 0;
+
         if (!empty($data["questions"] ?? []))
             foreach ($data["questions"] as $q)
                 $points += $q["points"] ?? 0;
@@ -285,6 +294,30 @@ class QuizLogicFactory
                 'time' => $time->second,
                 'result' => $data["questions"] ?? [],
             ]);
+
+
+        $thread = $bot->topics["actions"] ?? null;
+        $nameUser = BotMethods::prepareUserName($botUser);
+        $message = "$nameUser, спасибо за участие в нашем Квизе \"" . ($quiz->title ?? 'Без названия') . "\"! Вы прошли все задания за  <strong>$time</strong> сек и набрали <strong>$points</strong> баллов!";
+
+        $tmpWin = "Ура, Вы выиграли";
+        $tmpLoose = "Увы, Вы проиграли";
+        $message .= $points >= (($maxResult * ($quiz->success_percent ?? 50)) / 100) ?
+            $quiz->success_message[random_int(0, count($quiz->success_message ?? [$tmpWin]) - 1)] ?? $tmpWin :
+            $quiz->failure_message[random_int(0, count($quiz->failure_message ?? [$tmpLoose]) - 1)] ?? $tmpLoose;
+
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                $message,
+            )
+            ->sendMessage(
+                $bot->order_channel ?? $bot->main_channel ?? null,
+                "$nameUser прошел квиз #$quiz->id (" . ($quiz->title ?? 'Без названия') . ") за  <strong>$time</strong> сек и набрал <strong>$points</strong> баллов из <strong>$maxResult</strong> ",
+                $thread
+            );
 
         return new ActionStatusResource($action);
 
@@ -453,6 +486,148 @@ class QuizLogicFactory
             "points" => $points,
             "is_right" => $hasRightAnswer,
         ];
+
+
+    }
+
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function checkAllAnswers(array $data): array
+    {
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(400, "Не все условия функции выполнены!");
+
+        $validator = Validator::make($data, [
+            "quiz_id" => "required",
+            "answers" => "required"
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $quiz = Quiz::query()->find($data["quiz_id"]);
+
+        if (is_null($quiz))
+            throw new HttpException(404, "Квиз не найден");
+
+        $answers = json_decode($data["answers"]);
+
+        $ids = Collection::make($answers)
+            ->pluck("id");
+
+        $questions = QuizQuestion::query()
+            ->with(["answers"])
+            ->whereHas("answers")
+            ->whereIn("id", $ids)
+            ->get();
+
+
+        if (count($questions)==0)
+            throw new HttpException(404, "Вопросы не найден");
+
+        $bot = $this->bot;
+        $botUser = $this->botUser;
+        $slug = $this->slug;
+
+        $maxAttempts = $quiz->try_count ?? 1;
+
+        $action = ActionStatus::query()
+            ->where("bot_user_id", $botUser->id)
+            ->where("bot_id", $bot->id)
+            ->where("slug_id", $slug->id)
+            ->first();
+
+        if (is_null($action))
+            $action = ActionStatus::query()
+                ->create([
+                    'user_id' => $botUser->user_id,
+                    'bot_user_id' => $botUser->id,
+                    'bot_id' => $bot->id,
+                    'slug_id' => $slug->id,
+                    'max_attempts' => $maxAttempts,
+                    'current_attempts' => 0
+                ]);
+
+        $tmp = $action->data ?? [];
+        $tmpQuestionsResult = $tmp["questions"] ?? [];
+
+
+        $result = [];
+
+        foreach ($questions as $question) {
+            $points = 0;
+            $hasRightAnswer = false;
+            foreach ($question->answers as $answer) {
+                if (is_null($answer))
+                    continue;
+
+
+                $answerPool = array_filter($answers, function ($q) use ($question){
+                   return $q->id ==  $question->id;
+                });
+
+                $answerPool = Collection::make($answerPool)
+                    ->pluck("value");
+
+                //dd($answerPool);
+
+                if (in_array($question->is_open ?
+                    $answer->text : $answer->id,
+                    is_array($answerPool) ? $answerPool : [$answerPool[0]])) {
+
+
+                    $points += $answer->points;
+
+                    if ($answer->is_right_answer)
+                        $hasRightAnswer = true;
+
+                    if (!$question->is_multiply)
+                        break;
+                }
+
+            }
+
+
+            $tmpObject = [
+                "question_id" => $question->id,
+                "points" => $points,
+                "is_right" => $hasRightAnswer,
+            ];
+
+            $tmpQuestionsResult[] = (object)$tmpObject;
+
+            $result[] = [
+               ...$tmpObject,
+                "question" => (object)[
+                    "id" => $question->id,
+                    "text" => $question->text,
+                    "message" => $hasRightAnswer ? $question->success_message : $question->failure_message,
+                    "content" => $hasRightAnswer ? $question->success_media_content : $question->failure_media_content,
+                    "type" => $hasRightAnswer ? $question->success_media_content_type : $question->failure_media_content_type,
+                ],
+            ];
+
+        }
+
+        $action->data = (object)[
+            "questions" => $tmpQuestionsResult,
+        ];
+
+        $action->save();
+
+        /*  QuizResult::query()->create([
+              'quiz_id',
+              'quiz_command_id',
+              'points',
+              'time',
+              'result',
+          ]);*/
+
+
+        return $result;
 
 
     }
@@ -692,8 +867,6 @@ class QuizLogicFactory
         $validator = Validator::make($data, [
             'title' => "required",
             'description' => "required",
-            'start_at' => "required",
-            'end_at' => "required",
             'time_limit' => "required",
         ]);
 
@@ -718,19 +891,16 @@ class QuizLogicFactory
             "polling_mode" => ($data["polling_mode"] ?? false) == "true",
             "round_mode" => ($data["round_mode"] ?? false) == "true",
             "try_count" => $data["try_count"] ?? 1,
-            "is_active" => $data["is_active"] ?? true,
+            "is_active" => ($data["is_active"] ?? false) == "true",
             "success_percent" => $data["success_percent"] ?? 50,
             "success_message" => $success,
             "failure_message" => $failure,
 
         ];
 
-        if (is_null($data["id"] ?? null))
-        {
+        if (is_null($data["id"] ?? null)) {
             $quiz = Quiz::query()->create($tmp);
-        }
-        else
-        {
+        } else {
             $quiz = Quiz::query()->find($data["id"]);
             $quiz->update($tmp);
         }
