@@ -1,5 +1,6 @@
 <script setup>
 import Pagination from '@/AdminPanel/Components/Pagination.vue';
+import BotMediaObject from "@/AdminPanel/Components/Constructor/BotMediaObject.vue";
 </script>
 <template>
 
@@ -79,30 +80,12 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
             <div class="modal-content">
                 <div class="modal-body">
                     <div v-if="previewContent!=null" class="d-flex justify-content-center align-items-center">
-                        <div class="video-circle" v-if="previewContent.type=='video_note'">
-                            <video
-                                v-if="previewContent.type==='video'||previewContent.type=='video_note'"
-                                controls
-                                poster="/images/load.gif">
-                                <source
-                                    :src="'/file-by-file-id/'+ previewContent.file_id"
-                                    type="video/mp4"/>
-                            </video>
-                        </div>
+                        <BotMediaObject
+                            :type="previewContent.type"
+                            :content="previewContent.file_id"
+                        >
 
-                        <div v-if="previewContent.type==='video'">
-                            <video
-                                controls
-                                poster="/images/load.gif">
-                                <source
-                                    :src="'/file-by-file-id/'+ previewContent.file_id"
-                                    type="video/mp4"/>
-                            </video>
-                        </div>
-
-                        <img v-if="previewContent.type=='photo'" v-lazy="'/file-by-file-id/'+ previewContent.file_id" alt="">
-                        <audio v-if="previewContent.type==='audio'||previewContent.type==='voice'" controls
-                               :src="'/file-by-file-id/'+ previewContent.file_id"></audio>
+                        </BotMediaObject>
                     </div>
                 </div>
                 <div class="modal-footer">
