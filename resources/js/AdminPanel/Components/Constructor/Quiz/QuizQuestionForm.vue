@@ -83,7 +83,6 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
             </div>
 
 
-
             <div class="col-12 mb-3" v-if="need_media">
                 <label class="form-label" id="quiz-images">
                     <Popper>
@@ -102,18 +101,19 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                 </label>
                 <h6>Вставьте ссылку на контент...</h6>
                 <BotMediaVariant
-                    v-model:type="questionForm.media_content"
-                    v-model:value="questionForm.content_type"
+                    v-model:type="questionForm.content_type"
+                    v-model:value="questionForm.media_content"
                 >
                 </BotMediaVariant>
                 <h6>...или выберите из доступных</h6>
-                <BotMediaList
-                    :need-video="true"
-                    :need-video-note="true"
-                    :need-audio="true"
-                    :need-photo="true"
-                    :selected="[questionForm.media_content]"
-                    v-on:select="selectMedia"></BotMediaList>
+
+                <button
+                    type="button"
+                    @click="chooseBaseMediaContent"
+                    class="btn btn-outline-info rounded-lg">Выбрать медиа-файл
+                </button>
+
+
             </div>
 
             <div class="col-12 mb-3">
@@ -140,20 +140,36 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
 
             <div class="col-12 mb-3">
 
-                <label class="form-label " id="quiz-description">
-                    <Popper>
-                        <i class="fa-regular fa-circle-question mr-1"></i>
-                        <template #content>
-                            <div>
-                                Текст при выборе правильного ответа
-                            </div>
-                        </template>
-                    </Popper>
-                    Текст при выборе правильного ответа
-                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                    <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="questionForm.success_message">
-                        Длина текста {{ questionForm.success_message.length }}/255</small>
-                </label>
+                <div class="d-flex justify-content-between">
+                    <label class="form-label " id="quiz-description">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>
+                                    Текст при выборе правильного ответа
+                                </div>
+                            </template>
+                        </Popper>
+                        Текст при выборе правильного ответа
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="questionForm.success_message">
+                            Длина текста {{ questionForm.success_message.length }}/255</small>
+                    </label>
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            Кнопки
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li
+                                @click="attachTo('success_message',item.value)"
+                                v-for="item in htmlInjections"
+                            ><a class="dropdown-item"
+                                href="javascript:void(0)">{{ item.title || 'Не указано' }}</a></li>
+
+                        </ul>
+                    </div>
+                </div>
                 <textarea class="form-control"
                           placeholder="Текст при правильном ответе"
                           aria-label="Текст при правильном ответе"
@@ -185,32 +201,49 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                 </BotMediaVariant>
 
                 <h6>...или выберите из доступных</h6>
-                <BotMediaList
 
-                    :need-video="true"
-                    :need-video-note="true"
-                    :need-audio="true"
-                    :need-photo="true"
-                    :selected="[questionForm.success_media_content]"
-                    v-on:select="selectMediaForSuccess"></BotMediaList>
+                <button
+                    type="button"
+                    @click="chooseSuccessMediaContent"
+                    class="btn btn-outline-info rounded-lg">Выбрать медиа-файл
+                </button>
+
             </div>
 
             <div class="col-12 mb-3">
 
-                <label class="form-label " id="quiz-description">
-                    <Popper>
-                        <i class="fa-regular fa-circle-question mr-1"></i>
-                        <template #content>
-                            <div>
-                                Текст в выбора неправильного ответа
-                            </div>
-                        </template>
-                    </Popper>
-                    Текст при выборе неправильного ответа
-                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                    <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="questionForm.failure_message">
-                        Длина текста {{ questionForm.failure_message.length }}/255</small>
-                </label>
+                <div class="d-flex justify-content-between">
+                    <label class="form-label " id="quiz-description">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>
+                                    Текст в выбора неправильного ответа
+                                </div>
+                            </template>
+                        </Popper>
+                        Текст при выборе неправильного ответа
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                        <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="questionForm.failure_message">
+                            Длина текста {{ questionForm.failure_message.length }}/255</small>
+                    </label>
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            Кнопки
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li
+                                @click="attachTo('failure_message',item.value)"
+                                v-for="item in htmlInjections"
+                            ><a class="dropdown-item"
+                                href="javascript:void(0)">{{ item.title || 'Не указано' }}</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+
+
                 <textarea class="form-control"
                           placeholder="Текст при неправильном ответе"
                           aria-label="Текст при неправильном ответе"
@@ -242,18 +275,15 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
 
                 <h6>...или выберите из доступных</h6>
 
-                <BotMediaList
+                <button
+                    type="button"
+                    @click="chooseFailureMediaContent"
+                    class="btn btn-outline-info rounded-lg">Выбрать медиа-файл
+                </button>
 
-                    :need-video="true"
-                    :need-video-note="true"
-                    :need-audio="true"
-                    :need-photo="true"
-                    :selected="[questionForm.failure_media_content]"
-                    v-on:select="selectMediaForFailure"></BotMediaList>
+
             </div>
         </div>
-
-
 
 
         <div class="row">
@@ -379,6 +409,73 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="chooseSuccessMediaContent" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <BotMediaList
+
+                        :need-video="true"
+                        :need-video-note="true"
+                        :need-audio="true"
+                        :need-photo="true"
+                        :selected="[questionForm.success_media_content]"
+                        v-on:select="selectMediaForSuccess"></BotMediaList>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="chooseFailureMediaContent" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <BotMediaList
+
+                        :need-video="true"
+                        :need-video-note="true"
+                        :need-audio="true"
+                        :need-photo="true"
+                        :selected="[questionForm.failure_media_content]"
+                        v-on:select="selectMediaForFailure"></BotMediaList>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="chooseBaseMediaContent" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <BotMediaList
+                        :need-video="true"
+                        :need-video-note="true"
+                        :need-audio="true"
+                        :need-photo="true"
+                        :selected="[questionForm.media_content]"
+                        v-on:select="selectMedia"></BotMediaList>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script>
@@ -397,6 +494,20 @@ export default {
             need_media_for_success: false,
             need_media_for_failed: false,
             rounds: [],
+            htmlInjections: [
+                {
+                    title: "Кнопка синяя",
+                    value: "<a href='http://test.com/test' class='w-100 btn btn-primary'>Текст кнопки</a>"
+                },
+                {
+                    title: "Кнопка без цвета",
+                    value: "<a href='http://test.com/test' class='w-100 btn btn-link'>Текст кнопки</a>"
+                },
+                {
+                    title: "Кнопка с синей обводкой",
+                    value: "<a href='http://test.com/test' class='w-100 btn btn-outline-primary'>Текст кнопки</a>"
+                }
+            ],
             questionForm: {
                 id: null,
                 text: null,
@@ -408,10 +519,10 @@ export default {
                 answers: [],
                 success_message: null,
                 failure_message: null,
-                success_media_content:  null,
-                failure_media_content:  null,
-                success_media_content_type:  null,
-                failure_media_content_type:  null,
+                success_media_content: null,
+                failure_media_content: null,
+                success_media_content_type: null,
+                failure_media_content_type: null,
 
             }
         }
@@ -447,15 +558,17 @@ export default {
     },
 
     mounted() {
+
+
         this.loadQuizRounds()
         if (this.question) {
-            if (this.question.media_content!=null)
+            if (this.question.media_content != null)
                 this.need_media = true
 
-            if (this.question.success_media_content!=null)
+            if (this.question.success_media_content != null)
                 this.need_media_for_success = true
 
-            if (this.question.failure_media_content!=null)
+            if (this.question.failure_media_content != null)
                 this.need_media_for_failed = true
 
             this.$nextTick(() => {
@@ -481,15 +594,17 @@ export default {
             })
 
 
-
         }
-
-
 
 
     },
     methods: {
-
+        attachTo(param, value) {
+            if (this.questionForm[param] == null)
+                this.questionForm[param] = value
+            else
+                this.questionForm[param] += value;
+        },
         loadQuizRounds() {
             this.$store.dispatch("loadQuizRounds", {
                 dataObject: {
@@ -500,7 +615,18 @@ export default {
                 this.rounds = resp
             })
         },
-
+        chooseBaseMediaContent(index) {
+            const mc = new bootstrap.Modal(document.getElementById('chooseBaseMediaContent'), {})
+            mc.show()
+        },
+        chooseSuccessMediaContent(index) {
+            const mc = new bootstrap.Modal(document.getElementById('chooseSuccessMediaContent'), {})
+            mc.show()
+        },
+        chooseFailureMediaContent(index) {
+            const mc = new bootstrap.Modal(document.getElementById('chooseFailureMediaContent'), {})
+            mc.show()
+        },
         chooseMediaContent(index) {
 
 
@@ -514,12 +640,12 @@ export default {
 
         },
 
-        selectMediaForFailure(item){
-            this.questionForm.failure_media_content= item.file_id
+        selectMediaForFailure(item) {
+            this.questionForm.failure_media_content = item.file_id
             this.questionForm.failure_media_content_type = item.type
         },
-        selectMediaForSuccess(item){
-            this.questionForm.success_media_content= item.file_id
+        selectMediaForSuccess(item) {
+            this.questionForm.success_media_content = item.file_id
             this.questionForm.success_media_content_type = item.type
         },
         selectMediaForAnswer(item) {

@@ -84,6 +84,10 @@ export default {
             ],
         }
     },
+    mounted() {
+        const url = import.meta.env.VITE_PUSHER_APP_CLUSTER
+        console.log("media=>",url)
+    },
     computed: {
         isCompleted() {
            // return false;

@@ -148,14 +148,14 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link"
+                                <a class="nav-link disabled"
                                    v-bind:class="{'active':tab===2}"
                                    href="#" @click="tab=2">
                                     Документы
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link"
+                                <a class="nav-link disabled"
                                    v-bind:class="{'active':tab===3}"
                                    @click="tab=3"
                                    href="#">
@@ -163,7 +163,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link"
+                                <a class="nav-link disabled"
                                    @click="tab=4"
                                    v-bind:class="{'active':tab===4}"
                                    href="#"
@@ -172,7 +172,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link"
+                                <a class="nav-link disabled"
                                    @click="tab=5"
                                    v-bind:class="{'active':tab===5}"
                                    href="#"
@@ -183,15 +183,16 @@
                         </ul>
                     </div>
                 </div>
-                <div class="row">
-                    <div
-                        class="col-md-6 border-right">
-                        <div class="p-3 py-5">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h4 class="text-right">Настройки профиля менеджера</h4>
-                            </div>
-                            <form
-                                v-on:submit.prevent="submitManager" class="row mb-0">
+                <div class="row" v-if="tab===1">
+                    <form
+                        v-on:submit.prevent="submitManager" class="row mb-0">
+                        <div
+                            class="col-md-6 border-right">
+                            <div class="p-3 py-5">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="text-right">Настройки профиля менеджера</h4>
+                                </div>
+
 
                                 <div class="col-12">
                                     <label>Укажите Ваше Ф.И.О</label>
@@ -202,50 +203,7 @@
                                            aria-describedby="managerForm-name" required>
                                 </div>
 
-                                <div class="col-12">
-                                    <label class="mb-3">Загрузи своё персональное фото, мы же должны знать в лицо наших
-                                        сотрудников</label>
-                                    <div class="card d-inline-flex justify-content-center flex-wrap ">
-                                        <div class="card-body">
-                                            <label for="bot-photos" style="margin-right: 10px;"
-                                                   class="photo-loader ml-2 text-center">
-                                                <span class="p-3"><i class="fa-solid fa-image"></i></span>
-                                                <input type="file" id="bot-photos" accept="image/*"
-                                                       @change="onChangePhotos"
-                                                       style="display:none;"/>
 
-                                            </label>
-                                        </div>
-
-
-                                    </div>
-                                    <div class="card d-inline-flex justify-content-center flex-wrap mt-2"
-                                         v-if="managerForm.image">
-                                        <div class="card-body">
-                                            <div class="img-preview"
-                                                 style="margin-right: 10px;">
-                                                <img v-lazy="managerForm.image">
-                                                <div class="remove">
-                                                    <a @click="removePhoto('image')" class="cursor-pointer"><i
-                                                        class="fa-regular fa-trash-can"></i> удалить фото</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card d-inline-flex justify-content-center flex-wrap mt-2"
-                                         v-if="photo">
-                                        <div class="card-body">
-                                            <div class="img-preview"
-                                                 style="margin-right: 10px;">
-                                                <img v-lazy="getPhoto(photo).imageUrl">
-                                                <div class="remove">
-                                                    <a @click="removePhoto('photo')" class="cursor-pointer"><i
-                                                        class="fa-regular fa-trash-can"></i> удалить фото</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
 
                                 <div class="col-12 mt-3">
@@ -270,69 +228,8 @@
                                            required>
                                 </div>
 
-                                <div class="col-12 mt-3">
-                                    <label>Ссылки на ваши соц. сети</label>
 
-                                    <div class="input-group position-relative mb-2"
-                                         v-for="(item, index) in managerForm.social_links">
-                                        <input type="url"
-                                               class="form-control  font-14 p-3 rounded-s border-theme"
-                                               v-model="managerForm.social_links[index]"
-                                               placeholder="Ссылка на соц. сеть"
-                                               :aria-label="'managerForm-social-links-'+index"
-                                               :aria-describedby="'managerForm-social-links-'+index" required>
-                                        <span class="input-group-text bg-primary"
-                                              v-if="index>0">
-                                            <a href="javascript:void(0)"
 
-                                               @click="remove('social_links', index)"
-                                               class="text-white">
-                                                <i class="fa-regular fa-square-minus"></i>
-                                            </a>
-                                         </span>
-                                    </div>
-                                    <a
-                                        @click="add('social_links')"
-                                        class="d-block w-100 py-3 text-center"
-                                        href="javascript:void(0)">Добавить еще ссылку</a>
-                                </div>
-
-                                <div class="col-12">
-
-                                    <label>Укажите ваш пол</label>
-
-                                    <div class="row mb-0">
-                                        <div class="col-6 p-1">
-                                            <div
-                                                v-bind:class="{'btn-primary text-white':managerForm.sex}"
-                                                @click="managerForm.sex = true"
-                                                class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
-                                                <i class="fa-solid fa-mars font-28"></i>
-                                                <span class="text-center text-uppercase my-2">Мужчина</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 p-1">
-                                            <div
-                                                v-bind:class="{'btn-primary text-white':!managerForm.sex}"
-                                                @click="managerForm.sex = false"
-                                                class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
-                                                <i class="fa-solid fa-mars font-28"></i>
-                                                <span class="text-center text-uppercase my-2">Женщина</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <label>Введите дату своего рождения</label>
-                                    <div class="input-style input-style-2">
-                                        <input type="date"
-                                               class="form-control font-14 p-3 rounded-s border-theme"
-                                               v-model="managerForm.birthday"
-                                               aria-label="managerForm-birthday" aria-describedby="managerForm-birthday"
-                                               required>
-                                    </div>
-                                </div>
 
                                 <div class="col-12">
                                     <label>Укажите город вашего проживания</label>
@@ -358,7 +255,7 @@
                                 <div class="col-12">
                                     <p class="mb-3"><em>Напишите о себе любую информацию, которая может иметь для нас
                                         значение </em></p>
-                                    <h6 class="text-center">Дополнительная информация</h6>
+                                    <h6>Дополнительная информация</h6>
                                     <div class="input-style input-style-2">
                         <textarea type="text" class="form-control text-left font-14 p-3 rounded-s border-theme"
                                   v-model="managerForm.info"
@@ -418,9 +315,125 @@
                                     </button>
 
                                 </div>
-                            </form>
+
+                            </div>
+                        </div>
+                        <div
+                            class="col-md-6 border-right">
+                            <div class="my-2">
+                                <label class="mb-3">Загрузи своё персональное фото, мы же должны знать в лицо наших
+                                    сотрудников</label>
+                                <div class="card d-inline-flex justify-content-center flex-wrap ">
+                                    <div class="card-body">
+                                        <label for="bot-photos" style="margin-right: 10px;"
+                                               class="photo-loader ml-2 text-center">
+                                            <span class="p-3"><i class="fa-solid fa-image"></i></span>
+                                            <input type="file" id="bot-photos" accept="image/*"
+                                                   @change="onChangePhotos"
+                                                   style="display:none;"/>
+
+                                        </label>
+                                    </div>
+
+
+                                </div>
+                                <div class="card d-inline-flex justify-content-center flex-wrap mt-2"
+                                     v-if="managerForm.image">
+                                    <div class="card-body">
+                                        <div class="img-preview"
+                                             style="margin-right: 10px;">
+                                            <img v-lazy="managerForm.image">
+                                            <div class="remove">
+                                                <a @click="removePhoto('image')" class="cursor-pointer"><i
+                                                    class="fa-regular fa-trash-can"></i> удалить фото</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card d-inline-flex justify-content-center flex-wrap mt-2"
+                                     v-if="photo">
+                                    <div class="card-body">
+                                        <div class="img-preview"
+                                             style="margin-right: 10px;">
+                                            <img v-lazy="getPhoto(photo).imageUrl">
+                                            <div class="remove">
+                                                <a @click="removePhoto('photo')" class="cursor-pointer"><i
+                                                    class="fa-regular fa-trash-can"></i> удалить фото</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <label>Ссылки на ваши соц. сети</label>
+
+                                <div class="input-group position-relative mb-2"
+                                     v-for="(item, index) in managerForm.social_links">
+                                    <input type="url"
+                                           class="form-control  font-14 p-3 rounded-s border-theme"
+                                           v-model="managerForm.social_links[index]"
+                                           placeholder="Ссылка на соц. сеть"
+                                           :aria-label="'managerForm-social-links-'+index"
+                                           :aria-describedby="'managerForm-social-links-'+index">
+                                    <span class="input-group-text bg-primary"
+                                          v-if="index>0">
+                                            <a href="javascript:void(0)"
+
+                                               @click="remove('social_links', index)"
+                                               class="text-white">
+                                                <i class="fa-regular fa-square-minus"></i>
+                                            </a>
+                                         </span>
+                                </div>
+                                <a
+                                    @click="add('social_links')"
+                                    class="d-block w-100 py-3 text-center"
+                                    href="javascript:void(0)">Добавить еще ссылку</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="row" v-if="tab===2"></div>
+                <div class="row" v-if="tab===3"></div>
+                <div class="row" v-if="tab===4">
+                    <div class="col-12">
+
+                        <label>Укажите ваш пол</label>
+
+                        <div class="row mb-0">
+                            <div class="col-6 p-1">
+                                <div
+                                    v-bind:class="{'btn-primary text-white':managerForm.sex}"
+                                    @click="managerForm.sex = true"
+                                    class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
+                                    <i class="fa-solid fa-mars font-28"></i>
+                                    <span class="text-center text-uppercase my-2">Мужчина</span>
+                                </div>
+                            </div>
+                            <div class="col-6 p-1">
+                                <div
+                                    v-bind:class="{'btn-primary text-white':!managerForm.sex}"
+                                    @click="managerForm.sex = false"
+                                    class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
+                                    <i class="fa-solid fa-mars font-28"></i>
+                                    <span class="text-center text-uppercase my-2">Женщина</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="col-12">
+                        <label>Введите дату своего рождения</label>
+                        <div class="input-style input-style-2">
+                            <input type="date"
+                                   class="form-control font-14 p-3 rounded-s border-theme"
+                                   v-model="managerForm.birthday"
+                                   aria-label="managerForm-birthday" aria-describedby="managerForm-birthday"
+                                   required>
+                        </div>
+                    </div>
+
                     <div class="col-md-6" v-bind:class="{'col-md-6':!botUser.manager}">
 
                         <div class="row mt-5">
@@ -564,6 +577,7 @@
 
                     </div>
                 </div>
+                <div class="row" v-if="tab===5"></div>
             </div>
 
         </div>
@@ -762,9 +776,9 @@ export default {
                 }
 
                 this.$emit("update")
-                this.$botNotification.notification("Редактирование данных", "Данные успешно обновлены!")
+                this.$notify("Редактирование данных: Данные успешно обновлены!")
             }).catch(() => {
-                this.$botNotification.warning("Редактирование данных", "Ошибка обновления данных")
+                this.$notify("Редактирование данных: Ошибка обновления данных")
             })
         },
         submitManager() {
@@ -788,7 +802,6 @@ export default {
                 });
 
 
-
             data.append('bot_id', this.bot.id);
             data.append('bot_user_id', this.botUser.id);
 
@@ -796,6 +809,7 @@ export default {
                 data
             ).then((resp) => {
                 window.location.reload()
+                this.$notify("Редактирование данных: Данные успешно обновлены!")
             }).catch(() => {
                 this.loading = false
             })

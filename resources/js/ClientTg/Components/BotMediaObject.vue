@@ -39,6 +39,10 @@
 
 export default {
     props: ["type", "content"],
+    mounted() {
+        const url = import.meta.env.VITE_MEDIA_HANDLER_URL
+        console.log("media=>",url)
+    }
 }
 </script>
 <style lang="scss">

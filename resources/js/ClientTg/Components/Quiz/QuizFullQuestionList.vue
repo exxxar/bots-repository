@@ -101,7 +101,8 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
                     </div>
 
                     <p class="text-center my-3" v-if="(points[index] || {}).question">
-                        <strong>{{ points[index].question.message || 'Отлично! Идем дальше' }}</strong></p>
+                        <strong v-html="points[index].question.message|| 'Отлично! Идем дальше'"></strong>
+                    </p>
 
 
                 </div>
