@@ -8,7 +8,7 @@
             poster="/images/load.gif">
             <source
 
-                :src="'/file-by-file-id/'+content"
+                :src="url+content"
                 type="video/mp4"/>
 
         </video>
@@ -23,7 +23,7 @@
 
         <img v-if="type=='photo'&&content.indexOf('http')==-1"
              class="w-100"
-             v-lazy="'/file-by-file-id/'+content"
+             v-lazy="url+content"
              alt="">
         <img v-if="type=='photo'&&content.indexOf('http')!=-1"
              class="w-100"
@@ -32,16 +32,20 @@
         <audio v-if="type=='audio'&&content.indexOf('http')!=-1" controls autoplay
                :src="content"></audio>
         <audio v-if="type=='audio'&&content.indexOf('http')==-1" controls autoplay
-               :src="'/file-by-file-id/'+content"></audio>
+               :src="url+content"></audio>
     </div>
 </template>
 <script>
 
 export default {
     props: ["type", "content"],
+    data(){
+        return {
+            url:null,
+        }
+    },
     mounted() {
-        const url = import.meta.env.VITE_MEDIA_HANDLER_URL
-        console.log("media=>",url)
+        this.url = import.meta.env.VITE_MEDIA_HANDLER_URL
     }
 }
 </script>
