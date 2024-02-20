@@ -364,7 +364,31 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="mb-2">
 
+                                <label>Укажите ваш пол</label>
+
+                                <div class="row mb-0">
+                                    <div class="col-6 p-1">
+                                        <div
+                                            v-bind:class="{'btn-primary text-white':managerForm.sex}"
+                                            @click="managerForm.sex = true"
+                                            class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
+                                            <i class="fa-solid fa-mars font-28"></i>
+                                            <span class="text-center text-uppercase my-2">Мужчина</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 p-1">
+                                        <div
+                                            v-bind:class="{'btn-primary text-white':!managerForm.sex}"
+                                            @click="managerForm.sex = false"
+                                            class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
+                                            <i class="fa-solid fa-mars font-28"></i>
+                                            <span class="text-center text-uppercase my-2">Женщина</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="mb-2">
                                 <label>Ссылки на ваши соц. сети</label>
 
@@ -397,31 +421,7 @@
                 <div class="row" v-if="tab===2"></div>
                 <div class="row" v-if="tab===3"></div>
                 <div class="row" v-if="tab===4">
-                    <div class="col-12">
 
-                        <label>Укажите ваш пол</label>
-
-                        <div class="row mb-0">
-                            <div class="col-6 p-1">
-                                <div
-                                    v-bind:class="{'btn-primary text-white':managerForm.sex}"
-                                    @click="managerForm.sex = true"
-                                    class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
-                                    <i class="fa-solid fa-mars font-28"></i>
-                                    <span class="text-center text-uppercase my-2">Мужчина</span>
-                                </div>
-                            </div>
-                            <div class="col-6 p-1">
-                                <div
-                                    v-bind:class="{'btn-primary text-white':!managerForm.sex}"
-                                    @click="managerForm.sex = false"
-                                    class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
-                                    <i class="fa-solid fa-mars font-28"></i>
-                                    <span class="text-center text-uppercase my-2">Женщина</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="col-12">
                         <label>Введите дату своего рождения</label>
