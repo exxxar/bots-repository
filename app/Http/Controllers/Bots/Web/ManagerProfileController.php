@@ -19,18 +19,18 @@ class ManagerProfileController extends Controller
         $request->validate([
             "name" => "required",
             "phone" => "required",
-            "birthday" => "required",
+            //"birthday" => "required",
             "city" => "required",
             // "country" => "required",
-            "address" => "required",
-            "sex" => "required",
-            "referral" => "",
-            "info" => "",
-            "strengths" => "required",
-            "weaknesses" => "required",
-            "educations" => "required",
-            "social_links" => "required",
-            "skills" => "required",
+           // "address" => "required",
+          //  "sex" => "required",
+          //  "referral" => "",
+          //  "info" => "",
+           // "strengths" => "required",
+           // "weaknesses" => "required",
+           // "educations" => "required",
+            //"social_links" => "required",
+           // "skills" => "required",
         ]);
 
         BusinessLogic::manager()

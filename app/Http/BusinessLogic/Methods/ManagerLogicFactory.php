@@ -217,18 +217,18 @@ class ManagerLogicFactory
         $validator = Validator::make($data, [
             "name" => "required",
             "phone" => "required",
-            "birthday" => "required",
+           // "birthday" => "required",
             "city" => "required",
             // "country" => "required",
             // "address" => "required",
-            "sex" => "required",
-            "referral" => "",
-            "info" => "",
-            "strengths" => "required",
-            "weaknesses" => "required",
-            "educations" => "required",
-            "social_links" => "required",
-            "skills" => "required",
+           // "sex" => "required",
+           // "referral" => "",
+           // "info" => "",
+           // "strengths" => "required",
+           // "weaknesses" => "required",
+           // "educations" => "required",
+           // "social_links" => "required",
+          //  "skills" => "required",
         ]);
 
         if ($validator->fails())
