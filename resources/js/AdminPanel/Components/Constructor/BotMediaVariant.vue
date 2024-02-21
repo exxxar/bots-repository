@@ -14,7 +14,7 @@
               @click="$emit('update:type', 'audio')">Звук</span>
     </div>
     <div class="form-floating mb-3">
-        <input type="url" class="form-control"
+        <input type="text" class="form-control"
                :value="value"
                @input="$emit('update:value', value)"
                id="custom-url-link-for-success" placeholder="https://....">
