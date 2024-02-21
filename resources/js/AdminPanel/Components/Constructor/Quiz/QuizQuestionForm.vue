@@ -175,7 +175,7 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                           aria-label="Текст при правильном ответе"
                           maxlength="255"
                           v-model="questionForm.success_message"
-                          aria-describedby="quiz-question-success_message" required>
+                          aria-describedby="quiz-question-success_message">
                     </textarea>
 
             </div>
@@ -249,7 +249,7 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                           aria-label="Текст при неправильном ответе"
                           maxlength="255"
                           v-model="questionForm.failure_message"
-                          aria-describedby="quiz-question-success_message" required>
+                          aria-describedby="quiz-question-failure-message">
                     </textarea>
 
             </div>

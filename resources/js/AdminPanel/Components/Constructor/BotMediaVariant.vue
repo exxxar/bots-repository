@@ -4,6 +4,9 @@
                           v-bind:class="{'bg-success':type=='video'}"
                           @click="$emit('update:type', 'video')">Видео</span>
         <span class="badge bg-secondary cursor-pointer mr-1"
+              v-bind:class="{'bg-success':type=='video_note'}"
+              @click="$emit('update:type', 'video_note')">Кружок</span>
+        <span class="badge bg-secondary cursor-pointer mr-1"
               v-bind:class="{'bg-success':type=='photo'}"
               @click="$emit('update:type', 'photo')">Изображение</span>
         <span class="badge bg-secondary cursor-pointer mr-1"
