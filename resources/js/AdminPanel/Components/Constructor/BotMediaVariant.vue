@@ -16,7 +16,7 @@
     <div class="form-floating mb-3">
         <input type="url" class="form-control"
                :value="value"
-               @input="$emit('update:value', $event.target.value)"
+               @input="$emit('update:value', value)"
                id="custom-url-link-for-success" placeholder="https://....">
         <label for="custom-url-link-for-success">Ссылка на файл</label>
     </div>
