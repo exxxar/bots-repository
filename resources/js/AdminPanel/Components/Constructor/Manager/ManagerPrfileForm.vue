@@ -1,3 +1,10 @@
+<script setup>
+import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
+import ManagerPackageList from "@/AdminPanel/Components/Constructor/Manager/ManagerPackageList.vue";
+import ManagerSlotList from "@/AdminPanel/Components/Constructor/Manager/ManagerSlotList.vue";
+import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/ManagerStudiesList.vue";
+</script>
+
 <template>
 
 
@@ -7,35 +14,45 @@
                 <div
                     style="position:sticky;top:0px;"
                     class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    <img
-                        class="rounded-circle mt-5" style="width:150px; height:150px; object-fit:cover;"
-                        v-lazy="botUser.manager.image?botUser.manager.image:'../images/manager.png'">
-
                     <p class="text-white" v-if="botUser.manager.verified_at!=null">
                         Учетная запись менеджера <strong class="text-uppercase">активирована!</strong>
                     </p>
                     <p class="text-white" v-else>
-                        Учетная запись менеджера <strong class="text-uppercase">не активна!</strong>
+                        Учетная запись менеджера<!-- <strong class="text-uppercase">не активна!</strong>-->
                     </p>
-                    <p class="mb-0">Имя: <strong class="text-white">{{ botUser.name || 'Не указано' }}</strong></p>
-                    <p class="mb-0">Телефон: <strong class="text-white">{{ botUser.phone || 'Не указано' }}</strong></p>
 
-                    <p class="mb-0">Ваш баланс: <strong class="text-white">{{ botUser.manager.balance || 0 }}
-                        руб</strong></p>
-                    <p class="mb-0">Слотов под клиентов: <strong
-                        class="text-white">{{ botUser.manager.max_company_slot_count || 0 }}</strong></p>
-                    <p class="mb-3">Слотов слотов под ботов: <strong class="text-white">{{
+                    <img
+                        class="rounded-circle mt-5 mb-5" style="width:150px; height:150px; object-fit:cover; border:1px white solid;"
+                        v-lazy="botUser.manager.image?botUser.manager.image:'../images/manager.png'">
+
+
+                    <p class="mb-0 text-light">Приветствуем, <strong class="text-white">{{
+                            botUser.name || 'Не указано'
+                        }}</strong>!</p>
+                    <!--                    <p class="mb-0">Телефон: <strong class="text-white">{{ botUser.phone || 'Не указано' }}</strong></p>-->
+                    <!--
+                                        <p class="mb-0">Ваш баланс: <strong class="text-white">{{ botUser.manager.balance || 0 }}
+                                            руб</strong></p>-->
+                    <!--                    <p class="mb-0">Слотов под клиентов: <strong
+                                            class="text-white">{{ botUser.manager.max_company_slot_count || 0 }}</strong></p>-->
+                    <p class="mb-3 my-3"><a href="#" @click="tab=12" class="btn btn-link text-white">У вас <strong
+                        class="text-white">{{
                             botUser.manager.max_bot_slot_count || 0
-                        }}</strong></p>
+                        }}</strong> свободных слотов</a></p>
                     <a @click="tab++"
                        v-if="tab===0"
-                       class="btn btn-outline-light p-3 rounded-5 w-100"><i class="fa-solid fa-user-pen mr-2"></i>Профиль</a>
+                       class="btn btn-outline-light p-3 rounded-5 w-100 mb-2"><i class="fa-solid fa-user-pen mr-2"></i>Профиль</a>
                     <a @click="tab=0"
                        v-if="tab>0"
-                       class="btn btn-outline-light p-3 rounded-5 w-100">Главный экран</a>
+                       class="btn btn-outline-light p-3 rounded-5 w-100 mb-2">Главный экран</a>
 
                     <a
-                        class="btn btn-info p-3 rounded-5 w-100 my-2"><i class="fa-solid fa-graduation-cap mr-2"></i>Обучение</a>
+                        @click="tab=10"
+                        class="btn btn-info p-3 rounded-5 w-100 mb-2"><i class="fa-solid fa-graduation-cap mr-2"></i>Обучение</a>
+
+                    <a
+                        @click="tab=11"
+                        class="btn btn-info p-3 rounded-5 w-100 mb-2"><i class="fa-solid fa-robot mr-2"></i>Мои боты</a>
 
 
                     <a href="/договор_аренды_по.docx" target="_blank" class="text-white">
@@ -60,28 +77,9 @@
 
                         </div>
                     </div>
-                    <div class="col-12 my-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <h3>Работа с клиентами</h3>
-                                <h5 class="card-title">Набор инструментов для работы с клиентом</h5>
-                                <p class="card-text"><strong>Основные функции</strong>: <em>создание и редактирование
-                                    клиента</em>, <em>работа со списком заведений клиента</em></p>
-                                <a
-                                    v-if="botUser.manager"
-                                    href="/company-page" class="btn btn-outline-primary rounded-5 p-3">Перейти к
-                                    разделу</a>
-                                <button
-                                    v-else
-                                    type="button"
-                                    :disabled="true"
-                                    class="btn btn-outline-secondary rounded-5 p-3">Перейти к разделу
-                                </button>
-                            </div>
 
-                        </div>
-                    </div>
-                    <div class="col-12">
+                    <div class="col-12 my-3" v-if="botUser.manager">
+                        <h6 class="py-3">Теперь ты можешь перейти к разделу работы с ботами</h6>
                         <div class="card text-center">
                             <div class="card-body">
                                 <h3> Работа с ботами</h3>
@@ -97,7 +95,7 @@
                                 </p>
                                 <a href="/bot-page"
                                    v-if="botUser.manager"
-                                   class="btn btn-outline-primary p-3 rounded-5">
+                                   class="btn btn-outline-primary rounded-5">
                                     Перейти к разделу
                                 </a>
                                 <button
@@ -109,33 +107,87 @@
                             </div>
 
                         </div>
+                        <h6 class="py-3">Или же создать бота сразу тут</h6>
+                        <BotForm v-if="!load"
+                                 v-on:callback="prepareCurrentBot"
+                        />
                     </div>
-                    <div class="col-12 my-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <h3>Работа с системными скриптами</h3>
-                                <h5 class="card-title">Набор инструментов для работы с основными скриптами системы</h5>
-                                <p class="card-text"><strong>Основные функции</strong>: <em>создание и редактирование
-                                    скриптов</em>, <em>модификация глобальных параметров</em></p>
-                                <a href="/script-page"
-                                   v-if="botUser.manager"
-                                   class="btn btn-outline-primary rounded-5 p-3">Перейти к разделу</a>
-                                <button
-                                    v-else
-                                    type="button"
-                                    :disabled="true"
-                                    class="btn btn-outline-secondary rounded-5 p-3">Перейти к разделу
-                                </button>
-                            </div>
+                    <!--                    <div class="col-12 my-3">
+                                            <div class="card text-center">
+                                                <div class="card-body">
+                                                    <h3>Работа с клиентами</h3>
+                                                    <h5 class="card-title">Набор инструментов для работы с клиентом</h5>
+                                                    <p class="card-text"><strong>Основные функции</strong>: <em>создание и редактирование
+                                                        клиента</em>, <em>работа со списком заведений клиента</em></p>
+                                                    <a
+                                                        v-if="botUser.manager"
+                                                        href="/company-page" class="btn btn-outline-primary rounded-5 p-3">Перейти к
+                                                        разделу</a>
+                                                    <button
+                                                        v-else
+                                                        type="button"
+                                                        :disabled="true"
+                                                        class="btn btn-outline-secondary rounded-5 p-3">Перейти к разделу
+                                                    </button>
+                                                </div>
 
-                        </div>
-                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="card text-center">
+                                                <div class="card-body">
+                                                    <h3> Работа с ботами</h3>
+                                                    <h5 class="card-title">Набор инструментов для работы с ботами</h5>
+                                                    <p class="card-text"><strong>Основные функции</strong>: <em>создание и редактирование
+                                                        бота</em>,
+                                                        <em>работа со страницами бота</em>,
+                                                        <em>графическое меню бота</em>,
+                                                        <em>шаблоны клавиатур бота</em>,
+                                                        <em>скрипты в боте</em>,
+                                                        <em>и т.д.</em>
+
+                                                    </p>
+                                                    <a href="/bot-page"
+                                                       v-if="botUser.manager"
+                                                       class="btn btn-outline-primary p-3 rounded-5">
+                                                        Перейти к разделу
+                                                    </a>
+                                                    <button
+                                                        v-else
+                                                        type="button"
+                                                        :disabled="true"
+                                                        class="btn btn-outline-secondary p-3 rounded-5">Перейти к разделу
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-12 my-3">
+                                            <div class="card text-center">
+                                                <div class="card-body">
+                                                    <h3>Работа с системными скриптами</h3>
+                                                    <h5 class="card-title">Набор инструментов для работы с основными скриптами системы</h5>
+                                                    <p class="card-text"><strong>Основные функции</strong>: <em>создание и редактирование
+                                                        скриптов</em>, <em>модификация глобальных параметров</em></p>
+                                                    <a href="/script-page"
+                                                       v-if="botUser.manager"
+                                                       class="btn btn-outline-primary rounded-5 p-3">Перейти к разделу</a>
+                                                    <button
+                                                        v-else
+                                                        type="button"
+                                                        :disabled="true"
+                                                        class="btn btn-outline-secondary rounded-5 p-3">Перейти к разделу
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>-->
 
                 </div>
             </div>
             <div class="col-md-9"
                  v-bind:class="{'col-md-12':!botUser.manager}"
-                 v-if="tab>0">
+                 v-if="tab>0&&tab<10">
                 <div class="row mt-2">
                     <div class="col-12">
                         <ul class="nav nav-tabs">
@@ -204,8 +256,6 @@
                                 </div>
 
 
-
-
                                 <div class="col-12 mt-3">
                                     <label>Введите свой номер телефона</label>
                                     <input type="text"
@@ -227,8 +277,6 @@
                                            aria-label="managerForm-phone" aria-describedby="managerForm-email"
                                            required>
                                 </div>
-
-
 
 
                                 <div class="col-12">
@@ -323,45 +371,40 @@
                             <div class="my-2">
                                 <label class="mb-3">Загрузи своё персональное фото, мы же должны знать в лицо наших
                                     сотрудников</label>
-                                <div class="card d-inline-flex justify-content-center flex-wrap ">
-                                    <div class="card-body">
-                                        <label for="bot-photos" style="margin-right: 10px;"
-                                               class="photo-loader ml-2 text-center">
-                                            <span class="p-3"><i class="fa-solid fa-image"></i></span>
-                                            <input type="file" id="bot-photos" accept="image/*"
-                                                   @change="onChangePhotos"
-                                                   style="display:none;"/>
+                                <div class="d-flex justify-content-center flex-wrap ">
+                                    <label for="bot-photos" style="margin-right: 10px;"
+                                           class="photo-loader ml-2 text-center">
+                                        <span class="p-3"><i class="fa-solid fa-image"></i></span>
+                                        <input type="file" id="bot-photos" accept="image/*"
+                                               @change="onChangePhotos"
+                                               style="display:none;"/>
 
-                                        </label>
-                                    </div>
-
-
+                                    </label>
                                 </div>
-                                <div class="card d-inline-flex justify-content-center flex-wrap mt-2"
-                                     v-if="managerForm.image">
-                                    <div class="card-body">
-                                        <div class="img-preview"
-                                             style="margin-right: 10px;">
-                                            <img v-lazy="managerForm.image">
-                                            <div class="remove">
-                                                <a @click="removePhoto('image')" class="cursor-pointer"><i
-                                                    class="fa-regular fa-trash-can"></i> удалить фото</a>
-                                            </div>
+
+
+                                <div class="d-flex justify-content-center flex-wrap mt-2" v-if="managerForm.image">
+                                    <div class="img-preview">
+                                        <img v-lazy="managerForm.image">
+                                        <div class="remove">
+                                            <a @click="removePhoto('image')" class="cursor-pointer"><i
+                                                class="fa-regular fa-trash-can"></i> удалить фото</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card d-inline-flex justify-content-center flex-wrap mt-2"
+
+                                <div class="d-flex justify-content-center flex-wrap mt-2"
                                      v-if="photo">
-                                    <div class="card-body">
-                                        <div class="img-preview"
-                                             style="margin-right: 10px;">
-                                            <img v-lazy="getPhoto(photo).imageUrl">
-                                            <div class="remove">
-                                                <a @click="removePhoto('photo')" class="cursor-pointer"><i
-                                                    class="fa-regular fa-trash-can"></i> удалить фото</a>
-                                            </div>
+
+                                    <div class="img-preview"
+                                         style="margin-right: 10px;">
+                                        <img v-lazy="getPhoto(photo).imageUrl">
+                                        <div class="remove">
+                                            <a @click="removePhoto('photo')" class="cursor-pointer"><i
+                                                class="fa-regular fa-trash-can"></i> удалить фото</a>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="mb-2">
@@ -373,8 +416,8 @@
                                         <div
                                             v-bind:class="{'btn-primary text-white':managerForm.sex}"
                                             @click="managerForm.sex = true"
-                                            class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
-                                            <i class="fa-solid fa-mars font-28"></i>
+                                            class="btn btn-outline-secondary w-100  d-flex justify-content-center align-items-center ">
+                                            <i class="fa-solid fa-mars font-28 mr-2"></i>
                                             <span class="text-center text-uppercase my-2">Мужчина</span>
                                         </div>
                                     </div>
@@ -382,8 +425,8 @@
                                         <div
                                             v-bind:class="{'btn-primary text-white':!managerForm.sex}"
                                             @click="managerForm.sex = false"
-                                            class="btn btn-outline-secondary w-100 p-2 d-flex justify-content-between flex-column align-items-center ">
-                                            <i class="fa-solid fa-mars font-28"></i>
+                                            class="btn btn-outline-secondary w-100 d-flex justify-content-center align-items-center ">
+                                            <i class="fa-solid fa-mars font-28 mr-2"></i>
                                             <span class="text-center text-uppercase my-2">Женщина</span>
                                         </div>
                                     </div>
@@ -580,6 +623,26 @@
                 <div class="row" v-if="tab===5"></div>
             </div>
 
+            <div class="col-md-9"
+                 v-bind:class="{'col-md-12':!botUser.manager}"
+                 v-if="tab===10">
+
+                <ManagerStudiesList></ManagerStudiesList>
+
+            </div>
+
+            <div class="col-md-9"
+                 v-bind:class="{'col-md-12':!botUser.manager}"
+                 v-if="tab===11">
+                <ManagerSlotList v-on:callback="callback"></ManagerSlotList>
+            </div>
+
+            <div class="col-md-9"
+                 v-bind:class="{'col-md-12':!botUser.manager}"
+                 v-if="tab===12">
+                <p>Выбор пакета для оплаты</p>
+                <ManagerPackageList></ManagerPackageList>
+            </div>
         </div>
     </div>
 
@@ -669,6 +732,9 @@ export default {
         }
     },
     methods: {
+        callback(index) {
+            this.tab = index
+        },
         prepareManager() {
             this.botUser = this.getSelf
 
@@ -813,6 +879,19 @@ export default {
             }).catch(() => {
                 this.loading = false
             })
+        },
+        loadCurrentBot(bot = null) {
+            this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(() => {
+                this.bot = this.getCurrentBot
+            })
+        },
+        prepareCurrentBot(bot) {
+            this.loadCurrentBot(bot)
+            localStorage.setItem("cashman_set_botform_step_index", 0)
+            localStorage.setItem("cashman_set_botpage_step_index", 2)
+            window.location.href = '/bot-page'
         }
     }
 }

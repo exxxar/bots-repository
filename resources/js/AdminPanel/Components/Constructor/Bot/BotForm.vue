@@ -5,7 +5,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 </script>
 <template>
     <form
-        class="py-3 mb-5"
+        class=" mb-5"
         v-on:submit.prevent="addBot">
 
         <div class="row">
@@ -27,11 +27,11 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     <div class="d-inline-flex gap-2">
                         <a
                             href="https://t.me/botfather" target="_blank"
-                            class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill">
+                            class="d-inline-flex align-items-center btn btn-primary  px-4 rounded-pill">
                             Создать бота в Телеграм
                         </a>
                         <a href="https://telegra.ph/Sozdanie-telegram-bota-02-02" target="_blank"
-                           class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                           class="d-inline-flex align-items-center btn btn-outline-secondary  px-4 rounded-pill"
                         >
                             Инструкция
                         </a>
@@ -39,35 +39,45 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
             </div>
 
-            <div class="col-md-12 col-12">
-                <div class="mb-3">
-                    <label class="form-label d-flex justify-content-between" id="bot-token">
-                        <div>
-                            <Popper>
-                                <i class="fa-regular fa-circle-question mr-1"></i>
-                                <template #content>
-                                    <div>Взять из BotFather при создании бота! Длинная нечитаемая подсвеченная
-                                        строка!
-                                    </div>
-                                </template>
-                            </Popper>
-                            Токен бота
-                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                        </div>
 
-                    </label>
-                    <input type="text" class="form-control"
-                           placeholder="Токен"
-                           aria-label="Токен"
-                           v-model="botForm.bot_token"
-                           maxlength="255"
-                           @invalid="alert('Вы не ввели токен бота!')"
-                           aria-describedby="bot-token" required>
-                </div>
+        </div>
+
+
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-12 col-12">
+           <div class="card mb-3">
+               <div class="card-body">
+                   <label class="form-label d-flex justify-content-between" id="bot-token">
+                       <div>
+                           <Popper>
+                               <i class="fa-regular fa-circle-question mr-1"></i>
+                               <template #content>
+                                   <div>Взять из BotFather при создании бота! Длинная нечитаемая подсвеченная
+                                       строка!
+                                   </div>
+                               </template>
+                           </Popper>
+                           Токен бота
+                           <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                       </div>
+
+                   </label>
+                   <input type="text" class="form-control"
+                          placeholder="Токен"
+                          aria-label="Токен"
+                          v-model="botForm.bot_token"
+                          maxlength="255"
+                          minlength="40"
+                          @invalid="alert('Вы не ввели токен бота!')"
+                          aria-describedby="bot-token" required>
+                   <p><em><small>Для начала создания бота добавьте токен телеграм бота</small></em></p>
+               </div>
+           </div>
             </div>
         </div>
 
-        <div class="row" v-if="botForm.bot_token">
+        <div class="row" v-if="canOpenForm">
             <div class="col-12">
                 <ul class="nav nav-tabs justify-content-center">
                     <li class="nav-item" @click="tab=0">
@@ -109,7 +119,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </ul>
             </div>
         </div>
-        <div class="row py-3" v-show="tab===0&&botForm.bot_token">
+        <div class="row py-3" v-show="tab===0&&canOpenForm">
             <div class="col-md-12 col-12">
 
                 <div class="form-check mb-3">
@@ -399,7 +409,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
             </div>
 
         </div>
-        <div class="row py-3" v-show="tab===1&&botForm.bot_token">
+        <div class="row py-3" v-show="tab===1&&canOpenForm">
 
             <div class="col-md-6 col-12">
                 <div class="mb-3">
@@ -677,7 +687,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
             </div>
         </div>
-        <div class="row py-3" v-show="tab===2&&botForm.bot_token">
+        <div class="row py-3" v-show="tab===2&&canOpenForm">
             <div class="col-12">
                 <div class="alert alert-primary" role="alert">
                     <strong>Внимание!</strong> Для того чтобы узнать ID канала сперва создайте Канал или Группу в
@@ -788,7 +798,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
             </div>
 
         </div>
-        <div class="row py-3" v-show="tab===3&&botForm.bot_token">
+        <div class="row py-3" v-show="tab===3&&canOpenForm">
 
             <div class="col-12">
                 <div class="mb-3">
@@ -817,7 +827,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
             </div>
         </div>
-        <div class="row py-3" v-show="tab===4&&botForm.bot_token">
+        <div class="row py-3" v-show="tab===4&&canOpenForm">
             <div class="col-12">
                 <div class="alert alert-primary" role="alert">
                     Системная иконка нужна только для красивого отображения и узнаваемости бота на Landing-е системы.
@@ -889,7 +899,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
         </div>
 
-        <div class="row py-3" v-show="tab===5&&botForm.bot_token">
+        <div class="row py-3" v-show="tab===5&&canOpenForm">
 
             <div class="col-12">
                 <div class="alert alert-danger" role="alert">
@@ -1055,7 +1065,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         </div>
 
 
-        <div class="row">
+        <div class="row" v-if="canOpenForm">
             <div class="col-12">
 
                 <div
@@ -1068,12 +1078,12 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
 
             </div>
-            <div class="col-12">
+            <div class="col-12 col-md-12">
                 <button type="submit"
                         @click="messages = []"
                         :disabled="!botForm.bot_token||!can_create"
                         title="Сохранение бота"
-                        class="btn btn-primary min-menu-btn w-100">
+                        class="btn btn-primary min-menu-btn w-100 ">
                     <span v-if="!bot">Добавить бота</span>
                     <span v-else>Обновить бота</span>
                     <span class="ml-2" v-if="!can_create">{{ spent_time_counter }} сек.</span>
@@ -1285,6 +1295,15 @@ export default {
     },
     computed: {
         ...mapGetters(['getSlugs', 'getCurrentCompany']),
+        canOpenForm(){
+            if (!this.botForm.bot_token)
+                return false;
+
+            if (this.botForm.bot_token.length<40)
+                return false;
+
+            return true;
+        },
         filteredWarnings() {
             if (this.botForm.warnings.length === 0)
                 return this.warnings;
@@ -1780,4 +1799,8 @@ export default {
     border-radius: 0px 5px 5px 0px !important;
     border-left: none !important;
 }
+
+
+
+
 </style>
