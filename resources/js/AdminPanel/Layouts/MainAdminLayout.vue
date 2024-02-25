@@ -32,20 +32,26 @@ import Chat from "@/AdminPanel/Components/Chat/ChatMini.vue";
         <div class="navbar-nav d-flex justify-content-center align-items-center flex-row">
             <div class="nav-item text-nowrap">
                 <a class="nav-link px-3"
+                   @click="active=0"
+                   v-bind:class="{'border-bottom-active active':active==0}"
+                   href="/manager-page"> <i class="fa-solid fa-mug-hot"></i> Стартовая страница</a>
+            </div>
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3"
                    data-bs-toggle="offcanvas"
                    role="button"
                    href="#profile-sidebar"><i class="fa-solid fa-user"></i> Профиль</a>
             </div>
             <div class="nav-item text-nowrap">
                 <a class="nav-link px-3"
-                   @click="active=0"
-                   v-bind:class="{'border-bottom-active active':active==0}"
+                   @click="active=1"
+                   v-bind:class="{'border-bottom-active active':active==1}"
                    href="/company-page"> <i class="fa-solid fa-mug-hot"></i> Клиенты</a>
             </div>
             <div class="nav-item text-nowrap">
                 <a class="nav-link px-3"
-                   @click="active=1"
-                   v-bind:class="{'border-bottom-active active':active==1}"
+                   @click="active=2"
+                   v-bind:class="{'border-bottom-active active':active==2}"
                    href="/bot-page"> <i class="fa-solid fa-robot"></i> Боты</a>
             </div>
             <div

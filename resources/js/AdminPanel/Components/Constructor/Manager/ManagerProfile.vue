@@ -398,7 +398,7 @@
                     smm-специалисты,
                     программисты
                 </li>
-                <li class="list-group-item">Тех.поддержка по системе 24\7</li>
+                <li class="list-group-item">Тех.поддержка по системе</li>
 
 
             </ol>
@@ -414,6 +414,7 @@
 
         </div>
     </div>
+<!--
     <div class="card" v-if="isManagerVerified">
 
         <div class="card-body" v-if="botUser">
@@ -743,6 +744,7 @@
             </form>
         </div>
     </div>
+-->
 
 </template>
 <script>
