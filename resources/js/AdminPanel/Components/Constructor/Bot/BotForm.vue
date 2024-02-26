@@ -22,7 +22,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     </div>
                     <h1 class="text-body-emphasis">Создание бота</h1>
                     <p class="col-lg-8 mx-auto fs-5 text-muted">
-                     Если вы решили создать бота с самого начала, без заготовленных страниц, скриптов и т.д., то воспользуйтесь данным разделом и предложенной ниже инструкцией.
+                   Воспользуйся данным разделом просмотрев обучение или предложенной инструкцией.
                     </p>
                     <div class="d-inline-flex gap-2">
                         <a

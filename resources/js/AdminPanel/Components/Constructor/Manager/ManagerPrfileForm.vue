@@ -54,6 +54,12 @@ import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/Mana
                         @click="tab=11"
                         class="btn btn-info p-3 rounded-5 w-100 mb-2"><i class="fa-solid fa-robot mr-2"></i>Мои боты</a>
 
+                    <a href="/bot-page"
+                       target="_blank"
+                       v-if="botUser.manager"
+                       class="text-white">
+                        Перейти к редактированию ботов
+                    </a>
 
 <!--                    <a href="/договор_аренды_по.docx" target="_blank" class="text-white">
                         Образец договора для клиента
@@ -79,7 +85,7 @@ import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/Mana
                     </div>
 
                     <div class="col-12 my-3" v-if="botUser.manager">
-                        <h6 class="py-3">Теперь ты можешь перейти к разделу работы с ботами</h6>
+<!--                        <h6 class="py-3">Теперь ты можешь перейти к разделу работы с ботами</h6>
                         <div class="card text-center">
                             <div class="card-body">
                                 <h3> Работа с ботами</h3>
@@ -107,7 +113,7 @@ import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/Mana
                             </div>
 
                         </div>
-                        <h6 class="py-3">Или же создать бота сразу тут</h6>
+                        <h6 class="py-3">Или же создать бота сразу тут</h6>-->
                         <BotForm v-if="!load"
                                  v-on:callback="prepareCurrentBot"
                         />

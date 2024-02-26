@@ -469,7 +469,7 @@ class CashBackScriptController extends SlugController
 
             return;
         }
-        Log::info("specialCashBackSystem after checking");
+
         $botUser = BotManager::bot()->currentBotUser();
 
         $data = "001" . $botUser->telegram_chat_id;
