@@ -18,7 +18,7 @@ const actions = {
         let page = payload.page || 0
         let size = payload.size || 50
 
-        let link = `${BASE_PROMO_CODE_LINK}/?page=${page}&size=${size}`
+        let link = `${BASE_PROMO_CODE_LINK}?page=${page}&size=${size}`
         let method = 'POST'
         let data = payload.dataObject
 
