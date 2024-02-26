@@ -55,9 +55,9 @@ import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/Mana
                         class="btn btn-info p-3 rounded-5 w-100 mb-2"><i class="fa-solid fa-robot mr-2"></i>Мои боты</a>
 
 
-                    <a href="/договор_аренды_по.docx" target="_blank" class="text-white">
+<!--                    <a href="/договор_аренды_по.docx" target="_blank" class="text-white">
                         Образец договора для клиента
-                    </a>
+                    </a>-->
                 </div>
             </div>
 
