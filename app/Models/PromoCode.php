@@ -34,6 +34,7 @@ class PromoCode extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
+        'slot_amount' => 'integer',
         'cashback_amount' => 'double',
         'is_active' => 'boolean',
     ];
