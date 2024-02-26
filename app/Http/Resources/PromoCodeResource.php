@@ -20,8 +20,9 @@ class PromoCodeResource extends JsonResource
             'slot_amount' => $this->slot_amount,
             'cashback_amount' => $this->cashback_amount,
             'max_activation_count' => $this->max_activation_count,
+            'current_activation_count' => $this->whenLoaded('botUsers') ?? 0,
             'is_active' => $this->is_active,
-            'botUsers' => BotUserCollection::make($this->whenLoaded('botUsers')),
+            //'botUsers' => BotUserCollection::make($this->whenLoaded('botUsers')),
         ];
     }
 }

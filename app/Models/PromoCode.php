@@ -39,6 +39,8 @@ class PromoCode extends Model
         'is_active' => 'boolean',
     ];
 
+    protected $with = ["botUsers"];
+
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);

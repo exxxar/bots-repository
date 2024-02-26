@@ -29,9 +29,15 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('description')">Описание</th>
                     <th
                         v-if="getSelf.is_admin"
-                        scope="col" class="cursor-pointer" @click="loadAndOrder('slot_amount')">Число слотов</th>
-                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('cashback_amount')">Величина CashBack-а, руб</th>
-                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('max_activation_count')">Максимальное число активаций</th>
+                        scope="col" class="cursor-pointer" @click="loadAndOrder('slot_amount')">Число слотов
+                    </th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('cashback_amount')">Величина CashBack-а,
+                        руб
+                    </th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('max_activation_count')">Максимальное
+                        число активаций
+                    </th>
+                    <th scope="col" class="cursor-pointer">Число активаций</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('is_active')">Активный</th>
                     <th scope="col">Действие</th>
                 </tr>
@@ -53,6 +59,10 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
                     <td>
                         {{ code.max_activation_count }}
+                    </td>
+
+                    <td>
+                        {{ code.current_activation_count || 0 }}
                     </td>
                     <td>
                         <i class="fa-solid fa-chevron-down text-success" v-if="code.is_active"></i>
@@ -94,12 +104,15 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
                     <h1 class="text-body-emphasis">Создание промокода</h1>
                     <p class="col-lg-8 mx-auto fs-5 text-muted">
-                        Промокод - это инструмент мотивации пользователей пользоваться вашим сервисом. Он позволяет клиентам получать некоторые бонусы за активацию кода, а вы в свою очередь будете видеть статистику активация прмокода.
+                        Промокод - это инструмент мотивации пользователей пользоваться вашим сервисом. Он позволяет
+                        клиентам получать некоторые бонусы за активацию кода, а вы в свою очередь будете видеть
+                        статистику активация прмокода.
                     </p>
                     <div class="d-inline-flex gap-2 mb-5">
                         <button
                             @click="createPromoCode"
-                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-primary" type="button">
+                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill btn-primary"
+                            type="button">
                             Добавить
                         </button>
                         <a href="#"
@@ -141,7 +154,7 @@ export default {
 
     computed: {
         ...mapGetters(['getPromoCodes', 'getPromoCodesPaginateObject']),
-        getSelf(){
+        getSelf() {
             return window.profile
         }
 
@@ -165,7 +178,7 @@ export default {
             })
         },
 
-        createPromoCode(){
+        createPromoCode() {
             this.$emit("create")
         },
         nextPromoCodes(index) {
