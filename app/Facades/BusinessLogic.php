@@ -21,6 +21,7 @@ use App\Http\BusinessLogic\Methods\BotUserLogicFactory as BotUserLogic;
 use App\Http\BusinessLogic\Methods\KeyboardLogicFactory as KeyboardLogic;
 use App\Http\BusinessLogic\Methods\GeoLogicFactory as GeoLogic;
 use App\Http\BusinessLogic\Methods\DeliveryLogicFactory as DeliveryLogic;
+use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory as PromoCodesLogic;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -42,6 +43,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static YClientsLogic yClients()
  * @method static QuizLogic quiz()
  * @method static PaymentLogic payment()
+ * @method static PromoCodesLogic promoCodes()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

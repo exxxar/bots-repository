@@ -11,6 +11,7 @@ import products from './modules/products';
 import media from './modules/media';
 import appointments from './modules/appointments';
 import quizzes from './modules/quiz';
+import promoCodes from './modules/promocodes';
 import util from "@/AdminPanel/store/modules/utilites";
 
 
@@ -38,7 +39,7 @@ export default createStore({
     },
     actions: {
         async saveManager(context, payload) {
-            
+
             let link = `/admin/manager/register`
 
             let _axios = util.makeAxiosFactory(link, 'POST', payload)
@@ -146,6 +147,7 @@ export default createStore({
         slugs,
         products,
         quizzes,
-        media
+        media,
+        promoCodes
     }
 })

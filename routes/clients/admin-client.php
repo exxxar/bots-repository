@@ -147,6 +147,17 @@ Route::prefix("admin")
 
             });
 
+        Route::prefix("promo-codes")
+            ->controller(\App\Http\Controllers\Admin\PromoCodeController::class)
+            ->middleware(["role:manager"])
+            ->group(function () {
+                Route::post("/", "index");
+                Route::post("/activate", "activate");
+                Route::post("/list-of-results", "results");
+                Route::post("/store", "store");
+                Route::delete("/{id}", "remove");
+            });
+
         Route::prefix("appointments")
             ->controller(\App\Http\Controllers\Admin\AppointmentController::class)
             ->middleware(["role:manager"])

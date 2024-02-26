@@ -3,6 +3,7 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
 import ManagerPackageList from "@/AdminPanel/Components/Constructor/Manager/ManagerPackageList.vue";
 import ManagerSlotList from "@/AdminPanel/Components/Constructor/Manager/ManagerSlotList.vue";
 import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/ManagerStudiesList.vue";
+import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCodeActivateForm.vue";
 </script>
 
 <template>
@@ -35,7 +36,9 @@ import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/Mana
                                             руб</strong></p>-->
                     <!--                    <p class="mb-0">Слотов под клиентов: <strong
                                             class="text-white">{{ botUser.manager.max_company_slot_count || 0 }}</strong></p>-->
-                    <p class="mb-3 my-3"><a href="#" @click="tab=12" class="btn btn-link text-white">У вас <strong
+                    <p class="mb-3 my-3"><a href="#"
+                                            data-bs-toggle="modal" data-bs-target="#activate-promo-code"
+                                            class="btn btn-link text-white">У вас <strong
                         class="text-white">{{
                             botUser.manager.max_bot_slot_count || 0
                         }}</strong> свободных слотов</a></p>
@@ -54,12 +57,12 @@ import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/Mana
                         @click="tab=11"
                         class="btn btn-info p-3 rounded-5 w-100 mb-2"><i class="fa-solid fa-robot mr-2"></i>Мои боты</a>
 
-                    <a href="/bot-page"
+<!--                    <a href="/bot-page"
                        target="_blank"
                        v-if="botUser.manager"
                        class="text-white">
                         Перейти к редактированию ботов
-                    </a>
+                    </a>-->
 
 <!--                    <a href="/договор_аренды_по.docx" target="_blank" class="text-white">
                         Образец договора для клиента
@@ -85,109 +88,12 @@ import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/Mana
                     </div>
 
                     <div class="col-12 my-3" v-if="botUser.manager">
-<!--                        <h6 class="py-3">Теперь ты можешь перейти к разделу работы с ботами</h6>
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <h3> Работа с ботами</h3>
-                                <h5 class="card-title">Набор инструментов для работы с ботами</h5>
-                                <p class="card-text"><strong>Основные функции</strong>: <em>создание и редактирование
-                                    бота</em>,
-                                    <em>работа со страницами бота</em>,
-                                    <em>графическое меню бота</em>,
-                                    <em>шаблоны клавиатур бота</em>,
-                                    <em>скрипты в боте</em>,
-                                    <em>и т.д.</em>
 
-                                </p>
-                                <a href="/bot-page"
-                                   v-if="botUser.manager"
-                                   class="btn btn-outline-primary rounded-5">
-                                    Перейти к разделу
-                                </a>
-                                <button
-                                    v-else
-                                    type="button"
-                                    :disabled="true"
-                                    class="btn btn-outline-secondary p-3 rounded-5">Перейти к разделу
-                                </button>
-                            </div>
-
-                        </div>
-                        <h6 class="py-3">Или же создать бота сразу тут</h6>-->
                         <BotForm v-if="!load"
                                  v-on:callback="prepareCurrentBot"
                         />
                     </div>
-                    <!--                    <div class="col-12 my-3">
-                                            <div class="card text-center">
-                                                <div class="card-body">
-                                                    <h3>Работа с клиентами</h3>
-                                                    <h5 class="card-title">Набор инструментов для работы с клиентом</h5>
-                                                    <p class="card-text"><strong>Основные функции</strong>: <em>создание и редактирование
-                                                        клиента</em>, <em>работа со списком заведений клиента</em></p>
-                                                    <a
-                                                        v-if="botUser.manager"
-                                                        href="/company-page" class="btn btn-outline-primary rounded-5 p-3">Перейти к
-                                                        разделу</a>
-                                                    <button
-                                                        v-else
-                                                        type="button"
-                                                        :disabled="true"
-                                                        class="btn btn-outline-secondary rounded-5 p-3">Перейти к разделу
-                                                    </button>
-                                                </div>
 
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="card text-center">
-                                                <div class="card-body">
-                                                    <h3> Работа с ботами</h3>
-                                                    <h5 class="card-title">Набор инструментов для работы с ботами</h5>
-                                                    <p class="card-text"><strong>Основные функции</strong>: <em>создание и редактирование
-                                                        бота</em>,
-                                                        <em>работа со страницами бота</em>,
-                                                        <em>графическое меню бота</em>,
-                                                        <em>шаблоны клавиатур бота</em>,
-                                                        <em>скрипты в боте</em>,
-                                                        <em>и т.д.</em>
-
-                                                    </p>
-                                                    <a href="/bot-page"
-                                                       v-if="botUser.manager"
-                                                       class="btn btn-outline-primary p-3 rounded-5">
-                                                        Перейти к разделу
-                                                    </a>
-                                                    <button
-                                                        v-else
-                                                        type="button"
-                                                        :disabled="true"
-                                                        class="btn btn-outline-secondary p-3 rounded-5">Перейти к разделу
-                                                    </button>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-12 my-3">
-                                            <div class="card text-center">
-                                                <div class="card-body">
-                                                    <h3>Работа с системными скриптами</h3>
-                                                    <h5 class="card-title">Набор инструментов для работы с основными скриптами системы</h5>
-                                                    <p class="card-text"><strong>Основные функции</strong>: <em>создание и редактирование
-                                                        скриптов</em>, <em>модификация глобальных параметров</em></p>
-                                                    <a href="/script-page"
-                                                       v-if="botUser.manager"
-                                                       class="btn btn-outline-primary rounded-5 p-3">Перейти к разделу</a>
-                                                    <button
-                                                        v-else
-                                                        type="button"
-                                                        :disabled="true"
-                                                        class="btn btn-outline-secondary rounded-5 p-3">Перейти к разделу
-                                                    </button>
-                                                </div>
-
-                                            </div>
-                                        </div>-->
 
                 </div>
             </div>
@@ -646,12 +552,25 @@ import ManagerStudiesList from "@/AdminPanel/Components/Constructor/Manager/Mana
             <div class="col-md-9"
                  v-bind:class="{'col-md-12':!botUser.manager}"
                  v-if="tab===12">
-                <p>Выбор пакета для оплаты</p>
-                <ManagerPackageList></ManagerPackageList>
+                <ManagerPackageList :bot="bot"></ManagerPackageList>
             </div>
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="activate-promo-code" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h6 class="text-center">Активируйте ваш ключ и получите дополнительные слоты</h6>
+                    <PromoCodeActivateForm :bot="bot"></PromoCodeActivateForm>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </template>
 <script>

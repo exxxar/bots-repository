@@ -5,6 +5,7 @@ namespace App\Http\BusinessLogic;
 use App\Http\BusinessLogic\Methods\AmoLogicFactory;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory;
 use App\Http\BusinessLogic\Methods\PaymentLogicFactory;
+use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory;
 use App\Http\BusinessLogic\Methods\QuizLogicFactory;
 use App\Http\BusinessLogic\Methods\YClientLogicFactory;
 use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory;
@@ -42,6 +43,7 @@ class BusinessLogic
     protected BotMediaLogicFactory $media;
     protected GeoLogicFactory $geo;
     protected DeliveryLogicFactory $delivery;
+    protected PromoCodesLogicFactory $promoCodes;
 
     public function __construct()
     {
@@ -63,6 +65,7 @@ class BusinessLogic
         $this->media = new BotMediaLogicFactory();
         $this->geo = new GeoLogicFactory();
         $this->delivery = new DeliveryLogicFactory();
+        $this->promoCodes = new PromoCodesLogicFactory();
     }
 
     public function bots(): BotLogicFactory
@@ -78,6 +81,11 @@ class BusinessLogic
     public function payment(): PaymentLogicFactory
     {
         return $this->payment;
+    }
+
+    public function promoCodes(): PromoCodesLogicFactory
+    {
+        return $this->promoCodes;
     }
 
     public function yClients(): YClientLogicFactory
