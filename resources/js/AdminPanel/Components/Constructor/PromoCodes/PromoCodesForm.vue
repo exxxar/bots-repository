@@ -223,6 +223,12 @@ export default {
                     is_active: this.code.is_active || false,
                 }
 
+                if (this.promoCodeForm.slot_amount>0)
+                    this.need_slots = true;
+
+                if (this.promoCodeForm.cashback_amount>0)
+                    this.need_slots = true;
+
             })
 
     },
