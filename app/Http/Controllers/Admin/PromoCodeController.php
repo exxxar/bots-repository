@@ -12,6 +12,7 @@ use App\Models\Bot;
 use App\Models\PromoCode;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
 class PromoCodeController extends Controller
@@ -43,12 +44,14 @@ class PromoCodeController extends Controller
     public function activate(Request $request): object
     {
         $request->validate([
-            "bot_id" => "required",
+           // "bot_id" => "required",
             "code" => "required",
         ]);
 
+        $botUser =  Session::get("bot_user");
+
         $bot = Bot::query()
-            ->where("id", $request->bot_id ?? null)
+            ->where("id", $botUser->bot_id)
             ->first();
 
         return BusinessLogic::promoCodes()
