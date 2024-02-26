@@ -270,7 +270,7 @@ class PromoCodesLogicFactory
             'description' => $data["description"] ?? null,
             'slot_amount' => $this->botUser->is_admin ? ($data["slot_amount"] ?? 0) : 0,
             'cashback_amount' => $data["cashback_amount"] ?? 0,
-            'max_activation_count' => $data["cashback_amount"] ?? 1,
+            'max_activation_count' => $data["max_activation_count"] ?? 1,
             'is_active' => ($data["is_active"] ?? false) == "true",
 
         ];
