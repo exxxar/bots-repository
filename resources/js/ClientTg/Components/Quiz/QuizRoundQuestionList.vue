@@ -32,7 +32,8 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
 
 
                     <div v-if="question.answers">
-                        <p class="mb-0 font-weight-bold text-center" v-if="question.is_multiply">Вы можете выбрать несколько
+                        <p class="mb-0 font-weight-bold text-center" v-if="question.is_multiply">Вы можете выбрать
+                            несколько
                             ответов</p>
 
                         <div v-if="!question.is_open">
@@ -91,7 +92,7 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
 
 
                     <div v-if="!quiz.polling_mode">
-                        <div class="d-flex justify-content-center font-24" >
+                        <div class="d-flex justify-content-center font-24">
                             <countdown :time="(quiz.time_limit||30) * 1000"
                                        @finish="finish"
                                        format="mm:ss">
@@ -108,7 +109,7 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
                     <div class="divider divider-small my-3 bg-highlight "></div>
 
                     <a href="javascript:void(0)"
-
+                       v-if="isQuestionComplete(index)"
                        @click="checkAnswer(question.id,index)"
                        class="btn btn-m btn-full mb-2 rounded-m text-uppercase font-900 shadow-s bg-blue2-dark">
                         Проверить
@@ -226,6 +227,26 @@ export default {
         this.loadQuizQuestions();
     },
     methods: {
+        isQuestionComplete(index) {
+            if (index >= this.answers.length)
+                return false;
+
+            if (this.answers[index] === null)
+                return false
+
+            if (Array.isArray(this.answers)) {
+                let find = false
+
+                this.answers.forEach(item => {
+                    if (item != null)
+                        find = true
+                })
+
+                return find;
+            }
+
+            return this.answers[index] != null
+        },
         completeAndExit() {
             this.$store.dispatch("completeQuiz", {
                 quiz_id: this.quiz.id,
@@ -249,7 +270,6 @@ export default {
             this.answers[index].splice(openIndex, 1)
         },
         addMoreOpenAnswer(index) {
-            console.log(this.answers[index])
             this.answers[index].push(null);
         },
         checkAnswer(questionId, index) {
