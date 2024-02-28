@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
         Schema::table('bots', function (Blueprint $table) {
+
+            $table->dropForeign(['creator_id']);
+
             $table->foreignId('creator_id')
                 ->change()
                 ->nullable();
