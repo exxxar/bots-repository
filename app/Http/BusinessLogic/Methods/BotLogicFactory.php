@@ -439,6 +439,9 @@ class BotLogicFactory
 
         $newBot = $newBot->fresh();
 
+        $newBot->creator_id = $this->botUser->id;
+        $newBot->save();
+
         return new BotResource($newBot);
     }
 

@@ -24,6 +24,7 @@ class Bot extends Model
         'short_description',
         'long_description',
         'company_id',
+        'creator_id',
         'cashback_fire_percent',
         'cashback_fire_period',
         'welcome_message',
@@ -55,7 +56,7 @@ class Bot extends Model
         'blocked_at',
         'is_template',
         'template_description',
-        'creator_id',
+
     ];
 
     /**
@@ -66,6 +67,7 @@ class Bot extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
+        'creator_id' => 'integer',
         'cashback_fire_percent' => 'integer',
         'cashback_fire_period' => 'integer',
 

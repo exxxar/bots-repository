@@ -25,6 +25,7 @@ class BotResource extends JsonResource
             'is_template' => $this->is_template ?? false,
             'template_description' => $this->template_description ?? null,
             'company_id' => $this->company_id,
+            'creator_id' => $this->creator_id,
             'bot_domain' => $this->bot_domain,
             'welcome_message' => $this->welcome_message,
             'commands' => $this->commands,
