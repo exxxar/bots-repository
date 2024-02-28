@@ -1186,6 +1186,7 @@ export default {
                 bot_domain: null,
                 bot_token: null,
                 company_id: null,
+                creator_id: null,
                 bot_token_dev: null,
                 order_channel: null,
                 message_threads: null,
@@ -1354,6 +1355,7 @@ export default {
                     commands: this.bot.commands || null,
 
                     description: this.bot.description || null,
+                    creator_id: this.bot.creator_id || null,
 
                     info_link: this.bot.info_link || null,
 

@@ -1503,7 +1503,7 @@ class BotLogicFactory
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
-        $tmp->creator_id = $tmp->is_template ? null : ($tmp->creator_id ?? null);
+      //  $tmp->creator_id = $tmp->is_template ? null : ($tmp->creator_id ?? null);
 
         if (isset($data["keyboards"])) {
             unset($tmp->keyboards);
