@@ -16,9 +16,9 @@ return new class extends Migration
 
             $table->dropForeign(['creator_id']);
 
-            $table->foreignId('creator_id')
+          /*  $table->foreignId('creator_id')
                 ->change()
-                ->nullable();
+                ->nullable();*/
 
             //$table->dropForeign('creator_id');
         });
