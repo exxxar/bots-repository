@@ -265,7 +265,6 @@ class BotLogicFactory
         $newBot->is_active = true;
         $newBot->save();
 
-        Log::info("creator_id=>".print_r( $newBot->creator_id, true));
 
         $pages = BotPage::query()
             ->with(["slug", "replyKeyboard", "inlineKeyboard"])
@@ -436,8 +435,9 @@ class BotLogicFactory
             }
 
 
-       // $newBot = $newBot->fresh();
+        $newBot = $newBot->fresh();
 
+        Log::info("creator_id2=>".print_r( $newBot->creator_id, true)." - ".print_r( $this->botUser->id, true));
 
         return new BotResource($newBot);
     }
