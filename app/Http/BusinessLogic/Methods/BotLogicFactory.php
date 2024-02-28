@@ -117,7 +117,7 @@ class BotLogicFactory
             ->whereIn("id", $ids);
 
         if (!is_null($this->botUser))
-            $bots = $bots->where("creator_id", $this->botUser->user_id);
+            $bots = $bots->where("creator_id", $this->botUser->id);
 
         $bots = $bots->get();
 
@@ -150,7 +150,7 @@ class BotLogicFactory
             $bots = $bots->where("company_id", $companyId);
 
         if (!is_null($this->botUser))
-            $bots = $bots->where("creator_id", $this->botUser->user_id);
+            $bots = $bots->where("creator_id", $this->botUser->id);
 
         if (!is_null($search))
             $bots = $bots->where(function ($q) use ($search) {
@@ -198,7 +198,7 @@ class BotLogicFactory
                      ->orderBy("updated_at", 'DESC');
              });*/
 
-            $bots = $bots->where("creator_id", $this->botUser->user_id);
+            $bots = $bots->where("creator_id", $this->botUser->id);
         }
 
 
@@ -240,7 +240,7 @@ class BotLogicFactory
                 'title' => "Новый клиент",
                 'slug' => Str::uuid(),
                 'description' => "Автоматические создание нового клиента при дублировании бота от " . Carbon::now("+3")->format("Y-m-d H:i:s"),
-                'creator_id' => $this->botUser->user_id ?? null,
+                'creator_id' => $this->botUser->id ?? null,
             ]);
         } else
             $company = Company::query()->find($customParams["company_id"]);
@@ -258,7 +258,7 @@ class BotLogicFactory
         $newBot->company_id = $company->id;
         $newBot->is_template = false;
         $newBot->template_description = null;
-        $newBot->creator_id = $this->botUser->user_id ?? null;
+        $newBot->creator_id = $this->botUser->id ?? null;
         $newBot->balance = 70;
         $newBot->tax_per_day = 10;
 
@@ -1350,7 +1350,7 @@ class BotLogicFactory
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
-        $tmp->creator_id = !$tmp->is_template ? $this->botUser->user_id : null;
+        $tmp->creator_id = !$tmp->is_template ? $this->botUser->id : null;
 
         $keyboards = null;
         if (isset($data["keyboards"])) {
