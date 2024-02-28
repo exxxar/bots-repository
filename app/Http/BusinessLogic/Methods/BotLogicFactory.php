@@ -262,9 +262,9 @@ class BotLogicFactory
         $newBot->balance = 70;
         $newBot->tax_per_day = 10;
 
-        $newBot->save();
+        $newBot->push();
 
-        Log::info("duplicate_bot=>".print_r($newBot->toArray(), true));
+       // Log::info("duplicate_bot=>".print_r($newBot->toArray(), true));
 
         $pages = BotPage::query()
             ->with(["slug", "replyKeyboard", "inlineKeyboard"])
