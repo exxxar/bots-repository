@@ -261,6 +261,8 @@ class BotLogicFactory
         $newBot->creator_id = $this->botUser->id;
         $newBot->balance = 70;
         $newBot->tax_per_day = 10;
+        $newBot->deleted_at = null;
+        $newBot->is_active = true;
 
         $newBot->save();
 
