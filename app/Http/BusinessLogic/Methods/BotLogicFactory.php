@@ -262,7 +262,7 @@ class BotLogicFactory
         $newBot->balance = 70;
         $newBot->tax_per_day = 10;
 
-        $newBot->push();
+        $newBot->save();
 
        // Log::info("duplicate_bot=>".print_r($newBot->toArray(), true));
 
