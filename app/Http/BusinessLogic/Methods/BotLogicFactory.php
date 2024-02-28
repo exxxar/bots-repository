@@ -263,10 +263,9 @@ class BotLogicFactory
         $newBot->tax_per_day = 10;
         $newBot->deleted_at = null;
         $newBot->is_active = true;
-
         $newBot->save();
 
-       // Log::info("duplicate_bot=>".print_r($newBot->toArray(), true));
+        Log::info("creator_id=>".print_r( $newBot->creator_id, true));
 
         $pages = BotPage::query()
             ->with(["slug", "replyKeyboard", "inlineKeyboard"])
@@ -439,8 +438,6 @@ class BotLogicFactory
 
         $newBot = $newBot->fresh();
 
-        $newBot->creator_id = $this->botUser->id;
-        $newBot->save();
 
         return new BotResource($newBot);
     }
