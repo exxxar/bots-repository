@@ -436,7 +436,7 @@ class BotLogicFactory
             }
 
 
-        $newBot = $newBot->fresh();
+       // $newBot = $newBot->fresh();
 
 
         return new BotResource($newBot);
