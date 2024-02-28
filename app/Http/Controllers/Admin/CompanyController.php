@@ -22,7 +22,7 @@ class CompanyController extends Controller
     {
         $logic = BusinessLogic::companies();
 
-        if ($request->botUser->is_manager/*&&!$request->botUser->is_admin*/)
+        if ($request->botUser->is_manager&&!$request->botUser->is_admin)
             $logic = $logic->setBotUser($request->botUser);
 
         return $logic
