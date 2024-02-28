@@ -292,7 +292,13 @@ class ManagerLogicFactory
         if (is_null($manager ?? null))
             $manager = ManagerProfile::query()->create($form2);
         else
+        {
+            unset($form2["max_company_slot_count"]);
+            unset($form2["max_bot_slot_count"]);
+
             $manager->update($form2);
+        }
+
 
 
         $manager->image = !is_null($uploadedPhoto)?"/images-by-bot-id/".$this->bot->id.'/'.$imageName : $imageName;

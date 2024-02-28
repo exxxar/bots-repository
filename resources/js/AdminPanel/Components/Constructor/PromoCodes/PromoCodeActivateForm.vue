@@ -10,8 +10,8 @@
                 <div class="form-floating mb-3">
                     <input type="text"
                            v-model="promoCodeForm.code"
-                           class="form-control" id="promo-code-field" placeholder="Ваш промокод" required>
-                    <label for="promo-code-field">Промокод</label>
+                           class="form-control" id="promo-code-field" placeholder="Ваш код" required>
+                    <label for="promo-code-field">Ваш код</label>
                 </div>
             </div>
             <div class="col-12 mb-2" v-if="slots>0">
@@ -24,7 +24,7 @@
                 <button
                     :disabled="(promoCodeForm.code||'').length===0"
                     type="submit" class="btn btn-outline-success w-100 p-3">
-                    Активировать промокод
+                    Активировать код
                 </button>
             </div>
         </div>

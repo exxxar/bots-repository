@@ -20,7 +20,12 @@ class CompanyController extends Controller
 {
     public function index(Request $request): \App\Http\Resources\CompanyCollection
     {
-        return BusinessLogic::companies()
+        $logic = BusinessLogic::companies();
+
+        if ($request->botUser->is_manager/*&&!$request->botUser->is_admin*/)
+            $logic = $logic->setBotUser($request->botUser);
+
+        return $logic
             ->list($request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page')
             );
@@ -54,9 +59,9 @@ class CompanyController extends Controller
         ]);
 
         return BusinessLogic::companies()
+            ->setBotUser($request->botUser ?? null)
             ->createCompany($request->all(),
-                $request->hasFile('company_logo') ? $request->file('company_logo') : null,
-                Auth::user()->id ?? null
+                $request->hasFile('company_logo') ? $request->file('company_logo') : null
             );
     }
 
@@ -75,6 +80,7 @@ class CompanyController extends Controller
         ]);
 
         return BusinessLogic::companies()
+            ->setBotUser($request->botUser ?? null)
             ->editCompany($request->all(),
                 $request->hasFile('company_logo') ? $request->file('company_logo') : null,
                 Auth::user()->id ?? null

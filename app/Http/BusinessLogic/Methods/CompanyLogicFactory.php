@@ -87,6 +87,10 @@ class CompanyLogicFactory
             $companies = $companies->where("title", 'like', "%$search%")
                 ->orWhere("slug", "like", "%$search%");
 
+        if (!is_null($this->botUser))
+            $companies = $companies
+                ->where("creator_id", $this->botUser->id);
+
         $companies = $companies
             ->orderBy("updated_at", "DESC")
             ->paginate($size);
@@ -131,8 +135,12 @@ class CompanyLogicFactory
     /**
      * @throws ValidationException
      */
-    public function createCompany(array $data, $companyLogo = null, $creatorId = null): CompanyResource
+    public function createCompany(array $data, $companyLogo = null): CompanyResource
     {
+
+        if (is_null($this->botUser))
+            throw new HttpException(400, "Менеджер не указан!");
+
         $validator = Validator::make($data, [
             'title' => "required|string:255",
             'slug' => "required|string:190|unique:companies,slug",
@@ -154,8 +162,8 @@ class CompanyLogicFactory
         $tmp->schedule = json_decode($tmp->schedule);
         $tmp->phones = json_decode($tmp->phones);
         $tmp->image = $imageName ?? null;
-        $tmp->creator_id = $creatorId;
-        $tmp->owner_id = $creatorId;
+        $tmp->creator_id = $this->botUser->id;
+        $tmp->owner_id = $this->botUser->id;
 
         $company = Company::query()->create((array)$tmp);
 
@@ -166,8 +174,10 @@ class CompanyLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function editCompany(array $data, $companyLogo = null, $creatorId = null): CompanyResource
+    public function editCompany(array $data, $companyLogo = null): CompanyResource
     {
+        if (is_null($this->botUser))
+            throw new HttpException(400, "Менеджер не указан!");
 
         $validator = Validator::make($data, [
             'title' => "required|string:255",
@@ -198,8 +208,9 @@ class CompanyLogicFactory
         $tmp->schedule = json_decode($tmp->schedule);
         $tmp->phones = json_decode($tmp->phones);
         $tmp->image = $imageName;
-        $tmp->creator_id = $creatorId;
-        $tmp->owner_id = $creatorId;
+        $tmp->creator_id = $this->botUser->id;
+        $tmp->owner_id = $this->botUser->id;
+
 
         $company = Company::query()->where("id", $data["id"])
             ->first();
