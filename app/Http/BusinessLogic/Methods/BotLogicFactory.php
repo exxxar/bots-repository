@@ -258,11 +258,13 @@ class BotLogicFactory
         $newBot->company_id = $company->id;
         $newBot->is_template = false;
         $newBot->template_description = null;
-        $newBot->creator_id = $this->botUser->id ?? null;
+        $newBot->creator_id = $this->botUser->id;
         $newBot->balance = 70;
         $newBot->tax_per_day = 10;
 
         $newBot->save();
+
+        Log::info("duplicate_bot=>".print_r($newBot->toArray(), true));
 
         $pages = BotPage::query()
             ->with(["slug", "replyKeyboard", "inlineKeyboard"])
