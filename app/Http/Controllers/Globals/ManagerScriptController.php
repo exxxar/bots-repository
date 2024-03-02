@@ -173,7 +173,7 @@ class ManagerScriptController extends SlugController
                     [
                         ["text" => "💳Перейти в кабинет",
                             "login_url" => [
-                                'url' => env("app_url")."/auth/tg-link"
+                                'url' => env("app_url") . "/auth/tg-link"
                             ]
                         ],
                     ],
@@ -676,9 +676,12 @@ class ManagerScriptController extends SlugController
         $companyDomain = $bot->company->slug;
 
 
-        $path = !is_null($botUser->manager->image)?env("APP_URL").$botUser->manager->image :   public_path() . "/images/manager.png";//storage_path("app/public") . "/companies/$companyDomain/" . ($botUser->manager->image ?? 'noimage.jpg');
+        if (!is_null($botUser->manager))
+            $path = !is_null($botUser->manager->image) ? env("APP_URL") . $botUser->manager->image :
+                public_path() . "/images/manager.png";//storage_path("app/public") . "/companies/$companyDomain/" . ($botUser->manager->image ?? 'noimage.jpg');
+        else
+            $path = public_path() . "/images/manager.png";
 
-        Log::info($path);
         $file = InputFile::create(
             $path
         );
@@ -697,7 +700,7 @@ class ManagerScriptController extends SlugController
                     [
                         ["text" => "💳Перейти в кабинет",
                             "login_url" => [
-                                'url' => env("APP_URL")."/auth/tg-link"
+                                'url' => env("APP_URL") . "/auth/tg-link"
                             ]
                         ],
                     ],
