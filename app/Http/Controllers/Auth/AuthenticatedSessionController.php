@@ -118,31 +118,75 @@ class AuthenticatedSessionController extends Controller
     }
 
     public function telegramLinkAuth(Request $request){
-
-        Log::info(print_r($request->all(), true));
-    /*    $request->validate([
-            "link"=>"required"
+        $request->validate([
+           "id"=>"required",
+           "hash"=>"required",
+           "auth_date"=>"required",
         ]);
 
-
-        $link = decrypt($request->link) ?? null;
+        $tgId = $request->get("id");
 
         $bot = Bot::query()
             ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
             ->first();
 
-        if (is_null($link)||is_null($bot))
+        if (is_null($bot))
             return response()->redirectTo("login");
 
+        if (!$this->checkTelegramAuthorization($request->all(), $bot->bot_token)) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $tgId,
+                    "Ошибка проверки данных входа");
+
+            return response()->redirectToRoute("login");
+        }
 
         $botUser = BotUser::query()
+            ->with(["user"])
             ->where("bot_id", $bot->id)
-            ->where("id", $link)
+            ->where("telegram_chat_id", $tgId)
             ->first();
 
-        if (is_null($botUser))
-            return response()->redirectTo("login");
-*/
+        if (is_null($botUser)) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $tgId,
+                    "Пользователь еще не зарегистрировался в системе!");
+            return response()->redirectToRoute("login");
+        }
+
+
+        if (!$botUser->is_admin&&!$botUser->is_manager) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $tgId,
+                    "Вы не являетесь сотрудником системы!");
+            return response()->redirectToRoute("login");
+        }
+
+
+        $user = $botUser->user;
+
+        /*Log::info(print_r($user->toArray(), true));
+        if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {*/
+
+        Auth::login($user);
+
+        Session::put("bot_user", $botUser);
+
+        $request->session()->regenerate();
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage(
+                $tgId,
+                "Отлично! Вы успешно авторизовались!");
+
+        return redirect()->route('dashboard');
 
 
     }
