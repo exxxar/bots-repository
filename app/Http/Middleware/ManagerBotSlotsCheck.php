@@ -36,8 +36,8 @@ class ManagerBotSlotsCheck
             return \response()->json(["error" => "Пользователь не имеет профиля менеджера"], 404);
         }
 
-        /* if ($manager->max_bot_slot_count==0)
-             return \response()->json(["error" => "Недостаточное количество слотов для выполнения операции"], 400);*/
+        if ($manager->max_bot_slot_count == 0)
+            return \response()->json(["error" => "Недостаточное количество слотов для выполнения операции"], 400);
 
         $response = $next($request);
 

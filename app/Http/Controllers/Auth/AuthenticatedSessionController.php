@@ -117,6 +117,36 @@ class AuthenticatedSessionController extends Controller
 
     }
 
+    public function telegramLinkAuth(Request $request){
+
+        Log::info(print_r($request->all(), true));
+    /*    $request->validate([
+            "link"=>"required"
+        ]);
+
+
+        $link = decrypt($request->link) ?? null;
+
+        $bot = Bot::query()
+            ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
+            ->first();
+
+        if (is_null($link)||is_null($bot))
+            return response()->redirectTo("login");
+
+
+        $botUser = BotUser::query()
+            ->where("bot_id", $bot->id)
+            ->where("id", $link)
+            ->first();
+
+        if (is_null($botUser))
+            return response()->redirectTo("login");
+*/
+
+
+    }
+
     /**
      * Display the login view.
      */

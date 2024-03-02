@@ -26,7 +26,7 @@ class ManagerScriptController extends SlugController
 
         $hasMainScript = BotMenuSlug::query()->updateOrCreate(
             [
-                "slug" => "global_about_bot_main",
+                "slug" => "global_manager_main",
                 'is_global' => true,
                 'parent_slug_id' => null,
                 'bot_id' => null,
@@ -70,7 +70,7 @@ class ManagerScriptController extends SlugController
                 'comment' => "Отображение списка всех созданных менеджером ботов",
             ]);
 
-       $partnerScript = BotMenuSlug::query()->updateOrCreate(
+        $partnerScript = BotMenuSlug::query()->updateOrCreate(
             [
                 'slug' => "global_manager_partners",
                 'is_global' => true,
@@ -138,21 +138,16 @@ class ManagerScriptController extends SlugController
         $message = sprintf("Имя: %s
 Телефон: %s
 Город: %s
-Дата рождения: %s
-Ваш внутренний баланс: %s руб
-Ваши средства для вывода: %s руб
-Пол: %s
-Колл-во слотов под клиентов:  %s
-Колл-во слотов под ботов у клиента: %s
+Колл-во слотов под ботов: %s
         ",
             $botUser->name ?? 'Не указано',
             $botUser->phone ?? 'Не указано',
             $botUser->city ?? 'Не указано',
-            $botUser->birthday ?? 'Не указано',
-            $botUser->manager->balance ?? 0,
-            $botUser->cashBack->amount ?? 0,
-            $botUser->sex ? 'Мужской' : 'Женский',
-            $botUser->manager->max_company_slot_count ?? 0,
+            //$botUser->birthday ?? 'Не указано',
+            // $botUser->manager->balance ?? 0,
+            // $botUser->cashBack->amount ?? 0,
+            //  $botUser->sex ? 'Мужской' : 'Женский',
+            //  $botUser->manager->max_company_slot_count ?? 0,
             $botUser->manager->max_bot_slot_count ?? 0,
         );
 
@@ -176,19 +171,27 @@ class ManagerScriptController extends SlugController
                         ]],
                     ],
                     [
-                        ["text" => "💳Пополнить внутренний баланс", "callback_data" => "/manager_payments"],
+                        ["text" => "💳Перейти в кабинет",
+                            "login_url" => [
+                                'url' => env("app_url")."/auth/tg-link"
+                            ]
+                        ],
                     ],
-                    [
-                        ["text" => "💰Запросить вывод средств", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/cash-out"
-                        ]],
-                    ],
+                    /*  [
+                          ["text" => "💳Пополнить внутренний баланс", "callback_data" => "/manager_payments"],
+                      ],
+                      [
+                          ["text" => "💰Запросить вывод средств", "web_app" => [
+                              "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/cash-out"
+                          ]],
+                      ],*/
 
 
                 ]);
     }
 
-    public function payments(...$config){
+    public function payments(...$config)
+    {
 
     }
 
@@ -660,9 +663,11 @@ class ManagerScriptController extends SlugController
                 InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
                 [
                     [
-                        ["text" => "\xF0\x9F\x8E\xB2Приступить к работе", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-main"
-                        ]],
+                        ["text" => "💳Перейти в кабинет",
+                            "login_url" => [
+                                'url' => env("app_url")."/auth/tg-link"
+                            ]
+                        ],
                     ],
 
                 ]);

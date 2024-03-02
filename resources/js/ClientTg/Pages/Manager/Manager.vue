@@ -108,7 +108,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                                    v-model="managerForm.social_links[index]"
                                    placeholder="Ссылка на соц. сеть"
                                    :aria-label="'managerForm-social-links-'+index"
-                                   :aria-describedby="'managerForm-social-links-'+index" required>
+                                   :aria-describedby="'managerForm-social-links-'+index">
 
                             <a href="javascript:void(0)"
                                v-if="index>0"
@@ -183,7 +183,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     </div>
 
 
-                    <div class="col-12">
+<!--                    <div class="col-12">
                         <h4 class="text-center my-3">
                             <i class="fa-solid fa-clipboard-question mr-2 color-green2-light"></i>
                             Профессиональный блок вопросов
@@ -321,7 +321,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                         </div>
                     </div>
 
-                    <div class="divider divider-small my-3 bg-highlight "></div>
+                    <div class="divider divider-small my-3 bg-highlight "></div>-->
 
                     <div class="divider divider-small my-3 bg-highlight "></div>
 
@@ -384,7 +384,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
             <div class="content">
                 <h6>Поздравляем! Вы являетесь нашим официальным Менеджером! </h6>
 
-                <a href="javascript:void(0)"
+<!--                <a href="javascript:void(0)"
                    v-if="botUser.manager.verified_at!=null"
                    class="chip chip-small bg-gray1-dark">
                     <i class="fa fa-check bg-green1-dark"></i>
@@ -395,16 +395,16 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 <a href="#" class="chip chip-small bg-gray1-dark" v-else>
                     <i class="fa fa-times bg-red2-dark"></i>
                     <strong class="color-black font-400">Учетная запись менеджера не активна</strong>
-                </a>
+                </a>-->
 
                 <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
                 <p class="mb-0">Телефон: {{ botUser.phone || 'Не указано' }}</p>
                 <p class="mb-0">Город: {{ botUser.city || 'Не указано' }}</p>
                 <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
-                <p class="mb-0">Ваш баланс: {{ botUser.manager.balance || 0 }} руб</p>
+<!--                <p class="mb-0">Ваш баланс: {{ botUser.manager.balance || 0 }} руб</p>-->
                 <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
-                <p class="mb-0">Колл-во слотов под клиентов: {{ botUser.manager.max_company_slot_count || 0 }}</p>
-                <p class="mb-3">Колл-во слотов под ботов у клиента: {{ botUser.manager.max_bot_slot_count || 0 }}</p>
+<!--                <p class="mb-0">Колл-во слотов под клиентов: {{ botUser.manager.max_company_slot_count || 0 }}</p>-->
+                <p class="mb-3">Колл-во слотов под ботов: {{ botUser.manager.max_bot_slot_count || 0 }}</p>
 
                 <h6>Вам доступны следующие возможности:</h6>
                 <ul>

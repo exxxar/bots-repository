@@ -152,6 +152,7 @@ Route::get('/images/{companySlug}/{fileName}',
     [TelegramController::class, 'getFiles']);
 
 Route::get("/auth/telegram/{domain}/callback", [AuthenticatedSessionController::class,"telegramAuth"]);
+Route::any("/auth/tg-link", [AuthenticatedSessionController::class,"telegramLinkAuth"]);
 
 Route::prefix("bot")
     ->group(function () {
