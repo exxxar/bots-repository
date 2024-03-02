@@ -665,7 +665,7 @@ class ManagerScriptController extends SlugController
                     [
                         ["text" => "💳Перейти в кабинет",
                             "login_url" => [
-                                'url' => env("app_url")."/auth/tg-link"
+                                'url' => env("APP_URL")."/auth/tg-link"
                             ]
                         ],
                     ],
