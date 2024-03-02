@@ -657,11 +657,43 @@ class ManagerScriptController extends SlugController
 
         }
 
+        $message = sprintf("Имя: %s
+Телефон: %s
+Город: %s
+Колл-во слотов под ботов: %s
+        ",
+            $botUser->name ?? 'Не указано',
+            $botUser->phone ?? 'Не указано',
+            $botUser->city ?? 'Не указано',
+            //$botUser->birthday ?? 'Не указано',
+            // $botUser->manager->balance ?? 0,
+            // $botUser->cashBack->amount ?? 0,
+            //  $botUser->sex ? 'Мужской' : 'Женский',
+            //  $botUser->manager->max_company_slot_count ?? 0,
+            $botUser->manager->max_bot_slot_count ?? 0,
+        );
+
+        $companyDomain = $bot->company->slug;
+
+        $path = storage_path("app/public") . "/companies/$companyDomain/" . ($botUser->manager->image ?? 'noimage.jpg');
+
+        $file = InputFile::create(
+            file_exists($path) ?
+                $path :
+                public_path() . "/images/manager.png"
+        );
+
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto("Кабинет менеджера к вашим услугам",
-                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+            ->replyPhoto("Кабинет менеджера к вашим услугам:\n$message",
+                $file,
+
                 [
+                    [
+                        ["text" => "👨🏽‍💻Детали профиля", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-profile"
+                        ]],
+                    ],
                     [
                         ["text" => "💳Перейти в кабинет",
                             "login_url" => [
