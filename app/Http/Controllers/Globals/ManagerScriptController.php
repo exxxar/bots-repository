@@ -677,6 +677,7 @@ class ManagerScriptController extends SlugController
 
         $path = env("APP_URL").$botUser->manager->image;//storage_path("app/public") . "/companies/$companyDomain/" . ($botUser->manager->image ?? 'noimage.jpg');
 
+        Log::info($path);
         $file = InputFile::create(
             file_exists($path) ?
                 $path :
