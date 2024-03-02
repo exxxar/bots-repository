@@ -702,7 +702,7 @@ class ManagerScriptController extends SlugController
                     ],
                     [
                         ["text" => "👨🏽‍💻Настройка профиля", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-profile"
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/manager-form"
                         ]],
                     ],
 
