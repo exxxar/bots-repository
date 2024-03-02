@@ -679,9 +679,10 @@ class ManagerScriptController extends SlugController
 
         Log::info($path);
         $file = InputFile::create(
-            file_exists($path) ?
+            $path
+            /*file_exists($path) ?
                 $path :
-                public_path() . "/images/manager.png"
+                public_path() . "/images/manager.png"*/
         );
 
 
