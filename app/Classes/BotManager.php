@@ -160,7 +160,7 @@ class BotManager extends BotCore
                 InputFile::create(public_path() . "/images/maintenance.png"),
                 [
                     [
-                        ["text" => "\xF0\x9F\x9A\xA7Написать в тех. поддержку", "url" => "https://t.me/exxxar"]
+                        ["text" => "\xF0\x9F\x9A\xA7Написать в тех. поддержку", "url" => "https://t.me/Risha_358"]
                     ]
                 ]
             );
