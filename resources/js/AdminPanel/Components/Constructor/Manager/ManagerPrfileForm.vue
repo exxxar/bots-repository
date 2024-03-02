@@ -23,7 +23,8 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                     </p>
 
                     <img
-                        class="rounded-circle mt-5 mb-5" style="width:150px; height:150px; object-fit:cover; border:1px white solid;"
+                        class="rounded-circle mt-5 mb-5"
+                        style="width:150px; height:150px; object-fit:cover; border:1px white solid;"
                         v-lazy="botUser.manager.image?botUser.manager.image:'../images/manager.png'">
 
 
@@ -57,16 +58,16 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                         @click="tab=11"
                         class="btn btn-info p-3 rounded-5 w-100 mb-2"><i class="fa-solid fa-robot mr-2"></i>Мои боты</a>
 
-<!--                    <a href="/bot-page"
-                       target="_blank"
-                       v-if="botUser.manager"
-                       class="text-white">
-                        Перейти к редактированию ботов
-                    </a>-->
+                    <!--                    <a href="/bot-page"
+                                           target="_blank"
+                                           v-if="botUser.manager"
+                                           class="text-white">
+                                            Перейти к редактированию ботов
+                                        </a>-->
 
-<!--                    <a href="/договор_аренды_по.docx" target="_blank" class="text-white">
-                        Образец договора для клиента
-                    </a>-->
+                    <!--                    <a href="/договор_аренды_по.docx" target="_blank" class="text-white">
+                                            Образец договора для клиента
+                                        </a>-->
                 </div>
             </div>
 
@@ -74,18 +75,20 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                  v-bind:class="{'col-md-12':!botUser.manager}"
                  v-if="tab===0">
                 <div class="row">
-                    <div class="col-12 mt-3" v-if="!botUser.manager">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <h3>Для начал заведите профиль</h3>
-                                <h5 class="card-title">Редактирование профиля менеджера</h5>
-                                <p class="card-text">Внесите информацию о себе и получите более расширенный доступ к
-                                    системе</p>
-                                <a @click="tab++" class="btn btn-outline-primary p-3">Перейти к разделу</a>
-                            </div>
+                    <!--
+                                        <div class="col-12 mt-3" v-if="!botUser.manager">
+                                            <div class="card text-center">
+                                                <div class="card-body">
+                                                    <h3>Для начал заведите профиль</h3>
+                                                    <h5 class="card-title">Редактирование профиля менеджера</h5>
+                                                    <p class="card-text">Внесите информацию о себе и получите более расширенный доступ к
+                                                        системе</p>
+                                                    <a @click="tab++" class="btn btn-outline-primary p-3">Перейти к разделу</a>
+                                                </div>
 
-                        </div>
-                    </div>
+                                            </div>
+                                        </div>
+                    -->
 
                     <div class="col-12 my-3" v-if="botUser.manager">
 
@@ -558,7 +561,8 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="activate-promo-code" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="activate-promo-code" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
@@ -703,6 +707,9 @@ export default {
             this.botUserForm.sex = this.botUser.sex || false
             this.botUserForm.is_blocked = this.botUser.blocked_at != null
             this.botUserForm.blocked_message = this.botUser.blocked_message || null
+
+            if (!this.botUser.manager)
+                this.tab = 1
         },
         alert(msg) {
             this.messages.push(msg)

@@ -370,7 +370,7 @@ import PartnersList from "@/ClientTg/Components/Manager/PartnersList.vue";
                 <p v-if="botUser.manager.info">
                     {{ botUser.manager.info }}
                 </p>
-                <a href="javascript:void(0)"
+<!--                <a href="javascript:void(0)"
                    v-if="botUser.manager.verified_at!=null"
                    class="chip chip-small bg-gray1-dark">
                     <i class="fa fa-check bg-green1-dark"></i>
@@ -381,7 +381,7 @@ import PartnersList from "@/ClientTg/Components/Manager/PartnersList.vue";
                 <a href="#" class="chip chip-small bg-gray1-dark" v-else>
                     <i class="fa fa-times bg-red2-dark"></i>
                     <strong class="color-black font-400">Учетная запись менеджера не активна</strong>
-                </a>
+                </a>-->
                 <p
                     class="cursor-pointer"
                     @click="copyToClipboard"

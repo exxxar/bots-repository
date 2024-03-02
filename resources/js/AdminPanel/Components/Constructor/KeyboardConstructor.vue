@@ -162,7 +162,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         />
 
                         <button type="button"
-                               @click="openPageModal"
+                                @click="openPageModal"
                                 class="btn btn-outline-primary" aria-expanded="false">
                             <i class="fa-solid fa-bars"></i>
                         </button>
@@ -208,8 +208,65 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     <input type="text" class="form-control"
                            @change="needRemoveField( 'switch_inline_query_current_chat',select.row, select.col)"
                            v-model="keyboard[select.row][select.col].switch_inline_query_current_chat"
-                           :id="'witch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
+                           :id="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
                            placeholder="команда">
+                </div>
+                <div class="mb-3" v-if="type==='inline'">
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_login_url"
+                               type="checkbox"
+                               id="need-login-url">
+                        <label class="form-check-label" for="need-login-url">
+                           Добавить ссылку авторизации
+                        </label>
+                    </div>
+
+                    <div v-if="need_login_url" class="mb-3">
+                        <label :for="'login-link-row-'+select.row+'-col-'+select.col"
+                               class="form-label">Ссылка авторизации
+                        </label>
+
+                        <input type="text" class="form-control"
+                               v-model="keyboard[select.row][select.col].login_url.url"
+                               :id="'login-link-row-'+select.row+'-col-'+select.col"
+                               placeholder="Ссылка авторизации" required>
+                    </div>
+
+
+                    <div v-if="need_login_url" class="mb-3">
+                        <label :for="'login-link-forward-text-row-'+select.row+'-col-'+select.col"
+                               class="form-label">Новый текст кнопки в пересылаемых сообщениях
+                        </label>
+
+                        <input type="text" class="form-control"
+                               v-model="keyboard[select.row][select.col].login_url.forward_text"
+                               :id="'login-link-forward-text-row-'+select.row+'-col-'+select.col"
+                               placeholder="Текст кнопки">
+                    </div>
+
+                    <div v-if="need_login_url" class="mb-3">
+                        <label :for="'login-link-bot-username-row-'+select.row+'-col-'+select.col"
+                               class="form-label">Имя бота, которое будет использоваться для авторизации
+                        </label>
+
+                        <input type="text" class="form-control"
+                               v-model="keyboard[select.row][select.col].login_url.bot_username"
+                               :id="'login-link-bot-username-row-'+select.row+'-col-'+select.col"
+                               placeholder="Имя бота">
+                    </div>
+
+
+                    <div class="form-check mb-3" v-if="need_login_url">
+                        <input class="form-check-input"
+                               v-model="keyboard[select.row][select.col].login_url.request_write_access"
+                               type="checkbox"
+                               id="need-request_write_access">
+                        <label class="form-check-label" for="need-request_write_access">
+                            Запросить отправку сообщений ботом
+                        </label>
+                    </div>
                 </div>
 
 
@@ -266,7 +323,8 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
     </div>
 
 
-    <div class="modal fade" :id="'page-list-in-keyboard-'+uuid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="'page-list-in-keyboard-'+uuid" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
 
@@ -298,6 +356,20 @@ export default {
         }
     },
     watch: {
+        need_login_url: {
+            handler: function (newValue) {
+                if (this.need_login_url)
+                    this.keyboard[this.select.row][this.select.col].login_url = {
+                        url: null,
+                        forward_text: null,
+                        bot_username: null,
+                        request_write_access: true,
+                    }
+                else
+                    delete this.keyboard[this.select.row][this.select.col].login_url
+            },
+            deep: true
+        },
         keyboard: {
             handler: function (newValue) {
                 this.save()
@@ -307,7 +379,7 @@ export default {
     },
     data() {
         return {
-
+            need_login_url: false,
             pageModal: null,
             mode: 0,
             editor: false,
@@ -326,7 +398,7 @@ export default {
     },
 
     mounted() {
-        this.pageModal = new bootstrap.Modal(document.getElementById('page-list-in-keyboard-'+  this.uuid), {})
+        this.pageModal = new bootstrap.Modal(document.getElementById('page-list-in-keyboard-' + this.uuid), {})
 
 
         if (this.editedKeyboard) {
@@ -338,12 +410,12 @@ export default {
 
     },
     methods: {
-        openPageModal(){
-          this.pageModal.show()
+        openPageModal() {
+            this.pageModal.show()
         },
         attachPage(item) {
 
-            let command = (item.slug.command || 'Нет команды').replace(".*","")
+            let command = (item.slug.command || 'Нет команды').replace(".*", "")
 
             this.keyboard[this.select.row][this.select.col].text = command
 
@@ -354,7 +426,7 @@ export default {
                 type: 'success'
             });
 
-            if (this.type==='inline')
+            if (this.type === 'inline')
                 this.keyboard[this.select.row][this.select.col].callback_data = command
 
         },

@@ -379,10 +379,10 @@
                 </div>
             </form>
         </div>
-        <div class="card-body" v-else>
+        <div class="card-body" v-if="isManagerVerified">
 
             <p class="mb-0">Ваш баланс: <strong class="text-primary">{{ botUser.manager.balance || 0 }} ₽</strong></p>
-            <p class="mb-0">Колл-во слотов под клиентов: <strong class="text-primary">{{ botUser.manager.max_company_slot_count || 0 }} ед.</strong></p>
+<!--            <p class="mb-0">Колл-во слотов под клиентов: <strong class="text-primary">{{ botUser.manager.max_company_slot_count || 0 }} ед.</strong></p>-->
             <p class="mb-3">Колл-во слотов под ботов у клиента: <strong class="text-primary">{{ botUser.manager.max_bot_slot_count || 0 }} ед.</strong></p>
 
             <a href="/manager-page" class="btn btn-outline-primary w-100 mb-3">Перейти в ваш профиль</a>

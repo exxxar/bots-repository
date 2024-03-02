@@ -6,7 +6,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 </script>
 <template>
     <div v-if="botUser">
-        <div class="card card-style p-3" v-if="!botUser.is_manager||botUser.manager==null">
+        <div class="card card-style p-3" >
             <div class="content">
                 <form
                     v-on:submit.prevent="submit" class="row mb-0">
@@ -380,11 +380,11 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
         </div>
 
 
-        <div class="card card-style p-3" v-if="botUser.is_manager&&botUser.manager != null">
+<!--        <div class="card card-style p-3" v-if="botUser.is_manager&&botUser.manager != null">
             <div class="content">
                 <h6>Поздравляем! Вы являетесь нашим официальным Менеджером! </h6>
 
-<!--                <a href="javascript:void(0)"
+&lt;!&ndash;                <a href="javascript:void(0)"
                    v-if="botUser.manager.verified_at!=null"
                    class="chip chip-small bg-gray1-dark">
                     <i class="fa fa-check bg-green1-dark"></i>
@@ -395,15 +395,15 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 <a href="#" class="chip chip-small bg-gray1-dark" v-else>
                     <i class="fa fa-times bg-red2-dark"></i>
                     <strong class="color-black font-400">Учетная запись менеджера не активна</strong>
-                </a>-->
+                </a>&ndash;&gt;
 
                 <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
                 <p class="mb-0">Телефон: {{ botUser.phone || 'Не указано' }}</p>
                 <p class="mb-0">Город: {{ botUser.city || 'Не указано' }}</p>
                 <p class="mb-0">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
-<!--                <p class="mb-0">Ваш баланс: {{ botUser.manager.balance || 0 }} руб</p>-->
+&lt;!&ndash;                <p class="mb-0">Ваш баланс: {{ botUser.manager.balance || 0 }} руб</p>&ndash;&gt;
                 <p class="mb-0">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
-<!--                <p class="mb-0">Колл-во слотов под клиентов: {{ botUser.manager.max_company_slot_count || 0 }}</p>-->
+&lt;!&ndash;                <p class="mb-0">Колл-во слотов под клиентов: {{ botUser.manager.max_company_slot_count || 0 }}</p>&ndash;&gt;
                 <p class="mb-3">Колл-во слотов под ботов: {{ botUser.manager.max_bot_slot_count || 0 }}</p>
 
                 <h6>Вам доступны следующие возможности:</h6>
@@ -432,7 +432,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
 
                 <ReturnToBot class="mb-2"/>
             </div>
-        </div>
+        </div>-->
 
     </div>
 
