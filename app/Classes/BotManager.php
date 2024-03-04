@@ -375,7 +375,7 @@ class BotManager extends BotCore
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
 
-            $this->sendInlineKeyboard($channel,
+            $this->sendInlineKeyboard( $bot->order_channel ?? $bot->main_channel ?? null,
                 "#лог_действий_на_странице\n",
                 [
                     [
