@@ -369,14 +369,23 @@ class BotManager extends BotCore
             return;
         }
 
-        if ($page->need_log_user_action ?? false){
+        if ($page->need_log_user_action ?? false) {
             $thread = $bot->topics["response"] ?? null;
 
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
 
-            $this->sendInlineKeyboard( $bot->order_channel ?? $bot->main_channel ?? null,
-                "#лог_действий_на_странице\n",
+            $botUser = $this->currentBotUser();
+
+            $slug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
+
+            $pageName = is_null($slug) ? "Не указано имя страницы" : ($slug->command ?? $slug->id ?? '-');
+            $tgDomain = $botUser->username ?? null;
+            $tgName = $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
+
+            $this->sendInlineKeyboard($bot->order_channel ?? $bot->main_channel ?? null,
+                "#лог_действий_на_странице\n" .
+                (!is_null($tgDomain) ? "Действие от @$tgDomain:\n" : "Действие от $tgName:\n")."Страница: $pageName",
                 [
                     [
                         ["text" => "Написать пользователю сообщение", "url" => $link]
