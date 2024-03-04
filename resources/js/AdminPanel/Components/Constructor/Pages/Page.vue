@@ -1235,6 +1235,17 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                         <div class="col-12">
                             <div class="form-check">
                                 <input class="form-check-input"
+                                       v-model="pageForm.need_log_user_action"
+                                       type="checkbox" id="need_log_user_action">
+                                <label class="form-check-label" for="need_log_user_action">
+                                    Логгировать действия пользователя в канал при переходе
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input"
                                        v-model="need_stay_after_save"
                                        type="checkbox" id="need-stay-after-save">
                                 <label class="form-check-label" for="need-stay-after-save">
@@ -1356,6 +1367,7 @@ export default {
                 reply_keyboard: null,
                 inline_keyboard: null,
                 is_external: false,
+                need_log_user_action: false,
 
                 next_page_id: null,
                 next_bot_dialog_command_id: null,
@@ -1642,6 +1654,7 @@ export default {
                     next_bot_menu_slug_id: page.next_bot_menu_slug_id || null,
 
                     is_external: page.is_external || false,
+                    need_log_user_action: page.need_log_user_action || false,
                     rules_if: page.rules_if || null,
                     rules_else_page_id: page.rules_else_page_id || null,
                     audios: page.audios || [],
@@ -1732,6 +1745,7 @@ export default {
                 reply_keyboard: null,
                 inline_keyboard: null,
                 is_external: false,
+                need_log_user_action: false,
                 videos: [],
                 audios: [],
                 documents: [],

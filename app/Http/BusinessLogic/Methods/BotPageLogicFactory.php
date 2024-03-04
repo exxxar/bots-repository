@@ -203,6 +203,7 @@ class BotPageLogicFactory
 
         $tmp->content = $tmp->content ?? "";
         $tmp->is_external = (bool)($tmp->is_external ?? false);
+        $tmp->need_log_user_action = (bool)($tmp->need_log_user_action ?? false);
         $tmp->bot_id = $this->bot->id;
 
         if (!is_null($replyKeyboard)) {
@@ -318,6 +319,7 @@ class BotPageLogicFactory
         $tmp->documents = isset($pageData["documents"]) ? json_decode($pageData["documents"] ?? '[]') : null;
         $tmp->audios = isset($pageData["audios"]) ? json_decode($pageData["audios"] ?? '[]') : null;
         $tmp->is_external = (bool)($tmp->is_external ?? false);
+        $tmp->need_log_user_action = (bool)($tmp->need_log_user_action ?? false);
         $tmp->content = $tmp->content ?? "";
 
         unset($tmp->photos);

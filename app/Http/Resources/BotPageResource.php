@@ -29,6 +29,7 @@ class BotPageResource extends JsonResource
 
             'bot_id' => $this->bot_id ?? null,
             'is_external' => $this->is_external ?? false,
+            'need_log_user_action' => $this->need_log_user_action ?? false,
             'next_page_id' => $this->next_page_id ?? null,
             'next_bot_dialog_command_id' => $this->next_bot_dialog_command_id ?? null,
             'next_bot_menu_slug_id' => $this->next_bot_menu_slug_id ?? null,

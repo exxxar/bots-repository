@@ -369,6 +369,23 @@ class BotManager extends BotCore
             return;
         }
 
+        if ($page->need_log_user_action ?? false){
+            $thread = $bot->topics["response"] ?? null;
+
+            $botDomain = $this->getSelf()->bot_domain;
+            $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
+
+            $this->sendInlineKeyboard($channel,
+                "#лог_действий_на_странице\n",
+                [
+                    [
+                        ["text" => "Написать пользователю сообщение", "url" => $link]
+                    ]
+                ],
+                $thread
+            );
+        }
+
         $inlineKeyboard = $page->inlineKeyboard ?? null;
         $replyKeyboard = $page->replyKeyboard ?? null;
 
