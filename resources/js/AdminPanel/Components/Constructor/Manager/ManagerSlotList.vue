@@ -23,7 +23,7 @@
 
     <div class="container pb-5" v-if="bots.length>0">
         <h6>Ваши созданные боты</h6>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="row row-cols-1 row-cols-lg-3 row-cols-md-1 g-4">
             <div class="col" v-for="bot in bots">
 
                 <div class="card h-100">

@@ -11,7 +11,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
 
     <div class="container shadow-lg border  mt-1 mb-1" v-if="botUser">
         <div class="row">
-            <div class="col-md-3 border-right bg-primary" v-if="botUser.manager">
+            <div class="col-lg-3 col-md-6 border-right bg-primary" v-if="botUser.manager">
                 <div
                     style="position:sticky;top:0px;"
                     class="d-flex flex-column align-items-center text-center p-3 py-5">
@@ -71,7 +71,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                 </div>
             </div>
 
-            <div class="col-md-9"
+            <div class="col-lg-9 col-md-6"
                  v-bind:class="{'col-md-12':!botUser.manager}"
                  v-if="tab===0">
                 <div class="row">
@@ -100,7 +100,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
 
                 </div>
             </div>
-            <div class="col-md-9"
+            <div class="col-lg-9 col-md-6"
                  v-bind:class="{'col-md-12':!botUser.manager}"
                  v-if="tab>0&&tab<10">
                 <div class="row mt-2">
@@ -538,7 +538,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                 <div class="row" v-if="tab===5"></div>
             </div>
 
-            <div class="col-md-9"
+            <div class="col-lg-9 col-md-6"
                  v-bind:class="{'col-md-12':!botUser.manager}"
                  v-if="tab===10">
 
@@ -546,13 +546,13 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
 
             </div>
 
-            <div class="col-md-9"
+            <div class="col-lg-9 col-md-6"
                  v-bind:class="{'col-md-12':!botUser.manager}"
                  v-if="tab===11">
                 <ManagerSlotList v-on:callback="callback"></ManagerSlotList>
             </div>
 
-            <div class="col-md-9"
+            <div class="col-lg-9 col-md-6"
                  v-bind:class="{'col-md-12':!botUser.manager}"
                  v-if="tab===12">
                 <ManagerPackageList :bot="bot"></ManagerPackageList>
