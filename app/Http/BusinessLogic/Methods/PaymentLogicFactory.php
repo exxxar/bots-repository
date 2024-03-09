@@ -208,8 +208,10 @@ class PaymentLogicFactory
             ->first())["value"] ?? "Ваш товар";
 
 
-        \App\Facades\BotManager::bot()
-            ->replyInvoice(
+        \App\Facades\BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendInvoice(
+                $this->botUser->telegram_chat_id,
                 $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard,
                 $providerData
             );
