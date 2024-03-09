@@ -71,6 +71,7 @@ class PaymentLogicFactory
      */
     public function checkout(array $data): void
     {
+        Log::info("payment_data=>".print_r($data, true));
         if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
             throw new HttpException(404, "Бот не найден!");
 
