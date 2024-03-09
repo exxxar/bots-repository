@@ -71,7 +71,7 @@ class PaymentLogicFactory
      */
     public function checkout(array $data): void
     {
-        Log::info("payment_data=>".print_r($data, true));
+        Log::info("payment_data=>" . print_r($data, true));
         if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
             throw new HttpException(404, "Бот не найден!");
 
@@ -95,9 +95,9 @@ class PaymentLogicFactory
         $tmpProducts = $data["products"];
         $ids = Collection::make($tmpProducts)
             ->pluck("id");
-        Log::info("ids".print_r($ids, true));
+        Log::info("ids" . print_r($ids, true));
         $products = Product::query()
-            ->whereIn("id", [$ids])
+            ->whereIn("id", is_array($ids) ? $ids : [$ids])
             ->get();
 
         $prices = [];
@@ -126,22 +126,22 @@ class PaymentLogicFactory
             ];
 
             $providerData->receipt[] =
-                    (object)[
-                        "description" => "Заказ товара",
-                        "quantity" => "$tmpCount.00",
-                        "amount" => (object)[
-                            "value" => $tmpPrice /*/ 100*/,
-                            "currency" => $currency
-                        ],
-                        "vat_code" => $taxSystemCode
-                    ];
+                (object)[
+                    "description" => "Заказ товара",
+                    "quantity" => "$tmpCount.00",
+                    "amount" => (object)[
+                        "value" => $tmpPrice /*/ 100*/,
+                        "currency" => $currency
+                    ],
+                    "vat_code" => $taxSystemCode
+                ];
 
             $summaryCount += $tmpCount;
             $summaryPrice += $tmpPrice;
         }
 
-        Log::info("prices ".print_r( $prices, true));
-        Log::info("price receipt ".print_r( $providerData->receipt, true));
+        Log::info("prices " . print_r($prices, true));
+        Log::info("price receipt " . print_r($providerData->receipt, true));
         Log::info("price after $summaryPrice");
 
         $payload = bin2hex(Str::uuid());
