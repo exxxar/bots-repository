@@ -97,9 +97,13 @@ class PaymentLogicFactory
             ->pluck("id")
             ->toArray();
         Log::info("ids" . print_r($ids, true));
+
+
         $products = Product::query()
             ->whereIn("id", is_array($ids) ? $ids : [$ids])
             ->get();
+
+        Log::info("products" . print_r($products->toArray(), true));
 
         $prices = [];
         $currency = "RUB";
@@ -118,12 +122,10 @@ class PaymentLogicFactory
 
             $tmpPrice = ($product->current_price ?? 0) * $tmpCount;
 
-            if ($tmpPrice < 10000)
-                continue;
 
             $prices[] = [
                 "label" => $product->title,
-                "amount" => $tmpPrice
+                "amount" => $tmpPrice*100
             ];
 
             $providerData->receipt[] =
@@ -131,7 +133,7 @@ class PaymentLogicFactory
                     "description" => "Заказ товара",
                     "quantity" => "$tmpCount.00",
                     "amount" => (object)[
-                        "value" => $tmpPrice /*/ 100*/,
+                        "value" => $tmpPrice * 100,
                         "currency" => $currency
                     ],
                     "vat_code" => $taxSystemCode
