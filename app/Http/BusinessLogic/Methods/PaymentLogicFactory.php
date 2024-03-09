@@ -87,6 +87,8 @@ class PaymentLogicFactory
         $botUser = $this->botUser;
         $slug = $this->slug;
 
+        Log::info("slug config".print_r($slug->config, true));
+
         $taxSystemCode = (Collection::make($slug->config)
             ->where("key", "tax_system_code")
             ->first())["value"] ?? $bot->company->vat_code ?? 1;
@@ -96,14 +98,15 @@ class PaymentLogicFactory
         $ids = Collection::make($tmpProducts)
             ->pluck("id")
             ->toArray();
-        Log::info("ids" . print_r($ids, true));
+
+     /*   Log::info("ids" . print_r($ids, true));*/
 
 
         $products = Product::query()
             ->whereIn("id", is_array($ids) ? $ids : [$ids])
             ->get();
 
-        Log::info("products" . print_r($products->toArray(), true));
+      /*  Log::info("products" . print_r($products->toArray(), true));*/
 
         $prices = [];
         $currency = "RUB";
@@ -143,9 +146,9 @@ class PaymentLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
-        Log::info("prices " . print_r($prices, true));
+/*        Log::info("prices " . print_r($prices, true));
         Log::info("price receipt " . print_r($providerData->receipt, true));
-        Log::info("price after $summaryPrice");
+        Log::info("price after $summaryPrice");*/
 
         $payload = bin2hex(Str::uuid());
 
