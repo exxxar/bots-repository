@@ -95,8 +95,9 @@ class PaymentLogicFactory
         $tmpProducts = $data["products"];
         $ids = Collection::make($tmpProducts)
             ->pluck("id");
+        Log::info("ids".print_r($ids, true));
         $products = Product::query()
-            ->whereIn("id", $ids)
+            ->whereIn("id", [$ids])
             ->get();
 
         $prices = [];
