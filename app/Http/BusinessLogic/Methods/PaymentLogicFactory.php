@@ -69,7 +69,7 @@ class PaymentLogicFactory
     /**
      * @throws ValidationException
      */
-    public function checkout(array $data): mixed
+    public function checkout(array $data): void
     {
         if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
             throw new HttpException(404, "Бот не найден!");
@@ -128,7 +128,7 @@ class PaymentLogicFactory
                         "description" => "Заказ товара",
                         "quantity" => "$tmpCount.00",
                         "amount" => (object)[
-                            "value" => $tmpPrice / 100,
+                            "value" => $tmpPrice /*/ 100*/,
                             "currency" => $currency
                         ],
                         "vat_code" => $taxSystemCode
@@ -138,6 +138,9 @@ class PaymentLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
+        Log::info("prices ".print_r( $prices, true));
+        Log::info("price receipt ".print_r( $providerData->receipt, true));
+        Log::info("price after $summaryPrice");
 
         $payload = bin2hex(Str::uuid());
 
