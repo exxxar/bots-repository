@@ -94,7 +94,8 @@ class PaymentLogicFactory
 
         $tmpProducts = $data["products"];
         $ids = Collection::make($tmpProducts)
-            ->pluck("id");
+            ->pluck("id")
+            ->toArray();
         Log::info("ids" . print_r($ids, true));
         $products = Product::query()
             ->whereIn("id", is_array($ids) ? $ids : [$ids])
