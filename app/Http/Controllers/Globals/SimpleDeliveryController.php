@@ -17,6 +17,7 @@ use App\Models\CashBackHistory;
 use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
@@ -63,6 +64,13 @@ class SimpleDeliveryController extends SlugController
                 "type" => "boolean",
                 "key" => "use_payment_system",
                 "value" => false,
+
+            ],
+
+            [
+                "type" => "boolean",
+                "key" => "can_use_cash",
+                "value" => true,
 
             ],
             [
@@ -192,6 +200,19 @@ class SimpleDeliveryController extends SlugController
                 'comment' => "Скрипт добавляет возможность просмотра истории своих заказов из мини-доставки",
             ]);
 
+    }
+
+    public function loadData(Request $request)
+    {
+        $slug = $request->slug;
+
+        return response()->json(
+            [
+                'can_use_cash' => (Collection::make($slug->config)
+                        ->where("key", "can_use_cash")
+                        ->first())["value"] ?? true,
+            ]
+        );
     }
 
     private function orderPage($page = 0, $messageId = null)

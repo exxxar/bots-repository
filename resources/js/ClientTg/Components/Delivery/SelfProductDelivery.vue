@@ -307,8 +307,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 </a>
             </div>
 
-            <p class="mb-0 text-left">Способы оплаты</p>
-            <div class="custom-control ios-switch ios-switch-icon my-3">
+            <p class="mb-0 text-left" v-if="settings.can_use_cash">Способы оплаты</p>
+            <div class="custom-control ios-switch ios-switch-icon my-3" v-if="settings.can_use_cash">
                 <input type="checkbox"
                        v-model="deliveryForm.cash"
                        class="ios-input" id="toggle-payment-cash">
@@ -321,7 +321,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <i class="fa-solid fa-credit-card  font-11 color-white" style="margin-left: 24px;"></i>
             </div>
 
-            <div v-if="deliveryForm.cash">
+            <div v-if="deliveryForm.cash&&settings.can_use_cash" >
                 <h6>Мы можем подготовить для вас сдачу с:</h6>
                 <div class="row row-cols-2 mb-0">
                     <div class="col"  v-for="money in moneyVariants">
@@ -381,6 +381,10 @@ export default {
     props: ["type"],
     data() {
         return {
+            settings: {
+                can_use_cash: true,
+
+            },
             product_type_display: 1,
             spent_time_counter: 0,
             is_requested: false,
@@ -469,6 +473,7 @@ export default {
         this.clearCart();
 
         this.loadProducts()
+        this.loadShopModuleData()
 
         if (this.cartProducts.length > 0)
             this.loadActualProducts()
@@ -514,6 +519,15 @@ export default {
         },
         nextProducts(index) {
             this.loadProducts(index)
+        },
+        loadShopModuleData() {
+            return this.$store.dispatch("loadShopModuleData").then((resp) => {
+                this.$nextTick(() => {
+                    Object.keys(resp).forEach(item => {
+                        this.settings[item] = resp[item]
+                    })
+                })
+            })
         },
         loadProducts(page = 0) {
             return this.$store.dispatch("loadProducts", {

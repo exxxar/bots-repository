@@ -4,44 +4,19 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 <template>
     <div class="card" v-if="!is_edited">
 
-        <div v-if="selectMode" class="card-header d-flex justify-content-between align-items-center">
-          <div>
-              <button
-                  @click="selectCard"
-                  :disabled="load"
-                  type="button"
-                  class="btn btn-outline-success mr-2"
-              >
-                  <i class="fa-solid fa-arrow-left"></i>
-              </button>
+        <div
+            v-if="!simple"
+            class="card-header">
+            <div class="d-flex justify-content-start align-items-center" v-if="selectMode">
+                <button
+                    @click="selectCard"
+                    :disabled="load"
+                    type="button"
+                    class="btn btn-outline-success mr-2"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
 
-              <button
-                  @click="is_edited=true"
-                  :disabled="load"
-                  type="button"
-                  title="Редактировать клавиатуру"
-                  class="btn btn-outline-success mr-2"
-              >
-                  <i class="fa-regular fa-pen-to-square"></i>
-              </button>
-
-              <button
-                  @click="updateKeyboard"
-                  type="button"
-                  title="Обновить клавиатуру"
-                  :disabled="load||!is_edited"
-                  class="btn btn-outline-primary mr-2"
-                  v-bind:class="{'have-change':is_edited}"
-              >
-                  <i class="fa-regular fa-floppy-disk"></i>
-              </button>
-          </div>
-
-        </div>
-        <div v-if="!selectMode" class="card-header d-flex justify-content-between align-items-center">
-
-            <div>
-                <strong class="mr-2">#{{keyboard.id}}</strong>
                 <button
                     @click="is_edited=true"
                     :disabled="load"
@@ -51,15 +26,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
                 >
                     <i class="fa-regular fa-pen-to-square"></i>
                 </button>
-                <button
-                    @click="duplicateKeyboard"
-                    type="button"
-                    title="Дублировать клавиатуру"
-                    :disabled="load"
-                    class="btn btn-outline-primary mr-2"
-                >
-                    <i class="fa-regular fa-clone"></i>
-                </button>
+
                 <button
                     @click="updateKeyboard"
                     type="button"
@@ -72,17 +39,53 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
                 </button>
             </div>
 
+            <div v-if="!selectMode" class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong class="mr-2">#{{ keyboard.id }}</strong>
+                    <button
+                        @click="is_edited=true"
+                        :disabled="load"
+                        type="button"
+                        title="Редактировать клавиатуру"
+                        class="btn btn-outline-success mr-2"
+                    >
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </button>
+                    <button
+                        @click="duplicateKeyboard"
+                        type="button"
+                        title="Дублировать клавиатуру"
+                        :disabled="load"
+                        class="btn btn-outline-primary mr-2"
+                    >
+                        <i class="fa-regular fa-clone"></i>
+                    </button>
+                    <button
+                        @click="updateKeyboard"
+                        type="button"
+                        title="Обновить клавиатуру"
+                        :disabled="load||!is_edited"
+                        class="btn btn-outline-primary mr-2"
+                        v-bind:class="{'have-change':is_edited}"
+                    >
+                        <i class="fa-regular fa-floppy-disk"></i>
+                    </button>
+                </div>
 
-            <button
-                @click="removeKeyboard"
-                type="button"
-                :disabled="load"
-                title="Удалить клавиатуру"
-                class="btn btn-outline-danger mr-2"
-            >
-                <i class="fa-solid fa-trash-can"></i>
-            </button>
+                <button
+                    @click="removeKeyboard"
+                    type="button"
+                    :disabled="load"
+                    title="Удалить клавиатуру"
+                    class="btn btn-outline-danger mr-2"
+                >
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+
+
         </div>
+
         <div class="card-body">
             <div class="row" v-if="!selectMode">
 
@@ -140,16 +143,16 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
     <div class="card" v-if="is_edited">
         <div class="card-header d-flex justify-content-between align-items-center">
 
-                <button
-                    @click="updateKeyboard"
-                    type="button"
-                    title="Обновить клавиатуру"
-                    :disabled="load||!is_edited"
-                    class="btn btn-outline-primary mr-2"
-                    v-bind:class="{'have-change':is_edited}"
-                >
-                    <i class="fa-regular fa-floppy-disk"></i>
-                </button>
+            <button
+                @click="updateKeyboard"
+                type="button"
+                title="Обновить клавиатуру"
+                :disabled="load||!is_edited"
+                class="btn btn-outline-primary mr-2"
+                v-bind:class="{'have-change':is_edited}"
+            >
+                <i class="fa-regular fa-floppy-disk"></i>
+            </button>
 
         </div>
         <div class="card-body">
@@ -158,7 +161,6 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
                 v-if="keyboardForm"
                 v-on:save="saveKeyboard"
                 :edited-keyboard="keyboardForm"/>
-
 
 
             <Vue3JsonEditor
@@ -174,27 +176,27 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 
     </div>
 
-<!--    &lt;!&ndash; Modal &ndash;&gt;
-    <div class="modal fade"
-         :id="'open-construct-'+uuid" tabindex="-1" aria-labelledby="open-construct-label" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="open-construct-label">Визуальный редактор клавиатуры</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <BotMenuConstructor
-                        v-if="keyboardForm"
-                        v-on:save="saveKeyboard"
-                        :edited-keyboard="keyboardForm"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+    <!--    &lt;!&ndash; Modal &ndash;&gt;
+        <div class="modal fade"
+             :id="'open-construct-'+uuid" tabindex="-1" aria-labelledby="open-construct-label" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="open-construct-label">Визуальный редактор клавиатуры</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <BotMenuConstructor
+                            v-if="keyboardForm"
+                            v-on:save="saveKeyboard"
+                            :edited-keyboard="keyboardForm"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>-->
+        </div>-->
 
 </template>
 <script>
@@ -204,7 +206,7 @@ import {Vue3JsonEditor} from "vue3-json-editor";
 
 
 export default {
-    props: ["keyboard", "selectMode"],
+    props: ["keyboard", "selectMode", "simple"],
     data: () => ({
         is_edited: false,
         load: false,
@@ -234,7 +236,7 @@ export default {
         this.$nextTick(() => {
             this.is_edited = false
 
-            if (!Array.isArray(tmpKeyboard.menu)){
+            if (!Array.isArray(tmpKeyboard.menu)) {
                 this.updateKeyboard()
             }
         })
@@ -268,7 +270,7 @@ export default {
         selectCard() {
             this.$emit("select", this.keyboardForm)
         },
-        duplicateKeyboard(){
+        duplicateKeyboard() {
 
             let data = new FormData();
             Object.keys(this.keyboardForm)

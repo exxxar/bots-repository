@@ -685,7 +685,7 @@ abstract class BotCore
         }
 
 
-        $product = $transaction->products_info["payload"] ?? 'не указан продавцов';
+        $product = $transaction->products_info["payload"] ?? 'не указан продавцом';
 
         \App\Facades\BotMethods::bot()
             ->whereBot($bot)

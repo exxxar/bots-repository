@@ -8,6 +8,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
+import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.vue";
 </script>
 <template>
 
@@ -1088,6 +1089,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 <h6>Страница поддерживает комбинации клавиш:</h6>
                 <ul class="mb-0 mr-0 p-0">
                     <li><strong>Ctrl+S</strong> - открыть\закрыть окно сохранения</li>
+                    <li><strong>Ctrl+D</strong> - просмотр страницы (для сохраненных страниц)</li>
                     <li><strong>Ctrl+пробел</strong> - открыть\закрыть список страниц</li>
                     <li><strong>Ctrl+backspace</strong> - очистить страницу\новая страница</li>
                     <li><strong>Ctrl+стрелка вправо</strong> - переключение между вкладка вперед</li>
@@ -1289,6 +1291,22 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
     </div>
 
 
+    <div class="modal fade" id="page-preview-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <PagePreview
+                        v-if="page"
+                        :page="page"></PagePreview>
+                    <p v-else>Сперва сохраните страницу</p>
+                </div>
+
+            </div>
+        </div>
+    </div>-
+
+
     <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas"
          data-bs-keyboard="true"
          data-bs-scroll="true"
@@ -1325,6 +1343,7 @@ export default {
             links: [],
             saveModal: null,
             pageModal: null,
+            pagePreviewModal: null,
             page: null,
             need_show_qr_and_link: false,
             need_stay_after_save: true,
@@ -1551,6 +1570,8 @@ export default {
             scroll: true,
         })
 
+       this.pagePreviewModal  = new bootstrap.Modal(document.getElementById('page-preview-modal'), {})
+
         window.addEventListener("keydown", (e) => {
 
             if (e.ctrlKey && e.keyCode == 8) {
@@ -1559,6 +1580,10 @@ export default {
                 this.clearForm()
             }
 
+           if (e.ctrlKey && e.code == 'KeyD') {
+                e.preventDefault();
+                this.pagePreviewModal.toggle()
+            }
 
             if (e.ctrlKey && e.keyCode == 32) {
                 e.preventDefault();

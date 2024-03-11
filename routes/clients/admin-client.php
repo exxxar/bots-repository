@@ -55,6 +55,13 @@ Route::middleware(['auth', 'verified'])
         })->name('mail-page');
 
 
+        Route::get('/payment-page', function () {
+            Inertia::setRootView("app");
+
+            return Inertia::render('PaymentPage');
+        })->name('payment-page');
+
+
         Route::get('/bot-page', function () {
             Inertia::setRootView("app");
 

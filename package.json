@@ -26,6 +26,7 @@
         "@vueform/multiselect": "^2.6.2",
         "@vuepic/vue-datepicker": "^7.4.1",
         "@vueup/vue-quill": "^1.1.1",
+        "@vueuse/core": "^10.9.0",
         "file-saver": "^2.0.5",
         "mitt": "^3.0.0",
         "moment": "^2.29.4",

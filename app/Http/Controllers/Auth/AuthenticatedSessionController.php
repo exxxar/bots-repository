@@ -124,6 +124,14 @@ class AuthenticatedSessionController extends Controller
            "auth_date"=>"required",
         ]);
 
+        Auth::logout();
+
+        Session::remove("bot_user");
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
         $tgId = $request->get("id");
 
         $bot = Bot::query()

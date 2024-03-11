@@ -22,7 +22,20 @@ const getters = {
 
 const actions = {
 
+    async loadShopModuleData(context) {
 
+
+        let link = `${ BASE_PRODUCTS_LINK}/load-data`
+
+        let _axios = util.makeAxiosFactory(link, 'POST')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async removeProductCategory(context, payload = {category_id: null}) {
         let link = `${BASE_PRODUCTS_LINK}/remove-category/${payload.category_id}`
 

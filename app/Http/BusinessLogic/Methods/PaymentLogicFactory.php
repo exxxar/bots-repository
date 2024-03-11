@@ -87,7 +87,7 @@ class PaymentLogicFactory
         $botUser = $this->botUser;
         $slug = $this->slug;
 
-        Log::info("slug config".print_r($slug->config, true));
+      //  Log::info("slug config".print_r($slug->config, true));
 
         $taxSystemCode = (Collection::make($slug->config)
             ->where("key", "tax_system_code")
@@ -116,6 +116,7 @@ class PaymentLogicFactory
 
         $summaryPrice = 0;
         $summaryCount = 0;
+        $tmpDescription = "";
 
         foreach ($products as $product) {
 
@@ -130,6 +131,8 @@ class PaymentLogicFactory
                 "label" => $product->title,
                 "amount" => $tmpPrice*100
             ];
+
+            $tmpDescription .= "$product->title x$tmpCount = $tmpPrice\n";
 
             $providerData->receipt[] =
                 (object)[
@@ -150,7 +153,7 @@ class PaymentLogicFactory
         Log::info("price receipt " . print_r($providerData->receipt, true));
         Log::info("price after $summaryPrice");*/
 
-        $payload = bin2hex(Str::uuid());
+        $payload = Str::uuid();
 
         $providerToken = $bot->payment_provider_token;
 
@@ -163,7 +166,7 @@ class PaymentLogicFactory
             'total_amount' => $summaryPrice,
             'status' => 0,
             'products_info' => (object)[
-                "payload" => $payloadData ?? null,
+                "payload" => $tmpDescription ?? null,
                 "prices" => $prices,
             ],
         ]);
