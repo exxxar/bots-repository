@@ -65,7 +65,8 @@ export default {
     mounted() {
         this.loadCurrentBot()
 
-        //console.log(import.meta.env.VITE_PUSHER_APP_KEY)
+        this.paymentForm.terminalkey = import.meta.env.VITE_TINKOFF_TERMINAL_KEY
+
         let recaptchaScript = document.createElement('script')
         recaptchaScript.setAttribute('src', 'https://securepay.tinkoff.ru/html/payForm/js/tinkoff_v2.js')
         document.head.appendChild(recaptchaScript)
