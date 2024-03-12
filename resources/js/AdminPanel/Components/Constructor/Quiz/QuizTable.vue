@@ -37,6 +37,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('show_answers')">Показывать ответы по
                         окончанию раунда
                     </th>
+
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('is_active')">Активный
                     </th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('updated_at')">Дата изменения</th>
@@ -78,7 +79,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         <i class="fa-solid  fa-xmark text-danger" v-else></i>
                     </td>
                     <td>
-                        <i class="fa-solid fa-chevron-down text-success" v-if="quiz.is_multiply"></i>
+                        <i class="fa-solid fa-chevron-down text-success" v-if="quiz.is_active"></i>
                         <i class="fa-solid  fa-xmark text-danger" v-else></i>
                     </td>
                     <td>{{ $filters.current(quiz.updated_at) }}</td>
