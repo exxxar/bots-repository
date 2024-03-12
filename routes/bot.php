@@ -116,18 +116,16 @@ BotManager::bot()
         $link = "https://t.me/$bot->bot_domain?start=" .
             base64_encode("001" . $botUser->telegram_chat_id);
 
-
-        $historyLink = "https://t.me/$bot->bot_domain?start=" .
-            base64_encode("001" . $botUser->telegram_chat_id . "O" . $order->id);
-
-        $thread = $bot->topics["orders"] ?? null;
-
-
         $order = Order::query()
             ->where("bot_id", $bot->id)
             ->where("customer_id", $botUser->id)
             ->orderBy("updated_at", "DESC")
             ->first();
+
+        $historyLink = "https://t.me/$bot->bot_domain?start=" .
+            base64_encode("001" . $botUser->telegram_chat_id . "O" . $order->id);
+
+        $thread = $bot->topics["orders"] ?? null;
 
 
         if (is_null($order)) {
