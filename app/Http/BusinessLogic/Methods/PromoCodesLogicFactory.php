@@ -143,10 +143,14 @@ class PromoCodesLogicFactory
             $tmpSlotsCount += $code->slot_amount;
 
             if (count($code->scripts ?? []) > 0) {
+
+                $tmpIds = Collection::make($botUser->manager->scripts)
+                    ->pluck("id");
+
                 $scriptsIds = Collection::make($code->scripts)
                     ->pluck("id");
 
-                $botUser->manager->scripts()->sync($scriptsIds);
+                $botUser->manager->scripts()->sync([...$scriptsIds,...$tmpIds]);
             }
         }
 
