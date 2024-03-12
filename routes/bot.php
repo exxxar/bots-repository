@@ -91,6 +91,9 @@ BotManager::bot()
 
         $caption = mb_strtolower($caption);
 
+
+
+
         if (!str_contains($caption, "оплата")) {
             BotManager::bot()->reply("Фотография в описании должна содержать ключевое слово, например: оплата");
             return;
@@ -110,22 +113,9 @@ BotManager::bot()
 
         $phone = $botUser->phone ?? 'Не указан';
 
-
         $link = "https://t.me/$bot->bot_domain?start=" .
             base64_encode("001" . $botUser->telegram_chat_id);
 
-        $order = Order::query()
-            ->where("bot_id", $bot->id)
-            ->where("customer_id", $botUser->id)
-            ->orderBy("updated_at", "DESC")
-            ->first();
-
-
-        if (is_null($order)) {
-            BotManager::bot()
-                ->reply("Упс... Заказов нет:(");
-            return;
-        }
 
         $historyLink = "https://t.me/$bot->bot_domain?start=" .
             base64_encode("001" . $botUser->telegram_chat_id . "O" . $order->id);
