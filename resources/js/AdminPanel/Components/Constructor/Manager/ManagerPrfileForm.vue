@@ -621,7 +621,9 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
             <div class="modal-content">
                 <div class="modal-body">
                     <h6 class="text-center">Активируйте ваш ключ и получите дополнительные слоты</h6>
-                    <PromoCodeActivateForm :bot="bot"></PromoCodeActivateForm>
+                    <PromoCodeActivateForm
+                        v-on:callback="prepareManager"
+                        :bot="bot"></PromoCodeActivateForm>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -681,6 +683,7 @@ export default {
                 weaknesses: [""],
                 educations: [""],
                 social_links: [""],
+                scripts: [],
                 skills: [
                     {
                         title: null,
@@ -732,6 +735,7 @@ export default {
             this.managerForm.sex = this.botUser.sex || true
 
 
+
             if (this.botUser.manager) {
                 this.managerForm.id = this.botUser.manager.id || null
                 this.managerForm.social_links = this.botUser.manager.social_links || [""]
@@ -743,6 +747,7 @@ export default {
                 this.managerForm.educations = this.botUser.manager.educations || [""]
                 this.managerForm.strengths = this.botUser.manager.strengths || [""]
                 this.managerForm.image = this.botUser.manager.image || null
+                this.managerForm.scripts = this.botUser.scripts || []
             }
             this.botUserForm.id = this.botUser.id
             this.botUserForm.is_vip = this.botUser.is_vip
