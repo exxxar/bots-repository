@@ -52,8 +52,9 @@ class PromoCode extends Model
         return $this->belongsToMany(BotUser::class);
     }
 
+
     public function scripts(): BelongsToMany
     {
-        return $this->BelongsToMany(BotMenuSlug::class,"promo_code_has_scripts","manager_profile_id","bot_menu_slug_id");
+        return $this->BelongsToMany(BotMenuSlug::class,"promo_code_has_scripts","promo_code_id","bot_menu_slug_id");
     }
 }
