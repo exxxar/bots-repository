@@ -140,7 +140,14 @@ class PromoCodesLogicFactory
             $botUser->manager->max_bot_slot_count += $code->slot_amount ?? 0;
             $botUser->manager->save();
 
-            $tmpSlotsCount +=$code->slot_amount;
+            $tmpSlotsCount += $code->slot_amount;
+
+            if (count($code->scripts ?? []) > 0) {
+                $scriptsIds = Collection::make($code->scripts)
+                    ->pluck("id");
+
+                $botUser->manager->scripts()->sync($scriptsIds);
+            }
         }
 
         if ($code->cashback_amount > 0) {
@@ -155,7 +162,7 @@ class PromoCodesLogicFactory
                 throw new HttpException(400, "В системе нет администратора!");
 
             $cashBackAmount = $code->cashback_amount;
-            $tmpCashBackCount +=$code->cashback_amount;
+            $tmpCashBackCount += $code->cashback_amount;
 
             BusinessLogic::administrative()
                 ->setBot($bot)
@@ -170,8 +177,8 @@ class PromoCodesLogicFactory
 
 
         return (object)[
-            "cashback"=>$tmpCashBackCount,
-            "slots"=>$tmpSlotsCount
+            "cashback" => $tmpCashBackCount,
+            "slots" => $tmpSlotsCount
         ];
     }
 
@@ -293,6 +300,16 @@ class PromoCodesLogicFactory
 
             $code->update($tmp);
         }
+
+        $scripts = json_decode($data["scripts"] ?? '[]');
+
+        if (count($scripts) > 0) {
+            $scriptsIds = Collection::make($scripts)
+                ->pluck("id");
+
+            $code->scripts()->sync($scriptsIds);
+        }
+
 
         return new PromoCodeResource($code);
     }

@@ -115,6 +115,13 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link"
+                                   v-bind:class="{'active':tab===6}"
+                                   href="#" @click="tab=6">
+                                    Мои скрипты
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link disabled"
                                    v-bind:class="{'active':tab===2}"
                                    href="#" @click="tab=2">
@@ -536,6 +543,53 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                     </div>
                 </div>
                 <div class="row" v-if="tab===5"></div>
+                <div class="row" v-if="tab===6">
+
+
+                    <div class="col-12 py-3">
+                        <div class="alert alert-warning"
+                             v-if="botUser.manager.scripts.length===0" role="alert">
+                            Внимание! У вас нет ни одного глобального скрипта для использования.
+                        </div>
+
+                        <table class="table" v-else>
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Команда</th>
+                                <th scope="col">Пояснение</th>
+                                <th scope="col">Глобальный</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr
+
+                                v-bind:class="{'border-info':item.deleted_at==null,'border-danger':item.deleted_at!=null}"
+                                v-for="(item, index) in botUser.manager.scripts">
+                                <th scope="row" v-bind:class="{'text-danger':item.deleted_at!=null}">
+                                    {{ item.id || 'Нет идентификатора' }}
+                                </th>
+                                <td
+                                    v-bind:class="{'text-danger':item.deleted_at!=null}"> {{ item.command || 'Нет команды' }}
+                                </td>
+                                <td v-bind:class="{'text-danger':item.deleted_at!=null}"> {{
+                                        item.comment || 'Пояснение не указано'
+                                    }}
+                                </td>
+                                <td>
+                        <span
+                            v-if="item.is_global"><i class="fa-solid fa-check text-success"></i></span>
+                                    <span
+                                        v-else><i class="fa-solid fa-xmark text-danger"></i></span>
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
             </div>
 
             <div class="col-lg-9 col-md-6"

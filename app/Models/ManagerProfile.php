@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ManagerProfile extends Model
 {
@@ -51,9 +53,16 @@ class ManagerProfile extends Model
         'verified_at' => 'timestamp',
     ];
 
+    protected $with = ["scripts"];
+
     public function botUser(): BelongsTo
     {
         return $this->belongsTo(BotUser::class);
+    }
+
+    public function scripts(): BelongsToMany
+    {
+        return $this->BelongsToMany(BotMenuSlug::class,"promo_code_has_scripts","promo_code_id","bot_menu_slug_id");
     }
 
 }

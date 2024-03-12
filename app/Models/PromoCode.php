@@ -39,7 +39,7 @@ class PromoCode extends Model
         'is_active' => 'boolean',
     ];
 
-    protected $with = ["botUsers"];
+    protected $with = ["botUsers","scripts"];
 
     public function bot(): BelongsTo
     {
@@ -50,5 +50,10 @@ class PromoCode extends Model
     public function botUsers(): BelongsToMany
     {
         return $this->belongsToMany(BotUser::class);
+    }
+
+    public function scripts(): BelongsToMany
+    {
+        return $this->BelongsToMany(BotMenuSlug::class,"manager_profile_has_scripts","manager_profile_id","bot_menu_slug_id");
     }
 }

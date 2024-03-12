@@ -23,6 +23,7 @@ class ManagerProfileResource extends JsonResource
             'educations' => $this->educations,
             'social_links' => $this->social_links,
             'skills' => $this->skills,
+            'scripts' => $this->scripts??[],
             'stable_personal_discount' => $this->stable_personal_discount ?? 0,
             'permanent_personal_discount' => $this->permanent_personal_discount ?? 0,
             'max_company_slot_count' => $this->max_company_slot_count ?? 0,

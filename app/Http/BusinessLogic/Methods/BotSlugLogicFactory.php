@@ -19,10 +19,15 @@ class BotSlugLogicFactory
 {
 
     protected $bot;
+    protected $botUser;
+    protected $slug;
 
     public function __construct()
     {
         $this->bot = null;
+        $this->botUser = null;
+        $this->slug = null;
+
 
     }
 
@@ -35,8 +40,48 @@ class BotSlugLogicFactory
         return $this;
     }
 
+    /**
+     * @throws HttpException
+     */
+    public function setSlug($slug = null): static
+    {
+        if (is_null($slug))
+            throw new HttpException(400, "Команда не задана!");
+
+        $this->slug = $slug;
+        return $this;
+    }
+
+
+    public function setBotUser($botUser): static
+    {
+        if (is_null($botUser))
+            throw new HttpException(400, "Пользователь бота не задан!");
+
+        $this->botUser = $botUser;
+        return $this;
+    }
+
     public function globals(): BotMenuSlugCollection
     {
+        if (!is_null($this->botUser)) {
+            $manager = $this->botUser->manager ?? null;
+
+            if (is_null($manager))
+                throw new HttpException(400, "Не является менеджером!");
+
+            $ids = Collection::make($manager->scripts)->pluck("id");
+
+
+            $slugs = BotMenuSlug::query()
+                ->where("is_global", true)
+                ->whereIn("id", $ids)
+                ->whereNull("bot_id")
+                ->get()
+                ->unique("slug");
+            return new BotMenuSlugCollection($slugs);
+        }
+
         $slugs = BotMenuSlug::query()
             ->where("is_global", true)
             ->whereNull("bot_id")

@@ -1,5 +1,5 @@
 <script setup>
-
+import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlugList.vue";
 </script>
 <template>
     <form v-on:submit.prevent="submitForm" class="py-3">
@@ -141,7 +141,8 @@
                         <i class="fa-regular fa-circle-question mr-1"></i>
                         <template #content>
                             <div>
-                                Укажите количество слотов, которые получит пользователь при активации (внимание, доступно только для администраторов)
+                                Укажите количество слотов, которые получит пользователь при активации (внимание,
+                                доступно только для администраторов)
                             </div>
                         </template>
                     </Popper>
@@ -161,6 +162,30 @@
 
         </div>
 
+
+        <div class="col-12 mb-3" v-if="getSelf.is_admin">
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="need_attach_scripts"
+                       type="checkbox" id="promoCodeForm-need_attach_scripts">
+                <label class="form-check-label" for="promoCodeForm-need_attach_scripts">
+                    Нужно добавить скрипты
+                </label>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3" v-if="need_attach_scripts">
+            <p>
+                <span class="badge bg-primary mr-2 mb-2 cursor-pointer"
+                      @click="removeSlug(index)"
+                      v-for="(script, index) in promoCodeForm.scripts">{{ script.command || '-' }}</span>
+            </p>
+            <GlobalSlugList :can-add="true"
+                            v-if="bot"
+                            :bot="bot"
+                            :hide-add-modal="true"
+                            v-on:select="selectSlugsCallback"/>
+        </div>
 
         <div class="row">
             <div class="col-12">
@@ -184,22 +209,24 @@ export default {
             need_reset: false,
             need_cashback: false,
             need_slots: false,
+            need_attach_scripts: false,
             promoCodeForm: {
                 id: null,
-                code:null,
-                description:null,
-                slot_amount:0,
-                cashback_amount:0,
-                max_activation_count:1,
-                is_active: false
+                code: null,
+                description: null,
+                slot_amount: 0,
+                cashback_amount: 0,
+                max_activation_count: 1,
+                is_active: false,
+                scripts: []
 
             }
         }
     },
-    computed:{
-      getSelf(){
-          return window.profile
-      }
+    computed: {
+        getSelf() {
+            return window.profile
+        }
     },
     watch: {
         promoCodeForm: {
@@ -216,24 +243,38 @@ export default {
                 this.promoCodeForm = {
                     id: this.code.id || null,
                     description: this.code.description || null,
-                    code:this.code.code || null,
-                    slot_amount:this.code.slot_amount || 0,
-                    cashback_amount:this.code.cashback_amount || 0,
-                    max_activation_count:this.code.max_activation_count || 1,
+                    code: this.code.code || null,
+                    slot_amount: this.code.slot_amount || 0,
+                    cashback_amount: this.code.cashback_amount || 0,
+                    max_activation_count: this.code.max_activation_count || 1,
                     is_active: this.code.is_active || false,
+                    scripts: this.code.scripts || [],
                 }
 
-                if (this.promoCodeForm.slot_amount>0)
+                if (this.promoCodeForm.slot_amount > 0)
                     this.need_slots = true;
 
-                if (this.promoCodeForm.cashback_amount>0)
+                if (this.promoCodeForm.cashback_amount > 0)
                     this.need_slots = true;
+
+                if (this.promoCodeForm.scripts.length > 0)
+                    this.need_attach_scripts = true;
 
             })
 
     },
     methods: {
 
+        removeSlug(index) {
+            this.promoCodeForm.scripts.splice(index, 1)
+        },
+        selectSlugsCallback(item) {
+
+            let index = this.promoCodeForm.scripts.findIndex(script => script.id === item.id)
+
+            if (index === -1)
+                this.promoCodeForm.scripts.push(item)
+        },
         submitForm() {
             let data = new FormData();
             Object.keys(this.promoCodeForm)
@@ -254,11 +295,12 @@ export default {
 
                 this.promoCodeForm = {
                     id: null,
-                    code:null,
-                    description:null,
-                    slot_amount:0,
-                    cashback_amount:0,
-                    max_activation_count:1,
+                    code: null,
+                    description: null,
+                    slot_amount: 0,
+                    cashback_amount: 0,
+                    max_activation_count: 1,
+                    scripts: [],
                     is_active: false
                 }
 

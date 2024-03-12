@@ -218,7 +218,15 @@ class BotController extends Controller
 
     public function loadAllSlugs(Request $request): \App\Http\Resources\BotMenuSlugCollection
     {
-        return BusinessLogic::slugs()->globals();
+
+        $logic = BusinessLogic::slugs();
+
+        if ($request->botUser->is_manager&&!$request->botUser->is_admin)
+            $logic = $logic->setBotUser($request->botUser);
+
+
+        return $logic
+            ->globals();
     }
 
     /**

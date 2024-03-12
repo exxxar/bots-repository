@@ -85,7 +85,7 @@ export default {
                     return alert("Поле E-mail или Phone не должно быть пустым");
 
                 TPF.receipt.value = JSON.stringify({
-                    "EmailCompany": "mail@mail.com",
+                    "EmailCompany": "cashman.2024@mail.ru",
                     "Taxation": "patent",
                     "Items": [
                         {

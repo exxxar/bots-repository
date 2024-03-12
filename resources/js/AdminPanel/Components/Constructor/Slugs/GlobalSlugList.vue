@@ -15,8 +15,6 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
     </div>
 
 
-
-
     <div class="row" v-if="slugs.length>0">
 
         <div class="col-lg-3 col-md-6 col-12 mb-3"
@@ -29,7 +27,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                  v-bind:class="{'btn-outline-info':item.deleted_at==null,'btn-outline-danger border-danger':item.deleted_at!=null}"
             >
                 <div class="card-body">
-                    <p  style="word-wrap: break-word;" class="mb-0">
+                    <p style="word-wrap: break-word;" class="mb-0">
                         <i class="fa-solid fa-scroll"></i>
                         {{ item.command }}
                     </p>
@@ -40,9 +38,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <p>
                         {{ item.comment || 'Пояснение не указано' }}
                     </p>
-    <!--                    <p class="mb-0">
-                           <span class="badge bg-info">{{(item.config ||[]).length}}</span> настраиваемых параметра
-                        </p>-->
+                    <!--                    <p class="mb-0">
+                                           <span class="badge bg-info">{{(item.config ||[]).length}}</span> настраиваемых параметра
+                                        </p>-->
 
 
                 </div>
@@ -79,7 +77,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 <div class="modal-body">
                     <form v-on:submit.prevent="addSlug"
                           v-if="canAdd&&slugs.length>0">
-                        <p>Идентификатор скрипта #{{slugForm.id || 'Не указан'}}</p>
+                        <p>Идентификатор скрипта #{{ slugForm.id || 'Не указан' }}</p>
                         <div class="mb-3">
                             <label class="form-label" id="bot-domain">
                                 <Popper>
@@ -103,10 +101,11 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                    aria-describedby="bot-domain" required>
                         </div>
                         <p>
-                            <small><em>{{slugForm.comment || 'Не указан'}}</em></small>
+                            <small><em>{{ slugForm.comment || 'Не указан' }}</em></small>
                         </p>
                         <div class="alert alert-info" role="alert">
-                          При добавлении вы можете указать любое имя, которое вам нравится. Не обязательно использовать стандартное.
+                            При добавлении вы можете указать любое имя, которое вам нравится. Не обязательно
+                            использовать стандартное.
                         </div>
 
                         <button
@@ -130,18 +129,18 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["canAdd", "bot"],
+    props: ["canAdd", "bot", "hideAddModal"],
     data() {
         return {
             search: null,
             slugs: [],
             slugs_paginate_object: null,
-            addSlugModal:null,
+            addSlugModal: null,
             slugForm: {
                 command: null,
                 comment: null,
                 slug: null,
-                config:[],
+                config: [],
                 is_global: true,
                 bot_id: null,
             }
@@ -149,24 +148,24 @@ export default {
     },
     computed: {
         ...mapGetters(['getGlobalSlugs', 'getGlobalSlugsPaginateObject']),
-    /*    filteredAllSlugs() {
-            if (this.slugs.length === 0)
-                return [];
+        /*    filteredAllSlugs() {
+                if (this.slugs.length === 0)
+                    return [];
 
-            if (this.search == null)
-                return this.slugs
+                if (this.search == null)
+                    return this.slugs
 
-            return this.slugs.filter(item => {
-                let slug = item.slug || ''
-                let command = item.command || ''
-                let comment = item.comment || ''
+                return this.slugs.filter(item => {
+                    let slug = item.slug || ''
+                    let command = item.command || ''
+                    let comment = item.comment || ''
 
-                return command.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 ||
-                    comment.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 ||
-                    slug.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
-            })
+                    return command.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 ||
+                        comment.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 ||
+                        slug.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
+                })
 
-        },*/
+            },*/
     },
     watch: {
         'search': function (oldV, newV) {
@@ -184,7 +183,7 @@ export default {
                 dataObject: {
                     needGlobal: true,
                     search: this.search
-                   /// botId: this.bot.id
+                    /// botId: this.bot.id
                 },
                 page: page
             }).then(resp => {
@@ -217,12 +216,13 @@ export default {
             this.slugForm.slug = item.slug
             this.slugForm.comment = item.comment
             this.slugForm.command = this.command || item.command
-            this.slugForm.config =  item.config || []
+            this.slugForm.config = item.config || []
             this.slugForm.is_global = item.is_global || false
 
             this.$emit("select", item)
 
-            this.addSlugModal.show()
+            if (!this.hideAddModal)
+                this.addSlugModal.show()
         },
         addSlug() {
 

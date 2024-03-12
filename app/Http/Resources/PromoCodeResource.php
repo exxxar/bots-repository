@@ -18,6 +18,7 @@ class PromoCodeResource extends JsonResource
             'code' => $this->code,
             'description' => $this->description,
             'slot_amount' => $this->slot_amount,
+            'scripts' => $this->scripts ?? [],
             'cashback_amount' => $this->cashback_amount,
             'max_activation_count' => $this->max_activation_count,
             'current_activation_count' => count($this->botUsers ?? []),
