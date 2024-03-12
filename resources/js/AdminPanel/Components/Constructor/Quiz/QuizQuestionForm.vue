@@ -582,7 +582,6 @@ export default {
                     failure_media_content_type: this.question.failure_media_content_type || null,
                 }
 
-
                 if (this.questionForm.media_content != null)
                     this.need_media = true
 
