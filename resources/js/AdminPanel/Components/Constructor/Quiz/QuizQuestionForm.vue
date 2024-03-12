@@ -101,6 +101,8 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                 </label>
                 <h6>Вставьте ссылку на контент...</h6>
                 <BotMediaVariant
+                    :type="questionForm.content_type"
+                    :value="questionForm.media_content"
                     v-model:type="questionForm.content_type"
                     v-model:value="questionForm.media_content"
                 >
@@ -195,6 +197,8 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                 <h6>Вставьте ссылку на контент...</h6>
 
                 <BotMediaVariant
+                    :type="questionForm.success_media_content_type"
+                    :value="questionForm.success_media_content"
                     v-model:type="questionForm.success_media_content_type"
                     v-model:value="questionForm.success_media_content"
                 >
@@ -268,6 +272,8 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                 <h6>Вставьте ссылку на контент...</h6>
 
                 <BotMediaVariant
+                    :type="questionForm.failure_media_content_type"
+                    :value="questionForm.failure_media_content"
                     v-model:type="questionForm.failure_media_content_type"
                     v-model:value="questionForm.failure_media_content"
                 >
