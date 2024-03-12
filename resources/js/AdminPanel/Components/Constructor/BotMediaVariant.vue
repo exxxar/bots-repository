@@ -18,7 +18,7 @@
                :value="value"
                @input="$emit('update:value', $event.target.value)"
                id="custom-url-link-for-success" placeholder="https://....">
-        <label for="custom-url-link-for-success">Ссылка на файл </label>
+        <label for="custom-url-link-for-success">Ссылка на файл {{value??''}}</label>
     </div>
 
 </template>
