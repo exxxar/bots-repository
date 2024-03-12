@@ -101,6 +101,7 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                 </label>
                 <h6>Вставьте ссылку на контент...</h6>
                 <BotMediaVariant
+                    :value="questionForm.media_content"
                     v-model:type="questionForm.content_type"
                     v-model:value="questionForm.media_content"
                 >
@@ -560,10 +561,22 @@ export default {
     mounted() {
 
 
+
+
+
         this.loadQuizRounds()
         if (this.question) {
+            if (this.question.media_content != null)
+                this.need_media = true
+
+            if (this.question.success_media_content != null)
+                this.need_media_for_success = true
+
+            if (this.question.failure_media_content != null)
+                this.need_media_for_failed = true
 
             this.$nextTick(() => {
+
 
                 this.questionForm = {
                     id: this.question.id || null,
@@ -582,19 +595,12 @@ export default {
                     failure_media_content_type: this.question.failure_media_content_type || null,
                 }
 
-                if (this.questionForm.media_content != null)
-                    this.need_media = true
-
-                if (this.questionForm.success_media_content != null)
-                    this.need_media_for_success = true
-
-                if (this.questionForm.failure_media_content != null)
-                    this.need_media_for_failed = true
-
             })
 
 
         }
+
+
 
 
     },
