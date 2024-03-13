@@ -501,16 +501,15 @@ class BotManager extends BotCore
         if (count($images) === 0) {
             $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
 
-            $content = empty($content ?? '') ? 'Хм, нечего отобразить...': $content;
+            $content = empty($content ?? '') || empty($replyMenuTitle ?? '') ? 'Хм, нечего отобразить...' : $content;
 
             if (!$needContentInReply)
-                $this->replyInlineKeyboard($content , $iMenu);
+                $this->replyInlineKeyboard($content, $iMenu);
 
             if (!empty($replyKeyboard) && $needSendReplyMenu)
-                $this->replyKeyboard($needContentInReply ? $content  : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $this->replyKeyboard($needContentInReply ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
-            if ($needContentInReply && empty($replyKeyboard))
-            {
+            if ($needContentInReply && empty($replyKeyboard)) {
                 $this->reply($content);
             }
 
@@ -542,8 +541,8 @@ class BotManager extends BotCore
 
             $documents = $page->documents ?? [];
 
-      /*      Log::info("page" . print_r($page->toArray(), true));
-            Log::info("documents" . print_r($documents, true));*/
+            /*      Log::info("page" . print_r($page->toArray(), true));
+                  Log::info("documents" . print_r($documents, true));*/
             if (count($documents) == 1)
                 $this->replyDocument(null, $documents[0]);
 
