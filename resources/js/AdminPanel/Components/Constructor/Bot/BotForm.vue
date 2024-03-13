@@ -24,14 +24,14 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     <p class="col-lg-8 mx-auto fs-5 text-muted">
                    Воспользуйся данным разделом просмотрев обучение или предложенной инструкцией.
                     </p>
-                    <div class="d-inline-flex gap-2">
+                    <div class="d-md-inline-flex  d-flex flex-column flex-md-row gap-2">
                         <a
                             href="https://t.me/botfather" target="_blank"
-                            class="d-inline-flex align-items-center btn btn-primary  px-4 rounded-pill">
+                            class=" btn btn-primary text-center p-3 rounded-pill mb-0">
                             Создать бота в Телеграм
                         </a>
                         <a href="https://telegra.ph/Sozdanie-telegram-bota-02-02" target="_blank"
-                           class="d-inline-flex align-items-center btn btn-outline-secondary  px-4 rounded-pill"
+                           class="btn btn-outline-secondary text-center p-3 rounded-pill"
                         >
                             Инструкция
                         </a>

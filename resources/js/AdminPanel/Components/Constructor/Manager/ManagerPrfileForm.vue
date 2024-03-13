@@ -9,7 +9,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
 <template>
 
 
-    <div class="container shadow-lg border  mt-1 mb-1" v-if="botUser">
+    <div class="container shadow-lg border " v-if="botUser">
         <div class="row">
             <div class="col-lg-3 col-md-6 border-right bg-primary" v-if="botUser.manager">
                 <div
@@ -103,7 +103,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
             <div class="col-lg-9 col-md-6"
                  v-bind:class="{'col-md-12':!botUser.manager}"
                  v-if="tab>0&&tab<10">
-                <div class="row mt-2">
+                <div class="row mt-2" v-if="botUser.manager">
                     <div class="col-12">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
@@ -159,12 +159,12 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                 </div>
                 <div class="row" v-if="tab===1">
                     <form
-                        v-on:submit.prevent="submitManager" class="row mb-0">
+                        v-on:submit.prevent="submitManager" class="row m-0 p-0 p-md-3">
                         <div
-                            class="col-md-6 border-right">
+                            class="col-md-6 border-right p-0">
                             <div class="p-3 py-5">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h4 class="text-right">Настройки профиля менеджера</h4>
+                                    <h4 class="text-md-right text-center">Настройки профиля менеджера</h4>
                                 </div>
 
 
@@ -236,7 +236,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                                     </div>
                                 </div>
 
-                                <div class="col-12" v-if="!botUser.manager">
+<!--                                <div class="col-12" v-if="!botUser.manager">
                                     <p class="mb-3"><em>Для того чтоб вы и ваш друг получали больше бонусов
                                         воспользуйтесь
                                         реферальной программой и введите реферальный код от вашего друга!</em></p>
@@ -249,42 +249,10 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                                                aria-label="managerForm-referral"
                                                aria-describedby="managerForm-referral">
                                     </div>
-                                </div>
+                                </div>-->
 
 
-                                <div class="col-12">
-                                    <p class="mb-3"><em>Отлично! Теперь, прежде чем закончить, пожалуйста, прочитайте
-                                        условия
-                                        использования и дайте свое согласие на их принятие.</em></p>
 
-                                    <p>Перед отправкой данных нужно ознакомиться с <a
-                                        href="#">политикой конфиденциальности</a>.</p>
-
-                                    <div class="d-flex mb-3">
-                                        <div class="pt-1">
-                                            <p data-activate="toggle-id-1" class="font-500 font-13">
-                                                <span v-if="!managerForm.sex">С правилами ознакомилась</span>
-                                                <span v-if="managerForm.sex">С правилами ознакомлен</span>
-                                            </p>
-                                        </div>
-                                        <div class="ml-auto mr-4 pr-2">
-                                            <div class="custom-control ios-switch">
-                                                <input
-                                                    v-model="confirm"
-                                                    type="checkbox" class="ios-input" id="toggle-id-1">
-                                                <label class="custom-control-label" for="toggle-id-1"></label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <button type="submit"
-                                            :disabled="!confirm||load"
-                                            class="btn btn-primary mb-2  text-uppercase  w-100">
-                                        Отправить анкету
-                                    </button>
-
-                                </div>
 
                             </div>
                         </div>
@@ -331,10 +299,10 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                             </div>
                             <div class="mb-2">
 
-                                <label>Укажите ваш пол</label>
+                                <p class="text-center text-md-left">Укажите ваш пол</p>
 
                                 <div class="row mb-0">
-                                    <div class="col-6 p-1">
+                                    <div class="col-md-6 col-12 mb-2">
                                         <div
                                             v-bind:class="{'btn-primary text-white':managerForm.sex}"
                                             @click="managerForm.sex = true"
@@ -343,7 +311,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                                             <span class="text-center text-uppercase my-2">Мужчина</span>
                                         </div>
                                     </div>
-                                    <div class="col-6 p-1">
+                                    <div class="col-md-6 col-12">
                                         <div
                                             v-bind:class="{'btn-primary text-white':!managerForm.sex}"
                                             @click="managerForm.sex = false"
@@ -379,6 +347,40 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                                     @click="add('social_links')"
                                     class="d-block w-100 py-3 text-center"
                                     href="javascript:void(0)">Добавить еще ссылку</a>
+                            </div>
+
+                            <div class="mb-2">
+                                <p class="mb-3"><em>Отлично! Теперь, прежде чем закончить, пожалуйста, прочитайте
+                                    условия
+                                    использования и дайте свое согласие на их принятие.</em></p>
+
+                                <p>Перед отправкой данных нужно ознакомиться с <a
+                                    href="#">политикой конфиденциальности</a>.</p>
+
+                                <div class="d-flex mb-3">
+                                    <div class="pt-1">
+                                        <p data-activate="toggle-id-1" class="font-500 font-13">
+                                            <span v-if="!managerForm.sex">С правилами ознакомилась</span>
+                                            <span v-if="managerForm.sex">С правилами ознакомлен</span>
+                                        </p>
+                                    </div>
+                                    <div class="ml-auto mr-4 pr-2">
+                                        <div class="custom-control ios-switch">
+                                            <input
+                                                v-model="confirm"
+                                                type="checkbox" class="ios-input" id="toggle-id-1">
+                                            <label class="custom-control-label" for="toggle-id-1"></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <button type="submit"
+                                        :disabled="!confirm||load"
+                                        class="btn btn-primary mb-2  text-uppercase  w-100">
+                                    Отправить анкету
+                                </button>
+
                             </div>
                         </div>
                     </form>

@@ -74,8 +74,8 @@ import Chat from "@/AdminPanel/Components/Chat/ChatMini.vue";
     <div class="container-fluid">
         <div class="row">
 
-            <main class="col-md-12 ms-sm-auto col-lg-12 px-md-4">
-                <div class="pt-3 pb-2 mb-3">
+            <main class="col-md-12 ms-sm-auto col-lg-12 px-md-4 px-0">
+                <div class="pt-md-3 pt-0 pb-md-2 pb-0 mb-3">
                     <slot/>
                 </div>
             </main>
@@ -123,7 +123,7 @@ import Chat from "@/AdminPanel/Components/Chat/ChatMini.vue";
         </div>
     </div>
 
-    <div class="theme-switcher">
+    <div class="theme-switcher d-none d-md-block">
         <button id="switch-theme"
                 data-bs-toggle="modal" data-bs-target="#theme-switch-modal"
                 class="btn btn-primary">

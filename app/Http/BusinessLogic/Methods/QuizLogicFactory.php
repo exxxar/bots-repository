@@ -29,6 +29,7 @@ use App\Models\QuizResult;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -474,6 +475,8 @@ class QuizLogicFactory
               'result',
           ]);*/
 
+
+        Log::info(($hasRightAnswer?"true":"false")." ".print_r($hasRightAnswer ? $question->success_message : $question->failure_message, true));
 
         return (object)[
             "question" => (object)[

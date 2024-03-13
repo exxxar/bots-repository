@@ -298,8 +298,6 @@ abstract class BotCore
                                 BotPage::query()
                                     ->find($page->rules_else_page_id)
                                 : null;
-
-
                     }
 
                     if (is_null($page))

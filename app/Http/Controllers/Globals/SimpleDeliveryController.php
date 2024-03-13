@@ -208,9 +208,9 @@ class SimpleDeliveryController extends SlugController
 
         return response()->json(
             [
-                'can_use_cash' => (Collection::make($slug->config)
-                        ->where("key", "can_use_cash")
-                        ->first())["value"] ?? true,
+                'can_use_cash' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "can_use_cash")
+                    ->first())["value"] ?? true : true,
             ]
         );
     }
