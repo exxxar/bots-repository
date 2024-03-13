@@ -508,7 +508,11 @@ class BotManager extends BotCore
                 $this->replyKeyboard($needContentInReply ? ($content ?? 'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             if ($needContentInReply && empty($replyKeyboard))
+            {
+                Log::info("test empty message ".($content??'-'));
                 $this->reply($content ?? 'Хм, нечего отобразить...');
+            }
+
         }
 
         if (!is_null($page->videos)) {
