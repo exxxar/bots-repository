@@ -501,7 +501,7 @@ class BotManager extends BotCore
         if (count($images) === 0) {
             $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
 
-            $content = empty($content ?? '') || empty($replyMenuTitle ?? '') ? 'Хм, нечего отобразить...' : $content;
+            $content = empty($content ?? '') && empty($replyMenuTitle ?? '') ? 'Хм, нечего отобразить...' : $content;
 
             if (!$needContentInReply)
                 $this->replyInlineKeyboard($content, $iMenu);
