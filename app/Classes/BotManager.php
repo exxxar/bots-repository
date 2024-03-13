@@ -509,8 +509,7 @@ class BotManager extends BotCore
 
             if ($needContentInReply && empty($replyKeyboard))
             {
-                Log::info("test empty message ".($content??'-'));
-                $this->reply($content ?? 'Хм, нечего отобразить...');
+                $this->reply(empty($content ?? '') ? 'Хм, нечего отобразить...': $content);
             }
 
         }
