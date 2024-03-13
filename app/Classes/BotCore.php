@@ -376,8 +376,6 @@ abstract class BotCore
                 return true;
             }
 
-
-
         }
 
 

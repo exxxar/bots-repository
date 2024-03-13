@@ -385,7 +385,7 @@ class BotManager extends BotCore
 
             $this->sendInlineKeyboard($bot->order_channel ?? $bot->main_channel ?? null,
                 "#лог_действий_на_странице\n" .
-                (!is_null($tgDomain) ? "Действие от @$tgDomain:\n" : "Действие от $tgName:\n")."Страница: $pageName",
+                (!is_null($tgDomain) ? "Действие от @$tgDomain:\n" : "Действие от $tgName:\n") . "Страница: $pageName",
                 [
                     [
                         ["text" => "Написать пользователю сообщение", "url" => $link]
@@ -471,8 +471,8 @@ class BotManager extends BotCore
             }
 
 
-            if (!is_null($content) && $needContentInReply) {
-                $this->reply($content);
+            if (!is_null($content ?? null) && $needContentInReply) {
+                $this->reply($content ?? 'Меню');
                 $needContentInReply = false;
             }
 
@@ -537,8 +537,8 @@ class BotManager extends BotCore
 
             $documents = $page->documents ?? [];
 
-            Log::info("page" . print_r($page->toArray(), true));
-            Log::info("documents" . print_r($documents, true));
+      /*      Log::info("page" . print_r($page->toArray(), true));
+            Log::info("documents" . print_r($documents, true));*/
             if (count($documents) == 1)
                 $this->replyDocument(null, $documents[0]);
 
