@@ -271,6 +271,7 @@ abstract class BotCore
 
     private function botTemplatePageHandler($message, $query): bool
     {
+
         $matches = [];
 
         $templates = BotMenuSlug::query()
@@ -280,96 +281,106 @@ abstract class BotCore
             ->get();
 
         $find = false;
+
         foreach ($templates as $template) {
 
             $command = $template->command;
-
 
             if (!str_starts_with($command, "/"))
                 $command = "/" . $command;
 
             try {
                 if (preg_match($command . "$/i", $query, $matches)) {
-                    $page = $template->page;
-                    if (!is_null($template->page->rules_if)) {
-                        $result = $this->checkTemplatePageRules($page);
-                        if (!$result)
-                            $page = !is_null($page->rules_else_page_id) ?
-                                BotPage::query()
-                                    ->find($page->rules_else_page_id)
-                                : null;
-                    }
+                    $find = true;
+                    break;
+                }
 
-                    if (is_null($page))
-                        return true;
-
-                    $this->prepareTemplatePage($page);
-
-
-                    if (!is_null($page->next_bot_menu_slug_id)) {
-                        $slug = BotMenuSlug::query()
-                            ->where("id", $page
-                                ->next_bot_menu_slug_id)
-                            ->first();
-
-                        if (is_null($slug))
-                            return true;
-
-                        if (is_null($slug->parent_slug_id)) {
-                            $item = Collection::make($this->slugs)
-                                ->where("path", $slug->slug)
-                                ->first();
-                        } else {
-                            $parentSlug = BotMenuSlug::query()
-                                ->find($slug->parent_slug_id);
-
-                            if (is_null($parentSlug))
-                                return true;
-
-
-                            $item = Collection::make($this->slugs)
-                                ->where("path", $parentSlug->slug)
-                                ->first();
-                        }
-
-
-                        if (!is_null($item)) {
-
-                            $config = $slug->config ?? [];
-
-                            $config[] = [
-                                "key" => "slug_id",
-                                "value" => $slug->id,
-                            ];
-
-
-                            $config[] = [
-                                "key" => "parent_page_id",
-                                "value" => $page->id ?? null,
-                            ];
-
-
-                            $this->tryCall($item, $message,
-                                $config, []);
-
-                        }
-                    }
-
-                    if (!is_null($page->next_bot_dialog_command_id)) {
-                        $this->startBotDialog($page->next_bot_dialog_command_id);
-                        return true;
-                    }
-
-
+                if ($command  == $query) {
                     $find = true;
                     break;
                 }
             } catch (\Exception $e) {
-                Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
-                return false;
+
             }
 
         }
+
+        if ($find){
+            $page = $template->page;
+            if (!is_null($template->page->rules_if)) {
+                $result = $this->checkTemplatePageRules($page);
+                if (!$result)
+                    $page = !is_null($page->rules_else_page_id) ?
+                        BotPage::query()
+                            ->find($page->rules_else_page_id)
+                        : null;
+            }
+
+            if (is_null($page))
+                return true;
+
+            $this->prepareTemplatePage($page);
+
+
+            if (!is_null($page->next_bot_menu_slug_id)) {
+                $slug = BotMenuSlug::query()
+                    ->where("id", $page
+                        ->next_bot_menu_slug_id)
+                    ->first();
+
+                if (is_null($slug))
+                    return true;
+
+                if (is_null($slug->parent_slug_id)) {
+                    $item = Collection::make($this->slugs)
+                        ->where("path", $slug->slug)
+                        ->first();
+                } else {
+                    $parentSlug = BotMenuSlug::query()
+                        ->find($slug->parent_slug_id);
+
+                    if (is_null($parentSlug))
+                        return true;
+
+
+                    $item = Collection::make($this->slugs)
+                        ->where("path", $parentSlug->slug)
+                        ->first();
+                }
+
+
+                if (!is_null($item)) {
+
+                    $config = $slug->config ?? [];
+
+                    $config[] = [
+                        "key" => "slug_id",
+                        "value" => $slug->id,
+                    ];
+
+
+                    $config[] = [
+                        "key" => "parent_page_id",
+                        "value" => $page->id ?? null,
+                    ];
+
+
+                    $this->tryCall($item, $message,
+                        $config, []);
+
+                }
+            }
+
+            if (!is_null($page->next_bot_dialog_command_id)) {
+                $this->startBotDialog($page->next_bot_dialog_command_id);
+                return true;
+            }
+
+
+
+        }
+
+
         return $find;
     }
 

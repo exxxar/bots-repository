@@ -84,20 +84,13 @@ BotManager::bot()
 
         }
 
-        if (is_null($caption)) {
-            BotManager::bot()->reply("Фотография в описании должна содержать подпись!");
-            return;
-        }
 
-        $caption = mb_strtolower($caption);
+        $caption = !is_null($caption) ? $caption : 'Без подписи';
 
-
-
-
-        if (!str_contains($caption, "оплата")) {
+        /*if (!str_contains($caption, "оплата")) {
             BotManager::bot()->reply("Фотография в описании должна содержать ключевое слово, например: оплата");
             return;
-        }
+        }*/
 
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
@@ -136,6 +129,7 @@ BotManager::bot()
                     "Идентификатор: $id\n" .
                     "Пользователь: $name\n" .
                     "Телефон: $phone\n\n" .
+                    "Подпись к фото: $caption\n\n" .
                     $photoToSend, [
                     [
                         ["text" => "👩🏻‍💻Работа с пользователем", "url" => $link]
