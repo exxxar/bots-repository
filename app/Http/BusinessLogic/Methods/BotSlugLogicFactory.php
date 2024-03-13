@@ -216,6 +216,18 @@ class BotSlugLogicFactory
             ->where("is_global", true)
             ->whereNull("bot_id");
 
+        if (!is_null($this->botUser ?? null)) {
+            $manager = $this->botUser->manager ?? null;
+
+            if (is_null($manager))
+                throw new HttpException(400, "Не является менеджером!");
+
+            $ids = Collection::make($manager->scripts)->pluck("id");
+
+            $botMenuSlugs = $botMenuSlugs
+                ->whereIn("id", $ids);
+        }
+
         if (!is_null($search))
             $botMenuSlugs = $botMenuSlugs
                 ->where(function ($q) use ($search) {

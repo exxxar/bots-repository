@@ -88,8 +88,12 @@ class BotMenuSlugController extends Controller
 
     public function globalList(Request $request): BotMenuSlugCollection
     {
+        $logic = BusinessLogic::slugs();
 
-        return BusinessLogic::slugs()
+        if ($request->botUser->is_manager&&!$request->botUser->is_admin)
+            $logic = $logic->setBotUser($request->botUser);
+
+        return $logic
             ->globalList(
                 $request->search ?? null,
                 $request->get("size") ?? config('app.results_per_page')
