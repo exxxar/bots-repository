@@ -86,11 +86,10 @@ export default {
     },
     mounted() {
         const url = import.meta.env.VITE_PUSHER_APP_CLUSTER
-        console.log("media=>",url)
     },
     computed: {
         isCompleted() {
-           // return false;
+            //return false;
             let current_attempts = this.quiz.personal_info.current_attempts
             let max_attempts = this.quiz.personal_info.current_attempts
 

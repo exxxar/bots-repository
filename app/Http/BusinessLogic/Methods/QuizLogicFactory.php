@@ -403,7 +403,7 @@ class QuizLogicFactory
         if (is_null($question->answers ?? null))
             throw new HttpException(403, "Ошибка в ответах..");
 
-        $answerPool = json_decode($request->answers ?? '[]');
+        $answerPool = json_decode($data["answers"] ?? '[]');
 
         $points = 0;
         $hasRightAnswer = false;
