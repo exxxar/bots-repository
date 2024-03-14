@@ -234,7 +234,7 @@ import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/Inl
 
                             <InlineInjectButtons
                                 :param="'success_message'"
-                                v-on:callback="attachTo($event.target, index)"></InlineInjectButtons>
+                                v-on:callback="attachTo($event, index)"></InlineInjectButtons>
                         </div>
 
                         <textarea class="form-control"
@@ -286,7 +286,7 @@ import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/Inl
                             </label>
                             <InlineInjectButtons
                                 :param="'failure_message'"
-                                v-on:callback="attachTo($event.target, index)"></InlineInjectButtons>
+                                v-on:callback="attachTo($event, index)"></InlineInjectButtons>
                         </div>
 
 
@@ -495,7 +495,9 @@ export default {
     },
     methods: {
         attachTo(item, index) {
-            if (this.quizForm[item.param][index] == null)
+
+
+           if (this.quizForm[item.param][index] == null)
                 this.quizForm[item.param][index] = item.value
             else
                 this.quizForm[item.param][index] += item.value;

@@ -35,10 +35,14 @@ export default {
             ],
         }
     },
+    mounted() {
+
+    },
     methods: {
         attachTo(value) {
+
             this.$emit("callback", {
-                param: this.param,
+                param: this.param || null,
                 value: value
             })
         }
