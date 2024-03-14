@@ -495,10 +495,10 @@ export default {
     },
     methods: {
         attachTo(item) {
-            if (this.quiz[item.param] == null)
-                this.quiz[item.param] = item.value
+            if (this.quizForm[item.param] == null)
+                this.quizForm[item.param] = item.value
             else
-                this.quiz[item.param] += item.value;
+                this.quizForm[item.param] += item.value;
         },
         selectPhoto(item) {
             this.quizForm.image = item.file_id

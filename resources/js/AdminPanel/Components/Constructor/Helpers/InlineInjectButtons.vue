@@ -6,7 +6,7 @@
         </button>
         <ul class="dropdown-menu">
             <li
-                @click="attachTo(param,item.value)"
+                @click="attachTo(item.value)"
                 v-for="item in htmlInjections"
             ><a class="dropdown-item"
                 href="javascript:void(0)">{{ item.title || 'Не указано' }}</a></li>
@@ -36,9 +36,9 @@ export default {
         }
     },
     methods: {
-        attachTo(param, value) {
+        attachTo(value) {
             this.$emit("callback", {
-                param: param,
+                param: this.param,
                 value: value
             })
         }
