@@ -6,6 +6,7 @@ use App\Enums\OrderStatusEnum;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Models\Bot;
+use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\Order;
 use App\Models\ReferralHistory;
@@ -220,7 +221,6 @@ class StartCodesHandlerController extends Controller
         }
 
         if ($code == "005") {
-            Log::info("try run script $request_id");
             BotManager::bot()->runSlug($request_id);
             return;
         }
@@ -238,6 +238,9 @@ class StartCodesHandlerController extends Controller
                     "Вы перешли по своей собственной ссылке... вы, конечно, себе друг, но CashBack достанется кому-то одному..."
                 );
 
+            BotManager::bot()
+                ->setBot($bot)
+                ->pushCommand("/start");
             return;
 
         }
@@ -283,6 +286,10 @@ class StartCodesHandlerController extends Controller
 
         if (is_null($userBotUser)) {
             BotManager::bot()->reply("Данный код не корректный!");
+
+            BotManager::bot()
+                ->setBot($bot)
+                ->pushCommand("/start");
             return;
         }
 
@@ -290,6 +297,10 @@ class StartCodesHandlerController extends Controller
         $userBotUser->save();
 
         BotManager::bot()->reply($message);
+
+        BotManager::bot()
+            ->setBot($bot)
+            ->pushCommand("/start");
 
 
     }

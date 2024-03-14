@@ -1,6 +1,6 @@
 <script setup>
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
-
+import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectButtons.vue";
 </script>
 <template>
     <form v-on:submit.prevent="submitForm" class="py-3">
@@ -215,21 +215,28 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 
                 <div class="row">
                     <div class="col-10">
-                        <label class="form-label " id="quiz-success_message">
-                            <Popper>
-                                <i class="fa-regular fa-circle-question mr-1"></i>
-                                <template #content>
-                                    <div>
-                                        Текст в случае успешного прохождения квиза
-                                    </div>
-                                </template>
-                            </Popper>
-                            Текст при победе
-                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                            <small class="text-gray-400 ml-3" style="font-size:10px;"
-                                   v-if="quizForm.success_message[index]">
-                                Длина текста {{ quizForm.success_message[index].length }}/255</small>
-                        </label>
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label " id="quiz-success_message">
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>
+                                            Текст в случае успешного прохождения квиза
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Текст при победе
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                <small class="text-gray-400 ml-3" style="font-size:10px;"
+                                       v-if="quizForm.success_message[index]">
+                                    Длина текста {{ quizForm.success_message[index].length }}/255</small>
+                            </label>
+
+                            <InlineInjectButtons
+                                :param="'success_message'"
+                                v-on:callback="attachTo"></InlineInjectButtons>
+                        </div>
+
                         <textarea class="form-control"
                                   placeholder="Текст при победе"
                                   aria-label="Текст при победе"
@@ -261,21 +268,28 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 
                 <div class="row">
                     <div class="col-10">
-                        <label class="form-label " :id="'quiz-failure_message'+index">
-                            <Popper>
-                                <i class="fa-regular fa-circle-question mr-1"></i>
-                                <template #content>
-                                    <div>
-                                        Текст в случае неудачного прохождения квиза
-                                    </div>
-                                </template>
-                            </Popper>
-                            Текст при проигрыше
-                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                            <small class="text-gray-400 ml-3" style="font-size:10px;"
-                                   v-if="quizForm.failure_message[index]">
-                                Длина текста {{ quizForm.failure_message[index].length }}/255</small>
-                        </label>
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label " :id="'quiz-failure_message'+index">
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>
+                                            Текст в случае неудачного прохождения квиза
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Текст при проигрыше
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                <small class="text-gray-400 ml-3" style="font-size:10px;"
+                                       v-if="quizForm.failure_message[index]">
+                                    Длина текста {{ quizForm.failure_message[index].length }}/255</small>
+                            </label>
+                            <InlineInjectButtons
+                                :param="'failure_message'"
+                                v-on:callback="attachTo"></InlineInjectButtons>
+                        </div>
+
+
                         <textarea class="form-control"
                                   placeholder="Текст при проигрыше"
                                   aria-label="Текст при проигрыше"
@@ -480,6 +494,12 @@ export default {
 
     },
     methods: {
+        attachTo(item) {
+            if (this.quiz[item.param] == null)
+                this.quiz[item.param] = item.value
+            else
+                this.quiz[item.param] += item.value;
+        },
         selectPhoto(item) {
             this.quizForm.image = item.file_id
         },

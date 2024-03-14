@@ -23,7 +23,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                     </p>
 
                     <img
-                        class="rounded-circle mt-5 mb-5"
+                        class="rounded-circle mt-5 mb-5 d-md-block d-none"
                         style="width:150px; height:150px; object-fit:cover; border:1px white solid;"
                         v-lazy="botUser.manager.image?botUser.manager.image:'../images/manager.png'">
 

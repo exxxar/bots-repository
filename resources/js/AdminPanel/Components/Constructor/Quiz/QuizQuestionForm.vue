@@ -1,6 +1,7 @@
 <script setup>
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant.vue";
+import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectButtons.vue";
 </script>
 <template>
     <div class="row py-3">
@@ -156,20 +157,9 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                         <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="questionForm.success_message">
                             Длина текста {{ questionForm.success_message.length }}/255</small>
                     </label>
-                    <div class="dropdown">
-                        <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                            Кнопки
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li
-                                @click="attachTo('success_message',item.value)"
-                                v-for="item in htmlInjections"
-                            ><a class="dropdown-item"
-                                href="javascript:void(0)">{{ item.title || 'Не указано' }}</a></li>
-
-                        </ul>
-                    </div>
+                    <InlineInjectButtons
+                        :param="'success_message'"
+                        v-on:callback="attachTo"></InlineInjectButtons>
                 </div>
                 <textarea class="form-control"
                           placeholder="Текст при правильном ответе"
@@ -228,20 +218,9 @@ import BotMediaVariant from "@/AdminPanel/Components/Constructor/BotMediaVariant
                         <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="questionForm.failure_message">
                             Длина текста {{ questionForm.failure_message.length }}/255</small>
                     </label>
-                    <div class="dropdown">
-                        <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                            Кнопки
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li
-                                @click="attachTo('failure_message',item.value)"
-                                v-for="item in htmlInjections"
-                            ><a class="dropdown-item"
-                                href="javascript:void(0)">{{ item.title || 'Не указано' }}</a></li>
-
-                        </ul>
-                    </div>
+                    <InlineInjectButtons
+                        :param="'failure_message'"
+                        v-on:callback="attachTo"></InlineInjectButtons>
                 </div>
 
 
@@ -495,20 +474,7 @@ export default {
             need_media_for_success: false,
             need_media_for_failed: false,
             rounds: [],
-            htmlInjections: [
-                {
-                    title: "Кнопка синяя",
-                    value: "<a href='http://test.com/test' class='w-100 btn btn-primary'>Текст кнопки</a>"
-                },
-                {
-                    title: "Кнопка без цвета",
-                    value: "<a href='http://test.com/test' class='w-100 btn btn-link'>Текст кнопки</a>"
-                },
-                {
-                    title: "Кнопка с синей обводкой",
-                    value: "<a href='http://test.com/test' class='w-100 btn btn-outline-primary'>Текст кнопки</a>"
-                }
-            ],
+
             questionForm: {
                 id: null,
                 text: null,
@@ -605,11 +571,11 @@ export default {
 
     },
     methods: {
-        attachTo(param, value) {
-            if (this.questionForm[param] == null)
-                this.questionForm[param] = value
+        attachTo(item) {
+            if (this.questionForm[item.param] == null)
+                this.questionForm[item.param] = item.value
             else
-                this.questionForm[param] += value;
+                this.questionForm[item.param] += item.value;
         },
         loadQuizRounds() {
             this.$store.dispatch("loadQuizRounds", {
