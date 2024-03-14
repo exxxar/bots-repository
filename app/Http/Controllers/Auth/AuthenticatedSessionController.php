@@ -172,8 +172,11 @@ class AuthenticatedSessionController extends Controller
                 ->whereBot($bot)
                 ->sendMessage(
                     $tgId,
-                    "Вы не являетесь сотрудником системы!");
-            return response()->redirectToRoute("login");
+                    "Вы стали менеджером! Работаем дальше:)");
+
+            $botUser->is_manager = true;
+            $botUser->save();
+           // return response()->redirectToRoute("login");
         }
 
 

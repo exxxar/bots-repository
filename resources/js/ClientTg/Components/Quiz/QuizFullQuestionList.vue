@@ -137,6 +137,10 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
                 </li>
             </ol>
             <h6 class="my-2">Вы набрали {{ summaryPoints }} баллов</h6>
+
+            <p v-if="successPercentCount>=quiz.success_percent" v-html="quiz.success_message"></p>
+            <p v-else v-html="quiz.failure_message"></p>
+
             <a href="javascript:void(0)"
                @click="completeAndExit"
                class="btn btn-m btn-full mt-3 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">Завершить
@@ -172,6 +176,19 @@ export default {
 
     computed: {
         ...mapGetters(['getQuizQuestions', 'getQuizQuestionsPaginateObject']),
+        successPercentCount(){
+            if (this.points.length===0)
+                return 0
+
+            let rightSummary = 0;
+            this.points.forEach(item=>{
+                if (item.is_right)
+                    rightSummary++;
+            })
+
+            return rightSummary / this.points.length
+
+        },
         summaryPoints() {
             if (this.points.length === 0)
                 return 0;
