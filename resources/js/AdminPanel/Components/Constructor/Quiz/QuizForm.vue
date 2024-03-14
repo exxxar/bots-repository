@@ -286,7 +286,7 @@ import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/Inl
                             </label>
                             <InlineInjectButtons
                                 :param="'failure_message'"
-                                v-on:callback="attachTo"></InlineInjectButtons>
+                                v-on:callback="attachTo($event.target.value, index)"></InlineInjectButtons>
                         </div>
 
 
@@ -494,11 +494,11 @@ export default {
 
     },
     methods: {
-        attachTo(item) {
-            if (this.quizForm[item.param] == null)
-                this.quizForm[item.param] = item.value
+        attachTo(item, index) {
+            if (this.quizForm[item.param][index] == null)
+                this.quizForm[item.param][index] = item.value
             else
-                this.quizForm[item.param] += item.value;
+                this.quizForm[item.param][index] += item.value;
         },
         selectPhoto(item) {
             this.quizForm.image = item.file_id
