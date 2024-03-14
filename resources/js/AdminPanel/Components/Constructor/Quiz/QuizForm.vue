@@ -234,7 +234,7 @@ import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/Inl
 
                             <InlineInjectButtons
                                 :param="'success_message'"
-                                v-on:callback="attachTo"></InlineInjectButtons>
+                                v-on:callback="attachTo($event.target, index)"></InlineInjectButtons>
                         </div>
 
                         <textarea class="form-control"
@@ -286,7 +286,7 @@ import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/Inl
                             </label>
                             <InlineInjectButtons
                                 :param="'failure_message'"
-                                v-on:callback="attachTo($event.target.value, index)"></InlineInjectButtons>
+                                v-on:callback="attachTo($event.target, index)"></InlineInjectButtons>
                         </div>
 
 
