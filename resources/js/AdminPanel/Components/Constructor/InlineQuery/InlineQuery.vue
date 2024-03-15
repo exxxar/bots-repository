@@ -1,13 +1,16 @@
 <script setup>
 import InlineQueryForm from "@/AdminPanel/Components/Constructor/InlineQuery/InlineQueryForm.vue";
+import InlineQueryTable from "@/AdminPanel/Components/Constructor/InlineQuery/InlineQueryTable.vue";
 </script>
 <template>
     <h1>Inline Query</h1>
     <InlineQueryForm :bot="bot"
-                     v-if="selectedInlineQuery"
                      :inline-query="selectedInlineQuery">
 
     </InlineQueryForm>
+
+    <InlineQueryTable v-on:select="selectInlineQuery"></InlineQueryTable>
+
 </template>
 <script>
 export default {

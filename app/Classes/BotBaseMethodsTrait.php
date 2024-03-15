@@ -400,6 +400,7 @@ trait BotBaseMethodsTrait
 
     public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData = null)
     {
+
         $tmp = [
             "chat_id" => $chatId,
             "title" => $title,
@@ -414,6 +415,8 @@ trait BotBaseMethodsTrait
                 'inline_keyboard' => $keyboard,
             ])
         ];
+
+        Log::info("inline_keyboard_in_send_invoice ".print_r($tmp, true));
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);

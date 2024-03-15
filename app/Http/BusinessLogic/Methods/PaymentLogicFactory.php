@@ -221,6 +221,7 @@ class PaymentLogicFactory
             ->where("key", "checkout_description")
             ->first())["value"] ?? "Ваш товар";
 
+        Log::info("payload".print_r($payload, true));
 
         \App\Facades\BotMethods::bot()
             ->whereBot($this->bot)
