@@ -503,13 +503,13 @@ class BotManager extends BotCore
         if (count($images) === 0) {
             $needContentInReply = empty($iMenu) && is_null($replyMenuTitle);
 
-            $content = empty($content ?? '') && empty($replyMenuTitle ?? '') ? 'Хм, нечего отобразить...' : $content;
+            $content = empty($content ?? '') && empty($replyMenuTitle ?? '') ? '' : $content;
 
             if (!$needContentInReply)
-                $this->replyInlineKeyboard($content, $iMenu);
+                $this->replyInlineKeyboard(strlen($content) > 0 ? $content : 'Главное меню', $iMenu);
 
             if (!empty($replyKeyboard) && $needSendReplyMenu)
-                $this->replyKeyboard($needContentInReply ? $content : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $this->replyKeyboard($needContentInReply ? (strlen($content) > 0 ? $content : 'Главное меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             if ($needContentInReply && empty($replyKeyboard)) {
                 $this->reply($content);
