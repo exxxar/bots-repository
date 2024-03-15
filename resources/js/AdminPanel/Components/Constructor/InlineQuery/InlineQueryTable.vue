@@ -6,35 +6,33 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
     <div class="row">
         <div class="col-12">
-            <table class="table" v-if="commands.length>0">
+            <table class="table" v-if="queries.length>0">
                 <thead>
 
                 <tr>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('id')">#</th>
-                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('title')">Название</th>
-                    <th scope="col">Число участников</th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('command')">Команда</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('description')">Описание</th>
                     <th scope="col">Действие</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(command, index) in commands"
-                    v-bind:class="{'border-info':command.deleted_at==null,'border-danger':command.deleted_at!=null}">
-                    <th scope="row">{{ command.id }}</th>
-                    <td @click="selectQuizCommand(command)">{{ command.title || 'Не указано' }}
+                <tr v-for="(query, index) in queries"
+                    v-bind:class="{'border-info':query.deleted_at==null,'border-danger':query.deleted_at!=null}">
+                    <th scope="row">{{ query.id }}</th>
+                    <td @click="selectInlineQuery(query)">{{ query.command || 'Не указано' }}
                     </td>
-                    <td>{{ (command.players || []).length }}</td>
-                    <td>{{ command.description || 'Не указано' }}</td>
+                    <td>{{ query.description || 'Не указано' }}</td>
                     <td>
-                        <div class="dropdown" v-if="command.id">
+                        <div class="dropdown" v-if="query.id">
                             <button class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                 <i class="fa-solid fa-ellipsis"></i>
                             </button>
                             <ul class="dropdown-menu">
-                                <li v-if="command.deleted_at==null">
+                                <li v-if="query.deleted_at==null">
                                     <a class="dropdown-item"
-                                       @click="removeQuizCommand(command.id)"
+                                       @click="removeInlineQuery(query.id)"
                                        href="javascript:void(0)">Удалить</a></li>
                             </ul>
                         </div>
@@ -48,7 +46,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         </div>
         <div class="col-12">
             <Pagination
-                v-on:pagination_page="nextQuizCommand"
+                v-on:pagination_page="nextInlineQuery"
                 v-if="paginate_object"
                 :pagination="paginate_object"/>
         </div>
@@ -59,43 +57,42 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["bot", "quizId"],
+    props: ["bot", "queryId"],
     data() {
         return {
             direction: 'desc',
             order: 'updated_at',
             show: true,
-            is_group: false,
             loading: true,
-            commands: [],
+            queries: [],
             search: null,
             paginate_object: null,
         }
     },
 
     computed: {
-        ...mapGetters(['getQuizCommands', 'getQuizCommandsPaginateObject']),
+        ...mapGetters(['getInlineQueries', 'getInlineQueriesPaginateObject']),
 
     },
     mounted() {
-        this.loadQuizCommands();
+        this.loadInlineQueries();
     },
     methods: {
-        nextQuizCommand(index) {
-            this.loadQuizCommands(index)
+        nextInlineQuery(index) {
+            this.loadInlineQueries(index)
         },
-        selectQuizCommand(command) {
-            this.$emit("select", command)
+        selectInlineQuery(query) {
+            this.$emit("select", query)
             this.$notify("Вопрос успешно выбран");
         },
-        removeQuizCommand(id) {
+        removeInlineQuery(id) {
             this.loading = true
-            this.$store.dispatch("removeQuizCommand", {
-                quizCommandId: id,
+            this.$store.dispatch("removeInlineQuery", {
+                queryId: id,
 
             }).then(resp => {
                 this.loading = false
-                this.loadQuizCommands(0)
+                this.loadInlineQueries(0)
                 this.$notify("Вопрос успешно удален");
             }).catch(() => {
                 this.loading = false
@@ -107,11 +104,10 @@ export default {
             this.direction = this.direction === 'desc' ? 'asc' : 'desc'
             this.loadQuizCommands(0)
         },
-        loadQuizCommands(page = 0) {
+        loadInlineQueries(page = 0) {
             this.loading = true
-            this.$store.dispatch("loadQuizCommands", {
+            this.$store.dispatch("loadInlineQueries", {
                 dataObject: {
-                    quiz_id: this.quizId,
                     bot_id: this.bot.id || null,
                     search: this.search,
                     order: this.order,
@@ -121,8 +117,8 @@ export default {
                 size: 100
             }).then(resp => {
                 this.loading = false
-                this.commands = this.getQuizCommands
-                this.paginate_object = this.getQuizCommandsPaginateObject
+                this.queries = this.getInlineQueries
+                this.paginate_object = this.getInlineQueriesPaginateObject
             }).catch(() => {
                 this.loading = false
             })

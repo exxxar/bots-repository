@@ -258,7 +258,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                         </div>
                         <div
                             class="col-md-6 border-right">
-                            <div class="my-2">
+<!--                            <div class="my-2">
                                 <label class="mb-3">Загрузи своё персональное фото, мы же должны знать в лицо наших
                                     сотрудников</label>
                                 <div class="d-flex justify-content-center flex-wrap ">
@@ -296,7 +296,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                                     </div>
 
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="mb-2">
 
                                 <p class="text-center text-md-left">Укажите ваш пол</p>
@@ -327,7 +327,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
 
                                 <div class="input-group position-relative mb-2"
                                      v-for="(item, index) in managerForm.social_links">
-                                    <input type="url"
+                                    <input type="text"
                                            class="form-control  font-14 p-3 rounded-s border-theme"
                                            v-model="managerForm.social_links[index]"
                                            placeholder="Ссылка на соц. сеть"

@@ -12,6 +12,7 @@ import media from './modules/media';
 import appointments from './modules/appointments';
 import quizzes from './modules/quiz';
 import promoCodes from './modules/promocodes';
+import inlineQueries from './modules/inline_queries';
 import util from "@/AdminPanel/store/modules/utilites";
 
 
@@ -163,6 +164,7 @@ export default createStore({
         products,
         quizzes,
         media,
+        inlineQueries,
         promoCodes
     }
 })

@@ -92,10 +92,10 @@ Route::prefix("admin")
         Route::prefix("manager")
             ->controller(\App\Http\Controllers\Admin\ManagerProfileController::class)
             ->middleware(["role:manager"])
-            ->group(function(){
+            ->group(function () {
                 Route::post("/register", "registerManager");
-                Route::post('/load-data', [\App\Http\Controllers\Globals\ManagerScriptController::class,"loadData"]);
-                Route::post('/friends-web', [\App\Http\Controllers\Globals\ManagerScriptController::class,"getFriendList"]);
+                Route::post('/load-data', [\App\Http\Controllers\Globals\ManagerScriptController::class, "loadData"]);
+                Route::post('/friends-web', [\App\Http\Controllers\Globals\ManagerScriptController::class, "getFriendList"]);
             });
 
 
@@ -135,11 +135,21 @@ Route::prefix("admin")
                 Route::delete('/remove/{id}', "remove")->middleware(["role:admin"]);
             });
 
+
+        Route::prefix("inline-queries")
+            ->controller(\App\Http\Controllers\Admin\InlineQuerySlugController::class)
+            ->middleware(["role:manager"])
+            ->group(function () {
+                Route::post("/query-store", "queryStore");
+                Route::post("/list-of-inline-queries", "listOfInlineQueries");
+                Route::delete("/remove-query/{id}", "removeQuery");
+            });
+
         Route::prefix("quizzes")
             ->controller(\App\Http\Controllers\Admin\QuizController::class)
             ->middleware(["role:manager"])
             ->group(function () {
-                Route::post("/list-of-quiz", "listOfQuiz");
+
                 Route::post("/list-of-quiz-questions/{quizId}", "listOfQuizQuestions");
                 Route::post("/list-of-quiz-rounds/{quizId}", "listOfQuizRounds");
                 Route::post("/list-of-quiz-commands/{quizId}", "listOfQuizCommands");

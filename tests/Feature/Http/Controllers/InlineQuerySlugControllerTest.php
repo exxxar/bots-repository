@@ -10,7 +10,7 @@ use JMac\Testing\Traits\AdditionalAssertions;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\InlineQuerySlugController
+ * @see \App\Http\Controllers\Admin\InlineQuerySlugController
  */
 class InlineQuerySlugControllerTest extends TestCase
 {
@@ -36,7 +36,7 @@ class InlineQuerySlugControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\InlineQuerySlugController::class,
+            \App\Http\Controllers\Admin\InlineQuerySlugController::class,
             'store',
             \App\Http\Requests\InlineQuerySlugStoreRequest::class
         );
@@ -84,7 +84,7 @@ class InlineQuerySlugControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\InlineQuerySlugController::class,
+            \App\Http\Controllers\Admin\InlineQuerySlugController::class,
             'update',
             \App\Http\Requests\InlineQuerySlugUpdateRequest::class
         );
