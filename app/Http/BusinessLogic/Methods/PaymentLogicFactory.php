@@ -153,7 +153,7 @@ class PaymentLogicFactory
         Log::info("price receipt " . print_r($providerData->receipt, true));
         Log::info("price after $summaryPrice");*/
 
-        $payload = Str::uuid()->getBytes();
+        $payload = Str::uuid()->toString();
 
         $providerToken = $bot->payment_provider_token;
 
