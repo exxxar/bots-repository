@@ -495,7 +495,9 @@ class BotManager extends BotCore
                 $this->replyKeyboard(mb_strlen($content) >= 1024 ? $content ?? 'Хм, нечего отобразить...' : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
 
             if (empty($replyKeyboard) && mb_strlen($content) >= 1024)
-                $this->reply($content ?? 'Хм, нечего отобразить...');
+
+                if (strlen($content ?? '') > 0)
+                    $this->reply($content);
         }
 
         if (count($images) === 0) {
