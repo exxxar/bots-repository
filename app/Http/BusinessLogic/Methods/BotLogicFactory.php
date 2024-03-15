@@ -2108,6 +2108,36 @@ class BotLogicFactory
 
     }
 
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function sendToQueue(array $data): void
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "message" => "required",
+            "inline_keyboard" => "",
+            "images" => "",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        Http::post(env("MAILING_HANDLER_URL")."api/notification",[
+            "bot_id"=>$this->bot->id,
+            "message"=>$data["message"] ?? 'Текст сообщения',
+            "inline_keyboard"=>$data["inline_keyboard"] ?? null,
+            "reply_keyboard"=>$data["reply_keyboard"] ?? null,
+            "images"=>$data["images"] ?? null,
+            "videos"=>$data["videos"] ?? null,
+            "audios"=>$data["audios"] ?? null,
+        ]);
+
+    }
 
     /**
      * @throws HttpException

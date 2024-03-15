@@ -48,7 +48,8 @@ import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCode
 
                 <li><a class="dropdown-item" href="#bot-pages" @click="setStep(4)">
                     <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>-->
-
+                <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i
+                    class="fa-regular fa-newspaper mr-2"></i> Рассылки</a></li>
                 <li><a class="dropdown-item" href="#bot-appointments" @click="setStep(13)">
                     <i class="fa-regular fa-calendar-days  mr-2"></i>Запись на событие (прием)</a></li>
                 <li><a class="dropdown-item" href="#bot-quizzes" @click="setStep(14)">
@@ -69,8 +70,7 @@ import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCode
                     class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
                 <li><a class="dropdown-item" href="#bot-users" @click="setStep(3)"><i
                     class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
-                <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i
-                    class="fa-regular fa-newspaper mr-2"></i> Новостной канал</a></li>
+
                 <li><a class="dropdown-item" href="#bot-amo" @click="setStep(7)"><i
                     class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
                 <li><a class="dropdown-item" href="#bot-y-clients" @click="setStep(12)"><i

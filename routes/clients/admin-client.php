@@ -82,6 +82,7 @@ Route::middleware(['auth', 'verified'])
     });
 
 Route::post("/send-to-channel", [\App\Http\Controllers\Admin\BotController::class, "sendToChannel"]);
+Route::post("/send-to-queue", [\App\Http\Controllers\Admin\BotController::class, "sendToQueue"]);
 
 
 Route::prefix("admin")

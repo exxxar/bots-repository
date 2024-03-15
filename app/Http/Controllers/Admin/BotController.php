@@ -65,6 +65,29 @@ class BotController extends Controller
     /**
      * @throws ValidationException
      */
+    public function sendToQueue(Request $request): Response
+    {
+        $request->validate([
+            "message" => "required",
+            "bot_id" => "required",
+        ]);
+
+        $bot = Bot::query()
+            ->where("id", $request->bot_id)
+            ->first();
+
+        BusinessLogic::bots()
+            ->setBot($bot)
+            ->sendToQueue($request->all());
+
+        return response()->noContent();
+
+    }
+
+
+    /**
+     * @throws ValidationException
+     */
     public function createBotTopics(Request $request)
     {
         $request->validate([
