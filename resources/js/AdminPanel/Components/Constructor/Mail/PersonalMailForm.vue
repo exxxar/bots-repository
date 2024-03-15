@@ -24,7 +24,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                           placeholder="Введите текст"
                                           id="floatingTextarea2" style="min-height: 100px" required></textarea>
                 <label for="floatingTextarea2">Содержимое страницы <span
-                    v-if="mailForm.message">{{ mailForm.text.length }}/4096 </span></label>
+                    v-if="mailForm.message">{{ mailForm.message.length }}/4096 </span></label>
             </div>
 
         </div>
