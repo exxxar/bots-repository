@@ -69,6 +69,7 @@ class InlineQueryCore
             ->first();
 
 
+        Log::info("step 1");
         if (!is_null($inlineSlug)) {
 
             $max = InlineQueryItem::query()
@@ -111,7 +112,7 @@ class InlineQueryCore
         }
 
         $find = false;
-
+        Log::info("step 2");
         foreach ($this->routes as $item) {
 
             if (is_null($item["path"]))
@@ -123,7 +124,7 @@ class InlineQueryCore
             }
 
         }
-
+        Log::info("step 3");
         if (!$find) {
             $button_list[] = [
                 'type' => 'article',
