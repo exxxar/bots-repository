@@ -15,8 +15,8 @@ trait InlineQueryMethodsTrait
         Log::info("type=".$item->type);
 
         return match ($item->type) {
-            InlineItemTypeEnum::InlineQueryResultArticle => $this->InlineQueryResultArticle($item),
-            InlineItemTypeEnum::InlineQueryResultCachedPhoto => $this->InlineQueryResultCachedPhoto($item),
+            InlineItemTypeEnum::InlineQueryResultArticle->value => $this->InlineQueryResultArticle($item),
+            InlineItemTypeEnum::InlineQueryResultCachedPhoto->value => $this->InlineQueryResultCachedPhoto($item),
             default => null,
         };
     }
