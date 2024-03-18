@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use App\Enums\InlineItemTypeEnum;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use function PHPUnit\Framework\objectEquals;
 
@@ -11,6 +12,8 @@ trait InlineQueryMethodsTrait
 
     public function getInlineQueryItem(object $item): mixed
     {
+        Log::info("type=",$item->type);
+
         return match ($item->type) {
             InlineItemTypeEnum::InlineQueryResultArticle => $this->InlineQueryResultArticle($item),
             InlineItemTypeEnum::InlineQueryResultCachedPhoto => $this->InlineQueryResultCachedPhoto($item),
