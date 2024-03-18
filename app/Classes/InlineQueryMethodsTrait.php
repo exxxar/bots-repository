@@ -12,7 +12,7 @@ trait InlineQueryMethodsTrait
 
     public function getInlineQueryItem(object $item): mixed
     {
-        Log::info("type=".$item->type."-". print_r(InlineItemTypeEnum::InlineQueryResultArticle, true));
+        Log::info("type=" . $item->type . "-" . print_r(InlineItemTypeEnum::InlineQueryResultArticle, true));
 
         return match (InlineItemTypeEnum::from($item->type)) {
             InlineItemTypeEnum::InlineQueryResultArticle => $this->InlineQueryResultArticle($item),
@@ -26,16 +26,14 @@ trait InlineQueryMethodsTrait
         Log::info("we are here");
         $config = $item->custom_settings ?? [];
 
-        return (object)[
+
+        $tmp = [
             "type" => "article",
             "id" => Str::uuid(),
             "title" => $item->title ?? null,
             "input_message_content" => [
-                "message_text"=>$item->input_message_content
-                ],
-            "reply_markup" => !is_null($item->inline_keyboard) ? [
-                'inline_keyboard' => $item->inline_keyboard ?? []
-            ] : [],
+                "message_text" => $item->input_message_content
+            ],
             "parse_mode" => "HTML",
             "url" => $config["url"] ?? null,
             "hide_url" => $config["hide_url"] ?? true,
@@ -44,25 +42,37 @@ trait InlineQueryMethodsTrait
             "thumbnail_width" => $config["thumbnail_width"] ?? null,
             "thumbnail_height" => $config["thumbnail_height"] ?? null,
         ];
+
+        if (!is_null($item->inline_keyboard))
+            $tmp["reply_markup"] = [
+                'inline_keyboard' => $item->inline_keyboard ?? []
+            ];
+
+        return (object)$tmp;
     }
 
     private function InlineQueryResultCachedPhoto(object $item): object
     {
         $config = $item->custom_settings ?? [];
 
-        return (object)[
+        $tmp = [
             "type" => "photo",
             "id" => Str::uuid(),
-            "photo_file_id" => $config["photo_file_id"]??null,
-            "caption" => $config["caption"]??null,
+            "photo_file_id" => $config["photo_file_id"] ?? null,
+            "caption" => $config["caption"] ?? null,
             "title" => $item->title ?? null,
             "parse_mode" => "HTML",
             "input_message_content" => [
-                "message_text"=>$item->input_message_content
+                "message_text" => $item->input_message_content
             ],
-            "reply_markup" => !is_null($item->inline_keyboard) ? [
-                'inline_keyboard' => $item->inline_keyboard ?? []
-            ] : [],
+
         ];
+
+        if (!is_null($item->inline_keyboard))
+            $tmp["reply_markup"] = [
+                'inline_keyboard' => $item->inline_keyboard ?? []
+            ];
+
+        return (object)$tmp;
     }
 }
