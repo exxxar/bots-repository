@@ -14,7 +14,7 @@ trait InlineQueryMethodsTrait
     {
         Log::info("type=".$item->type."-". print_r(InlineItemTypeEnum::InlineQueryResultArticle, true));
 
-        return match ($item->type) {
+        return match (InlineItemTypeEnum::from($item->type)) {
             InlineItemTypeEnum::InlineQueryResultArticle => $this->InlineQueryResultArticle($item),
             InlineItemTypeEnum::InlineQueryResultCachedPhoto => $this->InlineQueryResultCachedPhoto($item),
             default => null,
