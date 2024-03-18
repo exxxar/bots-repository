@@ -67,31 +67,37 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
             <div class="col-12" v-if="(keyboard||[]).length>0">
                 <div class="row" v-for="(row, rowIndex) in keyboard">
-                    <div class="col-2 d-flex justify-content-around p-2">
-                        <button
-                            type="button"
-                            class="btn btn-link w-100"
-                            @click="addColToRow(rowIndex)"><i class="fa-solid fa-plus"></i>
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-link w-100"
-                            @click="removeColFromRow(rowIndex)"><i class="fa-solid fa-minus"></i>
-                        </button>
+                    <div class="col-1 d-flex justify-content-around p-2">
 
-                        <button
-                            type="button"
-                            class="btn btn-link w-100"
-                            @click="moveCol(rowIndex,0)"><i class="fa-solid fa-caret-left"></i>
-                        </button>
+                        <div class="dropdown">
+                            <a class="btn btn-link" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </a>
 
-                        <button
-                            type="button"
-                            class="btn btn-link w-100"
-                            @click="moveCol(rowIndex,1)"><i class="fa-solid fa-caret-right"></i>
-                        </button>
+                            <ul class="dropdown-menu">
+                                <li @click="addColToRow(rowIndex)">
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa-solid fa-plus mr-2"></i> добавить кнопку
+                                    </a>
+                                </li>
+                                <li   @click="removeColFromRow(rowIndex)">
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fa-solid fa-minus mr-2"></i> удалить кнопку
+                                </a>
+                                </li>
+                                <li   @click="moveCol(rowIndex,0)"><a class="dropdown-item" href="#">
+                                    <i class="fa-solid fa-caret-left mr-2"></i> переместить влево
+                                </a></li>
+                                <li   @click="moveCol(rowIndex,1)"><a class="dropdown-item" href="#">
+                                    <i class="fa-solid fa-caret-right mr-2"></i> переместить влево
+                                </a></li>
+                            </ul>
+                        </div>
+
+
                     </div>
-                    <div class="col-10 d-flex justify-content-center p-1">
+                    <div class="col-11 d-flex justify-content-center p-1">
 
                         <div class="btn-group dropdown-center w-100 m-1 "
                              @click="selectIndex(rowIndex, colIndex)"
@@ -219,7 +225,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                type="checkbox"
                                id="need-login-url">
                         <label class="form-check-label" for="need-login-url">
-                           Добавить ссылку авторизации
+                            Добавить ссылку авторизации
                         </label>
                     </div>
 

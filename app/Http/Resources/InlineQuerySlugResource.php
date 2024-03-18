@@ -17,6 +17,7 @@ class InlineQuerySlugResource extends JsonResource
             'bot_id' => $this->bot_id,
             'command' => $this->command,
             'description' => $this->description,
+            'items' => $this->items ?? [],
         ];
     }
 }

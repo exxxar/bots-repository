@@ -149,7 +149,7 @@ Route::prefix("admin")
             ->controller(\App\Http\Controllers\Admin\QuizController::class)
             ->middleware(["role:manager"])
             ->group(function () {
-
+                Route::post("/list-of-quiz", "listOfQuiz");
                 Route::post("/list-of-quiz-questions/{quizId}", "listOfQuizQuestions");
                 Route::post("/list-of-quiz-rounds/{quizId}", "listOfQuizRounds");
                 Route::post("/list-of-quiz-commands/{quizId}", "listOfQuizCommands");

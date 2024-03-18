@@ -107,15 +107,7 @@ class AuthenticatedSessionController extends Controller
                 "Отлично! Вы успешно авторизовались!");
 
         return redirect()->route('dashboard');
-        /* }
 
-         BotMethods::bot()
-             ->whereBot($bot)
-             ->sendMessage(
-                 $tgId,
-                 "Ошибка авторизации");
-
-         return response()->redirectToRoute("login");*/
 
     }
 
@@ -183,9 +175,6 @@ class AuthenticatedSessionController extends Controller
 
 
         $user = $botUser->user;
-
-        /*Log::info(print_r($user->toArray(), true));
-        if (Auth::attempt(['email' => $user->email, 'password' => $tgId])) {*/
 
         Auth::login($user);
 

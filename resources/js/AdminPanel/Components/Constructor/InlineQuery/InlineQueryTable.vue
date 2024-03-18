@@ -12,6 +12,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 <tr>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('id')">#</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('command')">Команда</th>
+                    <th scope="col" class="cursor-pointer" >Кол-во пунктов меню</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('description')">Описание</th>
                     <th scope="col">Действие</th>
                 </tr>
@@ -22,6 +23,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <th scope="row">{{ query.id }}</th>
                     <td @click="selectInlineQuery(query)">{{ query.command || 'Не указано' }}
                     </td>
+                    <td>{{ query.items.length }}</td>
                     <td>{{ query.description || 'Не указано' }}</td>
                     <td>
                         <div class="dropdown" v-if="query.id">
@@ -83,7 +85,7 @@ export default {
         },
         selectInlineQuery(query) {
             this.$emit("select", query)
-            this.$notify("Вопрос успешно выбран");
+            this.$notify("Встроенное меню успешно выбрано");
         },
         removeInlineQuery(id) {
             this.loading = true
@@ -93,10 +95,10 @@ export default {
             }).then(resp => {
                 this.loading = false
                 this.loadInlineQueries(0)
-                this.$notify("Вопрос успешно удален");
+                this.$notify("Встроенное меню успешно удалено");
             }).catch(() => {
                 this.loading = false
-                this.$notify("Вопрос удаления сервиса")
+                this.$notify("Ошибка удаления встроенного меню")
             })
         },
         loadAndOrder(order) {

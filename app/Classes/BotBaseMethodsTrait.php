@@ -94,7 +94,7 @@ trait BotBaseMethodsTrait
         $tmp = [
             "chat_id" => $chatId,
             "message_thread_id" => $messageThreadId,
-            "text" => $message,
+            "text" => $message ?? 'Текст сообщения',
             "parse_mode" => "HTML"
         ];
 

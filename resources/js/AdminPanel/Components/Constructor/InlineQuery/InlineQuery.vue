@@ -3,13 +3,27 @@ import InlineQueryForm from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
 import InlineQueryTable from "@/AdminPanel/Components/Constructor/InlineQuery/InlineQueryTable.vue";
 </script>
 <template>
-    <h1>Inline Query</h1>
-    <InlineQueryForm :bot="bot"
-                     :inline-query="selectedInlineQuery">
 
-    </InlineQueryForm>
+    <div class="my-2">
+        <div class="row mb-2" v-if="selectedInlineQuery!=null">
+            <div class="col-12">
+               <button
+                   type="button"
+                   @click="selectInlineQuery(null)"
+                   class="btn btn-primary"> Добавить новое встроенное меню</button>
+            </div>
+        </div>
+        <InlineQueryForm :bot="bot"
+                         v-if="!load"
+                         :inline-query="selectedInlineQuery">
 
-    <InlineQueryTable v-on:select="selectInlineQuery"></InlineQueryTable>
+        </InlineQueryForm>
+
+        <InlineQueryTable
+            :bot="bot"
+            v-on:select="selectInlineQuery"></InlineQueryTable>
+
+    </div>
 
 </template>
 <script>
@@ -17,6 +31,7 @@ export default {
     props:["bot"],
     data(){
         return {
+            load:false,
             selectedInlineQuery:null
         }
     },
@@ -25,7 +40,13 @@ export default {
     },
     methods:{
         selectInlineQuery(item){
-          this.selectedInlineQuery = item
+            this.load = true
+
+            this.$nextTick(()=>{
+                this.selectedInlineQuery = item
+                this.load = false
+            })
+
         },
         loadInlineQueries(){
             this.$store.dispatch("loadInlineQueries",{

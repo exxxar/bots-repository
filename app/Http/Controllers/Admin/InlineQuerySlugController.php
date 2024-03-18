@@ -2,47 +2,68 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InlineQuerySlugStoreRequest;
 use App\Http\Requests\InlineQuerySlugUpdateRequest;
 use App\Http\Resources\InlineQuerySlugCollection;
 use App\Http\Resources\InlineQuerySlugResource;
+use App\Http\Resources\QuizCollection;
+use App\Http\Resources\QuizResource;
+use App\Models\Bot;
 use App\Models\InlineQuerySlug;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class InlineQuerySlugController extends Controller
 {
-    public function index(Request $request): Response
+    public function listOfInlineQueries(Request $request): InlineQuerySlugCollection
     {
-        $inlineQuerySlugs = InlineQuerySlug::all();
+        $request->validate([
+            "bot_id" => "required",
+        ]);
 
-        return new InlineQuerySlugCollection($inlineQuerySlugs);
+        $bot = Bot::query()
+            ->where("id", $request->bot_id ?? null)
+            ->first();
+
+        return BusinessLogic::inlineQuery()
+            ->setBot($bot ?? null)
+            ->list(
+                $request->search ?? null,
+                $request->size ?? 12,
+                $request->order ?? "updated_at",
+                $request->direction ?? "desc"
+            );
     }
 
-    public function store(InlineQuerySlugStoreRequest $request): Response
+    /**
+     * @throws ValidationException
+     */
+    public function queryStore(Request $request): InlineQuerySlugResource
     {
-        $inlineQuerySlug = InlineQuerySlug::create($request->validated());
 
-        return new InlineQuerySlugResource($inlineQuerySlug);
+        $request->validate([
+            "bot_id" => "required",
+            'command' => "required",
+            'description' => "required",
+        ]);
+
+
+        $bot = Bot::query()
+            ->where("id", $request->bot_id ?? null)
+            ->first();
+
+        return BusinessLogic::inlineQuery()
+            ->setBot($bot ?? null)
+            ->store($request->all());
     }
 
-    public function show(Request $request, InlineQuerySlug $inlineQuerySlug): Response
+    public function removeQuery(Request $request, $queryId): QuizResource
     {
-        return new InlineQuerySlugResource($inlineQuerySlug);
+        return BusinessLogic::inlineQuery()
+            ->remove($queryId);
     }
 
-    public function update(InlineQuerySlugUpdateRequest $request, InlineQuerySlug $inlineQuerySlug): Response
-    {
-        $inlineQuerySlug->update($request->validated());
-
-        return new InlineQuerySlugResource($inlineQuerySlug);
-    }
-
-    public function destroy(Request $request, InlineQuerySlug $inlineQuerySlug): Response
-    {
-        $inlineQuerySlug->delete();
-
-        return response()->noContent();
-    }
 }
