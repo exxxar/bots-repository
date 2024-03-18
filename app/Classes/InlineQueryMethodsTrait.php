@@ -30,7 +30,9 @@ trait InlineQueryMethodsTrait
             "type" => "article",
             "id" => Str::uuid(),
             "title" => $item->title ?? null,
-            "input_message_content" => $item->input_message_content,
+            "input_message_content" => [
+                "message_text"=>$item->input_message_content
+                ],
             "reply_markup" => !is_null($item->inline_keyboard) ? [
                 'inline_keyboard' => $item->inline_keyboard
             ] : null,
@@ -55,7 +57,9 @@ trait InlineQueryMethodsTrait
             "caption" => $config["caption"]??null,
             "title" => $item->title ?? null,
             "parse_mode" => "HTML",
-            "input_message_content" => $item->input_message_content,
+            "input_message_content" => [
+                "message_text"=>$item->input_message_content
+            ],
             "reply_markup" => !is_null($item->inline_keyboard) ? [
                 'inline_keyboard' => $item->inline_keyboard
             ] : null,
