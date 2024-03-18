@@ -37,16 +37,16 @@ trait InlineQueryMethodsTrait
 
         ];
 
-        if (!is_null($config["thumbnail_url"]))
+        if (!is_null($config["thumbnail_url"]??null))
             $tmp["thumbnail_url"] = $config["thumbnail_url"];
 
-        if (!is_null($config["thumbnail_width"]))
+        if (!is_null($config["thumbnail_width"]??null))
             $tmp["thumbnail_width"] = $config["thumbnail_width"];
 
-        if (!is_null($config["thumbnail_height"]))
+        if (!is_null($config["thumbnail_height"]??null))
             $tmp["thumbnail_height"] = $config["thumbnail_height"];
 
-        if (!is_null($config["url"]))
+        if (!is_null($config["url"]??null))
             $tmp["url"] = $config["url"];
 
         if (!is_null($item->inline_keyboard))
