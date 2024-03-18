@@ -34,8 +34,8 @@ trait InlineQueryMethodsTrait
                 "message_text"=>$item->input_message_content
                 ],
             "reply_markup" => !is_null($item->inline_keyboard) ? [
-                'inline_keyboard' => $item->inline_keyboard
-            ] : null,
+                'inline_keyboard' => $item->inline_keyboard ?? []
+            ] : [],
             "parse_mode" => "HTML",
             "url" => $config["url"] ?? null,
             "hide_url" => $config["hide_url"] ?? true,
@@ -61,8 +61,8 @@ trait InlineQueryMethodsTrait
                 "message_text"=>$item->input_message_content
             ],
             "reply_markup" => !is_null($item->inline_keyboard) ? [
-                'inline_keyboard' => $item->inline_keyboard
-            ] : null,
+                'inline_keyboard' => $item->inline_keyboard ?? []
+            ] : [],
         ];
     }
 }
