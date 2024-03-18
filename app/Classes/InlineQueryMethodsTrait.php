@@ -12,7 +12,7 @@ trait InlineQueryMethodsTrait
 
     public function getInlineQueryItem(object $item): mixed
     {
-        Log::info("type=",$item->type);
+        Log::info("type=".$item->type);
 
         return match ($item->type) {
             InlineItemTypeEnum::InlineQueryResultArticle => $this->InlineQueryResultArticle($item),
