@@ -57,7 +57,7 @@ class InlineQueryCore
 
         $id = $data["id"] ?? null;
         $query = $data["query"] ?? "";
-        $offset = $data["offset"] ?? null;
+        $offset = $data["offset"] ?? 0;
 
         include_once base_path('routes/inline-queries.php');
 
@@ -82,8 +82,8 @@ class InlineQueryCore
 
             $items = InlineQueryItem::query()
                 ->where("inline_query_slug_id", $inlineSlug->id)
-                ->take(10)
-                ->skip(0)
+                ->take($step)
+                ->skip($offset)
                 ->get();
 
             $button_list = [];
@@ -104,7 +104,7 @@ class InlineQueryCore
             if (count($button_list) > 0) {
 
 
-                Log::info("offset=>$offset $step $step".print_r($offset ,true));
+                Log::info("offset=>$offset $step".print_r($offset ,true));
 
                 Log::info("count".count($button_list));
                 \App\Facades\BotMethods::bot()
