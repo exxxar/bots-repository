@@ -70,8 +70,9 @@ class InlineQueryCore
 
         $find = false;
 
-        Log::info("step 1" . print_r($inlineSlug->toArray(), true));
+
         if (!is_null($inlineSlug)) {
+            Log::info("step 1" . print_r($inlineSlug->toArray(), true));
             Log::info("step sub 1");
             $max = InlineQueryItem::query()
                 ->where("inline_query_slug_id", $inlineSlug->id)
