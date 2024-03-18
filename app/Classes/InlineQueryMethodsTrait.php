@@ -35,12 +35,12 @@ trait InlineQueryMethodsTrait
                 "message_text" => $item->input_message_content
             ],
             "parse_mode" => "HTML",
-            "url" => $config["url"] ?? null,
+        /*    "url" => $config["url"] ?? null,*/
             "hide_url" => $config["hide_url"] ?? true,
             "description" => $item->description ?? null,
-            "thumbnail_url" => $config["thumbnail_url"] ?? null,
+          /*  "thumbnail_url" => $config["thumbnail_url"] ?? null,
             "thumbnail_width" => $config["thumbnail_width"] ?? null,
-            "thumbnail_height" => $config["thumbnail_height"] ?? null,
+            "thumbnail_height" => $config["thumbnail_height"] ?? null,*/
         ];
 
         if (!is_null($item->inline_keyboard))
