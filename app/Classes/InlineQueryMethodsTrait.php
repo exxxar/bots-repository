@@ -9,7 +9,7 @@ use function PHPUnit\Framework\objectEquals;
 trait InlineQueryMethodsTrait
 {
 
-    public function getInlineQueryItem(object $item): object
+    public function getInlineQueryItem(object $item): mixed
     {
         return match ($item->type) {
             InlineItemTypeEnum::InlineQueryResultArticle => $this->InlineQueryResultArticle($item),
