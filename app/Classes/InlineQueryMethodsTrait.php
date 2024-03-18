@@ -21,7 +21,6 @@ trait InlineQueryMethodsTrait
 
     private function InlineQueryResultArticle(object $item): object
     {
-        Log::info("we are here");
         $config = $item->custom_settings ?? [];
 
 
@@ -33,13 +32,22 @@ trait InlineQueryMethodsTrait
                 "message_text" => $item->input_message_content
             ],
             "parse_mode" => "HTML",
-        /*    "url" => $config["url"] ?? null,*/
             "hide_url" => $config["hide_url"] ?? true,
             "description" => $item->description ?? null,
-          /*  "thumbnail_url" => $config["thumbnail_url"] ?? null,
-            "thumbnail_width" => $config["thumbnail_width"] ?? null,
-            "thumbnail_height" => $config["thumbnail_height"] ?? null,*/
+
         ];
+
+        if (!is_null($config["thumbnail_url"]))
+            $tmp["thumbnail_url"] = $config["thumbnail_url"];
+
+        if (!is_null($config["thumbnail_width"]))
+            $tmp["thumbnail_width"] = $config["thumbnail_width"];
+
+        if (!is_null($config["thumbnail_height"]))
+            $tmp["thumbnail_height"] = $config["thumbnail_height"];
+
+        if (!is_null($config["url"]))
+            $tmp["url"] = $config["url"];
 
         if (!is_null($item->inline_keyboard))
             $tmp["reply_markup"] = [
