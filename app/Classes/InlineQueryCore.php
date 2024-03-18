@@ -57,7 +57,7 @@ class InlineQueryCore
 
         $id = $data["id"] ?? null;
         $query = $data["query"] ?? "";
-        $offset = $data["offset"] ?? 0;
+        $offset = empty($data["offset"] ?? '') ? 0 : intval($data["offset"]);
 
         include_once base_path('routes/inline-queries.php');
 
@@ -104,12 +104,12 @@ class InlineQueryCore
             if (count($button_list) > 0) {
 
 
-                Log::info("offset=>$offset $step".print_r($offset ,true));
+                Log::info("offset=>$offset $step" . print_r($offset, true));
 
-                Log::info("count".count($button_list));
+                Log::info("count" . count($button_list));
                 \App\Facades\BotMethods::bot()
                     ->whereBot($this->bot)
-                    ->sendAnswerInlineQuery($id, $button_list,intval($offset + $step) < $max ? intval($offset + $step) : null);
+                    ->sendAnswerInlineQuery($id, $button_list, intval($offset + $step) < $max ? intval($offset + $step) : null);
 
                 return $this;
             }
