@@ -89,6 +89,7 @@ class InlineQueryCore
                 $data = InlineQueryService::inline()
                     ->getInlineQueryItem($item) ?? null;
 
+                Log::info("item=>".print_r($data, true));
                 if (!is_null($data))
                     $button_list[] = $data;
             }
