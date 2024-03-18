@@ -62,12 +62,12 @@
       "_TelegramChannelHelper-864fe219.js"
     ]
   },
-  "_BotList-7c1685fd.js": {
+  "_BotList-a51fc463.js": {
     "css": [
       "assets/BotList-bb51d3cf.css",
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/BotList-7c1685fd.js",
+    "file": "assets/BotList-a51fc463.js",
     "imports": [
       "_Mail-cab2a5b4.js",
       "_index.es-71d37bd0.js",
@@ -232,17 +232,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-8ec90ee2.js",
@@ -319,10 +319,10 @@
       "assets/ChatMini-5a929b50.css",
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/BotPage-55a46827.js",
+    "file": "assets/BotPage-6007846e.js",
     "imports": [
       "_MainAdminLayout-03548892.js",
-      "_BotList-7c1685fd.js",
+      "_BotList-a51fc463.js",
       "_CompanyList-c0a10ba6.js",
       "_BotForm-4b5a6839.js",
       "_index.es-71d37bd0.js",
@@ -393,10 +393,10 @@
       "assets/Dashboard-db3e581c.css",
       "assets/InlineInjectionsHelper-5ad24a6a.css"
     ],
-    "file": "assets/Dashboard-70f64cc8.js",
+    "file": "assets/Dashboard-1e635b47.js",
     "imports": [
       "_CompanyList-c0a10ba6.js",
-      "_BotList-7c1685fd.js",
+      "_BotList-a51fc463.js",
       "_Mail-cab2a5b4.js",
       "_BotForm-4b5a6839.js",
       "_BotMediaList-53d8d6dc.js",
@@ -554,7 +554,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-b54a5db8.js",
+    "file": "assets/app-00af0cd2.js",
     "imports": [
       "_index.es-71d37bd0.js",
       "_index-4a291d06.js"

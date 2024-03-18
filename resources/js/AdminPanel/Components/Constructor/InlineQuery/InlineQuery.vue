@@ -15,6 +15,7 @@ import InlineQueryTable from "@/AdminPanel/Components/Constructor/InlineQuery/In
         </div>
         <InlineQueryForm :bot="bot"
                          v-if="!load"
+                         v-on:callback="loadInlineQueries(0)"
                          :inline-query="selectedInlineQuery">
 
         </InlineQueryForm>

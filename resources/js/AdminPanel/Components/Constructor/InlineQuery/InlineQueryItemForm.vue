@@ -274,7 +274,7 @@ export default {
     },
     computed: {
         preparedTypeTile() {
-            return this.types.filter(item => item.value === this.itemForm.type)[0] || null
+            return this.types.filter(item => item.value == this.itemForm.type)[0] || null
         }
     },
     watch: {
