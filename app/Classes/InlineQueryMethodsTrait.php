@@ -12,17 +12,18 @@ trait InlineQueryMethodsTrait
 
     public function getInlineQueryItem(object $item): mixed
     {
-        Log::info("type=".$item->type);
+        Log::info("type=".$item->type."-". print_r(InlineItemTypeEnum::InlineQueryResultArticle, true));
 
         return match ($item->type) {
-            InlineItemTypeEnum::InlineQueryResultArticle->value => $this->InlineQueryResultArticle($item),
-            InlineItemTypeEnum::InlineQueryResultCachedPhoto->value => $this->InlineQueryResultCachedPhoto($item),
+            InlineItemTypeEnum::InlineQueryResultArticle => $this->InlineQueryResultArticle($item),
+            InlineItemTypeEnum::InlineQueryResultCachedPhoto => $this->InlineQueryResultCachedPhoto($item),
             default => null,
         };
     }
 
     private function InlineQueryResultArticle(object $item): object
     {
+        Log::info("we are here");
         $config = $item->custom_settings ?? [];
 
         return (object)[
