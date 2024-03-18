@@ -68,10 +68,11 @@ class InlineQueryCore
             ->where("command", $query)
             ->first();
 
+        $find = false;
 
-        Log::info("step 1");
+        Log::info("step 1" . print_r($inlineSlug->toArray(), true));
         if (!is_null($inlineSlug)) {
-
+            Log::info("step sub 1");
             $max = InlineQueryItem::query()
                 ->where("inline_query_slug_id", $inlineSlug->id)
                 ->count();
@@ -88,12 +89,12 @@ class InlineQueryCore
 
             foreach ($items as $item) {
 
-                Log::info("item1=>".print_r($item, true));
+                Log::info("item1=>" . print_r($item->toArray(), true));
 
                 $data = InlineQueryService::inline()
                     ->getInlineQueryItem($item) ?? null;
 
-                Log::info("item=>".print_r($data, true));
+                Log::info("item=>" . print_r($data, true));
                 if (!is_null($data))
                     $button_list[] = $data;
             }
@@ -109,21 +110,23 @@ class InlineQueryCore
                 return $this;
             }
 
+            $find = true;
         }
 
-        $find = false;
+
         Log::info("step 2");
-        foreach ($this->routes as $item) {
+        if (!$find)
+            foreach ($this->routes as $item) {
 
-            if (is_null($item["path"]))
-                continue;
+                if (is_null($item["path"]))
+                    continue;
 
-            if ($item["path"] == $query) {
-                $find = $this->tryCall($item, ...$data);
-                break;
+                if ($item["path"] == $query) {
+                    $find = $this->tryCall($item, ...$data);
+                    break;
+                }
+
             }
-
-        }
         Log::info("step 3");
         if (!$find) {
             $button_list[] = [
