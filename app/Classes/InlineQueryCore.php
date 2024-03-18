@@ -86,6 +86,9 @@ class InlineQueryCore
             $button_list = [];
 
             foreach ($items as $item) {
+
+                Log::info("item1=>".print_r($item, true));
+
                 $data = InlineQueryService::inline()
                     ->getInlineQueryItem($item) ?? null;
 
