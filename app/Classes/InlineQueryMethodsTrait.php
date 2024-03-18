@@ -12,8 +12,6 @@ trait InlineQueryMethodsTrait
 
     public function getInlineQueryItem(object $item): mixed
     {
-        Log::info("type=" . $item->type . "-" . print_r(InlineItemTypeEnum::InlineQueryResultArticle, true));
-
         return match (InlineItemTypeEnum::from($item->type)) {
             InlineItemTypeEnum::InlineQueryResultArticle => $this->InlineQueryResultArticle($item),
             InlineItemTypeEnum::InlineQueryResultCachedPhoto => $this->InlineQueryResultCachedPhoto($item),

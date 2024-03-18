@@ -82,8 +82,8 @@ class InlineQueryCore
 
             $items = InlineQueryItem::query()
                 ->where("inline_query_slug_id", $inlineSlug->id)
-                ->take($step)
-                ->skip($offset ?? 0)
+                ->take(10)
+                ->skip(0)
                 ->get();
 
             $button_list = [];
