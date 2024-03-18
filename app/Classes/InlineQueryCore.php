@@ -106,6 +106,7 @@ class InlineQueryCore
 
                 Log::info("offset=>$offset $step $step".print_r($offset ,true));
 
+                Log::info("count".count($button_list));
                 \App\Facades\BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendAnswerInlineQuery($id, $button_list,null /*$offset + $step < $max ? $offset + $step : null*/);
