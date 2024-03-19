@@ -416,7 +416,7 @@ trait BotBaseMethodsTrait
             ])
         ];
 
-        Log::info("inline_keyboard_in_send_invoice ".print_r($tmp, true));
+        Log::info("inline_keyboard_in_send_invoice " . print_r($tmp, true));
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
@@ -664,6 +664,7 @@ trait BotBaseMethodsTrait
 
     public function sendPhoto($chatId, $caption, $path, $keyboard = [], $messageThreadId = null)
     {
+        Log::info("keyboard=>" . print_r($keyboard, true));
         $tmp = [
             "chat_id" => $chatId,
             "message_thread_id" => $messageThreadId,
@@ -671,7 +672,7 @@ trait BotBaseMethodsTrait
             "caption" => $caption,
             "parse_mode" => "HTML",
             'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
+                'inline_keyboard' => is_array($keyboard) ? $keyboard : [],
             ])
         ];
 

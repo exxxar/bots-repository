@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use App\Enums\InlineItemTypeEnum;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use function PHPUnit\Framework\objectEquals;
@@ -37,22 +38,11 @@ trait InlineQueryMethodsTrait
 
         ];
 
-        if (!is_null($config["thumbnail_url"]??null))
-            $tmp["thumbnail_url"] = $config["thumbnail_url"];
-
-        if (!is_null($config["thumbnail_width"]??null))
-            $tmp["thumbnail_width"] = $config["thumbnail_width"];
-
-        if (!is_null($config["thumbnail_height"]??null))
-            $tmp["thumbnail_height"] = $config["thumbnail_height"];
-
-        if (!is_null($config["url"]??null))
-            $tmp["url"] = $config["url"];
-
-        if (!is_null($item->inline_keyboard))
-            $tmp["reply_markup"] = [
-                'inline_keyboard' => $item->inline_keyboard ?? []
-            ];
+        foreach ($config as $c)
+        {
+            $c = (object)$c;
+            $tmp[$c->key] = $c->value;
+        }
 
         return (object)$tmp;
     }
@@ -78,6 +68,12 @@ trait InlineQueryMethodsTrait
             $tmp["reply_markup"] = [
                 'inline_keyboard' => $item->inline_keyboard ?? []
             ];
+
+        foreach ($config as $c)
+        {
+            $c = (object)$c;
+            $tmp[$c->key] = $c->value;
+        }
 
         return (object)$tmp;
     }
