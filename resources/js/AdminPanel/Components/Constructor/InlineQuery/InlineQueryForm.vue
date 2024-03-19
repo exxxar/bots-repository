@@ -60,7 +60,7 @@ import InlineQueryItemForm from "@/AdminPanel/Components/Constructor/InlineQuery
                         data-bs-target="#show-inline-items-modal"
                         aria-controls="show-inline-items-modal">
                     <i class="fa-solid fa-bars mr-2"></i>
-                    ваше меню
+                    пункты меню
                     <strong >
                         ({{inlineQueryForm.items.length}})
                     </strong>

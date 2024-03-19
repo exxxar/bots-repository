@@ -9,10 +9,12 @@ use App\Http\Resources\QuizCollection;
 use App\Http\Resources\QuizResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
+use App\Models\BotMenuTemplate;
 use App\Models\InlineQueryItem;
 use App\Models\InlineQuerySlug;
 use App\Models\Quiz;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -138,6 +140,20 @@ class InlineQueryLogicFactory
         foreach ($items as $item) {
             $item = (array)$item;
 
+            if (isset($data["inline_keyboard"]) && is_null($data["inline_keyboard_id"] ?? null)) {
+                $keyboard = BotMenuTemplate::query()->create([
+                    'bot_id'=>$this->bot->id,
+                    'type'=>"inline",
+                    'slug'=>Str::uuid(),
+                    'menu'=>$data["inline_keyboard"],
+                ]);
+            }
+
+            if (!is_null($data["inline_keyboard_id"] ?? null))
+                $keyboard = BotMenuTemplate::query()->find($data["inline_keyboard_id"]);
+
+
+
             $queryItem = InlineQueryItem::query()
                 ->create([
                     'inline_query_slug_id' => $query->id,
@@ -145,7 +161,7 @@ class InlineQueryLogicFactory
                     'title' => $item["title"] ?? null,
                     'description' => $item["description"] ?? null,
                     'input_message_content' => $item["input_message_content"] ?? null,
-                    'inline_keyboard_id' => null,
+                    'inline_keyboard_id' => $keyboard?->id,
                     'custom_settings' => isset($item["custom_settings"]) ? $item["custom_settings"] : null,
                 ]);
         }

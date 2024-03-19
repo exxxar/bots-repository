@@ -38,13 +38,7 @@ trait InlineQueryMethodsTrait
 
         ];
 
-        foreach ($config as $c)
-        {
-            $c = (object)$c;
-            $tmp[$c->key] = $c->value;
-        }
-
-        return (object)$tmp;
+        return $this->extracted($item, $tmp, $config);
     }
 
     private function InlineQueryResultCachedPhoto(object $item): object
@@ -64,13 +58,23 @@ trait InlineQueryMethodsTrait
 
         ];
 
-        if (!is_null($item->inline_keyboard))
+        return $this->extracted($item, $tmp, $config);
+    }
+
+    /**
+     * @param object $item
+     * @param array $tmp
+     * @param array $config
+     * @return object
+     */
+    private function extracted(object $item, array $tmp, array $config): object
+    {
+        if (!is_null($item->inline_keyboard ?? null))
             $tmp["reply_markup"] = [
-                'inline_keyboard' => $item->inline_keyboard ?? []
+                'inline_keyboard' => !is_null($item->inline_keyboard ?? null) ? $item->inline_keyboard->menu : []
             ];
 
-        foreach ($config as $c)
-        {
+        foreach ($config as $c) {
             $c = (object)$c;
             $tmp[$c->key] = $c->value;
         }

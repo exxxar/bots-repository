@@ -297,7 +297,7 @@ export default {
                     input_message_content: this.item.input_message_content || null,
                     need_keyboard: this.item.title || false,
                     inline_keyboard_id: this.item.inline_keyboard_id || null,
-                    inline_keyboard: this.item.inline_keyboard || null,
+                    inline_keyboard: this.item.inline_keyboard ? this.item.inline_keyboard.menu : null,
                     custom_settings: this.item.custom_settings || [],
                 }
 
