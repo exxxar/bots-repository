@@ -160,7 +160,7 @@ class InlineQueryLogicFactory
                     'title' => $item["title"] ?? null,
                     'description' => $item["description"] ?? null,
                     'input_message_content' => $item["input_message_content"] ?? null,
-                    'inline_keyboard_id' => $keyboard?->id,
+                    'inline_keyboard_id' => is_null($keyboard ?? null) ? null : $keyboard->id,
                     'custom_settings' => isset($item["custom_settings"]) ? $item["custom_settings"] : null,
                 ]);
         }
