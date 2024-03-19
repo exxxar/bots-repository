@@ -89,7 +89,7 @@ export default {
     },
     computed: {
         isCompleted() {
-            //return false;
+            return false;
             let current_attempts = this.quiz.personal_info.current_attempts
             let max_attempts = this.quiz.personal_info.current_attempts
 
