@@ -1,5 +1,6 @@
 <script setup>
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
+import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/InlineQueryList.vue";
 </script>
 <template>
 
@@ -209,13 +210,28 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                 </div>
 
                 <div class="mb-3" v-if="type==='inline'">
+
                     <label :for="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
                            class="form-label">Команда всплывающего меню бота</label>
-                    <input type="text" class="form-control"
-                           @change="needRemoveField( 'switch_inline_query_current_chat',select.row, select.col)"
-                           v-model="keyboard[select.row][select.col].switch_inline_query_current_chat"
-                           :id="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
-                           placeholder="команда">
+
+                    <div class="alert alert-warning" role="alert">
+                        Внимание! Режим всплывающего меню должен быть настроен в BotFather-е в разделе редактирования бота InlineMode. Сперва нужно включить данный режим.
+                    </div>
+
+                    <div class="input-group mb-3">
+
+                        <input type="text" class="form-control"
+                               @change="needRemoveField( 'switch_inline_query_current_chat',select.row, select.col)"
+                               v-model="keyboard[select.row][select.col].switch_inline_query_current_chat"
+                               :id="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
+                               placeholder="команда">
+
+                        <button type="button"
+                                @click="openInlineQueryModal"
+                                class="btn btn-outline-primary" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+
+                    </div>
+
                 </div>
                 <div class="mb-3" v-if="type==='inline'">
 
@@ -343,6 +359,19 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
         </div>
     </div>
+
+    <div class="modal fade" :id="'inline-query-list-in-keyboard-'+uuid" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <InlineQueryList v-on:select="selectInlineQuery"></InlineQueryList>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <!-- Modal -->
 </template>
 <script>
@@ -387,6 +416,7 @@ export default {
         return {
             need_login_url: false,
             pageModal: null,
+            inlineQueryModal: null,
             mode: 0,
             editor: false,
             showCode: false,
@@ -405,6 +435,7 @@ export default {
 
     mounted() {
         this.pageModal = new bootstrap.Modal(document.getElementById('page-list-in-keyboard-' + this.uuid), {})
+        this.inlineQueryModal = new bootstrap.Modal(document.getElementById('inline-query-list-in-keyboard-' + this.uuid), {})
 
 
         if (this.editedKeyboard) {
@@ -416,6 +447,18 @@ export default {
 
     },
     methods: {
+        selectInlineQuery(query){
+            this.keyboard[this.select.row][this.select.col].switch_inline_query_current_chat = query.command
+
+            this.$notify({
+                title: "Конструктор страниц",
+                text: "Вы успешно выбрали страницу",
+                type: 'success'
+            });
+        },
+        openInlineQueryModal(){
+            this.inlineQueryModal.show()
+        },
         openPageModal() {
             this.pageModal.show()
         },

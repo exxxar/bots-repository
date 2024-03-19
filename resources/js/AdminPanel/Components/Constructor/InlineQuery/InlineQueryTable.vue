@@ -59,7 +59,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["bot", "queryId"],
+    props: ["bot"],
     data() {
         return {
             direction: 'desc',
@@ -104,7 +104,7 @@ export default {
         loadAndOrder(order) {
             this.order = order
             this.direction = this.direction === 'desc' ? 'asc' : 'desc'
-            this.loadQuizCommands(0)
+            this.loadInlineQueries(0)
         },
         loadInlineQueries(page = 0) {
             this.loading = true

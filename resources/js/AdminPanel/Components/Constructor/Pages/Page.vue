@@ -194,7 +194,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=0"
                     >
                         <a
-                            v-bind:class="{'active':tab===0}"
+                            v-bind:class="{'active':tab===0,'primary-mark':need_reply_menu}"
                             class="nav-link d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-regular fa-keyboard"></i>
@@ -206,7 +206,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=1"
                     >
                         <a
-                            v-bind:class="{'active':tab===1}"
+                            v-bind:class="{'active':tab===1,'primary-mark':need_inline_menu}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-solid fa-ellipsis"></i>
@@ -218,7 +218,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=2"
                     >
                         <a
-                            v-bind:class="{'active':tab===2}"
+                            v-bind:class="{'active':tab===2,'primary-mark':need_page_images}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-regular fa-images"></i>
@@ -230,7 +230,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=3"
                     >
                         <a
-                            v-bind:class="{'active':tab===3}"
+                            v-bind:class="{'active':tab===3,'primary-mark':need_page_video}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-solid fa-photo-film"></i>
@@ -242,7 +242,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=4"
                     >
                         <a
-                            v-bind:class="{'active':tab===4}"
+                            v-bind:class="{'active':tab===4,'primary-mark':need_page_sticker}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-regular fa-note-sticky"></i>
@@ -255,7 +255,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=5"
                     >
                         <a
-                            v-bind:class="{'active':tab===5}"
+                            v-bind:class="{'active':tab===5,'primary-mark':need_page_audios}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-regular fa-file-audio"></i>
@@ -267,7 +267,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=6"
                     >
                         <a
-                            v-bind:class="{'active':tab===6}"
+                            v-bind:class="{'active':tab===6,'primary-mark':need_page_documents}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-regular fa-file-word"></i>
@@ -279,7 +279,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=7"
                     >
                         <a
-                            v-bind:class="{'active':tab===7}"
+                            v-bind:class="{'active':tab===7,'primary-mark':need_attach_page}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-solid fa-link"></i>
@@ -291,7 +291,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=8"
                     >
                         <a
-                            v-bind:class="{'active':tab===8}"
+                            v-bind:class="{'active':tab===8,'primary-mark':need_attach_slug}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-solid fa-scroll"></i>
@@ -302,7 +302,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         class="nav-item "
                         @click="tab=9">
                         <a
-                            v-bind:class="{'active':tab===9}"
+                            v-bind:class="{'active':tab===9,'primary-mark':need_attach_dialog}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-regular fa-comment-dots"></i>
@@ -314,7 +314,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                         @click="tab=10"
                     >
                         <a
-                            v-bind:class="{'active':tab===10}"
+                            v-bind:class="{'active':tab===10,'primary-mark':need_rules}"
                             class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
                             href="javascript:void(0)">
                             <i class="fa-solid fa-scale-balanced"></i>
@@ -2185,6 +2185,20 @@ export default {
 
 .font-10 {
     font-size: 10px !important;
+}
+
+.primary-mark {
+    position: relative;
+    &:after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 5px;
+        height: 5px;
+        background-color: red;
+        border-radius: 50%;
+    }
 }
 
 </style>
