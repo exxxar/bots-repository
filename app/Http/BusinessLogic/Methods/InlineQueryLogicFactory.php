@@ -142,10 +142,10 @@ class InlineQueryLogicFactory
 
             if (isset($data["inline_keyboard"]) && is_null($data["inline_keyboard_id"] ?? null)) {
                 $keyboard = BotMenuTemplate::query()->create([
-                    'bot_id'=>$this->bot->id,
-                    'type'=>"inline",
-                    'slug'=>Str::uuid(),
-                    'menu'=>$data["inline_keyboard"],
+                    'bot_id' => $this->bot->id,
+                    'type' => "inline",
+                    'slug' => Str::uuid(),
+                    'menu' => $data["inline_keyboard"],
                 ]);
             }
 
@@ -153,10 +153,9 @@ class InlineQueryLogicFactory
                 $keyboard = BotMenuTemplate::query()->find($data["inline_keyboard_id"]);
 
 
-
             $queryItem = InlineQueryItem::query()
                 ->create([
-                    'inline_query_slug_id' => $query->id,
+                    'inline_query_slug_id' => is_null($id) ? $query->id : $id,
                     'type' => $item["type"] ?? null,
                     'title' => $item["title"] ?? null,
                     'description' => $item["description"] ?? null,
