@@ -455,6 +455,8 @@ export default {
                 text: "Вы успешно выбрали страницу",
                 type: 'success'
             });
+
+            this.inlineQueryModal.hide()
         },
         openInlineQueryModal(){
             this.inlineQueryModal.show()

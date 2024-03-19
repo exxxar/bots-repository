@@ -57,7 +57,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 </label>
             </div>
 
-            <div class="card"
+            <div class="card mb-2 cursor-pointer"
                  @click="selectInlineQuery(query)"
                  v-if="queries.length>0"
                  v-bind:class="{'border-info':query.deleted_at==null,'border-danger':query.deleted_at!=null}"
@@ -65,7 +65,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 <div class="card-body d-flex justify-content-between">
 
                     <p>{{ query.command || 'Не указано' }}</p>
-                    <span class="badge bg-primary d-flex justify-content-center align-items-center">{{ query.items.length }}</span>
+                    <span
+                        style="min-width:50px;"
+                        class="badge bg-primary d-flex justify-content-center align-items-center">{{ query.items.length }}</span>
 
 
                 </div>
