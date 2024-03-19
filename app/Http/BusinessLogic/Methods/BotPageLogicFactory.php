@@ -209,6 +209,8 @@ class BotPageLogicFactory
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($tmp->reply_keyboard);
 
+            $keyboard = $this->recursiveMenuFix($keyboard);
+
             unset($tmp->reply_keyboard);
 
             $strSlug = Str::uuid();
@@ -224,6 +226,8 @@ class BotPageLogicFactory
 
         if (!is_null($inlineKeyboard)) {
             $keyboard = json_decode($tmp->inline_keyboard);
+
+            $keyboard = $this->recursiveMenuFix($keyboard);
 
             unset($tmp->inline_keyboard);
 
@@ -337,6 +341,9 @@ class BotPageLogicFactory
 
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($tmp->reply_keyboard);
+
+            $keyboard = $this->recursiveMenuFix($keyboard);
+
             unset($tmp->reply_keyboard);
 
             $reply_keyboard_id = $tmp->reply_keyboard_id ?? -1;
@@ -364,6 +371,8 @@ class BotPageLogicFactory
 
         if (!is_null($inlineKeyboard)) {
             $keyboard = json_decode($tmp->inline_keyboard);
+
+            $keyboard = $this->recursiveMenuFix($keyboard);
 
             unset($tmp->inline_keyboard);
 

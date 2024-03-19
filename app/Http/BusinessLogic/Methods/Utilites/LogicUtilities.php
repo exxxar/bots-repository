@@ -38,4 +38,14 @@ trait LogicUtilities
         return $imageName;
     }
 
+    protected function recursiveMenuFix($menu): array
+    {
+        $menu = (array)$menu;
+        if (isset($menu["menu"])) {
+            return $this->recursiveMenuFix($menu["menu"]);
+        }
+
+        return $menu;
+    }
+
 }

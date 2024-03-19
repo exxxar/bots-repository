@@ -283,10 +283,15 @@ trait BotBaseMethodsTrait
             "document" => $fileId,
             "caption" => $caption,
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
-            ])
+
         ];
+
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
+
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
@@ -411,10 +416,14 @@ trait BotBaseMethodsTrait
             "currency" => $currency ?? env("PAYMENT_PROVIDER_CURRENCY"),
             "prices" => $prices,
             ...$needs,
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
-            ])
+
         ];
+
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
 
         Log::info("inline_keyboard_in_send_invoice " . print_r($tmp, true));
 
@@ -442,10 +451,15 @@ trait BotBaseMethodsTrait
             "chat_id" => $chatId,
             "message_id" => $messageId,
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
-            ])
+
         ];
+
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
+
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
@@ -471,10 +485,14 @@ trait BotBaseMethodsTrait
             "message_id" => $messageId,
             "media" => json_encode($media),
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
-            ])
+
         ];
+
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
@@ -501,10 +519,14 @@ trait BotBaseMethodsTrait
             "message_id" => $messageId,
             "text" => $text,
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
-            ])
+
         ];
+
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
@@ -530,10 +552,15 @@ trait BotBaseMethodsTrait
             "message_id" => $messageId,
             "caption" => $caption,
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
-            ])
+
         ];
+
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
+
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
@@ -560,11 +587,16 @@ trait BotBaseMethodsTrait
             "text" => $message,
             "message_thread_id" => $messageThreadId,
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
-            ])
+
 
         ];
+
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
+
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
@@ -671,10 +703,14 @@ trait BotBaseMethodsTrait
             "photo" => $path,
             "caption" => $caption,
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
-                'inline_keyboard' => is_array($keyboard) ? $keyboard : [],
-            ])
         ];
+
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
+
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
@@ -706,10 +742,14 @@ trait BotBaseMethodsTrait
             "video" => $videoPath,
             "caption" => $caption,
             "parse_mode" => "HTML",
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $keyboard,
-            ])
+
         ];
+
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
