@@ -53,24 +53,59 @@ import InlineQueryItemForm from "@/AdminPanel/Components/Constructor/InlineQuery
             </div>
 
             <div class="col-12 mb-2">
-                <button class="btn btn-outline-info mr-2"
-                        v-if="inlineQueryForm.items.length>0"
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#show-inline-items-modal"
-                        aria-controls="show-inline-items-modal">
-                    <i class="fa-solid fa-bars mr-2"></i>
-                    пункты меню
-                    <strong >
-                        ({{inlineQueryForm.items.length}})
-                    </strong>
 
-                </button>
 
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#inline-query-item-editor">
-                  Добавление пункта меню
+                <button type="button" class="btn btn-outline-primary" @click="openModal">
+                    Добавление пункта меню
                 </button>
+            </div>
+
+            <div v-if="inlineQueryForm.items.length>0">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Название</th>
+                            <th scope="col">Описание</th>
+                            <th scope="col">Текст</th>
+                            <th scope="col">Есть клавиатура</th>
+                            <th scope="col">Есть доп настройки</th>
+                            <th scope="col">Действие</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item, index) in inlineQueryForm.items">
+                            <td @click="selectInlineQueryItem(item)">{{ item.title || '-' }}</td>
+                            <td @click="selectInlineQueryItem(item)">{{ item.description || '-' }}</td>
+                            <td @click="selectInlineQueryItem(item)">{{ item.input_message_content || '-' }}</td>
+                            <td>
+                                <i class="fa-solid fa-check text-success"
+                                   v-if="item.inline_keyboard"></i>
+                                <i class="fa-solid fa-xmark text-danger" v-else></i>
+                            </td>
+                            <td>
+                                <i class="fa-solid fa-check text-success"
+                                   v-if="(item.custom_settings||[]).length > 0"></i>
+                                <i class="fa-solid fa-xmark text-danger" v-else></i>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-link" type="button" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        <i class="fa-solid fa-bars"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item"
+                                               @click="removeInlineQueryItem(index)"
+                                               href="#">Удалить</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>
@@ -87,85 +122,36 @@ import InlineQueryItemForm from "@/AdminPanel/Components/Constructor/InlineQuery
 
 
     <!-- Modal -->
-    <div class="modal fade" id="inline-query-item-editor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="inline-query-item-editor" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-body">
                     <InlineQueryItemForm
+                        v-if="!load"
+                        :item="selectedInlineQueryItem"
                         v-on:callback="addInlineQueryItem"></InlineQueryItemForm>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="offcanvas offcanvas-start"
-         data-bs-scroll="true"
-         data-bs-backdrop="false"
-         tabindex="-1" id="show-inline-items-modal" aria-labelledby="show-inline-items-modal-lable">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="show-inline-items-modal-label">Все созданные пункты меню</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div v-if="inlineQueryForm.items.length>0">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">Название</th>
-                            <th scope="col">Описание</th>
-                            <th scope="col">Текст</th>
-                            <th scope="col">Есть клавиатура</th>
-                            <th scope="col">Есть доп настройки</th>
-                            <th scope="col">Действие</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(item, index) in inlineQueryForm.items">
-                            <td>{{item.title || '-'}}</td>
-                            <td>{{item.description || '-'}}</td>
-                            <td>{{item.input_message_content || '-'}}</td>
-                            <td>
-                                <i class="fa-solid fa-check text-success" v-if="(item.inline_keyboard||[]).length > 0"></i>
-                                <i class="fa-solid fa-xmark text-danger" v-else></i>
-                            </td>
-                            <td>
-                                <i class="fa-solid fa-check text-success" v-if="(item.custom_settings||[]).length > 0"></i>
-                                <i class="fa-solid fa-xmark text-danger" v-else></i>
-                            </td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa-solid fa-bars"></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Удалить</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </template>
 
 <script>
 export default {
-    props: [ "bot","inlineQuery"],
+    props: ["bot", "inlineQuery"],
     data() {
         return {
             load: false,
-
+            selectedInlineQueryItem: null,
+            inlineQueryModal: null,
             inlineQueryForm: {
-                id:null,
-                command:null,
-                description:null,
-                items:[
-
-                ]
+                id: null,
+                command: null,
+                description: null,
+                items: []
             }
         }
     },
@@ -180,6 +166,7 @@ export default {
     },
     mounted() {
 
+        this.inlineQueryModal = new bootstrap.Modal(document.getElementById('inline-query-item-editor'), {})
 
         if (this.inlineQuery)
             this.$nextTick(() => {
@@ -193,8 +180,52 @@ export default {
 
     },
     methods: {
-        addInlineQueryItem(item){
-            this.inlineQueryForm.items.push(item)
+        removeInlineQueryItem(index) {
+            const item = this.inlineQueryForm.items[index]
+
+            this.inlineQueryForm.items.splice(index, 1)
+
+            this.$store.dispatch("removeInlineQueryItem",
+                {
+                    queryItemId: item.id
+                }).then((response) => {
+
+                this.$notify("Команда успешно удалена");
+            }).catch(err => {
+                this.$notify("Ошибка удаления команды");
+            })
+        },
+        openModal() {
+            this.load = true
+
+            this.$nextTick(() => {
+                this.selectedInlineQueryItem = null
+                this.load = false
+                this.inlineQueryModal.show();
+            })
+        },
+        addInlineQueryItem(item) {
+
+            let index = this.inlineQueryForm.items.findIndex(queryItem => queryItem.id === item.id)
+
+            if (index === -1)
+                this.inlineQueryForm.items.push(item)
+            else
+                this.inlineQueryForm.items[index] = item
+        },
+        selectInlineQueryItem(item) {
+            this.load = true
+
+            this.$nextTick(() => {
+
+                this.selectedInlineQueryItem = item
+
+                this.load = false
+
+
+                console.log("selectedInlineQueryItem", this.selectedInlineQueryItem)
+                this.inlineQueryModal.show();
+            })
         },
         submitForm() {
             let data = new FormData();
@@ -215,12 +246,10 @@ export default {
                 }).then((response) => {
 
                 this.inlineQueryForm = {
-                    id:null,
-                    command:null,
-                    description:null,
-                    items:[
-
-                    ]
+                    id: null,
+                    command: null,
+                    description: null,
+                    items: []
                 }
 
                 this.$emit("callback", response.data)
@@ -228,6 +257,8 @@ export default {
                 this.$notify("Команда успешно создана");
             }).catch(err => {
                 this.$notify("Ошибка создания команды");
+
+                this.$emit("callback", response.data)
             })
 
         },

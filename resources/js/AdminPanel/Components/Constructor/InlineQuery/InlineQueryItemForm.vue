@@ -137,8 +137,8 @@ import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
                         <BotMenuConstructor
                             :type="'inline'"
                             v-else
-                            v-on:save="saveInlineKeyboard"
-                            :edited-keyboard="itemForm.inline_keyboard"/>
+                            v-on:save="selectInlineKeyboard"
+                            :edited-keyboard="itemForm.inline_keyboard.menu"/>
                     </div>
                 </div>
 
@@ -234,7 +234,7 @@ import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
         <div class="row">
             <div class="col-12">
                 <button type="submit"
-                        class="btn btn-outline-primary w-100">Добавить пункт меню
+                        class="btn btn-outline-primary w-100">Сохранить пункт меню
                 </button>
             </div>
         </div>
@@ -243,8 +243,12 @@ import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
 </template>
 
 <script>
+
+import {v4 as uuidv4} from "uuid";
+
 export default {
     props: ["item"],
+
     data() {
         return {
             need_custom_settings: false,
@@ -267,7 +271,9 @@ export default {
                 description: null,
                 input_message_content: null,
                 inline_keyboard_id: null,
-                inline_keyboard: null,
+                inline_keyboard: {
+                    menu:null
+                },
                 custom_settings: []
             }
         }
@@ -275,10 +281,14 @@ export default {
     computed: {
         preparedTypeTile() {
             return this.types.filter(item => item.value == this.itemForm.type)[0] || null
+        },
+        uuid() {
+            const data = uuidv4();
+            return data
         }
     },
     watch: {
-        serviceForm: {
+        itemForm: {
             handler(val) {
                 this.need_reset = true
             },
@@ -289,17 +299,25 @@ export default {
 
         if (this.item)
             this.$nextTick(() => {
-                this.serviceForm = {
-                    id: null,
+                this.itemForm = {
+                    id: this.item.id || uuid,
                     type: this.item.type || 0,
                     title: this.item.title || null,
                     description: this.item.description || null,
                     input_message_content: this.item.input_message_content || null,
                     need_keyboard: this.item.title || false,
                     inline_keyboard_id: this.item.inline_keyboard_id || null,
-                    inline_keyboard: this.item.inline_keyboard ? this.item.inline_keyboard.menu : null,
+                    inline_keyboard: this.item.inline_keyboard ? this.item.inline_keyboard : {
+                        menu:null
+                    },
                     custom_settings: this.item.custom_settings || [],
                 }
+
+                if (this.itemForm.inline_keyboard)
+                    this.need_keyboard = true
+
+                if (this.itemForm.custom_settings)
+                    this.need_custom_settings = true
 
             })
 
@@ -315,9 +333,15 @@ export default {
                 description: null,
                 input_message_content: null,
                 inline_keyboard_id: null,
-                inline_keyboard: null,
+                inline_keyboard: {
+                    menu:null
+                },
                 custom_settings: []
             }
+
+            this.need_keyboard = false
+            this.need_custom_settings = false
+            this.need_show_inline_template_selector = false
         },
         addCustomSettings() {
             this.itemForm.custom_settings.push({
@@ -329,7 +353,12 @@ export default {
             this.itemForm.custom_settings.splice(index, 1)
         },
         selectInlineKeyboard(item) {
-            this.itemForm.inline_keyboard = item
+            console.log("selectInlineKeyboard",item)
+            this.itemForm.inline_keyboard = {
+                id:null,
+                menu: item,
+                slug:null,
+            }
             this.need_show_inline_template_selector = false
 
         }

@@ -15,15 +15,21 @@ import InlineQueryTable from "@/AdminPanel/Components/Constructor/InlineQuery/In
         </div>
         <InlineQueryForm :bot="bot"
                          v-if="!load"
-                         v-on:callback="loadInlineQueries(0)"
+                         v-on:callback="reloadTable"
                          :inline-query="selectedInlineQuery">
 
         </InlineQueryForm>
 
         <InlineQueryTable
             :bot="bot"
+            v-if="!load"
             v-on:select="selectInlineQuery"></InlineQueryTable>
 
+        <div class="spinner-border"
+             v-if="load"
+             role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
 
 </template>
@@ -37,7 +43,7 @@ export default {
         }
     },
     mounted() {
-        this.loadInlineQueries()
+
     },
     methods:{
         selectInlineQuery(item){
@@ -49,15 +55,13 @@ export default {
             })
 
         },
-        loadInlineQueries(){
-            this.$store.dispatch("loadInlineQueries",{
-                dataObject: {
-                    bot_id: this.bot.id || null,
-                }
-            }).then(resp=>{
-                this.categories = resp
+        reloadTable(){
+            this.load = true
+            this.$nextTick(()=>{
+                this.load = false
             })
-        },
+        }
+
     }
 }
 </script>

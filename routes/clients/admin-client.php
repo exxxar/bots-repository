@@ -143,6 +143,7 @@ Route::prefix("admin")
                 Route::post("/query-store", "queryStore");
                 Route::post("/list-of-inline-queries", "listOfInlineQueries");
                 Route::delete("/remove-query/{id}", "removeQuery");
+                Route::delete("/remove-query-item/{id}", "removeQueryItem");
             });
 
         Route::prefix("quizzes")

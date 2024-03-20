@@ -60,10 +60,18 @@ class InlineQuerySlugController extends Controller
             ->store($request->all());
     }
 
-    public function removeQuery(Request $request, $queryId): QuizResource
+    public function removeQuery(Request $request, $queryId): InlineQuerySlugResource
     {
         return BusinessLogic::inlineQuery()
             ->remove($queryId);
     }
+
+    public function removeQueryItem(Request $request, $queryItemId): \App\Http\Resources\InlineQueryItemResource
+    {
+        return BusinessLogic::inlineQuery()
+            ->removeItem($queryItemId);
+    }
+
+
 
 }

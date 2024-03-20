@@ -4,8 +4,8 @@ import util from './utilites';
 const BASE_INLINE_QUERY_LINK = '/admin/inline-queries'
 
 let state = {
-    inline_queries: [],
-    inline_queries_paginate_object: null,
+    inline_queries: localStorage.getItem("cashman_inline_queries")!=null?JSON.parse(localStorage.getItem("cashman_inline_queries")):[],
+    inline_queries_paginate_object: localStorage.getItem("cashman_inline_queries_paginate_object")!=null?JSON.parse(localStorage.getItem("cashman_inline_queries_paginate_object")):[],
 
 }
 
@@ -40,6 +40,18 @@ const actions = {
         let link = `${BASE_INLINE_QUERY_LINK}/query-store`
 
         let _axios = util.makeAxiosFactory(link,"POST", payload.inlineQueryForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async removeInlineQueryItem(context, payload= {queryItemId: null}){
+        let link = `${BASE_INLINE_QUERY_LINK}/remove-query-item/${payload.queryItemId}`
+
+        let _axios = util.makeAxiosFactory(link, 'DELETE')
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

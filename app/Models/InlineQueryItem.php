@@ -38,6 +38,8 @@ class InlineQueryItem extends Model
         'custom_settings' => 'array',
     ];
 
+    protected $with = ["inlineKeyboard"];
+
     public function inlineSlug(): BelongsTo
     {
         return $this->belongsTo(InlineQuerySlug::class);

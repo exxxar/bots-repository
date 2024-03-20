@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Http\Resources\AmoCrmResource;
+use App\Http\Resources\InlineQueryItemResource;
 use App\Http\Resources\InlineQuerySlugCollection;
 use App\Http\Resources\InlineQuerySlugResource;
 use App\Http\Resources\QuizCollection;
@@ -109,27 +110,27 @@ class InlineQueryLogicFactory
 
         $id = $data["id"] ?? null;
 
-        $isUniq = is_null(InlineQuerySlug::query()
+        $query = InlineQuerySlug::query()
             ->where("bot_id", $this->bot->id)
-            ->where("command", $data["command"])
-            ->first() ?? null);
+            ->where("id", $id)
+            ->first();
 
-        if (!$isUniq)
-            throw new HttpException(400, "Данная команда уже есть в боте!");
+        if (is_null($query)) {
+            $isQueryUniq = is_null(InlineQuerySlug::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("command", $data["command"] ?? null)
+                ->first() ?? null);
 
-        if (is_null($id))
+            if (!$isQueryUniq)
+                throw new HttpException(403, "Такая команда уже есть в вашем боте!");
+
             $query =
                 InlineQuerySlug::query()->create([
                     'bot_id' => $this->bot->id,
                     'command' => $data["command"] ?? null,
                     'description' => $data["description"] ?? null,
                 ]);
-
-        else {
-            $query = InlineQuerySlug::query()
-                ->where("id", $id)
-                ->first();
-
+        } else {
             $query->update([
                 'bot_id' => $this->bot->id,
                 'command' => $data["command"] ?? null,
@@ -146,29 +147,38 @@ class InlineQueryLogicFactory
         foreach ($items as $item) {
             $item = (array)$item;
 
-            if (isset($data["inline_keyboard"]) && is_null($data["inline_keyboard_id"] ?? null)) {
+
+            if (isset($item["inline_keyboard"]) && is_null($item["inline_keyboard_id"] ?? null)) {
                 $keyboard = BotMenuTemplate::query()->create([
                     'bot_id' => $this->bot->id,
                     'type' => "inline",
                     'slug' => Str::uuid(),
-                    'menu' => $data["inline_keyboard"],
+                    'menu' => $item["inline_keyboard"],
                 ]);
             }
 
-            if (!is_null($data["inline_keyboard_id"] ?? null))
-                $keyboard = BotMenuTemplate::query()->find($data["inline_keyboard_id"]);
-
+            if (!is_null($item["inline_keyboard_id"] ?? null))
+                $keyboard = BotMenuTemplate::query()->find($item["inline_keyboard_id"]);
 
             $queryItem = InlineQueryItem::query()
-                ->create([
-                    'inline_query_slug_id' => $query->id ,
-                    'type' => $item["type"] ?? null,
-                    'title' => $item["title"] ?? null,
-                    'description' => $item["description"] ?? null,
-                    'input_message_content' => $item["input_message_content"] ?? null,
-                    'inline_keyboard_id' => is_null($keyboard ?? null) ? null : $keyboard->id,
-                    'custom_settings' => isset($item["custom_settings"]) ? $item["custom_settings"] : null,
-                ]);
+                ->where("id", $item["id"])
+                ->first();
+
+            $tmp = [
+                'inline_query_slug_id' => $query->id,
+                'type' => $item["type"] ?? null,
+                'title' => $item["title"] ?? null,
+                'description' => $item["description"] ?? null,
+                'input_message_content' => $item["input_message_content"] ?? null,
+                'inline_keyboard_id' => is_null($keyboard ?? null) ? null : $keyboard->id,
+                'custom_settings' => isset($item["custom_settings"]) ? $item["custom_settings"] : null,
+            ];
+
+            if (is_null($queryItem))
+                $queryItem = InlineQueryItem::query()
+                    ->create($tmp);
+            else
+                $queryItem->update($tmp);
         }
 
         return new InlineQuerySlugResource($query);
@@ -178,7 +188,7 @@ class InlineQueryLogicFactory
     /**
      * @throws HttpException
      */
-    public function remove($queryId, $force = false): QuizResource
+    public function remove($queryId, $force = false): InlineQuerySlugResource
     {
         $query = InlineQuerySlug::query()
             ->with(["items"])
@@ -197,6 +207,25 @@ class InlineQueryLogicFactory
 
         $query->delete();
 
-        return new QuizResource($tmp);
+        return new InlineQuerySlugResource($tmp);
+    }
+
+
+    /**
+     * @throws HttpException
+     */
+    public function removeItem($queryItemId, $force = false): InlineQueryItemResource
+    {
+        $query = InlineQueryItem::query()
+            ->where("id", $queryItemId)
+            ->first();
+
+
+        if (is_null($query))
+            throw new HttpException(404, "Команда не найдена");
+        $tmp = $query;
+        $query->delete();
+
+        return new InlineQueryItemResource($tmp);
     }
 }
