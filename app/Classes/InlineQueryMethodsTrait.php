@@ -69,6 +69,7 @@ trait InlineQueryMethodsTrait
      */
     private function extracted(object $item, array $tmp, array $config): object
     {
+        Log::info("inline_keyboard=>".print_r($item->inline_keyboard , true));
         if (!is_null($item->inline_keyboard ?? null))
             $tmp["reply_markup"] = [
                 'inline_keyboard' => !is_null($item->inline_keyboard ?? null) ? $item->inline_keyboard->menu : []
