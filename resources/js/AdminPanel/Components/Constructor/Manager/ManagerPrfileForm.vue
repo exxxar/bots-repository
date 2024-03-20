@@ -51,7 +51,8 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                        class="btn btn-outline-light p-3 rounded-5 w-100 mb-2">Главный экран</a>
 
                     <a
-                        @click="tab=10"
+                        href="https://telegra.ph/Obuchenie-sozdaniyu-botov-03-20"
+                        target="_blank"
                         class="btn btn-info p-3 rounded-5 w-100 mb-2"><i class="fa-solid fa-graduation-cap mr-2"></i>Обучение</a>
 
                     <a
@@ -236,67 +237,65 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                                     </div>
                                 </div>
 
-<!--                                <div class="col-12" v-if="!botUser.manager">
-                                    <p class="mb-3"><em>Для того чтоб вы и ваш друг получали больше бонусов
-                                        воспользуйтесь
-                                        реферальной программой и введите реферальный код от вашего друга!</em></p>
-                                    <h6 class="text-center">Введите реферальный код вашего друга</h6>
-                                    <div class="input-style input-style-2">
-                                        <input type="text"
-                                               class="form-control text-center font-14 p-3 rounded-s border-theme"
-                                               v-model="managerForm.referral"
-                                               placeholder="Реферальный код"
-                                               aria-label="managerForm-referral"
-                                               aria-describedby="managerForm-referral">
-                                    </div>
-                                </div>-->
-
-
+                                <!--                                <div class="col-12" v-if="!botUser.manager">
+                                                                    <p class="mb-3"><em>Для того чтоб вы и ваш друг получали больше бонусов
+                                                                        воспользуйтесь
+                                                                        реферальной программой и введите реферальный код от вашего друга!</em></p>
+                                                                    <h6 class="text-center">Введите реферальный код вашего друга</h6>
+                                                                    <div class="input-style input-style-2">
+                                                                        <input type="text"
+                                                                               class="form-control text-center font-14 p-3 rounded-s border-theme"
+                                                                               v-model="managerForm.referral"
+                                                                               placeholder="Реферальный код"
+                                                                               aria-label="managerForm-referral"
+                                                                               aria-describedby="managerForm-referral">
+                                                                    </div>
+                                                                </div>-->
 
 
                             </div>
                         </div>
                         <div
                             class="col-md-6 border-right">
-<!--                            <div class="my-2">
-                                <label class="mb-3">Загрузи своё персональное фото, мы же должны знать в лицо наших
-                                    сотрудников</label>
-                                <div class="d-flex justify-content-center flex-wrap ">
-                                    <label for="bot-photos" style="margin-right: 10px;"
-                                           class="photo-loader ml-2 text-center">
-                                        <span class="p-3"><i class="fa-solid fa-image"></i></span>
-                                        <input type="file" id="bot-photos" accept="image/*"
-                                               @change="onChangePhotos"
-                                               style="display:none;"/>
+                            <!--                            <div class="my-2">
+                                                            <label class="mb-3">Загрузи своё персональное фото, мы же должны знать в лицо наших
+                                                                сотрудников</label>
+                                                            <div class="d-flex justify-content-center flex-wrap ">
+                                                                <label for="bot-photos" style="margin-right: 10px;"
+                                                                       class="photo-loader ml-2 text-center">
+                                                                    <span class="p-3"><i class="fa-solid fa-image"></i></span>
+                                                                    <input type="file" id="bot-photos" accept="image/*"
+                                                                           @change="onChangePhotos"
+                                                                           style="display:none;"/>
 
-                                    </label>
-                                </div>
+                                                                </label>
+                                                            </div>
 
 
-                                <div class="d-flex justify-content-center flex-wrap mt-2" v-if="managerForm.image">
-                                    <div class="img-preview">
-                                        <img v-lazy="managerForm.image">
-                                        <div class="remove">
-                                            <a @click="removePhoto('image')" class="cursor-pointer"><i
-                                                class="fa-regular fa-trash-can"></i> удалить фото</a>
-                                        </div>
-                                    </div>
-                                </div>
+                                                            <div class="d-flex justify-content-center flex-wrap mt-2" v-if="managerForm.image">
+                                                                <div class="img-preview">
+                                                                    <img v-lazy="managerForm.image">
+                                                                    <div class="remove">
+                                                                        <a @click="removePhoto('image')" class="cursor-pointer"><i
+                                                                            class="fa-regular fa-trash-can"></i> удалить фото</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
-                                <div class="d-flex justify-content-center flex-wrap mt-2"
-                                     v-if="photo">
+                                                            <div class="d-flex justify-content-center flex-wrap mt-2"
+                                                                 v-if="photo">
 
-                                    <div class="img-preview"
-                                         style="margin-right: 10px;">
-                                        <img v-lazy="getPhoto(photo).imageUrl">
-                                        <div class="remove">
-                                            <a @click="removePhoto('photo')" class="cursor-pointer"><i
-                                                class="fa-regular fa-trash-can"></i> удалить фото</a>
-                                        </div>
-                                    </div>
+                                                                <div class="img-preview"
+                                                                     style="margin-right: 10px;">
+                                                                    <img v-lazy="getPhoto(photo).imageUrl">
+                                                                    <div class="remove">
+                                                                        <a @click="removePhoto('photo')" class="cursor-pointer"><i
+                                                                            class="fa-regular fa-trash-can"></i> удалить фото</a>
+                                                                    </div>
+                                                                </div>
 
-                                </div>
-                            </div>-->
+                                                            </div>
+                                                        </div>-->
                             <div class="mb-2">
 
                                 <p class="text-center text-md-left">Укажите ваш пол</p>
@@ -572,7 +571,8 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                                     {{ item.id || 'Нет идентификатора' }}
                                 </th>
                                 <td
-                                    v-bind:class="{'text-danger':item.deleted_at!=null}"> {{ item.command || 'Нет команды' }}
+                                    v-bind:class="{'text-danger':item.deleted_at!=null}">
+                                    {{ item.command || 'Нет команды' }}
                                 </td>
                                 <td v-bind:class="{'text-danger':item.deleted_at!=null}"> {{
                                         item.comment || 'Пояснение не указано'
@@ -735,7 +735,6 @@ export default {
             this.managerForm.country = this.botUser.country || null
             this.managerForm.address = this.botUser.address || null
             this.managerForm.sex = this.botUser.sex || true
-
 
 
             if (this.botUser.manager) {

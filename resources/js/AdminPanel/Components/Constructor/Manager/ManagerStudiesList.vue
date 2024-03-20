@@ -32,9 +32,9 @@
                     <strong>12:40</strong>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-primary btn-sm btn-rounded">
+                    <a href="https://youtu.be/SXU3c5PFbmQ" target="" class="btn btn-primary btn-sm btn-rounded">
                         Смотреть урок
-                    </button>
+                    </a>
                 </td>
             </tr>
             <tr>

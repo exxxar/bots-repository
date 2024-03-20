@@ -153,7 +153,7 @@ class InlineQueryLogicFactory
                     'bot_id' => $this->bot->id,
                     'type' => "inline",
                     'slug' => Str::uuid(),
-                    'menu' => $item["inline_keyboard"],
+                    'menu' => $item["inline_keyboard"]["menu"] ?? null,
                 ]);
             }
 

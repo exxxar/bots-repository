@@ -221,9 +221,6 @@ export default {
                 this.selectedInlineQueryItem = item
 
                 this.load = false
-
-
-                console.log("selectedInlineQueryItem", this.selectedInlineQueryItem)
                 this.inlineQueryModal.show();
             })
         },

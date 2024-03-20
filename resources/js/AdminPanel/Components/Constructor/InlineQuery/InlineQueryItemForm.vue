@@ -299,6 +299,8 @@ export default {
 
         if (this.item)
             this.$nextTick(() => {
+
+                console.log("menu", this.item.inline_keyboard)
                 this.itemForm = {
                     id: this.item.id || uuid,
                     type: this.item.type || 0,
