@@ -117,19 +117,25 @@ class InlineQueryLogicFactory
         if (!$isUniq)
             throw new HttpException(400, "Данная команда уже есть в боте!");
 
-        $query = is_null($id) ?
-            InlineQuerySlug::query()->create([
-                'bot_id' => $this->bot->id,
-                'command' => $data["command"] ?? null,
-                'description' => $data["description"] ?? null,
-            ]) :
-            InlineQuerySlug::query()
-                ->where("id", $id)
-                ->update([
+        if (is_null($id))
+            $query =
+                InlineQuerySlug::query()->create([
                     'bot_id' => $this->bot->id,
                     'command' => $data["command"] ?? null,
                     'description' => $data["description"] ?? null,
                 ]);
+
+        else {
+            $query = InlineQuerySlug::query()
+                ->where("id", $id)
+                ->first();
+
+            $query->update([
+                'bot_id' => $this->bot->id,
+                'command' => $data["command"] ?? null,
+                'description' => $data["description"] ?? null,
+            ]);
+        }
 
 
         if (!isset($data["items"]))
@@ -155,7 +161,7 @@ class InlineQueryLogicFactory
 
             $queryItem = InlineQueryItem::query()
                 ->create([
-                    'inline_query_slug_id' => is_null($id) ? $query->id : $id,
+                    'inline_query_slug_id' => $query->id ,
                     'type' => $item["type"] ?? null,
                     'title' => $item["title"] ?? null,
                     'description' => $item["description"] ?? null,
