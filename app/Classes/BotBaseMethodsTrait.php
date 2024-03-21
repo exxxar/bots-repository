@@ -694,17 +694,24 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendPhoto($chatId, $caption, $path,array $keyboard = [], $messageThreadId = null)
+    public function sendPhoto($chatId, $caption, $path, array $keyboard = [], $messageThreadId = null)
     {
+        Log::info("path = ".print_r($path,true));
+        Log::info("thread = ".print_r($messageThreadId,true));
+        Log::info("keyboard = ".print_r($keyboard,true));
+
         $tmp = [
             "chat_id" => $chatId,
-            "message_thread_id" => $messageThreadId,
+
             "photo" => $path,
             "caption" => $caption,
             "reply_markup" => $caption,
             "parse_mode" => "HTML",
 
         ];
+
+        if (!is_null($messageThreadId))
+            $tmp["message_thread_id"] = $messageThreadId;
 
         if (!empty($keyboard ?? [])) {
             $tmp['reply_markup'] = json_encode([
