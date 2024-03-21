@@ -430,7 +430,6 @@ trait BotBaseMethodsTrait
             $tmp["message"] = mb_strlen($tmp["message"] ?? '') > 0 ? $tmp["message"] : 'Текст сообщения';
 
         if (isset($tmp["photo"])){
-            Log::info("photo=>".print_r($tmp["photo"], true));
             $tmp["photo"] =   !is_null($tmp["photo"] ?? null) ? $tmp["photo"] :
                 InputFile::create(public_path() . "/images/cashman.jpg");
         }
