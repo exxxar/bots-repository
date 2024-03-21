@@ -127,10 +127,11 @@ BotManager::bot()
 
 
         if (is_null($order)) {
+            Log::info("we are here #фото");
             BotManager::bot()
                 ->sendPhoto(
                     $channel,
-                    "#оплатачеком\n" .
+                    "#фото\n" .
                     "Идентификатор: $id\n" .
                     "Пользователь: $name\n" .
                     "Телефон: $phone\n\n" .
