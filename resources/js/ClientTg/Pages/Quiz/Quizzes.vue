@@ -45,7 +45,7 @@ import QuizCommands from "@/ClientTg/Components/Quiz/QuizCommands.vue";
         </div>-->
 
 
-    <CallbackForm/>
+<!--    <CallbackForm/>-->
 
 
 </template>

@@ -83,6 +83,7 @@ export const routes = [
         component: Vip,
         meta: { title: 'VIP-анкета', hide_menu:true }
     },
+
     {
         name: 'profileForm',
         path: '/profile-form',

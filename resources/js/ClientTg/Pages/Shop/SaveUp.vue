@@ -31,7 +31,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
         </div>
     </div>
 
-    <CallbackForm/>
+<!--    <CallbackForm/>-->
 
 </template>
 <script>

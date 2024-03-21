@@ -80,7 +80,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
         </template>
     </PlayerForm>
 
-    <CallbackForm/>
+<!--    <CallbackForm/>-->
 
 
 </template>

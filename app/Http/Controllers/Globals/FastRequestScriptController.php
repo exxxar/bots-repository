@@ -37,7 +37,12 @@ class FastRequestScriptController extends SlugController
             ]);
 
         $params = [
+            [
+                "type" => "image",
+                "key" => "main_image",
+                "value" => null,
 
+            ],
             [
                 "type" => "text",
                 "key" => "btn_text",
@@ -115,7 +120,7 @@ class FastRequestScriptController extends SlugController
         $slugId = $data[3] ?? null;
         $parentPageId = $data[4] ?? null;
 
-        Log::info("slug=$slugId parent page=$parentPageId");
+
         $slug = BotMenuSlug::query()
             ->with(["page"])
             ->where("id", $slugId)
@@ -163,7 +168,6 @@ class FastRequestScriptController extends SlugController
 
     public function fastRequest(...$config)
     {
-        Log::info("fastRequest start");
 
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
@@ -178,6 +182,10 @@ class FastRequestScriptController extends SlugController
             ->where("key", "btn_text")
             ->first())["value"] ?? "Запросить";
 
+
+        $mainImage = (Collection::make($config[1])
+            ->where("key", "main_image")
+            ->first())["value"] ?? null;
 
         /* $resultText = (Collection::make($config[1])
              ->where("key", "result_message")
@@ -194,17 +202,24 @@ class FastRequestScriptController extends SlugController
         if (!$botUser->is_vip) {
             $bot = BotManager::bot()->getSelf();
 
-            \App\Facades\BotManager::bot()
-                ->replyPhoto("Для начала необходимо заполнить анкету!",
-                    InputFile::create(public_path() . "/images/cashman2.jpg"),
-                    [
-                        [
-                            ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/vip"
-                            ]],
-                        ],
+            $keyboard = [
+                [
+                    ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                        "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/profile-form"
+                    ]],
+                ],
 
-                    ]);
+            ];
+
+            if (is_null($mainImage))
+                \App\Facades\BotManager::bot()
+                    ->replyInlineKeyboard("Для начала необходимо заполнить анкету!", $keyboard);
+            else
+                \App\Facades\BotManager::bot()
+                    ->replyPhoto("Для начала необходимо заполнить анкету!", $mainImage, $keyboard);
+
+
+
 
             return;
         }
@@ -228,8 +243,13 @@ class FastRequestScriptController extends SlugController
                 ],
             ]);
 
-        BotManager::bot()
-            ->replyInlineKeyboard("$preText", $menu->menu);
+        if (is_null($mainImage))
+            \App\Facades\BotManager::bot()
+                ->replyInlineKeyboard("$preText", $menu->menu);
+        else
+            \App\Facades\BotManager::bot()
+                ->replyPhoto("$preText", $mainImage, $menu->menu);
+
 
     }
 }

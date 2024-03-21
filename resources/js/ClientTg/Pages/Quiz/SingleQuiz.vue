@@ -33,7 +33,7 @@ import QuizCommands from "@/ClientTg/Components/Quiz/QuizCommands.vue";
         </QuizFullQuestionList>
 
     </div>
-    <CallbackForm/>
+<!--    <CallbackForm/>-->
 </template>
 <script>
 

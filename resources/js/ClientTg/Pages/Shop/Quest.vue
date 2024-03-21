@@ -72,7 +72,7 @@ import PlayerForm from "ClientTg@/Components/Shop/PlayerForm.vue";
         </template>
     </PlayerForm>
 
-    <CallbackForm/>
+<!--    <CallbackForm/>-->
 
 
 </template>
