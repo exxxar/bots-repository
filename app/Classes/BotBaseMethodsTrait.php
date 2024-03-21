@@ -702,14 +702,13 @@ trait BotBaseMethodsTrait
             "message_thread_id" => $messageThreadId,
             "photo" => $path,
             "caption" => $caption,
+            "reply_markup" => json_encode([
+                'inline_keyboard' => $keyboard,
+            ]),
             "parse_mode" => "HTML",
+
         ];
 
-        if (!empty($keyboard ?? [])) {
-            $tmp['reply_markup'] = json_encode([
-                'inline_keyboard' => $keyboard,
-            ]);
-        }
 
 
         if ($this->isWebMode) {
@@ -722,12 +721,10 @@ trait BotBaseMethodsTrait
 
         } catch (\Exception $e) {
 
-            //unset($tmp['reply_markup']);
+            unset($tmp['reply_markup']);
             $this->bot->sendPhoto($tmp);
 
-            Log::error($e->getMessage() . " " .
-                $e->getFile() . " " .
-                $e->getLine());
+            Log::error($e);
         }
 
         return $this;
