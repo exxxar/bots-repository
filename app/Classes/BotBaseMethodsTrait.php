@@ -424,7 +424,9 @@ trait BotBaseMethodsTrait
         unset($tmp['reply_markup']);
         unset($tmp['message_thread_id']);
 
-        $this->bot[$func]($tmp);
+        $bot = (array) $this->bot;
+
+        $bot[$func]($tmp);
 
     }
 
