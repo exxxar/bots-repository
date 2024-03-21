@@ -587,7 +587,8 @@ export default {
 
                     this.$botNotification.success("Доставка", "Дальнейшая инструкция отправлена вам в бот!")
 
-                    this.clearCart();
+                    this.$store.dispatch("clearCart");
+                    //this.clearCart();
 
                     this.sending = false
                 }).catch(err => {

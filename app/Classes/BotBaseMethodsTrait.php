@@ -430,13 +430,13 @@ trait BotBaseMethodsTrait
             $tmp["message"] = mb_strlen($tmp["message"] ?? '') > 0 ? $tmp["message"] : 'Текст сообщения';
 
         if (isset($tmp["photo"]))
-            $tmp["photo"] = !empty($tmp["photo"] ?? '') ? $tmp["photo"] :
+            $tmp["photo"] = !is_null($tmp["photo"] ?? null) ? $tmp["photo"] :
                 InputFile::create(public_path() . "/images/cashman.jpg");
 
         try {
             $this->bot->{$func}($tmp);
         } catch (\Exception $e) {
-           // Log::info($e);
+            Log::info("обработано=>".$e);
             $this->bot->sendMessage([
                 "chat_id" => $tmp["chat_id"],
                 "text" => "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
