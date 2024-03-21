@@ -70,13 +70,13 @@ class FriendsScriptController extends SlugController
 
         $mainText = (Collection::make($config[1])
             ->where("key", "main_text")
-            ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой <a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>";
+            ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\n Вы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой ";
 
         $referralText = (Collection::make($config[1])
             ->where("key", "referral_text")
             ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой <a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>";
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой ";
 
 
         $imgPath = (Collection::make($config[1])
@@ -94,10 +94,10 @@ class FriendsScriptController extends SlugController
             ->count();
 
         \App\Facades\BotManager::bot()
-            ->reply(sprintf($mainText, $friendCount));
+            ->reply(sprintf($mainText, $friendCount)."\n<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>");
 
         try {
-            $message = sprintf($referralText, $qr, $qr);
+            $message = sprintf($referralText, $qr, $qr)."\n<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>";
         } catch (\Exception $e) {
             $message = "Упс, у вас что-то с параметрами сообщения";
         }
