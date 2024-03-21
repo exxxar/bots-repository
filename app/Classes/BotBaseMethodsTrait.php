@@ -438,7 +438,7 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->{$func}($tmp);
         } catch (\Exception $e) {
-            Log::info("обработано=>" . $e);
+
             $this->bot->sendMessage([
                 "chat_id" => $tmp["chat_id"],
                 "text" => $tmp["message"] ?? $tmp["caption"] ?? "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
@@ -468,6 +468,14 @@ trait BotBaseMethodsTrait
             $tmp['reply_markup'] = json_encode([
                 'inline_keyboard' => $keyboard,
             ]);
+        } else {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => [
+                    [
+                        ["text" => "Оплатить заказ", "pay" => true]
+                    ]
+                ],
+            ]);
         }
 
         if ($this->isWebMode) {
@@ -485,9 +493,6 @@ trait BotBaseMethodsTrait
 
         return $this;
 
-        //[
-        //                ["label"=>"Test", "amount"=>10000]
-        //            ]
     }
 
     public function editInlineKeyboard($chatId, $messageId, $keyboard)
