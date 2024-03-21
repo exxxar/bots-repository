@@ -521,7 +521,7 @@ class CashBackScriptController extends SlugController
 
         \App\Facades\BotManager::bot()
             ->reply("У вас <b>$amount</b> руб.!\n$tmpSubsText $tmpFiredText
-Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>\nhttps://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr");
+Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>\n<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>");
 
         $slugId = (Collection::make($config[1])
             ->where("key", "slug_id")
