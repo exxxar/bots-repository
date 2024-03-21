@@ -62,6 +62,7 @@ BotManager::bot()
         $bot = BotManager::bot()->getSelf();
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
+        Log::info("photoToSend=>".print_r($photoToSend, true));
 
         $tmp = "";
         $count = 0;
@@ -95,6 +96,7 @@ BotManager::bot()
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
         if (is_null($photoToSend) || is_null($channel)) {
+            Log::info("Ошибка отправки фотографии!".print_r($photoToSend, true)." ".print_r($channel, true));
             BotManager::bot()->reply("Ошибка отправки фотографии!");
             return;
         }
