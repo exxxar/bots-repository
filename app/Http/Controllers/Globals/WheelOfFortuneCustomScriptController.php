@@ -40,6 +40,12 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $params = [
             [
+                "type" => "image",
+                "key" => "main_image",
+                "value" => null,
+
+            ],
+            [
                 "type" => "text",
                 "key" => "max_attempts",
                 "value" => 2,
@@ -139,7 +145,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         ];
 
         if (count($model->config ?? []) != count($params)) {
-            $model->config =$params;
+            $model->config = $params;
             $model->save();
         }
 
@@ -183,7 +189,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             $action = ActionStatus::query()
                 ->create([
                     'user_id' => $botUser->user_id,
-                    'bot_user_id'=>$botUser->id,
+                    'bot_user_id' => $botUser->id,
                     'bot_id' => $bot->id,
                     'slug_id' => $slug->id,
                     'max_attempts' => $maxAttempts,
@@ -196,8 +202,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
 
         $winNumber = $request->win ?? 0;
-        $winnerName = $request->name ??  $botUser->name ?? 'Имя не указано';
-        $winnerPhone = $request->phone ??    $botUser->phone ?? 'Телефон не указан';
+        $winnerName = $request->name ?? $botUser->name ?? 'Имя не указано';
+        $winnerPhone = $request->phone ?? $botUser->phone ?? 'Телефон не указан';
         $winnerDescription = $request->description ?? 'Без описания';
 
         $botUser->name = $botUser->name ?? $winnerName;
@@ -213,8 +219,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->where("key", "wheel_text")
             ->pluck("value")
             ->toArray();*/
-/*
-        $description = $wheelText[$winNumber] ?? 'Без описания';*/
+        /*
+                $description = $wheelText[$winNumber] ?? 'Без описания';*/
 
         $tmp[] = (object)[
             "name" => $winnerName,
@@ -305,7 +311,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
                     'slug_id' => $slug->id,
                     'max_attempts' => $maxAttempts,
                     'current_attempts' => 0,
-                    'bot_user_id'=>$botUser->id
+                    'bot_user_id' => $botUser->id
                 ]);
 
         $action->max_attempts = $maxAttempts;
@@ -327,6 +333,10 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $bot = BotManager::bot()->getSelf();
 
+        $mainImage = (Collection::make($config[1])
+            ->where("key", "main_image")
+            ->first())["value"] ?? null;
+
         $mainText = (Collection::make($config[1])
             ->where("key", "main_text")
             ->first())["value"] ?? "Начни розыгрыш и получи свои призы!";
@@ -339,16 +349,23 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->where("key", "slug_id")
             ->first())["value"];
 
+        $keyboard = [
+            [
+                ["text" => $btnText, "web_app" => [
+                    "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#wheel-of-fortune-custom"
+                ]],
+            ],
+
+        ];
+
+
         \App\Facades\BotManager::bot()
             ->replyPhoto($mainText,
-                InputFile::create(public_path() . "/images/cashman-wheel-of-fortune.png"),
-                [
-                    [
-                        ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#wheel-of-fortune-custom"
-                        ]],
-                    ],
+                is_null($mainImage) ?
+                    InputFile::create(public_path() . "/images/cashman-wheel-of-fortune.png") :
+                    $mainImage,
+                $keyboard);
 
-                ]);
+
     }
 }
