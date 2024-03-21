@@ -696,15 +696,15 @@ trait BotBaseMethodsTrait
 
     public function sendPhoto($chatId, $caption, $path, $keyboard = [], $messageThreadId = null)
     {
-        Log::info("keyboard=>" . print_r($keyboard, true));
+
         $tmp = [
             "chat_id" => $chatId,
             "message_thread_id" => $messageThreadId,
             "photo" => $path,
             "caption" => $caption,
-            "reply_markup" => json_encode([
+          /*  "reply_markup" => json_encode([
                 'inline_keyboard' => $keyboard,
-            ]),
+            ]),*/
             "parse_mode" => "HTML",
 
         ];
