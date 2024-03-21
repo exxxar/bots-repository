@@ -424,10 +424,12 @@ trait BotBaseMethodsTrait
         unset($tmp['reply_markup']);
         unset($tmp['message_thread_id']);
 
-        $bot = (array) $this->bot;
 
-        $bot[$func]($tmp);
-
+        switch ($func) {
+            case "sendPhoto":  $this->bot->sendPhoto($tmp); break;
+            default:
+            case "sendMessage":  $this->bot->sendMessage($tmp); break;
+        }
     }
 
     public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData = null)
