@@ -860,8 +860,10 @@ export default {
                 });
 
 
-            data.append('bot_id', this.bot.id);
-            data.append('bot_user_id', this.botUser.id);
+            if (this.bot)
+                data.append('bot_id', this.bot.id);
+            if (this.botUser)
+                data.append('bot_user_id', this.botUser.id);
 
             this.$store.dispatch("saveManager",
                 data
