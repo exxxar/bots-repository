@@ -412,7 +412,7 @@ trait BotBaseMethodsTrait
 
 
         } catch (\Exception $e) {
-           $this->sendMessageOnCrash($tmp, "sendMessage");
+            $this->sendMessageOnCrash($tmp, "sendMessage");
 
         }
 
@@ -420,16 +420,21 @@ trait BotBaseMethodsTrait
 
     }
 
-    protected function sendMessageOnCrash($tmp, $func){
+    protected function sendMessageOnCrash($tmp, $func)
+    {
         unset($tmp['reply_markup']);
         unset($tmp['message_thread_id']);
 
-        $this->bot->{$func}($tmp);
-      /* switch ($func) {
-            case "sendPhoto":  $this->bot->sendPhoto($tmp); break;
-            default:
-            case "sendMessage":  $this->bot->sendMessage($tmp); break;
-        }*/
+        try {
+            $this->bot->{$func}($tmp);
+        } catch (\Exception $e) {
+            $this->bot->sendMessage([
+                "chat_id" => $tmp["chat_id"],
+                "text" => "Данная возможность временно не доступна",
+                "parse_mode" => "HTML"
+            ]);
+        }
+
     }
 
     public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData = null)
@@ -792,7 +797,7 @@ trait BotBaseMethodsTrait
 
         } catch (\Exception $e) {
 
-            $this->sendMessageOnCrash($tmp,"sendVideo");
+            $this->sendMessageOnCrash($tmp, "sendVideo");
 
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
