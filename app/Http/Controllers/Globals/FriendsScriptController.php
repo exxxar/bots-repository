@@ -65,26 +65,28 @@ class FriendsScriptController extends SlugController
 
         $botDomain = $bot->bot_domain;
 
+        $qr = "https://t.me/$botDomain?start=" .
+            base64_encode("011" . BotManager::bot()->getCurrentChatId());
+
         $mainText = (Collection::make($config[1])
             ->where("key", "main_text")
             ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой";
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой <a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>";
 
         $referralText = (Collection::make($config[1])
             ->where("key", "referral_text")
             ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой";
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой <a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>";
 
 
         $imgPath = (Collection::make($config[1])
             ->where("key", "image_main")
             ->first())["value"] ?? null;
 
-        $imgPath = is_null($imgPath) ? env("APP_URL") . "/images/cashman.jpg" :
+        $imgPath = is_null($imgPath) ? public_path() . "/images/cashman.jpg" :
             $imgPath;
 
-        $qr = "https://t.me/$botDomain?start=" .
-            base64_encode("011" . BotManager::bot()->getCurrentChatId());
+
 
         $friendCount = ReferralHistory::query()
             ->where("user_sender_id", $botUser->user_id)
@@ -92,8 +94,7 @@ class FriendsScriptController extends SlugController
             ->count();
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto(sprintf($mainText, $friendCount),
-                InputFile::create("https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr"));
+            ->reply(sprintf($mainText, $friendCount));
 
         try {
             $message = sprintf($referralText, $qr, $qr);
