@@ -696,19 +696,21 @@ trait BotBaseMethodsTrait
 
     public function sendPhoto($chatId, $caption, $path,array $keyboard = [], $messageThreadId = null)
     {
-
         $tmp = [
             "chat_id" => $chatId,
             "message_thread_id" => $messageThreadId,
             "photo" => $path,
             "caption" => $caption,
-            "reply_markup" => json_encode([
-                'inline_keyboard' => $keyboard,
-            ]),
+            "reply_markup" => $caption,
             "parse_mode" => "HTML",
 
         ];
 
+        if (!empty($keyboard ?? [])) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
+        }
 
 
         if ($this->isWebMode) {
@@ -720,12 +722,9 @@ trait BotBaseMethodsTrait
             $data = $this->bot->sendPhoto($tmp);
 
         } catch (\Exception $e) {
-
             Log::error($e);
-
             unset($tmp['reply_markup']);
             $this->bot->sendPhoto($tmp);
-
 
         }
 

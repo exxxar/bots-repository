@@ -127,14 +127,13 @@ BotManager::bot()
 
 
         if (is_null($order)) {
-            Log::info("we are here #фото");
+
             $keyboard = [
                 [
                     ["text" => "Работа с пользователем", "url" => $link]
                 ]
             ];
 
-            Log::info("step 1");
             BotManager::bot()
                 ->sendPhoto(
                     $channel,
@@ -142,11 +141,12 @@ BotManager::bot()
                     "Идентификатор: $id\n" .
                     "Пользователь: $name\n" .
                     "Телефон: $phone\n\n" .
-                    "Подпись к фото: $caption\n\n" .
-                    $photoToSend, $keyboard,
+                    "Подпись к фото: $caption\n\n",
+                    $photoToSend,
+                    $keyboard,
                     $thread
                 );
-            Log::info("step 2");
+
             BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
 
             return;
