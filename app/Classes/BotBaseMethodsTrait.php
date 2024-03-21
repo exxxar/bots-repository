@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
+use Telegram\Bot\FileUpload\InputFile;
 use Telegram\Bot\TelegramClient;
 use Telegram\Bot\TelegramRequest;
 
@@ -428,10 +429,14 @@ trait BotBaseMethodsTrait
         if (isset($tmp["message"]))
             $tmp["message"] = mb_strlen($tmp["message"] ?? '') > 0 ? $tmp["message"] : 'Текст сообщения';
 
+        if (isset($tmp["photo"]))
+            $tmp["photo"] = mb_strlen($tmp["photo"] ?? '') > 0 ? $tmp["photo"] :
+                InputFile::create(public_path() . "/images/cashman.jpg");
+
         try {
             $this->bot->{$func}($tmp);
         } catch (\Exception $e) {
-            Log::info($e);
+           // Log::info($e);
             $this->bot->sendMessage([
                 "chat_id" => $tmp["chat_id"],
                 "text" => "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
