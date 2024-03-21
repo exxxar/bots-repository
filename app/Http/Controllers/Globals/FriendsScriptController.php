@@ -75,7 +75,7 @@ class FriendsScriptController extends SlugController
 
         $referralText = (Collection::make($config[1])
             ->where("key", "referral_text")
-            ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\nВы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+            ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\n Вы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
 Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой ";
 
 
@@ -85,7 +85,6 @@ class FriendsScriptController extends SlugController
 
         $imgPath = is_null($imgPath) ? public_path() . "/images/cashman.jpg" :
             $imgPath;
-
 
 
         $friendCount = ReferralHistory::query()
@@ -108,7 +107,7 @@ class FriendsScriptController extends SlugController
         else
             \App\Facades\BotManager::bot()
                 ->replyPhoto($message,
-                    str_contains($imgPath, "http") ? InputFile::create($imgPath) : $imgPath
+                    $imgPath
                 );
 
 
