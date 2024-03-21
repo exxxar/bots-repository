@@ -431,8 +431,8 @@ trait BotBaseMethodsTrait
 
         if (isset($tmp["photo"])){
             Log::info("photo=>".print_r($tmp["photo"], true));
-            $tmp["photo"] =  InputFile::create(public_path() . "/images/cashman.jpg");/* !is_null($tmp["photo"] ?? null) ? $tmp["photo"] :
-                InputFile::create(public_path() . "/images/cashman.jpg");*/
+            $tmp["photo"] =   !is_null($tmp["photo"] ?? null) ? $tmp["photo"] :
+                InputFile::create(public_path() . "/images/cashman.jpg");
         }
 
 
