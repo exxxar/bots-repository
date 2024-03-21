@@ -107,7 +107,7 @@ class FriendsScriptController extends SlugController
         else
             \App\Facades\BotManager::bot()
                 ->replyPhoto($message,
-                     InputFile::create($imgPath)
+                    str_contains($imgPath, "http") ? InputFile::create($imgPath) : $imgPath
                 );
 
 
