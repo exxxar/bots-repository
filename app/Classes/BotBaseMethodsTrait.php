@@ -694,7 +694,7 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendPhoto($chatId, $caption, $path, $keyboard = [], $messageThreadId = null)
+    public function sendPhoto($chatId, $caption, $path,array $keyboard = [], $messageThreadId = null)
     {
 
         $tmp = [
@@ -702,9 +702,9 @@ trait BotBaseMethodsTrait
             "message_thread_id" => $messageThreadId,
             "photo" => $path,
             "caption" => $caption,
-          /*  "reply_markup" => json_encode([
+            "reply_markup" => json_encode([
                 'inline_keyboard' => $keyboard,
-            ]),*/
+            ]),
             "parse_mode" => "HTML",
 
         ];
@@ -721,10 +721,12 @@ trait BotBaseMethodsTrait
 
         } catch (\Exception $e) {
 
+            Log::error($e);
+
             unset($tmp['reply_markup']);
             $this->bot->sendPhoto($tmp);
 
-            Log::error($e);
+
         }
 
         return $this;

@@ -134,6 +134,7 @@ BotManager::bot()
                 ]
             ];
 
+            Log::info("step 1");
             BotManager::bot()
                 ->sendPhoto(
                     $channel,
@@ -145,7 +146,7 @@ BotManager::bot()
                     $photoToSend, $keyboard,
                     $thread
                 );
-
+            Log::info("step 2");
             BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
 
             return;
