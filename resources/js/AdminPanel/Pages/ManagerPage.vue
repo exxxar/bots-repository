@@ -10,7 +10,7 @@ import Manager from "@/AdminPanel/Components/Constructor/Manager/ManagerPrfileFo
                 <div class="row mb-2">
                    <div class="col-12">
                        <Manager
-                           :bot="bot"></Manager>
+                           :bot="currentBot"></Manager>
                    </div>
                 </div>
 
@@ -26,25 +26,19 @@ export default {
 
     data() {
         return {
-
             load: false,
-            bot: null,
         }
     },
     computed: {
-        ...mapGetters(['getCurrentBot']),
+        currentBot(){
+            return window.currentBot
+        }
     },
     mounted() {
-        this.loadCurrentBot()
+
     },
     methods: {
-        loadCurrentBot(bot = null) {
-            this.$store.dispatch("updateCurrentBot", {
-                bot: bot
-            }).then(() => {
-                this.bot = this.getCurrentBot
-            })
-        },
+
 
 
 
