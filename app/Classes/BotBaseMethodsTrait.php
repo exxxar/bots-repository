@@ -430,8 +430,8 @@ trait BotBaseMethodsTrait
             $tmp["message"] = mb_strlen($tmp["message"] ?? '') > 0 ? $tmp["message"] : 'Текст сообщения';
 
         if (isset($tmp["photo"]))
-            $tmp["photo"] = !is_null($tmp["photo"] ?? null) ? $tmp["photo"] :
-                InputFile::create(public_path() . "/images/cashman.jpg");
+            $tmp["photo"] =  InputFile::create(public_path() . "/images/cashman.jpg");/* !is_null($tmp["photo"] ?? null) ? $tmp["photo"] :
+                InputFile::create(public_path() . "/images/cashman.jpg");*/
 
         try {
             $this->bot->{$func}($tmp);
@@ -744,7 +744,6 @@ trait BotBaseMethodsTrait
 
         $tmp = [
             "chat_id" => $chatId,
-
             "photo" => $path,
             "caption" => $caption,
             "reply_markup" => $caption,
