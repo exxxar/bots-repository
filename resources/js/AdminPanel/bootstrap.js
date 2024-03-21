@@ -37,8 +37,10 @@ Date.prototype.getWeek = function (dowOffset) {
 };
 
 let botUser = document.querySelector("meta[name='bot-user']").content || null
+let bot = document.querySelector("meta[name='bot']").content || null
 
 window.profile = botUser ? JSON.parse(botUser) : null
+window.currentBot = bot ? JSON.parse(bot) : null
 
 window.hasRole = function (arg) {
     let botUser = document.querySelector("meta[name='bot-user']").content || null

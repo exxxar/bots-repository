@@ -13,6 +13,7 @@
     <meta name="token" content="{{csrf_token()}}">
 
     <meta name="bot-user" content="{{Session::get("bot_user")}}">
+    <meta name="bot" content="{{Session::get("bot")}}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

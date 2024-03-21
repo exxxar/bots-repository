@@ -6,6 +6,7 @@ use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Service\Utilities;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\BotSecurityResource;
 use App\Models\Bot;
 use App\Models\BotUser;
 use App\Models\User;
@@ -45,21 +46,6 @@ class AuthenticatedSessionController extends Controller
 
             return response()->redirectToRoute("login");
         }
-        /*
-                $user = User::query()
-                    ->where("email", "$tgId@your-cashman.ru")
-                    ->first();
-
-                if (is_null($user)) {
-                    BotMethods::bot()
-                        ->whereBot($bot)
-                        ->sendMessage(
-                            $tgId,
-                            "Пользователь еще не зарегистрировался в системе!");
-
-                    return response()->redirectToRoute("login");
-                }*/
-
 
         $botUser = BotUser::query()
             ->with(["user"])
@@ -97,6 +83,7 @@ class AuthenticatedSessionController extends Controller
         Auth::login($user);
 
         Session::put("bot_user", $botUser);
+              Session::put("bot", (new BotSecurityResource($bot))->toJson());
 
         $request->session()->regenerate();
 
@@ -179,6 +166,7 @@ class AuthenticatedSessionController extends Controller
         Auth::login($user);
 
         Session::put("bot_user", $botUser);
+        Session::put("bot", (new BotSecurityResource($bot))->toJson());
 
         $request->session()->regenerate();
 
@@ -207,6 +195,13 @@ class AuthenticatedSessionController extends Controller
 
             Session::put("bot_user", $botUser);
 
+            $authBotDomain = $domain ?? env("AUTH_BOT_DOMAIN");
+
+            $bot = Bot::query()
+                ->where("bot_domain", $authBotDomain)
+                ->first();
+
+                  Session::put("bot", (new BotSecurityResource($bot))->toJson());
 
             return Inertia::render('Auth/Login', [
                 'canResetPassword' => Route::has('password.request'),
@@ -230,6 +225,15 @@ class AuthenticatedSessionController extends Controller
                 ->first();
 
             Session::put("bot_user", $botUser);
+
+            $authBotDomain = $domain ?? env("AUTH_BOT_DOMAIN");
+
+            $bot = Bot::query()
+                ->where("bot_domain", $authBotDomain)
+                ->first();
+
+                  Session::put("bot", (new BotSecurityResource($bot))->toJson());
+
         }
 
         $request->session()->regenerate();
@@ -245,6 +249,7 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         Session::remove("bot_user");
+        Session::remove("bot");
 
         $request->session()->invalidate();
 

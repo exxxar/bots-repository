@@ -10,7 +10,6 @@ import Manager from "@/AdminPanel/Components/Constructor/Manager/ManagerPrfileFo
                 <div class="row mb-2">
                    <div class="col-12">
                        <Manager
-                           v-if="bot"
                            :bot="bot"></Manager>
                    </div>
                 </div>

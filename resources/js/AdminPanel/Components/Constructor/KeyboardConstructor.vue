@@ -68,37 +68,8 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
             </div>
             <div class="col-12" v-if="(keyboard||[]).length>0">
                 <div class="row" v-for="(row, rowIndex) in keyboard">
-                    <div class="col-1 d-flex justify-content-around p-2">
 
-                        <div class="dropdown">
-                            <a class="btn btn-link" href="#" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </a>
-
-                            <ul class="dropdown-menu">
-                                <li @click="addColToRow(rowIndex)">
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fa-solid fa-plus mr-2"></i> добавить кнопку
-                                    </a>
-                                </li>
-                                <li   @click="removeColFromRow(rowIndex)">
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fa-solid fa-minus mr-2"></i> удалить кнопку
-                                </a>
-                                </li>
-                                <li   @click="moveCol(rowIndex,0)"><a class="dropdown-item" href="#">
-                                    <i class="fa-solid fa-caret-left mr-2"></i> переместить влево
-                                </a></li>
-                                <li   @click="moveCol(rowIndex,1)"><a class="dropdown-item" href="#">
-                                    <i class="fa-solid fa-caret-right mr-2"></i> переместить влево
-                                </a></li>
-                            </ul>
-                        </div>
-
-
-                    </div>
-                    <div class="col-11 d-flex justify-content-center p-1">
+                    <div class="col-12 d-flex justify-content-center p-1">
 
                         <div class="btn-group dropdown-center w-100 m-1 "
                              @click="selectIndex(rowIndex, colIndex)"
@@ -109,6 +80,39 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                                 class="btn  w-100"
                                 v-model="keyboard[rowIndex][colIndex].text"
                             />
+                            <div class="dropdown">
+                                <a class="btn btn-outline-primary" href="javascript:void(0)" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li @click="addColToRow(rowIndex)">
+                                        <a class="dropdown-item" href="javascript:void(0)">
+                                            <i class="fa-solid fa-plus mr-2"></i> добавить кнопку
+                                        </a>
+                                    </li>
+                                    <li @click="removeSelectedButton">
+                                        <a class="dropdown-item" href="javascript:void(0)">
+                                            <i class="fa-solid fa-minus mr-2"></i> удалить кнопку
+                                        </a>
+                                    </li>
+                                    <li @click="moveCol(rowIndex,0)"><a class="dropdown-item" href="javascript:void(0)">
+                                        <i class="fa-solid fa-caret-left mr-2"></i> переместить влево
+                                    </a></li>
+                                    <li @click="moveCol(rowIndex,1)"><a class="dropdown-item" href="javascript:void(0)">
+                                        <i class="fa-solid fa-caret-right mr-2"></i> переместить вправо
+                                    </a></li>
+                                    <li @click="moveColVertical(rowIndex,0)"><a class="dropdown-item"
+                                                                                href="javascript:void(0)">
+                                        <i class="fa-solid fa-caret-up mr-2 "></i> переместить вверх
+                                    </a></li>
+                                    <li @click="moveColVertical(rowIndex,1)"><a class="dropdown-item"
+                                                                                href="javascript:void(0)">
+                                        <i class="fa-solid fa-caret-down mr-2"></i> переместить вниз
+                                    </a></li>
+                                </ul>
+                            </div>
                             <button type="button"
                                     @click="mode=1"
                                     class="btn btn-outline-primary" aria-expanded="false">
@@ -215,7 +219,8 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                            class="form-label">Команда всплывающего меню бота</label>
 
                     <div class="alert alert-warning" role="alert">
-                        Внимание! Режим всплывающего меню должен быть настроен в BotFather-е в разделе редактирования бота InlineMode. Сперва нужно включить данный режим.
+                        Внимание! Режим всплывающего меню должен быть настроен в BotFather-е в разделе редактирования
+                        бота InlineMode. Сперва нужно включить данный режим.
                     </div>
 
                     <div class="input-group mb-3">
@@ -228,7 +233,8 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
 
                         <button type="button"
                                 @click="openInlineQueryModal"
-                                class="btn btn-outline-primary" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+                                class="btn btn-outline-primary" aria-expanded="false"><i class="fa-solid fa-bars"></i>
+                        </button>
 
                     </div>
 
@@ -360,7 +366,8 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
         </div>
     </div>
 
-    <div class="modal fade" :id="'inline-query-list-in-keyboard-'+uuid" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" :id="'inline-query-list-in-keyboard-'+uuid" tabindex="-1"
+         aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -447,7 +454,7 @@ export default {
 
     },
     methods: {
-        selectInlineQuery(query){
+        selectInlineQuery(query) {
             this.keyboard[this.select.row][this.select.col].switch_inline_query_current_chat = query.command
 
             this.$notify({
@@ -458,7 +465,7 @@ export default {
 
             this.inlineQueryModal.hide()
         },
-        openInlineQueryModal(){
+        openInlineQueryModal() {
             this.inlineQueryModal.show()
         },
         openPageModal() {
@@ -488,6 +495,19 @@ export default {
                 col: -1,
                 type: this.type || 'reply'
             }
+        },
+        removeSelectedButton() {
+            this.keyboard[this.select.row].splice(this.select.col, 1)
+
+            let tmpRow = this.select.row;
+
+
+            this.reset()
+
+            if (this.keyboard[tmpRow].length === 0)
+                this.keyboard.splice(tmpRow, 1)
+
+
         },
         needRemoveField(param, rowIndex, colIndex) {
             Object.keys(this.keyboard[rowIndex][colIndex])
@@ -524,12 +544,43 @@ export default {
         addRowAbove() {
             this.addRow(true)
         },
+        moveColVertical(row, direction) {
+            /*     if (row !== this.select.row) {
+                     this.select.row = row
+                     this.select.col = 0
+                     this.select.text = this.keyboard[this.select.row][this.select.col].text
+                 }
+     */
+            let maxRows = this.keyboard.length
+
+            let index = direction === 0 ?
+                this.select.row - 1 >= 0 ? this.select.row - 1 : maxRows - 1 :
+                this.select.row < maxRows - 1 ? this.select.row + 1 : 0
+
+            let tmpItem = this.keyboard[this.select.row][this.select.col]
+
+            this.keyboard[this.select.row].splice(this.select.col, 1)
+
+            console.log(this.keyboard[this.select.row].length, this.select.row)
+
+
+            this.keyboard[index].push(tmpItem)
+
+            if (this.keyboard[this.select.row].length === 0)
+                this.keyboard.splice(this.select.row, 1)
+
+            this.select.row = index
+            this.select.col = this.keyboard[index].length - 1
+            this.select.text = this.keyboard[index][0].text
+
+            this.selectedRow = index
+        },
         moveCol(row, direction = 0) {
 
             if (row !== this.select.row) {
                 this.select.row = row
                 this.select.col = 0
-                this.select.text = this.keyboard[this.select.row][this.select.col].text
+                this.select.text = this.keyboard[this.select.row][this.select.col]
             }
 
             let rowIndex = this.select.row
@@ -612,7 +663,10 @@ export default {
 
             this.select.row = rowIndex
             this.select.col = colIndex
-            this.select.text = this.keyboard[rowIndex][colIndex].text || ''
+
+            if (this.keyboard[rowIndex])
+                if (this.keyboard[rowIndex][colIndex])
+                    this.select.text = this.keyboard[rowIndex][colIndex].text || ''
 
             this.load = true
             this.$nextTick(() => {

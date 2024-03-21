@@ -32,7 +32,7 @@ export default createStore({
         },
         getCurrentBot: state => {
             let currentBot = !localStorage.getItem('store_current_bot') ?
-                null : JSON.parse(localStorage.getItem('store_current_bot'))
+                window.currentBot : JSON.parse(localStorage.getItem('store_current_bot'))
 
             return state.current_bot || currentBot || null
         },
