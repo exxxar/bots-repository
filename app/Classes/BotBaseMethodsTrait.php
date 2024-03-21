@@ -431,6 +431,7 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->{$func}($tmp);
         } catch (\Exception $e) {
+            Log::info($e);
             $this->bot->sendMessage([
                 "chat_id" => $tmp["chat_id"],
                 "text" => "Данная возможность временно не доступна",
