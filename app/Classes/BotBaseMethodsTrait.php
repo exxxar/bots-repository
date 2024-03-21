@@ -33,6 +33,9 @@ trait BotBaseMethodsTrait
             $data = $this->bot->sendMessage($tmp);
 
         } catch (\Exception $e) {
+
+            $this->sendMessageOnCrash($tmp, $this->bot->sendMessage);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -107,6 +110,9 @@ trait BotBaseMethodsTrait
             $data = $this->bot->sendMessage($tmp);
 
         } catch (\Exception $e) {
+
+            $this->sendMessageOnCrash($tmp, $this->bot->sendMessage);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -132,6 +138,8 @@ trait BotBaseMethodsTrait
             $data = $this->bot->sendSticker($tmp);
 
         } catch (\Exception $e) {
+            $this->sendMessageOnCrash($tmp, $this->bot->sendSticker);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -157,6 +165,8 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendLocation($tmp);
         } catch (\Exception $e) {
+            $this->sendMessageOnCrash($tmp, $this->bot->sendLocation);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -185,6 +195,8 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendVenue($tmp);
         } catch (\Exception $e) {
+            $this->sendMessageOnCrash($tmp, $this->bot->sendVenue);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -213,6 +225,9 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendContact($tmp);
         } catch (\Exception $e) {
+
+            $this->sendMessageOnCrash($tmp, $this->bot->sendContact);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -357,6 +372,9 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendDocument($tmp);
         } catch (\Exception $e) {
+
+            $this->sendMessageOnCrash($tmp, $this->bot->sendDocument);
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -394,13 +412,19 @@ trait BotBaseMethodsTrait
 
 
         } catch (\Exception $e) {
-            unset($tmp['reply_markup']);
-            $this->sendMessage($chatId, $message);
+           $this->sendMessageOnCrash($tmp, $this->bot->sendMessage);
 
         }
 
         return $this;
 
+    }
+
+    protected function sendMessageOnCrash($tmp, $func){
+        unset($tmp['reply_markup']);
+        unset($tmp['message_thread_id']);
+
+        $func($tmp);
     }
 
     public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData = null)
@@ -425,8 +449,6 @@ trait BotBaseMethodsTrait
             ]);
         }
 
-        Log::info("inline_keyboard_in_send_invoice " . print_r($tmp, true));
-
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
             return $this;
@@ -435,6 +457,8 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendInvoice($tmp);
         } catch (\Exception $e) {
+            $this->sendMessageOnCrash($tmp, $this->bot->sendInvoice);
+
             Log::info("Ошибка конфигурации платежной системы:" . $e->getMessage());
         }
 
@@ -469,6 +493,7 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->editMessageReplyMarkup($tmp);
         } catch (\Exception $e) {
+
 
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
@@ -608,8 +633,7 @@ trait BotBaseMethodsTrait
 
         } catch (\Exception $e) {
 
-            // unset($tmp['reply_markup']);
-            $this->sendMessage($chatId, $message);
+            $this->sendMessageOnCrash($tmp, $this->bot->sendMessage);
 
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
@@ -653,8 +677,7 @@ trait BotBaseMethodsTrait
             $this->bot->sendVideoNote($tmp);
         } catch (\Exception $e) {
 
-            unset($tmp['reply_markup']);
-            $this->bot->sendPhoto($tmp);
+            $this->sendMessageOnCrash($tmp, $this->bot->sendVideoNote);
 
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
@@ -685,6 +708,9 @@ trait BotBaseMethodsTrait
 
         } catch (\Exception $e) {
 
+            $this->sendMessageOnCrash($tmp, $this->bot->sendChatAction);
+
+
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
@@ -696,9 +722,6 @@ trait BotBaseMethodsTrait
 
     public function sendPhoto($chatId, $caption, $path, array $keyboard = [], $messageThreadId = null)
     {
-        Log::info("path = ".print_r($path,true));
-        Log::info("thread = ".print_r($messageThreadId,true));
-        Log::info("keyboard = ".print_r($keyboard,true));
 
         $tmp = [
             "chat_id" => $chatId,
@@ -729,9 +752,7 @@ trait BotBaseMethodsTrait
             $data = $this->bot->sendPhoto($tmp);
 
         } catch (\Exception $e) {
-            Log::error($e);
-            unset($tmp['reply_markup']);
-            $this->bot->sendPhoto($tmp);
+            $this->sendMessageOnCrash($tmp, $this->bot->sendPhoto);
 
         }
 
@@ -765,6 +786,8 @@ trait BotBaseMethodsTrait
             $data = $this->bot->sendVideo($tmp);
 
         } catch (\Exception $e) {
+
+            $this->sendMessageOnCrash($tmp, $this->bot->sendVideo);
 
             Log::error($e->getMessage() . " " .
                 $e->getFile() . " " .
