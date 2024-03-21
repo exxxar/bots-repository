@@ -96,7 +96,7 @@ class FriendsScriptController extends SlugController
             ->reply(sprintf($mainText, $friendCount)."\n<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>");
 
         try {
-            $message = sprintf($referralText, $qr, $qr)."\n<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>";
+            $message = sprintf($referralText, $qr, $qr);
         } catch (\Exception $e) {
             $message = "Упс, у вас что-то с параметрами сообщения";
         }
