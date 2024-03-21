@@ -434,7 +434,7 @@ trait BotBaseMethodsTrait
             Log::info($e);
             $this->bot->sendMessage([
                 "chat_id" => $tmp["chat_id"],
-                "text" => "Данная возможность временно не доступна",
+                "text" => "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
                 "parse_mode" => "HTML"
             ]);
         }
