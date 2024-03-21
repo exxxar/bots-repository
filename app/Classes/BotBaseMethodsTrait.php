@@ -97,7 +97,7 @@ trait BotBaseMethodsTrait
         $tmp = [
             "chat_id" => $chatId,
             "message_thread_id" => $messageThreadId,
-            "text" => $message ?? 'Текст сообщения',
+            "text" => mb_strlen($message ?? '') > 0 ? $message : 'Текст сообщения',
             "parse_mode" => "HTML"
         ];
 
@@ -424,6 +424,9 @@ trait BotBaseMethodsTrait
     {
         unset($tmp['reply_markup']);
         unset($tmp['message_thread_id']);
+
+        if (isset($tmp["message"]))
+            $tmp["message"] = mb_strlen($tmp["message"] ?? '') > 0 ? $tmp["message"] : 'Текст сообщения';
 
         try {
             $this->bot->{$func}($tmp);
