@@ -278,7 +278,7 @@ class ProfileFormScriptController extends SlugController
                     $keyboard);
         else
             \App\Facades\BotManager::bot()
-                ->reply($mainScriptText, $keyboard);
+                ->replyInlineKeyboard($mainScriptText, $keyboard);
 
     }
 }
