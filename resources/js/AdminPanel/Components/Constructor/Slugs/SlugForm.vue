@@ -125,6 +125,11 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                             <label :for="'field-input-key-'+index">Ключ</label>
                         </div>
 
+                        <div class="form-floating mb-1">
+                            <p class="mb-0 font-italic font-10" v-if="filteredConfigs[index].description" v-html="filteredConfigs[index].description"></p>
+                            <p class="mb-0 font-10" v-else>без описания</p>
+                        </div>
+
                         <div class="form-floating mb-1"
                              v-if="filteredConfigs[index].type==='text' || filteredConfigs[index].type==='channel'">
                             <input type="text" class="form-control" :id="'field-input-'+index"
@@ -154,6 +159,15 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                                    v-model="filteredConfigs[index].value"
                                    type="text" :id="'filtered-config-'+index+'-geo'">
                             <label :for="'filtered-config-'+index+'-geo'">Значение</label>
+                        </div>
+
+                        <div
+                            v-if="filteredConfigs[index].type==='script'"
+                            class="form-floating mb-1 mt-2">
+                            <input class="form-control"
+                                   v-model="filteredConfigs[index].value"
+                                   type="text" :id="'filtered-config-'+index+'-script'">
+                            <label :for="'filtered-config-'+index+'-script'">Значение</label>
                         </div>
 
                         <div
@@ -285,6 +299,10 @@ export default {
                 {
                     title: 'Номер телефона',
                     type: 'phone',
+                },
+                {
+                    title: 'ID скрипта',
+                    type: 'script',
                 },
                 {
                     title: 'JSON',

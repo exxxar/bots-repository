@@ -82,28 +82,26 @@ class ProfileFormScriptController extends SlugController
             [
                 "type" => "boolean",
                 "key" => "set_vip",
+                "description" => "Устанавливает флаг Вип по окончанию анкеты",
                 "value" => true,
 
             ],
             [
                 "type" => "boolean",
+                "description" => "Устанавливает флаг Менеджер по окончанию анкеты",
                 "key" => "set_manager",
                 "value" => true,
 
             ],
             [
                 "type" => "boolean",
+                "description" => "Устанавливает флаг Доставщик по окончанию анкеты",
                 "key" => "set_deliveryman",
                 "value" => true,
 
             ],
 
-            [
-                "type" => "boolean",
-                "key" => "need_profile_form_image",
-                "value" => true,
 
-            ],
             [
                 "type" => "boolean",
                 "key" => "need_birthday",
@@ -127,13 +125,22 @@ class ProfileFormScriptController extends SlugController
                 "value" => true,
             ],
             [
-                "type" => "form_image",
-                "key" => "image",
+                "type" => "boolean",
+                "description" => "Скрывает изображение в форме",
+                "key" => "need_profile_form_image",
+                "value" => true,
+
+            ],
+            [
+                "type" => "image",
+                "description" => "Изображение в самой форме",
+                "key" => "form_image",
                 "value" => null,
             ],
             [
-                "type" => "script_image",
-                "key" => "image",
+                "type" => "image",
+                "description" => "Изображение к скрипту в боте",
+                "key" => "script_image",
                 "value" => null,
             ],
 

@@ -44,6 +44,12 @@ class FastRequestScriptController extends SlugController
 
             ],
             [
+                "type" => "script",
+                "key" => "profile_id",
+                "value" => null,
+
+            ],
+            [
                 "type" => "text",
                 "key" => "btn_text",
                 "value" => "Запросить обратную связь",
@@ -187,6 +193,10 @@ class FastRequestScriptController extends SlugController
             ->where("key", "main_image")
             ->first())["value"] ?? null;
 
+        $profileScriptId = (Collection::make($config[1])
+            ->where("key", "profile_id")
+            ->first())["value"] ?? null;
+
         /* $resultText = (Collection::make($config[1])
              ->where("key", "result_message")
              ->first())["value"] ?? "%s, Ваш запрос получен!";*/
@@ -202,24 +212,28 @@ class FastRequestScriptController extends SlugController
         if (!$botUser->is_vip) {
             $bot = BotManager::bot()->getSelf();
 
-            $keyboard = [
-                [
-                    ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                        "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/profile-form"
-                    ]],
-                ],
+            if (!is_null($profileScriptId)){
+                BotManager::bot()->runSlug($profileScriptId);
+            }
+            else {
+                $keyboard = [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/vip"
+                        ]],
+                    ],
 
-            ];
-
-            if (is_null($mainImage))
-                \App\Facades\BotManager::bot()
-                    ->replyInlineKeyboard("Для начала необходимо заполнить анкету!", $keyboard);
-            else
-                \App\Facades\BotManager::bot()
-                    ->replyPhoto("Для начала необходимо заполнить анкету!", $mainImage, $keyboard);
+                ];
 
 
+                if (is_null($mainImage))
+                    \App\Facades\BotManager::bot()
+                        ->replyInlineKeyboard("Для начала необходимо заполнить анкету!", $keyboard);
+                else
+                    \App\Facades\BotManager::bot()
+                        ->replyPhoto("Для начала необходимо заполнить анкету!", $mainImage, $keyboard);
 
+            }
 
             return;
         }
