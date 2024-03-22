@@ -40,10 +40,10 @@ class ProfileFormScriptController extends SlugController
 
 
             [
-            "type" => "text",
-            "key" => "pre_name_text",
-            "value" => "Введите ваше имя"
-        ],
+                "type" => "text",
+                "key" => "pre_name_text",
+                "value" => "Введите ваше имя"
+            ],
             [
                 "type" => "text",
                 "key" => "pre_phone_text",
@@ -146,10 +146,9 @@ class ProfileFormScriptController extends SlugController
 
         ];
 
-        if (count($mainScript->config ?? []) != count($params)) {
-            $mainScript->config = $params;
-            $mainScript->save();
-        }
+
+        $mainScript->config = $params;
+        $mainScript->save();
 
 
     }
@@ -157,7 +156,8 @@ class ProfileFormScriptController extends SlugController
     /**
      * @throws ValidationException
      */
-    public function updateProfileFormData(Request $request){
+    public function updateProfileFormData(Request $request)
+    {
         $request->validate([
             "name" => "required",
             "phone" => "required",
