@@ -437,14 +437,20 @@ trait BotBaseMethodsTrait
 
         try {
             $this->bot->{$func}($tmp);
+
         } catch (\Exception $e) {
 
+            Log::info("chatId ".$tmp["chat_id"]);
             $this->bot->sendMessage([
                 "chat_id" => $tmp["chat_id"],
                 "text" => $tmp["message"] ?? $tmp["caption"] ?? "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
                 "parse_mode" => "HTML"
             ]);
+
+
         }
+
+
 
     }
 
