@@ -132,6 +132,13 @@ class ProfileFormScriptController extends SlugController
 
             ],
             [
+                "type" => "boolean",
+                "description" => "Скрывает изображение в скрипте",
+                "key" => "need_script_image",
+                "value" => true,
+
+            ],
+            [
                 "type" => "image",
                 "description" => "Изображение в самой форме",
                 "key" => "form_image",
@@ -239,6 +246,11 @@ class ProfileFormScriptController extends SlugController
             ->where("key", "script_image")
             ->first())["value"] ?? null;
 
+        $needScriptImage = (Collection::make($config[1])
+            ->where("key", "need_script_image")
+            ->first())["value"] ?? false;
+
+
         $mainScriptText = (Collection::make($config[1])
             ->where("key", "main_script_text")
             ->first())["value"] ?? 'Анкета';
@@ -250,17 +262,23 @@ class ProfileFormScriptController extends SlugController
         $bot = BotManager::bot()->getSelf();
 
 
-        \App\Facades\BotManager::bot()
-            ->replyPhoto($mainScriptText,
-                InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
-                [
-                    [
-                        ["text" => "$btnText", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/profile-form"
-                        ]],
-                    ],
+        $keyboard = [
+            [
+                ["text" => "$btnText", "web_app" => [
+                    "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/profile-form"
+                ]],
+            ],
 
-                ]);
+        ];
+
+        if ($needScriptImage)
+            \App\Facades\BotManager::bot()
+                ->replyPhoto($mainScriptText,
+                    InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                    $keyboard);
+        else
+            \App\Facades\BotManager::bot()
+                ->reply($mainScriptText, $keyboard);
 
     }
 }
