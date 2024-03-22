@@ -440,7 +440,7 @@ trait BotBaseMethodsTrait
 
         } catch (\Exception $e) {
 
-            Log::info("chatId " . $tmp["chat_id"]);
+            Log::info("chatId " . $tmp["chat_id"] . "" . ($this->domain ?? '-'));
             try {
                 $this->bot->sendMessage([
                     "chat_id" => $tmp["chat_id"],
