@@ -324,12 +324,12 @@ class BotManager extends BotCore
 
         $this->recursivePages = ($this->recursivePages ?? []);
 
+        if (is_null($page))
+            return;
+
         if (!in_array($page->id, $this->recursivePages))
             $this->recursivePages[] = $page->id;
         else
-            return;
-
-        if (is_null($page))
             return;
 
         $bot = $this->getSelf();
