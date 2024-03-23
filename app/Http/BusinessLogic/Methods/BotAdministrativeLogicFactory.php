@@ -837,7 +837,7 @@ class BotAdministrativeLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function vipStore(array $data): void
+    public function vipStore(array $data, $customMessage = null): void
     {
 
         if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
@@ -845,7 +845,7 @@ class BotAdministrativeLogicFactory
 
         $validator = Validator::make($data, [
             "name" => "required",
-           // "phone" => "required",
+            // "phone" => "required",
             //"birthday" => "required",
             //"city" => "required",
             //"sex" => "required",
@@ -967,7 +967,7 @@ class BotAdministrativeLogicFactory
             ->whereBot($this->bot)
             ->sendMessage(
                 $this->botUser->telegram_chat_id,
-                "Вы стали нашим <b>V.I.P.</b> пользователем! Поздравляем!"
+                $customMessage ?? "Вы стали нашим <b>V.I.P.</b> пользователем! Поздравляем!"
             );
 
     }

@@ -77,7 +77,7 @@ class ProfileFormScriptController extends SlugController
 
             [
                 "type" => "text",
-                "description"=>"Текст после отправки формы",
+                "description" => "Текст после отправки формы",
                 "key" => "text_after_submit",
                 "value" => "Спасибо!"
             ],
@@ -182,11 +182,15 @@ class ProfileFormScriptController extends SlugController
             "sex" => "required",
         ]);
 
+        $customMessage = (Collection::make($request->slug->config)
+                ->where("key", "pre_birthday_text")
+                ->first())["value"] ?? null;
+
         BusinessLogic::administrative()
             ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->setSlug($request->slug ?? null)
-            ->vipStore($request->all());
+            ->vipStore($request->all(), $customMessage);
 
         return response()->noContent();
     }
