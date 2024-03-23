@@ -183,7 +183,7 @@ class ProfileFormScriptController extends SlugController
         ]);
 
         $customMessage = (Collection::make($request->slug->config)
-                ->where("key", "pre_birthday_text")
+                ->where("key", "text_after_submit")
                 ->first())["value"] ?? null;
 
         BusinessLogic::administrative()
