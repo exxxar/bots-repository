@@ -171,7 +171,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
         </div>
 
         <div class="card card-style p-3" v-if="botUser.is_vip">
-            Поздравляем! Успешно заполнили ваш профиль!
+            <p v-html="settings.text_after_submit"></p>
 
             <h6>Ваши данные:</h6>
             <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
@@ -224,6 +224,7 @@ export default {
                 pre_sex_text: null,
                 pre_name_text: null,
                 pre_phone_text: null,
+                text_after_submit: null,
             },
             load: false,
             confirm: false,

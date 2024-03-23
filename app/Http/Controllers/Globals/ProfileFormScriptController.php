@@ -74,6 +74,13 @@ class ProfileFormScriptController extends SlugController
                 "key" => "main_script_text",
                 "value" => "Анкета пользователя"
             ],
+
+            [
+                "type" => "text",
+                "description"=>"Текст после отправки формы",
+                "key" => "text_after_submit",
+                "value" => "Спасибо!"
+            ],
             [
                 "type" => "text",
                 "key" => "profile_btn_caption",
@@ -199,6 +206,9 @@ class ProfileFormScriptController extends SlugController
                 'pre_birthday_text' => (Collection::make($slug->config)
                         ->where("key", "pre_birthday_text")
                         ->first())["value"] ?? 'Укажите вашу дату рождения',
+                'text_after_submit' => (Collection::make($slug->config)
+                        ->where("key", "text_after_submit")
+                        ->first())["value"] ?? 'Спасибо!',
                 'need_birthday' => (Collection::make($slug->config)
                         ->where("key", "need_birthday")
                         ->first())["value"] ?? true,
