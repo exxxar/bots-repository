@@ -210,6 +210,9 @@ class FastRequestScriptController extends SlugController
         $botUser = BotManager::bot()->currentBotUser();
 
         if (!$botUser->is_vip) {
+
+            Log::info("вы не вип!");
+
             $bot = BotManager::bot()->getSelf();
 
             if (!is_null($profileScriptId)){
@@ -238,6 +241,7 @@ class FastRequestScriptController extends SlugController
             return;
         }
 
+        Log::info("мы тут");
 
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
