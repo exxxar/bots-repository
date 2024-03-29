@@ -156,7 +156,7 @@ class PaymentLogicFactory
             \App\Facades\BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendMessage(
-                    $this->botUser->telegram_chat_id, "❗❗❗Сумма заказа должна быть больше чем 100 руб 00 коп.❗❗❗");
+                    $this->botUser->telegram_chat_id, "❗Сумма заказа должна быть больше чем <strong>100 руб 00 коп.</strong>❗");
 
             if (!is_null($slug ?? null))
                 BotManager::bot()->runSlug($slug->id);
