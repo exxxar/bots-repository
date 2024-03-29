@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Facades\BotManager;
+use App\Facades\BotMethods;
 use App\Http\Resources\AmoCrmResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
@@ -156,6 +157,9 @@ class PaymentLogicFactory
                 ->whereBot($this->bot)
                 ->sendMessage(
                     $this->botUser->telegram_chat_id, "❗❗❗Сумма заказа должна быть больше чем 100 руб 00 коп.❗❗❗");
+
+            if (!is_null($slug ?? null))
+                BotManager::bot()->runSlug($slug->id);
             return;
         }
 
