@@ -927,7 +927,7 @@ abstract class BotCore
                     $config, []);
 
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
         }
     }

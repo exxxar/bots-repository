@@ -87,7 +87,7 @@ class PaymentLogicFactory
         $botUser = $this->botUser;
         $slug = $this->slug;
 
-      //  Log::info("slug config".print_r($slug->config, true));
+        //  Log::info("slug config".print_r($slug->config, true));
 
         $taxSystemCode = (Collection::make($slug->config)
             ->where("key", "tax_system_code")
@@ -99,14 +99,14 @@ class PaymentLogicFactory
             ->pluck("id")
             ->toArray();
 
-     /*   Log::info("ids" . print_r($ids, true));*/
+        /*   Log::info("ids" . print_r($ids, true));*/
 
 
         $products = Product::query()
             ->whereIn("id", is_array($ids) ? $ids : [$ids])
             ->get();
 
-      /*  Log::info("products" . print_r($products->toArray(), true));*/
+        /*  Log::info("products" . print_r($products->toArray(), true));*/
 
         $prices = [];
         $currency = "RUB";
@@ -129,7 +129,7 @@ class PaymentLogicFactory
 
             $prices[] = [
                 "label" => $product->title,
-                "amount" => $tmpPrice*100
+                "amount" => $tmpPrice * 100
             ];
 
             $tmpDescription .= "$product->title x$tmpCount = $tmpPrice\n";
@@ -149,9 +149,15 @@ class PaymentLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
-/*        Log::info("prices " . print_r($prices, true));
-        Log::info("price receipt " . print_r($providerData->receipt, true));
-        Log::info("price after $summaryPrice");*/
+
+        if ($summaryPrice < 100) {
+
+            \App\Facades\BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $this->botUser->telegram_chat_id, "❗❗❗Сумма заказа должна быть больше чем 100 руб 00 коп.❗❗❗");
+            return;
+        }
 
         $payload = Str::uuid()->toString();
 
@@ -221,7 +227,6 @@ class PaymentLogicFactory
             ->where("key", "checkout_description")
             ->first())["value"] ?? "Ваш товар";
 
-        Log::info("payload".print_r($payload, true));
 
         \App\Facades\BotMethods::bot()
             ->whereBot($this->bot)
@@ -230,11 +235,11 @@ class PaymentLogicFactory
                 title: $title,
                 description: $description,
                 prices: $prices,
-                payload:  $payload,
+                payload: $payload,
                 providerToken: $providerToken,
                 currency: $currency,
                 needs: $needs,
-                keyboard:$keyboard,
+                keyboard: $keyboard,
                 providerData: $providerData
             );
     }

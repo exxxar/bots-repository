@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 use Telegram\Bot\FileUpload\InputFile;
 
 class FastRequestScriptController extends SlugController
@@ -121,6 +122,7 @@ class FastRequestScriptController extends SlugController
             ]
         );
     }
+
     public function requestCallback(...$data)
     {
         $slugId = $data[3] ?? null;
@@ -211,14 +213,13 @@ class FastRequestScriptController extends SlugController
 
         if (!$botUser->is_vip) {
 
-            Log::info("вы не вип!");
-
             $bot = BotManager::bot()->getSelf();
 
-            if (!is_null($profileScriptId)){
+            if (!is_null($profileScriptId) && $profileScriptId instanceof stdClass == "integer") {
+
                 BotManager::bot()->runSlug($profileScriptId);
-            }
-            else {
+
+            } else {
                 $keyboard = [
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
@@ -241,7 +242,6 @@ class FastRequestScriptController extends SlugController
             return;
         }
 
-        Log::info("мы тут");
 
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
