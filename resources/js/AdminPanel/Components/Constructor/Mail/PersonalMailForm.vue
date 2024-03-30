@@ -208,6 +208,8 @@ export default {
                     text: "Сообщение успешно поставлено в очередь!",
                     type: 'success'
                 });
+
+                this.$emit("callback")
             }).catch(err => {
 
             })

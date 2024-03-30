@@ -135,6 +135,15 @@ Route::prefix("admin")
                 Route::delete('/remove/{id}', "remove")->middleware(["role:admin"]);
             });
 
+        Route::prefix("mailing")
+            ->controller(\App\Http\Controllers\Admin\QueueController::class)
+            ->middleware(["role:manager"])
+            ->group(function () {
+                Route::post('/', "list");
+                Route::post('/store', "store");
+                Route::delete('/remove/{id}', "remove")->middleware(["role:admin"]);
+            });
+
 
         Route::prefix("inline-queries")
             ->controller(\App\Http\Controllers\Admin\InlineQuerySlugController::class)

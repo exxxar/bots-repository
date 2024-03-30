@@ -1,6 +1,7 @@
 <script setup>
 import ChannelMailForm from "@/AdminPanel/Components/Constructor/Mail/ChannelMailForm.vue";
 import PersonalMailForm from "@/AdminPanel/Components/Constructor/Mail/PersonalMailForm.vue";
+import MailingTable from "@/AdminPanel/Components/Constructor/Mail/MailingTable.vue";
 </script>
 
 <template>
@@ -28,7 +29,10 @@ import PersonalMailForm from "@/AdminPanel/Components/Constructor/Mail/PersonalM
 
         <div class="row" v-if="tab===1">
             <div class="col-12 py-2">
-                <PersonalMailForm></PersonalMailForm>
+                <PersonalMailForm v-on:callback="callbackPersonalMail"></PersonalMailForm>
+            </div>
+            <div class="col-12">
+                <MailingTable :bot="bot" v-if="!loadMailingTable"></MailingTable>
             </div>
         </div>
     </div>
@@ -39,22 +43,26 @@ import PersonalMailForm from "@/AdminPanel/Components/Constructor/Mail/PersonalM
 import {mapGetters} from "vuex";
 
 export default {
+    props:["bot"],
     data() {
         return {
             tab:1,
             load: false,
+            loadMailingTable:false
         }
     },
-    computed: {
-        ...mapGetters(['getCurrentBot']),
 
-    },
     mounted() {
 
     },
 
     methods: {
-
+        callbackPersonalMail(){
+            this.loadMailingTable = true
+            this.$nextTick(()=>{
+                this.loadMailingTable = false
+            })
+        }
 
     }
 }

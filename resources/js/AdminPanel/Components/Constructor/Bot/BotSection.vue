@@ -193,7 +193,7 @@ import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCode
     </div>
 
     <div v-if="step===9" class="pb-5 mb-5">
-        <Mail/>
+        <Mail :bot="bot"/>
     </div>
 
 

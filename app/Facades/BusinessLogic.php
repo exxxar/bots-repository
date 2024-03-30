@@ -23,6 +23,7 @@ use App\Http\BusinessLogic\Methods\KeyboardLogicFactory as KeyboardLogic;
 use App\Http\BusinessLogic\Methods\GeoLogicFactory as GeoLogic;
 use App\Http\BusinessLogic\Methods\DeliveryLogicFactory as DeliveryLogic;
 use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory as PromoCodesLogic;
+use App\Http\BusinessLogic\Methods\MailingLogicFactory as QueueLogic;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -46,6 +47,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static PaymentLogic payment()
  * @method static PromoCodesLogic promoCodes()
  * @method static InlineQueryLogic inlineQuery()
+ * @method static QueueLogic mailing()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

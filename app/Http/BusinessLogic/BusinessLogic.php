@@ -5,6 +5,7 @@ namespace App\Http\BusinessLogic;
 use App\Http\BusinessLogic\Methods\AmoLogicFactory;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory;
 use App\Http\BusinessLogic\Methods\InlineQueryLogicFactory;
+use App\Http\BusinessLogic\Methods\MailingLogicFactory;
 use App\Http\BusinessLogic\Methods\PaymentLogicFactory;
 use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory;
 use App\Http\BusinessLogic\Methods\QuizLogicFactory;
@@ -46,6 +47,7 @@ class BusinessLogic
     protected DeliveryLogicFactory $delivery;
     protected PromoCodesLogicFactory $promoCodes;
     protected InlineQueryLogicFactory $inlineQueries;
+    protected MailingLogicFactory $mailing;
 
     public function __construct()
     {
@@ -69,11 +71,17 @@ class BusinessLogic
         $this->delivery = new DeliveryLogicFactory();
         $this->promoCodes = new PromoCodesLogicFactory();
         $this->inlineQueries = new InlineQueryLogicFactory();
+        $this->mailing = new MailingLogicFactory();
     }
 
     public function bots(): BotLogicFactory
     {
         return $this->bot;
+    }
+
+    public function mailing(): MailingLogicFactory
+    {
+        return $this->mailing;
     }
 
     public function inlineQuery(): InlineQueryLogicFactory
