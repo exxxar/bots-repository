@@ -1,14 +1,23 @@
 <template>
 
     <div class="deal-container">
+
         <div class="deal-wheel">
             <!-- блок с призами -->
             <div class="outer-circle"></div>
 
+            <div class="deal-wheel-full">
+                <div class="inner-circle"></div>
+                <div class="inner-circle-2"></div>
+            </div>
+
             <ul class="spinner"></ul>
 
             <!-- язычок барабана -->
-            <div class="ticker"></div>
+            <div class="ticker">
+                <div class="circle"></div>
+                <div class="arrow"></div>
+            </div>
             <!-- кнопка -->
             <button class="btn-spin">
                 <slot name="baseContent"></slot>
@@ -85,6 +94,7 @@ export default {
 // переменная для текстовых подписей
         let prizeNodes;
 
+
 // расставляем текст по секторам
         const createPrizeNodes = () => {
             // обрабатываем каждую подпись
@@ -102,6 +112,7 @@ export default {
             });
         };
 
+
 // рисуем разноцветные секторы
         const createConicGradient = () => {
             // устанавливаем нужное значение стиля у элемента spinner
@@ -111,7 +122,9 @@ export default {
       from -90deg,
       ${prizes
                     // получаем цвет текущего сектора
-                    .map(({color}, i) => `${color} 0 ${(100 / prizes.length) * (prizes.length - i)}%`)
+                    .map(({color}, i) => {
+                        return `${color} 0 ${(100 / prizes.length) * (prizes.length - i)-0.25}%,black 0 ${(100 / prizes.length) * (prizes.length - i)}%`
+                    })
                     .reverse()
                 }
     );`
@@ -124,6 +137,8 @@ export default {
             createConicGradient();
             // потом текст
             createPrizeNodes();
+
+
             // а потом мы получим список всех призов на странице, чтобы работать с ними как с объектами
             prizeNodes = wheel.querySelectorAll(".prize");
 
@@ -182,6 +197,7 @@ export default {
         trigger.addEventListener("click", () => {
             // делаем её недоступной для нажатия
             trigger.disabled = true;
+
             // задаём начальное вращение колеса
             rotation = Math.floor(Math.random() * 360 + spinertia(2000, 5000));
             // убираем прошлый приз
@@ -283,7 +299,7 @@ export default {
     border-width: 2px 0;
     border-style: solid none;
     border-color: #FDBE33 #000 #D77206;
-    border-radius: 6px;
+    border-radius: 30px;
     background: linear-gradient(#F3AE0F, #E38916) #E38916;
     transition: 0.2s;
 
@@ -322,7 +338,6 @@ export default {
 .prize {
     /* включаем «гибкую» вёрстку */
     display: flex;
-    align-items: flex-start;
     /* задаём отступы от краёв блока */
     padding: 0 calc(var(--size) / 6) 0 calc(var(--size) / 20);
     /* устанавливаем размеры */
@@ -336,14 +351,19 @@ export default {
     user-select: none;
 
 
-    display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 
     span {
         line-height: 100%;
-        color: #7f5300;
+        color: #ffffff;
+        font-size: 10px;
+        text-align: center;
+        display: block;
+        position: absolute;
         transform: translateX(25px);
+        left: 4px;
     }
 }
 
@@ -357,13 +377,30 @@ export default {
     height: calc(var(--size) / 20);
     /* фон язычка */
    // background: var(--lg);
-    background: linear-gradient(0deg, rgba(255,144,19,1) 0%, rgba(158,6,2,1) 100%);
+
     /* делаем так, чтобы язычок был выше колеса */
     z-index: 6;
     /* форма язычка */
-    clip-path: polygon(20% 0, 100% 50%, 20% 100%, 0% 50%);
+   //
     /* устанавливаем точку, относительно которой будет вращаться язычок при движении колеса */
     transform-origin: center left;
+
+    .circle {
+        background: linear-gradient(0deg, rgba(255,144,19,1) 0%, rgba(158,6,2,1) 100%);
+        width:40px;
+        height: 40px;
+        border-radius: 50%;
+        position: absolute;
+    }
+
+    .arrow {
+        position: absolute;
+        background: linear-gradient(0deg, rgba(255,144,19,1) 0%, rgba(158,6,2,1) 100%);
+        width:60px;
+        height: 40px;
+        left:13px;
+        clip-path: polygon(20% 0, 100% 50%, 20% 100%, 0% 50%);
+    }
 }
 
 /* кнопка запуска колеса */
@@ -376,7 +413,7 @@ export default {
     /* добавляем отступы от текста внутри кнопки */
     padding: 0.9rem 2rem 1rem;
     /* скругляем углы */
-    border-radius: 0.5rem;
+    border-radius: 30px;
     /* меняем внешний вид курсора над кнопкой на руку*/
     cursor: pointer;
 }
@@ -412,9 +449,13 @@ export default {
 .prize.selected .text {
     /* делаем текст белым */
     color: white;
+    font-size: 12px;
+    font-weight: bold;
     /* настраиваем длительность анимации */
-    animation: selected 800ms ease;
+   /* animation: selected 800ms ease;
     transform: rotate(18deg);
+    position: absolute;
+    z-index: 10;*/
 
 }
 
@@ -454,4 +495,31 @@ export default {
     width: 100%;
     height: 100%;
 }
+
+.deal-wheel-full {
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    .inner-circle {
+        padding: 15px;
+        box-sizing: border-box;
+        border: 9px #FFC107 solid;
+        border-radius: 50%;
+        box-shadow: 1px 1px 5px 1px #c19308 inset, 0px 0px 4px 0px #a07903;
+        width: 72px;
+        height: 72px;
+        position: absolute;
+        z-index: 1;
+        background: #F44336;
+    }
+
+
+}
+
 </style>

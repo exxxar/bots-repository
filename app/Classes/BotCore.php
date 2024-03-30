@@ -6,6 +6,7 @@ use App\Enums\BotStatusEnum;
 use App\Enums\CashBackDirectionEnum;
 use App\Events\CashBackEvent;
 use App\Facades\BotManager;
+use App\Facades\BotMethods;
 use App\Facades\InlineQueryService;
 use App\Models\Basket;
 use App\Models\BotMenuSlug;
@@ -19,6 +20,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Mpdf\Mpdf;
 use PHPUnit\Exception;
 use ReflectionClass;
 use ReflectionMethod;
@@ -112,17 +115,17 @@ abstract class BotCore
 
         $this->chatId = $data["from"]["id"] ?? null;
 
-/*        $id = $data["inline_query"]["id"] ?? null;
-        $query = $data["inline_query"]["query"] ?? null;
-        $offset = $data["inline_query"]["offset"] ?? null;
+        /*        $id = $data["inline_query"]["id"] ?? null;
+                $query = $data["inline_query"]["query"] ?? null;
+                $offset = $data["inline_query"]["offset"] ?? null;
 
-        $this->chatId = $data["inline_query"]["from"]["id"] ?? null;*/
+                $this->chatId = $data["inline_query"]["from"]["id"] ?? null;*/
 
         InlineQueryService::inline()
             ->setBot($this->getSelf())
             ->handler($inlineData);
 
-      //  $this->tryCall($this->inline, $query, null, $id, $offset);
+        //  $this->tryCall($this->inline, $query, null, $id, $offset);
     }
 
     public function webHandler($domain, $data): \Illuminate\Http\JsonResponse
@@ -166,8 +169,8 @@ abstract class BotCore
         if ($this->botFallbackHandler($data))
             return response()->json($this->webMessages);
 
-       /* if ($this->adminNotificationHandler($data->message, $query))
-            return response()->json($this->webMessages);*/
+        /* if ($this->adminNotificationHandler($data->message, $query))
+             return response()->json($this->webMessages);*/
 
         $this->reply("Ошибка обработки данных!");
 
@@ -295,7 +298,7 @@ abstract class BotCore
                     break;
                 }
 
-                if ($command  == $query) {
+                if ($command == $query) {
                     $find = true;
                     break;
                 }
@@ -305,7 +308,7 @@ abstract class BotCore
 
         }
 
-        if ($find){
+        if ($find) {
             $page = $template->page;
             if (!is_null($template->page->rules_if)) {
                 $result = $this->checkTemplatePageRules($page);
@@ -699,6 +702,7 @@ abstract class BotCore
             ->sendMessage($botUser->telegram_chat_id, "Ваша покупка:\n$product");
 
 
+
         $transaction->update([
             'status' => 2,
             'order_info' => $orderInfo,
@@ -706,6 +710,35 @@ abstract class BotCore
             'provider_payment_charge_id' => $providerPaymentChargeId,
             'completed_at' => Carbon::now()
         ]);
+
+        $mpdf = new Mpdf();
+        $current_date = Carbon::now("+3:00")->format("Y-m-d H:i:s");
+
+        $number = Str::uuid();
+
+
+        $mpdf->WriteHTML(view("pdf.draft", [
+            "title" => $this->bot->title ?? $this->bot->bot_domain ?? 'CashMan',
+            "date" => $current_date,
+            "completed_at" => $transaction->completed_at ?? null,
+            "payload" => $transaction->payload,
+            "currency" => $transaction->currency,
+            "total_amount" => $transaction->total_amount ?? 0,
+            "status" => $transaction->status ?? 0,
+            "order_info" => $transaction->order_info ?? null,
+            "products_info" => $transaction->products_info ?? null,
+            "shipping_address" => $transaction->shipping_address ?? null,
+            "telegram_payment_charge_id" => $transaction->telegram_payment_charge_id ?? null,
+            "provider_payment_charge_id" => $transaction->provider_payment_charge_id ?? null,
+        ]));
+
+        $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
+
+
+        $this->replyDocument(
+            "Чек #" . ($transaction->id ?? 'не указан'),
+            InputFile::createFromContents($file, "draft.pdf")
+        );
     }
 
     public function shippingQueryHandler($data)
@@ -1030,7 +1063,7 @@ abstract class BotCore
     {
         $type = $message->chat->type ?? null;
 
-        if (is_null($type)||$type=="supergroup")
+        if (is_null($type) || $type == "supergroup")
             return true;
 
         $botUser = $this->currentBotUser();

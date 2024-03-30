@@ -21,14 +21,16 @@ import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCode
 </script>
 <template>
 
-    <div class="d-flex custom-dropdown justify-content-between align-items-center" >
+    <div class="d-flex custom-dropdown justify-content-between align-items-center">
         <div class="btn-group">
             <button type="button" class="btn btn-primary text-primary"
                     v-bind:class="{'bg-primary text-white':step==0}"
-                    @click="setStep(0)"><i class="fa-solid fa-info mr-2"></i>Информация о боте</button>
+                    @click="setStep(0)"><i class="fa-solid fa-info mr-2"></i>Информация о боте
+            </button>
             <button type="button" class="btn btn-primary text-primary"
                     v-bind:class="{'bg-primary text-white':step==4}"
-                    @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы (кнопки бота)</button>
+                    @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы (кнопки бота)
+            </button>
         </div>
 
         <div class="dropdown" v-if="hasRole('admin')">
@@ -40,14 +42,13 @@ import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCode
             </button>
 
 
-
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-<!--                <li><a class="dropdown-item" href="#bot-info" @click="setStep(0)">
-                    <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
+                <!--                <li><a class="dropdown-item" href="#bot-info" @click="setStep(0)">
+                                    <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
 
-                <li><a class="dropdown-item" href="#bot-pages" @click="setStep(4)">
-                    <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>-->
+                                <li><a class="dropdown-item" href="#bot-pages" @click="setStep(4)">
+                                    <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>-->
                 <li><a class="dropdown-item" href="#bot-news" @click="setStep(9)"><i
                     class="fa-regular fa-newspaper mr-2"></i> Рассылки</a></li>
                 <li><a class="dropdown-item" href="#bot-appointments" @click="setStep(13)">
@@ -111,6 +112,7 @@ import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCode
 
 
         <BotForm
+            v-on:callback="botCallbackUpdate"
             :bot="bot"
             v-if="!load"
         />
@@ -182,12 +184,12 @@ import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCode
                 v-on:callback="pageCallback"/>
         </div>
 
-<!--        <div class="col-12 col-md-4" v-if="!load">
-            <PagesList
-                :editor="true"
-                v-on:callback="pageListCallback"/>
+        <!--        <div class="col-12 col-md-4" v-if="!load">
+                    <PagesList
+                        :editor="true"
+                        v-on:callback="pageListCallback"/>
 
-        </div>-->
+                </div>-->
     </div>
 
     <div v-if="step===9" class="pb-5 mb-5">
@@ -201,7 +203,7 @@ import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCode
 import {mapGetters} from "vuex";
 
 export default {
-    props: [ "bot"],
+    props: ["bot"],
     data() {
         return {
             page: null,
@@ -216,7 +218,14 @@ export default {
         this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
     },
     methods: {
-        hasRole(role){
+        botCallbackUpdate(bot) {
+            this.$store.dispatch("updateCurrentBot", {
+                bot: bot
+            }).then(() => {
+
+            })
+        },
+        hasRole(role) {
             return window.hasRole(role) || false
         },
         setStep(index) {
@@ -262,7 +271,7 @@ export default {
     display: inline-block;
     position: sticky !important;
     top: 50px;
-    z-index:101;
+    z-index: 101;
 
     .btn {
         background: white;

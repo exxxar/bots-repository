@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Facades\BotMethods;
+use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\ActionStatusResource;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\AppointmentEventCollection;
@@ -21,6 +22,7 @@ use App\Models\AppointmentEvent;
 use App\Models\AppointmentReview;
 use App\Models\AppointmentService;
 use App\Models\Bot;
+use App\Models\BotMenuTemplate;
 use App\Models\Quiz;
 use App\Models\QuizAnswer;
 use App\Models\QuizCommand;
@@ -31,11 +33,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class QuizLogicFactory
 {
+    use LogicUtilities;
+
     protected $bot;
     protected $botUser;
     protected $slug;
@@ -303,16 +308,21 @@ class QuizLogicFactory
 
         $tmpWin = "Ура, Вы выиграли";
         $tmpLoose = "Увы, Вы проиграли";
-        $message .= $points >= (($maxResult * ($quiz->success_percent ?? 50)) / 100) ?
+        $isWin = $points >= (($maxResult * ($quiz->success_percent ?? 50)) / 100);
+
+        $message .= $isWin ?
             $quiz->success_message[random_int(0, count($quiz->success_message ?? [$tmpWin]) - 1)] ?? $tmpWin :
             $quiz->failure_message[random_int(0, count($quiz->failure_message ?? [$tmpLoose]) - 1)] ?? $tmpLoose;
 
+        $successReplyKeyboard = $quiz->successReplyKeyboard ?? null;
+        $failureReplyKeyboard = $quiz->failureReplyKeyboard ?? null;
 
         BotMethods::bot()
             ->whereBot($bot)
-            ->sendMessage(
+            ->sendInlineKeyboard(
                 $botUser->telegram_chat_id,
                 $message,
+                $isWin ? $successReplyKeyboard : $failureReplyKeyboard
             )
             ->sendMessage(
                 $bot->order_channel ?? $bot->main_channel ?? null,
@@ -476,7 +486,7 @@ class QuizLogicFactory
           ]);*/
 
 
-        Log::info(($hasRightAnswer?"true":"false")." ".print_r($hasRightAnswer ? $question->success_message : $question->failure_message, true));
+        Log::info(($hasRightAnswer ? "true" : "false") . " " . print_r($hasRightAnswer ? $question->success_message : $question->failure_message, true));
 
         return (object)[
             "question" => (object)[
@@ -528,7 +538,7 @@ class QuizLogicFactory
             ->get();
 
 
-        if (count($questions)==0)
+        if (count($questions) == 0)
             throw new HttpException(404, "Вопросы не найден");
 
         $bot = $this->bot;
@@ -568,8 +578,8 @@ class QuizLogicFactory
                     continue;
 
 
-                $answerPool = array_filter($answers, function ($q) use ($question){
-                   return $q->id ==  $question->id;
+                $answerPool = array_filter($answers, function ($q) use ($question) {
+                    return $q->id == $question->id;
                 });
 
                 $answerPool = Collection::make($answerPool)
@@ -603,7 +613,7 @@ class QuizLogicFactory
             $tmpQuestionsResult[] = (object)$tmpObject;
 
             $result[] = [
-               ...$tmpObject,
+                ...$tmpObject,
                 "question" => (object)[
                     "id" => $question->id,
                     "text" => $question->text,
@@ -879,6 +889,9 @@ class QuizLogicFactory
         $success = json_decode($data['success_message'] ?? '[]');
         $failure = json_decode($data['failure_message'] ?? '[]');
 
+        $successInlineKeyboard = isset($data["success_inline_keyboard"]) ? json_decode($data["success_inline_keyboard"] ?? '[]') : null;
+        $failureInlineKeyboard = isset($data["failure_inline_keyboard"]) ? json_decode($data["failure_inline_keyboard"] ?? '[]') : null;
+
 
         $tmp = [
             'bot_id' => $this->bot->id,
@@ -900,6 +913,68 @@ class QuizLogicFactory
             "failure_message" => $failure,
 
         ];
+
+
+        if (!is_null($successInlineKeyboard)) {
+
+            $successInlineKeyboard = $this->recursiveMenuFix($successInlineKeyboard);
+
+            $successInlineKeyboardId = $data["success_inline_keyboard_id"];
+
+            $menu = BotMenuTemplate::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("id", $successInlineKeyboardId)
+                ->first();
+
+            unset($data["success_inline_keyboard"]);
+
+            if (!is_null($menu))
+                $menu->update([
+                    'menu' => $successInlineKeyboard,
+                ]);
+            else {
+                $strSlug = Str::uuid();
+                $menu = BotMenuTemplate::query()->create([
+                    'bot_id' => $this->bot->id,
+                    'type' => "reply",
+                    'slug' => $strSlug,
+                    'menu' => $successInlineKeyboard,
+                ]);
+            }
+
+            $tmp["success_inline_keyboard_id"] = $menu->id;
+        }
+
+
+        if (!is_null($failureInlineKeyboard)) {
+
+            $failureInlineKeyboard = $this->recursiveMenuFix($failureInlineKeyboard);
+            $failureInlineKeyboardId = $data["failure_inline_keyboard_id"];
+
+            $menu = BotMenuTemplate::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("id", $failureInlineKeyboardId)
+                ->first();
+
+            unset($data["failure_inline_keyboard"]);
+
+            if (!is_null($menu))
+                $menu->update([
+                    'menu' => $failureInlineKeyboard,
+                ]);
+            else {
+                $strSlug = Str::uuid();
+                $menu = BotMenuTemplate::query()->create([
+                    'bot_id' => $this->bot->id,
+                    'type' => "reply",
+                    'slug' => $strSlug,
+                    'menu' => $failureInlineKeyboard,
+                ]);
+            }
+
+            $tmp["failure_inline_keyboard_id"] = $menu->id;
+        }
+
 
         if (is_null($data["id"] ?? null)) {
             $quiz = Quiz::query()->create($tmp);

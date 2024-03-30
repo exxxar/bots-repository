@@ -81,7 +81,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                                 v-model="keyboard[rowIndex][colIndex].text"
                             />
                             <div class="dropdown">
-                                <a class="btn btn-outline-primary" href="javascript:void(0)" role="button"
+                                <a class="btn btn-outline-primary rounded-0" href="javascript:void(0)" role="button"
                                    data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </a>
@@ -128,6 +128,59 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
             </div>
 
         </div>
+
+        <div class="mb-3" v-if="type==='reply'">
+
+
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="settings.is_persistent"
+                       type="checkbox"
+                       id="need-is_persistent">
+                <label class="form-check-label" for="need-is_persistent">
+                    Скрывать клавиатуру автоматически
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="settings.one_time_keyboard"
+                       type="checkbox"
+                       id="need-one_time_keyboard">
+                <label class="form-check-label" for="need-one_time_keyboard">
+                    Клавиатура показывается только 1 раз
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="settings.resize_keyboard"
+                       type="checkbox"
+                       id="need-resize_keyboard">
+                <label class="form-check-label" for="need-resize_keyboard">
+                    Клавиши масштабируются
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input"
+                       v-model="need_input_field_placeholder"
+                       type="checkbox"
+                       id="need_input_field_placeholder">
+                <label class="form-check-label" for="need_input_field_placeholder">
+                    Нужна подсказка к клавиатуре
+                </label>
+            </div>
+
+            <div class="form-floating mb-3" v-if="need_input_field_placeholder">
+                <input type="text"
+                       v-model="settings.input_field_placeholder"
+                       class="form-control" id="input_field_placeholder" placeholder="Клавиатура">
+                <label for="input_field_placeholder">Подсказка к клавиатуре</label>
+            </div>
+
+        </div>
+
         <div class="row" v-if="showCode">
             <div class="col-12">
 
@@ -421,6 +474,13 @@ export default {
     },
     data() {
         return {
+            need_input_field_placeholder: false,
+            settings: {
+                resize_keyboard: true,
+                one_time_keyboard: false,
+                input_field_placeholder: null,
+                is_persistent: false,
+            },
             need_login_url: false,
             pageModal: null,
             inlineQueryModal: null,
@@ -448,6 +508,15 @@ export default {
         if (this.editedKeyboard) {
             this.$nextTick(() => {
                 this.keyboard = this.editedKeyboard.menu
+                this.settings = {
+                    resize_keyboard: this.editedKeyboard.settings.resize_keyboard || true,
+                    one_time_keyboard: this.editedKeyboard.settings.one_time_keyboard || false,
+                    input_field_placeholder: this.editedKeyboard.settings.input_field_placeholder || null,
+                    is_persistent: this.editedKeyboard.settings.is_persistent || false,
+                }
+
+                if (this.settings.input_field_placeholder != null)
+                    this.need_input_field_placeholder = true
             })
         }
 
@@ -519,11 +588,8 @@ export default {
         },
         save() {
             this.$emit("save", this.keyboard)
-
-            /* this.load = true
-             this.$nextTick(() => {
-                 this.load = false
-             })*/
+            if (this.type === 'reply')
+                this.$emit("save-settings", this.settings)
 
         },
         onJsonChange(value) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\BotMenuTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -12,6 +13,7 @@ class QuizResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -32,8 +34,12 @@ class QuizResource extends JsonResource
             'show_answers' => $this->show_answers,
             'personal_info' => $this->personal_info ?? null,
             'bot_id' => $this->bot_id,
+            'success_inline_keyboard_id' => $this->success_inline_keyboard_id,
+            'failure_inline_keyboard_id' => $this->failure_inline_keyboard_id,
             'questions' => QuizQuestionResource::collection($this->whenLoaded('questions')),
             'commands' => QuizCommandResource::collection($this->whenLoaded('commands')),
+            'success_inline_keyboard' =>$this->whenLoaded('successReplyKeyboard'),
+            'failure_inline_keyboard' => $this->whenLoaded('failureReplyKeyboard'),
         ];
     }
 }

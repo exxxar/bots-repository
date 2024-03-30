@@ -1,6 +1,9 @@
 <script setup>
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectButtons.vue";
+
+import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardConstructor.vue";
+import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
 </script>
 <template>
     <form v-on:submit.prevent="submitForm" class="py-3">
@@ -258,6 +261,56 @@ import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/Inl
         </div>
 
         <div class="row">
+            <div class="col-12 mb-2" >
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_inline_menu_on_success"
+                           type="checkbox" id="need_inline_menu_on_success">
+                    <label class="form-check-label" for="need_inline_menu_on_success">
+                        Меню под текстом страницы при выигрыше
+                    </label>
+                </div>
+            </div>
+            <div class="col-12 mb-2" v-if="need_inline_menu_on_success">
+                <div class="card">
+
+
+                    <div class="card-header d-flex justify-between align-items-center">
+                        <h6>Конструктор меню в сообщении</h6>
+                        <button class="btn " type="button"
+                                v-bind:class="{'btn-outline-primary':!need_template_selector_on_success,'btn-primary':need_template_selector_on_success}"
+                                @click="need_template_selector_on_success = !need_template_selector_on_success"
+                        >
+
+                            <span v-if="!need_template_selector_on_success">  Открыть шаблоны меню</span>
+                            <span v-else> Скрыть шаблоны меню</span>
+                        </button>
+                    </div>
+
+
+                    <div class="card-body">
+                        <KeyboardList
+                            class="mb-2"
+                            :type="'inline'"
+                            v-if="need_template_selector_on_success"
+                            v-on:select="selectInlineKeyboardOnSuccess"
+                            :select-mode="true"/>
+
+                        <BotMenuConstructor
+                            :type="'inline'"
+                            v-else
+                            v-on:save="saveInlineKeyboardOnSuccess"
+                            :edited-keyboard="quizForm.success_inline_keyboard"/>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-12 py-2">
                 <button class="btn btn-outline-info rounded-5"
                         type="button"
@@ -310,6 +363,56 @@ import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/Inl
             </div>
 
 
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-2" >
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_inline_menu_on_failure"
+                           type="checkbox" id="need_template_selector_on_failure">
+                    <label class="form-check-label" for="need_template_selector_on_failure">
+                        Меню под текстом страницы при проигрыше
+                    </label>
+                </div>
+            </div>
+            <div class="col-12 mb-2" v-if="need_inline_menu_on_failure">
+                <div class="card">
+
+
+                    <div class="card-header d-flex justify-between align-items-center">
+                        <h6>Конструктор меню в сообщении</h6>
+                        <button class="btn " type="button"
+                                v-bind:class="{'btn-outline-primary':!need_template_selector_on_failure,'btn-primary':need_template_selector_on_failure}"
+                                @click="need_template_selector_on_failure = !need_template_selector_on_failure"
+                        >
+
+                            <span v-if="!need_template_selector_on_failure">  Открыть шаблоны меню</span>
+                            <span v-else> Скрыть шаблоны меню</span>
+                        </button>
+                    </div>
+
+
+                    <div class="card-body">
+                        <KeyboardList
+                            class="mb-2"
+                            :type="'inline'"
+                            v-if="need_template_selector_on_failure"
+                            v-on:select="selectInlineKeyboardOnFailure"
+                            :select-mode="true"/>
+
+                        <BotMenuConstructor
+                            :type="'inline'"
+                            v-else
+                            v-on:save="saveInlineKeyboardOnFailure"
+                            :edited-keyboard="quizForm.failure_inline_keyboard"/>
+
+
+                    </div>
+                </div>
+
+
+            </div>
         </div>
 
         <div class="row">
@@ -402,6 +505,8 @@ import InlineInjectButtons from "@/AdminPanel/Components/Constructor/Helpers/Inl
             </div>
         </div>-->
 
+
+
         <div class="row">
             <div class="col-12">
                 <button
@@ -424,6 +529,10 @@ export default {
             need_reset: false,
             need_services: false,
             need_media: false,
+            need_inline_menu_on_success: false,
+            need_template_selector_on_success: false,
+            need_template_selector_on_failure: false,
+            need_inline_menu_on_failure: false,
             types: [
                 "По порядку",
                 "Перемешать всё",
@@ -448,6 +557,10 @@ export default {
                 success_percent: 50,
                 success_message: ["Задание успешно пройдено!"],
                 failure_message: ["К сожалению вы не прошли задание!"],
+                success_inline_keyboard_id: null,
+                success_inline_keyboard:  null,
+                failure_inline_keyboard_id: null,
+                failure_inline_keyboard: null,
 
             }
         }
@@ -485,15 +598,42 @@ export default {
                     round_mode: this.quiz.round_mode || false,
                     is_active: this.quiz.is_active || false,
                     try_count: this.quiz.try_count || 1,
+                    success_inline_keyboard_id: this.quiz.success_inline_keyboard_id || null,
+                    success_inline_keyboard: this.quiz.success_inline_keyboard || null,
+                    failure_inline_keyboard_id: this.quiz.failure_inline_keyboard_id || null,
+                    failure_inline_keyboard: this.quiz.failure_inline_keyboard || null,
                     success_percent: this.quiz.success_percent || 50,
                     success_message: this.quiz.success_message || ["Задание успешно пройдено!"],
                     failure_message: this.quiz.failure_message || ["К сожалению вы не прошли задание!"],
+
                 }
+
+                if (this.quizForm.success_inline_keyboard)
+                    this.need_inline_menu_on_success = true
+
+                if (this.quizForm.failure_inline_keyboard)
+                    this.need_inline_menu_on_failure = true
 
             })
 
     },
     methods: {
+        saveInlineKeyboardOnSuccess(keyboard) {
+            this.quizForm.success_inline_keyboard = keyboard
+        },
+        saveInlineKeyboardOnFailure(keyboard) {
+            this.quizForm.failure_inline_keyboard = keyboard
+        },
+        selectInlineKeyboardOnSuccess(keyboard) {
+            this.quizForm.success_inline_keyboard = keyboard
+
+            this.need_template_selector_on_success = false;
+        },
+        selectInlineKeyboardOnFailure(keyboard) {
+            this.quizForm.failure_inline_keyboard = keyboard
+
+            this.need_template_selector_on_failure = false;
+        },
         attachTo(item, index) {
 
 
@@ -545,6 +685,10 @@ export default {
                     is_active: false,
                     try_count: 1,
                     success_percent: 50,
+                    success_inline_keyboard_id:  null,
+                    success_inline_keyboard:  null,
+                    failure_inline_keyboard_id:  null,
+                    failure_inline_keyboard:  null,
                     success_message: ["Задание успешно пройдено!"],
                     failure_message: ["К сожалению вы не прошли задание!"],
                 }

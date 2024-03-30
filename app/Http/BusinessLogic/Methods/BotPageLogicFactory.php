@@ -67,7 +67,7 @@ class BotPageLogicFactory
                 })
                 ->orWhere("id", 'like', "%$search%");
 
-        $botPages = $botPages->orderBy("updated_at", $needNewFirst? "DESC":"ASC");
+        $botPages = $botPages->orderBy("updated_at", $needNewFirst ? "DESC" : "ASC");
 
         return new BotPageCollection($botPages->paginate($size));
     }
@@ -127,7 +127,7 @@ class BotPageLogicFactory
             $botPage->next_bot_dialog_command_id = null;
             $botPage->next_bot_menu_slug_id = null;
             $botPage->rules_else_page_id = null;
-           // $botPage->bot_id = null;
+            // $botPage->bot_id = null;
             $botPage->save();
             $tmp = $botPage;
             $botPage->forceDelete();
@@ -193,6 +193,7 @@ class BotPageLogicFactory
         $tmp->images = count($photos) == 0 ? null : $photos;
 
         $replyKeyboard = $tmp->reply_keyboard ?? null;
+        $replyKeyboardSettings = $tmp->reply_keyboard_settings ?? null;
         $inlineKeyboard = $tmp->inline_keyboard ?? null;
 
         $tmp->reply_keyboard_id = null;
@@ -208,6 +209,14 @@ class BotPageLogicFactory
 
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($tmp->reply_keyboard);
+            $replyKeyboardSettings = is_null($replyKeyboardSettings) ? null : json_decode($replyKeyboardSettings ?? '[]');
+
+            $replyKeyboardSettings = (array)[
+                "resize_keyboard" => ($replyKeyboardSettings->resize_keyboard ?? "true") == "true",
+                "one_time_keyboard" => ($replyKeyboardSettings->one_time_keyboard ?? "true") == "true",
+                "input_field_placeholder" => $replyKeyboardSettings->input_field_placeholder ?? null,
+                "is_persistent" => ($replyKeyboardSettings->is_persistent ?? "true") == "true",
+            ];
 
             $keyboard = $this->recursiveMenuFix($keyboard);
 
@@ -219,9 +228,11 @@ class BotPageLogicFactory
                 'type' => "reply",
                 'slug' => $strSlug,
                 'menu' => $keyboard,
+                'settings' => $replyKeyboardSettings,
             ]);
 
             $tmp->reply_keyboard_id = $menu->id;
+
         }
 
         if (!is_null($inlineKeyboard)) {
@@ -338,9 +349,11 @@ class BotPageLogicFactory
 
         $replyKeyboard = $tmp->reply_keyboard ?? null;
         $inlineKeyboard = $tmp->inline_keyboard ?? null;
+        $replyKeyboardSettings = $tmp->reply_keyboard_settings ?? null;
 
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($tmp->reply_keyboard);
+            $replyKeyboardSettings = is_null($replyKeyboardSettings) ? null : json_decode($replyKeyboardSettings ?? '[]');
 
             $keyboard = $this->recursiveMenuFix($keyboard);
 
@@ -352,9 +365,18 @@ class BotPageLogicFactory
                 ->where("id", $reply_keyboard_id)
                 ->first();
 
+            $replyKeyboardSettings = (array)[
+                "resize_keyboard" => ($replyKeyboardSettings->resize_keyboard ?? "true") == "true",
+                "one_time_keyboard" => ($replyKeyboardSettings->one_time_keyboard ?? "true") == "true",
+                "input_field_placeholder" => $replyKeyboardSettings->input_field_placeholder ?? null,
+                "is_persistent" => ($replyKeyboardSettings->is_persistent ?? "true") == "true",
+            ];
+
+
             if (!is_null($menu))
                 $menu->update([
                     'menu' => $keyboard,
+                    'settings' => $replyKeyboardSettings,
                 ]);
             else {
                 $strSlug = Str::uuid();
@@ -363,6 +385,7 @@ class BotPageLogicFactory
                     'type' => "reply",
                     'slug' => $strSlug,
                     'menu' => $keyboard,
+                    'settings' => $replyKeyboardSettings,
                 ]);
             }
 

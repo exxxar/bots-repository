@@ -28,6 +28,8 @@ class Quiz extends Model
         "is_active",
         "success_percent",
         "success_message",
+        "success_inline_keyboard_id",
+        "failure_inline_keyboard_id",
         "failure_message",
         'start_at',
         'end_at',
@@ -57,11 +59,21 @@ class Quiz extends Model
         "failure_message"=> 'array',
     ];
 
-    protected $with = ["questions","commands"];
+    protected $with = ["questions","commands","successReplyKeyboard","failureReplyKeyboard"];
 
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
+    }
+
+    public function successReplyKeyboard(): BelongsTo
+    {
+        return $this->belongsTo(BotMenuTemplate::class,'success_inline_keyboard_id','id');
+    }
+
+    public function failureReplyKeyboard(): BelongsTo
+    {
+        return $this->belongsTo(BotMenuTemplate::class,'failure_inline_keyboard_id','id');
     }
 
     public function questions(): BelongsToMany

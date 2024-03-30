@@ -389,6 +389,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                                 v-else
                                 :type="'reply'"
                                 v-on:save="saveReplyKeyboard"
+                                v-on:save-settings="saveReplyKeyboardSettings"
                                 :edited-keyboard="pageForm.reply_keyboard"/>
                         </div>
                     </div>
@@ -1384,6 +1385,7 @@ export default {
                 sticker: null,
                 reply_keyboard_title: null,
                 reply_keyboard: null,
+                reply_keyboard_settings: null,
                 inline_keyboard: null,
                 is_external: false,
                 need_log_user_action: false,
@@ -1920,6 +1922,9 @@ export default {
         },
         saveReplyKeyboard(keyboard) {
             this.pageForm.reply_keyboard = keyboard
+        },
+        saveReplyKeyboardSettings(settings) {
+            this.pageForm.reply_keyboard_settings = settings
         },
         getPhoto(imgObject) {
             return {imageUrl: URL.createObjectURL(imgObject)}

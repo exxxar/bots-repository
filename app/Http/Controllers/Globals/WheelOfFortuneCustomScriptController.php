@@ -154,8 +154,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
     public function formWheelOfFortuneCallback(Request $request)
     {
         $request->validate([
-            "name" => "required",
-            "phone" => "required",
+         //   "name" => "required",
+         //   "phone" => "required",
             "win" => "required"
         ]);
 
@@ -206,8 +206,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $winnerPhone = $request->phone ?? $botUser->phone ?? 'Телефон не указан';
         $winnerDescription = $request->description ?? 'Без описания';
 
-        $botUser->name = $botUser->name ?? $winnerName;
-        $botUser->phone = $botUser->phone ?? $winnerPhone;
+        $botUser->name = $botUser->name ?? $winnerName ?? '-';
+        $botUser->phone = $botUser->phone ?? $winnerPhone ?? '-';
         $botUser->save();
 
         $username = $botUser->username ?? null;

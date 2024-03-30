@@ -20,6 +20,7 @@ class BotMenuTemplate extends Model
         'type',
         'slug',
         'menu',
+        'settings',
     ];
 
     /**
@@ -31,6 +32,7 @@ class BotMenuTemplate extends Model
         'id' => 'integer',
         'bot_id' => 'integer',
         'menu' => 'array',
+        'settings' => 'array',
     ];
 
     public function bot(): BelongsTo

@@ -398,12 +398,15 @@ class BotManager extends BotCore
         $inlineKeyboard = $page->inlineKeyboard ?? null;
         $replyKeyboard = $page->replyKeyboard ?? null;
 
-
         $iMenu = is_null($inlineKeyboard) ? [] : ($inlineKeyboard->menu ?? []);
         $rMenu = is_null($replyKeyboard) ? [] : ($replyKeyboard->menu ?? []);
 
+        $rMenuSettings = empty($rMenu)? null : ($rMenu->settings ?? null);
+
         $content = str_replace(["<p>", "</p>"], "", $page->content);
         $content = str_replace(["<br>"], "\n", $content);
+
+        $needSendReplyMenu = true;
 
         $name = $this->botUser->fio_from_telegram ?? $this->botUser->name ?? "Без имени";
 
@@ -421,8 +424,7 @@ class BotManager extends BotCore
 
         $content = str_replace(["{{referralQr}}"], $qr, $content);
 
-        $needContentInReply = true;
-        $needSendReplyMenu = true;
+        $needContentInReply = !empty($content);
 
         $images = [];
         if (is_array($page->images)) {
@@ -465,7 +467,9 @@ class BotManager extends BotCore
 
 
             if (!empty($rMenu)) {
-                $this->replyKeyboard($needContentInReply ? ($content ?? 'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $this->replyKeyboard($needContentInReply ? ($content ?? 'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu,
+                    settings:$rMenuSettings);
+
                 $needSendReplyMenu = false;
                 $needContentInReply = false;
             }
@@ -492,7 +496,8 @@ class BotManager extends BotCore
             }
 
             if (!empty($replyKeyboard))
-                $this->replyKeyboard(mb_strlen($content) >= 1024 ? $content ?? 'Хм, нечего отобразить...' : ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                $this->replyKeyboard(mb_strlen($content) >= 1024 ?
+                    $content ?? 'Хм, нечего отобразить...' : ($replyMenuTitle ?? 'Главное меню'), $rMenu, settings:$rMenuSettings);
 
             if (empty($replyKeyboard) && mb_strlen($content) >= 1024)
                     $this->reply($content);
@@ -508,7 +513,7 @@ class BotManager extends BotCore
 
             if (!empty($replyKeyboard) && $needSendReplyMenu)
                 $this->replyKeyboard($needContentInReply ? (strlen($content) > 0 ? $content : 'Главное меню') :
-                    ($replyMenuTitle ?? 'Главное меню'), $rMenu);
+                    ($replyMenuTitle ?? 'Главное меню'), $rMenu , settings:$rMenuSettings);
 
             if ($needContentInReply && empty($replyKeyboard)) {
                 $this->reply($content  ?? 'Главное меню');

@@ -133,9 +133,9 @@ trait BotMethodsTrait
         return $this->sendInvoice($this->chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData);
     }
 
-    public function replyKeyboard($message, $keyboard = [], $messageThreadId = null)
+    public function replyKeyboard($message, $keyboard = [], $messageThreadId = null, $settings = null)
     {
-        return $this->sendReplyKeyboard($this->chatId, $message, $keyboard, $messageThreadId);
+        return $this->sendReplyKeyboard($this->chatId, $message, $keyboard, $messageThreadId, $settings);
     }
 
 

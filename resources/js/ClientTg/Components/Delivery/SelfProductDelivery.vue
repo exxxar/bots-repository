@@ -432,6 +432,9 @@ export default {
 
             return this.products.filter(product => product.title.toLowerCase().trim().indexOf(this.search.toLowerCase().trim()) >= 0)
         },
+        tg() {
+            return window.Telegram.WebApp;
+        },
         activeCategories() {
             let tmp = [];
             this.filteredProducts.forEach(item => {
@@ -589,6 +592,8 @@ export default {
 
                     this.$store.dispatch("clearCart");
                     //this.clearCart();
+
+                    this.tg.close();
 
                     this.sending = false
                 }).catch(err => {

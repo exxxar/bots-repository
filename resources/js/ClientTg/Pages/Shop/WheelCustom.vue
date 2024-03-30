@@ -12,7 +12,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <p v-html="rules">
             </p>
 
-            <p v-if="canPlay" class="mb-2">Ваши попытки: <strong>{{
+            <p v-if="canPlay&&action" class="mb-2">Ваши попытки: <strong>{{
                     action.current_attempts || 0
                 }}</strong> из <strong>{{
                     action.max_attempts || 1
@@ -25,8 +25,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
             </div>
 
-            <ul v-if="action.data" class="m-0 p-0">
-                <li v-for="item in action.data" class="d-flex flex-column mb-2">
+            <ul v-if="action" class="m-0 p-0">
+                <li v-for="item in action.data" class="d-flex flex-column mb-2" v-if="action.data">
                     <span>Название приза <strong>{{ item.description || 'Отсутствует' }}</strong></span>
                     <span>Победитель  <strong>{{ item.name || 'Не указано' }}</strong></span>
                     <span>Телефон  <strong>{{ item.phone || 'Не указано' }}</strong></span>
@@ -35,7 +35,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
         </div>
     </div>
 
-    <div class="card card-style" v-if="canPlay&&hasProfileData">
+    <div class="card card-style" v-if="canPlay&&wheelDataLoaded">
         <div class="content d-flex justify-content-center flex-wrap">
 
 
@@ -48,21 +48,10 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             </WheelSecond>
 
 
+
         </div>
     </div>
 
-    <PlayerForm v-if="canPlay&&!hasProfileData"
-                v-on:callback="callbackPlayerForm">
-        <template v-slot:head>
-            <h3>Анкета участника акции</h3>
-
-            <p>
-                Для участия в конкурсе и дальнейшего получения приза необходимо заполнить данную анкету! Укажите своё
-                имя и номер телефона чтоб менеджер
-                мог выдать Вам приз по итогу.
-            </p>
-        </template>
-    </PlayerForm>
 
 <!--
     <CallbackForm/>
@@ -83,6 +72,7 @@ export default {
             rouletteKey: 0,
             action: null,
             hasProfileData: false,
+            wheelDataLoaded:false,
             winForm: {
                 win: null,
             },
@@ -117,22 +107,23 @@ export default {
         },
 
         loadServiceData() {
+            this.wheelDataLoaded = false
             return this.$store.dispatch("wheelOfFortuneCustomLoadData").then((response) => {
                 let index = 0;
 
                 const colors = [
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
-                    "hsl(50,100%,50%)",
-                    "hsl(43,100%,50%)",
+                    "#fdea21",
+                    "#f87410",
+                    "#f52a26",
+                    "#f51951",
+                    "#c614d8",
+                    "#7529eb",
+                    "#0e4bd7",
+                    "#1ec7e4",
+                    "#0bc94b",
+                    "#90ec1f",
+                    "#fdea21",
+                    "#f87410",
                 ]
 
                 this.rules = response.rules
@@ -154,6 +145,8 @@ export default {
                         text: "Не выиграл",
                         color: colors[index],
                     })*/
+
+                this.wheelDataLoaded = true
             })
         },
         shuffle(array) {
@@ -192,6 +185,8 @@ export default {
                 this.winForm.phone = null
 
                 this.prepareUserData()
+
+                this.tg.close();
             }).catch(err => {
 
             })
@@ -211,11 +206,11 @@ export default {
             if (!evt)
                 return;
             const win = evt
-            console.log("win number=>", evt)
+
             setTimeout(() => {
                 this.winForm.win = win
                 this.submit()
-                this.hasProfileData = false
+                this.wheelDataLoaded = false
             }, 2000)
 
         },

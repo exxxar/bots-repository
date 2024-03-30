@@ -385,9 +385,10 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendReplyKeyboard($chatId, $message, $keyboard, $messageThreadId = null)
+    public function sendReplyKeyboard($chatId, $message, $keyboard, $messageThreadId = null, $settings = null)
     {
 
+        $settings = (array)$settings;
 
         $tmp = [
             "chat_id" => $chatId,
@@ -396,8 +397,10 @@ trait BotBaseMethodsTrait
             "parse_mode" => "HTML",
             'reply_markup' => !is_null($keyboard) && !empty($keyboard) ? json_encode([
                 'keyboard' => $keyboard,
-                'resize_keyboard' => true,
-                'input_field_placeholder' => "Выбор действия"
+                'resize_keyboard' => $settings["resize_keyboard"] ?? true,
+                'is_persistent' => $settings["is_persistent"] ?? false,
+                'one_time_keyboard' => $settings["one_time_keyboard"] ?? false,
+                'input_field_placeholder' => $settings["input_field_placeholder"] ?? "Выбор действия"
             ]) : json_encode([
                 'remove_keyboard' => true,
             ])
