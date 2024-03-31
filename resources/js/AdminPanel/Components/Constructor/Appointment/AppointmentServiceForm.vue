@@ -121,6 +121,17 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 
 
             <div class="col-12 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_images"
+                           type="checkbox" id="need_images">
+                    <label class="form-check-label" for="need_images">
+                        Необходимо добавить изображения к сервиус
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3" v-if="need_images">
                 <label class="form-label" id="service-images">
                     <Popper>
                         <i class="fa-regular fa-circle-question mr-1"></i>
@@ -171,6 +182,7 @@ export default {
         return {
             load: false,
             need_reset: false,
+            need_images: false,
             categories: [],
             serviceForm: {
                 id:null,

@@ -167,6 +167,25 @@ Route::prefix("bot-client")
 
             });
 
+        Route::prefix("appointments")
+            ->controller(\App\Http\Controllers\Bots\Web\AppointmentController::class)
+            ->middleware(["tgAuth.any"])
+            ->group(function () {
+                Route::post("/event-list", "eventList");
+                Route::post("/schedule-list/{eventId}", "scheduleList");
+
+                Route::post("/store-review", "storeReview");
+                Route::post("/review-list/{eventId}", "reviewList");
+                Route::delete("/remove-review/{reviewId}", "removeReview");
+
+                Route::post("/service-category-list/{eventId}", "serviceCategoryList");
+                Route::post("/service-list/{eventId}", "serviceList");
+
+                Route::post("/appointment-list/{eventId}", "appointmentList");
+                Route::post("/store-appointment", "storeAppointment");
+                Route::delete("/remove-appointment", "removeAppointment");
+            });
+
         Route::prefix("shop")
             ->middleware(["tgAuth.any"])
             ->group(function () {

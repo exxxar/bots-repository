@@ -3,6 +3,7 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\AppointmentStatusEnum;
+use App\Facades\BotMethods;
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\AppointmentCollection;
@@ -392,7 +393,6 @@ class AppointmentLogicFactory
             'title' => "required",
             'description' => "required",
             'category' => "required",
-            'images' => "required",
             'price' => "required",
             //'services.*.discount_price'=> "required",
             //'services.*.need_prepayment'=> "required",
@@ -403,6 +403,8 @@ class AppointmentLogicFactory
 
         $tmp = (object)$data;
         $tmp->need_prepayment = (bool)($tmp->need_prepayment ?? false);
+        $tmp->discount_price = $tmp->discount_price ?? 0;
+        $tmp->images = json_decode($tmp->images ?? '[]');
 
         $service = AppointmentService::query()->create((array)$tmp);
 
@@ -571,6 +573,28 @@ class AppointmentLogicFactory
             $tmpAppointment = Appointment::query()->create((array)$appointment);
 
         $tmpAppointment->update((array)$appointment);
+
+        $bot = $this->bot;
+        $botUser = $this->botUser;
+
+        $thread = $bot->topics["actions"] ?? null;
+
+        $nameUser = BotMethods::prepareUserName($botUser);
+
+        $schedule = $tmpAppointment->schedule ?? null;
+        $time = !is_null($schedule) ? $schedule->year . "-" . $schedule->month . "-" . $schedule->day . " " . $schedule->start_time : "не указано";
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                "Вы успешно записались на прием \"" . ($tmpAppointment->event->title ?? "не указано") . "\"! в $time"
+            )
+            ->sendMessage(
+                $bot->order_channel ?? $bot->main_channel ?? null,
+                "#запись\n$nameUser записался на прием \"" . ($tmpAppointment->event->title ?? "не указано") . "\" в $time",
+                $thread
+            );
 
         return new AppointmentResource($tmpAppointment);
 
@@ -823,7 +847,7 @@ class AppointmentLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $events = AppointmentEvent::query()
-           // ->withTrashed()
+            // ->withTrashed()
             ->where("bot_id", $this->bot->id)
             ->where("is_group", $isGroup);
 

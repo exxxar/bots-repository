@@ -27,6 +27,7 @@ import botUsers from "./modules/bot_users";
 import media from "./modules/media";
 import quiz from "./modules/quiz";
 import profileForm from "./modules/profile";
+import appointments from "./modules/appointments";
 
 import util from "./modules/utilites";
 
@@ -130,6 +131,7 @@ export default createStore({
         ingredients,
         quiz,
         chatHistory,
-        profileForm
+        profileForm,
+        appointments
     }
 })

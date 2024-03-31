@@ -24,6 +24,10 @@ class AppointmentEventResource extends JsonResource
             'is_group' => $this->is_group ?? false,
             'max_people' => $this->max_people ?? 0,
             'min_people' => $this->min_people ?? 0,
+            'min_price' => $this->min_price ?? 0,
+
+            'address'=> $this->address ?? null,
+            'coords'=> $this->coords ?? null,
             'on_start_appointment' => $this->on_start_appointment,
             'on_cancel_appointment' => $this->on_cancel_appointment,
             'on_after_appointment' => $this->on_after_appointment,

@@ -28,6 +28,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('id')">#</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('title')">Название</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('subtitle')">Подзаголовок</th>
+                    <th scope="col" class="cursor-pointer" @click="loadAndOrder('address')">Адрес</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('description')">Описание</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('is_group')">Групповое</th>
                     <th scope="col" class="cursor-pointer" @click="loadAndOrder('updated_at')">Дата изменения</th>
@@ -42,6 +43,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                     <td @click="selectEvent(event)">{{ event.title || 'Не указано' }}
                     </td>
                     <td>{{ event.subtitle || 'Не указано' }}</td>
+                    <td>{{ event.address || 'Не указано' }}</td>
                     <td>{{ event.description || 'Не указано' }}</td>
                     <td>
                         <i class="fa-solid fa-chevron-down text-success" v-if="event.is_group"></i>

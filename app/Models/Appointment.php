@@ -42,7 +42,7 @@ class Appointment extends Model
         'appointment_event_id' => 'integer',
     ];
 
-    protected $with = ["botUser"];
+    protected $with = ["botUser","schedule","event"];
 
     public function bot(): BelongsTo
     {

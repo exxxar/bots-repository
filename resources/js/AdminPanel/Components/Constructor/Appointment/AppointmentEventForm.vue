@@ -49,6 +49,62 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
             </div>
 
             <div class="col-12 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="need_add_address"
+                           type="checkbox" id="need_add_address">
+                    <label class="form-check-label" for="need_add_address">
+                        Нужно указать адрес и координат мероприятия
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-12 mb-3" v-if="need_add_address">
+
+                <label class="form-label"
+                       id="event-address">
+                    <Popper>
+                        <i class="fa-regular fa-circle-question mr-1"></i>
+                        <template #content>
+                            <div>Адрес, указывающий точное место проведения события \ мероприятия
+                            </div>
+                        </template>
+                    </Popper>
+                    Адрес события \ мероприятия
+                </label>
+                <input type="text" class="form-control"
+                       placeholder="Адрес события"
+                       aria-label="Адрес события"
+                       v-model="eventForm.address"
+                       maxlength="255"
+                       aria-describedby="event-address" required>
+
+            </div>
+
+            <div class="col-12 mb-3" v-if="need_add_address">
+
+                <label class="form-label"
+                       id="event-coords">
+                    <Popper>
+                        <i class="fa-regular fa-circle-question mr-1"></i>
+                        <template #content>
+                            <div>Координаты мероприятия
+                            </div>
+                        </template>
+                    </Popper>
+                    Координаты мероприятия: широта, долгота
+                </label>
+                <input type="text" class="form-control"
+                       placeholder="00.0000,00.0000"
+                       aria-label="Координаты события"
+                       v-model="eventForm.coords"
+                       v-mask="'##.####,##.####'"
+                       maxlength="255"
+                       aria-describedby="event-coords" required>
+
+            </div>
+
+            <div class="col-12 mb-3">
 
                 <label class="form-label " id="event-description">
                     <Popper>
@@ -184,7 +240,7 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
                            v-model="need_media"
                            type="checkbox" id="need_media">
                     <label class="form-check-label" for="need_media">
-                       Нужно изображение к событию
+                        Нужно изображение к событию
                     </label>
                 </div>
             </div>
@@ -199,7 +255,7 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
                             </div>
                         </template>
                     </Popper>
-                   Изображение к событию
+                    Изображение к событию
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                 </label>
                 <BotMediaList
@@ -249,7 +305,7 @@ import AppointmentServiceForm from "@/AdminPanel/Components/Constructor/Appointm
                         content="Количество людей, которые могут посетить мероприятие за 1 сеанс">
                         <i class="fa-regular fa-circle-question mr-1"></i>
                     </Popper>
-                 Максимальное число посетителей в группе
+                    Максимальное число посетителей в группе
 
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
 
@@ -284,13 +340,16 @@ export default {
             step: 0,
             load: false,
             need_reset: false,
-            need_services:false,
-            need_media:false,
+            need_services: false,
+            need_add_address: false,
+            need_media: false,
             eventForm: {
-                id:null,
+                id: null,
                 title: null,
                 subtitle: null,
                 description: null,
+                address: null,
+                coords: null,
                 images: [],
                 services: [],
                 times: [],
@@ -323,6 +382,8 @@ export default {
                     description: this.event.description || null,
                     images: this.event.images || [],
                     is_group: this.event.is_group || false,
+                    address: this.event.address || null,
+                    coords: this.event.coords || null,
                     max_people: this.event.max_people || 0,
                     min_people: this.event.min_people || 0,
                     on_start_appointment: this.event.on_start_appointment || null,
@@ -335,7 +396,7 @@ export default {
 
     },
     methods: {
-        selectPhotos(item){
+        selectPhotos(item) {
             if (!this.eventForm.images)
                 this.eventForm.images = []
 
@@ -370,6 +431,28 @@ export default {
                     appointmentEventForm: data
                 }).then((response) => {
                 this.$emit("callback", response.data)
+
+
+                this.$nextTick(() => {
+                    this.eventForm = {
+                        id: null,
+                        title: null,
+                        subtitle: null,
+                        description: null,
+                        address: null,
+                        coords: null,
+                        images: [],
+                        services: [],
+                        times: [],
+                        is_group: false,
+                        max_people: 0,
+                        min_people: 0,
+                        on_start_appointment: null,
+                        on_cancel_appointment: null,
+                        on_after_appointment: null,
+                        on_repeat_appointment: null,
+                    }
+                })
 
                 this.$notify("Событие успешно создано");
             }).catch(err => {

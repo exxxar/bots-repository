@@ -29,6 +29,10 @@ BotManager::bot()
     ->slug("global_bonus_product", "bonusProduct");
 
 BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\AppointmentScriptController::class)
+    ->slug("global_appointment_main", "appointmentService");
+
+BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\QuizScriptController::class)
     ->slug("global_start_quiz", "startQuizForm");
 

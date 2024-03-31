@@ -11,6 +11,7 @@ import Settings from '@/ClientTg/Pages/Shop/Settings.vue';
 import Schedule from '@/ClientTg/Pages/Shop/Schedule.vue';
 import Quizzes from '@/ClientTg/Pages/Quiz/Quizzes.vue';
 import SingleQuiz from '@/ClientTg/Pages/Quiz/SingleQuiz.vue';
+import Appointments from '@/ClientTg/Pages/Appointment/Appointments.vue';
 
 
 import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
@@ -82,6 +83,12 @@ export const routes = [
         path: '/vip',
         component: Vip,
         meta: { title: 'VIP-анкета', hide_menu:true }
+    },
+    {
+        name: 'appointments',
+        path: '/appointment-events',
+        component: Appointments,
+        meta: { title: 'Запись', hide_menu:true }
     },
 
     {

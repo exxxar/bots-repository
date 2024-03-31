@@ -30,6 +30,8 @@ class AppointmentEvent extends Model
         'on_cancel_appointment',
         'on_after_appointment',
         'on_repeat_appointment',
+        'address',
+        'coords',
     ];
 
     /**
@@ -44,7 +46,14 @@ class AppointmentEvent extends Model
         'is_group' => 'boolean',
     ];
 
-    protected $with = ["services","times"];
+    protected $with = ["services", "times"];
+
+    protected $appends = ["min_price"];
+
+    public function getMinPriceAttribute()
+    {
+        return $this->services()->min("price") ?? 0;
+    }
 
     public function bot(): BelongsTo
     {
