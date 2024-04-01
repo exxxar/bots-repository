@@ -147,7 +147,10 @@ BotManager::bot()
                     $thread
                 );
 
-            BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
+            BotManager::bot()
+                ->sendMessage(
+                    $botUser->telegram_chat_id,
+                    "Спасибо! Ваше фото загружено!");
 
             return;
         }
@@ -197,7 +200,9 @@ BotManager::bot()
                 $thread
             );
 
-        BotManager::bot()->reply("Спасибо! Ваше фото загружено!");
+        BotManager::bot()
+            ->sendMessage(
+                $botUser->telegram_chat_id,"Спасибо! Ваше фото загружено!");
     });
 
 BotManager::bot()
