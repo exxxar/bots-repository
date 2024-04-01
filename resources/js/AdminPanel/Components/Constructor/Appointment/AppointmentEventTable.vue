@@ -61,6 +61,11 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                     <a class="dropdown-item"
                                        @click="removeAppointmentEvent(event.id)"
                                        href="javascript:void(0)">Удалить</a></li>
+
+                                <li v-if="event.deleted_at==null">
+                                    <a class="dropdown-item"
+                                       @click="duplicateAppointmentEvent(event.id)"
+                                       href="javascript:void(0)">Дублировать</a></li>
                             </ul>
                         </div>
 
@@ -107,7 +112,22 @@ export default {
         this.loadAppointmentEvents();
     },
     methods: {
-
+        duplicateAppointmentEvent(id){
+            this.loading = true
+            this.$store.dispatch("duplicateAppointmentEvent", {
+                dataObject: {
+                    appointmentEventId: id,
+                    bot_id: this.bot.id
+                },
+            }).then(resp => {
+                this.loading = false
+                this.loadAppointmentEvents(0)
+                this.$notify("Событие успешно продублировано");
+            }).catch(() => {
+                this.loading = false
+                this.$notify("Ошибка дублирования события")
+            })
+        },
         removeAppointmentEvent(id){
             this.loading = true
             this.$store.dispatch("removeAppointmentEvent", {

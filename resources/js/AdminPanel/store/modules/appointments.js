@@ -219,9 +219,9 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async duplicateAppointmentEvent(context, payload= {dataObject: {appointmentEventId: null}}){
+    async duplicateAppointmentEvent(context, payload= {dataObject: {appointmentEventId: null,bot_id:null}}){
         let link = `${BASE_APPOINTMENTS_LINK}/duplicate-event/${payload.dataObject.appointmentEventId}`
-        let _axios = util.makeAxiosFactory(link, 'POST')
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
         return _axios.then((response) => {
             return Promise.resolve(response);
         }).catch(err => {

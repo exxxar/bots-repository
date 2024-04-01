@@ -91,10 +91,10 @@ class FastRequestScriptController extends SlugController
             ],
 
         ];
-        if (count($mainScript->config ?? []) != count($params)) {
+
             $mainScript->config = $params;
             $mainScript->save();
-        }
+
 
     }
 

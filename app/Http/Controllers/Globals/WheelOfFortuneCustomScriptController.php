@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use ReflectionClass;
+use stdClass;
 use Telegram\Bot\FileUpload\InputFile;
 
 class WheelOfFortuneCustomScriptController extends SlugController
@@ -49,6 +50,12 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 "type" => "text",
                 "key" => "max_attempts",
                 "value" => 2,
+
+            ],
+            [
+                "type" => "script",
+                "key" => "profile_id",
+                "value" => null,
 
             ],
             [
@@ -144,18 +151,18 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ],
         ];
 
-        if (count($model->config ?? []) != count($params)) {
-            $model->config = $params;
-            $model->save();
-        }
+
+        $model->config = $params;
+        $model->save();
+
 
     }
 
     public function formWheelOfFortuneCallback(Request $request)
     {
         $request->validate([
-         //   "name" => "required",
-         //   "phone" => "required",
+            //   "name" => "required",
+            //   "phone" => "required",
             "win" => "required"
         ]);
 
@@ -333,8 +340,14 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $bot = BotManager::bot()->getSelf();
 
+        $botUser = BotManager::bot()->currentBotUser();
+
         $mainImage = (Collection::make($config[1])
             ->where("key", "main_image")
+            ->first())["value"] ?? null;
+
+        $profileScriptId = (Collection::make($config[1])
+            ->where("key", "profile_id")
             ->first())["value"] ?? null;
 
         $mainText = (Collection::make($config[1])
@@ -357,6 +370,37 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ],
 
         ];
+
+        if (!$botUser->is_vip) {
+
+            $bot = BotManager::bot()->getSelf();
+
+            if (!is_null($profileScriptId) && $profileScriptId instanceof stdClass == "integer") {
+
+                BotManager::bot()->runSlug($profileScriptId);
+
+            } else {
+                $keyboard = [
+                    [
+                        ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/vip"
+                        ]],
+                    ],
+
+                ];
+
+
+                if (is_null($mainImage))
+                    \App\Facades\BotManager::bot()
+                        ->replyInlineKeyboard("Для начала необходимо заполнить анкету!", $keyboard);
+                else
+                    \App\Facades\BotManager::bot()
+                        ->replyPhoto("Для начала необходимо заполнить анкету!", $mainImage, $keyboard);
+
+            }
+
+            return;
+        }
 
 
         \App\Facades\BotManager::bot()
