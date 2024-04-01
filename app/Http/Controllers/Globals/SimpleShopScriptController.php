@@ -82,7 +82,7 @@ class SimpleShopScriptController extends SlugController
             [
                 "type" => "channel",
                 "key" => "callback_channel_id",
-                "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
+                "value" => $bot->order_channel ??  env("BASE_ADMIN_CHANNEL"),
             ],
 
         ];

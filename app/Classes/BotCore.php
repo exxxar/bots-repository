@@ -634,7 +634,7 @@ abstract class BotCore
 
         $bot = $transaction->bot;
         $channel = $bot->order_channel ??
-            $bot->main_channel ?? null;
+             null;
 
         if ($bot->auto_cashback_on_payments) {
             $tmpTotalAmount = $totalAmount / 100;
@@ -1086,7 +1086,7 @@ abstract class BotCore
         if (mb_strlen($query) < 10)
             return false;
 
-        $channel = $this->getSelf()->order_channel ?? $this->getSelf()->main_channel ?? null;
+        $channel = $this->getSelf()->order_channel ??  null;
         if (!is_null($channel)) {
 
             $botDomain = $this->getSelf()->bot_domain;

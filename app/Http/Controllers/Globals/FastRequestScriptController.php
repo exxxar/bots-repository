@@ -165,7 +165,7 @@ class FastRequestScriptController extends SlugController
         $thread = $bot->topics["questions"] ?? null;
 
         BotManager::bot()
-            ->sendMessage(($bot->order_channel ?? $bot->main_channel ?? null),
+            ->sendMessage(($bot->order_channel ??null),
                 "Быстрый запрос из $from\nот пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
                 $thread
 

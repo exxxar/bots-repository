@@ -697,7 +697,7 @@ class ProductLogicFactory
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
-                $this->bot->order_channel ?? $this->bot->main_channel ?? null,
+                $this->bot->order_channel ??  null,
                 "$message\n\n$userInfo",
                 $keyboard,
                 $thread

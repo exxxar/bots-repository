@@ -63,7 +63,7 @@ class CheckBirthday extends Command
 
         $thread = $bot->topics["actions"] ?? null;
 
-        $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+        $channel = $bot->order_channel ?? null;
 
         if (!is_null($channel) && $count > 0)
             \App\Facades\BotMethods::bot()

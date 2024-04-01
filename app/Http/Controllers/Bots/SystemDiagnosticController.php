@@ -49,7 +49,10 @@ class SystemDiagnosticController extends Controller
 
 
         if (!$botUser->is_admin && !$botUser->is_manager) {
-            BotManager::bot()->reply("Данная опция доступна только персоналу бота!");
+            BotManager::bot()
+                ->sendMessage(
+                    $botUser->telegram_chat_id,
+                    "Данная опция доступна только персоналу бота!");
             return;
         }
 
@@ -67,7 +70,9 @@ class SystemDiagnosticController extends Controller
         ]);
 
         BotManager::bot()
-            ->reply("Медиа-файл добавлен в медиа пространство бота с идентификатором: <b>#$media->id</b>\n<em>$docToSend</em>\nдля просмотра доступных медиа используйте /media ");
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                "Медиа-файл добавлен в медиа пространство бота с идентификатором: <b>#$media->id</b>\n<em>$docToSend</em>\nдля просмотра доступных медиа используйте /media ");
 
     }
 
@@ -88,7 +93,9 @@ class SystemDiagnosticController extends Controller
 
         if (!$botUser->is_admin) {
             BotManager::bot()
-                ->reply("У вас недостаточно прав для выполнения данной команды");
+                ->sendMessage(
+                    $botUser->telegram_chat_id,
+                    "У вас недостаточно прав для выполнения данной команды");
             return;
         }
 
@@ -579,7 +586,7 @@ class SystemDiagnosticController extends Controller
         /*
                 if ($value <= 2)*/
         BotManager::bot()
-            ->sendMessage($bot->order_channel ?? $bot->main_channel ?? null,
+            ->sendMessage($bot->order_channel ??  null,
                 "#отзыв\nПользователь $name ($tgId, $phone) оставил оценку за обслуживание " . ($emojis[$value] ?? "😡") . "!",
                 $thread
             );
@@ -875,7 +882,7 @@ class SystemDiagnosticController extends Controller
         $this->changeDeliverymanStatus($bot, $document->botUser);
 
         $thread = $bot->topics["questions"] ?? null;
-        $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+        $channel = $bot->order_channel ?? null;
 
         BotMethods::bot()
             ->whereBot($bot)
@@ -918,7 +925,7 @@ class SystemDiagnosticController extends Controller
         $document->save();
 
         $thread = $bot->topics["questions"] ?? null;
-        $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+        $channel = $bot->order_channel ??  null;
 
         BotMethods::bot()
             ->whereBot($bot)
@@ -945,7 +952,7 @@ class SystemDiagnosticController extends Controller
         }
 
         $thread = $bot->topics["questions"] ?? null;
-        $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+        $channel = $bot->order_channel ?? null;
 
         if ($botUser->is_deliveryman && !$success) {
             BotMethods::bot()

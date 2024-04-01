@@ -66,7 +66,7 @@ class BonusProductScriptController extends SlugController
             [
                 "type" => "channel",
                 "key" => "callback_channel_id",
-                "value" => $bot->order_channel ?? $bot->main_channel ?? env("BASE_ADMIN_CHANNEL"),
+                "value" => $bot->order_channel ??  env("BASE_ADMIN_CHANNEL"),
 
             ],
             [
@@ -122,7 +122,6 @@ class BonusProductScriptController extends SlugController
             ->where("key", "callback_channel_id")
             ->first())["value"] ??
             $bot->order_channel ??
-            $bot->main_channel ??
             env("BASE_ADMIN_CHANNEL");
 
         $action = ActionStatus::query()
@@ -176,7 +175,6 @@ class BonusProductScriptController extends SlugController
             ->where("key", "callback_channel_id")
             ->first())["value"] ??
             $bot->order_channel ??
-            $bot->main_channel ??
             env("BASE_ADMIN_CHANNEL");
 
         $action = ActionStatus::query()

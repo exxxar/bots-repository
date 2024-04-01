@@ -119,7 +119,7 @@ class BotMediaLogicFactory
         if ($media->type === "video" || $media->type === "video_note")
             $action->sendVideo(
                 !is_null($this->botUser) ? $this->botUser->telegram_chat_id :
-                    $bot->order_channel ?? $bot->main_channel ?? null,
+                    $bot->order_channel ??  null,
                 $media->caption ?? 'Описание не указано',
                 $media->file_id, !is_null($this->botUser) ? [
                 [
@@ -133,7 +133,7 @@ class BotMediaLogicFactory
         if ($media->type === "photo")
             $action->sendPhoto(
                 !is_null($this->botUser) ? $this->botUser->telegram_chat_id :
-                    $bot->order_channel ?? $bot->main_channel ?? null,
+                    $bot->order_channel ?? null,
                 $media->caption ?? 'Описание не указано',
                 $media->file_id, !is_null($this->botUser) ? [
                 [

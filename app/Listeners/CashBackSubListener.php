@@ -209,7 +209,7 @@ class CashBackSubListener
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
-                    $bot->order_channel ?? $bot->main_channel ?? null,
+                    $bot->order_channel ??  null,
                     "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
                     $thread
                 );

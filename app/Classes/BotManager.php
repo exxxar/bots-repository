@@ -383,7 +383,7 @@ class BotManager extends BotCore
             $tgDomain = $botUser->username ?? null;
             $tgName = $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
 
-            $this->sendInlineKeyboard($bot->order_channel ?? $bot->main_channel ?? null,
+            $this->sendInlineKeyboard($bot->order_channel  ?? null,
                 "#лог_действий_на_странице\n" .
                 (!is_null($tgDomain) ? "Действие от @$tgDomain:\n" : "Действие от $tgName:\n") . "Страница: $pageName",
                 [

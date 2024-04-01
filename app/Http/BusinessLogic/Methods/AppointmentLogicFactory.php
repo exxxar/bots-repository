@@ -591,7 +591,7 @@ class AppointmentLogicFactory
                 "Вы успешно записались на прием \"" . ($tmpAppointment->event->title ?? "не указано") . "\"! в $time"
             )
             ->sendMessage(
-                $bot->order_channel ?? $bot->main_channel ?? null,
+                $bot->order_channel ?? null,
                 "#запись\n$nameUser записался на прием \"" . ($tmpAppointment->event->title ?? "не указано") . "\" в $time",
                 $thread
             );

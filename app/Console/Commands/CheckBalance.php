@@ -39,7 +39,7 @@ class CheckBalance extends Command
                 $bot->save();
 
 
-                $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+                $channel = $bot->order_channel  ?? null;
 
                 if ($bot->balance > 0 && $bot->balance < 1000) {
                     $daysBefore = round( $bot->balance  / $bot->tax_per_day);

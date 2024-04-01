@@ -130,7 +130,7 @@ class DeliveryLogicFactory
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
-                $this->bot->order_channel ?? $this->bot->main_channel ?? null,
+                $this->bot->order_channel ??  null,
                 "#регистрация_доставщика\n$message\n",
                 $keyboard,
                 $thread
@@ -214,7 +214,7 @@ class DeliveryLogicFactory
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendMessage(
-                $this->bot->order_channel ?? $this->bot->main_channel ?? null,
+                $this->bot->order_channel ??  null,
                 "#заказ_в_работе\n№$order->id взят в работу доставщиком $deliverymanInfo->name ($deliverymanInfo->phone)",
                 $thread
             );

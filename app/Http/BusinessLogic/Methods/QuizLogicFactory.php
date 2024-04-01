@@ -325,7 +325,7 @@ class QuizLogicFactory
                 $isWin ? $successReplyKeyboard : $failureReplyKeyboard
             )
             ->sendMessage(
-                $bot->order_channel ?? $bot->main_channel ?? null,
+                $bot->order_channel ??  null,
                 "$nameUser прошел квиз #$quiz->id (" . ($quiz->title ?? 'Без названия') . ") за  <strong>$time</strong> сек и набрал <strong>$points</strong> баллов из <strong>$maxResult</strong> ",
                 $thread
             );
