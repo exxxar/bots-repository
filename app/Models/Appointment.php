@@ -62,7 +62,7 @@ class Appointment extends Model
 
     public function event(): HasOne
     {
-        return $this->hasOne(AppointmentEvent::class);
+        return $this->hasOne(AppointmentEvent::class,"id","appointment_event_id");
     }
 
     public function services(): HasMany

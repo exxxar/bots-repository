@@ -553,8 +553,8 @@ class AppointmentLogicFactory
             throw new HttpException(404, "Время для записи не найдено!");
 
         $hasAppointment = !is_null(Appointment::query()
-            ->where("appointment_event_id", $data["appointment_event_id"])
-            ->where("appointment_schedule_id", $data["appointment_schedule_id"])
+            ->where("appointment_event_id", $data["appointment_event_id"] ?? null)
+            ->where("appointment_schedule_id", $data["appointment_schedule_id"] ?? null)
             ->where("bot_id", $this->bot->id)
             ->first());
 

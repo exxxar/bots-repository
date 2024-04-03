@@ -50,7 +50,7 @@ class AppointmentSchedule extends Model
 
     public function appointment(): BelongsTo
     {
-        return $this->belongsTo(Appointment::class,"id","appointment_schedule_id");
+        return $this->belongsTo(Appointment::class,"appointment_schedule_id","id");
     }
 
     public function getHasAppointmentAttribute(){
