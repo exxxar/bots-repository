@@ -63,7 +63,7 @@ Route::get("/test-export", function (){
 
 Route::get('/db-transfer', function (Request $request) {
 
-    $botId = 149;
+    /*$botId = 149;
 
     $users2 = DB::connection('mysql2')->table("users")
           ->get();
@@ -123,7 +123,7 @@ Route::get('/db-transfer', function (Request $request) {
 
 
       }
-      ini_set('max_execution_time', '300');
+      ini_set('max_execution_time', '300');*/
 
 });
 
