@@ -29,6 +29,18 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
         </div>
 
+        <div class="col-12 mb-2">
+            <div class="form-floating">
+                <select class="form-select"
+                        v-model="mailForm.cron_time"
+                        id="floatingSelect" aria-label="Floating label select example">
+                    <option selected>Выберите время рассылки</option>
+                    <option :value="time" v-for="time in times">{{time}}</option>
+                </select>
+                <label for="floatingSelect">Временные точки рассылки</label>
+            </div>
+        </div>
+
 
         <div class="col-12 mb-2">
             <div class="form-check">
@@ -111,7 +123,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         <div class="col-12">
             <button
                 type="submit" class="btn btn-success w-100 p-3">
-               Поставить сообщение в очередь
+                Поставить сообщение в очередь
             </button>
         </div>
 
@@ -132,11 +144,15 @@ export default {
             need_page_images: false,
             need_inline_menu: false,
 
-
+            times: [
+                "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"
+            ]
+            ,
             bot: null,
             mailForm: {
                 message: '',
                 inline_keyboard: null,
+                cron_time: null,
                 images: [],
             },
         }

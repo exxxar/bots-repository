@@ -19,6 +19,7 @@ class QueueResource extends JsonResource
             'reply_keyboard' => $this->reply_keyboard,
             'inline_keyboard' => $this->inline_keyboard,
             'images' => $this->images,
+            'cron_time' => $this->cron_time ?? null,
             'sent_at' => $this->sent_at,
         ];
     }

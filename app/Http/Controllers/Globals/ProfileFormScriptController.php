@@ -81,6 +81,7 @@ class ProfileFormScriptController extends SlugController
                 "key" => "text_after_submit",
                 "value" => "Спасибо!"
             ],
+
             [
                 "type" => "text",
                 "key" => "profile_btn_caption",

@@ -70,6 +70,7 @@ class BotController extends Controller
         $request->validate([
             "message" => "required",
             "bot_id" => "required",
+            "cron_time" => "required",
         ]);
 
         $bot = Bot::query()

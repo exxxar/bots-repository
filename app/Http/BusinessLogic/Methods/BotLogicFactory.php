@@ -2127,17 +2127,6 @@ class BotLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
-        $tmp = [
-            "bot_id"=>$this->bot->id,
-            "message"=>$data["message"] ?? 'Текст сообщения',
-            "inline_keyboard"=>$data["inline_keyboard"] ?? null,
-            "reply_keyboard"=>$data["reply_keyboard"] ?? null,
-            "images"=>$data["images"] ?? null,
-            "videos"=>$data["videos"] ?? null,
-            "audios"=>$data["audios"] ?? null,
-        ];
-
-        Log::info(print_r($tmp, true));
 
        $result =  Http::post(env("MAILING_HANDLER_URL")."api/notification",[
             "bot_id"=>$this->bot->id,
@@ -2147,9 +2136,9 @@ class BotLogicFactory
             "images"=>$data["images"] ?? null,
             "videos"=>$data["videos"] ?? null,
             "audios"=>$data["audios"] ?? null,
+           "cron_time"=>$data["cron_time"] ?? null,
         ]);
 
-        Log::info(print_r($result->status(), true));
     }
 
     /**

@@ -55,6 +55,18 @@ class SimpleDeliveryController extends SlugController
 
             ],
             [
+                "type" => "text",
+                "key" => "delivery_price_text",
+                "description" => "Описание ценника на доставку",
+                "value" => "1000 руб.",
+            ],
+            [
+                "type" => "text",
+                "key" => "min_price",
+                "description" => "Минимальный порог заказа",
+                "value" => 100,
+            ],
+            [
                 "type" => "boolean",
                 "key" => "is_disabled",
                 "value" => false,
@@ -181,10 +193,10 @@ class SimpleDeliveryController extends SlugController
 
         ];
 
-        if (count($mainScript->config ?? []) != count($params)) {
+
             $mainScript->config = $params;
             $mainScript->save();
-        }
+
 
 
         BotMenuSlug::query()->updateOrCreate(
@@ -208,6 +220,12 @@ class SimpleDeliveryController extends SlugController
 
         return response()->json(
             [
+                'delivery_price_text' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "delivery_price_text")
+                    ->first())["value"] ?? "Цена доставки рассчитывается курьером" : "Цена доставки рассчитывается курьером",
+                'min_price' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "min_price")
+                    ->first())["value"] ?? 100 : 100,
                 'can_use_cash' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "can_use_cash")
                     ->first())["value"] ?? true : true,

@@ -349,9 +349,11 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             </div>
 
 
+            <p v-if="settings.delivery_price_text" v-html="settings.delivery_price_text"></p>
+            <p v-if="settings.min_price">Минимальная цена заказа {{settings.min_price || 0}} руб</p>
             <button
                 type="submit"
-                :disabled="spent_time_counter>0"
+                :disabled="spent_time_counter>0||settings.min_price>cartTotalPrice"
                 class="btn btn-full btn-sm rounded-l bg-highlight font-800 text-uppercase w-100 mb-2">
 
                 <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
@@ -383,7 +385,8 @@ export default {
         return {
             settings: {
                 can_use_cash: true,
-
+                delivery_price_text:null,
+                min_price: 0
             },
             product_type_display: 1,
             spent_time_counter: 0,
