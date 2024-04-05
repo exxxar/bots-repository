@@ -30,15 +30,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         </div>
 
         <div class="col-12 mb-2">
-            <div class="form-floating">
-                <select class="form-select"
-                        v-model="mailForm.cron_time"
-                        id="floatingSelect" aria-label="Floating label select example">
-                    <option selected>Выберите время рассылки</option>
-                    <option :value="time" v-for="time in times">{{time}}</option>
-                </select>
-                <label for="floatingSelect">Временные точки рассылки</label>
-            </div>
+            <VueDatePicker v-model="mailForm.cron_time"></VueDatePicker>
         </div>
 
 
@@ -132,8 +124,10 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 <script>
 
 import {mapGetters} from "vuex";
-
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 export default {
+    components: { VueDatePicker },
     data() {
         return {
 
@@ -144,10 +138,7 @@ export default {
             need_page_images: false,
             need_inline_menu: false,
 
-            times: [
-                "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"
-            ]
-            ,
+
             bot: null,
             mailForm: {
                 message: '',
