@@ -2126,6 +2126,7 @@ class BotLogicFactory
             throw new ValidationException($validator);
 
 
+
         $result = Http::post(env("MAILING_HANDLER_URL") . "api/notification", [
             "bot_id" => $this->bot->id,
             "message" => $data["message"] ?? 'Текст сообщения',
