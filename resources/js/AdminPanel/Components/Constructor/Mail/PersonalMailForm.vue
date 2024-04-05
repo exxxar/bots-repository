@@ -30,7 +30,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         </div>
 
         <div class="col-12 mb-2">
-            <input type="datetime-local" class="form-control w-100" v-model="mailForm.cron_time"/>
+            <input type="datetime-local" class="form-control w-100" v-model="mailForm.cron_time" required/>
         </div>
 
 

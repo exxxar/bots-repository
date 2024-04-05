@@ -83,7 +83,8 @@ class MailingLogicFactory
 
         $queues = Queue::query()
             // ->withTrashed()
-            ->where("bot_id", $this->bot->id);
+            ->where("bot_id", $this->bot->id)
+            ->whereNull("sent_at");
 
         if (!is_null($search))
             $queues = $queues->where("content", 'like', "%$search%");
