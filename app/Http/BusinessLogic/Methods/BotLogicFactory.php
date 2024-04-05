@@ -437,7 +437,7 @@ class BotLogicFactory
 
         $newBot = $newBot->fresh();
 
-        Log::info("creator_id2=>".print_r( $newBot->creator_id, true)." - ".print_r( $this->botUser->id, true));
+        Log::info("creator_id2=>" . print_r($newBot->creator_id, true) . " - " . print_r($this->botUser->id, true));
 
         return new BotResource($newBot);
     }
@@ -1291,7 +1291,7 @@ class BotLogicFactory
             //"description" => "required",
 
             "maintenance_message" => "required",
-           // "welcome_message" => "required",
+            // "welcome_message" => "required",
             "level_1" => "required",
             // "selected_bot_template_id" => "required",
             //"slugs" => "required",
@@ -1443,8 +1443,6 @@ class BotLogicFactory
         $bot = $bot->fresh();
 
 
-
-
         return new BotResource($bot);
     }
 
@@ -1503,7 +1501,7 @@ class BotLogicFactory
 
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
-      //  $tmp->creator_id = $tmp->is_template ? null : ($tmp->creator_id ?? null);
+        //  $tmp->creator_id = $tmp->is_template ? null : ($tmp->creator_id ?? null);
 
         if (isset($data["keyboards"])) {
             unset($tmp->keyboards);
@@ -2128,15 +2126,15 @@ class BotLogicFactory
             throw new ValidationException($validator);
 
 
-       $result =  Http::post(env("MAILING_HANDLER_URL")."api/notification",[
-            "bot_id"=>$this->bot->id,
-            "message"=>$data["message"] ?? 'Текст сообщения',
-            "inline_keyboard"=>$data["inline_keyboard"] ?? null,
-            "reply_keyboard"=>$data["reply_keyboard"] ?? null,
-            "images"=>$data["images"] ?? null,
-            "videos"=>$data["videos"] ?? null,
-            "audios"=>$data["audios"] ?? null,
-           "cron_time"=>$data["cron_time"] ?? null,
+        $result = Http::post(env("MAILING_HANDLER_URL") . "api/notification", [
+            "bot_id" => $this->bot->id,
+            "message" => $data["message"] ?? 'Текст сообщения',
+            "inline_keyboard" => $data["inline_keyboard"] ?? null,
+            "reply_keyboard" => $data["reply_keyboard"] ?? null,
+            "images" => $data["images"] ?? null,
+            "videos" => $data["videos"] ?? null,
+            "audios" => $data["audios"] ?? null,
+            "cron_time" => is_null($data["cron_time"] ?? null) ? null : Carbon::parse($data["cron_time"])->timestamp ?? null,
         ]);
 
     }
