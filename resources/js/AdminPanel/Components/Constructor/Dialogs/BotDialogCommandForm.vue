@@ -272,11 +272,11 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                 </button>
                                 <div class="dropdown-menu p-2" style="width:400px;max-height:300px; overflow-y:auto;">
                                     <ul class="list-group">
-                                        <li class="list-group-item cursor-pointer btn btn-primary font-12"
+                                        <li class="list-group-item cursor-pointer font-12"
                                             @click="commandForm.answers[index].next_bot_dialog_command_id = null">Не
                                             выбран
                                         </li>
-                                        <li class="list-group-item cursor-pointer btn btn-primary font-12"
+                                        <li class="list-group-item cursor-pointer font-12"
                                             style="line-height:100%;text-align:left;"
                                             @click="commandForm.answers[index].next_bot_dialog_command_id = command.id"
                                             v-for="command in getDialogCommands">
