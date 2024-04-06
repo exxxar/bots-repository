@@ -3,11 +3,13 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
+use App\Http\Resources\BotDialogAnswerResource;
 use App\Http\Resources\BotDialogCommandCollection;
 use App\Http\Resources\BotDialogCommandResource;
 use App\Http\Resources\BotDialogGroupCollection;
 use App\Http\Resources\BotDialogGroupResource;
 use App\Models\Bot;
+use App\Models\BotDialogAnswer;
 use App\Models\BotDialogCommand;
 use App\Models\BotDialogGroup;
 use App\Models\BotDialogResult;
@@ -343,6 +345,19 @@ class BotDialogsLogicFactory
             'result_channel' => $data["result_channel"] ?? null,
         ]);
 
+        $answers = is_null($data["answers"] ?? null) ? null : json_decode($data["answers"] ?? '[]');
+
+        if (is_null($answers))
+            return new BotDialogCommandResource($command);
+
+        foreach ($answers as $answer)
+            BotDialogAnswer::query()
+                ->create([
+                    'bot_dialog_command_id' => $command->id,
+                    'answer' => $answer->answer ?? null,
+                    'pattern' => $answer->pattern ?? null,
+                    'next_bot_dialog_command_id' => $answer->next_bot_dialog_command_id ?? null,
+                ]);
 
         return new BotDialogCommandResource($command);
     }
@@ -428,7 +443,31 @@ class BotDialogsLogicFactory
         $command = BotDialogCommand::query()->find($tmp->id);
         $command->update((array)$tmp);
 
+        $answers = is_null($data["answers"] ?? null) ? null : json_decode($data["answers"] ?? '[]');
+
+        if (is_null($answers))
+            return new BotDialogCommandResource($command);
+
+        foreach ($answers as $answer) {
+
+            $tmp = [
+                'bot_dialog_command_id' => $command->id,
+                'answer' => $answer->answer ?? null,
+                'pattern' => $answer->pattern ?? null,
+                'next_bot_dialog_command_id' => $answer->next_bot_dialog_command_id ?? null,
+            ];
+
+            if (!is_null($answer->id ?? null)) {
+                $answer = BotDialogAnswer::query()->find($answer->id);
+                $answer->update($tmp);
+            } else
+                BotDialogAnswer::query()
+                    ->create($tmp);
+        }
+
+
         return new BotDialogCommandResource($command);
+
     }
 
     /**
@@ -494,6 +533,24 @@ class BotDialogsLogicFactory
         $group->delete();
 
         return new BotDialogGroupResource($tmpGroup);
+    }
+
+    public function removeDialogAnswer($answerId): BotDialogAnswerResource
+    {
+        $answer = BotDialogAnswer::query()->find($answerId);
+
+        if (is_null($answer))
+            throw new HttpException(404, "Ответ не найден!");
+
+        $tmpAnswer = $answer;
+
+        $answer->bot_dialog_command_id = null;
+        $answer->next_bot_dialog_command_id = null;
+        $answer->save();
+
+        $answer->delete();
+
+        return new BotDialogAnswerResource($tmpAnswer);
     }
 
     public function removeDialog($dialogId): BotDialogCommandResource

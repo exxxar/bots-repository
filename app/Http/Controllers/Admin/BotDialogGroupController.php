@@ -234,6 +234,13 @@ class BotDialogGroupController extends Controller
             ->removeGroup($groupId);
     }
 
+
+    public function removeDialogAnswer(Request $request, $answerId): \App\Http\Resources\BotDialogAnswerResource
+    {
+        return BusinessLogic::dialogs()
+            ->removeDialogAnswer($answerId);
+    }
+
     public function removeDialog(Request $request, $dialogId): BotDialogCommandResource
     {
         return BusinessLogic::dialogs()

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BotDialogCommand extends Model
@@ -51,11 +52,16 @@ class BotDialogCommand extends Model
         'next_bot_dialog_command_id' => 'integer',
     ];
 
-    protected $with = ["bot", "inlineKeyboard","replyKeyboard"];
+    protected $with = ["bot", "inlineKeyboard","replyKeyboard","answers"];
 
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
+    }
+
+    public function answers(): HasMany
+    {
+        return $this->hasMany(BotDialogAnswer::class,"bot_dialog_command_id","id");
     }
 
     public function botDialogGroup(): BelongsTo
@@ -77,4 +83,6 @@ class BotDialogCommand extends Model
     {
         return $this->belongsTo(BotDialogCommand::class);
     }
+
+
 }

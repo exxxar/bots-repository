@@ -40,7 +40,9 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 <tr>
                     <th class="text-center" scope="col">#</th>
                     <th class="text-center" scope="col">Текст диалога</th>
+                    <th class="text-center" scope="col">Есть ответы</th>
                     <th class="text-center" scope="col">Цепочки</th>
+
                     <th class="text-center" scope="col">Текст успеха</th>
                     <th class="text-center" scope="col">Текст ошибки</th>
                     <th class="text-center" scope="col">Канал результата</th>
@@ -64,6 +66,12 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                         data-bs-target="#dialog-command-modal-editor"
                         href="javascript:void(0)">{{ command.pre_text || '-' }}</a></td>
                     <td class="text-center">
+                        <p v-if="(command.answers||[]).length>0">{{command.answers.length}}</p>
+                        <p v-else>
+                            <i class="fa-solid fa-xmark text-danger"></i>
+                        </p>
+                    </td>
+                    <td class="text-center">
                             <span v-if="command.next_bot_dialog_command_id"
                                   class="badge bg-primary">#{{ command.next_bot_dialog_command_id || '-' }} ({{command.chain.length||0}})</span>
                         <span v-else>
@@ -76,6 +84,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                             <i class="fa-solid fa-xmark text-danger"></i>
                         </p>
                     </td>
+
                     <td class="text-center">
                         <p v-if="command.error_text">{{ command.error_text }}</p>
                         <p v-else>

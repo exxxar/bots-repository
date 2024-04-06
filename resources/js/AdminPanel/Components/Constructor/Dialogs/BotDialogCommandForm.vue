@@ -192,6 +192,130 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         </div>
 
         <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" v-model="need_chains" id="need-chains"
+                   checked>
+            <label class="form-check-label" for="need-chains">
+                Нужны многоуровневые диалоги
+            </label>
+        </div>
+
+        <div class="mb-2" v-if="need_chains">
+            <button type="button" class="btn btn-outline-primary" @click="addAnswer">Добавить вариант ответа</button>
+            <table class="table" v-if="commandForm.answers.length>0">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Ответ</th>
+                    <th scope="col">Паттерн</th>
+                    <th scope="col">Следующий диалог</th>
+                    <th scope="col" class="text-center">Действие</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(item, index) in commandForm.answers">
+                    <th scope="row">{{ index + 1 }}</th>
+                    <td>
+                        <div class="form-floating">
+                            <input type="text"
+                                   v-model="commandForm.answers[index].answer"
+                                   class="form-control" id="floatingInput" placeholder="name@example.com">
+                            <label for="floatingInput">Точный текст ответа</label>
+                        </div>
+                    </td>
+                    <td>
+
+                        <div class="input-group">
+                            <div class="form-floating">
+                                <input type="text"
+                                       v-model="commandForm.answers[index].pattern"
+                                       class="form-control" id="floatingInput"
+                                       placeholder="name@example.com">
+                                <label for="floatingInput">Шаблон предполагаемого текста</label>
+                            </div>
+                            <div class="dropdown d-flex">
+                                <button class="btn btn-outline-secondary w-100" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item"
+                                           @click="commandForm.answers[index].pattern = null"
+                                           href="javascript:void(0)">Не выбран</a></li>
+                                    <li><a class="dropdown-item"
+                                           @click="commandForm.answers[index].pattern = pattern.value"
+                                           v-for="pattern in patterns"
+                                           href="javascript:void(0)">{{ pattern.title || '-' }}</a></li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+
+                    </td>
+                    <td>
+                        <div class="input-group">
+
+
+                            <div class="form-floating">
+                                <input type="text" class="form-control"
+                                       v-model="commandForm.answers[index].next_bot_dialog_command_id"
+                                       id="floatingInput"
+                                       placeholder="name@example.com" required>
+                                <label for="floatingInput">Выберите диалог или введите его номер</label>
+                            </div>
+                            <div class="dropdown d-flex">
+                                <button class="btn btn-outline-secondary w-100"
+                                        data-bs-auto-close="outside"
+                                        type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                </button>
+                                <div class="dropdown-menu p-2" style="width:400px;max-height:300px; overflow-y:auto;">
+                                    <ul class="list-group">
+                                        <li class="list-group-item cursor-pointer btn btn-primary font-12"
+                                            @click="commandForm.answers[index].next_bot_dialog_command_id = null">Не
+                                            выбран
+                                        </li>
+                                        <li class="list-group-item cursor-pointer btn btn-primary font-12"
+                                            style="line-height:100%;text-align:left;"
+                                            @click="commandForm.answers[index].next_bot_dialog_command_id = command.id"
+                                            v-for="command in getDialogCommands">
+                                            #{{ command.id || '-' }} {{ command.pre_text || '-' }}
+                                        </li>
+                                    </ul>
+                                    <div class="px-3 pt-2">
+
+                                            <Pagination
+                                                v-on:pagination_page="nextDialogs"
+                                                v-if="dialog_commands_paginate_object"
+                                                :pagination="dialog_commands_paginate_object"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown d-flex justify-content-center align-items-center">
+                            <button class="btn btn-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-bars"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item"
+                                       @click="removeDialogAnswer(item, index)"
+                                       href="javascript:void(0)">Удалить</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="alert alert-primary mt-2" role="alert" v-else>
+                Добавьте один или несколько вариантов ответов
+            </div>
+        </div>
+
+        <div class="form-check mb-2">
             <input class="form-check-input" type="checkbox" v-model="need_set_flags" id="need-set-flags"
                    checked>
             <label class="form-check-label" for="need-set-flags">
@@ -265,12 +389,29 @@ export default {
     props: ["item", "bot"],
     data() {
         return {
+            patterns: [
+                {
+                    title: 'Номер телефона РФ',
+                    value: '/^\\s?(\\+\\s?7|8)([- ()]*\\d){10}$/'
+                },
+                {
+                    title: 'Дата в формате ДД/ММ/ГГГГ',
+                    value: '/(\\d{2})\\/(\\d{2})\\/(\\d{4})$/'
+                },
+                {
+                    title: 'Время в формате ЧЧ:ММ[:СС]',
+                    value: '#^[01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$#'
+                }
+
+
+            ],
             loading: true,
             dialog_commands: [],
             dialog_commands_paginate_object: null,
             need_images: false,
             need_inline_keyboard: false,
             need_reply_keyboard: false,
+            need_chains: false,
             need_set_flags: false,
             //сохранить данные в параметр
             //установить флаги
@@ -351,6 +492,8 @@ export default {
                 result_channel: null,
                 inline_keyboard: null,
                 reply_keyboard: null,
+
+                answers: [],
             },
             photos: []
         }
@@ -379,7 +522,7 @@ export default {
         },
         'need_images': function (newVal, oldVal) {
             if (!this.need_images) {
-              this.commandForm.images = null
+                this.commandForm.images = null
             }
 
         },
@@ -395,6 +538,7 @@ export default {
         }
     },
     mounted() {
+
 
         if (this.item) {
             this.$nextTick(() => {
@@ -417,7 +561,8 @@ export default {
                     reply_keyboard: this.item.reply_keyboard || null,
 
                     result_flags: this.item.result_flags || [],
-                    store_to: this.item.store_to || null
+                    store_to: this.item.store_to || null,
+                    answers: this.item.answers || [],
                 }
 
                 if (this.bot)
@@ -434,6 +579,10 @@ export default {
 
                 if (this.commandForm.result_flags.length > 0)
                     this.need_set_flags = true
+
+                if (this.commandForm.answers.length > 0)
+                    this.need_chains = true
+
             })
         }
 
@@ -451,8 +600,37 @@ export default {
 
     },
     methods: {
+        addAnswer() {
+            this.commandForm.answers.push({
+                id: null,
+                bot_dialog_command_id: null,
+                answer: null,
+                pattern: null,
+                next_bot_dialog_command_id: null,
+            })
+        },
         nextDialogs(index) {
             this.loadDialogs(index)
+        },
+        removeDialogAnswer(item, index) {
+
+            if (item.id == null) {
+                this.commandForm.answers.splice(index, 1)
+                return;
+            }
+
+            this.commandForm.answers.splice(index, 1)
+            this.loading = true
+            this.$store.dispatch("removeDialogAnswer", {
+                dataObject: {
+                    dialogAnswerId: item.id,
+                },
+            }).then(resp => {
+                this.loading = false
+                this.loadDialogs()
+            }).catch(() => {
+                this.loading = false
+            })
         },
         loadDialogs(page = 0) {
             this.loading = true
@@ -526,6 +704,7 @@ export default {
                         inline_keyboard: null,
                         is_empty: false,
                         result_flags: [],
+                        answers: [],
                         store_to: null,
                     }
 
@@ -559,8 +738,8 @@ export default {
             this.commandForm[object.param] = object.text;
 
         },
-        selectElementById(id){
-          this.$emit("select-element", id)
+        selectElementById(id) {
+            this.$emit("select-element", id)
         },
         selectFlag(item) {
 

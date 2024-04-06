@@ -127,6 +127,7 @@ trait BotDialogTrait
         return count($matches) > 0;
     }
 
+
     public function nextBotDialog($text, $botUser = null): void
     {
         $botUser = is_null($botUser) ? $this->currentBotUser() : $botUser;
@@ -185,8 +186,57 @@ trait BotDialogTrait
             $this->sendMessage($botUser->telegram_chat_id ?? null,
                 $botDialogCommand->post_text ?? 'Данные успешно сохранены');
 
+        $isAnswerFound = false;
+        if (count($botDialogCommand->answers ?? []) > 0) {
+
+            $tmpItem = null;
+            foreach ($botDialogCommand->answers as $item) {
+                if (!is_null($item->answer ?? null)) {
+                    if ($text == $item->answer) {
+                        $tmpItem = $item;
+                        $isAnswerFound = true;
+                        break;
+                    }
+                }
+
+                if (!is_null($item->pattern ?? null)) {
+                    if (preg_match($item->pattern, $text)) {
+                        $tmpItem = $item;
+                        $isAnswerFound = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!is_null($tmpItem)) {
+
+                $tmpNextDialog = BotDialogCommand::query()
+                    ->where("id", $tmpItem->next_bot_dialog_command_id)
+                    ->first();
+
+                BotDialogResult::query()->create([
+                    'bot_user_id' => $botUser->id,
+                    'bot_dialog_command_id' => $tmpItem->next_bot_dialog_command_id ?? null,
+                    'current_input_data' => null,
+                    'summary_input_data' => $dialog->summary_input_data ?? [],
+                    'completed_at' => ($tmpNextDialog->is_empty ?? true) ? Carbon::now() : null,
+                ]);
+
+                $this->sendDialogData($tmpNextDialog ?? null,
+                    $botUser->telegram_chat_id ?? null);
+
+                if ($tmpNextDialog->is_empty ?? true)
+                    $needStop = true;
+            }
+
+
+        }
+
         if (!is_null($botDialogCommand) &&
-            !is_null($botDialogCommand->next_bot_dialog_command_id ?? null)) {
+            !is_null($botDialogCommand->next_bot_dialog_command_id ?? null) &&
+            !$needStop &&
+            !$isAnswerFound
+        ) {
             $nextBotDialogCommand = BotDialogCommand::query()
                 ->find($botDialogCommand->next_bot_dialog_command_id);
 
@@ -195,7 +245,7 @@ trait BotDialogTrait
                 'bot_dialog_command_id' => $nextBotDialogCommand->id,
                 'current_input_data' => null,
                 'summary_input_data' => $dialog->summary_input_data ?? [],
-                'completed_at' => $nextBotDialogCommand->is_empty ? Carbon::now() : null,
+                'completed_at' => ($nextBotDialogCommand->is_empty ?? true) ? Carbon::now() : null,
             ]);
 
 
@@ -204,8 +254,7 @@ trait BotDialogTrait
             $this->sendDialogData($nextBotDialogCommand ?? null,
                 $botUser->telegram_chat_id ?? null);
 
-
-            if ($nextBotDialogCommand->is_empty)
+            if ($nextBotDialogCommand->is_empty ?? true)
                 $needStop = true;
         }
 
@@ -276,7 +325,7 @@ trait BotDialogTrait
 
         $channel = $botDialogCommand->result_channel ??
             $bot->order_channel ??
-             null;
+            null;
 
         $tmpMessage .= "Пользователь:\n"
             . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"

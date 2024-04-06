@@ -161,3 +161,6 @@ Route::apiResource('inline-query-item', \App\Http\Controllers\Admin\InlineQueryI
 
 
 Route::apiResource('promo-code', \App\Http\Controllers\Admin\PromoCodeController::class);
+
+
+Route::apiResource('bot-dialog-answer', App\Http\Controllers\BotDialogAnswerController::class);

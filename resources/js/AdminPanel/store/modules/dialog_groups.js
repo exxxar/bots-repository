@@ -92,6 +92,16 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async removeDialogAnswer(context, payload= {dataObject: {dialogAnswerId: null}}){
+        let link = `${BASE_DIALOG_GROUPS_LINK}/remove-dialog-answer/${payload.dataObject.dialogAnswerId}`
+        let _axios = util.makeAxiosFactory(link, 'DELETE')
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async removeDialogCommand(context, payload= {dataObject: {dialogCommandId: null}}){
         let link = `${BASE_DIALOG_GROUPS_LINK}/remove-dialog/${payload.dataObject.dialogCommandId}`
         let _axios = util.makeAxiosFactory(link, 'DELETE')

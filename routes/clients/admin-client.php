@@ -234,6 +234,7 @@ Route::prefix("admin")
                 Route::post("/update-dialog", "updateDialog");
                 Route::delete("/remove-group/{groupId}", "removeGroup")->middleware(["role:admin"]);
                 Route::delete("/remove-dialog/{dialogId}", "removeDialog")->middleware(["role:admin"]);
+                Route::delete("/remove-dialog-answer/{answerId}", "removeDialogAnswer")->middleware(["role:admin"]);
             });
 
 

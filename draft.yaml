@@ -1,28 +1,17 @@
 models:
-  InlineQuerySlug:
-    bot_id: id foreign:bots
-    command: string:255 nullable
-    description: longtext nullable
+  BotDialogAnswer:
+    bot_dialog_command_id: id foreign:bot_dialog_commands
+    answer: string:255 nullable
+    pattern: string:255 nullable
+    next_bot_dialog_command_id: id foreign:bot_dialog_commands
     relationships:
-      belongsTo: Bot
-      hasMany: InlineQueryItem
+      belongsTo: BotDialogCommand
 
-  InlineQueryItem:
-    inline_query_slug_id: id foreign:inline_query_slugs
-    type: integer default:0
-    title: string:255 nullable
-    description: longtext nullable
-    input_message_content: json nullable
-    inline_keyboard_id: id foreign:bot_menu_templates
-    custom_settings: json nullable
-    relationships:
-      belongsTo: InlineQuerySlug, BotMenuTemplate
-
-seeders: InlineQuerySlug,   InlineQueryItem
+seeders:   BotDialogAnswer
 
 controllers:
-  InlineQuerySlug:
+  BotDialogAnswer:
     resource: api
-  InlineQueryItem:
-    resource: api
+
+
 
