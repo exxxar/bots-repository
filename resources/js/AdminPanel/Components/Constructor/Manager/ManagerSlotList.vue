@@ -1,3 +1,6 @@
+<script setup>
+import Pagination from '@/AdminPanel/Components/Pagination.vue';
+</script>
 <template>
 
     <div class="container pt-5">
@@ -5,24 +8,57 @@
 
         <div class="row">
             <div class="col-md-6">
-                <div class="progress" role="progressbar" aria-label="Success striped example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-striped bg-success" v-bind:style="{'width': slotsPercent+'%'}"></div>
+                <div class="progress" role="progressbar" aria-label="Success striped example" aria-valuenow="25"
+                     aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-striped bg-success"
+                         v-bind:style="{'width': slotsPercent+'%'}"></div>
                 </div>
             </div>
-            <div class="col-md-6 d-flex justify-content-between">
-                <p>У вас <strong>{{getSelf.manager.max_bot_slot_count}}</strong> свободных слотов из <strong>{{summarySlotCount}}</strong> доступных</p>
+            <div class="col-md-4 d-flex justify-content-between">
+                <p>Число слотов <strong>{{ getSelf.manager.max_bot_slot_count }}</strong>.
+                    Отображается ботов <strong>{{ summarySlotCount }}</strong> шт. под вашим управлением</p>
 
+
+            </div>
+            <div class="col-md-2">
                 <a href="#" @click="callback(12)">Пополнить слоты</a>
             </div>
         </div>
 
 
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6 col-12">
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control "
+                           placeholder="Поиск бота"
+                           aria-label="Поиск бота"
+                           v-model="search"
+                           @keydown.enter="loadBots(0)"
+                           aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary "
+                            @click="loadBots(0)"
+                            type="button"
+                            id="button-addon2">Найти
+                    </button>
+                </div>
+            </div>
 
+
+        </div>
+
+        <div class="row my-2" v-if="bots.length>0">
+            <div class="col-12">
+                <Pagination
+                    v-on:pagination_page="nextBots"
+                    v-if="bots_paginate_object"
+                    :pagination="bots_paginate_object"/>
+            </div>
+        </div>
 
     </div>
 
     <div class="container pb-5" v-if="bots.length>0">
-        <h6>Ваши созданные боты</h6>
+        <h6>Ваши созданные боты <a href="/bot-page" v-if="(getSelf.is_admin||false)">перейти в раздел</a></h6>
         <div class="row row-cols-1 row-cols-lg-3 row-cols-md-1 g-4">
             <div class="col" v-for="bot in bots">
 
@@ -43,16 +79,27 @@
                         <button
                             type="button"
                             @click="gotoBot(bot)"
-                            class="btn btn-link text-white w-100">Редактировать</button>
+                            class="btn btn-link text-white w-100">Редактировать
+                        </button>
                     </div>
                 </div>
+            </div>
+
+        </div>
+        <div class="row my-5">
+
+            <div class="col-12">
+                <Pagination
+                    v-on:pagination_page="nextBots"
+                    v-if="bots_paginate_object"
+                    :pagination="bots_paginate_object"/>
             </div>
         </div>
     </div>
 
     <div class="container" v-else>
         <div class="alert alert-info" role="alert">
-           <p>У вас еще нет созданных ботов, попробуйте с чего-то простого;)</p>
+            <p>У вас еще нет созданных ботов, попробуйте с чего-то простого;)</p>
 
         </div>
 
@@ -70,27 +117,56 @@ export default {
 
     data() {
         return {
-            bots: []
+            search: null,
+            bots: [],
+            direction: 'desc',
+            order: 'updated_at',
+            bots_paginate_object: null
         }
     }, computed: {
-        ...mapGetters(['getBots']),
-        getSelf(){
+        ...mapGetters(['getBots', 'getBotsPaginateObject']),
+        getSelf() {
             return window.profile || null
         },
-        slotsPercent(){
-          return  (this.bots.length / this.summarySlotCount) * 100
+        slotsCount(){
+            return this.getSelf.manager.max_bot_slot_count
         },
-        summarySlotCount(){
-            return this.getSelf.manager.max_bot_slot_count + this.bots.length
+        slotsPercent() {
+            if (!this.bots_paginate_object)
+                return (this.bots.length / (this.summarySlotCount + this.slotsCount)) * 100
+
+            return ((this.bots_paginate_object.meta.total || 0) / (this.summarySlotCount + this.slotsCount)) * 100
+        },
+        summarySlotCount() {
+            if (!this.bots_paginate_object)
+                return 0
+            return this.bots_paginate_object.meta.total
         }
     },
     mounted() {
-        this.loadBots()
+        this.loadBots(0)
     },
     methods: {
-        loadBots() {
-            this.$store.dispatch("loadBots").then(() => {
+        nextBots(index) {
+            this.loadBots(index)
+        },
+        loadAndOrder(order) {
+            this.order = order
+            this.direction = this.direction === 'desc' ? 'asc' : 'desc'
+            this.loadBots(0)
+        },
+        loadBots(page = 0) {
+            this.$store.dispatch("loadBots", {
+                dataObject: {
+                    search: this.search,
+                    order: this.order,
+                    direction: this.direction,
+                },
+                page: page,
+                size: 20
+            }).then(() => {
                 this.bots = this.getBots || []
+                this.bots_paginate_object = this.getBotsPaginateObject || null
             })
         },
         loadCurrentBot(bot = null) {
@@ -100,14 +176,14 @@ export default {
                 this.bot = this.getCurrentBot
             })
         },
-        gotoBot(bot){
+        gotoBot(bot) {
             this.loadCurrentBot(bot)
             localStorage.setItem("cashman_set_botform_step_index", 0)
             localStorage.setItem("cashman_set_botpage_step_index", 2)
             window.location.href = '/bot-page'
 
         },
-        callback(index){
+        callback(index) {
             this.$emit("callback", index)
         }
     }
