@@ -133,11 +133,11 @@
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_ManagerPrfileForm.vue_vue_type_style_index_0_scoped_c568d9f8_lang-e7376e7b.js": {
+  "_ManagerPrfileForm.vue_vue_type_style_index_0_scoped_c568d9f8_lang-2dcd5413.js": {
     "css": [
       "assets/ManagerPrfileForm-9c76eb9d.css"
     ],
-    "file": "assets/ManagerPrfileForm.vue_vue_type_style_index_0_scoped_c568d9f8_lang-e7376e7b.js",
+    "file": "assets/ManagerPrfileForm.vue_vue_type_style_index_0_scoped_c568d9f8_lang-2dcd5413.js",
     "imports": [
       "_index.es-b188fb53.js",
       "_Pagination-0b2e35d4.js"
@@ -247,17 +247,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-f2c465d8.js",
@@ -465,12 +465,12 @@
     "css": [
       "assets/ChatMini-5a929b50.css"
     ],
-    "file": "assets/ManagerPage-f886c365.js",
+    "file": "assets/ManagerPage-be5caf27.js",
     "imports": [
       "_MainAdminLayout-342dd233.js",
       "_index.es-b188fb53.js",
       "_BotForm-c14db411.js",
-      "_ManagerPrfileForm.vue_vue_type_style_index_0_scoped_c568d9f8_lang-e7376e7b.js",
+      "_ManagerPrfileForm.vue_vue_type_style_index_0_scoped_c568d9f8_lang-2dcd5413.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_CompanyList-eb1dd949.js",
       "_Pagination-0b2e35d4.js",
@@ -501,11 +501,11 @@
       "assets/PaymentPage-fa49efcf.css",
       "assets/ChatMini-5a929b50.css"
     ],
-    "file": "assets/PaymentPage-7425af28.js",
+    "file": "assets/PaymentPage-b02b17c3.js",
     "imports": [
       "_MainAdminLayout-342dd233.js",
       "_BotForm-c14db411.js",
-      "_ManagerPrfileForm.vue_vue_type_style_index_0_scoped_c568d9f8_lang-e7376e7b.js",
+      "_ManagerPrfileForm.vue_vue_type_style_index_0_scoped_c568d9f8_lang-2dcd5413.js",
       "_index.es-b188fb53.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_CompanyList-eb1dd949.js",
@@ -568,7 +568,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-bcca096b.js",
+    "file": "assets/app-29eb415b.js",
     "imports": [
       "_index.es-b188fb53.js",
       "_index-0cbab2b5.js"

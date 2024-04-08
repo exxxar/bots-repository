@@ -41,6 +41,44 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             id="button-addon2">Найти
                     </button>
                 </div>
+
+                <div class="w-100 d-flex justify-content-center flex-wrap">
+                    <p class="mb-0 text-primary font-bold"><small>Тип сортировки</small></p>
+                    <ul class="list-group d-flex flex-row w-100 justify-content-center">
+                        <li class="list-inline-item mr-2 cursor-pointer" @click="loadAndOrder('id')">
+                          <span v-if="direction === 'desc'&&order === 'id'"><i
+                              class="fa-solid fa-caret-down"></i></span>
+                            <span v-if="direction === 'asc'&&order === 'id'"><i
+                                class="fa-solid fa-caret-up"></i></span>
+                            Id
+                        </li>
+                        <li class="list-inline-item mr-2 cursor-pointer" @click="loadAndOrder('title')">
+                        <span v-if="direction === 'desc'&&order === 'title'"><i
+                            class="fa-solid fa-caret-down"></i></span>
+                            <span v-if="direction === 'asc'&&order === 'title'"><i
+                                class="fa-solid fa-caret-up"></i></span>
+                            Название бота
+                        </li>
+                        <li class="list-inline-item mr-2 cursor-pointer" @click="loadAndOrder('bot_domain')">
+                        <span v-if="direction === 'desc'&&order === 'bot_domain'"><i
+                            class="fa-solid fa-caret-down"></i></span>
+                            <span v-if="direction === 'asc'&&order === 'bot_domain'"><i
+                                class="fa-solid fa-caret-up"></i></span>
+                            Домен бота
+                        </li>
+                        <li class="list-inline-item mr-2 cursor-pointer" @click="loadAndOrder('updated_at')">
+                        <span v-if="direction === 'desc'&&order === 'updated_at'"><i
+                            class="fa-solid fa-caret-down"></i></span>
+                            <span v-if="direction === 'asc'&&order === 'updated_at'"><i
+                                class="fa-solid fa-caret-up"></i></span>
+                            Дата обновления
+                        </li>
+                    </ul>
+
+
+                </div>
+
+
             </div>
 
 
@@ -68,10 +106,12 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         v-lazy="'/images-by-bot-id/'+bot.id+'/'+bot.image">
 
                     <div class="card-body">
+                        <h6 class="card-title text-center">#{{  bot.id }}</h6>
                         <h5 class="card-title text-center">{{ bot.title || bot.id }}</h5>
                         <p class="card-text text-center">
                             {{ bot.short_description || 'Без описания' }}
                         </p>
+                        <p class="text-center"><small>{{$filters.currentFull(bot.updated_at)}}</small></p>
                     </div>
                     <div class="card-footer "
                          v-bind:class="{'bg-danger':(bot.bot_token||'').length<40,'bg-success':(bot.bot_token||'').length>=40}"
