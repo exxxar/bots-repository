@@ -95,10 +95,13 @@ trait BotBaseMethodsTrait
 
     public function sendMessage($chatId, $message, $messageThreadId = null)
     {
+        if (mb_strlen($message ?? '') == 0)
+            return $this;
+
         $tmp = [
             "chat_id" => $chatId,
             "message_thread_id" => $messageThreadId,
-            "text" => mb_strlen($message ?? '') > 0 ? $message : 'Текст сообщения',
+            "text" => mb_strlen($message ?? '') > 0 ? $message : 'Главное меню',
             "parse_mode" => "HTML"
         ];
 
@@ -429,25 +432,25 @@ trait BotBaseMethodsTrait
         unset($tmp['reply_markup']);
         unset($tmp['message_thread_id']);
 
-        if (isset($tmp["message"]))
-            $tmp["message"] = mb_strlen($tmp["message"] ?? '') > 0 ? $tmp["message"] : 'Текст сообщения';
+        if (isset($tmp["message"])) {
+            if (is_null($tmp["message"] ?? null))
+                return;
+        }
+
+        $tmp["message"] = mb_strlen($tmp["message"] ?? '') > 0 ? $tmp["message"] : "Главное меню";
 
         if (isset($tmp["photo"])) {
             $tmp["photo"] = !is_null($tmp["photo"] ?? null) ? $tmp["photo"] :
                 InputFile::create(public_path() . "/images/cashman.jpg");
         }
 
-
         try {
             $this->bot->{$func}($tmp);
-
         } catch (\Exception $e) {
-
-            Log::info("chatId " . $tmp["chat_id"] . "" . ($this->domain ?? '-'));
             try {
                 $this->bot->sendMessage([
                     "chat_id" => $tmp["chat_id"],
-                    "text" => $tmp["message"] ?? $tmp["caption"] ?? "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
+                    "text" =>  $tmp["caption"] ?? "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
                     "parse_mode" => "HTML"
                 ]);
             } catch (\Exception $exception) {
