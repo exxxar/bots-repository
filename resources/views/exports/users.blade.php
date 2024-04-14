@@ -14,6 +14,7 @@
         <tr>
             <td style="width: 100px;">Имя</td>
             <td style="width: 100px;">Имя из ТГ</td>
+            <td style="width: 100px;">Домен</td>
             <td style="width: 100px;">Телефон</td>
             <td style="width: 100px;">Почта</td>
             <td style="width: 100px;">ДР</td>
@@ -33,6 +34,7 @@
             <tr>
                 <td style="width: 100px;">{{$user->name?? 'Не указан'}}</td>
                 <td style="width: 100px;">{{$user->fio_from_telegram?? 'Не указан'}}</td>
+                <td style="width: 100px;">{{$user->username?? 'Не указан'}}</td>
                 <td style="width: 100px;"> {{$user->phone?? 'Не указан'}}</td>
                 <td style="width: 100px;"> {{$user->email?? 'Не указан'}}</td>
                 <td style="width: 100px;"> {{$user->birthday?? 'Не указан'}}</td>

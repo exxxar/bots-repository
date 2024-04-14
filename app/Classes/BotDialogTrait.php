@@ -153,8 +153,9 @@ trait BotDialogTrait
 
         $botDialogCommand = $dialog->botDialogCommand;
         if (!$this->validateInput($text, $botDialogCommand->input_pattern ?? null)) {
-            $this->sendMessage($botUser->telegram_chat_id ?? null,
-                $botDialogCommand->error_text ?? 'Ошибка ввода');
+            if (!is_null($botDialogCommand->error_text ?? null))
+                $this->sendMessage($botUser->telegram_chat_id ?? null,
+                    $botDialogCommand->error_text);
             return;
         }
 
@@ -182,9 +183,9 @@ trait BotDialogTrait
 
         $needStop = false;
 
-        if (!$botDialogCommand->is_empty)
+        if (!$botDialogCommand->is_empty && !is_null($botDialogCommand->post_text ?? null))
             $this->sendMessage($botUser->telegram_chat_id ?? null,
-                $botDialogCommand->post_text ?? 'Данные успешно сохранены');
+                $botDialogCommand->post_text);
 
         $isAnswerFound = false;
         if (count($botDialogCommand->answers ?? []) > 0) {

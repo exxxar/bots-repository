@@ -37,14 +37,14 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
         <div class="form-floating mb-2" v-if="!commandForm.is_empty">
             <input type="text" class="form-control"
                    :id="'commandForm-post-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.post_text" required>
+                   placeholder="Начни с малого..." v-model="commandForm.post_text">
             <label :for="'commandForm-post-text-'+commandForm.id">Текст после успешного завершения
                 диалога</label>
         </div>
 
         <div class="form-floating mb-2" v-if="!commandForm.is_empty">
             <input type="text" class="form-control" :id="'commandForm-error-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.error_text" required>
+                   placeholder="Начни с малого..." v-model="commandForm.error_text">
             <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
                 данных</label>
         </div>

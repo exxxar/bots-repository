@@ -184,14 +184,18 @@ class ProfileFormScriptController extends SlugController
         ]);
 
         $customMessage = (Collection::make($request->slug->config)
-                ->where("key", "text_after_submit")
-                ->first())["value"] ?? null;
+            ->where("key", "text_after_submit")
+            ->first())["value"] ?? null;
 
         BusinessLogic::administrative()
             ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->setSlug($request->slug ?? null)
             ->vipStore($request->all(), $customMessage);
+
+        if (!is_null($request->slug ?? null))
+            BotManager::bot()
+                ->runSlug($request->slug->id);
 
         return response()->noContent();
     }

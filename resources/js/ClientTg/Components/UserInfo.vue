@@ -44,6 +44,12 @@
 
         </tr>
 
+        <tr>
+            <th scope="row">Домен пользователя</th>
+            <td class="font-weight-bold">{{ botUser.username || 'Не указано' }}</td>
+
+        </tr>
+
         <tr v-bind:class="{'bg-red1-light':botUser.phone==null}">
             <th scope="row">Номер телефона</th>
             <td class="font-weight-bold">{{ botUser.phone || 'Не указано' }}</td>
