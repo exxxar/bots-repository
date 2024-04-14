@@ -22,7 +22,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 v-else>
 
                 <p style="font-weight:900; color:red;" class="mb-2">Вы израсходовали все ваши попытки</p>
-                <ReturnToBot></ReturnToBot>
+
             </div>
 
             <ul v-if="action" class="m-0 p-0">
@@ -32,6 +32,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     <span>Телефон  <strong>{{ item.phone || 'Не указано' }}</strong></span>
                 </li>
             </ul>
+
+            <ReturnToBot class="my-2"></ReturnToBot>
         </div>
     </div>
 
