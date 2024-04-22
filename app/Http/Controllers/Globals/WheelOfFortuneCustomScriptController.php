@@ -392,7 +392,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
             $bot = BotManager::bot()->getSelf();
 
-            if (!is_null($profileScriptId) && $profileScriptId instanceof stdClass == "integer") {
+            if (!is_null($profileScriptId) ) {
 
                 BotManager::bot()->runSlug($profileScriptId);
 
