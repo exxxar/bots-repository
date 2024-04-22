@@ -1385,7 +1385,7 @@ export default {
                 if (this.botForm.payment_provider_token)
                     this.need_payments = true
 
-                if (this.botForm.cashback_config)
+                if ((this.botForm.cashback_config||[]).length>0)
                     this.need_cashback_config = true
 
                 if (this.botForm.warnings.length > 0)
