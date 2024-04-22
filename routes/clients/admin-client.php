@@ -41,6 +41,11 @@ Route::middleware(['auth', 'verified'])
             ]);
         })->name('media-page');
 
+        Route::get('/dialogs-page', function () {
+            Inertia::setRootView("app");
+
+            return Inertia::render('DialogConstructorPage');
+        })->name('dialogs-page');
 
         Route::get('/user-page', function () {
             Inertia::setRootView("app");

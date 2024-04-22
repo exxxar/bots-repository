@@ -38,7 +38,18 @@ class ProfileFormScriptController extends SlugController
 
         $params = [
 
-
+            [
+            "type" => "number",
+            "key" => "first_cashback_granted",
+            "description" => "Начислить разово сумму кэшбэка после заполнения формы",
+            "value" => null
+        ],
+            [
+                "type" => "number",
+                "key" => "next_script_id",
+                "description" => "Вызов следующего скрипта после этого (id скрипта)",
+                "value" => null
+            ],
             [
                 "type" => "text",
                 "key" => "pre_name_text",
@@ -134,7 +145,7 @@ class ProfileFormScriptController extends SlugController
             ],
             [
                 "type" => "boolean",
-                "description" => "Скрывает изображение в форме",
+                "description" => "Скрывает изображение в форме анкеты (лого сверху)",
                 "key" => "need_profile_form_image",
                 "value" => true,
 
@@ -193,9 +204,17 @@ class ProfileFormScriptController extends SlugController
             ->setSlug($request->slug ?? null)
             ->vipStore($request->all(), $customMessage);
 
-        if (!is_null($request->slug ?? null))
-            BotManager::bot()
-                ->runSlug($request->slug->id);
+
+        if (!is_null($request->slug ?? null)) {
+            $nextScriptId = (Collection::make($request->slug->config)
+                ->where("key", "next_script_id")
+                ->first())["value"] ?? null;
+
+            if (!is_null($nextScriptId))
+                BotManager::bot()
+                    ->runSlug($nextScriptId);
+        }
+
 
         return response()->noContent();
     }

@@ -10,8 +10,13 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                 <div class="col-12 d-flex justify-content-center mb-3" v-if="settings.need_profile_form_image">
                     <div class="img-avatar">
                         <img
+                            v-if="settings.form_image"
                             v-lazy="settings.form_image"
                             class="img-avatar"/>
+
+                        <img
+                            v-else
+                            v-lazy="'/images-by-bot-id/'+currentBot.id+'/'+currentBot.image">
                     </div>
 
                 </div>
@@ -31,7 +36,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     <h6 class="mb-3 text-center" v-if="settings.pre_phone_text" v-html="settings.pre_phone_text"></h6>
                     <div class="input-style input-style-2">
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               v-mask="['+7(###)###-##-##','+38(###)###-##-##']"
+                               v-mask="['+7(###)###-##-##','+38(0##)###-##-##']"
                                v-model="vipForm.phone"
                                placeholder="+7(000)000-00-00"
                                aria-label="vipForm-phone" aria-describedby="vipForm-phone" required>

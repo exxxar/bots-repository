@@ -1,0 +1,171 @@
+<!--
+<script setup>
+import Layout from "@/AdminPanel/Layouts/MainAdminLayout.vue";
+import {markRaw} from "vue";
+import { BaklavaEditor, useBaklava, Components  } from "@baklavajs/renderer-vue";
+import {applyResult, DependencyEngine, NodeInterface} from "baklavajs";
+import "@baklavajs/themes/dist/syrup-dark.css";
+
+/*const BaklavaNode = Components.Node;
+
+const baklava = useBaklava();
+const engine = new DependencyEngine(baklava.editor);
+
+baklava.settings.displayValueOnHover = true;*/
+
+import DialogNode1 from "@/AdminPanel/Components/Constructor/Dialogs/Constructor/DialogNode1.vue";
+
+
+
+import MyNode1 from "@/AdminPanel/Components/Constructor/Dialogs/Constructor/Nodes/MyNode1.ts";
+import MyNode2 from "@/AdminPanel/Components/Constructor/Dialogs/Constructor/Nodes/MyNode2.ts";
+import {ResourceNode} from "@/AdminPanel/Components/Constructor/Dialogs/Constructor/Nodes/ResourceNode.js";
+import {DisplayNode} from "@/AdminPanel/Components/Constructor/Dialogs/Constructor/Nodes/DisplayNode.js";
+import {MathNode} from "@/AdminPanel/Components/Constructor/Dialogs/Constructor/Nodes/MathNode.js";
+
+import HintOverlay from "./HintOverlay.vue";
+import { Editor } from "@baklavajs/core";
+import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
+import { OptionPlugin } from "@baklavajs/plugin-options-vue";
+import { Engine } from "@baklavajs/plugin-engine";
+
+import { RootNode } from "./RootNode";
+import { NumberNode } from "./NumberNode";
+import { JsonNode } from "./JsonNode";
+import { TextNode } from "./TextNode";
+import { JsonAttributeNode } from "./JsonAttribute";
+import TextareaOption from "./TextareaOption";
+import * as matchExample from "./json/math.json";
+import * as jsonExample from "./json/json.json";
+
+/*
+baklava.editor.registerNodeType(MyNode1);
+baklava.editor.registerNodeType(MyNode2);
+baklava.editor.registerNodeType(MathNode);
+baklava.editor.registerNodeType(MathNode);*/
+
+
+/*
+const token = Symbol();
+engine.events.afterRun.subscribe(token, (result) => {
+    engine.pause();
+    applyResult(result, baklava.editor);
+    engine.resume();
+});
+
+
+engine.start();
+
+// Add some nodes for demo purposes
+function addNodeWithCoordinates(nodeType, x, y) {
+    const n = new nodeType();
+    baklava.displayedGraph.addNode(n);
+    n.position.x = x;
+    n.position.y = y;
+    return n;
+}
+const node1 = addNodeWithCoordinates(MathNode, 300, 140);
+const node2 = addNodeWithCoordinates(DisplayNode, 550, 140);
+baklava.displayedGraph.addConnection(
+    node1.outputs.result,
+    node2.inputs.value
+);
+*/
+
+</script>
+
+
+<template>
+    <div class="row">
+        <div class="col-12" style="min-height:100vh;">
+            <BaklavaEditor :view-model="baklava" >
+
+            </BaklavaEditor>
+        </div>
+
+
+    </div>
+
+</template>
+<script>
+
+
+export default {
+    data () {
+        return {
+            editor: new Editor(),
+            viewPlugin: new ViewPlugin(),
+            engine: new Engine(true)
+        }
+    },
+    created() {
+        // Register the plugins
+        // The view plugin is used for rendering the nodes
+        this.editor.use(this.viewPlugin);
+        // The option plugin provides some default option UI elements
+        this.editor.use(new OptionPlugin());
+        // The engine plugin calculates the nodes in the graph in the
+        // correct order using the "calculate" methods of the nodes
+        this.editor.use(this.engine);
+
+        // Show a minimap in the top right corner
+        this.viewPlugin.enableMinimap = true;
+        this.viewPlugin.registerOption("TextareaOption", TextareaOption);
+
+        // register the nodes we have defined, so they can be
+        // added by the user as well as saved & loaded.
+        // this.editor.registerNodeType("DataNode", RootNode);
+        this.editor.registerNodeType("NumberNode", NumberNode);
+        this.editor.registerNodeType("JsonNode", JsonNode);
+        this.editor.registerNodeType("TextNode", TextNode);
+        this.editor.registerNodeType("MathNode", MathNode);
+        this.editor.registerNodeType("DisplayNode", DisplayNode);
+        this.editor.registerNodeType("JsonAttributeNode", JsonAttributeNode);
+        // add some nodes so the screen is not empty on startup
+        // const node1 = this.addNodeWithCoordinates(MathNode, 100, 140);
+        // const node2 = this.addNodeWithCoordinates(DisplayNode, 400, 140);
+        // this.editor.addConnection(
+        //     node1.getInterface("Result"),
+        //     node2.getInterface("Value")
+        // );
+        this.engine.calculate();
+    },
+    mounted() {
+        const saved = localStorage.getItem("save-node-editor");
+        console.log(saved);
+        if (saved && saved !== "undefined") {
+            this.editor.load(JSON.parse(saved));
+        }
+    },
+    methods: {
+        addNodeWithCoordinates(nodeType, x, y) {
+            const n = new nodeType();
+            this.editor.addNode(n);
+            n.position.x = x;
+            n.position.y = y;
+            return n;
+        },
+        save() {
+            const json = this.editor.save();
+            console.log(JSON.stringify(json));
+            localStorage.setItem("save-node-editor", JSON.stringify(json));
+            alert("Save successfully and copy json to clipboard");
+            navigator.clipboard.writeText(JSON.stringify(json));
+        },
+        loadJson() {
+            const value = prompt("Input your nodes json data to load");
+            if (value) {
+                this.editor.load(JSON.parse(value));
+            }
+        },
+        loadMatchSample() {
+            this.editor.load(matchExample);
+        },
+        loadJsonSample() {
+            this.editor.load(jsonExample);
+        }
+    },
+    components: {}
+}
+</script>
+-->

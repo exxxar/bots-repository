@@ -79,6 +79,7 @@ import BotForm from "@/AdminPanel/Components/Constructor/Bot/BotForm.vue";
 
                 <div v-if="step===2">
                     <BotSection
+                        v-on:callback="botSectionCallback"
                         v-if="bot&&!load"
                         :bot="bot"
                     />
@@ -198,7 +199,15 @@ export default {
                 this.bot = this.getCurrentBot
             })
         },
+        botSectionCallback(){
+            this.load = true
 
+            this.setStep(2)
+
+            this.$nextTick(() => {
+                this.load = false
+            })
+        },
         botListCallback(bot) {
             this.load = true
 

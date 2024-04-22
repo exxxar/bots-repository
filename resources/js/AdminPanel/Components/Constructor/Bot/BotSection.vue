@@ -224,6 +224,7 @@ export default {
             }).then(() => {
 
             })
+            this.$emit("callback")
         },
         hasRole(role) {
             return window.hasRole(role) || false

@@ -41,6 +41,13 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $params = [
             [
+                "type" => "number",
+                "key" => "next_win_page_id",
+                "description" => "Вызов следующей страницы при победе (id страницы)",
+                "value" => null
+            ],
+
+            [
                 "type" => "image",
                 "key" => "main_image",
                 "value" => null,
@@ -61,7 +68,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             [
                 "type" => "channel",
                 "key" => "callback_channel_id",
-                "value" => $bot->order_channel ??  env("BASE_ADMIN_CHANNEL"),
+                "value" => $bot->order_channel ?? env("BASE_ADMIN_CHANNEL"),
 
             ],
             [
@@ -228,6 +235,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         /*
                 $description = $wheelText[$winNumber] ?? 'Без описания';*/
 
+
         $tmp[] = (object)[
             "name" => $winnerName,
             "win" => $winNumber,
@@ -258,6 +266,16 @@ class WheelOfFortuneCustomScriptController extends SlugController
                         ["text" => "Написать пользователю ответ", "url" => $link]
                     ]
                 ], $thread);
+
+        if (!is_null($request->slug ?? null)) {
+            $nextWinPageId = (Collection::make($request->slug->config)
+                ->where("key", "next_win_page_id")
+                ->first())["value"] ?? null;
+
+            if (!is_null($nextWinPageId))
+                BotManager::bot()
+                    ->runPage($nextWinPageId);
+        }
 
         return response()->noContent();
     }
