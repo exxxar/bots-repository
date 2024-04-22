@@ -39,13 +39,13 @@ class ProfileFormScriptController extends SlugController
         $params = [
 
             [
-            "type" => "number",
+            "type" => "text",
             "key" => "first_cashback_granted",
             "description" => "Начислить разово сумму кэшбэка после заполнения формы",
             "value" => null
         ],
             [
-                "type" => "number",
+                "type" => "script",
                 "key" => "next_script_id",
                 "description" => "Вызов следующего скрипта после этого (id скрипта)",
                 "value" => null

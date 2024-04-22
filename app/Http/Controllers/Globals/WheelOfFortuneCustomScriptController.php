@@ -41,7 +41,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $params = [
             [
-                "type" => "number",
+                "type" => "text",
                 "key" => "next_win_page_id",
                 "description" => "Вызов следующей страницы при победе (id страницы)",
                 "value" => null
