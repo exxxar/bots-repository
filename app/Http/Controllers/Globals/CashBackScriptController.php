@@ -37,8 +37,8 @@ class CashBackScriptController extends SlugController
 
         $params = [
             [
-                "type" => "text",
-                "key" => "custom_profile_form_script_id",
+                "type" => "script",
+                "key" => "profile_id",
                 "value" => null
             ],
             [
@@ -447,13 +447,13 @@ class CashBackScriptController extends SlugController
             $bot = BotManager::bot()->getSelf();
 
             $scriptFormId = (Collection::make($config[1])
-                ->where("key", "custom_profile_form_script_id")
+                ->where("key", "profile_id")
                 ->first())["value"] ?? null;
 
 
             if (!is_null($scriptFormId)) {
                 BotManager::bot()
-                    ->runSlug($scriptFormId, $bot);
+                    ->runSlug($scriptFormId, $bot, $botUser);
             } else
                 \App\Facades\BotManager::bot()
                     ->replyPhoto("Заполни эту анкету и получи доступ к системе CashBack",
