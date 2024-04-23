@@ -641,6 +641,8 @@ class BotManager extends BotCore
                 ->first();
 
 
+            Log::info("item_slug".print_r($item, true));
+
             if (!is_null($item)) {
                 // $config = $slug->config ?? [];
                 $config[] = [
