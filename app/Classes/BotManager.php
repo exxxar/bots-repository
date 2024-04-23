@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use PHPUnit\Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\Api;
 use Telegram\Bot\FileUpload\InputFile;
@@ -599,6 +600,68 @@ class BotManager extends BotCore
 
     }
 
+    public function runSlug(int $slugId, $bot = null, $botUser = null): bool
+    {
+
+
+        if (!is_null($bot)) {
+            $this->setApiToken($bot->bot_domain);
+        }
+
+
+        if (!is_null($botUser)) {
+            $this->setBotUser($botUser);
+
+        }
+
+        //   $channel = is_null($botUser) ? $this->currentBotUser()->telegram_chat_id : $botUser->telegram_chat_id;
+        Log::info("runSlug $slugId");
+        try {
+
+            $slug = BotMenuSlug::query()
+                ->where("id", $slugId)
+                ->where("bot_id", is_null($bot) ? $this->getSelf()->id : $bot->id)
+                ->first();
+
+            if (is_null($slug)) {
+                Log::info("runSlug is null");
+                return false;
+            }
+
+            if (!is_null($slug->parent_slug_id)) {
+                $config = $slug->config ?? [];
+
+                $parentSlug = BotMenuSlug::query()
+                    ->where("id", $slug->parent_slug_id)
+                    ->first();
+            }
+
+            $item = Collection::make($this->slugs)
+                ->where("path", ($parentSlug ?? $slug)->slug)
+                ->first();
+
+
+            if (!is_null($item)) {
+                // $config = $slug->config ?? [];
+                $config[] = [
+                    "key" => "slug_id",
+                    "value" => $slug->id,
+                ];
+
+                $this->tryCall($item, [],
+                    $config, []);
+
+            }
+
+
+        } catch (Exception $e) {
+            Log::info($e);
+            return false;
+        }
+
+        return true;
+    }
+
     public function runPage(int $pageId, $bot = null, $botUser = null): bool
     {
 
@@ -608,8 +671,8 @@ class BotManager extends BotCore
 
 
         if (!is_null($botUser)) {
-            $this->botUser = $botUser;
-            $this->chatId = $botUser->telegram_chat_id;
+            $this->setBotUser($botUser);
+
         }
 
 
