@@ -923,7 +923,7 @@ abstract class BotCore
     {
 
      //   $channel = is_null($botUser) ? $this->currentBotUser()->telegram_chat_id : $botUser->telegram_chat_id;
-
+        Log::info("runSlug $slugId");
         try {
 
             $slug = BotMenuSlug::query()
@@ -932,6 +932,7 @@ abstract class BotCore
                 ->first();
 
             if (is_null($slug)) {
+                Log::info("runSlug is null");
                 return false;
             }
 

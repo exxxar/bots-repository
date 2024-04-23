@@ -602,6 +602,8 @@ class BotManager extends BotCore
     public function runPage(int $pageId, $bot = null, $botUser = null): bool
     {
 
+        Log::info("runPage $pageId");
+
         $channel = is_null($botUser) ? $this->currentBotUser()->telegram_chat_id : $botUser->telegram_chat_id;
 
         $page = BotPage::query()
@@ -610,6 +612,7 @@ class BotManager extends BotCore
             ->first();
 
         if (is_null($page)) {
+            Log::info("runPage page is null");
             return false;
         }
 
