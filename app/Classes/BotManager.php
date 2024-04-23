@@ -657,6 +657,7 @@ class BotManager extends BotCore
 
             return true;
         } catch (\Exception $e) {
+            Log::info($e);
             return false;
         }
     }

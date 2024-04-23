@@ -963,6 +963,7 @@ abstract class BotCore
 
 
         } catch (Exception $e) {
+            Log::info($e);
             return false;
         }
 
