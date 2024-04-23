@@ -628,17 +628,23 @@ class BotManager extends BotCore
                 return false;
             }
 
+            Log::info("parent_slug_id ".print_r($slug->parent_slug_id, true));
+
             if (!is_null($slug->parent_slug_id)) {
                 $config = $slug->config ?? [];
 
                 $parentSlug = BotMenuSlug::query()
                     ->where("id", $slug->parent_slug_id)
                     ->first();
+
+                Log::info("parent_slug ".print_r($parentSlug->toArray(), true));
             }
 
             $item = Collection::make($this->slugs)
                 ->where("path", ($parentSlug ?? $slug)->slug)
                 ->first();
+
+            Log::info("parent_slug ".print_r($slug->toArray(), true));
 
 
             Log::info("item_slug".print_r($item, true));
