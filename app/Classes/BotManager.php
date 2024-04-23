@@ -624,8 +624,7 @@ class BotManager extends BotCore
 
 
                 if (is_null($slug)) {
-                    $this->sendMessage($channel, "Скрипт не найден");
-                    return;
+                    return false;
                 }
 
                 $item = Collection::make($this->slugs)
