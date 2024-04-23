@@ -129,7 +129,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
 
         </div>
 
-        <div class="mb-3" v-if="type==='reply'">
+        <div class="mb-3" v-if="type==='reply'&&settings">
 
 
             <div class="form-check">
@@ -508,15 +508,18 @@ export default {
         if (this.editedKeyboard) {
             this.$nextTick(() => {
                 this.keyboard = this.editedKeyboard.menu
-                this.settings = {
-                    resize_keyboard: this.editedKeyboard.settings.resize_keyboard || true,
-                    one_time_keyboard: this.editedKeyboard.settings.one_time_keyboard || false,
-                    input_field_placeholder: this.editedKeyboard.settings.input_field_placeholder || null,
-                    is_persistent: this.editedKeyboard.settings.is_persistent || false,
-                }
 
-                if (this.settings.input_field_placeholder != null)
-                    this.need_input_field_placeholder = true
+                if (this.editedKeyboard.settings) {
+                    this.settings = {
+                        resize_keyboard: this.editedKeyboard.settings.resize_keyboard || true,
+                        one_time_keyboard: this.editedKeyboard.settings.one_time_keyboard || false,
+                        input_field_placeholder: this.editedKeyboard.settings.input_field_placeholder || null,
+                        is_persistent: this.editedKeyboard.settings.is_persistent || false,
+                    }
+
+                    if (this.settings.input_field_placeholder != null)
+                        this.need_input_field_placeholder = true
+                }
             })
         }
 

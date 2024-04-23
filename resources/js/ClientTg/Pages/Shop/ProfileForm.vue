@@ -36,7 +36,7 @@ import ProjectInfoCard from "ClientTg@/Components/Shop/Helpers/ProjectInfoCard.v
                     <h6 class="mb-3 text-center" v-if="settings.pre_phone_text" v-html="settings.pre_phone_text"></h6>
                     <div class="input-style input-style-2">
                         <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               v-mask="['+7(###)###-##-##','+38(0##)###-##-##']"
+                               v-mask="['+7(###)###-##-##']"
                                v-model="vipForm.phone"
                                placeholder="+7(000)000-00-00"
                                aria-label="vipForm-phone" aria-describedby="vipForm-phone" required>
