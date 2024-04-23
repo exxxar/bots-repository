@@ -923,7 +923,7 @@ abstract class BotCore
     {
 
         if (!is_null($bot)) {
-            $this->domain = $bot->bot_domain;
+            $this->setApiToken($bot->bot_domain);
         }
 
 
