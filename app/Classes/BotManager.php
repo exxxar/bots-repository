@@ -622,7 +622,6 @@ class BotManager extends BotCore
                         ->next_bot_menu_slug_id)
                     ->first();
 
-
                 if (is_null($slug)) {
                     return false;
                 }

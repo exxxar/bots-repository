@@ -919,7 +919,7 @@ abstract class BotCore
     }
 
 
-    public function runSlug(int $slugId, $bot = null, $botUser = null): boolean
+    public function runSlug(int $slugId, $bot = null, $botUser = null): bool
     {
 
         $channel = is_null($botUser) ? $this->currentBotUser()->telegram_chat_id : $botUser->telegram_chat_id;
