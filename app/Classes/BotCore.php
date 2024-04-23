@@ -922,6 +922,17 @@ abstract class BotCore
     public function runSlug(int $slugId, $bot = null, $botUser = null): bool
     {
 
+        if (!is_null($bot)) {
+            $this->domain = $bot->bot_domain;
+            $this->bot = $bot;
+        }
+
+
+        if (!is_null($botUser)) {
+            $this->botUser = $botUser;
+            $this->chatId = $botUser->telegram_chat_id;
+        }
+
      //   $channel = is_null($botUser) ? $this->currentBotUser()->telegram_chat_id : $botUser->telegram_chat_id;
         Log::info("runSlug $slugId");
         try {
