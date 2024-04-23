@@ -206,12 +206,14 @@ class ProfileFormScriptController extends SlugController
 
 
         if (!is_null($request->slug ?? null)) {
+
             $nextScriptId = (Collection::make($request->slug->config)
                 ->where("key", "next_script_id")
                 ->first())["value"] ?? null;
 
             if (!is_null($nextScriptId))
                 BotManager::bot()
+                    ->setBot($request->bot)
                     ->runSlug($nextScriptId);
         }
 

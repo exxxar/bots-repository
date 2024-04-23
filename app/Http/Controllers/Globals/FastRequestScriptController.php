@@ -217,7 +217,9 @@ class FastRequestScriptController extends SlugController
 
             if (!is_null($profileScriptId) && $profileScriptId instanceof stdClass == "integer") {
 
-                BotManager::bot()->runSlug($profileScriptId);
+                BotManager::bot()
+                    ->setBot($bot)
+                    ->runSlug($profileScriptId);
 
             } else {
                 $keyboard = [

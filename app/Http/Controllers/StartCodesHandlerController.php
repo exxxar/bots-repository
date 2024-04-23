@@ -221,7 +221,9 @@ class StartCodesHandlerController extends Controller
         }
 
         if ($code == "005") {
-            BotManager::bot()->runSlug($request_id);
+            BotManager::bot()
+                ->setBot($bot)
+                ->runSlug($request_id);
             return;
         }
 

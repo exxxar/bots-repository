@@ -394,7 +394,9 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
             if (!is_null($profileScriptId) ) {
 
-                BotManager::bot()->runSlug($profileScriptId);
+                BotManager::bot()
+                    ->setBot($bot)
+                    ->runSlug($profileScriptId);
 
             } else {
                 $keyboard = [
