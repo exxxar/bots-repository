@@ -39,11 +39,11 @@ class ProfileFormScriptController extends SlugController
         $params = [
 
             [
-            "type" => "text",
-            "key" => "first_cashback_granted",
-            "description" => "Начислить разово сумму кэшбэка после заполнения формы",
-            "value" => null
-        ],
+                "type" => "text",
+                "key" => "first_cashback_granted",
+                "description" => "Начислить разово сумму кэшбэка после заполнения формы",
+                "value" => null
+            ],
             [
                 "type" => "script",
                 "key" => "next_script_id",
@@ -211,9 +211,15 @@ class ProfileFormScriptController extends SlugController
                 ->where("key", "next_script_id")
                 ->first())["value"] ?? null;
 
-            if (!is_null($nextScriptId))
-                BotManager::bot()
-                    ->runSlug($nextScriptId, $request->bot );
+            if (!is_null($nextScriptId)) {
+                $isRun = BotManager::bot()
+                    ->runPage($nextScriptId, $request->bot, $request->botUser);
+
+                if (!$isRun)
+                    BotManager::bot()
+                        ->runSlug($nextScriptId, $request->bot, $request->botUser);
+            }
+
         }
 
 
