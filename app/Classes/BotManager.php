@@ -615,9 +615,8 @@ class BotManager extends BotCore
             $this->setBotUser($botUser);
 
         }
-
         //   $channel = is_null($botUser) ? $this->currentBotUser()->telegram_chat_id : $botUser->telegram_chat_id;
-        Log::info("runSlug $slugId");
+
         try {
 
             $slug = BotMenuSlug::query()
@@ -626,11 +625,8 @@ class BotManager extends BotCore
                 ->first();
 
             if (is_null($slug)) {
-                Log::info("runSlug is null");
                 return false;
             }
-
-            Log::info("parent_slug_id ".print_r($slug->parent_slug_id, true));
 
             if (!is_null($slug->parent_slug_id)) {
                 $config = $slug->config ?? [];
@@ -638,18 +634,11 @@ class BotManager extends BotCore
                 $parentSlug = BotMenuSlug::query()
                     ->where("id", $slug->parent_slug_id)
                     ->first();
-
-                Log::info("parent_slug ".print_r($parentSlug->toArray(), true));
             }
 
             $item = Collection::make($this->slugs)
                 ->where("path", ($parentSlug ?? $slug)->slug)
                 ->first();
-
-            Log::info("parent_slug ".print_r($slug->toArray(), true));
-
-
-            Log::info("item_slug".print_r($item, true));
 
             if (!is_null($item)) {
                 // $config = $slug->config ?? [];
@@ -687,8 +676,6 @@ class BotManager extends BotCore
         }
 
 
-        Log::info("runPage $pageId");
-
         $channel = is_null($botUser) ? $this->currentBotUser()->telegram_chat_id : $botUser->telegram_chat_id;
 
         $page = BotPage::query()
@@ -697,7 +684,6 @@ class BotManager extends BotCore
             ->first();
 
         if (is_null($page)) {
-            Log::info("runPage page is null");
             return false;
         }
 
