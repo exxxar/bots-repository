@@ -92,8 +92,8 @@ class FastRequestScriptController extends SlugController
 
         ];
 
-            $mainScript->config = $params;
-            $mainScript->save();
+        $mainScript->config = $params;
+        $mainScript->save();
 
 
     }
@@ -165,7 +165,7 @@ class FastRequestScriptController extends SlugController
         $thread = $bot->topics["questions"] ?? null;
 
         BotManager::bot()
-            ->sendMessage(($bot->order_channel ??null),
+            ->sendMessage(($bot->order_channel ?? null),
                 "Быстрый запрос из $from\nот пользователя $name:\nПол:$sex\nТелефон:$phone\nГород:$city\nДР:$birth (возраст $age)",
                 $thread
 
@@ -217,9 +217,15 @@ class FastRequestScriptController extends SlugController
 
             if (!is_null($profileScriptId) && $profileScriptId instanceof stdClass == "integer") {
 
-                BotManager::bot()
-                    ->setBot($bot)
-                    ->runSlug($profileScriptId);
+
+                $isRun = BotManager::bot()
+                    ->runPage($profileScriptId, $bot, $botUser) ?? false;
+
+                if (!$isRun) {
+                    $isRun = BotManager::bot()
+                        ->runSlug($profileScriptId, $bot, $botUser) ?? false;
+                }
+
 
             } else {
                 $keyboard = [

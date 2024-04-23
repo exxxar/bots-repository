@@ -383,7 +383,7 @@ class BotManager extends BotCore
             $tgDomain = $botUser->username ?? null;
             $tgName = $botUser->name ?? $botUser->fio_from_telegram ?? $botUser->telegram_chat_id;
 
-            $this->sendInlineKeyboard($bot->order_channel  ?? null,
+            $this->sendInlineKeyboard($bot->order_channel ?? null,
                 "#лог_действий_на_странице\n" .
                 (!is_null($tgDomain) ? "Действие от @$tgDomain:\n" : "Действие от $tgName:\n") . "Страница: $pageName",
                 [
@@ -401,7 +401,7 @@ class BotManager extends BotCore
         $iMenu = is_null($inlineKeyboard) ? [] : ($inlineKeyboard->menu ?? []);
         $rMenu = is_null($replyKeyboard) ? [] : ($replyKeyboard->menu ?? []);
 
-        $rMenuSettings = empty($rMenu)? null : ($rMenu->settings ?? null);
+        $rMenuSettings = empty($rMenu) ? null : ($rMenu->settings ?? null);
 
         $content = str_replace(["<p>", "</p>"], "", $page->content);
         $content = str_replace(["<br>"], "\n", $content);
@@ -468,7 +468,7 @@ class BotManager extends BotCore
 
             if (!empty($rMenu)) {
                 $this->replyKeyboard($needContentInReply ? ($content ?? 'Меню') : ($replyMenuTitle ?? 'Главное меню'), $rMenu,
-                    settings:$rMenuSettings);
+                    settings: $rMenuSettings);
 
                 $needSendReplyMenu = false;
                 $needContentInReply = false;
@@ -497,10 +497,10 @@ class BotManager extends BotCore
 
             if (!empty($replyKeyboard))
                 $this->replyKeyboard(mb_strlen($content) >= 1024 ?
-                    $content ?? 'Хм, нечего отобразить...' : ($replyMenuTitle ?? 'Главное меню'), $rMenu, settings:$rMenuSettings);
+                    $content ?? 'Хм, нечего отобразить...' : ($replyMenuTitle ?? 'Главное меню'), $rMenu, settings: $rMenuSettings);
 
             if (empty($replyKeyboard) && mb_strlen($content) >= 1024)
-                    $this->reply($content);
+                $this->reply($content);
         }
 
         if (count($images) === 0) {
@@ -513,10 +513,10 @@ class BotManager extends BotCore
 
             if (!empty($replyKeyboard) && $needSendReplyMenu)
                 $this->replyKeyboard($needContentInReply ? (strlen($content) > 0 ? $content : 'Главное меню') :
-                    ($replyMenuTitle ?? 'Главное меню'), $rMenu , settings:$rMenuSettings);
+                    ($replyMenuTitle ?? 'Главное меню'), $rMenu, settings: $rMenuSettings);
 
             if ($needContentInReply && empty($replyKeyboard)) {
-                $this->reply($content  ?? 'Главное меню');
+                $this->reply($content ?? 'Главное меню');
             }
 
         }
@@ -598,5 +598,67 @@ class BotManager extends BotCore
 
 
     }
+
+    public function runPage(int $pageId, $bot = null, $botUser = null): bool
+    {
+
+        $channel = is_null($botUser) ? $this->currentBotUser()->telegram_chat_id : $botUser->telegram_chat_id;
+
+        $page = BotPage::query()
+            ->where("bot_id", is_null($bot) ? $this->getSelf()->id : $bot->id)
+            ->where("id", $pageId)
+            ->first();
+
+        if (is_null($page)) {
+            return false;
+        }
+
+        try {
+            $this->prepareTemplatePage($page, $channel);
+
+            if (!is_null($page->next_bot_menu_slug_id)) {
+                $slug = BotMenuSlug::query()
+                    ->where("id", $page
+                        ->next_bot_menu_slug_id)
+                    ->first();
+
+
+                if (is_null($slug)) {
+                    $this->sendMessage($channel, "Скрипт не найден");
+                    return;
+                }
+
+                $item = Collection::make($this->slugs)
+                    ->where("path", $slug->slug)
+                    ->first();
+
+
+                if (!is_null($item)) {
+                    $config = $slug->config ?? [];
+                    $config[] = [
+                        "key" => "slug_id",
+                        "value" => $slug->id,
+                    ];
+
+
+                    $this->tryCall($item, [],
+                        $config, []);
+
+                }
+            }
+
+            if (!is_null($page->next_bot_dialog_command_id))
+                $this->startBotDialog($page->next_bot_dialog_command_id,
+                    is_null($botUser) ?
+                        $this->currentBotUser() :
+                        $botUser
+                );
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 
 }

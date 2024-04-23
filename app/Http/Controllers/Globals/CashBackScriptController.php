@@ -453,7 +453,7 @@ class CashBackScriptController extends SlugController
 
             if (!is_null($scriptFormId)) {
                 BotManager::bot()
-                    ->runSlug($scriptFormId);
+                    ->runSlug($scriptFormId, $bot);
             } else
                 \App\Facades\BotManager::bot()
                     ->replyPhoto("Заполни эту анкету и получи доступ к системе CashBack",

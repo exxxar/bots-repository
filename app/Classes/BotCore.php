@@ -634,7 +634,7 @@ abstract class BotCore
 
         $bot = $transaction->bot;
         $channel = $bot->order_channel ??
-             null;
+            null;
 
         if ($bot->auto_cashback_on_payments) {
             $tmpTotalAmount = $totalAmount / 100;
@@ -700,7 +700,6 @@ abstract class BotCore
         \App\Facades\BotMethods::bot()
             ->whereBot($bot)
             ->sendMessage($botUser->telegram_chat_id, "Ваша покупка:\n$product");
-
 
 
         $transaction->update([
@@ -920,20 +919,20 @@ abstract class BotCore
     }
 
 
-    public function runSlug(int $slugId, $botUser = null): void
+    public function runSlug(int $slugId, $bot = null, $botUser = null): boolean
     {
 
-        $channel = is_null($botUser) ? $this->chatId : $botUser->telegram_chat_id;
+        $channel = is_null($botUser) ? $this->currentBotUser()->telegram_chat_id : $botUser->telegram_chat_id;
 
         try {
 
             $slug = BotMenuSlug::query()
                 ->where("id", $slugId)
+                ->where("bot_id", is_null($bot) ? $this->getSelf()->id : $bot->id)
                 ->first();
 
             if (is_null($slug)) {
-                $this->sendMessage($channel, "Скрипт не найден");
-                return;
+                return false;
             }
 
             if (!is_null($slug->parent_slug_id)) {
@@ -960,77 +959,13 @@ abstract class BotCore
                     $config, []);
 
             }
+
+
         } catch (Exception $e) {
-
-        }
-    }
-
-    public function runPage(int $pageId, $botUser = null): void
-    {
-
-        $channel = is_null($botUser) ? $this->chatId : $botUser->telegram_chat_id;
-
-        $page = BotPage::query()
-            ->where("bot_id", $this->getSelf()->id)
-            ->where("id", $pageId)
-            ->first();
-
-        if (is_null($page)) {
-            $this->sendMessage($channel, "Страничка не найдена:(");
-            return;
+            return false;
         }
 
-        try {
-            $this->prepareTemplatePage($page, $channel);
-
-            if (!is_null($page->next_bot_menu_slug_id)) {
-                $slug = BotMenuSlug::query()
-                    ->where("id", $page
-                        ->next_bot_menu_slug_id)
-                    ->first();
-
-
-                if (is_null($slug)) {
-                    $this->sendMessage($channel, "Скрипт не найден");
-                    return;
-                }
-
-                $item = Collection::make($this->slugs)
-                    ->where("path", $slug->slug)
-                    ->first();
-
-
-                if (!is_null($item)) {
-                    $config = $slug->config ?? [];
-                    $config[] = [
-                        "key" => "slug_id",
-                        "value" => $slug->id,
-                    ];
-
-
-                    $this->tryCall($item, [],
-                        $config, []);
-
-                }
-            }
-
-            if (!is_null($page->next_bot_dialog_command_id))
-                $this->startBotDialog($page->next_bot_dialog_command_id, $botUser);
-
-        } catch (\Exception $e) {
-
-        }
-    }
-
-    public function pushPage($pageId, $botUser)
-    {
-
-        /* $this->botUser = $botUser;
-
-         $this->chatId = $botUser->telegram_chat_id;*/
-
-        $this->runPage($pageId, $botUser);
-
+        return true;
     }
 
 
@@ -1086,7 +1021,7 @@ abstract class BotCore
         if (mb_strlen($query) < 10)
             return false;
 
-        $channel = $this->getSelf()->order_channel ??  null;
+        $channel = $this->getSelf()->order_channel ?? null;
         if (!is_null($channel)) {
 
             $botDomain = $this->getSelf()->bot_domain;

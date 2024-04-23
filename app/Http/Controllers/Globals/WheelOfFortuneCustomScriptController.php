@@ -272,9 +272,16 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 ->where("key", "next_win_page_id")
                 ->first())["value"] ?? null;
 
-            if (!is_null($nextWinPageId))
-                BotManager::bot()
-                    ->runPage($nextWinPageId);
+            if (!is_null($nextWinPageId)) {
+                $isRun = BotManager::bot()
+                    ->runPage($nextWinPageId, $bot, $botUser);
+
+                if (!$isRun)
+                    BotManager::bot()
+                        ->runSlug($nextWinPageId, $bot, $botUser);
+            }
+
+
         }
 
         return response()->noContent();
@@ -392,11 +399,10 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
             $bot = BotManager::bot()->getSelf();
 
-            if (!is_null($profileScriptId) ) {
+            if (!is_null($profileScriptId)) {
 
                 BotManager::bot()
-                    ->setBot($bot)
-                    ->runSlug($profileScriptId);
+                    ->runSlug($profileScriptId, $bot, $botUser);
 
             } else {
                 $keyboard = [
