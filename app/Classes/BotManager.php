@@ -606,6 +606,8 @@ class BotManager extends BotCore
 
         if (!is_null($bot)) {
             $this->setApiToken($bot->bot_domain);
+
+            include_once base_path('routes/bot.php');
         }
 
 
@@ -675,6 +677,7 @@ class BotManager extends BotCore
 
         if (!is_null($bot)) {
             $this->setApiToken($bot->bot_domain);
+            include_once base_path('routes/bot.php');
         }
 
 
