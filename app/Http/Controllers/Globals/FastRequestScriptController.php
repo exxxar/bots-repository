@@ -258,7 +258,7 @@ class FastRequestScriptController extends SlugController
         }
 
 
-        try {
+
             $menu = BotMenuTemplate::query()
                 ->updateOrCreate(
                     [
@@ -270,31 +270,25 @@ class FastRequestScriptController extends SlugController
                     'menu' => [
                         [
                             ["text" => "$btnText", "callback_data" => is_null($parentPageId) ?
-                                "/request_callback_without_page $slugId" :
-                                "/request_callback $slugId $parentPageId"
+                                "/service_request_callback_without_page $slugId" :
+                                "/service_request_callback $slugId $parentPageId"
                             ],
                         ],
                     ],
                 ]);
-            Log::info("FAST REQUEST test 1");
+
             if (is_null($mainImage)) {
-                Log::info("FAST REQUEST test 2");
+
                 \App\Facades\BotManager::bot()
                     ->replyInlineKeyboard("$preText", $menu->menu);
             } else
             {
-                Log::info("FAST REQUEST test 3");
+
                 \App\Facades\BotManager::bot()
                     ->replyPhoto("$preText", $mainImage, $menu->menu);
             }
 
-            Log::info("FAST REQUEST test 3");
-        } catch (\Exception $exception) {
-            Log::info("FAST REQUEST ERROR" . $exception);
 
-            \App\Facades\BotManager::bot()
-                ->reply("$preText");
-        }
 
 
     }
