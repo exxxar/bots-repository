@@ -155,6 +155,7 @@ class FastRequestScriptController extends SlugController
 
         $bot = BotManager::bot()->getSelf();
 
+        Log::info("TEST FAST REQUEST 1");
         $from = !is_null($page) ? $page->slug->command ?? 'Источник запроса не указан' : 'Источник запроса не указан';
         $sex = $botUser->sex ? "Мужской" : "Женский";
         $phone = $botUser->phone ?? 'Не указан';
@@ -170,8 +171,14 @@ class FastRequestScriptController extends SlugController
                 $thread
 
             );
+        Log::info("TEST FAST REQUEST 2");
+        try {
+            BotManager::bot()->reply(sprintf($resultText, $name));
+        }catch (\Exception $e){
+            BotManager::bot()->reply("Спасибо! Ваш запрос отправлен!");
+        }
 
-        BotManager::bot()->reply(sprintf($resultText, $name));
+        Log::info("TEST FAST REQUEST 3");
     }
 
     public function fastRequest(...$config)
