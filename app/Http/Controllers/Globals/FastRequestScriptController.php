@@ -270,8 +270,8 @@ class FastRequestScriptController extends SlugController
                     'menu' => [
                         [
                             ["text" => "$btnText", "callback_data" => is_null($parentPageId) ?
-                                "/service_request_callback_without_page $slugId" :
-                                "/service_request_callback $slugId $parentPageId"
+                                "/service_callback_without_page $slugId" :
+                                "/service_callback $slugId $parentPageId"
                             ],
                         ],
                     ],
