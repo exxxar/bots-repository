@@ -258,30 +258,38 @@ class FastRequestScriptController extends SlugController
         }
 
 
-        $menu = BotMenuTemplate::query()
-            ->updateOrCreate(
-                [
-                    'bot_id' => $bot->id,
-                    'type' => 'inline',
-                    'slug' => "menu_fast_request_$slugId",
-
-                ], [
-                'menu' => [
+        try {
+            $menu = BotMenuTemplate::query()
+                ->updateOrCreate(
                     [
-                        ["text" => "$btnText", "callback_data" => is_null($parentPageId) ?
-                            "/request_callback_without_page $slugId" :
-                            "/request_callback $slugId $parentPageId"
+                        'bot_id' => $bot->id,
+                        'type' => 'inline',
+                        'slug' => "menu_fast_request_$slugId",
+
+                    ], [
+                    'menu' => [
+                        [
+                            ["text" => "$btnText", "callback_data" => is_null($parentPageId) ?
+                                "/request_callback_without_page $slugId" :
+                                "/request_callback $slugId $parentPageId"
+                            ],
                         ],
                     ],
-                ],
-            ]);
+                ]);
 
-        if (is_null($mainImage))
+            if (is_null($mainImage))
+                \App\Facades\BotManager::bot()
+                    ->replyInlineKeyboard("$preText", $menu->menu);
+            else
+                \App\Facades\BotManager::bot()
+                    ->replyPhoto("$preText", $mainImage, $menu->menu);
+        }catch (\Exception $exception){
+            Log::info("FAST REQUEST ERROR".$exception);
+
             \App\Facades\BotManager::bot()
-                ->replyInlineKeyboard("$preText", $menu->menu);
-        else
-            \App\Facades\BotManager::bot()
-                ->replyPhoto("$preText", $mainImage, $menu->menu);
+                ->reply("$preText");
+        }
+
 
 
     }
