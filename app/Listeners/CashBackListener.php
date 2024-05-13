@@ -101,7 +101,7 @@ class CashBackListener
                 $this->prepareLevel(
                     $nextBotUser,
                     $botUserAdmin,
-                    $bot->id,
+                    $bot,
                     $event->amount,
                     $level,
                     $index
@@ -116,7 +116,6 @@ class CashBackListener
 
 
                 if (is_null($nextBotUser)) {
-                    Log::info("break");
                     break;
                 }
 
@@ -174,6 +173,9 @@ class CashBackListener
                 'employee_id' => $event->adminId,
             ]);
 
+            $thread = $bot->topics["cashback"] ?? null;
+            $channel = $bot->order_channel ?? null;
+
             BotMethods::bot()
                 ->whereId($event->botId)
                 ->sendMessage(
@@ -183,6 +185,10 @@ class CashBackListener
                 ->sendMessage(
                     $botUserUser->telegram_chat_id,
                     "С вашего счета успешно списано <b>$event->amount руб.</b> CashBak. Списание произвел администратор $tmpAdmin",
+                )
+                ->sendMessage(
+                    $channel,
+                    "Администратор $tmpAdmin успешно списал <b>  $event->amount руб.</b> CashBak у пользователя $tmpUser", $thread
                 );
 
         }
@@ -207,7 +213,7 @@ class CashBackListener
 
     }
 
-    private function prepareLevel($userBotUser, $adminBotUser, $botId, $moneyAmount, $levelPercent, $levelIndex)
+    private function prepareLevel($userBotUser, $adminBotUser, $bot, $moneyAmount, $levelPercent, $levelIndex)
     {
 
 
@@ -216,14 +222,18 @@ class CashBackListener
 
         $tmpAmount = $moneyAmount * ($levelPercent / 100);
         // Log::info("cashback level=$levelIndex amount=$moneyAmount %=$levelPercent");
-        $cashBack = $this->prepareUserCashBack($botId, $userBotUser->id);
+        $cashBack = $this->prepareUserCashBack($bot->id, $userBotUser->id);
         $cashBack->amount += $tmpAmount;
         $cashBack->save();
 
         $name = BotMethods::prepareUserName($userBotUser);
+        $tmpAdmin = BotMethods::prepareUserName($adminBotUser);
+
+        $thread = $bot->topics["cashback"] ?? null;
+        $channel = $bot->order_channel ?? null;
 
         BotMethods::bot()
-            ->whereId($botId)
+            ->whereId($bot->id)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
                 "Вам начислили <b>$tmpAmount руб.</b> CashBack $levelIndex уровня",
@@ -231,6 +241,10 @@ class CashBackListener
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,
                 "Вы начислили <b>$tmpAmount руб.</b> CashBack пользователю $name $levelIndex уровня",
+            )
+            ->sendMessage(
+                $channel,
+                "Администратор $tmpAdmin успешно начислил <b>  $tmpAmount руб.</b> CashBaсk пользователю $name", $thread
             );
 
         $this->checkWarnings($moneyAmount, CashBackDirectionEnum::None, $levelIndex);

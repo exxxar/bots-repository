@@ -1045,7 +1045,7 @@ export default {
                     value: null,
                 },
                 {
-                    title: 'Начисление cashback',
+                    title: 'Операции с cashback',
                     key: 'cashback',
                     value: null,
                 },
@@ -1064,6 +1064,7 @@ export default {
                     key: 'orders',
                     value: null,
                 },
+
                 {
                     title: 'Вывод средств',
                     key: 'ask-money',
