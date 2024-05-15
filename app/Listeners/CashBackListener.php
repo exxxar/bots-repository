@@ -257,7 +257,7 @@ class CashBackListener
             'description' => "Реферальное начисление CashBack $levelIndex уровня",
             'operation_type' => 1,
             'user_id' => $userBotUser->user_id,
-            'bot_id' => $botId,
+            'bot_id' => $bot->id,
             'employee_id' => $adminBotUser->user_id,
         ]);
 
