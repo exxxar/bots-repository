@@ -15,6 +15,8 @@ import Appointments from '@/ClientTg/Pages/Appointment/Appointments.vue';
 
 
 import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
+import PaymentSBP from '@/ClientTg/Pages/Shop/PaymentSBP.vue';
+import ClientPromocode from '@/ClientTg/Pages/Shop/Promocode.vue';
 
 import FoodConstructors from '@/ClientTg/Pages/FoodConstructors.vue';
 
@@ -66,6 +68,7 @@ import ManagerPartners from '@/ClientTg/Pages/Manager/Partners.vue';
 
 import DeliverymanForm from '@/ClientTg/Pages/Delivery/DeliveryManForm.vue';
 
+
 export const routes = [
 
     {
@@ -83,6 +86,18 @@ export const routes = [
         path: '/vip',
         component: Vip,
         meta: { title: 'VIP-анкета', hide_menu:true }
+    },
+    {
+        name: 'PaymentSBP',
+        path: '/payment-sbp-main/:amount',
+        component: PaymentSBP,
+        meta: { title: 'Оплата по СБП', hide_menu:true }
+    },
+    {
+        name: 'ClientPromocode',
+        path: '/promocode-main',
+        component: ClientPromocode,
+        meta: { title: 'Ввод промокода', hide_menu:true }
     },
     {
         name: 'appointments',

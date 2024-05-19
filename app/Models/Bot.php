@@ -171,6 +171,11 @@ class Bot extends Model
         return $this->hasOne(AmoCrm::class);
     }
 
+    public function frontPad(): HasOne
+    {
+        return $this->hasOne(FrontPad::class);
+    }
+
     public function YClients(): HasOne
     {
         return $this->hasOne(YClients::class);

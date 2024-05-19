@@ -51,7 +51,9 @@ BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\ScheduleBotScriptController::class)
     ->slug("global_schedule_bot_main", "scheduleBotMain");
 
-
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\PromocodeScriptController::class)
+    ->slug("global_promocode_main", "promocodeScriptRun");
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\SinglePaymentScriptController::class)
@@ -64,6 +66,10 @@ BotManager::bot()
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\VenueScriptController::class)
     ->slug("global_venue_main", "venueScript");
+
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\PromocodeScriptController::class)
+    ->slug("global_promocode_main", "promocodeScriptRun");
 
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\SendContactScriptController::class)

@@ -538,6 +538,9 @@ class ProductLogicFactory
         $cash = ($data["cash"] ?? "false") == "true";
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
 
+        $persons = $data["persons"] ?? 1;
+        $time = $data["time"] ?? null;
+        $whenReady = ($data["when_ready"] ?? "false") == "true";
 
         $summaryPrice = 0;
         $summaryCount = 0;
@@ -584,6 +587,8 @@ class ProductLogicFactory
             . "Номер этажа: " . ($data["floor_number"] ?? 'Не указан') . "\n"
             . "Тип оплаты: " . ($cash ? "Наличкой" : "Картой") . "\n"
             . "Сдача с:" . ($data["money"] ?? 'Не указано') . "\n"
+            . "Время доставки:" . ($whenReady ? "По готовности": Carbon::parse($time)->format('Y-m-d H:i')) . "\n"
+            . "Число персон:" .$persons . "\n"
             . "Ограничения пользователя:\n" . ($disabilitiesText ?? 'не указаны');
 
         if (isset($data["address"]))
@@ -656,7 +661,7 @@ class ProductLogicFactory
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
 
         $userInfo = !$needPickup ?
-            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
+            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
@@ -667,13 +672,17 @@ class ProductLogicFactory
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
-            ) : sprintf("Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\n",
+                ($whenReady ? "По готовности": Carbon::parse($time)->format('Y-m-d H:i')),
+                $persons
+            ) : sprintf("Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nЗаберу в:%s\nЧисло персон: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
-                $data["info"] ?? 'Не указано'
+                $data["info"] ?? 'Не указано',
+                ($whenReady ? "По готовности": Carbon::parse($time)->format('Y-m-d H:i')),
+                $persons
             );
 
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';

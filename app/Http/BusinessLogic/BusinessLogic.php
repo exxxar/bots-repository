@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic;
 
 use App\Http\BusinessLogic\Methods\AmoLogicFactory;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory;
+use App\Http\BusinessLogic\Methods\FrontPadLogicFactory;
 use App\Http\BusinessLogic\Methods\InlineQueryLogicFactory;
 use App\Http\BusinessLogic\Methods\MailingLogicFactory;
 use App\Http\BusinessLogic\Methods\PaymentLogicFactory;
@@ -48,6 +49,7 @@ class BusinessLogic
     protected PromoCodesLogicFactory $promoCodes;
     protected InlineQueryLogicFactory $inlineQueries;
     protected MailingLogicFactory $mailing;
+    protected FrontPadLogicFactory $frontPad;
 
     public function __construct()
     {
@@ -72,6 +74,7 @@ class BusinessLogic
         $this->promoCodes = new PromoCodesLogicFactory();
         $this->inlineQueries = new InlineQueryLogicFactory();
         $this->mailing = new MailingLogicFactory();
+        $this->frontPad = new FrontPadLogicFactory();
     }
 
     public function bots(): BotLogicFactory
@@ -82,6 +85,11 @@ class BusinessLogic
     public function mailing(): MailingLogicFactory
     {
         return $this->mailing;
+    }
+
+    public function frontPad(): FrontPadLogicFactory
+    {
+        return $this->frontPad;
     }
 
     public function inlineQuery(): InlineQueryLogicFactory

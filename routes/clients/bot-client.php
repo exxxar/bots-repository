@@ -167,6 +167,20 @@ Route::prefix("bot-client")
 
             });
 
+        Route::prefix("payments")
+            ->controller(\App\Http\Controllers\Globals\PaymentSBPScriptController::class)
+            ->group(function () {
+                Route::get("/providers", "getProviders");
+
+            });
+
+        Route::prefix("promocodes")
+            ->middleware(["tgAuth.any", "slug"])
+            ->controller(\App\Http\Controllers\Globals\PromocodeScriptController::class)
+            ->group(function () {
+                Route::post("/activate", "activate");
+            });
+
         Route::prefix("appointments")
             ->controller(\App\Http\Controllers\Bots\Web\AppointmentController::class)
             ->middleware(["tgAuth.any"])

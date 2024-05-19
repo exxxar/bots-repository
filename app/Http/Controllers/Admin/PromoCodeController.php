@@ -56,7 +56,7 @@ class PromoCodeController extends Controller
 
         return BusinessLogic::promoCodes()
             ->setBot($bot ?? null)
-            ->setBotUser($request->botUser ?? null)
+            ->setBotUser($botUser ?? $request->botUser ?? null)
             ->activatePromoCode(
                $request->all()
             );

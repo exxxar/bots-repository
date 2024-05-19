@@ -80,7 +80,6 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 </button>
 
 
-
             </div>
 
             <div class="row">
@@ -116,8 +115,6 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <p>К сожалению, никаких товаров еще нет в магазине:(</p>
         </div>
     </div>
-
-
 
 
     <form
@@ -241,6 +238,30 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                           type="text" placeholder=""></textarea>
             </div>
 
+            <p class="mb-0 text-left">К какому времени заказ должен быть готов?</p>
+            <div class="custom-control ios-switch ios-switch-icon my-3">
+                <input type="checkbox"
+                       v-model="deliveryForm.when_ready"
+                       class="ios-input" id="toggle-when-ready">
+                <label class="custom-control-label pl-5" for="toggle-when-ready" v-if="!deliveryForm.when_ready">Ко
+                    времени</label>
+                <label class="custom-control-label pl-5" for="toggle-when-ready" v-if="deliveryForm.when_ready">По
+                    готовности</label>
+                <i class="fa-solid fa-clock font-11 color-white" style="left:8px;"></i>
+                <i class="fa-solid fa-mug-hot font-11 color-white" style="margin-left: 24px;"></i>
+            </div>
+
+
+            <div
+                v-if="!deliveryForm.when_ready"
+                class="input-style input-style-2 has-icon">
+                <i class="input-icon fa-regular fa-clock"></i>
+                <input class="form-control"
+                       type="datetime-local"
+                       v-model="deliveryForm.time"
+                       placeholder="Время доставки">
+            </div>
+
             <p class="mb-0 text-left " v-if="!deliveryForm.need_pickup">Ограничения по здоровью</p>
             <div class="custom-control ios-switch ios-switch-icon my-3" v-if="!deliveryForm.need_pickup">
                 <input type="checkbox"
@@ -321,15 +342,15 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <i class="fa-solid fa-credit-card  font-11 color-white" style="margin-left: 24px;"></i>
             </div>
 
-            <div v-if="deliveryForm.cash&&settings.can_use_cash" >
+            <div v-if="deliveryForm.cash&&settings.can_use_cash">
                 <h6>Мы можем подготовить для вас сдачу с:</h6>
                 <div class="row row-cols-2 mb-0">
-                    <div class="col"  v-for="money in moneyVariants">
+                    <div class="col" v-for="money in moneyVariants">
                         <button class="btn btn-outline-success w-100 mb-2 rounded-xl"
                                 type="button"
                                 @click="deliveryForm.money=money"
                                 v-bind:class="{'btn-success text-white':deliveryForm.money===money}"
-                               >{{ money }}₽
+                        >{{ money }}₽
                         </button>
                     </div>
 
@@ -347,10 +368,31 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                            placeholder="С какой суммы нужна сдача">
                 </div>
             </div>
+            <p class="mb-0 text-left">Число персон</p>
+            <div class="row text-center mr-2 ml-2 mb-3">
 
+                <div class="col-4 mb-n2">
+                    <button
+                        @click="decPersons"
+                        type="button" class="btn p-2 w-100 bg-green1-dark  rounded-l m-0"><i
+                        class="fa-solid fa-minus font-22"></i></button>
+                </div>
+
+                <div class="col-4 mb-n2 d-flex justify-content-center align-items-center">
+                    <strong class="font-22">{{ deliveryForm.persons }}</strong>
+                </div>
+
+                <div class="col-4 mb-n2">
+                    <button type="button"
+                            @click="incPersons"
+                            class="btn p-2 w-100 bg-green2-dark rounded-l m-0"><i
+                        class="fa-solid fa-plus font-22"></i></button>
+                </div>
+
+            </div>
 
             <p v-if="settings.delivery_price_text" v-html="settings.delivery_price_text"></p>
-            <p v-if="settings.min_price">Минимальная цена заказа {{settings.min_price || 0}} руб</p>
+            <p v-if="settings.min_price">Минимальная цена заказа {{ settings.min_price || 0 }} руб</p>
             <button
                 type="submit"
                 :disabled="spent_time_counter>0||settings.min_price>cartTotalPrice"
@@ -385,7 +427,7 @@ export default {
         return {
             settings: {
                 can_use_cash: true,
-                delivery_price_text:null,
+                delivery_price_text: null,
                 min_price: 0
             },
             product_type_display: 1,
@@ -414,6 +456,9 @@ export default {
                 disabilities: [],
                 money: null,
                 cash: true,
+                persons: 1,
+                time: null,
+                when_ready: true,// по готовности
             },
         }
     },
@@ -485,6 +530,12 @@ export default {
             this.loadActualProducts()
     },
     methods: {
+        decPersons() {
+            this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;
+        },
+        incPersons() {
+            this.deliveryForm.persons = this.deliveryForm.persons < 100 ? this.deliveryForm.persons + 1 : this.deliveryForm.persons;
+        },
         selectProductTypeDisplay(type) {
             this.product_type_display = type
             localStorage.setItem("cashman_self_product_type_display", this.product_type_display)
@@ -629,6 +680,7 @@ export default {
 .content {
     margin: 10px 10px 10px 10px !important;
 }
+
 .go-to-cart {
     position: fixed;
     bottom: 0px;

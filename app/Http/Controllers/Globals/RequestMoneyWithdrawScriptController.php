@@ -65,10 +65,10 @@ class RequestMoneyWithdrawScriptController extends SlugController
 
         ];
 
-        if (count($mainScript->config ?? []) != count($params)) {
+
             $mainScript->config = $params;
             $mainScript->save();
-        }
+
 
 
 
@@ -170,7 +170,6 @@ class RequestMoneyWithdrawScriptController extends SlugController
 
         $cashBackAmount = $botUser->cashBack->amount ?? 0;
 
-        Log::info("cashback=>".print_r($botUser->cashBack, true));
 
         \App\Facades\BotManager::bot()
             ->replyPhoto(($cashBackAmount < $minCashOutValue ?

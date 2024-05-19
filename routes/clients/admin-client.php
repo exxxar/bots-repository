@@ -116,6 +116,7 @@ Route::prefix("admin")
                 Route::post("/save-y-clients", [YClientsController::class, "saveYClients"]);
                 Route::post('/update-shop-link', "updateShopLink");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);
+                Route::post("/save-front-pad", [\App\Http\Controllers\FrontPadController::class, "saveFrontPad"]);
                 Route::post("/bot-update", "updateBot");
                 Route::post("/bot-webhook-update", "updateWebhook");
                 Route::post("/user-status", "changeUserStatus");

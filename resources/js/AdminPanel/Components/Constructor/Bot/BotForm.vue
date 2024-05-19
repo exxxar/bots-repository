@@ -88,7 +88,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     <li class="nav-item" @click="tab=1">
                         <a class="nav-link"
                            v-bind:class="{'active':tab===1}"
-                           href="javascript:void(0)">Кэшбэк</a>
+                           href="javascript:void(0)">Кэшбэк&Финансы</a>
                     </li>
                     <li class="nav-item" v-if="botForm.id!=null" @click="tab=2">
                         <a class="nav-link"

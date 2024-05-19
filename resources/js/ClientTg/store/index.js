@@ -28,6 +28,8 @@ import media from "./modules/media";
 import quiz from "./modules/quiz";
 import profileForm from "./modules/profile";
 import appointments from "./modules/appointments";
+import payments from "./modules/payment";
+import promocodes from "./modules/promocodes";
 
 import util from "./modules/utilites";
 
@@ -132,6 +134,8 @@ export default createStore({
         quiz,
         chatHistory,
         profileForm,
-        appointments
+        appointments,
+        payments,
+        promocodes
     }
 })

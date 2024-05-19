@@ -164,3 +164,6 @@ Route::apiResource('promo-code', \App\Http\Controllers\Admin\PromoCodeController
 
 
 Route::apiResource('bot-dialog-answer', App\Http\Controllers\BotDialogAnswerController::class);
+
+
+Route::apiResource('front-pad', App\Http\Controllers\FrontPadController::class);
