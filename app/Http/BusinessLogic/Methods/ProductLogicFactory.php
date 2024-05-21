@@ -13,6 +13,7 @@ use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\Basket;
 use App\Models\Bot;
+use App\Models\BotUser;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -782,6 +783,24 @@ class ProductLogicFactory
                 ]);
         }
 
+        if ($useCashback) {
+
+            $adminBotUser = BotUser::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("is_admin", true)
+                ->orderBy("updated_at", "desc")
+                ->first();
+
+            if (!is_null($adminBotUser))
+                BusinessLogic::administrative()
+                    ->setBotUser($adminBotUser)
+                    ->setBot($this->bot ?? null)
+                    ->removeCashBack([
+                        "user_telegram_chat_id" => $this->botUser->telegram_chat_id,
+                        "amount" => $discount ?? 0,
+                        "info" => "Автоматическое списание скидки на покупку товара",
+                    ]);
+        }
 
     }
 
