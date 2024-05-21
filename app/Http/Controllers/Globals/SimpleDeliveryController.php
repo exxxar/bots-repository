@@ -228,7 +228,7 @@ class SimpleDeliveryController extends SlugController
                     ->first())["value"] ?? 100 : 100,
                 'min_price_for_cashback' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "min_price_for_cashback")
-                    ->first())["value"] ?? 0 : 0,
+                    ->first())["value"] ?? 2000 : 2000,
                 'can_use_cash' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "can_use_cash")
                     ->first())["value"] ?? true : true,
