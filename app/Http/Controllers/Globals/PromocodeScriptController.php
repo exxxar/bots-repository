@@ -28,7 +28,7 @@ class PromocodeScriptController extends SlugController
                 'bot_id' => null,
             ],
             [
-                'command' => ".*Ввод промоокода",
+                'command' => ".*Ввод промокода",
                 'comment' => "Позволяет пользователю вводить промокод и получать бонусы \ скидки",
             ]);
 

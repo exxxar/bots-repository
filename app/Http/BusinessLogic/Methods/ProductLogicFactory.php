@@ -535,6 +535,7 @@ class ProductLogicFactory
 
         $needPickup = ($data["need_pickup"] ?? "false") == "true";
         $hasDisability = ($data["has_disability"] ?? "false") == "true";
+        $useCashback = ($data["use_cashback"] ?? "false") == "true";
         $cash = ($data["cash"] ?? "false") == "true";
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
 
@@ -582,21 +583,28 @@ class ProductLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
+        $maxUserCashback = $this->botUser->cashback->amount ?? 0;
+        $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
+        $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
+        $discount = min($cashBackAmount, $maxUserCashback);
+
         $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
             . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
             . "Номер этажа: " . ($data["floor_number"] ?? 'Не указан') . "\n"
             . "Тип оплаты: " . ($cash ? "Наличкой" : "Картой") . "\n"
             . "Сдача с:" . ($data["money"] ?? 'Не указано') . "\n"
-            . "Время доставки:" . ($whenReady ? "По готовности": Carbon::parse($time)->format('Y-m-d H:i')) . "\n"
-            . "Число персон:" .$persons . "\n"
+            . "Время доставки:" . ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')) . "\n"
+            . "Число персон:" . $persons . "\n"
             . "Ограничения пользователя:\n" . ($disabilitiesText ?? 'не указаны');
 
-        if (isset($data["address"]))
-            $geo = BusinessLogic::geo()
-                ->setBot($this->bot ?? null)
-                ->getCoords([
-                    "address" => $data["address"]
-                ]);
+        $address = (($data["city"] ?? "") . "," . ($data["street"] ?? "") . "," . ($data["building"] ?? ""));
+
+
+        $geo = BusinessLogic::geo()
+            ->setBot($this->bot ?? null)
+            ->getCoords([
+                "address" => $address
+            ]);
 
         $shopCoords = (Collection::make($this->slug->config)
             ->where("key", "shop_coords")
@@ -626,6 +634,7 @@ class ProductLogicFactory
             $distance = $distanceObject->distance ?? 0;
 
         }
+
         //сделать чек на оплату (pdf)
         $order = Order::query()->create([
             'bot_id' => $this->bot->id,
@@ -649,7 +658,7 @@ class ProductLogicFactory
             'receiver_name' => $data["name"] ?? 'Нет имени',
             'receiver_phone' => $data["phone"] ?? 'Нет телефона',
 
-            'address' => $data["address"] ?? 'Нет адреса',
+            'address' => $address . "," . ($data["flat_number"] ?? ""),
             'receiver_latitude' => $geo->latitude ?? 0,
             'receiver_longitude' => $geo->longitude ?? 0,
 
@@ -658,30 +667,32 @@ class ProductLogicFactory
             'payed_at' => null,
         ]);
 
-        $message .= "Итого: $summaryPrice руб. за $summaryCount ед.";
+        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. Скидка: $discount руб.";
 
         $userInfo = !$needPickup ?
-            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
+            sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
-                $data["address"] ?? 'Не указано',
+                $address . "," . ($data["flat_number"] ?? ""),
                 $distance ?? 0, //$distance
                 $data["entrance_number"] ?? 'Не указано',
                 $data["floor_number"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
-                ($whenReady ? "По готовности": Carbon::parse($time)->format('Y-m-d H:i')),
+                $useCashback ? $discount : "нет",
+                ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')),
                 $persons
-            ) : sprintf("Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nЗаберу в:%s\nЧисло персон: %s\n",
+            ) : sprintf("Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nЗаберу в:%s\nЧисло персон: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 ($cash ? "Наличкой" : "Картой"),
                 $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
-                ($whenReady ? "По готовности": Carbon::parse($time)->format('Y-m-d H:i')),
+                $useCashback ? $discount : "нет",
+                ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')),
                 $persons
             );
 
@@ -706,7 +717,7 @@ class ProductLogicFactory
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
-                $this->bot->order_channel ??  null,
+                $this->bot->order_channel ?? null,
                 "$message\n\n$userInfo",
                 $keyboard,
                 $thread
@@ -732,7 +743,7 @@ class ProductLogicFactory
             "orderId" => $order->id,
             "name" => $order->receiver_name,
             "phone" => $order->receiver_phone,
-            "address" => $order->address,
+            "address" => $address . "," . ($data["flat_number"] ?? ""),
             "message" => ($data["info"] ?? 'Не указано'),
             "entranceNumber" => ($data["entrance_number"] ?? 'Не указано'),
             "floorNumber" => ($data["floor_number"] ?? 'Не указано'),
@@ -740,6 +751,7 @@ class ProductLogicFactory
             "money" => ($data["money"] ?? 'Не указано'),
             "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),
             "totalPrice" => $summaryPrice,
+            "discount" => $useCashback ? $discount : 0,
             "totalCount" => $summaryCount,
             "distance" => $distance ?? 0, //$distance
             "currentDate" => $current_date,

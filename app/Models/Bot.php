@@ -26,6 +26,7 @@ class Bot extends Model
         'company_id',
         'creator_id',
         'cashback_fire_percent',
+        'max_cashback_use_percent',
         'cashback_fire_period',
         'welcome_message',
         'bot_domain',

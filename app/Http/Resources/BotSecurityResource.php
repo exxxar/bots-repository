@@ -19,7 +19,9 @@ class BotSecurityResource extends JsonResource
             'title' => $this->title ?? null,
             'short_description' => $this->short_description ?? null,
             'long_description' => $this->long_description ?? null,
-
+            'cashback_fire_percent'=> $this->cashback_fire_percent ?? 0,
+            'cashback_fire_period'=> $this->cashback_fire_period ?? 0,
+            'max_cashback_use_percent'=> $this->max_cashback_use_percent ?? 0,
             'bot_domain' => $this->bot_domain,
             'welcome_message' => $this->welcome_message,
             'image' => $this->image,

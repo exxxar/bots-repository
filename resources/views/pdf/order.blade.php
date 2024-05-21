@@ -52,8 +52,10 @@
     <li>Дополнительная информация от заказчика <strong>{!! $message !!}</strong>
     </li>
     <li>Сумма заказа <strong>{{$totalPrice }} руб.</strong></li>
+    <li>Скидка за CashBack <strong>{{$discount ?? 0 }} руб.</strong></li>
+    <li>Итого к оплате <strong>{{$totalPrice - ($discount ?? 0) }} руб.</strong></li>
     @if($distance>0)
-    <li>Дистанция доставки <strong>{{$distance }} м</strong></li>
+        <li>Дистанция доставки <strong>{{$distance }} м</strong></li>
     @endif
     <li>Количество позиций в заказе <strong>{{$totalCount}} ед.</strong></li>
     <li>Дата и время осуществления заказа <strong>{{$currentDate}}!</strong></li>
@@ -61,33 +63,34 @@
 </ul>
 
 @if(!empty($products))
-<hr>
-<h3>Ваш заказ состоит из следующих позиций:</h3>
-<table>
+    <hr>
+    <h3>Ваш заказ состоит из следующих позиций:</h3>
+    <table>
 
-    <tr>
-        <td><strong>№</strong></td>
-        <td><strong>Название</strong></td>
-        <td><strong>Цена, руб</strong></td>
-        <td><strong>Количество, шт</strong></td>
-    </tr>
-
-    @foreach($products as $index=>$product)
         <tr>
-            <td><strong>{{$index+1}}</strong></td>
-            <td><strong>{{$product->title ?? 'не указан'}}</strong></td>
-            <td><strong>{{$product->price ?? 'не указан'}}</strong></td>
-            <td><strong>{{$product->count ?? 'не указан'}}</strong></td>
+            <td><strong>№</strong></td>
+            <td><strong>Название</strong></td>
+            <td><strong>Цена, руб</strong></td>
+            <td><strong>Количество, шт</strong></td>
         </tr>
-    @endforeach
 
-</table>
+        @foreach($products as $index=>$product)
+            <tr>
+                <td><strong>{{$index+1}}</strong></td>
+                <td><strong>{{$product->title ?? 'не указан'}}</strong></td>
+                <td><strong>{{$product->price ?? 'не указан'}}</strong></td>
+                <td><strong>{{$product->count ?? 'не указан'}}</strong></td>
+            </tr>
+        @endforeach
+
+    </table>
 @endif
 <hr>
 <h3>Как оплатить</h3>
 <p>{!! $paymentInfo !!}</p>
 <!--<h3>Ваш промокод для участия в акциях:</h3>
 <p>{{$code}} - всего доступно <strong>{{$promoCount}}</strong> активаций </p>-->
-<h4>Команда <span style='color:red'>{{$title}}</span> благодарит Вас за использование нашего сервиса! Мы стараемся быть лучше для Вас!</h4>
+<h4>Команда <span style='color:red'>{{$title}}</span> благодарит Вас за использование нашего сервиса! Мы стараемся быть
+    лучше для Вас!</h4>
 </body>
 </html>

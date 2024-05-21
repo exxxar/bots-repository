@@ -449,6 +449,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                 </div>
             </div>
 
+
             <div class="mb-2">
                 <div class="form-check">
                     <input class="form-check-input"
@@ -479,6 +480,20 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                            min="0"
                            max="100"
                            aria-describedby="cashback-fired-level">
+                </div>
+            </div>
+
+            <div class="col-md-12 col-12">
+                <div class="mb-3">
+                    <label class="form-label" id="cashback-max_cashback_use_percent">
+                        Автоматическое списание CashBack при покупке, % от цены товара</label>
+                    <input type="number" class="form-control"
+                           placeholder="%"
+                           aria-label="процент для списания CashBack при покупке"
+                           v-model="botForm.max_cashback_use_percent"
+                           min="0"
+                           max="100"
+                           aria-describedby="cashback-max_cashback_use_percent">
                 </div>
             </div>
 
@@ -1200,6 +1215,7 @@ export default {
                 image: null,
                 cashback_fire_percent: 0,
                 cashback_fire_period: 0,
+                max_cashback_use_percent: 0,
                 description: "Это ваш бот! Вот такое вот описание у него.",
                 info_link: null,
                 social_links: [],
@@ -1351,6 +1367,7 @@ export default {
                     callback_link: this.bot.callback_link || null,
                     cashback_fire_percent: this.bot.cashback_fire_percent || 0,
                     cashback_fire_period: this.bot.cashback_fire_period || 0,
+                    max_cashback_use_percent: this.bot.max_cashback_use_percent || 0,
                     image: this.bot.image || null,
                     commands: this.bot.commands || null,
 
@@ -1613,6 +1630,7 @@ export default {
                         callback_link: null,
                         cashback_fire_percent: 0,
                         cashback_fire_period: 0,
+                        max_cashback_use_percent: 0,
                         image: null,
 
                         description: null,

@@ -1348,6 +1348,7 @@ class BotLogicFactory
         $tmp->bot_type_id = $botType->id;
         $tmp->cashback_fire_percent = $data["cashback_fire_percent"] ?? 0;
         $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
+        $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
         $tmp->is_active = true;
         $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
         $tmp->is_template = $data["is_template"] == "true";
@@ -1491,6 +1492,7 @@ class BotLogicFactory
         $tmp->level_3 = $data["level_3"] ?? 0;
         $tmp->cashback_fire_percent = $data["cashback_fire_percent"] ?? 0;
         $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
+        $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
         $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;

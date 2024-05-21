@@ -151,7 +151,33 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 <div class="col-6 text-left"><h4>Суммарно, ед.</h4></div>
                 <div class="col-6 text-right"><h4>{{ cartTotalCount }} шт.</h4></div>
                 <div class="col-6 text-left"><h4>Суммарно, цена</h4></div>
-                <div class="col-6 text-right"><h4>{{ cartTotalPrice }}<sup>.00</sup>₽</h4></div>
+                <div class="col-6 text-right">
+                    <h4 v-if="!deliveryForm.use_cashback">{{ cartTotalPrice }}<sup>.00</sup>₽</h4>
+                    <h4 v-if="deliveryForm.use_cashback">{{ cartTotalPrice - cashbackLimit }}<sup>.00</sup>₽</h4>
+
+                </div>
+                <div class="col-6 text-left" v-if="getSelf.cashBack"><h4>Использовать CashBack</h4></div>
+
+                <div class="col-6 text-right" v-if="getSelf.cashBack">
+                    <div class="custom-control ios-switch ios-switch-icon my-3" v-if="!deliveryForm.need_pickup">
+                        <input type="checkbox"
+                               v-model="deliveryForm.use_cashback"
+                               class="ios-input" id="toggle-use_cashback">
+                        <label class="custom-control-label"
+                               style="padding-left:30px;"
+                               v-if="deliveryForm.use_cashback"
+                               for="toggle-use_cashback"></label>
+                        <label class="custom-control-label "
+                               style="padding-left:30px;"
+                               v-if="!deliveryForm.use_cashback"
+                               for="toggle-use_cashback"></label>
+                        <i class="fa-solid fa-hand-holding-heart font-11 color-white" style="left:8px;"></i>
+                        <i class="fa-solid fa-hand-holding-heart font-11 color-white" style="margin-left: 24px;"></i>
+
+                    </div>
+                </div>
+                <div class="col-6 text-left" v-if="deliveryForm.use_cashback"><h4>Доступно для списания</h4></div>
+                <div class="col-6 text-right" v-if="deliveryForm.use_cashback"><h4>{{ cashbackLimit }}₽</h4></div>
 
             </div>
 
@@ -197,12 +223,35 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <div
                 v-if="!deliveryForm.need_pickup"
                 class="input-style input-style-2 has-icon">
-                <i class="input-icon fa-solid fa-map-location-dot"></i>
+                <i class="input-icon fa-solid fa-city"></i>
 
                 <input class="form-control"
                        type="text"
-                       v-model="deliveryForm.address"
-                       placeholder="г.Краснодар, ул. Героя Яцкова 9к1, кв 35"
+                       v-model="deliveryForm.city"
+                       placeholder="Ваш город"
+                       required>
+            </div>
+
+            <div
+                v-if="!deliveryForm.need_pickup"
+                class="input-style input-style-2 has-icon">
+                <i class="input-icon fa-solid fa-road"></i>
+
+                <input class="form-control"
+                       type="text"
+                       v-model="deliveryForm.street"
+                       placeholder="Улица"
+                       required>
+            </div>
+
+            <div
+                v-if="!deliveryForm.need_pickup"
+                class="input-style input-style-2 has-icon">
+                <i class="input-icon fa-solid fa-house-user"></i>
+                <input class="form-control"
+                       type="text"
+                       v-model="deliveryForm.building"
+                       placeholder="Номер дома"
                        required>
             </div>
 
@@ -210,6 +259,17 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 v-if="!deliveryForm.need_pickup"
                 class="input-style input-style-2 has-icon">
                 <i class="input-icon fa-solid fa-door-open"></i>
+
+                <input class="form-control"
+                       type="text"
+                       v-model="deliveryForm.flat_number"
+                       placeholder="Номер квартиры">
+            </div>
+
+            <div
+                v-if="!deliveryForm.need_pickup"
+                class="input-style input-style-2 has-icon">
+                <i class="input-icon fa-solid fa-house-flag"></i>
 
                 <input class="form-control"
                        type="text"
@@ -395,7 +455,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
             <p v-if="settings.min_price">Минимальная цена заказа {{ settings.min_price || 0 }} руб</p>
             <button
                 type="submit"
-                :disabled="spent_time_counter>0||settings.min_price>cartTotalPrice"
+                :disabled="spent_time_counter>0||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)"
                 class="btn btn-full btn-sm rounded-l bg-highlight font-800 text-uppercase w-100 mb-2">
 
                 <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
@@ -448,11 +508,16 @@ export default {
                 name: null,
                 phone: null,
                 address: null,
+                city:null,
+                street:null,
+                building:null,
+                flat_number:null,
                 entrance_number: null,
                 floor_number: null,
                 info: null,
                 need_pickup: false,
                 has_disability: false,
+                use_cashback: false,
                 disabilities: [],
                 money: null,
                 cash: true,
@@ -472,7 +537,19 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice']),
+        ...mapGetters(['getProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+        getCurrentBot() {
+            return window.currentBot
+        },
+        cashbackLimit() {
+            let maxUserCashback = this.getSelf.cashBack.amount || 0
+            let summaryPrice = this.cartTotalPrice || 0
+            let botCashbackPercent = this.getCurrentBot.max_cashback_use_percent || 0
+
+            let cashBackAmount = (summaryPrice * (botCashbackPercent / 100));
+
+            return Math.min(cashBackAmount, maxUserCashback)
+        },
         filteredProducts() {
 
             if (!this.search)
@@ -493,6 +570,7 @@ export default {
     },
     mounted() {
 
+
         if (localStorage.getItem("cashman_self_product_delivery_counter") != null) {
             this.is_requested = true;
             this.startTimer(localStorage.getItem("cashman_self_product_delivery_counter"))
@@ -512,6 +590,18 @@ export default {
         this.deliveryForm.address = localStorage.getItem("cashman_self_product_delivery_form_address") != null ?
             localStorage.getItem("cashman_self_product_delivery_form_address") : null
 
+        this.deliveryForm.city = localStorage.getItem("cashman_self_product_delivery_form_city") != null ?
+            localStorage.getItem("cashman_self_product_delivery_form_city") : null
+
+        this.deliveryForm.street = localStorage.getItem("cashman_self_product_delivery_form_street") != null ?
+            localStorage.getItem("cashman_self_product_delivery_form_street") : null
+
+        this.deliveryForm.building = localStorage.getItem("cashman_self_product_delivery_form_building") != null ?
+            localStorage.getItem("cashman_self_product_delivery_form_building") : null
+
+        this.deliveryForm.flat_number = localStorage.getItem("cashman_self_product_delivery_form_flat_number") != null ?
+            localStorage.getItem("cashman_self_product_delivery_form_flat_number") : null
+
         this.deliveryForm.entrance_number = localStorage.getItem("cashman_self_product_delivery_form_entrance_number") != null ?
             localStorage.getItem("cashman_self_product_delivery_form_entrance_number") : null
 
@@ -528,6 +618,11 @@ export default {
 
         if (this.cartProducts.length > 0)
             this.loadActualProducts()
+
+
+        this.$nextTick(() => {
+            console.log("self=>", this.getSelf)
+        })
     },
     methods: {
         decPersons() {
@@ -612,6 +707,11 @@ export default {
             localStorage.setItem("cashman_self_product_delivery_form_name", this.deliveryForm.name || '')
             localStorage.setItem("cashman_self_product_delivery_form_phone", this.deliveryForm.phone || '')
             localStorage.setItem("cashman_self_product_delivery_form_address", this.deliveryForm.address || '')
+            localStorage.setItem("cashman_self_product_delivery_form_city", this.deliveryForm.city || '')
+            localStorage.setItem("cashman_self_product_delivery_form_street", this.deliveryForm.street || '')
+            localStorage.setItem("cashman_self_product_delivery_form_building", this.deliveryForm.building || '')
+            localStorage.setItem("cashman_self_product_delivery_form_flat_number", this.deliveryForm.flat_number || '')
+
             localStorage.setItem("cashman_self_product_delivery_form_entrance_number", this.deliveryForm.entrance_number || '')
             localStorage.setItem("cashman_self_product_delivery_form_entrance_disabilities", JSON.stringify(this.deliveryForm.disabilities || []))
 

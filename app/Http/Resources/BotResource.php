@@ -22,6 +22,7 @@ class BotResource extends JsonResource
             'long_description'=> $this->long_description ?? null,
             'cashback_fire_percent'=> $this->cashback_fire_percent ?? 0,
             'cashback_fire_period'=> $this->cashback_fire_period ?? 0,
+            'max_cashback_use_percent'=> $this->max_cashback_use_percent ?? 0,
             'is_template' => $this->is_template ?? false,
             'template_description' => $this->template_description ?? null,
             'company_id' => $this->company_id,
