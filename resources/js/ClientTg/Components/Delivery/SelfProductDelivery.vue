@@ -156,9 +156,10 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     <h4 v-if="deliveryForm.use_cashback">{{ cartTotalPrice - cashbackLimit }}<sup>.00</sup>₽</h4>
 
                 </div>
-                <div class="col-6 text-left" v-if="getSelf.cashBack"><h4>Использовать CashBack</h4></div>
+                <div class="col-6 text-left"
+                     v-if="getSelf.cashBack&&settings.min_price_for_cashback<cartTotalPrice"><h4>Использовать CashBack</h4></div>
 
-                <div class="col-6 text-right" v-if="getSelf.cashBack">
+                <div class="col-6 text-right" v-if="getSelf.cashBack&&settings.min_price_for_cashback<cartTotalPrice">
                     <div class="custom-control ios-switch ios-switch-icon my-3" v-if="!deliveryForm.need_pickup">
                         <input type="checkbox"
                                v-model="deliveryForm.use_cashback"
@@ -488,7 +489,8 @@ export default {
             settings: {
                 can_use_cash: true,
                 delivery_price_text: null,
-                min_price: 0
+                min_price: 0,
+                min_price_for_cashback: 0,
             },
             product_type_display: 1,
             spent_time_counter: 0,
