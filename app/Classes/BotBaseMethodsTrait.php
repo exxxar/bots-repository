@@ -117,9 +117,7 @@ trait BotBaseMethodsTrait
 
             $this->sendMessageOnCrash($tmp, "sendMessage");
 
-            Log::error($e->getMessage() . " " .
-                $e->getFile() . " " .
-                $e->getLine());
+
         }
         return $this;
     }
@@ -447,6 +445,11 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->{$func}($tmp);
         } catch (\Exception $e) {
+
+            Log::error("[1]$func=>".$e->getMessage() . " " .
+                $e->getFile() . " " .
+                $e->getLine());
+
             try {
                 $this->bot->sendMessage([
                     "chat_id" => $tmp["chat_id"],
@@ -454,7 +457,9 @@ trait BotBaseMethodsTrait
                     "parse_mode" => "HTML"
                 ]);
             } catch (\Exception $exception) {
-
+                Log::error("[2]$func=>".$exception->getMessage() . " " .
+                    $exception->getFile() . " " .
+                    $exception->getLine());
             }
 
 

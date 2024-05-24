@@ -147,7 +147,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
             </div>
             <div class="divider mt-4"></div>
-            <div class="row mb-0">
+            <div class="row mb-0" v-if="getSelf">
                 <div class="col-6 text-left"><h4>Суммарно, ед.</h4></div>
                 <div class="col-6 text-right"><h4>{{ cartTotalCount }} шт.</h4></div>
                 <div class="col-6 text-left"><h4>Суммарно, цена</h4></div>
@@ -157,7 +157,8 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
                 </div>
                 <div class="col-6 text-left"
-                     v-if="getSelf.cashBack&&settings.min_price_for_cashback<cartTotalPrice"><h4>Использовать CashBack</h4></div>
+                     v-if="getSelf.cashBack&&settings.min_price_for_cashback<cartTotalPrice"><h4>Использовать
+                    CashBack</h4></div>
 
                 <div class="col-6 text-right" v-if="getSelf.cashBack&&settings.min_price_for_cashback<cartTotalPrice">
                     <div class="custom-control ios-switch ios-switch-icon my-3" v-if="!deliveryForm.need_pickup">
@@ -510,10 +511,10 @@ export default {
                 name: null,
                 phone: null,
                 address: null,
-                city:null,
-                street:null,
-                building:null,
-                flat_number:null,
+                city: null,
+                street: null,
+                building: null,
+                flat_number: null,
                 entrance_number: null,
                 floor_number: null,
                 info: null,
@@ -544,7 +545,7 @@ export default {
             return window.currentBot
         },
         cashbackLimit() {
-            let maxUserCashback = this.getSelf.cashBack.amount || 0
+            let maxUserCashback = this.getSelf.cashBack ? this.getSelf.cashBack.amount : 0
             let summaryPrice = this.cartTotalPrice || 0
             let botCashbackPercent = this.getCurrentBot.max_cashback_use_percent || 0
 
@@ -621,10 +622,6 @@ export default {
         if (this.cartProducts.length > 0)
             this.loadActualProducts()
 
-
-        this.$nextTick(() => {
-            console.log("self=>", this.getSelf)
-        })
     },
     methods: {
         decPersons() {

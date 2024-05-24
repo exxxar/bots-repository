@@ -80,7 +80,7 @@ class GeoLogicFactory
      */
     public function getDistance(array $data): object
     {
-        Log::info("data in func =>". print_r($data, true));
+        Log::info("data in func =>" . print_r($data, true));
 
         if (is_null($this->bot))
             throw new HttpException(403, "Не выполнены условия функции");
@@ -88,44 +88,45 @@ class GeoLogicFactory
 
         $coords = $data["coords"] ?? [];
 
-        if (count($coords)==0)
+        if (count($coords) == 0)
             return (object)[
-                "duration"=>0,
-                "distance"=>0,
+                "duration" => 0,
+                "distance" => 0,
             ];
 
         $tmpCoords = "";
         $index = 0;
         foreach ($coords as $point) {
             $point = (object)$point;
-            $tmpCoords .= "$point->lon,$point->lat" . ($index != count($coords )-1 ? ";" : "");
+            $tmpCoords .= "$point->lon,$point->lat" . ($index != count($coords) - 1 ? ";" : "");
             $index++;
         }
 
         try {
 
-            Log::info("distance route "."https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
+            Log::info("distance route " . "https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
             $res = Http::get("https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
 
             $data = (object)$res->json();
 
+            Log::info("distance route result" . print_r($data, true));
             if ($data->code != "Ok")
                 return (object)[
-                    "duration"=>0,
-                    "distance"=>0,
+                    "duration" => 0,
+                    "distance" => 0,
                 ];
 
 
             return (object)[
-                "duration"=>$data->routes[0]["duration"] ?? 0,
-                "distance"=>$data->routes[0]["distance"] ?? 0,
+                "duration" => $data->routes[0]["duration"] ?? 0,
+                "distance" => $data->routes[0]["distance"] ?? 0,
             ];
 
 
         } catch (\Exception $exception) {
             return (object)[
-                "duration"=>0,
-                "distance"=>0,
+                "duration" => 0,
+                "distance" => 0,
             ];
         }
 
