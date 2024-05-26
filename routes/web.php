@@ -36,38 +36,51 @@ use Yclients\YclientsApi;
 |
 */
 
-Route::get("/test-frontpad", function (){
+Route::get("/test-frontpad", function () {
     $bot = Bot::query()
         ->with(["frontPad"])
         ->find(166);
 
-    return BusinessLogic::frontPad()
+    $result = BusinessLogic::frontPad()
         ->setBot($bot)
         ->getProducts();
+    $index = 0;
+    $test = "Запеченный мини-ролл  с томаго";
+    foreach ($result->name as $key => $name)
+        if ($name == $test) {
+            $index = $key;
+            break;
+        }
+
+    return [
+        "name" => $test,
+        "index" => $index,
+        "id" => $result->product_id[$index] ?? '-'
+    ];
 });
 
-Route::get("/test-word",function (){
+Route::get("/test-word", function () {
 
-    $path = storage_path()."/app/public";
-    if(!file_exists($path."/document.docx")){
-        $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($path."/demo.docx");
+    $path = storage_path() . "/app/public";
+    if (!file_exists($path . "/document.docx")) {
+        $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($path . "/demo.docx");
         $templateProcessor->setValue('name', 'Akbarali');
-        $templateProcessor->setValue('time','13.02.2021');
+        $templateProcessor->setValue('time', '13.02.2021');
         $templateProcessor->setValue('month', 'January');
-        $templateProcessor->setValue('state','Uzbekistan');
-        $templateProcessor->saveAs($path."/document.docx");
+        $templateProcessor->setValue('state', 'Uzbekistan');
+        $templateProcessor->saveAs($path . "/document.docx");
     }
 });
 
-Route::any("/integrations/1c/callback", function (Request $request){
-    Log::info("integrations".print_r($request->all(),true));
+Route::any("/integrations/1c/callback", function (Request $request) {
+    Log::info("integrations" . print_r($request->all(), true));
     return "success";
 });
 
-Route::get("/test-export", function (){
+Route::get("/test-export", function () {
 
-    $statuses = \App\Models\ActionStatus::query()->where("bot_id",2)->get();
-    return Excel::download(new \App\Exports\ExportArrayData($statuses->toArray()), 'invoices.xlsx',\Maatwebsite\Excel\Excel::XLSX);
+    $statuses = \App\Models\ActionStatus::query()->where("bot_id", 2)->get();
+    return Excel::download(new \App\Exports\ExportArrayData($statuses->toArray()), 'invoices.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 });
 
 
@@ -161,8 +174,8 @@ Route::get('/images-by-bot-id/{botId}/{fileName}',
 Route::get('/images/{companySlug}/{fileName}',
     [TelegramController::class, 'getFiles']);
 
-Route::get("/auth/telegram/{domain}/callback", [AuthenticatedSessionController::class,"telegramAuth"]);
-Route::any("/auth/tg-link", [AuthenticatedSessionController::class,"telegramLinkAuth"]);
+Route::get("/auth/telegram/{domain}/callback", [AuthenticatedSessionController::class, "telegramAuth"]);
+Route::any("/auth/tg-link", [AuthenticatedSessionController::class, "telegramLinkAuth"]);
 
 Route::prefix("bot")
     ->group(function () {
