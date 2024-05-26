@@ -72,6 +72,11 @@ Route::get("/test-word", function () {
     }
 });
 
+Route::any("/front-pad/callback/{domain}", function (Request $request, $domain) {
+    Log::info("front-pad callback $domain" . print_r($request->all(), true));
+    return "success";
+});
+
 Route::any("/integrations/1c/callback", function (Request $request) {
     Log::info("integrations" . print_r($request->all(), true));
     return "success";

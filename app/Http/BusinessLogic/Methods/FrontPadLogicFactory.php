@@ -115,18 +115,29 @@ class FrontPadLogicFactory
      */
     public function newOrder(array $data)
     {
-
-
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
         $validator = Validator::make($data, [
-            "product" => "required|array",
-            "product_kol" => "required|array",
+            "products" => "required",
         ]);
 
         if ($validator->fails())
             throw new ValidationException($validator);
+
+        /*
+         *
+         *    "title" => $product->title,
+                "count" => $tmpCount,
+                "price" => $tmpPrice,
+                'frontpad_article' => $product->frontpad_article ?? null,
+                'iiko_article' => $product->iiko_article ?? null,
+         */
+        $products = Collection::make($data["products"])
+            ->pluck("frontpad_article");
+
+        $productsKol = Collection::make($data["products"])
+            ->pluck("count");
 
         $frontPad = FrontPad::query()
             ->where("bot_id", $this->bot->id)
@@ -135,7 +146,7 @@ class FrontPadLogicFactory
         if (is_null($frontPad) || is_null($frontPad->token ?? null))
             throw new HttpException(404, "FrontPad не подключен!");
 
-        $hookUrl = $data["hook_url"] ?? $frontPad->hook_url ?? null;//
+        $hookUrl = env("app_url")."/front-pad/callback/".$this->bot->domain; //$data["hook_url"] ?? $frontPad->hook_url ?? null;//
         $channel = $data["channel"] ?? $frontPad->channel ?? null;//
         $affiliate= $data["affiliate"] ?? $frontPad->affiliate ?? null;//
         $point= $data["point"] ?? $frontPad->point ?? null;//
@@ -143,8 +154,8 @@ class FrontPadLogicFactory
 
         $result = Http::asForm()->post("", [
             'secret' => $frontPad->token,
-            'product' => $data["product"],//массив артикулов товаров [ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР];
-            'product_kol' => $data["product_kol"],//массив количества товаров [ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР];
+            'product' => $products,//массив артикулов товаров [ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР];
+            'product_kol' => $productsKol,//массив количества товаров [ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР];
             'product_mod' => $data["product_mod"]?? null,//массив модификаторов товаров, где значение элемента массива является ключом родителя
             'product_price' => $data["product_price"] ?? null,
             'score' => $data["score"] ?? null, //баллы для оплаты заказа

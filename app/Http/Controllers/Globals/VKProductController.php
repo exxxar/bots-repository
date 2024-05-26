@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use mysql_xdevapi\Exception;
 use VK\Client\VKApiClient;
 use VK\Exceptions\VKException;
 use VK\OAuth\Scopes\VKOAuthUserScope;
@@ -23,6 +24,8 @@ use VK\OAuth\VKOAuthResponseType;
 class VKProductController extends Controller
 {
     //protected string $vkUrl;
+
+    protected $fpProducts = null;
 
     public function getVKAuthLink(Request $request)
     {
@@ -45,6 +48,24 @@ class VKProductController extends Controller
         return response()->json([
             "url" => $browser_url
         ]);
+    }
+
+    protected function findFrontPadProduct($test): object
+    {
+        $index = 0;
+
+        foreach ($this->fpProducts["name"] as $key => $name)
+            if ($name == $test) {
+                $index = $key;
+                break;
+            }
+
+
+        return (object)[
+            "name" => $test,
+            "index" => $index,
+            "id" => $this->fpProducts["product_id"][$index] ?? '-'
+        ];
     }
 
     protected function importProducts($vkProducts, $bot, $album, &$results)
@@ -74,10 +95,16 @@ class VKProductController extends Controller
                 ->where("bot_id", $bot->id)
                 ->first();
 
+
+
+            if (!is_null($this->fpProducts ?? null))
+                $fpObject = $this->findFrontPadProduct($vkProduct->title);
+
             if (is_null($product)) {
                 $product = Product::query()->create([
                     'article' => $vkProduct->sku ?? null,
                     'vk_product_id' => $vkProduct->id,
+                    'frontpad_article' => $fpObject->id ?? null,
                     'title' => $vkProduct->title,
                     'description' => $vkProduct->description,
                     'images' => [
@@ -95,6 +122,7 @@ class VKProductController extends Controller
             } else {
                 $product->update([
                     'article' => $vkProduct->sku ?? null,
+                    'frontpad_article' => $fpObject->id ?? null,
                     'title' => $vkProduct->title,
                     'description' => $vkProduct->description,
                     'images' => [
@@ -184,7 +212,7 @@ class VKProductController extends Controller
 
             $vkCategory = $vkProduct->category ?? null;
 
-            Log::info("categories=>".print_r($vkCategory, true));
+            Log::info("categories=>" . print_r($vkCategory, true));
             if (!is_null($vkCategory)) {
                 $vkCategory = (object)$vkCategory;
 
@@ -217,7 +245,7 @@ class VKProductController extends Controller
                             'bot_id' => $bot->id,
                         ]);
 
-                    $tmpCategoryForSync[] = $productCategorySection->id;
+                $tmpCategoryForSync[] = $productCategorySection->id;
 
 
                 if (!is_null($album)) {
@@ -236,10 +264,10 @@ class VKProductController extends Controller
 
                     $tmpCategoryForSync[] = $productCategoryAlbum->id;
 
-                //    Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
+                    //    Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
                 }
 
-                if (count($tmpCategoryForSync)>0) {
+                if (count($tmpCategoryForSync) > 0) {
                     //Log::info("tmpCategoryForSync=>".print_r($tmpCategoryForSync,true));
                     $product->productCategories()->sync($tmpCategoryForSync);
                 }
@@ -269,15 +297,17 @@ class VKProductController extends Controller
             ->where("bot_domain", $state)
             ->first();
 
-        BusinessLogic::frontPad()
-            ->setBot($bot)
-            ->loadProducts();
 
         if (is_null($bot))
             return response()->noContent(404);
 
         if (is_null($bot->vk_shop_link))
             return response()->noContent(404);
+
+        $this->fpProducts = !is_null($bot->frontPad ?? null) && !is_null($bot->frontPad->token ?? null) ?
+            BusinessLogic::frontPad()
+                ->setBot($bot)
+                ->getProducts() : null;
 
         Log::info("1test $client_id $client_secret $redirect_uri $code $state");
 
@@ -286,6 +316,7 @@ class VKProductController extends Controller
         $response = $oauth->getAccessToken($client_id, $client_secret, $redirect_uri, $code);
         $access_token = $response['access_token'] ?? null;
         Log::info("2test $client_id $client_secret $redirect_uri $code " . $response['access_token']);
+
 
         $vk = new VKApiClient();
 
@@ -346,7 +377,7 @@ class VKProductController extends Controller
                     $this->importProducts($vkProducts, $bot, $album, $results);
 
                 }
-            else{
+            else {
                 $response = $vk->market()->get($access_token, [
                     'owner_id' => "-$data->object_id",
                     'need_variants' => 1,

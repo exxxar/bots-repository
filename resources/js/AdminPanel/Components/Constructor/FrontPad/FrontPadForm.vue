@@ -22,6 +22,7 @@
                    aria-describedby="token">
         </div>
 
+<!--
         <div class="col-md-6 mb-2">
             <label class="form-label" id="hook_url">
                 <Popper>
@@ -41,6 +42,7 @@
                    aria-describedby="hook_url" required>
 
         </div>
+-->
 
         <div class="col-md-6 col-12 mb-2">
             <label class="form-label" id="channel">

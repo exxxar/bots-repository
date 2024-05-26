@@ -577,7 +577,9 @@ class ProductLogicFactory
             $tmpOrderProductInfo[] = (object)[
                 "title" => $product->title,
                 "count" => $tmpCount,
-                "price" => $tmpPrice
+                "price" => $tmpPrice,
+                'frontpad_article' => $product->frontpad_article ?? null,
+                'iiko_article' => $product->iiko_article ?? null,
             ];
 
             $summaryCount += $tmpCount;
@@ -782,6 +784,24 @@ class ProductLogicFactory
                     "products" => $tmpProducts
                 ]);
         }
+
+        if (!is_null($this->bot->frontPad ?? null))
+            BusinessLogic::frontPad()
+                ->setBot($this->bot)
+                ->newOrder([
+                    "products" => $tmpOrderProductInfo,
+                    "phone" => $order->receiver_phone,
+                    "descr" => $data["info"] ?? 'Не указано',
+                    "name" => $order->receiver_name,
+                    "home" => ($data["building"] ?? ""),
+                    "street" => ($data["street"] ?? ""),
+                    'pod' => ($data["entrance_number"] ?? 'Не указано'),
+                    'et' => ($data["floor_number"] ?? 'Не указано'),
+                    'apart' => ($data["flat_number"] ?? ""),
+                    'person' => $persons,
+
+                ]);
+
 
         if ($useCashback) {
 
