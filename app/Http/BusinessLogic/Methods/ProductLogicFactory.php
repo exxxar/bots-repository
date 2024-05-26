@@ -788,6 +788,7 @@ class ProductLogicFactory
         if (!is_null($this->bot->frontPad ?? null))
             BusinessLogic::frontPad()
                 ->setBot($this->bot)
+                ->setBotUser($this->botUser)
                 ->newOrder([
                     "products" => $tmpOrderProductInfo,
                     "phone" => $order->receiver_phone,

@@ -2,6 +2,7 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Facades\BotMethods;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\FrontPadResource;
 use App\Models\AmoCrm;
@@ -17,11 +18,25 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class FrontPadLogicFactory
 {
     protected $bot;
+    protected $botUser;
+
 
     public function __construct()
     {
         $this->bot = null;
+        $this->botUser = null;
+    }
 
+    /**
+     * @throws HttpException
+     */
+    public function setBotUser($botUser): static
+    {
+        if (is_null($botUser))
+            throw new HttpException(400, "Пользователь бота не задан!");
+
+        $this->botUser = $botUser;
+        return $this;
     }
 
     public function setBot($bot): static
@@ -116,8 +131,8 @@ class FrontPadLogicFactory
      */
     public function newOrder(array $data)
     {
-        if (is_null($this->bot))
-            throw new HttpException(404, "Бот не найден!");
+        if (is_null($this->bot)||is_null($this->botUser))
+            throw new HttpException(404, "Требования функции не выполнены!");
 
         $validator = Validator::make($data, [
             "products" => "required",
@@ -188,6 +203,19 @@ class FrontPadLogicFactory
 
         ]);
 
+
+        if ($result->json("result")=='error')
+        {
+            if ($result->json("error")=="cash_close")
+            {
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendMessage(
+                        $this->botUser->telegram_chat_id,
+                        "В данный момент наше заведение закрыто! Попробуйте оформить ваш заказ позже:)"
+                    );
+            }
+        }
         Log::info("frontpad new order result ".print_r($result->json(), true));
 
         return $result->json();
