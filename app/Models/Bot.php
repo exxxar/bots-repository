@@ -90,7 +90,7 @@ class Bot extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    protected $with = ["company", "amo", "warnings", "fieldSettings",'YClients'];
+    protected $with = ["company", "amo", "warnings", "fieldSettings",'YClients','frontPad'];
     protected $appends = ['topics'];
 
     public function getTopicsAttribute()

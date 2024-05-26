@@ -20,6 +20,8 @@ class Product extends Model
     protected $fillable = [
         'article',
         'vk_product_id',
+        'frontpad_article',
+        'iiko_article',
         'title',
         'description',
         'images',

@@ -86,6 +86,25 @@
                     <label for="article">Артикул товара</label>
                 </div>
             </div>
+
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           v-model="productForm.frontpad_article"
+                           class="form-control" id="article" placeholder="name@example.com">
+                    <label for="article">Артикул товара FrontPad</label>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           v-model="productForm.iiko_article"
+                           class="form-control" id="article" placeholder="name@example.com">
+                    <label for="article">Артикул товара в IIKO</label>
+                </div>
+            </div>
+
             <div class="col-md-6">
 
                 <div class="form-floating mb-3">
@@ -363,7 +382,10 @@ export default {
             productForm: {
                 article: null,
                 vk_product_id: null,
-                title: null,
+                frontpad_article: null,
+                iiko_article: null,
+
+            title: null,
                 description: null,
                 images: [],
                 type: 1,
@@ -396,6 +418,8 @@ export default {
                     id: this.item.id || null,
                     article: this.item.article || null,
                     vk_product_id: this.item.vk_product_id || null,
+                    frontpad_article: this.item.frontpad_article || null,
+                    iiko_article: this.item.iiko_article || null,
                     title: this.item.title || null,
                     description: this.item.description || null,
                     images: this.item.images || null,

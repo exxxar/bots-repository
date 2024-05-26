@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Globals;
 
+use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BotSecurityResource;
 use App\Models\Bot;
@@ -264,8 +265,13 @@ class VKProductController extends Controller
 
 
         $bot = Bot::query()
+            ->with(["frontPad"])
             ->where("bot_domain", $state)
             ->first();
+
+        BusinessLogic::frontPad()
+            ->setBot($bot)
+            ->loadProducts();
 
         if (is_null($bot))
             return response()->noContent(404);

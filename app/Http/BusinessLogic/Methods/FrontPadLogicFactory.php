@@ -7,6 +7,8 @@ use App\Http\Resources\FrontPadResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\FrontPad;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -29,6 +31,152 @@ class FrontPadLogicFactory
         $this->bot = $bot;
         return $this;
     }
+
+    /**
+     * @throws HttpException
+     */
+    public function getProducts()
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $frontPad = FrontPad::query()
+            ->where("bot_id", $this->bot->id)
+            ->first();
+
+        if (is_null($frontPad) || is_null($frontPad->token ?? null))
+            throw new HttpException(404, "FrontPad не подключен!");
+
+        $result = Http::asForm()->post(config("frontpad.api_url")."?get_products", [
+            'secret' => $frontPad->token
+        ]);
+
+        $status = $result->json("result") ?? "error";
+
+        if ($status=="error")
+            throw new HttpException(403, "Ошибка получения списка товаров!");
+
+        return $result->json();
+    }
+
+    public function getClient($clientPhone)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $frontPad = FrontPad::query()
+            ->where("bot_id", $this->bot->id)
+            ->first();
+
+        if (is_null($frontPad) || is_null($frontPad->token ?? null))
+            throw new HttpException(404, "FrontPad не подключен!");
+
+        $result = Http::asForm()->post(config("frontpad.api_url")."?get_client", [
+            'secret' => $frontPad->token,
+            'client_phone'=>$clientPhone,
+        ]);
+
+        $status = $result->json("result") ?? "error";
+
+        if ($status=="error")
+            throw new HttpException(403, "Ошибка получения информации о клиенте!");
+
+        return $result->json();
+    }
+
+    public function getCertificate($certificate)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $frontPad = FrontPad::query()
+            ->where("bot_id", $this->bot->id)
+            ->first();
+
+        if (is_null($frontPad) || is_null($frontPad->token ?? null))
+            throw new HttpException(404, "FrontPad не подключен!");
+
+        $result = Http::asForm()->post(config("frontpad.api_url")."?get_certificate", [
+            'secret' => $frontPad->token,
+            'certificate'=>$certificate,
+        ]);
+
+        $status = $result->json("result") ?? "error";
+
+        if ($status=="error")
+            throw new HttpException(403, "Ошибка получения информации о сертификате!");
+
+        return $result->json();
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function newOrder(array $data)
+    {
+
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "product" => "required|array",
+            "product_kol" => "required|array",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $frontPad = FrontPad::query()
+            ->where("bot_id", $this->bot->id)
+            ->first();
+
+        if (is_null($frontPad) || is_null($frontPad->token ?? null))
+            throw new HttpException(404, "FrontPad не подключен!");
+
+        $hookUrl = $data["hook_url"] ?? $frontPad->hook_url ?? null;//
+        $channel = $data["channel"] ?? $frontPad->channel ?? null;//
+        $affiliate= $data["affiliate"] ?? $frontPad->affiliate ?? null;//
+        $point= $data["point"] ?? $frontPad->point ?? null;//
+
+
+        $result = Http::asForm()->post("", [
+            'secret' => $frontPad->token,
+            'product' => $data["product"],//массив артикулов товаров [ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР];
+            'product_kol' => $data["product_kol"],//массив количества товаров [ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР];
+            'product_mod' => $data["product_mod"]?? null,//массив модификаторов товаров, где значение элемента массива является ключом родителя
+            'product_price' => $data["product_price"] ?? null,
+            'score' => $data["score"] ?? null, //баллы для оплаты заказа
+            'sale' => $data["sale"] ?? null, //скидка, положительное, целое число от 1 до 100;
+            'card' => $data["card"] ?? null, //карта клиента, положительное, целое число до 16 знаков;
+            'street' => $data["street"] ?? null, //улица, длина до 50 знаков;
+            'home' => $data["home"] ?? null, // дом, длина до 50 знаков;
+            'pod' => $data["pod"] ?? null, //  подъезд, длина до 2 знаков;
+            'et' => $data["et"] ?? null, //этаж, длина до 2 знаков;
+            'apart' => $data["apart"] ?? null, //квартира, длина до 50 знаков;
+            'phone' => $data["phone"] ?? null, //телефон, длина до 50 знаков;
+            'mail' => $data["mail"] ?? null, //адрес электронной почты, длина до 50 знаков, доступно только с активной опцией автоматического сохранения клиентов;
+            'descr' => $data["descr"] ?? null, //примечание, длина до 100 знаков;
+            'name' => $data["name"] ?? null, //имя клиента, длина до 50 знаков;
+            'pay' => $data["pay"] ?? null, //отметка оплаты заказа, значение можно посмотреть в справочнике “Варианты оплаты”;
+            'certificate' => $data["certificate"] ?? null, //номер сертификата;
+            'person' => $data["person"] ?? 1, //оличество персон, длина 2 знака. Обратите внимание, привязка "автосписания" к количеству персон, переданному через api, не осуществляется;
+            'tags' => $data["tags"] ?? null, //массив отметок заказов, значение кодов API можно посмотреть в справочнике программы.
+            'hook_status' => $data["hook_status"] ?? null, //массив статусов заказов, значение кодов API можно посмотреть в справочнике программы.Передается в формате аналогичном массиву товаров (не более 5), см. пример;
+            'hook_url' => $hookUrl,// url для отправки вебхука по текущему заказу (если параметр не передан, вебхук будетотправлен по url из настроек API;
+            'channel' => $channel,// канал продаж, значение можно посмотреть в справочнике программы;
+            'datetime' => $data["datetime"] ?? null,//время “предзаказа”, указывается в формате ГГГГ-ММ-ДД ЧЧ:ММ:СС,
+            //например 2016-08-15 15:30:00. Максимальный период предзаказа - 30 дней от текущей даты;
+            'affiliate' => $affiliate, //филиал, значение можно посмотреть в справочнике программы;
+            'point' => $point,//точка продаж, значение можно посмотреть в справочнике программы.
+
+
+        ]);
+
+        return $result->json();
+    }
+
 
     /**
      * @throws ValidationException

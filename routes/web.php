@@ -36,6 +36,15 @@ use Yclients\YclientsApi;
 |
 */
 
+Route::get("/test-frontpad", function (){
+    $bot = Bot::query()
+        ->with(["frontPad"])
+        ->find(166);
+
+    return BusinessLogic::frontPad()
+        ->getProducts();
+});
+
 Route::get("/test-word",function (){
 
     $path = storage_path()."/app/public";
