@@ -9,6 +9,7 @@ use App\Models\Bot;
 use App\Models\FrontPad;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -184,6 +185,8 @@ class FrontPadLogicFactory
 
 
         ]);
+
+        Log::info("frontpad new order result ".print_r($result->json(), true));
 
         return $result->json();
     }
