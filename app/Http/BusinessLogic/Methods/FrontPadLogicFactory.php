@@ -135,9 +135,11 @@ class FrontPadLogicFactory
                 'iiko_article' => $product->iiko_article ?? null,
          */
         $products = Collection::make($data["products"])
+            ->whereNotNull("frontpad_article")
             ->pluck("frontpad_article");
 
         $productsKol = Collection::make($data["products"])
+            ->whereNotNull("frontpad_article")
             ->pluck("count");
 
         $frontPad = FrontPad::query()
