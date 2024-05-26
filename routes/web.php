@@ -42,6 +42,7 @@ Route::get("/test-frontpad", function (){
         ->find(166);
 
     return BusinessLogic::frontPad()
+        ->setBot($bot)
         ->getProducts();
 });
 
