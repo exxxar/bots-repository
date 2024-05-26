@@ -155,7 +155,7 @@ class FrontPadLogicFactory
         $point= $data["point"] ?? $frontPad->point ?? null;//
 
 
-        $result = Http::asForm()->post("", [
+        $result = Http::asForm()->post(config("frontpad.api_url")."?new_order", [
             'secret' => $frontPad->token,
             'product' => $products,//массив артикулов товаров [ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР];
             'product_kol' => $productsKol,//массив количества товаров [ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР];
