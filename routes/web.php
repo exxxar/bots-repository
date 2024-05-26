@@ -46,7 +46,7 @@ Route::get("/test-frontpad", function () {
         ->getProducts();
     $index = 0;
     $test = "Запеченный мини-ролл  с томаго";
-    foreach ($result->name as $key => $name)
+    foreach ($result["name"] as $key => $name)
         if ($name == $test) {
             $index = $key;
             break;
@@ -55,7 +55,7 @@ Route::get("/test-frontpad", function () {
     return [
         "name" => $test,
         "index" => $index,
-        "id" => $result->product_id[$index] ?? '-'
+        "id" => $result["product_id"][$index] ?? '-'
     ];
 });
 
