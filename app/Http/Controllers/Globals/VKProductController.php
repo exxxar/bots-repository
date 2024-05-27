@@ -50,9 +50,9 @@ class VKProductController extends Controller
         ]);
     }
 
-    protected function findFrontPadProduct($test): object
+    protected function findFrontPadProduct($test): ?object
     {
-        $index = 0;
+        $index = null;
 
         foreach ($this->fpProducts["name"] as $key=>$name)
         {
@@ -63,6 +63,8 @@ class VKProductController extends Controller
             //$index++;
         }
 
+        if (is_null($index))
+            return null;
 
         Log::info("product=>".($this->fpProducts["product_id"][$index] ?? '-')."----".($this->fpProducts["name"][$index]??'-'));
 
