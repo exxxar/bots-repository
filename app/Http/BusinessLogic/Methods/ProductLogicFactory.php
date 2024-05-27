@@ -800,7 +800,9 @@ class ProductLogicFactory
                     'et' => ($data["floor_number"] ?? 'Не указано'),
                     'apart' => ($data["flat_number"] ?? ""),
                     'person' => $persons,
-
+                    'datetime' => ($whenReady ? Carbon::now()
+                        ->format("Y-m-d H:i:s")
+                        : Carbon::parse($time)->format('Y-m-d H:i:s')),
                 ]);
 
 
