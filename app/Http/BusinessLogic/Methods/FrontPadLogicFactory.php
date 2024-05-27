@@ -153,13 +153,13 @@ class FrontPadLogicFactory
             ->whereNotNull("frontpad_article")
             ->pluck("frontpad_article")->toArray());
 
-        Log::info("products=>".print_r($products));
+        Log::info("products=>".print_r($products, true));
 
         $productsKol = array_values(Collection::make($data["products"])
             ->whereNotNull("frontpad_article")
             ->pluck("count")->toArray());
 
-        Log::info("products Kol=>".print_r($productsKol));
+        Log::info("products Kol=>".print_r($productsKol, true));
 
         $frontPad = FrontPad::query()
             ->where("bot_id", $this->bot->id)
