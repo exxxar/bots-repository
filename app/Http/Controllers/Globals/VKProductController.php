@@ -103,7 +103,11 @@ class VKProductController extends Controller
 
 
             if (!is_null($this->fpProducts ?? null))
+            {
+                Log::info("VK PRODUCT $vkProduct->title");
                 $fpObject = $this->findFrontPadProduct($vkProduct->title);
+            }
+
 
             if (is_null($product)) {
                 $product = Product::query()->create([
@@ -313,6 +317,8 @@ class VKProductController extends Controller
             BusinessLogic::frontPad()
                 ->setBot($bot)
                 ->getProducts() : null;
+
+        Log::info("loaded products => ".print_r( $this->fpProducts, true));
 
         Log::info("1test $client_id $client_secret $redirect_uri $code $state");
 
