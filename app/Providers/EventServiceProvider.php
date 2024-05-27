@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Events\CashBackEvent;
 use App\Events\CashBackSubEvent;
+use App\Events\CashBackSystemEvent;
 use App\Listeners\CashBackListener;
 use App\Listeners\CashBackSubListener;
+use App\Listeners\CashBackSystemListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -24,6 +26,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         CashBackEvent::class => [
             CashBackListener::class,
+        ],
+        CashBackSystemEvent::class => [
+            CashBackSystemListener::class,
         ],
         CashBackSubEvent::class => [
             CashBackSubListener::class,

@@ -20,6 +20,8 @@ class FrontPadResource extends JsonResource
             'affiliate' => $this->affiliate,
             'point' => $this->point,
             'token' => $this->token,
+            'pays' => $this->pays,
+            'statuses' => $this->statuses,
         ];
     }
 }

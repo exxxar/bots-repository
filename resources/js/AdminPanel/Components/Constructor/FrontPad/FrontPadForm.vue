@@ -122,6 +122,8 @@ export default {
                 affiliate: null,
                 point: null,
                 token: null,
+                pays: null,
+                statuses: null,
                 bot_id: null,
             },
         }
@@ -140,6 +142,9 @@ export default {
                 this.frontPadForm.point = this.data.point || null
                 this.frontPadForm.token = this.data.token || null
                 this.frontPadForm.bot_id = this.data.bot_id || this.bot.id || null
+                this.frontPadForm.pays = this.data.pays ||  null
+                this.frontPadForm.statuses = this.data.statuses || null
+
             })
         else {
             this.frontPadForm.bot_id = this.bot.id || null

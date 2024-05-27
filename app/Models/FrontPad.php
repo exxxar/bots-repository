@@ -21,7 +21,10 @@ class FrontPad extends Model
         'channel',
         'affiliate',
         'point',
+        'pays',
+        'statuses',
         'token',
+
     ];
 
     /**
@@ -32,6 +35,8 @@ class FrontPad extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
+        'pays'=> 'array',
+        'statuses'=> 'array',
     ];
 
     public function bot(): BelongsTo
