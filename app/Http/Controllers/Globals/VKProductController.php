@@ -54,15 +54,17 @@ class VKProductController extends Controller
     {
         $index = 0;
 
-        foreach ($this->fpProducts["name"] as $name)
+        foreach ($this->fpProducts["name"] as $key=>$name)
         {
             if ($name == $test) {
+                $index = $key;
                 break;
             }
-            $index++;
+            //$index++;
         }
 
 
+        Log::info("product=>".($this->fpProducts["product_id"][$index] ?? '-')."----".($this->fpProducts["name"][$index]??'-'));
 
         return (object)[
             "name" => $test,
