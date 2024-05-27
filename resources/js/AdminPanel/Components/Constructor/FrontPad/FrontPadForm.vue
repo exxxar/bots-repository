@@ -101,6 +101,9 @@
                 </div>-->
 
         <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                Данные брать из справочника FrontPad "Статусы". Указать значение для API
+            </div>
             <div class="card mb-2 p-0" v-if="frontPadForm.statuses">
                 <div class="card-header">
                     <h6>Статусы</h6>
@@ -137,6 +140,9 @@
         </div>
 
         <div class="col-12">
+            <div class="alert alert-info" role="alert">
+               Данные брать из справочника FrontPad "Варианты оплат". Указать значение для API
+            </div>
             <div class="card mb-2 p-0" v-if="frontPadForm.pays">
                 <div class="card-header">
                     <h6>Типы оплаты</h6>
