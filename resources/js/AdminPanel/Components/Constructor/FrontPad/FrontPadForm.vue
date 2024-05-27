@@ -22,27 +22,27 @@
                    aria-describedby="token">
         </div>
 
-<!--
-        <div class="col-md-6 mb-2">
-            <label class="form-label" id="hook_url">
-                <Popper>
-                    <i class="fa-regular fa-circle-question mr-1"></i>
-                    <template #content>
-                        <div>Url для отправки вебхука по заказам</div>
-                    </template>
-                </Popper>
-                Url для отправки вебхука по заказам
-                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-            </label>
+        <!--
+                <div class="col-md-6 mb-2">
+                    <label class="form-label" id="hook_url">
+                        <Popper>
+                            <i class="fa-regular fa-circle-question mr-1"></i>
+                            <template #content>
+                                <div>Url для отправки вебхука по заказам</div>
+                            </template>
+                        </Popper>
+                        Url для отправки вебхука по заказам
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                    </label>
 
-            <input type="text" class="form-control"
-                   placeholder="Hook url"
-                   aria-label="Hook url"
-                   v-model="frontPadForm.hook_url"
-                   aria-describedby="hook_url" required>
+                    <input type="text" class="form-control"
+                           placeholder="Hook url"
+                           aria-label="Hook url"
+                           v-model="frontPadForm.hook_url"
+                           aria-describedby="hook_url" required>
 
-        </div>
--->
+                </div>
+        -->
 
         <div class="col-md-6 col-12 mb-2">
             <label class="form-label" id="channel">
@@ -99,6 +99,78 @@
         <!--        <div class="col-md-12 col-12" v-if="!hasConnect">
                     <button  class="btn btn-outline-info p-3 w-100" ><i class="fa-solid fa-plug mr-1"></i> Проверить подключение</button>
                 </div>-->
+
+        <div class="col-12">
+            <div class="card mb-2 p-0" v-if="frontPadForm.statuses">
+                <div class="card-header">
+                    <h6>Статусы</h6>
+                </div>
+                <div class="card-body">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+
+                            <th scope="col">Название</th>
+                            <th scope="col">Ключ</th>
+                            <th scope="col">Значение</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item, index) in frontPadForm.statuses">
+                            <td>{{ item.title || '-' }}</td>
+                            <td>{{ item.key || '-' }}</td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       placeholder="Статус"
+                                       aria-label="Статус"
+                                       v-model="frontPadForm.statuses[index].value"
+                                       aria-describedby="Статус">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card mb-2 p-0" v-if="frontPadForm.pays">
+                <div class="card-header">
+                    <h6>Типы оплаты</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+
+                            <th scope="col">Название</th>
+                            <th scope="col">Ключ</th>
+                            <th scope="col">Значение</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item, index) in frontPadForm.pays">
+
+                            <td>{{ item.title || '-' }}</td>
+                            <td>{{ item.key || '-' }}</td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       placeholder="Статус"
+                                       aria-label="Статус"
+                                       v-model="frontPadForm.pays[index].value"
+                                       aria-describedby="Статус">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-12 col-12">
             <button type="submit" class="btn btn-outline-primary p-3 w-100">
                 <i class="fa-solid fa-cloud-arrow-down mr-1"></i> Сохранить настройку
@@ -116,15 +188,34 @@ export default {
         return {
             hasConnect: false,
             bot: null,
+
             frontPadForm: {
                 hook_url: null,
                 channel: null,
                 affiliate: null,
                 point: null,
                 token: null,
-                pays: null,
-                statuses: null,
+                statuses: [
+                    {
+                        value: null,
+                        key: "new",
+                        title: "Новый",
+                    },
+
+                ],
                 bot_id: null,
+                pays: [
+                    {
+                        value: null,
+                        key: "cash",
+                        title: "Наличные",
+                    },
+                    {
+                        value: null,
+                        key: "card",
+                        title: "Перевод на карту",
+                    },
+                ],
             },
         }
     },
@@ -142,8 +233,10 @@ export default {
                 this.frontPadForm.point = this.data.point || null
                 this.frontPadForm.token = this.data.token || null
                 this.frontPadForm.bot_id = this.data.bot_id || this.bot.id || null
-                this.frontPadForm.pays = this.data.pays ||  null
-                this.frontPadForm.statuses = this.data.statuses || null
+                if (this.data.pays != null)
+                    this.frontPadForm.pays = this.data.pays
+                if (this.data.statuses != null)
+                    this.frontPadForm.statuses = this.data.statuses
 
             })
         else {

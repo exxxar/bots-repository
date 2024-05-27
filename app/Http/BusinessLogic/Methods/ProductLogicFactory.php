@@ -802,6 +802,7 @@ class ProductLogicFactory
                     'person' => $persons,
                     'datetime' => ($whenReady ? null
                         : Carbon::parse($time)->format('Y-m-d H:i:s')),
+                    'cash'=>$cash
                 ]);
 
 

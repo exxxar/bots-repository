@@ -56,7 +56,7 @@ class VKProductController extends Controller
 
         foreach ($this->fpProducts["name"] as $key=>$name)
         {
-            if ($name == $test) {
+            if ($name == $test ) {
                 $index = $key;
                 break;
             }

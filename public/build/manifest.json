@@ -58,11 +58,11 @@
       "_TelegramChannelHelper-8defcf8e.js"
     ]
   },
-  "_BotList-9fdac52b.js": {
+  "_BotList-1387b966.js": {
     "css": [
       "assets/BotList-7ab1b364.css"
     ],
-    "file": "assets/BotList-9fdac52b.js",
+    "file": "assets/BotList-1387b966.js",
     "imports": [
       "_MailingTable-aeb176f3.js",
       "_index.es-b188fb53.js",
@@ -333,10 +333,10 @@
       "assets/BotPage-3d03a0d5.css",
       "assets/ChatMini-5a929b50.css"
     ],
-    "file": "assets/BotPage-39b41dac.js",
+    "file": "assets/BotPage-a917f1c0.js",
     "imports": [
       "_MainAdminLayout-342dd233.js",
-      "_BotList-9fdac52b.js",
+      "_BotList-1387b966.js",
       "_CompanyList-eb1dd949.js",
       "_BotForm-df3cada8.js",
       "_index.es-b188fb53.js",
@@ -407,10 +407,10 @@
     "css": [
       "assets/Dashboard-db3e581c.css"
     ],
-    "file": "assets/Dashboard-c96165b9.js",
+    "file": "assets/Dashboard-fb5ec915.js",
     "imports": [
       "_CompanyList-eb1dd949.js",
-      "_BotList-9fdac52b.js",
+      "_BotList-1387b966.js",
       "_MailingTable-aeb176f3.js",
       "_InlineInjectionsHelper.vue_vue_type_style_index_0_lang-e0106cbd.js",
       "_BotForm-df3cada8.js",
@@ -568,7 +568,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-b83e7fdd.js",
+    "file": "assets/app-3b0983aa.js",
     "imports": [
       "_index.es-b188fb53.js",
       "_index-0cbab2b5.js"
