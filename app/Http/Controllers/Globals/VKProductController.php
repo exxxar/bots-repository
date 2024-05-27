@@ -108,6 +108,9 @@ class VKProductController extends Controller
             {
                 Log::info("VK PRODUCT $vkProduct->title");
                 $fpObject = $this->findFrontPadProduct($vkProduct->title);
+
+                if (!is_null($fpObject))
+                    $results->total_frontpad_count++;
             }
 
 
@@ -361,6 +364,7 @@ class VKProductController extends Controller
             "total_product_count" => 0,
             "created_product_count" => 0,
             "updated_product_count" => 0,
+            "total_frontpad_count" => 0,
         ];
 
         try {
