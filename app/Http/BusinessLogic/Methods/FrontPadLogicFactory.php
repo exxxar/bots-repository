@@ -149,13 +149,17 @@ class FrontPadLogicFactory
                 'frontpad_article' => $product->frontpad_article ?? null,
                 'iiko_article' => $product->iiko_article ?? null,
          */
-        $products = Collection::make($data["products"])
+        $products = array_values(Collection::make($data["products"])
             ->whereNotNull("frontpad_article")
-            ->pluck("frontpad_article");
+            ->pluck("frontpad_article"));
 
-        $productsKol = Collection::make($data["products"])
+        Log::info("products=>".print_r($products));
+
+        $productsKol = array_values(Collection::make($data["products"])
             ->whereNotNull("frontpad_article")
-            ->pluck("count");
+            ->pluck("count"));
+
+        Log::info("products Kol=>".print_r($productsKol));
 
         $frontPad = FrontPad::query()
             ->where("bot_id", $this->bot->id)
