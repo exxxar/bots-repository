@@ -151,13 +151,13 @@ class FrontPadLogicFactory
          */
         $products = array_values(Collection::make($data["products"])
             ->whereNotNull("frontpad_article")
-            ->pluck("frontpad_article"));
+            ->pluck("frontpad_article")->toArray());
 
         Log::info("products=>".print_r($products));
 
         $productsKol = array_values(Collection::make($data["products"])
             ->whereNotNull("frontpad_article")
-            ->pluck("count"));
+            ->pluck("count")->toArray());
 
         Log::info("products Kol=>".print_r($productsKol));
 
