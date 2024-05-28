@@ -62,9 +62,6 @@ BotManager::bot()
         $bot = BotManager::bot()->getSelf();
         $photoToSend = $photos[count($photos) - 1]->file_id ?? null;
 
-        Log::info("photoToSend=>".print_r($photoToSend, true));
-
-        $tmp = "";
         $count = 0;
 
         if ($botUser->is_admin || $botUser->is_manager) {
