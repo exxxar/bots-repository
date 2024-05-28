@@ -44,6 +44,8 @@ class CashBackListener
             ->where("id", $event->botId)
             ->first();
 
+        if (is_null($bot))
+            return;
 
         $this->warnings = $bot->warnings ?? [];
 
@@ -78,7 +80,7 @@ class CashBackListener
         }
 
 
-        $cashBack = $this->prepareUserCashBack($event->botId, $botUserUser->id);
+        $cashBack = $this->prepareUserCashBack($bot->id, $botUserUser->id);
 
         if ($event->directionEnum == CashBackDirectionEnum::Crediting) {
 
@@ -141,7 +143,7 @@ class CashBackListener
         if ($event->directionEnum == CashBackDirectionEnum::Debiting) {
             if ($cashBack->amount - $event->amount < 0) {
                 BotMethods::bot()
-                    ->whereId($event->botId)
+                    ->whereBot($bot)
                     ->sendMessage(
                         $botUserAdmin->telegram_chat_id,
                         "На счету клиента недостаточно CashBack для списания. На балансе <b>$cashBack->amount  руб.</b>, а требуется <b>$event->amount  руб.</b>"
@@ -169,7 +171,7 @@ class CashBackListener
                 'description' => $event->info,
                 'operation_type' => 0,
                 'user_id' => $event->userId,
-                'bot_id' => $event->botId,
+                'bot_id' => $bot->id,
                 'employee_id' => $event->adminId,
             ]);
 
@@ -204,7 +206,7 @@ class CashBackListener
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
-                    $bot->order_channel ??  null,
+                    $bot->order_channel ?? null,
                     "🚨🚨🚨🚨\n$this->warnText\nОперация выполнена администратором $nameAdmin ($tgAdminId) для пользователя $nameUser ($tgUserId)",
                     $thread
                 );
@@ -232,21 +234,6 @@ class CashBackListener
         $thread = $bot->topics["cashback"] ?? null;
         $channel = $bot->order_channel ?? null;
 
-        BotMethods::bot()
-            ->whereId($bot->id)
-            ->sendMessage(
-                $userBotUser->telegram_chat_id,
-                "Вам начислили <b>$tmpAmount руб.</b> CashBack $levelIndex уровня",
-            )
-            ->sendMessage(
-                $adminBotUser->telegram_chat_id,
-                "Вы начислили <b>$tmpAmount руб.</b> CashBack пользователю $name $levelIndex уровня",
-            )
-            ->sendMessage(
-                $channel,
-                "Администратор $tmpAdmin успешно начислил <b>  $tmpAmount руб.</b> CashBaсk пользователю $name", $thread
-            );
-
         $this->checkWarnings($moneyAmount, CashBackDirectionEnum::None, $levelIndex);
         $this->checkWarnings($tmpAmount, CashBackDirectionEnum::Crediting, $levelIndex);
 
@@ -261,6 +248,21 @@ class CashBackListener
             'employee_id' => $adminBotUser->user_id,
         ]);
 
+        if (!is_null($bot))
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $userBotUser->telegram_chat_id,
+                    "Вам начислили <b>$tmpAmount руб.</b> CashBack $levelIndex уровня",
+                )
+                ->sendMessage(
+                    $adminBotUser->telegram_chat_id,
+                    "Вы начислили <b>$tmpAmount руб.</b> CashBack пользователю $name $levelIndex уровня",
+                )
+                ->sendMessage(
+                    $channel,
+                    "Администратор $tmpAdmin успешно начислил <b>  $tmpAmount руб.</b> CashBaсk пользователю $name", $thread
+                );
 
     }
 
@@ -303,7 +305,8 @@ class CashBackListener
 
     private function prepareUserCashBack($botId, $botUserId)
     {
-        $cashBack = CashBack::query()->where("bot_id", $botId)
+        $cashBack = CashBack::query()
+            ->where("bot_id", $botId)
             ->where("bot_user_id", $botUserId)
             ->first();
 

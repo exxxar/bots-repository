@@ -49,7 +49,7 @@
                 <Popper>
                     <i class="fa-regular fa-circle-question mr-1"></i>
                     <template #content>
-                        <div>канал продаж</div>
+                        <div>Данные брать из справочника FrontPad "Каналы продаж". Создать канал. Telegram. Указать значение для API</div>
                     </template>
                 </Popper>
                 Канал продаж
