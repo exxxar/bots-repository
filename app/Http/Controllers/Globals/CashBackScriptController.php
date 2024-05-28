@@ -444,8 +444,6 @@ class CashBackScriptController extends SlugController
         if (!$botUser->is_vip) {
 
 
-            $bot = BotManager::bot()->getSelf();
-
             $scriptFormId = (Collection::make($config[1])
                 ->where("key", "profile_id")
                 ->first())["value"] ?? null;
@@ -531,6 +529,7 @@ class CashBackScriptController extends SlugController
             ->updateOrCreate(
                 [
 
+                    'bot_id'=>$bot->id,
                     'type' => 'reply',
                     'slug' => "menu_cashback_$slugId",
 
