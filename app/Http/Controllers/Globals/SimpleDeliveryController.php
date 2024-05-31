@@ -218,6 +218,7 @@ class SimpleDeliveryController extends SlugController
     {
         $slug = $request->slug;
 
+        Log::info("slug test=>".print_r($slug->config ?? [], true));
         return response()->json(
             [
                 'delivery_price_text' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
