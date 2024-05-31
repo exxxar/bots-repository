@@ -437,6 +437,9 @@ class CashBackScriptController extends SlugController
 
         $bot = BotManager::bot()->getSelf();
 
+        if (is_null($bot))
+            return;
+
         $botDomain = $bot->bot_domain;
 
         $botUser = BotManager::bot()->currentBotUser();
@@ -525,11 +528,12 @@ class CashBackScriptController extends SlugController
             ->where("key", "slug_id")
             ->first())["value"];
 
+
         $menu = BotMenuTemplate::query()
             ->updateOrCreate(
                 [
 
-                    'bot_id'=>$bot->id,
+                    'bot_id' => $bot->id,
                     'type' => 'reply',
                     'slug' => "menu_cashback_$slugId",
 

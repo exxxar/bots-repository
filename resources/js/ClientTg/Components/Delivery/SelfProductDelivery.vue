@@ -676,6 +676,7 @@ export default {
                 this.$nextTick(() => {
                     Object.keys(resp).forEach(item => {
                         this.settings[item] = resp[item]
+                        console.log("settings", this.settings[item],item)
                     })
                 })
             })
