@@ -204,7 +204,8 @@ Route::prefix("bot-client")
             ->middleware(["tgAuth.any"])
             ->group(function () {
                 Route::post("/products", [ProductController::class, "index"]);
-                Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"]);
+                Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"])
+                    ->middleware(["slug"]);
                 Route::post("/checkout", [ProductController::class, "checkout"]);
                 Route::post("/checkout-instruction", [ProductController::class, "checkoutInstruction"])
                     ->middleware(["slug"]);
