@@ -255,8 +255,6 @@ class FriendsGameScriptController extends SlugController
                 return response()->json([
                     "action" => new ActionStatusResource($action),
                     "current_friends" => $refsCount,
-                    "start_at" => $action->data["start_at"] ?? Carbon::now()->format("Y-m-d H:i:s"),
-                    "complete_at" => $action->data["complete_at"] ?? null,
                 ]);
         }
 
