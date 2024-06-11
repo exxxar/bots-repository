@@ -141,7 +141,7 @@ class FriendsGameScriptController extends SlugController
         $isStarted = $action->data->start_at ?? null;
         $isCompleted = $action->data->complete_at ?? null;
 
-        if (is_null($isStarted)|| !is_null($isCompleted))
+        if (is_null($isStarted) || !is_null($isCompleted))
             return response()->noContent(400);
 
         $refsCount = ReferralHistory::query()
@@ -150,10 +150,10 @@ class FriendsGameScriptController extends SlugController
             ->count();
 
         $action->data = (object)[
-            "friends_invite" =>  abs($refsCount - ($action->data["friends_on_start"] ?? 0)) ,
+            "friends_invite" => abs($refsCount - ($action->data["friends_on_start"] ?? 0)),
             "current_friends" => $refsCount,
-            "start_at" =>$action->data["start_at"] ?? null,
-            "complete_at" =>$action->data["complete_at"] ?? Carbon::now()->format("Y-m-d H:i:s"),
+            "start_at" => $action->data["start_at"] ?? null,
+            "complete_at" => $action->data["complete_at"] ?? Carbon::now()->format("Y-m-d H:i:s"),
             "friends_on_start" => $action->data["friends_on_start"] ?? 0,
             "needed_friends" => $action->data["needed_friends"] ?? 0
         ];
@@ -171,15 +171,15 @@ class FriendsGameScriptController extends SlugController
             env("BASE_ADMIN_CHANNEL");
 
         $cashBackForWin = (Collection::make($slug->config)
-              ->where("key", "cashback_for_win")
-              ->first())["value"] ?? 0;
+            ->where("key", "cashback_for_win")
+            ->first())["value"] ?? 0;
 
         $thread = $bot->topics["actions"] ?? null;
 
         $link = "https://t.me/$bot->bot_domain?start=" . base64_encode("003$botUser->telegram_chat_id");
 
         $winnerName = $botUser->name ?? 'Имя не указано';
-        $winnerPhone =$botUser->phone ?? 'Телефон не указан';
+        $winnerPhone = $botUser->phone ?? 'Телефон не указан';
         $username = $botUser->username ?? null;
 
         BotMethods::bot()
@@ -198,7 +198,7 @@ class FriendsGameScriptController extends SlugController
             ->where("key", "next_win_page_id")
             ->first())["value"] ?? null;
 
-        if ($cashBackForWin > 0){
+        if ($cashBackForWin > 0) {
             $admin = BotUser::query()
                 ->where("bot_id", $bot->id)
                 ->where("is_admin", true)
@@ -248,27 +248,28 @@ class FriendsGameScriptController extends SlugController
             ->count();
 
         if (!is_null($action->data ?? null)) {
-            $isStarted = $action->data->start_at ?? null;
-            $isCompleted = $action->data->complete_at ?? null;
+            $isStarted = $action->data["start_at"] ?? null;
+            $isCompleted = $action->data["complete_at"] ?? null;
 
-            if (!is_null($isStarted)|| !is_null($isCompleted))
+            if (!is_null($isStarted) || !is_null($isCompleted))
                 return response()->json([
                     "action" => new ActionStatusResource($action),
                     "current_friends" => $refsCount,
+                    "start_at" => $action->data["start_at"] ?? Carbon::now()->format("Y-m-d H:i:s"),
+                    "complete_at" => $action->data["complete_at"] ?? null,
                 ]);
         }
 
-        if (is_null($action->data ?? null)) {
-            $action->data = (object)[
-                "friends_invite" => 0,
-                "start_at" => Carbon::now()->format("Y-m-d H:i:s"),
-                "complete_at" =>null,
-                "current_friends" => $refsCount,
-                "friends_on_start" => $refsCount,
-                "needed_friends" => $refsCount + $maxAttempts
-            ];
-            $action->save();
-        }
+
+        $action->data = (object)[
+            "friends_invite" => 0,
+            "start_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            "complete_at" => null,
+            "current_friends" => $refsCount,
+            "friends_on_start" => $refsCount,
+            "needed_friends" => $refsCount + $maxAttempts
+        ];
+        $action->save();
 
 
         return response()->json([
@@ -298,10 +299,10 @@ class FriendsGameScriptController extends SlugController
         if (!is_null($action->data ?? null)) {
 
             $action->data = (object)[
-                "friends_invite" =>  abs($refsCount - ($action->data["friends_on_start"] ?? 0)) ,
+                "friends_invite" => abs($refsCount - ($action->data["friends_on_start"] ?? 0)),
                 "current_friends" => $refsCount,
-                "start_at" =>$action->data["start_at"] ?? null,
-                "complete_at" =>$action->data["complete_at"] ?? null,
+                "start_at" => $action->data["start_at"] ?? null,
+                "complete_at" => $action->data["complete_at"] ?? null,
                 "friends_on_start" => $action->data["friends_on_start"] ?? 0,
                 "needed_friends" => $action->data["needed_friends"] ?? 0
             ];
