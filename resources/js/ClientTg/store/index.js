@@ -9,6 +9,7 @@ import ingredients from './modules/ingrediens';
 import wheelOfFortune from "./modules/globals/wheelOfFortune";
 import chatHistory from "./modules/chat_history";
 import wheelOfFortuneCustom from "./modules/globals/wheelOfFortuneCustom";
+import friendsGame from "./modules/globals/friendsGame";
 import bonusProduct from "./modules/globals/bonusProduct";
 import instagramQuest from "./modules/globals/instagramQuest";
 import schedule from "./modules/globals/schedule";
@@ -136,6 +137,7 @@ export default createStore({
         profileForm,
         appointments,
         payments,
-        promocodes
+        promocodes,
+        friendsGame
     }
 })

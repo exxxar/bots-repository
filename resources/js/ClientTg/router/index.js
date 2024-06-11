@@ -17,6 +17,7 @@ import Appointments from '@/ClientTg/Pages/Appointment/Appointments.vue';
 import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
 import PaymentSBP from '@/ClientTg/Pages/Shop/PaymentSBP.vue';
 import ClientPromocode from '@/ClientTg/Pages/Shop/Promocode.vue';
+import FriendsGame from '@/ClientTg/Pages/Shop/FriendsGame.vue';
 
 import FoodConstructors from '@/ClientTg/Pages/FoodConstructors.vue';
 
@@ -87,6 +88,13 @@ export const routes = [
         component: Vip,
         meta: { title: 'VIP-анкета', hide_menu:true }
     },
+    {
+        name: 'FriendsGame',
+        path: '/friends-game',
+        component: FriendsGame,
+        meta: { title: 'Приведи друзей', hide_menu:true }
+    },
+
     {
         name: 'PaymentSBP',
         path: '/payment-sbp-main/:amount',

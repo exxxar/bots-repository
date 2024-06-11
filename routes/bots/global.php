@@ -24,6 +24,18 @@ BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\ProfileFormScriptController::class)
     ->slug("global_profile_form_main", "profileFormMain");
 
+
+
+
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\CashReceiptScriptController::class)
+    ->slug("global_cash_receipt_main", "cashReceiptMain");
+
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Globals\FriendsGameScriptController::class)
+    ->slug("global_friends_game_main", "friendsGameMain");
+
+
 BotManager::bot()
     ->controller(\App\Http\Controllers\Globals\BonusProductScriptController::class)
     ->slug("global_bonus_product", "bonusProduct");

@@ -70,6 +70,15 @@ Route::prefix("bot-client")
                 Route::post('/callback', "formWheelOfFortuneCallback");
             });
 
+        Route::prefix("friends-game")
+            ->controller(\App\Http\Controllers\Globals\FriendsGameScriptController::class)
+            ->middleware(["tgAuth.any", "slug"])
+            ->group(function () {
+                Route::post('/start-game', "startFriendsGame");
+                Route::post('/prepare', "friendsGamePrepare");
+                Route::post('/finish-game', "finishGame");
+            });
+
         Route::prefix("media")
             ->controller(\App\Http\Controllers\Bots\MediaController::class)
             ->middleware(["tgAuth.admin"])

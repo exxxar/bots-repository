@@ -73,5 +73,34 @@ class ActionStatus extends Model
 
     }
 
+    public static function prepare($botUser, $bot, $slug, $maxAttempts = 1){
+
+
+        $action = ActionStatus::query()
+            ->where("user_id", $botUser->user_id)
+            ->where("bot_id", $bot->id)
+            ->where("slug_id", $slug->id)
+            ->first();
+
+        if (is_null($action))
+            $action = ActionStatus::query()
+                ->create([
+                    'user_id' => $botUser->user_id,
+                    'bot_id' => $bot->id,
+                    'slug_id' => $slug->id,
+                    'max_attempts' => $maxAttempts,
+                    'current_attempts' => 0,
+                    'bot_user_id' => $botUser->id
+                ]);
+
+        $action->max_attempts = $maxAttempts;
+
+        if (is_null($action->data)) {
+            $action->current_attempts = 0;
+            $action->save();
+        }
+
+        return $action;
+    }
 
 }

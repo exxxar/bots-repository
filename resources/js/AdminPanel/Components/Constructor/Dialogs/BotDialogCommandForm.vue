@@ -20,8 +20,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
         </div>
         <div class="form-floating mb-2">
-            <input type="text" class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
+            <textarea class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
                    placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
+            </textarea>
             <label :for="'commandForm-pre-text-'+commandForm.id">Текст диалога</label>
         </div>
 
@@ -35,16 +36,18 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
 
         <div class="form-floating mb-2" v-if="!commandForm.is_empty">
-            <input type="text" class="form-control"
+            <textarea class="form-control"
                    :id="'commandForm-post-text-'+commandForm.id"
                    placeholder="Начни с малого..." v-model="commandForm.post_text">
+            </textarea>
             <label :for="'commandForm-post-text-'+commandForm.id">Текст после успешного завершения
                 диалога</label>
         </div>
 
         <div class="form-floating mb-2" v-if="!commandForm.is_empty">
-            <input type="text" class="form-control" :id="'commandForm-error-text-'+commandForm.id"
+            <textarea type="text" class="form-control" :id="'commandForm-error-text-'+commandForm.id"
                    placeholder="Начни с малого..." v-model="commandForm.error_text">
+            </textarea>
             <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
                 данных</label>
         </div>
