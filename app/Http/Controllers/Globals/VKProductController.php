@@ -417,6 +417,15 @@ class VKProductController extends Controller
             ]);
         }
 
+        $tmpClearedCategories = ProductCategory::query()
+            ->with(["products"])
+            ->where("bot_id", $bot->id)
+            ->has("products","=",0)
+            ->get();
+
+        foreach ($tmpClearedCategories as $tmpClearedCategory)
+            $tmpClearedCategory->delete();
+
         Inertia::setRootView("shop");
 
         return Inertia::render('Result', [
