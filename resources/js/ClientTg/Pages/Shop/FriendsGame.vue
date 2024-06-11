@@ -58,13 +58,14 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
         <div class="content">
             <button type="button"
-                    v-if="friendsForm.complete_at!=null&&friendsForm.start_at==null"
+                    v-if="friendsForm.complete_at==null&&friendsForm.start_at==null"
                     class="btn btn-m btn-full my-3 rounded-xl text-uppercase font-900 shadow-s bg-green2-dark w-100"
                     @click="start">Приступить к заданию</button>
 
             <p v-if="friendsForm.start_at!=null">Задание начато <strong>{{friendsForm.start_at}}</strong></p>
             <p v-if="friendsForm.complete_at!=null">Задание завершено <strong>{{friendsForm.complete_at}}</strong></p>
             <button type="button"
+                    v-if="friendsForm.start_at!=null"
                     @click="complete"
                     :disabled="progress<100||friendsForm.complete_at!=null||friendsForm.start_at==null"
                     class="btn btn-m btn-full my-3 rounded-xl text-uppercase font-900 shadow-s bg-green2-dark w-100">Получить награды</button>
