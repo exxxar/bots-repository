@@ -69,6 +69,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     @click="complete"
                     :disabled="progress<100||friendsForm.complete_at!=null||friendsForm.start_at==null"
                     class="btn btn-m btn-full my-3 rounded-xl text-uppercase font-900 shadow-s bg-green2-dark w-100">Получить награды</button>
+            <ReturnToBot></ReturnToBot>
         </div>
     </div>
 
