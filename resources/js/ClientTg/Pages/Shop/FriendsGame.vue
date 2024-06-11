@@ -9,13 +9,13 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
         <div class="content d-flex justify-content-center flex-wrap">
 
             <div class="img-avatar">
-                <img
+<!--                <img
                     v-if="settings.image"
                     v-lazy="settings.image"
-                    class="img-avatar"/>
+                    class="img-avatar"/>-->
 
                 <img
-                    v-else
+
                     v-lazy="'/images-by-bot-id/'+currentBot.id+'/'+currentBot.image">
             </div>
 
