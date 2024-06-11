@@ -107,8 +107,7 @@ class ProductLogicFactory
 
         $products = Product::query()
             ->with(["productCategories", "productOptions"])
-            ->where("bot_id", $this->bot->id)
-            ->has("productCategories", ">", 0);
+            ->where("bot_id", $this->bot->id);
 
         if (!is_null($search))
             $products = $products
@@ -803,7 +802,7 @@ class ProductLogicFactory
                     'person' => $persons,
                     'datetime' => ($whenReady ? null
                         : Carbon::parse($time)->format('Y-m-d H:i:s')),
-                    'cash' => $cash
+                    'cash'=>$cash
                 ]);
 
 
