@@ -1,5 +1,5 @@
 <script setup>
-import SlugForm from '@/AdminPanel/Components/Constructor/Slugs/SlugForm.vue'
+import SlugTableForm from '@/AdminPanel/Components/Constructor/Slugs/SlugTableForm.vue'
 
 </script>
 <template>
@@ -157,7 +157,7 @@ import SlugForm from '@/AdminPanel/Components/Constructor/Slugs/SlugForm.vue'
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <SlugForm :item="item"
+                    <SlugTableForm :item="item"
                               v-if="!load"
                               v-on:callback="slugFormCallback"
                     />
