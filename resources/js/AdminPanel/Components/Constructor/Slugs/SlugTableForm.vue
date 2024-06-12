@@ -467,16 +467,20 @@ export default {
             }).then((response) => {
                 let config= response.config
 
+                let attachedParamCount = 0;
                 config.forEach(item=>{
                     let findIndex = this.slugForm.config.findIndex(c=>c.key===item.key)
 
-                    if (findIndex===-1)
+                    if (findIndex===-1) {
+                        attachedParamCount++
                         this.slugForm.config.unshift(item)
+                    }
+
                 })
 
                 this.$notify({
                     title: "Конструктор команд",
-                    text: "Параметры успешно подгружены",
+                    text: `Параметры успешно подгружены: Обновлено ${attachedParamCount} параметров`,
                     type: 'success'
                 });
             })
