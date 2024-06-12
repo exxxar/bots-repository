@@ -60,11 +60,13 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                           v-for="(item, index) in configTypes"> {{ item.type }}</span>
                 </p>
 
-              <p v-if="slugForm.parent_id">Вы можете подгрузить отсутствующие параметры конфигурации</p>
+                <p v-if="slugForm.parent_id">Вы можете подгрузить отсутствующие параметры конфигурации</p>
                 <button
+                    v-if="slugForm.parent_id"
                     type="button"
                     @click="loadSlugParentParams"
-                    class="btn btn-outline-info"><i class="fa-solid fa-rotate mr-2"></i>Загрузить</button>
+                    class="btn btn-outline-info"><i class="fa-solid fa-rotate mr-2"></i>Загрузить
+                </button>
             </div>
         </div>
         <div class="row"
@@ -81,7 +83,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                     </tr>
                     </thead>
                     <tbody>
-                    <template  v-for="(item, index) in filteredConfigs">
+                    <template v-for="(item, index) in filteredConfigs">
 
                         <tr v-bind:class="{'table-light':index%2===0}">
 
@@ -89,36 +91,44 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 
                                 <div class="w-100 d-flex align-items-center justify-content-between">
                                     <div class="dropdown mr-2">
-                                        <button class="btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-outline-primary" type="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
                                             <i class="fa-solid fa-bars"></i>
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item"
                                                    @click="removeConfigItem(index)"
-                                                   href="javascript:void(0)"><i class="fa-solid fa-trash-can"></i> Удалить</a></li>
+                                                   href="javascript:void(0)"><i class="fa-solid fa-trash-can"></i>
+                                                Удалить</a></li>
                                             <li><a class="dropdown-item"
                                                    @click="move(index, 0)"
-                                                   href="javascript:void(0)">  <i class="fa-solid fa-caret-left"></i> Вверх</a></li>
+                                                   href="javascript:void(0)"> <i class="fa-solid fa-caret-left"></i>
+                                                Вверх</a></li>
                                             <li><a class="dropdown-item"
                                                    @click="move(index, 1)"
-                                                   href="javascript:void(0)"><i class="fa-solid fa-caret-right"></i> Вниз</a></li>
+                                                   href="javascript:void(0)"><i class="fa-solid fa-caret-right"></i>
+                                                Вниз</a></li>
 
                                         </ul>
 
 
                                     </div>
-                                    <p class="mb-0 font-italic  font-bold" v-if="filteredConfigs[index].description" v-html="filteredConfigs[index].description"></p>
+                                    <p class="mb-0 font-italic  font-bold" v-if="filteredConfigs[index].description"
+                                       v-html="filteredConfigs[index].description"></p>
                                     <p class="mb-0 font-bold" v-else>без описания</p>
 
                                     <div class="dropdown ">
-                                        <button class="btn btn-outline-primary dropdown-toggle w-100 d-flex justify-content-between align-items-center" type="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button
+                                            class="btn btn-outline-primary dropdown-toggle w-100 d-flex justify-content-between align-items-center"
+                                            type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
                                             {{ filteredConfigs[index].type }}
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li
                                                 v-for="config in configTypes">
-                                                <a class="dropdown-item" @click="filteredConfigs[index].type = config.type">{{
+                                                <a class="dropdown-item"
+                                                   @click="filteredConfigs[index].type = config.type">{{
                                                         config.title || item.type
                                                     }}</a>
                                             </li>
@@ -134,7 +144,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                     <input type="text" class="form-control"
                                            v-model="filteredConfigs[index].key"
                                            :id="'field-input-key-'+index"
-                                           placeholder="name@example.com" >
+                                           placeholder="name@example.com">
                                     <label :for="'field-input-key-'+index">Ключ</label>
                                 </div>
                             </td>
@@ -144,7 +154,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                      v-if="filteredConfigs[index].type==='text' || filteredConfigs[index].type==='channel'">
                                     <input type="text" class="form-control" :id="'field-input-'+index"
                                            v-model="filteredConfigs[index].value"
-                                           placeholder="name@example.com" >
+                                           placeholder="name@example.com">
                                     <label :for="'field-input-'+index">Значение</label>
                                 </div>
 
@@ -224,14 +234,15 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                            v-model="filteredConfigs[index].value"
                                            type="color" :id="'filtered-config-'+index+'-color'">
                                     <label :for="'filtered-config-'+index+'-color'">
-                                        <p v-bind:style="{'color':filteredConfigs[index].value}">Цвет: {{filteredConfigs[index].value}}</p>
+                                        <p v-bind:style="{'color':filteredConfigs[index].value}">Цвет:
+                                            {{ filteredConfigs[index].value }}</p>
                                     </label>
                                 </div>
 
                                 <div class="form-floating" v-if="filteredConfigs[index].type==='large-text'">
                             <textarea class="form-control" :id="'field-input-'+index"
                                       v-model="filteredConfigs[index].value"
-                                      placeholder="name@example.com" >
+                                      placeholder="name@example.com">
                             </textarea>
                                     <label :for="'field-input-'+index">Значение</label>
                                 </div>
@@ -260,7 +271,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                            type="text"
                                            disabled="true"
                                            v-model="filteredConfigs[index].value"
-                                           placeholder="name@example.com" >
+                                           placeholder="name@example.com">
                                     <label :for="'field-input-'+index">FileId ссылка на изображение</label>
 
                                     <BotMediaList
@@ -318,7 +329,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
             </div>
 
 
-
         </div>
         <div class="row" v-else>
             <div class="col-12">
@@ -340,6 +350,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 <script>
 import {mapGetters} from "vuex";
 import {Vue3JsonEditor} from 'vue3-json-editor'
+
 export default {
     props: ["item"],
     components: {
@@ -418,7 +429,7 @@ export default {
             ],
             bot: null,
 
-            photos:[],
+            photos: [],
             slugForm: {
                 bot_id: null,
                 id: null,
@@ -461,17 +472,17 @@ export default {
     },
 
     methods: {
-        loadSlugParentParams(){
+        loadSlugParentParams() {
             this.$store.dispatch("loadSlugParams", {
-                parentSlugId:this.slugForm.parent_id
+                parentSlugId: this.slugForm.parent_id
             }).then((response) => {
-                let config= response.config
+                let config = response.config
 
                 let attachedParamCount = 0;
-                config.forEach(item=>{
-                    let findIndex = this.slugForm.config.findIndex(c=>c.key===item.key)
+                config.forEach(item => {
+                    let findIndex = this.slugForm.config.findIndex(c => c.key === item.key)
 
-                    if (findIndex===-1) {
+                    if (findIndex === -1) {
                         attachedParamCount++
                         this.slugForm.config.unshift(item)
                     }
@@ -554,14 +565,14 @@ export default {
 
 
         },
-        move(index, direction = 0){
+        move(index, direction = 0) {
             let tmp = this.slugForm.config[index]
 
             let maxConfigElements = this.slugForm.config.length || 0
 
             let newIndex = direction === 0 ?
-                index -1 >= 0 ?index - 1 : maxConfigElements-1 :
-                index < maxConfigElements-1 ? index + 1 : 0
+                index - 1 >= 0 ? index - 1 : maxConfigElements - 1 :
+                index < maxConfigElements - 1 ? index + 1 : 0
 
             this.slugForm.config[index] = this.slugForm.config[newIndex]
             this.slugForm.config[newIndex] = tmp
@@ -575,10 +586,10 @@ export default {
             }
 
         },
-        selectSlug(event, index){
+        selectSlug(event, index) {
             this.filteredConfigs[index].value = event.id
         },
-        selectPhoto(event, index){
+        selectPhoto(event, index) {
             this.filteredConfigs[index].value = event.file_id
         }
     }
