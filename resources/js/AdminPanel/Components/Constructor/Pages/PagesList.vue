@@ -63,8 +63,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                             <span v-if="page.slug">{{ page.slug.command || 'Не указано' }}</span>
                             <span v-else>Не привязано к команде</span>
                             <span v-if="(current&&current==page.id)||(selected||[]).indexOf(page.id)!=-1"
-                                  title="Вы не можете выбрать данную страницу"><i
-                                class="fa-solid fa-lock ml-2 text-danger"></i></span>
+                                  title="Вы не можете выбрать данную страницу">
+                            <i class="fa-solid fa-check-double text-danger ml-2"></i>
+                            </span>
                         </strong>
 
 

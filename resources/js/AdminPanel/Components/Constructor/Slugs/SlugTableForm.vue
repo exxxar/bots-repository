@@ -304,6 +304,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                     <label :for="'filtered-config-'+index+'-script'">Значение</label>
 
                                     <PagesList
+                                        :selected="[filteredConfigs[index].value]"
                                         v-on:callback="selectSlug($event, index)"
                                         :editor="false"/>
 
