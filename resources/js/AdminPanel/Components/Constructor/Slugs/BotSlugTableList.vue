@@ -1,7 +1,9 @@
 <script setup>
 import SlugForm from "@/AdminPanel/Components/Constructor/Slugs/SlugForm.vue";
+import SlugTableForm from "@/AdminPanel/Components/Constructor/Slugs/SlugTableForm.vue";
 import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlugList.vue";
 import Pagination from '@/AdminPanel/Components/Pagination.vue';
+
 import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 </script>
 <template>
@@ -160,13 +162,18 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-8">
-                            <SlugForm
+                        <div class="col-12">
+
+                            <SlugTableForm
                                 :item="selectedSlug"
                                 v-on:callback="slugFormCallback"
-                            />
+                            ></SlugTableForm>
+<!--                            <SlugForm
+                                :item="selectedSlug"
+                                v-on:callback="slugFormCallback"
+                            />-->
                         </div>
-                        <div class="col-4">
+<!--                        <div class="col-4">
                             <ol class="list-group list-group-numbered">
                                 <li
                                     v-if="selectedSlug.config"
@@ -223,7 +230,7 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 
                                 </li>
                             </ol>
-                        </div>
+                        </div>-->
                     </div>
 
                 </div>

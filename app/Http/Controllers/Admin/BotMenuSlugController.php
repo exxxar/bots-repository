@@ -23,19 +23,38 @@ use Maatwebsite\Excel\Facades\Excel;
 class BotMenuSlugController extends Controller
 {
 
-    public function reloadGlobalScripts(Request $request){
+    public function loadSlugsParams(Request $request)
+    {
+        $request->validate([
+            "slug_id" => "required"
+        ]);
+
+        $slug = BotMenuSlug::query()
+            ->find($request->slug_id);
+
+        if (is_null($slug))
+            return \response()->noContent(404);
+
+        return \response()->json([
+            "config" => $slug->config ?? null
+        ]);
+    }
+
+    public function reloadGlobalScripts(Request $request)
+    {
         try {
             Artisan::call("bot:reinit-scripts-configs");
             return \response()->noContent();
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return \response()->noContent(400);
         }
     }
 
-    public function actionDataExport(Request $request, $slugId){
+    public function actionDataExport(Request $request, $slugId)
+    {
         $statuses = \App\Models\ActionStatus::query()
-            ->where("slug_id",$slugId)->get();
-        return Excel::download(new \App\Exports\ExportArrayData($statuses->toArray()), "action-statuses-data-$slugId.xlsx",\Maatwebsite\Excel\Excel::XLSX);
+            ->where("slug_id", $slugId)->get();
+        return Excel::download(new \App\Exports\ExportArrayData($statuses->toArray()), "action-statuses-data-$slugId.xlsx", \Maatwebsite\Excel\Excel::XLSX);
     }
 
     /**
@@ -90,7 +109,7 @@ class BotMenuSlugController extends Controller
     {
         $logic = BusinessLogic::slugs();
 
-        if ($request->botUser->is_manager&&!$request->botUser->is_admin)
+        if ($request->botUser->is_manager && !$request->botUser->is_admin)
             $logic = $logic->setBotUser($request->botUser);
 
         return $logic

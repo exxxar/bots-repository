@@ -292,6 +292,7 @@ Route::prefix("admin")
                 Route::post("/slug-update", "updateSlug");
                 Route::post("/duplicate/{slugId}", "duplicate");
                 Route::get("/reload-params/{slugId}", "reloadParams");
+                Route::post("/load-slugs-params", "loadSlugsParams");
                 Route::post("/reload-global-scripts", "reloadGlobalScripts");
                 Route::get("/action-data-export/{slugId}", "actionDataExport")->middleware(["role:admin"]);
                 Route::delete("/{slugId}", "destroy")->middleware(["role:admin"]);

@@ -158,6 +158,20 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async loadSlugParams(context, payload = {parentSlugId: null}) {
+        let link = `${BASE_SLUGS_LINK}/load-slugs-params`
+
+        let _axios = util.makeAxiosFactory(link, "POST", {
+            slug_id: payload.parentSlugId
+        })
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async createSlug(context, payload = {slugForm: null}) {
         let link = `${BASE_SLUGS_LINK}/slug`
 
