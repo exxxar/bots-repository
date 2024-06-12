@@ -60,9 +60,8 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                           v-for="(item, index) in configTypes"> {{ item.type }}</span>
                 </p>
 
-                <p v-if="slugForm.parent_id">Вы можете подгрузить отсутствующие параметры конфигурации</p>
+                <p >Вы можете подгрузить отсутствующие параметры конфигурации</p>
                 <button
-                    v-if="slugForm.parent_id"
                     type="button"
                     @click="loadSlugParentParams"
                     class="btn btn-outline-info"><i class="fa-solid fa-rotate mr-2"></i>Загрузить
@@ -475,7 +474,7 @@ export default {
     methods: {
         loadSlugParentParams() {
             this.$store.dispatch("loadSlugParams", {
-                parentSlugId: this.slugForm.parent_id
+                parentSlugId: this.slugForm.parent_id ? this.slugForm.parent_id : this.slugForm.id
             }).then((response) => {
                 let config = response.config
 
