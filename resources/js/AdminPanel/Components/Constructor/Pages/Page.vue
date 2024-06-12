@@ -2,7 +2,7 @@
 import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardConstructor.vue";
 import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
 import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlugList.vue";
-import BotSlugListSimple from "@/AdminPanel/Components/Constructor/Slugs/BotSlugListSimple.vue";
+import BotSlugTableList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugTableList.vue";
 import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
@@ -935,7 +935,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                     </div>
 
 
-                    <BotSlugListSimple v-if="bot&&load_slug_simple_list"
+                    <BotSlugTableList v-if="bot&&load_slug_simple_list"
                                        :global="true"
                                        :selected="[pageForm.next_bot_menu_slug_id]"
                                        v-on:callback="associateSlug"
