@@ -17,7 +17,7 @@ const getters = {
         return state.products.find(item => item.id === id)
     },
     getProductsPaginateObject: state => state.products_paginate_object || null,
-    getProductCategoriesPaginateObject: state => state.products_paginate_object || null,
+    getProductCategoriesPaginateObject: state => state.product_categories_paginate_object || null,
 }
 
 const actions = {
