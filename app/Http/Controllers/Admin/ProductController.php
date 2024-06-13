@@ -59,7 +59,7 @@ class ProductController extends Controller
 
         return BusinessLogic::products()
             ->setBot($bot)
-            ->categories();
+            ->categories(true);
     }
 
     public function getProduct(Request $request, $productId): ProductResource

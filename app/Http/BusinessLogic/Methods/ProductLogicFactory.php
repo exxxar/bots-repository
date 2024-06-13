@@ -148,7 +148,7 @@ class ProductLogicFactory
     /**
      * @throws HttpException
      */
-    public function categories($size = null): ProductCategoryCollection
+    public function categories($isFull = false): ProductCategoryCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -156,9 +156,14 @@ class ProductLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $categories = ProductCategory::query()
-            ->where("bot_id", $this->bot->id)
-            ->where("is_active", true)
-            ->paginate($size);
+            ->where("bot_id", $this->bot->id);
+
+        if (!$isFull)
+            $categories =
+                $categories->where("is_active", true);
+
+        $categories =
+            $categories->paginate($size);
 
         return new ProductCategoryCollection($categories);
     }
