@@ -59,7 +59,7 @@ const actions = {
         let page = payload.page || 0
         let size = 12
 
-        let link = `${BASE_PRODUCTS_LINK}/categories`
+        let link = `${BASE_PRODUCTS_LINK}/categories?page=${page}`
         let method = 'POST'
         let data = payload.dataObject
 
