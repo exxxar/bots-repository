@@ -328,6 +328,8 @@ Route::prefix("admin")
             ->group(function () {
                 Route::post("/products", [\App\Http\Controllers\Admin\ProductController::class, "index"]);
                 Route::post("/products/categories", [\App\Http\Controllers\Admin\ProductController::class, "getCategories"]);
+                Route::delete("/products/categories/remove/{id}", [\App\Http\Controllers\Admin\ProductController::class, "removeCategory"]);
+                Route::post("/products/categories/status/{id}", [\App\Http\Controllers\Admin\ProductController::class, "changeCategoryStatus"]);
                 Route::post("/products/save", [\App\Http\Controllers\Admin\ProductController::class, "saveProduct"]);
                 Route::delete("/products/remove/{productId}", [\App\Http\Controllers\Admin\ProductController::class, "destroy"]);
                 Route::post("/products/duplicate/{productId}", [\App\Http\Controllers\Admin\ProductController::class, "duplicate"]);

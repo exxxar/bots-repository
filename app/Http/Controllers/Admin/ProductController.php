@@ -118,6 +118,19 @@ class ProductController extends Controller
             ->destroy($productId);
     }
 
+    public function changeCategoryStatus(Request $request, $categoryId): \App\Http\Resources\ProductCategoryResource
+    {
+        return BusinessLogic::products()
+            ->changeCategoryStatus($categoryId);
+    }
+
+    public function removeCategory(Request $request, $categoryId): \App\Http\Resources\ProductCategoryResource
+    {
+        return BusinessLogic::products()
+            ->removeCategory($categoryId);
+    }
+
+
     public function duplicate(Request $request, $productId): ProductResource
     {
         return BusinessLogic::products()

@@ -15,9 +15,11 @@ export default defineConfig({
                 'resources/js/ClientTg/app.js',
                 'resources/js/Landing/app.js',
 
+
                 'resources/css/AdminPanel/app.css',
                 'resources/css/ClientTg/app.css',
                 'resources/css/Landing/app.css',
+
             ],
             ssr: ['resources/js/ClientTg/ssr.js', 'resources/js/Landing/ssr.js'],
             refresh: true,

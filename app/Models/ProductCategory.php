@@ -19,6 +19,7 @@ class ProductCategory extends Model
     protected $fillable = [
         'title',
         'bot_id',
+        'is_active',
     ];
 
     /**
@@ -29,6 +30,7 @@ class ProductCategory extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
+        'is_active' => 'boolean',
     ];
 
     protected $appends = ["count"];

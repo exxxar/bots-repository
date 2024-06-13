@@ -165,7 +165,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                            v-model="filteredConfigs[index].value"
                                            type="checkbox" value="false" :id="'filtered-config-'+index+'-checkbox'">
                                     <label class="form-check-label" :for="'filtered-config-'+index+'-checkbox'">
-                                        {{ filteredConfigs[index].value ? 'Истина' : 'Ложь' }}
+                                        {{ filteredConfigs[index].value ? 'Включено' : 'Выключено' }}
                                     </label>
                                 </div>
 

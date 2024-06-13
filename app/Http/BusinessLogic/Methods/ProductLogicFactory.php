@@ -157,6 +157,7 @@ class ProductLogicFactory
 
         $categories = ProductCategory::query()
             ->where("bot_id", $this->bot->id)
+            ->where("is_active", true)
             ->paginate($size);
 
         return new ProductCategoryCollection($categories);
@@ -398,6 +399,49 @@ class ProductLogicFactory
         $product->delete();
 
         return new ProductResource($tmpProduct);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function removeCategory($categoryId): ProductCategoryResource
+    {
+        $category = ProductCategory::query()
+            ->with(["products"])
+            ->find($categoryId);
+
+        if (is_null($category))
+            throw new HttpException(404, "Категория не найдена");
+
+
+        $ids = $category->products
+            ->get()
+            ->pluck("id");
+
+        $category->products->detach(array_values($ids));
+
+        $tmpCategory = $category;
+        $category->delete();
+
+        return new ProductCategoryResource($tmpCategory);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function changeCategoryStatus($categoryId): ProductCategoryResource
+    {
+        $category = ProductCategory::query()
+            ->with(["products"])
+            ->find($categoryId);
+
+        if (is_null($category))
+            throw new HttpException(404, "Категория не найдена");
+
+        $category->is_active = !$category->is_active ?? false;
+        $category->save();
+
+        return new ProductCategoryResource($category);
     }
 
     /**
@@ -802,7 +846,7 @@ class ProductLogicFactory
                     'person' => $persons,
                     'datetime' => ($whenReady ? null
                         : Carbon::parse($time)->format('Y-m-d H:i:s')),
-                    'cash'=>$cash
+                    'cash' => $cash
                 ]);
 
 
