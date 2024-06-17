@@ -615,22 +615,33 @@ class BotLogicFactory
                 'description' => $this->bot->long_description,
             ]);
 
-        Http::post("$website/setMyCommands", [
-            'commands' => $this->bot->commands ?? [
-                    [
-                        "command" => "/start", "description" => "начни с этой команды"
+        if (is_array($this->bot->commands ?? null))
+            Http::post("$website/setMyCommands", [
+                'commands' => $this->bot->commands ?? [
+                        [
+                            "command" => "/start", "description" => "начни с этой команды"
+                        ],
+                        [
+                            "command" => "/admins", "description" => "доступные администраторы в системе"
+                        ],
+                        [
+                            "command" => "/help", "description" => "как использовать систему"
+                        ],
+                        [
+                            "command" => "/about", "description" => "о CashMan"
+                        ]
                     ],
-                    [
-                        "command" => "/admins", "description" => "доступные администраторы в системе"
-                    ],
-                    [
-                        "command" => "/help", "description" => "как использовать систему"
-                    ],
-                    [
-                        "command" => "/about", "description" => "о CashMan"
+            ]);
+        else
+            Http::post("$website/setChatMenuButton", [
+                'menu_button' => [
+                    "type" => "web_app",
+                    "text" => $this->bot->commands["text"] ?? 'Меню',
+                    "web_app" => [
+                        "url" => $this->bot->commands["url"] ?? null,
                     ]
                 ],
-        ]);
+            ]);
     }
 
     /**
@@ -1342,7 +1353,13 @@ class BotLogicFactory
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
-        $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
+
+        if ($data["need_menu_btn"]=="true"){
+            $tmp->commands = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
+            unset($tmp->menu);
+        }
+        else
+            $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
 
         $tmp->company_id = $company->id;
         $tmp->bot_type_id = $botType->id;
@@ -1495,7 +1512,14 @@ class BotLogicFactory
         $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
-        $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
+
+        if ($data["need_menu_btn"]=="true"){
+            $tmp->commands = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
+            unset($tmp->menu);
+        }
+        else
+            $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
+
 
         $tmp->is_active = true;
         $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
@@ -1663,6 +1687,7 @@ class BotLogicFactory
         $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
+
         $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
 
         $tmp->bot_type_id = $botType->id;
@@ -2126,7 +2151,6 @@ class BotLogicFactory
 
         if ($validator->fails())
             throw new ValidationException($validator);
-
 
 
         $result = Http::post(env("MAILING_HANDLER_URL") . "api/notification", [

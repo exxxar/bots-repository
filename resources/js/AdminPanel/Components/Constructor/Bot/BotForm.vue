@@ -297,8 +297,23 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                 </textarea>
                         </div>
 
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="col-12 my-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               v-model="needMenuBtn" id="needMenuBtn">
+                                        <label class="form-check-label" for="needMenuBtn">
+                                            Команды \ Кнопка меню
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row"
+                             v-if="!needMenuBtn"
                              :key="'commands-'+index"
                              v-for="(item, index) in botForm.commands">
                             <div class="col-12" v-if="botForm.commands[index].command==='/adminmenu'">
@@ -339,7 +354,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                 </button>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row"
+                             v-if="!needMenuBtn">
                             <div class="col-12">
                                 <button
                                     type="button"
@@ -352,7 +368,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row"
+                             v-if="!needMenuBtn">
                             <div class="col-12 my-2">
                                 <div class="form-check">
                                     <input class="form-check-input"
@@ -373,6 +390,28 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                     :expandedOnStart="true"
                                     @json-change="onJsonChange"
                                 />
+                            </div>
+                        </div>
+
+                        <div class="row" v-if="needMenuBtn">
+                            <div class="col-6">
+                                <input type="text" class="form-control"
+                                       placeholder="Текст кнопки меню"
+                                       aria-label="Текст кнопки меню"
+                                       maxlength="255"
+                                       @invalid="alert('Текст кнопки меню!', 0)"
+                                       v-model="botForm.menu.text"
+                                       required>
+                            </div>
+
+                            <div class="col-6">
+                                <input type="text" class="form-control"
+                                       placeholder="Адрес перехода URL"
+                                       aria-label="Адрес перехода URL"
+                                       maxlength="255"
+                                       @invalid="alert('Вы не ввели адрес меню!', 0)"
+                                       v-model="botForm.menu.url"
+                                       required>
                             </div>
                         </div>
                     </div>
@@ -1144,6 +1183,7 @@ export default {
     data() {
         return {
             loadCommandEditor: true,
+            needMenuBtn: false,
             showCode: false,
             tab: 0,
             spent_time_counter: 0,
@@ -1256,6 +1296,10 @@ export default {
                 level_3: 0,
                 photos: [],
                 commands: null,
+                menu: {
+                    text: null,
+                    url: null
+                },
                 selected_bot_template_id: null,
                 pages: [],
                 amo: null,
@@ -1400,7 +1444,6 @@ export default {
                     cashback_fire_period: this.bot.cashback_fire_period || 0,
                     max_cashback_use_percent: this.bot.max_cashback_use_percent || 0,
                     image: this.bot.image || null,
-                    commands: this.bot.commands || null,
 
                     description: this.bot.description || null,
                     creator_id: this.bot.creator_id || null,
@@ -1422,7 +1465,22 @@ export default {
                     warnings: this.bot.warnings || [],
 
                     amo: this.bot.amo || null,
+                    menu: {
+                        text: null,
+                        url: null
+                    },
                 }
+
+                if (Array.isArray(this.bot.commands || null)) {
+                    this.botForm.commands = this.bot.commands || null
+                    this.needMenuBtn = false
+                }
+
+                if (typeof this.bot.commands === 'object' && !Array.isArray(this.bot.commands) && this.bot.commands !== null) {
+                    this.botForm.menu = this.bot.commands || null
+                    this.needMenuBtn = true
+                }
+
 
                 if (this.botForm.commands == null)
                     this.autoAddCommands();
@@ -1604,6 +1662,7 @@ export default {
         addBot() {
 
             let data = new FormData();
+            data.append("need_menu_btn", this.needMenuBtn )
             Object.keys(this.botForm)
                 .forEach(key => {
                     const item = this.botForm[key] || ''
