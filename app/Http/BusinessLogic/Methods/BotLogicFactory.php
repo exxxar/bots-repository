@@ -636,6 +636,8 @@ class BotLogicFactory
             ]);
 
         if (isset($this->bot->commands["url"]))
+        {
+            Log::info("isset menu url");
             Http::post("$website/setChatMenuButton", [
                 'menu_button' => [
                     "type" => "web_app",
@@ -645,6 +647,8 @@ class BotLogicFactory
                     ]
                 ],
             ]);
+        }
+
     }
 
     /**
