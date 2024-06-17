@@ -623,6 +623,11 @@ class SystemDiagnosticController extends Controller
         $value = $data[3] ?? 0;
     }
 
+    public function autoSendCashBack(...$data){
+        BotManager::bot()
+            ->reply("Тест! Начисляем кэшбэк по параметрам".print_r($data, true));
+    }
+
     private function mediaPrint($tmp, $media, $type = null)
     {
 

@@ -181,12 +181,15 @@ class StartCodesHandlerController extends Controller
 
         $message = $bot->welcome_message ?? null;
 
+        $attachedKeyboard = [];
         if ($botUser->is_admin) {
             switch ($code) {
                 default:
                 case "001":
                     $text = "Основная административная панель";
                     $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&user=$request_id#/admin-main";
+
+
                     break;
 
                 case "003":
@@ -208,7 +211,9 @@ class StartCodesHandlerController extends Controller
                                 "url" => $path
                             ]
                         ],
-                    ]
+                        ["text" => "💸Начислить пользователю CashBack",
+                            "callback_data" => "/auto_send_cashback $request_id"],
+                    ],
                 ]
             );
 
@@ -228,8 +233,7 @@ class StartCodesHandlerController extends Controller
         }
 
 
-        if ($code != "011")
-        {
+        if ($code != "011") {
             BotManager::bot()->reply($message);
             return;
         }

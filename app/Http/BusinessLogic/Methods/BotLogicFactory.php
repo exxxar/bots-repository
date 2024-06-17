@@ -615,39 +615,36 @@ class BotLogicFactory
                 'description' => $this->bot->long_description,
             ]);
 
-        Log::info("prepareBaseBotConfig".print_r($this->bot->commands,true));
 
-        if (!isset($this->bot->commands["url"]))
-            Http::post("$website/setMyCommands", [
-                'commands' => $this->bot->commands ?? [
-                        [
-                            "command" => "/start", "description" => "начни с этой команды"
-                        ],
-                        [
-                            "command" => "/admins", "description" => "доступные администраторы в системе"
-                        ],
-                        [
-                            "command" => "/help", "description" => "как использовать систему"
-                        ],
-                        [
-                            "command" => "/about", "description" => "о CashMan"
-                        ]
+        Http::post("$website/setMyCommands", [
+            'commands' => $this->bot->commands ?? [
+                    [
+                        "command" => "/start", "description" => "начни с этой команды"
                     ],
-            ]);
+                    [
+                        "command" => "/admins", "description" => "доступные администраторы в системе"
+                    ],
+                    [
+                        "command" => "/help", "description" => "как использовать систему"
+                    ],
+                    [
+                        "command" => "/about", "description" => "о CashMan"
+                    ]
+                ],
+        ]);
 
-        if (isset($this->bot->commands["url"]))
-        {
-            Log::info("isset menu url");
+
+        if (!is_null($this->bot->menu["url"] ?? null))
             Http::post("$website/setChatMenuButton", [
                 'menu_button' => [
                     "type" => "web_app",
-                    "text" => $this->bot->commands["text"] ?? 'Меню',
+                    "text" => $this->bot->menu["text"] ?? 'Меню',
                     "web_app" => [
-                        "url" => $this->bot->commands["url"] ?? null,
+                        "url" => $this->bot->menu["url"] ?? null,
                     ]
                 ],
             ]);
-        }
+
 
     }
 
@@ -1361,12 +1358,8 @@ class BotLogicFactory
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
 
-        if ($data["need_menu_btn"]=="true"){
-            $tmp->commands = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
-            unset($tmp->menu);
-        }
-        else
-            $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
+        $tmp->menu = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
+        $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
 
         $tmp->company_id = $company->id;
         $tmp->bot_type_id = $botType->id;
@@ -1519,15 +1512,8 @@ class BotLogicFactory
         $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
-
-        if ($data["need_menu_btn"]=="true"){
-            $tmp->commands = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
-            unset($tmp->menu);
-        }
-        else
-            $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
-
-
+        $tmp->menu = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
+        $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
         $tmp->is_active = true;
         $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
         $tmp->is_template = $data["is_template"] == "true";

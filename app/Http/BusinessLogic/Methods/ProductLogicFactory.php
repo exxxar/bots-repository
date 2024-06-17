@@ -764,6 +764,7 @@ class ProductLogicFactory
             ]
         ];
 
+
         $thread = $this->bot->topics["delivery"] ?? null;
 
         BotMethods::bot()

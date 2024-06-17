@@ -32,6 +32,7 @@ BotManager::bot()
     ->route("/pay_tax_fee ([0-9]+)", "payTaxFee")
     ->route("/send_review ([0-9]+)", "sendReview")
     ->route("/send_tips ([0-9]+)", "sendTips")
+    ->route("/auto_send_cashback ([0-9]+)", "autoSendCashBack")
     ->route("/remove_media_file ([0-9]+)", "removeMediaFile")
     ->route("/remove_all_media_file ([a-zA-Z0-9]+)", "removeAllMediaFileByType")
     ->route("/remove_notes ([0-9]+)", "removeNotes")
@@ -192,7 +193,8 @@ BotManager::bot()
                 ],
                 [
                     ["text" => "👩🏻‍💻Работа с пользователем", "url" => $link]
-                ]
+                ],
+
             ],
                 $thread
             );

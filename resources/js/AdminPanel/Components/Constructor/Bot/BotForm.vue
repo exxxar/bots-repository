@@ -297,23 +297,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                 </textarea>
                         </div>
 
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="col-12 my-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input"
-                                               type="checkbox"
-                                               v-model="needMenuBtn" id="needMenuBtn">
-                                        <label class="form-check-label" for="needMenuBtn">
-                                            Команды \ Кнопка меню
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="row"
-                             v-if="!needMenuBtn"
                              :key="'commands-'+index"
                              v-for="(item, index) in botForm.commands">
                             <div class="col-12" v-if="botForm.commands[index].command==='/adminmenu'">
@@ -354,8 +339,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                 </button>
                             </div>
                         </div>
-                        <div class="row"
-                             v-if="!needMenuBtn">
+                        <div class="row">
                             <div class="col-12">
                                 <button
                                     type="button"
@@ -369,7 +353,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                         </div>
 
                         <div class="row"
-                             v-if="!needMenuBtn">
+                        >
                             <div class="col-12 my-2">
                                 <div class="form-check">
                                     <input class="form-check-input"
@@ -380,7 +364,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-12" v-if="showCode">
+                            <div class="col-12 mb-3" v-if="showCode">
                                 <label class="form-label" id="bot-domain">JSON-код клавиатуры</label>
                                 <Vue3JsonEditor
                                     v-if="loadCommandEditor"
@@ -393,8 +377,19 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             </div>
                         </div>
 
-                        <div class="row" v-if="needMenuBtn">
-                            <div class="col-6">
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="mb-2">Кнопка меню</p>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           v-model="needMenuBtn" id="needMenuBtn">
+                                    <label class="form-check-label" for="needMenuBtn">
+                                        Нужна кнопка меню
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6" v-if="needMenuBtn">
                                 <input type="text" class="form-control"
                                        placeholder="Текст кнопки меню"
                                        aria-label="Текст кнопки меню"
@@ -404,8 +399,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                        required>
                             </div>
 
-                            <div class="col-6">
-                                <input type="text" class="form-control"
+                            <div class="col-6" v-if="needMenuBtn">
+                                <input type="url" class="form-control"
                                        placeholder="Адрес перехода URL"
                                        aria-label="Адрес перехода URL"
                                        maxlength="255"
@@ -1183,7 +1178,7 @@ export default {
     data() {
         return {
             loadCommandEditor: true,
-            needMenuBtn: false,
+
             showCode: false,
             tab: 0,
             spent_time_counter: 0,
@@ -1259,7 +1254,7 @@ export default {
                     value: 360,
                 }
             ],
-
+            needMenuBtn: false,
             botForm: {
                 title: 'Название бота',
                 short_description: 'Описание в шапке бота',
@@ -1460,7 +1455,7 @@ export default {
                     level_2: this.bot.level_2,
                     level_3: this.bot.level_3,
                     company_id: this.bot.company_id,
-
+                    commands: this.bot.commands || null,
                     photos: this.bot.photos || [],
                     warnings: this.bot.warnings || [],
 
@@ -1471,16 +1466,16 @@ export default {
                     },
                 }
 
-                if (Array.isArray(this.bot.commands || null)) {
-                    this.botForm.commands = this.bot.commands || null
-                    this.needMenuBtn = false
+                if (!Array.isArray(this.botForm.commands))
+                    this.botForm.commands = []
+
+                this.botForm.menu = this.bot.menu || {
+                    text: null,
+                    url: null
                 }
 
-                if (typeof this.bot.commands === 'object' && !Array.isArray(this.bot.commands) && this.bot.commands !== null) {
-                    this.botForm.menu = this.bot.commands || null
+                if (this.botForm.menu.url !== null)
                     this.needMenuBtn = true
-                }
-
 
                 if (this.botForm.commands == null)
                     this.autoAddCommands();
@@ -1662,7 +1657,7 @@ export default {
         addBot() {
 
             let data = new FormData();
-            data.append("need_menu_btn", this.needMenuBtn )
+
             Object.keys(this.botForm)
                 .forEach(key => {
                     const item = this.botForm[key] || ''
