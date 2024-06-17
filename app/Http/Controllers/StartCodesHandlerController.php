@@ -211,9 +211,12 @@ class StartCodesHandlerController extends Controller
                                 "url" => $path
                             ]
                         ],
+
+                    ],
+                    [
                         ["text" => "💸Начислить пользователю CashBack",
                             "callback_data" => "/auto_send_cashback $request_id"],
-                    ],
+                    ]
                 ]
             );
 
