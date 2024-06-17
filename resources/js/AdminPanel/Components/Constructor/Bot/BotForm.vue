@@ -22,7 +22,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     </div>
                     <h1 class="text-body-emphasis">Создание бота</h1>
                     <p class="col-lg-8 mx-auto fs-5 text-muted">
-                   Воспользуйся данным разделом просмотрев обучение или предложенной инструкцией.
+                        Воспользуйся данным разделом просмотрев обучение или предложенной инструкцией.
                     </p>
                     <div class="d-md-inline-flex  d-flex flex-column flex-md-row gap-2">
                         <a
@@ -43,37 +43,36 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         </div>
 
 
-
         <div class="row d-flex justify-content-center">
             <div class="col-md-12 col-12">
-           <div class="card mb-3">
-               <div class="card-body">
-                   <label class="form-label d-flex justify-content-between" id="bot-token">
-                       <div>
-                           <Popper>
-                               <i class="fa-regular fa-circle-question mr-1"></i>
-                               <template #content>
-                                   <div>Взять из BotFather при создании бота! Длинная нечитаемая подсвеченная
-                                       строка!
-                                   </div>
-                               </template>
-                           </Popper>
-                           Токен бота
-                           <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                       </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <label class="form-label d-flex justify-content-between" id="bot-token">
+                            <div>
+                                <Popper>
+                                    <i class="fa-regular fa-circle-question mr-1"></i>
+                                    <template #content>
+                                        <div>Взять из BotFather при создании бота! Длинная нечитаемая подсвеченная
+                                            строка!
+                                        </div>
+                                    </template>
+                                </Popper>
+                                Токен бота
+                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                            </div>
 
-                   </label>
-                   <input type="text" class="form-control"
-                          placeholder="Токен"
-                          aria-label="Токен"
-                          v-model="botForm.bot_token"
-                          maxlength="255"
-                          minlength="40"
-                          @invalid="alert('Вы не ввели токен бота!')"
-                          aria-describedby="bot-token" required>
-                   <p><em><small>Для начала создания бота добавьте токен телеграм бота</small></em></p>
-               </div>
-           </div>
+                        </label>
+                        <input type="text" class="form-control"
+                               placeholder="Токен"
+                               aria-label="Токен"
+                               v-model="botForm.bot_token"
+                               maxlength="255"
+                               minlength="40"
+                               @invalid="alert('Вы не ввели токен бота!')"
+                               aria-describedby="bot-token" required>
+                        <p><em><small>Для начала создания бота добавьте токен телеграм бота</small></em></p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -250,7 +249,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             </label>
 
                             <div class="alert alert-info" role="alert">
-                              Данное описание видно в момент, когда пользователь делится ссылкой на бота, а также при нажатии на иконку бота.
+                                Данное описание видно в момент, когда пользователь делится ссылкой на бота, а также при
+                                нажатии на иконку бота.
                             </div>
 
                             <textarea class="form-control"
@@ -277,7 +277,8 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             </label>
 
                             <div class="alert alert-info" role="alert">
-                               Данное описание видно при первом запуске бота, оно должно содержать информацию о возможностях бота:
+                                Данное описание видно при первом запуске бота, оно должно содержать информацию о
+                                возможностях бота:
                                 <ul class="m-0 pl-2">
                                     <li>- система лояльности</li>
                                     <li>- колесо фортуны</li>
@@ -351,6 +352,29 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-12 my-2">
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           v-model="showCode" id="showCode">
+                                    <label class="form-check-label" for="showCode">
+                                        Отобразить код
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12" v-if="showCode">
+                                <label class="form-label" id="bot-domain">JSON-код клавиатуры</label>
+                                <Vue3JsonEditor
+                                    v-if="loadCommandEditor"
+                                    :mode="'code'"
+                                    v-model="botForm.commands"
+                                    :show-btns="false"
+                                    :expandedOnStart="true"
+                                    @json-change="onJsonChange"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1110,11 +1134,17 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 <script>
 
 import {mapGetters} from "vuex";
+import {Vue3JsonEditor} from 'vue3-json-editor'
 
 export default {
+    components: {
+        Vue3JsonEditor
+    },
     props: ["bot"],
     data() {
         return {
+            loadCommandEditor: true,
+            showCode: false,
             tab: 0,
             spent_time_counter: 0,
             can_create: true,
@@ -1241,6 +1271,7 @@ export default {
             },
             deep: true
         },
+
         'need_threads': function (oVal, nVal) {
             let threads = [
                 {
@@ -1312,11 +1343,11 @@ export default {
     },
     computed: {
         ...mapGetters(['getSlugs', 'getCurrentCompany']),
-        canOpenForm(){
+        canOpenForm() {
             if (!this.botForm.bot_token)
                 return false;
 
-            if (this.botForm.bot_token.length<40)
+            if (this.botForm.bot_token.length < 40)
                 return false;
 
             return true;
@@ -1402,7 +1433,7 @@ export default {
                 if (this.botForm.payment_provider_token)
                     this.need_payments = true
 
-                if ((this.botForm.cashback_config||[]).length>0)
+                if ((this.botForm.cashback_config || []).length > 0)
                     this.need_cashback_config = true
 
                 if (this.botForm.warnings.length > 0)
@@ -1524,6 +1555,11 @@ export default {
         },
         removeCommands(index) {
             this.botForm.commands.splice(index, 1)
+
+            this.loadCommandEditor = false
+            this.$nextTick(() => {
+                this.loadCommandEditor = true
+            })
         },
         addCommands() {
             if (!this.botForm.commands)
@@ -1532,6 +1568,10 @@ export default {
             this.botForm.commands.push({
                 command: null,
                 description: null
+            })
+            this.loadCommandEditor = false
+            this.$nextTick(() => {
+                this.loadCommandEditor = true
             })
         },
 
@@ -1667,7 +1707,9 @@ export default {
 
 
         },
-
+        onJsonChange(value) {
+            this.botForm.commands = value
+        },
         removeCashBackConfig(index) {
             this.botForm.cashback_config.splice(index, 1)
         },
@@ -1819,8 +1861,6 @@ export default {
     border-radius: 0px 5px 5px 0px !important;
     border-left: none !important;
 }
-
-
 
 
 </style>
