@@ -615,6 +615,8 @@ class BotLogicFactory
                 'description' => $this->bot->long_description,
             ]);
 
+        Log::info("prepareBaseBotConfig".print_r($this->bot->commands,true));
+
         if (is_array($this->bot->commands ?? null))
             Http::post("$website/setMyCommands", [
                 'commands' => $this->bot->commands ?? [
