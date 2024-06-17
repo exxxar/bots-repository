@@ -617,7 +617,7 @@ class BotLogicFactory
 
         Log::info("prepareBaseBotConfig".print_r($this->bot->commands,true));
 
-        if (is_array($this->bot->commands ?? null))
+        if (!isset($this->bot->commands["url"]))
             Http::post("$website/setMyCommands", [
                 'commands' => $this->bot->commands ?? [
                         [
@@ -634,7 +634,8 @@ class BotLogicFactory
                         ]
                     ],
             ]);
-        else
+
+        if (isset($this->bot->commands["url"]))
             Http::post("$website/setChatMenuButton", [
                 'menu_button' => [
                     "type" => "web_app",
