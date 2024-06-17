@@ -15,12 +15,15 @@ use App\Models\BotNote;
 use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\Documents;
+use App\Models\Order;
 use App\Models\ReferralHistory;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
 
 class SystemDiagnosticController extends Controller
@@ -586,7 +589,7 @@ class SystemDiagnosticController extends Controller
         /*
                 if ($value <= 2)*/
         BotManager::bot()
-            ->sendMessage($bot->order_channel ??  null,
+            ->sendMessage($bot->order_channel ?? null,
                 "#отзыв\nПользователь $name ($tgId, $phone) оставил оценку за обслуживание " . ($emojis[$value] ?? "😡") . "!",
                 $thread
             );
@@ -623,9 +626,50 @@ class SystemDiagnosticController extends Controller
         $value = $data[3] ?? 0;
     }
 
-    public function autoSendCashBack(...$data){
+    /**
+     * @throws ValidationException
+     */
+    public function autoSendCashBack(...$data)
+    {
+
+        $bot = BotManager::bot()->getSelf();
+
+        $botUser = BotUser::query()
+            ->where("bot_id", $bot->id)
+            ->where("telegram_chat_id", $data[3] ?? null)
+            ->first();
+
+        if (is_null($botUser)) {
+            BotManager::bot()
+                ->reply("Пользователь не найден");
+            return;
+        }
+
+        $order = Order::query()
+            ->where("bot_id", $bot->id)
+            ->where("customer_id", $botUser->id)
+            ->orderBy("created_at", "DESC")
+            ->first();
+
+        if (is_null($order)) {
+            BotManager::bot()
+                ->reply("Заказ не найден");
+            return;
+        }
+
+        $admin = BotManager::bot()->currentBotUser();
+
+        BusinessLogic::administrative()
+            ->setBot($bot)
+            ->setBotUser($admin)
+            ->addCashBack([
+                "user_telegram_chat_id" =>$botUser->telegram_chat_id,
+                "amount" => $order->summary_price,
+                "info" => "Автоматическое начисление CashBack после заказа",
+            ]);
+
         BotManager::bot()
-            ->reply("Тест! Начисляем кэшбэк по параметрам".print_r($data, true));
+            ->reply("Операция выполнена успешно!");
     }
 
     private function mediaPrint($tmp, $media, $type = null)
@@ -930,7 +974,7 @@ class SystemDiagnosticController extends Controller
         $document->save();
 
         $thread = $bot->topics["questions"] ?? null;
-        $channel = $bot->order_channel ??  null;
+        $channel = $bot->order_channel ?? null;
 
         BotMethods::bot()
             ->whereBot($bot)
