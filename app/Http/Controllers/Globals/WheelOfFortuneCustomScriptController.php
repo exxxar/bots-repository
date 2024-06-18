@@ -254,6 +254,9 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $thread = $bot->topics["actions"] ?? null;
 
+        $vowels = ["(", ")", "-"];
+        $filteredPhone = str_replace($vowels, "", $winnerPhone);
+
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
@@ -261,7 +264,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 str_contains($winMessage, "%s") ?
                     sprintf($winMessage, $winnerName, $winNumber, $winnerDescription) : $winMessage)
             ->sendInlineKeyboard($callbackChannel,
-                "Участник $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $winnerDescription ) - свяжитесь с ним для дальнейших указаний", [
+                "Участник $filteredPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $winnerDescription ) - свяжитесь с ним для дальнейших указаний", [
                     [
                         ["text" => "Написать пользователю ответ", "url" => $link]
                     ]

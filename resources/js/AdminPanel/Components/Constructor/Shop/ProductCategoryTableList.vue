@@ -52,7 +52,7 @@ import Pagination from "@/AdminPanel/Components/Pagination.vue";
 
                         <button
                             title="Удалить товар"
-                            @click="removeProductCategory"
+                            @click="removeProductCategory(item)"
                             class="btn btn-outline-danger">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>

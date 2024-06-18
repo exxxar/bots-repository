@@ -54,11 +54,24 @@ class SimpleDeliveryController extends SlugController
                 "value" => "Наш магазин!",
 
             ],
+
             [
                 "type" => "text",
                 "key" => "delivery_price_text",
                 "description" => "Описание ценника на доставку",
                 "value" => "1000 руб.",
+            ],
+            [
+                "type" => "text",
+                "key" => "menu_list_type",
+                "description" => "Тип отображения меню в магазине: 0 - списком, 1 - карточками",
+                "value" => 0,
+            ],
+            [
+                "type" => "boolean",
+                "key" => "need_category_by_page",
+                "description" => "Каждая категория - отдельная страница",
+                "value" => false,
             ],
             [
                 "type" => "text",
@@ -233,6 +246,13 @@ class SimpleDeliveryController extends SlugController
                 'can_use_cash' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "can_use_cash")
                     ->first())["value"] ?? true : true,
+
+                'menu_list_type' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "menu_list_type")
+                    ->first())["value"] ?? 0 : 0,
+                'need_category_by_page' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "need_category_by_page")
+                    ->first())["value"] ?? false : false,
             ]
         );
     }
