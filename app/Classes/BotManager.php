@@ -413,6 +413,21 @@ class BotManager extends BotCore
 
         $content = str_replace(["{{userName}}"], $name, $content);
 
+        $cashback = $this->botUser->cashBack->amount ?? 0;
+        $content = str_replace(["{{cashback}}"], $cashback, $content);
+
+        $content = str_replace(["{{level_1_percent}}"], $bot->level_1 ?? 0, $content);
+        $content = str_replace(["{{level_2_percent}}"], $bot->level_2 ?? 0, $content);
+        $content = str_replace(["{{level_3_percent}}"], $bot->level_3 ?? 0, $content);
+        $content = str_replace(["{{cashback_fire_percent}}"], $bot->cashback_fire_percent ?? 0, $content);
+        $content = str_replace(["{{is_admin}}"], ($this->botUser->is_admin ?? false) ? "Вы администратор" : "Вы не администратор", $content);
+        $content = str_replace(["{{is_work}}"], ($this->botUser->is_work ?? false) ? "Вы за работой" : "Вы не работаете", $content);
+        $content = str_replace(["{{is_vip}}"], ($this->botUser->is_vip ?? false) ? "Вы VIP-клиент" : "У вас еще нет статуса VIP", $content);
+        $content = str_replace(["{{is_manager}}"], ($this->botUser->is_manager ?? false) ? "Вы менеджер" : "Вы не менеджер", $content);
+        $content = str_replace(["{{is_deliveryman}}"], ($this->botUser->is_deliveryman ?? false) ? "Вы доставщик" : "Вы не доставщик", $content);
+        $content = str_replace(["{{sex}}"], ($this->botUser->sex ?? false) ? "Мужчина" : "Женщина", $content);
+
+
         $telegramChatId = $this->botUser->telegram_chat_id ?? "Не указан";
 
         $content = str_replace(["{{telegramChatId}}"], $telegramChatId, $content);
