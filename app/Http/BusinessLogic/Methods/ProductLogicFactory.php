@@ -156,7 +156,8 @@ class ProductLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $categories = ProductCategory::query()
-            ->where("bot_id", $this->bot->id);
+            ->where("bot_id", $this->bot->id)
+            ->has("products",">",0);
 
         if (!$isFull)
             $categories =

@@ -5,7 +5,9 @@ import Rating from "ClientTg@/Components/Shop/Helpers/Rating.vue";
     <div
         v-if="displayType==0"
         class="d-flex pb-2">
-        <div class="mr-auto" style="max-height: 100px;">
+        <div class="mr-auto"
+             @click="addToCart"
+             style="max-height: 100px;">
             <img v-lazy="item.images[0]"
                  style="object-fit: cover;height: 100%;"
                  class="rounded-m shadow-xl" width="110">

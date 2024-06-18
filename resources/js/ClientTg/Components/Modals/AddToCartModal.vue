@@ -1,11 +1,21 @@
 <template>
     <div id="menu-product-info" class="menu menu-box-bottom menu-box-detached rounded-m d-block"
-         style="height:220px; display:block;overflow:auto;"
+         style="height:420px; display:block;overflow:auto;"
          data-menu-effect="menu-over">
 
         <div class="w-100" v-if="product">
+
+            <div class="mr-auto w-100 p-2">
+                <img v-lazy="product.images[0]"
+                     style="object-fit: cover;width:100px; height:200px;"
+                     class="rounded-m w-100">
+                <!--            <a href="#" data-menu="cart-item-edit"
+                               class="color-highlight mt-n5 py-3 pl-2 d-block font-11"><i class="fa-regular fa-share-from-square  pl-2 pr-1"></i>Подробнее</a>-->
+            </div>
+
             <h4 class="text-center font-700 mt-3 pt-1 px-4">{{product.title || 'Нет заголовка'}}</h4>
 
+            <p class="mb-2 px-4">{{product.description}}</p>
             <div class="row text-center mr-2 ml-2 mb-3" v-if="checkInCart>0">
 
 
@@ -40,7 +50,7 @@
                 </div>
             </div>
 
-            <div class="row text-center mr-2 ml-2 mb-3">
+<!--            <div class="row text-center mr-2 ml-2 mb-3">
                 <div class="col-12 mb-n2">
                     <button type="button"
                             v-if="!product.in_favorite"
@@ -57,7 +67,7 @@
                         Убрать из избранного
                     </button>
                 </div>
-            </div>
+            </div>-->
         </div>
 
 

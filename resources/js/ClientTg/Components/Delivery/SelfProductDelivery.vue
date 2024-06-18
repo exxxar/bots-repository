@@ -581,6 +581,8 @@ export default {
             this.startTimer(localStorage.getItem("cashman_self_product_delivery_counter"))
         }
 
+      //  this.selectProductTypeDisplay(this.settings.menu_list_type || 0)
+
         if (localStorage.getItem("cashman_self_product_type_display") != null) {
             this.product_type_display = parseInt(localStorage.getItem("cashman_self_product_type_display") || 0)
         }

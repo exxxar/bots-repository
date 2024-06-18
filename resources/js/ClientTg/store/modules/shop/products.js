@@ -118,7 +118,7 @@ const actions = {
         }
 
         let page = payload.page || 0
-        let size = 12
+        let size = 50
 
         let link = `${BASE_PRODUCTS_LINK}?page=${page}&size=${size}`
         let method = 'POST'
