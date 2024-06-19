@@ -663,6 +663,9 @@ class SystemDiagnosticController extends Controller
             return;
         }
 
+        $order->is_cashback_crediting = true;
+        $order->save();
+
         $admin = BotManager::bot()->currentBotUser();
 
         BusinessLogic::administrative()
