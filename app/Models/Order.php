@@ -38,6 +38,7 @@ class Order extends Model
         "receiver_longitude",
         'status',
         'order_type',
+        'is_cashback_crediting',
         'payed_at',
     ];
 
@@ -51,6 +52,7 @@ class Order extends Model
         'bot_id' => 'integer',
         'deliveryman_id' => 'integer',
         'customer_id' => 'integer',
+        'is_cashback_crediting' => 'boolean',
         'delivery_service_info' => 'array',
         'deliveryman_info' => 'array',
         'product_details' => 'array',

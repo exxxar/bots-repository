@@ -31,6 +31,9 @@ Route::prefix("bot-client")
         Route::post("/send-to-channel", [BotController::class, "sendToChannel"])
             ->middleware(["tgAuth.any"]);
 
+        Route::post("/send-to-queue", [BotController::class, "sendToQueue"])
+            ->middleware(["tgAuth.any"]);
+
         Route::post("/telegram-channel-id", [BotController::class, "requestTelegramChannel"])
             ->middleware(["tgAuth.any"]);
 

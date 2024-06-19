@@ -43,12 +43,14 @@ class BotController extends Controller
         return response()->noContent();
     }
 
-    public function loadBotFields(Request $request): \App\Http\Resources\BotCustomFieldSettingCollection{
+    public function loadBotFields(Request $request): \App\Http\Resources\BotCustomFieldSettingCollection
+    {
 
         return BusinessLogic::bots()
             ->setBot($request->bot ?? null)
             ->botFieldList();
     }
+
     /**
      * @throws ValidationException
      */
@@ -65,7 +67,7 @@ class BotController extends Controller
         ]);
 
         return BusinessLogic::bots()
-            ->setBot($request->bot  ?? null)
+            ->setBot($request->bot ?? null)
             ->storeBotFields($request->all());
     }
 
@@ -94,6 +96,26 @@ class BotController extends Controller
         return BusinessLogic::bots()
             ->setBot($request->bot ?? null)
             ->updateShopLink($request->all());
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function sendToQueue(Request $request): Response
+    {
+        $request->validate([
+            "message" => "required",
+            "cron_time" => "required",
+        ]);
+
+        $bot = $request->bot ?? null;
+
+        BusinessLogic::bots()
+            ->setBot($bot)
+            ->sendToQueue($request->all());
+
+        return response()->noContent();
+
     }
 
     /**
@@ -163,7 +185,8 @@ class BotController extends Controller
     }
 
 
-    public function requestManagerNotes(Request $request){
+    public function requestManagerNotes(Request $request)
+    {
         return response()
             ->json(
                 BusinessLogic::bots()
@@ -172,6 +195,7 @@ class BotController extends Controller
                     ->notes()
             );
     }
+
     /**
      * @throws ValidationException
      */
@@ -433,7 +457,7 @@ class BotController extends Controller
             ->first();
 
         if (!is_null($bot))
-            $botDomain = Str::uuid()."_bot";
+            $botDomain = Str::uuid() . "_bot";
 
 
         $botUser = $request->botUser ?? null;

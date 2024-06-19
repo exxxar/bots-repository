@@ -657,6 +657,12 @@ class SystemDiagnosticController extends Controller
             return;
         }
 
+        if (($order->is_cashback_crediting ?? true) === true){
+            BotManager::bot()
+                ->reply("❗По данному заказу уже был начислен автоматический CashBack❗");
+            return;
+        }
+
         $admin = BotManager::bot()->currentBotUser();
 
         BusinessLogic::administrative()

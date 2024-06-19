@@ -202,22 +202,39 @@ class StartCodesHandlerController extends Controller
             }
 
 
+            $requestBotUser = BotUser::query()
+                ->where("bot_id", $bot->id)
+                ->where("telegram_chat_id", $request_id ?? null)
+                ->first();
+
+            $order = Order::query()
+                ->where("bot_id", $bot->id)
+                ->where("customer_id", $requestBotUser->id)
+                ->orderBy("created_at", "DESC")
+                ->first();
+
+            $requestKeyboard = [
+                [
+                    ["text" => "\xF0\x9F\x8E\xB0Перейти в административное меню",
+                        "web_app" => [
+                            "url" => $path
+                        ]
+                    ],
+
+                ],
+
+            ];
+
+            if (!($order->is_cashback_crediting ?? true)){
+                $requestKeyboard[] = [
+                    ["text" => "💸Начислить пользователю CashBack",
+                        "callback_data" => "/auto_send_cashback $request_id"],
+                ];
+            }
+
             BotManager::bot()->replyInlineKeyboard(
                 $text,
-                [
-                    [
-                        ["text" => "\xF0\x9F\x8E\xB0Перейти в административное меню",
-                            "web_app" => [
-                                "url" => $path
-                            ]
-                        ],
-
-                    ],
-                    [
-                        ["text" => "💸Начислить пользователю CashBack",
-                            "callback_data" => "/auto_send_cashback $request_id"],
-                    ]
-                ]
+                $requestKeyboard
             );
 
 

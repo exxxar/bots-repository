@@ -37,6 +37,7 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'order_type' => $this->order_type,
             'payed_at' => $this->payed_at,
+            'is_cashback_crediting' => $this->is_cashback_crediting ?? true,
         ];
     }
 }
