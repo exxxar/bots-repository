@@ -33,7 +33,7 @@ trait BotDialogTrait
         foreach ($variables as $variable){
             $variable = (object)$variable;
 
-            $content = str_replace([$variable->key], $variable->value ?? 'не указано', $content);
+            $content = str_replace($variable->key, $variable->value ?? 'не указано', $content);
         }
 
 
