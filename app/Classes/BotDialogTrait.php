@@ -31,8 +31,6 @@ trait BotDialogTrait
         if (count($variables) == 0)
             return $content;
 
-        Log::info("variables=>" . print_r($variables, true));
-
         foreach ($variables as $variable) {
             $variable = (object)$variable;
 
@@ -50,8 +48,6 @@ trait BotDialogTrait
 
 
         $msg = $botDialogCommand->pre_text ?? 'Введите данные';
-
-        Log::info("pre_text=>" . print_r($msg, true));
 
         $msg = $this->prepareDataWithVariables($msg, $botUser);
 
@@ -91,7 +87,6 @@ trait BotDialogTrait
             $isSent = true;
         }
 
-        //Log::info("menu=>$isSent m=$msg keyboard=".print_r($replyKeyboard, true));
 
         $this->replyKeyboard(!$isSent ? $msg : 'Варианты ответов',
             !is_null($botDialogCommand->reply_keyboard_id) ?
@@ -187,7 +182,6 @@ trait BotDialogTrait
         if (!$this->validateInput($text, $botDialogCommand->input_pattern ?? null)) {
             if (!is_null($botDialogCommand->error_text ?? null)) {
 
-                Log::info("error_text=>" . print_r($botDialogCommand->error_text, true));
                 $errorText = $this->prepareDataWithVariables($botDialogCommand->error_text, $botUser);
 
                 $this->sendMessage($botUser->telegram_chat_id ?? null,
@@ -200,12 +194,9 @@ trait BotDialogTrait
         $tmpSummary = $dialog->summary_input_data ?? [];
         $tmpSummary[] = $text;
 
-        Log::info("dialog variables" . print_r($dialog->variables, true));
-
         $dialog->current_input_data = $text ?? null;
         $dialog->summary_input_data = $tmpSummary;
         $dialog->completed_at = Carbon::now();
-
 
         $tmpVariables = $dialog->variables ?? [];
 
@@ -216,14 +207,14 @@ trait BotDialogTrait
 
         $dialog->variables = $tmpVariables;
         $dialog->save();
-        Log::info("step 1");
+
 
 
         if (!is_null($botDialogCommand->store_to ?? null)) {
             $tmp[$botDialogCommand->store_to] = $text ?? null;
             $botUser->update($tmp);
         }
-        Log::info("step 2");
+
 
         $flags = is_array($botDialogCommand->result_flags) ? $botDialogCommand->result_flags : json_decode($botDialogCommand->result_flags ?? '[]');
         if (count($flags) > 0) {
@@ -235,14 +226,14 @@ trait BotDialogTrait
         }
 
         $needStop = false;
-        Log::info("step 3");
+
         if (!$botDialogCommand->is_empty && !is_null($botDialogCommand->post_text ?? null)) {
-            Log::info("post_text=>" . print_r($botDialogCommand->post_text, true));
+
             $postText = $this->prepareDataWithVariables($botDialogCommand->post_text, $botUser);
             $this->sendMessage($botUser->telegram_chat_id ?? null,
                 $postText);
         }
-        Log::info("step 4");
+
         $isAnswerFound = false;
         if (count($botDialogCommand->answers ?? []) > 0) {
 
@@ -289,7 +280,7 @@ trait BotDialogTrait
 
 
         }
-        Log::info("step 5");
+
         if (!is_null($botDialogCommand) &&
             !is_null($botDialogCommand->next_bot_dialog_command_id ?? null) &&
             !$needStop &&
@@ -317,7 +308,7 @@ trait BotDialogTrait
                 $needStop = true;
         }
 
-        Log::info("step 6");
+
         if ($needStop) {
             $botUser->in_dialog_mode = false;
             $botUser->save();
