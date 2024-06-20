@@ -7,16 +7,18 @@ use App\Models\BotDialogCommand;
 use App\Models\BotDialogResult;
 use App\Models\BotMenuTemplate;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
 trait BotDialogTrait
 {
-    private function prepareDataWithVariables($content, $botUser = null){
+    private function prepareDataWithVariables($content, $botUser = null)
+    {
         $dialog = BotDialogResult::query()
             ->with(["botDialogCommand"])
             ->where("bot_user_id", $botUser->id)
-           // ->whereNull("completed_at")
+            // ->whereNull("completed_at")
             ->orderBy("created_at", "DESC")
             ->first();
 
@@ -29,9 +31,9 @@ trait BotDialogTrait
         if (count($variables) == 0)
             return $content;
 
-        Log::info("variables=>".print_r($variables, true));
+        Log::info("variables=>" . print_r($variables, true));
 
-        foreach ($variables as $variable){
+        foreach ($variables as $variable) {
             $variable = (object)$variable;
 
             $content = str_replace($variable->key, $variable->value ?? 'не указано', $content);
@@ -40,6 +42,7 @@ trait BotDialogTrait
 
         return $content;
     }
+
     private function sendDialogData($botDialogCommand, $botUser = null): void
     {
         if (is_null($botDialogCommand))
@@ -48,7 +51,7 @@ trait BotDialogTrait
 
         $msg = $botDialogCommand->pre_text ?? 'Введите данные';
 
-        Log::info("pre_text=>".print_r($msg, true));
+        Log::info("pre_text=>" . print_r($msg, true));
 
         $msg = $this->prepareDataWithVariables($msg, $botUser);
 
@@ -182,10 +185,9 @@ trait BotDialogTrait
 
         $botDialogCommand = $dialog->botDialogCommand;
         if (!$this->validateInput($text, $botDialogCommand->input_pattern ?? null)) {
-            if (!is_null($botDialogCommand->error_text ?? null))
-            {
+            if (!is_null($botDialogCommand->error_text ?? null)) {
 
-                Log::info("error_text=>".print_r($botDialogCommand->error_text, true));
+                Log::info("error_text=>" . print_r($botDialogCommand->error_text, true));
                 $errorText = $this->prepareDataWithVariables($botDialogCommand->error_text, $botUser);
 
                 $this->sendMessage($botUser->telegram_chat_id ?? null,
@@ -198,15 +200,21 @@ trait BotDialogTrait
         $tmpSummary = $dialog->summary_input_data ?? [];
         $tmpSummary[] = $text;
 
-        Log::info("dialog variables".print_r($dialog->variables,true));
+        Log::info("dialog variables" . print_r($dialog->variables, true));
 
         $dialog->current_input_data = $text ?? null;
         $dialog->summary_input_data = $tmpSummary;
         $dialog->completed_at = Carbon::now();
-        $dialog->variables = [...$dialog->variables, (object)[
-            "key"=>$botDialogCommand->use_result_as ?? "key_$dialog->id",
-            "value"=>"$text"
-        ]];
+
+        $hasKey = Collection::make($dialog->variables)
+            ->where("key", $botDialogCommand->use_result_as ?? "key_$dialog->id")
+            ->first() ?? null;
+
+        if (is_null($hasKey))
+            $dialog->variables = [...$dialog->variables, (object)[
+                "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
+                "value" => "$text"
+            ]];
         $dialog->save();
         Log::info("step 1");
 
@@ -228,9 +236,8 @@ trait BotDialogTrait
 
         $needStop = false;
         Log::info("step 3");
-        if (!$botDialogCommand->is_empty && !is_null($botDialogCommand->post_text ?? null))
-        {
-            Log::info("post_text=>".print_r($botDialogCommand->post_text, true));
+        if (!$botDialogCommand->is_empty && !is_null($botDialogCommand->post_text ?? null)) {
+            Log::info("post_text=>" . print_r($botDialogCommand->post_text, true));
             $postText = $this->prepareDataWithVariables($botDialogCommand->post_text, $botUser);
             $this->sendMessage($botUser->telegram_chat_id ?? null,
                 $postText);
@@ -264,6 +271,15 @@ trait BotDialogTrait
                     ->where("id", $tmpItem->next_bot_dialog_command_id)
                     ->first();
 
+                $hasKey = Collection::make($dialog->variables)
+                    ->where("key", $botDialogCommand->use_result_as ?? "key_$dialog->id")
+                    ->first() ?? null;
+
+                if (is_null($hasKey))
+                    $dialog->variables = [...$dialog->variables, (object)[
+                        "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
+                        "value" => "$text"
+                    ]];
 
                 BotDialogResult::query()->create([
                     'bot_user_id' => $botUser->id,
@@ -298,8 +314,8 @@ trait BotDialogTrait
                 'current_input_data' => null,
                 'summary_input_data' => $dialog->summary_input_data ?? [],
                 'variables' => [...$dialog->variables, (object)[
-                    "key"=>$botDialogCommand->use_result_as ?? "key_$dialog->id",
-                    "value"=>"$text"
+                    "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
+                    "value" => "$text"
                 ]],
                 'completed_at' => ($nextBotDialogCommand->is_empty ?? true) ? Carbon::now() : null,
             ]);
