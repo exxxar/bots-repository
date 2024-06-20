@@ -20,6 +20,7 @@ class BotDialogResult extends Model
         'bot_dialog_command_id',
         'current_input_data',
         'summary_input_data',
+        'variables',
         'completed_at',
     ];
 
@@ -34,6 +35,7 @@ class BotDialogResult extends Model
         'bot_dialog_command_id' => 'integer',
         'current_input_data' => 'array',
         'summary_input_data' => 'array',
+        'variables' => 'array',
         'completed_at' => 'timestamp',
     ];
 

@@ -72,6 +72,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
     async updateDialogCommand(context, payload= {dialogCommandForm: null}){
         let link = `${BASE_DIALOG_GROUPS_LINK}/update-dialog`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dialogCommandForm)

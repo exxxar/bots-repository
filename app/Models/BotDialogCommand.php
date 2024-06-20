@@ -32,6 +32,7 @@ class BotDialogCommand extends Model
         'bot_dialog_group_id',
         'result_channel',
         'result_flags',
+        'use_result_as',
         'store_to',
 
     ];

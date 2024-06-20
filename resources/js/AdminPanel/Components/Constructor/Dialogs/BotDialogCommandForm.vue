@@ -194,6 +194,18 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
 
         </div>
 
+
+        <div class="mb-2">
+            <label class="form-check-label" for="need-empty-dialog">
+                Использовать значение как внутреннюю переменную
+            </label>
+
+            <input type="text"
+                   v-model="commandForm.use_result_as"
+                   class="form-control" id="floatingInput" placeholder="{name}">
+
+        </div>
+
         <div class="form-check mb-2">
             <input class="form-check-input" type="checkbox" v-model="need_chains" id="need-chains"
                    checked>
@@ -217,6 +229,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 <tbody>
                 <tr v-for="(item, index) in commandForm.answers">
                     <th scope="row">{{ index + 1 }}</th>
+
                     <td>
                         <div class="form-floating">
                             <input type="text"
@@ -491,6 +504,7 @@ export default {
 
                 result_flags: [],
                 store_to: null,
+                use_result_as: null,
 
                 result_channel: null,
                 inline_keyboard: null,

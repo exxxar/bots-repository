@@ -43,6 +43,8 @@ class BotDialogsLogicFactory
         return $this;
     }
 
+
+
     /**
      * @throws HttpException
      */
@@ -343,6 +345,7 @@ class BotDialogsLogicFactory
             'bot_dialog_group_id' => $groupId,
             'is_empty' => ($data["is_empty"] ?? false) == "true" ? 1 : 0,
             'result_channel' => $data["result_channel"] ?? null,
+            'use_result_as' => $data["use_result_as"] ?? null,
         ]);
 
         $answers = is_null($data["answers"] ?? null) ? null : json_decode($data["answers"] ?? '[]');
@@ -439,6 +442,7 @@ class BotDialogsLogicFactory
         $tmp->reply_keyboard_id = $replyKeyboard->id ?? $data["reply_keyboard_id"] ?? null;
         $tmp->is_empty = ($data["is_empty"] ?? false) == "true" ? 1 : 0;
         $tmp->result_flags = json_decode($data["result_flags"] ?? '[]');
+        $tmp->use_result_as = $data["use_result_as"] ?? null;
 
         $command = BotDialogCommand::query()->find($tmp->id);
         $command->update((array)$tmp);

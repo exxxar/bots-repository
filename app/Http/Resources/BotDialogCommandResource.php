@@ -40,6 +40,7 @@ class BotDialogCommandResource extends JsonResource
             'bot_dialog_group' => $this->whenLoaded("botDialogGroup"),
             'result_channel' => $this->result_channel,
             'result_flags' => $this->result_flags ?? [],
+            'use_result_as' => $this->use_result_as ?? null,
             'store_to' => $this->store_to,
             'answers' => $this->answers ?? [],
         ];

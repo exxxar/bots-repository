@@ -26,6 +26,19 @@ use Illuminate\Validation\ValidationException;
 
 class BotDialogGroupController extends Controller
 {
+
+    public function variablesList(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->botId ?? $request->bot_id ?? null)
+            ->first();
+
+        return response()->json(BusinessLogic::dialogs()
+            ->setBot($bot)
+            ->variablesList());
+    }
+
     public function commandList(Request $request): BotDialogCommandCollection
     {
         $bot = Bot::query()

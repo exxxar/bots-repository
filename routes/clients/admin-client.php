@@ -229,6 +229,7 @@ Route::prefix("admin")
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/commands", "commandList");
+
                 Route::post("/swap-group", "swapGroup");
                 Route::post("/swap-dialog", "swapDialog");
                 Route::post("/unlink-dialog", "unlinkDialog");

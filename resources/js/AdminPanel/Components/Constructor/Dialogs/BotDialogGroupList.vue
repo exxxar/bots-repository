@@ -33,12 +33,14 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
         </div>
     </div>
 
+
     <div class="row" v-if="dialog_commands.length>0">
         <div class="col-md-12">
             <table class="table">
                 <thead>
                 <tr>
                     <th class="text-center" scope="col">#</th>
+                    <th class="text-center" scope="col">Переменная</th>
                     <th class="text-center" scope="col">Текст диалога</th>
                     <th class="text-center" scope="col">Есть ответы</th>
                     <th class="text-center" scope="col">Цепочки</th>
@@ -60,6 +62,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 <tbody>
                 <tr v-for="(command,index) in dialog_commands">
                     <th scope="row">{{ command.id }}</th>
+                    <td class="text-center">{{command.use_result_as || 'не задана'}}</td>
                     <td class="text-center"><a
                         data-bs-toggle="modal"
                         @click="openEditor(command)"
@@ -216,6 +219,7 @@ export default {
 
     data() {
         return {
+            variables:[],
             bot: null,
             selected: null,
             loading: true,
@@ -335,7 +339,8 @@ export default {
             }).catch(() => {
                 this.loading = false
             })
-        }
+        },
+
     }
 }
 </script>

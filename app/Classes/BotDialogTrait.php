@@ -12,17 +12,37 @@ use Telegram\Bot\FileUpload\InputFile;
 
 trait BotDialogTrait
 {
-    private function sendDialogData($botDialogCommand, $channel = null): void
+    private function prepareDataWithVariables($content, $botUser = null){
+        $dialog = BotDialogResult::query()
+            ->with(["botDialogCommand"])
+            ->where("bot_user_id", $botUser->id)
+            ->whereNull("completed_at")
+            ->orderBy("created_at", "DESC")
+            ->first();
+
+        if (is_null($dialog))
+            return $content;
+
+        $variables = $dialog->variables ?? [];
+
+        foreach ($variables as $variable){
+            $variable = (object)$variable;
+
+            $content = str_replace([$variable->key], $variable->value ?? 'не указано', $content);
+        }
+
+
+        return $content;
+    }
+    private function sendDialogData($botDialogCommand, $botUser = null): void
     {
-
-        $channel = $this->getCurrentChatId() ?? $channel;
-
         if (is_null($botDialogCommand))
             return;
 
 
         $msg = $botDialogCommand->pre_text ?? 'Введите данные';
 
+        $msg = $this->prepareDataWithVariables($msg, $botUser);
 
         $inlineMenuTemplate = BotMenuTemplate::query()->find($botDialogCommand->inline_keyboard_id);
         $inlineKeyboard = $inlineMenuTemplate->menu ?? [];
@@ -103,10 +123,11 @@ trait BotDialogTrait
             'bot_dialog_command_id' => $botDialogCommand->id,
             'current_input_data' => null,
             'summary_input_data' => [],
+            'variables' => [],
             'completed_at' => null,
         ]);
 
-        $this->sendDialogData($botDialogCommand, $botUser->telegram_chat_id ?? null);
+        $this->sendDialogData($botDialogCommand, $botUser);
     }
 
     private function validateInput($text, $pattern = null): bool
@@ -154,8 +175,13 @@ trait BotDialogTrait
         $botDialogCommand = $dialog->botDialogCommand;
         if (!$this->validateInput($text, $botDialogCommand->input_pattern ?? null)) {
             if (!is_null($botDialogCommand->error_text ?? null))
+            {
+                $errorText = $this->prepareDataWithVariables($botDialogCommand->error_text, $botUser);
+
                 $this->sendMessage($botUser->telegram_chat_id ?? null,
-                    $botDialogCommand->error_text);
+                    $errorText);
+            }
+
             return;
         }
 
@@ -165,6 +191,10 @@ trait BotDialogTrait
         $dialog->current_input_data = $text ?? null;
         $dialog->summary_input_data = $tmpSummary;
         $dialog->completed_at = Carbon::now();
+        $dialog->variables = [...$dialog->variables, (object)[
+            "key"=>$botDialogCommand->use_result_as ?? "key_$dialog->id",
+            "value"=>"$text"
+        ]];
         $dialog->save();
 
         if (!is_null($botDialogCommand->store_to ?? null)) {
@@ -184,8 +214,11 @@ trait BotDialogTrait
         $needStop = false;
 
         if (!$botDialogCommand->is_empty && !is_null($botDialogCommand->post_text ?? null))
+        {
+            $postText = $this->prepareDataWithVariables($botDialogCommand->post_text, $botUser);
             $this->sendMessage($botUser->telegram_chat_id ?? null,
-                $botDialogCommand->post_text);
+                $postText);
+        }
 
         $isAnswerFound = false;
         if (count($botDialogCommand->answers ?? []) > 0) {
@@ -215,16 +248,21 @@ trait BotDialogTrait
                     ->where("id", $tmpItem->next_bot_dialog_command_id)
                     ->first();
 
+
                 BotDialogResult::query()->create([
                     'bot_user_id' => $botUser->id,
                     'bot_dialog_command_id' => $tmpItem->next_bot_dialog_command_id ?? null,
                     'current_input_data' => null,
                     'summary_input_data' => $dialog->summary_input_data ?? [],
+                    'variables' => [...$dialog->variables, (object)[
+                        "key"=>$botDialogCommand->use_result_as ?? "key_$dialog->id",
+                        "value"=>"$text"
+                    ]],
                     'completed_at' => ($tmpNextDialog->is_empty ?? true) ? Carbon::now() : null,
                 ]);
 
                 $this->sendDialogData($tmpNextDialog ?? null,
-                    $botUser->telegram_chat_id ?? null);
+                    $botUser);
 
                 if ($tmpNextDialog->is_empty ?? true)
                     $needStop = true;
@@ -246,6 +284,10 @@ trait BotDialogTrait
                 'bot_dialog_command_id' => $nextBotDialogCommand->id,
                 'current_input_data' => null,
                 'summary_input_data' => $dialog->summary_input_data ?? [],
+                'variables' => [...$dialog->variables, (object)[
+                    "key"=>$botDialogCommand->use_result_as ?? "key_$dialog->id",
+                    "value"=>"$text"
+                ]],
                 'completed_at' => ($nextBotDialogCommand->is_empty ?? true) ? Carbon::now() : null,
             ]);
 
@@ -253,7 +295,7 @@ trait BotDialogTrait
             $needStop = false;
 
             $this->sendDialogData($nextBotDialogCommand ?? null,
-                $botUser->telegram_chat_id ?? null);
+                $botUser);
 
             if ($nextBotDialogCommand->is_empty ?? true)
                 $needStop = true;
@@ -302,7 +344,7 @@ trait BotDialogTrait
 
         $botDialogCommand = $dialogs[count($dialogs) - 1]->botDialogCommand;
 
-        $tmp = $dialog->summary_input_data ?? [];
+        $tmp = $dialogs[count($dialogs) - 1]->summary_input_data ?? [];
 
         $this->dialogResponse($botUser, $botDialogCommand, $tmp);
 
