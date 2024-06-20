@@ -25,6 +25,8 @@ trait BotDialogTrait
 
         $variables = $dialog->variables ?? [];
 
+        Log::info("variables=>".print_r($variables, true));
+
         foreach ($variables as $variable){
             $variable = (object)$variable;
 
