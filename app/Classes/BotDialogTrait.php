@@ -47,6 +47,8 @@ trait BotDialogTrait
 
         $msg = $botDialogCommand->pre_text ?? 'Введите данные';
 
+        Log::info("pre_text=>".print_r($msg, true));
+
         $msg = $this->prepareDataWithVariables($msg, $botUser);
 
         $inlineMenuTemplate = BotMenuTemplate::query()->find($botDialogCommand->inline_keyboard_id);
@@ -181,6 +183,8 @@ trait BotDialogTrait
         if (!$this->validateInput($text, $botDialogCommand->input_pattern ?? null)) {
             if (!is_null($botDialogCommand->error_text ?? null))
             {
+
+                Log::info("error_text=>".print_r($botDialogCommand->error_text, true));
                 $errorText = $this->prepareDataWithVariables($botDialogCommand->error_text, $botUser);
 
                 $this->sendMessage($botUser->telegram_chat_id ?? null,
@@ -220,6 +224,7 @@ trait BotDialogTrait
 
         if (!$botDialogCommand->is_empty && !is_null($botDialogCommand->post_text ?? null))
         {
+            Log::info("post_text=>".print_r($botDialogCommand->post_text, true));
             $postText = $this->prepareDataWithVariables($botDialogCommand->post_text, $botUser);
             $this->sendMessage($botUser->telegram_chat_id ?? null,
                 $postText);
