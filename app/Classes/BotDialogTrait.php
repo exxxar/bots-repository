@@ -206,11 +206,8 @@ trait BotDialogTrait
         $dialog->summary_input_data = $tmpSummary;
         $dialog->completed_at = Carbon::now();
 
-        $hasKey = Collection::make($dialog->variables)
-            ->where("key", $botDialogCommand->use_result_as ?? "key_$dialog->id")
-            ->first() ?? null;
 
-        if (is_null($hasKey))
+
             $dialog->variables = [...$dialog->variables, (object)[
                 "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
                 "value" => "$text"
@@ -270,16 +267,6 @@ trait BotDialogTrait
                 $tmpNextDialog = BotDialogCommand::query()
                     ->where("id", $tmpItem->next_bot_dialog_command_id)
                     ->first();
-
-                $hasKey = Collection::make($dialog->variables)
-                    ->where("key", $botDialogCommand->use_result_as ?? "key_$dialog->id")
-                    ->first() ?? null;
-
-                if (is_null($hasKey))
-                    $dialog->variables = [...$dialog->variables, (object)[
-                        "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
-                        "value" => "$text"
-                    ]];
 
                 BotDialogResult::query()->create([
                     'bot_user_id' => $botUser->id,
