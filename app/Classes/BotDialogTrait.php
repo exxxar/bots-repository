@@ -207,13 +207,14 @@ trait BotDialogTrait
             "value"=>"$text"
         ]];
         $dialog->save();
-
+        Log::info("step 1");
 
 
         if (!is_null($botDialogCommand->store_to ?? null)) {
             $tmp[$botDialogCommand->store_to] = $text ?? null;
             $botUser->update($tmp);
         }
+        Log::info("step 2");
 
         $flags = is_array($botDialogCommand->result_flags) ? $botDialogCommand->result_flags : json_decode($botDialogCommand->result_flags ?? '[]');
         if (count($flags) > 0) {
@@ -225,7 +226,7 @@ trait BotDialogTrait
         }
 
         $needStop = false;
-
+        Log::info("step 3");
         if (!$botDialogCommand->is_empty && !is_null($botDialogCommand->post_text ?? null))
         {
             Log::info("post_text=>".print_r($botDialogCommand->post_text, true));
@@ -233,7 +234,7 @@ trait BotDialogTrait
             $this->sendMessage($botUser->telegram_chat_id ?? null,
                 $postText);
         }
-
+        Log::info("step 4");
         $isAnswerFound = false;
         if (count($botDialogCommand->answers ?? []) > 0) {
 
@@ -284,7 +285,7 @@ trait BotDialogTrait
 
 
         }
-
+        Log::info("step 5");
         if (!is_null($botDialogCommand) &&
             !is_null($botDialogCommand->next_bot_dialog_command_id ?? null) &&
             !$needStop &&
@@ -315,6 +316,7 @@ trait BotDialogTrait
                 $needStop = true;
         }
 
+        Log::info("step 6");
         if ($needStop) {
             $botUser->in_dialog_mode = false;
             $botUser->save();
