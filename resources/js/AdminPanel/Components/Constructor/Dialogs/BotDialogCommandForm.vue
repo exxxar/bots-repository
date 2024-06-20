@@ -580,6 +580,7 @@ export default {
                     result_flags: this.item.result_flags || [],
                     store_to: this.item.store_to || null,
                     answers: this.item.answers || [],
+                    use_result_as: this.item.use_result_as || null,
                 }
 
                 if (this.bot)
@@ -723,6 +724,7 @@ export default {
                         result_flags: [],
                         answers: [],
                         store_to: null,
+                        use_result_as: null,
                     }
 
                     this.photos = []
