@@ -208,10 +208,10 @@ trait BotDialogTrait
 
 
 
-            $dialog->variables = [...$dialog->variables, (object)[
+        $dialog->variables[] = (object)[
                 "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
                 "value" => "$text"
-            ]];
+            ];
         $dialog->save();
         Log::info("step 1");
 
@@ -300,10 +300,7 @@ trait BotDialogTrait
                 'bot_dialog_command_id' => $nextBotDialogCommand->id,
                 'current_input_data' => null,
                 'summary_input_data' => $dialog->summary_input_data ?? [],
-                'variables' => [...$dialog->variables, (object)[
-                    "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
-                    "value" => "$text"
-                ]],
+                'variables' => $dialog->variables,
                 'completed_at' => ($nextBotDialogCommand->is_empty ?? true) ? Carbon::now() : null,
             ]);
 
