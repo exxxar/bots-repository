@@ -20,6 +20,7 @@ trait BotDialogTrait
             ->orderBy("created_at", "DESC")
             ->first();
 
+        Log::info("prepare=>". print_r($dialog->toArray(), true));
         if (is_null($dialog))
             return $content;
 
