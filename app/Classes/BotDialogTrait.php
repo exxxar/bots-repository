@@ -207,11 +207,14 @@ trait BotDialogTrait
         $dialog->completed_at = Carbon::now();
 
 
+        $tmpVariables = $dialog->variables ?? [];
 
-        $dialog->variables[] = (object)[
-                "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
-                "value" => "$text"
-            ];
+        $tmpVariables[] = (object)[
+            "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
+            "value" => "$text"
+        ];
+
+        $dialog->variables = $tmpVariables;
         $dialog->save();
         Log::info("step 1");
 
