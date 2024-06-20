@@ -25,6 +25,9 @@ trait BotDialogTrait
 
         $variables = $dialog->variables ?? [];
 
+        if (count($variables) == 0)
+            return $content;
+
         Log::info("variables=>".print_r($variables, true));
 
         foreach ($variables as $variable){
