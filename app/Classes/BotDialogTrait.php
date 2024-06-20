@@ -197,6 +197,8 @@ trait BotDialogTrait
         $tmpSummary = $dialog->summary_input_data ?? [];
         $tmpSummary[] = $text;
 
+        Log::info("dialog variables".print_r($dialog->variables,true));
+
         $dialog->current_input_data = $text ?? null;
         $dialog->summary_input_data = $tmpSummary;
         $dialog->completed_at = Carbon::now();
@@ -205,6 +207,8 @@ trait BotDialogTrait
             "value"=>"$text"
         ]];
         $dialog->save();
+
+
 
         if (!is_null($botDialogCommand->store_to ?? null)) {
             $tmp[$botDialogCommand->store_to] = $text ?? null;
