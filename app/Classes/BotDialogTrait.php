@@ -21,8 +21,6 @@ trait BotDialogTrait
             ->orderBy("created_at", "DESC")
             ->first();
 
-        Log::info("get variables ".print_r($dialog->toArray(), true));
-
         if (is_null($dialog))
             return null;
 
@@ -396,9 +394,77 @@ trait BotDialogTrait
         }
 
 
-
         if (!is_null($botDialogCommand->rules ?? null)) {
             $variables = $this->getVariables($botUser);
+
+            $rules = $botDialogCommand->rules;
+
+            foreach ($rules as $rule) {
+                $rule = (object)$rule;
+
+                $arg1 = Collection::make($variables)
+                    ->where("key", $rule->param1)
+                    ->first()["value"] ?? $rule->param1;
+
+                $arg2 = Collection::make($variables)
+                    ->where("key", $rule->param2)
+                    ->first()["value"] ?? $rule->param2;
+
+                $op = $rule->operation;
+
+                switch ($op) {
+                    default:
+                    case 0:
+                        $result = true;
+                        break;
+                    case 1:
+                        $result = $arg1 > $arg2;
+                        break;
+                    case 2:
+                        $result = $arg1 < $arg2;
+                        break;
+                    case 3:
+                        $result = $arg1 == $arg2;
+                        break;
+                    case 4:
+                        $result = $arg1 != $arg2;
+                        break;
+                    case 5:
+                        $arg3 = $arg1 + $arg2;
+                        if (!is_null($rule->use_result_as ?? null))
+                            $variables[] = (object)[
+                                "key" => $rule->use_result_as,
+                                "value" => $arg3
+                            ];
+                        $result = true;
+                        break;
+
+                    case 6:
+                        $arg3 = $arg1 - $arg2;
+                        if (!is_null($rule->use_result_as ?? null))
+                            $variables[] = (object)[
+                                "key" => $rule->use_result_as,
+                                "value" => $arg3
+                            ];
+                        $result = true;
+                        break;
+
+                    case 7:
+                        $result = $arg1 && $arg2;
+                        break;
+                    case 8:
+                        $result = $arg1 || $arg2;
+                        break;
+                }
+
+                if ($result){
+                    $this->replyInlineKeyboard($rule->text_if_true, $rule->keyboard_if_true ?? []);
+                }
+                else
+                {
+                    $this->replyInlineKeyboard($rule->text_if_false, $rule->keyboard_if_false ?? []);
+                }
+            }
 
             Log::info("variables" . print_r($variables, true));
             Log::info("test rules" . print_r($botDialogCommand->rules ?? null, true));
