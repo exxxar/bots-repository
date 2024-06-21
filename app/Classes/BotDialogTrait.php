@@ -373,6 +373,7 @@ trait BotDialogTrait
             $step++;
         }
 
+        Log::info("before test rules" . print_r($botDialogCommand->toArray(), true));
         Log::info("test rules" . print_r($botDialogCommand->rules ?? null, true));
 
         $channel = $botDialogCommand->result_channel ??

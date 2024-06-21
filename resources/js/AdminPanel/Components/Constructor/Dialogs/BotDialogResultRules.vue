@@ -174,6 +174,10 @@ export default {
             ]
         }
     },
+    mounted() {
+      if (this.modelValue)
+          this.rules = this.modelValue
+    },
     methods: {
         addRule() {
             this.rules.push({
