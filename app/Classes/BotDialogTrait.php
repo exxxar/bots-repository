@@ -500,6 +500,7 @@ trait BotDialogTrait
                 ],
                 $thread
             );
-
         }
+
     }
+}

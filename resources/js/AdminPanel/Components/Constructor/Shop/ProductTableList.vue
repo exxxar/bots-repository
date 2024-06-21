@@ -1,6 +1,7 @@
 <script setup>
 import ProductCard from "@/AdminPanel/Components/Constructor/Shop/ProductCard.vue";
 import Pagination from "@/AdminPanel/Components/Pagination.vue";
+import ProductForm from "@/AdminPanel/Components/Constructor/Shop/ProductForm.vue";
 </script>
 <template>
     <form class="input-group mb-3"
@@ -15,16 +16,17 @@ import Pagination from "@/AdminPanel/Components/Pagination.vue";
         <button class="btn btn-outline-info"
                 type="submit"
                 id="button-addon2">
-           Найти
+            Найти
         </button>
     </form>
-    <p>Всего товаров: <span v-if="paginate">{{paginate.meta.total || 0}}</span></p>
+    <p>Всего товаров: <span v-if="paginate">{{ paginate.meta.total || 0 }}</span></p>
     <div class="row">
 
         <div class="col-12">
             <table class="table">
                 <thead>
                 <tr>
+                    <th scope="col"></th>
                     <th scope="col">#</th>
                     <th scope="col">Название</th>
                     <th scope="col">Картинка</th>
@@ -32,39 +34,55 @@ import Pagination from "@/AdminPanel/Components/Pagination.vue";
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(item, index) in filteredProducts">
-                    <th scope="row">{{ item.id }}</th>
-                    <td><a href="javascript:void(0)"
-                           @click="selectProduct(item)"
-                           data-bs-toggle="modal"
-                           data-bs-target="#product-form-edit"></a>{{ item.title }}
-                    </td>
-                    <td>
-                        <img
-                            v-if="(item.images||[]).length>0"
-                            :src="preparedImgUrl(item.images[0])"
-                            style="width:100px;height:100px;object-fit:cover;"
-                            class="d-block" alt="...">
-                        <p v-else>Не добавлено</p>
-                    </td>
-                    <td>
-                        <div class="d-flex">
-                            <button
-                                title="Дублировать товар"
-                                @click="duplicateProduct"
-                                class="btn btn-outline-info mr-1">
-                                <i class="fa-regular fa-copy"></i>
-                            </button>
+                <template v-for="(item, index) in filteredProducts">
+                    <tr>
+                        <td>
+                             <span
+                                 @click="toggleEditProduct(item)"
+                                 v-if="!item.in_edit_mode"><i
+                                 class="fa-solid fa-toggle-off cursor-pointer text-secondary"></i></span>
+                            <span
+                                @click="toggleEditProduct(item)"
+                                v-else><i class="fa-solid fa-toggle-on cursor-pointer text-primary"></i></span>
+                        </td>
+                        <th scope="row">{{ item.id }}</th>
+                        <td><a href="javascript:void(0)"
+                               @click="selectProduct(item)"
+                        >{{ item.title }}</a>
+                        </td>
+                        <td>
+                            <img
+                                v-if="(item.images||[]).length>0"
+                                :src="preparedImgUrl(item.images[0])"
+                                style="width:100px;height:100px;object-fit:cover;"
+                                class="d-block" alt="...">
+                            <p v-else>Не добавлено</p>
+                        </td>
+                        <td>
+                            <div class="d-flex">
+                                <button
+                                    title="Дублировать товар"
+                                    @click="duplicateProduct"
+                                    class="btn btn-outline-info mr-1">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
 
-                            <button
-                                title="Удалить товар"
-                                @click="removeProduct"
-                                class="btn btn-outline-danger">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                                <button
+                                    title="Удалить товар"
+                                    @click="removeProduct"
+                                    class="btn btn-outline-danger">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr v-if="item.in_edit_mode">
+                        <td colspan="5">
+                            <ProductForm :bot="bot" :item="item" v-on:refresh="refresh"></ProductForm>
+                        </td>
+                    </tr>
+                </template>
 
                 </tbody>
             </table>
@@ -107,7 +125,18 @@ export default {
 
     },
     methods: {
+        refresh() {
+            this.products.forEach(item => {
+                item.in_edit_mode = false
+            })
+        },
+        toggleEditProduct(product) {
+            console.log("product0", product)
+            product.in_edit_mode = !product.in_edit_mode
+        },
         selectProduct(product) {
+
+
             this.$emit("select", product)
         },
         nextProducts(index) {
@@ -117,9 +146,9 @@ export default {
             if (url.toLocaleLowerCase().startsWith("https://") || url.toLocaleLowerCase().startsWith("http://"))
                 return url;
 
-            return "/images-by-bot-id/"+this.bot.id+"/"+url
+            return "/images-by-bot-id/" + this.bot.id + "/" + url
         },
-        removeProduct(item){
+        removeProduct(item) {
             this.$store.dispatch("removeProduct", item.id).then((response) => {
 
                 this.$notify({
@@ -131,7 +160,7 @@ export default {
 
             })
         },
-        duplicateProduct(item){
+        duplicateProduct(item) {
             this.$store.dispatch("duplicateProduct", item.id).then((response) => {
 
                 this.$notify({

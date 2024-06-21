@@ -26,7 +26,15 @@
     <div v-if="tab===0">
         <form
             v-on:submit.prevent="submit"
-            class="row">
+            class="row py-2">
+
+            <div class="col-12">
+                <button
+                    type="submit"
+                    class="btn btn-outline-primary"><i class="fa-regular fa-floppy-disk mr-2"></i> Сохранить товар
+                </button>
+            </div>
+
             <div class="col-md-8 d-flex align-items-center">
                 <div class="form-check">
                     <input class="form-check-input"
@@ -329,12 +337,7 @@
 
             </div>
 
-            <div class="col-12">
-                <button
-                    type="submit"
-                    class="btn btn-outline-primary w-100 p-3">Сохранить
-                </button>
-            </div>
+
         </form>
 
     </div>
@@ -497,6 +500,8 @@ export default {
                 });
 
                 this.clearForm()
+
+
                 this.$emit("refresh")
             }).catch(err => {
 
