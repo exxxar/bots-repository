@@ -458,11 +458,13 @@ trait BotDialogTrait
                 }
 
                 if ($result){
-                    $this->replyInlineKeyboard($rule->text_if_true, $rule->keyboard_if_true ?? []);
+                    $text = $this->prepareDataWithVariables($rule->text_if_true, $botUser);
+                    $this->replyInlineKeyboard($text, $rule->keyboard_if_true ?? []);
                 }
                 else
                 {
-                    $this->replyInlineKeyboard($rule->text_if_false, $rule->keyboard_if_false ?? []);
+                    $text = $this->prepareDataWithVariables($rule->text_if_false, $botUser);
+                    $this->replyInlineKeyboard($text, $rule->keyboard_if_false ?? []);
                 }
             }
 
