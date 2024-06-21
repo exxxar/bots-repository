@@ -314,7 +314,9 @@ trait BotDialogTrait
 
             $tmp = $dialog->summary_input_data ?? [];
 
-            $this->dialogResponse($botUser, $botDialogCommand, $tmp);
+
+
+            $this->dialogResponse($botUser, $nextBotDialogCommand, $tmp);
         }
 
     }
