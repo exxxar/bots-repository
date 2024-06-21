@@ -18,7 +18,6 @@ trait BotDialogTrait
         $dialog = BotDialogResult::query()
             ->with(["botDialogCommand"])
             ->where("bot_user_id", $botUser->id)
-            ->whereNull("completed_at")
             ->orderBy("created_at", "DESC")
             ->first();
 
