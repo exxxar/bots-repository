@@ -140,6 +140,10 @@ export default {
             rules: [],
             operations: [
                 {
+                    id: 0,
+                    title: 'Выдать результат без обработки'
+                },
+                {
                     id: 1,
                     title: 'Больше'
                 },

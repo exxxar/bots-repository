@@ -404,11 +404,11 @@ trait BotDialogTrait
 
                 $arg1 = Collection::make($variables)
                     ->where("key", $rule->param1)
-                    ->first()["value"] ?? $rule->param1;
+                    ->first()["value"] ?? $rule->param1 ?? false;
 
                 $arg2 = Collection::make($variables)
                     ->where("key", $rule->param2)
-                    ->first()["value"] ?? $rule->param2;
+                    ->first()["value"] ?? $rule->param2 ?? false;
 
                 $op = $rule->operation;
 
@@ -457,50 +457,49 @@ trait BotDialogTrait
                         break;
                 }
 
-                if ($result){
+
+                if ($result && !is_null($rule->text_if_true ?? null)) {
                     $text = $this->prepareDataWithVariables($rule->text_if_true, $botUser);
                     $this->replyInlineKeyboard($text, $rule->keyboard_if_true ?? []);
                 }
-                else
-                {
-                    $text = $this->prepareDataWithVariables($rule->text_if_false, $botUser);
-                    $this->replyInlineKeyboard($text, $rule->keyboard_if_false ?? []);
+
+                if (!$result && !is_null($rule->text_if_false ?? null)) {
+                    {
+                        $text = $this->prepareDataWithVariables($rule->text_if_false, $botUser);
+                        $this->replyInlineKeyboard($text, $rule->keyboard_if_false ?? []);
+                    }
                 }
+
             }
 
-            Log::info("variables" . print_r($variables, true));
-            Log::info("test rules" . print_r($botDialogCommand->rules ?? null, true));
-        }
+            $channel = $botDialogCommand->result_channel ??
+                $bot->order_channel ??
+                null;
+
+            $tmpMessage .= "Пользователь:\n"
+                . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
+                . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
+                . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
+                . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
+                . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n";
+
+            $thread = $bot->topics["questions"] ?? null;
+
+            $botDomain = $bot->bot_domain;
+            $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $botUser->telegram_chat_id);
 
 
-        $channel = $botDialogCommand->result_channel ??
-            $bot->order_channel ??
-            null;
+            //$this->sendMessage($channel, $tmpMessage, $thread);
 
-        $tmpMessage .= "Пользователь:\n"
-            . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
-            . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
-            . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
-            . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
-            . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n";
-
-        $thread = $bot->topics["questions"] ?? null;
-
-        $botDomain = $bot->bot_domain;
-        $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $botUser->telegram_chat_id);
-
-
-        //$this->sendMessage($channel, $tmpMessage, $thread);
-
-        $this->sendInlineKeyboard($channel,
-            $tmpMessage,
-            [
+            $this->sendInlineKeyboard($channel,
+                $tmpMessage,
                 [
-                    ["text" => "✉Написать пользователю ответ", "url" => $link]
-                ]
-            ],
-            $thread
-        );
+                    [
+                        ["text" => "✉Написать пользователю ответ", "url" => $link]
+                    ]
+                ],
+                $thread
+            );
 
+        }
     }
-}
