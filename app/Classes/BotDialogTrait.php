@@ -13,6 +13,28 @@ use Telegram\Bot\FileUpload\InputFile;
 
 trait BotDialogTrait
 {
+    private function getVariables($botUser)
+    {
+        $dialog = BotDialogResult::query()
+            ->with(["botDialogCommand"])
+            ->where("bot_user_id", $botUser->id)
+            ->whereNull("completed_at")
+            ->orderBy("created_at", "DESC")
+            ->first();
+
+        Log::info("get variables ".print_r($dialog->toArray(), true));
+
+        if (is_null($dialog))
+            return null;
+
+        $variables = $dialog->variables ?? [];
+
+        if (count($variables) == 0)
+            return null;
+
+        return $variables;
+    }
+
     private function prepareDataWithVariables($content, $botUser = null)
     {
         $dialog = BotDialogResult::query()
@@ -315,7 +337,6 @@ trait BotDialogTrait
             $tmp = $dialog->summary_input_data ?? [];
 
 
-
             $this->dialogResponse($botUser, $nextBotDialogCommand, $tmp);
         }
 
@@ -375,8 +396,15 @@ trait BotDialogTrait
             $step++;
         }
 
-        Log::info("before test rules" . print_r($botDialogCommand->toArray(), true));
-        Log::info("test rules" . print_r($botDialogCommand->rules ?? null, true));
+
+
+        if (!is_null($botDialogCommand->rules ?? null)) {
+            $variables = $this->getVariables($botUser);
+
+            Log::info("variables" . print_r($variables, true));
+            Log::info("test rules" . print_r($botDialogCommand->rules ?? null, true));
+        }
+
 
         $channel = $botDialogCommand->result_channel ??
             $bot->order_channel ??
