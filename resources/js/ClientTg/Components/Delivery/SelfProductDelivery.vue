@@ -618,7 +618,7 @@ export default {
         if (this.deliveryForm.disabilities.length > 0)
             this.deliveryForm.has_disability = true
 
-        this.clearCart();
+       // this.clearCart();
 
         this.loadProducts()
         this.loadShopModuleData()
