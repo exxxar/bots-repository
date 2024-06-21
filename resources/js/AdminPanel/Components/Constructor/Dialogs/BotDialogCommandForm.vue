@@ -3,451 +3,100 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
 import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers/RegularExpressionHelper.vue";
 import Pagination from '@/AdminPanel/Components/Pagination.vue';
+import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogResultRules.vue";
 
 </script>
 <template>
     <form v-on:submit.prevent="submit">
-        <div class="mb-2 d-flex justify-content-start flex-wrap" v-if="commandForm.next_bot_dialog_command_id">
-            <p>Связь цепочек: </p>
-            <div v-for="(element, index) in item.chain">
-                <span class="badge cursor-pointer"
-                      @click="selectElementById(element)"
-                      v-bind:class="{'bg-success':commandForm.id==element,'bg-primary':commandForm.id!=element}">
-                    {{ element }}
-                </span>
-                <i class="fa-solid fa-arrow-right font-12" v-if="index<item.chain.length-1"></i>
+        <div class="mb-2 px-0">
+            <button type="submit" class="btn btn-outline-success">
+                <i class="fa-regular fa-floppy-disk mr-2"></i>
+                <span v-if="commandForm.id">Обновить диалог</span>
+                <span v-else>Добавить диалог</span>
+            </button>
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link"
+                   @click="tab=0"
+                   v-bind:class="{'active':tab===0}"
+                   aria-current="page" href="javascript:void(0)"><i class="fa-regular fa-comment-dots mr-2"></i>
+                    Основное</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   @click="tab=1"
+                   v-bind:class="{'active':tab===1}"
+                   href="javascript:void(0)"><i class="fa-solid fa-link mr-2"></i> Связывание диалогов</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   @click="tab=2"
+                   v-bind:class="{'active':tab===2}"
+                   href="javascript:void(0)"><i class="fa-brands fa-uncharted mr-2"></i> Дополнительное</a>
+            </li>
+            <li class="nav-item" v-if="commandForm.is_empty">
+                <a class="nav-link"
+                   @click="tab=3"
+                   v-bind:class="{'active':tab===3}"
+                   href="javascript:void(0)"
+                   aria-disabled="true"><i class="fa-solid fa-hashtag mr-2"></i> Вычисление результата</a>
+            </li>
+        </ul>
+
+        <div class="py-2 px-0" v-if="tab===0">
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" v-model="commandForm.is_empty" :id="'need-empty-dialog'+(commandForm.id||'new')"
+                       checked>
+                <label class="form-check-label" :for="'need-empty-dialog'+(commandForm.id||'new')">
+                    Диалог завершает цепочку (только вывод информации)
+                </label>
             </div>
 
-        </div>
-        <div class="form-floating mb-2">
-            <textarea class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
-            </textarea>
-            <label :for="'commandForm-pre-text-'+commandForm.id">Текст диалога</label>
-        </div>
+            <div class="form-floating mb-2">
+                <textarea class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
+                          placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
+                </textarea>
+                <label :for="'commandForm-pre-text-'+commandForm.id">Текст диалога</label>
+            </div>
 
-        <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" v-model="commandForm.is_empty" id="need-empty-dialog"
-                   checked>
-            <label class="form-check-label" for="need-empty-dialog">
-                Диалог без ожидания ответа
-            </label>
-        </div>
+            <div class="mb-2" v-if="!commandForm.is_empty">
+                <div class="form-floating">
+                    <input type="text"
+                           class="form-control"
+                           id="floatingPassword"
+                           v-model="commandForm.use_result_as"
+                           placeholder="Password">
+                    <label for="floatingPassword">Сохранить ответ пользователя как внутреннюю переменную</label>
+                </div>
+            </div>
 
 
-        <div class="form-floating mb-2" v-if="!commandForm.is_empty">
+
+            <div class="form-floating mb-2" v-if="!commandForm.is_empty">
             <textarea class="form-control"
-                   :id="'commandForm-post-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.post_text">
+                      :id="'commandForm-post-text-'+commandForm.id"
+                      placeholder="Начни с малого..." v-model="commandForm.post_text">
             </textarea>
-            <label :for="'commandForm-post-text-'+commandForm.id">Текст после успешного завершения
-                диалога</label>
-        </div>
-
-        <div class="form-floating mb-2" v-if="!commandForm.is_empty">
-            <textarea type="text" class="form-control" :id="'commandForm-error-text-'+commandForm.id"
-                   placeholder="Начни с малого..." v-model="commandForm.error_text">
-            </textarea>
-            <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
-                данных</label>
-        </div>
-
-
-        <div class="mb-2" v-if="!commandForm.is_empty">
-            <div class="d-flex justify-content-between">
-                <label class="form-label" :for="'commandForm-result-channel-'+commandForm.id">Регулярное выражение для
-                    валидации данных
-
-                </label>
-
-                <RegularExpressionHelper
-                    :param="'input_pattern'"
-                    v-on:callback="addTextTo"
-                />
-            </div>
-            <input type="text" class="form-control"
-                   placeholder="Регулярное выражение"
-                   aria-label="Регулярное выражение"
-                   v-model="commandForm.input_pattern"
-                   maxlength="255"
-                   :id="'commandForm-input-pattern-'+commandForm.id"
-                   aria-describedby="commandForm-input-pattern">
-        </div>
-
-        <div class="mb-2" v-if="commandForm.is_empty">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Шаг</th>
-                    <th scope="col">Параметр 1</th>
-                    <th scope="col">Операция</th>
-                    <th scope="col">Параметр 2</th>
-                    <th scope="col">Поместить результат в</th>
-                    <th scope="col">Текст "Да"</th>
-                    <th scope="col">Текст "Нет"</th>
-<!--                    <th scope="col">Страница "Да"</th>
-                    <th scope="col">Страница "Нет"</th>-->
-                </tr>
-                </thead>
-                <tbody>
-
-                    <tr>
-                        <td colspan="7">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Текст \ Страница
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput">Значение параметра 1</label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-floating">
-                                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                                <label for="floatingSelect">Доступные операции</label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput">Значение параметра 2</label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput">Переменная результата</label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-                                <label for="floatingTextarea">Текст "Да"</label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-                                <label for="floatingTextarea">Текст "Нет"</label>
-                            </div>
-                        </td>
-<!--                        <td>
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput">Страница "Да"</label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput">Страница "Нет"</label>
-                            </div>
-                        </td>-->
-                    </tr>
-
-
-
-                </tbody>
-            </table>
-        </div>
-
-        <div class="mb-2">
-            <div class="d-flex justify-content-between">
-                <label class="form-label" :for="'commandForm-result-channel-'+commandForm.id">Канал для отправки данных
-
-                </label>
-
-                <TelegramChannelHelper
-                    v-if="bot"
-                    :token="bot.bot_token"
-                    :param="'result_channel'"
-                    v-on:callback="addTextTo"
-                />
-            </div>
-            <input type="number" class="form-control"
-                   placeholder="id канала"
-                   aria-label="id канала"
-                   v-model="commandForm.result_channel"
-                   :id="'commandForm-result-channel-'+commandForm.id"
-                   aria-describedby="bot-order-channel">
-        </div>
-
-        <div class="mb-2">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox"
-                       v-model="need_images"
-                       id="need-dialog-image" checked>
-                <label class="form-check-label" for="need-dialog-image">
-                    В диалоге нужно изображение
-                </label>
+                <label :for="'commandForm-post-text-'+commandForm.id">Текст после успешного завершения
+                    диалога</label>
             </div>
 
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" v-model="need_inline_keyboard"
-                       id="need-dialog-menu-inline" checked>
-                <label class="form-check-label" for="need-dialog-menu-inline">
-                    В диалоге нужно меню тексту
-                </label>
-            </div>
 
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" v-model="need_reply_keyboard"
-                       id="need-dialog-menu-reply" checked>
-                <label class="form-check-label" for="need-dialog-menu-reply">
-                    В диалоге нужно нижнее меню
-                </label>
-            </div>
         </div>
 
-        <div class="card mb-2" v-if="need_images">
-            <div class="card-body">
-                <h6>Фотографии к диалогу</h6>
-                <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
-                    <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
-                        <span>+</span>
-                        <input type="file" id="location-photos" multiple accept="image/*"
-                               @change="onChangePhotos"
-                               style="display:none;"/>
-
-                    </label>
-                    <div class="mb-2 img-preview" style="margin-right: 10px;"
-                         v-for="(img, index) in photos"
-                         v-if="photos.length>0">
-                        <img v-lazy="getPhoto(img).imageUrl">
-                        <div class="remove">
-                            <a @click="removePhoto('photos',index)">Удалить</a>
-                        </div>
-                    </div>
-                    <div class="mb-2 img-preview"
-                         v-if="commandForm.images&&bot"
-                         style="margin-right: 10px;"
-                         v-for="(img, index) in commandForm.images">
-                        <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
-                        <div class="remove">
-                            <a @click="removePhoto('images',index)">Удалить</a>
-                        </div>
+        <div class="py-2 px-0" v-if="tab===1">
+            <div class="mb-2" v-if="commandForm.id">
+                <div class="row" v-if="filteredCommands.length>0">
+                    <div class="col-12">
+                        <h6>Выбрать следующий диалог:</h6>
                     </div>
 
-                </div>
-
-            </div>
-        </div>
-
-        <div class="card mb-2" v-if="need_inline_keyboard">
-            <div class="card-header">
-                <h6>Кнопки к тексту вопроса</h6>
-            </div>
-            <div class="card-body">
-                <BotMenuConstructor
-                    :type="'inline'"
-                    v-on:save="saveInlineKeyboard"
-                    :edited-keyboard="commandForm.inline_keyboard"/>
-            </div>
-
-        </div>
-
-        <div class="card mb-2" v-if="need_reply_keyboard">
-            <div class="card-header">
-                <h6>Кнопки в виде нижнего меню</h6>
-            </div>
-            <div class="card-body">
-                <BotMenuConstructor
-                    :type="'reply'"
-                    v-on:save="saveReplyKeyboard"
-                    :edited-keyboard="commandForm.reply_keyboard"/>
-            </div>
-
-        </div>
-
-        <div class=" mb-2">
-            <label class="form-check-label" for="need-empty-dialog">
-                Сохранить в переменную
-            </label>
-            <select class="form-control" v-model="commandForm.store_to">
-                <option selected>Не выбрано</option>
-                <option :value="item.key" v-for="item in store_variants">{{ item.title || 'Не указано' }}</option>
-            </select>
-
-        </div>
-
-
-        <div class="mb-2">
-            <label class="form-check-label" for="need-empty-dialog">
-                Использовать значение как внутреннюю переменную
-            </label>
-
-            <input type="text"
-                   v-model="commandForm.use_result_as"
-                   class="form-control" id="floatingInput" placeholder="{name}">
-
-        </div>
-
-        <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" v-model="need_chains" id="need-chains"
-                   checked>
-            <label class="form-check-label" for="need-chains">
-                Нужны многоуровневые диалоги
-            </label>
-        </div>
-
-        <div class="mb-2" v-if="need_chains">
-            <button type="button" class="btn btn-outline-primary" @click="addAnswer">Добавить вариант ответа</button>
-            <table class="table" v-if="commandForm.answers.length>0">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Ответ</th>
-                    <th scope="col">Паттерн</th>
-                    <th scope="col">Следующий диалог</th>
-                    <th scope="col" class="text-center">Действие</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(item, index) in commandForm.answers">
-                    <th scope="row">{{ index + 1 }}</th>
-
-                    <td>
-                        <div class="form-floating">
-                            <input type="text"
-                                   v-model="commandForm.answers[index].answer"
-                                   class="form-control" id="floatingInput" placeholder="name@example.com">
-                            <label for="floatingInput">Точный текст ответа</label>
-                        </div>
-                    </td>
-                    <td>
-
-                        <div class="input-group">
-                            <div class="form-floating">
-                                <input type="text"
-                                       v-model="commandForm.answers[index].pattern"
-                                       class="form-control" id="floatingInput"
-                                       placeholder="name@example.com">
-                                <label for="floatingInput">Шаблон предполагаемого текста</label>
-                            </div>
-                            <div class="dropdown d-flex">
-                                <button class="btn btn-outline-secondary w-100" type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item"
-                                           @click="commandForm.answers[index].pattern = null"
-                                           href="javascript:void(0)">Не выбран</a></li>
-                                    <li><a class="dropdown-item"
-                                           @click="commandForm.answers[index].pattern = pattern.value"
-                                           v-for="pattern in patterns"
-                                           href="javascript:void(0)">{{ pattern.title || '-' }}</a></li>
-                                </ul>
-                            </div>
-
-                        </div>
-
-
-                    </td>
-                    <td>
-                        <div class="input-group">
-
-
-                            <div class="form-floating">
-                                <input type="text" class="form-control"
-                                       v-model="commandForm.answers[index].next_bot_dialog_command_id"
-                                       id="floatingInput"
-                                       placeholder="name@example.com" required>
-                                <label for="floatingInput">Выберите диалог или введите его номер</label>
-                            </div>
-                            <div class="dropdown d-flex">
-                                <button class="btn btn-outline-secondary w-100"
-                                        data-bs-auto-close="outside"
-                                        type="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
-                                </button>
-                                <div class="dropdown-menu p-2" style="width:400px;max-height:300px; overflow-y:auto;">
-                                    <ul class="list-group">
-                                        <li class="list-group-item cursor-pointer font-12"
-                                            @click="commandForm.answers[index].next_bot_dialog_command_id = null">Не
-                                            выбран
-                                        </li>
-                                        <li class="list-group-item cursor-pointer font-12"
-                                            style="line-height:100%;text-align:left;"
-                                            @click="commandForm.answers[index].next_bot_dialog_command_id = command.id"
-                                            v-for="command in getDialogCommands">
-                                            #{{ command.id || '-' }} {{ command.pre_text || '-' }}
-                                        </li>
-                                    </ul>
-                                    <div class="px-3 pt-2">
-
-                                            <Pagination
-                                                v-on:pagination_page="nextDialogs"
-                                                v-if="dialog_commands_paginate_object"
-                                                :pagination="dialog_commands_paginate_object"/>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown d-flex justify-content-center align-items-center">
-                            <button class="btn btn-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-bars"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item"
-                                       @click="removeDialogAnswer(item, index)"
-                                       href="javascript:void(0)">Удалить</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="alert alert-primary mt-2" role="alert" v-else>
-                Добавьте один или несколько вариантов ответов
-            </div>
-        </div>
-
-        <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" v-model="need_set_flags" id="need-set-flags"
-                   checked>
-            <label class="form-check-label" for="need-set-flags">
-                Установить флаги в соответствующее значение
-            </label>
-        </div>
-
-
-        <div class=" mb-2" v-if="need_set_flags">
-            <p>Выбрать флаги</p>
-            <span class="badge text-info mr-2"
-                  v-bind:class="{'bg-info text-white':commandForm.result_flags.indexOf(item.key)!=-1}"
-                  @click="selectFlag(item)"
-                  v-for="item in flags_variants">{{ item.title }}</span>
-
-        </div>
-
-        <div class="mb-2" v-if="commandForm.id">
-            <div class="row" v-if="filteredCommands.length>0">
-                <div class="col-12">
-                    <p>Доступные для связывания диалоги:</p>
-                </div>
-
-                <div class="col-md-12 mb-1" v-for="(command, index) in filteredCommands">
-                    <button type="button"
-                            class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
-                            style="text-align:left;">
+                    <div class="col-md-12 mb-1" v-for="(command, index) in filteredCommands">
+                        <button type="button"
+                                class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
+                                style="text-align:left;">
                         <span @click="doCommandLink(command.id)">
                             <i class="fa-solid fa-link mr-2 text-success"
                                v-if="commandForm.next_bot_dialog_command_id == command.id"></i> #{{
@@ -456,33 +105,351 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                         </span>
 
 
-                        <i class="fa-solid fa-unlink text-danger"
-                           @click="doCommandLink(null)"
-                           v-if="commandForm.next_bot_dialog_command_id == command.id"></i>
+                            <i class="fa-solid fa-unlink text-danger"
+                               @click="doCommandLink(null)"
+                               v-if="commandForm.next_bot_dialog_command_id == command.id"></i>
 
-                    </button>
+                        </button>
+                    </div>
+
+                    <Pagination
+                        v-on:pagination_page="nextDialogs"
+                        v-if="dialog_commands_paginate_object"
+                        :pagination="dialog_commands_paginate_object"/>
                 </div>
-
-                <Pagination
-                    v-on:pagination_page="nextDialogs"
-                    v-if="dialog_commands_paginate_object"
-                    :pagination="dialog_commands_paginate_object"/>
-            </div>
-            <div class="row" v-else>
-                <div class="col-12">
-                    <div class="alert alert-danger" role="alert">
-                        Диалогов для связывания нет
+                <div class="row" v-else>
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert">
+                            Диалогов для связывания нет
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <hr>
-        <div class="mb-2">
-            <button type="submit" class="btn btn-outline-success p-3 w-100">
-                <span v-if="commandForm.id">Обновить диалог</span>
-                <span v-else>Добавить диалог</span>
-            </button>
+
+        <div class="py-2 px-0" v-if="tab===2">
+
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" v-model="need_additional_functions"
+                       id="need-additional-functions">
+                <label class="form-check-label" for="need-additional-functions">
+                    Нужен дополнительный функционал управления
+                </label>
+            </div>
+
+
+            <div class="form-floating mb-2" v-if="!commandForm.is_empty&&need_additional_functions">
+            <textarea type="text" class="form-control" :id="'commandForm-error-text-'+commandForm.id"
+                      placeholder="Начни с малого..." v-model="commandForm.error_text">
+            </textarea>
+                <label :for="'commandForm-error-text-'+commandForm.id">Текст на случай ошибки корректности
+                    данных</label>
+            </div>
+
+            <div class="mb-2" v-if="!commandForm.is_empty&&need_additional_functions">
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="mb-2">Регулярное выражение для
+                        валидации данных
+
+                    </p>
+
+                    <RegularExpressionHelper
+                        :param="'input_pattern'"
+                        v-on:callback="addTextTo"
+                    />
+                </div>
+
+                <div class="form-floating">
+                    <input type="text"
+                           v-model="commandForm.input_pattern"
+                           maxlength="255"
+                           class="form-control"
+                           :id="'commandForm-input-pattern-'+commandForm.id" placeholder="Регулярное выражение">
+                    <label :for="'commandForm-result-channel-'+commandForm.id">Регулярное выражение</label>
+                </div>
+            </div>
+
+            <div class="mb-2" v-if="need_additional_functions">
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="mb-2">Канал для отправки данных
+
+                    </p>
+
+                    <TelegramChannelHelper
+                        v-if="bot"
+                        :token="bot.bot_token"
+                        :param="'result_channel'"
+                        v-on:callback="addTextTo"
+                    />
+                </div>
+
+                <div class="form-floating">
+                    <input type="number"
+                           v-model="commandForm.result_channel"
+                           class="form-control"
+                           :id="'commandForm-result-channel-'+commandForm.id" placeholder="id канала">
+                    <label :for="'commandForm-result-channel-'+commandForm.id">id канала</label>
+                </div>
+
+            </div>
+
+            <div class=" mb-2" v-if="need_additional_functions">
+
+                <div class="form-floating">
+                    <select class="form-select"
+                            v-model="commandForm.store_to"
+                            id="store_variants" aria-label="Floating label select example">
+                        <option selected>Не выбрано</option>
+                        <option :value="item.key" v-for="item in store_variants">{{
+                                item.title || 'Не указано'
+                            }}
+                        </option>
+                    </select>
+                    <label for="store_variants">Сохранить в переменную</label>
+                </div>
+
+            </div>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox"
+                       v-model="need_images"
+                       id="need-dialog-image" checked>
+                <label class="form-check-label" for="need-dialog-image">
+                    В диалоге нужно изображение
+                </label>
+            </div>
+
+            <div class="card mb-2" v-if="need_images">
+                <div class="card-body">
+                    <h6>Фотографии к диалогу</h6>
+                    <div class="photo-preview d-flex justify-content-start flex-wrap w-100">
+                        <label for="location-photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                            <span>+</span>
+                            <input type="file" id="location-photos" multiple accept="image/*"
+                                   @change="onChangePhotos"
+                                   style="display:none;"/>
+
+                        </label>
+                        <div class="mb-2 img-preview" style="margin-right: 10px;"
+                             v-for="(img, index) in photos"
+                             v-if="photos.length>0">
+                            <img v-lazy="getPhoto(img).imageUrl">
+                            <div class="remove">
+                                <a @click="removePhoto('photos',index)">Удалить</a>
+                            </div>
+                        </div>
+                        <div class="mb-2 img-preview"
+                             v-if="commandForm.images&&bot"
+                             style="margin-right: 10px;"
+                             v-for="(img, index) in commandForm.images">
+                            <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+img">
+                            <div class="remove">
+                                <a @click="removePhoto('images',index)">Удалить</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" v-model="need_inline_keyboard"
+                       id="need-dialog-menu-inline" checked>
+                <label class="form-check-label" for="need-dialog-menu-inline">
+                    В диалоге нужно меню тексту
+                </label>
+            </div>
+
+            <div class="card mb-2" v-if="need_inline_keyboard">
+                <div class="card-header">
+                    <h6>Кнопки к тексту вопроса</h6>
+                </div>
+                <div class="card-body">
+                    <BotMenuConstructor
+                        :type="'inline'"
+                        v-on:save="saveInlineKeyboard"
+                        :edited-keyboard="commandForm.inline_keyboard"/>
+                </div>
+
+            </div>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" v-model="need_reply_keyboard"
+                       id="need-dialog-menu-reply" checked>
+                <label class="form-check-label" for="need-dialog-menu-reply">
+                    В диалоге нужно нижнее меню
+                </label>
+            </div>
+
+
+            <div class="card mb-2" v-if="need_reply_keyboard">
+                <div class="card-header">
+                    <h6>Кнопки в виде нижнего меню</h6>
+                </div>
+                <div class="card-body">
+                    <BotMenuConstructor
+                        :type="'reply'"
+                        v-on:save="saveReplyKeyboard"
+                        :edited-keyboard="commandForm.reply_keyboard"/>
+                </div>
+
+            </div>
+
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" v-model="need_chains" id="need-chains"
+                       checked>
+                <label class="form-check-label" for="need-chains">
+                    Нужны многоуровневые диалоги
+                </label>
+            </div>
+
+            <div class="mb-2" v-if="need_chains">
+                <button type="button" class="btn btn-outline-primary" @click="addAnswer">Добавить вариант ответа
+                </button>
+                <table class="table" v-if="commandForm.answers.length>0">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Ответ</th>
+                        <th scope="col">Паттерн</th>
+                        <th scope="col">Следующий диалог</th>
+                        <th scope="col" class="text-center">Действие</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item, index) in commandForm.answers">
+                        <th scope="row">{{ index + 1 }}</th>
+
+                        <td>
+                            <div class="form-floating">
+                                <input type="text"
+                                       v-model="commandForm.answers[index].answer"
+                                       class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <label for="floatingInput">Точный текст ответа</label>
+                            </div>
+                        </td>
+                        <td>
+
+                            <div class="input-group">
+                                <div class="form-floating">
+                                    <input type="text"
+                                           v-model="commandForm.answers[index].pattern"
+                                           class="form-control" id="floatingInput"
+                                           placeholder="name@example.com">
+                                    <label for="floatingInput">Шаблон предполагаемого текста</label>
+                                </div>
+                                <div class="dropdown d-flex">
+                                    <button class="btn btn-outline-secondary w-100" type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item"
+                                               @click="commandForm.answers[index].pattern = null"
+                                               href="javascript:void(0)">Не выбран</a></li>
+                                        <li><a class="dropdown-item"
+                                               @click="commandForm.answers[index].pattern = pattern.value"
+                                               v-for="pattern in patterns"
+                                               href="javascript:void(0)">{{ pattern.title || '-' }}</a></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+
+                        </td>
+                        <td>
+                            <div class="input-group">
+
+
+                                <div class="form-floating">
+                                    <input type="text" class="form-control"
+                                           v-model="commandForm.answers[index].next_bot_dialog_command_id"
+                                           id="floatingInput"
+                                           placeholder="name@example.com" required>
+                                    <label for="floatingInput">Выберите диалог или введите его номер</label>
+                                </div>
+                                <div class="dropdown d-flex">
+                                    <button class="btn btn-outline-secondary w-100"
+                                            data-bs-auto-close="outside"
+                                            type="button" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                    </button>
+                                    <div class="dropdown-menu p-2"
+                                         style="width:400px;max-height:300px; overflow-y:auto;">
+                                        <ul class="list-group">
+                                            <li class="list-group-item cursor-pointer font-12"
+                                                @click="commandForm.answers[index].next_bot_dialog_command_id = null">Не
+                                                выбран
+                                            </li>
+                                            <li class="list-group-item cursor-pointer font-12"
+                                                style="line-height:100%;text-align:left;"
+                                                @click="commandForm.answers[index].next_bot_dialog_command_id = command.id"
+                                                v-for="command in getDialogCommands">
+                                                #{{ command.id || '-' }} {{ command.pre_text || '-' }}
+                                            </li>
+                                        </ul>
+                                        <div class="px-3 pt-2">
+
+                                            <Pagination
+                                                v-on:pagination_page="nextDialogs"
+                                                v-if="dialog_commands_paginate_object"
+                                                :pagination="dialog_commands_paginate_object"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="dropdown d-flex justify-content-center align-items-center">
+                                <button class="btn btn-link" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <i class="fa-solid fa-bars"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item"
+                                           @click="removeDialogAnswer(item, index)"
+                                           href="javascript:void(0)">Удалить</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="alert alert-primary mt-2" role="alert" v-else>
+                    Добавьте один или несколько вариантов ответов
+                </div>
+            </div>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" v-model="need_set_flags" id="need-set-flags"
+                       checked>
+                <label class="form-check-label" for="need-set-flags">
+                    Установить флаги в соответствующее значение
+                </label>
+            </div>
+
+
+            <div class=" mb-2" v-if="need_set_flags">
+                <p>Выбрать флаги</p>
+                <span class="badge text-info mr-2"
+                      v-bind:class="{'bg-info text-white':commandForm.result_flags.indexOf(item.key)!=-1}"
+                      @click="selectFlag(item)"
+                      v-for="item in flags_variants">{{ item.title }}</span>
+
+            </div>
         </div>
+        <div class="py-2 px-0" v-if="tab===3">
+
+            <BotDialogResultRules v-model="commandForm.rules"></BotDialogResultRules>
+        </div>
+
     </form>
 </template>
 <script>
@@ -494,6 +461,7 @@ export default {
     props: ["item", "bot"],
     data() {
         return {
+            tab: 0,
             patterns: [
                 {
                     title: 'Номер телефона РФ',
@@ -510,12 +478,14 @@ export default {
 
 
             ],
+            test:[],
             loading: true,
             dialog_commands: [],
             dialog_commands_paginate_object: null,
             need_images: false,
             need_inline_keyboard: false,
             need_reply_keyboard: false,
+            need_additional_functions: false,
             need_chains: false,
             need_set_flags: false,
             //сохранить данные в параметр
@@ -600,6 +570,7 @@ export default {
                 reply_keyboard: null,
 
                 answers: [],
+                rules:[],
             },
             photos: []
         }
@@ -670,6 +641,7 @@ export default {
                     store_to: this.item.store_to || null,
                     answers: this.item.answers || [],
                     use_result_as: this.item.use_result_as || null,
+                    rules: this.item.rules || [],
                 }
 
                 if (this.bot)

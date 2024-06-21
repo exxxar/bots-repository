@@ -18,13 +18,13 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                         type="button"
                         class="btn btn-primary mb-2"
                         v-if="selectedRow!=null"
-                        @click="addRowAbove">Добавить строку выше
+                        @click="addRowAbove">Строка выше
                     </button>
                     <button
                         type="button"
                         class="btn btn-primary mb-2 ml-2"
                         v-if="selectedRow!=null"
-                        @click="addRowBelow">Добавить строку ниже
+                        @click="addRowBelow">Строка ниже
                     </button>
 
                     <button

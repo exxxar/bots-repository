@@ -209,7 +209,6 @@ trait BotDialogTrait
         $dialog->save();
 
 
-
         if (!is_null($botDialogCommand->store_to ?? null)) {
             $tmp[$botDialogCommand->store_to] = $text ?? null;
             $botUser->update($tmp);
@@ -373,6 +372,8 @@ trait BotDialogTrait
 
             $step++;
         }
+
+        Log::info("test rules" . print_r($botDialogCommand->rules ?? null, true));
 
         $channel = $botDialogCommand->result_channel ??
             $bot->order_channel ??

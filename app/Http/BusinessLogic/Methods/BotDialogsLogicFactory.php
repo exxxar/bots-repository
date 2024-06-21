@@ -341,6 +341,7 @@ class BotDialogsLogicFactory
             'reply_keyboard_id' => $data["reply_keyboard_id"] ?? $replyKeyboard->id ?? null,
             'images' => $photos ?? [],
             'result_flags' => json_decode($data["result_flags"] ?? '[]'),
+            'rules' => json_decode($data["rules"] ?? '[]'),
             'next_bot_dialog_command_id' => $data["next_bot_dialog_command_id"] ?? null,
             'bot_dialog_group_id' => $groupId,
             'is_empty' => ($data["is_empty"] ?? false) == "true" ? 1 : 0,
@@ -442,6 +443,7 @@ class BotDialogsLogicFactory
         $tmp->reply_keyboard_id = $replyKeyboard->id ?? $data["reply_keyboard_id"] ?? null;
         $tmp->is_empty = ($data["is_empty"] ?? false) == "true" ? 1 : 0;
         $tmp->result_flags = json_decode($data["result_flags"] ?? '[]');
+        $tmp->rules = json_decode($data["rules"] ?? '[]');
         $tmp->use_result_as = $data["use_result_as"] ?? null;
 
         $command = BotDialogCommand::query()->find($tmp->id);

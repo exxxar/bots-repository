@@ -39,6 +39,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
             <table class="table">
                 <thead>
                 <tr>
+                    <th class="text-center" scope="col"></th>
                     <th class="text-center" scope="col">#</th>
                     <th class="text-center" scope="col">Переменная</th>
                     <th class="text-center" scope="col">Текст диалога</th>
@@ -60,112 +61,128 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(command,index) in dialog_commands">
-                    <th scope="row">{{ command.id }}</th>
-                    <td class="text-center">{{command.use_result_as || 'не задана'}}</td>
-                    <td class="text-center"><a
-                        data-bs-toggle="modal"
-                        @click="openEditor(command)"
-                        data-bs-target="#dialog-command-modal-editor"
-                        href="javascript:void(0)">{{ command.pre_text || '-' }}</a></td>
-                    <td class="text-center">
-                        <p v-if="(command.answers||[]).length>0">{{command.answers.length}}</p>
-                        <p v-else>
-                            <i class="fa-solid fa-xmark text-danger"></i>
-                        </p>
-                    </td>
-                    <td class="text-center">
+                <template v-for="(command,index) in dialog_commands">
+                    <tr >
+                        <td>
+                          <span
+                              @click="toggleEditMode(command)"
+                              v-if="!command.in_edit_mode"><i class="fa-solid fa-toggle-off cursor-pointer text-secondary"></i></span>
+                          <span
+                              @click="toggleEditMode(command)"
+                              v-else><i class="fa-solid fa-toggle-on cursor-pointer text-primary"></i></span>
+                        </td>
+                        <th scope="row" >{{ command.id }}</th>
+                        <td class="text-center">{{command.use_result_as || 'не задана'}}</td>
+                        <td class="text-center">{{ command.pre_text || '-' }}</td>
+                        <td class="text-center">
+                            <p v-if="(command.answers||[]).length>0">{{command.answers.length}}</p>
+                            <p v-else>
+                                <i class="fa-solid fa-xmark text-danger"></i>
+                            </p>
+                        </td>
+                        <td class="text-center">
                             <span v-if="command.next_bot_dialog_command_id"
                                   class="badge bg-primary">#{{ command.next_bot_dialog_command_id || '-' }} ({{command.chain.length||0}})</span>
-                        <span v-else>
+                            <span v-else>
                               <i class="fa-solid fa-xmark text-danger"></i>
                         </span>
-                    </td>
-                    <td class="text-center">
-                        <p v-if="command.post_text">{{ command.post_text }}</p>
-                        <p v-else>
-                            <i class="fa-solid fa-xmark text-danger"></i>
-                        </p>
-                    </td>
+                        </td>
+                        <td class="text-center">
+                            <p v-if="command.post_text">{{ command.post_text }}</p>
+                            <p v-else>
+                                <i class="fa-solid fa-xmark text-danger"></i>
+                            </p>
+                        </td>
 
-                    <td class="text-center">
-                        <p v-if="command.error_text">{{ command.error_text }}</p>
-                        <p v-else>
-                            <i class="fa-solid fa-xmark text-danger"></i>
-                        </p>
-                    </td>
-                    <td class="text-center">
-                        <p v-if="command.result_channel">{{ command.result_channel }}</p>
-                        <p v-else>
-                            <i class="fa-solid fa-xmark text-danger"></i>
-                        </p>
-                    </td>
-                    <td class="text-center">
-                        <p v-if="command.result_flags.length > 0">
-                            <span v-for="flag in command.result_flags" class="badge bg-primary">{{ flag || '-' }}</span>
-                        </p>
-                        <p v-else>
-                            <i class="fa-solid fa-xmark text-danger"></i>
-                        </p>
-                    </td>
-                    <td class="text-center">
-                        <p v-if="command.store_to">{{ command.store_to }}</p>
-                        <p v-else>
-                            <i class="fa-solid fa-xmark text-danger"></i>
-                        </p>
-                    </td>
-                    <td class="text-center">
-                        <i class="fa-solid fa-check text-success" v-if="command.images.length > 0"></i>
-                        <i class="fa-solid fa-xmark text-danger" v-else></i>
-                    </td>
-                    <td class="text-center">
-                        <p v-if="command.input_pattern">{{ command.input_pattern }}</p>
-                        <p v-else>
-                            <i class="fa-solid fa-xmark text-danger"></i>
-                        </p>
-                    </td>
-                    <td class="text-center">
-                        <i class="fa-solid fa-check text-success" v-if="command.is_empty"></i>
-                        <i class="fa-solid fa-xmark text-danger" v-else></i>
-                    </td>
-                    <td class="text-center">
-                        <i class="fa-solid fa-check text-success" v-if="command.inline_keyboard_id != null"></i>
-                        <i class="fa-solid fa-xmark text-danger" v-else></i>
-                    </td>
-                    <td class="text-center">
-                        <i class="fa-solid fa-check text-success" v-if="command.reply_keyboard_id != null"></i>
-                        <i class="fa-solid fa-xmark text-danger" v-else></i>
-                    </td>
-                    <td class="text-center">
-                        <div class="dropdown">
-                            <button
-                                :disabled="loading"
-                                class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <i class="fa-solid fa-ellipsis"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a
-                                    @click="selectDialog(command)"
-                                    title="Выбрать диалог"
-                                    class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i>
-                                    Выбрать диалог </a></li>
-                                <hr>
+                        <td class="text-center">
+                            <p v-if="command.error_text">{{ command.error_text }}</p>
+                            <p v-else>
+                                <i class="fa-solid fa-xmark text-danger"></i>
+                            </p>
+                        </td>
+                        <td class="text-center">
+                            <p v-if="command.result_channel">{{ command.result_channel }}</p>
+                            <p v-else>
+                                <i class="fa-solid fa-xmark text-danger"></i>
+                            </p>
+                        </td>
+                        <td class="text-center">
+                            <p v-if="command.result_flags.length > 0">
+                                <span v-for="flag in command.result_flags" class="badge bg-primary">{{ flag || '-' }}</span>
+                            </p>
+                            <p v-else>
+                                <i class="fa-solid fa-xmark text-danger"></i>
+                            </p>
+                        </td>
+                        <td class="text-center">
+                            <p v-if="command.store_to">{{ command.store_to }}</p>
+                            <p v-else>
+                                <i class="fa-solid fa-xmark text-danger"></i>
+                            </p>
+                        </td>
+                        <td class="text-center">
+                            <i class="fa-solid fa-check text-success" v-if="command.images.length > 0"></i>
+                            <i class="fa-solid fa-xmark text-danger" v-else></i>
+                        </td>
+                        <td class="text-center">
+                            <p v-if="command.input_pattern">{{ command.input_pattern }}</p>
+                            <p v-else>
+                                <i class="fa-solid fa-xmark text-danger"></i>
+                            </p>
+                        </td>
+                        <td class="text-center">
+                            <i class="fa-solid fa-check text-success" v-if="command.is_empty"></i>
+                            <i class="fa-solid fa-xmark text-danger" v-else></i>
+                        </td>
+                        <td class="text-center">
+                            <i class="fa-solid fa-check text-success" v-if="command.inline_keyboard_id != null"></i>
+                            <i class="fa-solid fa-xmark text-danger" v-else></i>
+                        </td>
+                        <td class="text-center">
+                            <i class="fa-solid fa-check text-success" v-if="command.reply_keyboard_id != null"></i>
+                            <i class="fa-solid fa-xmark text-danger" v-else></i>
+                        </td>
+                        <td class="text-center">
+                            <div class="dropdown">
+                                <button
+                                    :disabled="loading"
+                                    class="btn btn-outline-secondary" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a
+                                        @click="selectDialog(command)"
+                                        title="Выбрать диалог"
+                                        class="dropdown-item cursor-pointer"><i class="fa-solid fa-arrow-left mr-1"></i>
+                                        Выбрать диалог </a></li>
+                                    <hr>
 
-                                <li><a
-                                    title="Дублирование команды"
-                                    @click="duplicate(command.id)"
-                                    class="dropdown-item cursor-pointer"> <i class="fa-solid fa-clone mr-1"></i>
-                                    Дублирование диалога </a></li>
-                                <li><a
-                                    @click="removeCommand(command.id)"
-                                    title="Удаление команды"
-                                    class="dropdown-item cursor-pointer"> <i class="fa-solid fa-trash-can mr-1"></i>
-                                    Удаление диалога </a></li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
+                                    <li><a
+                                        title="Дублирование команды"
+                                        @click="duplicate(command.id)"
+                                        class="dropdown-item cursor-pointer"> <i class="fa-solid fa-clone mr-1"></i>
+                                        Дублирование диалога </a></li>
+                                    <li><a
+                                        @click="removeCommand(command.id)"
+                                        title="Удаление команды"
+                                        class="dropdown-item cursor-pointer"> <i class="fa-solid fa-trash-can mr-1"></i>
+                                        Удаление диалога </a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr v-if="command.in_edit_mode">
+                        <td colspan="17">
+                            <BotDialogCommandForm
+                                :item="selected"
+                                v-if="bot&&!loading"
+                                v-on:callback="loadDialogs"
+                                v-on:select-element="selectElement"
+                                :bot="bot"/>
+                        </td>
+                    </tr>
+                </template>
 
                 </tbody>
             </table>
@@ -183,7 +200,6 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
             </div>
         </div>
     </div>
-
 
     <div class="modal fade" id="dialog-command-modal-editor"
          tabindex="-1">
@@ -241,6 +257,10 @@ export default {
     methods: {
         openEditor(command) {
             this.loading = true
+            if (!command)
+                this.dialog_commands.forEach(item=>{
+                    item.in_edit_mode = false
+                })
             this.$nextTick(() => {
                 this.selected = command
                 this.loading = false
@@ -292,6 +312,11 @@ export default {
                 this.loading = false
             })
         },
+        toggleEditMode(command){
+            this.selected = command
+
+            command.in_edit_mode = !(command.in_edit_mode||false)
+        },
         loadCurrentBot(bot = null) {
             return this.$store.dispatch("updateCurrentBot", {
                 bot: bot
@@ -329,8 +354,11 @@ export default {
 
                 this.loading = true
                 this.$nextTick(() => {
-                    if (tmpSelected)
+                    if (tmpSelected) {
                         this.selected = this.dialog_commands.find(command => command.id === tmpSelected.id) || null
+                        this.selected.in_edit_mode = false
+                    }
+
                     this.loading = false
 
                 })
