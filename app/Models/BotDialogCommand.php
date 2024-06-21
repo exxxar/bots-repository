@@ -55,7 +55,7 @@ class BotDialogCommand extends Model
         'next_bot_dialog_command_id' => 'integer',
     ];
 
-    protected $with = ["bot", "inlineKeyboard","replyKeyboard","answers"];
+    protected $with = [ "inlineKeyboard","replyKeyboard","answers"];
 
     public function bot(): BelongsTo
     {
