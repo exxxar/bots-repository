@@ -157,7 +157,7 @@ class ProductLogicFactory
 
         $categories = ProductCategory::query()
             ->where("bot_id", $this->bot->id)
-            ->has("products",">",0);
+            ->has("products", ">", 0);
 
         if (!$isFull)
             $categories =
@@ -639,7 +639,7 @@ class ProductLogicFactory
         $maxUserCashback = $this->botUser->cashback->amount ?? 0;
         $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
         $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
-        $discount = min($cashBackAmount, $maxUserCashback);
+        $discount = $useCashback ? min($cashBackAmount, $maxUserCashback) : 0;
 
         $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
             . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
@@ -720,7 +720,7 @@ class ProductLogicFactory
             'payed_at' => null,
         ]);
 
-        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. Скидка: $discount руб.";
+        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. ".($discount>0?"Скидка: $discount руб.":"");
 
         $userInfo = !$needPickup ?
             sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",

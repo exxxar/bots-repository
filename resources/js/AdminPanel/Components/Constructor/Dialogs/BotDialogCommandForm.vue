@@ -74,6 +74,95 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                    aria-describedby="commandForm-input-pattern">
         </div>
 
+        <div class="mb-2" v-if="commandForm.is_empty">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Шаг</th>
+                    <th scope="col">Параметр 1</th>
+                    <th scope="col">Операция</th>
+                    <th scope="col">Параметр 2</th>
+                    <th scope="col">Поместить результат в</th>
+                    <th scope="col">Текст "Да"</th>
+                    <th scope="col">Текст "Нет"</th>
+<!--                    <th scope="col">Страница "Да"</th>
+                    <th scope="col">Страница "Нет"</th>-->
+                </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td colspan="7">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Текст \ Страница
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <label for="floatingInput">Значение параметра 1</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-floating">
+                                <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                                <label for="floatingSelect">Доступные операции</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <label for="floatingInput">Значение параметра 2</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <label for="floatingInput">Переменная результата</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                                <label for="floatingTextarea">Текст "Да"</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                                <label for="floatingTextarea">Текст "Нет"</label>
+                            </div>
+                        </td>
+<!--                        <td>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <label for="floatingInput">Страница "Да"</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <label for="floatingInput">Страница "Нет"</label>
+                            </div>
+                        </td>-->
+                    </tr>
+
+
+
+                </tbody>
+            </table>
+        </div>
 
         <div class="mb-2">
             <div class="d-flex justify-content-between">
