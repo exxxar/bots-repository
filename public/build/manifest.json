@@ -185,11 +185,11 @@
       "_index.es-b188fb53.js"
     ]
   },
-  "_ShopLayout-4317246c.js": {
+  "_ShopLayout-a428f7df.js": {
     "css": [
       "assets/SimpleMain-5ac8cdc0.css"
     ],
-    "file": "assets/ShopLayout-4317246c.js",
+    "file": "assets/ShopLayout-a428f7df.js",
     "imports": [
       "_index.es-b188fb53.js",
       "resources/js/ClientTg/app.js"
@@ -251,17 +251,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-f2c465d8.js",
@@ -597,12 +597,12 @@
     "css": [
       "assets/Main-507604a0.css"
     ],
-    "file": "assets/Main-d4482ad8.js",
+    "file": "assets/Main-b01925ed.js",
     "imports": [
       "_MapModal.vue_vue_type_style_index_0_lang-c85f7fee.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-b188fb53.js",
-      "_ShopLayout-4317246c.js",
+      "_ShopLayout-a428f7df.js",
       "resources/js/ClientTg/app.js",
       "_BotMediaList-d7770095.js",
       "_Pagination-0b2e35d4.js",
@@ -617,9 +617,9 @@
     "src": "resources/js/ClientTg/Pages/Main.vue"
   },
   "resources/js/ClientTg/Pages/Result.vue": {
-    "file": "assets/Result-427f1276.js",
+    "file": "assets/Result-7928e91f.js",
     "imports": [
-      "_ShopLayout-4317246c.js",
+      "_ShopLayout-a428f7df.js",
       "resources/js/ClientTg/app.js",
       "_index.es-b188fb53.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -692,7 +692,7 @@
       "resources/js/ClientTg/Pages/Shop/CashReceipt.vue",
       "resources/js/ClientTg/Pages/SimpleMain.vue"
     ],
-    "file": "assets/app-01cab555.js",
+    "file": "assets/app-6b7837aa.js",
     "imports": [
       "_index.es-b188fb53.js",
       "__plugin-vue_export-helper-c27b6911.js",

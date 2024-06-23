@@ -665,7 +665,7 @@ export default {
         },
         selectCategory(item) {
 
-            if (!this.sending.need_category_by_page) {
+            if (!this.settings.need_category_by_page) {
                 let index = this.categories.findIndex(category => category.id === item.id)
                 if (index !== -1) {
                     this.categories.splice(index, 1)
