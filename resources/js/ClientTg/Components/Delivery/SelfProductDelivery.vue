@@ -93,7 +93,7 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                     <p class="mb-2 text-center"><small>Всего товаров найдено ({{ paginate.meta.total }})</small></p>
 
                     <CategoryList
-                        :size="100"
+                        :single-mode="true"
                         :active="activeCategories"
                         :selected="categories"
                         v-on:select="selectCategory"/>
@@ -664,11 +664,17 @@ export default {
             this.loadProducts(0)
         },
         selectCategory(item) {
-            let index = this.categories.findIndex(category => category.id === item.id)
-            if (index !== -1) {
-                this.categories.splice(index, 1)
-            } else
-                this.categories.push(item)
+
+            if (!this.sending.need_category_by_page) {
+                let index = this.categories.findIndex(category => category.id === item.id)
+                if (index !== -1) {
+                    this.categories.splice(index, 1)
+                } else
+                    this.categories.push(item)
+            }
+            else
+                this.categories = [item]
+
 
             this.loadProducts(0)
         },
