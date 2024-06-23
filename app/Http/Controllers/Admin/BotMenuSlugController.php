@@ -35,6 +35,17 @@ class BotMenuSlugController extends Controller
         if (is_null($slug))
             return \response()->noContent(404);
 
+        if (!is_null($slug->bot_id)){
+            $slug = BotMenuSlug::query()
+                ->where("slug", $slug->slug)
+                ->whereNull("bot_id")
+                ->first();
+
+            if (is_null($slug))
+                return \response()->noContent(404);
+        }
+
+
         return \response()->json([
             "config" => $slug->config ?? null
         ]);
