@@ -140,8 +140,13 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
 
                 <div class="col-6 text-left" v-if="item.product"><h6 class="font-600">
                     {{ item.product.title || 'Не указано' }}</h6></div>
-                <div class="col-2 text-center"><h6 class="font-600">x{{ item.quantity || 1 }}</h6></div>
-                <div class="col-4 text-right" v-if="item.product"><h6 class="font-600">
+                <div class="col-2 d-flex justify-content-between align-items-center">
+
+                    <i class="fa-regular fa-square-minus mr-2"></i>
+                    <h6 class="font-600 mb-0">x{{ item.quantity || 1 }}</h6>
+                    <i class="fa-regular fa-square-plus ml-2 color-green2-dark"></i>
+                </div>
+                <div class="col-4 text-right " v-if="item.product"><h6 class="font-600">
                     {{ item.product.current_price || 0 }}
                     <sup>.00</sup>₽</h6>
                 </div>
@@ -776,7 +781,6 @@ export default {
             this.categories.splice(index, 1)
         },
         addToCart(item){
-
             this.$cart.add(item.product)
         },
     }
