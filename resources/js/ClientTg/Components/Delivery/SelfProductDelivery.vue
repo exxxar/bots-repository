@@ -134,7 +134,9 @@ import ReturnToBot from "@/ClientTg/Components/Shop/Helpers/ReturnToBot.vue";
                 и
                 зависит от расстояния.
             </p>
-            <div class="row mb-0" v-for="(item, index) in cartProducts">
+            <div class="row mb-0"
+                 @click="addToCart(item)"
+                 v-for="(item, index) in cartProducts">
 
                 <div class="col-6 text-left" v-if="item.product"><h6 class="font-600">
                     {{ item.product.title || 'Не указано' }}</h6></div>
@@ -773,7 +775,10 @@ export default {
         removeCategory(index) {
             this.categories.splice(index, 1)
         },
+        addToCart(item){
 
+            this.$cart.add(item.product)
+        },
     }
 }
 </script>
