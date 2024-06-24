@@ -10,7 +10,7 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
             href="javascript:void(0)"
             @click="select(item)"
             v-bind:class="{'bg-green2-dark':inCategory(item.id),'bg-gray2-dark':active.indexOf(item.id)===-1&&!inCategory(item.id)}"
-            class="m-0 mb-2 badge bg-red2-light mr-2 rounded-l font-14 category-badge p-3">
+            class="m-0 mb-2 badge mr-2 bg-green2-dark  rounded-l font-14 category-badge p-3">
 
             {{ item.title || 'Не указано' }} <span class="   font-14">{{ item.count || 0 }}</span>
 
