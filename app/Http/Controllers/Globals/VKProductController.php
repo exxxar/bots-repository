@@ -395,6 +395,7 @@ class VKProductController extends Controller
                         'album_id' => $album->id,
                         'need_variants' => 1,
                         'count' => 200,
+                        'with_disabled' => 1,
                         'extended' => 1
                     ]);
 
