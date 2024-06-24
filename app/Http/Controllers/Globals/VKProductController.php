@@ -318,14 +318,14 @@ class VKProductController extends Controller
         if (is_null($bot->vk_shop_link))
             return response()->noContent(404);
 
-       /* $products = Product::query()
+        $products = Product::query()
             ->where("bot_id", $bot->id)
             ->get();
 
         foreach ($products as $product) {
             $product->in_stop_list_at = Carbon::now();
             $product->save();
-        }*/
+        }
 
 
         $this->fpProducts = !is_null($bot->frontPad ?? null) && !is_null($bot->frontPad->token ?? null) ?
