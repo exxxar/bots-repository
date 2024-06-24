@@ -45,7 +45,8 @@ class ProductController extends Controller
             ->list(
                 $request->search ?? null,
                 null,
-                $request->get("size") ?? config('app.results_per_page')
+                $request->get("size") ?? config('app.results_per_page'),
+                true
             );
     }
 

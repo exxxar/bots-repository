@@ -98,7 +98,7 @@ class ProductLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, array $filters = null, $size = null): ProductCollection
+    public function list($search = null, array $filters = null, $size = null, $needAll = false): ProductCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -107,8 +107,10 @@ class ProductLogicFactory
 
         $products = Product::query()
             ->with(["productCategories", "productOptions"])
-            ->where("bot_id", $this->bot->id)
-            ->whereNull("in_stop_list_at");
+            ->where("bot_id", $this->bot->id);
+
+        if (!$needAll)
+            $products = $products->whereNull("in_stop_list_at");
 
         if (!is_null($search))
             $products = $products
@@ -721,7 +723,7 @@ class ProductLogicFactory
             'payed_at' => null,
         ]);
 
-        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. ".($discount>0?"Скидка: $discount руб.":"");
+        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. " . ($discount > 0 ? "Скидка: $discount руб." : "");
 
         $userInfo = !$needPickup ?
             sprintf("Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
