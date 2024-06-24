@@ -107,7 +107,8 @@ class ProductLogicFactory
 
         $products = Product::query()
             ->with(["productCategories", "productOptions"])
-            ->where("bot_id", $this->bot->id);
+            ->where("bot_id", $this->bot->id)
+            ->whereNull("in_stop_list_at");
 
         if (!is_null($search))
             $products = $products
