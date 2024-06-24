@@ -21,6 +21,7 @@
 
                 <div class="col-4 mb-n2">
                     <button
+                        :disabled="product.in_stop_list_at"
                         @click="decProductCart"
                         type="button" class="btn p-3 w-100 bg-red1-dark rounded-s shadow-l"><i
                         class="fa-solid fa-minus font-22"></i></button>
@@ -32,6 +33,7 @@
 
                 <div class="col-4 mb-n2">
                     <button type="button"
+                            :disabled="product.in_stop_list_at"
                             @click="incProductCart"
                             class="btn p-3 w-100 bg-highlight rounded-s shadow-l"><i
                         class="fa-solid fa-plus font-22"></i></button>
@@ -42,6 +44,7 @@
             <div class="row text-center mr-2 ml-2 mb-3" v-else>
                 <div class="col-12 mb-n2">
                     <button type="button"
+                            :disabled="product.in_stop_list_at"
                             @click="incProductCart"
                             class="btn p-3 bg-highlight rounded-s shadow-l w-100">
                         <i class="fa-solid fa-cart-plus font-12"></i>
@@ -101,7 +104,7 @@ export default {
         window.addEventListener("add-to-cart", (e) => {
             this.product = e.detail.product || null
 
-            this.product.in_favorite = this.inFav(this.product.id)
+          //  this.product.in_favorite = this.inFav(this.product.id)
             this.$nextTick(() => {
 
                 $('#menu-product-info').showMenu();

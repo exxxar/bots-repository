@@ -204,9 +204,7 @@ export default {
             this.tg.close()
         },
         scrollToBasket(){
-            document.querySelector("#basket").scrollIntoView({
-                behavior: 'smooth'
-            });
+            window.dispatchEvent(new CustomEvent("scroll-to-basket"));
         }
 
     },

@@ -3,7 +3,7 @@ import CategoryItem from "@/ClientTg/Components/Shop/Categories/CategoryItem.vue
 import Pagination from "@/ClientTg/Components/Pagination.vue";
 </script>
 <template>
-    <div v-if="categories" class="d-flex flex-wrap scrollable-area">
+    <div v-if="categories" class="d-flex flex-wrap">
 
         <a
             v-for="item in categories"

@@ -1,5 +1,5 @@
 import './bootstrap';
-
+import Vue3TouchEvents from "vue3-touch-events";
 import BotNotification from './modules/notifications.js'
 import BotPages from './modules/pages.js'
 import BotPreloader from './modules/preloader.js'
@@ -68,6 +68,7 @@ createInertiaApp({
             .use(router)
             .use(VueSocialSharing)
             .use(PerfectScrollbar)
+            .use(Vue3TouchEvents)
             .use(ZiggyVue, Ziggy)
             .use(VueLazyLoad,
             {
