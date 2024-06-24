@@ -128,7 +128,7 @@ class VKProductController extends Controller
                     'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
                     'current_price' => $vkProduct->price["amount"] / 100,
                     'variants' => empty($variants) ? null : $variants,
-                    'in_stop_list_at' => $vkProduct->availability == 0 ? Carbon::now() : null,
+                    'in_stop_list_at' => $vkProduct->availability == 0 ?  null : Carbon::now(),
                     'bot_id' => $bot->id,
                 ]);
 
@@ -146,7 +146,7 @@ class VKProductController extends Controller
                     'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
                     'current_price' => $vkProduct->price["amount"] / 100,
                     'variants' => empty($variants) ? null : $variants,
-                    'in_stop_list_at' => $vkProduct->availability == 0 ? Carbon::now() : null,
+                    'in_stop_list_at' => $vkProduct->availability == 0 ?  null : Carbon::now(),
                 ]);
 
                 $results->updated_product_count++;
@@ -318,7 +318,7 @@ class VKProductController extends Controller
         if (is_null($bot->vk_shop_link))
             return response()->noContent(404);
 
-        /*$products = Product::query()
+       /* $products = Product::query()
             ->where("bot_id", $bot->id)
             ->get();
 
@@ -409,6 +409,7 @@ class VKProductController extends Controller
                     'owner_id' => "-$data->object_id",
                     'need_variants' => 1,
                     'count' => 200,
+                    'with_disabled' => 1,
                     'extended' => 1
                 ]);
 
