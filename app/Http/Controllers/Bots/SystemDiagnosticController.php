@@ -692,7 +692,7 @@ class SystemDiagnosticController extends Controller
                 ->whereBot($bot)
                 ->sendMessage(
                     $channel,
-                    "Заказ <b>№$order->id</b> передан на доставку:\n$text"
+                    "✅Заказ <b>№$order->id</b> доставляется клиенту:\n\n$text"
                 );
 
             BotManager::bot()
