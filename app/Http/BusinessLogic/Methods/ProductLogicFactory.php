@@ -764,7 +764,7 @@ class ProductLogicFactory
 
         $keyboard = [
             [
-                ["text" => "✉Написать пользователю ответ", "url" => $link]
+                ["text" => "✉Работа с заказом пользователя", "url" => $link]
             ]
         ];
 
