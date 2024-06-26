@@ -71,7 +71,7 @@ class SimpleDeliveryController extends SlugController
                 "type" => "boolean",
                 "key" => "need_category_by_page",
                 "description" => "Каждая категория - отдельная страница",
-                "value" => false,
+                "value" => true,
             ],
             [
                 "type" => "text",
@@ -252,7 +252,7 @@ class SimpleDeliveryController extends SlugController
                     ->first())["value"] ?? 0 : 0,
                 'need_category_by_page' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "need_category_by_page")
-                    ->first())["value"] ?? false : false,
+                    ->first())["value"] ?? true : true,
             ]
         );
     }

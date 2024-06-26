@@ -2069,12 +2069,12 @@ class BotLogicFactory
 
         $inlineKeyboard = json_decode($data["inline_keyboard"] ?? '[]');
 
-        $inlineKeyboard[] = [
+    /*    $inlineKeyboard[] = [
             [
                 "text" => "🤖Вернуться в бота",
                 "url" => "https://t.me/" . $this->bot->bot_domain
             ]
-        ];
+        ];*/
 
         //dd($inlineKeyboard);
 
