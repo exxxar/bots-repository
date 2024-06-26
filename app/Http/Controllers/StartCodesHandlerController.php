@@ -232,6 +232,13 @@ class StartCodesHandlerController extends Controller
                 ];
             }
 
+            if ($order->status == OrderStatusEnum::NewOrder->value){
+                $requestKeyboard[] = [
+                    ["text" => "🚛Передать на доставку",
+                        "callback_data" => "/send_to_delivery $request_id"],
+                ];
+            }
+
             BotManager::bot()->replyInlineKeyboard(
                 $text,
                 $requestKeyboard
