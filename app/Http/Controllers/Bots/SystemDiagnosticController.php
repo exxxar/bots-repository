@@ -687,7 +687,7 @@ class SystemDiagnosticController extends Controller
         $text = "<em>$products</em>\nДата заказа: " . Carbon::parse($order->created_at)
                 ->format("Y-m-d H:i:s");
 
-        if (!is_null($channel)) {
+      /*  if (!is_null($channel)) {
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
@@ -698,7 +698,7 @@ class SystemDiagnosticController extends Controller
             BotManager::bot()
                 ->reply("Операция выполнена успешно!");
 
-        }
+        }*/
 
         $botUser = BotUser::query()
             ->find($order->customer_id);
@@ -777,7 +777,7 @@ class SystemDiagnosticController extends Controller
         $text = "<em>$products</em>\nДата заказа: " . Carbon::parse($order->created_at)
                 ->format("Y-m-d H:i:s");
 
-        if (!is_null($channel)) {
+     /*   if (!is_null($channel)) {
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
@@ -788,7 +788,7 @@ class SystemDiagnosticController extends Controller
             BotManager::bot()
                 ->reply("Операция выполнена успешно!");
 
-        }
+        }*/
 
         $botUser = BotUser::query()
             ->find($order->customer_id);
