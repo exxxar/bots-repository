@@ -237,6 +237,11 @@ class StartCodesHandlerController extends Controller
                     ["text" => "🚛Передать на доставку",
                         "callback_data" => "/send_to_delivery $request_id"],
                 ];
+
+                $requestKeyboard[] = [
+                    ["text" => "✅Ваш заказ уже готов",
+                        "callback_data" => "/success_complete_order $request_id"],
+                ];
             }
 
             BotManager::bot()->replyInlineKeyboard(

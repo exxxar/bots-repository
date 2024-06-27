@@ -627,6 +627,96 @@ class SystemDiagnosticController extends Controller
         $value = $data[3] ?? 0;
     }
 
+    public function successCompleteOrder(...$data){
+        $bot = BotManager::bot()->getSelf();
+
+        $botUser = BotUser::query()
+            ->where("bot_id", $bot->id)
+            ->where("telegram_chat_id", $data[3] ?? null)
+            ->first();
+
+        if (is_null($botUser)) {
+            BotManager::bot()
+                ->reply("Пользователь не найден");
+            return;
+        }
+
+        $order = Order::query()
+            ->where("bot_id", $bot->id)
+            ->where("customer_id", $botUser->id)
+            ->orderBy("created_at", "DESC")
+            ->first();
+
+        if (is_null($order)) {
+            BotManager::bot()
+                ->reply("Заказ не найден");
+            return;
+        }
+
+        if ($order->status != OrderStatusEnum::NewOrder->value){
+            BotManager::bot()
+                ->reply("❗Данный заказ уже готов к выдаче❗");
+            return;
+        }
+
+        $order->status = OrderStatusEnum::InDelivery->value;
+        $order->save();
+
+        $channel = $bot->main_channel ?? null;
+
+        $products = "нет продуктов";
+        if (!empty($order->product_details)) {
+
+            $products = "";
+
+            foreach ($order->product_details as $detail) {
+                $detail = (object)$detail;
+                if (is_array($detail->products)) {
+                    foreach ($detail->products as $product) {
+                        $product = (object)$product;
+                        $products .= "$product->title x$product->count = $product->price ₽\n";
+                    }
+
+                } else
+                    $products .= "Текст заказа: $detail->products\n";
+
+            }
+        }
+
+
+        $text = "<em>$products</em>\nДата заказа: " . Carbon::parse($order->created_at)
+                ->format("Y-m-d H:i:s");
+
+        if (!is_null($channel)) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage(
+                    $channel,
+                    "✅Заказ <b>№$order->id</b> готов к выдаче:\n\n$text"
+                );
+
+            BotManager::bot()
+                ->reply("Операция выполнена успешно!");
+
+        }
+
+        $botUser = BotUser::query()
+            ->find($order->customer_id);
+
+
+        if (is_null($botUser)) {
+            return;
+        }
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                "✅Ваш заказ <b>№$order->id</b> готов и ожидает вас. Написать отзыв можно в нашем канале!"
+            );
+
+    }
+
     public function sendToDelivery(...$data){
         $bot = BotManager::bot()->getSelf();
 
@@ -655,7 +745,7 @@ class SystemDiagnosticController extends Controller
 
         if ($order->status != OrderStatusEnum::NewOrder->value){
             BotManager::bot()
-                ->reply("❗Данные заказ уже передан на доставку❗");
+                ->reply("❗Данный заказ уже передан на доставку❗");
             return;
         }
 
