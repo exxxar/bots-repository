@@ -207,12 +207,6 @@ class StartCodesHandlerController extends Controller
                 ->where("telegram_chat_id", $request_id ?? null)
                 ->first();
 
-            $order = Order::query()
-                ->where("bot_id", $bot->id)
-                ->where("customer_id", $requestBotUser->id)
-                ->orderBy("created_at", "DESC")
-                ->first();
-
             $requestKeyboard = [
                 [
                     ["text" => "\xF0\x9F\x8E\xB0Перейти в административное меню",
@@ -225,24 +219,33 @@ class StartCodesHandlerController extends Controller
 
             ];
 
-            if (!($order->is_cashback_crediting ?? true)){
-                $requestKeyboard[] = [
-                    ["text" => "💸Начислить пользователю CashBack",
-                        "callback_data" => "/auto_send_cashback $request_id"],
-                ];
+            $order = Order::query()
+                ->where("bot_id", $bot->id)
+                ->where("customer_id", $requestBotUser->id)
+                ->orderBy("created_at", "DESC")
+                ->first();
+
+            if (!is_null($order)) {
+                if (!($order->is_cashback_crediting ?? true)){
+                    $requestKeyboard[] = [
+                        ["text" => "💸Начислить пользователю CashBack",
+                            "callback_data" => "/auto_send_cashback $request_id"],
+                    ];
+                }
+
+                if ($order->status == OrderStatusEnum::NewOrder->value){
+                    $requestKeyboard[] = [
+                        ["text" => "🚛Передать на доставку",
+                            "callback_data" => "/send_to_delivery $request_id"],
+                    ];
+
+                    $requestKeyboard[] = [
+                        ["text" => "✅Ваш заказ уже готов",
+                            "callback_data" => "/success_complete_order $request_id"],
+                    ];
+                }
             }
 
-            if ($order->status == OrderStatusEnum::NewOrder->value){
-                $requestKeyboard[] = [
-                    ["text" => "🚛Передать на доставку",
-                        "callback_data" => "/send_to_delivery $request_id"],
-                ];
-
-                $requestKeyboard[] = [
-                    ["text" => "✅Ваш заказ уже готов",
-                        "callback_data" => "/success_complete_order $request_id"],
-                ];
-            }
 
             BotManager::bot()->replyInlineKeyboard(
                 $text,
