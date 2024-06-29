@@ -362,8 +362,10 @@ export default {
         text-align: center;
         display: block;
         position: absolute;
-        transform: translateX(25px);
+        transform: translate(25px);
         left: 4px;
+        width: 75px;
+        font-weight: bold;
     }
 }
 
