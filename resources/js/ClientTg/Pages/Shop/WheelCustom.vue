@@ -206,8 +206,8 @@ export default {
         },
         wheelEndedCallback(evt) {
             this.wheelDataLoaded = false
-            if (!evt)
-                return;
+            console.log("game event", evt)
+
             const win = evt
 
             setTimeout(() => {
@@ -215,6 +215,11 @@ export default {
                 this.submit()
 
             }, 2000)
+
+          /*  if (!evt)
+                return;
+            */
+
 
         },
     },
