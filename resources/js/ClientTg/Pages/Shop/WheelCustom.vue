@@ -205,6 +205,7 @@ export default {
             this.hasProfileData = true
         },
         wheelEndedCallback(evt) {
+            this.wheelDataLoaded = false
             if (!evt)
                 return;
             const win = evt
@@ -212,7 +213,7 @@ export default {
             setTimeout(() => {
                 this.winForm.win = win
                 this.submit()
-                this.wheelDataLoaded = false
+
             }, 2000)
 
         },
