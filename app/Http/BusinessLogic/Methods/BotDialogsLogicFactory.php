@@ -586,7 +586,9 @@ class BotDialogsLogicFactory
 
         $command->save();
 
-        $command->delete();
+        Schema::disableForeignKeyConstraints();
+        $command->forceDelete();
+        Schema::enableForeignKeyConstraints();
 
         return new BotDialogCommandResource($tmpCommand);
     }
