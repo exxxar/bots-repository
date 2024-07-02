@@ -12,9 +12,7 @@ import {Head} from '@inertiajs/vue3'
     </Head>
 
 
-    <div id="page">
-        <slot/>
-    </div>
+    <slot/>
 
 </template>
 <script>

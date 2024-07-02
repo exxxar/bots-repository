@@ -222,7 +222,7 @@ export default {
 }
 </script>
 <style lang="scss">
-h1 {
+/*h1 {
     font-family: 'Righteous', 'Arial';
     color: rgb(243, 247, 6);
     text-shadow: 2px 2px 30px rgb(243, 247, 6);
@@ -326,7 +326,7 @@ h1 {
     height: 70px;
     font-size: 34px;
     font-family: fantasy;
-    /* font-kerning: unset; */
+    !* font-kerning: unset; *!
     border: none;
     cursor: pointer;
     background-color: rgb(6, 214, 6);
@@ -360,12 +360,12 @@ input {
     font-family: "Righteous", "Arial";
     align-items: center;
     flex-direction: column;
-    /* top: 10%; */
-    /* left: 50%; */
-    /* transform: translateX(-50%); */
+    !* top: 10%; *!
+    !* left: 50%; *!
+    !* transform: translateX(-50%); *!
     color: rgb(6, 214, 6);
     text-shadow: 2px 5px 30px rgb(6, 214, 6);
-    /* height: 150px; */
+    !* height: 150px; *!
     width: 100%;
 
     span {
@@ -431,5 +431,5 @@ footer p a {
     100% {
         box-shadow: 0px 0px 20px 10px rgb(243, 247, 6);
     }
-}
+}*/
 </style>

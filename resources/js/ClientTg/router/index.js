@@ -1,4 +1,4 @@
-import {createWebHashHistory , createRouter} from "vue-router";
+import {createWebHashHistory, createRouter} from "vue-router";
 
 import Home from '@/ClientTg/Pages/Shop/Home.vue';
 import Products from '@/ClientTg/Pages/Shop/Products.vue';
@@ -81,115 +81,114 @@ export const routes = [
         name: 'empty',
         path: '/empty',
         component: Empty,
-        meta: { title: 'Ничего не найдено', hide_menu:true }
+        meta: {title: 'Ничего не найдено', hide_menu: true}
     },
     {
         name: 'vip',
         path: '/vip',
         component: Vip,
-        meta: { title: 'VIP-анкета', hide_menu:true }
+        meta: {title: 'VIP-анкета', hide_menu: true}
     },
     {
         name: 'FriendsGame',
         path: '/friends-game',
         component: FriendsGame,
-        meta: { title: 'Приведи друзей', hide_menu:true }
+        meta: {title: 'Приведи друзей', hide_menu: true}
     },
 
     {
         name: 'PaymentSBP',
         path: '/payment-sbp-main/:amount',
         component: PaymentSBP,
-        meta: { title: 'Оплата по СБП', hide_menu:true }
+        meta: {title: 'Оплата по СБП', hide_menu: true}
     },
     {
         name: 'ClientPromocode',
         path: '/promocode-main',
         component: ClientPromocode,
-        meta: { title: 'Ввод промокода', hide_menu:true }
+        meta: {title: 'Ввод промокода', hide_menu: true}
     },
     {
         name: 'appointments',
         path: '/appointment-events',
         component: Appointments,
-        meta: { title: 'Запись', hide_menu:true }
+        meta: {title: 'Запись', hide_menu: true}
     },
 
     {
         name: 'profileForm',
         path: '/profile-form',
         component: ProfileForm,
-        meta: { title: 'Анкета', hide_menu:true }
+        meta: {title: 'Анкета', hide_menu: true}
     },
     {
         name: 'quizzes',
         path: '/quizzes',
         component: Quizzes,
-        meta: { title: 'Квиз', hide_menu:true }
+        meta: {title: 'Квиз', hide_menu: true}
     },
     {
         name: 'quiz',
         path: '/quiz/:quizId',
         component: SingleQuiz,
-        meta: { title: 'Квиз', hide_menu:true }
+        meta: {title: 'Квиз', hide_menu: true}
     },
     {
         name: 'schedule',
         path: '/schedule-main',
         component: Schedule,
-        meta: { title: 'График работы', hide_menu:true }
+        meta: {title: 'График работы', hide_menu: true}
     },
     {
         name: 'cashOut',
         path: '/cash-out',
         component: CashOut,
-        meta: { title: 'Вывод средств', hide_menu:true }
+        meta: {title: 'Вывод средств', hide_menu: true}
     },
     {
         name: 'admin',
         path: '/admins',
         component: Admins,
-        meta: { title: 'Активные администраторы', hide_menu:true }
+        meta: {title: 'Активные администраторы', hide_menu: true}
     },
     {
         name: 'home',
         path: '/home',
         component: Home,
-        meta: { title: 'Главная страница' }
+        meta: {title: 'Главная страница'}
     },
     {
         name: 'booking',
         path: '/book-a-table',
         component: Booking,
-        meta: { title: 'Бронирование столика', hide_menu:true }
+        meta: {title: 'Бронирование столика', hide_menu: true}
     },
     {
         name: 'products',
         path: '/products',
         component: Products,
-        meta: { title: 'Продукты' }
+        meta: {title: 'Продукты'}
     },
 
     {
         name: 'productsInCategory',
         path: '/products-in-category/:categoryId',
         component: ProductsInCategory,
-        meta: { title: 'Продукты в категории' }
+        meta: {title: 'Продукты в категории'}
     },
-
 
 
     {
         name: 'categories',
         path: '/categories',
         component: Categories,
-        meta: { title: 'Категории товаров' }
+        meta: {title: 'Категории товаров'}
     },
     {
         name: 'checkout',
         path: '/checkout',
         component: CheckOut,
-        meta: { title: 'Корзина' }
+        meta: {title: 'Корзина'}
     },
 
 
@@ -197,79 +196,79 @@ export const routes = [
         name: 'OneArmedBanditPage',
         path: '/one-armed-bandit',
         component: OneArmedBanditPage,
-        meta: { title: 'Однорукий бандит', hide_menu:true }
+        meta: {title: 'Однорукий бандит', hide_menu: true}
     },
     {
         name: 'wheel',
         path: '/wheel-of-fortune',
         component: Wheel,
-        meta: { title: 'Колесо фортуны', hide_menu:true }
+        meta: {title: 'Колесо фортуны', hide_menu: true}
     },
     {
         name: 'wheelCustom',
         path: '/wheel-of-fortune-custom',
         component: WheelCustom,
-        meta: { title: 'Колесо фортуны 2', hide_menu:true }
+        meta: {title: 'Колесо фортуны 2', hide_menu: true}
     },
     {
         name: 'saveup',
         path: '/save-up',
         component: SaveUp,
-        meta: { title: 'Накопительная карта', hide_menu:true }
+        meta: {title: 'Накопительная карта', hide_menu: true}
     },
     {
         name: 'instagram',
         path: '/instagram-quest',
         component: Quest,
-        meta: { title: 'Инста-квест', hide_menu:true }
+        meta: {title: 'Инста-квест', hide_menu: true}
     },
     {
         name: 'help',
         path: '/help',
         component: Help,
-        meta: { title: 'Помощь' }
+        meta: {title: 'Помощь'}
     },
     {
         name: 'contactus',
         path: '/contact-us',
         component: ContactUs,
-        meta: { title: 'Наши контакты' }
+        meta: {title: 'Наши контакты'}
     },
     {
         name: 'ourteam',
         path: '/our-team',
         component: OurTeam,
-        meta: { title: 'Наша команда' }
+        meta: {title: 'Наша команда'}
     },
     {
         name: 'terms',
         path: '/terms',
         component: Terms,
-        meta: { title: 'Условия использования' }
+        meta: {title: 'Условия использования'}
     },
     {
         name: 'product',
         path: '/products/:productId',
         component: Product,
-        meta: { title: 'Продукт' }
+        meta: {title: 'Продукт'}
     },
     {
         name: 'settings',
         path: '/settings',
         component: Settings,
-        meta: { title: 'Настройки' }
+        meta: {title: 'Настройки'}
     },
     {
         name: 'basket',
         path: '/basket',
         component: Basket,
-        meta: { title: 'Корзина' }
+        meta: {title: 'Корзина'}
     },
     {
         name: 'favorites',
         path: '/favorites',
         component: Favorites,
-        meta: { title: 'Избранное' }
+        meta: {title: 'Избранное'}
     },
 ];
 
@@ -278,13 +277,13 @@ export const adminRoutes = [
         name: 'AdminMain',
         path: '/admin-main',
         component: AdminMain,
-        meta: { title: 'Админ панель: Главная', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: Главная', hide_menu: true, need_admin_menu: true}
     },
     {
         name: 'AdminChatLog',
         path: '/admin-chat-history/:botUserId',
         component: AdminChatLog,
-        meta: { title: 'История чата', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'История чата', hide_menu: true, need_admin_menu: true}
     },
 
 
@@ -292,112 +291,112 @@ export const adminRoutes = [
         name: 'AdminPromotion',
         path: '/admin-promotion',
         component: AdminPromotion,
-        meta: { title: 'Админ панель: Реклама', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: Реклама', hide_menu: true, need_admin_menu: true}
     },
 
     {
         name: 'AdminMessageToUser',
         path: '/admin-callback',
         component: AdminMessageToUser,
-        meta: { title: 'Админ панель: Сообщение к пользователю', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: Сообщение к пользователю', hide_menu: true, need_admin_menu: true}
     },
     {
         name: 'AdminShopManager',
         path: '/admin-shop-manager',
         component: AdminShopManager,
-        meta: { title: 'Админ панель: Магазин', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: Магазин', hide_menu: true, need_admin_menu: true}
     },
     {
         name: 'AdminCompanyManager',
         path: '/admin-company-manager',
         component: AdminCompanyManager,
-        meta: { title: 'Профиль компании', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Профиль компании', hide_menu: true, need_admin_menu: true}
     },
     {
         name: 'AdminBotManager',
         path: '/admin-bot-manager',
         component: AdminBotManager,
-        meta: { title: 'Настройки бота', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Настройки бота', hide_menu: true, need_admin_menu: true}
     },
 
     {
         name: 'AdminBotAmo',
         path: '/admin-bot-amo',
         component: AdminBotAmo,
-        meta: { title: 'AMO CRM', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'AMO CRM', hide_menu: true, need_admin_menu: true}
     },
 
     {
         name: 'AdminBotYClients',
         path: '/admin-bot-y-clients',
         component: AdminBotYClients,
-        meta: { title: 'YClients', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'YClients', hide_menu: true, need_admin_menu: true}
     },
 
     {
         name: 'AdminBotPage',
         path: '/admin-bot-page',
         component: AdminBotPage,
-        meta: { title: 'Страницы бота', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Страницы бота', hide_menu: true, need_admin_menu: true}
     },
 
     {
         name: 'AdminBotSlug',
         path: '/admin-bot-slug',
         component: AdminBotSlug,
-        meta: { title: 'Скрипты бота', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Скрипты бота', hide_menu: true, need_admin_menu: true}
     },
 
     {
         name: 'AdminBotDialog',
         path: '/admin-bot-dialog',
         component: AdminBotDialog,
-        meta: { title: 'Диалоги бота', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Диалоги бота', hide_menu: true, need_admin_menu: true}
     },
 
     {
         name: 'AdminBotKeyboard',
         path: '/admin-bot-keyboard',
         component: AdminBotKeyboard,
-        meta: { title: 'Клавитуары бота', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Клавитуары бота', hide_menu: true, need_admin_menu: true}
     },
 
     {
         name: 'AdminStatistic',
         path: '/admin-statistic',
         component: AdminStatistic,
-        meta: { title: 'Админ панель: Статистика', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: Статистика', hide_menu: true, need_admin_menu: true}
     },
     {
         name: 'AdminWorkStatus',
         path: '/admin-work-status',
         component: AdminWorkStatus,
-        meta: { title: 'Админ панель: Работа', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: Работа', hide_menu: true, need_admin_menu: true}
     },
     {
         name: 'AdminUsers',
         path: '/admin-users',
         component: AdminUsers,
-        meta: { title: 'Админ панель: Пользователи', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: Пользователи', hide_menu: true, need_admin_menu: true}
     },
     {
         name: 'AdminActions',
         path: '/admin-actions',
         component: AdminActions,
-        meta: { title: 'Админ панель: События', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: События', hide_menu: true, need_admin_menu: true}
     },
     {
         name: 'AdminOrders',
         path: '/admin-orders',
         component: AdminOrders,
-        meta: { title: 'Админ панель: Заказы', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: Заказы', hide_menu: true, need_admin_menu: true}
     },
 
     {
         name: 'AdminBonusProduct',
         path: '/admin-bonus-product',
         component: AdminBonusProduct,
-        meta: { title: 'Админ панель: Бонусы', hide_menu:true, need_admin_menu:true }
+        meta: {title: 'Админ панель: Бонусы', hide_menu: true, need_admin_menu: true}
     },
 ]
 
@@ -406,33 +405,33 @@ export const managerRoutes = [
         name: 'ManagerMain',
         path: '/manager-main',
         component: ManagerMain,
-        meta: { title: 'Менеджер: Главная', hide_menu:true}
+        meta: {title: 'Менеджер: Главная', hide_menu: true}
     },
     {
         name: 'ManagerForm',
         path: '/manager-form',
         component: ManagerForm,
-        meta: { title: 'Менеджер: Регистрация', hide_menu:true}
+        meta: {title: 'Менеджер: Регистрация', hide_menu: true}
     },
     {
         name: 'ManagerClients',
         path: '/manager-clients',
         component: ManagerClients,
-        meta: { title: 'Менеджер: Клиенты', hide_menu:true}
+        meta: {title: 'Менеджер: Клиенты', hide_menu: true}
     },
 
     {
         name: 'ManagerProfile',
         path: '/manager-profile',
         component: ManagerProfile,
-        meta: { title: 'Менеджер: Профиль', hide_menu:true}
+        meta: {title: 'Менеджер: Профиль', hide_menu: true}
     },
 
     {
         name: 'ManagerPartners',
         path: '/manager-partners',
         component: ManagerPartners,
-        meta: { title: 'Менеджер: Партнеры', hide_menu:true}
+        meta: {title: 'Менеджер: Партнеры', hide_menu: true}
     },
 
 ]
@@ -442,22 +441,66 @@ export const deliveryRoutes = [
         name: 'DeliveryMain',
         path: '/delivery-main',
         component: DeliveryMain,
-        meta: { title: 'Доставка: Главная', hide_menu:true, show_cart:true}
+        meta: {title: 'Доставка: Главная', hide_menu: true, show_cart: true}
     },
 
     {
         name: 'DeliverymanForm',
         path: '/deliveryman-form',
         component: DeliverymanForm,
-        meta: { title: 'Регистрация доставщика', hide_menu:true}
+        meta: {title: 'Регистрация доставщика', hide_menu: true}
     },
 
     {
         name: 'FoodConstructors',
         path: '/food-constructor-main',
         component: FoodConstructors,
-        meta: { title: 'Конструктор еды: Главная', hide_menu:true}
+        meta: {title: 'Конструктор еды: Главная', hide_menu: true}
     },
+
+
+];
+
+import CatalogV2 from '@/ClientTg/Pages/ShopV2/Catalog.vue';
+import ContactsV2 from '@/ClientTg/Pages/ShopV2/Contacts.vue';
+import OrdersV2 from '@/ClientTg/Pages/ShopV2/MyOrders.vue';
+import ProfileV2 from '@/ClientTg/Pages/ShopV2/Profile.vue';
+
+const simplePrefix = "/s"
+export const simpleRoutes = [
+
+            {
+                name: 'CatalogV2',
+                path: simplePrefix+'/catalog',
+                component: CatalogV2,
+                meta: {title: 'Каталог'}
+            },
+
+            {
+                name: 'ContactsV2',
+                path:  simplePrefix+'/contacts',
+                component: ContactsV2,
+                meta: {title: 'Контакты'}
+            },
+
+
+            {
+                name: 'OrdersV2',
+                path:  simplePrefix+'/orders',
+                component: OrdersV2,
+                meta: {title: 'Заказы'}
+            },
+
+
+            {
+                name: 'ProfileV2',
+                path:  simplePrefix+'/profile',
+                component: ProfileV2,
+                meta: {title: 'Профиль'}
+            },
+
+
+
 
 
 ];
@@ -465,7 +508,7 @@ export const deliveryRoutes = [
 
 const router = createRouter({
    history: createWebHashHistory(),
-    routes: [...routes, ...adminRoutes, ...managerRoutes, ...deliveryRoutes],
+    routes: [...routes, ...adminRoutes, ...managerRoutes, ...deliveryRoutes,...simpleRoutes],
 });
 
 export default router;
