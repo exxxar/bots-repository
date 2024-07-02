@@ -499,7 +499,7 @@ class BotDialogsLogicFactory
                     'result_flags' => [],
                     'rules' => [],
                     'next_bot_dialog_command_id' =>  null,
-                    'bot_dialog_group_id' => $tmp->bot_dialog_group_id,
+                    'bot_dialog_group_id' => $data["bot_dialog_group_id"]??null,
                     'is_empty' => false,
                     'result_channel' => null,
                     'use_result_as' => null,
