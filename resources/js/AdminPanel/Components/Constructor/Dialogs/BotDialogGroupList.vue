@@ -72,12 +72,15 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                 @click="toggleEditMode(command)"
                                 v-else><i class="fa-solid fa-toggle-on cursor-pointer text-primary"></i></span>
                         </td>
-                        <th scope="row" class="text-left">{{ command.id }}</th>
+                        <th scope="row" class="text-left">{{ command.id }}
+                            <i class="fa-solid fa-flag-checkered mr-1"
+                               v-if="command.is_empty"></i>
+                        </th>
                         <td class="text-left">{{ command.use_result_as || 'не задана' }}</td>
                         <td class="text-left" style="min-width:400px;">
 
                             <div class="dropdown">
-                                <button class="btn btn-link w-100 d-flex justify-content-between align-items-center"
+                                <button class="btn text-left text-decoration-none color-black w-100 d-flex justify-content-between align-items-center"
                                         type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     {{ command.pre_text || '-' }}
                                 </button>
