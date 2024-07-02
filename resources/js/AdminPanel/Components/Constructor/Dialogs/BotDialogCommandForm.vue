@@ -370,7 +370,7 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                            v-model="commandForm.answers[index].next_bot_dialog_command_id"
                                            id="floatingInput"
                                            placeholder="name@example.com" required>
-                                    <label for="floatingInput">Выберите диалог или введите его номер</label>
+                                    <label for="floatingInput">Выберите\введите диалог или введите его номер</label>
                                 </div>
                                 <div class="dropdown d-flex">
                                     <button class="btn btn-outline-secondary w-100"

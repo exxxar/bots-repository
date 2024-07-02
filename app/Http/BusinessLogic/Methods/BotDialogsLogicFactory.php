@@ -45,7 +45,6 @@ class BotDialogsLogicFactory
     }
 
 
-
     /**
      * @throws HttpException
      */
@@ -355,14 +354,41 @@ class BotDialogsLogicFactory
         if (is_null($answers))
             return new BotDialogCommandResource($command);
 
-        foreach ($answers as $answer)
+        foreach ($answers as $answer) {
+            $isNextBotDialogCommandId = is_int($answer->next_bot_dialog_command_id) || is_null($answer->next_bot_dialog_command_id ?? null);
+
+            if (!$isNextBotDialogCommandId){
+                $nextBotDialogCommand = BotDialogCommand::query()->create([
+                    'slug' => Str::uuid(),
+                    'pre_text' => $answer->next_bot_dialog_command_id ?? 'Текст диалога',
+                    'post_text' => "Спасибо!",
+                    'error_text' =>  "Ошибка",
+                    'bot_id' => $this->bot->id,
+                    'input_pattern' =>  null,
+                    'inline_keyboard_id' => null,
+                    'reply_keyboard_id' => null,
+                    'images' =>  [],
+                    'result_flags' => [],
+                    'rules' => [],
+                    'next_bot_dialog_command_id' =>  null,
+                    'bot_dialog_group_id' => $groupId,
+                    'is_empty' => false,
+                    'result_channel' => null,
+                    'use_result_as' => null,
+                ]);
+
+                $isNextBotDialogCommandId = $nextBotDialogCommand->id;
+            }
+
             BotDialogAnswer::query()
                 ->create([
                     'bot_dialog_command_id' => $command->id,
                     'answer' => $answer->answer ?? null,
                     'pattern' => $answer->pattern ?? null,
-                    'next_bot_dialog_command_id' => $answer->next_bot_dialog_command_id ?? null,
+                    'next_bot_dialog_command_id' => $isNextBotDialogCommandId,
                 ]);
+        }
+
 
         return new BotDialogCommandResource($command);
     }
@@ -457,11 +483,36 @@ class BotDialogsLogicFactory
 
         foreach ($answers as $answer) {
 
+            $isNextBotDialogCommandId = is_int($answer->next_bot_dialog_command_id) || is_null($answer->next_bot_dialog_command_id ?? null);
+
+            if (!$isNextBotDialogCommandId){
+                $nextBotDialogCommand = BotDialogCommand::query()->create([
+                    'slug' => Str::uuid(),
+                    'pre_text' => $answer->next_bot_dialog_command_id ?? 'Текст диалога',
+                    'post_text' => "Спасибо!",
+                    'error_text' =>  "Ошибка",
+                    'bot_id' => $this->bot->id,
+                    'input_pattern' =>  null,
+                    'inline_keyboard_id' => null,
+                    'reply_keyboard_id' => null,
+                    'images' =>  [],
+                    'result_flags' => [],
+                    'rules' => [],
+                    'next_bot_dialog_command_id' =>  null,
+                    'bot_dialog_group_id' => $tmp->bot_dialog_group_id,
+                    'is_empty' => false,
+                    'result_channel' => null,
+                    'use_result_as' => null,
+                ]);
+
+                $isNextBotDialogCommandId = $nextBotDialogCommand->id;
+            }
+
             $tmp = [
                 'bot_dialog_command_id' => $command->id,
                 'answer' => $answer->answer ?? null,
                 'pattern' => $answer->pattern ?? null,
-                'next_bot_dialog_command_id' => $answer->next_bot_dialog_command_id ?? null,
+                'next_bot_dialog_command_id' => $isNextBotDialogCommandId,
             ];
 
             if (!is_null($answer->id ?? null)) {
@@ -574,8 +625,8 @@ class BotDialogsLogicFactory
         $command->next_bot_dialog_command_id = null;
         $command->bot_dialog_group_id = null;
 
-        if (count($command->answers??[])>0){
-            foreach ($command->answers as $answer){
+        if (count($command->answers ?? []) > 0) {
+            foreach ($command->answers as $answer) {
 
                 $answer->bot_dialog_command_id = null;
                 $answer->next_bot_dialog_command_id = null;
