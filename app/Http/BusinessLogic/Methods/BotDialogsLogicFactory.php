@@ -572,6 +572,15 @@ class BotDialogsLogicFactory
         $command->reply_keyboard_id = null;
         $command->next_bot_dialog_command_id = null;
         $command->bot_dialog_group_id = null;
+
+        if (count($command->answers??[])>0){
+            foreach ($command->answers as $answer){
+                $answer->bot_dialog_command_id = null;
+                $answer->next_bot_dialog_command_id = null;
+                $answer->save();
+            }
+        }
+
         $command->save();
 
         $command->delete();
