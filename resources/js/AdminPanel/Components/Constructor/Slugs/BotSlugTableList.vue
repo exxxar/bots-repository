@@ -73,7 +73,8 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
                 <tbody>
                 <tr
 
-                    v-bind:class="{'border-info':item.deleted_at==null,'border-danger':item.deleted_at!=null}"
+                    v-bind:class="{'border-info':item.deleted_at==null,
+                    'border-danger':item.deleted_at!=null}"
                     v-for="(item, index) in slugs">
                     <th scope="row" v-bind:class="{'text-danger':item.deleted_at!=null}">
                         {{ item.id || 'Нет идентификатора' }}
@@ -168,69 +169,69 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
                                 :item="selectedSlug"
                                 v-on:callback="slugFormCallback"
                             ></SlugTableForm>
-<!--                            <SlugForm
-                                :item="selectedSlug"
-                                v-on:callback="slugFormCallback"
-                            />-->
+                            <!--                            <SlugForm
+                                                            :item="selectedSlug"
+                                                            v-on:callback="slugFormCallback"
+                                                        />-->
                         </div>
-<!--                        <div class="col-4">
-                            <ol class="list-group list-group-numbered">
-                                <li
-                                    v-if="selectedSlug.config"
-                                    class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="fw-bold">Набор параметров скрипта</div>
-                                        <p v-if="(selectedSlug.config||[]).length>0"
-                                           v-for="param in selectedSlug.config">
-                                            <strong>{{ param.key || 'Ключ не найден' }}:</strong>{{
-                                                param.value || 'Не указано'
-                                            }}
-                                        </p>
-                                        <p v-else>Отсутствует</p>
-                                    </div>
-                                </li>
-                                <li
-                                    v-if="selectedSlug.page"
-                                    class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="fw-bold">Привязана страница</div>
-                                    </div>
+                        <!--                        <div class="col-4">
+                                                    <ol class="list-group list-group-numbered">
+                                                        <li
+                                                            v-if="selectedSlug.config"
+                                                            class="list-group-item d-flex justify-content-between align-items-start">
+                                                            <div class="ms-2 me-auto">
+                                                                <div class="fw-bold">Набор параметров скрипта</div>
+                                                                <p v-if="(selectedSlug.config||[]).length>0"
+                                                                   v-for="param in selectedSlug.config">
+                                                                    <strong>{{ param.key || 'Ключ не найден' }}:</strong>{{
+                                                                        param.value || 'Не указано'
+                                                                    }}
+                                                                </p>
+                                                                <p v-else>Отсутствует</p>
+                                                            </div>
+                                                        </li>
+                                                        <li
+                                                            v-if="selectedSlug.page"
+                                                            class="list-group-item d-flex justify-content-between align-items-start">
+                                                            <div class="ms-2 me-auto">
+                                                                <div class="fw-bold">Привязана страница</div>
+                                                            </div>
 
-                                </li>
-                                <li
-                                    v-if="selectedSlug.is_global"
-                                    class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="fw-bold">Является глобальным скриптом</div>
-                                    </div>
+                                                        </li>
+                                                        <li
+                                                            v-if="selectedSlug.is_global"
+                                                            class="list-group-item d-flex justify-content-between align-items-start">
+                                                            <div class="ms-2 me-auto">
+                                                                <div class="fw-bold">Является глобальным скриптом</div>
+                                                            </div>
 
-                                </li>
+                                                        </li>
 
-                                <li
-                                    class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto w-100">
-                                        <form v-on:submit.prevent="submitRelocateData">
-                                            <div class="fw-bold">Перенести данные из:</div>
-                                            <select class="form-control w-100" v-model="relocated_slug_id" required>
-                                                <option :value="null">Не выбрано</option>
-                                                <option :value="slug.id" v-for="slug in slugs">#{{ slug.id }}
-                                                    {{ slug.slug || 'Не указан' }}
-                                                </option>
-                                            </select>
-                                            <p class="my-2"><em>Перенос данных затирает текущие данные в данном
-                                                скрипте</em></p>
-                                            <button
-                                                :disabled="relocated_slug_id == null"
-                                                class="btn btn-outline-warning w-100">
-                                                Выполнить перенос
-                                            </button>
-                                        </form>
+                                                        <li
+                                                            class="list-group-item d-flex justify-content-between align-items-start">
+                                                            <div class="ms-2 me-auto w-100">
+                                                                <form v-on:submit.prevent="submitRelocateData">
+                                                                    <div class="fw-bold">Перенести данные из:</div>
+                                                                    <select class="form-control w-100" v-model="relocated_slug_id" required>
+                                                                        <option :value="null">Не выбрано</option>
+                                                                        <option :value="slug.id" v-for="slug in slugs">#{{ slug.id }}
+                                                                            {{ slug.slug || 'Не указан' }}
+                                                                        </option>
+                                                                    </select>
+                                                                    <p class="my-2"><em>Перенос данных затирает текущие данные в данном
+                                                                        скрипте</em></p>
+                                                                    <button
+                                                                        :disabled="relocated_slug_id == null"
+                                                                        class="btn btn-outline-warning w-100">
+                                                                        Выполнить перенос
+                                                                    </button>
+                                                                </form>
 
-                                    </div>
+                                                            </div>
 
-                                </li>
-                            </ol>
-                        </div>-->
+                                                        </li>
+                                                    </ol>
+                                                </div>-->
                     </div>
 
                 </div>
@@ -245,7 +246,7 @@ import Slug from '@/AdminPanel/Components/Constructor/Slugs/Slug.vue'
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["command", "canSelect"],
+    props: ["selected", "command", "canSelect"],
     data() {
         return {
             bot: null,
@@ -300,12 +301,13 @@ export default {
             this.loadSlugs(index)
         },
         loadSlugs(page = 0) {
+            console.log("selected",this.selected)
             return this.$store.dispatch("loadSlugs", {
                 dataObject: {
                     botId: this.bot.id,
                     needGlobal: this.need_global,
                     needDeleted: this.need_show_deleted,
-                    search: this.ownSearch
+                    search: this.ownSearch || (this.selected||[]).length > 0 ? this.selected[0] : null
                 },
                 page: page
             }).then((resp) => {

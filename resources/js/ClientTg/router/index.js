@@ -12,6 +12,7 @@ import Schedule from '@/ClientTg/Pages/Shop/Schedule.vue';
 import Quizzes from '@/ClientTg/Pages/Quiz/Quizzes.vue';
 import SingleQuiz from '@/ClientTg/Pages/Quiz/SingleQuiz.vue';
 import Appointments from '@/ClientTg/Pages/Appointment/Appointments.vue';
+import OneArmedBanditPage from '@/ClientTg/Pages/OneArmedBanditPage.vue';
 
 
 import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
@@ -189,6 +190,14 @@ export const routes = [
         path: '/checkout',
         component: CheckOut,
         meta: { title: 'Корзина' }
+    },
+
+
+    {
+        name: 'OneArmedBanditPage',
+        path: '/one-armed-bandit',
+        component: OneArmedBanditPage,
+        meta: { title: 'Однорукий бандит', hide_menu:true }
     },
     {
         name: 'wheel',

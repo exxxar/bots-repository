@@ -39,109 +39,181 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
             <table class="table">
                 <thead>
                 <tr>
-                    <th class="text-center" scope="col"></th>
-                    <th class="text-center" scope="col">#</th>
-                    <th class="text-center" scope="col">Переменная</th>
-                    <th class="text-center" scope="col">Текст диалога</th>
-                    <th class="text-center" scope="col">Есть ответы</th>
-                    <th class="text-center" scope="col">Цепочки</th>
+                    <th class="text-left" scope="col"></th>
+                    <th class="text-left" scope="col">#</th>
+                    <th class="text-left" scope="col">Переменная</th>
+                    <th class="text-left" scope="col" style="min-width:400px;">Текст диалога</th>
+                    <!--                    <th class="text-center" scope="col">Есть ответы</th>
+                                        <th class="text-center" scope="col">Цепочки</th>
 
-                    <th class="text-center" scope="col">Текст успеха</th>
-                    <th class="text-center" scope="col">Текст ошибки</th>
-                    <th class="text-center" scope="col">Канал результата</th>
-                    <th class="text-center" scope="col">Флаги</th>
-                    <th class="text-center" scope="col">Сохранить в</th>
-                    <th class="text-center" scope="col">Есть изображения</th>
-                    <th class="text-center" scope="col">Есть паттерны</th>
-                    <th class="text-center" scope="col">Пустой</th>
-                    <th class="text-center" scope="col">Есть кнопки</th>
-                    <th class="text-center" scope="col">Есть меню</th>
+                                        <th class="text-center" scope="col">Текст успеха</th>
+                                        <th class="text-center" scope="col">Текст ошибки</th>
+                                        <th class="text-center" scope="col">Канал результата</th>
+                                        <th class="text-center" scope="col">Флаги</th>
+                                        <th class="text-center" scope="col">Сохранить в</th>
+                                        <th class="text-center" scope="col">Есть изображения</th>
+                                        <th class="text-center" scope="col">Есть паттерны</th>
+                                        <th class="text-center" scope="col">Пустой</th>
+                                        <th class="text-center" scope="col">Есть кнопки</th>
+                                        <th class="text-center" scope="col">Есть меню</th>-->
                     <th class="text-center" scope="col">Команды</th>
 
                 </tr>
                 </thead>
                 <tbody>
                 <template v-for="(command,index) in dialog_commands">
-                    <tr >
+                    <tr>
                         <td>
                           <span
                               @click="toggleEditMode(command)"
-                              v-if="!command.in_edit_mode"><i class="fa-solid fa-toggle-off cursor-pointer text-secondary"></i></span>
-                          <span
-                              @click="toggleEditMode(command)"
-                              v-else><i class="fa-solid fa-toggle-on cursor-pointer text-primary"></i></span>
+                              v-if="!command.in_edit_mode"><i
+                              class="fa-solid fa-toggle-off cursor-pointer text-secondary"></i></span>
+                            <span
+                                @click="toggleEditMode(command)"
+                                v-else><i class="fa-solid fa-toggle-on cursor-pointer text-primary"></i></span>
                         </td>
-                        <th scope="row" >{{ command.id }}</th>
-                        <td class="text-center">{{command.use_result_as || 'не задана'}}</td>
-                        <td class="text-center">{{ command.pre_text || '-' }}</td>
-                        <td class="text-center">
-                            <p v-if="(command.answers||[]).length>0">{{command.answers.length}}</p>
-                            <p v-else>
-                                <i class="fa-solid fa-xmark text-danger"></i>
-                            </p>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="command.next_bot_dialog_command_id"
-                                  class="badge bg-primary">#{{ command.next_bot_dialog_command_id || '-' }} ({{command.chain.length||0}})</span>
-                            <span v-else>
-                              <i class="fa-solid fa-xmark text-danger"></i>
-                        </span>
-                        </td>
-                        <td class="text-center">
-                            <p v-if="command.post_text">{{ command.post_text }}</p>
-                            <p v-else>
-                                <i class="fa-solid fa-xmark text-danger"></i>
-                            </p>
+                        <th scope="row" class="text-left">{{ command.id }}</th>
+                        <td class="text-left">{{ command.use_result_as || 'не задана' }}</td>
+                        <td class="text-left" style="min-width:400px;">
+
+                            <div class="dropdown">
+                                <button class="btn btn-link w-100 d-flex justify-content-between align-items-center"
+                                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ command.pre_text || '-' }}
+                                </button>
+                                <div class="dropdown-menu p-4 text-body-secondary"
+                                     style="max-width: 400px; min-width:400px; height:200px; overflow-y:scroll;">
+                                    <h6>Основные параметры диалога</h6>
+                                    <table  class="table">
+                                        <tbody>
+                                        <tr>
+                                            <td>Есть ответы</td>
+                                            <td>
+                                                <p v-if="(command.answers||[]).length>0">
+                                                    {{ command.answers.length }}</p>
+                                                <p v-else>
+                                                    <i class="fa-solid fa-xmark text-danger"></i>
+                                                </p>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Цепочки</td>
+                                            <td>
+                                                <span v-if="command.next_bot_dialog_command_id"
+                                                      class="badge bg-primary">#{{
+                                                        command.next_bot_dialog_command_id || '-'
+                                                    }} ({{ command.chain.length || 0 }})</span>
+                                                <span v-else>
+                                                      <i class="fa-solid fa-xmark text-danger"></i>
+                                                </span>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>Текст успеха</td>
+                                            <td>
+                                                <p v-if="command.post_text">{{ command.post_text }}</p>
+                                                <p v-else>
+                                                    <i class="fa-solid fa-xmark text-danger"></i>
+                                                </p>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Текст ошибки</td>
+                                            <td>
+                                                <p v-if="command.error_text">{{ command.error_text }}</p>
+                                                <p v-else>
+                                                    <i class="fa-solid fa-xmark text-danger"></i>
+                                                </p>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>Канал результата</td>
+                                            <td>
+                                                <p v-if="command.result_channel">{{ command.result_channel }}</p>
+                                                <p v-else>
+                                                    <i class="fa-solid fa-xmark text-danger"></i>
+                                                </p>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>Флаги</td>
+                                            <td>
+                                                <p v-if="command.result_flags.length > 0">
+                                                    <span v-for="flag in command.result_flags" class="badge bg-primary">{{ flag || '-' }}</span>
+                                                </p>
+                                                <p v-else>
+                                                    <i class="fa-solid fa-xmark text-danger"></i>
+                                                </p>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>Сохранить в</td>
+                                            <td>
+                                                <p v-if="command.store_to">{{ command.store_to }}</p>
+                                                <p v-else>
+                                                    <i class="fa-solid fa-xmark text-danger"></i>
+                                                </p>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>Есть изображения</td>
+                                            <td>
+                                                <i class="fa-solid fa-check text-success" v-if="(command.images||[]).length > 0"></i>
+                                                <i class="fa-solid fa-xmark text-danger" v-else></i>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Есть паттерны</td>
+                                            <td>
+                                                <p v-if="command.input_pattern">{{ command.input_pattern }}</p>
+                                                <p v-else>
+                                                    <i class="fa-solid fa-xmark text-danger"></i>
+                                                </p>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Пустой</td>
+                                            <td>
+                                                <i class="fa-solid fa-check text-success" v-if="command.is_empty"></i>
+                                                <i class="fa-solid fa-xmark text-danger" v-else></i>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Есть кнопки</td>
+                                            <td>
+                                                <i class="fa-solid fa-check text-success" v-if="command.inline_keyboard_id != null"></i>
+                                                <i class="fa-solid fa-xmark text-danger" v-else></i>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Есть меню</td>
+                                            <td>
+                                                <i class="fa-solid fa-check text-success" v-if="command.reply_keyboard_id != null"></i>
+                                                <i class="fa-solid fa-xmark text-danger" v-else></i>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </td>
 
-                        <td class="text-center">
-                            <p v-if="command.error_text">{{ command.error_text }}</p>
-                            <p v-else>
-                                <i class="fa-solid fa-xmark text-danger"></i>
-                            </p>
-                        </td>
-                        <td class="text-center">
-                            <p v-if="command.result_channel">{{ command.result_channel }}</p>
-                            <p v-else>
-                                <i class="fa-solid fa-xmark text-danger"></i>
-                            </p>
-                        </td>
-                        <td class="text-center">
-                            <p v-if="command.result_flags.length > 0">
-                                <span v-for="flag in command.result_flags" class="badge bg-primary">{{ flag || '-' }}</span>
-                            </p>
-                            <p v-else>
-                                <i class="fa-solid fa-xmark text-danger"></i>
-                            </p>
-                        </td>
-                        <td class="text-center">
-                            <p v-if="command.store_to">{{ command.store_to }}</p>
-                            <p v-else>
-                                <i class="fa-solid fa-xmark text-danger"></i>
-                            </p>
-                        </td>
-                        <td class="text-center">
-                            <i class="fa-solid fa-check text-success" v-if="command.images.length > 0"></i>
-                            <i class="fa-solid fa-xmark text-danger" v-else></i>
-                        </td>
-                        <td class="text-center">
-                            <p v-if="command.input_pattern">{{ command.input_pattern }}</p>
-                            <p v-else>
-                                <i class="fa-solid fa-xmark text-danger"></i>
-                            </p>
-                        </td>
-                        <td class="text-center">
-                            <i class="fa-solid fa-check text-success" v-if="command.is_empty"></i>
-                            <i class="fa-solid fa-xmark text-danger" v-else></i>
-                        </td>
-                        <td class="text-center">
-                            <i class="fa-solid fa-check text-success" v-if="command.inline_keyboard_id != null"></i>
-                            <i class="fa-solid fa-xmark text-danger" v-else></i>
-                        </td>
-                        <td class="text-center">
-                            <i class="fa-solid fa-check text-success" v-if="command.reply_keyboard_id != null"></i>
-                            <i class="fa-solid fa-xmark text-danger" v-else></i>
-                        </td>
                         <td class="text-center">
                             <div class="dropdown">
                                 <button
@@ -196,7 +268,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
     <div class="row" v-else>
         <div class="col-12">
             <div class="alert alert-danger" role="alert">
-               Не найдено ни одного диалога!
+                Не найдено ни одного диалога!
             </div>
         </div>
     </div>
@@ -235,7 +307,7 @@ export default {
 
     data() {
         return {
-            variables:[],
+            variables: [],
             bot: null,
             selected: null,
             loading: true,
@@ -258,7 +330,7 @@ export default {
         openEditor(command) {
             this.loading = true
             if (!command)
-                this.dialog_commands.forEach(item=>{
+                this.dialog_commands.forEach(item => {
                     item.in_edit_mode = false
                 })
             this.$nextTick(() => {
@@ -312,10 +384,10 @@ export default {
                 this.loading = false
             })
         },
-        toggleEditMode(command){
+        toggleEditMode(command) {
             this.selected = command
 
-            command.in_edit_mode = !(command.in_edit_mode||false)
+            command.in_edit_mode = !(command.in_edit_mode || false)
         },
         loadCurrentBot(bot = null) {
             return this.$store.dispatch("updateCurrentBot", {
@@ -331,7 +403,7 @@ export default {
         nextDialogs(index) {
             this.loadDialogs(index)
         },
-        selectElement(id){
+        selectElement(id) {
             this.loading = true
             this.$nextTick(() => {
                 this.selected = this.dialog_commands.find(command => command.id === id) || null

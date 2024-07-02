@@ -89,6 +89,7 @@ export default {
 
     },
     mounted() {
+      //  this.search = (this.selected||[]).length > 0 ? this.selected[0] : null
         this.loadSlugs()
     },
     methods: {
@@ -110,7 +111,7 @@ export default {
             this.$store.dispatch("loadSlugs", {
                 dataObject:{
                     botId: this.bot.id,
-                    search: this.search,
+                    search: this.search || (this.selected||[]).length > 0 ? this.selected[0] : null,
                     needGlobal: this.global
                 },
                 page:page

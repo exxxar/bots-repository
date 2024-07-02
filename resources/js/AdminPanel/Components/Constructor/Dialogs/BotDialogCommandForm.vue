@@ -46,6 +46,8 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
         <div class="py-2 px-0" v-if="tab===0">
 
+
+
             <div class="form-check mb-2">
                 <input class="form-check-input" type="checkbox" v-model="commandForm.is_empty" :id="'need-empty-dialog'+(commandForm.id||'new')"
                        checked>
@@ -97,18 +99,15 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                         <button type="button"
                                 class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
                                 style="text-align:left;">
-                        <span @click="doCommandLink(command.id)">
-                            <i class="fa-solid fa-link mr-2 text-success"
-                               v-if="commandForm.next_bot_dialog_command_id == command.id"></i> #{{
-                                command.id
-                            }} {{ command.pre_text || 'Без текста' }}
+                        <span>
+                               <i class="fa-solid fa-unlink text-danger mr-2"
+                                  @click="doCommandLink(null)"
+                                  v-if="commandForm.next_bot_dialog_command_id == command.id"></i>
+                            <i
+                                @click="doCommandLink(command.id)"
+                                class="fa-solid fa-link mr-2 text-success"
+                               v-else></i> [#{{command.id }}] Текст диалога: {{ command.pre_text || 'Без текста' }}
                         </span>
-
-
-                            <i class="fa-solid fa-unlink text-danger"
-                               @click="doCommandLink(null)"
-                               v-if="commandForm.next_bot_dialog_command_id == command.id"></i>
-
                         </button>
                     </div>
 
@@ -446,9 +445,9 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
             </div>
         </div>
         <div class="py-2 px-0" v-if="tab===3">
-
             <BotDialogResultRules v-model="commandForm.rules"></BotDialogResultRules>
         </div>
+
 
     </form>
 </template>
