@@ -39,31 +39,18 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
             <table class="table">
                 <thead>
                 <tr>
-                    <th class="text-left" scope="col"></th>
-                    <th class="text-left" scope="col">#</th>
-                    <th class="text-left" scope="col">Переменная</th>
+                    <th class="text-left" scope="col" style="width:40px;"></th>
+                    <th class="text-left" scope="col" style="width:80px;"> #</th>
                     <th class="text-left" scope="col" style="min-width:400px;">Текст диалога</th>
-                    <!--                    <th class="text-center" scope="col">Есть ответы</th>
-                                        <th class="text-center" scope="col">Цепочки</th>
 
-                                        <th class="text-center" scope="col">Текст успеха</th>
-                                        <th class="text-center" scope="col">Текст ошибки</th>
-                                        <th class="text-center" scope="col">Канал результата</th>
-                                        <th class="text-center" scope="col">Флаги</th>
-                                        <th class="text-center" scope="col">Сохранить в</th>
-                                        <th class="text-center" scope="col">Есть изображения</th>
-                                        <th class="text-center" scope="col">Есть паттерны</th>
-                                        <th class="text-center" scope="col">Пустой</th>
-                                        <th class="text-center" scope="col">Есть кнопки</th>
-                                        <th class="text-center" scope="col">Есть меню</th>-->
-                    <th class="text-center" scope="col">Команды</th>
+                    <th class="text-center" scope="col" style="width:40px;">Команды</th>
 
                 </tr>
                 </thead>
                 <tbody>
                 <template v-for="(command,index) in dialog_commands">
                     <tr>
-                        <td>
+                        <td  style="width:40px;">
                           <span
                               @click="toggleEditMode(command)"
                               v-if="!command.in_edit_mode"><i
@@ -72,15 +59,17 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                 @click="toggleEditMode(command)"
                                 v-else><i class="fa-solid fa-toggle-on cursor-pointer text-primary"></i></span>
                         </td>
-                        <th scope="row" class="text-left">
-                            <span class="d-flex flex-column align-items-center">
+                        <th scope="row" class="text-left" style="width:80px;">
+                            <span class="d-flex justify-content-start align-items-center">
                             {{ command.id }}
-                            <i class="fa-solid fa-flag-checkered mr-1"
+                            <i class="fa-solid fa-flag-checkered ml-2"
                                v-if="command.is_empty"></i>
                                 </span>
                         </th>
-                        <td class="text-left">{{ command.use_result_as || 'не задана' }}</td>
+
                         <td class="text-left" style="min-width:400px;">
+
+                            <p class="mb-0 px-2">Результат будет сохранен в <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
 
                             <div class="dropdown">
                                 <button
@@ -227,7 +216,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                             </div>
                         </td>
 
-                        <td class="text-center">
+                        <td class="text-center" style="width:40px;">
                             <div class="dropdown">
                                 <button
                                     :disabled="loading"

@@ -62,11 +62,11 @@
       "_TelegramChannelHelper-4e4e817d.js"
     ]
   },
-  "_BotList-2039650a.js": {
+  "_BotList-03da9f58.js": {
     "css": [
       "assets/BotList-7ab1b364.css"
     ],
-    "file": "assets/BotList-2039650a.js",
+    "file": "assets/BotList-03da9f58.js",
     "imports": [
       "_MailingTable-569c5ae8.js",
       "_index.es-886ebff7.js",
@@ -251,17 +251,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-87081980.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-6bb2bce0.js",
@@ -337,10 +337,10 @@
       "assets/BotPage-3d03a0d5.css",
       "assets/ChatMini-5a929b50.css"
     ],
-    "file": "assets/BotPage-bfc85045.js",
+    "file": "assets/BotPage-12a035ec.js",
     "imports": [
       "_MainAdminLayout-a8500339.js",
-      "_BotList-2039650a.js",
+      "_BotList-03da9f58.js",
       "_CompanyList-ad500be7.js",
       "_BotForm-0980301e.js",
       "_index.es-886ebff7.js",
@@ -411,10 +411,10 @@
     "css": [
       "assets/Dashboard-db3e581c.css"
     ],
-    "file": "assets/Dashboard-eeddcd0c.js",
+    "file": "assets/Dashboard-ca977458.js",
     "imports": [
       "_CompanyList-ad500be7.js",
-      "_BotList-2039650a.js",
+      "_BotList-03da9f58.js",
       "_MailingTable-569c5ae8.js",
       "_InlineInjectionsHelper.vue_vue_type_style_index_0_lang-6b34797d.js",
       "_BotForm-0980301e.js",
@@ -572,7 +572,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-6039529f.js",
+    "file": "assets/app-dfcc2e8f.js",
     "imports": [
       "_index.es-886ebff7.js",
       "_index-d9a7ad0b.js"
