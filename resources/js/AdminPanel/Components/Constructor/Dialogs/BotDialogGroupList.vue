@@ -72,22 +72,27 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                 @click="toggleEditMode(command)"
                                 v-else><i class="fa-solid fa-toggle-on cursor-pointer text-primary"></i></span>
                         </td>
-                        <th scope="row" class="text-left">{{ command.id }}
+                        <th scope="row" class="text-left">
+                            <span class="d-flex flex-column align-items-center">
+                            {{ command.id }}
                             <i class="fa-solid fa-flag-checkered mr-1"
                                v-if="command.is_empty"></i>
+                                </span>
                         </th>
                         <td class="text-left">{{ command.use_result_as || 'не задана' }}</td>
                         <td class="text-left" style="min-width:400px;">
 
                             <div class="dropdown">
-                                <button class="btn text-left text-decoration-none color-black w-100 d-flex justify-content-between align-items-center"
-                                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button
+                                    style="text-align:left !important;"
+                                    class="btn text-decoration-none color-black w-100 d-flex justify-content-between align-items-center"
+                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     {{ command.pre_text || '-' }}
                                 </button>
                                 <div class="dropdown-menu p-4 text-body-secondary"
                                      style="max-width: 400px; min-width:400px; height:200px; overflow-y:scroll;">
                                     <h6>Основные параметры диалога</h6>
-                                    <table  class="table">
+                                    <table class="table">
                                         <tbody>
                                         <tr>
                                             <td>Есть ответы</td>
@@ -150,7 +155,9 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                             <td>Флаги</td>
                                             <td>
                                                 <p v-if="command.result_flags.length > 0">
-                                                    <span v-for="flag in command.result_flags" class="badge bg-primary">{{ flag || '-' }}</span>
+                                                    <span v-for="flag in command.result_flags" class="badge bg-primary">{{
+                                                            flag || '-'
+                                                        }}</span>
                                                 </p>
                                                 <p v-else>
                                                     <i class="fa-solid fa-xmark text-danger"></i>
@@ -173,7 +180,8 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                         <tr>
                                             <td>Есть изображения</td>
                                             <td>
-                                                <i class="fa-solid fa-check text-success" v-if="(command.images||[]).length > 0"></i>
+                                                <i class="fa-solid fa-check text-success"
+                                                   v-if="(command.images||[]).length > 0"></i>
                                                 <i class="fa-solid fa-xmark text-danger" v-else></i>
                                             </td>
                                         </tr>
@@ -199,7 +207,8 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                         <tr>
                                             <td>Есть кнопки</td>
                                             <td>
-                                                <i class="fa-solid fa-check text-success" v-if="command.inline_keyboard_id != null"></i>
+                                                <i class="fa-solid fa-check text-success"
+                                                   v-if="command.inline_keyboard_id != null"></i>
                                                 <i class="fa-solid fa-xmark text-danger" v-else></i>
                                             </td>
                                         </tr>
@@ -207,7 +216,8 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                         <tr>
                                             <td>Есть меню</td>
                                             <td>
-                                                <i class="fa-solid fa-check text-success" v-if="command.reply_keyboard_id != null"></i>
+                                                <i class="fa-solid fa-check text-success"
+                                                   v-if="command.reply_keyboard_id != null"></i>
                                                 <i class="fa-solid fa-xmark text-danger" v-else></i>
                                             </td>
                                         </tr>
