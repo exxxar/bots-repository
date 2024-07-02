@@ -16,6 +16,7 @@ use App\Models\BotDialogResult;
 use App\Models\BotMenuTemplate;
 use App\Models\BotUser;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -575,9 +576,11 @@ class BotDialogsLogicFactory
 
         if (count($command->answers??[])>0){
             foreach ($command->answers as $answer){
+                Schema::disableForeignKeyConstraints();
                 $answer->bot_dialog_command_id = null;
                 $answer->next_bot_dialog_command_id = null;
                 $answer->save();
+                Schema::enableForeignKeyConstraints();
             }
         }
 
