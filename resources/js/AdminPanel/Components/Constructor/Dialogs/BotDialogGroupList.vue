@@ -89,7 +89,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
                         <td class="text-left" style="min-width:400px;">
 
-                            <p class="mb-0">Результат будет сохранен в <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
+                            <p class="mb-0" v-if="!command.is_empty&&!command.is_inform">Результат будет сохранен в <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
 
                             <div class="dropdown my-2">
                                 <button
