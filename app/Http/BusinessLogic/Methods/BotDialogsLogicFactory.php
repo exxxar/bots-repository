@@ -355,9 +355,8 @@ class BotDialogsLogicFactory
             return new BotDialogCommandResource($command);
 
         foreach ($answers as $answer) {
-            $isNextBotDialogCommandId = is_int(trim($answer->next_bot_dialog_command_id)) || is_null($answer->next_bot_dialog_command_id ?? null);
-
-            if (!$isNextBotDialogCommandId){
+            $isNextBotDialogCommand = !is_null(BotDialogCommand::query()->find($answer->next_bot_dialog_command_id ?? null));
+            if (!$isNextBotDialogCommand){
                 $nextBotDialogCommand = BotDialogCommand::query()->create([
                     'slug' => Str::uuid(),
                     'pre_text' => $answer->next_bot_dialog_command_id ?? 'Текст диалога',
@@ -379,6 +378,8 @@ class BotDialogsLogicFactory
 
                 $isNextBotDialogCommandId = $nextBotDialogCommand->id;
             }
+            else
+                $isNextBotDialogCommandId = $answer->next_bot_dialog_command_id;
 
             BotDialogAnswer::query()
                 ->create([
@@ -483,9 +484,9 @@ class BotDialogsLogicFactory
 
         foreach ($answers as $answer) {
 
-            $isNextBotDialogCommandId = is_int(trim($answer->next_bot_dialog_command_id)) || is_null($answer->next_bot_dialog_command_id ?? null);
+            $isNextBotDialogCommand = !is_null(BotDialogCommand::query()->find($answer->next_bot_dialog_command_id ?? null));
 
-            if (!$isNextBotDialogCommandId){
+            if (!$isNextBotDialogCommand){
                 $nextBotDialogCommand = BotDialogCommand::query()->create([
                     'slug' => Str::uuid(),
                     'pre_text' => $answer->next_bot_dialog_command_id ?? 'Текст диалога',
@@ -507,6 +508,8 @@ class BotDialogsLogicFactory
 
                 $isNextBotDialogCommandId = $nextBotDialogCommand->id;
             }
+            else
+                $isNextBotDialogCommandId = $answer->next_bot_dialog_command_id;
 
             $tmp = [
                 'bot_dialog_command_id' => $command->id,
