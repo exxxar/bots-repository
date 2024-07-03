@@ -244,7 +244,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                             </div>
 
                             <p
-                                v-if="command.next_bot_dialog_command_id||(command.answers||[]).length>0"
+                                v-if="(command.next_bot_dialog_command_id||(command.answers||[]).length>0)&&!command.is_inform"
                                 class="small font-bold m-0">Ответ<i class="fa-solid fa-angles-right mx-2"></i>диалог</p>
 
                             <table>
@@ -254,8 +254,9 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                 </tr>
                                 <tr v-if="command.next_bot_dialog_command_id">
                                     <td>
-                                        <span class="text-danger font-bold" v-if="(command.answers||[]).length>0">Другой ответ</span>
-                                        <span class="text-success font-bold" v-else>Любой ответ</span>
+                                        <span class="text-danger font-bold" v-if="(command.answers||[]).length>0&&!command.is_inform">Другой ответ</span>
+                                        <span class="text-success font-bold" v-if="(command.answers||[]).length===0&&!command.is_inform">Любой ответ</span>
+                                        <span class="text-warning font-bold" v-if="(command.answers||[]).length===0&&command.is_inform">Переход к диалогу</span>
                                     </td>
                                     <td class="cursor-pointer" @click="loadAndOpenEditor(command.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{command.next_bot_dialog_command_id || '-'}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
                                 </tr>
