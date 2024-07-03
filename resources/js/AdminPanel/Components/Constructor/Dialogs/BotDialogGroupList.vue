@@ -28,7 +28,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                     <select
                         @change="loadDialogs(current_page)"
                         v-model="size"
-                        class="form-select">
+                        class="form-select rounded-0">
                         <option value="25">25</option>
                         <option value="50">50</option>
                         <option value="100">100</option>
@@ -80,7 +80,11 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                             {{ command.id }}
                             <i class="fa-solid fa-flag-checkered ml-2"
                                v-if="command.is_empty"></i>
+
+                                <i class="fa-solid fa-sitemap ml-2"
+                                   v-if="command.is_inform"></i>
                                 </span>
+
                         </th>
 
                         <td class="text-left" style="min-width:400px;">
@@ -205,6 +209,14 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                             <td>Пустой</td>
                                             <td>
                                                 <i class="fa-solid fa-check text-success" v-if="command.is_empty"></i>
+                                                <i class="fa-solid fa-xmark text-danger" v-else></i>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Информационный</td>
+                                            <td>
+                                                <i class="fa-solid fa-check text-success" v-if="command.is_inform"></i>
                                                 <i class="fa-solid fa-xmark text-danger" v-else></i>
                                             </td>
                                         </tr>

@@ -62,6 +62,23 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async loadLinkedDialogCommands(context, payload = {dataObject: {botId: null, search:null}, page: 0, size: 30}) {
+        let page = payload.page || 0
+        let size = payload.size || 30
+
+        let link = `${BASE_DIALOG_GROUPS_LINK}/commands?page=${page}&size=${size}`
+        let method = 'POST'
+        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async updateDialogGroup(context, payload= {dialogGroupForm: null}){
         let link = `${BASE_DIALOG_GROUPS_LINK}/update-group`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dialogGroupForm)

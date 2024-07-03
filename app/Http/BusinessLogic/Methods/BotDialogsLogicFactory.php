@@ -468,6 +468,7 @@ class BotDialogsLogicFactory
             ]);
         }
 
+        $tmp->post_text = $data["post_text"] ?? null;
         $tmp->inline_keyboard_id = $inlineKeyboard->id ?? $data["inline_keyboard_id"] ?? null;
         $tmp->reply_keyboard_id = $replyKeyboard->id ?? $data["reply_keyboard_id"] ?? null;
         $tmp->is_empty = ($data["is_empty"] ?? false) == "true" ? 1 : 0;

@@ -599,6 +599,7 @@ export default {
             if (this.commandForm.is_inform) {
                 this.commandForm.is_empty = false
                 this.commandForm.post_text = null
+                this.commandForm.use_result_as = null
 
             }
 
@@ -697,13 +698,9 @@ export default {
                 this.commandForm.bot_id = this.bot.id
             })
 
-        if (this.item) {
-            this.dialog_commands = this.getDialogCommands
-            this.dialog_commands_paginate_object = this.getDialogCommandsPaginateObject
-        }
         /*else
             this.loadGroups();*/
-
+            this.loadDialogs()
     },
     methods: {
         addAnswer() {
@@ -740,17 +737,20 @@ export default {
         },
         loadDialogs(page = 0) {
             this.loading = true
-            this.$store.dispatch("loadDialogCommands", {
+            this.$store.dispatch("loadLinkedDialogCommands", {
                 dataObject: {
                     botId: this.bot.id || null,
-                    search: this.search
+                    order:'id',
+                    direction:'asc'
                 },
                 page: page,
                 size: 100
             }).then(resp => {
                 this.loading = false
-                this.dialog_commands = this.getDialogCommands
-                this.dialog_commands_paginate_object = this.getDialogCommandsPaginateObject
+                let dataObject = resp.data
+                this.dialog_commands = dataObject.data || []
+                delete dataObject.data
+                this.dialog_commands_paginate_object = dataObject
             }).catch(() => {
                 this.loading = false
             })
