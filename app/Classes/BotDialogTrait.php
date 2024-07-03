@@ -290,11 +290,9 @@ trait BotDialogTrait
 
                 $this->sendDialogData($tmpNextDialog ?? null,
                     $botUser);
-                Log::info("2DIALOG!!=>" . print_r($tmpNextDialog->toArray(), true));
+
                 if ($tmpNextDialog->is_inform ?? false) {
-                    Log::info("is_inform 2");
                     $this->nextBotDialog(null, $botUser);
-                    Log::info("after is_inform 2");
                 }
 
                 if ($tmpNextDialog->is_empty ?? true)
@@ -328,12 +326,8 @@ trait BotDialogTrait
             $this->sendDialogData($nextBotDialogCommand ?? null,
                 $botUser);
 
-
-            Log::info("DIALOG!!=>" . print_r($nextBotDialogCommand->toArray(), true));
             if ($nextBotDialogCommand->is_inform ?? false) {
-                Log::info("is_inform 1");
                 $this->nextBotDialog(null, $botUser);
-                Log::info("after is_inform 1");
             }
             if ($nextBotDialogCommand->is_empty ?? true)
                 $needStop = true;
