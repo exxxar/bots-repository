@@ -112,6 +112,8 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                         <h6>Выбрать следующий диалог:</h6>
                     </div>
 
+
+
                     <div class="col-md-12 mb-1" v-for="(command, index) in filteredCommands">
                         <button type="button"
                                 class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
@@ -739,7 +741,8 @@ export default {
                     botId: this.bot.id || null,
                     search: this.search
                 },
-                page: page
+                page: page,
+                size: 100
             }).then(resp => {
                 this.loading = false
                 this.dialog_commands = this.getDialogCommands
