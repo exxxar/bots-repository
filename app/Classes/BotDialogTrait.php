@@ -321,8 +321,10 @@ trait BotDialogTrait
             $this->sendDialogData($nextBotDialogCommand ?? null,
                 $botUser);
 
-            if ($nextBotDialogCommand->is_infor ?? false) {
+            if ($nextBotDialogCommand->is_inform ?? false) {
+                Log::info("is_inform");
                 $this->nextBotDialog(null, $botUser);
+                Log::info("after is_inform");
             }
             if ($nextBotDialogCommand->is_empty ?? true)
                 $needStop = true;
