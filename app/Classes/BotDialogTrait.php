@@ -290,7 +290,7 @@ trait BotDialogTrait
 
                 $this->sendDialogData($tmpNextDialog ?? null,
                     $botUser);
-                Log::info("2DIALOG!!=>".print_r($botDialogCommand->toArray(),true));
+                Log::info("2DIALOG!!=>" . print_r($botDialogCommand->toArray(), true));
                 if ($botDialogCommand->is_inform ?? false) {
                     Log::info("is_inform 2");
                     $this->nextBotDialog(null, $botUser);
@@ -302,6 +302,8 @@ trait BotDialogTrait
             }
 
 
+            if (is_null($tmpItem))
+                $needStop = true;
         }
 
         if (!is_null($botDialogCommand) &&
@@ -318,7 +320,7 @@ trait BotDialogTrait
                 'current_input_data' => null,
                 'summary_input_data' => $dialog->summary_input_data ?? [],
                 'variables' => $dialog->variables,
-                'completed_at' => ($nextBotDialogCommand->is_empty ?? true)  || ($botDialogCommand->is_inform ?? false)? Carbon::now() : null,
+                'completed_at' => ($nextBotDialogCommand->is_empty ?? true) || ($botDialogCommand->is_inform ?? false) ? Carbon::now() : null,
             ]);
 
             $needStop = false;
@@ -327,7 +329,7 @@ trait BotDialogTrait
                 $botUser);
 
 
-            Log::info("DIALOG!!=>".print_r($botDialogCommand->toArray(),true));
+            Log::info("DIALOG!!=>" . print_r($botDialogCommand->toArray(), true));
             if ($botDialogCommand->is_inform ?? false) {
                 Log::info("is_inform 1");
                 $this->nextBotDialog(null, $botUser);
