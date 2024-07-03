@@ -26,6 +26,7 @@ class BotDialogCommandResource extends JsonResource
             'post_text' => $this->post_text,
             'error_text' => $this->error_text,
             'is_empty' => $this->is_empty ?? false,
+            'is_inform' => $this->is_inform ?? false,
             'bot_id' => $this->bot_id,
             'chain' => $chain,
             /* 'bot' => $this->whenLoaded('bot'),*/

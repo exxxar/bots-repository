@@ -29,7 +29,7 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                    v-bind:class="{'active':tab===1}"
                    href="javascript:void(0)"><i class="fa-solid fa-link mr-2"></i> Связывание диалогов</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="!commandForm.is_inform">
                 <a class="nav-link"
                    @click="tab=2"
                    v-bind:class="{'active':tab===2}"
@@ -46,14 +46,30 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
         <div class="py-2 px-0" v-if="tab===0">
 
-
-
             <div class="form-check mb-2">
-                <input class="form-check-input" type="checkbox" v-model="commandForm.is_empty" :id="'need-empty-dialog'+(commandForm.id||'new')"
+                <input class="form-check-input" type="checkbox" v-model="commandForm.is_inform"
+                       :id="'need-inform-dialog'+(commandForm.id||'new')"
+                       checked>
+                <label class="form-check-label" :for="'need-inform-dialog'+(commandForm.id||'new')">
+                    Диалог только выводит данные
+                </label>
+            </div>
+
+            <div class="form-check mb-2" v-if="!commandForm.is_inform">
+                <input class="form-check-input" type="checkbox" v-model="commandForm.is_empty"
+                       :id="'need-empty-dialog'+(commandForm.id||'new')"
                        checked>
                 <label class="form-check-label" :for="'need-empty-dialog'+(commandForm.id||'new')">
                     Диалог завершает цепочку (только вывод информации)
                 </label>
+            </div>
+
+
+            <div class="alert alert-info"
+                 v-if="commandForm.is_inform"
+                 role="alert">
+                Данный диалог позволит вам сразу вызвать связанный с ним другой диалог без ожидания ввод данных от
+                пользователя!
             </div>
 
             <div class="form-floating mb-2">
@@ -63,9 +79,10 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 <label :for="'commandForm-pre-text-'+commandForm.id">Текст диалога</label>
             </div>
 
-            <div class="mb-2" v-if="!commandForm.is_empty">
+            <div class="mb-2" v-if="!commandForm.is_empty&&!commandForm.is_inform">
                 <div class="form-floating">
                     <input type="text"
+                           :disabled="commandForm.is_inform"
                            class="form-control"
                            id="floatingPassword"
                            v-model="commandForm.use_result_as"
@@ -75,9 +92,9 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
             </div>
 
 
-
-            <div class="form-floating mb-2" v-if="!commandForm.is_empty">
+            <div class="form-floating mb-2" v-if="!commandForm.is_empty&&!commandForm.is_inform">
             <textarea class="form-control"
+                      :disabled="commandForm.is_inform"
                       :id="'commandForm-post-text-'+commandForm.id"
                       placeholder="Начни с малого..." v-model="commandForm.post_text">
             </textarea>
@@ -106,7 +123,7 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                             <i
                                 @click="doCommandLink(command.id)"
                                 class="fa-solid fa-link mr-2 text-success"
-                               v-else></i> [#{{command.id }}] Текст диалога: {{ command.pre_text || 'Без текста' }}
+                                v-else></i> [#{{ command.id }}] Текст диалога: {{ command.pre_text || 'Без текста' }}
                         </span>
                         </button>
                     </div>
@@ -477,7 +494,7 @@ export default {
 
 
             ],
-            test:[],
+            test: [],
             loading: true,
             dialog_commands: [],
             dialog_commands_paginate_object: null,
@@ -559,6 +576,7 @@ export default {
                 next_bot_dialog_command_id: null,
                 bot_dialog_group_id: null,
                 is_empty: false,
+                is_inform: false,
 
                 result_flags: [],
                 store_to: null,
@@ -569,13 +587,16 @@ export default {
                 reply_keyboard: null,
 
                 answers: [],
-                rules:[],
+                rules: [],
             },
             photos: []
         }
     },
     watch: {
-
+        'commandForm.is_inform': function (newVal, oldVal) {
+            if (this.commandForm.is_inform)
+                this.commandForm.is_empty = false
+        },
         'need_inline_keyboard': function (newVal, oldVal) {
             if (!this.need_inline_keyboard) {
                 this.commandForm.inline_keyboard_id = null
@@ -625,6 +646,7 @@ export default {
                     post_text: this.item.post_text || null,
                     error_text: this.item.error_text || null,
                     is_empty: this.item.is_empty || false,
+                    is_inform: this.item.is_inform || false,
 
                     input_pattern: this.item.input_pattern || null,
                     inline_keyboard_id: this.item.inline_keyboard_id || null,
@@ -780,6 +802,7 @@ export default {
                         bot_dialog_group_id: null,
                         result_channel: null,
                         inline_keyboard: null,
+                        is_inform: false,
                         is_empty: false,
                         result_flags: [],
                         answers: [],

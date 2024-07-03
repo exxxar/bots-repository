@@ -24,6 +24,7 @@ class BotDialogCommand extends Model
         'error_text',
         'bot_id',
         'is_empty',
+        'is_inform',
         'input_pattern',
         'inline_keyboard_id',
         'reply_keyboard_id',
@@ -52,6 +53,7 @@ class BotDialogCommand extends Model
         'rules' => 'array',
         'result_flags' => 'array',
         'is_empty' => 'boolean',
+        'is_inform' => 'boolean',
         'next_bot_dialog_command_id' => 'integer',
     ];
 

@@ -313,9 +313,8 @@ trait BotDialogTrait
                 'current_input_data' => null,
                 'summary_input_data' => $dialog->summary_input_data ?? [],
                 'variables' => $dialog->variables,
-                'completed_at' => ($nextBotDialogCommand->is_empty ?? true) ? Carbon::now() : null,
+                'completed_at' => ($nextBotDialogCommand->is_empty ?? true)  || ($nextBotDialogCommand->is_inform ?? false)? Carbon::now() : null,
             ]);
-
 
             $needStop = false;
 

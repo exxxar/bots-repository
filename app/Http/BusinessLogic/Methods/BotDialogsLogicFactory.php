@@ -333,7 +333,7 @@ class BotDialogsLogicFactory
         $command = BotDialogCommand::query()->create([
             'slug' => Str::uuid(),
             'pre_text' => $data["pre_text"],
-            'post_text' => $data["post_text"] ?? "Спасибо!",
+            'post_text' => $data["post_text"] ?? null,
             'error_text' => $data["error_text"] ?? "Ошибка",
             'bot_id' => $this->bot->id,
             'input_pattern' => $data["input_pattern"] ?? null,
@@ -345,6 +345,7 @@ class BotDialogsLogicFactory
             'next_bot_dialog_command_id' => $data["next_bot_dialog_command_id"] ?? null,
             'bot_dialog_group_id' => $groupId,
             'is_empty' => ($data["is_empty"] ?? false) == "true" ? 1 : 0,
+            'is_inform' => ($data["is_inform"] ?? false) == "true" ? 1 : 0,
             'result_channel' => $data["result_channel"] ?? null,
             'use_result_as' => $data["use_result_as"] ?? null,
         ]);
@@ -372,6 +373,7 @@ class BotDialogsLogicFactory
                     'next_bot_dialog_command_id' =>  null,
                     'bot_dialog_group_id' => $groupId,
                     'is_empty' => false,
+                    'is_inform' => false,
                     'result_channel' => null,
                     'use_result_as' => null,
                 ]);
@@ -425,7 +427,6 @@ class BotDialogsLogicFactory
             'id' => "required",
             'slug' => "required",
             'pre_text' => "required",
-            'post_text' => "required",
             'error_text' => "required",
             'input_pattern' => "",
             'inline_keyboard_id' => "",
@@ -470,6 +471,7 @@ class BotDialogsLogicFactory
         $tmp->inline_keyboard_id = $inlineKeyboard->id ?? $data["inline_keyboard_id"] ?? null;
         $tmp->reply_keyboard_id = $replyKeyboard->id ?? $data["reply_keyboard_id"] ?? null;
         $tmp->is_empty = ($data["is_empty"] ?? false) == "true" ? 1 : 0;
+        $tmp->is_inform = ($data["is_inform"] ?? false) == "true" ? 1 : 0;
         $tmp->result_flags = json_decode($data["result_flags"] ?? '[]');
         $tmp->rules = json_decode($data["rules"] ?? '[]');
         $tmp->use_result_as = $data["use_result_as"] ?? null;
@@ -490,7 +492,7 @@ class BotDialogsLogicFactory
                 $nextBotDialogCommand = BotDialogCommand::query()->create([
                     'slug' => Str::uuid(),
                     'pre_text' => $answer->next_bot_dialog_command_id ?? 'Текст диалога',
-                    'post_text' => "Спасибо!",
+                    'post_text' => null,
                     'error_text' =>  "Ошибка",
                     'bot_id' => $this->bot->id,
                     'input_pattern' =>  null,
@@ -502,6 +504,7 @@ class BotDialogsLogicFactory
                     'next_bot_dialog_command_id' =>  null,
                     'bot_dialog_group_id' => $data["bot_dialog_group_id"]??null,
                     'is_empty' => false,
+                    'is_inform' => false,
                     'result_channel' => null,
                     'use_result_as' => null,
                 ]);
