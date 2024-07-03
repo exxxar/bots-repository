@@ -285,13 +285,13 @@ trait BotDialogTrait
                     'current_input_data' => null,
                     'summary_input_data' => $dialog->summary_input_data ?? [],
                     'variables' => $dialog->variables,
-                    'completed_at' => ($tmpNextDialog->is_empty ?? true) || ($botDialogCommand->is_inform ?? false) ? Carbon::now() : null,
+                    'completed_at' => ($tmpNextDialog->is_empty ?? true) || ($tmpNextDialog->is_inform ?? false) ? Carbon::now() : null,
                 ]);
 
                 $this->sendDialogData($tmpNextDialog ?? null,
                     $botUser);
-                Log::info("2DIALOG!!=>" . print_r($botDialogCommand->toArray(), true));
-                if ($botDialogCommand->is_inform ?? false) {
+                Log::info("2DIALOG!!=>" . print_r($tmpNextDialog->toArray(), true));
+                if ($tmpNextDialog->is_inform ?? false) {
                     Log::info("is_inform 2");
                     $this->nextBotDialog(null, $botUser);
                     Log::info("after is_inform 2");
@@ -320,7 +320,7 @@ trait BotDialogTrait
                 'current_input_data' => null,
                 'summary_input_data' => $dialog->summary_input_data ?? [],
                 'variables' => $dialog->variables,
-                'completed_at' => ($nextBotDialogCommand->is_empty ?? true) || ($botDialogCommand->is_inform ?? false) ? Carbon::now() : null,
+                'completed_at' => ($nextBotDialogCommand->is_empty ?? true) || ($nextBotDialogCommand->is_inform ?? false) ? Carbon::now() : null,
             ]);
 
             $needStop = false;
@@ -329,8 +329,8 @@ trait BotDialogTrait
                 $botUser);
 
 
-            Log::info("DIALOG!!=>" . print_r($botDialogCommand->toArray(), true));
-            if ($botDialogCommand->is_inform ?? false) {
+            Log::info("DIALOG!!=>" . print_r($nextBotDialogCommand->toArray(), true));
+            if ($nextBotDialogCommand->is_inform ?? false) {
                 Log::info("is_inform 1");
                 $this->nextBotDialog(null, $botUser);
                 Log::info("after is_inform 1");
