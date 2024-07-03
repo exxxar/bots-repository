@@ -233,7 +233,6 @@ trait BotDialogTrait
             $botUser->update($tmp);
         }
 
-
         $flags = is_array($botDialogCommand->result_flags) ? $botDialogCommand->result_flags : json_decode($botDialogCommand->result_flags ?? '[]');
         if (count($flags) > 0) {
             $tmp = [];
@@ -286,11 +285,17 @@ trait BotDialogTrait
                     'current_input_data' => null,
                     'summary_input_data' => $dialog->summary_input_data ?? [],
                     'variables' => $dialog->variables,
-                    'completed_at' => ($tmpNextDialog->is_empty ?? true) ? Carbon::now() : null,
+                    'completed_at' => ($tmpNextDialog->is_empty ?? true) || ($nextBotDialogCommand->is_inform ?? false) ? Carbon::now() : null,
                 ]);
 
                 $this->sendDialogData($tmpNextDialog ?? null,
                     $botUser);
+
+                if ($dialog->is_inform ?? false) {
+                    Log::info("is_inform 2");
+                    $this->nextBotDialog(null, $botUser);
+                    Log::info("after is_inform 2");
+                }
 
                 if ($tmpNextDialog->is_empty ?? true)
                     $needStop = true;
@@ -321,10 +326,11 @@ trait BotDialogTrait
             $this->sendDialogData($nextBotDialogCommand ?? null,
                 $botUser);
 
+
             if ($dialog->is_inform ?? false) {
-                Log::info("is_inform");
+                Log::info("is_inform 1");
                 $this->nextBotDialog(null, $botUser);
-                Log::info("after is_inform");
+                Log::info("after is_inform 1");
             }
             if ($nextBotDialogCommand->is_empty ?? true)
                 $needStop = true;
