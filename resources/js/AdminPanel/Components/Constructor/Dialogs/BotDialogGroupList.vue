@@ -250,14 +250,14 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                             <table>
                                 <tr v-for="answ in command.answers">
                                     <td>{{answ.answer}}</td>
-                                    <td><i class="fa-solid fa-angles-right mx-2"></i>{{answ.next_bot_dialog_command_id}}</td>
+                                    <td class="cursor-pointer" @click="loadAndOpenEditor(answ.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{answ.next_bot_dialog_command_id}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
                                 </tr>
                                 <tr v-if="command.next_bot_dialog_command_id">
                                     <td>
                                         <span class="text-danger font-bold" v-if="(command.answers||[]).length>0">Другой ответ</span>
                                         <span class="text-success font-bold" v-else>Любой ответ</span>
                                     </td>
-                                    <td><i class="fa-solid fa-angles-right mx-2"></i>{{command.next_bot_dialog_command_id || '-'}}</td>
+                                    <td class="cursor-pointer" @click="loadAndOpenEditor(command.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{command.next_bot_dialog_command_id || '-'}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
                                 </tr>
                             </table>
 
@@ -386,6 +386,27 @@ export default {
             this.order = order
             this.direction = this.direction === 'desc' ? 'asc' : 'desc'
             this.loadDialogs(0)
+        },
+        loadAndOpenEditor(commandId){
+            this.loading = true
+            this.$store.dispatch("loadLinkedDialogCommand", {
+                command_id: commandId,
+                bot_id: this.bot.id,
+            }).then(resp => {
+                this.selected = resp.data
+
+                console.log(resp.data)
+                this.loading = false
+                const myModal = new bootstrap.Modal(document.getElementById('dialog-command-modal-editor'), {})
+                myModal.show();
+
+            }).catch(() => {
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Ошибка работы с командой",
+                    type: 'error'
+                });
+            })
         },
         openEditor(command) {
             this.loading = true

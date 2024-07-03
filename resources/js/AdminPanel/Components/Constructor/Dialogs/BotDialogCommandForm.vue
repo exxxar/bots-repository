@@ -11,7 +11,7 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
         <div class="mb-2 px-0">
             <button type="submit" class="btn btn-outline-success">
                 <i class="fa-regular fa-floppy-disk mr-2"></i>
-                <span v-if="commandForm.id">Обновить диалог</span>
+                <span v-if="commandForm.id">Обновить диалог #{{commandForm.id}}</span>
                 <span v-else>Добавить диалог</span>
             </button>
         </div>

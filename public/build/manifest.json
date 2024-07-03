@@ -58,11 +58,11 @@
       "_TelegramChannelHelper-4e4e817d.js"
     ]
   },
-  "_BotList-980f59ec.js": {
+  "_BotList-fe7c9fce.js": {
     "css": [
       "assets/BotList-7ab1b364.css"
     ],
-    "file": "assets/BotList-980f59ec.js",
+    "file": "assets/BotList-fe7c9fce.js",
     "imports": [
       "_MailingTable-569c5ae8.js",
       "_index.es-886ebff7.js",
@@ -250,17 +250,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-859d2caf.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-859d2caf.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-859d2caf.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-6bb2bce0.js",
@@ -336,10 +336,10 @@
       "assets/BotPage-c29596a0.css",
       "assets/ChatMini-5a929b50.css"
     ],
-    "file": "assets/BotPage-016964ee.js",
+    "file": "assets/BotPage-e9d14fc4.js",
     "imports": [
       "_MainAdminLayout-a8500339.js",
-      "_BotList-980f59ec.js",
+      "_BotList-fe7c9fce.js",
       "_CompanyList-ad500be7.js",
       "_BotForm-0980301e.js",
       "_index.es-886ebff7.js",
@@ -411,10 +411,10 @@
     "css": [
       "assets/Dashboard-db3e581c.css"
     ],
-    "file": "assets/Dashboard-d0f80d65.js",
+    "file": "assets/Dashboard-848479f2.js",
     "imports": [
       "_CompanyList-ad500be7.js",
-      "_BotList-980f59ec.js",
+      "_BotList-fe7c9fce.js",
       "_MailingTable-569c5ae8.js",
       "_InlineInjectionsHelper.vue_vue_type_style_index_0_lang-6b34797d.js",
       "_BotForm-0980301e.js",
@@ -572,7 +572,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-d7c991d3.js",
+    "file": "assets/app-3b0c7040.js",
     "imports": [
       "_index.es-886ebff7.js",
       "_index-d9a7ad0b.js"

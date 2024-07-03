@@ -39,6 +39,18 @@ class BotDialogGroupController extends Controller
             ->variablesList());
     }
 
+    public function getCommand(Request $request, $commandId): BotDialogCommandResource
+    {
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->botId ?? $request->bot_id ?? null)
+            ->first();
+
+        return BusinessLogic::dialogs()
+            ->setBot($bot)
+            ->getCommand($commandId);
+    }
+
     public function commandList(Request $request): BotDialogCommandCollection
     {
         $bot = Bot::query()

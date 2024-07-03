@@ -44,7 +44,26 @@ class BotDialogsLogicFactory
         return $this;
     }
 
+    /**
+     * @throws HttpException
+     */
+    public function getCommand($commandId): BotDialogCommandResource
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
 
+
+        $botDialogCommand = BotDialogCommand::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("id", $commandId)
+            ->first();
+
+        if (is_null($botDialogCommand))
+            throw new HttpException(404, "Команда не найдена!");
+
+
+        return new BotDialogCommandResource($botDialogCommand);
+    }
     /**
      * @throws HttpException
      */
