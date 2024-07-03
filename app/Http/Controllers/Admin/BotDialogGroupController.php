@@ -197,8 +197,6 @@ class BotDialogGroupController extends Controller
             'id' => "required",
             'slug' => "required",
             'pre_text' => "required",
-            'post_text' => "required",
-            'error_text' => "required",
             'bot_id' => "required",
             'input_pattern' => "",
             'inline_keyboard_id' => "",

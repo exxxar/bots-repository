@@ -596,8 +596,12 @@ export default {
     },
     watch: {
         'commandForm.is_inform': function (newVal, oldVal) {
-            if (this.commandForm.is_inform)
+            if (this.commandForm.is_inform) {
                 this.commandForm.is_empty = false
+                this.commandForm.post_text = null
+
+            }
+
         },
         'need_inline_keyboard': function (newVal, oldVal) {
             if (!this.need_inline_keyboard) {
