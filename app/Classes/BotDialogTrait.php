@@ -290,7 +290,7 @@ trait BotDialogTrait
 
                 $this->sendDialogData($tmpNextDialog ?? null,
                     $botUser);
-
+                Log::info("2DIALOG!!=>".print_r($dialog->toArray(),true));
                 if ($dialog->is_inform ?? false) {
                     Log::info("is_inform 2");
                     $this->nextBotDialog(null, $botUser);
@@ -327,6 +327,7 @@ trait BotDialogTrait
                 $botUser);
 
 
+            Log::info("DIALOG!!=>".print_r($dialog->toArray(),true));
             if ($dialog->is_inform ?? false) {
                 Log::info("is_inform 1");
                 $this->nextBotDialog(null, $botUser);
