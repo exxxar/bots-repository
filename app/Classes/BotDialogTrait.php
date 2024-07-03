@@ -257,7 +257,7 @@ trait BotDialogTrait
             $tmpItem = null;
             foreach ($botDialogCommand->answers as $item) {
                 if (!is_null($item->answer ?? null)) {
-                    if ($text == $item->answer) {
+                    if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
                         $tmpItem = $item;
                         $isAnswerFound = true;
                         break;
