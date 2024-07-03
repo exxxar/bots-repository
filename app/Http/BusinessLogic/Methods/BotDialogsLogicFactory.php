@@ -49,7 +49,7 @@ class BotDialogsLogicFactory
      * @throws HttpException
      */
 
-    public function commandList($search = null, $size = null): BotDialogCommandCollection
+    public function commandList($search = null, $order="id", $direction="desc", $size = null): BotDialogCommandCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -70,7 +70,7 @@ class BotDialogsLogicFactory
                 });
 
         $botDialogCommands = $botDialogCommands
-            ->orderBy("created_at", "desc")
+            ->orderBy($order, $direction)
             ->paginate($size);
 
         return new BotDialogCommandCollection($botDialogCommands);
@@ -355,7 +355,7 @@ class BotDialogsLogicFactory
             return new BotDialogCommandResource($command);
 
         foreach ($answers as $answer) {
-            $isNextBotDialogCommandId = is_int($answer->next_bot_dialog_command_id) || is_null($answer->next_bot_dialog_command_id ?? null);
+            $isNextBotDialogCommandId = is_int(trim($answer->next_bot_dialog_command_id)) || is_null($answer->next_bot_dialog_command_id ?? null);
 
             if (!$isNextBotDialogCommandId){
                 $nextBotDialogCommand = BotDialogCommand::query()->create([
@@ -483,7 +483,7 @@ class BotDialogsLogicFactory
 
         foreach ($answers as $answer) {
 
-            $isNextBotDialogCommandId = is_int($answer->next_bot_dialog_command_id) || is_null($answer->next_bot_dialog_command_id ?? null);
+            $isNextBotDialogCommandId = is_int(trim($answer->next_bot_dialog_command_id)) || is_null($answer->next_bot_dialog_command_id ?? null);
 
             if (!$isNextBotDialogCommandId){
                 $nextBotDialogCommand = BotDialogCommand::query()->create([

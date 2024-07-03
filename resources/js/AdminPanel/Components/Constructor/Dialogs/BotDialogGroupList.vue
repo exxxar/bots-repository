@@ -24,6 +24,18 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                        aria-label="Поиск диалога"
                        v-model="search"
                        aria-describedby="button-addon2">
+                <div style="width:200px !important;">
+                    <select
+                        @change="loadDialogs(current_page)"
+                        v-model="size"
+                        class="form-select">
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                    </select>
+                </div>
                 <button class="btn btn-outline-secondary"
                         @click="loadDialogs(0)"
                         type="button"
@@ -40,8 +52,12 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 <thead>
                 <tr>
                     <th class="text-left" scope="col" style="width:40px;"></th>
-                    <th class="text-left" scope="col" style="width:80px;"> #</th>
-                    <th class="text-left" scope="col" style="min-width:400px;">Текст диалога</th>
+                    <th class="text-left cursor-pointer" scope="col"
+                        @click="loadAndOrder('id')"
+                        style="width:80px;"> #</th>
+                    <th class="text-left cursor-pointer" scope="col"
+                        @click="loadAndOrder('pre_text')"
+                        style="min-width:400px;">Текст диалога</th>
 
                     <th class="text-center" scope="col" style="width:40px;">Команды</th>
 
@@ -309,10 +325,14 @@ export default {
 
     data() {
         return {
+            direction: 'desc',
+            order: 'updated_at',
+            size: 25,
             variables: [],
             bot: null,
             selected: null,
             loading: true,
+            current_page:0,
             dialog_commands: [],
             search: null,
             dialog_commands_paginate_object: null,
@@ -325,10 +345,16 @@ export default {
     mounted() {
 
         this.loadCurrentBot().then(() => {
-            this.loadDialogs();
+            let page = localStorage.getItem("cashman_dialogs_current_page_"+this.bot.id) || 0
+            this.loadDialogs(page);
         })
     },
     methods: {
+        loadAndOrder(order) {
+            this.order = order
+            this.direction = this.direction === 'desc' ? 'asc' : 'desc'
+            this.loadDialogs(0)
+        },
         openEditor(command) {
             this.loading = true
             if (!command)
@@ -414,13 +440,18 @@ export default {
         },
         loadDialogs(page = 0) {
 
+            this.current_page = page
 
+            localStorage.setItem("cashman_dialogs_current_page_"+this.bot.id, this.current_page)
             this.$store.dispatch("loadDialogCommands", {
                 dataObject: {
                     botId: this.bot.id || null,
-                    search: this.search
+                    search: this.search,
+                    order: this.order,
+                    direction: this.direction
                 },
-                page: page
+                page: page,
+                size: this.size || 25
             }).then(resp => {
                 const tmpSelected = this.selected
                 this.dialog_commands = this.getDialogCommands

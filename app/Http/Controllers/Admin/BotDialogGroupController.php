@@ -50,6 +50,8 @@ class BotDialogGroupController extends Controller
             ->setBot($bot)
             ->commandList(
                 $request->search ?? null,
+                $request->order ?? "id",
+                $request->direction ?? "desc",
                 $request->get("size") ?? config('app.results_per_page'),
 
             );

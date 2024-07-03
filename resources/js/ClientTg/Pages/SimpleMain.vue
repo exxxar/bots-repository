@@ -1,23 +1,4 @@
 <script setup>
-import Notifications from "@/ClientTg/Components/Modals/Notifications.vue";
-import AddToCartModal from "@/ClientTg/Components/Modals/AddToCartModal.vue";
-import CashBackItemInfoModal from "@/ClientTg/Components/Modals/CashBackItemInfoModal.vue";
-import QrCodeModal from "@/ClientTg/Components/Modals/QrCodeModal.vue";
-import EventCallbackForm from "@/ClientTg/Components/Modals/EventCallbackForm.vue";
-
-
-import ShareMenuBar from "@/ClientTg/Components/Modals/ShareMenuBar.vue";
-import HighlightsMenuBar from "@/ClientTg/Components/Modals/HighlightsMenuBar.vue";
-import Preloader from "@/ClientTg/Components/Shop/Helpers/Preloader.vue";
-import SideBar from "@/ClientTg/Components/Modals/SideBar.vue";
-import SideBarAdmin from "@/ClientTg/Components/Modals/Admin/SideBarAdmin.vue";
-
-
-import PageMenuModal from "@/ClientTg/Components/Modals/Admin/PageMenuModal.vue";
-import RulesModal from "@/ClientTg/Components/Modals/Admin/RulesModal.vue";
-import KeyboardMenuModal from "@/ClientTg/Components/Modals/Admin/KeyboardMenuModal.vue";
-import TgHelperModal from "@/ClientTg/Components/Modals/Admin/TgHelperModal.vue";
-import MapModal from "@/ClientTg/Components/Modals/Admin/MapModal.vue";
 
 defineProps({
     bot: {
@@ -34,6 +15,8 @@ import Layout from "@/ClientTg/Layouts/SimpleLayout.vue";
 <template>
     <Layout>
         <template #default>
+            <notifications position="top right" width="100%"/>
+
             <router-view
                 :bot="bot"/>
         </template>
