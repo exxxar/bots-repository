@@ -89,12 +89,12 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
                         <td class="text-left" style="min-width:400px;">
 
-                            <p class="mb-0 px-2">Результат будет сохранен в <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
+                            <p class="mb-0">Результат будет сохранен в <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
 
-                            <div class="dropdown">
+                            <div class="dropdown my-2">
                                 <button
                                     style="text-align:left !important;"
-                                    class="btn text-decoration-none color-black w-100 d-flex justify-content-between align-items-center"
+                                    class="text-decoration-none fst-italic color-black w-100 d-flex justify-content-between align-items-center"
                                     type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     {{ command.pre_text || '-' }}
                                 </button>
@@ -242,6 +242,26 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                     </table>
                                 </div>
                             </div>
+
+                            <p
+                                v-if="command.next_bot_dialog_command_id||(command.answers||[]).length>0"
+                                class="small font-bold m-0">Ответ<i class="fa-solid fa-angles-right mx-2"></i>диалог</p>
+
+                            <table>
+                                <tr v-for="answ in command.answers">
+                                    <td>{{answ.answer}}</td>
+                                    <td><i class="fa-solid fa-angles-right mx-2"></i>{{answ.next_bot_dialog_command_id}}</td>
+                                </tr>
+                                <tr v-if="command.next_bot_dialog_command_id">
+                                    <td>
+                                        <span class="text-danger font-bold" v-if="(command.answers||[]).length>0">Другой ответ</span>
+                                        <span class="text-success font-bold" v-else>Любой ответ</span>
+                                    </td>
+                                    <td><i class="fa-solid fa-angles-right mx-2"></i>{{command.next_bot_dialog_command_id || '-'}}</td>
+                                </tr>
+                            </table>
+
+
                         </td>
 
                         <td class="text-center" style="width:40px;">
