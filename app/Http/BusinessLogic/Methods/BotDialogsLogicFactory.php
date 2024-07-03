@@ -361,7 +361,7 @@ class BotDialogsLogicFactory
                 $nextBotDialogCommand = BotDialogCommand::query()->create([
                     'slug' => Str::uuid(),
                     'pre_text' => $answer->next_bot_dialog_command_id ?? 'Текст диалога',
-                    'post_text' => "Спасибо!",
+                    'post_text' => null,
                     'error_text' =>  "Ошибка",
                     'bot_id' => $this->bot->id,
                     'input_pattern' =>  null,
