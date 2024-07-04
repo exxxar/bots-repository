@@ -252,7 +252,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                     <td style="width:150px;">{{answ.answer}}</td>
                                     <td style="width:90px;" class="cursor-pointer" @click="loadAndOpenEditor(answ.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{answ.next_bot_dialog_command_id}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
                                     <td v-if="answ.custom_stored_value"><i class="fa-solid fa-arrow-right-long mx-2"></i></td>
-                                    <td v-if="answ.custom_stored_value">
+                                    <td v-if="answ.custom_stored_value" style="max-width: 770px;">
                                         <p class="mb-0" style="line-height:100%;font-size:10px;">{{answ.custom_stored_value || '-'}}</p>
                                     </td>
                                 </tr>
@@ -264,7 +264,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                     </td>
                                     <td class="cursor-pointer" @click="loadAndOpenEditor(command.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{command.next_bot_dialog_command_id || '-'}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
                                     <td v-if="command.custom_stored_value"><i class="fa-solid fa-arrow-right-long mx-2"></i></td>
-                                    <td v-if="command.custom_stored_value">
+                                    <td v-if="command.custom_stored_value" style="max-width: 770px;">
                                         <p class="mb-0" style="line-height:100%;font-size:10px;">{{command.custom_stored_value || '-'}}</p>
                                     </td>
                                 </tr>
