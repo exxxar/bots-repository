@@ -225,7 +225,7 @@ trait BotDialogTrait
         ];
 
         if (!is_null($botDialogCommand->custom_stored_value ?? null)){
-            $var->custom_stored_value = $botDialogCommand->custom_stored_value;
+            $var->custom_stored_value = $botDialogCommand->custom_stored_value ;
         }
 
         $tmpVariables[] = $var;

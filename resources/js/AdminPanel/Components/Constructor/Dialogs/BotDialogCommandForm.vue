@@ -649,7 +649,6 @@ export default {
             if (this.commandForm.is_inform) {
                 this.commandForm.is_empty = false
                 this.commandForm.post_text = null
-                this.commandForm.use_result_as = null
                 this.commandForm.answers = []
             }
 
