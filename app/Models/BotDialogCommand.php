@@ -25,6 +25,7 @@ class BotDialogCommand extends Model
         'bot_id',
         'is_empty',
         'is_inform',
+        'custom_stored_value',
         'input_pattern',
         'inline_keyboard_id',
         'reply_keyboard_id',

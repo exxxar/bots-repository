@@ -219,10 +219,16 @@ trait BotDialogTrait
 
         $tmpVariables = $dialog->variables ?? [];
 
-        $tmpVariables[] = (object)[
+        $var =  (object)[
             "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
             "value" => "$text"
         ];
+
+        if (!is_null($botDialogCommand->custom_stored_value ?? null)){
+            $var->custom_stored_value = $botDialogCommand->custom_stored_value;
+        }
+
+        $tmpVariables[] = $var;
 
         $dialog->variables = $tmpVariables;
         $dialog->save();
@@ -345,7 +351,6 @@ trait BotDialogTrait
             $botUser->save();
 
             $tmp = $dialog->summary_input_data ?? [];
-
 
             $this->dialogResponse($botUser, $nextBotDialogCommand, $tmp);
         }

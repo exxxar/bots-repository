@@ -29,6 +29,7 @@ class BotDialogCommandResource extends JsonResource
             'is_inform' => $this->is_inform ?? false,
             'bot_id' => $this->bot_id,
             'chain' => $chain,
+            'custom_stored_value' => $this->custom_stored_value ?? null,
             /* 'bot' => $this->whenLoaded('bot'),*/
             'input_pattern' => $this->input_pattern,
             'inline_keyboard_id' => $this->inline_keyboard_id,

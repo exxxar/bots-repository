@@ -89,7 +89,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
                         <td class="text-left" style="min-width:400px;">
 
-                            <p class="mb-0" v-if="!command.is_empty&&!command.is_inform">Результат будет сохранен в <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
+                            <p class="mb-0" v-if="!command.is_empty">Результат будет сохранен в <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
 
                             <div class="dropdown my-2">
                                 <button
@@ -249,8 +249,12 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
                             <table>
                                 <tr v-for="answ in command.answers">
-                                    <td>{{answ.answer}}</td>
-                                    <td class="cursor-pointer" @click="loadAndOpenEditor(answ.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{answ.next_bot_dialog_command_id}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
+                                    <td style="width:150px;">{{answ.answer}}</td>
+                                    <td style="width:90px;" class="cursor-pointer" @click="loadAndOpenEditor(answ.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{answ.next_bot_dialog_command_id}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
+                                    <td v-if="answ.custom_stored_value"><i class="fa-solid fa-arrow-right-long mx-2"></i></td>
+                                    <td v-if="answ.custom_stored_value">
+                                        <p class="mb-0" style="line-height:100%;font-size:10px;">{{answ.custom_stored_value || '-'}}</p>
+                                    </td>
                                 </tr>
                                 <tr v-if="command.next_bot_dialog_command_id">
                                     <td>
@@ -259,6 +263,10 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                         <span class="text-warning font-bold" v-if="(command.answers||[]).length===0&&command.is_inform">Переход к диалогу</span>
                                     </td>
                                     <td class="cursor-pointer" @click="loadAndOpenEditor(command.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{command.next_bot_dialog_command_id || '-'}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
+                                    <td v-if="command.custom_stored_value"><i class="fa-solid fa-arrow-right-long mx-2"></i></td>
+                                    <td v-if="command.custom_stored_value">
+                                        <p class="mb-0" style="line-height:100%;font-size:10px;">{{command.custom_stored_value || '-'}}</p>
+                                    </td>
                                 </tr>
                             </table>
 

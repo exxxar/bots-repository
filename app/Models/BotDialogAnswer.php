@@ -19,6 +19,7 @@ class BotDialogAnswer extends Model
         'bot_dialog_command_id',
         'answer',
         'pattern',
+        'custom_stored_value',
         'next_bot_dialog_command_id',
     ];
 

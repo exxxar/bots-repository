@@ -16,7 +16,8 @@ class BotDialogAnswerResource extends JsonResource
             'id' => $this->id,
             'bot_dialog_command_id' => $this->bot_dialog_command_id,
             'answer' => $this->answer,
-            'pattern' => $this->pattern,
+            'pattern' => $this->pattern?? null,
+            'custom_stored_value' => $this->custom_stored_value ?? null,
             'next_bot_dialog_command_id' => $this->next_bot_dialog_command_id,
         ];
     }

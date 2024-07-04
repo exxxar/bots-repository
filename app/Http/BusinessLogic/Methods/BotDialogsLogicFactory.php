@@ -366,6 +366,7 @@ class BotDialogsLogicFactory
             'is_empty' => ($data["is_empty"] ?? false) == "true" ? 1 : 0,
             'is_inform' => ($data["is_inform"] ?? false) == "true" ? 1 : 0,
             'result_channel' => $data["result_channel"] ?? null,
+            'custom_stored_value' => $data["custom_stored_value"] ?? null,
             'use_result_as' => $data["use_result_as"] ?? null,
         ]);
 
@@ -393,6 +394,7 @@ class BotDialogsLogicFactory
                     'bot_dialog_group_id' => $groupId,
                     'is_empty' => false,
                     'is_inform' => false,
+                    'custom_stored_value' => null,
                     'result_channel' => null,
                     'use_result_as' => null,
                 ]);
@@ -407,6 +409,7 @@ class BotDialogsLogicFactory
                     'bot_dialog_command_id' => $command->id,
                     'answer' => $answer->answer ?? null,
                     'pattern' => $answer->pattern ?? null,
+                    'custom_stored_value' => $answer->custom_stored_value ?? null,
                     'next_bot_dialog_command_id' => $isNextBotDialogCommandId,
                 ]);
         }
@@ -495,6 +498,7 @@ class BotDialogsLogicFactory
         $tmp->result_flags = json_decode($data["result_flags"] ?? '[]');
         $tmp->rules = json_decode($data["rules"] ?? '[]');
         $tmp->use_result_as = $data["use_result_as"] ?? null;
+        $tmp->custom_stored_value = $data["custom_stored_value"] ?? null;
 
         $command = BotDialogCommand::query()->find($tmp->id);
         $command->update((array)$tmp);
@@ -525,6 +529,7 @@ class BotDialogsLogicFactory
                     'bot_dialog_group_id' => $data["bot_dialog_group_id"]??null,
                     'is_empty' => false,
                     'is_inform' => false,
+                    'custom_stored_value' => null,
                     'result_channel' => null,
                     'use_result_as' => null,
                 ]);
@@ -538,6 +543,7 @@ class BotDialogsLogicFactory
                 'bot_dialog_command_id' => $command->id,
                 'answer' => $answer->answer ?? null,
                 'pattern' => $answer->pattern ?? null,
+                'custom_stored_value' => $answer->custom_stored_value ?? null,
                 'next_bot_dialog_command_id' => $isNextBotDialogCommandId,
             ];
 
