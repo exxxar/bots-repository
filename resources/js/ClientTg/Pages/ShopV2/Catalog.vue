@@ -2,109 +2,109 @@
 import ProductCategories from "@/ClientTg/Components/ShopV2/ProductCategories.vue";
 import ProductCard from "@/ClientTg/Components/ShopV2/ProductCard.vue";
 import Pagination from "@/ClientTg/Components/Pagination.vue";
+import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 </script>
 <template>
 
+    <div v-touch:swipe.left="doSwipeLeft"
+         v-touch:swipe.right="doSwipeRight" class="d-flex flex-column">
+        <menu class="d-block position-sticky w-100 header-category-slider">
 
-    <menu class="d-block position-sticky w-100 header-category-slider">
-        <ProductCategories v-on:select="selectCategory"></ProductCategories>
-    </menu>
+            <ul class="nav nav-tabs justify-content-center catalog-tabs">
+                <li class="nav-item">
+                    <a class="nav-link"
+                       @click="openTab(0)"
+                       v-bind:class="{'active':tab===0}"
+                       aria-current="page" href="javascript:void(0)"><i class="fa-solid fa-tag mr-2"></i>Категории</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       @click="openTab(1)"
+                       v-bind:class="{'active':tab===1}"
+                       href="javascript:void(0)"><i class="fa-solid fa-bag-shopping mr-2"></i>Товары</a>
+                </li>
 
-    <div class="album py-2 bg-body-tertiary">
-        <div class="container">
+            </ul>
+        </menu>
 
-
-            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-3" v-if="(products||[]).length>0">
-                <div class="col"
-                     v-for="(product, index) in filteredProducts">
-                    <ProductCard
-                        :item="product"
-                    />
-                </div>
-
+        <div
+            v-show="tab===0"
+            class="album py-2 bg-body-tertiary" style="min-height:100vh;">
+            <div class="container g-2">
+                <CategoryList
+                    :selected="categories"
+                    v-on:select="selectCategory"/>
             </div>
         </div>
-        <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <div class="col">
-                    <Pagination
-                        :simple="true"
-                        v-on:pagination_page="nextProducts"
-                        v-if="paginate"
-                        :pagination="paginate"/>
+
+        <div
+            v-if="tab===1"
+            style="min-height:100vh;"
+            class="album py-2 bg-body-tertiary">
+            <div class="container g-2">
+
+                <template v-for="cat in products">
+                    <h5 class="my-4" :id="'cat-'+cat.id"><i class="fa-solid fa-layer-group mr-2"></i>{{cat.title || '-'}}</h5>
+
+                    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
+                        <div class="col"
+                             v-for="(product, index) in cat.products">
+                            <ProductCard
+                                :item="product"
+                            />
+                        </div>
+
+                    </div>
+                </template>
+
+<!--                <p class="mb-2 text-center" v-if="paginate"><small>Всего товаров найдено ({{
+                        paginate.meta.total
+                    }})</small></p>
+
+                <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2"
+                     v-if="(products||[]).length>0">
+                    <div class="col"
+                         v-for="(product, index) in products">
+                        <ProductCard
+                            :item="product"
+                        />
+                    </div>
+
+                </div>-->
+            </div>
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    <div class="col">
+                        <Pagination
+                            :simple="true"
+                            v-on:pagination_page="nextProducts"
+                            v-if="paginate"
+                            :pagination="paginate"/>
+                    </div>
                 </div>
             </div>
+
         </div>
 
-    </div>
-    <footer class="text-body-secondary py-5">
-        <div class="container">
-            <p class="float-end mb-1">
-                <a href="#">Back to top</a>
-            </p>
-            <p class="mb-1">Album example is © Bootstrap, but please download and customize it for yourself!</p>
-            <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a
-                href="/docs/5.3/getting-started/introduction/">getting started guide</a>.</p>
-        </div>
-    </footer>
 
-    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
-                aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (dark)">
-            <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
-                <use href="#moon-stars-fill"></use>
-            </svg>
-            <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
-            <li>
-                <button type="button"
-                        @click="changeTheme('light')"
-                        class="dropdown-item d-flex align-items-center" data-bs-theme-value="light"
-                        aria-pressed="false">
-                    <svg class="bi me-2 opacity-50" width="1em" height="1em">
-                        <use href="#sun-fill"></use>
-                    </svg>
-                    Light
-                    <svg class="bi ms-auto d-none" width="1em" height="1em">
-                        <use href="#check2"></use>
-                    </svg>
-                </button>
-            </li>
-            <li>
-                <button type="button"
-                        @click="changeTheme('dark')"
-                        class="dropdown-item d-flex align-items-center active" data-bs-theme-value="dark"
-                        aria-pressed="true">
-                    <svg class="bi me-2 opacity-50" width="1em" height="1em">
-                        <use href="#moon-stars-fill"></use>
-                    </svg>
-                    Dark
-                    <svg class="bi ms-auto d-none" width="1em" height="1em">
-                        <use href="#check2"></use>
-                    </svg>
-                </button>
-            </li>
-            <li>
-                <button type="button"
-                        @click="changeTheme('auto')"
-                        class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
-                    <svg class="bi me-2 opacity-50" width="1em" height="1em">
-                        <use href="#circle-half"></use>
-                    </svg>
-                    Auto
-                    <svg class="bi ms-auto d-none" width="1em" height="1em">
-                        <use href="#check2"></use>
-                    </svg>
-                </button>
-            </li>
-        </ul>
     </div>
-
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom p-0" style="border-radius:10px 10px 0px 0px;">
-        <button class="btn btn-primary w-100 p-3 rounded-0">Корзина <strong>{{cartTotalPrice || 0}}<sup class="font-10 opacity-50">.00</sup>₽</strong></button>
+        <button
+            @click="goToCart"
+            class="btn btn-primary w-100 p-3 rounded-0">
+            Корзина <strong>{{ cartTotalPrice || 0 }}<sup class="font-10 opacity-50">.00</sup>₽</strong>
+        </button>
     </nav>
+
+    <div class="catalog-preloader" v-if="load_content">
+        <div class="d-flex flex-column align-items-center">
+            <div class="spinner-grow bg-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="py-2">Загружаем...</p>
+        </div>
+    </div>
 </template>
 <script>
 
@@ -114,7 +114,8 @@ export default {
 
     data() {
         return {
-            tab: 0,
+            tab: 1,
+            load_content: false,
             settings: {
                 can_use_cash: true,
                 delivery_price_text: null,
@@ -129,6 +130,7 @@ export default {
             isCollapsed: true,
             search: null,
             products: [],
+            products_with_categories: [],
             paginate: null,
             categories: [],
             sending: false,
@@ -161,7 +163,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+        ...mapGetters(['getProducts', 'getCategories', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
         getCurrentBot() {
             return window.currentBot
         },
@@ -176,11 +178,11 @@ export default {
         },
         filteredProducts() {
 
-            if (this.categories.length===0)
+            if (this.categories.length === 0)
                 return this.products
 
 
-            return this.products.filter(product => product.categories.findIndex(cat=>this.categories.indexOf(cat.id)!==-1)!==-1)
+            return this.products.filter(product => product.categories.findIndex(cat => this.categories.indexOf(cat.id) !== -1) !== -1)
         },
         tg() {
             return window.Telegram.WebApp;
@@ -201,24 +203,53 @@ export default {
             this.loadActualProducts()
     },
     methods: {
-        changeTheme(name) {
-            let themes = document.querySelectorAll("[data-bs-theme]")
-
-            themes.forEach(item => {
-                console.log("item", item)
-                item.setAttribute("data-bs-theme", name)
-            })
+        scrollTo(id){
+           // document.getElementById(id).scrollIntoView();
+            var element = document.getElementById(id);
+            var headerOffset = 70;
+            var elementPosition = element.getBoundingClientRect().top;
+            var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
         },
+        openTab(tab) {
+            this.tab = tab
+            window.scrollTo(0, 90);
+        },
+        doSwipeLeft() {
+            let limit = 1
+            if (this.tab === 0)
+                this.tab = limit
+            else
+                this.tab--;
+
+            window.scrollTo(0, 90);
+        },
+        doSwipeRight() {
+            let limit = 1
+            if (this.tab === limit)
+                this.tab = 0
+            else
+                this.tab++;
+
+            window.scrollTo(0, 90);
+
+        },
+        goToCart() {
+
+            this.$router.push({name: 'ShopCartV2'})
+
+        },
+
         decPersons() {
             this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;
         },
         incPersons() {
             this.deliveryForm.persons = this.deliveryForm.persons < 100 ? this.deliveryForm.persons + 1 : this.deliveryForm.persons;
         },
-        selectProductTypeDisplay(type) {
-            this.product_type_display = type
-            localStorage.setItem("cashman_self_product_type_display", this.product_type_display)
-        },
+
         startTimer(time) {
             this.spent_time_counter = time != null ? Math.min(time, 10) : 10;
 
@@ -241,14 +272,19 @@ export default {
             })
 
         },
-        resetCategories() {
-            this.categories = []
-            this.loadProducts(0)
-        },
-        selectCategory(item) {
-            this.categories = [item]
 
-           // this.loadProducts(0)
+        selectCategory(item) {
+            //this.categories = item ? [item] : []
+            this.tab = 1
+
+            this.$nextTick(()=>{
+                if (item)
+                    this.scrollTo("cat-"+item.id)
+                else
+                    window.scrollTo(0, 90);
+            })
+
+            //this.loadProducts(0)
         },
         nextProducts(index) {
             this.loadProducts(index)
@@ -263,8 +299,13 @@ export default {
                 })
             })
         },
+
         loadProducts(page = 0) {
-            return this.$store.dispatch("loadProducts", {
+            this.tab = 1
+            this.load_content = true
+
+
+            return this.$store.dispatch("loadProductsByCategory"/*, {
                 dataObject: {
                     search: this.search,
                     categories: this.categories.length > 0 ? this.categories.map(o => o['id']) : null,
@@ -272,11 +313,15 @@ export default {
                     max_price: this.max_price || null
                 },
                 page: page,
-                size:1000
-            }).then(() => {
-                this.products = this.getProducts
-                this.paginate = this.getProductsPaginateObject
-
+                size: 100
+            }*/).then((resp) => {
+                this.products = resp.data
+                /*   this.products = this.getProducts
+                   this.paginate = this.getProductsPaginateObject*/
+                this.load_content = false
+                window.scrollTo(0, 90);
+            }).catch(() => {
+                this.load_content = false
             })
         },
         startCheckout() {
@@ -353,7 +398,7 @@ export default {
     }
 }
 </script>
-<style>
+<style lang="scss">
 .header-category-slider {
     top: 0px;
     background: #212529;
@@ -362,14 +407,24 @@ export default {
     z-index: 100;
 }
 
-.selected-category-item {
-    padding: 5px;
-    margin: 0;
-    position: relative;
+.catalog-tabs {
+    .nav-item {
+        position: relative;
+        bottom: -1px;
+    }
 }
 
-.carousel__prev,
-.carousel__next {
-    display: none;
+.catalog-preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1033;
+    width: 100%;
+    height: 100vh;
+    background-color: #000000d9;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>

@@ -32,9 +32,8 @@ import {Head} from '@inertiajs/vue3'
         </div>
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="container">
-                <a href="#" class="navbar-brand d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                    <strong>Album</strong>
+                <a href="#" class="navbar-brand d-flex align-items-center px-3">
+                    <strong><i class="fa-brands fa-shopify mr-2"></i> {{ $route.meta.title || 'Меню' }}</strong>
                 </a>
                 <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -44,6 +43,17 @@ import {Head} from '@inertiajs/vue3'
     </header>
 
     <slot/>
+
+    <footer class="text-body-secondary" style="padding:35px 0px 90px 0px;">
+        <div class="container d-flex justify-content-center flex-column align-items-center">
+            <p class="d-flex justify-content-center my-2">
+                <a href="javascript:void(0)" @click="scrollTop">Вернуться наверх</a>
+            </p>
+            <p class="mb-1 text-center">{{bot.company.description}}</p>
+            <p class="mb-1 text-center" v-if="bot.company.address"><i class="fa-solid fa-map-location-dot mr-2"></i>{{bot.company.address}}</p>
+            <p class="mb-0">{{bot.company.title}}©2024</p>
+        </div>
+    </footer>
 
 </template>
 <script>
@@ -63,11 +73,27 @@ export default {
         tg() {
             return window.Telegram.WebApp;
         },
+        bot(){
+            return window.currentBot
+        }
     },
     mounted() {
-
+        this.changeTheme(this.tg.colorScheme)
+        this.tg.BackButton.show()
+        this.tg.SettingsButton.show()
     },
     methods: {
+        changeTheme(name) {
+            let themes = document.querySelectorAll("[data-bs-theme]")
+
+            themes.forEach(item => {
+                console.log("item", item)
+                item.setAttribute("data-bs-theme", name)
+            })
+        },
+        scrollTop(){
+            window.scrollTo(0, 90);
+        },
         openLink(url) {
             this.tg.openLink(url, {
                 try_instant_view: true

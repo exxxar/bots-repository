@@ -18,7 +18,7 @@ class ProductCategoryResource extends JsonResource
             'bot_id' => $this->bot_id,
             'is_active' => $this->is_active,
             'count' => $this->count ?? 0,
-            'products' => ProductCollection::make($this->whenLoaded('products')),
+            'products' => $this->whenLoaded('products'),
         ];
     }
 }

@@ -85,6 +85,20 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async loadProductsByCategory(context) {
+
+        let link = `${BASE_PRODUCTS_LINK}-by-category`
+        let method = 'POST'
+        let _axios = util.makeAxiosFactory(link, method)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadProduct(context, payload = {dataObject: {productId: null}}) {
 
         let link = `${BASE_PRODUCTS_LINK}/${payload.dataObject.productId}`

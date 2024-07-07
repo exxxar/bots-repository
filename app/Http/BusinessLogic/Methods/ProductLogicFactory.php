@@ -98,6 +98,23 @@ class ProductLogicFactory
     /**
      * @throws HttpException
      */
+    public function listByCategories(): ProductCategoryCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+       $categories = ProductCategory::query()
+           ->with(["products"])
+           ->where("bot_id", $this->bot->id)
+           ->get();
+
+        return new ProductCategoryCollection($categories);
+    }
+
+
+    /**
+     * @throws HttpException
+     */
     public function list($search = null, array $filters = null, $size = null, $needAll = false): ProductCollection
     {
         if (is_null($this->bot))
@@ -726,7 +743,7 @@ class ProductLogicFactory
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед. " . ($discount > 0 ? "Скидка: $discount руб." : "");
 
         $userInfo = !$needPickup ?
-            sprintf(($whenReady?"🟢":"🟡")."Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
+            sprintf(($whenReady ? "🟢" : "🟡") . "Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
@@ -740,7 +757,7 @@ class ProductLogicFactory
                 $useCashback ? $discount : "нет",
                 ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')),
                 $persons
-            ) : sprintf(($whenReady?"🟢":"🟡")."Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nЗаберу в:%s\nЧисло персон: %s\n",
+            ) : sprintf(($whenReady ? "🟢" : "🟡") . "Идентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nЗаберу в:%s\nЧисло персон: %s\n",
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',

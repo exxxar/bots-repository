@@ -57,6 +57,13 @@ class SimpleDeliveryController extends SlugController
 
             [
                 "type" => "text",
+                "key" => "shop_theme_id",
+                "value" => 0,
+
+            ],
+
+            [
+                "type" => "text",
                 "key" => "delivery_price_text",
                 "description" => "Описание ценника на доставку",
                 "value" => "1000 руб.",
@@ -428,14 +435,28 @@ class SimpleDeliveryController extends SlugController
         $mainImage = (Collection::make($config[1])
             ->where("key", "main_image")
             ->first())["value"] ?? null;
-        //
+
+        $shopThemeId = (Collection::make($config[1])
+            ->where("key", "shop_theme_id")
+            ->first())["value"] ?? 0;
+
+
+        switch ($shopThemeId){
+            default:
+            case 0:
+                $shopUrl = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/delivery-main";
+                break;
+            case 1:
+                $shopUrl = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/catalog";
+                break;
+        }
+
         $keyboard = [
             [
                 ["text" => "$btnText", "web_app" => [
-                    "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/delivery-main"
+                    "url" => $shopUrl
                 ]],
             ],
-
         ];
 
         if (is_null($mainImage))

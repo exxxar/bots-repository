@@ -465,50 +465,68 @@ import CatalogV2 from '@/ClientTg/Pages/ShopV2/Catalog.vue';
 import ContactsV2 from '@/ClientTg/Pages/ShopV2/Contacts.vue';
 import OrdersV2 from '@/ClientTg/Pages/ShopV2/MyOrders.vue';
 import ProfileV2 from '@/ClientTg/Pages/ShopV2/Profile.vue';
+import ProductV2 from '@/ClientTg/Pages/ShopV2/Product.vue';
+import ShopCartV2 from '@/ClientTg/Pages/ShopV2/ShopCart.vue';
+import PaymentV2 from '@/ClientTg/Pages/ShopV2/Payment.vue';
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
 
-            {
-                name: 'CatalogV2',
-                path: simplePrefix+'/catalog',
-                component: CatalogV2,
-                meta: {title: 'Каталог'}
-            },
+    {
+        name: 'CatalogV2',
+        path: simplePrefix + '/catalog',
+        component: CatalogV2,
+        meta: {title: 'Каталог'}
+    },
 
-            {
-                name: 'ContactsV2',
-                path:  simplePrefix+'/contacts',
-                component: ContactsV2,
-                meta: {title: 'Контакты'}
-            },
+    {
+        name: 'ContactsV2',
+        path: simplePrefix + '/contacts',
+        component: ContactsV2,
+        meta: {title: 'Контакты'}
+    },
 
+    {
+        name: 'ProductV2',
+        path: simplePrefix + '/product/:productId',
+        component: ProductV2,
+        meta: {title: 'Товар'}
+    },
 
-            {
-                name: 'OrdersV2',
-                path:  simplePrefix+'/orders',
-                component: OrdersV2,
-                meta: {title: 'Заказы'}
-            },
-
-
-            {
-                name: 'ProfileV2',
-                path:  simplePrefix+'/profile',
-                component: ProfileV2,
-                meta: {title: 'Профиль'}
-            },
+    {
+        name: 'OrdersV2',
+        path: simplePrefix + '/orders',
+        component: OrdersV2,
+        meta: {title: 'Заказы'}
+    },
 
 
-
+    {
+        name: 'ShopCartV2',
+        path: simplePrefix + '/cart',
+        component: ShopCartV2,
+        meta: {title: 'Корзина'}
+    },
+    {
+        name: 'PaymentV2',
+        path: simplePrefix + '/payment',
+        component: PaymentV2,
+        meta: {title: 'Оплата'}
+    },
+    {
+        name: 'ProfileV2',
+        path: simplePrefix + '/profile',
+        component: ProfileV2,
+        meta: {title: 'Профиль'}
+    },
 
 
 ];
 
 
 const router = createRouter({
-   history: createWebHashHistory(),
-    routes: [...routes, ...adminRoutes, ...managerRoutes, ...deliveryRoutes,...simpleRoutes],
+    history: createWebHashHistory(),
+    routes: [...routes, ...adminRoutes, ...managerRoutes, ...deliveryRoutes, ...simpleRoutes],
 });
 
 export default router;
