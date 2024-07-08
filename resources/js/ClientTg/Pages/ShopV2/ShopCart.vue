@@ -548,6 +548,7 @@ export default {
 
     mounted() {
 
+        this.tg.BackButton.hide()
 
         if (localStorage.getItem("cashman_self_product_delivery_counter") != null) {
             this.is_requested = true;

@@ -25,7 +25,7 @@
                 <span>Телефон</span>
                 <span
                     @click="sendMyNumber"
-                    class="text-primary fw-bold">отправить мой номер</span>
+                    class="text-primary fw-bold cursor-pointer">отправить мой номер</span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">

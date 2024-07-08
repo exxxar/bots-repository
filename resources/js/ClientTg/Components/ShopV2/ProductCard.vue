@@ -9,7 +9,7 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
             @click="showProductDetails"
             v-lazy="item.images[0]">
         <div class="card-body">
-            <p class="text-center mb-2">{{item.title.slice(0, 50)}} <span v-if="item.title.length>50">...</span></p>
+            <p class="text-center mb-2" style="font-size: 12px;">{{item.title.slice(0, 50)}} <span v-if="item.title.length>50">...</span></p>
             <div class="d-flex justify-content-between align-items-center">
                 <button type="button"
                         v-if="inCart(item.id)===0"
