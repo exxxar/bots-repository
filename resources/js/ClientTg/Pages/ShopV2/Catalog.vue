@@ -108,6 +108,8 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
             <p class="py-2">Загружаем...</p>
         </div>
     </div>
+
+
 </template>
 <script>
 

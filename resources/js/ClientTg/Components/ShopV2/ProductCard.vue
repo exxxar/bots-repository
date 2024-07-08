@@ -41,23 +41,23 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                     <div class="card text-bg-dark" v-if="item">
                         <img v-lazy="item.images[0]"
                              class="card-img" alt="...">
-                        <div class="card-img-overlay d-flex flex-column justify-content-between">
+                        <div class="card-img-overlay d-flex flex-column justify-content-between p-0">
                             <div class="shadow-bg">
-                                <h6 class="text-center">{{ (item.title || 'Не указан') }}</h6>
-                                <p class="text-center mb-0">Цена {{ item.current_price || 0 }}<sup
+                                <h6 class="text-left" style="font-weight:700; line-height:100%;">{{ (item.title || 'Не указан') }}</h6>
+                                <p class="text-left mb-0">Цена {{ item.current_price || 0 }}<sup
                                     class="font-400 opacity-50">.00</sup> ₽</p>
                             </div>
 
-                            <div class="shadow-bg">
-                                <p class="mb-0">Рейтинг товара</p>
-                                <h6 class="d-flex justify-content-between mb-3"><Rating :rating="item.rating"></Rating> {{item.rating}} из 5</h6>
 
-                            </div>
 
                         </div>
                     </div>
+                    <div class="p-2">
+                        <p class="mb-0">Рейтинг товара</p>
+                        <h6 class="d-flex justify-content-between mb-3"><Rating :rating="item.rating"></Rating> {{item.rating}} из 5</h6>
 
-                    <p class="text-center py-3">{{item.description || '-'}}</p>
+                    </div>
+                    <p class="text-justify py-2 fst-italic">{{item.description || '-'}}</p>
 
 <!--
                     <ProductReviewFrom></ProductReviewFrom>
@@ -193,6 +193,5 @@ export default {
 .shadow-bg {
     background: #0000005e;
     padding: 5px;
-    border-radius: 5px;
 }
 </style>
