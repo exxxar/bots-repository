@@ -80,7 +80,10 @@ export default {
     mounted() {
         this.changeTheme(this.tg.colorScheme)
         this.tg.BackButton.show()
-        this.tg.SettingsButton.show()
+
+        this.tg.BackButton.onClick(()=>{
+            this.$router.back()
+        })
     },
     methods: {
         changeTheme(name) {

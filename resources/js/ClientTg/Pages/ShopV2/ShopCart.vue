@@ -521,11 +521,7 @@ export default {
             return [...new Set(tmp.map(item => item[0])), ...new Set(tmp.map(item => item[1]))];
         }
     },
-    activated() {
-        this.tg.BackButton.onClick(()=>{
-            this.$router.push({name: 'CatalogV2'})
-        })
-    },
+
     mounted() {
 
 

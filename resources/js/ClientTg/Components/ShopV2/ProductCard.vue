@@ -44,8 +44,8 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                         <div class="card-img-overlay d-flex flex-column justify-content-between p-0">
                             <div class="shadow-bg">
                                 <h6 class="text-left" style="font-weight:700; line-height:100%;">{{ (item.title || 'Не указан') }}</h6>
-                                <p class="text-left mb-0">Цена {{ item.current_price || 0 }}<sup
-                                    class="font-400 opacity-50">.00</sup> ₽</p>
+                                <p class="text-left mb-0 ">Цена <strong class="text-primary">{{ item.current_price || 0 }}<sup
+                                    class="font-400 opacity-50">.00</sup></strong> ₽</p>
                             </div>
 
 
