@@ -46,12 +46,13 @@ import {Head} from '@inertiajs/vue3'
 
     <footer class="text-body-secondary" style="padding:20px 0px 90px 0px;">
         <div class="container d-flex justify-content-center flex-column align-items-center">
-            <p class="d-flex justify-content-center mb-4">
-                <a href="javascript:void(0)" @click="scrollTop"><i class="fa-solid fa-arrow-up mr-2"></i>Вернуться наверх</a>
-            </p>
+
             <p class="mb-3 text-center">{{bot.company.description}}</p>
             <p class="mb-3 text-center" v-if="bot.company.address"><i class="fa-solid fa-map-location-dot mr-2"></i>{{bot.company.address}}</p>
             <p class="mb-0">{{bot.company.title}}©2024</p>
+            <p class="d-flex justify-content-center my-3">
+                <a href="javascript:void(0)" @click="scrollTop"><i class="fa-solid fa-arrow-up mr-2"></i>Вернуться наверх</a>
+            </p>
         </div>
     </footer>
 
@@ -97,7 +98,7 @@ export default {
             })
         },
         scrollTop(){
-            window.scrollTo(0, 90);
+            window.scrollTo(0, 80);
         },
         openLink(url) {
             this.tg.openLink(url, {

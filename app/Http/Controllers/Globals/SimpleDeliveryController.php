@@ -106,6 +106,13 @@ class SimpleDeliveryController extends SlugController
 
             ],
             [
+                "type" => "boolean",
+                "key" => "can_use_card",
+                "value" => true,
+
+            ],
+
+            [
                 "type" => "text",
                 "key" => "disabled_text",
                 "value" => "Магазин временно не доступен",
@@ -214,9 +221,8 @@ class SimpleDeliveryController extends SlugController
         ];
 
 
-            $mainScript->config = $params;
-            $mainScript->save();
-
+        $mainScript->config = $params;
+        $mainScript->save();
 
 
         BotMenuSlug::query()->updateOrCreate(
@@ -234,11 +240,15 @@ class SimpleDeliveryController extends SlugController
 
     }
 
+    public function loadClientProfile(Request $request){
+
+    }
+
     public function loadData(Request $request)
     {
         $slug = $request->slug;
 
-        Log::info("slug test=>".print_r($slug->config ?? [], true));
+        Log::info("slug test=>" . print_r($slug->config ?? [], true));
         return response()->json(
             [
                 'delivery_price_text' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
@@ -250,6 +260,9 @@ class SimpleDeliveryController extends SlugController
                 'min_price_for_cashback' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "min_price_for_cashback")
                     ->first())["value"] ?? 2000 : 2000,
+                'can_use_card' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "can_use_card")
+                    ->first())["value"] ?? false : false,
                 'can_use_cash' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "can_use_cash")
                     ->first())["value"] ?? true : true,
@@ -441,23 +454,48 @@ class SimpleDeliveryController extends SlugController
             ->first())["value"] ?? 0;
 
 
-        switch ($shopThemeId){
+        switch ($shopThemeId) {
             default:
             case 0:
-                $shopUrl = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/delivery-main";
+                $keyboard = [
+                    [
+                        ["text" => "$btnText", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/delivery-main"
+                        ]],
+                    ],
+                ];
+
+
                 break;
             case 1:
-                $shopUrl = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/catalog";
+
+                $keyboard = [
+                    [
+                        ["text" => "$btnText", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/catalog"]
+                        ],
+                    ],
+                    [
+                        ["text" => "🛒Корзина", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/cart"]
+                        ],
+                    ],
+                    [
+                        ["text" => "😎Мой профиль", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/profile"]
+                        ],
+                    ],
+                    [
+                        ["text" => "😎Контакты", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/contacts"]
+                        ],
+                    ],
+                ];
+
+
                 break;
         }
 
-        $keyboard = [
-            [
-                ["text" => "$btnText", "web_app" => [
-                    "url" => $shopUrl
-                ]],
-            ],
-        ];
 
         if (is_null($mainImage))
             \App\Facades\BotManager::bot()
