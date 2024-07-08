@@ -62,10 +62,11 @@ export default {
             window.self = this.getSelf
         })
 
-        this.$botNotification.success(
-            "Главная",
-            "Успешно!",
-        );
+        this.$notify( {
+            title:'Главная',
+            text:"Успешно!",
+            type:"success",
+        });
 
     },
     methods: {

@@ -79,6 +79,9 @@ export default {
             return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa("001" + this.self.telegram_chat_id);
         }
     },
+    mounted() {
+        this.tg.BackButton.hide()
+    },
     methods:{
         sendMyNumber(){
             this.tg.requestContact(()=>{

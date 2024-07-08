@@ -85,6 +85,9 @@ export default {
         return {
             map: '<div style="position:relative;overflow:hidden;"><a href="https://yandex.ru/maps/24880/khartsyzk/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Харцызск</a><a href="https://yandex.ru/maps/24880/khartsyzk/?ll=38.145854%2C48.040252&mode=whatshere&utm_medium=mapframe&utm_source=maps&whatshere%5Bpoint%5D=38.144137%2C48.042410&whatshere%5Bzoom%5D=14&z=14" style="color:#eee;font-size:12px;position:absolute;top:14px;">Харцызск — Яндекс Карты</a><iframe src="https://yandex.ru/map-widget/v1/?ll=38.145854%2C48.040252&mode=whatshere&whatshere%5Bpoint%5D=38.144137%2C48.042410&whatshere%5Bzoom%5D=14&z=14" width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe></div>\n'
         }
-    }
+    },
+    mounted() {
+        this.tg.BackButton.hide()
+    },
 }
 </script>

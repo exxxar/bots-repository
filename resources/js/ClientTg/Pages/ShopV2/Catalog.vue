@@ -214,6 +214,7 @@ export default {
             this.loadActualProducts()
 
 
+        this.tg.BackButton.hide()
     },
     methods: {
         scrollTo(id) {
@@ -355,7 +356,12 @@ export default {
         startCheckout() {
 
             if (this.is_requested) {
-                this.$botNotification.warning("Упс!", `Сделать повторный заказ можно через <strong>${this.spent_time_counter} сек.</strong>`)
+
+                this.$notify( {
+                    title:'Упс!',
+                    text:"Сделать повторный заказ можно через ${this.spent_time_counter} сек.",
+                    type:"error",
+                });
                 return;
             }
 
