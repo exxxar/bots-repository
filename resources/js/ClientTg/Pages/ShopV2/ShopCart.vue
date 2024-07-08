@@ -141,12 +141,11 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                     class="fa-regular fa-money-bill-1 mr-2"></i> Наличными</a>
             </div>
 
-            <h6 class="opacity-75" v-if="canUseCashBack">Бонусы <small>(нажми для использования)</small></h6>
+            <h6 class="opacity-75">Бонусы <small>(нажми для использования)</small></h6>
 
             <div class="card my-3"
                  v-bind:class="{'text-bg-primary':deliveryForm.use_cashback}"
-                 @click="deliveryForm.use_cashback=!deliveryForm.use_cashback"
-                 v-if="canUseCashBack">
+                 @click="deliveryForm.use_cashback=!deliveryForm.use_cashback">
                 <div
                     class="card-body">
                     <p class="d-flex justify-content-between mb-0">
