@@ -1,5 +1,6 @@
 <script setup>
-import Rating from "ClientTg@/Components/Shop/Helpers/Rating.vue";
+import Rating from "@/ClientTg/Components/Shop/Helpers/Rating.vue";
+import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vue";
 </script>
 <template>
 
@@ -8,7 +9,7 @@ import Rating from "ClientTg@/Components/Shop/Helpers/Rating.vue";
             @click="showProductDetails"
             v-lazy="item.images[0]">
         <div class="card-body">
-            <p class="card-text">{{item.title}}</p>
+            <p class="text-center mb-2">{{item.title.slice(0, 50)}} <span v-if="item.title.length>50">...</span></p>
             <div class="d-flex justify-content-between align-items-center">
                 <button type="button"
                         v-if="inCart(item.id)===0"
@@ -40,36 +41,52 @@ import Rating from "ClientTg@/Components/Shop/Helpers/Rating.vue";
                     <div class="card text-bg-dark" v-if="item">
                         <img v-lazy="item.images[0]"
                              class="card-img" alt="...">
-                        <div class="card-img-overlay">
-                            <h5 class="card-title">{{ item.title || 'Не указан' }}</h5>
-                            <p class="card-text">Цена {{ item.current_price || 0 }}<sup
-                                class="font-400 opacity-50">.00</sup> ₽</p>
+                        <div class="card-img-overlay d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="text-center">{{ (item.title || 'Не указан') }}</h5>
+                                <p class="text-center">Цена {{ item.current_price || 0 }}<sup
+                                    class="font-400 opacity-50">.00</sup> ₽</p>
+                            </div>
+
+                            <div>
+                                <p class="mb-0">Рейтинг товара</p>
+                                <h6 class="d-flex justify-content-between mb-3"><Rating :rating="item.rating"></Rating> {{item.rating}} из 5</h6>
+
+                            </div>
+
                         </div>
                     </div>
 
                     <p class="text-center py-3">{{item.description || '-'}}</p>
-                    <div class="d-flex justify-content-between align-items-center px-3 mb-5">
+
+                    <ProductReviewFrom></ProductReviewFrom>
+
+                    <button type="button" class="btn btn-link w-100 mt-2"
+                            data-bs-dismiss="modal">Закрыть</button>
+
+                </div>
+                <div class="modal-footer p-0 m-0">
+                    <div class="d-flex justify-content-between align-items-center w-100 p-0">
                         <button type="button"
                                 v-if="inCart(item.id)===0"
                                 @click="incProductCart"
-                                class="btn btn-md btn-primary w-100 rounded-3">{{item.current_price || 0}}<sup class="font-10 opacity-50">.00</sup>₽</button>
+                                class="btn btn-md btn-primary w-100 rounded-3 p-3">{{item.current_price || 0}}<sup class="font-10 opacity-50">.00</sup>₽</button>
 
                         <div class="btn-group w-100" v-if="inCart(item.id)>0">
                             <button type="button"
                                     :disabled="item.in_stop_list_at"
                                     @click="decProductCart"
-                                    class="btn btn-md btn-primary">-</button>
+                                    class="btn btn-md btn-primary p-3">-</button>
                             <button type="button" class="btn btn-md">{{ checkInCart }}</button>
                             <button type="button"
                                     :disabled="item.in_stop_list_at"
                                     @click="incProductCart"
-                                    class="btn btn-md btn-primary">+</button>
+                                    class="btn btn-md btn-primary p-3">+</button>
                         </div>
                     </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Закрыть</button>
+
+                    <!--                    -->
                 </div>
             </div>
         </div>
@@ -150,7 +167,7 @@ export default {
 }
 
 .product-card {
-    min-height: 350px;
+    min-height: 320px;
 
     img {
         object-fit: cover;

@@ -8,7 +8,9 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 
     <div v-touch:swipe.left="doSwipeLeft"
          v-touch:swipe.right="doSwipeRight" class="d-flex flex-column">
-        <menu class="d-block position-sticky w-100 header-category-slider">
+        <menu
+            v-bind:style="colorTheme"
+            class="d-block position-sticky w-100 header-category-slider">
 
             <ul class="nav nav-tabs justify-content-center catalog-tabs">
                 <li class="nav-item">
@@ -29,7 +31,7 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 
         <div
             v-show="tab===0"
-            class="album py-2 bg-body-tertiary" style="min-height:100vh;">
+            class="album" style="min-height:100vh;">
             <div class="container g-2">
                 <CategoryList
                     :selected="categories"
@@ -40,15 +42,16 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
         <div
             v-if="tab===1"
             style="min-height:100vh;"
-            class="album py-2 bg-body-tertiary">
+            class="album">
             <div class="container g-2">
 
                 <template v-for="cat in products">
-                    <h5 class="my-4" :id="'cat-'+cat.id"><i class="fa-solid fa-layer-group mr-2"></i>{{cat.title || '-'}}</h5>
+                    <h5 class="my-4 divider" :id="'cat-'+cat.id">{{ cat.title || '-' }}</h5>
 
                     <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
                         <div class="col"
                              v-for="(product, index) in cat.products">
+
                             <ProductCard
                                 :item="product"
                             />
@@ -57,20 +60,20 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
                     </div>
                 </template>
 
-<!--                <p class="mb-2 text-center" v-if="paginate"><small>Всего товаров найдено ({{
-                        paginate.meta.total
-                    }})</small></p>
+                <!--                <p class="mb-2 text-center" v-if="paginate"><small>Всего товаров найдено ({{
+                                        paginate.meta.total
+                                    }})</small></p>
 
-                <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2"
-                     v-if="(products||[]).length>0">
-                    <div class="col"
-                         v-for="(product, index) in products">
-                        <ProductCard
-                            :item="product"
-                        />
-                    </div>
+                                <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2"
+                                     v-if="(products||[]).length>0">
+                                    <div class="col"
+                                         v-for="(product, index) in products">
+                                        <ProductCard
+                                            :item="product"
+                                        />
+                                    </div>
 
-                </div>-->
+                                </div>-->
             </div>
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -164,6 +167,11 @@ export default {
     },
     computed: {
         ...mapGetters(['getProducts', 'getCategories', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+        colorTheme() {
+            const theme = document.querySelector("[data-bs-theme]").getAttribute('data-bs-theme')
+
+            return "background-color:" + (theme === "light" ? "white" : "#212529");
+        },
         getCurrentBot() {
             return window.currentBot
         },
@@ -201,10 +209,14 @@ export default {
 
         if (this.cartProducts.length > 0)
             this.loadActualProducts()
+
+        this.tg.BackButton.onClick(()=>{
+            this.tg.close()
+        })
     },
     methods: {
-        scrollTo(id){
-           // document.getElementById(id).scrollIntoView();
+        scrollTo(id) {
+            // document.getElementById(id).scrollIntoView();
             var element = document.getElementById(id);
             var headerOffset = 70;
             var elementPosition = element.getBoundingClientRect().top;
@@ -218,7 +230,19 @@ export default {
             this.tab = tab
             window.scrollTo(0, 90);
         },
+        closeModalOnSwipe(){
+            let modals = document.querySelectorAll('.modal.show')
+
+            if (modals.length>0){
+                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item=>item.click())
+                return true;
+            }
+            return false;
+        },
         doSwipeLeft() {
+            if (this.closeModalOnSwipe())
+                return;
+
             let limit = 1
             if (this.tab === 0)
                 this.tab = limit
@@ -228,6 +252,9 @@ export default {
             window.scrollTo(0, 90);
         },
         doSwipeRight() {
+            if (this.closeModalOnSwipe())
+                return;
+
             let limit = 1
             if (this.tab === limit)
                 this.tab = 0
@@ -277,9 +304,9 @@ export default {
             //this.categories = item ? [item] : []
             this.tab = 1
 
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 if (item)
-                    this.scrollTo("cat-"+item.id)
+                    this.scrollTo("cat-" + item.id)
                 else
                     window.scrollTo(0, 90);
             })
@@ -400,8 +427,7 @@ export default {
 </script>
 <style lang="scss">
 .header-category-slider {
-    top: 0px;
-    background: #212529;
+    top: -1px;
     padding: 11px 0px;
     font-size: 14px;
     z-index: 100;
@@ -426,5 +452,18 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+}
+
+.divider::before, .divider::after {
+    flex: 1;
+    content: "";
+    padding: 1px;
+    background-color: var(--bs-primary);
+    margin: 5px;
 }
 </style>

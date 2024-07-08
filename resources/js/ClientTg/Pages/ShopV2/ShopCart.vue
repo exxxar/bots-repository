@@ -523,6 +523,9 @@ export default {
     },
     mounted() {
 
+        this.tg.BackButton.onClick(()=>{
+            this.$router.push({name: 'CatalogV2'})
+        })
 
         if (localStorage.getItem("cashman_self_product_delivery_counter") != null) {
             this.is_requested = true;
