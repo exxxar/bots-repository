@@ -575,6 +575,183 @@ class ProductLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
+    public function createCheckoutLink(array $data)
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(404, "Требования функции не выполнены!");
+
+        $validator = Validator::make($data, [
+            "products" => "required",
+            "name" => "required",
+            "phone" => "required",
+            //  "address" => "",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $tmpProducts = json_decode($data["products"]);
+        $ids = Collection::make($tmpProducts)
+            ->pluck("id");
+
+        $products = Product::query()
+            ->whereIn("id", $ids)
+            ->get();
+
+        $needPickup = ($data["need_pickup"] ?? "false") == "true";
+        $hasDisability = ($data["has_disability"] ?? "false") == "true";
+        $useCashback = ($data["use_cashback"] ?? "false") == "true";
+        $needPaymentLink = ($data["need_payment_link"] ?? "false") == "true";
+        $cash = ($data["cash"] ?? "false") == "true";
+        $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
+
+        $persons = $data["persons"] ?? 1;
+        $time = $data["time"] ?? null;
+        $whenReady = ($data["when_ready"] ?? "false") == "true";
+
+        $summaryPrice = 0;
+        $summaryCount = 0;
+
+        $disabilities = json_decode($data["disabilities"] ?? '[]');
+
+        if ($hasDisability) {
+
+            $disabilitiesText = "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
+
+            foreach ($disabilities as $disability)
+                $disabilitiesText .= "-<em>$disability</em>\n";
+
+            $message .= $disabilitiesText . "\n";
+        }
+
+        $tmpOrderProductInfo = [];
+        foreach ($products as $product) {
+
+            $tmpCount = array_values(array_filter($tmpProducts, function ($item) use ($product) {
+                return $item->id === $product->id;
+            }))[0]->count ?? 0;
+
+
+            $tmpPrice = ($product->current_price ?? 0) * $tmpCount;
+            $message .= sprintf("%s x%s=%s руб.\n",
+                $product->title,
+                $tmpCount,
+                $tmpPrice
+            );
+
+            $tmpOrderProductInfo[] = (object)[
+                "title" => $product->title,
+                "count" => $tmpCount,
+                "price" => $tmpPrice,
+                'frontpad_article' => $product->frontpad_article ?? null,
+                'iiko_article' => $product->iiko_article ?? null,
+            ];
+
+            $summaryCount += $tmpCount;
+            $summaryPrice += $tmpPrice;
+        }
+
+        $maxUserCashback = $this->botUser->cashback->amount ?? 0;
+        $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
+        $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
+        $discount = $useCashback ? min($cashBackAmount, $maxUserCashback) : 0;
+
+        $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
+            . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
+            . "Номер этажа: " . ($data["floor_number"] ?? 'Не указан') . "\n"
+            . "Тип оплаты: " . ($cash ? "Наличкой" : "Картой") . "\n"
+            . "Сдача с:" . ($data["money"] ?? 'Не указано') . "\n"
+            . "Время доставки:" . ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')) . "\n"
+            . "Число персон:" . $persons . "\n"
+            . "Ограничения пользователя:\n" . ($disabilitiesText ?? 'не указаны');
+
+        $address = (($data["city"] ?? "") . "," . ($data["street"] ?? "") . "," . ($data["building"] ?? ""));
+
+
+        $geo = BusinessLogic::geo()
+            ->setBot($this->bot ?? null)
+            ->getCoords([
+                "address" => $address
+            ]);
+
+        $shopCoords = (Collection::make($this->slug->config)
+            ->where("key", "shop_coords")
+            ->first())["value"] ?? null;
+
+
+        if (!is_null($shopCoords) && !$needPickup) {
+            $coords = explode(',', $shopCoords);
+
+            $coordsData = [
+                "coords" => [
+                    (object)[
+                        "lat" => $geo->latitude ?? 0,
+                        "lon" => $geo->longitude ?? 0,
+                    ],
+                    (object)[
+                        "lat" => $coords[0] ?? 0,
+                        "lon" => $coords[1] ?? 0,
+                    ],
+                ]
+            ];
+
+            $distanceObject = BusinessLogic::geo()
+                ->setBot($this->bot ?? null)
+                ->getDistance($coordsData);
+
+            $distance = $distanceObject->distance ?? 0;
+
+        }
+
+        //сделать чек на оплату (pdf)
+        $order = Order::query()->create([
+            'bot_id' => $this->bot->id,
+            'deliveryman_id' => null,
+            'customer_id' => $this->botUser->id,
+            'delivery_service_info' => null,//информация о сервисе доставки
+            'deliveryman_info' => null,//информация о доставщике
+            'product_details' => [
+                (object)[
+                    "from" => $this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
+                    "products" => $tmpOrderProductInfo
+                ]
+            ],//информация о продуктах и заведении, из которого сделан заказ
+            'product_count' => $summaryCount,
+            'summary_price' => $summaryPrice,
+            'delivery_price' => 0,
+            'delivery_range' => $distance ?? 0,
+            'deliveryman_latitude' => 0,
+            'deliveryman_longitude' => 0,
+            'delivery_note' => $deliveryNote,
+            'receiver_name' => $data["name"] ?? 'Нет имени',
+            'receiver_phone' => $data["phone"] ?? 'Нет телефона',
+
+            'address' => $address . "," . ($data["flat_number"] ?? ""),
+            'receiver_latitude' => $geo->latitude ?? 0,
+            'receiver_longitude' => $geo->longitude ?? 0,
+
+            'status' => OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
+            'order_type' => OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора
+            'payed_at' => null,
+        ]);
+
+         return  BusinessLogic::payment()
+                ->setBot($this->bot)
+                ->setBotUser($this->botUser)
+                ->setSlug($this->slug)
+                ->checkoutLink([
+                    "products" => $tmpProducts
+                ]);
+
+
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
     public function checkoutInformation(array $data): void
     {
 
@@ -607,6 +784,7 @@ class ProductLogicFactory
         $needPickup = ($data["need_pickup"] ?? "false") == "true";
         $hasDisability = ($data["has_disability"] ?? "false") == "true";
         $useCashback = ($data["use_cashback"] ?? "false") == "true";
+        $needPaymentLink = ($data["need_payment_link"] ?? "false") == "true";
         $cash = ($data["cash"] ?? "false") == "true";
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
 
@@ -838,7 +1016,7 @@ class ProductLogicFactory
 
         $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
 
-        if (!$usePaymentSystem)
+        if (!$needPaymentLink)
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendDocument(
@@ -847,7 +1025,7 @@ class ProductLogicFactory
                     InputFile::createFromContents($file, "invoice.pdf")
                 );
         else {
-            BusinessLogic::payment()
+           BusinessLogic::payment()
                 ->setBot($this->bot)
                 ->setBotUser($this->botUser)
                 ->setSlug($this->slug)
@@ -895,6 +1073,8 @@ class ProductLogicFactory
                         "info" => "Автоматическое списание скидки на покупку товара",
                     ]);
         }
+
+
 
     }
 

@@ -141,6 +141,26 @@ class ProductController extends Controller
             ->duplicate($productId);
     }
 
+
+
+    /**
+     * @throws ValidationException
+     */
+    public function createCheckoutLink(Request $request){
+        $request->validate([
+            "products" => "required",
+            "name"=>"required",
+            "phone"=>"required",
+        ]);
+
+        return BusinessLogic::products()
+            ->setSlug($request->slug ?? null)
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->createCheckoutLink($request->all());
+
+    }
+
     /**
      * @throws ValidationException
      */

@@ -46,6 +46,30 @@ const getters = {
 
 // actions
 const actions = {
+    async createCheckoutLink(context, payload = {deliveryForm: null}) {
+
+        let products = []
+        context.state.items.forEach(item => {
+            if (item.product)
+                products.push({
+                    id: item.product.id,
+                    count: item.quantity || 0
+                })
+        })
+
+        payload.deliveryForm.append("products", JSON.stringify(products))
+        let link = `/bot-client/shop/checkout-link`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method, payload.deliveryForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async startCheckout(context, payload = {deliveryForm: null}) {
 
         let products = []

@@ -5,6 +5,7 @@ namespace App\Classes;
 use App\Models\Bot;
 use App\Models\BotMenuTemplate;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
@@ -467,6 +468,43 @@ trait BotBaseMethodsTrait
 
 
     }
+
+    public function createInvoiceLink( $chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $providerData = null)
+    {
+
+        $tmp = [
+            "chat_id" => $chatId,
+            "title" => $title,
+            "description" => $description,
+            "payload" => $payload,
+            "provider_token" => "381764678:TEST:61829",//$providerToken ?? env("PAYMENT_PROVIDER_TOKEN"),
+            "provider_data" => $providerData,
+            "currency" => $currency ?? env("PAYMENT_PROVIDER_CURRENCY"),
+            "prices" => $prices,
+            ...$needs,
+
+        ];
+
+
+        $bot = Bot::query()->where("bot_domain", "isushibot" /*$this->domain*/)->first();
+
+
+
+        try {
+            $client = Http::post("https://api.telegram.org/bot".$bot->bot_token."/createInvoiceLink",$tmp);
+
+
+        return $client->json();
+
+        } catch (\Exception $e) {
+            $this->sendMessageOnCrash($tmp, "createInvoiceLink");
+
+            Log::info("Ошибка конфигурации платежной системы:" . $e->getMessage());
+        }
+
+        return null;
+    }
+
 
     public function sendInvoice($chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $keyboard, $providerData = null)
     {

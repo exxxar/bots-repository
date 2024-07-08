@@ -222,6 +222,9 @@ Route::prefix("bot-client")
                 Route::post("/checkout", [ProductController::class, "checkout"]);
                 Route::post("/checkout-instruction", [ProductController::class, "checkoutInstruction"])
                     ->middleware(["slug"]);
+                Route::post("/checkout-link", [ProductController::class, "createCheckoutLink"])
+                    ->middleware(["slug"]);
+
                 Route::post("/products/by-ids", [ProductController::class, "getProductsByIds"]);
                 Route::post("/products/random", [ProductController::class, "randomProducts"]);
                 Route::post("/products/categories", [ProductController::class, "getCategories"]);

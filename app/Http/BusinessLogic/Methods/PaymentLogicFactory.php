@@ -245,4 +245,157 @@ class PaymentLogicFactory
                 providerData: $providerData
             );
     }
+
+    /**
+     * @throws ValidationException
+     */
+    public function checkoutLink(array $data)
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "products.*" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $bot = $this->bot;
+        $botUser = $this->botUser;
+        $slug = $this->slug;
+
+        //  Log::info("slug config".print_r($slug->config, true));
+
+        $taxSystemCode = (Collection::make($slug->config)
+            ->where("key", "tax_system_code")
+            ->first())["value"] ?? $bot->company->vat_code ?? 1;
+
+        $tmpProducts = $data["products"];
+        $ids = Collection::make($tmpProducts)
+            ->pluck("id")
+            ->toArray();
+
+
+        $products = Product::query()
+            ->whereIn("id", is_array($ids) ? $ids : [$ids])
+            ->get();
+
+
+        $prices = [];
+        $currency = "RUB";
+        $providerData = (object)[
+            "receipt" => []
+        ];
+
+        $summaryPrice = 0;
+        $summaryCount = 0;
+        $tmpDescription = "";
+
+        foreach ($products as $product) {
+
+            $tmpCount = array_values(array_filter($tmpProducts, function ($item) use ($product) {
+                return $item->id === $product->id;
+            }))[0]->count ?? 0;
+
+            $tmpPrice = ($product->current_price ?? 0) * $tmpCount;
+
+
+            $prices[] = [
+                "label" => $product->title,
+                "amount" => $tmpPrice * 100
+            ];
+
+            $tmpDescription .= "$product->title x$tmpCount = $tmpPrice\n";
+
+            $providerData->receipt[] =
+                (object)[
+                    "description" => "Заказ товара",
+                    "quantity" => "$tmpCount.00",
+                    "amount" => (object)[
+                        "value" => $tmpPrice * 100,
+                        "currency" => $currency
+                    ],
+                    "vat_code" => $taxSystemCode
+                ];
+
+            $summaryCount += $tmpCount;
+            $summaryPrice += $tmpPrice;
+        }
+
+
+        $payload = Str::uuid()->toString();
+
+        $providerToken = $bot->payment_provider_token;
+
+        Transaction::query()->create([
+            'user_id' => $botUser->user_id,
+            'bot_user_id' => $botUser->id,
+            'bot_id' => $bot->id,
+            'payload' => $payload,
+            'currency' => $currency,
+            'total_amount' => $summaryPrice,
+            'status' => 0,
+            'products_info' => (object)[
+                "payload" => $tmpDescription ?? null,
+                "prices" => $prices,
+            ],
+        ]);
+
+        $needs = [
+            "need_name" => (Collection::make($slug->config)
+                    ->where("key", "need_name")
+                    ->first())["value"] ?? false,
+            "need_phone_number" => (Collection::make($slug->config)
+                    ->where("key", "need_phone_number")
+                    ->first())["value"] ?? false,
+            "need_email" => (Collection::make($slug->config)
+                    ->where("key", "need_email")
+                    ->first())["value"] ?? false,
+            "need_shipping_address" => (Collection::make($slug->config)
+                    ->where("key", "need_shipping_address")
+                    ->first())["value"] ?? false,
+            "send_phone_number_to_provider" => (Collection::make($slug->config)
+                    ->where("key", "need_send_phone_number_to_provider")
+                    ->first())["value"] ?? false,
+            "send_email_to_provider" => (Collection::make($slug->config)
+                    ->where("key", "need_send_email_to_provider")
+                    ->first())["value"] ?? false,
+            "is_flexible" => (Collection::make($slug->config)
+                    ->where("key", "is_flexible")
+                    ->first())["value"] ?? false,
+            "disable_notification" => (Collection::make($slug->config)
+                    ->where("key", "disable_notification")
+                    ->first())["value"] ?? false,
+            "protect_content" => (Collection::make($slug->config)
+                    ->where("key", "protect_content")
+                    ->first())["value"] ?? false,
+        ];
+
+
+        $title = (Collection::make($slug->config)
+            ->where("key", "checkout_title")
+            ->first())["value"] ?? "Заказ товара";
+
+        $description = (Collection::make($slug->config)
+            ->where("key", "checkout_description")
+            ->first())["value"] ?? "Ваш товар";
+
+
+        return \App\Facades\BotMethods::bot()
+            ->whereBot($this->bot)
+            ->createInvoiceLink(
+                $this->botUser->telegram_chat_id,
+                title: $title,
+                description: $description,
+                prices: $prices,
+                payload: $payload,
+                providerToken: $providerToken,
+                currency: $currency,
+                needs: $needs,
+                providerData: $providerData
+            );
+    }
 }

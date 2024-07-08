@@ -137,7 +137,7 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                 class="fa-regular fa-money-bill-1 mr-2"></i> Наличными</a>
         </div>
 
-        <h6 class="opacity-75" v-if="canUseCashBack">Бонусы</h6>
+        <h6 class="opacity-75" v-if="canUseCashBack">Бонусы <small>(нажми для использования)</small></h6>
 
         <div class="card my-3"
              v-bind:class="{'text-bg-primary':deliveryForm.use_cashback}"
@@ -478,6 +478,12 @@ export default {
         }
     },
     watch: {
+        'tab': {
+            handler: function (newValue) {
+                window.scrollTo(0, 90);
+            },
+            deep: true
+        },
         'deliveryForm.cash': {
             handler: function (newValue) {
                 if (!this.deliveryForm.cash)
@@ -588,21 +594,7 @@ export default {
     },
     methods: {
 
-        doSwipeLeft() {
-            let limit = this.cartProducts.length > 0 ? 2 : 1
-            if (this.tab === 0)
-                this.tab = limit
-            else
-                this.tab--;
-        },
-        doSwipeRight() {
-            let limit = this.cartProducts.length > 0 ? 2 : 1
-            if (this.tab === limit)
-                this.tab = 0
-            else
-                this.tab++;
 
-        },
         decPersons() {
             this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;
         },
@@ -663,7 +655,6 @@ export default {
                 this.$nextTick(() => {
                     Object.keys(resp).forEach(item => {
                         this.settings[item] = resp[item]
-                        console.log("settings", this.settings[item], item)
                     })
                 })
             })
@@ -680,9 +671,10 @@ export default {
             }).then(() => {
                 this.products = this.getProducts
                 this.paginate = this.getProductsPaginateObject
-                baseJS.handler()
+
             })
         },
+
         startCheckout() {
 
             if (this.is_requested) {
@@ -704,7 +696,8 @@ export default {
 
             let data = new FormData();
 
-            this.sending = true
+            data.append("need_payment_link", this.deliveryForm.payment_type === 0)
+
             Object.keys(this.deliveryForm)
                 .forEach(key => {
                     const item = this.deliveryForm[key] || ''
@@ -717,6 +710,18 @@ export default {
             if (this.type)
                 data.append("type", this.type)
 
+            if (this.deliveryForm.payment_type === 0){
+                this.$store.dispatch("createCheckoutLink", {
+                    deliveryForm: data
+
+                }).then((resp)=>{
+                    console.log("checkout resp", resp.result)
+                    this.tg.openInvoice(resp.result)
+                })
+                return;
+            }
+
+            this.sending = true
             this.$store.dispatch("startCheckout", {
                 deliveryForm: data
 
