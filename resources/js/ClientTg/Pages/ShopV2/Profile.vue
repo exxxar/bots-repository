@@ -18,10 +18,14 @@
                 <span>ID</span>
                 <span class="text-primary fw-bold">1234567890</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between"
+            <li
+
+                class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Телефон</span>
-                <span class="text-primary fw-bold">+7(949)000-00-00</span>
+                <span
+                    @click="sendMyNumber"
+                    class="text-primary fw-bold">отправить мой номер</span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
@@ -42,3 +46,45 @@
     </div>
 
 </template>
+<script>
+import {mapGetters} from "vuex";
+
+export default {
+    computed: {
+        ...mapGetters(['getSelf']),
+        logo() {
+            return `/images-by-bot-id/${this.currentBot.id}/${this.currentBot.image}`
+        },
+        self() {
+            return window.self || null
+        },
+        tg() {
+            return window.Telegram.WebApp;
+        },
+        tgUser() {
+            const urlParams = new URLSearchParams(this.tg.initData);
+            return JSON.parse(urlParams.get('user'));
+        },
+        currentBot() {
+            return window.currentBot
+        },
+        qr() {
+            return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.link
+        },
+        link() {
+            return "https://t.me/" + this.currentBot.bot_domain + "?start=" + btoa("001" + this.self.telegram_chat_id);
+        }
+    },
+    methods:{
+        sendMyNumber(){
+            this.tg.requestContact(()=>{
+                this.$notify({
+                    title: "Профиль",
+                    text: "Ваш контакт успешно отправлен!",
+                    type: "success"
+                })
+            })
+        }
+    }
+}
+</script>

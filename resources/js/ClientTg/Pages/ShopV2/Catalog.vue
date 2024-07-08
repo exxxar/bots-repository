@@ -231,11 +231,11 @@ export default {
             this.tab = tab
             window.scrollTo(0, 80);
         },
-        closeModalOnSwipe(){
+        closeModalOnSwipe() {
             let modals = document.querySelectorAll('.modal.show')
 
-            if (modals.length>0){
-                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item=>item.click())
+            if (modals.length > 0) {
+                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
                 return true;
             }
             return false;
@@ -398,7 +398,11 @@ export default {
                         phone: null,
                     }
 
-                    this.$botNotification.success("Доставка", "Дальнейшая инструкция отправлена вам в бот!")
+                    this.$notify({
+                        title: "Доставка",
+                        text: "Дальнейшая инструкция отправлена вам в бот!",
+                        type: "success"
+                    })
 
                     this.tab = 1
                     this.$store.dispatch("clearCart");
