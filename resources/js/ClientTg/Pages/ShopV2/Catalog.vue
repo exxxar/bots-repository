@@ -203,6 +203,11 @@ export default {
             return [...new Set(tmp.map(item => item[0])), ...new Set(tmp.map(item => item[1]))];
         }
     },
+    activated() {
+        this.tg.BackButton.onClick(()=>{
+            this.tg.close()
+        })
+    },
     mounted() {
         this.loadProducts()
         this.loadShopModuleData()
@@ -210,9 +215,7 @@ export default {
         if (this.cartProducts.length > 0)
             this.loadActualProducts()
 
-        this.tg.BackButton.onClick(()=>{
-            this.tg.close()
-        })
+
     },
     methods: {
         scrollTo(id) {
