@@ -43,6 +43,10 @@
                 <span class="text-primary fw-bold">1000 ₽</span>
             </li>
         </ul>
+
+        <h6 class="opacity-75 my-3">Ваш QR-код</h6>
+
+        <img v-lazy="qr" class="img-thumbnail" alt="...">
     </div>
 
 </template>
