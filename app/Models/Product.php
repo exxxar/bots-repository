@@ -48,7 +48,7 @@ class Product extends Model
         'bot_id' => 'integer',
     ];
 
-    protected $with = ["productCategories", "productOptions"];
+    protected $with = ["productOptions"];
     protected $appends = ['rating'];
 
     public function bot(): BelongsTo
