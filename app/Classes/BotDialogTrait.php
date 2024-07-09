@@ -299,6 +299,8 @@ trait BotDialogTrait
             }
 
 
+            Log::info("answers is null ".(is_null($tmpItem)?"true":"false"));
+
          /*   if (is_null($tmpItem)) {
                 $nextBotDialogCommand = BotDialogCommand::query()
                     ->find($botDialogCommand->next_bot_dialog_command_id);
