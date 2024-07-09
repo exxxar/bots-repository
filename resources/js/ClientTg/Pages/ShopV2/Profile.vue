@@ -23,7 +23,7 @@
                 <span class="text-primary fw-bold">{{ self.telegram_chat_id || '-' }}</span>
             </li>
             <li
-
+                v-if="load_self"
                 class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Телефон</span>
@@ -95,6 +95,7 @@ export default {
     data(){
       return {
           photos:null,
+          load_self:true,
       }
     },
     computed: {
@@ -142,7 +143,12 @@ export default {
                     text: resp?"Ваш контакт успешно отправлен!":"Вы отменили отправку контакта",
                     type: resp?"success":'error'
                 })
-                this.$store.dispatch("loadSelf")
+                this.$store.dispatch("loadSelf").then(()=>{
+                    this.load_self = false
+                    this.$nextTick(()=>{
+                        this.load_self = true
+                    })
+                })
             })
         }
     }
