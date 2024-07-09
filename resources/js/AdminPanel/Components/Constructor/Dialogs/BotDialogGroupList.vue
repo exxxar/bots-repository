@@ -83,7 +83,13 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
                                 <i class="fa-solid fa-sitemap ml-2"
                                    v-if="command.is_inform"></i>
+
+                                   <i class="fa-solid fa-arrows-rotate ml-2"
+                                      v-if="command.next_bot_dialog_command_id === command.id"></i>
+
                                 </span>
+
+
 
                         </th>
 

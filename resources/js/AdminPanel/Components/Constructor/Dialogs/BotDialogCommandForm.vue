@@ -124,7 +124,7 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
         </div>
 
         <div class="py-2 px-0" v-if="tab===1">
-            <div class="mb-2" v-if="commandForm.id">
+            <div class="mb-2" >
                 <div class="row" v-if="filteredCommands.length>0">
                     <div class="col-12">
                         <h6>Выбрать следующий диалог:</h6>
