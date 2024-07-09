@@ -171,7 +171,7 @@ export default {
 }
 
 .product-card {
-    min-height: 320px;
+    min-height: 350px;
 
     img {
         object-fit: cover;

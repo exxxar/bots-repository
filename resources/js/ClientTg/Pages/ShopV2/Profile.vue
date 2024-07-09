@@ -1,7 +1,3 @@
-<script setup>
-import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
-
-</script>
 <template>
 
     <div class="container py-3" v-if="self">
@@ -9,8 +5,8 @@ import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
             <div style="width:200px;height:200px;border-radius:50%;overflow:hidden;">
                 <img
                     class="w-100 object-fit-cover"
-                    v-lazy="'/file-by-file-id-and-bot-domain/'+this.photos[0][0].file_id+'/'+this.currentBot.bot_domain"
-                     v-if="this.photos"/>
+                    v-lazy="'/file-by-file-id-and-bot-domain/'+photos[0][0].file_id+'/'+currentBot.bot_domain"
+                     v-if="photos"/>
 
 
             </div>
