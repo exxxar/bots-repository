@@ -16,6 +16,7 @@ use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\BotPage;
 use App\Models\BotType;
+use App\Models\BotUser;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -161,7 +162,9 @@ class BotController extends Controller
 
     public function getSelf(Request $request): BotUserResource
     {
-        return new BotUserResource($request->botUser);
+        $botUser = BotUser::query()->find($request->botUser->id);
+
+        return new BotUserResource($botUser);
     }
 
     public function getBot(Request $request): BotResource
