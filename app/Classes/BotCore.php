@@ -853,6 +853,8 @@ abstract class BotCore
                 $item->callback_query->data ??
                 $item->message->contact->phone_number ?? '';
 
+            Log::info("contact=>",print_r($item, true));
+
             $this->chatId = $message->chat->id;
 
             $botStatus = $this->botStatusHandler();

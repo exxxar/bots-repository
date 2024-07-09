@@ -137,11 +137,10 @@ export default {
         },
         sendMyNumber() {
             this.tg.requestContact((resp) => {
-                console.log("request contact", resp)
                 this.$notify({
                     title: "Профиль",
-                    text: "Ваш контакт успешно отправлен!",
-                    type: "success"
+                    text: resp?"Ваш контакт успешно отправлен!":"Вы отменили отправку контакта",
+                    type: resp?"success":'error'
                 })
             })
         }
