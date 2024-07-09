@@ -64,11 +64,12 @@ class BotDialogsLogicFactory
 
         return new BotDialogCommandResource($botDialogCommand);
     }
+
     /**
      * @throws HttpException
      */
 
-    public function commandList($search = null, $order="id", $direction="desc", $size = null): BotDialogCommandCollection
+    public function commandList($search = null, $order = "id", $direction = "desc", $size = null): BotDialogCommandCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -332,20 +333,28 @@ class BotDialogsLogicFactory
         }
 
         if (!is_null($data["reply_keyboard"] ?? null)) {
+
+            $menu = json_decode($data["reply_keyboard"] ?? '[]');
+
+            if (!empty($menu))
             $replyKeyboard = BotMenuTemplate::query()->create([
                 'bot_id' => $this->bot->id,
                 'type' => "reply",
                 'slug' => Str::uuid(),
-                'menu' => json_decode($data["reply_keyboard"] ?? '[]')
+                'menu' => $this->recursiveMenuFix($menu)
             ]);
         }
 
         if (!is_null($data["inline_keyboard"] ?? null)) {
+
+            $menu = json_decode($data["inline_keyboard"] ?? '[]');
+
+            if (!empty($menu))
             $inlineKeyboard = BotMenuTemplate::query()->create([
                 'bot_id' => $this->bot->id,
                 'type' => "inline",
                 'slug' => Str::uuid(),
-                'menu' => json_decode($data["inline_keyboard"] ?? '[]')
+                'menu' => $this->recursiveMenuFix($menu)
             ]);
         }
 
@@ -377,20 +386,20 @@ class BotDialogsLogicFactory
 
         foreach ($answers as $answer) {
             $isNextBotDialogCommand = !is_null(BotDialogCommand::query()->find($answer->next_bot_dialog_command_id ?? null));
-            if (!$isNextBotDialogCommand){
+            if (!$isNextBotDialogCommand) {
                 $nextBotDialogCommand = BotDialogCommand::query()->create([
                     'slug' => Str::uuid(),
                     'pre_text' => $answer->next_bot_dialog_command_id ?? 'Текст диалога',
                     'post_text' => null,
-                    'error_text' =>  "Ошибка",
+                    'error_text' => "Ошибка",
                     'bot_id' => $this->bot->id,
-                    'input_pattern' =>  null,
+                    'input_pattern' => null,
                     'inline_keyboard_id' => null,
                     'reply_keyboard_id' => null,
-                    'images' =>  [],
+                    'images' => [],
                     'result_flags' => [],
                     'rules' => [],
-                    'next_bot_dialog_command_id' =>  null,
+                    'next_bot_dialog_command_id' => null,
                     'bot_dialog_group_id' => $groupId,
                     'is_empty' => false,
                     'is_inform' => false,
@@ -400,8 +409,7 @@ class BotDialogsLogicFactory
                 ]);
 
                 $isNextBotDialogCommandId = $nextBotDialogCommand->id;
-            }
-            else
+            } else
                 $isNextBotDialogCommandId = $answer->next_bot_dialog_command_id;
 
             BotDialogAnswer::query()
@@ -472,21 +480,29 @@ class BotDialogsLogicFactory
         if (count($photos) > 0)
             $tmp->images = $photos;
 
+
         if (!is_null($data["reply_keyboard"] ?? null)) {
-            $replyKeyboard = BotMenuTemplate::query()->create([
-                'bot_id' => $this->bot->id,
-                'type' => "reply",
-                'slug' => Str::uuid(),
-                'menu' => json_decode($data["reply_keyboard"] ?? '[]')
-            ]);
+            $menu = json_decode($data["reply_keyboard"] ?? '[]');
+
+            if (!empty($menu))
+                $replyKeyboard = BotMenuTemplate::query()->create([
+                    'bot_id' => $this->bot->id,
+                    'type' => "reply",
+                    'slug' => Str::uuid(),
+                    'menu' => $this->recursiveMenuFix($menu)
+
+                ]);
         }
 
         if (!is_null($data["inline_keyboard"] ?? null)) {
+            $menu = json_decode($data["inline_keyboard"] ?? '[]');
+
+            if (!empty($menu))
             $inlineKeyboard = BotMenuTemplate::query()->create([
                 'bot_id' => $this->bot->id,
                 'type' => "inline",
                 'slug' => Str::uuid(),
-                'menu' => json_decode($data["inline_keyboard"] ?? '[]')
+                'menu' => $this->recursiveMenuFix($menu)
             ]);
         }
 
@@ -512,21 +528,21 @@ class BotDialogsLogicFactory
 
             $isNextBotDialogCommand = !is_null(BotDialogCommand::query()->find($answer->next_bot_dialog_command_id ?? null));
 
-            if (!$isNextBotDialogCommand){
+            if (!$isNextBotDialogCommand) {
                 $nextBotDialogCommand = BotDialogCommand::query()->create([
                     'slug' => Str::uuid(),
                     'pre_text' => $answer->next_bot_dialog_command_id ?? 'Текст диалога',
                     'post_text' => null,
-                    'error_text' =>  "Ошибка",
+                    'error_text' => "Ошибка",
                     'bot_id' => $this->bot->id,
-                    'input_pattern' =>  null,
+                    'input_pattern' => null,
                     'inline_keyboard_id' => null,
                     'reply_keyboard_id' => null,
-                    'images' =>  [],
+                    'images' => [],
                     'result_flags' => [],
                     'rules' => [],
-                    'next_bot_dialog_command_id' =>  null,
-                    'bot_dialog_group_id' => $data["bot_dialog_group_id"]??null,
+                    'next_bot_dialog_command_id' => null,
+                    'bot_dialog_group_id' => $data["bot_dialog_group_id"] ?? null,
                     'is_empty' => false,
                     'is_inform' => false,
                     'custom_stored_value' => null,
@@ -535,8 +551,7 @@ class BotDialogsLogicFactory
                 ]);
 
                 $isNextBotDialogCommandId = $nextBotDialogCommand->id;
-            }
-            else
+            } else
                 $isNextBotDialogCommandId = $answer->next_bot_dialog_command_id;
 
             $tmp = [
