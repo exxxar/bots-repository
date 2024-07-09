@@ -219,13 +219,13 @@ trait BotDialogTrait
 
         $tmpVariables = $dialog->variables ?? [];
 
-        $var =  (object)[
+        $var = (object)[
             "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
             "value" => "$text"
         ];
 
-        if (!is_null($botDialogCommand->custom_stored_value ?? null)){
-            $var->custom_stored_value = $botDialogCommand->custom_stored_value ;
+        if (!is_null($botDialogCommand->custom_stored_value ?? null)) {
+            $var->custom_stored_value = $botDialogCommand->custom_stored_value;
         }
 
         $tmpVariables[] = $var;
@@ -249,7 +249,7 @@ trait BotDialogTrait
         }
 
         $needStop = false;
-        
+
         $isAnswerFound = false;
         if (count($botDialogCommand->answers ?? []) > 0) {
 
@@ -314,6 +314,7 @@ trait BotDialogTrait
             && !$isAnswerFound
         ) {
 
+            Log::info("another dialog data ".$botDialogCommand->post_text);
             $postText = $this->prepareDataWithVariables($botDialogCommand->post_text, $botUser);
             $this->sendMessage($botUser->telegram_chat_id ?? null,
                 $postText);
@@ -402,6 +403,9 @@ trait BotDialogTrait
     private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void
     {
         /*     if (!is_null($botDialogCommand->result_channel)) */
+
+        if (is_null($botUser ?? null) || is_null($botDialogCommand ?? null))
+            return;
 
         $bot = $this->getSelf();
 
