@@ -299,13 +299,13 @@ trait BotDialogTrait
             }
 
 
-            if (is_null($tmpItem)) {
+         /*   if (is_null($tmpItem)) {
                 $nextBotDialogCommand = BotDialogCommand::query()
                     ->find($botDialogCommand->next_bot_dialog_command_id);
 
                 if (is_null($nextBotDialogCommand))
                     $needStop = true;
-            }
+            }*/
 
         }
 
