@@ -35,6 +35,13 @@ class BotUsersController extends Controller
             );
     }
 
+    public function getUserProfilePhotos(Request $request){
+        return BusinessLogic::botUsers()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->getUserProfilePhotos();
+    }
+
     /**
      * @throws ValidationException
      */

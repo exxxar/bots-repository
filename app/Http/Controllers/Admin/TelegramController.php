@@ -104,6 +104,52 @@ class TelegramController extends Controller
 
     }
 
+    public function getFileByMediaContentIdAndBotDomain(Request $request, $fileId, $botDomain)
+    {
+
+
+        $bot = Bot::query()
+            ->withTrashed()
+            ->where("bot_domain", $botDomain)
+            ->first();
+
+        if (is_null($bot))
+            return null;
+
+        $data = Http::get("https://api.telegram.org/bot" . $bot->bot_token . "/getFile?file_id=$fileId");
+
+        $data = $data->json();
+
+        if (!$data["ok"])
+            return null;
+
+        $type = explode("/", $data["result"]["file_path"]);
+
+
+        switch ($type[0]) {
+            case "photo":
+            default:
+                $file = "image.jpg";
+                $contentType = "image/jpeg";
+                break;
+            case "videos":
+            case "video_notes":
+                $contentType = "video/mpeg";
+                $file = "video.mp4";
+                break;
+
+        }
+
+
+        $data = Http::get("https://api.telegram.org/file/bot" . $bot->bot_token . "/" . $data["result"]["file_path"]);
+
+        return response($data)->withHeaders([
+            'Content-disposition' => 'attachment; filename=' . $file,
+            'Access-Control-Expose-Headers' => 'Content-Disposition',
+            'Content-Type' => $contentType,
+        ]);
+    }
+
     public function getFileByMediaContentId(Request $request, $fileId)
     {
 

@@ -249,14 +249,7 @@ trait BotDialogTrait
         }
 
         $needStop = false;
-
-        if (!$botDialogCommand->is_empty && !is_null($botDialogCommand->post_text ?? null)) {
-
-            $postText = $this->prepareDataWithVariables($botDialogCommand->post_text, $botUser);
-            $this->sendMessage($botUser->telegram_chat_id ?? null,
-                $postText);
-        }
-
+        
         $isAnswerFound = false;
         if (count($botDialogCommand->answers ?? []) > 0) {
 
@@ -314,6 +307,16 @@ trait BotDialogTrait
                     $needStop = true;
             }
 
+        }
+
+        if (!$botDialogCommand->is_empty &&
+            !is_null($botDialogCommand->post_text ?? null)
+            && !$isAnswerFound
+        ) {
+
+            $postText = $this->prepareDataWithVariables($botDialogCommand->post_text, $botUser);
+            $this->sendMessage($botUser->telegram_chat_id ?? null,
+                $postText);
         }
 
         if (!is_null($botDialogCommand) &&

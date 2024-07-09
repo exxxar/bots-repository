@@ -10,6 +10,10 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
             v-lazy="item.images[0]">
         <div class="card-body">
             <p class="text-center mb-2" style="font-size: 12px;">{{item.title.slice(0, 50)}} <span v-if="item.title.length>50">...</span></p>
+
+
+            <h6 class="d-flex justify-content-center mb-3"><Rating :rating="item.rating"></Rating> </h6>
+
             <div class="d-flex justify-content-between align-items-center">
                 <button type="button"
                         v-if="inCart(item.id)===0"
@@ -59,9 +63,7 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                     </div>
                     <p class="text-justify py-2 fst-italic">{{item.description || '-'}}</p>
 
-<!--
                     <ProductReviewFrom></ProductReviewFrom>
--->
 
                     <button type="button" class="btn btn-link w-100 mt-2"
                             data-bs-dismiss="modal">Закрыть</button>

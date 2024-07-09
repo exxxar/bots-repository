@@ -170,6 +170,10 @@ Route::get('/companies/{company}/{fileName}',
 Route::get('/file-by-file-id/{fileId}',
     [TelegramController::class, 'getFileByMediaContentId']);
 
+Route::get('/file-by-file-id-and-bot-domain/{fileId}/{domain}',
+    [TelegramController::class, 'getFileByMediaContentIdAndBotDomain']);
+
+
 Route::get('/images-by-company-id/{companyId}/{fileName}',
     [TelegramController::class, 'getFilesByCompanyId']);
 

@@ -16,15 +16,24 @@ import {Head} from '@inertiajs/vue3'
             <div class="container">
                 <div class="row">
                     <div class="col-sm-8 col-md-7 py-4">
-                        <h4>About</h4>
-                        <p class="text-body-secondary">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+                        <h4>О нас</h4>
+                        <p class="text-body-primary mb-2">
+                            {{bot.long_description || 'Без описания'}}
+                        </p>
                     </div>
-                    <div class="col-sm-4 offset-md-1 py-4">
-                        <h4>Contact</h4>
+                    <div class="col-sm-4 offset-md-1 py-4" v-if="bot.company">
+                        <h4>Контакты</h4>
                         <ul class="list-unstyled">
-                            <li><a href="#" class="text-white">Follow on Twitter</a></li>
-                            <li><a href="#" class="text-white">Like on Facebook</a></li>
-                            <li><a href="#" class="text-white">Email me</a></li>
+                            <li v-if="(bot.company.phones||[]).length>0"><p class="mb-0">Телефон</p></li>
+                            <li v-if="(bot.company.phones||[]).length>0" v-for="phone in bot.company.phones">
+                                <a :href="'tel:'+phone" class="text-white">{{phone}}</a>
+                            </li>
+                            <li v-if="(bot.social_links||[]).length>0"><p class="mb-0">Ссылки</p></li>
+                            <li v-if="(bot.social_links||[]).length>0" v-for="link in bot.social_links"><a :href="link.url" class="text-white">{{link.title || 'ссылка'}}</a></li>
+                            <li><p class="mb-0">Почта</p></li>
+                            <li><a :href="'mailto:'+bot.company.email"
+                                   v-if="bot.company.email"
+                                   class="text-white">{{bot.company.email}}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -76,7 +85,7 @@ export default {
         },
         bot(){
             return window.currentBot
-        }
+        },
     },
     mounted() {
         this.changeTheme(this.tg.colorScheme)

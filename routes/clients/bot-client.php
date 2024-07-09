@@ -295,7 +295,8 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post("/update-bot-user", "updateBotUser")
                     ->middleware(["tgAuth.admin"]);
-
+                Route::post("/get-user-profile-photos", "getUserProfilePhotos")
+                    ->middleware(["tgAuth.any"]);
             });
 
 

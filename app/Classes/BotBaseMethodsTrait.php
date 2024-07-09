@@ -447,18 +447,18 @@ trait BotBaseMethodsTrait
             $this->bot->{$func}($tmp);
         } catch (\Exception $e) {
 
-            Log::error("[1]$func=>".$e->getMessage() . " " .
+            Log::error("[1]$func=>" . $e->getMessage() . " " .
                 $e->getFile() . " " .
                 $e->getLine());
 
             try {
                 $this->bot->sendMessage([
                     "chat_id" => $tmp["chat_id"],
-                    "text" =>  $tmp["caption"] ?? "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
+                    "text" => $tmp["caption"] ?? "Тут что-то должно было быть, но возникли непредвиденные обстоятельства и этого нет...",
                     "parse_mode" => "HTML"
                 ]);
             } catch (\Exception $exception) {
-                Log::error("[2]$func=>".$exception->getMessage() . " " .
+                Log::error("[2]$func=>" . $exception->getMessage() . " " .
                     $exception->getFile() . " " .
                     $exception->getLine());
             }
@@ -469,7 +469,7 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function createInvoiceLink( $chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $providerData = null)
+    public function createInvoiceLink($chatId, $title, $description, $prices, $payload, $providerToken, $currency, $needs, $providerData = null)
     {
 
         $tmp = [
@@ -477,7 +477,7 @@ trait BotBaseMethodsTrait
             "title" => $title,
             "description" => $description,
             "payload" => $payload,
-            "provider_token" => "381764678:TEST:61829",//$providerToken ?? env("PAYMENT_PROVIDER_TOKEN"),
+            "provider_token" => $providerToken ?? env("PAYMENT_PROVIDER_TOKEN"),
             "provider_data" => $providerData,
             "currency" => $currency ?? env("PAYMENT_PROVIDER_CURRENCY"),
             "prices" => $prices,
@@ -486,15 +486,13 @@ trait BotBaseMethodsTrait
         ];
 
 
-        $bot = Bot::query()->where("bot_domain", "isushibot" /*$this->domain*/)->first();
-
-
+        $bot = Bot::query()->where("bot_domain", $this->domain)->first();
 
         try {
-            $client = Http::post("https://api.telegram.org/bot".$bot->bot_token."/createInvoiceLink",$tmp);
+            $client = Http::post("https://api.telegram.org/bot" . $bot->bot_token . "/createInvoiceLink", $tmp);
 
 
-        return $client->json();
+            return $client->json();
 
         } catch (\Exception $e) {
             $this->sendMessageOnCrash($tmp, "createInvoiceLink");

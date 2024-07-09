@@ -22,6 +22,8 @@ use App\Models\ReferralHistory;
 use App\Models\Review;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -61,6 +63,26 @@ class BotUserLogicFactory
 
         $this->botUser = $botUser;
         return $this;
+    }
+
+    public function getUserProfilePhotos(): mixed
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Параметры не заданы!");
+
+        try {
+            $client = Http::post("https://api.telegram.org/bot" . $this->bot->bot_token . "/getUserProfilePhotos", [
+                "user_id" => $this->botUser->telegram_chat_id
+            ]);
+
+
+            return $client->json();
+
+        } catch (\Exception $e) {
+
+        }
+
+        return null;
     }
 
     public function all($needAdmins = false): BotUserCollection

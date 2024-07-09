@@ -1,22 +1,31 @@
+<script setup>
+import BotMediaObject from '@/ClientTg/Components/BotMediaObject.vue'
+
+</script>
 <template>
 
-    <div  class="container py-3">
+    <div class="container py-3" v-if="self">
         <div class="d-flex justify-content-center align-items-center" style="min-height:350px;">
             <div style="width:200px;height:200px;border-radius:50%;overflow:hidden;">
-                <img v-lazy="''" class="w-100 object-fit-cover" alt="...">
+                <img
+                    class="w-100 object-fit-cover"
+                    v-lazy="'/file-by-file-id-and-bot-domain/'+this.photos[0][0].file_id+'/'+this.currentBot.bot_domain"
+                     v-if="this.photos"/>
+
+
             </div>
         </div>
         <h6 class="opacity-75 mb-3">Информация о профиле</h6>
-        <ul class="list-group">
+        <ul class="list-group" >
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Имя</span>
-                <span class="text-primary fw-bold">Testoviy</span>
+                <span class="text-primary fw-bold">{{ self.fio_from_telegram || self.name || 'не указано' }}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>ID</span>
-                <span class="text-primary fw-bold">1234567890</span>
+                <span class="text-primary fw-bold">{{ self.telegram_chat_id || '-' }}</span>
             </li>
             <li
 
@@ -25,8 +34,32 @@
                 <span>Телефон</span>
                 <span
                     @click="sendMyNumber"
-                    class="text-primary fw-bold cursor-pointer">отправить мой номер</span>
+                    class="text-primary fw-bold cursor-pointer">
+                    {{ self.phone || 'отправить мой номер' }}
+                </span>
             </li>
+
+            <li
+                class="list-group-item d-flex justify-content-between"
+                aria-current="true">
+                <span>Город</span>
+                <span
+                    class="text-primary fw-bold cursor-pointer">
+                    {{ self.city || 'не указан' }}
+                </span>
+            </li>
+
+            <li
+
+                class="list-group-item d-flex justify-content-between"
+                aria-current="true">
+                <span>День рождения</span>
+                <span
+                    class="text-primary fw-bold cursor-pointer">
+                    {{ self.birthday || '-' }}
+                </span>
+            </li>
+
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Приглашено друзей</span>
@@ -38,9 +71,21 @@
                 <span class="text-primary fw-bold">10</span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
+                v-if="self.cashBack"
                 aria-current="true">
                 <span>Получено CashBack</span>
-                <span class="text-primary fw-bold">1000 ₽</span>
+                <span class="text-primary fw-bold">{{ self.cashBack.amount || 0 }} ₽</span>
+            </li>
+        </ul>
+
+        <h6 class="opacity-75 my-3" v-if="self.cashBack">Специальные начисления</h6>
+
+        <ul class="list-group" v-if="self.cashBack">
+            <li class="list-group-item d-flex justify-content-between"
+                v-for="sub in self.cashBack.subs"
+                aria-current="true">
+                <span>{{ sub.title || '-' }}</span>
+                <span class="text-primary fw-bold">{{ sub.amount || 0 }} ₽</span>
             </li>
         </ul>
 
@@ -54,6 +99,11 @@
 import {mapGetters} from "vuex";
 
 export default {
+    data(){
+      return {
+          photos:null,
+      }
+    },
     computed: {
         ...mapGetters(['getSelf']),
         logo() {
@@ -81,10 +131,20 @@ export default {
     },
     mounted() {
         this.tg.BackButton.hide()
+
+        this.loadUserPhotos()
     },
-    methods:{
-        sendMyNumber(){
-            this.tg.requestContact(()=>{
+    methods: {
+        loadUserPhotos() {
+            this.$store.dispatch("getUserProfilePhotos").then(resp => {
+                console.log(resp)
+                this.photos = resp.result.photos || null
+
+            })
+        },
+        sendMyNumber() {
+            this.tg.requestContact((resp) => {
+                console.log("request contact", resp)
                 this.$notify({
                     title: "Профиль",
                     text: "Ваш контакт успешно отправлен!",

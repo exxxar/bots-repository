@@ -1,5 +1,6 @@
 <template>
     <div class="d-flex justify-content-center">
+
         <video
             v-if="(type=='video'||type=='video_note')&&content.indexOf('http')==-1"
             class="w-100"
