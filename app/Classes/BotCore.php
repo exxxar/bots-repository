@@ -853,11 +853,11 @@ abstract class BotCore
                 $item->callback_query->data ??
                 $item->message->contact->phone_number ?? '';
 
-            if (is_null($item->message->contact ?? null)) {
+            if (!is_null($item->message->contact ?? null)) {
                 $botUser = $this->currentBotUser();
                 $botUser->phone = $item->message->contact->phone_number ?? $botUser->phone ?? null;
                 $botUser->save();
-                Log::info("save bot user".print_r($botUser->toArray(), true));
+                Log::info("save bot user".print_r($item->message->contact->phone_number ?? '-', true));
             }
 
 
