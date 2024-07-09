@@ -11,7 +11,7 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
         <div class="mb-2 px-0">
             <button type="submit" class="btn btn-outline-success">
                 <i class="fa-regular fa-floppy-disk mr-2"></i>
-                <span v-if="commandForm.id">Обновить диалог #{{commandForm.id}}</span>
+                <span v-if="commandForm.id">Обновить диалог #{{ commandForm.id }}</span>
                 <span v-else>Добавить диалог</span>
             </button>
         </div>
@@ -110,7 +110,6 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
             </div>
 
 
-
             <div class="form-floating mb-2" v-if="!commandForm.is_empty&&!commandForm.is_inform">
             <textarea class="form-control"
                       :disabled="commandForm.is_inform"
@@ -131,7 +130,16 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                         <h6>Выбрать следующий диалог:</h6>
                     </div>
 
-
+                    <div class="col-12 mb-2" v-if="commandForm.id">
+                        <button
+                            type="button"
+                            @click="toggleRepeatSelfDialog"
+                            v-bind:class="{'btn-outline-primary':commandForm.next_bot_dialog_command_id!==commandForm.id, 'btn-primary':commandForm.next_bot_dialog_command_id===commandForm.id}"
+                            class="btn">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            Зациклить диалог на себе в случае ошибки
+                        </button>
+                    </div>
 
                     <div class="col-md-12 mb-1" v-for="(command, index) in filteredCommands">
                         <button type="button"
@@ -358,8 +366,8 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                             <td><strong>Ответ</strong></td>
                             <td><strong>Следующий диалог</strong></td>
                         </tr>
-                        <tr >
-                            <td  style="width:40px;">
+                        <tr>
+                            <td style="width:40px;">
                           <span
                               @click="commandForm.answers[index].in_edit_mode = true"
                               v-if="!commandForm.answers[index].in_edit_mode"><i
@@ -402,7 +410,8 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                              style="width:400px;max-height:300px; overflow-y:auto;">
                                             <ul class="list-group">
                                                 <li class="list-group-item cursor-pointer font-12"
-                                                    @click="commandForm.answers[index].next_bot_dialog_command_id = null">Не
+                                                    @click="commandForm.answers[index].next_bot_dialog_command_id = null">
+                                                    Не
                                                     выбран
                                                 </li>
                                                 <li class="list-group-item cursor-pointer font-12"
@@ -480,7 +489,8 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                            v-model="commandForm.answers[index].custom_stored_value"
                                            class="form-control" :id="'custom_stored_value-'+index"
                                            placeholder="name@example.com">
-                                    <label :for="'custom_stored_value-'+index">Поместить данный текст в переменную</label>
+                                    <label :for="'custom_stored_value-'+index">Поместить данный текст в
+                                        переменную</label>
                                 </div>
                             </td>
                         </tr>
@@ -762,9 +772,15 @@ export default {
 
         /*else
             this.loadGroups();*/
-            this.loadDialogs()
+        this.loadDialogs()
     },
     methods: {
+        toggleRepeatSelfDialog() {
+            if (this.commandForm.next_bot_dialog_command_id != null && this.commandForm.next_bot_dialog_command_id !== this.commandForm.id)
+                this.commandForm.next_bot_dialog_command_id = this.commandForm.id
+            else
+                this.commandForm.next_bot_dialog_command_id = this.commandForm.next_bot_dialog_command_id === null ? this.commandForm.id : null
+        },
         addAnswer() {
             this.commandForm.answers.push({
                 id: null,
@@ -803,8 +819,8 @@ export default {
             this.$store.dispatch("loadLinkedDialogCommands", {
                 dataObject: {
                     botId: this.bot.id || null,
-                    order:'id',
-                    direction:'asc'
+                    order: 'id',
+                    direction: 'asc'
                 },
                 page: page,
                 size: 100
