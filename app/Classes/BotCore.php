@@ -853,7 +853,12 @@ abstract class BotCore
                 $item->callback_query->data ??
                 $item->message->contact->phone_number ?? '';
 
-            Log::info("contact=>".print_r($item, true));
+            if (is_null($item->message->contact ?? null)) {
+                $botUser = $this->currentBotUser();
+                $botUser->phone = $item->message->contact->phone_number ?? $botUser->phone ?? null;
+                $botUser->save();
+            }
+
 
             $this->chatId = $message->chat->id;
 
@@ -919,9 +924,6 @@ abstract class BotCore
 
         }
     }
-
-
-
 
 
     public function pushCommand(string $command): void
