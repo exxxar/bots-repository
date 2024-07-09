@@ -857,6 +857,7 @@ abstract class BotCore
                 $botUser = $this->currentBotUser();
                 $botUser->phone = $item->message->contact->phone_number ?? $botUser->phone ?? null;
                 $botUser->save();
+                Log::info("save bot user".print_r($botUser, true));
             }
 
 
