@@ -1,5 +1,4 @@
 <template>
-
     <div class="container py-3" v-if="self">
         <div class="d-flex justify-content-center align-items-center" style="min-height:350px;">
             <div style="width:200px;height:200px;border-radius:50%;overflow:hidden;">
@@ -67,7 +66,6 @@
                 <span class="text-primary fw-bold">10</span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
-                v-if="self.cashBack"
                 aria-current="true">
                 <span>Получено CashBack</span>
                 <span class="text-primary fw-bold">{{ self.cashBack.amount || 0 }} ₽</span>
@@ -89,7 +87,6 @@
 
         <img v-lazy="qr" class="img-thumbnail" alt="...">
     </div>
-
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -106,7 +103,7 @@ export default {
             return `/images-by-bot-id/${this.currentBot.id}/${this.currentBot.image}`
         },
         self() {
-            return window.self || null
+            return this.getSelf
         },
         tg() {
             return window.Telegram.WebApp;
