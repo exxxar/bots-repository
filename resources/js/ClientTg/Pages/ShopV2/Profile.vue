@@ -142,6 +142,7 @@ export default {
                     text: resp?"Ваш контакт успешно отправлен!":"Вы отменили отправку контакта",
                     type: resp?"success":'error'
                 })
+                this.$store.dispatch("loadSelf")
             })
         }
     }
