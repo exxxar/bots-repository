@@ -72,16 +72,19 @@
             </li>
         </ul>
 
-        <h6 class="opacity-75 my-3" v-if="self.cashBack">Специальные начисления</h6>
+        <template v-if="self.cashBack">
+            <h6 class="opacity-75 my-3" v-if="(self.cashBack.subs||[]).length>0">Специальные начисления</h6>
 
-        <ul class="list-group" v-if="self.cashBack">
-            <li class="list-group-item d-flex justify-content-between"
-                v-for="sub in self.cashBack.subs"
-                aria-current="true">
-                <span>{{ sub.title || '-' }}</span>
-                <span class="text-primary fw-bold">{{ sub.amount || 0 }} ₽</span>
-            </li>
-        </ul>
+            <ul class="list-group" v-if="(self.cashBack.subs||[]).length>0">
+                <li class="list-group-item d-flex justify-content-between"
+                    v-for="sub in self.cashBack.subs"
+                    aria-current="true">
+                    <span>{{ sub.title || '-' }}</span>
+                    <span class="text-primary fw-bold">{{ sub.amount || 0 }} ₽</span>
+                </li>
+            </ul>
+        </template>
+
 
         <h6 class="opacity-75 my-3">Ваш QR-код</h6>
 
