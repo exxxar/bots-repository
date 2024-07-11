@@ -948,6 +948,53 @@ class BotLogicFactory
 
     }
 
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function sendFeedback(array $data): void
+    {
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "name" => "required",
+            "phone" => "required",
+            "message" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $feedbackChannel = $this->bot->main_channel ?? null;
+        $adminChannel = $this->bot->order_channel ?? null;
+
+        $feedbackMessage = "#отзыв_клиента\n%s \n<em>%s</em>\n";
+        $adminMessage = "#отзыв_клиента\n -имя: %s \n -телефон: %s\n -почта: %s\nСообщение: %s\n";
+
+        $thread = $this->bot->topics["callback"] ?? null;
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $feedbackChannel,
+                sprintf($feedbackMessage,
+                    $data["name"] ?? '-',
+                    $data["message"] ?? '-'
+                )
+            )
+            ->sendMessage($adminChannel,
+                sprintf($adminMessage,
+                    $this->bot->bot_domain,
+                    $this->slug->id,
+                    $this->slug->slug,
+                    $this->botUser->telegram_chat_id ?? '-',
+                    $data["name"] ?? '-',
+                    $data["phone"] ?? '-',
+                    $data["message"] ?? '-'
+                ), $thread);
+
+    }
 
     /**
      * @throws ValidationException

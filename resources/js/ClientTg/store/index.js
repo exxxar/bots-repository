@@ -103,6 +103,20 @@ export default createStore({
                 return Promise.reject(err);
             })
         },
+        async feedBackForm(context, payload = {callbackForm: null}) {
+            let callbackForm = payload.callbackForm
+
+            let link = `/bot-client/feedback`
+
+            let _axios = util.makeAxiosFactory(link, 'POST', callbackForm)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
         async callbackForm(context, payload = {callbackForm: null}) {
             let callbackForm = payload.callbackForm
 

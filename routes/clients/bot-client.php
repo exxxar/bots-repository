@@ -54,6 +54,8 @@ Route::prefix("bot-client")
         Route::post('/callback', [BotController::class, "sendCallback"])
             ->middleware(["tgAuth.any","slug"]);
 
+        Route::post('/feedback', [BotController::class, "sendFeedback"])
+            ->middleware(["tgAuth.any","slug"]);
 
         Route::prefix("wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)

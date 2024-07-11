@@ -140,6 +140,27 @@ class BotController extends Controller
 
     }
 
+
+    /**
+     * @throws ValidationException
+     */
+    public function sendFeedback(Request $request): Response
+    {
+        $request->validate([
+            "name" => "required",
+            "phone" => "required",
+            "message" => "required",
+        ]);
+
+        BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->setSlug($request->slug ?? null)
+            ->sendFeedback($request->all());
+
+        return response()->noContent();
+    }
+
     /**
      * @throws ValidationException
      */

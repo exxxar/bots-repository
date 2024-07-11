@@ -67,7 +67,6 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["type"],
     data() {
         return {
             sending: false,
@@ -104,9 +103,6 @@ export default {
             this.callbackForm.phone = this.self.phone || null
         }
 
-
-        if (this.type === 'booking')
-            this.callbackForm.message = 'Добрый день! Я хочу забронировать столик! Перезвоните мне.'
     },
     methods: {
         submitCallback() {
@@ -122,10 +118,8 @@ export default {
                         data.append(key, item)
                 });
 
-            if (this.type)
-                data.append("type", this.type)
 
-            this.$store.dispatch("callbackForm", {
+            this.$store.dispatch("feedBackForm", {
                 callbackForm: data
 
             }).then((response) => {
