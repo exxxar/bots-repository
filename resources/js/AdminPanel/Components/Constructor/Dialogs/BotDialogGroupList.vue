@@ -374,7 +374,7 @@ export default {
         return {
             direction: 'desc',
             order: 'updated_at',
-            size: 25,
+            size: 500,
             variables: [],
             bot: null,
             selected: null,

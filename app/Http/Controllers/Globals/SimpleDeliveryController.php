@@ -485,11 +485,11 @@ class SimpleDeliveryController extends SlugController
                             "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/profile"]
                         ],
                     ],
-                    [
+                  /*  [
                         ["text" => "😎Контакты", "web_app" => [
                             "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/contacts"]
                         ],
-                    ],
+                    ],*/
                 ];
 
 
