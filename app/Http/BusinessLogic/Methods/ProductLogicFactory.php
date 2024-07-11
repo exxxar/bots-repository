@@ -181,10 +181,6 @@ class ProductLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $categories = ProductCategory::query()
-            ->with(["products"])
-            ->whereHas("products", function ($q) {
-                $q->whereNull("in_stop_list_at");
-            })
             ->where("bot_id", $this->bot->id);
 
         if (!$isFull)
@@ -193,7 +189,7 @@ class ProductLogicFactory
 
         $categories =
             $categories
-                ->has("products", ">", 0)
+                ->where("count", ">", 0)
                 ->paginate($size);
 
         return new ProductCategoryCollection($categories);

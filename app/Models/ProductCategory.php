@@ -42,7 +42,9 @@ class ProductCategory extends Model
 
 
     public function getCountAttribute(){
-        return $this->products()->count();
+        return $this->products()
+            ->whereNull("in_stop_list_at")
+            ->count();
     }
 
     public function products(): BelongsToMany
