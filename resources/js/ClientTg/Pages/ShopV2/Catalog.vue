@@ -241,20 +241,20 @@ export default {
         this.tg.BackButton.hide()
     },
     methods: {
-        scrollTo(id) {
+        scroll(id) {
             // document.getElementById(id).scrollIntoView();
             var element = document.getElementById(id);
             var headerOffset = 70;
             var elementPosition = element.getBoundingClientRect().top;
             var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            window.scrollTo({
+            window.scroll({
                 top: offsetPosition,
                 behavior: "smooth"
             });
         },
         openTab(tab) {
             this.tab = tab
-            window.scrollTo(0, 80);
+            window.scroll(0, 80);
         },
         closeModalOnSwipe() {
             let modals = document.querySelectorAll('.modal.show')
@@ -275,7 +275,7 @@ export default {
             else
                 this.tab--;
 
-            window.scrollTo(0, 80);
+            window.scroll(0, 80);
         },
         doSwipeRight() {
             if (this.closeModalOnSwipe())
@@ -287,7 +287,7 @@ export default {
             else
                 this.tab++;
 
-            window.scrollTo(0, 80);
+            window.scroll(0, 80);
 
         },
         goToCart() {
@@ -332,9 +332,9 @@ export default {
 
             this.$nextTick(() => {
                 if (item)
-                    this.scrollTo("cat-" + item.id)
+                    this.scroll("cat-" + item.id)
                 else
-                    window.scrollTo(0, 80);
+                    window.scroll(0, 80);
             })
 
             //this.loadProducts(0)
@@ -372,7 +372,7 @@ export default {
                 /*   this.products = this.getProducts
                    this.paginate = this.getProductsPaginateObject*/
                 this.load_content = false
-                window.scrollTo(0, 80);
+                window.scroll(0, 80);
             }).catch(() => {
                 this.load_content = false
             })

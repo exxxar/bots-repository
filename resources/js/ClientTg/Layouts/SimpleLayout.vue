@@ -60,7 +60,7 @@ import {Head} from '@inertiajs/vue3'
             <button
                 v-if="$route.name!='FeedBackV2'"
                 @click="goToFeedBackPage"
-                class="btn btn-outline-primary mb-2 w-100 p-3 text-primary">Обратная связь</button>
+                class="btn btn-link mb-2 w-100 p-3 text-primary">Обратная связь</button>
 
             <p class="mb-3 text-center" v-html="bot.company.description"></p>
             <p class="mb-3 text-center" v-if="bot.company.address"><i class="fa-solid fa-map-location-dot mr-2"></i>{{bot.company.address}}</p>

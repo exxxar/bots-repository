@@ -497,7 +497,7 @@ export default {
     watch: {
         'tab': {
             handler: function (newValue) {
-                window.scrollTo(0, 80);
+                window.scroll(0, 80);
             },
             deep: true
         },
