@@ -107,6 +107,7 @@ class ProductLogicFactory
            ->with(["products"=>function($q){
                $q->whereNull("in_stop_list_at");
            }])
+           ->has("products",">",0)
            ->where("bot_id", $this->bot->id)
            ->get();
 
