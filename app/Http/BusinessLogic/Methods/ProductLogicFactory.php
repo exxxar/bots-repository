@@ -109,6 +109,7 @@ class ProductLogicFactory
                $q->whereNull("in_stop_list_at");
            })
            ->where("bot_id", $this->bot->id)
+           ->where("is_active", true)
            ->has("products",">",0)
            ->get();
 
