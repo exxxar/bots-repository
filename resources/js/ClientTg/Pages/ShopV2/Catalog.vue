@@ -14,13 +14,13 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 
             <ul class="nav nav-tabs justify-content-center catalog-tabs">
                 <li class="nav-item">
-                    <a class="nav-link"
+                    <a class="nav-link font-weight-bold"
                        @click="openTab(0)"
                        v-bind:class="{'active':tab===0}"
                        aria-current="page" href="javascript:void(0)"><i class="fa-solid fa-tag mr-2"></i>Категории</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link"
+                    <a class="nav-link font-weight-bold"
                        @click="openTab(1)"
                        v-bind:class="{'active':tab===1}"
                        href="javascript:void(0)"><i class="fa-solid fa-bag-shopping mr-2"></i>Товары</a>

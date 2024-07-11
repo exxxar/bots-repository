@@ -181,8 +181,7 @@ class ProductLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $categories = ProductCategory::query()
-            ->with(["products"])
-            ->whereHas("products", function ($q) {
+            ->where("products", function ($q) {
                 $q->whereNull("in_stop_list_at");
             })
             ->where("bot_id", $this->bot->id);
