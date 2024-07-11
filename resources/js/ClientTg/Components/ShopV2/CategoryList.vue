@@ -8,6 +8,7 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
             href="javascript:void(0)"
             @click="select(null)"
             v-bind:class="{'active':inCategory(null)}"
+            style="font-weight:bold;"
             class="list-group-item list-group-item-action d-flex justify-content-between p-3" aria-current="true">
             Все категории товаров
         </a>
@@ -17,7 +18,8 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
             @click="select(item)"
             v-for="item in categories"
             v-bind:class="{'active':inCategory(item.id)}"
-            class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center font-weight-bold" aria-current="true">
+            style="font-weight:bold;"
+            class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center" aria-current="true">
             {{ item.title || 'Не указано' }}<span class="badge text-bg-primary">{{ item.count || 0 }}</span>
         </a>
 
