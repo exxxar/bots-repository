@@ -104,7 +104,9 @@ class ProductLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
        $categories = ProductCategory::query()
-           ->with(["products"])
+           ->with(["products"=>function($q){
+               $q->whereNull("in_stop_list_at");
+           }])
            ->where("bot_id", $this->bot->id)
            ->get();
 
