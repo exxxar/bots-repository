@@ -970,7 +970,7 @@ class BotLogicFactory
         $adminChannel = $this->bot->order_channel ?? null;
 
         $feedbackMessage = "#отзыв_клиента\n%s \n<em>%s</em>\n";
-        $adminMessage = "#отзыв_клиента\n -имя: %s \n -телефон: %s\n -почта: %s\nСообщение: %s\n";
+        $adminMessage = "#отзыв_клиента\n -имя: %s \n  -тг id: %s\n -телефон: %s\nСообщение: %s\n";
 
         $thread = $this->bot->topics["callback"] ?? null;
 
@@ -985,11 +985,8 @@ class BotLogicFactory
             )
             ->sendMessage($adminChannel,
                 sprintf($adminMessage,
-                    $this->bot->bot_domain,
-                    $this->slug->id,
-                    $this->slug->slug,
-                    $this->botUser->telegram_chat_id ?? '-',
                     $data["name"] ?? '-',
+                    $this->botUser->telegram_chat_id ?? '-',
                     $data["phone"] ?? '-',
                     $data["message"] ?? '-'
                 ), $thread);
