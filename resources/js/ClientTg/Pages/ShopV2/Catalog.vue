@@ -209,6 +209,8 @@ export default {
     },
 
     mounted() {
+        this.clearCart();
+
         this.loadProducts()
         this.loadShopModuleData()
 

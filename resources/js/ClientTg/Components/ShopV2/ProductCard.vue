@@ -78,12 +78,12 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
 
                         <div class="btn-group w-100" v-if="inCart(item.id)>0">
                             <button type="button"
-                                    :disabled="item.in_stop_list_at"
+                                    :disabled="item.in_stop_list_at!=null"
                                     @click="decProductCart"
                                     class="btn btn-md btn-primary p-3">-</button>
                             <button type="button" class="btn btn-md">{{ checkInCart }}</button>
                             <button type="button"
-                                    :disabled="item.in_stop_list_at"
+                                    :disabled="item.in_stop_list_at!=null"
                                     @click="incProductCart"
                                     class="btn btn-md btn-primary p-3">+</button>
                         </div>
