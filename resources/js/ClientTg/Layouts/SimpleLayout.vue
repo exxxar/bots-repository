@@ -53,8 +53,14 @@ import {Head} from '@inertiajs/vue3'
 
     <slot/>
 
-    <footer class="text-body-secondary" style="padding:20px 0px 90px 0px;">
-        <div class="container d-flex justify-content-center flex-column align-items-center">
+    <footer class="text-body-secondary" style="padding:0px 0px 90px 0px;">
+
+        <div class="container g-2 d-flex justify-content-center flex-column align-items-center">
+
+            <button
+                v-if="$route.name!='FeedBackV2'"
+                @click="goToFeedBackPage"
+                class="btn btn-outline-primary mb-2 w-100 p-3 text-primary">Обратная связь</button>
 
             <p class="mb-3 text-center" v-html="bot.company.description"></p>
             <p class="mb-3 text-center" v-if="bot.company.address"><i class="fa-solid fa-map-location-dot mr-2"></i>{{bot.company.address}}</p>
@@ -72,6 +78,8 @@ import {mapGetters} from "vuex";
 export default {
     watch: {
         $route(newRouteValue) {
+            console.log("router",this.$route.name)
+
             this.$preloader.show();
             this.$nextTick(() => {
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -98,6 +106,9 @@ export default {
         })
     },
     methods: {
+        goToFeedBackPage(){
+            this.$router.push({name: 'FeedBackV2'})
+        },
         changeTheme(name) {
             let themes = document.querySelectorAll("[data-bs-theme]")
 

@@ -35,9 +35,29 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
             v-show="tab===0"
             class="album" style="min-height:100vh;">
             <div class="container g-2">
-                <CategoryList
+                <div class="list-group" v-if="products">
+                    <a
+                        href="javascript:void(0)"
+                        @click="selectCategory(null)"
+                        style="font-weight:bold;"
+                        class="list-group-item list-group-item-action d-flex justify-content-between p-3" aria-current="true">
+                        Все категории товаров
+                    </a>
+
+                    <a
+                        href="javascript:void(0)"
+                        @click="selectCategory(item)"
+                        v-for="item in products"
+                        style="font-weight:bold;"
+                        class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center" aria-current="true">
+                        {{ item.title || 'Не указано' }}<span class="badge text-bg-primary">{{ item.count || 0 }}</span>
+                    </a>
+
+                </div>
+
+<!--                <CategoryList
                     :selected="categories"
-                    v-on:select="selectCategory"/>
+                    v-on:select="selectCategory"/>-->
             </div>
         </div>
 

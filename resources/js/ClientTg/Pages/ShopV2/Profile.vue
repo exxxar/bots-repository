@@ -1,5 +1,5 @@
 <template>
-    <div class="container py-3" v-if="self">
+    <div class="container py-3 g-2" v-if="self">
         <div class="d-flex justify-content-center align-items-center" style="min-height:350px;">
             <div style="width:200px;height:200px;border-radius:50%;overflow:hidden;">
                 <img
@@ -89,6 +89,9 @@
         <h6 class="opacity-75 my-3">Ваш QR-код</h6>
 
         <img v-lazy="qr" class="img-thumbnail" alt="...">
+
+
+
     </div>
 </template>
 <script>
@@ -132,6 +135,8 @@ export default {
         this.loadUserPhotos()
     },
     methods: {
+
+
         loadUserPhotos() {
             this.$store.dispatch("getUserProfilePhotos").then(resp => {
                 console.log(resp)

@@ -468,6 +468,7 @@ import ProfileV2 from '@/ClientTg/Pages/ShopV2/Profile.vue';
 import ProductV2 from '@/ClientTg/Pages/ShopV2/Product.vue';
 import ShopCartV2 from '@/ClientTg/Pages/ShopV2/ShopCart.vue';
 import PaymentV2 from '@/ClientTg/Pages/ShopV2/Payment.vue';
+import FeedBackV2 from "@/ClientTg/Pages/ShopV2/FeedBack.vue";
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
@@ -519,6 +520,14 @@ export const simpleRoutes = [
         component: ProfileV2,
         meta: {title: 'Профиль'}
     },
+
+    {
+        name: 'FeedBackV2',
+        path: simplePrefix + '/feedback',
+        component: FeedBackV2,
+        meta: {title: 'Обратная связь'}
+    },
+
 
 
 ];

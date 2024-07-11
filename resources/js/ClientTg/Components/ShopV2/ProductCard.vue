@@ -13,7 +13,7 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
 
 
             <h6 class="d-flex justify-content-center mb-3"><Rating :rating="item.rating"></Rating> </h6>
-
+            <p v-if="item.in_stop_list_at!=null">Товар в стопе</p>
             <div class="d-flex justify-content-between align-items-center">
                 <button type="button"
                         v-if="inCart(item.id)===0"
