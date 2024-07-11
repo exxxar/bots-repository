@@ -69,7 +69,7 @@ class Product extends Model
 
     public function getRatingAttribute()
     {
-        return "3.0";
+        return "5.0";
     }
 
 
