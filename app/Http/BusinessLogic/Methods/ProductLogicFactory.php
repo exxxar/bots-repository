@@ -103,15 +103,15 @@ class ProductLogicFactory
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
-       $categories = ProductCategory::query()
-           ->with(["products"])
-           ->whereHas("products", function($q){
-               $q->whereNull("in_stop_list_at");
-           })
-           ->where("bot_id", $this->bot->id)
-           ->where("is_active", true)
-           ->has("products",">",0)
-           ->get();
+        $categories = ProductCategory::query()
+            ->with(["products"])
+            ->whereHas("products", function ($q) {
+                $q->whereNull("in_stop_list_at");
+            })
+            ->where("bot_id", $this->bot->id)
+            ->where("is_active", true)
+            ->has("products", ">", 0)
+            ->get();
 
         return new ProductCategoryCollection($categories);
     }
@@ -181,15 +181,20 @@ class ProductLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $categories = ProductCategory::query()
-            ->where("bot_id", $this->bot->id)
-            ->has("products", ">", 0);
+            ->with(["products"])
+            ->whereHas("products", function ($q) {
+                $q->whereNull("in_stop_list_at");
+            })
+            ->where("bot_id", $this->bot->id);
 
         if (!$isFull)
             $categories =
                 $categories->where("is_active", true);
 
         $categories =
-            $categories->paginate($size);
+            $categories
+                ->has("products", ">", 0)
+                ->paginate($size);
 
         return new ProductCategoryCollection($categories);
     }
@@ -742,13 +747,13 @@ class ProductLogicFactory
             'payed_at' => null,
         ]);
 
-         return  BusinessLogic::payment()
-                ->setBot($this->bot)
-                ->setBotUser($this->botUser)
-                ->setSlug($this->slug)
-                ->checkoutLink([
-                    "products" => $tmpProducts
-                ]);
+        return BusinessLogic::payment()
+            ->setBot($this->bot)
+            ->setBotUser($this->botUser)
+            ->setSlug($this->slug)
+            ->checkoutLink([
+                "products" => $tmpProducts
+            ]);
 
 
     }
@@ -1030,7 +1035,7 @@ class ProductLogicFactory
                     InputFile::createFromContents($file, "invoice.pdf")
                 );
         else {
-           BusinessLogic::payment()
+            BusinessLogic::payment()
                 ->setBot($this->bot)
                 ->setBotUser($this->botUser)
                 ->setSlug($this->slug)
@@ -1078,7 +1083,6 @@ class ProductLogicFactory
                         "info" => "Автоматическое списание скидки на покупку товара",
                     ]);
         }
-
 
 
     }
