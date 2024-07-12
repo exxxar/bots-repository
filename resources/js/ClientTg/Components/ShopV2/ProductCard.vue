@@ -71,7 +71,7 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                             data-bs-dismiss="modal">Закрыть</button>
 
                 </div>
-                <div class="modal-footer p-0 m-0"
+               <div class="modal-footer p-0 m-0"
                      v-if="!item.in_stop_list_at">
                     <div class="d-flex justify-content-between align-items-center w-100 p-0">
                         <button type="button"
@@ -92,8 +92,10 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                         </div>
                     </div>
 
-
-                    <!--                    -->
+                </div>
+                <div class="modal-footer p-0 m-0"
+                  v-else>
+                    <p class="p-3 border-secondary border rounded-2 w-100 text-secondary fw-bold text-center">Товар недоступен для заказа</p>
                 </div>
             </div>
         </div>
