@@ -7,6 +7,10 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
         <div class="row">
             <div class="col-12">
                 <h5 class="my-3"><i class="fa-solid fa-list-check mr-1 text-primary"></i> Список заказов</h5>
+
+                <div class="alert alert-light mb-3 fw-bold" role="alert">
+                    <strong class="text-primary">Внимание!</strong> При повторном заказе автоматически формируется корзина из доступных к заказу товаров из вашего списка. Товары в стоп-листе заведения добавлены не будут.
+                </div>
             </div>
             <div class="col-12">
                 <div class="list-group" v-if="orders">
@@ -26,6 +30,8 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
                         </ul>
 
                         <button type="button"
+                                v-if="!item.disabled"
+                                :disabled="item.disabled"
                                 @click="repeatOrder(item)"
                                 class="btn btn-primary w-100 p-3">
                             <i class="fa-solid fa-arrow-rotate-right mr-2"></i> Повторить заказ
@@ -78,6 +84,18 @@ export default {
                 this.$store.dispatch("clearCart")
 
                 let currentProducts = resp.data
+
+                if (currentProducts.length===0)
+                {
+                    item.disabled = true
+
+                    this.$notify({
+                        title: "Корзина",
+                        text: "Нет доступных к заказу товаров:(",
+                    })
+
+                    return;
+                }
 
                 currentProducts.forEach(item => {
                     if (this.inCart(item) === 0)
