@@ -18,6 +18,7 @@ use App\Models\BotPage;
 use App\Models\BotType;
 use App\Models\BotUser;
 use App\Models\Company;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
