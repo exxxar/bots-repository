@@ -21,7 +21,6 @@
             Корзина
         </button>
         <button type="button"
-                disabled
                 @click="goTo('OrdersV2')"
                 class="btn btn-outline-primary w-100 p-3 mb-2">
             <i class="fa-solid fa-clock-rotate-left mr-2"></i>

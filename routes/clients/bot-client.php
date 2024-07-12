@@ -217,6 +217,12 @@ Route::prefix("bot-client")
         Route::prefix("shop")
             ->middleware(["tgAuth.any"])
             ->group(function () {
+                Route::prefix("orders")
+                    ->group(function(){
+                        Route::post("/", [ProductController::class, "getOrders"]);
+                        Route::post("/repeat-order", [ProductController::class, "repeatOrder"]);
+                    });
+
                 Route::post("/products", [ProductController::class, "index"]);
                 Route::post("/products-by-category", [ProductController::class, "listByCategories"]);
                 Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"])

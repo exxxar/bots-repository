@@ -67,6 +67,8 @@ class Order extends Model
         'deliveryman_latitude' => 'double',
         'deliveryman_longitude' => 'double',
         'payed_at' => 'timestamp',
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     public function user(): BelongsTo

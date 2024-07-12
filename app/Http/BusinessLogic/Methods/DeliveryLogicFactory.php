@@ -5,10 +5,13 @@ namespace App\Http\BusinessLogic\Methods;
 use App\Enums\OrderStatusEnum;
 use App\Facades\BotMethods;
 use App\Http\Resources\AmoCrmResource;
+use App\Http\Resources\OrderCollection;
+use App\Http\Resources\ProductCollection;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\Documents;
 use App\Models\Order;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -234,13 +237,49 @@ class DeliveryLogicFactory
         //отмена заказа доставщиком и возврат в активные заказы
     }
 
-    public function orderList()
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function repeatOrder(array $data): ProductCollection
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "products" => "required",
+
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $products = Product::query()
+            ->where("bot_id", $this->bot->id)
+            ->whereNull("in_stop_list_at")
+            ->whereIn("title", $data["products"])
+            ->get();
+
+        return new ProductCollection($products);
+
+    }
+
+    public function orderList($size = 30): OrderCollection
     {
         //список заказов с фильтром: мои заказы, все заказы, архивные заказы (статус доставлено)
 
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Бот не найден!");
 
+        $orders = Order::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("customer_id", $this->botUser->id)
+            ->orderBy("created_at", "desc")
+            ->paginate($size);
+
+        return new OrderCollection($orders);
         /*    $order = Order::query()
                 ->find($orderId);
 

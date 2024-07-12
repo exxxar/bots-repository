@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -37,6 +38,7 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'order_type' => $this->order_type,
             'payed_at' => $this->payed_at,
+            'created_at' => Carbon::parse($this->created_at)->format("Y-m-d H:i:s"),
             'is_cashback_crediting' => $this->is_cashback_crediting ?? true,
         ];
     }

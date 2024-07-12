@@ -21,6 +21,27 @@ use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
+    public function getOrders(Request $request): \App\Http\Resources\OrderCollection
+    {
+        return BusinessLogic::delivery()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->orderList($request->get("size") ?? config('app.results_per_page'));
+
+    }
+
+    public function repeatOrder(Request $request): ProductCollection
+    {
+        $request->validate([
+            "products"=>"required"
+        ]);
+
+        return BusinessLogic::delivery()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->repeatOrder($request->all());
+    }
+
     public function getProductsByIds(Request $request): ProductCollection
     {
         $request->validate([
