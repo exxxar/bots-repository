@@ -54,7 +54,7 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                 <h6 class="my-3 text-center fw-bold">Прикрепить фотографию</h6>
                 <div class="photo-preview d-flex justify-content-center flex-wrap w-100 my-3">
                     <label for="menu-photos" style="margin-right: 10px;" class="photo-loader ml-2">
-                        <span>+</span>
+                        <span class="text-primary fw-bold">+</span>
                         <input type="file" id="menu-photos" accept="image/*"
                                @change="onChangePhotos"
                                style="display:none;"/>

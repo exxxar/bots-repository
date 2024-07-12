@@ -981,7 +981,6 @@ class BotLogicFactory
 
             $uploadedPhoto->storeAs("$imageName");
 
-            Log::info("image=>".storage_path()."/$imageName");
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendPhoto(
@@ -990,7 +989,7 @@ class BotLogicFactory
                         $data["name"] ?? '-',
                         $data["message"] ?? '-'
                     ),
-                    InputFile::create(storage_path()."/$imageName")
+                    InputFile::create(storage_path()."/app/$imageName")
                 );
         } else {
             BotMethods::bot()
