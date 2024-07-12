@@ -31,7 +31,6 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
 
                         <button type="button"
                                 v-if="!item.disabled"
-                                :disabled="item.disabled"
                                 @click="repeatOrder(item)"
                                 class="btn btn-primary w-100 p-3">
                             <i class="fa-solid fa-arrow-rotate-right mr-2"></i> Повторить заказ

@@ -185,6 +185,13 @@ class BotController extends Controller
     {
         $botUser = BotUser::query()->find($request->botUser->id);
 
+        $orders = Order::query()
+            ->where("bot_id", $request->bot->id)
+            ->where("customer_id", $request->botUser->id)
+            ->count();
+
+        $botUser->order_count = $orders;
+
         return new BotUserResource($botUser);
     }
 

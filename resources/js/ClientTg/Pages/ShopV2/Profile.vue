@@ -63,7 +63,7 @@
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Количество заказов</span>
-                <span class="text-primary fw-bold">0</span>
+                <span class="text-primary fw-bold">{{self.order_count || 0}}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
