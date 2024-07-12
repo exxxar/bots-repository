@@ -13,8 +13,10 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
 
 
             <h6 class="d-flex justify-content-center mb-3"><Rating :rating="item.rating"></Rating> </h6>
-            <p v-if="item.in_stop_list_at!=null">Товар в стопе</p>
-            <div class="d-flex justify-content-between align-items-center">
+
+            <div
+                v-if="!item.in_stop_list_at"
+                class="d-flex justify-content-between align-items-center">
                 <button type="button"
                         v-if="inCart(item.id)===0"
                         @click="incProductCart"
@@ -69,7 +71,8 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                             data-bs-dismiss="modal">Закрыть</button>
 
                 </div>
-                <div class="modal-footer p-0 m-0">
+                <div class="modal-footer p-0 m-0"
+                     v-if="!item.in_stop_list_at">
                     <div class="d-flex justify-content-between align-items-center w-100 p-0">
                         <button type="button"
                                 v-if="inCart(item.id)===0"
