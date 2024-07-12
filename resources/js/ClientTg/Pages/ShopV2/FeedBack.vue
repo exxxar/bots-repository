@@ -19,6 +19,8 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
 
             <form v-on:submit.prevent="submitCallback">
 
+
+
                 <div class="form-floating mb-2">
                     <input type="text"
                            v-model="callbackForm.name"
@@ -49,6 +51,25 @@ import ReturnToBot from "ClientTg@/Components/Shop/Helpers/ReturnToBot.vue";
                     <label for="callbackForm-message" required>Текст сообщения</label>
                 </div>
 
+                <h6 class="my-3 text-center fw-bold">Прикрепить фотографию</h6>
+                <div class="photo-preview d-flex justify-content-center flex-wrap w-100 my-3">
+                    <label for="menu-photos" style="margin-right: 10px;" class="photo-loader ml-2">
+                        <span>+</span>
+                        <input type="file" id="menu-photos" accept="image/*"
+                               @change="onChangePhotos"
+                               style="display:none;"/>
+
+                    </label>
+                    <div class="mb-2 img-preview" style="margin-right: 10px;"
+                         v-if="callbackForm.image">
+                        <img v-lazy="getPhoto(callbackForm.image).imageUrl">
+                        <div class="remove">
+                            <a @click="removePhoto()">Удалить</a>
+                        </div>
+                    </div>
+
+                </div>
+
 
                 <button type="submit"
                         :disabled="sending"
@@ -74,6 +95,7 @@ export default {
                 name: null,
                 phone: null,
                 message: null,
+                image:null
             },
         }
     },
@@ -105,6 +127,16 @@ export default {
 
     },
     methods: {
+        onChangePhotos(e) {
+            const file = e.target.files[0]
+            this.callbackForm.image = file
+        },
+        getPhoto(imgObject) {
+            return {imageUrl: URL.createObjectURL(imgObject)}
+        },
+        removePhoto() {
+            this.callbackForm.image = null
+        },
         submitCallback() {
             let data = new FormData();
 
@@ -118,6 +150,10 @@ export default {
                         data.append(key, item)
                 });
 
+            if (typeof this.callbackForm.image != "string") {
+                data.append('photo', this.callbackForm.image);
+                data.delete("image")
+            }
 
             this.$store.dispatch("feedBackForm", {
                 callbackForm: data

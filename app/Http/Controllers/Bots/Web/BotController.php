@@ -157,7 +157,8 @@ class BotController extends Controller
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
             ->setSlug($request->slug ?? null)
-            ->sendFeedback($request->all());
+            ->sendFeedback($request->all(),
+                $request->hasFile('photo') ? $request->file('photo') : null);
 
         return response()->noContent();
     }

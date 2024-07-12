@@ -952,7 +952,7 @@ class BotLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function sendFeedback(array $data): void
+    public function sendFeedback(array $data, $uploadedPhoto = null): void
     {
         if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
             throw new HttpException(403, "Не выполнены условия функции");
@@ -974,15 +974,38 @@ class BotLogicFactory
 
         $thread = $this->bot->topics["callback"] ?? null;
 
+        if (!is_null($uploadedPhoto)) {
+            $ext = $uploadedPhoto->getClientOriginalExtension();
+
+            $imageName = Str::uuid() . "." . $ext;
+
+            //$uploadedPhoto->storeAs("$path/$imageName");
+
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendPhoto(
+                    $feedbackChannel,
+                    sprintf($feedbackMessage,
+                        $data["name"] ?? '-',
+                        $data["message"] ?? '-'
+                    ),
+                    InputFile::createFromContents($uploadedPhoto, "$imageName")
+                );
+        } else {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $feedbackChannel,
+                    sprintf($feedbackMessage,
+                        $data["name"] ?? '-',
+                        $data["message"] ?? '-'
+                    )
+                );
+        }
+
+
         BotMethods::bot()
             ->whereBot($this->bot)
-            ->sendMessage(
-                $feedbackChannel,
-                sprintf($feedbackMessage,
-                    $data["name"] ?? '-',
-                    $data["message"] ?? '-'
-                )
-            )
             ->sendMessage($adminChannel,
                 sprintf($adminMessage,
                     $data["name"] ?? '-',
@@ -2113,12 +2136,12 @@ class BotLogicFactory
 
         $inlineKeyboard = json_decode($data["inline_keyboard"] ?? '[]');
 
-    /*    $inlineKeyboard[] = [
-            [
-                "text" => "🤖Вернуться в бота",
-                "url" => "https://t.me/" . $this->bot->bot_domain
-            ]
-        ];*/
+        /*    $inlineKeyboard[] = [
+                [
+                    "text" => "🤖Вернуться в бота",
+                    "url" => "https://t.me/" . $this->bot->bot_domain
+                ]
+            ];*/
 
         //dd($inlineKeyboard);
 

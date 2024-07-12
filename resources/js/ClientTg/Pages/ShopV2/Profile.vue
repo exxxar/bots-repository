@@ -39,7 +39,7 @@
                 aria-current="true">
                 <span>Город</span>
                 <span
-                    class="text-primary fw-bold cursor-pointer">
+                    class="text-primary fw-bold">
                     {{ self.city || 'не указан' }}
                 </span>
             </li>
@@ -50,17 +50,17 @@
                 aria-current="true">
                 <span>День рождения</span>
                 <span
-                    class="text-primary fw-bold cursor-pointer">
+                    class="text-primary fw-bold">
                     {{ self.birthday || '-' }}
                 </span>
             </li>
 
-            <li class="list-group-item d-flex justify-content-between"
+            <li class="list-group-item d-flex justify-content-between cursor-pointer"
                 aria-current="true">
                 <span>Приглашено друзей</span>
                 <span class="text-primary fw-bold">0</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between"
+            <li class="list-group-item d-flex justify-content-between cursor-pointer"
                 @click="goToOrders"
                 aria-current="true">
                 <span>Количество заказов</span>
