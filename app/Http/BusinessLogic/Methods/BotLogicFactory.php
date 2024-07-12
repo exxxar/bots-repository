@@ -979,8 +979,9 @@ class BotLogicFactory
 
             $imageName = Str::uuid() . "." . $ext;
 
-            //$uploadedPhoto->storeAs("$path/$imageName");
+            $uploadedPhoto->storeAs("$imageName");
 
+            Log::info("image=>".storage_path()."/$imageName");
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendPhoto(
@@ -989,7 +990,7 @@ class BotLogicFactory
                         $data["name"] ?? '-',
                         $data["message"] ?? '-'
                     ),
-                    InputFile::createFromContents($uploadedPhoto, "$imageName")
+                    InputFile::create(storage_path()."/$imageName")
                 );
         } else {
             BotMethods::bot()
