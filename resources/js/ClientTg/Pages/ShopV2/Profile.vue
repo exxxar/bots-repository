@@ -61,6 +61,7 @@
                 <span class="text-primary fw-bold">0</span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
+                @click="goToOrders"
                 aria-current="true">
                 <span>Количество заказов</span>
                 <span class="text-primary fw-bold">{{self.order_count || 0}}</span>
@@ -136,7 +137,9 @@ export default {
     },
     methods: {
 
-
+        goToOrders(){
+            this.$router.push({name: 'OrdersV2'})
+        },
         loadUserPhotos() {
             this.$store.dispatch("getUserProfilePhotos").then(resp => {
                 console.log(resp)
