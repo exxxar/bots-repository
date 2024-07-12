@@ -3,7 +3,7 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
 </script>
 <template>
 
-    <div class="container g-2">
+    <div class="container">
         <div class="row">
             <div class="col-12">
                 <h5 class="my-3"><i class="fa-solid fa-list-check mr-1 text-primary"></i> Список заказов</h5>
