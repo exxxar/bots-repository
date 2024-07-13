@@ -59,7 +59,7 @@ class VKProductController extends Controller
 
         Log::info("fpProducts".print_r($this->fpProducts, true));
 
-        foreach ($this->fpProducts["name"] as $key=>$name)
+        foreach ($this->fpProducts["name"] ?? [] as $key=>$name)
         {
             if ($name == $test ) {
                 $index = $key;
