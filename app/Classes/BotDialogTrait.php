@@ -278,6 +278,14 @@ trait BotDialogTrait
                     ->where("id", $tmpItem->next_bot_dialog_command_id)
                     ->first();
 
+                Log::info("current variables=>".print_r($dialog->toArray(), true));
+           /*     $tmpVariables = $dialog->variables ?? [];
+
+                $var = (object)[
+                    "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
+                    "value" => "$text"
+                ];*/
+
                 BotDialogResult::query()->create([
                     'bot_user_id' => $botUser->id,
                     'bot_dialog_command_id' => $tmpItem->next_bot_dialog_command_id ?? null,
@@ -297,6 +305,7 @@ trait BotDialogTrait
                 if ($tmpNextDialog->is_empty ?? true)
                     $needStop = true;
             }
+
 
 
             Log::info("answers ".print_r($tmpItem->toArray(), true));
