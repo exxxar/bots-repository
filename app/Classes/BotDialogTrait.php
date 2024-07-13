@@ -298,6 +298,7 @@ trait BotDialogTrait
                     }
 
                     $dialog->variables = $tmpVariables;
+                    Log::info("modified variables".print_r( $dialog->variables,true));
                 }
 
 
