@@ -407,8 +407,10 @@ class VKProductController extends Controller
 
                     $vkProducts = ((object)$response)->items;
 
+
                     $this->importProducts($vkProducts, $bot, $album, $results);
 
+                    sleep(2);
                 }
             else {
                 $response = $vk->market()->get($access_token, [
