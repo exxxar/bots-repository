@@ -299,7 +299,7 @@ trait BotDialogTrait
             }
 
 
-            Log::info("answers ".print_r($tmpItem, true));
+            Log::info("answers ".print_r($tmpItem->toArray(), true));
 
 
            /* if (is_null($tmpItem)) {
