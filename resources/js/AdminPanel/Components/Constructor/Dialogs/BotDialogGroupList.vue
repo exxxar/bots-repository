@@ -54,10 +54,12 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                     <th class="text-left" scope="col" style="width:40px;"></th>
                     <th class="text-left cursor-pointer" scope="col"
                         @click="loadAndOrder('id')"
-                        style="width:80px;"> #</th>
+                        style="width:80px;"> #
+                    </th>
                     <th class="text-left cursor-pointer" scope="col"
                         @click="loadAndOrder('pre_text')"
-                        style="min-width:400px;">Текст диалога</th>
+                        style="min-width:400px;">Текст диалога
+                    </th>
 
                     <th class="text-center" scope="col" style="width:40px;">Команды</th>
 
@@ -66,7 +68,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 <tbody>
                 <template v-for="(command,index) in dialog_commands">
                     <tr>
-                        <td  style="width:40px;">
+                        <td style="width:40px;">
                           <span
                               @click="toggleEditMode(command)"
                               v-if="!command.in_edit_mode"><i
@@ -90,12 +92,12 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                 </span>
 
 
-
                         </th>
 
                         <td class="text-left" style="min-width:400px;">
 
-                            <p class="mb-0" v-if="!command.is_empty">Результат будет сохранен в <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
+                            <p class="mb-0" v-if="!command.is_empty">Результат будет сохранен в
+                                <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
 
                             <div class="dropdown my-2">
                                 <button
@@ -255,23 +257,62 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
                             <table>
                                 <tr v-for="answ in command.answers">
-                                    <td style="width:150px;">{{answ.answer}}</td>
-                                    <td style="width:90px;" class="cursor-pointer" @click="loadAndOpenEditor(answ.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{answ.next_bot_dialog_command_id}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
-                                    <td v-if="answ.custom_stored_value"><i class="fa-solid fa-arrow-right-long mx-2"></i></td>
-                                    <td v-if="answ.custom_stored_value" style="max-width: 770px;">
-                                        <p class="mb-0" style="line-height:100%;font-size:10px;">{{answ.custom_stored_value || '-'}}</p>
+                                    <td style="width:150px;">{{ answ.answer }}</td>
+                                    <td style="width:90px;" class="cursor-pointer"
+                                        @click="loadAndOpenEditor(answ.next_bot_dialog_command_id)"><i
+                                        class="fa-solid fa-angles-right mx-2"></i>{{ answ.next_bot_dialog_command_id }}
+                                        <small><i
+                                            class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small>
+                                    </td>
+                                    <td><i class="fa-solid fa-arrow-right-long mx-2"></i></td>
+                                    <td style="max-width: 770px;">
+                                        <div class="dropdown">
+                                            <button
+                                                style="line-height:100%;font-size:10px;text-align:left;"
+                                                class="btn btn-link m-0 p-0 text-decoration-none" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span
+                                                    v-if="answ.custom_stored_value">{{ answ.custom_stored_value || '-' }}</span>
+                                                <span v-else>нажмите, чтобы добавить</span>
+                                            </button>
+                                            <div class="dropdown-menu p-2">
+                                                <form v-on:submit.prevent="updateAnswer(answ)"
+                                                      class="p-2">
+                                                    <p class="mb-0">Значение</p>
+                                                    <textarea
+                                                        class="form-control"
+                                                        v-model="answ.custom_stored_value"
+                                                        name="" id="" cols="30" rows="10"></textarea>
+
+                                                    <button class="btn btn-outline-primary mt-2 w-100 text-center">
+                                                        Сохранить
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+
                                     </td>
                                 </tr>
                                 <tr v-if="command.next_bot_dialog_command_id">
                                     <td>
-                                        <span class="text-danger font-bold" v-if="(command.answers||[]).length>0&&!command.is_inform">Другой ответ</span>
-                                        <span class="text-success font-bold" v-if="(command.answers||[]).length===0&&!command.is_inform">Любой ответ</span>
-                                        <span class="text-warning font-bold" v-if="(command.answers||[]).length===0&&command.is_inform">Переход к диалогу</span>
+                                        <span class="text-danger font-bold"
+                                              v-if="(command.answers||[]).length>0&&!command.is_inform">Другой ответ</span>
+                                        <span class="text-success font-bold"
+                                              v-if="(command.answers||[]).length===0&&!command.is_inform">Любой ответ</span>
+                                        <span class="text-warning font-bold"
+                                              v-if="(command.answers||[]).length===0&&command.is_inform">Переход к диалогу</span>
                                     </td>
-                                    <td class="cursor-pointer" @click="loadAndOpenEditor(command.next_bot_dialog_command_id)"><i class="fa-solid fa-angles-right mx-2"></i>{{command.next_bot_dialog_command_id || '-'}} <small><i class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></td>
-                                    <td v-if="command.custom_stored_value"><i class="fa-solid fa-arrow-right-long mx-2"></i></td>
+                                    <td class="cursor-pointer"
+                                        @click="loadAndOpenEditor(command.next_bot_dialog_command_id)"><i
+                                        class="fa-solid fa-angles-right mx-2"></i>{{ command.next_bot_dialog_command_id || '-' }}
+                                        <small><i
+                                            class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small>
+                                    </td>
+                                    <td v-if="command.custom_stored_value"><i
+                                        class="fa-solid fa-arrow-right-long mx-2"></i></td>
                                     <td v-if="command.custom_stored_value" style="max-width: 770px;">
-                                        <p class="mb-0" style="line-height:100%;font-size:10px;">{{command.custom_stored_value || '-'}}</p>
+                                        <p class="mb-0" style="line-height:100%;font-size:10px;">
+                                            {{ command.custom_stored_value || '-' }}</p>
                                     </td>
                                 </tr>
                             </table>
@@ -379,7 +420,7 @@ export default {
             bot: null,
             selected: null,
             loading: true,
-            current_page:0,
+            current_page: 0,
             dialog_commands: [],
             search: null,
             dialog_commands_paginate_object: null,
@@ -392,17 +433,32 @@ export default {
     mounted() {
 
         this.loadCurrentBot().then(() => {
-            let page = localStorage.getItem("cashman_dialogs_current_page_"+this.bot.id) || 0
+            let page = localStorage.getItem("cashman_dialogs_current_page_" + this.bot.id) || 0
             this.loadDialogs(page);
         })
     },
     methods: {
+        updateAnswer(answ) {
+            this.$store.dispatch("updatedDialogAnswer", {
+                    ...answ,
+                    bot_id: this.bot.id,
+                }).then((response) => {
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Текст успешно обновлен",
+                    type: 'success'
+                });
+
+            }).catch(err => {
+
+            })
+        },
         loadAndOrder(order) {
             this.order = order
             this.direction = this.direction === 'desc' ? 'asc' : 'desc'
             this.loadDialogs(0)
         },
-        loadAndOpenEditor(commandId){
+        loadAndOpenEditor(commandId) {
             this.loading = true
             this.$store.dispatch("loadLinkedDialogCommand", {
                 command_id: commandId,
@@ -510,7 +566,7 @@ export default {
 
             this.current_page = page
 
-            localStorage.setItem("cashman_dialogs_current_page_"+this.bot.id, this.current_page)
+            localStorage.setItem("cashman_dialogs_current_page_" + this.bot.id, this.current_page)
             this.$store.dispatch("loadDialogCommands", {
                 dataObject: {
                     botId: this.bot.id || null,

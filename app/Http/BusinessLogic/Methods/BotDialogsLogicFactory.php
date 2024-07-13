@@ -44,6 +44,19 @@ class BotDialogsLogicFactory
         return $this;
     }
 
+    public function variablesList(): array
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        return array_values(BotDialogCommand::query()
+            ->where("bot_id", $this->bot->id)
+            ->whereNotNull("use_result_as")
+            ->get()
+            ->pluck("use_result_as")
+            ->toArray());
+    }
+
     /**
      * @throws HttpException
      */
@@ -337,12 +350,12 @@ class BotDialogsLogicFactory
             $menu = json_decode($data["reply_keyboard"] ?? '[]');
 
             if (!empty($menu))
-            $replyKeyboard = BotMenuTemplate::query()->create([
-                'bot_id' => $this->bot->id,
-                'type' => "reply",
-                'slug' => Str::uuid(),
-                'menu' => $this->recursiveMenuFix($menu)
-            ]);
+                $replyKeyboard = BotMenuTemplate::query()->create([
+                    'bot_id' => $this->bot->id,
+                    'type' => "reply",
+                    'slug' => Str::uuid(),
+                    'menu' => $this->recursiveMenuFix($menu)
+                ]);
         }
 
         if (!is_null($data["inline_keyboard"] ?? null)) {
@@ -350,12 +363,12 @@ class BotDialogsLogicFactory
             $menu = json_decode($data["inline_keyboard"] ?? '[]');
 
             if (!empty($menu))
-            $inlineKeyboard = BotMenuTemplate::query()->create([
-                'bot_id' => $this->bot->id,
-                'type' => "inline",
-                'slug' => Str::uuid(),
-                'menu' => $this->recursiveMenuFix($menu)
-            ]);
+                $inlineKeyboard = BotMenuTemplate::query()->create([
+                    'bot_id' => $this->bot->id,
+                    'type' => "inline",
+                    'slug' => Str::uuid(),
+                    'menu' => $this->recursiveMenuFix($menu)
+                ]);
         }
 
         $command = BotDialogCommand::query()->create([
@@ -444,6 +457,43 @@ class BotDialogsLogicFactory
 
     }
 
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function updateAnswer(array $data): BotDialogAnswerResource
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            'id' => "required",
+
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $tmp = (object)$data;
+
+        $answer = BotDialogAnswer::query()->find($tmp->id);
+
+        if (is_null($answer))
+            throw new HttpException(404, "Ответ не найден!");
+
+        $answer->update([
+            'answer' => $tmp->answer ?? null,
+            'pattern' => $tmp->pattern ?? null,
+            'custom_stored_value' => $tmp->custom_stored_value ?? null,
+            'next_bot_dialog_command_id' => $tmp->next_bot_dialog_command_id ?? null,
+        ]);
+
+        return new BotDialogAnswerResource($answer);
+
+    }
+
     /**
      * @throws ValidationException
      * @throws HttpException
@@ -498,12 +548,12 @@ class BotDialogsLogicFactory
             $menu = json_decode($data["inline_keyboard"] ?? '[]');
 
             if (!empty($menu))
-            $inlineKeyboard = BotMenuTemplate::query()->create([
-                'bot_id' => $this->bot->id,
-                'type' => "inline",
-                'slug' => Str::uuid(),
-                'menu' => $this->recursiveMenuFix($menu)
-            ]);
+                $inlineKeyboard = BotMenuTemplate::query()->create([
+                    'bot_id' => $this->bot->id,
+                    'type' => "inline",
+                    'slug' => Str::uuid(),
+                    'menu' => $this->recursiveMenuFix($menu)
+                ]);
         }
 
         $tmp->post_text = $data["post_text"] ?? null;

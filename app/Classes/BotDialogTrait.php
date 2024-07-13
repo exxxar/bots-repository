@@ -173,7 +173,6 @@ trait BotDialogTrait
         return count($matches) > 0;
     }
 
-
     public function nextBotDialog($text, $botUser = null): void
     {
         $botUser = is_null($botUser) ? $this->currentBotUser() : $botUser;

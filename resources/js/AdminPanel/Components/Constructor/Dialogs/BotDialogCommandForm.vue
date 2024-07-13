@@ -4,7 +4,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 import RegularExpressionHelper from "@/AdminPanel/Components/Constructor/Helpers/RegularExpressionHelper.vue";
 import Pagination from '@/AdminPanel/Components/Pagination.vue';
 import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogResultRules.vue";
-
+import BotDialogVariablesHelper from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogVariablesHelper.vue";
 </script>
 <template>
     <form v-on:submit.prevent="submit">
@@ -72,6 +72,9 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 пользователя!
             </div>
 
+            <BotDialogVariablesHelper
+                v-on:callback="addVariableToTextBlock('pre_text', $event)"
+                :bot="bot"></BotDialogVariablesHelper>
             <div class="form-floating mb-2">
                 <textarea class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
                           placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
@@ -124,7 +127,7 @@ import BotDialogResultRules from "@/AdminPanel/Components/Constructor/Dialogs/Bo
         </div>
 
         <div class="py-2 px-0" v-if="tab===1">
-            <div class="mb-2" >
+            <div class="mb-2">
                 <div class="row" v-if="filteredCommands.length>0">
                     <div class="col-12">
                         <h6>Выбрать следующий диалог:</h6>
@@ -775,6 +778,9 @@ export default {
         this.loadDialogs()
     },
     methods: {
+        addVariableToTextBlock(param, event) {
+            this.commandForm[param] += event
+        },
         toggleRepeatSelfDialog() {
             if (this.commandForm.next_bot_dialog_command_id != null && this.commandForm.next_bot_dialog_command_id !== this.commandForm.id)
                 this.commandForm.next_bot_dialog_command_id = this.commandForm.id

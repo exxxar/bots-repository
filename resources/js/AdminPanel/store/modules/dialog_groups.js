@@ -20,6 +20,21 @@ const getters = {
 }
 
 const actions = {
+
+    async loadDialogVariables(context, payload) {
+
+        let link = `${BASE_DIALOG_GROUPS_LINK}/variables`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method, payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadDialogGroups(context, payload = {dataObject: {botId: null, search:null}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12
@@ -93,6 +108,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async updatedDialogAnswer(context, payload){
+        let link = `${BASE_DIALOG_GROUPS_LINK}/update-answer`
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
     async updateDialogGroup(context, payload= {dialogGroupForm: null}){
         let link = `${BASE_DIALOG_GROUPS_LINK}/update-group`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dialogGroupForm)

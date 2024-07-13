@@ -230,7 +230,8 @@ Route::prefix("admin")
                 Route::post("/", "index");
                 Route::post("/commands", "commandList");
                 Route::post("/command/{commandId}", "getCommand");
-
+                Route::post("/variables", "variablesList");
+                Route::post("/update-answer", "updateAnswer");
                 Route::post("/swap-group", "swapGroup");
                 Route::post("/swap-dialog", "swapDialog");
                 Route::post("/unlink-dialog", "unlinkDialog");
@@ -253,6 +254,8 @@ Route::prefix("admin")
                 Route::get("/bots", "loadBotsAsTemplate");
 
                 Route::get("/description", "loadDescriptions");
+
+
                 Route::post("/telegram-channel-id", "requestTelegramChannel");
                 Route::get("/keyboards/{botId}", "loadKeyboards");
 

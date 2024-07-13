@@ -203,6 +203,26 @@ class BotDialogGroupController extends Controller
     /**
      * @throws ValidationException
      */
+    public function updateAnswer(Request $request): \App\Http\Resources\BotDialogAnswerResource
+    {
+        $request->validate([
+            'id' => "required",
+            'bot_id' => "required",
+        ]);
+
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->bot_id ?? null)
+            ->first();
+
+        return BusinessLogic::dialogs()
+            ->setBot($bot)
+            ->updateAnswer($request->all());
+    }
+
+    /**
+     * @throws ValidationException
+     */
     public function updateDialog(Request $request): BotDialogCommandResource
     {
         $request->validate([
