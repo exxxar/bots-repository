@@ -316,8 +316,6 @@ trait BotDialogTrait
             }
 
 
-            Log::info("answers " . print_r($tmpItem->toArray(), true));
-
 
             /* if (is_null($tmpItem)) {
                  $nextBotDialogCommand = BotDialogCommand::query()
@@ -334,7 +332,6 @@ trait BotDialogTrait
             && !$isAnswerFound
         ) {
 
-            Log::info("another dialog data " . $botDialogCommand->post_text);
             $postText = $this->prepareDataWithVariables($botDialogCommand->post_text, $botUser);
             $this->sendMessage($botUser->telegram_chat_id ?? null,
                 $postText);
@@ -439,7 +436,7 @@ trait BotDialogTrait
     private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void
     {
         /*     if (!is_null($botDialogCommand->result_channel)) */
-        Log::info("dialogResponse=>" . print_r($dialogData, true));
+
         if (is_null($botUser ?? null) || is_null($botDialogCommand ?? null))
             return;
 
@@ -454,8 +451,6 @@ trait BotDialogTrait
             $step++;
         }
 
-        Log::info("finish dialog=>" . print_r($tmpMessage, true));
-        Log::info("finish rules=>" . print_r($botDialogCommand->rules, true));
 
         if (!is_null($botDialogCommand->rules ?? null)) {
             $variables = $this->getVariables($botUser);
