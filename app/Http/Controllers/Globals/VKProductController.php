@@ -54,6 +54,9 @@ class VKProductController extends Controller
     {
         $index = null;
 
+        if (is_null($this->fpProducts??null))
+            return null;
+
         foreach ($this->fpProducts["name"] as $key=>$name)
         {
             if ($name == $test ) {
