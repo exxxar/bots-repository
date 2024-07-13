@@ -279,8 +279,14 @@ trait BotDialogTrait
                     ->first();
 
                 if (!is_null($tmpItem->custom_stored_value ?? null)) {
+                    Log::info("custom stored value ".print_r($tmpItem->custom_stored_value, true));
                     $tmpV = $dialog->use_result_as ?? null;
+
+                    Log::info("use result as ".print_r($tmpV, true));
+
                     $tmpVariables = $dialog->variables ?? [];
+
+                    Log::info("current variables ".print_r($tmpVariables, true));
 
                     for ($index = 0; $index < count($tmpVariables); $index++) {
                         $var = (object)$tmpVariables[$index];
