@@ -57,6 +57,8 @@ class VKProductController extends Controller
         if (is_null($this->fpProducts??null))
             return null;
 
+        Log::info("fpProducts".print_r($this->fpProduct, true));
+
         foreach ($this->fpProducts["name"] as $key=>$name)
         {
             if ($name == $test ) {
