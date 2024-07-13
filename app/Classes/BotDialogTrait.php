@@ -278,14 +278,14 @@ trait BotDialogTrait
                     ->where("id", $tmpItem->next_bot_dialog_command_id)
                     ->first();
 
-                if (!is_null($dialog->custom_stored_value)) {
+                if (!is_null($tmpItem->custom_stored_value ?? null)) {
                     $tmpV = $dialog->use_result_as ?? null;
                     $tmpVariables = $dialog->variables ?? [];
 
                     for ($index = 0; $index < count($tmpVariables); $index++) {
                         $var = (object)$tmpVariables[$index];
                         if ($var->key == $tmpV) {
-                            $var->value = $dialog->custom_stored_value;
+                            $var->value = $tmpItem->custom_stored_value;
                             $tmpVariables[$index] = $var;
                         }
 
@@ -347,6 +347,22 @@ trait BotDialogTrait
         ) {
             $nextBotDialogCommand = BotDialogCommand::query()
                 ->find($botDialogCommand->next_bot_dialog_command_id);
+
+            if (!is_null($dialog->custom_stored_value ?? null)) {
+                $tmpV = $dialog->use_result_as ?? null;
+                $tmpVariables = $dialog->variables ?? [];
+
+                for ($index = 0; $index < count($tmpVariables); $index++) {
+                    $var = (object)$tmpVariables[$index];
+                    if ($var->key == $tmpV) {
+                        $var->value = $dialog->custom_stored_value;
+                        $tmpVariables[$index] = $var;
+                    }
+
+                }
+
+                $dialog->variables = $tmpVariables;
+            }
 
             BotDialogResult::query()->create([
                 'bot_user_id' => $botUser->id,
