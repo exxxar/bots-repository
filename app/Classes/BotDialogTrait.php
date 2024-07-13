@@ -286,15 +286,14 @@ trait BotDialogTrait
                     for ($index = 0; $index < count($tmpVariables); $index++) {
                         $var = (object)$tmpVariables[$index];
                         if ($var->key == $tmpV) {
-                            $var->old_value = $var->value ?? null;
-                            $var->value = $tmpItem->custom_stored_value ?? null;
+                            $var->custom_stored_value = $tmpItem->custom_stored_value ?? null;
                             $tmpVariables[$index] = $var;
                         }
 
                     }
 
                     $dialog->variables = $tmpVariables;
-                    Log::info("modified variables" . print_r($dialog->variables, true));
+
                 }
 
 
@@ -354,8 +353,7 @@ trait BotDialogTrait
                 for ($index = 0; $index < count($tmpVariables); $index++) {
                     $var = (object)$tmpVariables[$index];
                     if ($var->key == $tmpV) {
-                        $var->old_value = $var->value ?? null;
-                        $var->value = $botDialogCommand->custom_stored_value ?? null;
+                        $var->custom_stored_value = $botDialogCommand->custom_stored_value ?? null;
                         $tmpVariables[$index] = $var;
                     }
 
@@ -391,8 +389,9 @@ trait BotDialogTrait
             $botUser->save();
 
             $tmp = $dialog->summary_input_data ?? [];
+            $tmpVariables = $dialog->variables ?? [];
 
-            $this->dialogResponse($botUser, $botDialogCommand, $tmp);
+            $this->dialogResponse($botUser, $botDialogCommand, $tmp, $tmpVariables);
         }
 
     }
@@ -430,13 +429,14 @@ trait BotDialogTrait
         $botDialogCommand = $dialogs[count($dialogs) - 1]->botDialogCommand;
 
         $tmp = $dialogs[count($dialogs) - 1]->summary_input_data ?? [];
+        $tmpVariables = $dialogs[count($dialogs) - 1]->variables ?? [];
 
-        $this->dialogResponse($botUser, $botDialogCommand, $tmp);
+        $this->dialogResponse($botUser, $botDialogCommand, $tmp, $tmpVariables);
 
 
     }
 
-    private function dialogResponse($botUser, $botDialogCommand, $dialogData = []): void
+    private function dialogResponse($botUser, $botDialogCommand, $dialogData = [], $variables = []): void
     {
         /*     if (!is_null($botDialogCommand->result_channel)) */
 
@@ -452,6 +452,10 @@ trait BotDialogTrait
             $tmpMessage .= "Шаг $step: $data \n";
 
             $step++;
+        }
+
+        foreach ($variables as $data) {
+            $tmpMessage .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
 
