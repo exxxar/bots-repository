@@ -455,6 +455,8 @@ trait BotDialogTrait
         }
 
         foreach ($variables as $data) {
+
+            $data = (object)$data;
             $tmpMessage .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
