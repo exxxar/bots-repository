@@ -144,7 +144,7 @@ export default {
             }
 
             //all this params are startup params - startGame method will upgrade them
-            render(render = ['url(../images/bandit/dolar_start_sign.png)', 'url(../images/bandit/dolar_start_sign.png)', 'url(../images/bandit/dolar_start_sign.png)'],
+            render(render = ['url(../../images/bandit/dolar_start_sign.png)', 'url(../../images/bandit/dolar_start_sign.png)', 'url(../../images/bandit/dolar_start_sign.png)'],
                    money = this.wallet.getWalletValue(), stats = [0, 0, 0], lastGame = "", result = "", bid = 0) {
 
                 if (result) {
@@ -185,17 +185,17 @@ export default {
                 //maybe its look like noob-code, but it's working fine and rendering proper fruits
 
                 //plum
-                if (fruits[0] === 'plum') this.render[0] = this.fruitsInMachine[0].style.backgroundImage = 'url(../images/bandit/plum_transparent.png)'
-                if (fruits[1] === 'plum') this.render[1] = this.fruitsInMachine[1].style.backgroundImage = 'url(../images/bandit/plum_transparent.png)'
-                if (fruits[2] === 'plum') this.render[2] = this.fruitsInMachine[2].style.backgroundImage = 'url(../images/bandit/plum_transparent.png)'
+                if (fruits[0] === 'plum') this.render[0] = this.fruitsInMachine[0].style.backgroundImage = 'url(../../images/bandit/plum_transparent.png)'
+                if (fruits[1] === 'plum') this.render[1] = this.fruitsInMachine[1].style.backgroundImage = 'url(../../images/bandit/plum_transparent.png)'
+                if (fruits[2] === 'plum') this.render[2] = this.fruitsInMachine[2].style.backgroundImage = 'url(../../images/bandit/plum_transparent.png)'
                 //banana
-                if (fruits[0] === 'banana') this.render[0] = this.fruitsInMachine[0].style.backgroundImage = 'url(../images/bandit/banana_transparent.png)'
-                if (fruits[1] === 'banana') this.render[1] = this.fruitsInMachine[1].style.backgroundImage = 'url(../images/bandit/banana_transparent.png)'
-                if (fruits[2] === 'banana') this.render[2] = this.fruitsInMachine[2].style.backgroundImage = 'url(../images/bandit/banana_transparent.png)'
+                if (fruits[0] === 'banana') this.render[0] = this.fruitsInMachine[0].style.backgroundImage = 'url(../../images/bandit/banana_transparent.png)'
+                if (fruits[1] === 'banana') this.render[1] = this.fruitsInMachine[1].style.backgroundImage = 'url(../../images/bandit/banana_transparent.png)'
+                if (fruits[2] === 'banana') this.render[2] = this.fruitsInMachine[2].style.backgroundImage = 'url(../../images/bandit/banana_transparent.png)'
                 //cherries
-                if (fruits[0] === 'cherry') this.render[0] = this.fruitsInMachine[0].style.backgroundImage = 'url(../images/bandit/cherries_transparent.png)'
-                if (fruits[1] === 'cherry') this.render[1] = this.fruitsInMachine[1].style.backgroundImage = 'url(../images/bandit/cherries_transparent.png)'
-                if (fruits[2] === 'cherry') this.render[2] = this.fruitsInMachine[2].style.backgroundImage = 'url(../images/bandit/cherries_transparent.png)'
+                if (fruits[0] === 'cherry') this.render[0] = this.fruitsInMachine[0].style.backgroundImage = 'url(../../images/bandit/cherries_transparent.png)'
+                if (fruits[1] === 'cherry') this.render[1] = this.fruitsInMachine[1].style.backgroundImage = 'url(../../images/bandit/cherries_transparent.png)'
+                if (fruits[2] === 'cherry') this.render[2] = this.fruitsInMachine[2].style.backgroundImage = 'url(../../images/bandit/cherries_transparent.png)'
 
                 //we get result from static method
                 const result = Result.checkWinner(fruits);
@@ -221,8 +221,8 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-/*h1 {
+<style lang="scss" scoped>
+h1 {
     font-family: 'Righteous', 'Arial';
     color: rgb(243, 247, 6);
     text-shadow: 2px 2px 30px rgb(243, 247, 6);
@@ -238,7 +238,7 @@ export default {
     padding: 10px 25px;
     box-sizing: border-box;
     background: #2c2c2d;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 .machine {
     position: relative;
@@ -326,7 +326,7 @@ export default {
     height: 70px;
     font-size: 34px;
     font-family: fantasy;
-    !* font-kerning: unset; *!
+     font-kerning: unset;
     border: none;
     cursor: pointer;
     background-color: rgb(6, 214, 6);
@@ -360,12 +360,12 @@ input {
     font-family: "Righteous", "Arial";
     align-items: center;
     flex-direction: column;
-    !* top: 10%; *!
-    !* left: 50%; *!
-    !* transform: translateX(-50%); *!
+     top: 10%;
+     left: 50%;
+     transform: translateX(-50%);
     color: rgb(6, 214, 6);
     text-shadow: 2px 5px 30px rgb(6, 214, 6);
-    !* height: 150px; *!
+     height: 150px;
     width: 100%;
 
     span {
@@ -431,5 +431,5 @@ footer p a {
     100% {
         box-shadow: 0px 0px 20px 10px rgb(243, 247, 6);
     }
-}*/
+}
 </style>

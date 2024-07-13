@@ -470,6 +470,7 @@ import ShopCartV2 from '@/ClientTg/Pages/ShopV2/ShopCart.vue';
 import PaymentV2 from '@/ClientTg/Pages/ShopV2/Payment.vue';
 import FeedBackV2 from "@/ClientTg/Pages/ShopV2/FeedBack.vue";
 import MenuV2 from "@/ClientTg/Pages/ShopV2/Menu.vue";
+import OneArmedBanditV2 from '@/ClientTg/Pages/ShopV2/OneArmedBanditPage.vue';
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
@@ -533,6 +534,13 @@ export const simpleRoutes = [
         path: simplePrefix + '/menu',
         component: MenuV2,
         meta: {title: 'Меню системы'}
+    },
+
+    {
+        name: 'OneArmedBanditV2',
+        path: simplePrefix + '/bandit',
+        component: OneArmedBanditV2,
+        meta: {title: 'Однорукий бандит'}
     },
 
 

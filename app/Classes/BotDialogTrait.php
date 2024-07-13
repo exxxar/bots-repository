@@ -299,7 +299,7 @@ trait BotDialogTrait
             }
 
 
-            Log::info("answers is null ".(is_null($tmpItem)?"true":"false"));
+            Log::info("answers ".print_r($tmpItem, true));
 
 
            /* if (is_null($tmpItem)) {
