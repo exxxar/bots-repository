@@ -280,7 +280,7 @@ trait BotDialogTrait
 
                 if (!is_null($tmpItem->custom_stored_value ?? null)) {
                     Log::info("custom stored value ".print_r($tmpItem->custom_stored_value, true));
-                    $tmpV = $dialog->use_result_as ?? null;
+                    $tmpV = $botDialogCommand->use_result_as ?? null;
 
                     Log::info("use result as ".print_r($tmpV, true));
 
@@ -351,14 +351,14 @@ trait BotDialogTrait
             $nextBotDialogCommand = BotDialogCommand::query()
                 ->find($botDialogCommand->next_bot_dialog_command_id);
 
-            if (!is_null($dialog->custom_stored_value ?? null)) {
-                $tmpV = $dialog->use_result_as ?? null;
+            if (!is_null($botDialogCommand->custom_stored_value ?? null)) {
+                $tmpV = $botDialogCommand->use_result_as ?? null;
                 $tmpVariables = $dialog->variables ?? [];
 
                 for ($index = 0; $index < count($tmpVariables); $index++) {
                     $var = (object)$tmpVariables[$index];
                     if ($var->key == $tmpV) {
-                        $var->value = $dialog->custom_stored_value;
+                        $var->value = $botDialogCommand->custom_stored_value;
                         $tmpVariables[$index] = $var;
                     }
 
