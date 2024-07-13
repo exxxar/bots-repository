@@ -279,26 +279,22 @@ trait BotDialogTrait
                     ->first();
 
                 if (!is_null($tmpItem->custom_stored_value ?? null)) {
-                    Log::info("custom stored value ".print_r($tmpItem->custom_stored_value, true));
+
                     $tmpV = $botDialogCommand->use_result_as ?? null;
-
-                    Log::info("use result as ".print_r($tmpV, true));
-
                     $tmpVariables = $dialog->variables ?? [];
-
-                    Log::info("current variables ".print_r($tmpVariables, true));
 
                     for ($index = 0; $index < count($tmpVariables); $index++) {
                         $var = (object)$tmpVariables[$index];
                         if ($var->key == $tmpV) {
-                            $var->value = $tmpItem->custom_stored_value;
+                            $var->old_value = $var->value ?? null;
+                            $var->value = $tmpItem->custom_stored_value ?? null;
                             $tmpVariables[$index] = $var;
                         }
 
                     }
 
                     $dialog->variables = $tmpVariables;
-                    Log::info("modified variables".print_r( $dialog->variables,true));
+                    Log::info("modified variables" . print_r($dialog->variables, true));
                 }
 
 
@@ -321,7 +317,6 @@ trait BotDialogTrait
                 if ($tmpNextDialog->is_empty ?? true)
                     $needStop = true;
             }
-
 
 
             /* if (is_null($tmpItem)) {
@@ -359,7 +354,8 @@ trait BotDialogTrait
                 for ($index = 0; $index < count($tmpVariables); $index++) {
                     $var = (object)$tmpVariables[$index];
                     if ($var->key == $tmpV) {
-                        $var->value = $botDialogCommand->custom_stored_value;
+                        $var->old_value = $var->value ?? null;
+                        $var->value = $botDialogCommand->custom_stored_value ?? null;
                         $tmpVariables[$index] = $var;
                     }
 
