@@ -245,7 +245,7 @@ class FrontPadLogicFactory
             throw new HttpException(404, "Бот не найден!");
 
         $validator = Validator::make($data, [
-            "hook_url" => "required",
+           // "hook_url" => "required",
             "token" => "required",
         ]);
 

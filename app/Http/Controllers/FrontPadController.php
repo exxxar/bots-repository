@@ -21,7 +21,7 @@ class FrontPadController extends Controller
     public function saveFrontPad(Request $request): FrontPadResource
     {
         $request->validate([
-            "hook_url" => "required",
+            //"hook_url" => "required",
             "token" => "required",
             "bot_id" => "required",
         ]);
