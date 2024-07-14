@@ -100,8 +100,7 @@ class GeoLogicFactory
                     $item->getData(); // необработанные данные*/
 
         Log::info(print_r([
-            "response"=>$response,
-           "points"=>$response->getList(),
+           "points"=>$response->getList()[0]->getData(),
            "r1"=> $response->getFoundCount(),
            "r2"=> $response->getQuery(),
            "r3"=> $response->getFoundCount(),
