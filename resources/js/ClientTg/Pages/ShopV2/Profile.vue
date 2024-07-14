@@ -5,9 +5,11 @@
                 <img
                     class="w-100 object-fit-cover"
                     v-lazy="'/file-by-file-id-and-bot-domain/'+photos[0][0].file_id+'/'+currentBot.bot_domain"
-                     v-if="photos"/>
-
-
+                     v-if="photos.length>0"/>
+                <img
+                    class="w-100 object-fit-cover"
+                    v-lazy="'/images/shop-v2/profile.pnf'"
+                    v-else/>
             </div>
         </div>
         <h6 class="opacity-75 mb-3">Информация о профиле</h6>
