@@ -8,7 +8,7 @@
                      v-if="photos.length>0"/>
                 <img
                     class="w-100 object-fit-cover"
-                    v-lazy="'/images/shop-v2/profile.pnf'"
+                    v-lazy="'/images/shop-v2/profile.png'"
                     v-else/>
             </div>
         </div>
