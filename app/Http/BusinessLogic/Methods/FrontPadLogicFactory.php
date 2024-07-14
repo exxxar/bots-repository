@@ -69,7 +69,7 @@ class FrontPadLogicFactory
 
         $status = $result->json("result") ?? "error";
 
-        Log::info("LOADED FP PRODUCTS=>".print_r($result->json(), true));
+        Log::info("LOADED FP PRODUCTS=>".print_r($result, true));
 
         if ($status == "error")
             throw new HttpException(403, "Ошибка получения списка товаров!");
