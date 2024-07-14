@@ -58,14 +58,15 @@ class ProductController extends Controller
                 "address" => (($request->city ?? "") . "," . ($request->street ?? "") . "," . ($request->building ?? ""))
             ]);
 
-        $distance = BusinessLogic::geo()
+        $tmpDistance = BusinessLogic::geo()
             ->setBot($request->bot ?? null)
             ->setSlug($request->slug ?? null)
             ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
 
+        $distance = $tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0,2) : 0;
         return response()->json([
-            "distance" => round($distance ?? 0,2),
-            "price" => round($min_base_delivery_price + ($distance ?? 0) * $price_per_km,2)
+            "distance" => $distance,
+            "price" => round($min_base_delivery_price + $distance * $price_per_km,2)
         ]);
     }
 
