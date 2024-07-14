@@ -546,10 +546,10 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                 <label for="deliveryForm-image_info">Текст к оплате <small>(не обязательно)</small></label>
             </div>
 
-
+<!--            ||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)||deliveryForm.image==null-->
             <button
                 type="submit"
-                :disabled="spent_time_counter>0||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)||deliveryForm.image==null"
+                :disabled="spent_time_counter>0"
                 class="btn btn-primary p-3 w-100">
 
                 <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
