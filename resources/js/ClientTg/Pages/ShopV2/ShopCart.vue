@@ -429,12 +429,12 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                     class="color-white">Осталось ждать {{ spent_time_counter }} сек.</span>
             </button>
 
-<!--            ||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)-->
+            <!--            ||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)-->
             <button
                 v-if="deliveryForm.payment_type===2&&tab===1"
                 type="button"
                 @click="tab=3"
-                :disabled="spent_time_counter>0"
+                :disabled="!canSubmitForm"
                 class="btn btn-primary p-3 w-100">
                 <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
             </button>
@@ -546,10 +546,10 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                 <label for="deliveryForm-image_info">Текст к оплате <small>(не обязательно)</small></label>
             </div>
 
-<!--            ||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)||deliveryForm.image==null-->
+            <!--            ||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)||deliveryForm.image==null-->
             <button
                 type="submit"
-                :disabled="spent_time_counter>0"
+                :disabled="!canSubmitForm"
                 class="btn btn-primary p-3 w-100">
 
                 <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
@@ -624,7 +624,7 @@ export default {
             sending: false,
             min_price: null,
             max_price: null,
-            need_request_delivery_price:true,
+            need_request_delivery_price: true,
             moneyVariants: [
                 500, 1000, 2000, 5000
             ],
@@ -667,8 +667,7 @@ export default {
 
         'deliveryForm.need_pickup': {
             handler: function (newValue) {
-                if (this.deliveryForm.need_pickup)
-                {
+                if (this.deliveryForm.need_pickup) {
                     this.deliveryForm.delivery_price = 0
                     this.deliveryForm.distance = 0
                 }
@@ -685,55 +684,69 @@ export default {
         'deliveryForm.city': {
             handler: function (newValue) {
 
-              /*  if (this.tab!==1)
-                    return;
+                /*  if (this.tab!==1)
+                      return;
 
-                if (this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
-                {
+                  if (this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
+                  {
 
-                    this.need_request_delivery_price = false;
-                    this.requestDeliveryPrice();
+                      this.need_request_delivery_price = false;
+                      this.requestDeliveryPrice();
 
-                }*/
+                  }*/
             },
             deep: true
         },
         'deliveryForm.street': {
             handler: function (newValue) {
-               /* if (this.tab!==1)
-                    return;
+                /* if (this.tab!==1)
+                     return;
 
-                if (this.need_request_delivery_price &&this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
-                {
+                 if (this.need_request_delivery_price &&this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
+                 {
 
-                    this.need_request_delivery_price = false;
-                    this.requestDeliveryPrice();
+                     this.need_request_delivery_price = false;
+                     this.requestDeliveryPrice();
 
-                }*/
+                 }*/
             },
             deep: true
         },
         'deliveryForm.building': {
             handler: function (newValue) {
 
-            /*    if (this.tab!==1)
-                    return;
+                /*    if (this.tab!==1)
+                        return;
 
-                if (this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
-                {
+                    if (this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
+                    {
 
-                    this.need_request_delivery_price = false;
-                    this.requestDeliveryPrice();
-                }*/
+                        this.need_request_delivery_price = false;
+                        this.requestDeliveryPrice();
+                    }*/
             },
             deep: true
         }
     },
     computed: {
         ...mapGetters(['getProducts', 'cartProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
-       canRequestDeliverPrice(){
-           return this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null;
-       },
+        canRequestDeliverPrice() {
+            return this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null;
+        },
+
+        canSubmitForm() {
+
+            console.info("spent_time_counter", this.spent_time_counter)
+            console.info("cartTotalPrice", this.cartTotalPrice)
+            console.info("settings.min_price", this.settings.min_price)
+            console.info("cashbackLimit", this.cashbackLimit)
+
+            return (this.spent_time_counter || 0) == 0
+                && (!this.deliveryForm.use_cashback ?
+                    this.cartTotalPrice >= this.settings.min_price :
+                    this.cartTotalPrice - this.cashbackLimit > this.settings.min_price)
+              && (this.tab == 3 ? this.deliveryForm.image != null : true)
+        },
 
         canUseCashBack() {
             return this.getSelf.cashBack && this.settings.min_price_for_cashback < this.cartTotalPrice
@@ -847,7 +860,7 @@ export default {
                 street: this.deliveryForm.street,
                 building: this.deliveryForm.building,
             }).then(resp => {
-                console.log("resp",resp)
+                console.log("resp", resp)
                 this.deliveryForm.delivery_price = resp.price || 0
                 this.deliveryForm.distance = resp.distance || 0
 
@@ -858,7 +871,7 @@ export default {
                     text: "Цена доставки успешно просчитана",
                     type: "success"
                 })
-            }).catch(()=>{
+            }).catch(() => {
                 this.deliveryForm.delivery_price = 0
                 this.deliveryForm.distance = 0
                 this.need_request_delivery_price = true
@@ -985,7 +998,10 @@ export default {
             localStorage.setItem("cashman_self_product_delivery_form_flat_number", this.deliveryForm.flat_number || '')
 
             localStorage.setItem("cashman_self_product_delivery_form_entrance_number", this.deliveryForm.entrance_number || '')
-            localStorage.setItem("cashman_self_product_delivery_form_entrance_disabilities", JSON.stringify(this.deliveryForm.disabilities || []))
+            if ((this.deliveryForm.disabilities || []).length > 0)
+                localStorage.setItem("cashman_self_product_delivery_form_entrance_disabilities", JSON.stringify(this.deliveryForm.disabilities || []))
+            else
+                localStorage.removeItem("cashman_self_product_delivery_form_entrance_disabilities");
 
             let data = new FormData();
 

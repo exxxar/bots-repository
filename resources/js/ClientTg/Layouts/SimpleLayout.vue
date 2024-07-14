@@ -22,7 +22,7 @@ import {Head} from '@inertiajs/vue3'
                         </p>
                     </div>
 
-                    <div class="col-sm-4 offset-md-1 py-4" v-if="bot.company">
+                    <div class="col-sm-4 offset-md-1 py-4">
                         <h4>Меню</h4>
                         <ul class="list-unstyled">
                             <li><a
@@ -68,7 +68,9 @@ import {Head} from '@inertiajs/vue3'
         </div>
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="container">
-                <a href="#" class="navbar-brand d-flex align-items-center px-3">
+                <a href="javascript:void(0)"
+                   @click="goTo('MenuV2')"
+                   class="navbar-brand d-flex align-items-center px-3">
                     <strong><i class="fa-brands fa-shopify mr-2"></i> {{ $route.meta.title || 'Меню' }}</strong>
                 </a>
                 <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
