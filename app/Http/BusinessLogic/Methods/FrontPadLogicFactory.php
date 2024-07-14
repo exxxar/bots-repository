@@ -64,10 +64,12 @@ class FrontPadLogicFactory
             throw new HttpException(404, "FrontPad не подключен!");
 
         $result = Http::asForm()->post(config("frontpad.api_url") . "?get_products", [
-            'secret' => $frontPad->token
+            'secret' => trim($frontPad->token)
         ]);
 
         $status = $result->json("result") ?? "error";
+
+        Log::info("LOADED FP PRODUCTS=>".print_r($result->json(), true));
 
         if ($status == "error")
             throw new HttpException(403, "Ошибка получения списка товаров!");
