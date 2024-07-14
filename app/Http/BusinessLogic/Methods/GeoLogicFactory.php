@@ -108,9 +108,10 @@ class GeoLogicFactory
            "r5"=> $response->getLongitude(),
         ],true));
 
+        $obj =  $response->getList()[0]->getData();
         return (object)[
-            "lat" => $response->getLatitude() ?? 0,
-            "lon" => $response->getLongitude() ?? 0
+            "lat" =>$obj["Latitude"] ?? 0,
+            "lon" => $obj["Longitude"] ?? 0
         ];
 
     }
