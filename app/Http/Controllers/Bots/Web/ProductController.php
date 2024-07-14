@@ -61,7 +61,7 @@ class ProductController extends Controller
         $distance = BusinessLogic::geo()
             ->setBot($request->bot ?? null)
             ->setSlug($request->slug ?? null)
-            ->getDistance($geo["lat"], $geo["lon"]);
+            ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
 
         return response()->json([
             "distance" => $distance ?? 0,
