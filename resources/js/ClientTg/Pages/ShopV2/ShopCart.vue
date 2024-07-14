@@ -429,11 +429,12 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                     class="color-white">Осталось ждать {{ spent_time_counter }} сек.</span>
             </button>
 
+<!--            ||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)-->
             <button
                 v-if="deliveryForm.payment_type===2&&tab===1"
                 type="button"
                 @click="tab=3"
-                :disabled="spent_time_counter>0||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)"
+                :disabled="spent_time_counter>0"
                 class="btn btn-primary p-3 w-100">
                 <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
             </button>
