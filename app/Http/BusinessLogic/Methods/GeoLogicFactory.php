@@ -74,8 +74,8 @@ class GeoLogicFactory
 
         Log::info("yandex geo=>".print_r($yandex_geocoder, true));
         Log::info("address=>".print_r($address, true));
-        $api->setToken($yandex_geocoder);
-        $api->setQuery($address);
+        $api->setToken(trim($yandex_geocoder));
+        $api->setQuery(trim($address));
         try {
             $api
                 ->setLimit(1)
