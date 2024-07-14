@@ -103,14 +103,6 @@ class GeoLogicFactory
                     $item->getLongitude(); // долгота
                     $item->getData(); // необработанные данные*/
 
-        Log::info(print_r([
-           "points"=>$response->getList()[0]->getData(),
-           "r1"=> $response->getFoundCount(),
-           "r2"=> $response->getQuery(),
-           "r3"=> $response->getFoundCount(),
-           "r4"=> $response->getLatitude(),
-           "r5"=> $response->getLongitude(),
-        ],true));
 
         $obj =  $response->getList()[0]->getData();
         return (object)[
