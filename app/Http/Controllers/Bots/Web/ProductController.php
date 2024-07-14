@@ -64,8 +64,8 @@ class ProductController extends Controller
             ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
 
         return response()->json([
-            "distance" => $distance ?? 0,
-            "price" => $min_base_delivery_price + ($distance ?? 0) * $price_per_km
+            "distance" => round($distance ?? 0,2),
+            "price" => round($min_base_delivery_price + ($distance ?? 0) * $price_per_km,2)
         ]);
     }
 

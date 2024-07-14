@@ -447,6 +447,74 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                  v-if="settings.payment_info"
                  role="alert" v-html="settings.payment_info"></div>
 
+            <h6 class="opacity-75 mt-3">Сводка</h6>
+
+            <div class="card my-3 ">
+                <div class="card-body p-2">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <p class="mb-0 d-flex justify-content-between">Суммарно, ед. <strong>{{ cartTotalCount }}
+                                шт.</strong></p>
+                        </li>
+                        <li class="list-group-item">
+                            <p class="mb-0 d-flex justify-content-between">Цена <strong>{{ cartTotalPrice }}
+                                <sup>.00</sup>₽</strong>
+                            </p>
+                        </li>
+                        <li class="list-group-item">
+                            <p class="mb-0 d-flex justify-content-between">Оплата бонусами
+                                <strong v-if="deliveryForm.use_cashback">{{ cashbackLimit }} <sup>.00</sup>₽</strong>
+                                <strong v-else>-</strong>
+                            </p>
+                        </li>
+
+                        <li class="list-group-item" v-if="!deliveryForm.need_pickup">
+                            <p class="mb-0 d-flex justify-content-between">Цена доставки
+                                <strong v-if="deliveryForm.delivery_price>0">{{ deliveryForm.delivery_price }}
+                                    <sup>.00</sup>₽</strong>
+                                <strong v-else>от курьера</strong>
+                            </p>
+                        </li>
+                        <li class="list-group-item">
+                            <p v-if="!deliveryForm.use_cashback"
+                               class="mb-0 d-flex justify-content-between">Итого, цена
+                                <strong>{{ cartTotalPrice + deliveryForm.delivery_price }}
+                                    <sup>.00</sup>₽</strong></p>
+                            <p v-else
+                               class="mb-0 d-flex justify-content-between">Итого, цена
+                                <strong>{{ (cartTotalPrice - cashbackLimit) + deliveryForm.delivery_price }}
+                                    <sup>.00</sup>₽</strong></p>
+                        </li>
+                    </ul>
+
+                    <div v-if="deliveryForm.payment_type === 3&&settings.can_use_cash">
+                        <p class="my-3 text-center">Мы можем подготовить для вас сдачу с:</p>
+                        <div class="row row-cols-2 mb-0">
+                            <div class="col" v-for="money in moneyVariants">
+                                <button class="btn btn-outline-primary w-100 mb-2 rounded-5"
+                                        type="button"
+                                        @click="deliveryForm.money=money"
+                                        v-bind:class="{'btn-primary text-white':deliveryForm.money===money}">{{
+                                        money
+                                    }}₽
+                                </button>
+                            </div>
+
+                        </div>
+                        <p class="mb-2"><em>или введите другую сумму...</em></p>
+
+                        <div class="form-floating">
+                            <input type="number"
+                                   min="0"
+                                   v-model="deliveryForm.money"
+                                   class="form-control" id="deliveryForm-money" placeholder="С какой суммы нужна сдача">
+                            <label for="deliveryForm-money">С какой суммы нужна сдача</label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
             <div class="d-flex justify-content-center flex-wrap w-100">
                 <label
                     v-if="deliveryForm.image==null"
@@ -778,8 +846,9 @@ export default {
                 street: this.deliveryForm.street,
                 building: this.deliveryForm.building,
             }).then(resp => {
-                this.deliveryForm.delivery_price = resp.data.price || 0
-                this.deliveryForm.distance = resp.data.distance || 0
+                console.log("resp",resp)
+                this.deliveryForm.delivery_price = resp.price || 0
+                this.deliveryForm.distance = resp.distance || 0
 
                 this.need_request_delivery_price = true
 

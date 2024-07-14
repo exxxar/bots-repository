@@ -84,6 +84,7 @@ class GeoLogicFactory
         } catch (Exception $e) {
         }
 
+
         $response = $api->getResponse();
         //  $response->getFoundCount(); // кол-во найденных адресов
         //  $response->getQuery(); // исходный запрос
@@ -98,6 +99,13 @@ class GeoLogicFactory
                     $item->getLongitude(); // долгота
                     $item->getData(); // необработанные данные*/
 
+        Log::info(print_r([
+           "r1"=> $response->getFoundCount(),
+           "r2"=> $response->getQuery(),
+           "r3"=> $response->getFoundCount(),
+           "r4"=> $response->getLatitude(),
+           "r5"=> $response->getLongitude(),
+        ],true));
 
         return (object)[
             "lat" => $response->getLatitude() ?? 0,
