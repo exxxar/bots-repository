@@ -755,7 +755,7 @@ class ProductLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function checkoutInformation(array $data): void
+    public function checkoutInformation(array $data, $uploadedPhoto = null): void
     {
 
         if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
@@ -784,13 +784,15 @@ class ProductLogicFactory
             ->whereIn("id", $ids)
             ->get();
 
+
         $needPickup = ($data["need_pickup"] ?? "false") == "true";
         $hasDisability = ($data["has_disability"] ?? "false") == "true";
         $useCashback = ($data["use_cashback"] ?? "false") == "true";
         $needPaymentLink = ($data["need_payment_link"] ?? "false") == "true";
         $cash = ($data["cash"] ?? "false") == "true";
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
-
+        $deliveryPrice = $data["delivery_price"] ?? 0;
+        $distance = $data["distance"] ?? 0;
         $persons = $data["persons"] ?? 1;
         $time = $data["time"] ?? null;
         $whenReady = ($data["when_ready"] ?? "false") == "true";
@@ -854,41 +856,6 @@ class ProductLogicFactory
         $address = (($data["city"] ?? "") . "," . ($data["street"] ?? "") . "," . ($data["building"] ?? ""));
 
 
-        $geo = BusinessLogic::geo()
-            ->setBot($this->bot ?? null)
-            ->getCoords([
-                "address" => $address
-            ]);
-
-        $shopCoords = (Collection::make($this->slug->config)
-            ->where("key", "shop_coords")
-            ->first())["value"] ?? null;
-
-
-        if (!is_null($shopCoords) && !$needPickup) {
-            $coords = explode(',', $shopCoords);
-
-            $coordsData = [
-                "coords" => [
-                    (object)[
-                        "lat" => $geo->latitude ?? 0,
-                        "lon" => $geo->longitude ?? 0,
-                    ],
-                    (object)[
-                        "lat" => $coords[0] ?? 0,
-                        "lon" => $coords[1] ?? 0,
-                    ],
-                ]
-            ];
-
-            $distanceObject = BusinessLogic::geo()
-                ->setBot($this->bot ?? null)
-                ->getDistance($coordsData);
-
-            $distance = $distanceObject->distance ?? 0;
-
-        }
-
         //сделать чек на оплату (pdf)
         $order = Order::query()->create([
             'bot_id' => $this->bot->id,
@@ -904,7 +871,7 @@ class ProductLogicFactory
             ],//информация о продуктах и заведении, из которого сделан заказ
             'product_count' => $summaryCount,
             'summary_price' => $summaryPrice,
-            'delivery_price' => 0,
+            'delivery_price' => $deliveryPrice,
             'delivery_range' => $distance ?? 0,
             'deliveryman_latitude' => 0,
             'deliveryman_longitude' => 0,
@@ -918,17 +885,19 @@ class ProductLogicFactory
 
             'status' => OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
             'order_type' => OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора
-            'payed_at' => null,
+            'payed_at' => Carbon::now(),
         ]);
 
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед. " . ($discount > 0 ? "Скидка: $discount руб." : "");
 
         $userInfo = !$needPickup ?
-            sprintf(($whenReady ? "🟢" : "🟡") . "Идентификатор: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nДистанция(тест): %s м\nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
-                $this->botUser->telegram_chat_id,
+            sprintf(($whenReady ? "🟢" : "🟡") . "Заказ №: %s\nИдентификатор клиента: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nЦена доставки(тест): %s \nДистанция(тест): %s \nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
+                $order->id ??'-',
+                $this->botUser->telegram_chat_id ?? '-',
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
                 $address . "," . ($data["flat_number"] ?? ""),
+                $deliveryPrice ?? 0, //$distance
                 $distance ?? 0, //$distance
                 $data["entrance_number"] ?? 'Не указано',
                 $data["floor_number"] ?? 'Не указано',
@@ -1009,6 +978,7 @@ class ProductLogicFactory
             "discount" => $useCashback ? $discount : 0,
             "totalCount" => $summaryCount,
             "distance" => $distance ?? 0, //$distance
+            "deliveryPrice" => $deliveryPrice ?? 0, //цена доставки
             "currentDate" => $current_date,
             "code" => "Без промокода",
             "promoCount" => "0",
@@ -1077,6 +1047,43 @@ class ProductLogicFactory
                     ]);
         }
 
+        if (!is_null($uploadedPhoto)) {
+            $ext = $uploadedPhoto->getClientOriginalExtension();
+
+            $imageName = Str::uuid() . "." . $ext;
+
+            $uploadedPhoto->storeAs("$imageName");
+
+            $thread = $bot->topics["orders"] ?? null;
+
+            $historyLink = "https://t.me/" . ($this->bot->bot_domain) . "?start=" . (
+                !is_null($order) ?
+                    base64_encode("001" . ($this->botUser->telegram_chat_id) . "O" . $order->id) :
+                    base64_encode("001" . ($this->botUser->telegram_chat_id))
+                );
+
+            $channel = $this->bot->order_channel ?? $this->bot->main_channel ?? null;
+
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendPhoto(
+                    $channel,
+                    "#оплатачеком\n" .
+                    ($whenReady ? "🟢" : "🟡") . "Заказ №:" . ($order->id ?? '-') . "\n" .
+                    "Идентификатор клиента: " . ($this->botUser->telegram_chat_id ?? '-') . "\n" .
+                    "Пользователь: " . ($order->receiver_name ?? '-') . "\n" .
+                    "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
+                    "Пояснение к оплате: " . ($data["image_info"] ?? 'не указано'),
+                    InputFile::create(storage_path() . "/app/$imageName"), [
+                    [
+                        ["text" => "📜Заказ пользователя", "url" => $historyLink]
+                    ],
+
+                ],
+                    $thread
+                );
+
+        }
 
     }
 

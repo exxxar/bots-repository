@@ -47,8 +47,6 @@ const actions = {
         let page = payload.page || 0
         let size = 12
 
-
-
         let link = `${BASE_CASHBACK_LINK}/history?page=${page}&size=${size}`
 
         let _axios = util.makeAxiosFactory(link, 'POST', {

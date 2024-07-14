@@ -221,6 +221,8 @@ Route::prefix("bot-client")
                     ->group(function(){
                         Route::post("/", [ProductController::class, "getOrders"]);
                         Route::post("/repeat-order", [ProductController::class, "repeatOrder"]);
+                        Route::post("/get-delivery-price", [ProductController::class, "getDeliveryPrice"])
+                            ->middleware(["slug"]);
                     });
 
                 Route::post("/products", [ProductController::class, "index"]);
@@ -228,6 +230,7 @@ Route::prefix("bot-client")
                 Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"])
                     ->middleware(["slug"]);
                 Route::post("/checkout", [ProductController::class, "checkout"]);
+
                 Route::post("/checkout-instruction", [ProductController::class, "checkoutInstruction"])
                     ->middleware(["slug"]);
                 Route::post("/checkout-link", [ProductController::class, "createCheckoutLink"])

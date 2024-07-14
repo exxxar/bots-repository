@@ -66,7 +66,9 @@
                 <span>Количество заказов</span>
                 <span class="text-primary fw-bold">{{self.order_count || 0}}</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between"
+            <li
+                @click="goToCashback"
+                class="list-group-item d-flex justify-content-between cursor-pointer"
                 aria-current="true">
                 <span>Получено CashBack</span>
                 <span class="text-primary fw-bold">{{ self.cashBack.amount || 0 }} ₽</span>
@@ -136,7 +138,9 @@ export default {
         this.loadUserPhotos()
     },
     methods: {
-
+        goToCashback(){
+            this.$router.push({name: 'CashBackV2'})
+        },
         goToOrders(){
             this.$router.push({name: 'OrdersV2'})
         },

@@ -16,11 +16,59 @@ use App\Models\ProductOption;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
+
+    /**
+     * @throws ValidationException
+     */
+    public function getDeliveryPrice(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            "city" => "required",
+            "street" => "required",
+            "building" => "required",
+        ]);
+
+        $slug = $request->slug ?? null;
+
+        if (is_null($slug))
+            return response()->json([
+                "distance" => 0,
+                "price" => 0
+            ]);
+
+        $price_per_km = (Collection::make($slug->config)
+            ->where("key", "price_per_km ")
+            ->first())["value"] ?? 80;
+
+        $min_base_delivery_price = (Collection::make($slug->config)
+            ->where("key", "min_base_delivery_price ")
+            ->first())["value"] ?? 100;
+
+
+        $geo = BusinessLogic::geo()
+            ->setBot($request->bot ?? null)
+            ->setSlug($request->slug ?? null)
+            ->getCoords([
+                "address" => (($request->city ?? "") . "," . ($request->street ?? "") . "," . ($request->building ?? ""))
+            ]);
+
+        $distance = BusinessLogic::geo()
+            ->setBot($request->bot ?? null)
+            ->setSlug($request->slug ?? null)
+            ->getDistance($geo["lat"], $geo["lon"]);
+
+        return response()->json([
+            "distance" => $distance ?? 0,
+            "price" => $min_base_delivery_price + ($distance ?? 0) * $price_per_km
+        ]);
+    }
+
     public function getOrders(Request $request): \App\Http\Resources\OrderCollection
     {
         return BusinessLogic::delivery()
@@ -33,7 +81,7 @@ class ProductController extends Controller
     public function repeatOrder(Request $request): ProductCollection
     {
         $request->validate([
-            "products"=>"required"
+            "products" => "required"
         ]);
 
         return BusinessLogic::delivery()
@@ -67,6 +115,7 @@ class ProductController extends Controller
             ->setBot($request->bot ?? null)
             ->listByCategories();
     }
+
     public function index(Request $request): ProductCollection
     {
 
@@ -163,15 +212,15 @@ class ProductController extends Controller
     }
 
 
-
     /**
      * @throws ValidationException
      */
-    public function createCheckoutLink(Request $request){
+    public function createCheckoutLink(Request $request)
+    {
         $request->validate([
             "products" => "required",
-            "name"=>"required",
-            "phone"=>"required",
+            "name" => "required",
+            "phone" => "required",
         ]);
 
         return BusinessLogic::products()
@@ -185,21 +234,25 @@ class ProductController extends Controller
     /**
      * @throws ValidationException
      */
-    public function checkoutInstruction(Request $request){
+    public function checkoutInstruction(Request $request)
+    {
         $request->validate([
             "products" => "required",
-            "name"=>"required",
-            "phone"=>"required",
+            "name" => "required",
+            "phone" => "required",
         ]);
 
         BusinessLogic::products()
             ->setSlug($request->slug ?? null)
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->checkoutInformation($request->all());
+            ->checkoutInformation($request->all(),
+                $request->hasFile('photo') ? $request->file('photo') : null
+            );
 
         return response()->noContent();
     }
+
     /**
      * @throws ValidationException
      */

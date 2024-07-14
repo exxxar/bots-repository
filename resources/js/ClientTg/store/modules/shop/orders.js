@@ -11,16 +11,26 @@ let state = {
 
 const getters = {
     getOrders: state => state.orders || [],
-    getCategories: state => state.categories || [],
     getOrderById: (state) => (id) => {
         return state.orders.find(item => item.id === id)
     },
     getOrdersPaginateObject: state => state.orders_paginate_object || null,
-    getCategoriesPaginateObject: state => state.categories_paginate_object || null,
+
 }
 
 const actions = {
+    async requestDeliveryPrice(context, payload) {
+        let link = `${BASE_ORDERS_LINK}/get-delivery-price`
 
+        let _axios = util.makeAxiosFactory(link, "POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadOrders(context, payload = {dataObject: {search: null, categories:null}, page: 0, size: 12}) {
         let data = {
             ...payload.dataObject

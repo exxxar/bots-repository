@@ -969,7 +969,7 @@ class BotLogicFactory
         $feedbackChannel = $this->bot->main_channel ?? null;
         $adminChannel = $this->bot->order_channel ?? null;
 
-        $feedbackMessage = "#отзыв_клиента\n%s \n<em>%s</em>\n";
+        $feedbackMessage = "#отзыв_клиента\n<em>%s</em>\n";
         $adminMessage = "#отзыв_клиента\n -имя: %s \n  -тг id: %s\n -телефон: %s\nСообщение: %s\n";
 
         $thread = $this->bot->topics["callback"] ?? null;
@@ -986,7 +986,6 @@ class BotLogicFactory
                 ->sendPhoto(
                     $feedbackChannel,
                     sprintf($feedbackMessage,
-                        $data["name"] ?? '-',
                         $data["message"] ?? '-'
                     ),
                     InputFile::create(storage_path()."/app/$imageName")
@@ -997,7 +996,6 @@ class BotLogicFactory
                 ->sendMessage(
                     $feedbackChannel,
                     sprintf($feedbackMessage,
-                        $data["name"] ?? '-',
                         $data["message"] ?? '-'
                     )
                 );
@@ -1036,7 +1034,7 @@ class BotLogicFactory
 
         $type = $data["type"] ?? null;
 
-        $callbackChannel = $this->bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
+        $callbackChannel = $this->bot->order_channel ?? env("BASE_ADMIN_CHANNEL");
 
         $typeText = match ($type) {
             'booking' => "#бронированиестолика",

@@ -5,20 +5,36 @@ namespace App\Http\BusinessLogic\Methods;
 use App\Http\Resources\AmoCrmResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
+use App\Models\YClients;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Yandex\Geo\Exception;
+use Yandex\Geo\Exception\CurlError;
+use Yandex\Geo\Exception\ServerError;
 
 class GeoLogicFactory
 {
     protected $bot;
 
+    protected $slug;
+
     public function __construct()
     {
         $this->bot = null;
+        $this->slug = null;
+    }
 
+    public function setSlug($slug): static
+    {
+        if (is_null($slug))
+            throw new HttpException(400, "Команда не задана!");
+
+        $this->slug = $slug;
+        return $this;
     }
 
     public function setBot($bot): static
@@ -35,7 +51,7 @@ class GeoLogicFactory
      */
     public function getCoords(array $data): object
     {
-        if (is_null($this->bot))
+        if (is_null($this->bot) || is_null($this->slug))
             throw new HttpException(403, "Не выполнены условия функции");
 
         $validator = Validator::make($data, [
@@ -45,90 +61,93 @@ class GeoLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
-
         $address = $data["address"] ?? '';
 
+        $yandex_geocoder = (Collection::make($this->slug->config)
+            ->where("key", "yandex_geocoder")
+            ->first())["value"] ?? null;
+
+        if (is_null($yandex_geocoder))
+            throw new HttpException(403, "Не установлен токен гео-кодера");
+
+        $api = new \Yandex\Geo\Api();
+
+        $api->setToken($yandex_geocoder);
+        $api->setQuery($address);
         try {
-            $res = Http::get("https://geocode.maps.co/search?q=$address");
-
-            $data = $res->json();
-
-            if (empty($data))
-                return (object)[
-                    "latitude" => 0,
-                    "longitude" => 0,
-                ];
-
-
-            return (object)[
-                "latitude" => $data[0]["lat"],
-                "longitude" => $data[0]["lon"],
-            ];
-
-
-        } catch (\Exception $exception) {
-            return (object)[
-                "latitude" => 0,
-                "longitude" => 0,
-            ];
+            $api
+                ->setLimit(1)
+                ->setLang(\Yandex\Geo\Api::LANG_RU)
+                ->load();
+        } catch (CurlError $e) {
+        } catch (ServerError $e) {
+        } catch (Exception $e) {
         }
+
+        $response = $api->getResponse();
+        //  $response->getFoundCount(); // кол-во найденных адресов
+        //  $response->getQuery(); // исходный запрос
+        // $response->getLatitude(); // широта для исходного запроса
+        //$response->getLongitude(); // долгота для исходного запроса
+        /*
+        // Список найденных точек
+                $collection = $response->getList();
+                foreach ($collection as $item) {
+                    $item->getAddress(); // вернет адрес
+                    $item->getLatitude(); // широта
+                    $item->getLongitude(); // долгота
+                    $item->getData(); // необработанные данные*/
+
+
+        return (object)[
+            "lat" => $response->getLatitude() ?? 0,
+            "lon" => $response->getLongitude() ?? 0
+        ];
 
     }
 
     /**
      * @throws ValidationException
      */
-    public function getDistance(array $data): object
+    public function getDistance($latA, $longA): float
     {
-        Log::info("data in func =>" . print_r($data, true));
-
-        if (is_null($this->bot))
+        if (is_null($this->bot) || is_null($this->slug))
             throw new HttpException(403, "Не выполнены условия функции");
 
 
-        $coords = $data["coords"] ?? [];
+        $shopCoords = (Collection::make($this->slug->config)
+            ->where("key", "shop_coords")
+            ->first())["value"] ?? null;
 
-        if (count($coords) == 0)
-            return (object)[
-                "duration" => 0,
-                "distance" => 0,
-            ];
+        $coords = explode(',', $shopCoords);
 
-        $tmpCoords = "";
-        $index = 0;
-        foreach ($coords as $point) {
-            $point = (object)$point;
-            $tmpCoords .= "$point->lon,$point->lat" . ($index != count($coords) - 1 ? ";" : "");
-            $index++;
-        }
+        $latB = $coords[0] ?? 0;
+        $longB = $coords[1] ?? 0;
 
-        try {
+        $earth_radius = 6372795;
+        // перевести координаты в радианы
+        $lat1 = $latA * M_PI / 180;
+        $lat2 = $latB * M_PI / 180;
+        $long1 = $longA * M_PI / 180;
+        $long2 = $longB * M_PI / 180;
 
-            Log::info("distance route " . "https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
-            $res = Http::get("https://router.project-osrm.org/route/v1/driving/$tmpCoords?alternatives=false");
+// косинусы и синусы широт и разницы долгот
+        $cl1 = cos($lat1);
+        $cl2 = cos($lat2);
+        $sl1 = sin($lat1);
+        $sl2 = sin($lat2);
+        $delta = $long2 - $long1;
+        $cdelta = cos($delta);
+        $sdelta = sin($delta);
 
-            $data = (object)$res->json();
+// вычисления длины большого круга
+        $y = sqrt(pow($cl2 * $sdelta, 2) + pow($cl1 * $sl2 - $sl1 * $cl2 * $cdelta, 2));
+        $x = $sl1 * $sl2 + $cl1 * $cl2 * $cdelta;
 
-            Log::info("distance route result" . print_r($data, true));
-            if ($data->code != "Ok")
-                return (object)[
-                    "duration" => 0,
-                    "distance" => 0,
-                ];
+//
+        $ad = atan2($y, $x);
+        $dist = $ad * $earth_radius;
 
-
-            return (object)[
-                "duration" => $data->routes[0]["duration"] ?? 0,
-                "distance" => $data->routes[0]["distance"] ?? 0,
-            ];
-
-
-        } catch (\Exception $exception) {
-            return (object)[
-                "duration" => 0,
-                "distance" => 0,
-            ];
-        }
-
+        return $dist;
     }
 }

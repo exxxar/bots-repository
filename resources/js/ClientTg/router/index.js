@@ -471,6 +471,9 @@ import PaymentV2 from '@/ClientTg/Pages/ShopV2/Payment.vue';
 import FeedBackV2 from "@/ClientTg/Pages/ShopV2/FeedBack.vue";
 import MenuV2 from "@/ClientTg/Pages/ShopV2/Menu.vue";
 import OneArmedBanditV2 from '@/ClientTg/Pages/ShopV2/OneArmedBanditPage.vue';
+import CashBackV2 from '@/ClientTg/Pages/ShopV2/MyCashBack.vue';
+import FriendsV2 from '@/ClientTg/Pages/ShopV2/MyFriends.vue';
+import WheelOfFortuneV2 from '@/ClientTg/Pages/ShopV2/WheelOfFortune.vue';
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
@@ -542,6 +545,30 @@ export const simpleRoutes = [
         component: OneArmedBanditV2,
         meta: {title: 'Однорукий бандит'}
     },
+
+    {
+        name: 'CashBackV2',
+        path: simplePrefix + '/cashback',
+        component: CashBackV2,
+        meta: {title: 'История бонусов'}
+    },
+
+    {
+        name: 'FriendsV2',
+        path: simplePrefix + '/friends',
+        component: FriendsV2,
+        meta: {title: 'Друзья'}
+    },
+
+    {
+        name: 'WheelOfFortuneV2',
+        path: simplePrefix + '/wheel',
+        component: WheelOfFortuneV2,
+        meta: {title: 'Колесо фортуны'}
+    },
+
+
+
 
 
 

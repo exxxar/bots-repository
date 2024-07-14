@@ -12,6 +12,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.8",
         "irazasyed/telegram-bot-sdk": "^3.10",
+        "jackmartin/laravel-yandex-geocode": "^1.2",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
@@ -19,7 +20,8 @@
         "phpoffice/phpword": "^1.2",
         "spatie/laravel-permission": "^6.4",
         "tightenco/ziggy": "^1.0",
-        "vkcom/vk-php-sdk": "^5.131"
+        "vkcom/vk-php-sdk": "^5.131",
+        "yandex/geo": "^1.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

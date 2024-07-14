@@ -292,7 +292,8 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
 
             <div class="list-group my-3" v-if="deliveryForm.has_disability&&!deliveryForm.need_pickup">
                 <a href="javascript:void(0)"
-                   class="list-group-item list-group-item-action p-3 d-flex justify-content-between" aria-current="true">
+                   class="list-group-item list-group-item-action p-3 d-flex justify-content-between"
+                   aria-current="true">
                     <label for="switch-1"> <i class="fa-solid fa-head-side-mask mr-2"></i> Болею</label>
                     <input type="checkbox"
                            value="болею"
@@ -301,7 +302,8 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                 </a>
 
                 <a href="javascript:void(0)"
-                   class="list-group-item list-group-item-action p-3 d-flex justify-content-between" aria-current="true">
+                   class="list-group-item list-group-item-action p-3 d-flex justify-content-between"
+                   aria-current="true">
                     <label for="switch-5"> <i class="fa-solid fa-ear-deaf mr-2"></i> Плохо слышит \ говорит</label>
                     <input type="checkbox"
                            value="плохо слышит или говорит"
@@ -310,7 +312,8 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                 </a>
 
                 <a href="javascript:void(0)"
-                   class="list-group-item list-group-item-action p-3 d-flex justify-content-between" aria-current="true">
+                   class="list-group-item list-group-item-action p-3 d-flex justify-content-between"
+                   aria-current="true">
                     <label for="switch-3"> <i class="fa-solid fa-glasses mr-2"></i> Слабовидящий</label>
                     <input type="checkbox"
                            value="слабовидящий"
@@ -319,7 +322,8 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                 </a>
 
                 <a href="javascript:void(0)"
-                   class="list-group-item list-group-item-action p-3 d-flex justify-content-between" aria-current="true">
+                   class="list-group-item list-group-item-action p-3 d-flex justify-content-between"
+                   aria-current="true">
                     <label for="switch-4"> <i class="fa-solid fa-wheelchair mr-2"></i> Ограничения мобильности</label>
                     <input type="checkbox"
                            class="form-check-input"
@@ -339,7 +343,8 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                                 шт.</strong></p>
                         </li>
                         <li class="list-group-item">
-                            <p class="mb-0 d-flex justify-content-between">Цена <strong>{{ cartTotalPrice }} <sup>.00</sup>₽</strong>
+                            <p class="mb-0 d-flex justify-content-between">Цена <strong>{{ cartTotalPrice }}
+                                <sup>.00</sup>₽</strong>
                             </p>
                         </li>
                         <li class="list-group-item">
@@ -348,13 +353,23 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                                 <strong v-else>-</strong>
                             </p>
                         </li>
+
+                        <li class="list-group-item" v-if="!deliveryForm.need_pickup">
+                            <p class="mb-0 d-flex justify-content-between">Цена доставки
+                                <strong v-if="deliveryForm.delivery_price>0">{{ deliveryForm.delivery_price }}
+                                    <sup>.00</sup>₽</strong>
+                                <strong v-else>от курьера</strong>
+                            </p>
+                        </li>
                         <li class="list-group-item">
                             <p v-if="!deliveryForm.use_cashback"
-                               class="mb-0 d-flex justify-content-between">Итого, цена <strong>{{ cartTotalPrice }}
-                                <sup>.00</sup>₽</strong></p>
+                               class="mb-0 d-flex justify-content-between">Итого, цена
+                                <strong>{{ cartTotalPrice + deliveryForm.delivery_price }}
+                                    <sup>.00</sup>₽</strong></p>
                             <p v-else
                                class="mb-0 d-flex justify-content-between">Итого, цена
-                                <strong>{{ cartTotalPrice - cashbackLimit }} <sup>.00</sup>₽</strong></p>
+                                <strong>{{ (cartTotalPrice - cashbackLimit) + deliveryForm.delivery_price }}
+                                    <sup>.00</sup>₽</strong></p>
                         </li>
                     </ul>
 
@@ -365,7 +380,9 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                                 <button class="btn btn-outline-primary w-100 mb-2 rounded-5"
                                         type="button"
                                         @click="deliveryForm.money=money"
-                                        v-bind:class="{'btn-primary text-white':deliveryForm.money===money}">{{ money }}₽
+                                        v-bind:class="{'btn-primary text-white':deliveryForm.money===money}">{{
+                                        money
+                                    }}₽
                                 </button>
                             </div>
 
@@ -387,7 +404,16 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
 
             <p v-if="settings.delivery_price_text" v-html="settings.delivery_price_text"></p>
             <p v-if="settings.min_price">Минимальная цена заказа {{ settings.min_price || 0 }} руб</p>
+
             <button
+                @click="requestDeliveryPrice"
+                class="btn btn-outline-light text-primary p-3 w-100 mb-2"
+                :disabled="!canRequestDeliverPrice">
+                <i class="fa-solid fa-map-location-dot mr-2"></i> Узнать цену доставки
+            </button>
+
+            <button
+                v-if="deliveryForm.payment_type!==2&&tab===1"
                 type="submit"
                 :disabled="spent_time_counter>0||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)"
                 class="btn btn-primary p-3 w-100">
@@ -403,7 +429,70 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                     class="color-white">Осталось ждать {{ spent_time_counter }} сек.</span>
             </button>
 
+            <button
+                v-if="deliveryForm.payment_type===2&&tab===1"
+                type="button"
+                @click="tab=3"
+                :disabled="spent_time_counter>0||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)"
+                class="btn btn-primary p-3 w-100">
+                <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
+            </button>
+        </form>
+        <form v-if="tab===3"
+              class="container py-3"
+              v-on:submit.prevent="startCheckout">
+            <h5 class="my-3 text-left"><i class="fa-regular fa-image mr-2"></i>Фотография чека</h5>
 
+            <div class="alert alert-light mb-2 fw-bold"
+                 v-if="settings.payment_info"
+                 role="alert" v-html="settings.payment_info"></div>
+
+            <div class="d-flex justify-content-center flex-wrap w-100">
+                <label
+                    v-if="deliveryForm.image==null"
+                    for="menu-photos"
+                    class="photo-loader-bill d-flex flex-column justify-content-center align-items-center mb-2">
+                    <i class="fa-regular fa-image my-2 text-primary" style="font-size:20px;"></i>
+                    <span class="text-primary fw-bold">Выбрать фотографию чека</span>
+                    <input type="file" id="menu-photos" accept="image/*"
+                           @change="onChangePhotos"
+                           style="display:none;"/>
+
+                </label>
+                <div class="mb-2 img-preview-bill"
+                     v-if="deliveryForm.image!=null">
+                    <img v-lazy="getPhoto(deliveryForm.image).imageUrl">
+                    <div class="remove">
+                        <a @click="removePhoto()"><i class="fa-solid fa-trash-can mr-2 text-primary"></i>Удалить</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-floating mb-2">
+            <textarea class="form-control"
+                      v-model="deliveryForm.image_info"
+                      style="height:100px;line-height:150%;"
+                      placeholder="Информация" id="deliveryForm-image_info"></textarea>
+                <label for="deliveryForm-image_info">Текст к оплате <small>(не обязательно)</small></label>
+            </div>
+
+
+            <button
+                type="submit"
+                :disabled="spent_time_counter>0||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)||deliveryForm.image==null"
+                class="btn btn-primary p-3 w-100">
+
+                <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
+                <i v-else class="fa-solid fa-hourglass  mr-2"></i>
+
+                <span
+                    v-if="spent_time_counter<=0"
+                    class="color-white">Оформить</span>
+                <span
+                    v-else
+                    class="color-white">Осталось ждать {{ spent_time_counter }} сек.</span>
+            </button>
         </form>
     </div>
 
@@ -422,7 +511,7 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
                     class="btn btn-md btn-primary w-100 rounded-0 p-3">Оформление заказа
             </button>
             <button type="button"
-                    v-if="tab===1"
+                    v-if="tab>=1"
                     @click="tab=0"
                     class="btn btn-md btn-primary w-100 rounded-0 p-3">Корзина с товаром
             </button>
@@ -453,9 +542,9 @@ export default {
                 min_price: 0,
                 min_price_for_cashback: 0,
                 menu_list_type: 0,
+                payment_info: 0,
                 need_category_by_page: false,
             },
-
             spent_time_counter: 0,
             is_requested: false,
             isCollapsed: true,
@@ -466,6 +555,7 @@ export default {
             sending: false,
             min_price: null,
             max_price: null,
+            need_request_delivery_price:true,
             moneyVariants: [
                 500, 1000, 2000, 5000
             ],
@@ -487,10 +577,14 @@ export default {
                 disabilities: [],
                 money: null,
                 cash: true,
-                payment_type: 1,
+                payment_type: 2,
                 persons: 1,
                 time: null,
                 when_ready: true,// по готовности
+                image: null,
+                image_info: null,
+                delivery_price: 0,
+                distance: 0,
             },
         }
     },
@@ -501,16 +595,77 @@ export default {
             },
             deep: true
         },
+
+        'deliveryForm.need_pickup': {
+            handler: function (newValue) {
+                if (this.deliveryForm.need_pickup)
+                {
+                    this.deliveryForm.delivery_price = 0
+                    this.deliveryForm.distance = 0
+                }
+            },
+            deep: true
+        },
         'deliveryForm.cash': {
             handler: function (newValue) {
                 if (!this.deliveryForm.cash)
                     this.deliveryForm.money = null
             },
             deep: true
+        },
+        'deliveryForm.city': {
+            handler: function (newValue) {
+
+              /*  if (this.tab!==1)
+                    return;
+
+                if (this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
+                {
+
+                    this.need_request_delivery_price = false;
+                    this.requestDeliveryPrice();
+
+                }*/
+            },
+            deep: true
+        },
+        'deliveryForm.street': {
+            handler: function (newValue) {
+               /* if (this.tab!==1)
+                    return;
+
+                if (this.need_request_delivery_price &&this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
+                {
+
+                    this.need_request_delivery_price = false;
+                    this.requestDeliveryPrice();
+
+                }*/
+            },
+            deep: true
+        },
+        'deliveryForm.building': {
+            handler: function (newValue) {
+
+            /*    if (this.tab!==1)
+                    return;
+
+                if (this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
+                {
+
+                    this.need_request_delivery_price = false;
+                    this.requestDeliveryPrice();
+                }*/
+            },
+            deep: true
         }
     },
     computed: {
         ...mapGetters(['getProducts', 'cartProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+       canRequestDeliverPrice(){
+           return this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null;
+       },
+
         canUseCashBack() {
             return this.getSelf.cashBack && this.settings.min_price_for_cashback < this.cartTotalPrice
         },
@@ -610,7 +765,52 @@ export default {
 
     },
     methods: {
-        goToCatalog(){
+        requestDeliveryPrice() {
+            this.need_request_delivery_price = false
+
+            this.$notify({
+                title: "Корзина",
+                text: "Мы начали процесс расчета цены доставки",
+            })
+
+            this.$store.dispatch("requestDeliveryPrice", {
+                city: this.deliveryForm.city,
+                street: this.deliveryForm.street,
+                building: this.deliveryForm.building,
+            }).then(resp => {
+                this.deliveryForm.delivery_price = resp.data.price || 0
+                this.deliveryForm.distance = resp.data.distance || 0
+
+                this.need_request_delivery_price = true
+
+                this.$notify({
+                    title: "Корзина",
+                    text: "Цена доставки успешно просчитана",
+                    type: "success"
+                })
+            }).catch(()=>{
+                this.deliveryForm.delivery_price = 0
+                this.deliveryForm.distance = 0
+                this.need_request_delivery_price = true
+
+                this.$notify({
+                    title: "Корзина",
+                    text: "Ошибка расчёта цены доставки",
+                    type: "error"
+                })
+            })
+        },
+        onChangePhotos(e) {
+            const file = e.target.files[0]
+            this.deliveryForm.image = file
+        },
+        getPhoto(imgObject) {
+            return {imageUrl: URL.createObjectURL(imgObject)}
+        },
+        removePhoto() {
+            this.deliveryForm.image = null
+        },
+        goToCatalog() {
             this.$router.push({name: 'CatalogV2'})
         },
 
@@ -733,6 +933,7 @@ export default {
             if (this.type)
                 data.append("type", this.type)
 
+
             if (this.deliveryForm.payment_type === 0 && this.settings.can_use_card) {
                 this.$store.dispatch("createCheckoutLink", {
                     deliveryForm: data
@@ -741,6 +942,11 @@ export default {
                     this.tg.openInvoice(resp.result)
                 })
                 return;
+            }
+
+            if (typeof this.deliveryForm.image != "string") {
+                data.append('photo', this.deliveryForm.image);
+                data.delete("image")
             }
 
             this.sending = true
@@ -818,5 +1024,54 @@ export default {
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
+}
+
+
+.photo-loader-bill {
+    width: 100%;
+    height: 300px;
+    border-radius: 5px;
+    border: 1px solid #dcdcdc;
+
+
+    span {
+        font-size: 20px;
+        font-weight: normal !important;
+    }
+}
+
+.img-preview-bill {
+    width: 100%;
+    height: 300px;
+    border-radius: 5px;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        border-radius: 5px;
+    }
+
+    .remove {
+        position: absolute;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.38);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        color: white;
+        font-size: 20px;
+    }
+
 }
 </style>

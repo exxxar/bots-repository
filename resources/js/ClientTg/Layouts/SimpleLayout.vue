@@ -21,7 +21,34 @@ import {Head} from '@inertiajs/vue3'
                             {{bot.long_description || 'Без описания'}}
                         </p>
                     </div>
+
                     <div class="col-sm-4 offset-md-1 py-4" v-if="bot.company">
+                        <h4>Меню</h4>
+                        <ul class="list-unstyled">
+                            <li><a
+                                v-bind:class="{'fw-bold':$route.name==='MenuV2'}"
+                                @click="goTo('MenuV2')"
+                                href="javascript:void(0)"
+                                   class="text-white">Главное меню</a></li>
+                            <li><a
+                                v-bind:class="{'fw-bold':$route.name==='ProfileV2'}"
+                                @click="goTo('ProfileV2')"
+                                href="javascript:void(0)"
+                                   class="text-white">Профиль</a></li>
+                            <li><a
+                                v-bind:class="{'fw-bold':$route.name==='CatalogV2'}"
+                                @click="goTo('CatalogV2')"
+                                href="javascript:void(0)"
+                                   class="text-white">Каталог товаров</a></li>
+                            <li><a
+                                v-bind:class="{'fw-bold':$route.name==='ShopCartV2'}"
+                                @click="goTo('ShopCartV2')"
+                                href="javascript:void(0)"
+                                   class="text-white">Корзина <span class="fw-bold" v-if="cartTotalCount>0">({{cartTotalCount}})</span></a></li>
+                        </ul>
+
+                    </div>
+<!--                    <div class="col-sm-4 offset-md-1 py-4" v-if="bot.company">
                         <h4>Контакты</h4>
                         <ul class="list-unstyled">
                             <li v-if="(bot.company.phones||[]).length>0"><p class="mb-0">Телефон</p></li>
@@ -35,7 +62,7 @@ import {Head} from '@inertiajs/vue3'
                                    v-if="bot.company.email"
                                    class="text-white">{{bot.company.email}}</a></li>
                         </ul>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -59,7 +86,7 @@ import {Head} from '@inertiajs/vue3'
 
             <button
                 v-if="$route.name!='FeedBackV2'"
-                @click="goToFeedBackPage"
+                @click="goTo('FeedBackV2')"
                 class="btn btn-link mb-2 w-100 p-3 text-primary">Обратная связь</button>
 
             <p class="mb-3 text-center" v-html="bot.company.description"></p>
@@ -87,7 +114,7 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['getSelf']),
+        ...mapGetters(['getSelf','cartTotalCount']),
         tg() {
             return window.Telegram.WebApp;
         },
@@ -106,9 +133,10 @@ export default {
         })
     },
     methods: {
-        goToFeedBackPage(){
-            this.$router.push({name: 'FeedBackV2'})
+        goTo(name){
+            this.$router.push({name: name})
         },
+
         changeTheme(name) {
             let themes = document.querySelectorAll("[data-bs-theme]")
 

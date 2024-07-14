@@ -13,7 +13,7 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
                 </div>
             </div>
             <div class="col-12">
-                <div class="list-group" v-if="orders">
+                <div class="list-group" v-if="(orders||[]).length>0">
 
                     <a
                         href="javascript:void(0)"

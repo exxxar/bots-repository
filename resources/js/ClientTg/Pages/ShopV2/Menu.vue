@@ -2,44 +2,105 @@
     <div class="container g-2 my-3">
         <h6 class="opacity-75 mb-3">Доступные сервисы</h6>
 
-        <button type="button"
-                @click="goTo('ProfileV2')"
-                class="btn btn-outline-primary w-100 p-3 mb-2">
-            <i class="fa-solid fa-user-tie mr-2"></i>
-            Профиль
-        </button>
-        <button type="button"
-                @click="goTo('CatalogV2')"
-                class="btn btn-outline-primary w-100 p-3 mb-2">
-            <i class="fa-brands fa-shopify mr-2 "></i>
-            Магазин
-        </button>
-        <button type="button"
-                @click="goTo('ShopCartV2')"
-                class="btn btn-outline-primary w-100 p-3 mb-2">
-            <i class="fa-solid fa-basket-shopping mr-2"></i>
-            Корзина
-        </button>
-        <button type="button"
-                @click="goTo('OrdersV2')"
-                class="btn btn-outline-primary w-100 p-3 mb-2">
-            <i class="fa-solid fa-clock-rotate-left mr-2"></i>
-            История заказов
-        </button>
-        <button type="button"
-                @click="goTo('CatalogV2')"
-                disabled
-                class="btn btn-outline-primary w-100 p-3 mb-2">
-            <i class="fa-solid fa-clover mr-2"></i>Колесо фортуны
-        </button>
-        <button type="button"
-                disabled
-                @click="goTo('ContactsV2')"
-                class="btn btn-outline-primary w-100 p-3 mb-2">
-            <i class="fa-regular fa-circle-question mr-2"></i>
-            О нас
-        </button>
+        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
+            <div class="col">
+                <button type="button"
+                        @click="goTo('ProfileV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card ">
+                    <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/profile.png'" class="img-fluid" alt="">
+
+                        <p class="my-2">Профиль</p>
+                    </div>
+
+                </button>
+            </div>
+
+            <div class="col">
+                <button type="button"
+                        @click="goTo('CatalogV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/shop.png'" class="img-fluid" alt="">
+
+                        <p class="my-2">Магазин</p>
+                    </div>
+
+                </button>
+            </div>
+
+            <div class="col">
+
+                <button type="button"
+                        @click="goTo('ShopCartV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/cart.png'" class="img-fluid" alt="">
+
+                        <p class="my-2">Корзина
+                            <span class="badge bg-primary" v-if="cartTotalCount>0   ">{{ cartTotalCount }}</span>
+                        </p>
+                    </div>
+
+                </button>
+
+            </div>
+
+            <div class="col">
+
+                <button type="button"
+                        @click="goTo('OrdersV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/history.png'" class="img-fluid" alt="">
+
+                        <p class="my-2"> История заказов</p>
+                    </div>
+
+                </button>
+
+            </div>
+
+<!--            <div class="col">
+
+                <button type="button"
+
+                        @click="goTo('WheelOfFortuneV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/gift.png'" class="img-fluid" alt="">
+
+                        <p class="my-2"> Колесо фортуны</p>
+                    </div>
+
+                </button>
+
+
+            </div>-->
+
+<!--            <div class="col">
+
+                <button type="button"
+                        @click="goTo('ContactsV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/contacts.png'" class="img-fluid" alt="">
+
+                        <p class="my-2">Наши контакты</p>
+                    </div>
+
+                </button>
+
+            </div>-->
+        </div>
     </div>
+
 
 </template>
 <script>
@@ -50,7 +111,9 @@ export default {
         return {}
     },
     computed: {
-        ...mapGetters(['getSelf']),
+        ...mapGetters(['getSelf', 'cartTotalCount']),
+
+
         tg() {
             return window.Telegram.WebApp;
         },

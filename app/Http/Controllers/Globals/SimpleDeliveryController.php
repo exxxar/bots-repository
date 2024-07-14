@@ -42,7 +42,27 @@ class SimpleDeliveryController extends SlugController
             ]);
 
         $params = [
+            [
+                "type" => "text",
+                "key" => "yandex_geocoder",
+                "description" => "ключ от АПИ яндекс ГЕО",
+                "value" => null,
 
+            ],
+            [
+                "type" => "text",
+                "key" => "min_base_delivery_price",
+                "description" => "Минимальная цена доставки для расчёта",
+                "value" => 0,
+
+            ],
+            [
+                "type" => "text",
+                "key" => "price_per_km",
+                "description" => "Цена доставки за КМ",
+                "value" => 80,
+
+            ],
             [
                 "type" => "text",
                 "key" => "payment_info",
@@ -248,7 +268,6 @@ class SimpleDeliveryController extends SlugController
     {
         $slug = $request->slug;
 
-        Log::info("slug test=>" . print_r($slug->config ?? [], true));
         return response()->json(
             [
                 'delivery_price_text' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
@@ -273,6 +292,11 @@ class SimpleDeliveryController extends SlugController
                 'need_category_by_page' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "need_category_by_page")
                     ->first())["value"] ?? true : true,
+
+                'payment_info' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "payment_info")
+                    ->first())["value"] ?? "Текст не найден" : "Текст не найден",
+
             ]
         );
     }
