@@ -681,49 +681,22 @@ export default {
             },
             deep: true
         },
-        'deliveryForm.city': {
+        'deliveryForm': {
             handler: function (newValue) {
+                localStorage.setItem("cashman_self_product_delivery_form_name", this.deliveryForm.name || '')
+                localStorage.setItem("cashman_self_product_delivery_form_phone", this.deliveryForm.phone || '')
+                localStorage.setItem("cashman_self_product_delivery_form_address", this.deliveryForm.address || '')
+                localStorage.setItem("cashman_self_product_delivery_form_city", this.deliveryForm.city || '')
+                localStorage.setItem("cashman_self_product_delivery_form_street", this.deliveryForm.street || '')
+                localStorage.setItem("cashman_self_product_delivery_form_building", this.deliveryForm.building || '')
+                localStorage.setItem("cashman_self_product_delivery_form_flat_number", this.deliveryForm.flat_number || '')
 
-                /*  if (this.tab!==1)
-                      return;
+                localStorage.setItem("cashman_self_product_delivery_form_entrance_number", this.deliveryForm.entrance_number || '')
+                if ((this.deliveryForm.disabilities || []).length > 0)
+                    localStorage.setItem("cashman_self_product_delivery_form_entrance_disabilities", JSON.stringify(this.deliveryForm.disabilities || []))
+                else
+                    localStorage.removeItem("cashman_self_product_delivery_form_entrance_disabilities");
 
-                  if (this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
-                  {
-
-                      this.need_request_delivery_price = false;
-                      this.requestDeliveryPrice();
-
-                  }*/
-            },
-            deep: true
-        },
-        'deliveryForm.street': {
-            handler: function (newValue) {
-                /* if (this.tab!==1)
-                     return;
-
-                 if (this.need_request_delivery_price &&this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
-                 {
-
-                     this.need_request_delivery_price = false;
-                     this.requestDeliveryPrice();
-
-                 }*/
-            },
-            deep: true
-        },
-        'deliveryForm.building': {
-            handler: function (newValue) {
-
-                /*    if (this.tab!==1)
-                        return;
-
-                    if (this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null)
-                    {
-
-                        this.need_request_delivery_price = false;
-                        this.requestDeliveryPrice();
-                    }*/
             },
             deep: true
         }
@@ -987,21 +960,6 @@ export default {
                 this.$botNotification.warning("Упс!", `Сделать повторный заказ можно через <strong>${this.spent_time_counter} сек.</strong>`)
                 return;
             }
-
-
-            localStorage.setItem("cashman_self_product_delivery_form_name", this.deliveryForm.name || '')
-            localStorage.setItem("cashman_self_product_delivery_form_phone", this.deliveryForm.phone || '')
-            localStorage.setItem("cashman_self_product_delivery_form_address", this.deliveryForm.address || '')
-            localStorage.setItem("cashman_self_product_delivery_form_city", this.deliveryForm.city || '')
-            localStorage.setItem("cashman_self_product_delivery_form_street", this.deliveryForm.street || '')
-            localStorage.setItem("cashman_self_product_delivery_form_building", this.deliveryForm.building || '')
-            localStorage.setItem("cashman_self_product_delivery_form_flat_number", this.deliveryForm.flat_number || '')
-
-            localStorage.setItem("cashman_self_product_delivery_form_entrance_number", this.deliveryForm.entrance_number || '')
-            if ((this.deliveryForm.disabilities || []).length > 0)
-                localStorage.setItem("cashman_self_product_delivery_form_entrance_disabilities", JSON.stringify(this.deliveryForm.disabilities || []))
-            else
-                localStorage.removeItem("cashman_self_product_delivery_form_entrance_disabilities");
 
             let data = new FormData();
 
