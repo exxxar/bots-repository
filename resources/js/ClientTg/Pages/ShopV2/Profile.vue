@@ -1,15 +1,20 @@
 <template>
     <div class="container py-3 g-2" v-if="self">
         <div class="d-flex justify-content-center align-items-center" style="min-height:350px;">
-            <div style="width:200px;height:200px;border-radius:50%;overflow:hidden;">
+            <div
+                v-if="photos.length>0"
+                style="width:200px;height:200px;border-radius:50%;overflow:hidden;">
                 <img
                     class="w-100 object-fit-cover"
                     v-lazy="'/file-by-file-id-and-bot-domain/'+photos[0][0].file_id+'/'+currentBot.bot_domain"
-                     v-if="photos.length>0"/>
+                />
+            </div>
+            <div v-else
+                 style="width:200px;height:200px;">
                 <img
                     class="w-100 object-fit-cover"
                     v-lazy="'/images/shop-v2/profile.png'"
-                    v-else/>
+                    />
             </div>
         </div>
         <h6 class="opacity-75 mb-3">Информация о профиле</h6>
