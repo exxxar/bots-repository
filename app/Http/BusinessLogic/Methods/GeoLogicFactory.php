@@ -72,6 +72,8 @@ class GeoLogicFactory
 
         $api = new \Yandex\Geo\Api();
 
+        Log::info("yandex geo=>".print_r($yandex_geocoder, true));
+        Log::info("address=>".print_r($address, true));
         $api->setToken($yandex_geocoder);
         $api->setQuery($address);
         try {
@@ -80,8 +82,11 @@ class GeoLogicFactory
                 ->setLang(\Yandex\Geo\Api::LANG_RU)
                 ->load();
         } catch (CurlError $e) {
+            Log::info("curl".$e->getMessage());
         } catch (ServerError $e) {
+            Log::info("ServerError".$e->getMessage());
         } catch (Exception $e) {
+            Log::info("Exception".$e->getMessage());
         }
 
 
