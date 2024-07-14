@@ -994,7 +994,7 @@ class ProductLogicFactory
                 ->whereBot($this->bot)
                 ->sendDocument(
                     $this->botUser->telegram_chat_id,
-                    "Счет на оплату заказа #" . ($order->id ?? 'не указан'),
+                    "Информация о заказе #" . ($order->id ?? 'не указан'),
                     InputFile::createFromContents($file, "invoice.pdf")
                 );
         else {
