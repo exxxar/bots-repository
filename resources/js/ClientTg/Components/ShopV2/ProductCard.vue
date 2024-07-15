@@ -68,8 +68,8 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
 
                     <button type="button" class="btn btn-link w-100 mt-2"
                             data-bs-dismiss="modal">Закрыть</button>
-<!--
-                    <ProductReviewFrom></ProductReviewFrom>-->
+
+                    <ProductReviewFrom></ProductReviewFrom>
 
                 </div>
                <div class="modal-footer p-0 m-0"

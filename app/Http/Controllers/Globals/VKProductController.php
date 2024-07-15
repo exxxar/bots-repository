@@ -61,8 +61,10 @@ class VKProductController extends Controller
 
         foreach ($this->fpProducts["name"] ?? [] as $key=>$name)
         {
-            $preparedName1 = preg_replace('/[^a-z]/', "", strtolower($name));
-            $preparedName2 = preg_replace('/[^a-z]/', "", strtolower($test));
+            $chars = ['@','#','$','%','^','&','*','"'];
+
+            $preparedName1 = preg_replace($chars, "", strtolower($name));
+            $preparedName2 = preg_replace($chars, "", strtolower($test));
 
             if ($preparedName1 == $preparedName2 ) {
                 Log::info("совпадение $preparedName1 == $preparedName2 ");
