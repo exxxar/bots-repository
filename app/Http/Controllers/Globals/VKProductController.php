@@ -136,11 +136,11 @@ class VKProductController extends Controller
             if (!in_array($product->id, $this->tmpProducts)) {
                 $this->tmpProducts[] = $product->id ?? null;
 
-                foreach ($tmpCategoryForSync as $cat){
+            /*    foreach ($tmpCategoryForSync as $cat){
                     $product->productCategories()->attach($cat);
                 }
 
-                continue;
+                continue;*/
             }
 
             if (!is_null($this->fpProducts ?? null)) {
@@ -288,7 +288,7 @@ class VKProductController extends Controller
             }
 
             if (count($tmpCategoryForSync) > 0)
-                $product->productCategories()->sync($tmpCategoryForSync);
+                $product->productCategories()->attach($tmpCategoryForSync);
 
         }
     }
