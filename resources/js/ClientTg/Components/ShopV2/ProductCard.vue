@@ -65,10 +65,11 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                     </div>
                     <p class="text-justify py-2 fst-italic">{{item.description || '-'}}</p>
 
-<!--                    <ProductReviewFrom></ProductReviewFrom>-->
 
                     <button type="button" class="btn btn-link w-100 mt-2"
                             data-bs-dismiss="modal">Закрыть</button>
+
+                    <ProductReviewFrom></ProductReviewFrom>
 
                 </div>
                <div class="modal-footer p-0 m-0"

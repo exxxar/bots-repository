@@ -61,7 +61,10 @@ class VKProductController extends Controller
 
         foreach ($this->fpProducts["name"] ?? [] as $key=>$name)
         {
-            if ($name == $test ) {
+            $preparedName1 = preg_replace('/[^a-z]/', "", strtolower($name));
+            $preparedName2 = preg_replace('/[^a-z]/', "", strtolower($test));
+
+            if ($preparedName1 == $preparedName2 ) {
                 $index = $key;
                 break;
             }
@@ -231,7 +234,7 @@ class VKProductController extends Controller
 
             $vkCategory = $vkProduct->category ?? null;
 
-            Log::info("categories=>" . print_r($vkCategory, true));
+
             if (!is_null($vkCategory)) {
                 $vkCategory = (object)$vkCategory;
 
