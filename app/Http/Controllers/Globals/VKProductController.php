@@ -56,18 +56,17 @@ class VKProductController extends Controller
     {
         $index = null;
 
-        if (is_null($this->fpProducts??null))
+        if (is_null($this->fpProducts ?? null))
             return null;
 
 
-        foreach ($this->fpProducts["name"] ?? [] as $key=>$name)
-        {
-            $chars = ['"',"'","`","(",")","-"];
+        foreach ($this->fpProducts["name"] ?? [] as $key => $name) {
+            $chars = ['"', "'", "`", "(", ")", "-"];
 
             $preparedName1 = mb_strtolower(str_replace($chars, "", mb_strtolower($name)));
             $preparedName2 = mb_strtolower(str_replace($chars, "", mb_strtolower($test)));
 
-            if ($preparedName1 == $preparedName2 ) {
+            if ($preparedName1 == $preparedName2) {
 
                 $index = $key;
                 break;
@@ -134,13 +133,11 @@ class VKProductController extends Controller
                 ->where("bot_id", $bot->id)
                 ->first();
 
-            $this->tmpProducts[] = $product->id ?? null;
+            if (!in_array($product->id, $this->tmpProducts))
+                $this->tmpProducts[] = $product->id ?? null;
 
-            Log::info("товар=>".($vkProduct->title ?? '-')." найдено=>".(is_null($product)?"нет":"да"));
 
-
-            if (!is_null($this->fpProducts ?? null))
-            {
+            if (!is_null($this->fpProducts ?? null)) {
 
                 $fpObject = $this->findFrontPadProduct($vkProduct->title);
 
@@ -155,13 +152,13 @@ class VKProductController extends Controller
                 'title' => $vkProduct->title ?? '-',
                 'description' => $vkProduct->description ?? '-',
                 'images' => [
-                    $vkProduct->thumb_photo ?? '-'
+                        $vkProduct->thumb_photo ?? '-'
                 ],
                 'type' => 0,
                 'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
                 'current_price' => $vkProduct->price["amount"] / 100,
                 'variants' => empty($variants) ? null : $variants,
-                'in_stop_list_at' => $vkProduct->availability == 0 ?  null : Carbon::now(),
+                'in_stop_list_at' => $vkProduct->availability == 0 ? null : Carbon::now(),
                 'bot_id' => $bot->id,
             ];
 
@@ -282,10 +279,6 @@ class VKProductController extends Controller
                 $tmpCategoryForSync[] = $productCategorySection->id;
 
 
-
-
-
-
             }
 
             if (count($tmpCategoryForSync) > 0)
@@ -399,6 +392,7 @@ class VKProductController extends Controller
 
                     $vkProducts = ((object)$response)->items;
 
+                    Log::info("Альбом=>".$album->title." товары в альбоме ".print_r($vkProducts, true));
 
                     $this->importProducts($vkProducts, $bot, $album, $results);
 
@@ -419,7 +413,7 @@ class VKProductController extends Controller
                 $this->importProducts($vkProducts, $bot, null, $results);
             }
 
-            Log::info("all product ids=>".print_r(  array_values($this->tmpProducts), true));
+            Log::info("all product ids=>" . print_r(array_values($this->tmpProducts), true));
         } catch (\Exception $e) {
             Log::info($e->getMessage() . " " . $e->getLine());
             Inertia::setRootView("shop");
