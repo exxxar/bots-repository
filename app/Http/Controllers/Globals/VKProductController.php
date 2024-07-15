@@ -90,7 +90,7 @@ class VKProductController extends Controller
     {
         foreach ($vkProducts as $vkProduct) {
 
-            Log::info("продукт в альбоме".print_r($vkProduct, true));
+
             $tmpCategoryForSync = [];
 
             if (!is_null($album)) {
@@ -134,8 +134,6 @@ class VKProductController extends Controller
                 ->where("bot_id", $bot->id)
                 ->first();
 
-
-
             if (!is_null($this->fpProducts ?? null))
             {
                 Log::info("VK PRODUCT $vkProduct->title");
@@ -145,44 +143,31 @@ class VKProductController extends Controller
                     $results->total_frontpad_count++;
             }
 
+            $tmpProduct = [
+                'article' => $vkProduct->sku ?? null,
+                'vk_product_id' => $vkProduct->id,
+                'frontpad_article' => $fpObject->id ?? null,
+                'title' => $vkProduct->title,
+                'description' => $vkProduct->description,
+                'images' => [
+                    $vkProduct->thumb_photo
+                ],
+                'type' => 0,
+                'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
+                'current_price' => $vkProduct->price["amount"] / 100,
+                'variants' => empty($variants) ? null : $variants,
+                'in_stop_list_at' => $vkProduct->availability == 0 ?  null : Carbon::now(),
+                'bot_id' => $bot->id,
+            ];
 
             if (is_null($product)) {
-                $product = Product::query()->create([
-                    'article' => $vkProduct->sku ?? null,
-                    'vk_product_id' => $vkProduct->id,
-                    'frontpad_article' => $fpObject->id ?? null,
-                    'title' => $vkProduct->title,
-                    'description' => $vkProduct->description,
-                    'images' => [
-                        $vkProduct->thumb_photo
-                    ],
-                    'type' => 0,
-                    'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
-                    'current_price' => $vkProduct->price["amount"] / 100,
-                    'variants' => empty($variants) ? null : $variants,
-                    'in_stop_list_at' => $vkProduct->availability == 0 ?  null : Carbon::now(),
-                    'bot_id' => $bot->id,
-                ]);
-
+                $product = Product::query()->create($tmpProduct);
                 $results->created_product_count++;
             } else {
-                $product->update([
-                    'article' => $vkProduct->sku ?? null,
-                    'frontpad_article' => $fpObject->id ?? null,
-                    'title' => $vkProduct->title,
-                    'description' => $vkProduct->description,
-                    'images' => [
-                        $vkProduct->thumb_photo
-                    ],
-                    'type' => 0,
-                    'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
-                    'current_price' => $vkProduct->price["amount"] / 100,
-                    'variants' => empty($variants) ? null : $variants,
-                    'in_stop_list_at' => $vkProduct->availability == 0 ?  null : Carbon::now(),
-                ]);
-
+                $product->update($tmpProduct);
                 $results->updated_product_count++;
             }
+
 
             $vkDimensions = $vkProduct->dimensions ?? null;
 
@@ -258,12 +243,8 @@ class VKProductController extends Controller
 
             $vkCategory = $vkProduct->category ?? null;
 
-            Log::info("категория ".print_r($vkCategory, true));
-
-
             if (!is_null($vkCategory)) {
                 $vkCategory = (object)$vkCategory;
-
 
                 $productCategory = ProductCategory::query()
                     ->where("title", $vkCategory->name)
@@ -297,12 +278,13 @@ class VKProductController extends Controller
 
 
 
-                if (count($tmpCategoryForSync) > 0) {
-                    //Log::info("tmpCategoryForSync=>".print_r($tmpCategoryForSync,true));
-                    $product->productCategories()->sync($tmpCategoryForSync);
-                }
+
+
 
             }
+
+            if (count($tmpCategoryForSync) > 0)
+                $product->productCategories()->sync($tmpCategoryForSync);
         }
     }
 
