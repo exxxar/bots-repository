@@ -136,9 +136,10 @@ class VKProductController extends Controller
             if (!in_array($product->id, $this->tmpProducts)) {
                 $this->tmpProducts[] = $product->id ?? null;
 
-                $tmpCategoryForSync[] =  array_values($product->productCategories()->get()->pluck("product_category_id")->toArray());
-                Log::info("tmpCategoryForSync".print_r($tmpCategoryForSync, true));
-                $product->productCategories()->sync($tmpCategoryForSync);
+                foreach ($tmpCategoryForSync as $cat){
+                    $product->productCategories()->attach($cat);
+                }
+
                 continue;
             }
 
