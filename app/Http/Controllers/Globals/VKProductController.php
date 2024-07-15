@@ -169,11 +169,6 @@ class VKProductController extends Controller
             ];
 
 
-            if (count($vkProduct->photos)>1) {
-                Log::info("products=>".print_r(  $vkProduct->photos, true));
-            }
-
-
             if (is_null($product)) {
                 $product = Product::query()->create($tmpProduct);
                 $results->created_product_count++;
