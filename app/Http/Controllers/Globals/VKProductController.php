@@ -145,12 +145,12 @@ class VKProductController extends Controller
 
             $tmpProduct = [
                 'article' => $vkProduct->sku ?? null,
-                'vk_product_id' => $vkProduct->id,
+                'vk_product_id' => $vkProduct->id ?? '-',
                 'frontpad_article' => $fpObject->id ?? null,
-                'title' => $vkProduct->title,
-                'description' => $vkProduct->description,
+                'title' => $vkProduct->title ?? '-',
+                'description' => $vkProduct->description ?? '-',
                 'images' => [
-                    $vkProduct->thumb_photo
+                    $vkProduct->thumb_photo ?? '-'
                 ],
                 'type' => 0,
                 'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
@@ -285,6 +285,7 @@ class VKProductController extends Controller
 
             if (count($tmpCategoryForSync) > 0)
                 $product->productCategories()->sync($tmpCategoryForSync);
+
         }
     }
 
