@@ -111,6 +111,7 @@ class ProductLogicFactory
             ->where("bot_id", $this->bot->id)
             ->where("is_active", true)
             ->has("products", ">", 0)
+            ->orderBy("order_position", "ASC")
             ->get();
 
         return new ProductCategoryCollection($categories);
@@ -385,12 +386,14 @@ class ProductLogicFactory
             "category" => "required",
         ]);
 
+
         if ($validator->fails())
             throw new ValidationException($validator);
 
         $category = ProductCategory::query()
             ->create([
-                'title' => $data["category"],
+                'title' => $data["category"]["title"] ?? '-',
+                'order_position' => $data["category"]["order_position"] ?? 0,
                 'bot_id' => $this->bot->id,
             ]);
 
@@ -472,6 +475,8 @@ class ProductLogicFactory
 
         return new ProductCategoryResource($category);
     }
+
+
 
     /**
      * @throws HttpException
@@ -892,7 +897,7 @@ class ProductLogicFactory
 
         $userInfo = !$needPickup ?
             sprintf(($whenReady ? "🟢" : "🟡") . "Заказ №: %s\nИдентификатор клиента: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nЦена доставки(тест): %s \nДистанция(тест): %s \nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
-                $order->id ??'-',
+                $order->id ?? '-',
                 $this->botUser->telegram_chat_id ?? '-',
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',

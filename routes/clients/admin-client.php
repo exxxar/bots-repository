@@ -331,6 +331,7 @@ Route::prefix("admin")
         Route::prefix("shop")
             ->middleware(["role:manager"])
             ->group(function () {
+                Route::post("/products/store-category", [\App\Http\Controllers\Admin\ProductController::class, "storeCategory"]);
                 Route::post("/products", [\App\Http\Controllers\Admin\ProductController::class, "index"]);
                 Route::post("/products/categories", [\App\Http\Controllers\Admin\ProductController::class, "getCategories"]);
                 Route::delete("/products/categories/remove/{id}", [\App\Http\Controllers\Admin\ProductController::class, "removeCategory"]);

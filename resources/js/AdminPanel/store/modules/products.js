@@ -21,6 +21,19 @@ const getters = {
 }
 
 const actions = {
+
+    async storeProductCategory(context, payload = {category: null}) {
+        let link = `${BASE_PRODUCTS_LINK}/store-category`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadProduct(context, payload = {dataObject: { productId: null}}) {
 
         let link = `${BASE_PRODUCTS_LINK}/${payload.dataObject.productId}`

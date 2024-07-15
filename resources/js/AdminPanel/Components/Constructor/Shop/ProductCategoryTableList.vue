@@ -27,6 +27,7 @@ import Pagination from "@/AdminPanel/Components/Pagination.vue";
                     <th scope="col">#</th>
                     <th scope="col">Название</th>
                     <th scope="col">Состояние</th>
+                    <th scope="col">Позиция в выдаче</th>
                     <th scope="col">Действия</th>
                 </tr>
                 </thead>
@@ -47,6 +48,15 @@ import Pagination from "@/AdminPanel/Components/Pagination.vue";
                             <span v-else>Не активная</span>
                         </button>
                     </td>
+
+
+                    <td>
+                        <input type="number"
+                               @change="updateCategory(item)"
+                               v-model="item.order_position"
+                               class="form-control">
+                    </td>
+
                     <td>
 
 
@@ -101,6 +111,27 @@ export default {
 
     },
     methods: {
+        updateCategory(item){
+          console.log("update", item)
+
+            this.$store.dispatch("storeProductCategory", {
+                category:item,
+                bot_id: this.bot.id
+            }).then((response) => {
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Данные сохранены!",
+                    type: 'success'
+                });
+            }).catch(err => {
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Ошибка сохранения данных!",
+                    type: 'error'
+                });
+            })
+        },
         changeCategoryStatus(item) {
             let index = this.categories.findIndex(category => item.id === category.id)
             if (index === -1)

@@ -20,6 +20,7 @@ class ProductCategory extends Model
         'title',
         'bot_id',
         'is_active',
+        'order_position',
     ];
 
     /**
@@ -30,6 +31,7 @@ class ProductCategory extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
+        'order_position' => 'integer',
         'is_active' => 'boolean',
     ];
 

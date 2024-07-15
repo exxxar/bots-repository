@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductCategoryCollection;
+use App\Http\Resources\ProductCategoryResource;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\Bot;
@@ -22,6 +23,23 @@ use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
+    /**
+     * @throws ValidationException
+     */
+    public function storeCategory(Request $request): ProductCategoryResource
+    {
+        $request->validate([
+            "category" => "required",
+            "bot_id" => "required"
+        ]);
+
+        $bot = Bot::query()->find($request->bot_id);
+
+        return BusinessLogic::products()
+            ->setBot($bot ?? null)
+            ->createOrUpdateCategory($request->all());
+    }
+
     public function getProductsByIds(Request $request): ProductCollection
     {
         $request->validate([

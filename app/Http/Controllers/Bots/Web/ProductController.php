@@ -137,7 +137,7 @@ class ProductController extends Controller
     /**
      * @throws ValidationException
      */
-    public function addCategory(Request $request): ProductCategoryResource
+    public function storeCategory(Request $request): ProductCategoryResource
     {
         $request->validate([
             "category" => "required"
