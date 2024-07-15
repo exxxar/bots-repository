@@ -237,6 +237,7 @@ class VKProductController extends Controller
 
             $vkCategory = $vkProduct->category ?? null;
 
+            Log::info("категория ".print_r($vkCategory, true));
 
             if (!is_null($vkCategory)) {
                 $vkCategory = (object)$vkCategory;
@@ -395,6 +396,7 @@ class VKProductController extends Controller
 
             $vkAlbums = ((object)$response)->items;
 
+            Log::info("альбомы".print_r($vkAlbums, true));
             if (count($vkAlbums) > 0)
                 foreach ($vkAlbums as $album) {
 
