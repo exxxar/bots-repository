@@ -390,12 +390,21 @@ class ProductLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
-        $category = ProductCategory::query()
-            ->create([
-                'title' => $data["category"]["title"] ?? '-',
-                'order_position' => $data["category"]["order_position"] ?? 0,
-                'bot_id' => $this->bot->id,
-            ]);
+        $id = $data["category"]["id"] ?? null;
+        $tmp = [
+            'title' => $data["category"]["title"] ?? '-',
+            'order_position' => $data["category"]["order_position"] ?? 0,
+            'bot_id' => $this->bot->id,
+        ];
+
+        if (is_null($id))
+            $category = ProductCategory::query()
+                ->create($tmp);
+        else {
+            $category = ProductCategory::query()->find($id);
+
+            $category->update($tmp);
+        }
 
         return new ProductCategoryResource($category);
     }
@@ -475,7 +484,6 @@ class ProductLogicFactory
 
         return new ProductCategoryResource($category);
     }
-
 
 
     /**
