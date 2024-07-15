@@ -419,7 +419,7 @@ class VKProductController extends Controller
                 $this->importProducts($vkProducts, $bot, null, $results);
             }
 
-            Log::info("all product ids=>".print_r(  $this->tmpProducts, true));
+            Log::info("all product ids=>".print_r(  array_values($this->tmpProducts), true));
         } catch (\Exception $e) {
             Log::info($e->getMessage() . " " . $e->getLine());
             Inertia::setRootView("shop");
