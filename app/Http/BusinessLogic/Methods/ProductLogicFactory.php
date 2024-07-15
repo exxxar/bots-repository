@@ -449,7 +449,8 @@ class ProductLogicFactory
     {
         $category = ProductCategory::query()
             ->with(["products"])
-            ->find($categoryId);
+            ->where("id",$categoryId)
+            ->first();
 
         if (is_null($category))
             throw new HttpException(404, "Категория не найдена");

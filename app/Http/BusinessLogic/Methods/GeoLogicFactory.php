@@ -80,12 +80,11 @@ class GeoLogicFactory
                 ->setLimit(1)
                 ->setLang(\Yandex\Geo\Api::LANG_RU)
                 ->load();
-        } catch (CurlError $e) {
-
-        } catch (ServerError $e) {
-
         } catch (Exception $e) {
-
+            return (object)[
+                "lat" => 0,
+                "lon" =>  0
+            ];
         }
 
 
