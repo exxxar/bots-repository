@@ -288,7 +288,7 @@ class VKProductController extends Controller
             }
 
             if (count($tmpCategoryForSync) > 0)
-                $product->productCategories()->attach($tmpCategoryForSync);
+                $product->productCategories()->sync($tmpCategoryForSync);
 
         }
     }
