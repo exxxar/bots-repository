@@ -158,7 +158,7 @@ class VKProductController extends Controller
                 'title' => $vkProduct->title ?? '-',
                 'description' => $vkProduct->description ?? '-',
                 'images' => [
-                        $vkProduct->thumb_photo ?? '-'
+                        $vkProduct->thumb_photo
                 ],
                 'type' => 0,
                 'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
@@ -167,6 +167,8 @@ class VKProductController extends Controller
                 'in_stop_list_at' => $vkProduct->availability == 0 ? null : Carbon::now(),
                 'bot_id' => $bot->id,
             ];
+
+            Log::info("photos".print_r(  $vkProduct->thumb_photo, true));
 
             if (is_null($product)) {
                 $product = Product::query()->create($tmpProduct);
