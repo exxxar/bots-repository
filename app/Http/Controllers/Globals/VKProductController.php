@@ -157,7 +157,7 @@ class VKProductController extends Controller
                 'in_stop_list_at' => $vkProduct->availability == 0 ?  null : Carbon::now(),
                 'bot_id' => $bot->id,
             ];
-            Log::info("товар=>".($vkProduct->title ?? '-'));
+            Log::info("товар=>".($vkProduct->title ?? '-')." найдено=>".(is_null($product)?"нет":"да"));
             if (is_null($product)) {
                 $product = Product::query()->create($tmpProduct);
                 $results->created_product_count++;
