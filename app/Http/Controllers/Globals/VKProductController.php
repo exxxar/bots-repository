@@ -57,7 +57,6 @@ class VKProductController extends Controller
         if (is_null($this->fpProducts??null))
             return null;
 
-        Log::info("fpProducts".print_r($this->fpProducts, true));
 
         foreach ($this->fpProducts["name"] ?? [] as $key=>$name)
         {
@@ -67,7 +66,7 @@ class VKProductController extends Controller
             $preparedName2 = mb_strtolower(str_replace($chars, "", mb_strtolower($test)));
 
             if ($preparedName1 == $preparedName2 ) {
-                Log::info("совпадение $preparedName1 == $preparedName2 ");
+
                 $index = $key;
                 break;
             }
@@ -77,7 +76,6 @@ class VKProductController extends Controller
         if (is_null($index))
             return null;
 
-        Log::info("product=>".($this->fpProducts["product_id"][$index] ?? '-')."----".($this->fpProducts["name"][$index]??'-'));
 
         return (object)[
             "name" => $test,
@@ -110,7 +108,7 @@ class VKProductController extends Controller
 
                 $tmpCategoryForSync[] = $productCategoryAlbum->id;
 
-                //    Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
+
             }
 
             $variants = [];
@@ -136,7 +134,7 @@ class VKProductController extends Controller
 
             if (!is_null($this->fpProducts ?? null))
             {
-                Log::info("VK PRODUCT $vkProduct->title");
+
                 $fpObject = $this->findFrontPadProduct($vkProduct->title);
 
                 if (!is_null($fpObject))
@@ -159,7 +157,7 @@ class VKProductController extends Controller
                 'in_stop_list_at' => $vkProduct->availability == 0 ?  null : Carbon::now(),
                 'bot_id' => $bot->id,
             ];
-
+            Log::info("товар=>".($vkProduct->title ?? '-'));
             if (is_null($product)) {
                 $product = Product::query()->create($tmpProduct);
                 $results->created_product_count++;
@@ -332,22 +330,16 @@ class VKProductController extends Controller
                 ->setBot($bot)
                 ->getProducts() : null;
 
-        Log::info("loaded products => ".print_r( $this->fpProducts, true));
-
-        Log::info("1test $client_id $client_secret $redirect_uri $code $state");
 
         $tmpScreenName = substr($bot->vk_shop_link, strpos($bot->vk_shop_link, "https://vk.com/") + strlen("https://vk.com/"));
 
         $response = $oauth->getAccessToken($client_id, $client_secret, $redirect_uri, $code);
         $access_token = $response['access_token'] ?? null;
-        Log::info("2test $client_id $client_secret $redirect_uri $code " . $response['access_token']);
-
 
         $vk = new VKApiClient();
 
         try {
 
-            Log::info("3test $tmpScreenName");
             $response = $vk->utils()->resolveScreenName($access_token, [
                 'screen_name' => $tmpScreenName ?? null,
             ]);
@@ -359,15 +351,13 @@ class VKProductController extends Controller
         }
 
         $data = ((object)$response);
-        Log::info("4test " . print_r($data, true));
+
         if (is_null($data))
             return response()->noContent(400);
 
         if ($data->type != "group" && $data->type != "page")
             return response()->noContent(400);
 
-
-        Log::info("access_token:$access_token");
 
         $results = (object)[
             "total_product_count" => 0,
@@ -383,7 +373,7 @@ class VKProductController extends Controller
 
             $vkAlbums = ((object)$response)->items;
 
-            Log::info("альбомы".print_r($vkAlbums, true));
+
             if (count($vkAlbums) > 0)
                 foreach ($vkAlbums as $album) {
 
