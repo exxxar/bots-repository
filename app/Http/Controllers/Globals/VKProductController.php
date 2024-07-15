@@ -27,6 +27,8 @@ class VKProductController extends Controller
 
     protected $fpProducts = null;
 
+    protected $tmpProducts = [];
+
     public function getVKAuthLink(Request $request)
     {
         $bot = $request->bot ?? null;
@@ -132,8 +134,10 @@ class VKProductController extends Controller
                 ->where("bot_id", $bot->id)
                 ->first();
 
+            $this->tmpProducts[] = $product->id ?? null;
+
             Log::info("товар=>".($vkProduct->title ?? '-')." найдено=>".(is_null($product)?"нет":"да"));
-            Log::info("детали товара в системе=>".print_r($product->toArray() ?? null, true));
+
 
             if (!is_null($this->fpProducts ?? null))
             {
@@ -415,6 +419,7 @@ class VKProductController extends Controller
                 $this->importProducts($vkProducts, $bot, null, $results);
             }
 
+            Log::info("all product ids=>".print_r(  $this->tmpProducts, true));
         } catch (\Exception $e) {
             Log::info($e->getMessage() . " " . $e->getLine());
             Inertia::setRootView("shop");
