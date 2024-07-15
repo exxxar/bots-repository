@@ -90,6 +90,7 @@ class VKProductController extends Controller
     {
         foreach ($vkProducts as $vkProduct) {
 
+            Log::info("продукт в альбоме".print_r($vkProduct, true));
             $tmpCategoryForSync = [];
 
             if (!is_null($album)) {
