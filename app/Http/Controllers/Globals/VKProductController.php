@@ -168,7 +168,7 @@ class VKProductController extends Controller
                 'bot_id' => $bot->id,
             ];
 
-            Log::info("photos".print_r(  $vkProduct->thumb_photo, true));
+            Log::info("products=>".print_r(  $vkProduct, true));
 
             if (is_null($product)) {
                 $product = Product::query()->create($tmpProduct);
