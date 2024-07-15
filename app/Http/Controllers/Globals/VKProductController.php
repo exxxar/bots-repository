@@ -93,12 +93,11 @@ class VKProductController extends Controller
             $tmpCategoryForSync = [];
 
             if (!is_null($album)) {
-                Log::info("ЗАШЛИ В АЛЬБОМ ".print_r($album, true));
+
                 $productCategoryAlbum = ProductCategory::query()
                     ->where("title", $album->title)
                     ->where("bot_id", $bot->id)
                     ->first();
-                Log::info("ПУСТОЙ? ".print_r(is_null($productCategoryAlbum)?"нет":"да", true));
 
                 if (is_null($productCategoryAlbum))
                     $productCategoryAlbum = ProductCategory::query()
@@ -448,14 +447,14 @@ class VKProductController extends Controller
             ]);
         }
 
-        $tmpClearedCategories = ProductCategory::query()
+        /*$tmpClearedCategories = ProductCategory::query()
             ->with(["products"])
             ->where("bot_id", $bot->id)
             ->has("products","=",0)
             ->get();
 
         foreach ($tmpClearedCategories as $tmpClearedCategory)
-            $tmpClearedCategory->delete();
+            $tmpClearedCategory->delete();*/
 
         Inertia::setRootView("shop");
 
