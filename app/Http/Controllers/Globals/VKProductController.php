@@ -61,7 +61,7 @@ class VKProductController extends Controller
 
         foreach ($this->fpProducts["name"] ?? [] as $key=>$name)
         {
-            $chars = ['@','#','$','%','^','&','*','"'];
+            $chars = ['"',"'","`"];
 
             $preparedName1 = preg_replace($chars, "", strtolower($name));
             $preparedName2 = preg_replace($chars, "", strtolower($test));
