@@ -92,6 +92,25 @@ class VKProductController extends Controller
 
             $tmpCategoryForSync = [];
 
+            if (!is_null($album)) {
+                $productCategoryAlbum = ProductCategory::query()
+                    ->where("title", $album->title)
+                    ->where("bot_id", $bot->id)
+                    ->first();
+
+                if (is_null($productCategoryAlbum))
+                    $productCategoryAlbum = ProductCategory::query()
+                        ->create([
+                            'title' => $album->title,
+                            'bot_id' => $bot->id,
+                        ]);
+
+
+                $tmpCategoryForSync[] = $productCategoryAlbum->id;
+
+                //    Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
+            }
+
             $variants = [];
 
             $results->total_product_count++;
@@ -239,6 +258,7 @@ class VKProductController extends Controller
 
             Log::info("категория ".print_r($vkCategory, true));
 
+
             if (!is_null($vkCategory)) {
                 $vkCategory = (object)$vkCategory;
 
@@ -274,24 +294,6 @@ class VKProductController extends Controller
                 $tmpCategoryForSync[] = $productCategorySection->id;
 
 
-                if (!is_null($album)) {
-                    $productCategoryAlbum = ProductCategory::query()
-                        ->where("title", $album->title)
-                        ->where("bot_id", $bot->id)
-                        ->first();
-
-                    if (is_null($productCategoryAlbum))
-                        $productCategoryAlbum = ProductCategory::query()
-                            ->create([
-                                'title' => $album->title,
-                                'bot_id' => $bot->id,
-                            ]);
-
-
-                    $tmpCategoryForSync[] = $productCategoryAlbum->id;
-
-                    //    Log::info("album" . print_r($productCategoryAlbum->toArray(), true));
-                }
 
                 if (count($tmpCategoryForSync) > 0) {
                     //Log::info("tmpCategoryForSync=>".print_r($tmpCategoryForSync,true));
