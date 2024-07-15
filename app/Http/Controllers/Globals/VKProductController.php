@@ -133,9 +133,13 @@ class VKProductController extends Controller
                 ->where("bot_id", $bot->id)
                 ->first();
 
-            if (!in_array($product->id, $this->tmpProducts))
+            if (!in_array($product->id, $this->tmpProducts)) {
                 $this->tmpProducts[] = $product->id ?? null;
 
+                $tmpCategoryForSync[] =  array_values($product->productCategories()->get()->pluck("id")->toArray());
+                $product->productCategories()->sync($tmpCategoryForSync);
+                continue;
+            }
 
             if (!is_null($this->fpProducts ?? null)) {
 
@@ -392,7 +396,7 @@ class VKProductController extends Controller
 
                     $vkProducts = ((object)$response)->items;
 
-                    Log::info("Альбом=>".$album->title." товары в альбоме ".print_r($vkProducts, true));
+                   // Log::info("Альбом=>".$album->title." товары в альбоме ".print_r($vkProducts, true));
 
                     $this->importProducts($vkProducts, $bot, $album, $results);
 
