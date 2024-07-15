@@ -78,6 +78,7 @@ class SimpleDeliveryController extends SlugController
             [
                 "type" => "text",
                 "key" => "shop_theme_id",
+                "description" => "Идентификатор темы магазина",
                 "value" => 0,
 
             ],
