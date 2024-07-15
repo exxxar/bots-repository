@@ -681,25 +681,7 @@ export default {
             },
             deep: true
         },
-        'deliveryForm': {
-            handler: function (newValue) {
-                localStorage.setItem("cashman_self_product_delivery_form_name", this.deliveryForm.name || '')
-                localStorage.setItem("cashman_self_product_delivery_form_phone", this.deliveryForm.phone || '')
-                localStorage.setItem("cashman_self_product_delivery_form_address", this.deliveryForm.address || '')
-                localStorage.setItem("cashman_self_product_delivery_form_city", this.deliveryForm.city || '')
-                localStorage.setItem("cashman_self_product_delivery_form_street", this.deliveryForm.street || '')
-                localStorage.setItem("cashman_self_product_delivery_form_building", this.deliveryForm.building || '')
-                localStorage.setItem("cashman_self_product_delivery_form_flat_number", this.deliveryForm.flat_number || '')
 
-                localStorage.setItem("cashman_self_product_delivery_form_entrance_number", this.deliveryForm.entrance_number || '')
-                if ((this.deliveryForm.disabilities || []).length > 0)
-                    localStorage.setItem("cashman_self_product_delivery_form_entrance_disabilities", JSON.stringify(this.deliveryForm.disabilities || []))
-                else
-                    localStorage.removeItem("cashman_self_product_delivery_form_entrance_disabilities");
-
-            },
-            deep: true
-        }
     },
     computed: {
         ...mapGetters(['getProducts', 'cartProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
@@ -709,10 +691,6 @@ export default {
 
         canSubmitForm() {
 
-            console.info("spent_time_counter", this.spent_time_counter)
-            console.info("cartTotalPrice", this.cartTotalPrice)
-            console.info("settings.min_price", this.settings.min_price)
-            console.info("cashbackLimit", this.cashbackLimit)
 
             return (this.spent_time_counter || 0) == 0
                 && (!this.deliveryForm.use_cashback ?
@@ -955,6 +933,21 @@ export default {
         },
 
         startCheckout() {
+
+            localStorage.setItem("cashman_self_product_delivery_form_name", this.deliveryForm.name || '')
+            localStorage.setItem("cashman_self_product_delivery_form_phone", this.deliveryForm.phone || '')
+            localStorage.setItem("cashman_self_product_delivery_form_address", this.deliveryForm.address || '')
+            localStorage.setItem("cashman_self_product_delivery_form_city", this.deliveryForm.city || '')
+            localStorage.setItem("cashman_self_product_delivery_form_street", this.deliveryForm.street || '')
+            localStorage.setItem("cashman_self_product_delivery_form_building", this.deliveryForm.building || '')
+            localStorage.setItem("cashman_self_product_delivery_form_flat_number", this.deliveryForm.flat_number || '')
+
+            localStorage.setItem("cashman_self_product_delivery_form_entrance_number", this.deliveryForm.entrance_number || '')
+            if ((this.deliveryForm.disabilities || []).length > 0)
+                localStorage.setItem("cashman_self_product_delivery_form_entrance_disabilities", JSON.stringify(this.deliveryForm.disabilities || []))
+            else
+                localStorage.removeItem("cashman_self_product_delivery_form_entrance_disabilities");
+
 
             if (this.is_requested) {
                 this.$botNotification.warning("Упс!", `Сделать повторный заказ можно через <strong>${this.spent_time_counter} сек.</strong>`)
