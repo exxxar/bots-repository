@@ -65,6 +65,7 @@ class VKProductController extends Controller
             $preparedName2 = preg_replace('/[^a-z]/', "", strtolower($test));
 
             if ($preparedName1 == $preparedName2 ) {
+                Log::info("совпадение $preparedName1 == $preparedName2 ");
                 $index = $key;
                 break;
             }
