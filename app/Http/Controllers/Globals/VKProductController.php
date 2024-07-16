@@ -168,10 +168,10 @@ class VKProductController extends Controller
                 $results->updated_product_count++;
             }
 
-            if (!in_array($product->id , $this->tmpProducts))
+       /*     if (!in_array($product->id , $this->tmpProducts))
                 $this->tmpProducts[] = $product->id ?? null;
             else
-                continue;
+                continue;*/
 
 
             $vkDimensions = $vkProduct->dimensions ?? null;
