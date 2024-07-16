@@ -803,7 +803,11 @@ class ProductLogicFactory
         $hasDisability = ($data["has_disability"] ?? "false") == "true";
         $useCashback = ($data["use_cashback"] ?? "false") == "true";
         $needPaymentLink = ($data["need_payment_link"] ?? "false") == "true";
-        $cash = ($data["cash"] ?? "false") == "true";
+
+       $paymentTypes = ["Онлайн в боте", "Картой в заведении","Переводом","Наличными"];
+        $cash = $paymentTypes[$data["payment_type"] ?? 0];
+
+
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
         $deliveryPrice = $data["delivery_price"] ?? 0;
         $distance = $data["distance"] ?? 0;
@@ -861,7 +865,7 @@ class ProductLogicFactory
         $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
             . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
             . "Номер этажа: " . ($data["floor_number"] ?? 'Не указан') . "\n"
-            . "Тип оплаты: " . ($cash ? "Наличкой" : "Картой") . "\n"
+            . "Тип оплаты: " . $cash . "\n"
             . "Сдача с:" . ($data["money"] ?? 'Не указано') . "\n"
             . "Время доставки:" . ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')) . "\n"
             . "Число персон:" . $persons . "\n"
@@ -915,7 +919,7 @@ class ProductLogicFactory
                 $distance ?? 0, //$distance
                 $data["entrance_number"] ?? 'Не указано',
                 $data["floor_number"] ?? 'Не указано',
-                ($cash ? "Наличкой" : "Картой"),
+               $cash,
                 $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
                 $useCashback ? $discount : "нет",
@@ -925,7 +929,7 @@ class ProductLogicFactory
                 $this->botUser->telegram_chat_id,
                 $data["name"] ?? 'Не указано',
                 $data["phone"] ?? 'Не указано',
-                ($cash ? "Наличкой" : "Картой"),
+                $cash,
                 $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
                 $useCashback ? $discount : "нет",
@@ -985,7 +989,7 @@ class ProductLogicFactory
             "message" => ($data["info"] ?? 'Не указано'),
             "entranceNumber" => ($data["entrance_number"] ?? 'Не указано'),
             "floorNumber" => ($data["floor_number"] ?? 'Не указано'),
-            "cashType" => ($cash ? "Наличкой" : "Картой"),
+            "cashType" =>$cash,
             "money" => ($data["money"] ?? 'Не указано'),
             "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),
             "totalPrice" => $summaryPrice,
