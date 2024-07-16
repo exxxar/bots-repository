@@ -436,7 +436,6 @@ trait BotDialogTrait
     }
 
 
-
     private function dialogResponse($botUser, $botDialogCommand, $dialogData = [], $variables = []): void
     {
         /*     if (!is_null($botDialogCommand->result_channel)) */
@@ -542,39 +541,37 @@ trait BotDialogTrait
 
             }
 
-            $channel = $botDialogCommand->result_channel ??
-                $bot->order_channel ??
-                null;
-
-            $tmpMessage = "Пользователь:\n"
-                . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
-                . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
-                . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
-                . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
-                . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n\n" . $tmpMessage;
-
-            $thread = $bot->topics["questions"] ?? null;
-
-            $botDomain = $bot->bot_domain;
-            $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $botUser->telegram_chat_id);
-
-
-            //$this->sendMessage($channel, $tmpMessage, $thread);
-
-            $tmpText = mb_substr($tmpMessage, 0, 4000);
-
-            $this->sendInlineKeyboard($channel,
-                $tmpText,
-                [
-                    [
-                        ["text" => "✉Написать пользователю ответ", "url" => $link]
-                    ]
-                ],
-                $thread
-            );
-
-
         }
+
+        $channel = $botDialogCommand->result_channel ??
+            $bot->order_channel ??
+            null;
+
+        $tmpMessage = "Пользователь:\n"
+            . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
+            . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
+            . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
+            . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
+            . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n\n" . $tmpMessage;
+
+        $thread = $bot->topics["questions"] ?? null;
+
+        $botDomain = $bot->bot_domain;
+        $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $botUser->telegram_chat_id);
+
+
+        //$this->sendMessage($channel, $tmpMessage, $thread);
+
+        $this->sendInlineKeyboard($channel,
+            $tmpMessage,
+            [
+                [
+                    ["text" => "✉Написать пользователю ответ", "url" => $link]
+                ]
+            ],
+            $thread
+        );
+
 
     }
 }

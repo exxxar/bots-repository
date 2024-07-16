@@ -100,16 +100,18 @@ trait BotBaseMethodsTrait
             return $this;
 
 
-        if ( mb_strlen($message ?? '') > 4096){
-            $subMessage = mb_substr($message, 0, 4096);
-            $elseMessage = mb_substr($message, 4096);
+        $tmp = [
+            "chat_id" => $chatId,
+            "message_thread_id" => $messageThreadId,
+            "text" => $message,
+            "parse_mode" => "HTML"
+        ];
 
-            $tmp = [
-                "chat_id" => $chatId,
-                "message_thread_id" => $messageThreadId,
-                "text" => $subMessage,
-                "parse_mode" => "HTML"
-            ];
+        if ( mb_strlen($message ?? '') >= 4000){
+            $subMessage = mb_substr($message, 0, 4000);
+            $elseMessage = mb_substr($message, 4000);
+
+            $tmp["text"] = $subMessage;
 
             $data = $this->bot->sendMessage($tmp);
 
@@ -118,12 +120,6 @@ trait BotBaseMethodsTrait
         }
 
 
-        $tmp = [
-            "chat_id" => $chatId,
-            "message_thread_id" => $messageThreadId,
-            "text" => mb_strlen($message ?? '') > 0 ? $message : 'Главное меню',
-            "parse_mode" => "HTML"
-        ];
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
@@ -721,9 +717,9 @@ trait BotBaseMethodsTrait
             ]);
         }
 
-        if ( mb_strlen($message ?? '') >= 4096){
-            $subMessage = mb_substr($message, 0, 4096);
-            $elseMessage = mb_substr($message, 4096);
+        if ( mb_strlen($message ?? '') >= 4000){
+            $subMessage = mb_substr($message, 0, 4000);
+            $elseMessage = mb_substr($message, 4000);
 
             $tmp["text"] = $subMessage;
 
