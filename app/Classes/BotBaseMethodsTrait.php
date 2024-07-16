@@ -423,6 +423,18 @@ trait BotBaseMethodsTrait
             ])
         ];
 
+        if ( mb_strlen($message ?? '') >= 4000){
+            $subMessage = mb_substr($message, 0, 4000);
+            $elseMessage = mb_substr($message, 4000);
+
+            $tmp["text"] = $subMessage;
+
+            $data = $this->bot->sendMessage($tmp);
+
+            return $this->sendMessage($chatId, $elseMessage, $messageThreadId);
+
+        }
+
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
             return $this;
