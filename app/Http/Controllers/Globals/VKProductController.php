@@ -171,7 +171,7 @@ class VKProductController extends Controller
             if (!in_array($product->id , $this->tmpProducts))
                 $this->tmpProducts[] = $product->id ?? null;
             else {
-                $product->productCategories()->sync($tmpCategoryForSync);
+                $product->productCategories()->attach($tmpCategoryForSync);
                 continue;
             }
                 ;
