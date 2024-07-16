@@ -107,35 +107,7 @@ trait BotBaseMethodsTrait
             "parse_mode" => "HTML"
         ];
 
-        if ( mb_strlen($message ?? '') >= 4000){
-            $subMessage = mb_substr($message, 0, 4000);
-            $elseMessage = mb_substr($message, 4000);
-
-            $tmp["text"] = $subMessage;
-
-            $data = $this->bot->sendMessage($tmp);
-
-            return $this->sendMessage($chatId, $elseMessage, $messageThreadId);
-
-        }
-
-
-
-        if ($this->isWebMode) {
-            $this->pushWebMessage($tmp);
-            return $this;
-        }
-
-        try {
-            $data = $this->bot->sendMessage($tmp);
-
-        } catch (\Exception $e) {
-
-            $this->sendMessageOnCrash($tmp, "sendMessage");
-
-
-        }
-        return $this;
+        return $this->extractedMessage($message, $tmp, $chatId, $messageThreadId);
     }
 
     public function sendSticker($chatId, $sticker, $messageThreadId = null)
@@ -423,33 +395,7 @@ trait BotBaseMethodsTrait
             ])
         ];
 
-        if ( mb_strlen($message ?? '') >= 4000){
-            $subMessage = mb_substr($message, 0, 4000);
-            $elseMessage = mb_substr($message, 4000);
-
-            $tmp["text"] = $subMessage;
-
-            $data = $this->bot->sendMessage($tmp);
-
-            return $this->sendMessage($chatId, $elseMessage, $messageThreadId);
-
-        }
-
-        if ($this->isWebMode) {
-            $this->pushWebMessage($tmp);
-            return $this;
-        }
-
-        try {
-            $data = $this->bot->sendMessage($tmp);
-
-
-        } catch (\Exception $e) {
-            $this->sendMessageOnCrash($tmp, "sendMessage");
-
-        }
-
-        return $this;
+        return $this->extractedMessage($message, $tmp, $chatId, $messageThreadId);
 
     }
 
@@ -733,11 +679,11 @@ trait BotBaseMethodsTrait
             $subMessage = mb_substr($message, 0, 4000);
             $elseMessage = mb_substr($message, 4000);
 
-            $tmp["text"] = $subMessage;
+            $tmp["text"] = "$subMessage...";
 
             $data = $this->bot->sendMessage($tmp);
 
-            return $this->sendMessage($chatId, $elseMessage, $messageThreadId);
+            return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
 
         }
 
@@ -1036,5 +982,44 @@ trait BotBaseMethodsTrait
             ->first();
 
         $this->sendInlineKeyboard($chatId, $text, is_null($menu) ? [] : $menu->menu);
+    }
+
+    /**
+     * @param $message
+     * @param array $tmp
+     * @param $chatId
+     * @param mixed $messageThreadId
+     * @return $this|BotManager|BotMethods
+     */
+    private function extractedMessage($message, array $tmp, $chatId, mixed $messageThreadId): BotBaseMethodsTrait|BotMethods|BotManager
+    {
+        if (mb_strlen($message ?? '') >= 4000) {
+            $subMessage = mb_substr($message, 0, 4000);
+            $elseMessage = mb_substr($message, 4000);
+
+            $tmp["text"] = "$subMessage...";
+
+            $data = $this->bot->sendMessage($tmp);
+
+            return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
+
+        }
+
+
+        if ($this->isWebMode) {
+            $this->pushWebMessage($tmp);
+            return $this;
+        }
+
+        try {
+            $data = $this->bot->sendMessage($tmp);
+
+        } catch (\Exception $e) {
+
+            $this->sendMessageOnCrash($tmp, "sendMessage");
+
+
+        }
+        return $this;
     }
 }
