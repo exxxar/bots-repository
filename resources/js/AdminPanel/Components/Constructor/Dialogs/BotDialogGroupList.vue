@@ -96,8 +96,30 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
                         <td class="text-left" style="min-width:400px;">
 
-                            <p class="mb-0" v-if="!command.is_empty">Результат будет сохранен в
-                                <strong>{{ command.use_result_as || 'не задана' }}</strong></p>
+                            <div class="dropdown" v-if="!command.is_empty">
+                                <button
+                                    style="line-height:100%;font-size:10px;text-align:left;"
+                                    class="btn btn-link m-0 p-0 text-decoration-none" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Результат будет сохранен в
+                                    <strong>{{ command.use_result_as || 'не задана' }}</strong>
+                                </button>
+                                <div class="dropdown-menu p-2">
+                                    <form v-on:submit.prevent="updateDialogCommand(command)"
+                                          class="p-2">
+                                        <p class="mb-0">Значение</p>
+                                        <textarea
+                                            class="form-control"
+                                            v-model="command.use_result_as"
+                                            name="" id="" cols="30" rows="10"></textarea>
+
+                                        <button class="btn btn-outline-primary mt-2 w-100 text-center">
+                                            Сохранить
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
 
                             <div class="dropdown my-2">
                                 <button
@@ -438,6 +460,38 @@ export default {
         })
     },
     methods: {
+        updateDialogCommand(command){
+            let data = new FormData();
+            Object.keys(command)
+                .forEach(key => {
+                    const item = command[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+
+            this.$store.dispatch("updateDialogCommand",
+                {
+                    dialogCommandForm: data
+                }).then((response) => {
+
+                this.loading = false
+
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Успешная обработка диалоговой команды",
+                    type: 'success'
+                });
+            }).catch(()=>{
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Ошибка обработки диалоговой команды",
+                    type: 'error'
+                });
+            })
+        },
         updateAnswer(answ) {
             this.$store.dispatch("updatedDialogAnswer", {
                     ...answ,
