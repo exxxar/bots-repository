@@ -98,7 +98,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
 
                             <div class="dropdown" v-if="!command.is_empty">
                                 <button
-                                    style="line-height:100%;font-size:10px;text-align:left;"
+                                    style="line-height:100%;font-size:14px;text-align:left;"
                                     class="btn btn-link m-0 p-0 text-decoration-none" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     Результат будет сохранен в
