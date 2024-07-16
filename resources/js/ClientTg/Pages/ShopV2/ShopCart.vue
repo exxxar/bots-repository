@@ -413,7 +413,7 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
             </button>
 
             <button
-                v-if="(deliveryForm.payment_type!==2||settings.need_pay_after_call)&&tab===1"
+                v-if="deliveryForm.payment_type!==2&&settings.need_pay_after_call&&tab===1"
                 type="submit"
                 :disabled="spent_time_counter>0||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)"
                 class="btn btn-primary p-3 w-100">
@@ -431,7 +431,7 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
 
             <!--            ||(!deliveryForm.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit)-->
             <button
-                v-if="deliveryForm.payment_type===2&&tab===1"
+                v-if="deliveryForm.payment_type===2&&!settings.need_pay_after_call&&tab===1"
                 type="button"
                 @click="tab=3"
                 :disabled="!canSubmitForm"
