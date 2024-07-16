@@ -150,6 +150,7 @@ export default {
                 min_price_for_cashback: 0,
                 menu_list_type: 0,
                 need_category_by_page: false,
+                need_pay_after_call: false,
             },
             product_type_display: 1,
             spent_time_counter: 0,

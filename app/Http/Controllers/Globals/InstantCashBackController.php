@@ -107,6 +107,11 @@ class InstantCashBackController extends SlugController
             return;
         }
 
+        if ($action->current_attempts>=$action->max_attempts){
+            BotManager::bot()->reply("Вы уже израсходовали попытки");
+            return;
+        }
+
         $cashBackAmount = (Collection::make($slug->config)
             ->where("key", "cashback_amount")
             ->first())["value"] ?? 0;
@@ -122,6 +127,8 @@ class InstantCashBackController extends SlugController
             return;
         }
 
+        $action->current_attempts++;
+        $action->save();
 
         BusinessLogic::administrative()
             ->setBot($bot)
@@ -133,8 +140,7 @@ class InstantCashBackController extends SlugController
                 "info" => "Мгновенное начисление CashBack в размере $cashBackAmount руб.",
             ]);
 
-        $action->current_attempts++;
-        $action->save();
+
 
     }
 

@@ -435,17 +435,7 @@ trait BotDialogTrait
 
     }
 
-    private function textReSender($text, $offset = 0, $channel = null, $thread = null)
-    {
-        $limit = 4000;
-        for ($i = $offset; $i <= round(mb_strlen($text) / $limit); $i += $limit) {
-            $tmp = mb_substr($text, $i, $limit);
-            if (is_null($channel))
-                $this->reply($tmp, $thread);
-            else
-                $this->sendMessage($channel, $tmp, $thread);
-        }
-    }
+
 
     private function dialogResponse($botUser, $botDialogCommand, $dialogData = [], $variables = []): void
     {
@@ -538,17 +528,15 @@ trait BotDialogTrait
 
                 if ($result && !is_null($rule->text_if_true ?? null)) {
                     $text = $this->prepareDataWithVariables($rule->text_if_true, $botUser);
-                    $tmpText = mb_substr($text, 0, 4000);
-                    $this->replyInlineKeyboard($tmpText, $rule->keyboard_if_true ?? []);
-                    $this->textReSender($tmpText, 4000);
+                    $this->replyInlineKeyboard($text, $rule->keyboard_if_true ?? []);
+
                 }
 
                 if (!$result && !is_null($rule->text_if_false ?? null)) {
                     {
                         $text = $this->prepareDataWithVariables($rule->text_if_false, $botUser);
-                        $tmpText = mb_substr($text, 0, 4000);
-                        $this->replyInlineKeyboard($tmpText, $rule->keyboard_if_true ?? []);
-                        $this->textReSender($tmpText, 4000);
+                        $this->replyInlineKeyboard($text, $rule->keyboard_if_true ?? []);
+
                     }
                 }
 
@@ -585,7 +573,7 @@ trait BotDialogTrait
                 $thread
             );
 
-            $this->textReSender($tmpText, 4000, $channel, $thread);
+
         }
 
     }

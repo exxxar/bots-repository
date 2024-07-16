@@ -99,6 +99,25 @@ trait BotBaseMethodsTrait
         if (mb_strlen($message ?? '') == 0)
             return $this;
 
+
+        if ( mb_strlen($message ?? '') > 4096){
+            $subMessage = mb_substr($message, 0, 4096);
+            $elseMessage = mb_substr($message, 4096);
+
+            $tmp = [
+                "chat_id" => $chatId,
+                "message_thread_id" => $messageThreadId,
+                "text" => $subMessage,
+                "parse_mode" => "HTML"
+            ];
+
+            $data = $this->bot->sendMessage($tmp);
+
+            return $this->sendMessage($chatId, $elseMessage, $messageThreadId);
+
+        }
+
+
         $tmp = [
             "chat_id" => $chatId,
             "message_thread_id" => $messageThreadId,
@@ -691,17 +710,27 @@ trait BotBaseMethodsTrait
 
         $tmp = [
             "chat_id" => $chatId,
-            "text" => $message,
             "message_thread_id" => $messageThreadId,
-            "parse_mode" => "HTML",
-
-
+            "text" => $message,
+            "parse_mode" => "HTML"
         ];
 
         if (!empty($keyboard ?? [])) {
             $tmp['reply_markup'] = json_encode([
                 'inline_keyboard' => $keyboard,
             ]);
+        }
+
+        if ( mb_strlen($message ?? '') >= 4096){
+            $subMessage = mb_substr($message, 0, 4096);
+            $elseMessage = mb_substr($message, 4096);
+
+            $tmp["text"] = $subMessage;
+
+            $data = $this->bot->sendMessage($tmp);
+
+            return $this->sendMessage($chatId, $elseMessage, $messageThreadId);
+
         }
 
 

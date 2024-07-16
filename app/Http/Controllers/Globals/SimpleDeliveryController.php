@@ -134,6 +134,13 @@ class SimpleDeliveryController extends SlugController
             ],
 
             [
+                "type" => "boolean",
+                "key" => "need_pay_after_call",
+                "value" => false,
+
+            ],
+
+            [
                 "type" => "text",
                 "key" => "disabled_text",
                 "value" => "Магазин временно не доступен",
@@ -293,10 +300,14 @@ class SimpleDeliveryController extends SlugController
                 'need_category_by_page' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "need_category_by_page")
                     ->first())["value"] ?? true : true,
-
+                'need_pay_after_call' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "need_pay_after_call")
+                    ->first())["value"] ?? false : false,
                 'payment_info' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "payment_info")
                     ->first())["value"] ?? "Текст не найден" : "Текст не найден",
+
+
 
             ]
         );
