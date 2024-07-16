@@ -173,8 +173,7 @@ class VKProductController extends Controller
             else {
                 $product->productCategories()->attach($tmpCategoryForSync);
                 continue;
-            }
-                ;
+            };
 
 
             $vkDimensions = $vkProduct->dimensions ?? null;

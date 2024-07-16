@@ -435,6 +435,18 @@ trait BotDialogTrait
 
     }
 
+    private function textReSender($text, $offset = 0, $channel = null, $thread = null)
+    {
+        $limit = 4000;
+        for ($i = $offset; $i <= round(mb_strlen($text) / $limit); $i += $limit) {
+            $tmp = mb_substr($text, $i, $limit);
+            if (is_null($channel))
+                $this->reply($tmp, $thread);
+            else
+                $this->sendMessage($channel, $tmp, $thread);
+        }
+    }
+
     private function dialogResponse($botUser, $botDialogCommand, $dialogData = [], $variables = []): void
     {
         /*     if (!is_null($botDialogCommand->result_channel)) */
@@ -526,13 +538,17 @@ trait BotDialogTrait
 
                 if ($result && !is_null($rule->text_if_true ?? null)) {
                     $text = $this->prepareDataWithVariables($rule->text_if_true, $botUser);
-                    $this->replyInlineKeyboard($text, $rule->keyboard_if_true ?? []);
+                    $tmpText = mb_substr($text, 0, 4000);
+                    $this->replyInlineKeyboard($tmpText, $rule->keyboard_if_true ?? []);
+                    $this->textReSender($tmpText, 4000);
                 }
 
                 if (!$result && !is_null($rule->text_if_false ?? null)) {
                     {
                         $text = $this->prepareDataWithVariables($rule->text_if_false, $botUser);
-                        $this->replyInlineKeyboard($text, $rule->keyboard_if_false ?? []);
+                        $tmpText = mb_substr($text, 0, 4000);
+                        $this->replyInlineKeyboard($tmpText, $rule->keyboard_if_true ?? []);
+                        $this->textReSender($tmpText, 4000);
                     }
                 }
 
@@ -542,12 +558,12 @@ trait BotDialogTrait
                 $bot->order_channel ??
                 null;
 
-            $tmpMessage .= "Пользователь:\n"
+            $tmpMessage = "Пользователь:\n"
                 . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
                 . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
                 . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
                 . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
-                . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n";
+                . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n\n" . $tmpMessage;
 
             $thread = $bot->topics["questions"] ?? null;
 
@@ -557,8 +573,10 @@ trait BotDialogTrait
 
             //$this->sendMessage($channel, $tmpMessage, $thread);
 
+            $tmpText = mb_substr($tmpMessage, 0, 4000);
+
             $this->sendInlineKeyboard($channel,
-                $tmpMessage,
+                $tmpText,
                 [
                     [
                         ["text" => "✉Написать пользователю ответ", "url" => $link]
@@ -566,6 +584,8 @@ trait BotDialogTrait
                 ],
                 $thread
             );
+
+            $this->textReSender($tmpText, 4000, $channel, $thread);
         }
 
     }
