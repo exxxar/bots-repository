@@ -581,8 +581,8 @@ trait BotDialogTrait
             ->sendDocument($channel,
                 "Результат от пользователя",
                 InputFile::create(
-                    storage_path("app/public") . "/$$fileName",
-                    "dialog-answers-$date.xls"
+                    storage_path("app/public") . "/$fileName",
+                    "dialog-answers-$date.xlsx"
                 )
             );
 
