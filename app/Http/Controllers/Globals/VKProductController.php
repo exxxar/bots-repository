@@ -133,15 +133,6 @@ class VKProductController extends Controller
                 ->where("bot_id", $bot->id)
                 ->first();
 
-            if (!in_array($product->id, $this->tmpProducts)) {
-                $this->tmpProducts[] = $product->id ?? null;
-
-                /*foreach ($tmpCategoryForSync as $cat){
-                    $product->productCategories()->attach($cat);
-                }*/
-
-                continue;
-            }
 
             if (!is_null($this->fpProducts ?? null)) {
 
@@ -176,6 +167,11 @@ class VKProductController extends Controller
                 $product->update($tmpProduct);
                 $results->updated_product_count++;
             }
+
+            if (!in_array($product->id , $this->tmpProducts))
+                $this->tmpProducts[] = $product->id ?? null;
+            else
+                continue;
 
 
             $vkDimensions = $vkProduct->dimensions ?? null;
