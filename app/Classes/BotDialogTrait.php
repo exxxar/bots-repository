@@ -579,7 +579,10 @@ trait BotDialogTrait
 
         $this
             ->sendDocument($channel,
-                "Результат от пользователя",
+                "Результат от пользователя #"
+                .($botUser->telegram_chat_id??'-')
+                ."("
+                .($botUser->fio_from_telegram??'имя не указано').")",
                 InputFile::create(
                     storage_path("app/public") . "/$fileName",
                     "dialog-answers-$date.xlsx"
