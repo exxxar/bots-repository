@@ -30,7 +30,7 @@
     <table>
         <tr>
             <td style="width: 150px;">Ключ (переменная)</td>
-            <td style="width: 100px;">Данные от пользователя</td>
+            <td style="width: 100px;">Пользователь ввёл</td>
             <td style="width: 1000px;">Сохраненные данные</td>
 
         </tr>
