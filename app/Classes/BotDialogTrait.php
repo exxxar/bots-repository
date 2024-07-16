@@ -2,13 +2,18 @@
 
 namespace App\Classes;
 
+use App\Exports\BotUsersExport;
+use App\Exports\DialogAnswersExport;
 use App\Facades\BotManager;
+use App\Facades\BotMethods;
 use App\Models\BotDialogCommand;
 use App\Models\BotDialogResult;
 use App\Models\BotMenuTemplate;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use Telegram\Bot\FileUpload\InputFile;
 
 trait BotDialogTrait
@@ -552,15 +557,36 @@ trait BotDialogTrait
             . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
             . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
             . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
-            . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n\n" . $tmpMessage;
+            . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n\n";
 
         $thread = $bot->topics["questions"] ?? null;
 
         $botDomain = $bot->bot_domain;
         $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $botUser->telegram_chat_id);
 
+        $fileName = Str::uuid().".xlsx";
 
-        //$this->sendMessage($channel, $tmpMessage, $thread);
+        Excel::store( new DialogAnswersExport([
+            "answers"=>$variables ?? [],
+            "user"=>(object)[
+                "telegram_chat_id"=>$botUser->telegram_chat_id,
+                "fio_from_telegram"=>$botUser->fio_from_telegram,
+                "phone"=>$botUser->phone,
+            ]
+        ]),"$fileName","public", \Maatwebsite\Excel\Excel::XLSX);
+
+        $date = Carbon::now()->format("Y-m-d H-i-s");
+
+        $this
+            ->sendDocument($channel,
+                "Результат от пользователя",
+                InputFile::create(
+                    storage_path("app/public") . "/$$fileName",
+                    "dialog-answers-$date.xls"
+                )
+            );
+
+        unlink(storage_path("app/public") . "/$fileName");
 
         $this->sendInlineKeyboard($channel,
             $tmpMessage,

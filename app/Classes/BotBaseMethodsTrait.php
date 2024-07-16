@@ -806,6 +806,17 @@ trait BotBaseMethodsTrait
             ]);
         }
 
+        if (mb_strlen($caption ?? '') >= 1000) {
+            $subMessage = mb_substr($caption, 0, 1000);
+            $elseMessage = mb_substr($caption, 1000);
+
+            $tmp["caption"] = "$subMessage...";
+
+            $data = $this->bot->sendPhoto($tmp);
+
+            return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
+
+        }
 
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
