@@ -39,11 +39,13 @@
             @php
                 $answer = (object)$answer;
             @endphp
-            <tr>
-                <td style="width: 150px;">{{$answer->key?? 'Не указан'}}</td>
-                <td style="width: 100px;">{{$answer->value?? 'Не указан'}}</td>
-                <td style="width: 1000px;">{{$answer->custom_stored_value?? 'Не указан'}}</td>
-            </tr>
+            @if(!empty($answer->value ?? '')||!empty($answer->custom_stored_value ?? ''))
+                <tr>
+                    <td style="width: 150px;">{{$answer->key?? 'Не указан'}}</td>
+                    <td style="width: 100px;">{{$answer->value?? 'Не указан'}}</td>
+                    <td style="width: 1000px;">{{$answer->custom_stored_value?? 'Не указан'}}</td>
+                </tr>
+            @endif
         @endforeach
 
     </table>
