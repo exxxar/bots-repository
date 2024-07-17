@@ -8,6 +8,16 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 
     <div v-touch:swipe.left="doSwipeLeft"
          v-touch:swipe.right="doSwipeRight" class="d-flex flex-column">
+
+        <div class="p-2">
+            <div class="form-floating">
+                <input type="search"
+                       v-model="search"
+                       class="form-control" id="search-product" placeholder="name@example.com">
+                <label for="search-product">Поиск по товарам</label>
+            </div>
+        </div>
+
         <menu
             v-bind:style="colorTheme"
             class="d-block position-sticky w-100 header-category-slider">
@@ -40,7 +50,8 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
                         href="javascript:void(0)"
                         @click="selectCategory(null)"
                         style="font-weight:bold;"
-                        class="list-group-item list-group-item-action d-flex justify-content-between p-3" aria-current="true">
+                        class="list-group-item list-group-item-action d-flex justify-content-between p-3"
+                        aria-current="true">
                         Все категории товаров
                     </a>
 
@@ -49,15 +60,16 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
                         @click="selectCategory(item)"
                         v-for="item in products"
                         style="font-weight:bold;"
-                        class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center" aria-current="true">
+                        class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center"
+                        aria-current="true">
                         {{ item.title || 'Не указано' }}<span class="badge text-bg-primary">{{ item.count || 0 }}</span>
                     </a>
 
                 </div>
 
-<!--                <CategoryList
-                    :selected="categories"
-                    v-on:select="selectCategory"/>-->
+                <!--                <CategoryList
+                                    :selected="categories"
+                                    v-on:select="selectCategory"/>-->
             </div>
         </div>
 
@@ -66,8 +78,9 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
             style="min-height:100vh;"
             class="album">
             <div class="container g-2">
-
-                <template v-for="cat in products">
+                <template
+                    v-if="filteredCategories.length>0"
+                    v-for="cat in filteredCategories">
                     <h5 class="my-4 divider" :id="'cat-'+cat.id">{{ cat.title || '-' }}</h5>
 
                     <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
@@ -81,6 +94,13 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 
                     </div>
                 </template>
+                <div v-else class="alert alert-light text-primary d-flex flex-column justify-content-center align-items-center" role="alert">
+                    По данному запросу нет ничего:(
+
+                    <button
+                        @click="search=null"
+                        class="btn btn-outline-primary my-3">Сбросить поиск</button>
+                </div>
 
                 <!--                <p class="mb-2 text-center" v-if="paginate"><small>Всего товаров найдено ({{
                                         paginate.meta.total
@@ -114,14 +134,16 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 
     </div>
 
-    <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0" style="border-radius:10px 10px 0px 0px;">
+    <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+         style="border-radius:10px 10px 0px 0px;">
         <button
             @click="goToCart"
             style="box-shadow: 1px 1px 6px 0px #0000004a;"
             class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between ">
 
             <span class="d-block" style="position:relative;"><i class="fa-solid fa-cart-shopping mr-2">
-            </i><sup class="bg-white text-primary sup-badge" v-if="cartTotalCount>0">{{cartTotalCount}}</sup>Корзина </span> <strong>{{ cartTotalPrice || 0 }}<sup class="font-10 opacity-50">.00</sup>₽</strong>
+            </i><sup class="bg-white text-primary sup-badge" v-if="cartTotalCount>0">{{ cartTotalCount }}</sup>Корзина </span>
+            <strong>{{ cartTotalPrice || 0 }}<sup class="font-10 opacity-50">.00</sup>₽</strong>
         </button>
     </nav>
 
@@ -146,6 +168,7 @@ export default {
         return {
             tab: 1,
             load_content: false,
+
             settings: {
                 can_use_cash: true,
                 delivery_price_text: null,
@@ -211,6 +234,32 @@ export default {
             let cashBackAmount = (summaryPrice * (botCashbackPercent / 100));
 
             return Math.min(cashBackAmount, maxUserCashback)
+        },
+        filteredCategories() {
+            if (this.products.length === 0)
+                return []
+
+            if ((this.search || '').length === 0)
+                return this.products
+
+            let categories = []
+
+            this.products.forEach(item => {
+                let products = item.products.filter(product => product
+                    .title
+                    .toLowerCase()
+                    .indexOf(this.search.toLowerCase()) != -1);
+
+                if (products.length > 0) {
+                    item.products = products;
+                    categories.push(item)
+
+                    console.log("category", item)
+                }
+            })
+
+            return categories
+
         },
         filteredProducts() {
 
@@ -385,10 +434,10 @@ export default {
 
             if (this.is_requested) {
 
-                this.$notify( {
-                    title:'Упс!',
-                    text:"Сделать повторный заказ можно через ${this.spent_time_counter} сек.",
-                    type:"error",
+                this.$notify({
+                    title: 'Упс!',
+                    text: "Сделать повторный заказ можно через ${this.spent_time_counter} сек.",
+                    type: "error",
                 });
                 return;
             }
@@ -467,9 +516,10 @@ export default {
 <style lang="scss">
 .header-category-slider {
     top: -1px;
-    padding: 11px 0px;
+    padding: 10px 0px;
     font-size: 14px;
     z-index: 100;
+    margin: 0;
 }
 
 .catalog-tabs {

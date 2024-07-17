@@ -1,5 +1,5 @@
 <template>
-    <form class="px-2" action="">
+    <form class="p-2" action="">
         <p class="text-center"><strong>Поставьте оценку этому блюду</strong></p>
 
         <div class="form-check mb-2">

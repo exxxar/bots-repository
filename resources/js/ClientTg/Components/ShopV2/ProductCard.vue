@@ -80,13 +80,36 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                         <h6 class="d-flex justify-content-between mb-3"><Rating :rating="item.rating"></Rating> {{item.rating}} из 5</h6>
 
                     </div>
-                    <p class="text-justify py-2 fst-italic">{{item.description || '-'}}</p>
+
+
+                    <ul class="nav nav-tabs justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               v-bind:class="{'active':tab===0}"
+                               @click="tab=0"
+                               aria-current="page"
+                               href="javascript:void(0)">Описание</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               v-bind:class="{'active':tab===1}"
+                               @click="tab=1"
+                               href="javascript:void(0)">Отзывы</a>
+                        </li>
+                    </ul>
+
+                    <div v-if="tab===0">
+                        <p class="text-justify py-2 fst-italic">{{item.description || '-'}}</p>
+                    </div>
+
+                    <div v-if="tab===1">
+                        <ProductReviewFrom></ProductReviewFrom>
+                    </div>
 
 
                     <button type="button" class="btn btn-link w-100 mt-2"
                             data-bs-dismiss="modal">Закрыть</button>
-<!--
-                    <ProductReviewFrom></ProductReviewFrom>-->
+
 
                 </div>
                <div class="modal-footer p-0 m-0"
@@ -127,6 +150,7 @@ export default {
     props: ["item", "displayType"],
     data(){
         return {
+            tab:0,
             showCart:false
         }
     },
