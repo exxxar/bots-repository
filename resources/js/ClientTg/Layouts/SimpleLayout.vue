@@ -75,7 +75,12 @@ import {Head} from '@inertiajs/vue3'
                 </a>-->
                 <p class="mb-0 text-white"
                    style="font-size:12px;"
-                   v-if="bot.company"><i class="fa-solid fa-location-dot mr-1"></i> {{bot.company.address}}</p>
+                   v-if="bot.company">
+                    <span v-if="bot.company.address">
+                          <i class="fa-solid fa-location-dot mr-1"></i> {{bot.company.address}}
+                    </span>
+                    <span v-else>{{bot.title||'Магазин'}}</span>
+                </p>
                 <p class="mb-0 text-white"
                    style="font-size:12px;"
                    v-else>{{bot.title || 'Бот'}}</p>
