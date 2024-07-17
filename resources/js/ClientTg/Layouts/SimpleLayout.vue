@@ -12,7 +12,7 @@ import {Head} from '@inertiajs/vue3'
     </Head>
 
     <header data-bs-theme="dark">
-        <div class="text-bg-dark collapse" id="navbarHeader" style="">
+<!--        <div class="text-bg-dark collapse" id="navbarHeader" style="">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-8 col-md-7 py-4">
@@ -48,7 +48,7 @@ import {Head} from '@inertiajs/vue3'
                         </ul>
 
                     </div>
-<!--                    <div class="col-sm-4 offset-md-1 py-4" v-if="bot.company">
+&lt;!&ndash;                    <div class="col-sm-4 offset-md-1 py-4" v-if="bot.company">
                         <h4>Контакты</h4>
                         <ul class="list-unstyled">
                             <li v-if="(bot.company.phones||[]).length>0"><p class="mb-0">Телефон</p></li>
@@ -62,18 +62,25 @@ import {Head} from '@inertiajs/vue3'
                                    v-if="bot.company.email"
                                    class="text-white">{{bot.company.email}}</a></li>
                         </ul>
-                    </div>-->
+                    </div>&ndash;&gt;
                 </div>
             </div>
-        </div>
+        </div>-->
         <div class="navbar navbar-dark bg-dark shadow-sm">
-            <div class="container">
-                <a href="javascript:void(0)"
+            <div class="container flex-row-reverse">
+<!--                <a href="javascript:void(0)"
                    @click="goTo('MenuV2')"
-                   class="navbar-brand d-flex align-items-center px-3">
-                    <strong><i class="fa-brands fa-shopify mr-2"></i> {{ $route.meta.title || 'Меню' }}</strong>
-                </a>
-                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                   class="text-white text-decoration-none d-flex align-items-center px-3 m-0">
+                    <strong>{{ $route.meta.title || 'Меню' }}</strong>
+                </a>-->
+                <p class="mb-0 text-white"
+                   style="font-size:12px;"
+                   v-if="bot.company"><i class="fa-solid fa-location-dot mr-1"></i> {{bot.company.address}}</p>
+                <p class="mb-0 text-white"
+                   style="font-size:12px;"
+                   v-else>{{bot.title || 'Бот'}}</p>
+                <button class="navbar-toggler collapsed rounded-0 border-0 p-1" type="button"
+                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
@@ -100,11 +107,165 @@ import {Head} from '@inertiajs/vue3'
         </div>
     </footer>
 
+
+    <div class="offcanvas offcanvas-start"
+         style="width: 70%;border-radius: 0px 10px 10px 0px;"
+         tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h6 class="offcanvas-title" id="offcanvasExampleLabel">{{bot.title||'Магазин'}}</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <p class="text-body-primary mb-2">
+                {{bot.short_description || 'Без описания'}}
+            </p>
+            <div class="border-top my-3  p-2"></div>
+            <div
+                class="p-2"
+                v-if="bot.company">
+            <ul class="list-unstyled">
+                <li  v-if="(bot.company.phones||[]).length>0"><p class="mb-0">Телефон</p></li>
+                <li v-if="(bot.company.phones||[]).length>0"
+                    class="mb-2"
+                    v-for="phone in bot.company.phones">
+                    <a :href="'tel:'+phone" class="text-decoration-none fw-bold">{{phone}}</a>
+                </li>
+                <li v-if="(bot.social_links||[]).length>0"><p class="mb-0">Ссылки</p></li>
+                <li v-if="(bot.social_links||[]).length>0" v-for="link in bot.social_links"><a :href="link.url" class="text-white">{{link.title || 'ссылка'}}</a></li>
+                <li v-if="bot.company.email"><p class="mb-0">Почта</p></li>
+                <li><a :href="'mailto:'+bot.company.email"
+                       v-if="bot.company.email"
+                       class="text-decoration-none fw-bold"
+                       >{{bot.company.email}}</a></li>
+            </ul>
+        </div>
+
+            <p class="text-body-primary mb-2 p-2">
+                {{bot.long_description || 'Без описания'}}
+            </p>
+            <div class="border-top my-3 "></div>
+            <ul class="list-unstyled">
+                <li class="p-2"><a
+                    v-bind:class="{'fw-bold':$route.name==='MenuV2'}"
+                    @click="goTo('MenuV2')"
+                    href="javascript:void(0)"
+                    class="text-decoration-none fw-normal"
+                    > Главное меню</a></li>
+                <li class="p-2"><a
+                    v-bind:class="{'fw-bold':$route.name==='ProfileV2'}"
+                    @click="goTo('ProfileV2')"
+                    href="javascript:void(0)"
+                    class="text-decoration-none fw-normal"
+                    > Профиль</a></li>
+                <li class="p-2"><a
+                    v-bind:class="{'fw-bold':$route.name==='CatalogV2'}"
+                    @click="goTo('CatalogV2')"
+                    href="javascript:void(0)"
+                    class="text-decoration-none fw-normal"
+                    > Каталог товаров</a></li>
+                <li class="p-2"><a
+                    v-bind:class="{'fw-bold':$route.name==='ShopCartV2'}"
+                    @click="goTo('ShopCartV2')"
+                    href="javascript:void(0)"
+                    class="text-decoration-none fw-normal"
+                    > Корзина <span class="fw-bold" v-if="cartTotalCount>0">({{cartTotalCount}})</span></a></li>
+            </ul>
+            <div class="border-top my-3 "></div>
+            <div class="dropdown">
+                <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Тема оформления
+                </button>
+                <ul class="dropdown-menu">
+                    <li  v-for="(theme, index) in themes">
+                        <button type="button"
+                                @click="switchTheme(index)"
+                                v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
+                                class="list-group-item list-group-item-action " aria-current="true">
+                            {{theme.title || '-'}}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 import {mapGetters} from "vuex";
 
 export default {
+    data(){
+      return {
+          currentTheme:'',
+          themes:[
+              {
+                  title:'Тема 1',
+                  href: '/theme1.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 2',
+                  href: '/theme2.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 3',
+                  href: '/theme3.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 4',
+                  href: '/theme4.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 5',
+                  href: '/theme5.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 6',
+                  href: '/theme6.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 7',
+                  href: '/theme7.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 8',
+                  href: '/theme8.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 9',
+                  href: '/theme9.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 10',
+                  href: '/theme10.bootstrap.min.css',
+              }
+              ,
+              {
+                  title:'Тема 11',
+                  href: '/theme11.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 12',
+                  href: '/theme12.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 13',
+                  href: '/theme13.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 14',
+                  href: '/theme14.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 15',
+                  href: '/theme15.bootstrap.min.css',
+              },
+              {
+                  title:'Тема 16',
+                  href: '/theme16.bootstrap.min.css',
+              }
+          ]
+      }
+    },
     watch: {
         $route(newRouteValue) {
             console.log("router",this.$route.name)
@@ -125,6 +286,16 @@ export default {
         },
     },
     mounted() {
+
+        let theme =  localStorage.getItem("cashman_global_client_theme") || null
+
+        if (theme)
+        {
+            this.$nextTick(()=>{
+                this.currentTheme = theme
+            })
+        }
+
         this.changeTheme(this.tg.colorScheme)
         this.tg.BackButton.show()
 
@@ -135,6 +306,18 @@ export default {
         })
     },
     methods: {
+        switchTheme(index){
+            let changeTheme = document.querySelector("#theme")
+            changeTheme.href = this.themes[index].href //`./theme${index}.bootstrap.min.css`
+            localStorage.setItem("cashman_global_client_theme", changeTheme.href)
+
+
+            this.$nextTick(()=>{
+                this.currentTheme = changeTheme.href
+            })
+
+
+        },
         goTo(name){
             this.$router.push({name: name})
         },

@@ -7,7 +7,7 @@
                 <button type="button"
                         @click="goTo('ProfileV2')"
                         style="min-height:250px;"
-                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card ">
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2/profile.png'" class="img-fluid" alt="">
 
@@ -21,7 +21,7 @@
                 <button type="button"
                         @click="goTo('CatalogV2')"
                         style="min-height:250px;"
-                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2/shop.png'" class="img-fluid" alt="">
 
@@ -36,7 +36,7 @@
                 <button type="button"
                         @click="goTo('ShopCartV2')"
                         style="min-height:250px;"
-                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2/cart.png'" class="img-fluid" alt="">
 
@@ -54,7 +54,7 @@
                 <button type="button"
                         @click="goTo('OrdersV2')"
                         style="min-height:250px;"
-                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2/history.png'" class="img-fluid" alt="">
 

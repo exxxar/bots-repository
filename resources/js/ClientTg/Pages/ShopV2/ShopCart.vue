@@ -572,23 +572,26 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
         </div>
     </div>
     <nav
-        class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom p-0" style="border-radius:10px 10px 0px 0px;">
+        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent" style="border-radius:10px 10px 0px 0px;">
         <div v-if="cartProducts.length>0" class="w-100">
             <button type="button"
                     v-if="tab===0"
                     @click="tab=1"
-                    class="btn btn-md btn-primary w-100 rounded-0 p-3">Оформление заказа
+                    style="box-shadow: 1px 1px 6px 0px #0000004a;"
+                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">Оформление заказа
             </button>
             <button type="button"
                     v-if="tab>=1"
                     @click="tab=0"
-                    class="btn btn-md btn-primary w-100 rounded-0 p-3">Корзина с товаром
+                    style="box-shadow: 1px 1px 6px 0px #0000004a;"
+                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">Корзина с товаром
             </button>
         </div>
         <div v-else class="w-100">
             <button type="button"
                     @click="goToCatalog"
-                    class="btn btn-md btn-primary w-100 rounded-0 p-3 w-100">Вернуться в магазин
+                    style="box-shadow: 1px 1px 6px 0px #0000004a;"
+                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">Вернуться в магазин
             </button>
         </div>
     </nav>

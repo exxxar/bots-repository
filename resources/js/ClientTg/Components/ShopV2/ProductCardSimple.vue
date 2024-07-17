@@ -3,8 +3,8 @@ import Rating from "ClientTg@/Components/Shop/Helpers/Rating.vue";
 </script>
 <template>
 
-<div class="card mb-2">
-    <div class="card-body p-2">
+<div class="card border-0">
+    <div class="card-body p-1">
         <div class="d-flex">
             <div class="mr-auto"
                  @click="addToCart"
@@ -14,7 +14,7 @@ import Rating from "ClientTg@/Components/Shop/Helpers/Rating.vue";
                      class="rounded-2" width="110">
             </div>
             <div class="w-100 px-2 d-flex flex-column justify-content-between">
-                <h6 class="pb-0 mb-0" style="font-size:12px;">{{item.title || 'не указано'}}</h6>
+                <h6 class="pb-0 mb-0 fw-bold" style="font-size:14px;">{{item.title || 'не указано'}}</h6>
 
                 <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">
                     <span>{{item.current_price || 0}}₽</span>

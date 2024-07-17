@@ -123,6 +123,7 @@ const actions = {
         return state.items
     },
     addProductToCart({state, commit}, product) {
+
         commit('pushProductToCart', product);
     },
     setQuantity({state, commit}, prod) {
@@ -154,6 +155,7 @@ const mutations = {
             })
         else
             cartItem.quantity++;
+
 
         localStorage.setItem('cashman_basket', JSON.stringify(state.items));
     },

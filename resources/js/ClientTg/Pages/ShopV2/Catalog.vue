@@ -114,11 +114,14 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 
     </div>
 
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom p-0" style="border-radius:10px 10px 0px 0px;">
+    <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent" style="border-radius:10px 10px 0px 0px;">
         <button
             @click="goToCart"
-            class="btn btn-primary w-100 p-3 rounded-0">
-            Корзина <strong>{{ cartTotalPrice || 0 }}<sup class="font-10 opacity-50">.00</sup>₽</strong>
+            style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between">
+
+            <span class="d-block" style="position:relative;"><i class="fa-solid fa-cart-shopping mr-2">
+            </i><sup class="bg-white text-primary sup-badge" v-if="cartTotalCount>0">{{cartTotalCount}}</sup>Корзина </span> <strong>{{ cartTotalPrice || 0 }}<sup class="font-10 opacity-50">.00</sup>₽</strong>
         </button>
     </nav>
 
@@ -502,4 +505,20 @@ export default {
     background-color: var(--bs-primary);
     margin: 5px;
 }
+
+.sup-badge {
+    position: absolute;
+    top: -7px;
+    left: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: bold;
+    box-shadow: 1px 1px 7px 0px #00000045;
+}
+
 </style>

@@ -4,15 +4,32 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
 </script>
 <template>
 
-    <div class="card shadow-sm product-card">
-        <img
+    <div class="card  border-0 product-card">
+        <div
             @click="showProductDetails"
-            v-lazy="item.images[0]">
-        <div class="card-body">
+            class="img-container">
+            <img
+                class="rounded-3"
+
+                v-lazy="item.images[0]">
+            <div class="controls">
+                <div class="top d-flex justify-content-between w-100 align-items-center">
+                    <div class="rating w-100 p-2">
+                        <span class="text-white fw-bold"><i class="fa-regular fa-star text-primary mr-1"></i> {{item.rating || 0}}</span>
+                    </div>
+                    <span
+                        v-if="item.old_price>0"
+                        class="badge bg-primary mr-2 fw-bold">%</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card-body px-0">
             <p class="text-center mb-2" style="font-size: 12px;">{{item.title.slice(0, 50)}} <span v-if="item.title.length>50">...</span></p>
 
 
-            <h6 class="d-flex justify-content-center mb-3"><Rating :rating="item.rating"></Rating> </h6>
+<!--            <h6 class="d-flex justify-content-center mb-3"><Rating :rating="item.rating"></Rating> </h6>-->
 
             <div
                 v-if="!item.in_stop_list_at"
@@ -20,14 +37,14 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                 <button type="button"
                         v-if="inCart(item.id)===0"
                         @click="incProductCart"
-                        class="btn btn-md btn-primary w-100 rounded-3">{{item.current_price || 0}}<sup class="font-10 opacity-50">.00</sup>₽</button>
+                        class="btn btn-md btn-light w-100 rounded-3">{{item.current_price || 0}}<sup class="font-10 opacity-50">.00</sup>₽</button>
 
                 <div class="btn-group w-100" v-if="inCart(item.id)>0">
                     <button type="button"
                             :disabled="item.in_stop_list_at"
                             @click="decProductCart"
                             class="btn btn-md btn-primary">-</button>
-                    <button type="button" class="btn btn-md">{{ checkInCart }}</button>
+                    <button type="button" class="btn btn-md btn-primary border-0">{{ checkInCart }}</button>
                     <button type="button"
                             :disabled="item.in_stop_list_at"
                             @click="incProductCart"
@@ -125,6 +142,9 @@ export default {
             return this.inCart(this.item.id)
         },
     },
+    mounted() {
+        console.log(this.item)
+    },
     methods:{
 
         showProductDetails(){
@@ -135,6 +155,7 @@ export default {
             this.$router.push({ name: 'ProductV2', params: { productId: this.item.id } })
         },
         incProductCart() {
+            console.log("TEEEEEEEEST1231312312")
             if (this.checkInCart === 0)
                 this.$store.dispatch("addProductToCart", this.item)
             else
@@ -177,7 +198,7 @@ export default {
 }
 
 .product-card {
-    min-height: 350px;
+    min-height: 290px;
 
     img {
         object-fit: cover;
@@ -201,5 +222,37 @@ export default {
 .shadow-bg {
     background: #0000005e;
     padding: 5px;
+}
+
+.img-container {
+    position: relative;
+    display: block;
+
+    img {
+        position: relative;
+        z-index: 1;
+    }
+
+    .controls {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+    }
+}
+
+.rating {
+    span{
+        background: #00000069;
+        padding: 5px 6px;
+        border-radius: 5px;
+        font-size: 10px;
+    }
 }
 </style>
