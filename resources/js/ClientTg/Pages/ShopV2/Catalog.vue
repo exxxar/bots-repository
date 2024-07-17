@@ -114,11 +114,11 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 
     </div>
 
-    <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent" style="border-radius:10px 10px 0px 0px;">
+    <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0" style="border-radius:10px 10px 0px 0px;">
         <button
             @click="goToCart"
             style="box-shadow: 1px 1px 6px 0px #0000004a;"
-            class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between">
+            class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between ">
 
             <span class="d-block" style="position:relative;"><i class="fa-solid fa-cart-shopping mr-2">
             </i><sup class="bg-white text-primary sup-badge" v-if="cartTotalCount>0">{{cartTotalCount}}</sup>Корзина </span> <strong>{{ cartTotalPrice || 0 }}<sup class="font-10 opacity-50">.00</sup>₽</strong>

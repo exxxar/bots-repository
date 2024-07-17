@@ -108,79 +108,84 @@ import {Head} from '@inertiajs/vue3'
     </footer>
 
 
-    <div class="offcanvas offcanvas-start"
+    <div class="offcanvas offcanvas-start custom-offcanvas"
          style="width: 70%;border-radius: 0px 10px 10px 0px;"
          tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header">
             <h6 class="offcanvas-title" id="offcanvasExampleLabel">{{bot.title||'Магазин'}}</h6>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
+
+
         <div class="offcanvas-body">
             <p class="text-body-primary mb-2">
                 {{bot.short_description || 'Без описания'}}
             </p>
             <div class="border-top my-3  p-2"></div>
-            <div
-                class="p-2"
-                v-if="bot.company">
-            <ul class="list-unstyled">
-                <li  v-if="(bot.company.phones||[]).length>0"><p class="mb-0">Телефон</p></li>
-                <li v-if="(bot.company.phones||[]).length>0"
-                    class="mb-2"
-                    v-for="phone in bot.company.phones">
-                    <a :href="'tel:'+phone" class="text-decoration-none fw-bold">{{phone}}</a>
-                </li>
-                <li v-if="(bot.social_links||[]).length>0"><p class="mb-0">Ссылки</p></li>
-                <li v-if="(bot.social_links||[]).length>0" v-for="link in bot.social_links"><a :href="link.url" class="text-white">{{link.title || 'ссылка'}}</a></li>
-                <li v-if="bot.company.email"><p class="mb-0">Почта</p></li>
-                <li><a :href="'mailto:'+bot.company.email"
-                       v-if="bot.company.email"
-                       class="text-decoration-none fw-bold"
-                       >{{bot.company.email}}</a></li>
-            </ul>
-        </div>
 
-            <p class="text-body-primary mb-2 p-2">
-                {{bot.long_description || 'Без описания'}}
-            </p>
-            <div class="border-top my-3 "></div>
             <ul class="list-unstyled">
                 <li class="p-2"><a
                     v-bind:class="{'fw-bold':$route.name==='MenuV2'}"
                     @click="goTo('MenuV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                    > Главное меню</a></li>
+                > Главное меню</a></li>
                 <li class="p-2"><a
                     v-bind:class="{'fw-bold':$route.name==='ProfileV2'}"
                     @click="goTo('ProfileV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                    > Профиль</a></li>
+                > Профиль</a></li>
                 <li class="p-2"><a
                     v-bind:class="{'fw-bold':$route.name==='CatalogV2'}"
                     @click="goTo('CatalogV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                    > Каталог товаров</a></li>
+                > Каталог товаров</a></li>
                 <li class="p-2"><a
                     v-bind:class="{'fw-bold':$route.name==='ShopCartV2'}"
                     @click="goTo('ShopCartV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                    > Корзина <span class="fw-bold" v-if="cartTotalCount>0">({{cartTotalCount}})</span></a></li>
+                > Корзина <span class="fw-bold" v-if="cartTotalCount>0">({{cartTotalCount}})</span></a></li>
             </ul>
+
+
+
+            <p class="text-body-primary mb-2 p-2">
+                {{bot.long_description || 'Без описания'}}
+            </p>
+            <div class="border-top my-3 "></div>
+            <div
+                class="p-2"
+                v-if="bot.company">
+                <ul class="list-unstyled">
+                    <li  v-if="(bot.company.phones||[]).length>0"><p class="mb-0">Телефон</p></li>
+                    <li v-if="(bot.company.phones||[]).length>0"
+                        class="mb-2"
+                        v-for="phone in bot.company.phones">
+                        <a :href="'tel:'+phone" class="text-decoration-none fw-bold">{{phone}}</a>
+                    </li>
+                    <li v-if="(bot.social_links||[]).length>0"><p class="mb-0">Ссылки</p></li>
+                    <li v-if="(bot.social_links||[]).length>0" v-for="link in bot.social_links"><a :href="link.url" class="text-white">{{link.title || 'ссылка'}}</a></li>
+                    <li v-if="bot.company.email"><p class="mb-0">Почта</p></li>
+                    <li><a :href="'mailto:'+bot.company.email"
+                           v-if="bot.company.email"
+                           class="text-decoration-none fw-bold"
+                    >{{bot.company.email}}</a></li>
+                </ul>
+            </div>
             <div class="border-top my-3 "></div>
             <div class="dropdown">
                 <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Тема оформления
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu w-100 bg-light">
                     <li  v-for="(theme, index) in themes">
                         <button type="button"
                                 @click="switchTheme(index)"
                                 v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
-                                class="list-group-item list-group-item-action " aria-current="true">
+                                class="list-group-item list-group-item-action p-2 w-100 text-primary" aria-current="true">
                             {{theme.title || '-'}}
                         </button>
                     </li>
@@ -202,65 +207,52 @@ export default {
                   title:'Тема 1',
                   href: '/theme1.bootstrap.min.css',
               },
-              {
-                  title:'Тема 2',
-                  href: '/theme2.bootstrap.min.css',
-              },
+
+
               {
                   title:'Тема 3',
-                  href: '/theme3.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 4',
-                  href: '/theme4.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 5',
                   href: '/theme5.bootstrap.min.css',
               },
               {
-                  title:'Тема 6',
+                  title:'Тема 4',
                   href: '/theme6.bootstrap.min.css',
               },
+
               {
-                  title:'Тема 7',
-                  href: '/theme7.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 8',
+                  title:'Тема 5',
                   href: '/theme8.bootstrap.min.css',
               },
               {
-                  title:'Тема 9',
+                  title:'Тема 6',
                   href: '/theme9.bootstrap.min.css',
               },
               {
-                  title:'Тема 10',
+                  title:'Тема 7',
                   href: '/theme10.bootstrap.min.css',
               }
               ,
               {
-                  title:'Тема 11',
+                  title:'Тема 8',
                   href: '/theme11.bootstrap.min.css',
               },
               {
-                  title:'Тема 12',
+                  title:'Тема 9',
                   href: '/theme12.bootstrap.min.css',
               },
               {
-                  title:'Тема 13',
+                  title:'Тема 10',
                   href: '/theme13.bootstrap.min.css',
               },
               {
-                  title:'Тема 14',
+                  title:'Тема 11',
                   href: '/theme14.bootstrap.min.css',
               },
               {
-                  title:'Тема 15',
+                  title:'Тема 12',
                   href: '/theme15.bootstrap.min.css',
               },
               {
-                  title:'Тема 16',
+                  title:'Тема 13',
                   href: '/theme16.bootstrap.min.css',
               }
           ]
@@ -476,5 +468,15 @@ body {
         padding: 10px;
         box-sizing: border-box;
     }
+}
+
+.custom-offcanvas {
+    border: none;
+    box-shadow: inset 1px 1px rgba(255, 255, 255, .2), inset -1px -1px rgba(255, 255, 255, .1), 1px 3px 24px -1px rgba(0, 0, 0, .15);
+    background-color: #000000b3;
+    background-image: linear-gradient(125deg, rgba(255, 255, 255, .3), rgba(255, 255, 255, .2) 70%);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    color:white;
 }
 </style>

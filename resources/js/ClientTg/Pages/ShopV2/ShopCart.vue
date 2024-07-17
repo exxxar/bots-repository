@@ -572,7 +572,7 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
         </div>
     </div>
     <nav
-        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent" style="border-radius:10px 10px 0px 0px;">
+        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0" style="border-radius:10px 10px 0px 0px;">
         <div v-if="cartProducts.length>0" class="w-100">
             <button type="button"
                     v-if="tab===0"

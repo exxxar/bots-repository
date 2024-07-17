@@ -33,18 +33,18 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
 
             <div
                 v-if="!item.in_stop_list_at"
-                class="d-flex justify-content-between align-items-center">
+                class="d-flex justify-content-between align-items-center px-2">
                 <button type="button"
                         v-if="inCart(item.id)===0"
                         @click="incProductCart"
                         class="btn btn-md btn-light w-100 rounded-3">{{item.current_price || 0}}<sup class="font-10 opacity-50">.00</sup>₽</button>
 
-                <div class="btn-group w-100" v-if="inCart(item.id)>0">
+                <div class="btn-group w-100 rounded-3" v-if="inCart(item.id)>0">
                     <button type="button"
                             :disabled="item.in_stop_list_at"
                             @click="decProductCart"
                             class="btn btn-md btn-primary">-</button>
-                    <button type="button" class="btn btn-md btn-primary border-0">{{ checkInCart }}</button>
+                    <button type="button" class="btn btn-md btn-primary ">{{ checkInCart }}</button>
                     <button type="button"
                             :disabled="item.in_stop_list_at"
                             @click="incProductCart"
