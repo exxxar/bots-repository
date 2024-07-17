@@ -243,23 +243,24 @@ export default {
 
             let categories = []
 
-            let step = 0
-            this.products.forEach(item => {
+            const tmpCategories = this.products
 
-                const tmpProducts = item.products.filter(product => product
+            for (let i=0;i<tmpCategories.length;i++){
+                const tmpProducts = tmpCategories[i].products.filter(product => product
                     .title
                     .toLowerCase()
                     .indexOf(this.search.toLowerCase()) != -1);
 
 
                 if (tmpProducts.length > 0) {
-                    const cat = item
+                    let cat = tmpCategories[i]
                     cat.products = tmpProducts;
                     cat.count = tmpProducts.length;
                     categories.push(cat)
 
                 }
-            })
+            }
+
 
             return categories
 
