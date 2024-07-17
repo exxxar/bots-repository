@@ -118,10 +118,6 @@ import {Head} from '@inertiajs/vue3'
 
 
         <div class="offcanvas-body">
-            <p class="text-body-primary mb-2">
-                {{bot.short_description || 'Без описания'}}
-            </p>
-            <div class="border-top my-3  p-2"></div>
 
             <ul class="list-unstyled">
                 <li class="p-2"><a
@@ -150,11 +146,6 @@ import {Head} from '@inertiajs/vue3'
                 > Корзина <span class="fw-bold" v-if="cartTotalCount>0">({{cartTotalCount}})</span></a></li>
             </ul>
 
-
-
-            <p class="text-body-primary mb-2 p-2">
-                {{bot.long_description || 'Без описания'}}
-            </p>
             <div class="border-top my-3 "></div>
             <div
                 class="p-2"
