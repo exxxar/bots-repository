@@ -167,7 +167,7 @@ export default {
         },
     },
     mounted() {
-        console.log(this.item)
+
     },
     methods:{
 
@@ -179,7 +179,7 @@ export default {
             this.$router.push({ name: 'ProductV2', params: { productId: this.item.id } })
         },
         incProductCart() {
-            console.log("TEEEEEEEEST1231312312")
+
             if (this.checkInCart === 0)
                 this.$store.dispatch("addProductToCart", this.item)
             else

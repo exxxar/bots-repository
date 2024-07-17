@@ -45,7 +45,7 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
             v-show="tab===0"
             class="album" style="min-height:100vh;">
             <div class="container g-2">
-                <div class="list-group" v-if="products">
+                <div class="list-group" v-if="filteredCategories.length>0">
                     <a
                         href="javascript:void(0)"
                         @click="selectCategory(null)"
@@ -58,7 +58,7 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
                     <a
                         href="javascript:void(0)"
                         @click="selectCategory(item)"
-                        v-for="item in products"
+                        v-for="item in filteredCategories"
                         style="font-weight:bold;"
                         class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center"
                         aria-current="true">
@@ -168,7 +168,6 @@ export default {
         return {
             tab: 1,
             load_content: false,
-
             settings: {
                 can_use_cash: true,
                 delivery_price_text: null,
@@ -244,17 +243,21 @@ export default {
 
             let categories = []
 
+            let step = 0
             this.products.forEach(item => {
-                let products = item.products.filter(product => product
+
+                const tmpProducts = item.products.filter(product => product
                     .title
                     .toLowerCase()
                     .indexOf(this.search.toLowerCase()) != -1);
 
-                if (products.length > 0) {
-                    item.products = products;
-                    categories.push(item)
 
-                    console.log("category", item)
+                if (tmpProducts.length > 0) {
+                    const cat = item
+                    cat.products = tmpProducts;
+                    cat.count = tmpProducts.length;
+                    categories.push(cat)
+
                 }
             })
 
