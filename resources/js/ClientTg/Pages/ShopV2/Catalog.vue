@@ -241,28 +241,30 @@ export default {
             if ((this.search || '').length === 0)
                 return this.products
 
+         /*   console.log("products", this.products)
             let categories = []
 
-            const tmpCategories = this.products
+            let tmpCategories = this.products
 
             for (let i=0;i<tmpCategories.length;i++){
-                const tmpProducts = tmpCategories[i].products.filter(product => product
+                const cat123 =  tmpCategories[i]
+                let cc = cat123.products.filter(product => product
                     .title
                     .toLowerCase()
                     .indexOf(this.search.toLowerCase()) != -1);
 
 
-                if (tmpProducts.length > 0) {
-                    let cat = tmpCategories[i]
-                    cat.products = tmpProducts;
-                    cat.count = tmpProducts.length;
+                if (cc.length > 0) {
+                    let cat = cat123
+                    cat.products = cc;
+                    cat.count = cc.length;
                     categories.push(cat)
 
                 }
-            }
+            }*/
 
 
-            return categories
+            return this.products.filter(item=>item.products.filter(sub=>sub.title.toLowerCase().indexOf(this.search.toLowerCase())!=-1).length>0)
 
         },
         filteredProducts() {
