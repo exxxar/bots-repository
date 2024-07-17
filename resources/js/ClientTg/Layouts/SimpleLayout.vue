@@ -67,7 +67,7 @@ import {Head} from '@inertiajs/vue3'
             </div>
         </div>-->
         <div class="navbar navbar-dark bg-dark shadow-sm">
-            <div class="container flex-row-reverse">
+            <div class="container flex-row-reverse p-2">
 <!--                <a href="javascript:void(0)"
                    @click="goTo('MenuV2')"
                    class="text-white text-decoration-none d-flex align-items-center px-3 m-0">
@@ -120,30 +120,48 @@ import {Head} from '@inertiajs/vue3'
         <div class="offcanvas-body">
 
             <ul class="list-unstyled">
-                <li class="p-2"><a
+                <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='MenuV2'}"
                     @click="goTo('MenuV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
                 > Главное меню</a></li>
-                <li class="p-2"><a
+                <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='ProfileV2'}"
                     @click="goTo('ProfileV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
                 > Профиль</a></li>
-                <li class="p-2"><a
+                <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='CatalogV2'}"
                     @click="goTo('CatalogV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
                 > Каталог товаров</a></li>
-                <li class="p-2"><a
+                <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='ShopCartV2'}"
                     @click="goTo('ShopCartV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
                 > Корзина <span class="fw-bold" v-if="cartTotalCount>0">({{cartTotalCount}})</span></a></li>
+                <li class="p-1"><a
+                    v-bind:class="{'fw-bold':$route.name==='OrdersV2'}"
+                    @click="goTo('OrdersV2')"
+                    href="javascript:void(0)"
+                    class="text-decoration-none fw-normal"
+                > История заказов</a></li>
+                <li class="p-1"><a
+                    v-bind:class="{'fw-bold':$route.name==='CashBackV2'}"
+                    @click="goTo('CashBackV2')"
+                    href="javascript:void(0)"
+                    class="text-decoration-none fw-normal"
+                > CashBack</a></li>
+                <li class="p-1"><a
+                    v-bind:class="{'fw-bold':$route.name==='FeedBackV2'}"
+                    @click="goTo('FeedBackV2')"
+                    href="javascript:void(0)"
+                    class="text-decoration-none fw-normal"
+                > Оставить отзыв</a></li>
             </ul>
 
             <div class="border-top my-3 "></div>
@@ -196,11 +214,6 @@ export default {
       return {
           currentTheme:'',
           themes:[
-              {
-                  title:'Тема 1',
-                  href: '/theme1.bootstrap.min.css',
-              },
-
 
               {
                   title:'Тема 3',
