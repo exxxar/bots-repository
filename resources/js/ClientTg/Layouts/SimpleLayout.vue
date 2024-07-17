@@ -251,6 +251,15 @@ export default {
     },
     watch: {
         $route(newRouteValue) {
+            let theme =  localStorage.getItem("cashman_global_client_theme") || null
+
+            if (theme)
+            {
+                this.$nextTick(()=>{
+                    this.currentTheme = theme
+                })
+            }
+
             console.log("router",this.$route.name)
 
             this.$preloader.show();
@@ -268,6 +277,7 @@ export default {
             return window.currentBot
         },
     },
+
     mounted() {
 
         let theme =  localStorage.getItem("cashman_global_client_theme") || null
@@ -461,7 +471,7 @@ body {
     }
 }
 
-.custom-offcanvas {
+/*.custom-offcanvas {
     border: none;
     box-shadow: inset 1px 1px rgba(255, 255, 255, .2), inset -1px -1px rgba(255, 255, 255, .1), 1px 3px 24px -1px rgba(0, 0, 0, .15);
     background-color: #000000b3;
@@ -469,5 +479,5 @@ body {
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     color:white;
-}
+}*/
 </style>
