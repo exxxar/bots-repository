@@ -79,8 +79,8 @@ import {Head} from '@inertiajs/vue3'
                 <p class="mb-0 text-white"
                    style="font-size:12px;"
                    v-else>{{bot.title || 'Бот'}}</p>
-                <button class="navbar-toggler collapsed rounded-0 border-0 p-1" type="button"
-                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                <button class="btn btn-link rounded-0 border-0 p-1" type="button"
+                        data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
@@ -110,7 +110,7 @@ import {Head} from '@inertiajs/vue3'
 
     <div class="offcanvas offcanvas-start custom-offcanvas"
          style="width: 70%;border-radius: 0px 10px 10px 0px;"
-         tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+         tabindex="-1" id="sidebar-menu" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header">
             <h6 class="offcanvas-title" id="offcanvasExampleLabel">{{bot.title||'Магазин'}}</h6>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -155,12 +155,14 @@ import {Head} from '@inertiajs/vue3'
                     <li v-if="(bot.company.phones||[]).length>0"
                         class="mb-2"
                         v-for="phone in bot.company.phones">
-                        <a :href="'tel:'+phone" class="text-decoration-none fw-bold">{{phone}}</a>
+                        <a  href="javascript:void(0)" class="text-decoration-none fw-bold">{{phone}}</a>
                     </li>
                     <li v-if="(bot.social_links||[]).length>0"><p class="mb-0">Ссылки</p></li>
-                    <li v-if="(bot.social_links||[]).length>0" v-for="link in bot.social_links"><a :href="link.url" class="text-white">{{link.title || 'ссылка'}}</a></li>
+                    <li v-if="(bot.social_links||[]).length>0" v-for="link in bot.social_links">
+                        <a target="_blank"
+                            :href="link.url" class="text-white">{{link.title || 'ссылка'}}</a></li>
                     <li v-if="bot.company.email"><p class="mb-0">Почта</p></li>
-                    <li><a :href="'mailto:'+bot.company.email"
+                    <li><a href="javascript:void(0)"
                            v-if="bot.company.email"
                            class="text-decoration-none fw-bold"
                     >{{bot.company.email}}</a></li>
