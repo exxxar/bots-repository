@@ -32,7 +32,7 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
 <!--            <h6 class="d-flex justify-content-center mb-3"><Rating :rating="item.rating"></Rating> </h6>-->
 
             <div
-                v-if="!item.in_stop_list_at"
+                v-if="item.in_stop_list_at"
                 class="d-flex justify-content-between align-items-center px-2">
                 <button type="button"
                         v-if="inCart(item.id)===0"
@@ -51,8 +51,10 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                             class="btn btn-md btn-primary">+</button>
                 </div>
             </div>
-            <div v-else>
-                <span class="btn btn-outline-light rounded-3 p-2 w-100 d-flex justify-content-center align-items-center"><i class="fa-solid fa-lock mr-2"></i> нет в наличии</span>
+            <div v-else class="px-2">
+                <span
+                    style="font-size:12px;"
+                    class="btn btn-outline-secondary rounded-3 btn-md w-100 d-flex justify-content-center align-items-center"><i class="fa-solid fa-lock mr-2"></i> нет в наличии</span>
             </div>
         </div>
     </div>
