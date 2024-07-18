@@ -49,6 +49,21 @@ class SimpleDeliveryController extends SlugController
                 "value" => null,
 
             ],
+
+            [
+                "type" => "text",
+                "key" => "yandex_map_link",
+                "description" => "Ссылка на ваше расположение на карте",
+                "value" => null,
+
+            ],
+            [
+                "type" => "text",
+                "key" => "free_shipping_starts_from",
+                "description" => "Бесплатная доставка от",
+                "value" => 0,
+
+            ],
             [
                 "type" => "text",
                 "key" => "min_base_delivery_price",
@@ -268,7 +283,8 @@ class SimpleDeliveryController extends SlugController
 
     }
 
-    public function loadClientProfile(Request $request){
+    public function loadClientProfile(Request $request)
+    {
 
     }
 
@@ -303,10 +319,15 @@ class SimpleDeliveryController extends SlugController
                 'need_pay_after_call' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "need_pay_after_call")
                     ->first())["value"] ?? false : false,
+                'free_shipping_starts_from' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "free_shipping_starts_from")
+                    ->first())["value"] ?? 0 : 0,
                 'payment_info' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
                     ->where("key", "payment_info")
                     ->first())["value"] ?? "Текст не найден" : "Текст не найден",
-
+                'yandex_map_link' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
+                    ->where("key", "yandex_map_link")
+                    ->first())["value"] ?? null : null,
 
 
             ]
@@ -521,11 +542,11 @@ class SimpleDeliveryController extends SlugController
                             "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/profile"]
                         ],
                     ],
-                  /*  [
-                        ["text" => "😎Контакты", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/contacts"]
-                        ],
-                    ],*/
+                    /*  [
+                          ["text" => "😎Контакты", "web_app" => [
+                              "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/contacts"]
+                          ],
+                      ],*/
                 ];
 
 

@@ -406,6 +406,7 @@ import ProductCardSimple from "@/ClientTg/Components/ShopV2/ProductCardSimple.vu
             <p v-if="settings.min_price">Минимальная цена заказа {{ settings.min_price || 0 }} руб</p>
 
             <button
+                v-if="cartTotalPrice <= settings.free_shipping_starts_from"
                 @click="requestDeliveryPrice"
                 class="btn btn-outline-light text-primary p-3 w-100 mb-2"
                 :disabled="!canRequestDeliverPrice">
@@ -617,6 +618,7 @@ export default {
                 payment_info: 0,
                 need_category_by_page: false,
                 need_pay_after_call: false,
+                free_shipping_starts_from: 0,
             },
             spent_time_counter: 0,
             is_requested: false,
@@ -674,6 +676,14 @@ export default {
                 if (this.deliveryForm.need_pickup) {
                     this.deliveryForm.delivery_price = 0
                     this.deliveryForm.distance = 0
+                }
+            },
+            deep: true
+        },
+        'cartTotalPrice': {
+            handler: function (newValue) {
+                if (this.settings.free_shipping_starts_from <= this.cartTotalPrice) {
+                    this.deliveryForm.delivery_price = 0
                 }
             },
             deep: true

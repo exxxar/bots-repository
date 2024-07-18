@@ -219,7 +219,6 @@ export default {
         ...mapGetters(['getProducts', 'getCategories', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
         colorTheme() {
             const theme = document.querySelector("[data-bs-theme]").getAttribute('data-bs-theme')
-
             return "background-color:" + (theme === "light" ? "white" : "#212529");
         },
         getCurrentBot() {
@@ -240,29 +239,6 @@ export default {
 
             if ((this.search || '').length === 0)
                 return this.products
-
-         /*   console.log("products", this.products)
-            let categories = []
-
-            let tmpCategories = this.products
-
-            for (let i=0;i<tmpCategories.length;i++){
-                const cat123 =  tmpCategories[i]
-                let cc = cat123.products.filter(product => product
-                    .title
-                    .toLowerCase()
-                    .indexOf(this.search.toLowerCase()) != -1);
-
-
-                if (cc.length > 0) {
-                    let cat = cat123
-                    cat.products = cc;
-                    cat.count = cc.length;
-                    categories.push(cat)
-
-                }
-            }*/
-
 
             return this.products.filter(item=>item.products.filter(sub=>sub.title.toLowerCase().indexOf(this.search.toLowerCase())!=-1).length>0)
 

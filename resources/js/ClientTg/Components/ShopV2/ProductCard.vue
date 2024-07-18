@@ -51,15 +51,21 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                             class="btn btn-md btn-primary">+</button>
                 </div>
             </div>
+            <div v-else>
+                <span class="btn btn-outline-light rounded-3 p-2 w-100 d-flex justify-content-center align-items-center"><i class="fa-solid fa-lock mr-2"></i> нет в наличии</span>
+            </div>
         </div>
     </div>
 
 
     <!-- Modal -->
     <div class="modal fade" :id="'product-modal-info'+item.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
             <div class="modal-content">
-
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
                 <div class="modal-body">
                     <div class="card text-bg-dark" v-if="item">
                         <img v-lazy="item.images[0]"
@@ -106,9 +112,9 @@ import ProductReviewFrom from "@/ClientTg/Components/ShopV2/ProductReviewFrom.vu
                         <ProductReviewFrom></ProductReviewFrom>
                     </div>
 
-
+<!--
                     <button type="button" class="btn btn-link w-100 mt-2"
-                            data-bs-dismiss="modal">Закрыть</button>
+                            data-bs-dismiss="modal">Закрыть</button>-->
 
 
                 </div>
