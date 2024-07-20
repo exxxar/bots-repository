@@ -2219,7 +2219,10 @@ class BotLogicFactory
             "images" => $data["images"] ?? null,
             "videos" => $data["videos"] ?? null,
             "audios" => $data["audios"] ?? null,
-            "cron_time" => is_null($data["cron_time"] ?? null) ? null : Carbon::parse($data["cron_time"])->setTimezone("+0:00")->timestamp ?? null,
+            "cron_time" => is_null($data["cron_time"] ?? null) ? null : Carbon::parse($data["cron_time"])
+                ->setTimezone("+0:00")
+                ->subHours(3)
+                ->timestamp ?? null,
         ]);
 
     }

@@ -449,7 +449,7 @@ class ProductLogicFactory
     {
         $category = ProductCategory::query()
             ->with(["products"])
-            ->where("id",$categoryId)
+            ->where("id", $categoryId)
             ->first();
 
         if (is_null($category))
@@ -804,7 +804,7 @@ class ProductLogicFactory
         $useCashback = ($data["use_cashback"] ?? "false") == "true";
         $needPaymentLink = ($data["need_payment_link"] ?? "false") == "true";
 
-       $paymentTypes = ["Онлайн в боте", "Картой в заведении","Переводом","Наличными"];
+        $paymentTypes = ["Онлайн в боте", "Картой в заведении", "Переводом", "Наличными"];
         $cash = $paymentTypes[$data["payment_type"] ?? 0];
 
 
@@ -855,6 +855,8 @@ class ProductLogicFactory
 
             $summaryCount += $tmpCount;
             $summaryPrice += $tmpPrice;
+
+
         }
 
         $maxUserCashback = $this->botUser->cashback->amount ?? 0;
@@ -906,6 +908,11 @@ class ProductLogicFactory
             'payed_at' => Carbon::now(),
         ]);
 
+        BusinessLogic::review()
+            ->setBotUser($this->botUser)
+            ->setBot($this->bot)
+            ->prepareReviews($order->id, $ids);
+
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед. " . ($discount > 0 ? "Скидка: $discount руб." : "");
 
         $userInfo = !$needPickup ?
@@ -919,7 +926,7 @@ class ProductLogicFactory
                 $distance ?? 0, //$distance
                 $data["entrance_number"] ?? 'Не указано',
                 $data["floor_number"] ?? 'Не указано',
-               $cash,
+                $cash,
                 $data["money"] ?? 'Не указано',
                 $data["info"] ?? 'Не указано',
                 $useCashback ? $discount : "нет",
@@ -989,7 +996,7 @@ class ProductLogicFactory
             "message" => ($data["info"] ?? 'Не указано'),
             "entranceNumber" => ($data["entrance_number"] ?? 'Не указано'),
             "floorNumber" => ($data["floor_number"] ?? 'Не указано'),
-            "cashType" =>$cash,
+            "cashType" => $cash,
             "money" => ($data["money"] ?? 'Не указано'),
             "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),
             "totalPrice" => $summaryPrice,

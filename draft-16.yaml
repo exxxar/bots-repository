@@ -1,0 +1,20 @@
+models:
+  Review:
+    bot_id: id foreign:bots nullable
+    order_id: id foreign:orders nullable
+    bot_user_id: id foreign:orders nullable
+    product_id: id foreign:products nullable
+    text: string:255 nullable comment:'текст отзыва'
+    rating: double default:0
+    send_review_at: datetime nullable
+    relationships:
+      belongsTo: Bot, Order, BotUser, Product
+
+seeders:   Review
+
+controllers:
+  Review:
+    resource: api
+
+
+

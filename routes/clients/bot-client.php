@@ -225,6 +225,14 @@ Route::prefix("bot-client")
                             ->middleware(["slug"]);
                     });
 
+                Route::prefix("reviews")
+                    ->group(function(){
+                        Route::post("/", [ProductController::class, "getReviews"]);
+                        Route::post("/by-product-id", [ProductController::class, "getReviewsByProductId"]);
+                        Route::post("/store-review", [ProductController::class, "storeReview"]);
+
+                    });
+
                 Route::post("/products", [ProductController::class, "index"]);
                 Route::post("/products-by-category", [ProductController::class, "listByCategories"]);
                 Route::post("/products/load-data", [\App\Http\Controllers\Globals\SimpleDeliveryController::class, "loadData"])

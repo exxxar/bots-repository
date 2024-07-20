@@ -15,6 +15,7 @@ import {ZiggyVue} from '../../../vendor/tightenco/ziggy/dist/vue.m';
 import VueLazyLoad from 'vue3-lazyload'
 import moment from 'moment'
 
+
 import VueTheMask from 'vue-the-mask'
 import VueSocialSharing from 'vue-social-sharing'
 

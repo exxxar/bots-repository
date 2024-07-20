@@ -129,6 +129,7 @@ class VKProductController extends Controller
             $vkProduct = (object)$vkProduct;
 
             $product = Product::query()
+                ->withTrashed()
                 ->where("vk_product_id", $vkProduct->id)
                 ->where("bot_id", $bot->id)
                 ->first();
@@ -157,6 +158,7 @@ class VKProductController extends Controller
                 'variants' => empty($variants) ? null : $variants,
                 'in_stop_list_at' => $vkProduct->availability == 0 ? null : Carbon::now(),
                 'bot_id' => $bot->id,
+                'deleted_at'=>null
             ];
 
 
@@ -326,6 +328,7 @@ class VKProductController extends Controller
 
         foreach ($products as $product) {
             $product->in_stop_list_at = Carbon::now();
+            $product->deleted_at = Carbon::now();
             $product->save();
         }
 

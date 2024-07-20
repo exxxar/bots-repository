@@ -110,7 +110,7 @@ class ProductController extends Controller
     public function saveProduct(Request $request): ProductResource
     {
         $request->validate([
-            "article" => "required",
+            "article" => "",
             "title" => "required",
             "description" => "required",
             "type" => "required",

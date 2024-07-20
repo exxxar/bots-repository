@@ -10,6 +10,7 @@ use App\Http\BusinessLogic\Methods\MailingLogicFactory;
 use App\Http\BusinessLogic\Methods\PaymentLogicFactory;
 use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory;
 use App\Http\BusinessLogic\Methods\QuizLogicFactory;
+use App\Http\BusinessLogic\Methods\ReviewLogicFactory;
 use App\Http\BusinessLogic\Methods\YClientLogicFactory;
 use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory;
 use App\Http\BusinessLogic\Methods\BotDialogsLogicFactory;
@@ -50,6 +51,7 @@ class BusinessLogic
     protected InlineQueryLogicFactory $inlineQueries;
     protected MailingLogicFactory $mailing;
     protected FrontPadLogicFactory $frontPad;
+    protected ReviewLogicFactory $review;
 
     public function __construct()
     {
@@ -75,12 +77,19 @@ class BusinessLogic
         $this->inlineQueries = new InlineQueryLogicFactory();
         $this->mailing = new MailingLogicFactory();
         $this->frontPad = new FrontPadLogicFactory();
+        $this->review = new ReviewLogicFactory();
     }
 
     public function bots(): BotLogicFactory
     {
         return $this->bot;
     }
+
+    public function review(): ReviewLogicFactory
+    {
+        return $this->review;
+    }
+
 
     public function mailing(): MailingLogicFactory
     {

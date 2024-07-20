@@ -191,7 +191,7 @@ import {Head} from '@inertiajs/vue3'
                     >{{bot.company.email}}</a></li>
                 </ul>
             </div>
-            <div class="border-top my-3 "></div>
+<!--            <div class="border-top my-3 "></div>
             <div class="dropdown">
                 <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Тема оформления
@@ -206,7 +206,7 @@ import {Head} from '@inertiajs/vue3'
                         </button>
                     </li>
                 </ul>
-            </div>
+            </div>-->
         </div>
     </div>
 

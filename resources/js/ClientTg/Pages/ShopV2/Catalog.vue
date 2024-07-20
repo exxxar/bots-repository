@@ -10,12 +10,17 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
          v-touch:swipe.right="doSwipeRight" class="d-flex flex-column">
 
         <div class="p-2">
-            <div class="form-floating">
-                <input type="search"
-                       v-model="search"
-                       class="form-control" id="search-product" placeholder="name@example.com">
-                <label for="search-product">Поиск по товарам</label>
+            <div class="input-group mb-3">
+                <div class="form-floating">
+                    <input type="search"
+                           v-model="search"
+                           class="form-control" id="search-product" placeholder="name@example.com">
+                    <label for="search-product">Поиск по товарам</label>
+                </div>
+                <button class="btn btn-outline-secondary border-light" type="button" id="button-addon2"><i class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
             </div>
+
+
         </div>
 
         <menu
@@ -66,7 +71,16 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
                     </a>
 
                 </div>
+                <div v-else
+                     class="alert alert-light text-primary d-flex flex-column justify-content-center align-items-center"
+                     role="alert">
+                    По данному запросу нет ничего:(
 
+                    <button
+                        @click="search=null"
+                        class="btn btn-outline-primary my-3">Сбросить поиск
+                    </button>
+                </div>
                 <!--                <CategoryList
                                     :selected="categories"
                                     v-on:select="selectCategory"/>-->
@@ -94,12 +108,15 @@ import CategoryList from "@/ClientTg/Components/ShopV2/CategoryList.vue";
 
                     </div>
                 </template>
-                <div v-else class="alert alert-light text-primary d-flex flex-column justify-content-center align-items-center" role="alert">
+                <div v-else
+                     class="alert alert-light text-primary d-flex flex-column justify-content-center align-items-center"
+                     role="alert">
                     По данному запросу нет ничего:(
 
                     <button
                         @click="search=null"
-                        class="btn btn-outline-primary my-3">Сбросить поиск</button>
+                        class="btn btn-outline-primary my-3">Сбросить поиск
+                    </button>
                 </div>
 
                 <!--                <p class="mb-2 text-center" v-if="paginate"><small>Всего товаров найдено ({{
@@ -240,7 +257,7 @@ export default {
             if ((this.search || '').length === 0)
                 return this.products
 
-            return this.products.filter(item=>item.products.filter(sub=>sub.title.toLowerCase().indexOf(this.search.toLowerCase())!=-1).length>0)
+            return this.products.filter(item => item.products.filter(sub => sub.title.toLowerCase().indexOf(this.search.toLowerCase()) != -1).length > 0)
 
         },
         filteredProducts() {
@@ -410,6 +427,10 @@ export default {
                 window.scroll(0, 80);
             }).catch(() => {
                 this.load_content = false
+
+                this.$store.dispatch("clearCart").then(() => {
+                    this.loadProducts()
+                })
             })
         },
         startCheckout() {

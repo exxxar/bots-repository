@@ -79,6 +79,46 @@ class ProductController extends Controller
 
     }
 
+    public function getReviews(Request $request): \App\Http\Resources\ReviewCollection
+    {
+
+
+        return BusinessLogic::review()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->reviews( $request->get("size") ?? config('app.results_per_page'));
+    }
+    public function getReviewsByProductId(Request $request): \App\Http\Resources\ReviewCollection
+    {
+
+        $request->validate([
+            "product_id"=>"required"
+        ]);
+
+        return BusinessLogic::review()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->reviewsByProductId($request->product_id, $request->get("size") ?? config('app.results_per_page'));
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function storeReview(Request $request): \App\Http\Resources\ReviewResource
+    {
+        $request->validate([
+            'id' => "required",
+
+        ]);
+
+        return BusinessLogic::review()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->store($request->all(),
+                $request->hasFile('photo') ?
+                $request->file('photo') : null);
+    }
+
     public function repeatOrder(Request $request): ProductCollection
     {
         $request->validate([

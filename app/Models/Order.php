@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
@@ -60,7 +62,6 @@ class Order extends Model
         'delivery_price' => 'double',
         'delivery_range' => 'double',
 
-
         "receiver_latitude"=> 'double',
         "receiver_longitude"=> 'double',
 
@@ -70,6 +71,11 @@ class Order extends Model
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    public function review(): HasOne
+    {
+        return $this->hasOne(Review::class);
+    }
 
     public function user(): BelongsTo
     {

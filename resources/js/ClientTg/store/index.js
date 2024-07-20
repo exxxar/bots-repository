@@ -32,6 +32,7 @@ import appointments from "./modules/appointments";
 import payments from "./modules/payment";
 import promocodes from "./modules/promocodes";
 import orders from "./modules/shop/orders"
+import reviews from "./modules/shop/reviews"
 
 import util from "./modules/utilites";
 
@@ -168,6 +169,7 @@ export default createStore({
         payments,
         promocodes,
         orders,
-        friendsGame
+        friendsGame,
+        reviews
     }
 })

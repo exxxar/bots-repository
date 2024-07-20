@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Bot;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Review;
-use App\Models\User;
 
 class ReviewFactory extends Factory
 {
@@ -24,13 +24,13 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            'text' => $this->faker->text,
-            'images' => '{}',
-            'rating' => $this->faker->numberBetween(-10000, 10000),
-            'user_id' => User::factory(),
-            'product_id' => Product::factory(),
             'bot_id' => Bot::factory(),
-            'deleted_at' => $this->faker->dateTime(),
+            'order_id' => Order::factory(),
+            'bot_user_id' => Order::factory(),
+            'product_id' => Product::factory(),
+            'text' => $this->faker->regexify('[A-Za-z0-9]{255}'),
+            'rating' => $this->faker->randomFloat(0, 0, 9999999999.),
+            'send_review_at' => $this->faker->dateTime(),
         ];
     }
 }

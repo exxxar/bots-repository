@@ -389,6 +389,15 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                     </label>
                                 </div>
                             </div>
+
+                            <div class="col-12" v-if="needMenuBtn">
+                                <span
+                                    v-for="item in menu_variants"
+                                    @click="selectVariant(item)"
+                                    class="badge bg-primary mb-2 btn">
+                                    {{item.title || 'Выбрать'}}
+                                </span>
+                            </div>
                             <div class="col-6" v-if="needMenuBtn">
                                 <input type="text" class="form-control"
                                        placeholder="Текст кнопки меню"
@@ -1179,6 +1188,12 @@ export default {
         return {
             loadCommandEditor: true,
 
+            menu_variants:[
+                {
+                    title:'Открыть меню',
+                    url:'/bot-client/simple/{0}?slug={скрипт_id}#/s/menu'
+                }
+            ],
             showCode: false,
             tab: 0,
             spent_time_counter: 0,
@@ -1401,6 +1416,9 @@ export default {
         }
     },
     mounted() {
+
+
+
         //this.loadCurrentCompany()
         if (localStorage.getItem("cashman_admin_bot_creator_counter") != null) {
             this.can_create = false;
@@ -1806,6 +1824,19 @@ export default {
                 this.load = false
             })
 
+        },
+        selectVariant(item){
+            String.format = function() {
+                let s = arguments[0];
+                for (let i = 0; i < arguments.length - 1; i++) {
+                    let reg = new RegExp("\\{" + i + "\\}", "gm");
+                    s = s.replace(reg, arguments[i + 1]);
+                }
+                return s;
+            }
+
+          this.botForm.menu.text = item.title || 'Меню'
+          this.botForm.menu.url =  (import.meta.env.VITE_ASSET_URL || '') + String.format(item.url, this.bot.bot_domain || 'домен_бота');
         },
         addWarning() {
 

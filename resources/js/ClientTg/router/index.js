@@ -474,6 +474,7 @@ import OneArmedBanditV2 from '@/ClientTg/Pages/ShopV2/OneArmedBanditPage.vue';
 import CashBackV2 from '@/ClientTg/Pages/ShopV2/MyCashBack.vue';
 import FriendsV2 from '@/ClientTg/Pages/ShopV2/MyFriends.vue';
 import WheelOfFortuneV2 from '@/ClientTg/Pages/ShopV2/WheelOfFortune.vue';
+import AdminV2 from '@/ClientTg/Pages/ShopV2/Admin/Main.vue';
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
@@ -565,6 +566,13 @@ export const simpleRoutes = [
         path: simplePrefix + '/wheel',
         component: WheelOfFortuneV2,
         meta: {title: 'Колесо фортуны'}
+    },
+
+    {
+        name: 'AdminV2',
+        path: simplePrefix + '/admin/menu',
+        component: AdminV2,
+        meta: {title: 'Админ.панель'}
     },
 
 

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -44,16 +45,22 @@ class Product extends Model
         'old_price' => 'double',
         'current_price' => 'double',
         'variants' => 'array',
+        'rating' => 'double',
         'in_stop_list_at' => 'datetime:Y-m-d H:i:s',
         'bot_id' => 'integer',
     ];
 
     protected $with = ["productOptions"];
-    protected $appends = ['rating'];
+
 
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 
 
@@ -67,10 +74,7 @@ class Product extends Model
         return $this->hasMany(ProductOption::class);
     }
 
-    public function getRatingAttribute()
-    {
-        return "5.0";
-    }
+
 
 
 

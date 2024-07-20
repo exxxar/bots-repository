@@ -167,3 +167,6 @@ Route::apiResource('bot-dialog-answer', App\Http\Controllers\BotDialogAnswerCont
 
 
 Route::apiResource('front-pad', App\Http\Controllers\FrontPadController::class);
+
+
+Route::apiResource('reviews', App\Http\Controllers\ReviewController::class);

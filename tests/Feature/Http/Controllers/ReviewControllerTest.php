@@ -2,70 +2,53 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Bot;
-use App\Models\Product;
 use App\Models\Review;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use JMac\Testing\Traits\AdditionalAssertions;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\Admin\ReviewController
+ * @see \App\Http\Controllers\ReviewController
  */
-class ReviewControllerTest extends TestCase
+final class ReviewControllerTest extends TestCase
 {
     use AdditionalAssertions, RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function index_behaves_as_expected(): void
     {
         $reviews = Review::factory()->count(3)->create();
 
-        $response = $this->get(route('review.index'));
+        $response = $this->get(route('reviews.index'));
 
         $response->assertOk();
         $response->assertJsonStructure([]);
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Admin\ReviewController::class,
+            \App\Http\Controllers\ReviewController::class,
             'store',
             \App\Http\Requests\ReviewStoreRequest::class
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function store_saves(): void
     {
-        $rating = $this->faker->numberBetween(-10000, 10000);
-        $user = User::factory()->create();
-        $product = Product::factory()->create();
-        $bot = Bot::factory()->create();
+        $rating = $this->faker->randomFloat(/** double_attributes **/);
 
-        $response = $this->post(route('review.store'), [
+        $response = $this->post(route('reviews.store'), [
             'rating' => $rating,
-            'user_id' => $user->id,
-            'product_id' => $product->id,
-            'bot_id' => $bot->id,
         ]);
 
         $reviews = Review::query()
             ->where('rating', $rating)
-            ->where('user_id', $user->id)
-            ->where('product_id', $product->id)
-            ->where('bot_id', $bot->id)
             ->get();
         $this->assertCount(1, $reviews);
         $review = $reviews->first();
@@ -75,48 +58,36 @@ class ReviewControllerTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function show_behaves_as_expected(): void
     {
         $review = Review::factory()->create();
 
-        $response = $this->get(route('review.show', $review));
+        $response = $this->get(route('reviews.show', $review));
 
         $response->assertOk();
         $response->assertJsonStructure([]);
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\Admin\ReviewController::class,
+            \App\Http\Controllers\ReviewController::class,
             'update',
             \App\Http\Requests\ReviewUpdateRequest::class
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function update_behaves_as_expected(): void
     {
         $review = Review::factory()->create();
-        $rating = $this->faker->numberBetween(-10000, 10000);
-        $user = User::factory()->create();
-        $product = Product::factory()->create();
-        $bot = Bot::factory()->create();
+        $rating = $this->faker->randomFloat(/** double_attributes **/);
 
-        $response = $this->put(route('review.update', $review), [
+        $response = $this->put(route('reviews.update', $review), [
             'rating' => $rating,
-            'user_id' => $user->id,
-            'product_id' => $product->id,
-            'bot_id' => $bot->id,
         ]);
 
         $review->refresh();
@@ -125,20 +96,15 @@ class ReviewControllerTest extends TestCase
         $response->assertJsonStructure([]);
 
         $this->assertEquals($rating, $review->rating);
-        $this->assertEquals($user->id, $review->user_id);
-        $this->assertEquals($product->id, $review->product_id);
-        $this->assertEquals($bot->id, $review->bot_id);
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function destroy_deletes_and_responds_with(): void
     {
         $review = Review::factory()->create();
 
-        $response = $this->delete(route('review.destroy', $review));
+        $response = $this->delete(route('reviews.destroy', $review));
 
         $response->assertNoContent();
 

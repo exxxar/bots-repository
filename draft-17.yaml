@@ -1,0 +1,20 @@
+models:
+  SubShop:
+    bot_id: id foreign:bots nullable
+    title:  string:255 nullable comment:'название внутреннего магазина'
+    keyword:  string:255 nullable comment:'идентификатор-метка магазина'
+    image: string:255 nullable
+    schedule: json nullable
+    config: json nullable comment:'дополнительная настройка магазина'
+    is_active: boolean default:true
+    relationships:
+      belongsTo: Bot
+
+seeders:     SubShop
+
+controllers:
+  SubShop:
+    resource: api
+
+
+

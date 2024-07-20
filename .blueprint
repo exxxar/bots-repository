@@ -1,14 +1,10 @@
 created:
-    - app/Http/Controllers/FrontPadController.php
-    - database/factories/FrontPadFactory.php
-    - database/migrations/2024_05_18_081917_create_front_pads_table.php
-    - app/Models/FrontPad.php
-    - database/seeders/FrontPadSeeder.php
-    - tests/Feature/Http/Controllers/FrontPadControllerTest.php
-    - app/Http/Requests/FrontPadStoreRequest.php
-    - app/Http/Requests/FrontPadUpdateRequest.php
-    - app/Http/Resources/FrontPadCollection.php
-    - app/Http/Resources/FrontPadResource.php
+    - app/Http/Controllers/ReviewController.php
+    - database/factories/ReviewFactory.php
+    - database/migrations/2024_07_18_224444_create_reviews_table.php
+    - app/Models/Review.php
+    - database/seeders/ReviewSeeder.php
+    - tests/Feature/Http/Controllers/ReviewControllerTest.php
 updated:
     - routes/api.php
 models:
@@ -38,7 +34,7 @@ models:
     ProductOption: { key: 'string:255 nullable', title: 'string:255 nullable', value: 'string:255 nullable', section: 'string:255 nullable', product_id: 'id foreign:products', relationships: { belongsTo: Product } }
     Product: { article: 'string:255 nullable', vk_product_id: 'string:255 nullable', title: 'string:255 nullable', description: 'longtext nullable', images: 'json nullable', type: 'integer default:0', old_price: 'double default:0', current_price: 'double default:0', variants: 'json nullable', in_stop_list_at: 'timestamp nullable', bot_id: 'id foreign:bots', relationships: { belongsTo: Bot, belongsToMany: ProductCategory } }
     Favorite: { product_id: 'id foreign:products', user_id: 'id foreign:users', bot_id: 'id foreign:bots', relationships: { belongsTo: 'Product, User, Bot' } }
-    Review: { text: 'longtext nullable', images: 'json nullable', rating: 'integer default:0', user_id: 'id foreign:users', product_id: 'id foreign:products', bot_id: 'id foreign:bots', deleted_at: 'nullable timestamp', relationships: { belongsTo: 'Product, Bot, User' } }
+    Review: { bot_id: 'id foreign:bots nullable', order_id: 'id foreign:orders nullable', bot_user_id: 'id foreign:orders nullable', product_id: 'id foreign:products nullable', text: "string:255 nullable comment:'текст отзыва'", rating: 'double default:0', send_review_at: 'datetime nullable', relationships: { belongsTo: 'Bot, Order, BotUser, Product' } }
     Order: { bot_id: 'id foreign:companies', user_id: 'id foreign:users', delivery_service_info: "json nullable comment:'Информация о сервисе доставки'", deliveryman_info: "json nullable comment:'Берется из внешнего доверенного сервиса'", product_details: "json nullable comment:'Дамп заказанных продуктов'", product_count: 'integer default:0', summary_price: 'double default:0', delivery_price: 'double default:0', delivery_range: 'double default:0', deliveryman_latitude: 'double default:0', deliveryman_longitude: 'double default:0', delivery_note: 'longtext nullable', receiver_name: 'string:255 nullable', receiver_phone: 'string:255 nullable', receiver_get_id: 'id foreign:geos', status: 'integer default:0', order_type: 'integer default:0', payed_at: 'timestamp nullable', relationships: { belongsTo: 'User, Geo, Bot' } }
     PaymentHistory: { amount: 'double default:0', user_id: 'id foreign:users', order_id: 'id foreign:orders' }
     Geo: { region: "string:255 nullable comment:'Регион'", city: "string:255 nullable comment:'Город'", district: "string:255 nullable comment:'Район'", address: "string:255 nullable comment:'Адрес'", landmark: "string:255 nullable comment:'Ориентир'", latitude: "string:50 nullable comment:'Широта'", longitude: "string:50 nullable comment:'Долгота'", user_id: 'id foreign:users', bot_id: 'id foreign:bots', deleted_at: 'timestamp nullable', relationships: { belongsTo: 'Bot, User' } }

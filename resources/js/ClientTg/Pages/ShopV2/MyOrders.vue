@@ -1,5 +1,7 @@
 <script setup>
 import Pagination from "@/ClientTg/Components/Pagination.vue";
+import ReviewCard from "@/ClientTg/Components/ShopV2/ReviewCard.vue";
+
 </script>
 <template>
 
@@ -9,18 +11,38 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
                 <h5 class="my-3"><i class="fa-solid fa-list-check mr-1 text-primary"></i> Список заказов</h5>
 
                 <div class="alert alert-light mb-3 fw-bold" role="alert">
-                    <strong class="text-primary">Внимание!</strong> При повторном заказе автоматически формируется корзина из доступных к заказу товаров из вашего списка. Товары в стоп-листе заведения добавлены не будут.
+                    <strong class="text-primary">Внимание!</strong> При повторном заказе автоматически формируется
+                    корзина из доступных к заказу товаров из вашего списка. Товары в стоп-листе заведения добавлены не
+                    будут.
                 </div>
             </div>
+
             <div class="col-12">
-                <div class="list-group" v-if="(orders||[]).length>0">
+                <ul class="nav nav-tabs justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           v-bind:class="{'active':tab===0}"
+                           @click="tab=0"
+                           aria-current="page"
+                           href="javascript:void(0)">Заказы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           v-bind:class="{'active':tab===1}"
+                           @click="loadProductInOrders(0)"
+                           href="javascript:void(0)">Товары</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12" v-if="tab===0">
+                <div class="list-group my-2" v-if="(orders||[]).length>0">
 
                     <a
                         href="javascript:void(0)"
                         @click="select(item)"
                         v-for="item in orders"
                         style="font-weight:bold;"
-                        class="list-group-item list-group-item-action d-flex justify-content-between p-3
+                        class="list-group-item d-flex justify-content-between p-3
                        align-items-start flex-column" aria-current="true">
                         <p><i class="fa-solid fa-stopwatch mr-2 text-primary"></i> Время заказа {{ item.created_at }}
                         </p>
@@ -28,6 +50,12 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
                         <ul>
                             <li v-for="product in  item.product_details[0].products">{{ product.title }}</li>
                         </ul>
+
+
+                        <ReviewCard
+                            class="mb-3"
+                            v-if="item.review"
+                            v-model="item.review"></ReviewCard>
 
                         <button type="button"
                                 v-if="!item.disabled"
@@ -51,6 +79,18 @@ import Pagination from "@/ClientTg/Components/Pagination.vue";
                     v-if="orders_paginate_object"
                     :pagination="orders_paginate_object"/>
             </div>
+            <div class="col-12" v-if="tab===1">
+                <template v-for="(review, index) in reviews">
+                    <ReviewCard v-model="reviews[index]" :need-product="true"></ReviewCard>
+                    <hr>
+                </template>
+
+                <Pagination
+                    :simple="true"
+                    v-on:pagination_page="nextReviews"
+                    v-if="reviews_paginate_object"
+                    :pagination="reviews_paginate_object"/>
+            </div>
         </div>
     </div>
 
@@ -62,18 +102,32 @@ export default {
     props: ["selected", "active"],
     data() {
         return {
+            tab: 0,
             orders: null,
             orders_paginate_object: null,
+            reviews: [],
+            reviews_paginate_object: null,
         }
     },
     computed: {
-        ...mapGetters(['getOrders', 'getOrdersPaginateObject', 'inCart']),
+        ...mapGetters(['getOrders', 'getOrdersPaginateObject', 'inCart', 'getReviews', 'getReviewsPaginateObject']),
 
     },
     mounted() {
         this.loadOrders()
     },
     methods: {
+        loadProductInOrders(page = 0) {
+            this.tab = 1
+
+            return this.$store.dispatch("loadReviews", {
+                page: page || 0,
+                size: 20
+            }).then(() => {
+                this.reviews = this.getReviews
+                this.reviews_paginate_object = this.getReviewsPaginateObject
+            })
+        },
         repeatOrder(item) {
             let products = item.product_details[0].products.map(o => o.title)
 
@@ -84,8 +138,7 @@ export default {
 
                 let currentProducts = resp.data
 
-                if (currentProducts.length===0)
-                {
+                if (currentProducts.length === 0) {
                     item.disabled = true
 
                     this.$notify({
@@ -114,6 +167,9 @@ export default {
         },
         nextOrders(index) {
             this.loadOrders(index)
+        },
+        nextReviews(index) {
+            this.loadProductInOrders(index)
         },
         select(item) {
             return this.$emit("select", item)

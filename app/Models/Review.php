@@ -16,12 +16,14 @@ class Review extends Model
      * @var array
      */
     protected $fillable = [
-        'text',
-        'images',
-        'rating',
-        'user_id',
-        'product_id',
         'bot_id',
+        'order_id',
+        'bot_user_id',
+        'product_id',
+        'text',
+        'rating',
+        'images',
+        'send_review_at',
     ];
 
     /**
@@ -31,27 +33,32 @@ class Review extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'images' => 'array',
-        'user_id' => 'integer',
-        'product_id' => 'integer',
         'bot_id' => 'integer',
-        'deleted_at' => 'timestamp',
+        'order_id' => 'integer',
+        'bot_user_id' => 'integer',
+        'product_id' => 'integer',
+        'rating' => 'double',
+        'images' => 'array',
+        'send_review_at' => 'datetime:Y-m-d H:i:s',
     ];
-
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
-    }
 
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
     }
 
-    public function user(): BelongsTo
+    public function order(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Order::class);
     }
 
+    public function botUser(): BelongsTo
+    {
+        return $this->belongsTo(BotUser::class);
+    }
 
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

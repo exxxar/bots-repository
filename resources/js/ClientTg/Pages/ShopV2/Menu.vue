@@ -65,6 +65,21 @@
 
             </div>
 
+<!--            <div class="col" v-if="getSelf.is_admin">
+                <button type="button"
+                        @click="goTo('AdminV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/home.png'" class="img-fluid" alt="">
+
+                        <p class="my-2">Админ.панель</p>
+                    </div>
+
+                </button>
+
+            </div>-->
+
 <!--            <div class="col">
 
                 <button type="button"
