@@ -49,6 +49,17 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async updateProfile(context, payload= {botUserForm: null}){
+        let link = `${BASE_BOT_USERS_LINK}/update-profile`
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.botUserForm)
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async updateBotUser(context, payload= {botUserForm: null}){
         let link = `${BASE_BOT_USERS_LINK}/update-bot-user`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.botUserForm)

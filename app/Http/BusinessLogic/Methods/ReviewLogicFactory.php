@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTypeEnum;
+use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
@@ -90,7 +91,6 @@ class ReviewLogicFactory
     }
 
 
-
     public function reviews($size = null): ReviewCollection
     {
         if (is_null($this->bot) || is_null($this->botUser))
@@ -100,8 +100,8 @@ class ReviewLogicFactory
 
         $reviews = Review::query()
             ->with(["product"])
-            ->where("bot_id",$this->bot->id)
-            ->where("bot_user_id",$this->botUser->id)
+            ->where("bot_id", $this->bot->id)
+            ->where("bot_user_id", $this->botUser->id)
             ->whereNotNull("product_id")
             ->paginate($size);
 
@@ -114,11 +114,12 @@ class ReviewLogicFactory
         $size = $size ?? config('app.results_per_page');
 
         $reviews = Review::query()
-            ->where("product_id",$productId)
+            ->where("product_id", $productId)
             ->paginate($size);
 
         return new ReviewCollection($reviews);
     }
+
     /**
      * @throws ValidationException
      */
@@ -129,17 +130,39 @@ class ReviewLogicFactory
             throw new HttpException(404, "Условия функции не выполнены!");
 
         $this->store([
-            "order_id"=>$orderId
+            "order_id" => $orderId
         ]);
 
-        foreach ($productsIds as $id){
+        foreach ($productsIds as $id) {
             $this->store([
-                "order_id"=>$orderId,
-                "product_id"=>$id,
+                "order_id" => $orderId,
+                "product_id" => $id,
             ]);
         }
     }
 
+    public function notifyUserForReview(array $data): void
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Условия функции не выполнены!");
+
+        $productId = $data["product_id"] ?? null;
+        $orderId = $data["order_id"] ?? null;
+
+
+        $message = "Вы забыли оставить отзыв!";
+
+        if (!is_null($orderId) && is_null($productId))
+            $message = "Вы забыли оставить отзыв к заказу №$orderId";
+
+        if (!is_null($productId))
+            $message = "Вы забыли оставить отзыв к товару №$productId";
+
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage($this->botUser->telegram_chat_id, $message);
+    }
     /**
      * @throws ValidationException
      * @throws HttpException
@@ -176,6 +199,8 @@ class ReviewLogicFactory
 
         $reviewId = $data["id"] ?? null;
 
+        $needUserNotify = ($data["need_user_notify"] ?? false) == "true";
+
         $tmp = [
             'bot_id' => $this->bot->id,
             'order_id' => $data["order_id"] ?? null,
@@ -184,7 +209,7 @@ class ReviewLogicFactory
             'text' => $data["text"] ?? null,
             'rating' => $data["rating"] ?? 5,
             'images' => $images,
-            'send_review_at' => !is_null($data["id"] ?? null) ? Carbon::now()->format("Y-m-d H:i:s"): null,
+            'send_review_at' => !is_null($data["id"] ?? null) ? Carbon::now()->format("Y-m-d H:i:s") : null,
         ];
 
         if (!is_null($reviewId)) {
@@ -192,8 +217,18 @@ class ReviewLogicFactory
                 ->where("id", $reviewId)
                 ->first();
 
-            if (!is_null($review->send_review_at ?? null))
+            if (!is_null($review->send_review_at ?? null) && !is_null($data["send_review_at"] ?? null))
                 return new ReviewResource($review);
+
+            if (is_null($data["send_review_at"] ?? null) && !is_null($review->send_review_at ?? null)) {
+                $tmp["send_review_at"] = null;
+                if ($needUserNotify) {
+                    BotMethods::bot()
+                        ->whereBot($this->bot)
+                        ->sendMessage($this->botUser->telegram_chat_id, "Ваш отзыв на товар был удален. Вы можете оставить другой отзыв!");
+                }
+            }
+
 
             $review->update($tmp);
         } else
@@ -211,7 +246,7 @@ class ReviewLogicFactory
                 $average = Review::query()
                     ->where("bot_id", $this->bot->id)
                     ->where("product_id", $product->id)
-                    ->average("rating")??5;
+                    ->average("rating") ?? 5;
 
                 $product->rating = $average;
                 $product->save();
@@ -247,13 +282,12 @@ class ReviewLogicFactory
                 $average = Review::query()
                     ->where("bot_id", $this->bot->id)
                     ->where("product_id", $product->id)
-                    ->average("rating")??5;
+                    ->average("rating") ?? 5;
 
                 $product->rating = $average;
                 $product->save();
             }
         }
-
 
 
         return new ReviewResource($tmpReview);

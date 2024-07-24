@@ -33,6 +33,7 @@ import payments from "./modules/payment";
 import promocodes from "./modules/promocodes";
 import orders from "./modules/shop/orders"
 import reviews from "./modules/shop/reviews"
+import mailing from "./modules/mailing"
 
 import util from "./modules/utilites";
 
@@ -49,20 +50,6 @@ export default createStore({
         async sendToChannel(context, payload = {mailForm: null}) {
 
             let link = `/bot-client/send-to-channel`
-
-            let _axios = util.makeAxiosFactory(link, 'POST', payload.mailForm)
-
-            return _axios.then((response) => {
-                return Promise.resolve(response.data);
-            }).catch(err => {
-                context.commit("setErrors", err.response.data.errors || [])
-                return Promise.reject(err);
-            })
-        },
-
-        async sendToQueue(context, payload = {mailForm: null}) {
-
-            let link = `/bot-client/send-to-queue`
 
             let _axios = util.makeAxiosFactory(link, 'POST', payload.mailForm)
 
@@ -170,6 +157,7 @@ export default createStore({
         promocodes,
         orders,
         friendsGame,
+        mailing,
         reviews
     }
 })

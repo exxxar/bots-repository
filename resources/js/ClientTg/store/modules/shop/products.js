@@ -60,7 +60,6 @@ const actions = {
             return Promise.reject(err);
         })
     },
-
     async saveProduct(context, payload = {productForm: null}) {
         let link = `${BASE_PRODUCTS_LINK}/add-product`
 
@@ -85,7 +84,6 @@ const actions = {
             return Promise.reject(err);
         })
     },
-
     async loadProductsByCategory(context) {
 
         let link = `${BASE_PRODUCTS_LINK}-by-category`
@@ -150,11 +148,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadProductsInCategory(context, payload = {
-        dataObject: {search: null, category_id: null},
-        page: 0,
-        size: 12
-    }) {
+    async loadProductsInCategory(context, payload = {dataObject: {search: null, category_id: null}, page: 0, size: 12}) {
         let tgData = window.Telegram.WebApp.initData || null
         let botDomain = window.currentBot.bot_domain || null
         let slugId = window.currentScript || null

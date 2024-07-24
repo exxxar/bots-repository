@@ -41,7 +41,23 @@ class QueueController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            "message" => "required",
+            "cron_time" => "required",
+            "bot_id" => "required",
+        ]);
 
+
+        $bot = Bot::query()
+            ->where("id", $request->bot_id ?? null)
+            ->first();
+
+
+        BusinessLogic::bots()
+            ->setBot($bot)
+            ->sendToQueue($request->all());
+
+        return response()->noContent();
     }
 
     public function remove(Request $request, $queueId): \App\Http\Resources\QueueResource

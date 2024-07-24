@@ -70,12 +70,23 @@ class ProductController extends Controller
         ]);
     }
 
+
+
+    public function getAllOrders(Request $request): \App\Http\Resources\OrderCollection
+    {
+        return BusinessLogic::delivery()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->orderList($request->all(), $request->get("size") ?? config('app.results_per_page'), true);
+
+    }
+
     public function getOrders(Request $request): \App\Http\Resources\OrderCollection
     {
         return BusinessLogic::delivery()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->orderList($request->get("size") ?? config('app.results_per_page'));
+            ->orderList($request->all(), $request->get("size") ?? config('app.results_per_page'));
 
     }
 
@@ -101,6 +112,12 @@ class ProductController extends Controller
             ->reviewsByProductId($request->product_id, $request->get("size") ?? config('app.results_per_page'));
     }
 
+    public function notifyUser(Request $request){
+         BusinessLogic::review()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->notifyUserForReview($request->all());
+    }
     /**
      * @throws ValidationException
      */
@@ -117,6 +134,20 @@ class ProductController extends Controller
             ->store($request->all(),
                 $request->hasFile('photo') ?
                 $request->file('photo') : null);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function addCashBackToOrder(Request $request){
+        $request->validate([
+            "order_id" => "required"
+        ]);
+
+        BusinessLogic::delivery()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->addCashBackToOrder($request->all());
     }
 
     public function repeatOrder(Request $request): ProductCollection

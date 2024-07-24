@@ -521,38 +521,15 @@ class CashBackScriptController extends SlugController
         }
 
         \App\Facades\BotManager::bot()
-            ->reply("У вас <b>$amount</b> руб.!\n$tmpSubsText $tmpFiredText
-Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>\n<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>");
-
-        $slugId = (Collection::make($config[1])
-            ->where("key", "slug_id")
-            ->first())["value"];
-
-
-        $menu = BotMenuTemplate::query()
-            ->updateOrCreate(
+            ->replyInlineKeyboard("У вас <b>$amount</b> руб.!\n$tmpSubsText $tmpFiredText
+Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>\n<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>",[
                 [
-
-                    'bot_id' => $bot->id,
-                    'type' => 'reply',
-                    'slug' => "menu_cashback_$slugId",
-
-                ], [
-                'menu' => [
-                    [
-                        ["text" => "\xF0\x9F\x93\x8DМой бюджет"],
-                    ],
-                    [
-                        ["text" => "\xF0\x9F\x93\x8DЗапросить CashBack"],
-                    ],
-                    [
-                        ["text" => "\xF0\x9F\x93\x8DГлавное меню"],
-                    ],
+                    ["text" => "😎Открыть профиль", "web_app" => [
+                        "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/s/profile"
+                    ]],
                 ],
             ]);
 
-        BotManager::bot()
-            ->replyKeyboard("Меню управления CashBack-ом", $menu->menu);
 
     }
 }

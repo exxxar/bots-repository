@@ -875,6 +875,9 @@ class ProductLogicFactory
 
         $address = (($data["city"] ?? "") . "," . ($data["street"] ?? "") . "," . ($data["building"] ?? ""));
 
+        $this->botUser->city = $data["city"] ?? $this->botUser->city ?? null;
+        $this->botUser->address = ($data["street"] ?? "") . "," . ($data["building"] ?? "");
+        $this->botUser->save();
 
         //сделать чек на оплату (pdf)
         $order = Order::query()->create([

@@ -1,0 +1,59 @@
+<script setup>
+defineProps({
+    message: {
+        type: String
+    },
+    data: {
+        type: String
+    }
+});
+
+import Layout from "@/ClientTg/Layouts/V1Layout.vue";
+import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
+</script>
+<template>
+   <div class="container">
+
+       <div class="row">
+           <div class="col-12">
+               <h2 class="text-primary fw-bold text-center mb-2">Результат</h2>
+               <p class="text-primary mb-3">
+                   {{ message }}
+
+               </p>
+
+               <p
+                   v-if="statistic"
+                   class="text-primary d-flex flex-column">
+                   <span>Всего товаров затронуто <strong>{{ statistic.total_product_count || 0 }}</strong></span>
+                   <span>Совпадений товара с FrontPad <strong>{{ statistic.total_frontpad_count || 0 }}</strong></span>
+                   <span>Создано новых товаров <strong>{{ statistic.created_product_count || 0 }}</strong></span>
+                   <span>Обновлено товаров <strong>{{ statistic.updated_product_count || 0 }}</strong></span>
+               </p>
+           </div>
+       </div>
+
+   </div>
+
+</template>
+<script>
+import {mapGetters} from "vuex";
+
+export default {
+    data() {
+        return {
+            statistic: null
+        }
+    },
+    computed: {
+        tg() {
+            return window.Telegram.WebApp;
+        },
+    },
+    mounted() {
+        if (this.data)
+            this.statistic = JSON.parse(this.data)
+    },
+    methods: {}
+}
+</script>

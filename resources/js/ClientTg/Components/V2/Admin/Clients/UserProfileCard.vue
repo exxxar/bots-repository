@@ -1,0 +1,110 @@
+<script setup>
+
+import UserInfo from '@/ClientTg/Components/V2/Admin/Clients/UserInfo.vue';
+import Pagination from '@/ClientTg/Components/V1/Pagination.vue'
+
+import MessageToUser from "@/ClientTg/Components/V2/Admin/Clients/Modules/MessageToUser.vue";
+import RemoveCashBack from "@/ClientTg/Components/V2/Admin/Clients/Modules/RemoveCashBack.vue";
+import AddCashBack from "@/ClientTg/Components/V2/Admin/Clients/Modules/AddCashBack.vue"
+import ChangeAdminStatus from "@/ClientTg/Components/V2/Admin/Clients/Modules/ChangeAdminStatus.vue";
+import RefreshUserMenu from "@/ClientTg/Components/V2/Admin/Clients/Modules/RefreshUserMenu.vue";
+import RequestUserProfile from "@/ClientTg/Components/V2/Admin/Clients/Modules/RequestUserProfile.vue";
+import RequestInvoice from "@/ClientTg/Components/V2/Admin/Clients/Modules/RequestInvoice.vue";
+import CashBackList from "@/ClientTg/Components/V2/CashBack/CashBackList.vue";
+</script>
+<template>
+
+
+    <div class="btn-group w-100 my-3" role="group" aria-label="Basic example">
+        <button type="button"
+                v-bind:class="{'btn-primary':tab===0,'btn-outline-primary':tab!==0}"
+                @click="tab=0"
+                class="btn">Информация
+        </button>
+        <button type="button"
+                @click="tab=2"
+                v-bind:class="{'btn-primary':tab===2,'btn-outline-primary':tab!==2}"
+                class="btn">Управление
+        </button>
+        <button type="button"
+                @click="tab=1"
+                v-bind:class="{'btn-primary':tab===1,'btn-outline-primary':tab!==1}"
+                class="btn">CashBack
+        </button>
+    </div>
+
+    <div v-if="tab===0">
+        <UserInfo
+            v-on:update="updateUserInfo"
+            v-if="botUser&&!reloadUsers"
+            :bot-user="botUser"></UserInfo>
+    </div>
+
+    <div v-if="tab===1">
+        <CashBackList
+            v-if="botUser"
+            :bot-user="botUser"></CashBackList>
+    </div>
+
+    <div v-if="botUser&&tab===2">
+
+        <MessageToUser
+            class="mb-2"
+            :bot-user="botUser"></MessageToUser>
+
+        <RemoveCashBack class="mb-2"
+                        :bot-user="botUser"></RemoveCashBack>
+
+        <AddCashBack class="mb-2"
+                     :bot-user="botUser"></AddCashBack>
+
+        <ChangeAdminStatus class="mb-2"
+                           :bot-user="botUser"></ChangeAdminStatus>
+
+        <RefreshUserMenu class="mb-2"
+                         :bot-user="botUser"></RefreshUserMenu>
+
+        <RequestUserProfile class="mb-2"
+                            :bot-user="botUser"></RequestUserProfile>
+
+        <RequestInvoice class="mb-2"
+                        :bot-user="botUser"></RequestInvoice>
+
+
+    </div>
+</template>
+<script>
+
+import {mapGetters} from "vuex";
+
+export default {
+    props: ["botUser"],
+    data() {
+        return {
+            loading: false,
+            reloadUsers: false,
+            tab: 0,
+            request_telegram_chat_id: null,
+
+        }
+    },
+    computed: {
+        ...mapGetters(['getSelf']),
+        currentBot() {
+            return window.currentBot
+        }
+    },
+    methods: {
+        updateUserInfo() {
+            this.reloadUsers = true
+            this.botUser = null
+            this.request_telegram_chat_id = null
+            this.$nextTick(() => {
+                this.reloadUsers = false
+            })
+        },
+
+    }
+}
+</script>
+

@@ -9,6 +9,7 @@
         "ext-curl": "*",
         "andrey-tech/amocrm-api-php": "2.7",
         "carlos-meneses/laravel-mpdf": "^2.1",
+        "danog/tg-file-decoder": "^0.1.13",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.8",
         "irazasyed/telegram-bot-sdk": "^3.10",

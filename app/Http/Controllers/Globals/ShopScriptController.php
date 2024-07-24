@@ -72,13 +72,13 @@ class ShopScriptController extends SlugController
 
         if (is_null($bot)) {
             Inertia::setRootView("bot");
-            return Inertia::render('Error');
+            return Inertia::render('V1/Error');
         }
 
         if ($scriptId == "route") {
             Inertia::setRootView("bot");
 
-            return Inertia::render('SimpleMain', [
+            return Inertia::render('MainV2', [
                 'bot' => BotSecurityResource::make($bot),
             ]);
         }
@@ -96,13 +96,13 @@ class ShopScriptController extends SlugController
 
         if (is_null($slug)) {
             Inertia::setRootView("bot");
-            return Inertia::render('Error');
+            return Inertia::render('V1/Error');
         }
 
 
         Inertia::setRootView("bot");
 
-        return Inertia::render('SimpleMain', [
+        return Inertia::render('MainV2', [
             'bot' => BotSecurityResource::make($bot),
             'slug_id' => $slug->id,
         ]);
@@ -130,7 +130,7 @@ class ShopScriptController extends SlugController
         if ($scriptId == "route") {
             Inertia::setRootView("shop");
 
-            return Inertia::render('Main', [
+            return Inertia::render('MainV1', [
                 'bot' => BotSecurityResource::make($bot),
             ]);
         }
@@ -148,13 +148,13 @@ class ShopScriptController extends SlugController
 
         if (is_null($slug)) {
             Inertia::setRootView("shop");
-            return Inertia::render('Error');
+            return Inertia::render('V1/Error');
         }
 
 
         Inertia::setRootView("shop");
 
-        return Inertia::render('Main', [
+        return Inertia::render('MainV1', [
             'bot' => BotSecurityResource::make($bot),
             'slug_id' => $slug->id,
         ]);

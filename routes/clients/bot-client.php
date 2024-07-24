@@ -9,6 +9,7 @@ use App\Http\Controllers\Bots\Web\BotPageController;
 use App\Http\Controllers\Bots\Web\BotUsersController;
 use App\Http\Controllers\Bots\Web\CompanyController;
 use App\Http\Controllers\Bots\Web\ProductController;
+use App\Http\Controllers\Bots\Web\QueueController;
 use App\Http\Controllers\Bots\Web\YClientsController;
 use App\Http\Controllers\Globals\AboutBotScriptController;
 use App\Http\Controllers\Globals\BonusProductScriptController;
@@ -31,8 +32,8 @@ Route::prefix("bot-client")
         Route::post("/send-to-channel", [BotController::class, "sendToChannel"])
             ->middleware(["tgAuth.any"]);
 
-        Route::post("/send-to-queue", [BotController::class, "sendToQueue"])
-            ->middleware(["tgAuth.any"]);
+        /*Route::post("/send-to-queue", [BotController::class, "sendToQueue"])
+            ->middleware(["tgAuth.any"]);*/
 
         Route::post("/telegram-channel-id", [BotController::class, "requestTelegramChannel"])
             ->middleware(["tgAuth.any"]);
@@ -64,6 +65,15 @@ Route::prefix("bot-client")
                 Route::post('/prepare', "formWheelOfFortunePrepare");
                 Route::post('/load-data', "loadData");
                 Route::post('/callback', "formWheelOfFortuneCallback");
+            });
+
+        Route::prefix("mailing")
+            ->controller(QueueController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function () {
+                Route::post('/', "list");
+                Route::post('/send-to-queue', "store");
+                Route::delete('/remove/{id}', "remove");
             });
 
         Route::prefix("wheel-of-fortune-custom")
@@ -220,7 +230,9 @@ Route::prefix("bot-client")
                 Route::prefix("orders")
                     ->group(function(){
                         Route::post("/", [ProductController::class, "getOrders"]);
+                        Route::post("/all", [ProductController::class, "getAllOrders"])->middleware(["tgAuth.admin"]);
                         Route::post("/repeat-order", [ProductController::class, "repeatOrder"]);
+                        Route::post("/add-cashback-to-order", [ProductController::class, "addCashBackToOrder"])->middleware(["tgAuth.admin"]);
                         Route::post("/get-delivery-price", [ProductController::class, "getDeliveryPrice"])
                             ->middleware(["slug"]);
                     });
@@ -230,6 +242,8 @@ Route::prefix("bot-client")
                         Route::post("/", [ProductController::class, "getReviews"]);
                         Route::post("/by-product-id", [ProductController::class, "getReviewsByProductId"]);
                         Route::post("/store-review", [ProductController::class, "storeReview"]);
+                        Route::post("/notify-user", [ProductController::class, "notifyUser"]);
+
 
                     });
 
@@ -314,6 +328,8 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post("/update-bot-user", "updateBotUser")
                     ->middleware(["tgAuth.admin"]);
+                Route::post("/update-profile", "updateProfile")
+                    ->middleware(["tgAuth.any"]);
                 Route::post("/get-user-profile-photos", "getUserProfilePhotos")
                     ->middleware(["tgAuth.any"]);
             });

@@ -23,6 +23,7 @@ use App\Http\Resources\CashBackResource;
 use App\Http\Resources\ImageMenuCollection;
 use App\Http\Resources\ImageMenuResource;
 use App\Http\Resources\LocationResource;
+use App\Http\Resources\QueueResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\BotCustomFieldSetting;
@@ -41,6 +42,8 @@ use App\Models\Company;
 use App\Models\ImageMenu;
 use App\Models\Location;
 use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\Queue;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -2195,7 +2198,7 @@ class BotLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
-    public function sendToQueue(array $data): void
+    public function sendToQueue(array $data): QueueResource
     {
 
         if (is_null($this->bot))
@@ -2211,19 +2214,31 @@ class BotLogicFactory
             throw new ValidationException($validator);
 
 
-        $result = Http::post(env("MAILING_HANDLER_URL") . "api/notification", [
+
+        $id = $data["id"] ?? null;
+        $tmp =[
             "bot_id" => $this->bot->id,
-            "message" => $data["message"] ?? 'Текст сообщения',
+            "content" => $data["message"] ?? 'Текст сообщения',
             "inline_keyboard" => $data["inline_keyboard"] ?? null,
             "reply_keyboard" => $data["reply_keyboard"] ?? null,
-            "images" => $data["images"] ?? null,
+            "images" => json_decode($data["images"] ?? '[]'),
             "videos" => $data["videos"] ?? null,
             "audios" => $data["audios"] ?? null,
             "cron_time" => is_null($data["cron_time"] ?? null) ? null : Carbon::parse($data["cron_time"])
                 ->setTimezone("+0:00")
-                ->subHours(3)
-                ->timestamp ?? null,
-        ]);
+                ->subHours(3) ?? null,
+        ];
+
+        if (is_null($id))
+            $queue = Queue::query()
+                ->create($tmp);
+        else {
+            $queue = Queue::query()->find($id);
+
+            $queue->update($tmp);
+        }
+
+        return new QueueResource($queue);
 
     }
 

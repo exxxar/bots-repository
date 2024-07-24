@@ -3,12 +3,15 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\OrderStatusEnum;
+use App\Facades\BotManager;
 use App\Facades\BotMethods;
+use App\Facades\BusinessLogic;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\OrderCollection;
 use App\Http\Resources\ProductCollection;
 use App\Models\AmoCrm;
 use App\Models\Bot;
+use App\Models\BotUser;
 use App\Models\Documents;
 use App\Models\Order;
 use App\Models\Product;
@@ -48,6 +51,80 @@ class DeliveryLogicFactory
         $this->botUser = $botUser;
         return $this;
     }
+
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function addCashBackToOrder(array $data): void
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "order_id" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $orderId = $data["order_id"] ?? null;
+
+        $order = Order::query()
+            ->where("id", $orderId)
+            ->first();
+
+        if (is_null($order)) {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $this->botUser->telegram_chat_id,
+                    "Заказ не найден");
+            return;
+        }
+
+        if (($order->is_cashback_crediting ?? true) === true) {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $this->botUser->telegram_chat_id,
+                    "❗По данному заказу уже был начислен автоматический CashBack❗");
+            return;
+        }
+
+        $order->is_cashback_crediting = true;
+        $order->save();
+
+        $client = BotUser::query()->where("id", $order->customer_id)
+            ->first();
+
+        if (is_null($client)) {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage(
+                    $this->botUser->telegram_chat_id,
+                    "Клиент не найден!");
+            return;
+        }
+
+        BusinessLogic::administrative()
+            ->setBot($this->bot)
+            ->setBotUser($this->botUser)
+            ->addCashBack([
+                "user_telegram_chat_id" => $client->telegram_chat_id,
+                "amount" => $order->summary_price,
+                "info" => "Автоматическое начисление CashBack после заказа",
+            ]);
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                "Операция выполнена успешно!");
+    }
+
 
     /**
      * @throws ValidationException
@@ -133,7 +210,7 @@ class DeliveryLogicFactory
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
-                $this->bot->order_channel ??  null,
+                $this->bot->order_channel ?? null,
                 "#регистрация_доставщика\n$message\n",
                 $keyboard,
                 $thread
@@ -171,7 +248,8 @@ class DeliveryLogicFactory
         return true;
     }
 
-    public function userOrders(){
+    public function userOrders()
+    {
 
     }
 
@@ -217,7 +295,7 @@ class DeliveryLogicFactory
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendMessage(
-                $this->bot->order_channel ??  null,
+                $this->bot->order_channel ?? null,
                 "#заказ_в_работе\n№$order->id взят в работу доставщиком $deliverymanInfo->name ($deliverymanInfo->phone)",
                 $thread
             );
@@ -266,25 +344,50 @@ class DeliveryLogicFactory
 
     }
 
-    public function orderList($size = 30): OrderCollection
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function orderList(array $data, $size = 30, $needAll = false): OrderCollection
     {
         //список заказов с фильтром: мои заказы, все заказы, архивные заказы (статус доставлено)
 
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Бот не найден!");
 
+        $validator = Validator::make($data, [
+            "search" => "",
+            "order_by" => "",
+            "direction" => "",
+
+        ]);
+
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $search = $data["search"] ?? null;
+        $orderBy = $data["order_by"] ?? "id";
+        $direction = $data["direction"] ?? "asc";
+
         $orders = Order::query()
-            ->where("bot_id", $this->bot->id)
-            ->where("customer_id", $this->botUser->id)
-            ->orderBy("created_at", "desc")
+            ->where("bot_id", $this->bot->id);
+
+        if (!is_null($search)) {
+            $orders = $orders->where("id", "like", "%$search%");
+        }
+
+        if (!$needAll)
+            $orders = $orders->where("customer_id", $this->botUser->id);
+
+
+        $orders = $orders
+            ->orderBy($orderBy, $direction)
             ->paginate($size);
 
-        return new OrderCollection($orders);
-        /*    $order = Order::query()
-                ->find($orderId);
 
-            if (is_null($order))
-                return false;*/
+        return new OrderCollection($orders);
+
 
     }
 

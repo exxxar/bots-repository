@@ -23,6 +23,18 @@ const getters = {
 const actions = {
 
 
+    async notifyUserForReview(context, payload = {reviewForm: null}) {
+        let link = `${BASE_REVIEWS_LINK}/notify-user`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload.reviewForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async storeReview(context, payload = {reviewForm: null}) {
         let link = `${BASE_REVIEWS_LINK}/store-review`
 

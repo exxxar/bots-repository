@@ -4,6 +4,8 @@ namespace App\Classes;
 
 use App\Models\Bot;
 use App\Models\BotMenuTemplate;
+use danog\Decoder\FileId;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Http;
@@ -412,7 +414,16 @@ trait BotBaseMethodsTrait
         $tmp["message"] = mb_strlen($tmp["message"] ?? '') > 0 ? $tmp["message"] : "Главное меню";
 
         if (isset($tmp["photo"])) {
-            $tmp["photo"] = !is_null($tmp["photo"] ?? null) ? $tmp["photo"] :
+
+            try {
+                if (!is_null($tmp["photo"] ?? null))
+                    $fileId = FileId::fromBotAPI($tmp["photo"]);
+            } catch (Exception $e) {
+                $fileId = null;
+            }
+
+
+            $tmp["photo"] = !is_null($fileId) ? $tmp["photo"] :
                 InputFile::create(public_path() . "/images/cashman.jpg");
         }
 
@@ -675,7 +686,7 @@ trait BotBaseMethodsTrait
             ]);
         }
 
-        if ( mb_strlen($message ?? '') >= 4000){
+        if (mb_strlen($message ?? '') >= 4000) {
             $subMessage = mb_substr($message, 0, 4000);
             $elseMessage = mb_substr($message, 4000);
 
@@ -788,11 +799,30 @@ trait BotBaseMethodsTrait
     public function sendPhoto($chatId, $caption, $path, array $keyboard = [], $messageThreadId = null)
     {
 
+        $photoIsCorrect = false;
+
+        if ($path instanceof InputFile)
+            $photoIsCorrect = true;
+
+        try {
+            if (!$photoIsCorrect) {
+                $fileId = FileId::fromBotAPI($path);
+                $photoIsCorrect = true;
+            }
+        } catch (Exception $e) {
+        }
+
+        if (!$photoIsCorrect) {
+            return empty($keyboard ?? []) ?
+                $this->sendMessage($chatId, $caption ?? 'Ошибочка...', $messageThreadId) :
+                $this->sendInlineKeyboard($chatId, $caption ?? 'Ошибочка...', $keyboard, $messageThreadId);
+        }
+
         $tmp = [
             "chat_id" => $chatId,
             "photo" => $path,
             "caption" => $caption,
-            "reply_markup" => $caption,
+            "reply_markup" => $keyboard,
             "parse_mode" => "HTML",
 
         ];
@@ -800,7 +830,7 @@ trait BotBaseMethodsTrait
         if (!is_null($messageThreadId))
             $tmp["message_thread_id"] = $messageThreadId;
 
-        if (!empty($keyboard ?? [])) {
+        if (!empty($keyboard ?? []) && is_array($keyboard ?? null)) {
             $tmp['reply_markup'] = json_encode([
                 'inline_keyboard' => $keyboard,
             ]);

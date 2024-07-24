@@ -12,6 +12,7 @@ use App\Models\Company;
 use App\Models\ReferralHistory;
 use App\Models\Role;
 use App\Models\User;
+use danog\Decoder\FileId;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Telegram\Bot\FileUpload\InputFile;
 use Yclients\YclientsApi;
 
 /*
@@ -36,27 +38,8 @@ use Yclients\YclientsApi;
 |
 */
 
-Route::get("/test-frontpad", function () {
-    $bot = Bot::query()
-        ->with(["frontPad"])
-        ->find(166);
+Route::get("/test-decode", function () {
 
-    $result = BusinessLogic::frontPad()
-        ->setBot($bot)
-        ->getProducts();
-    $index = 0;
-    $test = "Запеченный мини-ролл  с томаго";
-    foreach ($result["name"] as $key => $name)
-        if ($name == $test) {
-            $index = $key;
-            break;
-        }
-
-    return [
-        "name" => $test,
-        "index" => $index,
-        "id" => $result["product_id"][$index] ?? '-'
-    ];
 });
 
 Route::get("/test-word", function () {

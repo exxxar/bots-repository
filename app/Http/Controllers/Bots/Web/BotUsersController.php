@@ -45,6 +45,28 @@ class BotUsersController extends Controller
     /**
      * @throws ValidationException
      */
+    public function updateProfile(Request $request): BotUserResource
+    {
+        $request->validate([
+            "name" => "required",
+            "phone" => "required",
+            "email" => "",
+            "birthday" => "",
+            "city" => "",
+            "country" => "",
+            "address" => "",
+            "sex" => "",
+        ]);
+
+        return BusinessLogic::botUsers()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->updateProfile( $request->all());
+    }
+
+    /**
+     * @throws ValidationException
+     */
     public function updateBotUser(Request $request): BotUserResource
     {
         $request->validate([

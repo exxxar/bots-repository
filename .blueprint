@@ -1,10 +1,14 @@
 created:
-    - app/Http/Controllers/ReviewController.php
-    - database/factories/ReviewFactory.php
-    - database/migrations/2024_07_18_224444_create_reviews_table.php
-    - app/Models/Review.php
-    - database/seeders/ReviewSeeder.php
-    - tests/Feature/Http/Controllers/ReviewControllerTest.php
+    - app/Http/Controllers/SubShopController.php
+    - database/factories/SubShopFactory.php
+    - database/migrations/2024_07_20_211303_create_sub_shops_table.php
+    - app/Models/SubShop.php
+    - database/seeders/SubShopSeeder.php
+    - tests/Feature/Http/Controllers/SubShopControllerTest.php
+    - app/Http/Requests/SubShopStoreRequest.php
+    - app/Http/Requests/SubShopUpdateRequest.php
+    - app/Http/Resources/SubShopCollection.php
+    - app/Http/Resources/SubShopResource.php
 updated:
     - routes/api.php
 models:
@@ -68,3 +72,4 @@ models:
     PromoCode: { bot_id: 'id foreign:bots', code: 'string:255 unique', description: 'longtext nullable', slot_amount: 'integer default:0', cashback_amount: 'double default:0', max_activation_count: 'integer default:0', is_active: 'boolean default:false', relationships: { belongsTo: Bot, belongsToMany: BotUser } }
     BotDialogAnswer: { bot_dialog_command_id: 'id foreign:bot_dialog_commands', answer: 'string:255 nullable', pattern: 'string:255 nullable', next_bot_dialog_command_id: 'id foreign:bot_dialog_commands', relationships: { belongsTo: BotDialogCommand } }
     FrontPad: { bot_id: 'id foreign:bots nullable', hook_url: "string:255 nullable comment:'url для отправки вебхука по текущему заказу'", channel: "string:255 nullable comment:'канал продаж'", affiliate: "string:255 nullable comment:'филиал'", point: "string:255 nullable comment:'точка продаж'", token: "string:255 nullable comment:'тоукен интеграции'", relationships: { belongsTo: Bot } }
+    SubShop: { bot_id: 'id foreign:bots nullable', title: "string:255 nullable comment:'название внутреннего магазина'", keyword: "string:255 nullable comment:'идентификатор-метка магазина'", image: 'string:255 nullable', schedule: 'json nullable', config: "json nullable comment:'дополнительная настройка магазина'", is_active: 'boolean default:true', relationships: { belongsTo: Bot } }

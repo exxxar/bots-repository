@@ -43,6 +43,9 @@ createInertiaApp({
         const app = createApp({render: () => h(App, props)})
 
         app.config.globalProperties.$filters = {
+            local(date){
+                return moment(date).format("YYYY-MM-DDThh:mm")
+            },
             timeAgo(date) {
                 return moment(date).fromNow()
             },

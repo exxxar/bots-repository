@@ -1,74 +1,74 @@
 import {createWebHashHistory, createRouter} from "vue-router";
 
-import Home from '@/ClientTg/Pages/Shop/Home.vue';
-import Products from '@/ClientTg/Pages/Shop/Products.vue';
-import ProductsInCategory from '@/ClientTg/Pages/Shop/ProductsInCategory.vue';
-import Product from '@/ClientTg/Pages/Shop/Product.vue';
-import Favorites from '@/ClientTg/Pages/Shop/Favorites.vue';
-import Basket from '@/ClientTg/Pages/Shop/Basket.vue';
-import CheckOut from '@/ClientTg/Pages/Shop/CheckOut.vue';
-import Settings from '@/ClientTg/Pages/Shop/Settings.vue';
-import Schedule from '@/ClientTg/Pages/Shop/Schedule.vue';
-import Quizzes from '@/ClientTg/Pages/Quiz/Quizzes.vue';
-import SingleQuiz from '@/ClientTg/Pages/Quiz/SingleQuiz.vue';
-import Appointments from '@/ClientTg/Pages/Appointment/Appointments.vue';
-import OneArmedBanditPage from '@/ClientTg/Pages/OneArmedBanditPage.vue';
+import Home from '@/ClientTg/Pages/V1/Shop/Home.vue';
+import Products from '@/ClientTg/Pages/V1/Shop/Products.vue';
+import ProductsInCategory from '@/ClientTg/Pages/V1/Shop/ProductsInCategory.vue';
+import Product from '@/ClientTg/Pages/V1/Shop/Product.vue';
+import Favorites from '@/ClientTg/Pages/V1/Shop/Favorites.vue';
+import Basket from '@/ClientTg/Pages/V1/Shop/Basket.vue';
+import CheckOut from '@/ClientTg/Pages/V1/Shop/CheckOut.vue';
+import Settings from '@/ClientTg/Pages/V1/Shop/Settings.vue';
+import Schedule from '@/ClientTg/Pages/V1/Shop/Schedule.vue';
+import Quizzes from '@/ClientTg/Pages/V1/Quiz/Quizzes.vue';
+import SingleQuiz from '@/ClientTg/Pages/V1/Quiz/SingleQuiz.vue';
+import Appointments from '@/ClientTg/Pages/V1/Appointment/Appointments.vue';
+import OneArmedBanditPage from '@/ClientTg/Pages/V1/OneArmedBanditPage.vue';
 
 
-import DeliveryMain from '@/ClientTg/Pages/Delivery/Main.vue';
-import PaymentSBP from '@/ClientTg/Pages/Shop/PaymentSBP.vue';
-import ClientPromocode from '@/ClientTg/Pages/Shop/Promocode.vue';
-import FriendsGame from '@/ClientTg/Pages/Shop/FriendsGame.vue';
+import DeliveryMain from '@/ClientTg/Pages/V1/Delivery/Main.vue';
+import PaymentSBP from '@/ClientTg/Pages/V1/Shop/PaymentSBP.vue';
+import ClientPromocode from '@/ClientTg/Pages/V1/Shop/Promocode.vue';
+import FriendsGame from '@/ClientTg/Pages/V1/Shop/FriendsGame.vue';
 
-import FoodConstructors from '@/ClientTg/Pages/FoodConstructors.vue';
+import FoodConstructors from '@/ClientTg/Pages/V1/FoodConstructors.vue';
 
 //support pages
-import Terms from '@/ClientTg/Pages/Shop/Terms.vue';
-import OurTeam from '@/ClientTg/Pages/Shop/OurTeam.vue';
-import ContactUs from '@/ClientTg/Pages/Shop/ContactUs.vue';
-import Help from '@/ClientTg/Pages/Shop/Help.vue';
-import Wheel from '@/ClientTg/Pages/Shop/Wheel.vue';
-import WheelCustom from '@/ClientTg/Pages/Shop/WheelCustom.vue';
-import CashOut from '@/ClientTg/Pages/Shop/CashOut.vue';
-import SaveUp from '@/ClientTg/Pages/Shop/SaveUp.vue';
-import Quest from '@/ClientTg/Pages/Shop/Quest.vue';
-import Empty from '@/ClientTg/Pages/Shop/Empty.vue';
-import Booking from '@/ClientTg/Pages/Shop/Booking.vue';
-import Admins from '@/ClientTg/Pages/Shop/Admins.vue';
-import Vip from '@/ClientTg/Pages/Shop/Vip.vue';
-import ProfileForm from '@/ClientTg/Pages/Shop/ProfileForm.vue';
+import Terms from '@/ClientTg/Pages/V1/Shop/Terms.vue';
+import OurTeam from '@/ClientTg/Pages/V1/Shop/OurTeam.vue';
+import ContactUs from '@/ClientTg/Pages/V1/Shop/ContactUs.vue';
+import Help from '@/ClientTg/Pages/V1/Shop/Help.vue';
+import Wheel from '@/ClientTg/Pages/V1/Shop/Wheel.vue';
+import WheelCustom from '@/ClientTg/Pages/V1/Shop/WheelCustom.vue';
+import CashOut from '@/ClientTg/Pages/V1/Shop/CashOut.vue';
+import SaveUp from '@/ClientTg/Pages/V1/Shop/SaveUp.vue';
+import Quest from '@/ClientTg/Pages/V1/Shop/Quest.vue';
+import Empty from '@/ClientTg/Pages/V1/Shop/Empty.vue';
+import Booking from '@/ClientTg/Pages/V1/Shop/Booking.vue';
+import Admins from '@/ClientTg/Pages/V1/Shop/Admins.vue';
+import Vip from '@/ClientTg/Pages/V1/Shop/Vip.vue';
+import ProfileForm from '@/ClientTg/Pages/V1/Shop/ProfileForm.vue';
 
-import Categories from '@/ClientTg/Pages/Shop/Categories.vue';
+import Categories from '@/ClientTg/Pages/V1/Shop/Categories.vue';
 
-import AdminMain from '@/ClientTg/Pages/Admin/Main.vue';
-import AdminChatLog from '@/ClientTg/Pages/Admin/ChatHistory.vue';
-import AdminPromotion from '@/ClientTg/Pages/Admin/Promotion.vue';
-import AdminStatistic from '@/ClientTg/Pages/Admin/Statistic.vue';
-import AdminWorkStatus from '@/ClientTg/Pages/Admin/WorkStatus.vue';
-import AdminOrders from '@/ClientTg/Pages/Admin/Orders.vue';
-import AdminUsers from '@/ClientTg/Pages/Admin/Users.vue';
-import AdminActions from '@/ClientTg/Pages/Admin/Actions.vue';
-import AdminShopManager from '@/ClientTg/Pages/Admin/ShopManager.vue';
-import AdminCompanyManager from '@/ClientTg/Pages/Admin/CompanyManager.vue';
-import AdminBotManager from '@/ClientTg/Pages/Admin/BotManager.vue';
-import AdminBotPage from '@/ClientTg/Pages/Admin/BotManager/Pages.vue';
-import AdminBotSlug from '@/ClientTg/Pages/Admin/BotManager/Slugs.vue';
-import AdminBotDialog from '@/ClientTg/Pages/Admin/BotManager/Dialogs.vue';
-import AdminBotKeyboard from '@/ClientTg/Pages/Admin/BotManager/Keyboards.vue';
-import AdminBotAmo from '@/ClientTg/Pages/Admin/BotManager/Amo.vue';
-import AdminBotYClients from '@/ClientTg/Pages/Admin/BotManager/YClients.vue';
-import AdminBonusProduct from '@/ClientTg/Pages/Admin/BonusProduct.vue';
-import AdminMessageToUser from '@/ClientTg/Pages/Admin/MessageToUser.vue';
-
-
-import ManagerMain from '@/ClientTg/Pages/Manager/Main.vue';
-import ManagerForm from '@/ClientTg/Pages/Manager/Manager.vue';
-import ManagerClients from '@/ClientTg/Pages/Manager/Clients.vue';
-import ManagerProfile from '@/ClientTg/Pages/Manager/Profile.vue';
-import ManagerPartners from '@/ClientTg/Pages/Manager/Partners.vue';
+import AdminMain from '@/ClientTg/Pages/V1/Admin/Main.vue';
+import AdminChatLog from '@/ClientTg/Pages/V1/Admin/ChatHistory.vue';
+import AdminPromotion from '@/ClientTg/Pages/V1/Admin/Promotion.vue';
+import AdminStatistic from '@/ClientTg/Pages/V1/Admin/Statistic.vue';
+import AdminWorkStatus from '@/ClientTg/Pages/V1/Admin/WorkStatus.vue';
+import AdminOrders from '@/ClientTg/Pages/V1/Admin/Orders.vue';
+import AdminUsers from '@/ClientTg/Pages/V1/Admin/Users.vue';
+import AdminActions from '@/ClientTg/Pages/V1/Admin/Actions.vue';
+import AdminShopManager from '@/ClientTg/Pages/V1/Admin/ShopManager.vue';
+import AdminCompanyManager from '@/ClientTg/Pages/V1/Admin/CompanyManager.vue';
+import AdminBotManager from '@/ClientTg/Pages/V1/Admin/BotManager.vue';
+import AdminBotPage from '@/ClientTg/Pages/V1/Admin/BotManager/Pages.vue';
+import AdminBotSlug from '@/ClientTg/Pages/V1/Admin/BotManager/Slugs.vue';
+import AdminBotDialog from '@/ClientTg/Pages/V1/Admin/BotManager/Dialogs.vue';
+import AdminBotKeyboard from '@/ClientTg/Pages/V1/Admin/BotManager/Keyboards.vue';
+import AdminBotAmo from '@/ClientTg/Pages/V1/Admin/BotManager/Amo.vue';
+import AdminBotYClients from '@/ClientTg/Pages/V1/Admin/BotManager/YClients.vue';
+import AdminBonusProduct from '@/ClientTg/Pages/V1/Admin/BonusProduct.vue';
+import AdminMessageToUser from '@/ClientTg/Pages/V1/Admin/MessageToUser.vue';
 
 
-import DeliverymanForm from '@/ClientTg/Pages/Delivery/DeliveryManForm.vue';
+import ManagerMain from '@/ClientTg/Pages/V1/Manager/Main.vue';
+import ManagerForm from '@/ClientTg/Pages/V1/Manager/Manager.vue';
+import ManagerClients from '@/ClientTg/Pages/V1/Manager/Clients.vue';
+import ManagerProfile from '@/ClientTg/Pages/V1/Manager/Profile.vue';
+import ManagerPartners from '@/ClientTg/Pages/V1/Manager/Partners.vue';
+
+
+import DeliverymanForm from '@/ClientTg/Pages/V1/Delivery/DeliveryManForm.vue';
 
 
 export const routes = [
@@ -461,20 +461,25 @@ export const deliveryRoutes = [
 
 ];
 
-import CatalogV2 from '@/ClientTg/Pages/ShopV2/Catalog.vue';
-import ContactsV2 from '@/ClientTg/Pages/ShopV2/Contacts.vue';
-import OrdersV2 from '@/ClientTg/Pages/ShopV2/MyOrders.vue';
-import ProfileV2 from '@/ClientTg/Pages/ShopV2/Profile.vue';
-import ProductV2 from '@/ClientTg/Pages/ShopV2/Product.vue';
-import ShopCartV2 from '@/ClientTg/Pages/ShopV2/ShopCart.vue';
-import PaymentV2 from '@/ClientTg/Pages/ShopV2/Payment.vue';
-import FeedBackV2 from "@/ClientTg/Pages/ShopV2/FeedBack.vue";
-import MenuV2 from "@/ClientTg/Pages/ShopV2/Menu.vue";
-import OneArmedBanditV2 from '@/ClientTg/Pages/ShopV2/OneArmedBanditPage.vue';
-import CashBackV2 from '@/ClientTg/Pages/ShopV2/MyCashBack.vue';
-import FriendsV2 from '@/ClientTg/Pages/ShopV2/MyFriends.vue';
-import WheelOfFortuneV2 from '@/ClientTg/Pages/ShopV2/WheelOfFortune.vue';
-import AdminV2 from '@/ClientTg/Pages/ShopV2/Admin/Main.vue';
+import CatalogV2 from '@/ClientTg/Pages/V2/Shop/Catalog.vue';
+import ContactsV2 from '@/ClientTg/Pages/V2/Shop/Contacts.vue';
+import OrdersV2 from '@/ClientTg/Pages/V2/Shop/MyOrders.vue';
+import ProfileV2 from '@/ClientTg/Pages/V2/Shop/Profile.vue';
+import ProductV2 from '@/ClientTg/Pages/V2/Shop/Product.vue';
+import ShopCartV2 from '@/ClientTg/Pages/V2/Shop/ShopCart.vue';
+import PaymentV2 from '@/ClientTg/Pages/V2/Shop/Payment.vue';
+import FeedBackV2 from "@/ClientTg/Pages/V2/Other/FeedBack.vue";
+import MenuV2 from "@/ClientTg/Pages/V2/Shop/Menu.vue";
+import OneArmedBanditV2 from '@/ClientTg/Pages/V2/Games/OneArmedBanditPage.vue';
+import CashBackV2 from '@/ClientTg/Pages/V2/Shop/MyCashBack.vue';
+import FriendsV2 from '@/ClientTg/Pages/V2/Shop/MyFriends.vue';
+import WheelOfFortuneV2 from '@/ClientTg/Pages/V2/Games/WheelOfFortune.vue';
+import MailingV2 from '@/ClientTg/Pages/V2/Admin/Mailing.vue';
+import ClientsV2 from '@/ClientTg/Pages/V2/Admin/Clients.vue';
+import ShopV2 from '@/ClientTg/Pages/V2/Admin/Shop.vue';
+import AdminOrdersV2 from '@/ClientTg/Pages/V2/Admin/Orders.vue';
+import StatisticV2 from '@/ClientTg/Pages/V2/Admin/Statistic.vue';
+
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
@@ -569,13 +574,38 @@ export const simpleRoutes = [
     },
 
     {
-        name: 'AdminV2',
-        path: simplePrefix + '/admin/menu',
-        component: AdminV2,
-        meta: {title: 'Админ.панель'}
+        name: 'MailingV2',
+        path: simplePrefix + '/admin/mailing',
+        component: MailingV2,
+        meta: {title: 'Рассылка'}
     },
 
+    {
+        name: 'ClientsV2',
+        path: simplePrefix + '/admin/clients',
+        component: ClientsV2,
+        meta: {title: 'Клиенты'}
+    },
+    {
+        name: 'ShopV2',
+        path: simplePrefix + '/admin/shop',
+        component: ShopV2,
+        meta: {title: 'Магазин'}
+    },
 
+    {
+        name: 'AdminOrdersV2',
+        path: simplePrefix + '/admin/orders',
+        component: AdminOrdersV2,
+        meta: {title: 'Заказы'}
+    },
+
+    {
+        name: 'StatisticV2',
+        path: simplePrefix + '/admin/statistic',
+        component: StatisticV2,
+        meta: {title: 'Статистика'}
+    },
 
 
 

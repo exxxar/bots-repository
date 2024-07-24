@@ -379,6 +379,71 @@ class BotUserLogicFactory
     }
 
     /**
+     * @throws ValidationException
+     */
+    public function updateProfile(array $data)
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Параметры не соответствуют условию!");
+
+        $validator = Validator::make($data, [
+            "name" => "required",
+            "phone" => "required",
+            "email" => "",
+            "birthday" => "",
+            "city" => "",
+            "country" => "",
+            "address" => "",
+            "sex" => "",
+
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $botUser = $this->botUser;
+
+        $birthday = Carbon::parse($data["birthday"] ?? $botUser->birthday ?? Carbon::now())->format("Y-m-d");
+
+
+        $botUser->name = $data["name"] ?? $botUser->name ?? null;
+        $botUser->phone = $data["phone"] ?? $botUser->phone ?? null;
+        $botUser->email = $data["email"] ?? $botUser->email ?? null;
+        $botUser->birthday = $birthday;
+        $botUser->city = $data["city"] ?? $botUser->city ?? null;
+        $botUser->country = $data["country"] ?? $botUser->country ?? null;
+        $botUser->address = $data["address"] ?? $botUser->address ?? null;
+        $botUser->sex = (bool)(($data["sex"] ?? false));
+        $botUser->age = Carbon::now()->year - Carbon::parse($birthday)
+                ->year;
+
+        $botUser->save();
+
+
+        $message = sprintf("Ф.И.О: %s\nТелефон: %s\nПочта: %s\nДР: %s\nВозраст: %s\nСтрана: %s\nГород: %s\nАдрес: %s\nПол: %s",
+            $botUser->name ?? "Не указано",
+            $botUser->phone ?? "Не указано",
+            $botUser->email ?? "Не указано",
+            $botUser->birthday ?? "Не указано",
+            $botUser->age ?? "Не указано",
+            $botUser->country ?? "Не указано",
+            $botUser->city ?? "Не указано",
+            $botUser->address ?? "Не указано",
+            $botUser->sex ? "муж" : "жен",
+
+        );
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                "Ваши анкетные данные обновлены:\n $message"
+            );
+
+        return new BotUserResource($botUser);
+    }
+
+    /**
      * @throws HttpException
      * @throws ValidationException
      */

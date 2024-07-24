@@ -170,3 +170,6 @@ Route::apiResource('front-pad', App\Http\Controllers\FrontPadController::class);
 
 
 Route::apiResource('reviews', App\Http\Controllers\ReviewController::class);
+
+
+Route::apiResource('sub-shops', App\Http\Controllers\SubShopController::class);

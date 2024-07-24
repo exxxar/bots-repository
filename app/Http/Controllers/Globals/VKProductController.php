@@ -426,7 +426,7 @@ class VKProductController extends Controller
             Log::info($e->getMessage() . " " . $e->getLine());
             Inertia::setRootView("shop");
 
-            return Inertia::render('Result', [
+            return Inertia::render('V2/Result', [
                 'message' => "Ошибка добавления товаров!",
             ]);
         }
@@ -442,7 +442,7 @@ class VKProductController extends Controller
 
         Inertia::setRootView("shop");
 
-        return Inertia::render('Result', [
+        return Inertia::render('V2/Result', [
             'message' => "Товары успешно добавлены!",
             'data' => json_encode($results)
         ]);

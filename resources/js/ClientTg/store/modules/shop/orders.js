@@ -19,6 +19,19 @@ const getters = {
 }
 
 const actions = {
+
+    async addCashBackToOrder(context, payload = {order_id:null}) {
+        let link = `${BASE_ORDERS_LINK}/add-cashback-to-order`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async requestDeliveryPrice(context, payload) {
         let link = `${BASE_ORDERS_LINK}/get-delivery-price`
 
@@ -26,6 +39,30 @@ const actions = {
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadAllOrders(context, payload = {dataObject: {search: null, categories:null}, page: 0, size: 12}) {
+        let data = {
+            ...payload.dataObject
+        }
+
+        let page = payload.page || 0
+        let size = 20
+
+        let link = `${BASE_ORDERS_LINK}/all?page=${page}&size=${size}`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            context.commit("setOrders", dataObject.data)
+            delete dataObject.data
+            context.commit('setOrdersPaginateObject', dataObject)
+            return Promise.resolve();
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])
             return Promise.reject(err);
