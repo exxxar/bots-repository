@@ -180,12 +180,13 @@ class CompanyLogicFactory
             throw new HttpException(400, "Менеджер не указан!");
 
         $validator = Validator::make($data, [
+            'id' => "required",
             'title' => "required|string:255",
-            'slug' => "required|string:190",
-            'description' => "required|string:255",
+         //   'slug' => "required|string:190",
+            'description' => "required|string:1000",
             // 'address' => "required|string:255",
             //   'email' => "required|string:255",
-            'vat_code' => "required|integer",
+           // 'vat_code' => "required|integer",
         ]);
 
         if ($validator->fails())
@@ -204,12 +205,13 @@ class CompanyLogicFactory
 
         $tmp = (object)$data;
 
+
         $tmp->links = json_decode($tmp->links);
         $tmp->schedule = json_decode($tmp->schedule);
         $tmp->phones = json_decode($tmp->phones);
         $tmp->image = $imageName;
-        $tmp->creator_id = $this->botUser->id;
-        $tmp->owner_id = $this->botUser->id;
+       // $tmp->creator_id = $this->botUser->id;
+        //$tmp->owner_id = $this->botUser->id;
 
 
         $company = Company::query()->where("id", $data["id"])
@@ -220,7 +222,7 @@ class CompanyLogicFactory
 
         $company->update((array)$tmp);
 
-        return new CompanyResource($company);
+        return new CompanyResource($company->refresh());
     }
 
     public function locationsList($companyId = null, $size = null): LocationCollection

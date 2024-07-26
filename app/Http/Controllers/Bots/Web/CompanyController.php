@@ -44,21 +44,21 @@ class CompanyController extends Controller
     public function editCompany(Request $request): CompanyResource
     {
         $request->validate([
+            'id' => "required",
             'title' => "required|string:255",
-            'slug' => "required|string:190",
-            'description' => "required|string:255",
-            'address' => "required|string:255",
-            'email' => "required|string:255",
-            'vat_code' => "required|integer",
+          //  'slug' => "required|string:190",
+            'description' => "required|string:1000",
+          //  'address' => "required|string:255",
+           // 'email' => "required|string:255",
+           // 'vat_code' => "required|integer",
         ]);
 
         $botUser = $request->botUser;
 
         return BusinessLogic::companies()
+            ->setBotUser($botUser ?? null)
             ->editCompany($request->all(),
-                $request->hasFile('company_logo') ? $request->file('company_logo') : null,
-                $botUser->user_id
-            );
+                $request->hasFile('company_logo') ? $request->file('company_logo') : null);
     }
 
     public function loadLocations(Request $request): \App\Http\Resources\LocationCollection

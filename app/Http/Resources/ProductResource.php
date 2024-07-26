@@ -27,7 +27,7 @@ class ProductResource extends JsonResource
             'variants' => $this->variants,
             'in_stop_list_at' => $this->in_stop_list_at,
             'bot_id' => $this->bot_id,
-            'rating' => $this->rating ?? 0,
+            'rating' => $this->rating ?? 5,
             'reviews' => $this->reviews ?? [],
             "options"=> ProductOptionResource::collection($this->whenLoaded('productOptions')),
             'categories' => ProductCategoryResource::collection($this->whenLoaded('productCategories')),

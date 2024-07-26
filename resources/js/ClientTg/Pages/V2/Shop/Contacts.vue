@@ -1,100 +1,70 @@
+<script setup>
+import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
+</script>
 <template>
 
     <div class="container py-3" v-if="bot">
         <div
-            v-if="settings.yandex_map_link"
-            class="d-flex" style="min-height:300px;">
+            v-if="(company.links||{map_link:null}).map_link"
+            class="d-flex" style="min-height:300px;overflow:hidden;">
 
-            <div style="position:relative;overflow:hidden;">
-                <iframe
-                    :src="settings.yandex_map_link"
-                    width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe>
-            </div>
+            <div v-html="company.links.map_link"></div>
         </div>
         <div class="alert alert-danger" role="alert" v-else>
-            Вы не указали ссылку на карту с расположением вашего заведения
+            <p class="mb-0 fw-bold">Администратор еще не добавили виджет Яндекс.Карты с расположением заведения!</p>
         </div>
 
     <h6 class="my-3" >{{bot.company.address||'Адрес вашего заведения'}}</h6>
-    <h6 class="opacity-75 mb-3">Контактная информация</h6>
+    <h6 class="opacity-75 mb-3 d-flex justify-content-between align-items-center">Контактная информация <a
+        v-if="(getSelf||{is_admin:false}).is_admin"
+        data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
+        href="javascript:void(0)" class="text-primary ml-2"><i class="fa-solid fa-pen-to-square"></i></a></h6>
 
     <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between"
             aria-current="true">
             <span>Телефон</span>
-            <span class="text-primary fw-bold">7(949)000-00-00</span>
+            <span class="text-primary fw-bold" style="font-size:12px;">{{company.phones[0] || '-'}}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between"
             aria-current="true">
             <span>Инста</span>
-            <span class="text-primary fw-bold">@test_insta_profile</span>
+            <span class="text-primary fw-bold" style="font-size:12px;">{{company.links.inst || '-'}}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between"
             aria-current="true">
             <span>Вконтакте</span>
-            <span class="text-primary fw-bold">https://vk.com/test_vk_public</span>
+            <span class="text-primary fw-bold" style="font-size:12px;">{{company.links.vk || '-'}}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between"
             aria-current="true">
             <span>Почта</span>
-            <span class="text-primary fw-bold">test@gmail.com</span>
+            <span class="text-primary fw-bold" style="font-size:12px;">{{company.email || '-'}}</span>
         </li>
 
     </ul>
 
-    <h6 class="opacity-75 my-3">Прием заказов осуществляется</h6>
-    <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Понедельник</span>
-            <span class="text-primary fw-bold">10:00 - 21:59</span>
-        </li>
+    <h6 class="opacity-75 my-3 d-flex justify-content-between align-items-center">Прием заказов осуществляется <a
+        v-if="(getSelf||{is_admin:false}).is_admin"
+        data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
+        href="javascript:void(0)" class="text-primary ml-2"><i class="fa-solid fa-pen-to-square"></i></a></h6>
 
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Вторник</span>
-            <span class="text-primary fw-bold">10:00 - 21:59</span>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Среда</span>
-            <span class="text-primary fw-bold">10:00 - 21:59</span>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Четверг</span>
-            <span class="text-primary fw-bold">10:00 - 21:59</span>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Пятница</span>
-            <span class="text-primary fw-bold">10:00 - 21:59</span>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Суббота</span>
-            <span class="text-primary fw-bold">10:00 - 21:59</span>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Воскресенье</span>
-            <span class="text-primary fw-bold">10:00 - 21:59</span>
-        </li>
-    </ul>
-
-        <h6 class="opacity-75 my-3">Специальные возможности</h6>
+        <ScheduleList
+            v-if="isCorrectSchedule"
+            :schedule="company.schedule"></ScheduleList>
+        <div class="alert alert-danger" v-else>
+            <p class="mb-0 fw-bold">График работ еще не составлен:)</p>
+        </div>
+<!--        <h6 class="opacity-75 my-3">Специальные возможности</h6>
         <button class="btn btn-outline-primary w-100 mb-2">Пригласить администратора</button>
         <button class="btn btn-outline-primary w-100 mb-2">Запросить CashBack</button>
-        <button class="btn btn-outline-primary w-100 mb-2">Забронировать столик</button>
+        <button class="btn btn-outline-primary w-100 mb-2">Забронировать столик</button>-->
     </div>
 
 </template>
 <script>
+
+import {mapGetters} from "vuex";
 
 export default {
     data() {
@@ -115,30 +85,33 @@ export default {
 
         }
     },
-    computed:{
+    computed: {
+        ...mapGetters(['getSelf']),
         tg() {
             return window.Telegram.WebApp;
         },
         bot(){
             return window.currentBot
         },
+        isCorrectSchedule(){
+          return window.isCorrectSchedule(this.bot.company.schedule);
+        },
+        company(){
+            return this.bot.company
+        },
     },
     mounted() {
-        this.loadShopModuleData()
 
         this.tg.BackButton.hide()
     },
     methods:{
-        loadShopModuleData() {
-            return this.$store.dispatch("loadShopModuleData").then((resp) => {
-                this.$nextTick(() => {
-                    Object.keys(resp).forEach(item => {
-                        this.settings[item] = resp[item]
-                    })
-                })
-            })
-        },
+
 
     }
 }
 </script>
+<style>
+.current-day {
+    background-image: repeating-linear-gradient(-45deg, #eee 0, #eee 15px, #fff 15px, #fff 25px);
+}
+</style>

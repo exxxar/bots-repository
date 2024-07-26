@@ -201,7 +201,7 @@ class ProductController extends Controller
                     "max_price" => $request->max_price ?? null
                 ],
 
-                $request->get("size") ?? config('app.results_per_page')
+                $request->get("size") ?? config('app.results_per_page'),
             );
     }
 

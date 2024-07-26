@@ -278,6 +278,16 @@ export default {
         this.tg.BackButton.hide()
 
         this.loadUserPhotos()
+
+        this.botUserForm.id = this.getSelf.id
+        this.botUserForm.name = this.getSelf.name || this.getSelf.username || this.getSelf.id
+        this.botUserForm.phone = this.getSelf.phone
+        this.botUserForm.email = this.getSelf.email
+        this.botUserForm.birthday = this.getSelf.birthday || null
+        this.botUserForm.city = this.getSelf.city || null
+        this.botUserForm.country = this.getSelf.country || null
+        this.botUserForm.address = this.getSelf.address || null
+        this.botUserForm.sex = this.getSelf.sex || false
     },
     methods: {
 

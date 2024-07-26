@@ -1,6 +1,7 @@
 <script setup>
 
 import {Head} from '@inertiajs/vue3'
+import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 
 
 </script>
@@ -20,18 +21,18 @@ import {Head} from '@inertiajs/vue3'
                    style="font-size:12px;"
                    v-if="bot.company">
                     <span v-if="bot.company.address" class="text-primary">
-                          <i class="fa-solid fa-location-dot mr-1"></i> {{bot.company.address}}
+                          <i class="fa-solid fa-location-dot mr-1"></i> {{ bot.company.address }}
                     </span>
-                    <span class="text-primary" v-else>{{bot.title||'Магазин'}}</span>
+                    <span class="text-primary" v-else>{{ bot.title || 'Магазин' }}</span>
 
-                <span v-if="(bot.company.phones||[]).length>0"
-                    class="small d-flex justify-content-end">
-                    <a  href="javascript:void(0)" class=" text-secondary fw-bold">{{bot.company.phones[0]}}</a>
+                    <span v-if="(bot.company.phones||[]).length>0"
+                          class="small d-flex justify-content-end">
+                    <a href="javascript:void(0)" class=" text-secondary fw-bold">{{ bot.company.phones[0] }}</a>
                 </span>
                 </p>
                 <p class="mb-0 text-primary"
                    style="font-size:12px;"
-                   v-else>{{bot.title || 'Бот'}}</p>
+                   v-else>{{ bot.title || 'Бот' }}</p>
                 <button class="btn btn-link rounded-0 border-0 p-1" type="button"
                         data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu">
                     <span class="navbar-toggler-icon"></span>
@@ -49,22 +50,26 @@ import {Head} from '@inertiajs/vue3'
             <button
                 v-if="$route.name!='FeedBackV2'"
                 @click="goTo('FeedBackV2')"
-                class="btn btn-link mb-2 w-100 p-3 text-primary">Обратная связь</button>
+                class="btn btn-link mb-2 w-100 p-3 text-primary">Обратная связь
+            </button>
 
 
-                <p class="text-center mb-3" >
-                    <span v-html="bot.company.description"></span>
-                    <a
-                        v-if="(getSelf||{is_admin:false}).is_admin"
-                        data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
-                        href="javascript:void(0)" class="text-primary ml-2" style="font-size:12px;"><i class="fa-solid fa-pen-to-square"></i> редактировать</a>
-                </p>
+            <p class="text-center mb-3">
+                <span v-html="bot.company.description"></span>
+                <a
+                    v-if="(getSelf||{is_admin:false}).is_admin"
+                    data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
+                    href="javascript:void(0)" class="text-primary ml-2" style="font-size:12px;"><i
+                    class="fa-solid fa-pen-to-square"></i> редактировать</a>
+            </p>
 
 
-            <p class="mb-3 text-center" v-if="bot.company.address"><i class="fa-solid fa-map-location-dot mr-2"></i>{{bot.company.address}}</p>
-            <p class="mb-0">{{bot.company.title}}©2024</p>
+            <p class="mb-3 text-center" v-if="bot.company.address"><i
+                class="fa-solid fa-map-location-dot mr-2"></i>{{ bot.company.address }}</p>
+            <p class="mb-0">{{ bot.company.title }}©2024</p>
             <p class="d-flex justify-content-center my-3">
-                <a href="javascript:void(0)" @click="scrollTop"><i class="fa-solid fa-arrow-up mr-2"></i>Вернуться наверх</a>
+                <a href="javascript:void(0)" @click="scrollTop"><i class="fa-solid fa-arrow-up mr-2"></i>Вернуться
+                    наверх</a>
             </p>
         </div>
     </footer>
@@ -74,7 +79,7 @@ import {Head} from '@inertiajs/vue3'
          style="width: 70%;border-radius: 0px 10px 10px 0px;"
          tabindex="-1" id="sidebar-menu" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header">
-            <h6 class="offcanvas-title" id="offcanvasExampleLabel">{{bot.title||'Магазин'}}</h6>
+            <h6 class="offcanvas-title" id="offcanvasExampleLabel">{{ bot.title || 'Магазин' }}</h6>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
 
@@ -105,7 +110,7 @@ import {Head} from '@inertiajs/vue3'
                     @click="goTo('ShopCartV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                > Корзина <span class="fw-bold" v-if="cartTotalCount>0">({{cartTotalCount}})</span></a></li>
+                > Корзина <span class="fw-bold" v-if="cartTotalCount>0">({{ cartTotalCount }})</span></a></li>
                 <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='OrdersV2'}"
                     @click="goTo('OrdersV2')"
@@ -131,44 +136,61 @@ import {Head} from '@inertiajs/vue3'
                 class="p-2"
                 v-if="bot.company">
                 <ul class="list-unstyled">
-                    <li  v-if="(bot.company.phones||[]).length>0"><p class="mb-0">Телефон</p></li>
+                    <li v-if="(bot.company.phones||[]).length>0"><p class="mb-0">Телефон</p></li>
                     <li v-if="(bot.company.phones||[]).length>0"
-                        class="mb-2"
-                        v-for="phone in bot.company.phones">
-                        <a  href="javascript:void(0)" class="text-decoration-none fw-bold">{{phone}}</a>
+                        class="mb-2">
+                        <a
+                            target="_blank"
+                            :href="'tel:'+bot.company.phones[0]" class="text-decoration-none fw-bold">{{ bot.company.phones[0]||'-' }}</a>
                     </li>
-                    <li v-if="(bot.social_links||[]).length>0"><p class="mb-0">Ссылки</p></li>
-                    <li v-if="(bot.social_links||[]).length>0" v-for="link in bot.social_links">
+                    <li><p class="mb-0">Ссылки</p></li>
+                    <li>
                         <a target="_blank"
-                            :href="link.url" class="text-white">{{link.title || 'ссылка'}}</a></li>
+                           :href="'http://instagram.com/'+bot.company.links.inst"
+                           style="font-size:12px;"
+                           class="text-primary">
+                            <i class="fa-brands fa-instagram mr-1"></i>
+                            {{ bot.company.links.inst || 'ссылка' }}
+                        </a>
+                    </li>
+                    <li>
+                        <a target="_blank"
+                           :href="'https://vk.com/'+bot.company.links.vk"
+                           style="font-size:12px;"
+                           class="text-primary">
+                            <i class="fa-brands fa-vk mr-1"></i>
+                            {{ bot.company.links.vk || 'ссылка' }}
+                        </a>
+                    </li>
                     <li v-if="bot.company.email"><p class="mb-0">Почта</p></li>
-                    <li><a href="javascript:void(0)"
+                    <li><a :href="'mailto:'+bot.company.email"
                            v-if="bot.company.email"
                            class="text-decoration-none fw-bold"
-                    >{{bot.company.email}}</a></li>
+                    >{{ bot.company.email }}</a></li>
                 </ul>
             </div>
-<!--            <div class="border-top my-3 "></div>
-            <div class="dropdown">
-                <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Тема оформления
-                </button>
-                <ul class="dropdown-menu w-100 bg-light">
-                    <li  v-for="(theme, index) in themes">
-                        <button type="button"
-                                @click="switchTheme(index)"
-                                v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
-                                class="list-group-item list-group-item-action p-2 w-100 text-primary" aria-current="true">
-                            {{theme.title || '-'}}
-                        </button>
-                    </li>
-                </ul>
-            </div>-->
+            <!--            <div class="border-top my-3 "></div>
+                        <div class="dropdown">
+                            <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Тема оформления
+                            </button>
+                            <ul class="dropdown-menu w-100 bg-light">
+                                <li  v-for="(theme, index) in themes">
+                                    <button type="button"
+                                            @click="switchTheme(index)"
+                                            v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
+                                            class="list-group-item list-group-item-action p-2 w-100 text-primary" aria-current="true">
+                                        {{theme.title || '-'}}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>-->
         </div>
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="edit-shop-footer-description-modal" tabindex="-1" aria-labelledby="edit-shop-footer-description" aria-hidden="true">
+    <div class="modal fade" id="edit-shop-footer-description-modal" tabindex="-1"
+         aria-labelledby="edit-shop-footer-description" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
@@ -176,44 +198,11 @@ import {Head} from '@inertiajs/vue3'
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Название</label>
-                    </div>
-
-                    <div class="form-floating">
-                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                        <label for="floatingTextarea2">Описание</label>
-                    </div>
-
-                    <h6 class="opacity-75 my-3">Контактная информация</h6>
-
-                    <div class="form-floating mb-2">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Телефон</label>
-                    </div>
-
-                    <div class="form-floating mb-2">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Инста</label>
-                    </div>
-
-                    <div class="form-floating mb-2">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Вконтакте</label>
-                    </div>
-
-                    <div class="form-floating mb-2">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">Почта</label>
-                    </div>
-
-
-                    <h6 class="opacity-75 my-3">График работы</h6>
+                    <CompanyInfo></CompanyInfo>
 
                 </div>
                 <div class="modal-footer p-2">
-                    <button type="button" class="btn btn-primary w-100">Сохранить изменения</button>
+
                 </div>
             </div>
         </div>
@@ -223,72 +212,70 @@ import {Head} from '@inertiajs/vue3'
 import {mapGetters} from "vuex";
 
 export default {
-    data(){
-      return {
-          currentTheme:'',
-          themes:[
+    data() {
+        return {
+            currentTheme: '',
+            themes: [
 
-              {
-                  title:'Тема 3',
-                  href: '/theme5.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 4',
-                  href: '/theme6.bootstrap.min.css',
-              },
+                {
+                    title: 'Тема 3',
+                    href: '/theme5.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 4',
+                    href: '/theme6.bootstrap.min.css',
+                },
 
-              {
-                  title:'Тема 5',
-                  href: '/theme8.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 6',
-                  href: '/theme9.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 7',
-                  href: '/theme10.bootstrap.min.css',
-              }
-              ,
-              {
-                  title:'Тема 8',
-                  href: '/theme11.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 9',
-                  href: '/theme12.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 10',
-                  href: '/theme13.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 11',
-                  href: '/theme14.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 12',
-                  href: '/theme15.bootstrap.min.css',
-              },
-              {
-                  title:'Тема 13',
-                  href: '/theme16.bootstrap.min.css',
-              }
-          ]
-      }
+                {
+                    title: 'Тема 5',
+                    href: '/theme8.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 6',
+                    href: '/theme9.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 7',
+                    href: '/theme10.bootstrap.min.css',
+                }
+                ,
+                {
+                    title: 'Тема 8',
+                    href: '/theme11.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 9',
+                    href: '/theme12.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 10',
+                    href: '/theme13.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 11',
+                    href: '/theme14.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 12',
+                    href: '/theme15.bootstrap.min.css',
+                },
+                {
+                    title: 'Тема 13',
+                    href: '/theme16.bootstrap.min.css',
+                }
+            ]
+        }
     },
     watch: {
         $route(newRouteValue) {
-            let theme =  localStorage.getItem("cashman_global_client_theme") || null
+            let theme = localStorage.getItem("cashman_global_client_theme") || null
 
-            if (theme)
-            {
-                this.$nextTick(()=>{
+            if (theme) {
+                this.$nextTick(() => {
                     this.currentTheme = theme
                 })
             }
 
-            console.log("router",this.$route.name)
 
             this.$preloader.show();
             this.$nextTick(() => {
@@ -297,22 +284,21 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['getSelf','cartTotalCount']),
+        ...mapGetters(['getSelf', 'cartTotalCount']),
         tg() {
             return window.Telegram.WebApp;
         },
-        bot(){
+        bot() {
             return window.currentBot
         },
     },
 
     mounted() {
 
-        let theme =  localStorage.getItem("cashman_global_client_theme") || null
+        let theme = localStorage.getItem("cashman_global_client_theme") || null
 
-        if (theme)
-        {
-            this.$nextTick(()=>{
+        if (theme) {
+            this.$nextTick(() => {
                 this.currentTheme = theme
             })
         }
@@ -320,26 +306,26 @@ export default {
         this.changeTheme(this.tg.colorScheme)
         this.tg.BackButton.show()
 
-        this.tg.BackButton.onClick(()=>{
-            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item=>item.click())
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
 
             this.$router.back()
         })
     },
     methods: {
-        switchTheme(index){
+        switchTheme(index) {
             let changeTheme = document.querySelector("#theme")
             changeTheme.href = this.themes[index].href //`./theme${index}.bootstrap.min.css`
             localStorage.setItem("cashman_global_client_theme", changeTheme.href)
 
 
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.currentTheme = changeTheme.href
             })
 
 
         },
-        goTo(name){
+        goTo(name) {
             this.$router.push({name: name})
         },
 
@@ -347,11 +333,10 @@ export default {
             let themes = document.querySelectorAll("[data-bs-theme]")
 
             themes.forEach(item => {
-                console.log("item", item)
                 item.setAttribute("data-bs-theme", name)
             })
         },
-        scrollTop(){
+        scrollTop() {
             window.scrollTo(0, 80);
         },
         openLink(url) {

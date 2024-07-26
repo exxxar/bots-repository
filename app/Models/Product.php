@@ -27,6 +27,7 @@ class Product extends Model
         'description',
         'images',
         'type',
+        'rating',
         'old_price',
         'current_price',
         'variants',

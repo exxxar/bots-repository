@@ -56,6 +56,63 @@ export default {
     created() {
         window.currentBot = this.bot.data
 
+        const schedule =  window.currentBot.company.schedule || [];
+
+        window.isCorrectSchedule = (schedule) => {
+            if ((schedule || []).length < 7)
+                return false
+
+            let isCorrect = true
+            schedule.forEach(day => {
+                isCorrect = isCorrect && typeof day == 'object'
+            })
+
+            return isCorrect
+        }
+
+        if (window.isCorrectSchedule(schedule)) {
+            const day = (new Date()).getDay();
+
+            const hours = (new Date()).getHours();
+            const minutes = (new Date()).getMinutes();
+
+            let tmpStartAt = schedule[day-1]["start_at"] || "08:00";
+            let tmpStartHours = parseInt(tmpStartAt.split(":")[0]);
+            let tmpStartMinutes = parseInt(tmpStartAt.split(":")[1]);
+
+            let tmpEndAt = schedule[day-1]["end_at"] || "20:00";
+            let tmpEndHours = parseInt(tmpEndAt.split(":")[0]);
+            let tmpEndMinutes = parseInt(tmpEndAt.split(":")[1]);
+
+            let isWork = false
+
+            if (tmpStartHours===hours)
+                isWork = minutes>=tmpStartMinutes
+
+            if (tmpEndHours===hours)
+                isWork = minutes<tmpEndMinutes
+
+            if (hours>tmpStartHours && hours<tmpEndHours)
+                isWork = true;
+
+            window.currentBot.company.is_work = !(schedule[day-1].closed||false)&&isWork
+        }
+
+
+      /*  if (!($schedule[$day]["closed"] ?? false)) {
+            $startHour = explode(":", $schedule[$day]["start_at"])[0] ?? 0;
+            $endHour = explode(":", $schedule[$day]["end_at"])[0] ?? 23;
+
+            return response()->json(
+                [
+                    'schedule' => $schedule,
+                'current_day' => $day,
+                'opened_comment' => $openedComment,
+                'closed_comment' => $closedComment,
+                'is_work' => $hour >= (int)$startHour && $hour <= (int)$endHour,
+        ]
+
+        );*/
         window.currentScript = this.slug_id || null
 
         this.$store.dispatch("loadSelf").then(() => {

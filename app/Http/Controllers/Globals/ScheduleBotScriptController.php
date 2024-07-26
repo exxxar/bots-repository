@@ -121,10 +121,8 @@ class ScheduleBotScriptController extends SlugController
 
         ];
 
-        if (count($model->config ?? []) != count($params)) {
-            $model->config = $params;
-            $model->save();
-        }
+        $model->config = $params;
+        $model->save();
 
     }
 

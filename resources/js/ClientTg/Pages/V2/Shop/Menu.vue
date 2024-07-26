@@ -1,7 +1,24 @@
+<script setup>
+import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
+</script>
 <template>
     <div class="container g-2 my-3" v-if="getSelf">
-        <h6 class="opacity-75 mb-3 text-center"><i class="fa-solid fa-house-chimney mr-2 text-primary"></i>Доступные сервисы</h6>
+        <h6 class="opacity-75 mb-3 text-center"><i class="fa-solid fa-house-chimney mr-2 text-primary"></i>Доступные
+            сервисы</h6>
 
+        <div class="row" v-if="bot">
+            <div class="col-12">
+                <div
+                    v-if="isWork"
+                    class="alert alert-light" role="alert">
+                    В данный момент мы <span class="text-primary fw-bold">не работаем</span>.
+                    Вы можете ознакомиться с нашим
+                    <span
+                        data-bs-toggle="modal" data-bs-target="#schedule-list-display"
+                        class="text-primary fw-bold text-decoration-underline cursor-pointer">графиком работы</span>.
+                </div>
+            </div>
+        </div>
         <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
             <div class="col">
                 <button type="button"
@@ -65,58 +82,59 @@
 
             </div>
 
-<!--            <div class="col" v-if="getSelf.is_admin">
-                <button type="button"
-                        @click="goTo('AdminV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/home.png'" class="img-fluid" alt="">
+            <!--            <div class="col" v-if="getSelf.is_admin">
+                            <button type="button"
+                                    @click="goTo('AdminV2')"
+                                    style="min-height:250px;"
+                                    class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                                <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                                    <img v-lazy="'/images/shop-v2/home.png'" class="img-fluid" alt="">
 
-                        <p class="my-2">Админ.панель</p>
-                    </div>
+                                    <p class="my-2">Админ.панель</p>
+                                </div>
 
-                </button>
+                            </button>
 
-            </div>-->
+                        </div>-->
 
-<!--            <div class="col">
+            <!--            <div class="col">
 
-                <button type="button"
+                            <button type="button"
 
-                        @click="goTo('WheelOfFortuneV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/gift.png'" class="img-fluid" alt="">
+                                    @click="goTo('WheelOfFortuneV2')"
+                                    style="min-height:250px;"
+                                    class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                                <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                                    <img v-lazy="'/images/shop-v2/gift.png'" class="img-fluid" alt="">
 
-                        <p class="my-2"> Колесо фортуны</p>
-                    </div>
+                                    <p class="my-2"> Колесо фортуны</p>
+                                </div>
 
-                </button>
+                            </button>
 
 
-            </div>-->
+                        </div>-->
 
-<!--            <div class="col">
+            <div class="col">
 
                 <button type="button"
                         @click="goTo('ContactsV2')"
                         style="min-height:250px;"
-                        class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
+                        class="btn shadow-sm btn-outline-primary w-100 border-0 mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2/contacts.png'" class="img-fluid" alt="">
 
-                        <p class="my-2">Наши контакты</p>
+                        <p class="my-2">О Нас & Контакты</p>
                     </div>
 
                 </button>
 
-            </div>-->
+            </div>
         </div>
 
 
-        <h6 class="opacity-75 my-3 text-center" v-if="getSelf.is_admin"><i class="fa-solid fa-house-lock mr-2 text-primary"></i>Административные сервисы</h6>
+        <h6 class="opacity-75 my-3 text-center" v-if="getSelf.is_admin"><i
+            class="fa-solid fa-house-lock mr-2 text-primary"></i>Административные сервисы</h6>
 
         <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2" v-if="getSelf.is_admin">
             <div class="col">
@@ -191,6 +209,23 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="schedule-list-display" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">График работы</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ScheduleList
+                        v-if="bot"
+                        :schedule="bot.company.schedule"></ScheduleList>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </template>
 <script>
@@ -203,7 +238,12 @@ export default {
     computed: {
         ...mapGetters(['getSelf', 'cartTotalCount']),
 
+        isWork(){
+            if (!window.isCorrectSchedule(this.bot.company.schedule))
+                return true
 
+          return (this.bot.company || {is_work:true}).is_work
+        },
         tg() {
             return window.Telegram.WebApp;
         },

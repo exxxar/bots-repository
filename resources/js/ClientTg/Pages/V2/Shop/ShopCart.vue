@@ -31,18 +31,20 @@ import ProductCardSimple from "@/ClientTg/Components/V2/Shop/ProductCardSimple.v
                         <div class="col-4">
                             <button
                                 @click="decPersons"
-                                type="button" class="btn p-2 w-100 bg-primary"><i
+                                type="button" class="btn p-2 w-100 bg-primary text-white"><i
                                 class="fa-solid fa-minus font-22"></i></button>
                         </div>
 
                         <div class="col-4 d-flex justify-content-center align-items-center">
-                            <strong class="font-22">{{ deliveryForm.persons }}</strong>
+                            <strong
+                                class="fw-bold"
+                                style="font-size:16px;">{{ deliveryForm.persons }}</strong>
                         </div>
 
                         <div class="col-4">
                             <button type="button"
                                     @click="incPersons"
-                                    class="btn p-2 w-100 bg-primary"><i
+                                    class="btn p-2 w-100 bg-primary  text-white"><i
                                 class="fa-solid fa-plus font-22"></i></button>
                         </div>
 
@@ -51,9 +53,9 @@ import ProductCardSimple from "@/ClientTg/Components/V2/Shop/ProductCardSimple.v
             </div>
             <div class="card mb-3">
                 <div class="card-body">
-                    <h6>Товаров в корзине <strong>{{ cartTotalCount }} ед.</strong></h6>
-                    <h6>Общая цена товаров <strong>{{ cartTotalPrice }}₽</strong></h6>
-                    <h6>Приборы на <strong>{{ deliveryForm.persons }} чел.</strong></h6>
+                    <h6>Товаров в корзине <strong class="fw-bold">{{ cartTotalCount }} ед.</strong></h6>
+                    <h6>Общая цена товаров <strong class="fw-bold">{{ cartTotalPrice }}₽</strong></h6>
+                    <h6>Приборы на <strong class="fw-bold">{{ deliveryForm.persons }} чел.</strong></h6>
                 </div>
             </div>
             <button
