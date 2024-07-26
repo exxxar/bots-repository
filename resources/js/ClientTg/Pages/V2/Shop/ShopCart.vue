@@ -525,7 +525,7 @@ import ProductCardSimple from "@/ClientTg/Components/V2/Shop/ProductCardSimple.v
                     for="menu-photos"
                     class="photo-loader-bill d-flex flex-column justify-content-center align-items-center mb-2">
                     <i class="fa-regular fa-image my-2 text-primary" style="font-size:20px;"></i>
-                    <span class="text-primary fw-bold">Выбрать фотографию чека</span>
+                    <span class="text-primary fw-bold">Выбрать фотографию чека в формате: jpg, png, bmp</span>
                     <input type="file" id="menu-photos" accept="image/*"
                            @change="onChangePhotos"
                            style="display:none;"/>
