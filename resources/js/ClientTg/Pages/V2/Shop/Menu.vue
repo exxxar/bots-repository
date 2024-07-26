@@ -9,7 +9,7 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
         <div class="row" v-if="bot">
             <div class="col-12">
                 <div
-                    v-if="isWork"
+                    v-if="!isWork"
                     class="alert alert-light" role="alert">
                     В данный момент мы <span class="text-primary fw-bold">не работаем</span>.
                     Вы можете ознакомиться с нашим
