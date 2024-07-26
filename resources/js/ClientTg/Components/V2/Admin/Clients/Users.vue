@@ -15,7 +15,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 
 
         <div class="d-flex w-100" style="overflow-x: scroll;">
-            <div class="scroll d-flex px-2" style="min-width: 1100px;">
+            <div class="scroll d-flex px-2" style="min-width: 1300px;">
 
                 <div class="form-check form-switch mx-2">
                     <input class="form-check-input"
