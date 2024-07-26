@@ -222,6 +222,10 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
                     <ScheduleList
                         v-if="bot"
                         :schedule="bot.company.schedule"></ScheduleList>
+                    <p  v-if="(getSelf||{is_admin:false}).is_admin" class="my-2 d-flex justify-content-center"><a
+                        data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
+                        href="javascript:void(0)" class="text-primary ml-2" style="font-size:12px;"><i
+                        class="fa-solid fa-pen-to-square"></i> редактировать</a></p>
                 </div>
             </div>
         </div>
