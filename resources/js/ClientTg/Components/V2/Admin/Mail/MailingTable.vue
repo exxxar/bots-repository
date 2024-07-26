@@ -11,11 +11,11 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 <div class="form-floating">
                     <input type="search"
                            v-model="search"
-                           class="form-control" id="floatingInput" placeholder="Поиск рассылки">
+                           class="form-control border-light" id="floatingInput" placeholder="Поиск рассылки">
                     <label for="floatingInput">Поиск рассылки</label>
                 </div>
 
-                <button class="btn btn-outline-secondary "
+                <button class="btn btn-outline-light "
                         @click="loadQueues(0)"
                         type="button"
                         id="queue-search-queue">Найти

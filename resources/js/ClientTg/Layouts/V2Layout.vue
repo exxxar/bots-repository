@@ -143,8 +143,8 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                             target="_blank"
                             :href="'tel:'+bot.company.phones[0]" class="text-decoration-none fw-bold">{{ bot.company.phones[0]||'-' }}</a>
                     </li>
-                    <li><p class="mb-0">Ссылки</p></li>
-                    <li>
+                    <li v-if="bot.company.links.inst||bot.company.links.vk"><p class="mb-0">Ссылки</p></li>
+                    <li v-if="bot.company.links.inst">
                         <a target="_blank"
                            :href="'http://instagram.com/'+bot.company.links.inst"
                            style="font-size:12px;"
@@ -153,7 +153,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                             {{ bot.company.links.inst || 'ссылка' }}
                         </a>
                     </li>
-                    <li>
+                    <li v-if="bot.company.links.vk">
                         <a target="_blank"
                            :href="'https://vk.com/'+bot.company.links.vk"
                            style="font-size:12px;"

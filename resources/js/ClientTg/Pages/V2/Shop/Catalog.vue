@@ -14,10 +14,10 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
                 <div class="form-floating">
                     <input type="search"
                            v-model="search"
-                           class="form-control" id="search-product" placeholder="name@example.com">
+                           class="form-control border-light" id="search-product" placeholder="name@example.com">
                     <label for="search-product">Поиск по товарам</label>
                 </div>
-                <button class="btn btn-outline-secondary border-light" type="button" id="button-addon2"><i class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
+                <button class="btn btn-outline-light " type="button" id="button-addon2"><i class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
             </div>
 
 
