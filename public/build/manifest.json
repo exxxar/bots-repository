@@ -187,11 +187,11 @@
       "_index.es-f98e90e3.js"
     ]
   },
-  "_V1Layout-11b434a4.js": {
+  "_V1Layout-7d430cb0.js": {
     "css": [
       "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-11b434a4.js",
+    "file": "assets/V1Layout-7d430cb0.js",
     "imports": [
       "_index.es-f98e90e3.js",
       "resources/js/ClientTg/app.js"
@@ -588,11 +588,11 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-bc5dd3ab.js",
+    "file": "assets/MainV1-3ad95cda.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-f98e90e3.js",
-      "_V1Layout-11b434a4.js",
+      "_V1Layout-7d430cb0.js",
       "resources/js/ClientTg/app.js",
       "_BotMediaList-30372b72.js",
       "_Pagination-8d87cf85.js",
@@ -615,7 +615,7 @@
     "css": [
       "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/MainV2-90adcfb2.js",
+    "file": "assets/MainV2-f341dca6.js",
     "imports": [
       "_index.es-f98e90e3.js",
       "__plugin-vue_export-helper-c27b6911.js"
@@ -633,9 +633,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Error.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-e9bc50bf.js",
+    "file": "assets/Result-ebdabab7.js",
     "imports": [
-      "_V1Layout-11b434a4.js",
+      "_V1Layout-7d430cb0.js",
       "resources/js/ClientTg/app.js",
       "_index.es-f98e90e3.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -677,9 +677,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-67e13387.js",
+    "file": "assets/Result-1c99e720.js",
     "imports": [
-      "_V1Layout-11b434a4.js",
+      "_V1Layout-7d430cb0.js",
       "_index.es-f98e90e3.js",
       "resources/js/ClientTg/app.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -713,7 +713,7 @@
       "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-f70bff49.js",
+    "file": "assets/app-15db63b2.js",
     "imports": [
       "_index.es-f98e90e3.js",
       "__plugin-vue_export-helper-c27b6911.js",

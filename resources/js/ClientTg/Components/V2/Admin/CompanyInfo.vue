@@ -121,7 +121,9 @@
         </template>
 
 
-        <button type="submit" class="btn btn-primary w-100 p-3 mb-3">Сохранить изменения</button>
+        <button
+            style="z-index: 100;"
+            type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения</button>
     </form>
 </template>
 <script>
