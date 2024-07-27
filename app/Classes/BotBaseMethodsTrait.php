@@ -843,7 +843,6 @@ trait BotBaseMethodsTrait
 
             $tmp["caption"] = "$subMessage...";
 
-            Log::info("step 1" . print_r($tmp, true));
             $data = $this->bot->sendPhoto($tmp);
 
             return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
@@ -856,13 +855,9 @@ trait BotBaseMethodsTrait
         }
 
         try {
-            Log::info("pre step 2" . print_r($tmp, true));
             $data = $this->bot->sendPhoto($tmp);
-            Log::info("step 2" . print_r($tmp, true));
         } catch (\Exception $e) {
-            Log::info("crash " . $e);
             $this->sendMessageOnCrash($tmp, "sendPhoto");
-
         }
 
         return $this;
