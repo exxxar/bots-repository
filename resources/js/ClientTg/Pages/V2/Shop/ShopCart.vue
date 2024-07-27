@@ -37,7 +37,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         <div class="col-4">
                             <button
                                 @click="decPersons"
-                                type="button" class="btn p-2 w-100 bg-primary text-white"><i
+                                type="button" class="btn p-2 w-100 btn-light text-dark"><i
                                 class="fa-solid fa-minus font-22"></i></button>
                         </div>
 
@@ -50,7 +50,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         <div class="col-4">
                             <button type="button"
                                     @click="incPersons"
-                                    class="btn p-2 w-100 bg-primary  text-white"><i
+                                    class="btn p-2 w-100 btn-light text-dark"><i
                                 class="fa-solid fa-plus font-22"></i></button>
                         </div>
 
