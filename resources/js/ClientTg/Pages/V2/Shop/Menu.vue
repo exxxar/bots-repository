@@ -6,7 +6,7 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
         <h6 class="opacity-75 mb-3 text-center"><i class="fa-solid fa-house-chimney mr-2 text-primary"></i>Доступные
             сервисы</h6>
 
-        <div class="row" v-if="bot">
+        <div class="row g-2" v-if="bot">
             <div class="col-12">
                 <div
                     v-if="!isWork"

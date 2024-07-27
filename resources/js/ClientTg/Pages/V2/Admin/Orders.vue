@@ -107,8 +107,8 @@ export default {
             tab: 0,
 
             sort: {
-                param: null,
-                direction: 'asc'
+                param: 'id',
+                direction: 'desc'
             },
             orders: null,
             orders_paginate_object: null,

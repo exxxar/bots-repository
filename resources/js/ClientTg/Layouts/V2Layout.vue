@@ -66,7 +66,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 
             <p class="mb-3 text-center" v-if="bot.company.address"><i
                 class="fa-solid fa-map-location-dot mr-2"></i>{{ bot.company.address }}</p>
-            <p class="mb-0">{{ bot.company.title }}©2024</p>
+            <p class="mb-0">{{ bot.company.title }}©{{(new Date()).getFullYear()}}</p>
             <p class="d-flex justify-content-center my-3">
                 <a href="javascript:void(0)" @click="scrollTop"><i class="fa-solid fa-arrow-up mr-2"></i>Вернуться
                     наверх</a>
@@ -150,10 +150,10 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                            style="font-size:12px;"
                            class="text-primary">
                             <i class="fa-brands fa-instagram mr-1"></i>
-                            {{ bot.company.links.inst || 'ссылка' }}
+                            {{ (bot.company.links||{ins:null}).inst || 'ссылка' }}
                         </a>
                     </li>
-                    <li v-if="bot.company.links.vk">
+                    <li v-if="(bot.company.links||{vk:null}).vk">
                         <a target="_blank"
                            :href="'https://vk.com/'+bot.company.links.vk"
                            style="font-size:12px;"

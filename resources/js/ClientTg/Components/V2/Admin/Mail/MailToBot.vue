@@ -1,5 +1,5 @@
 <script setup>
-import BotMenuConstructor from "@/ClientTg/Components/V1/Admin/Keyboards/KeyboardConstructor.vue";
+import KeyboardConstructor from "@/ClientTg/Components/V2/Admin/Keyboard/KeyboardConstructor.vue";
 import KeyboardList from "@/ClientTg/Components/V1/Admin/Keyboards/KeyboardList.vue";
 import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
 import MailingTable from "@/ClientTg/Components/V2/Admin/Mail/MailingTable.vue";
@@ -74,7 +74,7 @@ import MailingTable from "@/ClientTg/Components/V2/Admin/Mail/MailingTable.vue";
                 v-on:select="selectInlineKeyboard"
                 :select-mode="true"/>
 
-            <BotMenuConstructor
+            <KeyboardConstructor
                 :type="'inline'"
                 v-else
                 v-on:save="saveInlineKeyboard"

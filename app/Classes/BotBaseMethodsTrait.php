@@ -414,12 +414,12 @@ trait BotBaseMethodsTrait
         $tmp["message"] = mb_strlen($tmp["message"] ?? '') > 0 ? $tmp["message"] : "Главное меню";
 
         if (isset($tmp["photo"])) {
-
+            $fileId = null;
             try {
-                if (!is_null($tmp["photo"] ?? null))
+                if (!is_null($tmp["photo"] ?? null) && !($tmp["photo"] instanceof InputFile))
                     $fileId = FileId::fromBotAPI($tmp["photo"]);
             } catch (Exception $e) {
-                $fileId = null;
+
             }
 
 
