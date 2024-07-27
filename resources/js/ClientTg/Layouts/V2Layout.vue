@@ -66,7 +66,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 
             <p class="mb-3 text-center" v-if="bot.company.address"><i
                 class="fa-solid fa-map-location-dot mr-2"></i>{{ bot.company.address }}</p>
-            <p class="mb-0">{{ bot.company.title }}©{{(new Date()).getFullYear()}}</p>
+            <p class="mb-0">{{ bot.company.title }}©{{ (new Date()).getFullYear() }}</p>
             <p class="d-flex justify-content-center my-3">
                 <a href="javascript:void(0)" @click="scrollTop"><i class="fa-solid fa-arrow-up mr-2"></i>Вернуться
                     наверх</a>
@@ -141,7 +141,8 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                         class="mb-2">
                         <a
                             target="_blank"
-                            :href="'tel:'+bot.company.phones[0]" class="text-decoration-none fw-bold">{{ bot.company.phones[0]||'-' }}</a>
+                            :href="'tel:'+bot.company.phones[0]"
+                            class="text-decoration-none fw-bold">{{ bot.company.phones[0] || '-' }}</a>
                     </li>
                     <li v-if="links.inst||links.vk"><p class="mb-0">Ссылки</p></li>
                     <li v-if="links.inst">
@@ -169,22 +170,24 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                     >{{ bot.company.email }}</a></li>
                 </ul>
             </div>
-            <!--            <div class="border-top my-3 "></div>
-                        <div class="dropdown">
-                            <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Тема оформления
-                            </button>
-                            <ul class="dropdown-menu w-100 bg-light">
-                                <li  v-for="(theme, index) in themes">
-                                    <button type="button"
-                                            @click="switchTheme(index)"
-                                            v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
-                                            class="list-group-item list-group-item-action p-2 w-100 text-primary" aria-current="true">
-                                        {{theme.title || '-'}}
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>-->
+
+            <div class="dropdown" v-if="(getSelf||{is_admin:false}).is_admin">
+                <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Тема оформления
+                </button>
+                <ul class="dropdown-menu w-100 bg-light">
+                    <li v-for="(theme, index) in themes">
+                        <button type="button"
+                                @click="switchTheme(index)"
+                                v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
+                                class="list-group-item list-group-item-action p-2 w-100 text-primary"
+                                aria-current="true">
+                            {{ theme.title || '-' }}
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -291,11 +294,11 @@ export default {
         bot() {
             return window.currentBot
         },
-        links(){
+        links() {
             return {
-                inst: (this.bot.company.links||{inst:null}).inst || null,
-                vk: (this.bot.company.links||{inst:null}).vk || null,
-                map_link: (this.bot.company.links||{inst:null}).map_link || null,
+                inst: (this.bot.company.links || {inst: null}).inst || null,
+                vk: (this.bot.company.links || {inst: null}).vk || null,
+                map_link: (this.bot.company.links || {inst: null}).map_link || null,
             }
         }
     },

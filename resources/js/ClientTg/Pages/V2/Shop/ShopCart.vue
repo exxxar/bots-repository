@@ -1,5 +1,6 @@
 <script setup>
 import ProductCardSimple from "@/ClientTg/Components/V2/Shop/ProductCardSimple.vue";
+import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
 </script>
 <template>
 
@@ -22,6 +23,11 @@ import ProductCardSimple from "@/ClientTg/Components/V2/Shop/ProductCardSimple.v
                     <ProductCardSimple :item="item.product"/>
                 </div>
             </div>
+
+
+           <PromoCodeForm></PromoCodeForm>
+
+
             <h6 class="opacity-75 mb-3 mt-2">Число персон</h6>
             <div class="card mb-3">
                 <div class="card-body">
@@ -636,6 +642,8 @@ export default {
             moneyVariants: [
                 500, 1000, 2000, 5000
             ],
+
+
             deliveryForm: {
                 name: null,
                 phone: null,

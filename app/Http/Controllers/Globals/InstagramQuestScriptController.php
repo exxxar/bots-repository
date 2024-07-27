@@ -78,10 +78,10 @@ class InstagramQuestScriptController extends SlugController
 
         ];
 
-        if (count($model->config ?? []) != count($params)) {
+
             $model->config = $params;
             $model->save();
-        }
+
 
     }
 
@@ -260,8 +260,8 @@ class InstagramQuestScriptController extends SlugController
             ->first())["value"];
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto($mainText,
-                InputFile::create(public_path() . "/images/cashman-quest.png"),
+            ->replyInlineKeyboard($mainText,
+               // InputFile::create(public_path() . "/images/cashman-quest.png"),
                 [
                     [
                         ["text" => $btnText, "web_app" => [
