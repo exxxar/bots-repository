@@ -24,7 +24,7 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
         <li class="list-group-item d-flex justify-content-between"
             aria-current="true">
             <span>Телефон</span>
-            <span class="text-primary fw-bold" style="font-size:12px;">{{company.phones[0] || '-'}}</span>
+            <span class="text-primary fw-bold" style="font-size:12px;">{{phone || '-'}}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between"
             aria-current="true">
@@ -98,6 +98,11 @@ export default {
         },
         company(){
             return this.bot.company
+        },
+        phone(){
+            if (!this.bot.company.phones)
+                return null
+          return this.bot.company.phones[0] || null
         },
         links(){
             return {
