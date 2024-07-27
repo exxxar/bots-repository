@@ -143,23 +143,23 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                             target="_blank"
                             :href="'tel:'+bot.company.phones[0]" class="text-decoration-none fw-bold">{{ bot.company.phones[0]||'-' }}</a>
                     </li>
-                    <li v-if="bot.company.links.inst||bot.company.links.vk"><p class="mb-0">Ссылки</p></li>
-                    <li v-if="bot.company.links.inst">
+                    <li v-if="links.inst||links.vk"><p class="mb-0">Ссылки</p></li>
+                    <li v-if="links.inst">
                         <a target="_blank"
-                           :href="'http://instagram.com/'+bot.company.links.inst"
+                           :href="'http://instagram.com/'+links.inst"
                            style="font-size:12px;"
                            class="text-primary">
                             <i class="fa-brands fa-instagram mr-1"></i>
-                            {{ (bot.company.links||{ins:null}).inst || 'ссылка' }}
+                            {{ links.inst || 'ссылка' }}
                         </a>
                     </li>
-                    <li v-if="(bot.company.links||{vk:null}).vk">
+                    <li v-if="links.vk">
                         <a target="_blank"
-                           :href="'https://vk.com/'+bot.company.links.vk"
+                           :href="'https://vk.com/'+links.vk"
                            style="font-size:12px;"
                            class="text-primary">
                             <i class="fa-brands fa-vk mr-1"></i>
-                            {{ bot.company.links.vk || 'ссылка' }}
+                            {{ links.vk || 'ссылка' }}
                         </a>
                     </li>
                     <li v-if="bot.company.email"><p class="mb-0">Почта</p></li>
@@ -291,6 +291,13 @@ export default {
         bot() {
             return window.currentBot
         },
+        links(){
+            return {
+                inst: (this.bot.company.links||{inst:null}).inst || null,
+                vk: (this.bot.company.links||{inst:null}).vk || null,
+                map_link: (this.bot.company.links||{inst:null}).map_link || null,
+            }
+        }
     },
 
     mounted() {

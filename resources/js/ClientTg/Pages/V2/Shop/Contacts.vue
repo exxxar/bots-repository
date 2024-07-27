@@ -29,12 +29,12 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
         <li class="list-group-item d-flex justify-content-between"
             aria-current="true">
             <span>Инста</span>
-            <span class="text-primary fw-bold" style="font-size:12px;">{{company.links.inst || '-'}}</span>
+            <span class="text-primary fw-bold" style="font-size:12px;">{{links.inst || '-'}}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between"
             aria-current="true">
             <span>Вконтакте</span>
-            <span class="text-primary fw-bold" style="font-size:12px;">{{company.links.vk || '-'}}</span>
+            <span class="text-primary fw-bold" style="font-size:12px;">{{links.vk || '-'}}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between"
             aria-current="true">
@@ -99,6 +99,13 @@ export default {
         company(){
             return this.bot.company
         },
+        links(){
+            return {
+                inst: (this.bot.company.links||{inst:null}).inst || null,
+                vk: (this.bot.company.links||{inst:null}).vk || null,
+                map_link: (this.bot.company.links||{inst:null}).map_link || null,
+            }
+        }
     },
     mounted() {
 
