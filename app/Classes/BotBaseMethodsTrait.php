@@ -801,7 +801,7 @@ trait BotBaseMethodsTrait
 
         $photoIsCorrect = false;
 
-        if ($path instanceof InputFile){
+        if ($path instanceof InputFile) {
             $photoIsCorrect = true;
         }
 
@@ -809,7 +809,7 @@ trait BotBaseMethodsTrait
         try {
             if (!$photoIsCorrect) {
                 $fileId = FileId::fromBotAPI($path);
-                Log::info("photo is fileId=>".print_r($fileId, true));
+                Log::info("photo is fileId=>" . print_r($fileId, true));
                 $photoIsCorrect = true;
             }
         } catch (Exception $e) {
@@ -833,10 +833,10 @@ trait BotBaseMethodsTrait
         if (!is_null($messageThreadId))
             $tmp["message_thread_id"] = $messageThreadId;
 
-        if (!empty($keyboard ?? []) && is_array($keyboard ?? null)) {
-            $tmp['reply_markup'] = json_encode([
-                'inline_keyboard' => $keyboard,
-            ]);
+        if (count($keyboard ?? [])>0) {
+                $tmp['reply_markup'] = json_encode([
+                    'inline_keyboard' => $keyboard,
+                ]);
         }
 
         if (mb_strlen($caption ?? '') >= 1000) {
@@ -845,7 +845,7 @@ trait BotBaseMethodsTrait
 
             $tmp["caption"] = "$subMessage...";
 
-            Log::info("step 1".print_r($tmp, true));
+            Log::info("step 1" . print_r($tmp, true));
             $data = $this->bot->sendPhoto($tmp);
 
             return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
@@ -858,11 +858,11 @@ trait BotBaseMethodsTrait
         }
 
         try {
-            Log::info("pre step 2".print_r($tmp, true));
+            Log::info("pre step 2" . print_r($tmp, true));
             $data = $this->bot->sendPhoto($tmp);
-            Log::info("step 2".print_r($tmp, true));
+            Log::info("step 2" . print_r($tmp, true));
         } catch (\Exception $e) {
-            Log::info("crash ".$e);
+            Log::info("crash " . $e);
             $this->sendMessageOnCrash($tmp, "sendPhoto");
 
         }
