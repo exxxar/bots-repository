@@ -825,9 +825,7 @@ trait BotBaseMethodsTrait
             "chat_id" => $chatId,
             "photo" => $path,
             "caption" => $caption,
-            "reply_markup" => $keyboard,
             "parse_mode" => "HTML",
-
         ];
 
         if (!is_null($messageThreadId))
