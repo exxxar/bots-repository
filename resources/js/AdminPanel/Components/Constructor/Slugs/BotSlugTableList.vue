@@ -307,7 +307,7 @@ export default {
                     botId: this.bot.id,
                     needGlobal: this.need_global,
                     needDeleted: this.need_show_deleted,
-                    search: this.ownSearch || (this.selected||[]).length > 0 ? this.selected[0] : null
+                    search: this.ownSearch ||  null
                 },
                 page: page
             }).then((resp) => {

@@ -32,6 +32,7 @@
             </button>
             <span
                 v-if="discount>0"
+                style="min-width:170px;"
                 class="input-group-text bg-transparent fw-bold text-primary" id="basic-addon1">-{{discount}} руб.</span>
         </div>
 

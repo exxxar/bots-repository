@@ -73,10 +73,9 @@ class InstantCashBackController extends SlugController
 
             ];
 
-        if (count($model->config ?? []) != count($params)) {
             $model->config = $params;
             $model->save();
-        }
+
 
     }
 
@@ -211,8 +210,7 @@ class InstantCashBackController extends SlugController
             ->first())["value"] ?? "\xF0\x9F\x8E\xB2Получить";
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto(sprintf($mainText, $cashBackAmount),
-                InputFile::create(public_path() . "/images/cashman.jpg"),
+            ->replyInlineKeyboard(sprintf($mainText, $cashBackAmount),
                 [
                     [
                         ["text" => $btnText, "callback_data" => "/take_cashback_by_slug $slugId"],
