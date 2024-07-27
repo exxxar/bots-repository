@@ -858,6 +858,7 @@ trait BotBaseMethodsTrait
         }
 
         try {
+            Log::info("pre step 2".print_r($tmp, true));
             $data = $this->bot->sendPhoto($tmp);
             Log::info("step 2".print_r($tmp, true));
         } catch (\Exception $e) {
