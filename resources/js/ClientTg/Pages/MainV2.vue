@@ -79,6 +79,8 @@ export default {
 
 
             if (schedule&&(schedule||[]).length>0) {
+
+                console.log(schedule)
                 const day = (new Date()).getDay();
 
                 const hours = (new Date()).getHours();
