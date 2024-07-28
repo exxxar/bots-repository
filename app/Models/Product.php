@@ -33,6 +33,7 @@ class Product extends Model
         'variants',
         'in_stop_list_at',
         'bot_id',
+        'deleted_at',
     ];
 
     /**

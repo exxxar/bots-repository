@@ -199,11 +199,15 @@ Route::prefix("bot-client")
             });
 
         Route::prefix("promocodes")
-            ->middleware(["tgAuth.any", "slug"])
+            ->middleware(["tgAuth.any"])
             ->controller(\App\Http\Controllers\Globals\PromocodeScriptController::class)
             ->group(function () {
-                Route::post("/activate", "activate");
-                Route::post("/activate-shop-discount", "activateShopDiscount");
+                Route::post("/", "list")->middleware(["tgAuth.admin"]);
+                Route::post("/store", "store")->middleware(["tgAuth.admin"]);
+                Route::post("/activate", "activate")
+                    ->middleware(["slug"]);
+                Route::post("/activate-shop-discount", "activateShopDiscount")
+                    ->middleware(["slug"]);
             });
 
         Route::prefix("appointments")

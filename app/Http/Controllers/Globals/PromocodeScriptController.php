@@ -6,6 +6,8 @@ use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PromoCodeCollection;
+use App\Http\Resources\PromoCodeResource;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use Illuminate\Http\Request;
@@ -58,6 +60,38 @@ class PromocodeScriptController extends SlugController
         $model->config = $params;
         $model->save();
 
+    }
+
+    public function list(Request $request): PromoCodeCollection
+    {
+
+        $bot = $request->bot ?? null;
+
+        return BusinessLogic::promoCodes()
+            ->setBot($bot ?? null)
+            ->listOfPromoCodes(
+                $request->search ?? null,
+                $request->size ?? 12,
+                $request->order ?? "updated_at",
+                $request->direction ?? "desc"
+            );
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function store(Request $request): PromoCodeResource
+    {
+        $request->validate([
+            'code' => "required",
+        ]);
+
+        $bot = $request->bot ?? null;
+
+        return BusinessLogic::promoCodes()
+            ->setBot($bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->store($request->all());
     }
 
     /**
