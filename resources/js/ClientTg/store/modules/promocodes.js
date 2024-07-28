@@ -21,6 +21,16 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async activateShopDiscountPromocode(context, payload= {promocodeForm: null}){
+        let link = `${BASE_PROMOCODES_LINK}/activate-shop-discount`
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.promocodeForm)
+        return _axios.then((response) => {
+            return Promise.resolve(response);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
 
 
 

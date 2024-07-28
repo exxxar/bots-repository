@@ -203,6 +203,7 @@ Route::prefix("bot-client")
             ->controller(\App\Http\Controllers\Globals\PromocodeScriptController::class)
             ->group(function () {
                 Route::post("/activate", "activate");
+                Route::post("/activate-shop-discount", "activateShopDiscount");
             });
 
         Route::prefix("appointments")

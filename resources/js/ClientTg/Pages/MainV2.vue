@@ -71,31 +71,41 @@ export default {
         }
 
         if (window.isCorrectSchedule(schedule)) {
-            const day = (new Date()).getDay();
 
-            const hours = (new Date()).getHours();
-            const minutes = (new Date()).getMinutes();
+            if (!schedule || (schedule||[]).length===0)
+            {
+                window.currentBot.company.is_work = true
+            }
 
-            let tmpStartAt = schedule[day-1]["start_at"] || "08:00";
-            let tmpStartHours = parseInt(tmpStartAt.split(":")[0]);
-            let tmpStartMinutes = parseInt(tmpStartAt.split(":")[1]);
 
-            let tmpEndAt = schedule[day-1]["end_at"] || "20:00";
-            let tmpEndHours = parseInt(tmpEndAt.split(":")[0]);
-            let tmpEndMinutes = parseInt(tmpEndAt.split(":")[1]);
+            if (schedule&&(schedule||[]).length>0) {
+                const day = (new Date()).getDay();
 
-            let isWork = false
+                const hours = (new Date()).getHours();
+                const minutes = (new Date()).getMinutes();
 
-            if (tmpStartHours===hours)
-                isWork = minutes>=tmpStartMinutes
+                let tmpStartAt = schedule[day-1]["start_at"] || "08:00";
+                let tmpStartHours = parseInt(tmpStartAt.split(":")[0]);
+                let tmpStartMinutes = parseInt(tmpStartAt.split(":")[1]);
 
-            if (tmpEndHours===hours)
-                isWork = minutes<tmpEndMinutes
+                let tmpEndAt = schedule[day-1]["end_at"] || "20:00";
+                let tmpEndHours = parseInt(tmpEndAt.split(":")[0]);
+                let tmpEndMinutes = parseInt(tmpEndAt.split(":")[1]);
 
-            if (hours>tmpStartHours && hours<tmpEndHours)
-                isWork = true;
+                let isWork = false
 
-            window.currentBot.company.is_work = !(schedule[day-1].closed||false)&&isWork
+                if (tmpStartHours===hours)
+                    isWork = minutes>=tmpStartMinutes
+
+                if (tmpEndHours===hours)
+                    isWork = minutes<tmpEndMinutes
+
+                if (hours>tmpStartHours && hours<tmpEndHours)
+                    isWork = true;
+
+                window.currentBot.company.is_work = !(schedule[day-1].closed||false)&&isWork
+            }
+
         }
 
 

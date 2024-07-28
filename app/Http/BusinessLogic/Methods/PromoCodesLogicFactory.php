@@ -90,6 +90,61 @@ class PromoCodesLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
+    public function activatePromoCodeForDiscount(array $data): object
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(400, "Не все условия функции выполнены!");
+
+        $validator = Validator::make($data, [
+            'code' => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+        $bot = $this->bot;
+        $botUser = $this->botUser;
+
+        $code = PromoCode::query()
+            ->with(["botUsers"])
+            ->where("bot_id", $bot->id)
+            ->where("code", $data["code"])
+            ->first();
+
+        if (is_null($code))
+            throw new HttpException(404, "Промокод не найден");
+
+        if (!$code->is_active)
+            throw new HttpException(403, "Промокод не активен");
+
+        $isPromoActivated = !is_null($code->botUsers()->where("bot_user_id", $botUser->id)->first() ?? null);
+
+        if ($isPromoActivated)
+            throw new HttpException(400, "Промокод уже активирован");
+
+        $maxActivations = $code->max_activation_count ?? 0;
+        $currentActivations = $code->botUsers()->count() ?? 0;
+
+        if ($currentActivations >= $maxActivations) {
+            $code->is_active = false;
+            $code->save();
+            throw new HttpException(400, "Закончились попытки активации промокода!");
+        }
+
+        $code->botUsers()->attach([$botUser->id]);
+        $code->save();
+
+        if ($code->cashback_amount==0)
+            throw new HttpException(400, "Данный промокод нельзя активировать как скидочный!");
+
+        return (object)[
+            "discount" => $code->cashback_amount,
+        ];
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
     public function activatePromoCode(array $data): object
     {
         if (is_null($this->bot) || is_null($this->botUser))

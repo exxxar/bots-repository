@@ -25,7 +25,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
             </div>
 
 
-           <PromoCodeForm></PromoCodeForm>
+            <PromoCodeForm v-on:callback="activateDiscount"></PromoCodeForm>
 
 
             <h6 class="opacity-75 mb-3 mt-2">Число персон</h6>
@@ -62,6 +62,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                     <h6>Товаров в корзине <strong class="fw-bold">{{ cartTotalCount }} ед.</strong></h6>
                     <h6>Общая цена товаров <strong class="fw-bold">{{ cartTotalPrice }}₽</strong></h6>
                     <h6>Приборы на <strong class="fw-bold">{{ deliveryForm.persons }} чел.</strong></h6>
+                    <h6 v-if="deliveryForm.promo.discount>0">Скидка за промокод <strong class="fw-bold">{{ deliveryForm.promo.discount }} ₽</strong></h6>
                 </div>
             </div>
             <button
@@ -357,8 +358,14 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         </li>
                         <li class="list-group-item">
                             <p class="mb-0 d-flex justify-content-between">Оплата бонусами
-                                <strong v-if="deliveryForm.use_cashback">{{ cashbackLimit }} <sup>.00</sup>₽</strong>
+                                <strong v-if="deliveryForm.use_cashback">{{ cashbackLimit }} ₽</strong>
                                 <strong v-else>-</strong>
+                            </p>
+                        </li>
+
+                        <li class="list-group-item" v-if="deliveryForm.promo.discount>0">
+                            <p class="mb-0 d-flex justify-content-between">Промокод
+                                <strong>{{ deliveryForm.promo.discount }} ₽</strong>
                             </p>
                         </li>
 
@@ -369,6 +376,8 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                                 <strong v-else>от курьера</strong>
                             </p>
                         </li>
+
+
                         <li class="list-group-item">
                             <p v-if="!deliveryForm.use_cashback"
                                class="mb-0 d-flex justify-content-between">Итого, цена
@@ -376,8 +385,8 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                                     <sup>.00</sup>₽</strong></p>
                             <p v-else
                                class="mb-0 d-flex justify-content-between">Итого, цена
-                                <strong>{{ (cartTotalPrice - cashbackLimit) + deliveryForm.delivery_price }}
-                                    <sup>.00</sup>₽</strong></p>
+                                <strong>{{ (cartTotalPrice - cashbackLimit -  deliveryForm.promo.discount) + deliveryForm.delivery_price }}
+                                    ₽</strong></p>
                         </li>
                     </ul>
 
@@ -468,32 +477,38 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         </li>
                         <li class="list-group-item">
                             <p class="mb-0 d-flex justify-content-between">Цена <strong>{{ cartTotalPrice }}
-                                <sup>.00</sup>₽</strong>
+                                ₽</strong>
                             </p>
                         </li>
                         <li class="list-group-item">
                             <p class="mb-0 d-flex justify-content-between">Оплата бонусами
-                                <strong v-if="deliveryForm.use_cashback">{{ cashbackLimit }} <sup>.00</sup>₽</strong>
+                                <strong v-if="deliveryForm.use_cashback">{{ cashbackLimit }} ₽</strong>
                                 <strong v-else>-</strong>
                             </p>
                         </li>
 
+                        <li class="list-group-item" v-if="deliveryForm.promo.discount>0">
+                            <p class="mb-0 d-flex justify-content-between">Промокод
+                                <strong>{{   deliveryForm.promo.discount }} ₽</strong>
+
+                            </p>
+                        </li>
+
+
+
                         <li class="list-group-item" v-if="!deliveryForm.need_pickup">
                             <p class="mb-0 d-flex justify-content-between">Цена доставки
-                                <strong v-if="deliveryForm.delivery_price>0">{{ deliveryForm.delivery_price }}
-                                    <sup>.00</sup>₽</strong>
+                                <strong v-if="deliveryForm.delivery_price>0">{{ deliveryForm.delivery_price }}₽</strong>
                                 <strong v-else>от курьера</strong>
                             </p>
                         </li>
                         <li class="list-group-item">
                             <p v-if="!deliveryForm.use_cashback"
                                class="mb-0 d-flex justify-content-between">Итого, цена
-                                <strong>{{ cartTotalPrice + deliveryForm.delivery_price }}
-                                    <sup>.00</sup>₽</strong></p>
+                                <strong>{{ cartTotalPrice -  deliveryForm.promo.discount + deliveryForm.delivery_price }} ₽</strong></p>
                             <p v-else
                                class="mb-0 d-flex justify-content-between">Итого, цена
-                                <strong>{{ (cartTotalPrice - cashbackLimit) + deliveryForm.delivery_price }}
-                                    <sup>.00</sup>₽</strong></p>
+                                <strong>{{ (cartTotalPrice - cashbackLimit - deliveryForm.promo.discount) + deliveryForm.delivery_price }} ₽</strong></p>
                         </li>
                     </ul>
 
@@ -581,26 +596,30 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
         </div>
     </div>
     <nav
-        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0" style="border-radius:10px 10px 0px 0px;">
+        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+        style="border-radius:10px 10px 0px 0px;">
         <div v-if="cartProducts.length>0" class="w-100">
             <button type="button"
                     v-if="tab===0"
                     @click="tab=1"
                     style="box-shadow: 1px 1px 6px 0px #0000004a;"
-                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">Оформление заказа
+                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">Оформление
+                заказа
             </button>
             <button type="button"
                     v-if="tab>=1"
                     @click="tab=0"
                     style="box-shadow: 1px 1px 6px 0px #0000004a;"
-                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">Корзина с товаром
+                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">Корзина с
+                товаром
             </button>
         </div>
         <div v-else class="w-100">
             <button type="button"
                     @click="goToCatalog"
                     style="box-shadow: 1px 1px 6px 0px #0000004a;"
-                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">Вернуться в магазин
+                    class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">Вернуться в
+                магазин
             </button>
         </div>
     </nav>
@@ -648,6 +667,11 @@ export default {
                 name: null,
                 phone: null,
                 address: null,
+                promo: {
+                    discount: 0,
+                    code: 0,
+                },
+
                 city: null,
                 street: null,
                 building: null,
@@ -720,7 +744,7 @@ export default {
                 && (!this.deliveryForm.use_cashback ?
                     this.cartTotalPrice >= this.settings.min_price :
                     this.cartTotalPrice - this.cashbackLimit > this.settings.min_price)
-              && (this.tab == 3 ? this.deliveryForm.image != null : true)
+                && (this.tab == 3 ? this.deliveryForm.image != null : true)
         },
 
         canUseCashBack() {
@@ -955,7 +979,11 @@ export default {
 
             })
         },
+        activateDiscount(item) {
+            this.deliveryForm.promo.discount = item.discount
+            this.deliveryForm.promo.code = item.code
 
+        },
         startCheckout() {
 
             localStorage.setItem("cashman_self_product_delivery_form_name", this.deliveryForm.name || '')
@@ -974,10 +1002,10 @@ export default {
 
 
             if (this.is_requested) {
-                this.$notify( {
-                    title:'Упс!',
-                    text:'Сделать повторный заказ можно через ${this.spent_time_counter} сек.',
-                    type:'error'
+                this.$notify({
+                    title: 'Упс!',
+                    text: 'Сделать повторный заказ можно через ${this.spent_time_counter} сек.',
+                    type: 'error'
                 })
 
                 return;

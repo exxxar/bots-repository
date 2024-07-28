@@ -64,13 +64,43 @@ import Layout from "@/ClientTg/Layouts/V1Layout.vue";
 
                 <!-- footer and footer card-->
 
-                <div class="footer" v-if="currentBot">
+                <div class="footer">
                     <div class="card card-style mb-0">
                         <a href="#" class="footer-title p-4" >{{ currentBot.company.title || 'CashMan:Shopify' }}</a>
                         <p class="text-center font-12 mt-n1 mb-3 opacity-70">
                             Добавь <span class="color-highlight">красок</span> в свою жизнь
                         </p>
-                        <p class="boxed-text-l">
+
+                        <p class="text-center font-12 mt-n1 mb-3 opacity-70">
+                            Сервис Разработан ООО "Некст Групп"
+                        </p>
+                        <div class="text-center mb-3">
+                            <a href="tel:+79384341473"
+                               target="_blank"
+                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook text-white">
+                                +7 (938) 434-14-73 Вотс Ап
+                            </a>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <a href="https://vk.com/nextgroupit"
+                               target="_blank"
+                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook text-white">
+                                https://vk.com/nextgroupit
+                            </a>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <a href="https://t.me/nextitgroup_bot"
+                               target="_blank"
+                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook text-white">
+                                https://t.me/nextitgroup_bot
+                            </a>
+                        </div>
+
+
+
+<!--                        <p class="boxed-text-l">
                             {{ currentBot.company.description || 'Описание вашего магазина' }}
                         </p>
                         <div class="text-center mb-3">
@@ -88,8 +118,8 @@ import Layout from "@/ClientTg/Layouts/V1Layout.vue";
                                 class="fa fa-share-alt"></i></a>
                             <a href="#" class="back-to-top icon icon-xs rounded-sm shadow-l bg-highlight text-white "><i
                                 class="fa fa-arrow-up"></i></a>
-                        </div>
-                        <p class="footer-copyright pb-3 mb-1">© CashMan <span id="copyright-year">2023</span>.
+                        </div>-->
+                        <p class="footer-copyright pb-3 mb-1">© CashMan <span id="copyright-year">2024</span>.
                             Все
                             Права защищены.</p>
                     </div>

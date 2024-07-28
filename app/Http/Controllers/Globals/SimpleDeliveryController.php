@@ -50,13 +50,13 @@ class SimpleDeliveryController extends SlugController
 
             ],
 
-            [
+          /*  [
                 "type" => "text",
                 "key" => "yandex_map_link",
                 "description" => "Ссылка на ваше расположение на карте",
                 "value" => null,
 
-            ],
+            ],*/
             [
                 "type" => "text",
                 "key" => "free_shipping_starts_from",

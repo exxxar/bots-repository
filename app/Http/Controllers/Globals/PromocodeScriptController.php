@@ -84,6 +84,28 @@ class PromocodeScriptController extends SlugController
         return response()->noContent();
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function activateShopDiscount(Request $request){
+        $request->validate([
+            // "bot_id" => "required",
+            "code" => "required",
+        ]);
+
+        $botUser = $request->botUser;
+
+        $bot = $request->bot;
+
+       return BusinessLogic::promoCodes()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser ?? null)
+            ->activatePromoCodeForDiscount(
+                $request->all()
+            );
+
+
+    }
 
     public function promocodeScriptRun(...$config)
     {

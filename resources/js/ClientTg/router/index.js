@@ -479,6 +479,7 @@ import ClientsV2 from '@/ClientTg/Pages/V2/Admin/Clients.vue';
 import ShopV2 from '@/ClientTg/Pages/V2/Admin/Shop.vue';
 import AdminOrdersV2 from '@/ClientTg/Pages/V2/Admin/Orders.vue';
 import StatisticV2 from '@/ClientTg/Pages/V2/Admin/Statistic.vue';
+import PromoCodesV2 from '@/ClientTg/Pages/V2/Admin/Promocodes.vue';
 
 
 const simplePrefix = "/s"
@@ -605,6 +606,13 @@ export const simpleRoutes = [
         path: simplePrefix + '/admin/statistic',
         component: StatisticV2,
         meta: {title: 'Статистика'}
+    },
+
+    {
+        name: 'PromoCodesV2',
+        path: simplePrefix + '/admin/promocodes',
+        component: PromoCodesV2,
+        meta: {title: 'Промокоды'}
     },
 
 

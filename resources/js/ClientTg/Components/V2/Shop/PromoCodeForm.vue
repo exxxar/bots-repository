@@ -93,7 +93,7 @@ export default {
             this.startTimer();
 
             this.is_requested = true
-            this.$store.dispatch("activatePromocode", {
+            this.$store.dispatch("activateShopDiscountPromocode", {
                 promocodeForm: this.promocodeForm
             }).then(resp => {
                 this.is_requested = false
@@ -104,9 +104,20 @@ export default {
                     type: "success"
                 })
 
+                this.$emit("callback",{
+                    code:this.promocodeForm.code || null,
+                    discount: this.discount || 0
+                })
+
             }).catch(() => {
                 this.is_requested = false
                 this.discount = 0
+
+                this.$emit("callback",{
+                    code:this.promocodeForm.code || null,
+                    discount: 0
+                })
+
                 this.$notify({
                     title: "Промокод",
                     text: "Ошибка активации промокода!",
