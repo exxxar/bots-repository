@@ -81,7 +81,7 @@ export default {
             if (schedule&&(schedule||[]).length>0) {
 
                 console.log(schedule)
-                const day = (new Date()).getDay();
+                const day = (new Date()).getUTCDay();
 
                 console.log("day=>", day)
                 const hours = (new Date()).getHours();
