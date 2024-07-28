@@ -81,17 +81,17 @@ export default {
             if (schedule&&(schedule||[]).length>0) {
 
                 console.log(schedule)
-                const day = (new Date()).getUTCDay();
+                const day = (new Date()).getDay();
 
                 console.log("day=>", day)
                 const hours = (new Date()).getHours();
                 const minutes = (new Date()).getMinutes();
 
-                let tmpStartAt = schedule[day-1].start_at || "08:00";
+                let tmpStartAt = schedule[day].start_at || "08:00";
                 let tmpStartHours = parseInt(tmpStartAt.split(":")[0]);
                 let tmpStartMinutes = parseInt(tmpStartAt.split(":")[1]);
 
-                let tmpEndAt = schedule[day-1].end_at || "20:00";
+                let tmpEndAt = schedule[day].end_at || "20:00";
                 let tmpEndHours = parseInt(tmpEndAt.split(":")[0]);
                 let tmpEndMinutes = parseInt(tmpEndAt.split(":")[1]);
 
@@ -106,7 +106,7 @@ export default {
                 if (hours>tmpStartHours && hours<tmpEndHours)
                     isWork = true;
 
-                window.currentBot.company.is_work = !(schedule[day-1].closed||false)&&isWork
+                window.currentBot.company.is_work = !(schedule[day].closed||false)&&isWork
             }
 
         }
