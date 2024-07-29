@@ -56,6 +56,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 
             <p class="text-center mb-3">
                 <span v-html="bot.company.description"></span>
+                <br>
                 <a
                     v-if="(getSelf||{is_admin:false}).is_admin"
                     data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"

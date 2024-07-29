@@ -10,7 +10,7 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
                    maxlength="255"
                    class="form-control"
                    required id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Промокод (вписать или сгенерировать)</label>
+            <label for="floatingInput">Текст промокода</label>
         </div>
 
         <div class="form-floating mb-2">

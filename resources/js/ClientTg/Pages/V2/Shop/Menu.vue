@@ -1,7 +1,9 @@
 <script setup>
 import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
+import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vue";
 </script>
 <template>
+
     <div class="container g-2 my-3" v-if="getSelf">
         <h6 class="opacity-75 mb-3 text-center"><i class="fa-solid fa-house-chimney mr-2 text-primary"></i>Доступные
             сервисы</h6>
@@ -76,6 +78,25 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
                         <img v-lazy="'/images/shop-v2/history.png'" class="img-fluid" alt="">
 
                         <p class="my-2"> История заказов</p>
+                    </div>
+
+                </button>
+
+            </div>
+
+            <div class="col">
+
+                <button type="button"
+                        :disabled="true"
+                        @click="goTo('WheelOfFortuneV2')"
+                        style="min-height:250px;"
+
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/gift.png'" class="img-fluid" alt="">
+
+                        <p class="my-2"> Колесо фортуны</p>
+                        <span style="font-size:12px;"><i class="fa-solid fa-lock"></i> закрыто</span>
                     </div>
 
                 </button>
@@ -222,6 +243,36 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
 
                 </button>
             </div>
+
+            <div class="col" v-if="script_data">
+                <button type="button"
+                        data-bs-toggle="modal" data-bs-target="#script-setting-editor"
+                        style="min-height:250px;"
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/setting.webp'" class="img-fluid" alt="">
+
+                        <p class="my-2">Настройка скрипта</p>
+                    </div>
+
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="script-setting-editor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ShopScriptEditor v-if="script_data"
+                                 v-model="script_data">
+                    </ShopScriptEditor>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -253,7 +304,9 @@ import {mapGetters} from "vuex";
 
 export default {
     data() {
-        return {}
+        return {
+            script_data:null,
+        }
     },
     computed: {
         ...mapGetters(['getSelf', 'cartTotalCount']),
@@ -274,6 +327,8 @@ export default {
     mounted() {
         this.tg.BackButton.show()
 
+        this.loadScriptModuleData()
+
         this.tg.BackButton.onClick(() => {
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
 
@@ -286,7 +341,20 @@ export default {
     methods: {
         goTo(name) {
             this.$router.push({name: name})
-        }
+        },
+        loadScriptModuleData() {
+            return this.$store.dispatch("loadShopModuleData").then((resp) => {
+                this.script_data  = []
+
+                this.$nextTick(() => {
+                    Object.keys(resp).forEach(item => {
+                        this.script_data[item] = resp[item]
+                    })
+
+                    console.log("uploaded data", this.script_data)
+                })
+            })
+        },
     }
 }
 </script>

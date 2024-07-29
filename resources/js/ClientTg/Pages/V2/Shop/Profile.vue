@@ -28,7 +28,9 @@
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Имя</span>
-                <span class="text-primary fw-bold"> {{self.name ||  'не указано' }} ({{ self.fio_from_telegram ||  'не указано' }})</span>
+                <span
+                    style="font-size:12px;"
+                    class="text-primary fw-bold"> {{ self.fio_from_telegram ||  'не указано' }}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
