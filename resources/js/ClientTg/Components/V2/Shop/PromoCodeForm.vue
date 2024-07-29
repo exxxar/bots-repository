@@ -97,7 +97,8 @@ export default {
                 promocodeForm: this.promocodeForm
             }).then(resp => {
                 this.is_requested = false
-                this.discount = resp.data.discount
+
+                this.discount = resp.discount
                 this.$notify({
                     title: "Промокод",
                     text: "Промокод успешно активирован!",

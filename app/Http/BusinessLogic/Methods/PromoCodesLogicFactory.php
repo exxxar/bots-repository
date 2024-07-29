@@ -116,7 +116,14 @@ class PromoCodesLogicFactory
         if (!$code->is_active)
             throw new HttpException(403, "Промокод не активен");
 
-        $isPromoActivated = !is_null($code->botUsers()->where("bot_user_id", $botUser->id)->first() ?? null);
+        if (!is_null($code->available_to)) {
+            if (Carbon::parse($code->available_to)->timestamp < Carbon::now()->timestamp)
+                throw new HttpException(400, "Срок действия промокода закончен!");
+        }
+
+        $isPromoActivated = !is_null($code->botUsers()
+            ->where("bot_user_id", $botUser->id)
+            ->first() ?? null);
 
         if ($isPromoActivated)
             throw new HttpException(400, "Промокод уже активирован");
@@ -133,7 +140,7 @@ class PromoCodesLogicFactory
         $code->botUsers()->attach([$botUser->id]);
         $code->save();
 
-        if ($code->cashback_amount==0)
+        if ($code->cashback_amount == 0)
             throw new HttpException(400, "Данный промокод нельзя активировать как скидочный!");
 
         return (object)[
@@ -171,6 +178,12 @@ class PromoCodesLogicFactory
         if (!$code->is_active)
             throw new HttpException(403, "Промокод не активен");
 
+        if (!is_null($code->available_to)) {
+            if (Carbon::parse($code->available_to)->timestamp < Carbon::now()->timestamp)
+                throw new HttpException(400, "Срок действия промокода закончен!");
+        }
+
+
         $isPromoActivated = !is_null($code->botUsers()->where("bot_user_id", $botUser->id)->first() ?? null);
 
         if ($isPromoActivated)
@@ -205,7 +218,7 @@ class PromoCodesLogicFactory
                 $scriptsIds = Collection::make($code->scripts)
                     ->pluck("id");
 
-                $botUser->manager->scripts()->sync([...$scriptsIds,...$tmpIds]);
+                $botUser->manager->scripts()->sync([...$scriptsIds, ...$tmpIds]);
             }
         }
 
@@ -259,6 +272,7 @@ class PromoCodesLogicFactory
         if (!is_null($search))
             $codes = $codes->where(function ($q) use ($search) {
                 $q->where("description", 'like', "%$search%");
+                $q->orWhere("code", 'like', "%$search%");
             });
 
 
@@ -338,6 +352,7 @@ class PromoCodesLogicFactory
             'cashback_amount' => $data["cashback_amount"] ?? 0,
             'max_activation_count' => $data["max_activation_count"] ?? 1,
             'is_active' => ($data["is_active"] ?? false) == "true",
+            'available_to' => is_null($data["available_to"]) ? null : Carbon::parse($data["available_to"]),
 
         ];
 

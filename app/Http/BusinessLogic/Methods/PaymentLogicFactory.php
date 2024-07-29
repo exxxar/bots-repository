@@ -119,6 +119,7 @@ class PaymentLogicFactory
         $summaryCount = 0;
         $tmpDescription = "";
 
+
         foreach ($products as $product) {
 
             $tmpCount = array_values(array_filter($tmpProducts, function ($item) use ($product) {
@@ -292,6 +293,7 @@ class PaymentLogicFactory
 
         $summaryPrice = 0;
         $summaryCount = 0;
+        $discount = $data["discount"] ?? 0;
         $tmpDescription = "";
 
         foreach ($products as $product) {
@@ -336,7 +338,7 @@ class PaymentLogicFactory
             'bot_id' => $bot->id,
             'payload' => $payload,
             'currency' => $currency,
-            'total_amount' => $summaryPrice,
+            'total_amount' => max(1,$summaryPrice-$discount),
             'status' => 0,
             'products_info' => (object)[
                 "payload" => $tmpDescription ?? null,

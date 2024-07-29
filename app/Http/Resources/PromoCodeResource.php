@@ -23,6 +23,7 @@ class PromoCodeResource extends JsonResource
             'max_activation_count' => $this->max_activation_count,
             'current_activation_count' => count($this->botUsers ?? []),
             'is_active' => $this->is_active,
+            'available_to' => $this->available_to ?? null,
             //'botUsers' => BotUserCollection::make($this->whenLoaded('botUsers')),
         ];
     }

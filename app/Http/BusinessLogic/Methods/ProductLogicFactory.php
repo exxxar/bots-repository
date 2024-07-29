@@ -622,6 +622,8 @@ class ProductLogicFactory
         $useCashback = ($data["use_cashback"] ?? "false") == "true";
         $needPaymentLink = ($data["need_payment_link"] ?? "false") == "true";
         $cash = ($data["cash"] ?? "false") == "true";
+        $promo = json_decode($data["promo"]);
+
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
 
         $persons = $data["persons"] ?? 1;
@@ -671,9 +673,11 @@ class ProductLogicFactory
         }
 
         $maxUserCashback = $this->botUser->cashback->amount ?? 0;
+        $deliveryPrice = $data["delivery_price"] ?? 0;
+        $distance = $data["distance"] ?? 0;
         $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
         $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
-        $discount = $useCashback ? min($cashBackAmount, $maxUserCashback) : 0;
+        $discount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0)+($promo->discount ?? 0) ;
 
         $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
             . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
@@ -687,42 +691,6 @@ class ProductLogicFactory
         $address = (($data["city"] ?? "") . "," . ($data["street"] ?? "") . "," . ($data["building"] ?? ""));
 
 
-        $geo = BusinessLogic::geo()
-            ->setBot($this->bot ?? null)
-            ->getCoords([
-                "address" => $address
-            ]);
-
-        $shopCoords = (Collection::make($this->slug->config)
-            ->where("key", "shop_coords")
-            ->first())["value"] ?? null;
-
-
-        if (!is_null($shopCoords) && !$needPickup) {
-            $coords = explode(',', $shopCoords);
-
-            $coordsData = [
-                "coords" => [
-                    (object)[
-                        "lat" => $geo->latitude ?? 0,
-                        "lon" => $geo->longitude ?? 0,
-                    ],
-                    (object)[
-                        "lat" => $coords[0] ?? 0,
-                        "lon" => $coords[1] ?? 0,
-                    ],
-                ]
-            ];
-
-            $distanceObject = BusinessLogic::geo()
-                ->setBot($this->bot ?? null)
-                ->getDistance($coordsData);
-
-            $distance = $distanceObject->distance ?? 0;
-
-        }
-
-        //сделать чек на оплату (pdf)
         $order = Order::query()->create([
             'bot_id' => $this->bot->id,
             'deliveryman_id' => null,
@@ -736,8 +704,8 @@ class ProductLogicFactory
                 ]
             ],//информация о продуктах и заведении, из которого сделан заказ
             'product_count' => $summaryCount,
-            'summary_price' => $summaryPrice,
-            'delivery_price' => 0,
+            'summary_price' => max(1,$summaryPrice - $discount),
+            'delivery_price' => $deliveryPrice,
             'delivery_range' => $distance ?? 0,
             'deliveryman_latitude' => 0,
             'deliveryman_longitude' => 0,
@@ -759,6 +727,7 @@ class ProductLogicFactory
             ->setBotUser($this->botUser)
             ->setSlug($this->slug)
             ->checkoutLink([
+                "discount"=>$discount,
                 "products" => $tmpProducts
             ]);
 
@@ -774,6 +743,7 @@ class ProductLogicFactory
 
         if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
             throw new HttpException(404, "Требования функции не выполнены!");
+
 
         $validator = Validator::make($data, [
             "products" => "required",
@@ -819,6 +789,7 @@ class ProductLogicFactory
         $summaryCount = 0;
 
         $disabilities = json_decode($data["disabilities"] ?? '[]');
+        $promo = json_decode($data["promo"]);
 
         if ($hasDisability) {
 
@@ -862,7 +833,7 @@ class ProductLogicFactory
         $maxUserCashback = $this->botUser->cashback->amount ?? 0;
         $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
         $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
-        $discount = $useCashback ? min($cashBackAmount, $maxUserCashback) : 0;
+        $discount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0)+($promo->discount ?? 0) ;
 
         $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
             . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
@@ -916,7 +887,7 @@ class ProductLogicFactory
             ->setBot($this->bot)
             ->prepareReviews($order->id, $ids);
 
-        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. " . ($discount > 0 ? "Скидка: $discount руб." : "");
+        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. " . ($discount > 0 ? "Скидка: $discount руб." : "").(!is_null($promo->code ?? null)?" скидка за промокод '$promo->code' составляет $promo->discount руб. (уже учтена)":"");
 
         $userInfo = !$needPickup ?
             sprintf(($whenReady ? "🟢" : "🟡") . "Заказ №: %s\nИдентификатор клиента: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nЦена доставки(тест): %s \nДистанция(тест): %s \nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",

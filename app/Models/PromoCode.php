@@ -24,6 +24,7 @@ class PromoCode extends Model
         'cashback_amount',
         'max_activation_count',
         'is_active',
+        'available_to',
     ];
 
     /**
@@ -37,6 +38,7 @@ class PromoCode extends Model
         'slot_amount' => 'integer',
         'cashback_amount' => 'double',
         'is_active' => 'boolean',
+        'available_to' => 'datetime:Y-m-d H:i:s',
     ];
 
     protected $with = ["botUsers","scripts"];

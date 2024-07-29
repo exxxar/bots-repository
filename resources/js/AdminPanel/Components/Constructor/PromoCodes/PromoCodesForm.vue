@@ -255,7 +255,7 @@ export default {
                     this.need_slots = true;
 
                 if (this.promoCodeForm.cashback_amount > 0)
-                    this.need_slots = true;
+                    this.need_cashback = true;
 
                 if (this.promoCodeForm.scripts.length > 0)
                     this.need_attach_scripts = true;

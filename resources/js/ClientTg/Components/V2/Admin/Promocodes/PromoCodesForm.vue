@@ -1,0 +1,161 @@
+<script setup>
+import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlugList.vue";
+</script>
+<template>
+    <form v-on:submit.prevent="submitForm">
+
+        <div class="form-floating mb-2">
+            <input type="text"
+                   v-model="promoCodeForm.code"
+                   maxlength="255"
+                   class="form-control"
+                   required id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Промокод (вписать или сгенерировать)</label>
+        </div>
+
+        <div class="form-floating mb-2">
+            <textarea class="form-control"
+                      maxlength="255"
+                      v-model="promoCodeForm.description"
+                      placeholder="Leave a comment here" id="floatingTextarea" required></textarea>
+            <label for="floatingTextarea"> Назначение промокода</label>
+        </div>
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   v-model="promoCodeForm.is_active"
+                   type="checkbox" role="switch" id="is_active">
+            <label class="form-check-label"
+                   for="is_active">Доступен для активации</label>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input type="number"
+                   step="1"
+                   min="1"
+                   v-model="promoCodeForm.max_activation_count"
+                   class="form-control" id="floatingInput" placeholder="name@example.com" required>
+            <label for="floatingInput"> Максимальное число активаций кода</label>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input type="number"
+                   step="1"
+                   min="1"
+                   v-model="promoCodeForm.cashback_amount"
+                   class="form-control" id="floatingInput" placeholder="name@example.com" required>
+            <label for="floatingInput"> Величина скидки \ CashBack</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="datetime-local"
+                   v-model="promoCodeForm.available_to"
+                   class="form-control"
+                   id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Доступен до...</label>
+        </div>
+
+        <button
+            type="submit" class="btn btn-primary w-100 p-3">
+            <span v-if="promoCodeForm.id==null">Создать промокод</span>
+            <span v-else>Обновить промокод</span>
+        </button>
+
+
+    </form>
+</template>
+
+<script>
+import {mapGetters} from "vuex";
+
+export default {
+    props: ["code"],
+    data() {
+        return {
+            step: 0,
+            load: false,
+            need_reset: false,
+            promoCodeForm: {
+                id: null,
+                code: null,
+                description: null,
+                cashback_amount: 0,
+                max_activation_count: 1,
+                is_active: false,
+                available_to: null,
+
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['getSelf']),
+        bot() {
+            return window.currentBot
+        }
+
+    },
+    watch: {
+        promoCodeForm: {
+            handler(val) {
+                this.need_reset = true
+            },
+            deep: true
+        },
+    },
+    mounted() {
+
+        if (this.code)
+            this.$nextTick(() => {
+                this.promoCodeForm = {
+                    id: this.code.id || null,
+                    description: this.code.description || null,
+                    code: this.code.code || null,
+                    cashback_amount: this.code.cashback_amount || 0,
+                    max_activation_count: this.code.max_activation_count || 1,
+                    is_active: this.code.is_active || false,
+                    available_to:  this.code.available_to ? this.$filters.local(this.code.available_to) : null
+                }
+
+
+            })
+
+    },
+    methods: {
+
+        submitForm() {
+            let data = new FormData();
+            Object.keys(this.promoCodeForm)
+                .forEach(key => {
+                    const item = this.promoCodeForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+            data.append('bot_id', this.bot.id);
+
+            this.$store.dispatch("storePromoCodes",
+                {
+                    promoCodeForm: data
+                }).then((response) => {
+
+                this.promoCodeForm = {
+                    id: null,
+                    code: null,
+                    description: null,
+                    cashback_amount: 0,
+                    max_activation_count: 1,
+                    is_active: false
+                }
+
+                this.$emit("callback", response.data)
+                this.$notify("Промокод успешно создан");
+            }).catch(err => {
+                this.$notify("Ошибка создания промокода");
+            })
+
+        },
+
+    }
+}
+</script>

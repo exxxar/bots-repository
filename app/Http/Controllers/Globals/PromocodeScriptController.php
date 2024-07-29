@@ -77,6 +77,12 @@ class PromocodeScriptController extends SlugController
             );
     }
 
+    public function remove(Request $request, $promoCodeId): PromoCodeResource
+    {
+        return BusinessLogic::promoCodes()
+            ->removePromoCode($promoCodeId);
+    }
+
     /**
      * @throws ValidationException
      */

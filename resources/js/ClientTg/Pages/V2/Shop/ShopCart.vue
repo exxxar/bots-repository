@@ -62,7 +62,8 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                     <h6>Товаров в корзине <strong class="fw-bold">{{ cartTotalCount }} ед.</strong></h6>
                     <h6>Общая цена товаров <strong class="fw-bold">{{ cartTotalPrice }}₽</strong></h6>
                     <h6>Приборы на <strong class="fw-bold">{{ deliveryForm.persons }} чел.</strong></h6>
-                    <h6 v-if="deliveryForm.promo.discount>0">Скидка за промокод <strong class="fw-bold">{{ deliveryForm.promo.discount }} ₽</strong></h6>
+                    <h6 v-if="deliveryForm.promo.discount>0">Скидка за промокод <strong
+                        class="fw-bold">{{ deliveryForm.promo.discount }} ₽</strong></h6>
                 </div>
             </div>
             <button
@@ -364,6 +365,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         </li>
 
                         <li class="list-group-item" v-if="deliveryForm.promo.discount>0">
+                            <p class="mb-2 text-justify">   <strong class="fw-bold">Внимание!</strong> Не распространяется на цену доставки!</p>
                             <p class="mb-0 d-flex justify-content-between">Промокод
                                 <strong>{{ deliveryForm.promo.discount }} ₽</strong>
                             </p>
@@ -381,11 +383,13 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         <li class="list-group-item">
                             <p v-if="!deliveryForm.use_cashback"
                                class="mb-0 d-flex justify-content-between">Итого, цена
-                                <strong>{{ cartTotalPrice + deliveryForm.delivery_price }}
+                                <strong>{{ Math.max(1, (cartTotalPrice - deliveryForm.promo.discount))  + deliveryForm.delivery_price }}
                                     <sup>.00</sup>₽</strong></p>
                             <p v-else
                                class="mb-0 d-flex justify-content-between">Итого, цена
-                                <strong>{{ (cartTotalPrice - cashbackLimit -  deliveryForm.promo.discount) + deliveryForm.delivery_price }}
+                                <strong>{{
+                                        Math.max(1, (cartTotalPrice - cashbackLimit - deliveryForm.promo.discount)) + deliveryForm.delivery_price
+                                    }}
                                     ₽</strong></p>
                         </li>
                     </ul>
@@ -488,12 +492,14 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         </li>
 
                         <li class="list-group-item" v-if="deliveryForm.promo.discount>0">
+                            <p class="mb-2 text-justify">
+                                <strong class="fw-bold">Внимание!</strong> Не распространяется на цену доставки!
+                            </p>
                             <p class="mb-0 d-flex justify-content-between">Промокод
-                                <strong>{{   deliveryForm.promo.discount }} ₽</strong>
+                                <strong>{{ deliveryForm.promo.discount }} ₽</strong>
 
                             </p>
                         </li>
-
 
 
                         <li class="list-group-item" v-if="!deliveryForm.need_pickup">
@@ -505,10 +511,13 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         <li class="list-group-item">
                             <p v-if="!deliveryForm.use_cashback"
                                class="mb-0 d-flex justify-content-between">Итого, цена
-                                <strong>{{ cartTotalPrice -  deliveryForm.promo.discount + deliveryForm.delivery_price }} ₽</strong></p>
+                                <strong>{{ Math.max(1, (cartTotalPrice - deliveryForm.promo.discount)) + deliveryForm.delivery_price }}
+                                    ₽</strong></p>
                             <p v-else
                                class="mb-0 d-flex justify-content-between">Итого, цена
-                                <strong>{{ (cartTotalPrice - cashbackLimit - deliveryForm.promo.discount) + deliveryForm.delivery_price }} ₽</strong></p>
+                                <strong>{{
+                                        Math.max(1, (cartTotalPrice - cashbackLimit - deliveryForm.promo.discount)) + deliveryForm.delivery_price
+                                    }} ₽</strong></p>
                         </li>
                     </ul>
 
@@ -546,7 +555,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                     for="menu-photos"
                     class="photo-loader-bill d-flex flex-column justify-content-center align-items-center mb-2">
                     <i class="fa-regular fa-image my-2 text-primary" style="font-size:20px;"></i>
-                    <span class="text-primary fw-bold">Выбрать фотографию чека в формате: jpg, png, bmp</span>
+                    <span class="text-primary fw-bold text-center">Выбрать фотографию чека в формате: jpg, png, bmp</span>
                     <input type="file" id="menu-photos" accept="image/*"
                            @change="onChangePhotos"
                            style="display:none;"/>
@@ -669,7 +678,7 @@ export default {
                 address: null,
                 promo: {
                     discount: 0,
-                    code: 0,
+                    code: null,
                 },
 
                 city: null,
@@ -859,7 +868,7 @@ export default {
                 street: this.deliveryForm.street,
                 building: this.deliveryForm.building,
             }).then(resp => {
-                console.log("resp", resp)
+
                 this.deliveryForm.delivery_price = resp.price || 0
                 this.deliveryForm.distance = resp.distance || 0
 
@@ -980,8 +989,9 @@ export default {
             })
         },
         activateDiscount(item) {
-            this.deliveryForm.promo.discount = item.discount
-            this.deliveryForm.promo.code = item.code
+
+            this.deliveryForm.promo.discount = item.discount || 0
+            this.deliveryForm.promo.code = item.code || null
 
         },
         startCheckout() {

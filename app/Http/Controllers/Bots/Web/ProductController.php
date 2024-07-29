@@ -314,6 +314,7 @@ class ProductController extends Controller
             "phone" => "required",
         ]);
 
+
         BusinessLogic::products()
             ->setSlug($request->slug ?? null)
             ->setBot($request->bot ?? null)

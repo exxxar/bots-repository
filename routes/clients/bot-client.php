@@ -206,8 +206,8 @@ Route::prefix("bot-client")
                 Route::post("/store", "store")->middleware(["tgAuth.admin"]);
                 Route::post("/activate", "activate")
                     ->middleware(["slug"]);
-                Route::post("/activate-shop-discount", "activateShopDiscount")
-                    ->middleware(["slug"]);
+                Route::post("/activate-shop-discount", "activateShopDiscount");
+                Route::delete("/{id}", "remove")->middleware(["tgAuth.admin"]);
             });
 
         Route::prefix("appointments")

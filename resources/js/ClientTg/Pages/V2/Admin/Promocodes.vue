@@ -1,94 +1,46 @@
 <script setup>
-import PromoCodesForm from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCodesForm.vue";
-import PromoCodesTable from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCodesTable.vue";
+import PromoCodesForm from "@/ClientTg/Components/V2/Admin/Promocodes/PromoCodesForm.vue";
+import PromoCodesList from "@/ClientTg/Components/V2/Admin/Promocodes/PromoCodesList.vue";
 </script>
 <template>
 
-
-    <div v-if="part===0" class="py-2 container">
-        <div class="row">
-            <div class="col-12">
-                <button type="button"
-                        @click="createPromoCode"
-                        class="btn btn-primary">
-                    Создать новый промокод
-                </button>
-            </div>
-        </div>
-
-        <PromoCodesTable
+    <div class="container py-2">
+        <PromoCodesList
             v-if="!loadTable"
             v-on:create="createPromoCode"
             v-on:select="selectPromoCode"
-            :bot="bot"></PromoCodesTable>
+            :bot="bot"></PromoCodesList>
     </div>
 
-    <div v-if="part===2" class="py-2 container">
-        <div class="row">
-            <div class="col-12">
-                <button type="button"
-                        @click="part=0"
-                        class="btn btn-outline-primary">
-                    Назад
-                </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="promocode-form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-12">
+                        <PromoCodesForm
+                            v-if="!loadForm"
+                            v-on:callback="callbackForm"
+                            :code="selectedPromoCode"/>
+                    </div>
+                </div>
+
             </div>
         </div>
-
-        <PromoCodesForm
-            v-if="!loadForm"
-            v-on:callback="callbackForm"
-            :bot="bot"/>
     </div>
 
-    <div v-if="part===1" class="py-2 container">
-        <div class="row">
-            <div class="col-12">
-                <button type="button"
-                        @click="part=0"
-                        class="btn btn-outline-primary">
-                    Назад
-                </button>
-            </div>
-        </div>
-
-        <ul class="nav nav-tabs justify-content-center">
-            <li class="nav-item" @click="tab=0">
-                <a class="nav-link"
-                   v-bind:class="{'active':tab===0}"
-                   aria-current="page"
-                   href="javascript:void(0)">Информация о Промокоде</a>
-            </li>
-
-            <li class="nav-item" @click="tab=1">
-                <a class="nav-link"
-                   v-bind:class="{'active':tab===1}"
-                   href="javascript:void(0)">Статистика использования</a>
-            </li>
-
-        </ul>
-
-        <div class="row py-3" v-if="tab===0">
-            <div class="col-12">
-                <PromoCodesForm
-                    v-if="!loadForm"
-                    v-on:callback="callbackForm"
-                    :code="selectedPromoCode"
-                    :bot="bot"/>
-            </div>
-        </div>
-
-        <div class="row py-3" v-if="tab===1">
-            <div class="col-12 py-3">
-                <h4>Статистика</h4>
-
-            </div>
-
-        </div>
-
-
-
+    <div class="fixed-footer p-3">
+        <button type="button"
+                @click="createPromoCode"
+                class="btn btn-primary w-100 p-3">
+            Создать новый промокод
+        </button>
     </div>
-
 </template>
 <script>
 export default {
@@ -97,33 +49,43 @@ export default {
         return {
             part: 0,
             tab: 0,
-
+            promocodeFormModal:null,
             selectedPromoCode:null,
             loadForm:false,
             loadTable:false,
         }
+    },
+    mounted() {
+        this.promocodeFormModal = new bootstrap.Modal('#promocode-form', {})
     },
     methods: {
 
         callbackForm() {
             this.loadTable = true
             this.selectedPromoCode = null
-            this.part = 0
+            this.promocodeFormModal.hide();
             this.$nextTick(() => {
                 this.loadTable = false
             })
         },
         createPromoCode() {
-            this.part = 2
+            this.selectedPromoCode = null
+            this.loadForm = true
+            this.$nextTick(() => {
+                this.loadForm = false
+
+
+                this.promocodeFormModal.show();
+            })
+
         },
         selectPromoCode(code) {
             this.loadForm = true
             this.$nextTick(() => {
                 this.loadForm = false
-                this.selectedPromoCode = code
-                this.part = 1
-                this.tab = 0
 
+                this.selectedPromoCode = code
+                this.promocodeFormModal.show()
             })
 
         }

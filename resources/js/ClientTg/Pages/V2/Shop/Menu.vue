@@ -195,6 +195,22 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
 
             <div class="col">
                 <button type="button"
+                        @click="goTo('PromoCodesV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                        <img v-lazy="'/images/shop-v2/promocode.webp'" class="img-fluid" alt="">
+
+                        <p class="my-2">Управление промокодами</p>
+                    </div>
+
+                </button>
+            </div>
+
+
+
+            <div class="col">
+                <button type="button"
                         @click="goTo('StatisticV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
