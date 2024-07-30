@@ -172,23 +172,23 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 </ul>
             </div>
 
-            <div class="dropdown" v-if="(getSelf||{is_admin:false}).is_admin">
-                <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    Тема оформления
-                </button>
-                <ul class="dropdown-menu w-100 bg-light">
-                    <li v-for="(theme, index) in themes">
-                        <button type="button"
-                                @click="switchTheme(index)"
-                                v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
-                                class="list-group-item list-group-item-action p-2 w-100 text-primary"
-                                aria-current="true">
-                            {{ theme.title || '-' }}
-                        </button>
-                    </li>
-                </ul>
-            </div>
+            <!--            <div class="dropdown" v-if="(getSelf||{is_admin:false}).is_admin">
+                            <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                Тема оформления
+                            </button>
+                            <ul class="dropdown-menu w-100 bg-light">
+                                <li v-for="(theme, index) in themes">
+                                    <button type="button"
+                                            @click="switchTheme(index)"
+                                            v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
+                                            class="list-group-item list-group-item-action p-2 w-100 text-primary"
+                                            aria-current="true">
+                                        {{ theme.title || '-' }}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>-->
         </div>
     </div>
 
@@ -203,10 +203,6 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 </div>
                 <div class="modal-body">
                     <CompanyInfo></CompanyInfo>
-
-                </div>
-                <div class="modal-footer p-2">
-
                 </div>
             </div>
         </div>

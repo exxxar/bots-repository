@@ -46,6 +46,16 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
                    class="form-control" id="floatingInput" placeholder="name@example.com" required>
             <label for="floatingInput"> Величина скидки \ CashBack</label>
         </div>
+
+        <div class="form-floating mb-2">
+            <input type="number"
+                   step="1"
+                   min="0"
+                   v-model="promoCodeForm.activate_price"
+                   class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput"> Сумма активации от... руб</label>
+        </div>
+
         <div class="form-floating mb-2">
             <input type="datetime-local"
                    v-model="promoCodeForm.available_to"
@@ -82,6 +92,7 @@ export default {
                 max_activation_count: 1,
                 is_active: false,
                 available_to: null,
+                activate_price: 0,
 
             }
         }

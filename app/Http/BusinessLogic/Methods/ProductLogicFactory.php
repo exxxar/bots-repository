@@ -677,7 +677,7 @@ class ProductLogicFactory
         $distance = $data["distance"] ?? 0;
         $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
         $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
-        $discount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0)+($promo->discount ?? 0) ;
+        $discount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0) + ($promo->discount ?? 0);
 
         $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
             . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
@@ -704,7 +704,7 @@ class ProductLogicFactory
                 ]
             ],//информация о продуктах и заведении, из которого сделан заказ
             'product_count' => $summaryCount,
-            'summary_price' => max(1,$summaryPrice - $discount),
+            'summary_price' => max(1, $summaryPrice - $discount),
             'delivery_price' => $deliveryPrice,
             'delivery_range' => $distance ?? 0,
             'deliveryman_latitude' => 0,
@@ -727,7 +727,7 @@ class ProductLogicFactory
             ->setBotUser($this->botUser)
             ->setSlug($this->slug)
             ->checkoutLink([
-                "discount"=>$discount,
+                "discount" => $discount,
                 "products" => $tmpProducts
             ]);
 
@@ -833,7 +833,10 @@ class ProductLogicFactory
         $maxUserCashback = $this->botUser->cashback->amount ?? 0;
         $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
         $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
-        $discount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0)+($promo->discount ?? 0) ;
+
+
+        $discount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0) +
+            ($summaryPrice >= ($promo->activate_price ?? 0) ? ($promo->discount ?? 0) : 0);
 
         $deliveryNote = ($data["info"] ?? 'Не указано') . "\n"
             . "Номер подъезда: " . ($data["entrance_number"] ?? 'Не указан') . "\n"
@@ -887,7 +890,7 @@ class ProductLogicFactory
             ->setBot($this->bot)
             ->prepareReviews($order->id, $ids);
 
-        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. " . ($discount > 0 ? "Скидка: $discount руб." : "").(!is_null($promo->code ?? null)?" скидка за промокод '$promo->code' составляет $promo->discount руб. (уже учтена)":"");
+        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. " . ($discount > 0 ? "Скидка: $discount руб." : "") . (!is_null($promo->code ?? null) ? " скидка за промокод '$promo->code' составляет $promo->discount руб. (уже учтена)" : "");
 
         $userInfo = !$needPickup ?
             sprintf(($whenReady ? "🟢" : "🟡") . "Заказ №: %s\nИдентификатор клиента: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nЦена доставки(тест): %s \nДистанция(тест): %s \nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",

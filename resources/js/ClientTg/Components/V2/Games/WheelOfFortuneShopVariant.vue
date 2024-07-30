@@ -11,6 +11,18 @@
         />
     </div>
 
+    <div class="card" v-if="form.win">
+        <div class="card-body">
+            <h6 class="text-center fw-bold">Ваш выигрыш</h6>
+            <h6 class="mb-2 text-center"> {{form.win.value || form.win.id || '-'}} (#{{form.win.id}})</h6>
+            <p class="mb-2 fst-italic">{{form.win.description|| 'не указно'}}</p>
+            <p class="mb-0">Вы сможете получить приз: <span class="fw-bold text-primary">{{form.win.mark || 'не указано'}}</span></p>
+            <hr class="mb-2 p-0">
+            <p class="mb-0"><span class="fw-bold">Внимание!</span> Приз возможно получить только в день выигрыша:
+                <span class="fw-bold text-primary">{{$filters.current(new Date())}}</span>
+            </p>
+        </div>
+    </div>
 
 </template>
 
@@ -24,7 +36,9 @@ export default {
             loaded:true,
             gift: 2,
             started:false,
-            form: {},
+            form: {
+                win:null,
+            },
             logo: {
                 src: "/wheel.png",
                 width: 120,
@@ -98,7 +112,7 @@ export default {
     },
     methods: {
         done(r) {
-            console.log("done", r);
+            this.form.win = r
         },
 
         launchWheel() {

@@ -97,6 +97,7 @@ class PromoCodesLogicFactory
 
         $validator = Validator::make($data, [
             'code' => "required",
+
         ]);
 
         if ($validator->fails())
@@ -145,6 +146,7 @@ class PromoCodesLogicFactory
 
         return (object)[
             "discount" => $code->cashback_amount,
+            "activate_price" => $code->activate_price,
         ];
     }
 
@@ -350,6 +352,7 @@ class PromoCodesLogicFactory
             'description' => $data["description"] ?? null,
             'slot_amount' => $this->botUser->is_admin ? ($data["slot_amount"] ?? 0) : 0,
             'cashback_amount' => $data["cashback_amount"] ?? 0,
+            'activate_price' => $data["activate_price"] ?? 0,
             'max_activation_count' => $data["max_activation_count"] ?? 1,
             'is_active' => ($data["is_active"] ?? false) == "true",
             'available_to' => is_null($data["available_to"]) ? null : Carbon::parse($data["available_to"]),

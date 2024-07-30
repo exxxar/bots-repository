@@ -81,9 +81,10 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 <div class="card-body">
                     <h5 @click="selectEvent(code)" class="card-title fw-bold">{{ code.code || 'Не указано' }}</h5>
                     <p class="card-text mb-2 fst-italic">{{ code.description || 'Не указано' }}</p>
-                    <p class="card-text mb-0">
-                        Скидка:
-                        <strong class="fw-bold">-{{ code.cashback_amount }} руб</strong>
+                    <p class="card-text mb-0 d-flex justify-content-between">
+                       <span> Скидка:<strong class="fw-bold">-{{ code.cashback_amount || 0}} руб</strong></span>
+
+                        <span>Активация от: <strong class="fw-bold">{{code.activate_price || 0}} руб</strong></span>
                     </p>
 
                 </div>

@@ -24,6 +24,7 @@ class PromoCodeResource extends JsonResource
             'current_activation_count' => count($this->botUsers ?? []),
             'is_active' => $this->is_active,
             'available_to' => $this->available_to ?? null,
+            'activate_price' => $this->activate_price ?? 0,
             //'botUsers' => BotUserCollection::make($this->whenLoaded('botUsers')),
         ];
     }

@@ -28,7 +28,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/profile.png'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/profile.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Профиль</p>
                     </div>
@@ -42,7 +42,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/shop.png'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/shop.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Магазин</p>
                     </div>
@@ -57,7 +57,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/cart.png'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/basket.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Корзина
                             <span class="badge bg-primary" v-if="cartTotalCount>0   ">{{ cartTotalCount }}</span>
@@ -75,7 +75,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/history.png'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/history.png'" class="img-fluid" alt="">
 
                         <p class="my-2"> История заказов</p>
                     </div>
@@ -93,7 +93,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
 
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/gift.png'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/events.png'" class="img-fluid" alt="">
 
                         <p class="my-2"> Колесо фортуны</p>
                         <span style="font-size:12px;"><i class="fa-solid fa-lock"></i> закрыто</span>
@@ -143,7 +143,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm btn-outline-primary w-100 border-0 mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/contacts.png'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/contacts.png'" class="img-fluid" alt="">
 
                         <p class="my-2">О Нас & Контакты</p>
                     </div>
@@ -164,7 +164,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/client-admin.webp'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/clients.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление клиентами</p>
                     </div>
@@ -178,7 +178,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/mailing.webp'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/mail.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление рассылками</p>
                     </div>
@@ -192,7 +192,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/shop-admin.webp'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/products.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление товарами</p>
                     </div>
@@ -206,7 +206,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/order-admin.webp'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/orders.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление заказами</p>
                     </div>
@@ -220,7 +220,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/promocode.webp'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/promo.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление промокодами</p>
                     </div>
@@ -236,7 +236,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/statistic.webp'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Статистика</p>
                     </div>
@@ -250,7 +250,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
-                        <img v-lazy="'/images/shop-v2/setting.webp'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Настройка скрипта</p>
                     </div>
