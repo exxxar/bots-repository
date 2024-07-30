@@ -61,13 +61,21 @@ import PlayerForm from "@/ClientTg/Components/V1/Shop/PlayerForm.vue";
     <PlayerForm v-if="canPlay&&!hasProfileData"
                 v-on:callback="callbackPlayerForm">
         <template v-slot:head>
-            <h3>Анкета участника акции</h3>
 
-            <p>
-                Для участия в конкурсе и дальнейшего получения приза необходимо заполнить данную анкету! Укажите своё
-                имя и номер телефона чтоб менеджер
-                мог выдать Вам приз по итогу.
-            </p>
+            <div class="card card-style my-3">
+                <div class="content">
+                    <h3>Анкета участника акции</h3>
+
+                    <p>
+                        Для участия в конкурсе и дальнейшего получения приза необходимо заполнить данную анкету! Укажите своё
+                        имя и номер телефона чтоб менеджер
+                        мог выдать Вам приз по итогу.
+                    </p>
+                </div>
+            </div>
+
+
+
         </template>
     </PlayerForm>
 

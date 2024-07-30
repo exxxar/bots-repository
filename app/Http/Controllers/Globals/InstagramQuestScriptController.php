@@ -182,8 +182,9 @@ class InstagramQuestScriptController extends SlugController
                 ->telegram_chat_id,
                 sprintf($winMessage, $winnerName))
             ->sendPhoto($callbackChannel,
-                "Участника $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в InstagramQuest - свяжитесь с ним для дальнейших указаний",
+                "Участник $winnerPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в InstagramQuest - свяжитесь с ним для дальнейших указаний",
                 $file,
+                [],
                 $thread
             );
 

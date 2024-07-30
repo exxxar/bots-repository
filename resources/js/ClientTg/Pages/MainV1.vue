@@ -77,24 +77,24 @@ import Layout from "@/ClientTg/Layouts/V1Layout.vue";
                         <div class="text-center mb-3">
                             <a href="tel:+79384341473"
                                target="_blank"
-                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook text-white">
-                                +7 (938) 434-14-73 Вотс Ап
+                               class="icon p-2 icon-xs rounded-l shadow-l mr-1 bg-facebook text-white">
+                                WatsApp разработчика
                             </a>
                         </div>
 
                         <div class="text-center mb-3">
                             <a href="https://vk.com/nextgroupit"
                                target="_blank"
-                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook text-white">
-                                https://vk.com/nextgroupit
+                               class="icon p-2 icon-xs rounded-l shadow-l mr-1 bg-facebook text-white">
+                               ВК разработчика
                             </a>
                         </div>
 
                         <div class="text-center mb-3">
                             <a href="https://t.me/nextitgroup_bot"
                                target="_blank"
-                               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook text-white">
-                                https://t.me/nextitgroup_bot
+                               class="icon p-2 icon-xs rounded-l shadow-l mr-1 bg-facebook text-white">
+                                Телеграм разработчика
                             </a>
                         </div>
 
