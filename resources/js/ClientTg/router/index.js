@@ -483,6 +483,7 @@ import PromoCodesV2 from '@/ClientTg/Pages/V2/Admin/Promocodes.vue';
 import InstaQuestV2 from "@/ClientTg/Pages/V2/Shop/InstaQuest.vue";
 import FriendsGameV2 from "@/ClientTg/Pages/V2/Shop/FriendsGame.vue";
 import PromoCodeFormV2 from "@/ClientTg/Pages/V2/Shop/PromoCode.vue";
+import VipProfileV2 from "@/ClientTg/Pages/V2/Shop/VipProfile.vue";
 
 
 const simplePrefix = "/s"
@@ -540,7 +541,7 @@ export const simpleRoutes = [
         name: 'FeedBackV2',
         path: simplePrefix + '/feedback',
         component: FeedBackV2,
-        meta: {title: 'Обратная связь'}
+        meta: {title: 'Обратная связь', hide_menu: true}
     },
     {
         name: 'MenuV2',
@@ -638,6 +639,13 @@ export const simpleRoutes = [
         component: PromoCodeFormV2,
         meta: {title: 'Промокоды',  hide_menu: true}
     },
+    {
+        name: 'VipProfileV2',
+        path: simplePrefix + '/new-vip',
+        component: VipProfileV2,
+        meta: {title: 'Анкета пользователя',  hide_menu: true}
+    },
+
 
 ];
 
