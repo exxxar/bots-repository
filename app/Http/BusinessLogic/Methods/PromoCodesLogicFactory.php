@@ -35,6 +35,7 @@ use App\Models\QuizResult;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -323,6 +324,7 @@ class PromoCodesLogicFactory
 
         $tmp = $code;
 
+        Log::info("каким-то хером удалился промокод");
 
         $code->delete();
 

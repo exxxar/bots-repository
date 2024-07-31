@@ -84,10 +84,24 @@ export default {
             this.$store.dispatch("activatePromocode", {
                 promocodeForm: this.promocodeForm
             }).then(resp => {
-                this.$botNotification.success("Промокод", "Промокод успешно активирован!")
+
+
+                this.$notify({
+                    title: 'Промокод',
+                    text: "Промокод успешно активирован!",
+                    type: "success"
+                })
+
                 this.promocodeForm.code = null
             }).catch(() => {
-                this.$botNotification.warning("Промокод", "Ошибка активации промокода")
+
+
+                this.$notify({
+                    title: 'Упс!',
+                    text: "Ошибка активации промокода!",
+                    type: "error"
+                })
+
             })
 
         }
