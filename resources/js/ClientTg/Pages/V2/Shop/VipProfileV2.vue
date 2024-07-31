@@ -1,210 +1,220 @@
-<script setup>
-import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
-import ProjectInfoCard from "@/ClientTg/Components/V1/Shop/Helpers/ProjectInfoCard.vue";
-</script>
 <template>
-    <div v-if="botUser"><!---->
-        <div class="card card-style p-3" v-if="!botUser.is_vip">
-            <form
-                v-on:submit.prevent="submit" class="row mb-0">
-                <div class="col-12 d-flex justify-content-center mb-3" v-if="settings.need_profile_form_image">
-                    <div class="img-avatar">
-                        <img
-                            v-if="settings.form_image"
-                            v-lazy="settings.form_image"
-                            class="img-avatar"/>
+    <div
+        class="container py-3"
+        v-if="botUser"><!---->
 
-                        <img
-                            v-else
-                            v-lazy="'/images-by-bot-id/'+currentBot.id+'/'+currentBot.image">
-                    </div>
+        <div class="row">
+            <div class="col-12" v-if="!botUser.is_vip">
+                <form
+                    v-on:submit.prevent="submit" class="row mb-0">
+                    <div class="col-12 d-flex justify-content-center mb-3" v-if="settings.need_profile_form_image">
+                        <div class="img-avatar">
+                            <img
+                                v-if="settings.form_image"
+                                v-lazy="settings.form_image"
+                                class="img-avatar"/>
 
-                </div>
-                <div class="col-12">
-                    <h6 class="mb-3 text-center" v-if="settings.pre_name_text" v-html="settings.pre_name_text"></h6>
-                    <div class="input-style input-style-2">
-
-                        <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               placeholder="Петров Петр Семенович"
-                               aria-label="vipForm-name"
-                               v-model="vipForm.name"
-                               aria-describedby="vipForm-name" required>
-                    </div>
-                </div>
-
-                <div class="col-12" v-if="settings.need_phone">
-                    <h6 class="mb-3 text-center" v-if="settings.pre_phone_text" v-html="settings.pre_phone_text"></h6>
-                    <div class="input-style input-style-2">
-                        <input type="text" class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               v-mask="['+7(###)###-##-##']"
-                               v-model="vipForm.phone"
-                               placeholder="+7(000)000-00-00"
-                               aria-label="vipForm-phone" aria-describedby="vipForm-phone" required>
-
-                    </div>
-                </div>
-
-                <div class="col-12" v-if="settings.need_email">
-                    <h6 class="mb-3 text-center" v-if="settings.pre_email_text" v-html="settings.pre_email_text"></h6>
-                    <div class="input-style input-style-2">
-                        <input type="email" class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               v-model="vipForm.email"
-                               placeholder="example@test.com"
-                               aria-label="vipForm-phone" aria-describedby="vipForm-phone" required>
-
-                    </div>
-                </div>
-
-                <div class="col-12" v-if="settings.need_sex">
-                    <h6 class="mb-3 text-center" v-if="settings.pre_sex_text" v-html="settings.pre_sex_text"></h6>
-                    <div class="row mb-0">
-                        <div class="col-6 p-3">
-                            <div
-                                v-bind:class="{'bg-highlight':vipForm.sex}"
-                                @click="vipForm.sex = true"
-                                class="btn btn-border btn-m btn-full border-highlight rounded-s shadow-s w-100 p-3 d-flex justify-content-between flex-column align-items-center ">
-                                <i class="fa-solid fa-mars font-28"></i>
-                                <span class="text-center text-uppercase my-2">Мужчина</span>
-                            </div>
-                        </div>
-                        <div class="col-6 p-3">
-                            <div
-                                v-bind:class="{'bg-highlight ':!vipForm.sex}"
-                                @click="vipForm.sex = false"
-                                class="btn btn-border btn-m btn-full border-highlight rounded-s  shadow-s w-100 p-3 d-flex justify-content-between flex-column align-items-center ">
-                                <i class="fa-solid fa-mars font-28"></i>
-                                <span class="text-center text-uppercase my-2">Женщина</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12" v-if="settings.need_birthday">
-                    <h6 class="mb-3 text-center" v-if="settings.pre_birthday_text" v-html="settings.pre_birthday_text"></h6>
-                    <div class="input-style input-style-2">
-                        <input type="date" class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               v-model="vipForm.birthday"
-                               aria-label="vipForm-birthday" aria-describedby="vipForm-birthday" required>
-                    </div>
-                </div>
-
-                <div class="col-12" v-if="settings.need_city">
-                    <h6 class="mb-3 text-center" v-if="settings.pre_city_text" v-html="settings.pre_city_text"></h6>
-                    <div class="input-style input-style-2">
-                        <input type="text"
-                               v-model="vipForm.city"
-                               class="form-control text-center font-14 p-3 rounded-s border-theme"
-                               placeholder="Ваш город"
-                               aria-label="vipForm-city" aria-describedby="vipForm-city" required>
-                    </div>
-                </div>
-                <!-- -->
-                <div class="col-12"
-
-                     v-for="(field, index) in vipForm.fields"
-                >
-                    <div v-if="settings[field.key]">
-                        <h6 class="text-center">{{ field.description }}</h6>
-                        <div class="input-style input-style-2" v-if="field.type===0||field.type===1">
-                            <input :type="field.type===1?'number':'text'"
-                                   v-model="vipForm.fields[index].value"
-                                   class="form-control text-center font-14 p-3 rounded-s border-theme"
-                                   :placeholder="field.title"
-                                   :pattern="vipForm.fields[index].pattern||''"
-                                   aria-label="vipForm-city" aria-describedby="vipForm-city"
-                                   :required="vipForm.fields[index].requried"
-                            >
+                            <img
+                                v-else
+                                v-lazy="'/images-by-bot-id/'+currentBot.id+'/'+currentBot.image">
                         </div>
 
-                        <div class="row mb-0" v-if="field.type===2">
-                            <div class="col-6 p-3">
+                    </div>
+                    <div class="col-12">
+                        <h6 class="mb-3 text-center" v-if="settings.pre_name_text" v-html="settings.pre_name_text"></h6>
+                        <div class="form-floating">
+                            <input type="text" class="form-control text-center"
+                                   placeholder="Петров Петр Семенович"
+                                   aria-label="vipForm-name"
+                                   v-model="vipForm.name"
+                                   aria-describedby="vipForm-name" required>
+                            <label for="vipForm-name">Ф.И.О.</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12" v-if="settings.need_phone">
+                        <h6 class="mb-3 text-center" v-if="settings.pre_phone_text"
+                            v-html="settings.pre_phone_text"></h6>
+                        <div class="form-floating">
+                            <input type="text" class="form-control text-center"
+                                   v-mask="['+7(###)###-##-##']"
+                                   v-model="vipForm.phone"
+                                   placeholder="+7(000)000-00-00"
+                                   aria-label="vipForm-phone" aria-describedby="vipForm-phone" required>
+                            <label for="vipForm-phone">Номер телефона</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12" v-if="settings.need_email">
+                        <h6 class="mb-3 text-center" v-if="settings.pre_email_text"
+                            v-html="settings.pre_email_text"></h6>
+                        <div class="form-floating">
+                            <input type="email" class="form-control text-center"
+                                   v-model="vipForm.email"
+                                   placeholder="example@test.com"
+                                   aria-label="vipForm-email" aria-describedby="vipForm-email" required>
+                            <label for="vipForm-email">Почта</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12" v-if="settings.need_sex">
+                        <h6 class="mb-3 text-center" v-if="settings.pre_sex_text" v-html="settings.pre_sex_text"></h6>
+                        <div class="row mb-0">
+                            <div class="col-6">
                                 <div
-                                    v-bind:class="{'bg-highlight':vipForm.fields[index].value}"
-                                    @click="vipForm.fields[index].value = true"
-                                    class="btn btn-border btn-m btn-full border-highlight rounded-s shadow-s w-100 p-3 d-flex justify-content-between flex-column align-items-center ">
-                                    <i class="fa-solid fa-check font-28"></i>
-                                    <span class="text-center text-uppercase my-2">Да</span>
+                                    v-bind:class="{'bg-primary':vipForm.sex}"
+                                    @click="vipForm.sex = true"
+                                    class="btn w-100 btn-outline-primary p-2 d-flex justify-content-between flex-column align-items-center ">
+                                    <i class="fa-solid fa-mars font-28"></i>
+                                    <span class="text-center text-uppercase my-2">Мужчина</span>
                                 </div>
                             </div>
-                            <div class="col-6 p-3">
+                            <div class="col-6">
                                 <div
-                                    v-bind:class="{'bg-highlight ':!vipForm.fields[index].value}"
-                                    @click="vipForm.fields[index].value = false"
-                                    class="btn btn-border btn-m btn-full border-highlight rounded-s  shadow-s w-100 p-3 d-flex justify-content-between flex-column align-items-center ">
-                                    <i class="fa-solid fa-xmark font-28"></i>
-                                    <span class="text-center text-uppercase my-2">Нет</span>
+                                    v-bind:class="{'bg-primary':!vipForm.sex}"
+                                    @click="vipForm.sex = false"
+                                    class="btn w-100 btn-outline-primary p-2 d-flex justify-content-between flex-column align-items-center ">
+                                    <i class="fa-solid fa-mars font-28"></i>
+                                    <span class="text-center text-uppercase my-2">Женщина</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-12">
-                    <p class="mb-3"><em>Отлично! Теперь, прежде чем закончить, пожалуйста, прочитайте условия
-                        использования и дайте свое согласие на их принятие.</em></p>
-
-                    <p>Перед отправкой данных нужно ознакомиться с <a
-                        href="#">политикой конфиденциальности</a>.</p>
-
-                    <div class="d-flex mb-3">
-                        <div class="pt-1">
-                            <h5 data-activate="toggle-id-1" class="font-500 font-13">
-                                <span v-if="!vipForm.sex">С правилами ознакомилась</span>
-                                <span v-if="vipForm.sex">С правилами ознакомлен</span>
-                            </h5>
+                    <div class="col-12" v-if="settings.need_birthday">
+                        <h6 class="mb-3 text-center" v-if="settings.pre_birthday_text"
+                            v-html="settings.pre_birthday_text"></h6>
+                        <div class="form-floating">
+                            <input type="date" class="form-control text-center"
+                                   v-model="vipForm.birthday"
+                                   aria-label="vipForm-birthday" aria-describedby="vipForm-birthday" required>
+                            <label for="vipForm-birthday">Дата рождения</label>
                         </div>
-                        <div class="ml-auto mr-4 pr-2">
-                            <div class="custom-control ios-switch">
-                                <input
-                                    v-model="confirm"
-                                    type="checkbox" class="ios-input" id="toggle-id-1">
-                                <label class="custom-control-label" for="toggle-id-1"></label>
+                    </div>
+
+                    <div class="col-12" v-if="settings.need_city">
+                        <h6 class="mb-3 text-center" v-if="settings.pre_city_text" v-html="settings.pre_city_text"></h6>
+                        <div class="form-floating">
+                            <input type="text"
+                                   v-model="vipForm.city"
+                                   class="form-control text-center"
+                                   placeholder="Ваш город"
+                                   aria-label="vipForm-city" aria-describedby="vipForm-city" required>
+                            <label for="vipForm-city">Город проживания</label>
+                        </div>
+                    </div>
+                    <!-- -->
+                    <div class="col-12"
+                         v-if="(vipForm.fields||[]).length>0"
+                         v-for="(field, index) in vipForm.fields"
+                    >
+                        <div v-if="settings[field.key]">
+                            <h6 class="text-center">{{ field.description }}</h6>
+                            <div class="form-floating" v-if="field.type===0||field.type===1">
+                                <input :type="field.type===1?'number':'text'"
+                                       v-model="vipForm.fields[index].value"
+                                       class="form-control text-center"
+                                       :placeholder="field.title"
+                                       :pattern="vipForm.fields[index].pattern||''"
+                                       aria-label="vipForm-city" aria-describedby="vipForm-city"
+                                       :required="vipForm.fields[index].required||false"
+                                >
+                                <label :for="'vipForm-field'+index">{{ field.title || '-' }}</label>
+                            </div>
+
+                            <div class="row mb-0" v-if="field.type===2">
+                                <div class="col-6 p-3">
+                                    <div
+                                        v-bind:class="{'bg-primary':vipForm.fields[index].value}"
+                                        @click="vipForm.fields[index].value = true"
+                                        class="btn p-2 w-100 btn-outline-primary d-flex justify-content-between flex-column align-items-center ">
+                                        <i class="fa-solid fa-check font-28"></i>
+                                        <span class="text-center text-uppercase my-2">Да</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 p-3">
+                                    <div
+                                        v-bind:class="{'bg-primary':!vipForm.fields[index].value}"
+                                        @click="vipForm.fields[index].value = false"
+                                        class="btn p-2 w-100 btn-outline-primary d-flex justify-content-between flex-column align-items-center ">
+                                        <i class="fa-solid fa-xmark font-28"></i>
+                                        <span class="text-center text-uppercase my-2">Нет</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    <div class="col-12">
+                        <p class="mb-3"><em>Отлично! Теперь, прежде чем закончить, пожалуйста, прочитайте условия
+                            использования и дайте свое согласие на их принятие.</em></p>
 
-                    <button type="submit"
-                            :disabled="!confirm||load"
-                            class="btn btn-m btn-full mb-2 rounded-s text-uppercase font-900 shadow-s bg-highlight w-100">
-                        Отправить анкету
-                    </button>
+                        <p>Перед отправкой данных нужно ознакомиться с <a
+                            href="#">политикой конфиденциальности</a>.</p>
 
-                </div>
-            </form>
+                        <div class="d-flex mb-3">
+                            <div class="pt-1">
+                                <h5 data-activate="toggle-id-1" class="font-500 font-13">
+                                    <span v-if="!vipForm.sex">С правилами ознакомилась</span>
+                                    <span v-if="vipForm.sex">С правилами ознакомлен</span>
+                                </h5>
+                            </div>
+                            <div class="ml-auto mr-4 pr-2">
+                                <div class="custom-control ios-switch">
+                                    <input
+                                        v-model="confirm"
+                                        type="checkbox" class="ios-input" id="toggle-id-1">
+                                    <label class="custom-control-label" for="toggle-id-1"></label>
+                                </div>
+                            </div>
+                        </div>
 
-        </div>
 
-        <div class="card card-style p-3" v-if="botUser.is_vip">
-            <p v-html="settings.text_after_submit"></p>
+                        <button type="submit"
+                                :disabled="!confirm||load"
+                                class="btn btn-primary p-3 w-100">
+                            Отправить анкету
+                        </button>
 
-            <h6>Ваши данные:</h6>
-            <p class="mb-0">Имя: {{ botUser.name || 'Не указано' }}</p>
-            <p class="mb-0" v-if="settings.need_phone">Телефон: {{ botUser.phone || 'Не указано' }}</p>
-            <p class="mb-0" v-if="settings.need_email">Email: {{ botUser.email || 'Не указано' }}</p>
-            <p class="mb-0" v-if="settings.need_city">Город: {{ botUser.city || 'Не указано' }}</p>
-            <p class="mb-0" v-if="settings.need_birthday">Дата рождения: {{ botUser.birthday || 'Не указано' }}</p>
-            <p class="mb-0" v-if="settings.need_sex">Пол: {{ botUser.sex ? 'Мужской' : 'Женский' }}</p>
-            <p class="mb-0" v-for="field in vipForm.fields">
-                {{ field.title }}:
+                    </div>
+                </form>
 
-                <span v-if="field.config.type===2">
+            </div>
+
+            <div class="col-12" v-if="botUser.is_vip">
+
+                <p class="alert alert-light my-2" v-html="settings.text_after_submit"></p>
+
+                <div class="alert alert-light">
+                    <h6 class="text-primary text-center fw-bold">Ваши данные:</h6>
+                    <p class="mb-2 d-flex justify-content-between">Имя: <span class="fw-bold text-primary">{{ botUser.name || 'Не указано' }}</span></p>
+                    <p class="mb-2 d-flex justify-content-between" v-if="settings.need_phone">Телефон: <span class="fw-bold text-primary">{{ botUser.phone || 'Не указано' }}</span></p>
+                    <p class="mb-2 d-flex justify-content-between" v-if="settings.need_email">Email: <span class="fw-bold text-primary">{{ botUser.email || 'Не указано' }}</span></p>
+                    <p class="mb-2 d-flex justify-content-between" v-if="settings.need_city">Город: <span class="fw-bold text-primary">{{ botUser.city || 'Не указано' }}</span></p>
+                    <p class="mb-2 d-flex justify-content-between" v-if="settings.need_birthday">Дата рождения: <span class="fw-bold text-primary">{{
+                            botUser.birthday || 'Не указано'
+                        }}</span></p>
+                    <p class="mb-2 d-flex justify-content-between" v-if="settings.need_sex">Пол: <span class="fw-bold text-primary">{{ botUser.sex ? 'Мужской' : 'Женский' }}</span></p>
+                    <p class="mb-2 d-flex justify-content-between" v-for="field in vipForm.fields">
+                        {{ field.title }}:
+
+                        <span v-if="field.config.type===2">
                             {{ field.value === false ? "Нет" : "Да" }}
                         </span>
 
-                <span v-if="field.config.type===0||field.config.type===1">
+                        <span v-if="field.config.type===0||field.config.type===1">
                             {{ field.value }}
                         </span>
-            </p>
+                    </p>
+                </div>
 
-
-            <ReturnToBot class="mb-2"/>
+            </div>
         </div>
+
 
     </div>
 
 
-    <ProjectInfoCard/>
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -364,12 +374,25 @@ export default {
             this.loading = true;
 
             this.$store.dispatch("saveProfileFormData", {
-                dataObject:this.vipForm
+                dataObject: this.vipForm
             }).then((resp) => {
                 this.loading = false
+
+                this.$notify({
+                    title: 'Отлично!',
+                    text: "Вы успешно заполнили форму и стали наши VIP-пользователем!",
+                    type: "success"
+                })
+
                 this.tg.close()
             }).catch(() => {
                 this.loading = false
+
+                this.$notify({
+                    title: 'Упс!',
+                    text: "Ошибка заполнения формы!",
+                    type: "error"
+                })
             })
         }
     }

@@ -507,7 +507,7 @@ export default {
                 sex: this.botUser.sex || true,
             }
 
-            this.botUser.is_vip = false
+
         })
 
 
