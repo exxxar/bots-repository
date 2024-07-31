@@ -482,6 +482,7 @@ import StatisticV2 from '@/ClientTg/Pages/V2/Admin/Statistic.vue';
 import PromoCodesV2 from '@/ClientTg/Pages/V2/Admin/Promocodes.vue';
 import InstaQuestV2 from "@/ClientTg/Pages/V2/Shop/InstaQuest.vue";
 import FriendsGameV2 from "@/ClientTg/Pages/V2/Shop/FriendsGame.vue";
+import PromoCodeFormV2 from "@/ClientTg/Pages/V2/Shop/PromoCode.vue";
 
 
 const simplePrefix = "/s"
@@ -631,6 +632,12 @@ export const simpleRoutes = [
         meta: {title: 'Квест',  hide_menu: true}
     },
 
+    {
+        name: 'PromoCodeFormV2',
+        path: simplePrefix + '/new-promo-code',
+        component: PromoCodeFormV2,
+        meta: {title: 'Промокоды',  hide_menu: true}
+    },
 
 ];
 
