@@ -251,6 +251,7 @@ class InstagramQuestScriptController extends SlugController
             ->where("key", "slug_id")
             ->first())["value"];
 
+        BotManager::bot()->reply("Спасибо что участвуете!");
         \App\Facades\BotManager::bot()
             ->replyInlineKeyboard($mainText,
                // InputFile::create(public_path() . "/images/cashman-quest.png"),

@@ -1,7 +1,4 @@
-<script setup>
-import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
-import PlayerForm from "@/ClientTg/Components/V1/Shop/PlayerForm.vue";
-</script>
+
 <template>
 
     <div class="container py-3">
