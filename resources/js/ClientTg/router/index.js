@@ -619,14 +619,14 @@ export const simpleRoutes = [
 
     {
         name: 'InstaQuestV2',
-        path: simplePrefix + '/insta-quest',
+        path: simplePrefix + '/new-insta-quest',
         component: InstaQuestV2,
         meta: {title: 'Квест',  hide_menu: true}
     },
 
     {
         name: 'FriendsGameV2',
-        path: simplePrefix + '/friends-game',
+        path: simplePrefix + '/new-friends-game',
         component: FriendsGameV2,
         meta: {title: 'Квест',  hide_menu: true}
     },
