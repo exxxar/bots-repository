@@ -257,7 +257,7 @@ class InstagramQuestScriptController extends SlugController
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/s/new-insta-quest"
+                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/new-insta-quest"
                         ]],
                     ],
 

@@ -369,7 +369,7 @@ class FriendsGameScriptController extends SlugController
         $keyboard = [
             [
                 ["text" => $btnText, "web_app" => [
-                    "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/s/new-friends-game"
+                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/new-friends-game"
                 ]],
             ],
 
