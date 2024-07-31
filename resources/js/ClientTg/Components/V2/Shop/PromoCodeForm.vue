@@ -27,13 +27,13 @@
                 v-if="discount===0"
                 @click="submit"
                 :disabled="spent_time_counter>0"
-                class="btn btn-outline-light text-primary" style="min-width:170px;">
+                class="btn btn-outline-light text-primary" style="min-width:110px;font-size:12px;">
                 <i class="fa-solid fa-tags"></i> Активировать
             </button>
             <span
                 v-if="discount>0"
-                style="min-width:170px;"
-                class="input-group-text bg-transparent fw-bold text-primary" id="basic-addon1">-{{discount}} руб.</span>
+                style="min-width:110px;font-size:12px;"
+                class="input-group-text bg-transparent border-light fw-bold text-primary text-center" id="basic-addon1">-{{discount}} руб.</span>
         </div>
 
 </template>
