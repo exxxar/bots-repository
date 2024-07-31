@@ -105,7 +105,6 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                 <button type="button" class="btn btn-secondary ml-2" data-bs-dismiss="modal">Нет, отменить</button>
                                 <button type="button"
                                         @click="removeCode(code.id)"
-                                        data-bs-dismiss="modal"
                                         class="btn btn-primary">Да, удалить</button>
                             </div>
                         </div>
@@ -194,6 +193,9 @@ export default {
                     type:'success',
                     text:"Промокод успешно удален",
                 })
+
+                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
             }).catch(() => {
                 this.loading = false
                 this.$notify({
