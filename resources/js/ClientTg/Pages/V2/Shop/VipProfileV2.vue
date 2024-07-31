@@ -10,7 +10,7 @@
                     <div class="col-12 d-flex justify-content-center mb-3" v-if="settings.need_profile_form_image">
                         <div class="img-avatar">
                             <img
-                                v-if="settings.form_image"
+                                v-if="(settings.form_image||'').length>0"
                                 v-lazy="settings.form_image"
                                 class="img-avatar"/>
 
@@ -109,7 +109,7 @@
                          v-for="(field, index) in vipForm.fields"
                     >
                         <div v-if="settings[field.key]">
-                            <h6 class="text-center">{{ field.description }}</h6>
+                             <h6 class="text-center my-3">{{ field.description }}</h6>
                             <div class="form-floating" v-if="field.type===0||field.type===1">
                                 <input :type="field.type===1?'number':'text'"
                                        v-model="vipForm.fields[index].value"
@@ -153,19 +153,14 @@
                             href="#">политикой конфиденциальности</a>.</p>
 
                         <div class="d-flex mb-3">
-                            <div class="pt-1">
-                                <h5 data-activate="toggle-id-1" class="font-500 font-13">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"
+                                       v-model="confirm"
+                                       type="checkbox" role="switch" id="toggle-id-1">
+                                <label class="form-check-label" for="toggle-id-1">
                                     <span v-if="!vipForm.sex">С правилами ознакомилась</span>
                                     <span v-if="vipForm.sex">С правилами ознакомлен</span>
-                                </h5>
-                            </div>
-                            <div class="ml-auto mr-4 pr-2">
-                                <div class="custom-control ios-switch">
-                                    <input
-                                        v-model="confirm"
-                                        type="checkbox" class="ios-input" id="toggle-id-1">
-                                    <label class="custom-control-label" for="toggle-id-1"></label>
-                                </div>
+                                </label>
                             </div>
                         </div>
 
