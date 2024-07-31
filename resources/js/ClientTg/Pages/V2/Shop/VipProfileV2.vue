@@ -21,7 +21,7 @@
 
                     </div>
                     <div class="col-12">
-                        <h6 class="mb-3 text-center" v-if="settings.pre_name_text" v-html="settings.pre_name_text"></h6>
+                          <h6 class="text-center my-3" v-if="settings.pre_name_text" v-html="settings.pre_name_text"></h6>
                         <div class="form-floating">
                             <input type="text" class="form-control text-center"
                                    placeholder="Петров Петр Семенович"
@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="col-12" v-if="settings.need_phone">
-                        <h6 class="mb-3 text-center" v-if="settings.pre_phone_text"
+                          <h6 class="text-center my-3" v-if="settings.pre_phone_text"
                             v-html="settings.pre_phone_text"></h6>
                         <div class="form-floating">
                             <input type="text" class="form-control text-center"
@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="col-12" v-if="settings.need_email">
-                        <h6 class="mb-3 text-center" v-if="settings.pre_email_text"
+                          <h6 class="text-center my-3" v-if="settings.pre_email_text"
                             v-html="settings.pre_email_text"></h6>
                         <div class="form-floating">
                             <input type="email" class="form-control text-center"
@@ -58,7 +58,7 @@
                     </div>
 
                     <div class="col-12" v-if="settings.need_sex">
-                        <h6 class="mb-3 text-center" v-if="settings.pre_sex_text" v-html="settings.pre_sex_text"></h6>
+                          <h6 class="text-center my-3" v-if="settings.pre_sex_text" v-html="settings.pre_sex_text"></h6>
                         <div class="row mb-0">
                             <div class="col-6">
                                 <div
@@ -82,7 +82,7 @@
                     </div>
 
                     <div class="col-12" v-if="settings.need_birthday">
-                        <h6 class="mb-3 text-center" v-if="settings.pre_birthday_text"
+                          <h6 class="text-center my-3" v-if="settings.pre_birthday_text"
                             v-html="settings.pre_birthday_text"></h6>
                         <div class="form-floating">
                             <input type="date" class="form-control text-center"
@@ -93,7 +93,7 @@
                     </div>
 
                     <div class="col-12" v-if="settings.need_city">
-                        <h6 class="mb-3 text-center" v-if="settings.pre_city_text" v-html="settings.pre_city_text"></h6>
+                          <h6 class="text-center my-3" v-if="settings.pre_city_text" v-html="settings.pre_city_text"></h6>
                         <div class="form-floating">
                             <input type="text"
                                    v-model="vipForm.city"
