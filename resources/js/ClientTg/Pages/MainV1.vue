@@ -75,7 +75,7 @@ import Layout from "@/ClientTg/Layouts/V1Layout.vue";
                             Сервис Разработан ООО "Некст Групп"
                         </p>
                         <div class="text-center mb-3">
-                            <a href="https://wa.me/79384341473?text=%D0%94%D0%BE%D0%B1%D1%80%D1%8B%D0%B9%20%D0%B4%D0%B5%D0%BD%D1%8C%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D1%81%D0%B5%D0%B1%D0%B5%20%D1%82%D0%B0%D0%BA%D0%BE%D0%B9%20%D0%B6%D0%B5%20%D0%B1%D0%BE%D1%82!"
+                            <a href="https://wa.me/79384341473?text=%D0%94%D0%BE%D0%B1%D1%80%D1%8B%D0%B9%20%D0%B4%D0%B5%D0%BD%D1%8C%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D1%81%D0%B5%D0%B1%D0%B5%20%D1%82%D0%B0%D0%BA%D0%BE%D0%B9%20%D0%B6%D0%B5%20%D0%B1%D0%BE%D1%82!ph"
                                target="_blank"
                                class="icon p-2 icon-xs rounded-l shadow-l mr-1 bg-facebook text-white">
                                 WatsApp разработчика

@@ -193,7 +193,7 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
                              <textarea class="form-control"
                                        v-model="form.wheel_of_fortune.items[index].description"
                                        maxlength="4000"
-                                       style="min-height:150px;"
+                                       style="min-height:100px;"
                                        placeholder="Leave a comment here"
                                        :id="'script-settings-description-'+index" required>
                              </textarea>
@@ -208,6 +208,7 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
                             <label :for="'script-settings-bgColor-'+index">Цвет фона сектора</label>
                         </div>
 
+<!--
                         <div class="form-floating mb-2">
                             <input type="color"
                                    v-model="form.wheel_of_fortune.items[index].color"
@@ -215,6 +216,7 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
                                    placeholder="name@example.com" required>
                             <label :for="'script-settings-color-'+index">Цвет шрифта сектора</label>
                         </div>
+-->
 
                         <p class="alert-light alert mb-2">Впишите или выберите где можно получить приз: <span
                             @click="attachMarkText(index, 'во время доставки')"
@@ -233,7 +235,7 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
 
                         <a href="javascript:void(0)"
                            @click="removeSector(index)"
-                           class="btn btn-link w-100 text-center my-3">Удалить сектор #{{ item.id }}</a>
+                           class="btn btn-link w-100 text-center my-3"><i class="fa-regular fa-trash-can"></i> Удалить сектор #{{ item.id }}</a>
                     </div>
                 </div>
 
@@ -312,7 +314,7 @@ export default {
                         },
                         {
                             id: 4,
-                            value: "😍",
+                            value: "🍓",
                             bgColor: "#a1043a",
                             color: "#ffffff",
                             description: null,
@@ -336,7 +338,7 @@ export default {
                         },
                         {
                             id: 7,
-                            value: "📲",
+                            value: "⭐",
                             bgColor: "#ffffff",
                             color: "#000000",
                             description: null,
@@ -344,7 +346,7 @@ export default {
                         },
                         {
                             id: 8,
-                            value: "📌",
+                            value: "🎁",
                             bgColor: "#c92729",
                             color: "#ffffff",
                             description: null,
@@ -353,7 +355,7 @@ export default {
                         {
                             id: 9,
                             value: "🚀",
-                            bgColor: "#c92729",
+                            bgColor: "#ffffff",
                             color: "#ffffff",
                             description: null,
                             mark: 'в заведении & на доставке',

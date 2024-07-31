@@ -87,11 +87,6 @@ class InstagramQuestScriptController extends SlugController
 
     public function instagramQuestCallback(Request $request)
     {
-        $request->validate([
-            "name" => "required",
-            "phone" => "required",
-        ]);
-
         $bot = $request->bot;
         $botUser = $request->botUser;
         $slug = $request->slug;
@@ -147,14 +142,10 @@ class InstagramQuestScriptController extends SlugController
         if ($action->current_attempts >= $maxAttempts)
             $action->completed_at = Carbon::now();
 
-        $winnerName = $request->name ?? 'Имя не указано';
-        $winnerPhone = $request->phone ?? 'Телефон не указан';
+        $winnerName = $botUser->name ?? $botUser->fio_from_telegram?? 'Имя не указано';
+        $winnerPhone = $botUser->phone ?? 'Телефон не указан';
 
-        $botUser->name = $botUser->name ?? $winnerName;
-        $botUser->phone = $botUser->phone ?? $winnerPhone;
-        $botUser->save();
-
-        $username = $botUser->username ?? null;
+        $username = $botUser->username ?? $botUser->telegra_chat_id ?? null;
 
         $tmp[] = (object)[
             "name" => $winnerName,
@@ -266,7 +257,7 @@ class InstagramQuestScriptController extends SlugController
                 [
                     [
                         ["text" => $btnText, "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/instagram-quest"
+                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/s/insta-quest"
                         ]],
                     ],
 

@@ -12,8 +12,9 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
         <meta name="description" content="CashMan - система твоего бизнеса внутри"/>
     </Head>
 
-    <header data-bs-theme="dark">
-
+    <header
+        v-if="!$route.meta.hide_menu"
+        data-bs-theme="dark">
         <div class="navbar shadow shadow-sm">
             <div class="container flex-row-reverse p-2">
 
