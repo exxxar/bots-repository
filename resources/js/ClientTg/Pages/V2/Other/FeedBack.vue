@@ -3,7 +3,7 @@
 </script>
 <template>
 
-        <div class="container my-3 g-2" v-if="self">
+        <div class="container py-3" v-if="self">
             <h3>Обратная связь</h3>
 
             <p class="alert alert-light">

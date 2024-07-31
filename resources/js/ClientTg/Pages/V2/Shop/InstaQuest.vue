@@ -35,11 +35,11 @@
                                v-if="!photo"
                                style="font-size:14px;min-height:300px;"
                                class="photo-loader my-2 d-flex justify-content-center align-items-center flex-column text-center w-100">
-                            <i class="fa-brands fa-instagram"></i>
+                            <i class="fa-brands fa-instagram text-primary"></i>
                             <input type="file" id="photos"
                                    accept="image/*" @change="onChangePhotos"
                                    style="display:none;"/>
-                            <p class="mt-3 font-16"> Нажмите для выбора фотографии</p>
+                            <p class="mt-3 font-16 text-primary"> Нажмите для выбора фотографии</p>
                         </label>
                         <div
                             style="font-size:14px;min-height:300px;"
@@ -232,7 +232,7 @@ export default {
         justify-content: center;
         align-items: center;
         font-size: 16px;
-        background: white;
+        background: transparent;
         border-radius: 10px;
         border: 1px lightgray solid;
         position: relative;
