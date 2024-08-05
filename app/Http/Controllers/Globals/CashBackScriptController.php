@@ -463,7 +463,7 @@ class CashBackScriptController extends SlugController
                         [
                             [
                                 ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/new-profile-form"
+                                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/new-vip"
                                 ]],
                             ],
 
