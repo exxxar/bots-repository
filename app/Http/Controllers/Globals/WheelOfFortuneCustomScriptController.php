@@ -290,36 +290,6 @@ class WheelOfFortuneCustomScriptController extends SlugController
         return response()->noContent();
     }
 
-    public function loadData(Request $request)
-    {
-
-        $bot = $request->bot;
-        $botUser = $request->botUser;
-        $slug = $request->slug;
-
-
-        $wheels = Collection::make($slug->config)
-            ->where("key", "wheel_text")
-            ->toArray();
-
-        $rules = Collection::make($slug->config)
-            ->where("key", "rules_text")
-            ->first();
-
-        $callback_message = Collection::make($slug->config)
-            ->where("key", "callback_message")
-            ->first();
-
-        return response()->json(
-            [
-                "wheels" => array_values($wheels),
-                'rules' => $rules["value"] ?? null,
-                'callback_message' => $rules["value"] ?? null,
-            ]
-
-        );
-    }
-
     public function formWheelOfFortunePrepare(Request $request)
     {
 
@@ -361,6 +331,38 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         ]);
     }
+
+    public function loadData(Request $request)
+    {
+
+        $bot = $request->bot;
+        $botUser = $request->botUser;
+        $slug = $request->slug;
+
+
+        $wheels = Collection::make($slug->config)
+            ->where("key", "wheel_text")
+            ->toArray();
+
+        $rules = Collection::make($slug->config)
+            ->where("key", "rules_text")
+            ->first();
+
+        $callback_message = Collection::make($slug->config)
+            ->where("key", "callback_message")
+            ->first();
+
+        return response()->json(
+            [
+                "wheels" => array_values($wheels),
+                'rules' => $rules["value"] ?? null,
+                'callback_message' => $rules["value"] ?? null,
+            ]
+
+        );
+    }
+
+
 
     public function wheelOfFortune(...$config)
     {

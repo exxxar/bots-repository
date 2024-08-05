@@ -347,4 +347,58 @@ class BotSlugLogicFactory
 
         return new BotMenuSlugResource($slug);
     }
+
+    /**
+     * @throws HttpException
+     */
+    public function updateScriptParams(array $data): BotMenuSlugResource
+    {
+        if (is_null($this->bot) || is_null($this->slug))
+            throw new HttpException(404, "Не все параметры функции заданы!");
+
+
+        $slug = BotMenuSlug::query()->find($this->slug->id);
+
+
+        if (is_null($slug))
+            throw new HttpException(404, "Команда не найдена!");
+
+
+        $data["can_use_cash"] = (($data["can_use_cash"] ?? false) == "true");
+        $data["can_use_card"] = (($data["can_use_card"] ?? false) == "true");
+        $data["need_pay_after_call"] = (($data["need_pay_after_call"] ?? false) == "true");
+        $data["price_per_km"] = $data["price_per_km"] ?? 0;
+        $data["free_shipping_starts_from"] = $data["free_shipping_starts_from"] ?? 0;
+        $data["min_base_delivery_price"] = $data["min_base_delivery_price"] ?? 0;
+        $data["wheel_of_fortune"] = json_decode($data["wheel_of_fortune"] ?? '[]');
+
+        $config = Collection::make($slug->config ?? []);
+
+        $tmp = $slug->config ?? [];
+
+        foreach ($tmp as $key => $item) {
+            $configItem = $config->where("key", $item["key"])->first() ?? null;
+            $configItem["value"] = $data[$item["key"]] ?? null;
+            $tmp[$key] = $configItem;
+        }
+
+        foreach (array_keys($data) as $key) {
+
+            $configItem = $config->where("key", $key)->first() ?? null;
+
+            if (is_null($configItem)) {
+                $tmp[] = [
+                    "key" => $key,
+                    "type" => "json",
+                    "value" => $data[$key]
+                ];
+            }
+
+        }
+
+        $slug->config = $tmp;
+        $slug->save();
+
+        return new BotMenuSlugResource($slug);
+    }
 }

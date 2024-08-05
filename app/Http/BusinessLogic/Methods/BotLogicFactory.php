@@ -1532,6 +1532,64 @@ class BotLogicFactory
         return new BotResource($bot);
     }
 
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function updateParams(array $data): BotResource
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Условия функции не выполнены!");
+
+
+
+        $tmp = (object)$data;
+
+
+        $tmp->level_2 = $data["level_2"] ?? 0;
+        $tmp->level_3 = $data["level_3"] ?? 0;
+        $tmp->cashback_fire_percent = $data["cashback_fire_percent"] ?? 0;
+        $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
+        $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
+        $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
+        $tmp->auto_cashback_on_payments = ($data["auto_cashback_on_payments"]??false) == "true";
+
+        $warnings = null;
+        if (isset($data["warnings"])) {
+            $warnings = json_decode($data["warnings"]);
+            unset($tmp->warnings);
+        }
+
+        $this->bot->update((array)$tmp);
+
+        if (!is_null($warnings))
+            foreach ($warnings as $warn) {
+
+                $tmpWarn = BotWarning::query()
+                    ->where("rule_key", $warn->rule_key)
+                    ->where("bot_id", $this->bot->id)
+                    ->first();
+
+                if (!is_null($tmpWarn))
+                    $tmpWarn->update([
+                        'rule_key' => $warn->rule_key ?? null,
+                        'rule_value' => $warn->rule_value ?? null,
+                        'is_active' => $warn->is_active ?? false,
+                    ]);
+                else
+                    $rez = BotWarning::query()->create([
+                        'bot_id' => $this->bot->id,
+                        'rule_key' => $warn->rule_key ?? null,
+                        'rule_value' => $warn->rule_value ?? null,
+                        'is_active' => $warn->is_active ?? false,
+                    ]);
+            }
+
+        return new BotResource($this->bot);
+    }
+
+
     /**
      * @throws HttpException
      * @throws ValidationException

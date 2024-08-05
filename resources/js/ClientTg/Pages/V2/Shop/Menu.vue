@@ -84,10 +84,10 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
 
             </div>
 
-            <div class="col">
+            <div class="col" v-if="script_data.wheel_of_fortune">
 
                 <button type="button"
-                        :disabled="true"
+                        :disabled="!script_data.wheel_of_fortune.can_play||!loadScriptData"
                         @click="goTo('WheelOfFortuneV2')"
                         style="min-height:250px;"
 
@@ -96,7 +96,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         <img v-lazy="'/images/shop-v2-2/events.png'" class="img-fluid" alt="">
 
                         <p class="my-2"> Колесо фортуны</p>
-                        <span style="font-size:12px;"><i class="fa-solid fa-lock"></i> закрыто</span>
+                        <span style="font-size:12px;" v-if="!script_data.wheel_of_fortune.can_play||!loadScriptData"><i class="fa-solid fa-lock"></i> закрыто</span>
                     </div>
 
                 </button>
@@ -268,7 +268,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <ShopScriptEditor v-if="script_data"
+                    <ShopScriptEditor v-if="loadScriptData"
                                  v-model="script_data">
                     </ShopScriptEditor>
                 </div>
@@ -305,7 +305,12 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-            script_data:null,
+            loadScriptData:false,
+            script_data: {
+                wheel_of_fortune:{
+                    can_play:false,
+                }
+            },
         }
     },
     computed: {
@@ -343,6 +348,7 @@ export default {
             this.$router.push({name: name})
         },
         loadScriptModuleData() {
+            this.loadScriptData = false
             return this.$store.dispatch("loadShopModuleData").then((resp) => {
                 this.script_data  = []
 
@@ -351,6 +357,7 @@ export default {
                         this.script_data[item] = resp[item]
                     })
 
+                    this.loadScriptData = true
                     console.log("uploaded data", this.script_data)
                 })
             })

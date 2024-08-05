@@ -525,7 +525,7 @@ class CashBackScriptController extends SlugController
 Для начисления CashBack при оплате за услуги дайте отсканировать данный QR-код сотруднику <b>$companyTitle</b>\n<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>",[
                 [
                     ["text" => "😎Открыть профиль", "web_app" => [
-                        "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/s/profile"
+                        "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route#/s/profile"
                     ]],
                 ],
             ]);

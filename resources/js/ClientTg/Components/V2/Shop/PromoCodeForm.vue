@@ -1,40 +1,45 @@
 
 <template>
+    <h6 class="opacity-75 mb-2 mt-2 d-flex justify-content-between" data-bs-container="body" data-bs-toggle="popover"
+        data-bs-placement="top" data-bs-content="Введи промокод и нажми на кнопку рядом чтоб узнать % скидки!">
+        <span>Промокод на скидку <i class="fa-regular fa-circle-question"></i></span>
 
-    <h6 class="opacity-75 mb-3 mt-2 d-flex justify-content-between" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Введи промокод и нажми на кнопку рядом чтоб узнать % скидки!"    >
-        <span >Промокод на скидку <i class="fa-regular fa-circle-question"></i></span>
-
-        <span v-if="spent_time_counter>0">{{spent_time_counter}} сек.</span>
+        <span v-if="spent_time_counter>0">{{ spent_time_counter }} сек.</span>
         <div class="spinner-border spinner-border-sm text-primary" v-if="is_requested" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
 
     </h6>
-        <div class="input-group mb-3">
 
-            <div class="form-floating ">
-                <input type="text"
-                       :disabled="spent_time_counter>0"
-                       @change="submit"
-                       v-model="promocodeForm.code"
-                       class="form-control border-light" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Ваш промокод
+    <div class="alert-light alert mb-2">
+        <span class="text-primary fw-bold">Внимание!</span> После активации промокода его нельзя использовать повторно!
+    </div>
 
-                </label>
-            </div>
+    <div class="input-group mb-3">
 
-            <button
-                v-if="discount===0"
-                @click="submit"
-                :disabled="spent_time_counter>0"
-                class="btn btn-outline-light text-primary" style="min-width:110px;font-size:12px;">
-                <i class="fa-solid fa-tags"></i> Активировать
-            </button>
-            <span
-                v-if="discount>0"
-                style="min-width:110px;font-size:12px;"
-                class="input-group-text bg-transparent border-light fw-bold text-primary text-center" id="basic-addon1">-{{discount}} руб.</span>
+        <div class="form-floating ">
+            <input type="text"
+                   :disabled="spent_time_counter>0"
+                   @change="submit"
+                   v-model="promocodeForm.code"
+                   class="form-control border-light" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Ваш промокод
+
+            </label>
         </div>
+
+        <button
+            v-if="discount===0"
+            @click="submit"
+            :disabled="spent_time_counter>0"
+            class="btn btn-outline-light text-primary" style="min-width:110px;font-size:12px;">
+            <i class="fa-solid fa-tags"></i> Активировать
+        </button>
+        <span
+            v-if="discount>0"
+            style="min-width:110px;font-size:12px;"
+            class="input-group-text bg-transparent border-light fw-bold text-primary text-center" id="basic-addon1">-{{discount}} руб.</span>
+    </div>
 
 </template>
 <script>

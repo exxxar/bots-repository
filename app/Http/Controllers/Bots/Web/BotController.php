@@ -811,9 +811,24 @@ class BotController extends Controller
 
         return BusinessLogic::bots()
             ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
             ->update(
                 $request->all(),
                 $request->hasFile('images') ? $request->file('images') : null
+            );
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function updateBotParams(Request $request): BotResource
+    {
+
+        return BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->updateParams(
+                $request->all()
             );
     }
 

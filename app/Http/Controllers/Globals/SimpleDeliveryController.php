@@ -7,6 +7,8 @@ use App\Classes\SlugController;
 use App\Enums\OrderStatusEnum;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ActionStatusResource;
+use App\Models\ActionStatus;
 use App\Models\Basket;
 use App\Models\Bot;
 use App\Models\BotMenuSlug;
@@ -20,6 +22,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
 
 class SimpleDeliveryController extends SlugController
@@ -50,13 +53,6 @@ class SimpleDeliveryController extends SlugController
 
             ],
 
-          /*  [
-                "type" => "text",
-                "key" => "yandex_map_link",
-                "description" => "Ссылка на ваше расположение на карте",
-                "value" => null,
-
-            ],*/
             [
                 "type" => "text",
                 "key" => "free_shipping_starts_from",
@@ -288,50 +284,38 @@ class SimpleDeliveryController extends SlugController
 
     }
 
-    public function loadData(Request $request)
+    public function loadData(Request $request): \Illuminate\Http\JsonResponse
     {
         $slug = $request->slug;
 
-        return response()->json(
-            [
-                'delivery_price_text' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "delivery_price_text")
-                    ->first())["value"] ?? "Цена доставки рассчитывается курьером" : "Цена доставки рассчитывается курьером",
-                'min_price' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "min_price")
-                    ->first())["value"] ?? 100 : 100,
-                'min_price_for_cashback' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "min_price_for_cashback")
-                    ->first())["value"] ?? 2000 : 2000,
-                'can_use_card' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "can_use_card")
-                    ->first())["value"] ?? false : false,
-                'can_use_cash' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "can_use_cash")
-                    ->first())["value"] ?? true : true,
-
-                'menu_list_type' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "menu_list_type")
-                    ->first())["value"] ?? 0 : 0,
-                'need_category_by_page' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "need_category_by_page")
-                    ->first())["value"] ?? true : true,
-                'need_pay_after_call' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "need_pay_after_call")
-                    ->first())["value"] ?? false : false,
-                'free_shipping_starts_from' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "free_shipping_starts_from")
-                    ->first())["value"] ?? 0 : 0,
-                'payment_info' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "payment_info")
-                    ->first())["value"] ?? "Текст не найден" : "Текст не найден",
-                'yandex_map_link' => !is_null($slug->config ?? null) ? (Collection::make($slug->config)
-                    ->where("key", "yandex_map_link")
-                    ->first())["value"] ?? null : null,
+        $dictionary = [
+            "delivery_price_text" => "Цена доставки рассчитывается курьером",
+            "disabled_text" => "Временно недоступно!",
+            "min_price" => 100,
+            "price_per_km" => 100,
+            "min_price_for_cashback" => 2000,
+            "can_use_card" => false,
+            "can_use_cash" => true,
+            "menu_list_type" => 0,
+            "need_category_by_page" => true,
+            "need_pay_after_call" => true,
+            "free_shipping_starts_from" => 0,
+            "payment_info" => "Текст не найден",
+            "wheel_of_fortune" => null,
+            "win_message" => "%s, вы приняли участие в розыгрыше и выиграли приз под номером %s (%s). Наш менеджер свяжется с вами в ближайшее время!",
+        ];
 
 
-            ]
-        );
+        if (!is_null($slug->config ?? null)) {
+            $tmp = [];
+
+            foreach ($slug->config ?? [] as $item) {
+                $item = (object)$item;
+                $tmp[$item->key] = is_null($item->value ?? null) ? ($dictionary[$item->key] ?? null) : $item->value;
+            }
+            return response()->json($tmp);
+        }
+        return response()->json($dictionary);
     }
 
     private function orderPage($page = 0, $messageId = null)
@@ -430,6 +414,172 @@ class SimpleDeliveryController extends SlugController
 
     }
 
+    public function formWheelOfFortuneV3Callback(Request $request): \Illuminate\Http\Response
+    {
+        $request->validate([
+            "id" => "required",
+            "description" => "required"
+        ]);
+
+        $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
+        $slug = $request->slug ?? null;
+
+        if (is_null($bot) || is_null($botUser) || is_null($slug))
+            throw new HttpException(400, "Не заданы необходимые параметры функции");
+
+        $maxAttempts = 1;
+
+        $callbackChannel = $bot->order_channel ?? null;
+
+        $winMessage = (Collection::make($slug->config)
+            ->where("key", "win_message")
+            ->first())["value"] ?? "%s, вы приняли участие в розыгрыше и выиграли приз под номером %s (%s). Наш менеджер свяжется с вами в ближайшее время!";
+
+        $action = ActionStatus::query()
+            ->where("user_id", $botUser->user_id)
+            ->where("bot_id", $bot->id)
+            ->where("slug_id", $slug->id)
+            ->first();
+
+        if (is_null($action))
+            throw new HttpException(404, "Не найдено игровое состояние");
+
+        if (!is_null($action->completed_at ?? null))
+            throw new HttpException(403, "Получение призов для игрока недоступно");
+
+        $action->current_attempts++;
+
+        if ($action->current_attempts >= $maxAttempts)
+            $action->completed_at = Carbon::now();
+
+
+        $winNumber = $request->id ?? 0;
+        $winnerName = $botUser->name ?? 'Имя не указано';
+        $winnerPhone = $botUser->phone ?? 'Телефон не указан';
+        $mark = $request->mark ?? 'Без указания способа получения';
+        $winnerDescription = ($request->description ?? 'Без описания') . ", <b>способ получения приза:" . $mark."</b>";
+
+        $username = $botUser->username ?? null;
+
+       /* $tmp = $action->data ?? [];
+
+        $tmp[] = (object)[
+            "bgColor" => $request->bgColor ?? null,
+            "color" => $request->color ?? null,
+            "description" => $request->description ?? null,
+            "id" => $request->id ?? null,
+            "mark" => $request->mark ?? null,
+            "value" => $request->value ?? null,
+
+        ];*/
+
+        $action->data = [
+            (object)[
+                "bgColor" => $request->bgColor ?? null,
+                "color" => $request->color ?? null,
+                "description" => $request->description ?? null,
+                "id" => $request->id ?? null,
+                "mark" => $request->mark ?? null,
+                "value" => $request->value ?? null,
+
+            ]
+        ];
+
+        $link = "https://t.me/$bot->bot_domain?start=" . base64_encode("003$botUser->telegram_chat_id");
+
+        $action->max_attempts = $maxAttempts;
+        $action->save();
+
+        $thread = $bot->topics["actions"] ?? null;
+
+        $vowels = ["(", ")", "-"];
+        $filteredPhone = str_replace($vowels, "", $winnerPhone);
+
+        \App\Facades\BotMethods::bot()
+            ->whereDomain($bot->bot_domain)
+            ->sendMessage($botUser
+                ->telegram_chat_id,
+                str_contains($winMessage, "%s") ?
+                    sprintf($winMessage, $winnerName, $winNumber, $winnerDescription) : $winMessage)
+            ->sendInlineKeyboard($callbackChannel,
+                "Участник $filteredPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $winnerDescription ) - свяжитесь с ним для дальнейших указаний", [
+                    [
+                        ["text" => "Написать пользователю ответ", "url" => $link]
+                    ]
+                ], $thread);
+
+
+        $nextWinPageId = (Collection::make($slug->config)
+            ->where("key", "next_win_page_id")
+            ->first())["value"] ?? null;
+
+        if (!is_null($nextWinPageId)) {
+            $isRun = BotManager::bot()
+                ->runPage($nextWinPageId, $bot, $botUser);
+
+            if (!$isRun)
+                BotManager::bot()
+                    ->runSlug($nextWinPageId, $bot, $botUser);
+        }
+
+
+        return response()->noContent();
+    }
+
+    public function formWheelOfFortuneV3Prepare(Request $request): \Illuminate\Http\JsonResponse
+    {
+
+        $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
+        $slug = $request->slug ?? null;
+
+        if (is_null($bot) || is_null($botUser) || is_null($slug))
+            throw new HttpException(400, "Не заданы необходимые параметры функции");
+
+        $maxAttempts = 1;
+
+        $action = ActionStatus::query()
+            ->where("user_id", $botUser->user_id)
+            ->where("bot_id", $bot->id)
+            ->where("slug_id", $slug->id)
+            ->first();
+
+        if (is_null($action))
+            $action = ActionStatus::query()
+                ->create([
+                    'user_id' => $botUser->user_id,
+                    'bot_id' => $bot->id,
+                    'slug_id' => $slug->id,
+                    'max_attempts' => $maxAttempts,
+                    'current_attempts' => 0,
+                    'bot_user_id' => $botUser->id
+                ]);
+
+
+        $action->max_attempts = $maxAttempts;
+
+        if (!is_null($action->completed_at ?? null))
+            if (Carbon::now()->timestamp - Carbon::parse($action->completed_at)->timestamp >= 86400) {
+                $action->current_attempts = 0;
+                $action->completed_at = null;
+            }
+
+        if (is_null($action->completed_at ?? null)) {
+            $action->current_attempts = 0;
+            $action->completed_at = null;
+        }
+
+
+        if (is_null($action->data ?? null))
+            $action->current_attempts = 0;
+
+        $action->save();
+
+        return response()->json([
+            "action" => new ActionStatusResource($action),
+        ]);
+    }
 
     public function watchForDeliveryman(...$data)
     {

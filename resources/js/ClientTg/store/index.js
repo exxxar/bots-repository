@@ -9,6 +9,7 @@ import ingredients from './modules/ingrediens';
 import wheelOfFortune from "./modules/globals/wheelOfFortune";
 import chatHistory from "./modules/chat_history";
 import wheelOfFortuneCustom from "./modules/globals/wheelOfFortuneCustom";
+import wheelOfFortuneV3 from "./modules/globals/wheelOfFortuneV3";
 import friendsGame from "./modules/globals/friendsGame";
 import bonusProduct from "./modules/globals/bonusProduct";
 import instagramQuest from "./modules/globals/instagramQuest";
@@ -132,6 +133,7 @@ export default createStore({
         products,
         wheelOfFortune,
         wheelOfFortuneCustom,
+        wheelOfFortuneV3,
         instagramQuest,
         schedule,
         cashOut,

@@ -1,5 +1,10 @@
+<script setup>
+/*import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
+import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/InlineQueryList.vue";*/
+</script>
 <template>
 
+    <div v-if="!editor&&mode===0">
     <Popper>
         <p class="mb-2"><i class="fa-regular fa-circle-question mr-1"></i>Инструкция</p>
         <template #content>
@@ -70,9 +75,9 @@
     </div>
 
 
-    <p v-if="keyboard.length===0" class="text-danger font-weight-bold p-0 m-0">Элементы клавиатуры еще не добавлены</p>
+    <p v-if="(keyboard||[]).length===0" class="text-danger font-weight-bold p-0 m-0">Элементы клавиатуры еще не добавлены</p>
 
-    <div v-if="keyboard.length>0">
+    <div v-if="(keyboard||[]).length>0">
         <div class="row mb-0"
 
              v-for="(row, rowIndex) in keyboard">
@@ -207,6 +212,243 @@
             @json-change="onJsonChange"
         />
     </div>
+    </div>
+
+    <div v-if="mode===1">
+        <div class="row">
+            <div class="col-12 mb-2">
+                <button type="button"
+                        @click="mode=0"
+                        class="btn btn-outline-primary">Назад
+                </button>
+            </div>
+            <form class="col-12">
+                <div class="alert alert-danger" role="alert">
+                    Возможно выбрать только 1 тип действия
+                </div>
+
+                <div class="mb-3">
+
+                    <div class="input-group ">
+
+                        <div class="form-floating ">
+                            <input
+                                type="text"
+                                :id="'command-title-'+select.row+'-col-'+select.col"
+                                class="form-control border-light"
+                                v-model="keyboard[select.row][select.col].text"
+                            />
+                            <label for="floatingInput">Название кнопки</label>
+                        </div>
+
+
+                        <button type="button"
+                                @click="openPageModal"
+                                class="btn btn-outline-light" aria-expanded="false">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+
+                    </div>
+
+
+                </div>
+                <hr class="m-0">
+
+                <div class="form-floating mb-2" v-if="type==='inline'">
+
+                    <input type="text"
+                           @change="needRemoveField( 'callback_data', select.row, select.col)"
+                           v-model="keyboard[select.row][select.col].callback_data"
+                           class="form-control"
+                           :id="'command-row-'+select.row+'-col-'+select.col"
+                           placeholder="/start">
+                    <label :for="'command-row-'+select.row+'-col-'+select.col"
+                           class="form-label">Команда (для меню в сообщении)</label>
+                </div>
+                <div class="form-floating mb-2" v-if="type==='inline'">
+                    <input type="text" class="form-control"
+                           @change="needRemoveField( 'switch_inline_query',select.row, select.col)"
+                           v-model="keyboard[select.row][select.col].switch_inline_query"
+                           :id="'switch-inline-query-row-'+select.row+'-col-'+select.col"
+                           placeholder="@YourAccountLink">
+                    <label :for="'switch-inline-query-row-'+select.row+'-col-'+select.col"
+                           class="form-label">Ссылка на аккаунт в ТЕЛЕГРАММ</label>
+                </div>
+                <div class="form-floating mb-2" v-if="type==='inline'">
+                    <input type="text" class="form-control"
+                           @change="needRemoveField( 'url',select.row, select.col)"
+                           v-model="keyboard[select.row][select.col].url"
+                           :id="'url-row-'+select.row+'-col-'+colIndex"
+                           placeholder="https://t.me/example">
+                    <label :for="'url-row-'+select.row+'-col-'+select.col"
+                           class="form-label">Внешняя URL-ссылка</label>
+                </div>
+
+                <div class="mb-3" v-if="type==='inline'">
+
+                    <label :for="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
+                           class="form-label">Команда всплывающего меню бота</label>
+
+                    <div class="alert alert-warning" role="alert">
+                        Внимание! Режим всплывающего меню должен быть настроен в BotFather-е в разделе редактирования
+                        бота InlineMode. Сперва нужно включить данный режим.
+                    </div>
+
+                    <div class="input-group mb-3">
+
+                        <input type="text" class="form-control"
+                               @change="needRemoveField( 'switch_inline_query_current_chat',select.row, select.col)"
+                               v-model="keyboard[select.row][select.col].switch_inline_query_current_chat"
+                               :id="'switch-inline-query-current-chat-row-'+select.row+'-col-'+select.col"
+                               placeholder="команда">
+
+                        <button type="button"
+                                @click="openInlineQueryModal"
+                                class="btn btn-outline-primary" aria-expanded="false"><i class="fa-solid fa-bars"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+                <div class="mb-3" v-if="type==='inline'">
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_login_url"
+                               type="checkbox"
+                               id="need-login-url">
+                        <label class="form-check-label" for="need-login-url">
+                            Добавить ссылку авторизации
+                        </label>
+                    </div>
+
+                    <div v-if="need_login_url" class="mb-3">
+                        <label :for="'login-link-row-'+select.row+'-col-'+select.col"
+                               class="form-label">Ссылка авторизации
+                        </label>
+
+                        <input type="text" class="form-control"
+                               v-model="keyboard[select.row][select.col].login_url.url"
+                               :id="'login-link-row-'+select.row+'-col-'+select.col"
+                               placeholder="Ссылка авторизации" required>
+                    </div>
+
+
+                    <div v-if="need_login_url" class="mb-3">
+                        <label :for="'login-link-forward-text-row-'+select.row+'-col-'+select.col"
+                               class="form-label">Новый текст кнопки в пересылаемых сообщениях
+                        </label>
+
+                        <input type="text" class="form-control"
+                               v-model="keyboard[select.row][select.col].login_url.forward_text"
+                               :id="'login-link-forward-text-row-'+select.row+'-col-'+select.col"
+                               placeholder="Текст кнопки">
+                    </div>
+
+                    <div v-if="need_login_url" class="mb-3">
+                        <label :for="'login-link-bot-username-row-'+select.row+'-col-'+select.col"
+                               class="form-label">Имя бота, которое будет использоваться для авторизации
+                        </label>
+
+                        <input type="text" class="form-control"
+                               v-model="keyboard[select.row][select.col].login_url.bot_username"
+                               :id="'login-link-bot-username-row-'+select.row+'-col-'+select.col"
+                               placeholder="Имя бота">
+                    </div>
+
+
+                    <div class="form-check mb-3" v-if="need_login_url">
+                        <input class="form-check-input"
+                               v-model="keyboard[select.row][select.col].login_url.request_write_access"
+                               type="checkbox"
+                               id="need-request_write_access">
+                        <label class="form-check-label" for="need-request_write_access">
+                            Запросить отправку сообщений ботом
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-check" v-if="type==='reply'">
+                    <input type="radio"
+                           @change="needRemoveField( null,select.row, select.col)"
+                           name="request-radio"
+                           class="form-check-input"
+                           :id="'no-action-row-'+select.row+'-col-'+select.col">
+                    <label class="form-check-label"
+                           :for="'no-action-row-'+select.row+'-col-'+select.col">
+                        Без действий
+                    </label>
+                </div>
+                <!--                                                <div class="form-check" v-if="rowIndex===0">
+                                                                    <input type="radio"
+                                                                           @change="needRemoveField( 'pay',rowIndex, colIndex)"
+                                                                           @click="keyboard[rowIndex][colIndex].pay = true"
+                                                                           name="request-radio"
+                                                                           class="form-check-input"
+                                                                           :id="'pay-action-row-'+rowIndex+'-col-'+colIndex">
+                                                                    <label class="form-check-label"
+                                                                           :for="'pay-action-row-'+rowIndex+'-col-'+colIndex">
+                                                                        Кнопка оплаты
+                                                                    </label>
+                                                                </div>-->
+                <div class="form-check" v-if="type==='reply'">
+                    <input type="radio"
+                           @change="needRemoveField( 'request_contact',select.row, select.col)"
+                           @click="keyboard[select.row][select.col].request_contact = true"
+                           name="request-radio"
+                           :checked="keyboard[select.row][select.col].request_contact"
+                           class="form-check-input" :id="'phone-row-'+select.row+'-col-'+select.col">
+                    <label class="form-check-label" :for="'phone-row-'+select.row+'-col-'+select.col">
+                        Запросить телефон
+                    </label>
+                </div>
+                <div class="form-check" v-if="type==='reply'">
+                    <input type="radio"
+                           name="request-radio"
+                           :checked="keyboard[select.row][select.col].request_location"
+                           @change="needRemoveField( 'request_location',select.row, select.col)"
+                           @click="keyboard[select.row][select.col].request_location = true"
+                           class="form-check-input" :id="'location-row-'+select.row+'-col-'+select.col">
+                    <label class="form-check-label"
+                           :for="'location-row-'+select.row+'-col-'+select.col">
+                        Запросить локацию
+                    </label>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+    <div class="modal fade" :id="'page-list-in-keyboard-'+uuid" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <PagesList
+                        v-on:callback="attachPage"
+                        :editor="false"/>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" :id="'inline-query-list-in-keyboard-'+uuid" tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <InlineQueryList v-on:select="selectInlineQuery"></InlineQueryList>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 import {Vue3JsonEditor} from 'vue3-json-editor'
@@ -232,6 +474,18 @@ export default {
     },
     data() {
         return {
+            need_input_field_placeholder: false,
+            settings: {
+                resize_keyboard: true,
+                one_time_keyboard: false,
+                input_field_placeholder: null,
+                is_persistent: false,
+            },
+            need_login_url: false,
+            pageModal: null,
+            inlineQueryModal: null,
+            mode: 0,
+            editor: false,
             showCode: false,
             showAssign: false,
             selectedRow: null,
@@ -247,14 +501,93 @@ export default {
     },
 
     mounted() {
+        this.pageModal = new bootstrap.Modal(document.getElementById('page-list-in-keyboard-' + this.uuid), {})
+        this.inlineQueryModal = new bootstrap.Modal(document.getElementById('inline-query-list-in-keyboard-' + this.uuid), {})
+
+
         if (this.editedKeyboard) {
             this.$nextTick(() => {
                 this.keyboard = this.editedKeyboard.menu
+
+                if (this.editedKeyboard.settings) {
+                    this.settings = {
+                        resize_keyboard: this.editedKeyboard.settings.resize_keyboard || true,
+                        one_time_keyboard: this.editedKeyboard.settings.one_time_keyboard || false,
+                        input_field_placeholder: this.editedKeyboard.settings.input_field_placeholder || null,
+                        is_persistent: this.editedKeyboard.settings.is_persistent || false,
+                    }
+
+                    if (this.settings.input_field_placeholder != null)
+                        this.need_input_field_placeholder = true
+                }
             })
         }
 
     },
     methods: {
+        selectInlineQuery(query) {
+            this.keyboard[this.select.row][this.select.col].switch_inline_query_current_chat = query.command
+
+            this.$notify({
+                title: "Конструктор страниц",
+                text: "Вы успешно выбрали страницу",
+                type: 'success'
+            });
+
+            this.inlineQueryModal.hide()
+        },
+        openInlineQueryModal() {
+            this.inlineQueryModal.show()
+        },
+        openPageModal() {
+            this.pageModal.show()
+        },
+        attachPage(item) {
+
+            let command = (item.slug.command || 'Нет команды').replace(".*", "")
+
+            this.keyboard[this.select.row][this.select.col].text = command
+
+
+            this.$notify({
+                title: "Конструктор страниц",
+                text: "Вы успешно выбрали страницу",
+                type: 'success'
+            });
+
+            if (this.type === 'inline')
+                this.keyboard[this.select.row][this.select.col].callback_data = command
+
+        },
+        reset() {
+            this.selectedRow = null
+            this.select = {
+                row: -1,
+                col: -1,
+                type: this.type || 'reply'
+            }
+        },
+        removeSelectedButton() {
+            this.keyboard[this.select.row].splice(this.select.col, 1)
+
+            let tmpRow = this.select.row;
+
+
+            this.reset()
+
+            if (this.keyboard[tmpRow].length === 0)
+                this.keyboard.splice(tmpRow, 1)
+
+
+        },
+        needRemoveField(param, rowIndex, colIndex) {
+            Object.keys(this.keyboard[rowIndex][colIndex])
+                .forEach(item => {
+                    if (item !== 'text' && item !== param)
+                        delete this.keyboard[rowIndex][colIndex][item]
+                })
+
+        },
         moveCol(direction = 0) {
 
             let row = this.selectedRow
@@ -302,14 +635,8 @@ export default {
 
         },
         openKeyboardEditorMenu(rowIndex, colIndex) {
-
-            this.$botPages.keyboard({
-                row: rowIndex,
-                col: colIndex,
-                type: this.type,
-            }, this.keyboard)
+            this.mode = 1
         },
-
         save() {
             this.$emit("save", this.keyboard)
         },
@@ -336,7 +663,6 @@ export default {
         addRowBelow() {
             this.addRow(false)
         },
-
         addRow(above = false) {
 
             if (this.selectedRow == null) {
@@ -359,7 +685,6 @@ export default {
 
             this.save();
         },
-
         addColToRow() {
             let index = this.selectedRow
             this.keyboard[index].push({
@@ -382,7 +707,6 @@ export default {
                 this.load = false
             })
         },
-
         removeCol(rowIndex, colIndex) {
             if (this.keyboard[rowIndex].length > 1)
                 this.keyboard[rowIndex].splice(colIndex, 1)

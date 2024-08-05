@@ -164,12 +164,30 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
                           style="min-height:150px;"
                           placeholder="Leave a comment here"
                           id="script-settings-wheel-of-fortune-can_play"></textarea>
-                <label for="script-settings-disabled_text">Правила колеса фортуны</label>
+                <label for="script-settings-disabled_text">Правила колеса фортуны
+                    <span v-if="(form.wheel_of_fortune.rules||'').length>0">{{(form.wheel_of_fortune.rules||'').length}}/4000</span>
+                </label>
             </div>
+
+            <div class="form-floating mb-2">
+                <textarea class="form-control"
+                          v-model="form.win_message"
+                          maxlength="4000"
+                          style="min-height:150px;"
+                          placeholder="Leave a comment here"
+                          id="script-settings-wheel-of-fortune-can_play"></textarea>
+                <label for="script-settings-disabled_text">Текст пользователю при выигрыше
+                    <span v-if="(form.win_message||'').length>0">{{(form.win_message||'').length}}/4000</span>
+                </label>
+            </div>
+
             <p class="alert alert-light mb-2">Редактирование призов, описания, отметки места получения приза, цвет
                 сектора и цвет текста. Максимальное число секторов <span class="fw-bold text-primary">10</span>, сейчас
                 создано <span class="fw-bold text-primary">{{ (form.wheel_of_fortune.items || []).length }}</span>
-                секторов. <strong class="fw-bold text-primary">Внимание!</strong> При удалении сектора идет пересчет его номера!</p>
+                секторов. <strong class="fw-bold text-primary">Внимание!</strong> При удалении сектора идет пересчет его
+                номера!</p>
+
+
             <div class="accordion accordion-flush" :id="'wheel_of_fortune'">
                 <div class="accordion-item" v-for="(item, index) in form.wheel_of_fortune.items">
                     <h2 class="accordion-header">
@@ -181,14 +199,38 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
                     </h2>
                     <div :id="'wheel-sector-'+index" class="accordion-collapse collapse"
                          :data-bs-parent="'#wheel_of_fortune'">
+                        <div class="input-group  my-2">
+                            <div class="form-floating">
+                                <input type="text"
+                                       v-model="form.wheel_of_fortune.items[index].value"
+                                       class="form-control" id="floatingInput" placeholder="name@example.com" required>
+                                <label for="floatingInput">Телеграм-эмодзи</label>
+                            </div>
+                            <div class="dropdown">
+                                <button
 
-                        <div class="form-floating my-2">
-                            <input type="text"
-                                   v-model="form.wheel_of_fortune.items[index].value"
-                                   class="form-control" id="floatingInput" placeholder="name@example.com" required>
-                            <label for="floatingInput">Телеграм-эмодзи</label>
+                                    class="btn btn-outline-light text-primary w-100 h-100 rounded-0"
+                                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-regular fa-face-smile-beam"></i>
+                                </button>
+                                <div class="dropdown-menu p-0"
+                                     style="width:300px;">
+                                    <div class="row row-cols-5 w-100 p-2">
+                                        <div
+                                            class="col mb-2" v-for="smile in smiles">
+                                            <a
+                                                @click="addSmile(index, smile)"
+                                                href="javascript:void(0)"
+                                                class="btn btn-outline-light"
+                                            >{{ smile }}</a>
+                                        </div
+                                        >
+                                    </div>
+
+
+                                </div>
+                            </div>
                         </div>
-
                         <div class="form-floating mb-2">
                              <textarea class="form-control"
                                        v-model="form.wheel_of_fortune.items[index].description"
@@ -208,15 +250,15 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
                             <label :for="'script-settings-bgColor-'+index">Цвет фона сектора</label>
                         </div>
 
-<!--
-                        <div class="form-floating mb-2">
-                            <input type="color"
-                                   v-model="form.wheel_of_fortune.items[index].color"
-                                   class="form-control" :id="'script-settings-color-'+index"
-                                   placeholder="name@example.com" required>
-                            <label :for="'script-settings-color-'+index">Цвет шрифта сектора</label>
-                        </div>
--->
+                        <!--
+                                                <div class="form-floating mb-2">
+                                                    <input type="color"
+                                                           v-model="form.wheel_of_fortune.items[index].color"
+                                                           class="form-control" :id="'script-settings-color-'+index"
+                                                           placeholder="name@example.com" required>
+                                                    <label :for="'script-settings-color-'+index">Цвет шрифта сектора</label>
+                                                </div>
+                        -->
 
                         <p class="alert-light alert mb-2">Впишите или выберите где можно получить приз: <span
                             @click="attachMarkText(index, 'во время доставки')"
@@ -229,20 +271,31 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
                         <div class="form-floating my-2">
                             <input type="search"
                                    v-model="form.wheel_of_fortune.items[index].mark"
-                                   class="form-control" id="floatingInput" placeholder="name@example.com" required>
-                            <label for="floatingInput">Где выдается приз</label>
+                                   class="form-control"
+                                   :name="'wheel_of_fortune-mark-'+index"
+                                   :id="'wheel_of_fortune-mark-'+index" placeholder="name@example.com" required>
+                            <label :for="'wheel_of_fortune-mark-'+index">Где выдается приз</label>
                         </div>
 
                         <a href="javascript:void(0)"
                            @click="removeSector(index)"
-                           class="btn btn-link w-100 text-center my-3"><i class="fa-regular fa-trash-can"></i> Удалить сектор #{{ item.id }}</a>
+                           class="btn btn-link w-100 text-center my-3"><i class="fa-regular fa-trash-can"></i> Удалить
+                            сектор #{{ item.id }} ({{ item.value || '-' }})</a>
                     </div>
                 </div>
 
             </div>
+
+            <div class="form-check form-switch my-2">
+                <input class="form-check-input"
+                       v-model="need_auto_random_smiles"
+                       type="checkbox" role="switch" id="need_auto_random_smiles">
+                <label class="form-check-label" for="need_auto_random_smiles">Добавлять смайл случайным образом</label>
+            </div>
+
             <button
                 type="button"
-                :disabled="form.wheel_of_fortune.items.length===10"
+                :disabled="(form.wheel_of_fortune.items||[]).length===10"
                 @click="addSector"
                 class="btn btn-outline-primary w-100 p-3 mb-2">Добавить еще сектор
             </button>
@@ -250,7 +303,8 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
             <div class="alert alert-light mb-2">
                 <p>Демонстрация заполнения</p>
                 <WheelOfFortuneShopVariant
-                    v-if="loaded"
+                    :is-admin="true"
+                    v-if="loaded&&(form.wheel_of_fortune.items||[]).length>=3"
                     v-model="form.wheel_of_fortune.items"></WheelOfFortuneShopVariant>
             </div>
         </div>
@@ -268,6 +322,9 @@ export default {
         return {
             loaded: true,
             tab: 0,
+            need_auto_random_smiles: true,
+            smiles: ["🥤", "🥗", "🍔", "🍗", "🍟", "🥓", "🌯", "🍱", "🍜", "🍲", "🍧", "🍨", "🧁", "🥞",
+                "💎", "🤖", "🎲", "🎯", "🏆", "😊", "😎", "🌻", "👽", "💌", "📚", "🐶", "👻", "🏀", "👓", "🎓"],
             form: {
                 shop_coords: null,
                 yandex_geocoder: null,
@@ -283,6 +340,7 @@ export default {
                 can_use_card: true,
                 need_pay_after_call: false,
                 disabled_text: null,
+                win_message: '%s, вы приняли участие в розыгрыше и выиграли приз под номером %s (%s). Наш менеджер свяжется с вами в ближайшее время!',
                 wheel_of_fortune: {
                     can_play: true,
                     rules: 'Колесо фортуны доступно 1 раз в сутки. В качестве приза вы можете выиграть 1 из предложенных призов и воспользоваться ими в заведении или на доставке:) Приятного отдыха!',
@@ -374,15 +432,29 @@ export default {
                 })
             },
             deep: true
+        },
+        'form': {
+            handler: function (newValue) {
+                this.$emit("updated:modelValue", this.form)
+            },
+            deep: true
         }
+    },
+    mounted() {
+
+        this.$nextTick(() => {
+            this.form = this.modelValue
+        })
+
+
     },
     methods: {
         removeSector(index) {
             this.form.wheel_of_fortune.items.splice(index, 1)
 
             let i = 1
-            this.form.wheel_of_fortune.items.forEach(item=>{
-                item.id =  i
+            this.form.wheel_of_fortune.items.forEach(item => {
+                item.id = i
                 i++
             })
             this.$notify({
@@ -400,13 +472,16 @@ export default {
             if ((this.form.wheel_of_fortune.items || []).length === 0)
                 this.form.wheel_of_fortune.items = []
 
+
+            let value = this.need_auto_random_smiles ? this.smiles[Math.floor(Math.random() * this.smiles.length - 1)] : this.form.wheel_of_fortune.items.length + 1
+
             if (this.form.wheel_of_fortune.items.length < 10) {
                 this.form.wheel_of_fortune.items.push({
                     id: this.form.wheel_of_fortune.items.length + 1,
-                    value: this.form.wheel_of_fortune.items.length + 1,
-                    bgColor: "#c92729",
+                    value: value,
+                    bgColor: ((this.form.wheel_of_fortune.items || []).length + 1) % 2 === 0 ? "#c92729" : "#ffffff",
                     color: "#ffffff",
-                    description: null,
+                    description: 'Описание приза №' + (this.form.wheel_of_fortune.items.length + 1),
                     mark: 'в заведении & на доставке',
                 })
 
@@ -424,8 +499,39 @@ export default {
             }
 
         },
+        addSmile(index, smile) {
+            this.form.wheel_of_fortune.items[index].value = smile
+        },
         submit() {
+            let data = new FormData();
+            Object.keys(this.form)
+                .forEach(key => {
+                    const item = this.form[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
 
+
+            this.$store.dispatch("updateScriptParams", {
+                slugForm: data
+            }).then((response) => {
+                this.$notify({
+                    title: "Информация о скрипте",
+                    text: "Информация о скрипте успешно обновлена!",
+                    type: "success"
+                })
+                this.$emit("callback", response.data)
+
+                window.location.reload()
+            }).catch(err => {
+                this.$notify({
+                    title: "Информация о скрипте",
+                    text: "Ошибка обновления информации о скрипте",
+                    type: "error"
+                })
+            })
         }
     }
 }

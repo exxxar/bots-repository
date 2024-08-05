@@ -53,10 +53,10 @@ Route::prefix("bot-client")
 
 
         Route::post('/callback', [BotController::class, "sendCallback"])
-            ->middleware(["tgAuth.any","slug"]);
+            ->middleware(["tgAuth.any", "slug"]);
 
         Route::post('/feedback', [BotController::class, "sendFeedback"])
-            ->middleware(["tgAuth.any","slug"]);
+            ->middleware(["tgAuth.any", "slug"]);
 
         Route::prefix("wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)
@@ -127,12 +127,12 @@ Route::prefix("bot-client")
                 Route::post('/list-of-results/{quizId}', "loadQuizResultList");
                 Route::post('/list-of-quiz-questions/{quizId}', "listOfQuizQuestions");
 
-             /*   Route::post('/check', "check")
-                    ->middleware(["tgAuth.admin"]);
-                Route::post('/exchange', "exchange")
-                    ->middleware(["tgAuth.admin"]);
-                Route::post('/load-action-data', "loadActionData")
-                    ->middleware(["tgAuth.admin"]);*/
+                /*   Route::post('/check', "check")
+                       ->middleware(["tgAuth.admin"]);
+                   Route::post('/exchange', "exchange")
+                       ->middleware(["tgAuth.admin"]);
+                   Route::post('/load-action-data', "loadActionData")
+                       ->middleware(["tgAuth.admin"]);*/
             });
 
         Route::prefix("bonus-product")
@@ -232,8 +232,17 @@ Route::prefix("bot-client")
         Route::prefix("shop")
             ->middleware(["tgAuth.any"])
             ->group(function () {
+
+                Route::prefix("wheel-of-fortune-v3")
+                    ->controller(\App\Http\Controllers\Globals\SimpleDeliveryController::class)
+                    ->middleware(["tgAuth.any", "slug"])
+                    ->group(function () {
+                        Route::post('/prepare', "formWheelOfFortuneV3Prepare");
+                        Route::post('/callback', "formWheelOfFortuneV3Callback");
+                    });
+
                 Route::prefix("orders")
-                    ->group(function(){
+                    ->group(function () {
                         Route::post("/", [ProductController::class, "getOrders"]);
                         Route::post("/all", [ProductController::class, "getAllOrders"])->middleware(["tgAuth.admin"]);
                         Route::post("/repeat-order", [ProductController::class, "repeatOrder"]);
@@ -243,7 +252,7 @@ Route::prefix("bot-client")
                     });
 
                 Route::prefix("reviews")
-                    ->group(function(){
+                    ->group(function () {
                         Route::post("/", [ProductController::class, "getReviews"]);
                         Route::post("/by-product-id", [ProductController::class, "getReviewsByProductId"]);
                         Route::post("/store-review", [ProductController::class, "storeReview"]);
@@ -368,12 +377,12 @@ Route::prefix("bot-client")
                 Route::post('/request-refresh-menu', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "requestRefreshMenu"])
                     ->middleware(["tgAuth.admin"]);
                 Route::post('/load-data', [\App\Http\Controllers\Globals\CashBackScriptController::class, "loadData"])
-                ->middleware(["slug"]);
+                    ->middleware(["slug"]);
             });
 
         Route::prefix("cash-out")
             ->middleware(["tgAuth.any"])
-            ->group(function(){
+            ->group(function () {
                 Route::post('/withdraw-money', [\App\Http\Controllers\Globals\RequestMoneyWithdrawScriptController::class, "withDrawMoney"])
                     ->middleware(["slug"]);
             });
@@ -399,6 +408,7 @@ Route::prefix("bot-client")
                 Route::post("/load-amo-fields", [AmoCrmController::class, "loadAmoFields"]);
                 Route::post("/sync-amo", [AmoCrmController::class, "syncAmoCrm"]);
                 Route::post("/bot-update", "updateBot");
+                Route::post("/bot-params-update", "updateBotParams");
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");
                 Route::post("/image-menu", "loadImageMenu");
@@ -408,8 +418,8 @@ Route::prefix("bot-client")
                 Route::post("/keyboard-template", "createKeyboardTemplate");
                 Route::post("/remove-keyboard-template/{keyboardId}", "removeKeyboardTemplate");
                 Route::post("/edit-keyboard-template", "editKeyboardTemplate");
-                Route::post('/switch-status',"switchBotStatus");
-                Route::post('/update-shop-link',"updateShopLink");
+                Route::post('/switch-status', "switchBotStatus");
+                Route::post('/update-shop-link', "updateShopLink");
                 Route::post("/restore/{botId}", "restore");
 
             });
@@ -417,16 +427,16 @@ Route::prefix("bot-client")
         Route::prefix("manager")
             ->controller(\App\Http\Controllers\Bots\Web\ManagerProfileController::class)
             ->middleware(["tgAuth.any"])
-            ->group(function(){
+            ->group(function () {
                 Route::post("/register", "registerManager");
-                Route::post('/load-data', [\App\Http\Controllers\Globals\ManagerScriptController::class,"loadData"]);
-                Route::post('/friends-web', [\App\Http\Controllers\Globals\ManagerScriptController::class,"getFriendList"]);
+                Route::post('/load-data', [\App\Http\Controllers\Globals\ManagerScriptController::class, "loadData"]);
+                Route::post('/friends-web', [\App\Http\Controllers\Globals\ManagerScriptController::class, "getFriendList"]);
             });
 
         Route::prefix("bots")
             ->controller(BotController::class)
             ->middleware(["tgAuth.any"])
-            ->group(function(){
+            ->group(function () {
                 Route::post("/simple-bot-list", "simpleList")
                     ->middleware(["tgAuth.manager"]);
                 Route::post("/bot-lazy", "createBotLazy")
@@ -434,7 +444,7 @@ Route::prefix("bot-client")
                 Route::post("/store-fields", "storeBotFields")
                     ->middleware(["tgAuth.admin"]);
                 Route::get("/load-fields", "loadBotFields");
-                Route::post('/manager-switch-status',"switchBotStatusManager")
+                Route::post('/manager-switch-status', "switchBotStatusManager")
                     ->middleware(["tgAuth.manager"]);
                 Route::post("/manager-bot-update", "updateBotByManager")
                     ->middleware(["tgAuth.manager"]);
@@ -451,6 +461,8 @@ Route::prefix("bot-client")
 
                 Route::post("/slug", "createSlug");
                 Route::post("/slug-update", "updateSlug");
+                Route::post("/slug-script-params", "updateScriptParams")
+                    ->middleware(["slug"]);
                 Route::post("/duplicate/{slugId}", "duplicate");
                 Route::get("/reload-params/{slugId}", "reloadParams");
                 Route::delete("/{slugId}", "destroy");
@@ -470,11 +482,10 @@ Route::prefix("bot-client")
             ->where("slug", "[0-9]+|route");
 
 
-
     });
 
 Route::prefix("bot-manager-client")
-    ->group(function(){
+    ->group(function () {
         Route::get("/{botDomain}", [\App\Http\Controllers\Globals\ManagerScriptController::class, "managerHomePage"])
             ->where("slug", "[0-9]+|route");
     });
