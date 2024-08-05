@@ -458,7 +458,8 @@ class CashBackScriptController extends SlugController
             } else
                 \App\Facades\BotManager::bot()
                     ->replyPhoto("Заполни эту анкету и получи доступ к системе CashBack",
-                        InputFile::create($image ?? public_path() . "/images/cashman2.jpg"),
+                        is_null($image)?
+                        InputFile::create( public_path() . "/images/cashman2.jpg") : $image,
                         [
                             [
                                 ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
