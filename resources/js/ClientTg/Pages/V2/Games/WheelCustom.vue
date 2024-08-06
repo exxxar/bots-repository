@@ -315,12 +315,19 @@ export default {
                 let index = 0
                 this.items = []
                 let tmpValues = []
+
+                let getRandomInt = (min, max) => {
+                    min = Math.ceil(min);
+                    max = Math.floor(max);
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                }
+
                 wheels.forEach(item => {
 
                     let success = false
                     let value = index+1
                     while (!success) {
-                        value = this.smiles[Math.floor(Math.random() * this.smiles.length - 1)]
+                        value = this.smiles[getRandomInt(0,this.smiles.length - 1)]
                         if (tmpValues.indexOf(value) === -1) {
                             tmpValues.push(value)
                             success = true
