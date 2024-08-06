@@ -485,6 +485,7 @@ import FriendsGameV2 from "@/ClientTg/Pages/V2/Shop/FriendsGame.vue";
 import PromoCodeFormV2 from "@/ClientTg/Pages/V2/Shop/PromoCode.vue";
 import VipProfileV2_1 from "@/ClientTg/Pages/V2/Shop/VipProfileV1.vue";
 import VipProfileV2_2 from "@/ClientTg/Pages/V2/Shop/VipProfileV2.vue";
+import WheelCustomV2 from "@/ClientTg/Pages/V2/Games/WheelCustom.vue";
 
 
 const simplePrefix = "/s"
@@ -652,6 +653,13 @@ export const simpleRoutes = [
         path: simplePrefix + '/new-profile-form',
         component: VipProfileV2_2,
         meta: {title: 'Анкета пользователя',  hide_menu: true}
+    },
+
+    {
+        name: 'WheelCustomV2',
+        path: simplePrefix + '/wheel-of-fortune-custom',
+        component: WheelCustomV2,
+        meta: {title: 'Колесо фортуны',  hide_menu: true}
     },
 
 

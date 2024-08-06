@@ -67,7 +67,7 @@
 
 <script lang="ts">
 import {Wheel} from "vue3-fortune-wheel";
-import img from '/public/images/bg-wheel-1.png'
+
 
 export default {
     props: ["modelValue", "canPlay", "actionData", "isAdmin"],

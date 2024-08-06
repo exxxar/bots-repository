@@ -473,7 +473,22 @@ export default {
                 this.form.wheel_of_fortune.items = []
 
 
-            let value = this.need_auto_random_smiles ? this.smiles[Math.floor(Math.random() * this.smiles.length - 1)] : this.form.wheel_of_fortune.items.length + 1
+
+            let tmpValues = []
+            let value = this.form.wheel_of_fortune.items.length + 1
+
+            if ( this.need_auto_random_smiles) {
+                let success = false
+
+                while (!success) {
+                    value = this.smiles[Math.floor(Math.random() * this.smiles.length - 1)]
+                    if (tmpValues.indexOf(value) === -1) {
+                        tmpValues.push(value)
+                        success = true
+                    }
+                }
+            }
+
 
             if (this.form.wheel_of_fortune.items.length < 10) {
                 this.form.wheel_of_fortune.items.push({

@@ -13,6 +13,7 @@ use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotUser;
 use Carbon\Carbon;
+use HttpException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -165,7 +166,10 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
     }
 
-    public function formWheelOfFortuneCallback(Request $request)
+    /**
+     * @throws HttpException
+     */
+    public function formWheelOfFortuneCallback(Request $request): \Illuminate\Http\Response
     {
         $request->validate([
             //   "name" => "required",
@@ -173,16 +177,19 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "win" => "required"
         ]);
 
-        $bot = $request->bot;
-        $botUser = $request->botUser;
-        $slug = $request->slug;
+        $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
+        $slug = $request->slug ?? null;
+
+        if (is_null($bot) || is_null($botUser) || is_null($slug))
+            throw new HttpException( "Не заданы необходимые параметры функции", 400);
 
 
-        $maxAttempts = (Collection::make($slug->config)
+        $maxAttempts = (Collection::make($slug->config ?? [])
             ->where("key", "max_attempts")
             ->first())["value"] ?? 1;
 
-        $callbackChannel = (Collection::make($slug->config)
+        $callbackChannel = (Collection::make($slug->config ?? [])
             ->where("key", "callback_channel_id")
             ->first())["value"] ??
             $bot->order_channel ??
@@ -199,15 +206,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->first();
 
         if (is_null($action))
-            $action = ActionStatus::query()
-                ->create([
-                    'user_id' => $botUser->user_id,
-                    'bot_user_id' => $botUser->id,
-                    'bot_id' => $bot->id,
-                    'slug_id' => $slug->id,
-                    'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0
-                ]);
+           throw new HttpException("Вы еще не начали розыгрыш!", 400);
 
         $action->current_attempts++;
         if ($action->current_attempts >= $maxAttempts)
@@ -215,13 +214,9 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
 
         $winNumber = $request->win ?? 0;
-        $winnerName = $request->name ?? $botUser->name ?? 'Имя не указано';
-        $winnerPhone = $request->phone ?? $botUser->phone ?? 'Телефон не указан';
+        $winnerName = $botUser->name ?? 'Имя не указано';
+        $winnerPhone =  $botUser->phone ?? 'Телефон не указан';
         $winnerDescription = $request->description ?? 'Без описания';
-
-        $botUser->name = $botUser->name ?? $winnerName ?? '-';
-        $botUser->phone = $botUser->phone ?? $winnerPhone ?? '-';
-        $botUser->save();
 
         $username = $botUser->username ?? null;
 
@@ -241,6 +236,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "win" => $winNumber,
             "description" => $winnerDescription,
             "phone" => $winnerPhone,
+            "played_at"=>Carbon::now(),
             "answered_at" => null,
             "answered_by" => null,
         ];
@@ -249,7 +245,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $link = "https://t.me/$bot->bot_domain?start=" . base64_encode("003$botUser->telegram_chat_id");
 
-        $action->max_attempts = $maxAttempts;
+        //$action->max_attempts = $maxAttempts;
         $action->save();
 
         $thread = $bot->topics["actions"] ?? null;
@@ -257,14 +253,14 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $vowels = ["(", ")", "-"];
         $filteredPhone = str_replace($vowels, "", $winnerPhone);
 
+        //str_contains($winMessage, "%s") ?
+        //                    sprintf($winMessage, $winnerName, $winNumber, $winnerDescription) : $winMessage
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
-                ->telegram_chat_id,
-                str_contains($winMessage, "%s") ?
-                    sprintf($winMessage, $winnerName, $winNumber, $winnerDescription) : $winMessage)
+                ->telegram_chat_id, "Вы приняли участие в розыгрыше призов и выиграли приз: $winnerDescription ! Обратитесь к администратору за дальнейшими инструкциями.")
             ->sendInlineKeyboard($callbackChannel,
-                "Участник $filteredPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $winnerDescription ) - свяжитесь с ним для дальнейших указаний", [
+                "Участник $filteredPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз  $winnerDescription - свяжитесь с ним для дальнейших указаний", [
                     [
                         ["text" => "Написать пользователю ответ", "url" => $link]
                     ]
@@ -290,14 +286,20 @@ class WheelOfFortuneCustomScriptController extends SlugController
         return response()->noContent();
     }
 
+    /**
+     * @throws HttpException
+     */
     public function formWheelOfFortunePrepare(Request $request)
     {
 
-        $bot = $request->bot;
-        $botUser = $request->botUser;
-        $slug = $request->slug;
+        $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
+        $slug = $request->slug ?? null;
 
-        $maxAttempts = (Collection::make($slug->config)
+        if (is_null($bot) || is_null($botUser) || is_null($slug))
+            throw new HttpException( "Не заданы необходимые параметры функции", 400);
+
+        $maxAttempts = (Collection::make($slug->config ?? [])
             ->where("key", "max_attempts")
             ->first())["value"] ?? 1;
 
@@ -318,7 +320,6 @@ class WheelOfFortuneCustomScriptController extends SlugController
                     'bot_user_id' => $botUser->id
                 ]);
 
-        $action->max_attempts = $maxAttempts;
 
         if (is_null($action->data)) {
             $action->current_attempts = 0;
@@ -328,23 +329,28 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         return response()->json([
             "action" => new ActionStatusResource($action),
-
         ]);
     }
 
+    /**
+     * @throws HttpException
+     */
     public function loadData(Request $request)
     {
 
-        $bot = $request->bot;
-        $botUser = $request->botUser;
-        $slug = $request->slug;
+        $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
+        $slug = $request->slug ?? null;
+
+        if (is_null($bot) || is_null($botUser) || is_null($slug))
+            throw new HttpException( "Не заданы необходимые параметры функции", 400);
 
 
-        $wheels = Collection::make($slug->config)
+        $wheels = Collection::make($slug->config ?? [])
             ->where("key", "wheel_text")
             ->toArray();
 
-        $rules = Collection::make($slug->config)
+        $rules = Collection::make($slug->config ?? [])
             ->where("key", "rules_text")
             ->first();
 
@@ -394,7 +400,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $keyboard = [
             [
                 ["text" => $btnText, "web_app" => [
-                    "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#wheel-of-fortune-custom"
+                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/wheel-of-fortune-custom"
                 ]],
             ],
 
@@ -413,7 +419,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 $keyboard = [
                     [
                         ["text" => "\xF0\x9F\x8E\xB2Заполнить анкету", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=$slugId#/vip"
+                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/new-vip"
                         ]],
                     ],
 
