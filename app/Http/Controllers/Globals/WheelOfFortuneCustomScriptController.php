@@ -440,8 +440,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
 
         \App\Facades\BotManager::bot()
-            ->replyPhoto($mainText,
-                $mainImage,
+            ->replyInlineKeyboard($mainText,
                 $keyboard);
 
 
