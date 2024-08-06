@@ -92,7 +92,7 @@
                 </div>
             </div>
 
-            <div class="col-12" v-if="action">
+            <div class="col-12" v-if="sortedActionData.length>0">
                 <h6 class="my-3">История розыгрышей</h6>
                 <ul class="list-group">
                     <li class="list-group-item p" v-for="item in sortedActionData"
