@@ -1,5 +1,5 @@
 <template>
-    <div class="container py-3 g-2" v-if="self">
+    <div class="container py-3" v-if="self">
         <div class="d-flex justify-content-center align-items-center" style="min-height:350px;">
             <div
                 v-if="(photos||[]).length>0"

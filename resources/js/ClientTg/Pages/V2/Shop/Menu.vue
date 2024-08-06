@@ -4,7 +4,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
 </script>
 <template>
 
-    <div class="container g-2 my-3" v-if="getSelf">
+    <div class="container py-3" v-if="getSelf">
         <h6 class="opacity-75 mb-3 text-center"><i class="fa-solid fa-house-chimney mr-2 text-primary"></i>Доступные
             сервисы</h6>
 
