@@ -801,6 +801,7 @@ trait BotBaseMethodsTrait
 
         $photoIsCorrect = false;
 
+        Log::info("photo type InputFile ".(($path instanceof InputFile)?"true":"false"));
         if ($path instanceof InputFile) {
             $photoIsCorrect = true;
         }
@@ -810,7 +811,6 @@ trait BotBaseMethodsTrait
             if (!$photoIsCorrect) {
                 $fileId = FileId::fromBotAPI($path);
                 $photoIsCorrect = true;
-                Log::info("correct file id=>".print_r($fileId, true));
             }
         } catch (Exception $e) {
             Log::info("wrong file id=>".$e);
