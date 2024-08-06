@@ -799,13 +799,10 @@ trait BotBaseMethodsTrait
     public function sendPhoto($chatId, $caption, $path, array $keyboard = [], $messageThreadId = null)
     {
 
-        $photoIsCorrect = false;
-
         Log::info("photo type InputFile ".(($path instanceof InputFile)?"true":"false"));
-        if ($path instanceof InputFile) {
-            $photoIsCorrect = true;
-        }
+        Log::info("photo path ".print_r($path, true));
 
+        $photoIsCorrect = $path instanceof InputFile;
 
         try {
             if (!$photoIsCorrect) {
