@@ -807,7 +807,7 @@ trait BotBaseMethodsTrait
         try {
             if (!$photoIsCorrect) {
                 $fileId = FileId::fromBotAPI($path);
-                Log::info($fileId);
+                Log::info($fileId->getVersion());
                 $photoIsCorrect = true;
             }
         } catch (Exception $e) {
