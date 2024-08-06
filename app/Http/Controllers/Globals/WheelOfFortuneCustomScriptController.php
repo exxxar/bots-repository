@@ -441,9 +441,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         \App\Facades\BotManager::bot()
             ->replyPhoto($mainText,
-                is_null($mainImage) ?
-                    InputFile::create(public_path() . "/images/wheel-of-fortune.jpg") :
-                    $mainImage,
+                $mainImage,
                 $keyboard);
 
 
