@@ -799,19 +799,15 @@ trait BotBaseMethodsTrait
     public function sendPhoto($chatId, $caption, $path, array $keyboard = [], $messageThreadId = null)
     {
 
-        Log::info("photo type InputFile ".(($path instanceof InputFile)?"true":"false"));
-        Log::info("photo path ".print_r($path, true));
-
         $photoIsCorrect = $path instanceof InputFile;
 
         try {
             if (!$photoIsCorrect) {
                 $fileId = FileId::fromBotAPI($path);
-                Log::info($fileId->getVersion());
                 $photoIsCorrect = true;
             }
         } catch (Exception $e) {
-            Log::info("wrong file id=>".$e);
+
         }
 
         if (!$photoIsCorrect) {
@@ -830,10 +826,10 @@ trait BotBaseMethodsTrait
         if (!is_null($messageThreadId))
             $tmp["message_thread_id"] = $messageThreadId;
 
-        if (count($keyboard ?? [])>0) {
-                $tmp['reply_markup'] = json_encode([
-                    'inline_keyboard' => $keyboard,
-                ]);
+        if (count($keyboard ?? []) > 0) {
+            $tmp['reply_markup'] = json_encode([
+                'inline_keyboard' => $keyboard,
+            ]);
         }
 
         if (mb_strlen($caption ?? '') >= 1000) {
@@ -856,7 +852,9 @@ trait BotBaseMethodsTrait
         try {
             $data = $this->bot->sendPhoto($tmp);
         } catch (\Exception $e) {
-            $this->sendMessageOnCrash($tmp, "sendPhoto");
+            empty($keyboard ?? []) ?
+                $this->sendMessage($chatId, $caption ?? 'Ошибочка...', $messageThreadId) :
+                $this->sendInlineKeyboard($chatId, $caption ?? 'Ошибочка...', $keyboard, $messageThreadId);
         }
 
         return $this;
@@ -1052,12 +1050,9 @@ trait BotBaseMethodsTrait
 
         try {
             $data = $this->bot->sendMessage($tmp);
-
         } catch (\Exception $e) {
-
-            $this->sendMessageOnCrash($tmp, "sendMessage");
-
-
+            Log::info("error in extractedMessage" . $e);
+            //$this->sendMessageOnCrash($tmp, "sendMessage");
         }
         return $this;
     }
