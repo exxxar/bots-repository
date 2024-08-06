@@ -320,12 +320,12 @@ class WheelOfFortuneCustomScriptController extends SlugController
                     'bot_user_id' => $botUser->id
                 ]);
 
+        $action->max_attempts = $maxAttempts;
 
-        if (is_null($action->data)) {
+        if (is_null($action->data))
             $action->current_attempts = 0;
-            $action->save();
-        }
 
+        $action->save();
 
         return response()->json([
             "action" => new ActionStatusResource($action),
