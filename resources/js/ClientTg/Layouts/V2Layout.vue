@@ -13,7 +13,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
     </Head>
 
     <header
-        v-if="!$route.meta.hide_menu"
+        v-if="!needHideMenu"
         data-bs-theme="dark">
         <div class="navbar shadow shadow-sm">
             <div class="container flex-row-reverse p-2">
@@ -292,6 +292,10 @@ export default {
         bot() {
             return window.currentBot
         },
+        needHideMenu(){
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.has('hide_menu') || this.$route.meta.hide_menu
+        },
         links() {
             return {
                 inst: (this.bot.company.links || {inst: null}).inst || null,
@@ -302,6 +306,7 @@ export default {
     },
 
     mounted() {
+
 
         let theme = localStorage.getItem("cashman_global_client_theme") || null
 

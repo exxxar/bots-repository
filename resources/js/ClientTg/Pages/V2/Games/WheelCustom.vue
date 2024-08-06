@@ -98,15 +98,15 @@
                     <li class="list-group-item p" v-for="item in sortedActionData"
                         v-if="action.data">
                         <p class="mb-2 d-flex justify-content-between">Название приза <strong
-                            class="fw-bold text-primary">{{ item.description || 'Отсутствует' }}</strong></p>
-                        <p class="mb-2 d-flex justify-content-between">Победитель <strong class="fw-bold text-primary">{{
+                            class="fw-bold text-primary text-right">{{ item.description || 'Отсутствует' }}</strong></p>
+                        <p class="mb-2 d-flex justify-content-between">Победитель <strong class="fw-bold text-primary text-right">{{
                                 item.name || 'Не указано'
                             }}</strong></p>
                         <p class="mb-2 d-flex justify-content-between">Телефон <strong
-                            class="fw-bold text-primary">{{ item.phone || 'Не указано' }}</strong></p>
+                            class="fw-bold text-primary text-right">{{ item.phone || 'Не указано' }}</strong></p>
                         <p class="mb-2 d-flex justify-content-between"
                            v-if="item.played_at">
-                            Дата розыгрыша <strong class="fw-bold text-primary">{{
+                            Дата розыгрыша <strong class="fw-bold text-primary text-right">{{
                                 $filters.currentFull(item.played_at)
                             }}</strong>
                         </p>

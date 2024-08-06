@@ -310,7 +310,7 @@ class ProfileFormScriptController extends SlugController
         $keyboard = [
             [
                 ["text" => "$btnText", "web_app" => [
-                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/new-profile-form"
+                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId&hide_menu#/s/new-profile-form"
                 ]],
             ],
 

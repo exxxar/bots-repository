@@ -173,7 +173,7 @@ class PromocodeScriptController extends SlugController
         $keyboard = [
             [
                 ["text" => "$btnText", "web_app" => [
-                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId#/s/new-promo-code"
+                    "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=$slugId&hide_menu#/s/new-promo-code"
                 ]],
             ],
 
