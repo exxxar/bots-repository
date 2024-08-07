@@ -116,7 +116,7 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
 
         <button
             type="button"
-            :disabled="form.wheels.length>=10"
+            v-if="form.wheels.length<10"
             @click="addWheel"
             class="btn btn-outline-primary p-3 w-100 mb-5">Добавить приз
         </button>
