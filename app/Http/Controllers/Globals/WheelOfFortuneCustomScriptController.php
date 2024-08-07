@@ -7,6 +7,7 @@ use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ActionStatusResource;
+use App\Http\Resources\BotMenuSlugResource;
 use App\Http\Resources\BotSecurityResource;
 use App\Models\ActionStatus;
 use App\Models\Bot;
@@ -182,7 +183,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $slug = $request->slug ?? null;
 
         if (is_null($bot) || is_null($botUser) || is_null($slug))
-            throw new HttpException( "Не заданы необходимые параметры функции", 400);
+            throw new HttpException("Не заданы необходимые параметры функции", 400);
 
 
         $maxAttempts = (Collection::make($slug->config ?? [])
@@ -197,7 +198,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $winMessage = (Collection::make($slug->config)
             ->where("key", "win_message")
-            ->first())["value"] ?? "%s, вы приняли участие в розыгрыше и выиграли приз под номером %s. Наш менеджер свяжется с вами в ближайшее время!";
+            ->first())["value"] ?? "Спасибо за участие!";
 
         $action = ActionStatus::query()
             ->where("user_id", $botUser->user_id)
@@ -206,7 +207,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             ->first();
 
         if (is_null($action))
-           throw new HttpException("Вы еще не начали розыгрыш!", 400);
+            throw new HttpException("Вы еще не начали розыгрыш!", 400);
 
         $action->current_attempts++;
         if ($action->current_attempts >= $maxAttempts)
@@ -215,7 +216,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
         $winNumber = $request->win ?? 0;
         $winnerName = $botUser->name ?? 'Имя не указано';
-        $winnerPhone =  $botUser->phone ?? 'Телефон не указан';
+        $winnerPhone = $botUser->phone ?? 'Телефон не указан';
         $winnerDescription = $request->description ?? 'Без описания';
 
         $username = $botUser->username ?? null;
@@ -236,7 +237,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "win" => $winNumber,
             "description" => $winnerDescription,
             "phone" => $winnerPhone,
-            "played_at"=>Carbon::now(),
+            "played_at" => Carbon::now(),
             "answered_at" => null,
             "answered_by" => null,
         ];
@@ -253,12 +254,15 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $vowels = ["(", ")", "-"];
         $filteredPhone = str_replace($vowels, "", $winnerPhone);
 
-        //str_contains($winMessage, "%s") ?
-        //                    sprintf($winMessage, $winnerName, $winNumber, $winnerDescription) : $winMessage
+        $winMessage = str_replace(["{{name}}"], $winnerName ?? 'имя не указано', $winMessage);
+        $winMessage = str_replace(["{{phone}}"], $winnerPhone ?? 'телефон не указан', $winMessage);
+        $winMessage = str_replace(["{{prize}}"], $winnerDescription ?? 'описание приза не указано', $winMessage);
+        $winMessage = str_replace(["{{username}}"], "@" . ($username ?? 'имя не указано'), $winMessage);
+
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
-                ->telegram_chat_id, "Вы приняли участие в розыгрыше призов и выиграли приз: $winnerDescription ! Обратитесь к администратору за дальнейшими инструкциями.")
+                ->telegram_chat_id, $winMessage)
             ->sendInlineKeyboard($callbackChannel,
                 "Участник $filteredPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз  $winnerDescription - свяжитесь с ним для дальнейших указаний", [
                     [
@@ -297,7 +301,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $slug = $request->slug ?? null;
 
         if (is_null($bot) || is_null($botUser) || is_null($slug))
-            throw new HttpException( "Не заданы необходимые параметры функции", 400);
+            throw new HttpException("Не заданы необходимые параметры функции", 400);
 
         $maxAttempts = (Collection::make($slug->config ?? [])
             ->where("key", "max_attempts")
@@ -335,7 +339,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
     /**
      * @throws HttpException
      */
-    public function loadData(Request $request)
+    public function loadData(Request $request): \Illuminate\Http\JsonResponse
     {
 
         $bot = $request->bot ?? null;
@@ -343,31 +347,121 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $slug = $request->slug ?? null;
 
         if (is_null($bot) || is_null($botUser) || is_null($slug))
-            throw new HttpException( "Не заданы необходимые параметры функции", 400);
+            throw new HttpException("Не заданы необходимые параметры функции", 400);
 
 
-        $wheels = Collection::make($slug->config ?? [])
-            ->where("key", "wheel_text")
-            ->toArray();
+        $dictionary = [
+            "rules_text" => "Правила колеса фортуны",
+            "callback_message" => "Спасибо за участие в розыгрыше, {{name}}!",
+            "main_text" => "Колесо фортуны!",
+            "btn_text" => "Поехали!",
+            "max_attempts" => 1,
+            "can_play" => true,
+            "wheels" => array_values(Collection::make($slug->config ?? [])
+                ->where("key", "wheel_text")
+                ->toArray()) ?? [],
+            "win_message" => "{{name}}, вы приняли участие в розыгрыше и выиграли приз {{prize}}. Наш менеджер свяжется с вами в ближайшее время!",
+        ];
 
-        $rules = Collection::make($slug->config ?? [])
-            ->where("key", "rules_text")
-            ->first();
 
-        $callback_message = Collection::make($slug->config)
-            ->where("key", "callback_message")
-            ->first();
+        if (!is_null($slug->config ?? null)) {
+            $tmp = [];
 
-        return response()->json(
-            [
-                "wheels" => array_values($wheels),
-                'rules' => $rules["value"] ?? null,
-                'callback_message' => $rules["value"] ?? null,
-            ]
+            foreach ($slug->config ?? [] as $item) {
+                $item = (object)$item;
+                $tmp[$item->key] = is_null($item->value ?? null) ? ($dictionary[$item->key] ?? null) : $item->value;
+            }
 
-        );
+            foreach ($dictionary as $key => $item) {
+                if (!isset($tmp[$key]))
+                    $tmp[$key] = $item;
+            }
+
+
+            return response()->json($tmp);
+        }
+
+        return response()->json($dictionary);
+
     }
 
+    /**
+     * @throws HttpException
+     */
+    public function storeParams(Request $request)
+    {
+
+        $bot = $request->bot ?? null;
+        $slug = $request->slug ?? null;
+
+        if (is_null($bot) || is_null($slug))
+            throw new HttpException("Не все параметры функции заданы!", 404);
+
+        $slug = BotMenuSlug::query()->find($slug->id);
+
+
+        if (is_null($slug))
+            throw new HttpException(404, "Команда не найдена!");
+
+        $data = $request->all();
+
+
+        $data["can_play"] = (($data["can_play"] ?? false) == "true");
+        $data["rules_text"] = $data["rules_text"] ?? "Правила игры";
+        $data["main_text"] = $data["main_text"] ?? "Начни игру, испытай удачи, выиграй приз!";
+        $data["btn_text"] = $data["btn_text"] ?? "Поехали!";
+        $data["callback_message"] = $data["callback_message"] ?? "Поехали!";
+        $data["win_message"] = $data["win_message"] ?? "Поехали!";
+        $data["max_attempts"] = $data["max_attempts"] ?? 0;
+        $wheels = json_decode($data["wheels"] ?? '[]');
+        unset($data["wheels"]);
+
+
+        $config = Collection::make($slug->config ?? []);
+
+        $tmp = $slug->config ?? [];
+
+        foreach ($tmp as $key => $item) {
+            if ($item["key"] == "wheel_text" || $item["key"]=="wheels") {
+                unset($tmp[$key]);
+                continue;
+            }
+
+            $configItem = $config->where("key", $item["key"])->first() ?? null;
+            $configItem["value"] = $data[$item["key"]] ?? null;
+            $tmp[$key] = $configItem;
+
+        }
+
+        foreach (array_keys($data) as $key) {
+
+            $configItem = $config->where("key", $key)->first() ?? null;
+
+            if (is_null($configItem)) {
+                $tmp[] = [
+                    "key" => $key,
+                    "type" => "json",
+                    "value" => $data[$key]
+                ];
+            }
+
+        }
+
+        if (count($wheels) > 0)
+            foreach ($wheels as $wheel) {
+                $wheel = (object)$wheel;
+                $tmp[] = [
+                    "key" => $wheel->key,
+                    "type" => $wheel->type,
+                    "value" => $wheel->value
+                ];
+            }
+
+        $slug->config = $tmp;
+        $slug->save();
+
+        return new BotMenuSlugResource($slug);
+    }
 
 
     public function wheelOfFortune(...$config)

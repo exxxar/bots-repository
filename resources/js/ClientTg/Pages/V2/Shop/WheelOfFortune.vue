@@ -1,10 +1,20 @@
 <script setup>
 import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFortuneShopVariant.vue";
+import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopScriptEditor.vue";
 </script>
 
 <template>
     <div class="container py-3" v-if="loadScriptData&&action">
         <div class="row">
+            <div class="col-12" v-if="(getSelf||{is_admin:false}).is_admin">
+                <button
+                    type="button"
+                    data-bs-toggle="modal" data-bs-target="#shop-wheel-form-modal"
+                    class="btn btn-outline-light text-primary w-100 mb-2"
+                    style="font-size:12px;">
+                    <i class="fa-regular fa-pen-to-square "></i> Редактор скрипта
+                </button>
+            </div>
             <div class="col-12" v-if="(script_data.wheel_of_fortune||{rules:null}).rules">
                 <div class="alert alert-light mb-2">
                     {{ (script_data.wheel_of_fortune || {rules: null}).rules || 'Правила игры' }}
@@ -33,8 +43,30 @@ import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFor
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div
+        v-if="(getSelf||{is_admin:false}).is_admin"
+        class="modal fade" id="shop-wheel-form-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ShopScriptEditor
+                        :default-type="1"
+                        v-if="script_data"
+                        v-model="script_data"></ShopScriptEditor>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     data() {
         return {
@@ -44,6 +76,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['getSelf']),
         canPlay() {
             if (!this.action)
                 return false

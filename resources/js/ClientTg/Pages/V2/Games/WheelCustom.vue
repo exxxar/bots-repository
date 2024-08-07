@@ -1,7 +1,20 @@
+<script setup>
+import WheelCustomScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/WheelCustom/WheelCustomScriptEditor.vue";
+</script>
 <template>
 
     <div class="container py-3" v-if="wheelDataLoaded">
         <div class="row">
+            <div class="col-12" v-if="(getSelf||{is_admin:false}).is_admin">
+                <button
+                    type="button"
+                    data-bs-toggle="modal" data-bs-target="#shop-wheel-form-modal"
+                    class="btn btn-outline-light text-primary w-100 mb-2"
+                    style="font-size:12px;">
+                    <i class="fa-regular fa-pen-to-square "></i> Редактор скрипта
+                </button>
+            </div>
+
             <div class="col-12">
                 <h4 v-if="rules">Правила данной игры</h4>
                 <p v-if="rules" v-html="rules" class="mb-2"></p>
@@ -38,6 +51,9 @@
                                 $filters.currentFull(sortedActionData[0].played_at)
                             }}</strong>
                         </p>
+
+                        <h6 class="mt-3 mb-2 text-center fw-bold">Как получить приз</h6>
+                        <p class="mb-0 fst-italic" v-if="script_data.callback_message" v-html="script_data.callback_message"></p>
                     </div>
                 </div>
                 <div v-else
@@ -87,7 +103,9 @@
                         <h6 class="mb-2 text-center"> {{ winForm.win.value || winForm.win.id || '-' }} (#{{
                                 winForm.win.id
                             }})</h6>
-                        <p class="mb-0 fst-italic">{{ winForm.win.description || 'не указно' }}</p>
+                        <p class="mb-2 fst-italic">{{ winForm.win.description || 'не указно' }}</p>
+
+
                     </div>
                 </div>
             </div>
@@ -127,9 +145,27 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div
+        v-if="(getSelf||{is_admin:false}).is_admin"
+        class="modal fade" id="shop-wheel-form-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <WheelCustomScriptEditor v-if="script_data" v-model="script_data"></WheelCustomScriptEditor>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 import {Wheel} from "vue3-fortune-wheel";
+import {mapGetters} from "vuex";
 
 export default {
     components: {
@@ -143,6 +179,7 @@ export default {
                 "💎", "🤖", "🎲", "🎯", "🏆", "😊", "😎", "🌻", "👽", "💌", "📚", "🐶", "👻", "🏀", "👓", "🎓"],
             rules: null,
             action: null,
+            script_data:null,
             selected_prize: null,
             wheelDataLoaded: false,
             winForm: {
@@ -213,6 +250,7 @@ export default {
         };
     },
     computed: {
+        ...mapGetters(['getSelf']),
         sortedActionData() {
             if (!this.action || (this.action?.data || []).length === 0)
                 return []
@@ -309,6 +347,7 @@ export default {
         loadServiceData() {
 
             return this.$store.dispatch("wheelOfFortuneCustomLoadData").then((response) => {
+                this.script_data = response
                 this.rules = response.rules
                 const wheels = this.shuffle(response.wheels)
 

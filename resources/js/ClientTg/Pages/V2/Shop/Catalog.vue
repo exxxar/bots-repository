@@ -9,8 +9,14 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
     <div v-touch:swipe.left="doSwipeLeft"
          v-touch:swipe.right="doSwipeRight" class="d-flex flex-column">
 
+        <div class="p-2" v-if="settings.is_disabled">
+            <div class="alert alert-danger mb-0" >
+                <p class="mb-0" v-html="settings.disabled_text"></p>
+            </div>
+        </div>
+
         <div class="p-2">
-            <div class="input-group mb-3">
+            <div class="input-group">
                 <div class="form-floating">
                     <input type="search"
                            v-model="search"
@@ -19,8 +25,6 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
                 </div>
                 <button class="btn btn-outline-light " type="button" id="button-addon2"><i class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
             </div>
-
-
         </div>
 
         <menu
@@ -186,6 +190,8 @@ export default {
             tab: 1,
             load_content: false,
             settings: {
+                is_disabled:false,
+                disabled_text:null,
                 can_use_cash: true,
                 delivery_price_text: null,
                 min_price: 0,

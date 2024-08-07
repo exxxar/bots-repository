@@ -79,16 +79,28 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                     :pagination="orders_paginate_object"/>
             </div>
             <div class="col-12" v-if="tab===1">
-                <template v-for="(review, index) in reviews">
-                    <ReviewCard v-model="reviews[index]" :need-product="true"></ReviewCard>
-                    <hr>
-                </template>
 
-                <Pagination
-                    :simple="true"
-                    v-on:pagination_page="nextReviews"
-                    v-if="reviews_paginate_object"
-                    :pagination="reviews_paginate_object"/>
+                <div v-if="(reviews||[]).length>0">
+                    <template v-for="(review, index) in reviews">
+                        <ReviewCard v-model="reviews[index]" :need-product="true"></ReviewCard>
+                        <hr>
+                    </template>
+
+
+                    <Pagination
+                        :simple="true"
+                        v-on:pagination_page="nextReviews"
+                        v-if="reviews_paginate_object"
+                        :pagination="reviews_paginate_object"/>
+                </div>
+
+
+                <div v-else class="d-flex flex-column justify-content-center align-items-center" style="height:100vh;">
+                    <div class="d-flex justify-content-center flex-column align-items-center">
+                        <i class="fa-brands fa-shopify mb-3" style="font-size:36px;"></i>
+                        <p>Отзывов о товарах еще нет:(</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

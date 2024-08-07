@@ -286,7 +286,13 @@ class SimpleDeliveryController extends SlugController
 
     public function loadData(Request $request): \Illuminate\Http\JsonResponse
     {
-        $slug = $request->slug;
+        $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
+        $slug = $request->slug ?? null;
+
+        if (is_null($bot) || is_null($botUser) || is_null($slug))
+            throw new HttpException("Не заданы необходимые параметры функции", 400);
+
 
         $dictionary = [
             "delivery_price_text" => "Цена доставки рассчитывается курьером",
@@ -294,6 +300,7 @@ class SimpleDeliveryController extends SlugController
             "min_price" => 100,
             "price_per_km" => 100,
             "min_price_for_cashback" => 2000,
+            "is_disabled" => false,
             "can_use_card" => false,
             "can_use_cash" => true,
             "menu_list_type" => 0,
@@ -301,8 +308,12 @@ class SimpleDeliveryController extends SlugController
             "need_pay_after_call" => true,
             "free_shipping_starts_from" => 0,
             "payment_info" => "Текст не найден",
-            "wheel_of_fortune" => null,
-            "win_message" => "%s, вы приняли участие в розыгрыше и выиграли приз под номером %s (%s). Наш менеджер свяжется с вами в ближайшее время!",
+            "wheel_of_fortune" => (object)[
+                "rules" => "Правила колеса фортуны",
+                "can_play" => false,
+                "items" => []
+            ],
+            "win_message" => "{{name}}, вы приняли участие в розыгрыше и выиграли приз {{prize}}. Наш менеджер свяжется с вами в ближайшее время!",
         ];
 
 
@@ -313,6 +324,13 @@ class SimpleDeliveryController extends SlugController
                 $item = (object)$item;
                 $tmp[$item->key] = is_null($item->value ?? null) ? ($dictionary[$item->key] ?? null) : $item->value;
             }
+
+            foreach ($dictionary as $key => $item) {
+                if (!isset($tmp[$key]))
+                    $tmp[$key] = $item;
+            }
+
+
             return response()->json($tmp);
         }
         return response()->json($dictionary);
@@ -458,21 +476,21 @@ class SimpleDeliveryController extends SlugController
         $winnerName = $botUser->name ?? 'Имя не указано';
         $winnerPhone = $botUser->phone ?? 'Телефон не указан';
         $mark = $request->mark ?? 'Без указания способа получения';
-        $winnerDescription = ($request->description ?? 'Без описания') . ", <b>способ получения приза:" . $mark."</b>";
+        $winnerDescription = ($request->description ?? 'Без описания') . ", <b>способ получения приза:" . $mark . "</b>";
 
         $username = $botUser->username ?? null;
 
-       /* $tmp = $action->data ?? [];
+        /* $tmp = $action->data ?? [];
 
-        $tmp[] = (object)[
-            "bgColor" => $request->bgColor ?? null,
-            "color" => $request->color ?? null,
-            "description" => $request->description ?? null,
-            "id" => $request->id ?? null,
-            "mark" => $request->mark ?? null,
-            "value" => $request->value ?? null,
+         $tmp[] = (object)[
+             "bgColor" => $request->bgColor ?? null,
+             "color" => $request->color ?? null,
+             "description" => $request->description ?? null,
+             "id" => $request->id ?? null,
+             "mark" => $request->mark ?? null,
+             "value" => $request->value ?? null,
 
-        ];*/
+         ];*/
 
         $action->data = [
             (object)[
@@ -496,12 +514,16 @@ class SimpleDeliveryController extends SlugController
         $vowels = ["(", ")", "-"];
         $filteredPhone = str_replace($vowels, "", $winnerPhone);
 
+        $winMessage = str_replace(["{{name}}"], $winnerName ?? 'имя не указано', $winMessage);
+        $winMessage = str_replace(["{{phone}}"], $winnerPhone ?? 'телефон не указан', $winMessage);
+        $winMessage = str_replace(["{{prize}}"], $winnerDescription ?? 'описание приза не указано', $winMessage);
+        $winMessage = str_replace(["{{username}}"], "@" . ($username ?? 'имя не указано'), $winMessage);
+
         \App\Facades\BotMethods::bot()
-            ->whereDomain($bot->bot_domain)
+            ->whereBot($bot)
             ->sendMessage($botUser
                 ->telegram_chat_id,
-                str_contains($winMessage, "%s") ?
-                    sprintf($winMessage, $winnerName, $winNumber, $winnerDescription) : $winMessage)
+                $winMessage)
             ->sendInlineKeyboard($callbackChannel,
                 "Участник $filteredPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз №$winNumber ( $winnerDescription ) - свяжитесь с ним для дальнейших указаний", [
                     [

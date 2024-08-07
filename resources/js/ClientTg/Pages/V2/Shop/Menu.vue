@@ -1,10 +1,17 @@
 <script setup>
 import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
-import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vue";
+import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopScriptEditor.vue";
 </script>
 <template>
 
     <div class="container py-3" v-if="getSelf">
+
+        <div
+            v-if="script_data.is_disabled||false"
+            class="alert alert-danger mb-3">
+            <p class="mb-0" v-html="script_data.disabled_text||'-'"></p>
+        </div>
+
         <h6 class="opacity-75 mb-3 text-center"><i class="fa-solid fa-house-chimney mr-2 text-primary"></i>Доступные
             сервисы</h6>
 
@@ -40,11 +47,13 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                 <button type="button"
                         @click="goTo('CatalogV2')"
                         style="min-height:250px;"
+                        :disabled="script_data.is_disabled"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2-2/shop.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Магазин</p>
+                        <span style="font-size:12px;" v-if="script_data.is_disabled"><i class="fa-solid fa-lock"></i> закрыто</span>
                     </div>
 
                 </button>
@@ -96,7 +105,8 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                         <img v-lazy="'/images/shop-v2-2/events.png'" class="img-fluid" alt="">
 
                         <p class="my-2"> Колесо фортуны</p>
-                        <span style="font-size:12px;" v-if="!script_data.wheel_of_fortune.can_play||!loadScriptData"><i class="fa-solid fa-lock"></i> закрыто</span>
+                        <span style="font-size:12px;" v-if="!script_data.wheel_of_fortune.can_play||!loadScriptData"><i
+                            class="fa-solid fa-lock"></i> закрыто</span>
                     </div>
 
                 </button>
@@ -229,7 +239,6 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
             </div>
 
 
-
             <div class="col">
                 <button type="button"
                         @click="goTo('StatisticV2')"
@@ -260,7 +269,8 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
         </div>
     </div>
 
-    <div class="modal fade" id="script-setting-editor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="script-setting-editor" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
@@ -269,7 +279,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                 </div>
                 <div class="modal-body">
                     <ShopScriptEditor v-if="loadScriptData"
-                                 v-model="script_data">
+                                      v-model="script_data">
                     </ShopScriptEditor>
                 </div>
             </div>
@@ -289,7 +299,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ShopScriptEditor.vu
                     <ScheduleList
                         v-if="bot"
                         :schedule="bot.company.schedule"></ScheduleList>
-                    <p  v-if="(getSelf||{is_admin:false}).is_admin" class="my-2 d-flex justify-content-center"><a
+                    <p v-if="(getSelf||{is_admin:false}).is_admin" class="my-2 d-flex justify-content-center"><a
                         data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
                         href="javascript:void(0)" class="text-primary ml-2" style="font-size:12px;"><i
                         class="fa-solid fa-pen-to-square"></i> редактировать</a></p>
@@ -305,10 +315,10 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-            loadScriptData:false,
+            loadScriptData: false,
             script_data: {
-                wheel_of_fortune:{
-                    can_play:false,
+                wheel_of_fortune: {
+                    can_play: false,
                 }
             },
         }
@@ -316,11 +326,11 @@ export default {
     computed: {
         ...mapGetters(['getSelf', 'cartTotalCount']),
 
-        isWork(){
+        isWork() {
             if (!window.isCorrectSchedule(this.bot.company.schedule))
                 return true
 
-          return (this.bot.company || {is_work:true}).is_work
+            return (this.bot.company || {is_work: true}).is_work
         },
         tg() {
             return window.Telegram.WebApp;
@@ -350,7 +360,7 @@ export default {
         loadScriptModuleData() {
             this.loadScriptData = false
             return this.$store.dispatch("loadShopModuleData").then((resp) => {
-                this.script_data  = []
+                this.script_data = []
 
                 this.$nextTick(() => {
                     Object.keys(resp).forEach(item => {

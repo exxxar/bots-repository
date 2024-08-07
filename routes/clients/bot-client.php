@@ -82,6 +82,7 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post('/prepare', "formWheelOfFortunePrepare");
                 Route::post('/load-data', "loadData");
+                Route::post('/store-params', "storeParams")->middleware(["tgAuth.admin"]);
                 Route::post('/callback', "formWheelOfFortuneCallback");
             });
 

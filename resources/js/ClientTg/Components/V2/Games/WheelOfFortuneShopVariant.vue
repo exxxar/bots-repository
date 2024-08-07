@@ -217,7 +217,7 @@ export default {
 
     .start-panel {
         position: absolute;
-        z-index: 1000;
+        z-index: 99;
         height: 110px;
         width: 110px;
         display: flex;

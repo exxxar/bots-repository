@@ -8,9 +8,19 @@ let state = {}
 const getters = {}
 
 const actions = {
+    async updateWheelCustomScriptParams(context, payload = {slugForm: null}) {
+        let link = `${BASE_WHEEL_OF_FORTUNE_CUSTOM_LINK}/store-params`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.slugForm)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async wheelOfFortuneCustomLoadData(context) {
-
-
         let link = `${ BASE_WHEEL_OF_FORTUNE_CUSTOM_LINK}/load-data`
 
         let _axios = util.makeAxiosFactory(link, 'POST')
