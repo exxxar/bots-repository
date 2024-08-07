@@ -56,7 +56,7 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
             :required="true"
             class="mb-2">
             <template #title>
-                Текст пользователю при выигрыше
+                Текст при выигрыше
             </template>
         </ParametrizedTextArea>
 
@@ -95,13 +95,13 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
              v-for="(item, index) in form.wheels">
             <div class="form-floating">
 
-                <textarea class="form-control"
+                <textarea class="form-control border-light"
                           v-model="form.wheels[index].value"
                           maxlength="4000"
                           style="min-height:100px;"
                           placeholder="Leave a comment here"
                           id="script-settings-wheel-of-fortune-can_play" required></textarea>
-                <label for="script-settings-disabled_text">#{{ index + 1 }} - описание приза в колесе
+                <label for="script-settings-disabled_text">#{{ index + 1 }} - описание приза
                     <span
                         v-if="(form.wheels[index].value||'').length>0">{{
                             (form.wheels[index].value || '').length
