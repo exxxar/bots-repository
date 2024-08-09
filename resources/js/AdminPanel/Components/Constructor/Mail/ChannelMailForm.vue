@@ -166,8 +166,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     <BotMenuConstructor
                         :type="'inline'"
                         v-else
-                        v-on:save="saveInlineKeyboard"
-                        :edited-keyboard="mailForm.inline_keyboard"/>
+                        v-model="mailForm.inline_keyboard"/>
 
 
                 </div>
@@ -277,9 +276,7 @@ export default {
             })
 
         },
-        saveInlineKeyboard(keyboard) {
-            this.mailForm.inline_keyboard = keyboard
-        },
+
         selectInlineKeyboard(keyboard) {
             this.mailForm.inline_keyboard = keyboard
 

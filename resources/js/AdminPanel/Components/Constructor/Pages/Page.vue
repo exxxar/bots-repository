@@ -3,7 +3,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
 import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlugList.vue";
 import BotSlugListSimple from "@/AdminPanel/Components/Constructor/Slugs/BotSlugListSimple.vue";
-import BotSlugTableList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugTableList.vue";
+
 import BotDialogGroupListSimple from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/InlineInjectionsHelper.vue";
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
@@ -389,9 +389,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                             <BotMenuConstructor
                                 v-else
                                 :type="'reply'"
-                                v-on:save="saveReplyKeyboard"
-                                v-on:save-settings="saveReplyKeyboardSettings"
-                                :edited-keyboard="pageForm.reply_keyboard"/>
+                                v-model="pageForm.reply_keyboard"/>
                         </div>
                     </div>
 
@@ -469,8 +467,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
                             <BotMenuConstructor
                                 :type="'inline'"
                                 v-else
-                                v-on:save="saveInlineKeyboard"
-                                :edited-keyboard="pageForm.inline_keyboard"/>
+                                v-model="pageForm.inline_keyboard"/>
 
 
                         </div>
@@ -938,7 +935,7 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
 
                     <BotSlugListSimple v-if="bot&&load_slug_simple_list"
                                        :global="true"
-                                        :can-select="true"
+                                       :can-select="true"
                                        :selected="[pageForm.next_bot_menu_slug_id]"
                                        v-on:callback="associateSlug"
                                        :bot="bot"/>
@@ -1294,7 +1291,8 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
     </div>
 
 
-    <div class="modal fade" id="page-preview-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="page-preview-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
 
@@ -1307,7 +1305,8 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
 
             </div>
         </div>
-    </div>-
+    </div>
+    -
 
 
     <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas"
@@ -1348,9 +1347,7 @@ export default {
             pageModal: null,
             pagePreviewModal: null,
             page: null,
-            need_show_qr_and_link: false,
-            need_stay_after_save: true,
-            need_show_global_slug_list: false,
+
             need_clean: false,
             load: false,
             photos: [],
@@ -1360,6 +1357,9 @@ export default {
             load_slug_simple_list: true,
             showMenu: false,
 
+            need_show_qr_and_link: false,
+            need_stay_after_save: true,
+            need_show_global_slug_list: false,
             need_page_sticker: false,
             need_page_audios: false,
             need_page_documents: false,
@@ -1574,7 +1574,7 @@ export default {
             scroll: true,
         })
 
-       this.pagePreviewModal  = new bootstrap.Modal(document.getElementById('page-preview-modal'), {})
+        this.pagePreviewModal = new bootstrap.Modal(document.getElementById('page-preview-modal'), {})
 
         window.addEventListener("keydown", (e) => {
 
@@ -1584,7 +1584,7 @@ export default {
                 this.clearForm()
             }
 
-           if (e.ctrlKey && e.code == 'KeyD') {
+            if (e.ctrlKey && e.code == 'KeyD') {
                 e.preventDefault();
                 this.pagePreviewModal.toggle()
             }
@@ -1660,39 +1660,54 @@ export default {
         },
         preparePageForm(page) {
 
+            this.need_show_qr_and_link = false
+            this.need_stay_after_save = true
+            this.need_show_global_slug_list = false
+            this.need_page_sticker = false
+            this.need_page_audios = false
+            this.need_page_documents = false
+            this.need_page_video = false
+            this.need_page_images = false
+            this.need_inline_menu = false
+            this.need_reply_menu = false
+            this.need_attach_page = false
+            this.need_attach_dialog = false
+            this.need_attach_slug = false
+            this.need_rules = false
+
             this.links = []
             this.page = page
             this.photos = []
             this.$nextTick(() => {
-                this.pageForm = {
-                    id: page.id,
-                    slug_id: page.slug ? page.slug.id : null,
-                    content: page.content,
-                    command: page.slug ? page.slug.command : null,
-                    slug: page.slug ? page.slug.slug : null,
-                    comment: page.slug ? page.slug.comment : null,
-                    images: page.images || [],
-                    sticker: page.sticker || null,
-                    reply_keyboard_title: page.reply_keyboard_title || null,
-                    reply_keyboard_id: page.reply_keyboard_id || null,
-                    inline_keyboard_id: page.inline_keyboard_id || null,
-                    reply_keyboard: page.replyKeyboard || null,
-                    inline_keyboard: page.inlineKeyboard || null,
-                    next_page_id: page.next_page_id || null,
-                    next_bot_dialog_command_id: page.next_bot_dialog_command_id || null,
-                    next_bot_menu_slug_id: page.next_bot_menu_slug_id || null,
 
-                    is_external: page.is_external || false,
-                    need_log_user_action: page.need_log_user_action || false,
-                    rules_if: page.rules_if || null,
-                    rules_else_page_id: page.rules_else_page_id || null,
-                    audios: page.audios || [],
-                    documents: page.documents || [],
-                    videos: page.videos || [],
+                this.pageForm.id = page.id
+                this.pageForm.slug_id = page.slug ? page.slug.id : null
+                this.pageForm.content = page.content
+                this.pageForm.command = page.slug ? page.slug.command : null
+                this.pageForm.slug = page.slug ? page.slug.slug : null
+                this.pageForm.comment = page.slug ? page.slug.comment : null
+                this.pageForm.images = page.images || []
+                this.pageForm.sticker = page.sticker || null
+                this.pageForm.reply_keyboard_title = page.reply_keyboard_title || null
+                this.pageForm.reply_keyboard_id = page.reply_keyboard_id || null
+                this.pageForm.inline_keyboard_id = page.inline_keyboard_id || null
+                this.pageForm.reply_keyboard = page.replyKeyboard || null
+                this.pageForm.inline_keyboard = page.inlineKeyboard || null
+                this.pageForm.next_page_id = page.next_page_id || null
+                this.pageForm.next_bot_dialog_command_id = page.next_bot_dialog_command_id || null
+                this.pageForm.next_bot_menu_slug_id = page.next_bot_menu_slug_id || null
 
-                    rules_if_message: page.rules_if_message || null,
-                    rules_else_message: page.rules_else_message || null,
-                }
+                this.pageForm.is_external = page.is_external || false
+                this.pageForm.need_log_user_action = page.need_log_user_action || false
+                this.pageForm.rules_if = page.rules_if || null
+                this.pageForm.rules_else_page_id = page.rules_else_page_id || null
+                this.pageForm.audios = page.audios || []
+                this.pageForm.documents = page.documents || []
+                this.pageForm.videos = page.videos || []
+
+                this.pageForm.rules_if_message = page.rules_if_message || null
+                this.pageForm.rules_else_message = page.rules_else_message || null
+
 
                 if (this.pageForm.id != null && this.pageForm.next_page_id != null)
                     this.loadPageChains()
@@ -1922,12 +1937,12 @@ export default {
 
             this.showInlineTemplateSelector = false;
         },
-        saveReplyKeyboard(keyboard) {
-            this.pageForm.reply_keyboard = keyboard
-        },
-        saveReplyKeyboardSettings(settings) {
-            this.pageForm.reply_keyboard_settings = settings
-        },
+        /*  saveReplyKeyboard(keyboard) {
+              this.pageForm.reply_keyboard = keyboard
+          },
+          saveReplyKeyboardSettings(settings) {
+              this.pageForm.reply_keyboard_settings = settings
+          },*/
         getPhoto(imgObject) {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
@@ -2196,6 +2211,7 @@ export default {
 
 .primary-mark {
     position: relative;
+
     &:after {
         content: '';
         position: absolute;

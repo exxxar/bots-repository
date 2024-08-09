@@ -1,5 +1,5 @@
 <script setup>
-import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
+
 import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardConstructor.vue";
 import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
 </script>
@@ -137,8 +137,7 @@ import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
                         <BotMenuConstructor
                             :type="'inline'"
                             v-else
-                            v-on:save="selectInlineKeyboard"
-                            :edited-keyboard="itemForm.inline_keyboard.menu"/>
+                            v-model="itemForm.inline_keyboard.menu"/>
                     </div>
                 </div>
 
@@ -355,7 +354,7 @@ export default {
             this.itemForm.custom_settings.splice(index, 1)
         },
         selectInlineKeyboard(item) {
-            console.log("selectInlineKeyboard",item)
+
             this.itemForm.inline_keyboard = {
                 id:null,
                 menu: item,

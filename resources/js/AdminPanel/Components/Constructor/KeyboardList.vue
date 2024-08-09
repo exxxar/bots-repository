@@ -44,8 +44,8 @@ import KeyboardCard from "@/AdminPanel/Components/Constructor/Cards/KeyboardCard
                         <div class="col-12">
                             <BotMenuConstructor
                                 v-if="!load"
-                                v-on:save="changeKeyboardFormMenu"
-                                :edited-keyboard="keyboardForm"/>
+                                v-model="keyboardForm"
+                            />
                         </div>
 
                         <div class="col-12">
@@ -203,43 +203,6 @@ export default {
         generateSlug() {
             this.keyboardForm.slug = uuidv4();
         },
-        changeKeyboardFormMenu(keyboard) {
-            this.keyboardForm.menu = keyboard
-        },
-        /*  saveKeyboard(keyboard) {
-              this.keyboards[this.selectMenuIndex].menu = keyboard
-          },*/
-        /*  editKeyboard(keyboard, index) {
-              this.load = true
-              this.$nextTick(() => {
-                  this.selectMenuIndex = index
-                  this.editedKeyboard = keyboard
-                  this.load = false
-              })
-
-          },*/
-        /*  removeKeyboard(index) {
-              this.$emit("remove", index)
-          },
-          editBtn(keyboardIndex, rowIndex, colIndex) {
-              this.editedButton.oldTextVal = this.keyboards[keyboardIndex].menu[rowIndex][colIndex].text
-              this.editedButton.colIndex = colIndex
-              this.editedButton.rowIndex = rowIndex
-              this.editedButton.keyboardIndex = keyboardIndex
-
-
-              this.$emit("edit", {
-                  command: this.editedButton.oldTextVal
-              })
-
-
-              /!*  Object
-                    .keys(this.keyboards[keyboardIndex].menu[rowIndex][colIndex])
-                    .forEach(item=>{
-                        console.log("item", this.keyboards[keyboardIndex].menu[rowIndex][colIndex][item])
-                    })*!/
-              //console.log()
-          },*/
 
     }
 }

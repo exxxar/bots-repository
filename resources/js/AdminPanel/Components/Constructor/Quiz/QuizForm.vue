@@ -299,8 +299,8 @@ import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
                         <BotMenuConstructor
                             :type="'inline'"
                             v-else
-                            v-on:save="saveInlineKeyboardOnSuccess"
-                            :edited-keyboard="quizForm.success_inline_keyboard"/>
+
+                           v-model="quizForm.success_inline_keyboard"/>
 
 
                     </div>
@@ -404,8 +404,7 @@ import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
                         <BotMenuConstructor
                             :type="'inline'"
                             v-else
-                            v-on:save="saveInlineKeyboardOnFailure"
-                            :edited-keyboard="quizForm.failure_inline_keyboard"/>
+                            v-model="quizForm.failure_inline_keyboard"/>
 
 
                     </div>
@@ -618,12 +617,12 @@ export default {
 
     },
     methods: {
-        saveInlineKeyboardOnSuccess(keyboard) {
+     /*   saveInlineKeyboardOnSuccess(keyboard) {
             this.quizForm.success_inline_keyboard = keyboard
         },
         saveInlineKeyboardOnFailure(keyboard) {
             this.quizForm.failure_inline_keyboard = keyboard
-        },
+        },*/
         selectInlineKeyboardOnSuccess(keyboard) {
             this.quizForm.success_inline_keyboard = keyboard
 

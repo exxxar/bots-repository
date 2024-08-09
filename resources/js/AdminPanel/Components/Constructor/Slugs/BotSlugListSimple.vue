@@ -111,7 +111,7 @@ export default {
             this.$store.dispatch("loadSlugs", {
                 dataObject:{
                     botId: this.bot.id,
-                    search: this.search || (this.selected||[]).length > 0 ? this.selected[0] : null,
+                    search: this.search  || null,
                     needGlobal: this.global
                 },
                 page:page

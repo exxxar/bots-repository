@@ -439,7 +439,7 @@ import {Vue3JsonEditor} from 'vue3-json-editor'
 import {v4 as uuidv4} from "uuid";
 
 export default {
-    props: ["editedKeyboard", "type"],
+    props: ["modelValue", "type"],
 
     components: {
         Vue3JsonEditor
@@ -451,6 +451,7 @@ export default {
         }
     },
     watch: {
+
         need_login_url: {
             handler: function (newValue) {
                 if (this.need_login_url)
@@ -468,6 +469,7 @@ export default {
         keyboard: {
             handler: function (newValue) {
                 this.save()
+                this.$emit("update:modelValue", this.keyboard)
             },
             deep: true
         }
@@ -505,23 +507,19 @@ export default {
         this.inlineQueryModal = new bootstrap.Modal(document.getElementById('inline-query-list-in-keyboard-' + this.uuid), {})
 
 
-        if (this.editedKeyboard) {
-            this.$nextTick(() => {
-                this.keyboard = this.editedKeyboard.menu
+        this.$nextTick(() => {
+            this.keyboard = this.modelValue.menu
 
-                if (this.editedKeyboard.settings) {
-                    this.settings = {
-                        resize_keyboard: this.editedKeyboard.settings.resize_keyboard || true,
-                        one_time_keyboard: this.editedKeyboard.settings.one_time_keyboard || false,
-                        input_field_placeholder: this.editedKeyboard.settings.input_field_placeholder || null,
-                        is_persistent: this.editedKeyboard.settings.is_persistent || false,
-                    }
-
-                    if (this.settings.input_field_placeholder != null)
-                        this.need_input_field_placeholder = true
-                }
-            })
-        }
+            if (this.modelValue.settings) {
+                this.settings.resize_keyboard = this.modelValue.settings.resize_keyboard || true
+                this.settings.one_time_keyboard = this.modelValue.settings.one_time_keyboard || false
+                this.settings.input_field_placeholder = this.modelValue.settings.input_field_placeholder || null
+                this.settings.is_persistent = this.modelValue.settings.is_persistent || false
+                
+                if (this.settings.input_field_placeholder != null)
+                    this.need_input_field_placeholder = true
+            }
+        })
 
 
     },

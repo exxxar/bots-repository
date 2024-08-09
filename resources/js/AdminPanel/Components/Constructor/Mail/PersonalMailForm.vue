@@ -3,7 +3,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
 
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
-import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
+
 </script>
 
 <template>
@@ -101,8 +101,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                     <BotMenuConstructor
                         :type="'inline'"
                         v-else
-                        v-on:save="saveInlineKeyboard"
-                        :edited-keyboard="mailForm.inline_keyboard"/>
+                        v-model="mailForm.inline_keyboard"/>
 
 
                 </div>
@@ -222,9 +221,7 @@ export default {
             })
 
         },
-        saveInlineKeyboard(keyboard) {
-            this.mailForm.inline_keyboard = keyboard
-        },
+
         selectInlineKeyboard(keyboard) {
             this.mailForm.inline_keyboard = keyboard
 

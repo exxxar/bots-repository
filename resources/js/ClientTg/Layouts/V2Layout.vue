@@ -46,7 +46,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
 
     <footer class="text-body-secondary" style="padding:0px 0px 90px 0px;">
 
-        <div class="container g-2 d-flex justify-content-center flex-column align-items-center">
+        <div class="container d-flex justify-content-center flex-column align-items-center">
 
             <button
                 v-if="$route.name!='FeedBackV2'"

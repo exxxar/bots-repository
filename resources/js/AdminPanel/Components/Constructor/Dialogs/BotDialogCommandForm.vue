@@ -317,8 +317,7 @@ import BotDialogVariablesHelper from "@/AdminPanel/Components/Constructor/Dialog
                 <div class="card-body">
                     <BotMenuConstructor
                         :type="'inline'"
-                        v-on:save="saveInlineKeyboard"
-                        :edited-keyboard="commandForm.inline_keyboard"/>
+                        v-model="commandForm.inline_keyboard"/>
                 </div>
 
             </div>
@@ -339,8 +338,8 @@ import BotDialogVariablesHelper from "@/AdminPanel/Components/Constructor/Dialog
                 <div class="card-body">
                     <BotMenuConstructor
                         :type="'reply'"
-                        v-on:save="saveReplyKeyboard"
-                        :edited-keyboard="commandForm.reply_keyboard"/>
+                        v-model="commandForm.reply_keyboard"
+                    />
                 </div>
 
             </div>
@@ -923,19 +922,12 @@ export default {
             for (let i = 0; i < files.length; i++)
                 this.photos.push(files[i])
         },
-        saveInlineKeyboard(keyboard) {
-            this.commandForm.inline_keyboard = keyboard
-        },
-        saveReplyKeyboard(keyboard) {
-            this.commandForm.reply_keyboard = keyboard
-        },
+
         addTextTo(object = {param: null, text: null}) {
             this.commandForm[object.param] = object.text;
 
         },
-        selectElementById(id) {
-            this.$emit("select-element", id)
-        },
+
         selectFlag(item) {
 
             if (!this.commandForm.result_flags || !Array.isArray(this.commandForm.result_flags))

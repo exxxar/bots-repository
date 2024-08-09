@@ -497,7 +497,7 @@ export default {
         this.botForm.warnings = this.currentBot.warnings || []
 
 
-        let isCorrectLinks = (links) => {
+        let isCorrectLinks = (links = []) => {
             let params = ['inst', 'vk', 'map_link']
             let isCorrect = false
             let correctCount = 0;
@@ -512,7 +512,7 @@ export default {
             return isCorrect && correctCount === params.length;
         }
 
-        this.companyForm.links = isCorrectLinks(company.links) ? company.links : this.companyForm.links
+        this.companyForm.links = isCorrectLinks(company.links || []) ? company.links : this.companyForm.links
 
         let isCorrectSchedule = (schedule) => {
             if ((schedule || []).length < 7)

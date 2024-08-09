@@ -159,9 +159,7 @@ import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardCons
 
             <BotMenuConstructor
                 v-if="keyboardForm"
-                v-on:save="saveKeyboard"
-                :edited-keyboard="keyboardForm"/>
-
+                v-model="keyboardForm"/>
 
             <Vue3JsonEditor
                 :mode="'code'"
@@ -263,9 +261,6 @@ export default {
             })
         },
 
-        saveKeyboard(keyboard) {
-            this.keyboardForm.menu = keyboard
-        },
 
         selectCard() {
             this.$emit("select", this.keyboardForm)

@@ -1,6 +1,6 @@
 <script setup>
 import BotMenuConstructor from "@/AdminPanel/Components/Constructor/KeyboardConstructor.vue";
-import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
+
 </script>
 <template>
     <button
@@ -102,8 +102,8 @@ import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
                 <BotMenuConstructor
                     :type="'inline'"
                     v-if="rules[index].need_keyboard_if_true"
-                    v-on:save="saveInlineKeyboard($event, index, true)"
-                    :edited-keyboard="rules[index].keyboard_if_true"/>
+                    v-model="rules[index].keyboard_if_true"
+                />
             </div>
             <div class="col-6">
                 <div class="form-check mb-2">
@@ -117,8 +117,7 @@ import KeyboardList from "@/AdminPanel/Components/Constructor/KeyboardList.vue";
                 <BotMenuConstructor
                     :type="'inline'"
                     v-if="rules[index].need_keyboard_if_false"
-                    v-on:save="saveInlineKeyboard($event, index, false)"
-                    :edited-keyboard="rules[index].keyboard_if_false"/>
+                    v-model="rules[index].keyboard_if_false"/>
             </div>
         </div>
     </template>
@@ -219,10 +218,10 @@ export default {
                 type: 'success'
             });
         },
-        saveInlineKeyboard(keyboard, index, direction) {
+       /* saveInlineKeyboard(keyboard, index, direction) {
             this.rules[index]["keyboard_if_"+(direction?"true":"false")] = keyboard
 
-        },
+        },*/
     }
 }
 </script>

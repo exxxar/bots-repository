@@ -60,9 +60,13 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
             <div class="card mb-3">
                 <div class="card-body">
                     <h6>Товаров в корзине <strong class="fw-bold">{{ cartTotalCount }} ед.</strong></h6>
-                    <h6>Общая цена товаров <strong class="fw-bold">{{ cartTotalPrice }}₽</strong></h6>
+                    <h6>Общая цена товаров <strong class="fw-bold">{{ cartTotalPrice - deliveryForm.promo.discount }}₽</strong>
+                        <strong
+                            v-if="(deliveryForm.promo.discount||0)>0"
+                            class="text-success fw-bold"> (-{{ deliveryForm.promo.discount }}₽)</strong>
+                    </h6>
                     <h6>Приборы на <strong class="fw-bold">{{ deliveryForm.persons }} чел.</strong></h6>
-                    <p class="alert alert-light">
+                    <p class="fst-italic">
                         <span class="fw-bold text-primary">Внимание!</span> Скидка за промокод доступна только если
                         сумма заказа больше чем
                         <span class="fw-bold text-primary">{{ deliveryForm.promo.activate_price }}₽</span>
