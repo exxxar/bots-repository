@@ -1661,7 +1661,6 @@ export default {
         preparePageForm(page) {
 
             this.need_show_qr_and_link = false
-            this.need_stay_after_save = true
             this.need_show_global_slug_list = false
             this.need_page_sticker = false
             this.need_page_audios = false
