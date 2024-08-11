@@ -183,7 +183,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.name"
                        class="form-control" id="deliveryForm-name"
                        placeholder="Иванов Иван Иванович" required>
-                <label for="deliveryForm-name">Ф.И.О.</label>
+                <label for="deliveryForm-name">Ф.И.О.  <span class="fw-bold text-danger">*</span></label>
             </div>
 
             <div class="form-floating mb-3">
@@ -192,7 +192,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.phone"
                        class="form-control" id="deliveryForm-phone"
                        placeholder="+7(000)000-00-00" required>
-                <label for="deliveryForm-phone">Номер телефона</label>
+                <label for="deliveryForm-phone">Номер телефона  <span class="fw-bold text-danger">*</span></label>
             </div>
 
 
@@ -203,7 +203,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.city"
                        class="form-control" id="deliveryForm-city"
                        placeholder="Ваш город" required>
-                <label for="deliveryForm-city">Ваш город</label>
+                <label for="deliveryForm-city">Ваш город  <span class="fw-bold text-danger">*</span></label>
             </div>
 
             <div
@@ -213,7 +213,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.street"
                        class="form-control" id="deliveryForm-street"
                        placeholder="Улица" required>
-                <label for="deliveryForm-street">Улица</label>
+                <label for="deliveryForm-street">Улица  <span class="fw-bold text-danger">*</span></label>
             </div>
 
 
@@ -224,7 +224,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.building"
                        class="form-control" id="deliveryForm-building"
                        placeholder="Номер дома" required>
-                <label for="deliveryForm-building">Номер дома</label>
+                <label for="deliveryForm-building">Номер дома  <span class="fw-bold text-danger">*</span></label>
             </div>
 
             <div
@@ -234,7 +234,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.flat_number"
                        class="form-control" id="deliveryForm-flat-number"
                        placeholder="Номер квартиры">
-                <label for="deliveryForm-flat-number">Номер квартиры</label>
+                <label for="deliveryForm-flat-number">Номер квартиры </label>
             </div>
 
             <div
@@ -352,6 +352,25 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                            v-model="deliveryForm.disabilities" id="switch-4">
                 </a>
 
+                <a href="javascript:void(0)"
+                   class="list-group-item list-group-item-action p-3 d-flex justify-content-between"
+                   aria-current="true">
+                    <label for="switch-5"> <i class="fa-solid fa-person-dots-from-line mr-2"></i> Пищевая аллергия</label>
+                    <input type="checkbox"
+                           class="form-check-input"
+                           value="пищевая аллергия"
+                           v-model="deliveryForm.disabilities" id="switch-5">
+                </a>
+
+            </div>
+
+            <div class="form-floating mb-2" v-if="deliveryForm.disabilities.indexOf('пищевая аллергия')!==-1">
+                <input type="text" class="form-control"
+                       v-model="deliveryForm.allergy"
+                       id="floatingInput" placeholder="name@example.com" required>
+                <label for="floatingInput">Укажите на что аллергия
+                    <span class="fw-bold text-danger">*</span>
+                </label>
             </div>
 
             <h6 class="opacity-75 mt-3">Сводка</h6>
@@ -705,6 +724,7 @@ export default {
                 image_info: null,
                 delivery_price: 0,
                 distance: 0,
+                allergy:null,
             },
         }
     },
@@ -740,6 +760,15 @@ export default {
             },
             deep: true
         },
+        'deliveryForm.has_disability': {
+            handler: function (newValue) {
+                this.deliveryForm.disabilities = []
+                this.deliveryForm.allergy = null
+            },
+            deep: true
+        },
+
+
 
     },
     computed: {

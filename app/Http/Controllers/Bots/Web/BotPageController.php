@@ -28,8 +28,10 @@ class BotPageController extends Controller
         return BusinessLogic::pages()
             ->setBot($request->bot ?? null)
             ->list(
-                $request->search ?? null,
-                $request->get("size") ?? config('app.results_per_page')
+                search:$request->search ?? null,
+                size: $request->get("size") ?? config('app.results_per_page'),
+                order: $request->order_by ?? "updated_at",
+                direction: $request->direction ?? "asc"
             );
 
     }

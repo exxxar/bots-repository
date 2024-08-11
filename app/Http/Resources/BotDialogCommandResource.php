@@ -46,6 +46,7 @@ class BotDialogCommandResource extends JsonResource
             'store_to' => $this->store_to,
             'answers' => $this->answers ?? [],
             'rules' => $this->rules ?? [],
+            'send_params' => $this->send_params ?? [],
         ];
     }
 

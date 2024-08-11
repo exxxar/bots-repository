@@ -250,6 +250,9 @@ export default {
     },
     computed: {
         ...mapGetters(['getSelf']),
+        tg() {
+            return window.Telegram.WebApp;
+        },
         sortedActionData() {
             if (!this.action || (this.action?.data || []).length === 0)
                 return []
@@ -272,6 +275,13 @@ export default {
             this.prepareUserData().then(()=>{
                 this.wheelDataLoaded = true
             })
+        })
+
+        this.tg.BackButton.show()
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.tg.close();
         })
     }
     ,

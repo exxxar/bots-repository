@@ -486,7 +486,9 @@ import PromoCodeFormV2 from "@/ClientTg/Pages/V2/Shop/PromoCode.vue";
 import VipProfileV2_1 from "@/ClientTg/Pages/V2/Shop/VipProfileV1.vue";
 import VipProfileV2_2 from "@/ClientTg/Pages/V2/Shop/VipProfileV2.vue";
 import WheelCustomV2 from "@/ClientTg/Pages/V2/Games/WheelCustom.vue";
-
+import AdminMenuV2 from "@/ClientTg/Pages/V2/Admin/AdminMenu.vue";
+import BotManagerV2 from "@/ClientTg/Pages/V2/Admin/BotManager.vue";
+import PageManagerV2 from "@/ClientTg/Pages/V2/Admin/Pages.vue";
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
@@ -613,6 +615,13 @@ export const simpleRoutes = [
         component: StatisticV2,
         meta: {title: 'Статистика'}
     },
+    {
+        name: 'AdminMenuV2',
+        path: simplePrefix + '/admin/menu',
+        component: AdminMenuV2,
+        meta: {title: 'Меню'}
+    },
+
 
     {
         name: 'PromoCodesV2',
@@ -661,7 +670,18 @@ export const simpleRoutes = [
         component: WheelCustomV2,
         meta: {title: 'Колесо фортуны',  hide_menu: true}
     },
-
+    {
+        name: 'BotManagerV2',
+        path: simplePrefix + '/admin/bot',
+        component: BotManagerV2,
+        meta: {title: 'Бот'}
+    },
+    {
+        name: 'PageManagerV2',
+        path: simplePrefix + '/admin/pages',
+        component: PageManagerV2,
+        meta: {title: 'Страницы'}
+    },
 
 ];
 

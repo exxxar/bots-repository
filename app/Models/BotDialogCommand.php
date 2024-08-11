@@ -37,6 +37,7 @@ class BotDialogCommand extends Model
         'result_flags',
         'use_result_as',
         'store_to',
+        'send_params',
 
     ];
 
@@ -53,6 +54,7 @@ class BotDialogCommand extends Model
         'images' => 'array',
         'rules' => 'array',
         'result_flags' => 'array',
+        'send_params' => 'array',
         'is_empty' => 'boolean',
         'is_inform' => 'boolean',
         'next_bot_dialog_command_id' => 'integer',

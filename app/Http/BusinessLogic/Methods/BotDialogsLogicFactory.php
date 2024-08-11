@@ -390,6 +390,7 @@ class BotDialogsLogicFactory
             'result_channel' => $data["result_channel"] ?? null,
             'custom_stored_value' => $data["custom_stored_value"] ?? null,
             'use_result_as' => $data["use_result_as"] ?? null,
+            'send_params' => json_decode($data["send_params"] ?? '[]'),
         ]);
 
         $answers = is_null($data["answers"] ?? null) ? null : json_decode($data["answers"] ?? '[]');
@@ -419,6 +420,7 @@ class BotDialogsLogicFactory
                     'custom_stored_value' => null,
                     'result_channel' => null,
                     'use_result_as' => null,
+                    'send_params' => null,
                 ]);
 
                 $isNextBotDialogCommandId = $nextBotDialogCommand->id;
@@ -563,6 +565,7 @@ class BotDialogsLogicFactory
         $tmp->is_inform = ($data["is_inform"] ?? false) == "true" ? 1 : 0;
         $tmp->result_flags = json_decode($data["result_flags"] ?? '[]');
         $tmp->rules = json_decode($data["rules"] ?? '[]');
+        $tmp->send_params = json_decode($data["send_params"] ?? '[]');
         $tmp->use_result_as = $data["use_result_as"] ?? null;
         $tmp->custom_stored_value = $data["custom_stored_value"] ?? null;
 
@@ -598,6 +601,7 @@ class BotDialogsLogicFactory
                     'custom_stored_value' => null,
                     'result_channel' => null,
                     'use_result_as' => null,
+                    'send_params' => null,
                 ]);
 
                 $isNextBotDialogCommandId = $nextBotDialogCommand->id;

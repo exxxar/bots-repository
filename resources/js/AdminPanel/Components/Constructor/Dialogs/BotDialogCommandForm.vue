@@ -72,8 +72,9 @@ import BotDialogVariablesHelper from "@/AdminPanel/Components/Constructor/Dialog
                 пользователя!
             </div>
 
+
             <BotDialogVariablesHelper
-                v-on:callback="addVariableToTextBlock('pre_text', $event)"
+                v-model="commandForm.pre_text"
                 :bot="bot"></BotDialogVariablesHelper>
             <div class="form-floating mb-2">
                 <textarea class="form-control" :id="'commandForm-pre-text-'+commandForm.id"
@@ -81,6 +82,74 @@ import BotDialogVariablesHelper from "@/AdminPanel/Components/Constructor/Dialog
                 </textarea>
                 <label :for="'commandForm-pre-text-'+commandForm.id">Текст диалога</label>
             </div>
+
+            <template v-if="commandForm.is_empty">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="alert alert-light">
+                            Данные блоки настраивают отображение данных администратором
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   v-model="commandForm.send_params.send_by_text"
+                                   type="checkbox" role="switch" :id="'send-result-by-text'+(commandForm.id||'new')">
+                            <label class="form-check-label"
+                                   :for="'send-result-by-text'+(commandForm.id||'new')">Отправить текстом</label>
+                        </div>
+
+                        <template v-if="commandForm.send_params.send_by_text">
+                            <div class="alert alert-light">
+                                Выберите шаблон из списка
+                                <BotDialogVariablesHelper
+                                    class="d-inline"
+                                    v-model="commandForm.send_params.format"
+                                    :bot="bot"></BotDialogVariablesHelper>
+                                для форматирования результата
+                                или оставьте поле пустым, тогда будут выданы все полученные данные. Если каких-то полей
+                                не будет в результате - они будут проигнорированы.
+                            </div>
+
+                            <div class="form-floating mb-2">
+                                <textarea class="form-control"
+                                          :id="'commandForm-send-params-format-'+(commandForm.id||'new')"
+                                          placeholder="Начни с малого..." v-model="commandForm.send_params.format">
+                                </textarea>
+                                <label :for="'commandForm-send-params-format-'+(commandForm.id||'new')">Шаблон
+                                    результата</label>
+                            </div>
+                        </template>
+
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   v-model="commandForm.send_params.send_by_file"
+                                   type="checkbox" role="switch" :id="'send-result-by-file'+(commandForm.id||'new')">
+                            <label class="form-check-label"
+                                   :for="'send-result-by-file'+(commandForm.id||'new')">Отправить файлом</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   v-model="commandForm.send_params.send_to_mail"
+                                   type="checkbox" role="switch" :id="'send-result-to-mail'+(commandForm.id||'new')">
+                            <label class="form-check-label"
+                                   :for="'send-result-to-mail'+(commandForm.id||'new')">Отправить на почту</label>
+                        </div>
+
+                        <div
+                            v-if="commandForm.send_params.send_to_mail"
+                            class="form-floating mb-2">
+                            <input type="email"
+                                   v-model="commandForm.send_params.mail"
+                                   class="form-control" id="floatingInput" placeholder="name@example.com" required>
+                            <label for="floatingInput">Почта для отправки результата</label>
+                        </div>
+                    </div>
+                </div>
+
+            </template>
 
             <div class="mb-2" v-if="!commandForm.is_empty">
                 <div class="form-floating">
@@ -642,6 +711,13 @@ export default {
                 is_inform: false,
                 custom_stored_value: null,
 
+                send_params: {
+                    send_by_text: true,
+                    format: null,
+                    send_by_file: false,
+                    send_to_mail: false,
+                    mail: null,
+                },
                 result_flags: [],
                 store_to: null,
                 use_result_as: null,
@@ -740,6 +816,25 @@ export default {
                     answers: this.item.answers || [],
                     use_result_as: this.item.use_result_as || null,
                     rules: this.item.rules || [],
+
+                    send_params: {
+                        send_by_text: true,
+                        format: null,
+                        send_by_file: false,
+                        send_to_mail: false,
+                        mail: null,
+                    },
+
+                }
+
+
+
+                if (this.item.send_params) {
+                    this.commandForm.send_params.format = this.item.send_params.format || null
+                    this.commandForm.send_params.send_by_text = this.item.send_params.send_by_text || true
+                    this.commandForm.send_params.send_by_file = this.item.send_params.send_by_file || false
+                    this.commandForm.send_params.send_to_mail = this.item.send_params.send_to_mail || false
+                    this.commandForm.send_params.mail = this.item.send_params.mail || null
                 }
 
                 if (this.bot)
@@ -777,9 +872,7 @@ export default {
         this.loadDialogs()
     },
     methods: {
-        addVariableToTextBlock(param, event) {
-            this.commandForm[param] += event
-        },
+
         toggleRepeatSelfDialog() {
             if (this.commandForm.next_bot_dialog_command_id != null && this.commandForm.next_bot_dialog_command_id !== this.commandForm.id)
                 this.commandForm.next_bot_dialog_command_id = this.commandForm.id

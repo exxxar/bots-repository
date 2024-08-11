@@ -11,7 +11,13 @@
             <input type="search" class="form-control" id="search-description-text"
                    v-model="search"
                    placeholder="Введите текст для поиска">
+            <div class="dropdown-divider"></div>
 
+            <button
+                type="button"
+                @click="addAll"
+                class="btn-outline-light btn w-100 text-primary">Добавить все
+            </button>
 
             <div class="dropdown-divider"></div>
             <p v-for="(item, index) in filteredVariable"
@@ -22,12 +28,21 @@
 </template>
 <script>
 export default {
-    props: ["bot"],
+    props: ["modelValue", "bot"],
     data() {
         return {
+            text: null,
             search: null,
             variables: [],
         }
+    },
+    watch: {
+        'text': {
+            handler: function (newValue) {
+                this.$emit("update:modelValue", this.text)
+            },
+            deep: true
+        },
     },
     computed: {
         filteredVariable() {
@@ -37,18 +52,28 @@ export default {
         }
     },
     mounted() {
+
+        this.text = this.modelValue
+
         this.loadVariables();
     },
     methods: {
-        select(text) {
-            this.$emit("callback", text)
+        select(arg) {
+            if (!this.text)
+                this.text = ''
+
+            this.text += arg
+        },
+        addAll() {
+            this.filteredVariable.forEach(item => {
+                this.select(item)
+            })
         },
         loadVariables() {
             this.$store.dispatch("loadDialogVariables", {
                 bot_id: this.bot.id
             }).then((resp) => {
                 this.variables = resp.data
-
             })
         },
     }

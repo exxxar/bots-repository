@@ -42,7 +42,7 @@ class BotPageLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, $size = null, $needDeleted = false, $needNewFirst = false): BotPageCollection
+    public function list($search = null, $size = null, $needDeleted = false, $needNewFirst = false ,$order = "updated_at", $direction = "desc"): BotPageCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -67,7 +67,7 @@ class BotPageLogicFactory
                 })
                 ->orWhere("id", 'like', "%$search%");
 
-        $botPages = $botPages->orderBy("updated_at", $needNewFirst ? "DESC" : "ASC");
+        $botPages = $botPages->orderBy($order, $direction);
 
         return new BotPageCollection($botPages->paginate($size));
     }

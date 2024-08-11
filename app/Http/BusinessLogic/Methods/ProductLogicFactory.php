@@ -634,13 +634,15 @@ class ProductLogicFactory
         $summaryCount = 0;
 
         $disabilities = json_decode($data["disabilities"] ?? '[]');
+        $allergy = $data["allergy"] ?? 'не указана';
 
         if ($hasDisability) {
 
             $disabilitiesText = "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
 
             foreach ($disabilities as $disability)
-                $disabilitiesText .= "-<em>$disability</em>\n";
+                $disabilitiesText .= $disability=="пищевая аллергия"? "-<em>$disability на: $allergy</em>\n":"-<em>$disability</em>\n";
+
 
             $message .= $disabilitiesText . "\n";
         }
@@ -789,6 +791,7 @@ class ProductLogicFactory
         $summaryCount = 0;
 
         $disabilities = json_decode($data["disabilities"] ?? '[]');
+        $allergy = $data["allergy"] ?? 'не указана';
         $promo = json_decode($data["promo"]);
 
         if ($hasDisability) {
@@ -796,9 +799,11 @@ class ProductLogicFactory
             $disabilitiesText = "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
 
             foreach ($disabilities as $disability)
-                $disabilitiesText .= "-<em>$disability</em>\n";
+                $disabilitiesText .= $disability=="пищевая аллергия"? "-<em>$disability на: $allergy</em>\n":"-<em>$disability</em>\n";
 
             $message .= $disabilitiesText . "\n";
+
+
         }
 
         $tmpOrderProductInfo = [];

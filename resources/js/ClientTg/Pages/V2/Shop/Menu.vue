@@ -104,7 +104,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2-2/events.png'" class="img-fluid" alt="">
 
-                        <p class="my-2"> Колесо фортуны</p>
+                        <p class="my-2"> Ежедневный розыгрыш</p>
                         <span style="font-size:12px;" v-if="!script_data.wheel_of_fortune.can_play||!loadScriptData"><i
                             class="fa-solid fa-lock"></i> закрыто</span>
                     </div>
