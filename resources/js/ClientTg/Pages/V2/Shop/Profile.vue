@@ -277,7 +277,13 @@ export default {
     },
 
     mounted() {
-        this.tg.BackButton.hide()
+        this.tg.BackButton.show()
+
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
 
         this.$nextTick(()=>{
             this.loadUserPhotos()

@@ -69,11 +69,22 @@ export default {
             'getCashBackPaginateObject']),
         self() {
             return this.getSelf
-        }
+        },
+        tg() {
+            return window.Telegram.WebApp;
+        },
     },
     mounted() {
         if (this.self)
             this.loadCashBack()
+
+        this.tg.BackButton.show()
+
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
     },
     methods: {
 

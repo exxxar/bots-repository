@@ -322,11 +322,6 @@ export default {
 
         this.tg.BackButton.hide()
 
-      /*  this.tg.BackButton.onClick(() => {
-            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
-
-            this.$router.back()
-        })*/
     },
     methods: {
         switchTheme(index) {
