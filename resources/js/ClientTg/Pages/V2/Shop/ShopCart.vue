@@ -832,7 +832,15 @@ export default {
 
     mounted() {
 
-        this.tg.BackButton.hide()
+        this.tg.BackButton.show()
+
+        console.log("cart")
+        this.tg.BackButton.onClick(() => {
+            console.log("cart BackButton")
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
 
         if (localStorage.getItem("cashman_self_product_delivery_counter") != null) {
             this.is_requested = true;

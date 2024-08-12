@@ -296,7 +296,15 @@ export default {
             this.loadActualProducts()
 
 
-        this.tg.BackButton.hide()
+        this.tg.BackButton.show()
+
+        console.log("catalog")
+        this.tg.BackButton.onClick(() => {
+            console.log("catalog BackButton")
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
     },
     methods: {
         scroll(id) {

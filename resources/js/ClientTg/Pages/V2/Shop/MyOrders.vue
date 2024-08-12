@@ -122,10 +122,22 @@ export default {
     },
     computed: {
         ...mapGetters(['getOrders', 'getOrdersPaginateObject', 'inCart', 'getReviews', 'getReviewsPaginateObject']),
-
+        tg() {
+            return window.Telegram.WebApp;
+        },
     },
     mounted() {
         this.loadOrders()
+
+        this.tg.BackButton.show()
+
+        console.log("orders")
+        this.tg.BackButton.onClick(() => {
+            console.log("orders BackButton")
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
     },
     methods: {
         loadProductInOrders(page = 0) {
