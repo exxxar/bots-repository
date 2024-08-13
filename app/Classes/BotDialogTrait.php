@@ -12,6 +12,7 @@ use App\Models\BotMenuTemplate;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Telegram\Bot\FileUpload\InputFile;
@@ -453,11 +454,11 @@ trait BotDialogTrait
 
         $bot = $this->getSelf();
 
-        $tmpMessage = "Диалог с пользователем <b>#$botUser->id</b> [<b>#$botDialogCommand->id</b>]: \n";
+        $resultData = "Диалог с пользователем <b>#$botUser->id</b> [<b>#$botDialogCommand->id</b>]: \n";
 
         $step = 1;
         foreach ($dialogData as $data) {
-            $tmpMessage .= "Шаг $step: $data \n";
+            $resultData .= "Шаг $step: $data \n";
 
             $step++;
         }
@@ -465,7 +466,7 @@ trait BotDialogTrait
         foreach ($variables as $data) {
 
             $data = (object)$data;
-            $tmpMessage .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
+            $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
 
@@ -556,45 +557,32 @@ trait BotDialogTrait
             null;
 
 
-        Log::info(print_r($botDialogCommand->send_params, true));
-        $tmpMessage = "Пользователь:\n"
+        $sendByText = (boolean)($botDialogCommand->send_params["send_by_text"] ?? false);
+        $sendToEmail = (boolean)($botDialogCommand->send_params["send_to_mail"] ?? false);
+        $sendByFile = (boolean)($botDialogCommand->send_params["send_by_file"] ?? false);
+        $format = $botDialogCommand->send_params["format"] ?? null;
+        $mail = $botDialogCommand->send_params["mail"] ?? null;
+
+        $tmpMessage = "Диалог <b>#$botDialogCommand->id</b>\nПользователь:\n"
             . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
             . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
             . "-введенное имя: " . ($botUser->name ?? 'Введенное имя не указано') . "\n"
             . "-телефон: " . ($botUser->phone ?? 'Номер телефона не указан') . "\n"
-            . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n\n";
+            . "-email: " . ($botUser->email ?? 'Почта не указана') . "\n\n"
+            . "Данные из диалога:\n";
+
+        if ($sendByText) {
+            if (!is_null($format))
+                $tmpMessage .= $this->prepareDataWithVariables($format, $botUser);
+            else
+                $tmpMessage .= $resultData;
+        }
+
 
         $thread = $bot->topics["questions"] ?? null;
 
         $botDomain = $bot->bot_domain;
         $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $botUser->telegram_chat_id);
-
-        $fileName = Str::uuid() . ".xlsx";
-
-        Excel::store(new DialogAnswersExport([
-            "answers" => $variables ?? [],
-            "user" => (object)[
-                "telegram_chat_id" => $botUser->telegram_chat_id,
-                "fio_from_telegram" => $botUser->fio_from_telegram,
-                "phone" => $botUser->phone,
-            ]
-        ]), "$fileName", "public", \Maatwebsite\Excel\Excel::XLSX);
-
-        $date = Carbon::now()->format("Y-m-d H-i-s");
-
-        $this
-            ->sendDocument($channel,
-                "Результат от пользователя #"
-                . ($botUser->telegram_chat_id ?? '-')
-                . " ("
-                . ($botUser->fio_from_telegram ?? 'имя не указано') . ")",
-                InputFile::create(
-                    storage_path("app/public") . "/$fileName",
-                    "dialog-answers-$date.xlsx"
-                )
-            );
-
-        unlink(storage_path("app/public") . "/$fileName");
 
         $this->sendInlineKeyboard($channel,
             $tmpMessage,
@@ -605,6 +593,40 @@ trait BotDialogTrait
             ],
             $thread
         );
+
+        if ($sendByFile) {
+            $fileName = Str::uuid() . ".xlsx";
+
+            Excel::store(new DialogAnswersExport([
+                "answers" => $variables ?? [],
+                "user" => (object)[
+                    "telegram_chat_id" => $botUser->telegram_chat_id,
+                    "fio_from_telegram" => $botUser->fio_from_telegram,
+                    "phone" => $botUser->phone,
+                ]
+            ]), "$fileName", "public", \Maatwebsite\Excel\Excel::XLSX);
+
+            $date = Carbon::now()->format("Y-m-d H-i-s");
+
+            $this
+                ->sendDocument($channel,
+                    "Результат от пользователя #"
+                    . ($botUser->telegram_chat_id ?? '-')
+                    . " ("
+                    . ($botUser->fio_from_telegram ?? 'имя не указано') . ")",
+                    InputFile::create(
+                        storage_path("app/public") . "/$fileName",
+                        "dialog-answers-$date.xlsx"
+                    ),
+                    $thread
+                );
+
+            unlink(storage_path("app/public") . "/$fileName");
+        }
+
+        if ($sendToEmail) {
+            //отправляем письмо на почту $tmpMessage
+        }
 
 
     }

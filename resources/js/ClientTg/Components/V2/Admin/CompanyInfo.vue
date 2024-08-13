@@ -35,7 +35,7 @@
         <div class="form-floating">
             <textarea
                 v-model="companyForm.description"
-                maxlength="1000"
+                maxlength="512"
                 required
                 class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
                 style="height: 200px"></textarea>
@@ -43,7 +43,7 @@
                 <span
                     class="ml-1"
                     style="font-size:10px;"
-                    v-if="(companyForm.description||'').length>0">({{ companyForm.description.length }}/1000)</span>
+                    v-if="(companyForm.description||'').length>0">({{ companyForm.description.length }}/512)</span>
             </label>
         </div>
 
