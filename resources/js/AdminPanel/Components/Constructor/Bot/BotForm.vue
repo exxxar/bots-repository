@@ -125,7 +125,9 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                             required
                             v-model="botForm.server"
                             id="floatingSelect" aria-label="Floating label select example">
-                        <option :value="server.key" v-for="server in servers">{{ server.title || 'без названия' }}
+                        <option
+                            :disabled="server.disabled"
+                            :value="server.key" v-for="server in servers">{{ server.title || 'без названия' }}
                             ({{ server.current_count || 0 }} из {{ server.max_bot_limit || 0 }})
                         </option>
                     </select>

@@ -552,7 +552,7 @@ trait BotDialogTrait
             $bot->order_channel ??
             null;
 
-        Log::info("dialog send_params=>" . print_r($botDialogCommand->send_params ?? [], true));
+        Log::info("dialog send_params=>" . print_r($botDialogCommand->toArray(), true));
 
 
         $tmpMessage = "Пользователь:\n"
