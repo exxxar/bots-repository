@@ -552,6 +552,9 @@ trait BotDialogTrait
             $bot->order_channel ??
             null;
 
+        Log::info("dialog send_params=>" . print_r($botDialogCommand->send_params ?? [], true));
+
+
         $tmpMessage = "Пользователь:\n"
             . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
             . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
@@ -564,25 +567,25 @@ trait BotDialogTrait
         $botDomain = $bot->bot_domain;
         $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $botUser->telegram_chat_id);
 
-        $fileName = Str::uuid().".xlsx";
+        $fileName = Str::uuid() . ".xlsx";
 
-        Excel::store( new DialogAnswersExport([
-            "answers"=>$variables ?? [],
-            "user"=>(object)[
-                "telegram_chat_id"=>$botUser->telegram_chat_id,
-                "fio_from_telegram"=>$botUser->fio_from_telegram,
-                "phone"=>$botUser->phone,
+        Excel::store(new DialogAnswersExport([
+            "answers" => $variables ?? [],
+            "user" => (object)[
+                "telegram_chat_id" => $botUser->telegram_chat_id,
+                "fio_from_telegram" => $botUser->fio_from_telegram,
+                "phone" => $botUser->phone,
             ]
-        ]),"$fileName","public", \Maatwebsite\Excel\Excel::XLSX);
+        ]), "$fileName", "public", \Maatwebsite\Excel\Excel::XLSX);
 
         $date = Carbon::now()->format("Y-m-d H-i-s");
 
         $this
             ->sendDocument($channel,
                 "Результат от пользователя #"
-                .($botUser->telegram_chat_id??'-')
-                ." ("
-                .($botUser->fio_from_telegram??'имя не указано').")",
+                . ($botUser->telegram_chat_id ?? '-')
+                . " ("
+                . ($botUser->fio_from_telegram ?? 'имя не указано') . ")",
                 InputFile::create(
                     storage_path("app/public") . "/$fileName",
                     "dialog-answers-$date.xlsx"

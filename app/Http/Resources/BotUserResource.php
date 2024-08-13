@@ -77,7 +77,8 @@ class BotUserResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 
-            'order_count'=>$this->order_count ?? 0
+            'order_count'=>$this->order_count ?? 0,
+            'friends_count'=>$this->friends_count ?? 0
 
         ];
     }

@@ -14,7 +14,7 @@
                 <img
                     class="w-100 object-fit-cover"
                     v-lazy="'/images/shop-v2/profile.png'"
-                    />
+                />
             </div>
         </div>
 
@@ -24,13 +24,13 @@
                 data-bs-toggle="modal" data-bs-target="#edit-profile"
                 class="btn btn-link"><i class="fa-solid fa-pen-to-square mr-1"></i></button>
         </h6>
-        <ul class="list-group" >
+        <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Имя</span>
                 <span
                     style="font-size:12px;"
-                    class="text-primary fw-bold"> {{ self.fio_from_telegram ||  'не указано' }}</span>
+                    class="text-primary fw-bold"> {{ self.fio_from_telegram || 'не указано' }}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
@@ -73,13 +73,13 @@
             <li class="list-group-item d-flex justify-content-between cursor-pointer"
                 aria-current="true">
                 <span>Приглашено друзей</span>
-                <span class="text-primary fw-bold">0</span>
+                <span class="text-primary fw-bold">{{ self.friends_count || 0 }}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between cursor-pointer"
                 @click="goToOrders"
                 aria-current="true">
                 <span>Количество заказов</span>
-                <span class="text-primary fw-bold">{{self.order_count || 0}}</span>
+                <span class="text-primary fw-bold">{{ self.order_count || 0 }}</span>
             </li>
             <li
                 @click="goToCashback"
@@ -109,8 +109,6 @@
         <img v-lazy="qr" class="img-thumbnail" alt="...">
 
 
-
-
         <!-- Modal -->
         <div class="modal fade" id="edit-profile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen">
@@ -124,85 +122,85 @@
                     <div class="modal-body">
 
 
-                            <div class="form-floating mb-2">
+                        <div class="form-floating mb-2">
 
-                                <input type="text" class="form-control"
-                                       v-model="botUserForm.name"
-                                       placeholder="Иванов Иван Иванович" required>
-                                <label for="">Ф.И.О пользователя</label>
+                            <input type="text" class="form-control"
+                                   v-model="botUserForm.name"
+                                   placeholder="Иванов Иван Иванович" required>
+                            <label for="">Ф.И.О пользователя</label>
+                        </div>
+
+
+                        <div class="form-floating mb-2">
+
+                            <input type="text" class="form-control"
+                                   v-model="botUserForm.phone"
+                                   v-mask="'+7(###)###-##-##'"
+                                   placeholder="+7(XXX) XXX-XX-XX" required>
+                            <label for="">Телефон</label>
+                        </div>
+
+                        <div class="form-floating mb-2">
+                            <input type="text" class="form-control"
+                                   v-model="botUserForm.email"
+                                   placeholder="example@gmail.com">
+                            <label for="">Почта</label>
+                        </div>
+
+                        <div class="form-floating mb-2">
+
+                            <input type="text" class="form-control"
+                                   v-model="botUserForm.address"
+                                   placeholder="ул. Петрова, 123, кв 45">
+                            <label for="">Адрес</label>
+                        </div>
+
+                        <div class="form-floating mb-2">
+
+                            <input type="date" class="form-control"
+                                   v-model="botUserForm.birthday"
+                                   placeholder="12/01/2023">
+                            <label for="">Дата рождения</label>
+                        </div>
+
+                        <div class="form-floating mb-2">
+
+                            <input type="text" class="form-control"
+                                   v-model="botUserForm.country"
+                                   placeholder="Россия">
+                            <label for="">Страна</label>
+                        </div>
+
+
+                        <div class="form-floating mb-2">
+
+                            <input type="text" class="form-control"
+                                   v-model="botUserForm.city"
+                                   placeholder="Краснодар">
+                            <label for="">Город</label>
+                        </div>
+
+                        <div class="row mb-0">
+                            <p class="col-12 my-2">Пол</p>
+                            <div class="col-6">
+                                <button
+                                    type="button"
+                                    @click="botUserForm.sex = true"
+                                    v-bind:class="{'btn-info':botUserForm.sex,'btn-outline-secondary':!botUserForm.sex}"
+                                    class="w-100 btn">
+                                    <i class="fa-solid fa-mars mr-1"></i> Муж
+                                </button>
                             </div>
-
-
-                            <div class="form-floating mb-2">
-
-                                <input type="text" class="form-control"
-                                       v-model="botUserForm.phone"
-                                       v-mask="'+7(###)###-##-##'"
-                                       placeholder="+7(XXX) XXX-XX-XX" required>
-                                <label for="">Телефон</label>
+                            <div class="col-6">
+                                <button
+                                    type="button"
+                                    @click="botUserForm.sex = false"
+                                    v-bind:class="{'btn-info':!botUserForm.sex,'btn-outline-secondary':botUserForm.sex}"
+                                    class="w-100 btn">
+                                    <i class="fa-solid fa-venus mr-1"></i> Жен
+                                </button>
                             </div>
-
-                            <div class="form-floating mb-2">
-                                <input type="text" class="form-control"
-                                       v-model="botUserForm.email"
-                                       placeholder="example@gmail.com">
-                                <label for="">Почта</label>
-                            </div>
-
-                            <div class="form-floating mb-2">
-
-                                <input type="text" class="form-control"
-                                       v-model="botUserForm.address"
-                                       placeholder="ул. Петрова, 123, кв 45">
-                                <label for="">Адрес</label>
-                            </div>
-
-                            <div class="form-floating mb-2">
-
-                                <input type="date" class="form-control"
-                                       v-model="botUserForm.birthday"
-                                       placeholder="12/01/2023">
-                                <label for="">Дата рождения</label>
-                            </div>
-
-                            <div class="form-floating mb-2">
-
-                                <input type="text" class="form-control"
-                                       v-model="botUserForm.country"
-                                       placeholder="Россия">
-                                <label for="">Страна</label>
-                            </div>
-
-
-                            <div class="form-floating mb-2">
-
-                                <input type="text" class="form-control"
-                                       v-model="botUserForm.city"
-                                       placeholder="Краснодар">
-                                <label for="">Город</label>
-                            </div>
-
-                                                      <div class="row mb-0">
-                                <p class="col-12 my-2">Пол</p>
-                                <div class="col-6">
-                                    <button
-                                        type="button"
-                                        @click="botUserForm.sex = true"
-                                        v-bind:class="{'btn-info':botUserForm.sex,'btn-outline-secondary':!botUserForm.sex}"
-                                        class="w-100 btn">
-                                        <i class="fa-solid fa-mars mr-1"></i> Муж
-                                    </button>
-                                </div>
-                                <div class="col-6">
-                                    <button
-                                        type="button"
-                                        @click="botUserForm.sex = false"
-                                        v-bind:class="{'btn-info':!botUserForm.sex,'btn-outline-secondary':botUserForm.sex}"
-                                        class="w-100 btn">
-                                        <i class="fa-solid fa-venus mr-1"></i> Жен
-                                    </button>
-                                </div>
-                            </div>
+                        </div>
 
                     </div>
                     <div class="modal-footer p-2">
@@ -218,24 +216,24 @@
 import {mapGetters} from "vuex";
 
 export default {
-    data(){
-      return {
-          photos:null,
-          load_self:true,
-          botUserForm: {
-              id: null,
-              name: null,
-              phone: null,
-              email: null,
-              birthday: null,
-              age: null,
-              city: null,
-              country: null,
-              address: null,
-              sex: null,
+    data() {
+        return {
+            photos: null,
+            load_self: true,
+            botUserForm: {
+                id: null,
+                name: null,
+                phone: null,
+                email: null,
+                birthday: null,
+                age: null,
+                city: null,
+                country: null,
+                address: null,
+                sex: null,
 
-          }
-      }
+            }
+        }
     },
     computed: {
         ...mapGetters(['getSelf']),
@@ -285,7 +283,7 @@ export default {
             this.$router.back()
         })
 
-        this.$nextTick(()=>{
+        this.$nextTick(() => {
             this.loadUserPhotos()
 
             if (this.getSelf) {
@@ -315,7 +313,7 @@ export default {
                     type: "success"
                 })
                 window.location.reload()
-            }).catch(()=>{
+            }).catch(() => {
                 this.$notify({
                     title: "Редактирование данных",
                     text: "Ошибка обновления данных",
@@ -323,10 +321,10 @@ export default {
                 })
             })
         },
-        goToCashback(){
+        goToCashback() {
             this.$router.push({name: 'CashBackV2'})
         },
-        goToOrders(){
+        goToOrders() {
             this.$router.push({name: 'OrdersV2'})
         },
         loadUserPhotos() {
@@ -340,12 +338,12 @@ export default {
             this.tg.requestContact((resp) => {
                 this.$notify({
                     title: "Профиль",
-                    text: resp?"Ваш контакт успешно отправлен!":"Вы отменили отправку контакта",
-                    type: resp?"success":'error'
+                    text: resp ? "Ваш контакт успешно отправлен!" : "Вы отменили отправку контакта",
+                    type: resp ? "success" : 'error'
                 })
-                this.$store.dispatch("loadSelf").then(()=>{
+                this.$store.dispatch("loadSelf").then(() => {
                     this.load_self = false
-                    this.$nextTick(()=>{
+                    this.$nextTick(() => {
                         this.load_self = true
                     })
                 })

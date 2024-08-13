@@ -120,6 +120,19 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
         </div>
         <div class="row py-3" v-show="tab===0&&canOpenForm">
             <div class="col-md-12 col-12">
+                <div class="form-floating mb-2">
+                    <select class="form-select"
+                            required
+                            v-model="botForm.server"
+                            id="floatingSelect" aria-label="Floating label select example">
+                        <option :value="server.key" v-for="server in servers">{{ server.title || 'без названия' }}
+                            ({{ server.current_count || 0 }} из {{ server.max_bot_limit || 0 }})
+                        </option>
+                    </select>
+                    <label for="floatingSelect">Выбор сервера размещения</label>
+                </div>
+            </div>
+            <div class="col-md-12 col-12">
 
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox"
@@ -395,7 +408,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
                                     v-for="item in menu_variants"
                                     @click="selectVariant(item)"
                                     class="badge bg-primary mb-2 btn">
-                                    {{item.title || 'Выбрать'}}
+                                    {{ item.title || 'Выбрать' }}
                                 </span>
                             </div>
                             <div class="col-6" v-if="needMenuBtn">
@@ -1188,10 +1201,10 @@ export default {
         return {
             loadCommandEditor: true,
 
-            menu_variants:[
+            menu_variants: [
                 {
-                    title:'Открыть меню',
-                    url:'/bot-client/simple/{0}?slug={скрипт_id}#/s/menu'
+                    title: 'Открыть меню',
+                    url: '/bot-client/simple/{0}?slug={скрипт_id}#/s/menu'
                 }
             ],
             showCode: false,
@@ -1200,6 +1213,7 @@ export default {
             can_create: true,
             can_create_topics: true,
             messages: [],
+            servers: [],
             need_company_select: false,
             selected_warning: null,
             page: null,
@@ -1286,6 +1300,7 @@ export default {
                 order_channel: null,
                 message_threads: null,
                 cashback_config: null,
+                server: "main",
                 main_channel: null,
                 vk_shop_link: null,
                 callback_link: null,
@@ -1418,7 +1433,7 @@ export default {
     mounted() {
 
 
-
+        this.loadCurrentServers()
         //this.loadCurrentCompany()
         if (localStorage.getItem("cashman_admin_bot_creator_counter") != null) {
             this.can_create = false;
@@ -1450,6 +1465,7 @@ export default {
                     cashback_config: this.bot.cashback_config || null,
                     main_channel: this.bot.main_channel || null,
                     balance: this.bot.balance || null,
+                    server: this.bot.server || "main",
                     tax_per_day: this.bot.tax_per_day || null,
                     vk_shop_link: this.bot.vk_shop_link || null,
                     callback_link: this.bot.callback_link || null,
@@ -1645,7 +1661,11 @@ export default {
                 this.loadCommandEditor = true
             })
         },
-
+        loadCurrentServers() {
+            this.$store.dispatch("loadCurrentServers").then((resp) => {
+                this.servers = resp
+            })
+        },
         getPhoto(img) {
             return {imageUrl: URL.createObjectURL(img)}
         },
@@ -1726,6 +1746,7 @@ export default {
                 if (this.bot == null)
                     this.botForm = {
                         title: '',
+                        server: 'main',
                         short_description: '',
                         long_description: '',
                         is_template: false,
@@ -1825,8 +1846,8 @@ export default {
             })
 
         },
-        selectVariant(item){
-            String.format = function() {
+        selectVariant(item) {
+            String.format = function () {
                 let s = arguments[0];
                 for (let i = 0; i < arguments.length - 1; i++) {
                     let reg = new RegExp("\\{" + i + "\\}", "gm");
@@ -1835,8 +1856,8 @@ export default {
                 return s;
             }
 
-          this.botForm.menu.text = item.title || 'Меню'
-          this.botForm.menu.url =  (import.meta.env.VITE_ASSET_URL || '') + String.format(item.url, this.bot.bot_domain || 'домен_бота');
+            this.botForm.menu.text = item.title || 'Меню'
+            this.botForm.menu.url = (import.meta.env.VITE_ASSET_URL || '') + String.format(item.url, this.bot.bot_domain || 'домен_бота');
         },
         addWarning() {
 

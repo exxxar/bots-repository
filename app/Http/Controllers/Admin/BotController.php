@@ -23,6 +23,11 @@ use Illuminate\Validation\ValidationException;
 class BotController extends Controller
 {
 
+    public function loadCurrentServerList(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(BusinessLogic::bots()->getCurrentServers());
+    }
+
 
     public function getMe(Request $request): \Illuminate\Http\JsonResponse
     {

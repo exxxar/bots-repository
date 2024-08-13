@@ -1,0 +1,20 @@
+[
+    {
+        "title": "Главный",
+        "key": "main",
+        "max_bot_limit": 100,
+        "url": "https://your-cashman.com"
+    },
+    {
+        "title": "Краснодар-1",
+        "key": "krasnodar1",
+        "max_bot_limit": 100,
+        "url": "https://krasnodar.next-bots.ru"
+    },
+    {
+        "title": "Донецк-1",
+        "key": "dpr1",
+        "max_bot_limit": 100,
+        "url": "https://dpr.next-bots.ru"
+    }
+]

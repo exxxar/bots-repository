@@ -16,8 +16,8 @@ class BotResource extends JsonResource
     {
         return [
             'id' => $this->id,
-
             'title'=> $this->title ?? null,
+            'server'=> $this->server ?? null,
             'short_description'=> $this->short_description ?? null,
             'long_description'=> $this->long_description ?? null,
             'cashback_fire_percent'=> $this->cashback_fire_percent ?? 0,

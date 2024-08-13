@@ -100,6 +100,24 @@ class BotLogicFactory
         return $this;
     }
 
+    /**
+     * @return array|null
+     */
+    public function getCurrentServers(): ?array
+    {
+        if (!file_exists(base_path() . "/servers.json"))
+            return null;
+
+        $d = file_get_contents(base_path() . "/servers.json");
+
+        $servers = Collection::make(json_decode($d))->toArray();
+        foreach ($servers as $key => $value) {
+            $count = Bot::query()->where("server", $value->key)->count() ?? 0;
+            $servers[$key]->current_count = $count;
+        }
+
+        return $servers;
+    }
 
     /**
      * @throws HttpException
@@ -991,7 +1009,7 @@ class BotLogicFactory
                     sprintf($feedbackMessage,
                         $data["message"] ?? '-'
                     ),
-                    InputFile::create(storage_path()."/app/$imageName")
+                    InputFile::create(storage_path() . "/app/$imageName")
                 );
         } else {
             BotMethods::bot()
@@ -1423,6 +1441,7 @@ class BotLogicFactory
         $tmp->image = is_null($photos) ? null : ($photos[0] ?? null);
         $tmp->level_2 = $request->level_2 ?? 0;
         $tmp->level_3 = $request->level_3 ?? 0;
+        $tmp->server = $request->server ?? null;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
 
@@ -1543,7 +1562,6 @@ class BotLogicFactory
             throw new HttpException(403, "Условия функции не выполнены!");
 
 
-
         $tmp = (object)$data;
 
 
@@ -1553,7 +1571,7 @@ class BotLogicFactory
         $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
         $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
-        $tmp->auto_cashback_on_payments = ($data["auto_cashback_on_payments"]??false) == "true";
+        $tmp->auto_cashback_on_payments = ($data["auto_cashback_on_payments"] ?? false) == "true";
 
         $warnings = null;
         if (isset($data["warnings"])) {
@@ -1633,6 +1651,7 @@ class BotLogicFactory
 
         $tmp->level_2 = $data["level_2"] ?? 0;
         $tmp->level_3 = $data["level_3"] ?? 0;
+        $tmp->server = $data["server"] ?? null;
         $tmp->cashback_fire_percent = $data["cashback_fire_percent"] ?? 0;
         $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
         $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
@@ -2272,9 +2291,8 @@ class BotLogicFactory
             throw new ValidationException($validator);
 
 
-
         $id = $data["id"] ?? null;
-        $tmp =[
+        $tmp = [
             "bot_id" => $this->bot->id,
             "content" => $data["message"] ?? 'Текст сообщения',
             "inline_keyboard" => $data["inline_keyboard"] ?? null,

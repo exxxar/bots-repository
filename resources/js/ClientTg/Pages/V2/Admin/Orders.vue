@@ -118,10 +118,21 @@ export default {
     },
     computed: {
         ...mapGetters(['getOrders', 'getOrdersPaginateObject', 'inCart', 'getReviews', 'getReviewsPaginateObject']),
-
+        tg() {
+            return window.Telegram.WebApp;
+        },
     },
     mounted() {
         this.loadOrders()
+
+
+        this.tg.BackButton.show()
+
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
     },
     methods: {
         changeDirection(direction) {

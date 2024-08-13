@@ -131,9 +131,7 @@ export default {
 
         this.tg.BackButton.show()
 
-        console.log("orders")
         this.tg.BackButton.onClick(() => {
-            console.log("orders BackButton")
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
 
             this.$router.back()

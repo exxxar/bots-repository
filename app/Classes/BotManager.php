@@ -179,6 +179,23 @@ class BotManager extends BotCore
         return $this->slugs;
     }
 
+
+
+    private function prepareServerURL($serverKey = "main")
+    {
+        if (!file_exists(base_path() . "/servers.json"))
+            return null;
+
+        $d = file_get_contents(base_path() . "/servers.json");
+        $servers = \Illuminate\Support\Collection::make(json_decode($d));
+        $currentServer = $servers->where("key", $serverKey)->first() ?? null;
+
+        if (is_null($currentServer))
+            return null;
+
+        return $currentServer->url ?? null;
+    }
+
     public function setWebhooks($botId = null)
     {
         $bots = Bot::query()
@@ -192,7 +209,10 @@ class BotManager extends BotCore
 
         $result = [];
         foreach ($bots as $bot) {
-            $botUrl = env("APP_URL") . "/bot/" . $bot->bot_domain;
+
+            $serverUrl = $this->prepareServerURL($bot->server ?? null);
+
+            $botUrl = ($serverUrl ?? env("APP_URL")) . "/bot/" . $bot->bot_domain;
 
             $token = env("APP_DEBUG") ?
                 ($bot->bot_token_dev ?? null) :

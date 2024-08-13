@@ -64,7 +64,10 @@ export default {
         ...mapGetters(['getSelf']),
         currentBot() {
             return window.currentBot
-        }
+        },
+        tg() {
+            return window.Telegram.WebApp;
+        },
 
     },
 
@@ -81,6 +84,14 @@ export default {
 
             this.loadReceiverUserData()
         }
+
+        this.tg.BackButton.show()
+
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
 
     },
 

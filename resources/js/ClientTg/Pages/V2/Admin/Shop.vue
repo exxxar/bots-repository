@@ -129,6 +129,14 @@ export default {
     mounted() {
         this.updateProducts()
         this.botForm.vk_shop_link = window.currentBot.vk_shop_link || null
+
+        this.tg.BackButton.show()
+
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
     },
     methods: {
         updateShopLink() {

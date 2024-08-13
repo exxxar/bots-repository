@@ -52,7 +52,19 @@ export default {
     },
     computed: {
         ...mapGetters(['getSelf']),
+        tg() {
+            return window.Telegram.WebApp;
+        },
     },
+    mounted() {
+        this.tg.BackButton.show()
+
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
+    }
 
 }
 </script>

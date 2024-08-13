@@ -113,6 +113,7 @@ Route::prefix("admin")
                 Route::post("/", "index");
                 Route::post("/ids", "listByIds");
                 Route::post('/get-me', "getMe");
+                Route::post('/load-current-servers', "loadCurrentServerList");
                 Route::post("/save-y-clients", [YClientsController::class, "saveYClients"]);
                 Route::post('/update-shop-link', "updateShopLink");
                 Route::post("/save-amo", [AmoCrmController::class, "saveAmoCrm"]);

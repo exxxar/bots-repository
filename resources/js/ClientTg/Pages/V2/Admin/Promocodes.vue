@@ -55,8 +55,21 @@ export default {
             loadTable:false,
         }
     },
+    computed:{
+        tg() {
+            return window.Telegram.WebApp;
+        },
+    },
     mounted() {
         this.promocodeFormModal = new bootstrap.Modal('#promocode-form', {})
+
+        this.tg.BackButton.show()
+
+        this.tg.BackButton.onClick(() => {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+
+            this.$router.back()
+        })
     },
     methods: {
 

@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckAppNode;
 use App\Http\Middleware\ManagerBotSlotsCheck;
 use App\Http\Middleware\SlugCheck;
 use App\Http\Middleware\TelegramAdminCheck;
@@ -76,5 +77,6 @@ class Kernel extends HttpKernel
         'tgAuth.manager' => TelegramManagerCheck::class,
         'slug' => SlugCheck::class,
         'bot.slots' => ManagerBotSlotsCheck::class,
+        'check-node' => CheckAppNode::class,
     ];
 }

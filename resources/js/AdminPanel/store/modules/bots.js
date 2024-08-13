@@ -33,6 +33,19 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async loadCurrentServers(context) {
+        let link = `${BASE_BOTS_LINK}/load-current-servers`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async getMe(context, payload = {bot_token: null}) {
         let link = `${BASE_BOTS_LINK}/get-me`
         let method = 'POST'
@@ -77,7 +90,7 @@ const actions = {
         })
     },
 
-    async loadChatInfo(context, payload = {dataObject: {chat_id: null, bot_id:null}}) {
+    async loadChatInfo(context, payload = {dataObject: {chat_id: null, bot_id: null}}) {
         let link = `${BASE_BOTS_LINK}/load-chat-info`
 
         let _axios = util.makeAxiosFactory(link, "POST", payload.dataObject)
@@ -89,7 +102,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async createBotTopics(context, payload = {dataObject: {bot_id:null, topics: null}}) {
+    async createBotTopics(context, payload = {dataObject: {bot_id: null, topics: null}}) {
         let link = `${BASE_BOTS_LINK}/create-bot-topics`
 
         let _axios = util.makeAxiosFactory(link, "POST", payload.dataObject)
@@ -135,7 +148,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadBotsByIds(context, payload = {ids:null}) {
+    async loadBotsByIds(context, payload = {ids: null}) {
         let page = payload.page || 0
         let size = payload.size || 50
 
@@ -164,7 +177,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async updateBotWebhook(context, payload = {dataObject: {bot_id:null}}) {
+    async updateBotWebhook(context, payload = {dataObject: {bot_id: null}}) {
         let link = `${BASE_BOTS_LINK}/bot-webhook-update`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
@@ -301,19 +314,19 @@ const actions = {
 const mutations = {
     setBots(state, payload) {
         state.bots = payload || [];
-       // localStorage.setItem('cashman_bots', JSON.stringify(payload));
+        // localStorage.setItem('cashman_bots', JSON.stringify(payload));
     },
     setBotUsers(state, payload) {
         state.bot_users = payload || [];
-       // localStorage.setItem('cashman_bot_users', JSON.stringify(payload));
+        // localStorage.setItem('cashman_bot_users', JSON.stringify(payload));
     },
     setBotUsersPaginateObject(state, payload) {
         state.bot_users_paginate_object = payload || [];
-     //   localStorage.setItem('cashman_bot_users_paginate_object', JSON.stringify(payload));
+        //   localStorage.setItem('cashman_bot_users_paginate_object', JSON.stringify(payload));
     },
     setBotsPaginateObject(state, payload) {
         state.bots_paginate_object = payload || [];
-      //  localStorage.setItem('cashman_bots_paginate_object', JSON.stringify(payload));
+        //  localStorage.setItem('cashman_bots_paginate_object', JSON.stringify(payload));
     }
 }
 

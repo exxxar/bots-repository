@@ -19,6 +19,7 @@ use App\Models\BotType;
 use App\Models\BotUser;
 use App\Models\Company;
 use App\Models\Order;
+use App\Models\ReferralHistory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -28,6 +29,12 @@ use Illuminate\Validation\ValidationException;
 
 class BotController extends Controller
 {
+
+    public function loadCurrentServerList(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(BusinessLogic::bots()->getCurrentServers());
+    }
+
 
     /**
      * @throws ValidationException
@@ -192,7 +199,12 @@ class BotController extends Controller
             ->where("customer_id", $request->botUser->id)
             ->count();
 
+        $refCount = ReferralHistory::query()
+            ->where("user_sender_id", $botUser->user_id)
+            ->count() ?? 0;
+
         $botUser->order_count = $orders;
+        $botUser->friends_count = $refCount;
 
         return new BotUserResource($botUser);
     }
