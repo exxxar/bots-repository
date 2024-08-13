@@ -572,7 +572,7 @@ trait BotDialogTrait
             . "Данные из диалога:\n";
 
         if ($sendByText) {
-            if (!is_null($format))
+            if (strlen(trim($format ?? '')) > 0)
                 $tmpMessage .= $this->prepareDataWithVariables($format, $botUser);
             else
                 $tmpMessage .= $resultData;
