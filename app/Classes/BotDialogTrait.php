@@ -395,7 +395,10 @@ trait BotDialogTrait
             $tmp = $dialog->summary_input_data ?? [];
             $tmpVariables = $dialog->variables ?? [];
 
-            $this->dialogResponse($botUser, $botDialogCommand, $tmp, $tmpVariables);
+            $nextBotDialogCommand = BotDialogCommand::query()
+                ->find($botDialogCommand->next_bot_dialog_command_id);
+
+            $this->dialogResponse($botUser, $nextBotDialogCommand, $tmp, $tmpVariables);
         }
 
     }
@@ -552,7 +555,7 @@ trait BotDialogTrait
             $bot->order_channel ??
             null;
 
-        Log::info("dialog send_params=>" . print_r($botDialogCommand->toArray(), true));
+
 
 
         $tmpMessage = "Пользователь:\n"
