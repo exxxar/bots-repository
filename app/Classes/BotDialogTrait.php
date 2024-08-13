@@ -556,7 +556,7 @@ trait BotDialogTrait
             null;
 
 
-        Log::info(print_r($botDialogCommand, true));
+        Log::info(print_r($botDialogCommand->send_params, true));
         $tmpMessage = "Пользователь:\n"
             . "-ТГ id: " . ($botUser->telegram_chat_id ?? '-') . "\n"
             . "-имя из ТГ: " . ($botUser->fio_from_telegram ?? 'Имя из телеграм не указано') . "\n"
