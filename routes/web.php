@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -46,6 +47,16 @@ Route::middleware(["check-node"])
         require __DIR__ . '/clients/admin-client.php';
         require __DIR__ . '/clients/landing.php';
         require __DIR__ . '/auth.php';
+
+        Route::get("/test-mail", function (){
+            $to_name = 'exxxar';
+            $to_email = 'exxxar@gmail.com';
+            $data = array('name'=>"Sam Jose", "body" => "Test mail");
+            Mail::send('emails.emails', $data, function($message) use ($to_name, $to_email) {
+                $message->to($to_email, $to_name)->subject('Artisans Web Testing Mail');
+                $message->from('inbox@your-cashman.com','Artisans Web');
+            });
+        });
 
         Route::get("/test-word", function () {
 

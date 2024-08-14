@@ -626,6 +626,24 @@ trait BotDialogTrait
 
         if ($sendToEmail) {
             //отправляем письмо на почту $tmpMessage
+
+            if (is_null($mail))
+                return;
+
+
+            $data =[
+                "answers" => $variables ?? [],
+                "user" => (object)[
+                    "telegram_chat_id" => $botUser->telegram_chat_id,
+                    "fio_from_telegram" => $botUser->fio_from_telegram,
+                    "phone" => $botUser->phone,
+                ]
+            ];
+
+            Mail::send('emails.result', $data, function($message) use ($botDomain, $mail, $botDialogCommand, $botUser) {
+                $message->to($mail, $botDomain)->subject("Диалог #$botDialogCommand->id - от пользователя ".($botUser->telegram_chat_id ?? '-'));
+                $message->from('inbox@your-cashman.com','YourCashman');
+            });
         }
 
 
