@@ -255,7 +255,7 @@ class ProfileFormScriptController extends SlugController
 
             Mail::send('emails.profile', $data, function ($message) use ($bot, $mail, $botUser) {
                 $message->to($mail, $bot->bot_domain)->subject("Анкет от пользователя " . ($botUser->telegram_chat_id ?? '-'));
-                $message->from('inbox@your-cashman.com', 'YourCashman:' . $bot->bot_domain);
+                $message->from(env("APP_EMAIL"), 'YourCashman:' . $bot->bot_domain);
             });
         }
 
