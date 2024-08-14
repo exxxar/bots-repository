@@ -557,7 +557,7 @@ trait BotDialogTrait
             null;
 
 
-        $sendByText = (boolean)($botDialogCommand->send_params["send_by_text"] ?? false);
+        $sendByText = (boolean)($botDialogCommand->send_params["send_by_text"] ?? true);
         $sendToEmail = (boolean)($botDialogCommand->send_params["send_to_mail"] ?? false);
         $sendByFile = (boolean)($botDialogCommand->send_params["send_by_file"] ?? false);
         $format = $botDialogCommand->send_params["format"] ?? null;
