@@ -642,7 +642,7 @@ trait BotDialogTrait
 
             Mail::send('emails.result', $data, function($message) use ($botDomain, $mail, $botDialogCommand, $botUser) {
                 $message->to($mail, $botDomain)->subject("Диалог #$botDialogCommand->id - от пользователя ".($botUser->telegram_chat_id ?? '-'));
-                $message->from('inbox@your-cashman.com','YourCashman');
+                $message->from('inbox@your-cashman.com','YourCashman:'.$botDomain);
             });
         }
 

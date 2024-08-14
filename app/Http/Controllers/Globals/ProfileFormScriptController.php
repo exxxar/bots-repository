@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -37,7 +38,12 @@ class ProfileFormScriptController extends SlugController
             ]);
 
         $params = [
-
+            [
+                "type" => "text",
+                "key" => "mail",
+                "description" => "Почта для отправки результата администратору",
+                "value" => null
+            ],
             [
                 "type" => "text",
                 "key" => "first_cashback_granted",
@@ -222,6 +228,36 @@ class ProfileFormScriptController extends SlugController
 
         }
 
+        $mail = (Collection::make($request->slug->config)
+            ->where("key", "mail")
+            ->first())["value"] ?? null;
+
+        if (!is_null($mail)) {
+            $botUser = $request->botUser;
+
+            $bot = $request->bot;
+
+            $data = [
+                "telegram_chat_id" => $botUser->telegram_chat_id ?? 'не указан',
+                "fio_from_telegram" => $botUser->fio_from_telegram ?? 'не указан',
+                'name' => $botUser->name ?? 'не указан',
+                'username' => $botUser->username ?? 'не указан',
+                'phone' => $botUser->phone ?? 'не указан',
+                'email' => $botUser->email ?? 'не указан',
+                'birthday' => $botUser->birthday ?? 'не указан',
+                'age' => $botUser->age ?? 'не указан',
+                'city' => $botUser->city ?? 'не указан',
+                'country' => $botUser->country ?? 'не указан',
+                'address' => $botUser->address ?? 'не указан',
+                'sex' => $botUser->sex == 1 ? "Мужской" : "Женский",
+
+            ];
+
+            Mail::send('emails.profile', $data, function ($message) use ($bot, $mail, $botUser) {
+                $message->to($mail, $bot->bot_domain)->subject("Анкет от пользователя " . ($botUser->telegram_chat_id ?? '-'));
+                $message->from('inbox@your-cashman.com', 'YourCashman:' . $bot->bot_domain);
+            });
+        }
 
         return response()->noContent();
     }
