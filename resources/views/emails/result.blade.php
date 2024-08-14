@@ -12,16 +12,16 @@
     <h2>Данные о пользователе</h2>
     <table>
         <tr>
-            <td style="width: 100px;">Идентификатор в телеграм</td>
-            <td style="width: 100px;">{{$user->telegram_chat_id}}</td>
+            <td style="width: 250px;">Идентификатор в телеграм</td>
+            <td style="width: 250px;">{{$user->telegram_chat_id}}</td>
         </tr>
         <tr>
-            <td style="width: 100px;">Имя в телеграм</td>
-            <td style="width: 100px;">{{$user->fio_from_telegram}}</td>
+            <td style="width: 250px;">Имя в телеграм</td>
+            <td style="width: 250px;">{{$user->fio_from_telegram}}</td>
         </tr>
         <tr>
-            <td style="width: 100px;">Номер телефона</td>
-            <td style="width: 100px;">{{$user->phone ?? 'не указан'}}</td>
+            <td style="width: 250px;">Номер телефона</td>
+            <td style="width: 250px;">{{$user->phone ?? 'не указан'}}</td>
         </tr>
     </table>
 @endif
@@ -29,8 +29,8 @@
     <h2>Результаты анкетирования</h2>
     <table>
         <tr>
-            <td style="width: 150px;">Ключ (переменная)</td>
-            <td style="width: 100px;">Пользователь ввёл</td>
+            <td style="width: 250px;">Ключ (переменная)</td>
+            <td style="width: 250px;">Пользователь ввёл</td>
             <td style="width: 1000px;">Сохраненные данные</td>
 
         </tr>
@@ -41,8 +41,8 @@
             @endphp
             @if(!empty($answer->value ?? '')||!empty($answer->custom_stored_value ?? ''))
                 <tr>
-                    <td style="width: 150px;">{{$answer->key?? 'Не указан'}}</td>
-                    <td style="width: 100px;">{{$answer->value?? 'Не указан'}}</td>
+                    <td style="width: 250px;">{{$answer->key?? 'Не указан'}}</td>
+                    <td style="width: 250px;">{{$answer->value?? 'Не указан'}}</td>
                     <td style="width: 1000px;">{{$answer->custom_stored_value?? 'Не указан'}}</td>
                 </tr>
             @endif
