@@ -609,7 +609,7 @@ class SystemDiagnosticController extends Controller
                     $messageId,
                     [
                         [
-                            ["text" => "📢Оставить отзыв и фото", "web_app" => [
+                            ["text" => "📢Написать текстовый отзыв с фото", "web_app" => [
                                 "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&hide_menu#/s/feedback"
                             ]],
                         ],
