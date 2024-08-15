@@ -599,7 +599,7 @@ class SystemDiagnosticController extends Controller
 
         if (!is_null($messageId))
             BotManager::bot()
-                ->editMessageCaption(
+                ->editMessageText(
                     $botUser->telegram_chat_id,
                     $messageId,
                     "Благодарим вас за вашу оценку, так же вы можете отправить нам фото отзыв и получить дополнительный КэшБэк на ваш счет 💖"
