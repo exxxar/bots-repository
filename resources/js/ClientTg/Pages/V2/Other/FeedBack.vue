@@ -19,7 +19,9 @@
                            class="form-control"
                            id="callbackForm-name"
                            placeholder="name@example.com" required>
-                    <label for="callbackForm-name">Ваше имя</label>
+                    <label for="callbackForm-name">Ваше имя
+                        <span class="text-danger">*</span>
+                    </label>
                 </div>
 
 
@@ -30,7 +32,9 @@
                            class="form-control"
                            id="callbackForm-phone"
                            placeholder="name@example.com" required>
-                    <label for="callbackForm-phone">Номер телефона</label>
+                    <label for="callbackForm-phone">Номер телефона
+                        <span class="text-danger">*</span>
+                    </label>
                 </div>
 
 
@@ -40,14 +44,19 @@
                               v-model="callbackForm.message"
                               placeholder="Leave a comment here"
                               id="callbackForm-message"></textarea>
-                    <label for="callbackForm-message" required>Текст сообщения</label>
+                    <label for="callbackForm-message" required>Текст сообщения
+                        <span class="text-danger">*</span>
+                    </label>
                 </div>
 
-                <h6 class="my-3 text-center fw-bold">Прикрепить фотографию</h6>
+                <h6 class="my-3 text-center fw-bold">Прикрепить фотографию
+                    <span class="text-danger">*</span>
+                </h6>
                 <div class="photo-preview d-flex justify-content-center flex-wrap w-100 my-3">
                     <label for="menu-photos" style="margin-right: 10px;" class="photo-loader ml-2">
                         <span class="text-primary fw-bold">+</span>
                         <input type="file" id="menu-photos" accept="image/*"
+                               required
                                @change="onChangePhotos"
                                style="display:none;"/>
 
