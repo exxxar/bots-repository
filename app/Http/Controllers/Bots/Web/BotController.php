@@ -163,7 +163,7 @@ class BotController extends Controller
         BusinessLogic::bots()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->setSlug($request->slug ?? null)
+           // ->setSlug($request->slug ?? null)
             ->sendFeedback($request->all(),
                 $request->hasFile('photo') ? $request->file('photo') : null);
 

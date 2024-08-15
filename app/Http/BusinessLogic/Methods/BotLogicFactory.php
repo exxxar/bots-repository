@@ -975,7 +975,7 @@ class BotLogicFactory
      */
     public function sendFeedback(array $data, $uploadedPhoto = null): void
     {
-        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+        if (is_null($this->bot) || is_null($this->botUser) )
             throw new HttpException(403, "Не выполнены условия функции");
 
         $validator = Validator::make($data, [
