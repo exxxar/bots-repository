@@ -407,8 +407,15 @@ class BotUserLogicFactory
         $birthday = Carbon::parse($data["birthday"] ?? $botUser->birthday ?? Carbon::now())->format("Y-m-d");
 
 
+        if (!is_null($data["phone"] ?? null)) {
+            $vowels = ["(", ")", "-"];
+            $filteredPhone = str_replace($vowels, "", $data["phone"]);
+            $botUser->phone = $filteredPhone;
+        } else
+            $botUser->phone = $botUser->phone ?? null;
+
+
         $botUser->name = $data["name"] ?? $botUser->name ?? null;
-        $botUser->phone = $data["phone"] ?? $botUser->phone ?? null;
         $botUser->email = $data["email"] ?? $botUser->email ?? null;
         $botUser->birthday = $birthday;
         $botUser->city = $data["city"] ?? $botUser->city ?? null;
@@ -480,6 +487,12 @@ class BotUserLogicFactory
 
         $birthday = Carbon::parse($data["birthday"] ?? $botUser->birthday ?? Carbon::now())->format("Y-m-d");
 
+        if (!is_null($data["phone"] ?? null)) {
+            $vowels = ["(", ")", "-"];
+            $filteredPhone = str_replace($vowels, "", $data["phone"]);
+            $botUser->phone = $filteredPhone;
+        } else
+            $botUser->phone = $botUser->phone ?? null;
 
         $botUser->is_vip = (bool)(($data["is_vip"] ?? false));
         $botUser->is_admin = (bool)(($data["is_admin"] ?? false));
@@ -487,7 +500,7 @@ class BotUserLogicFactory
         $botUser->is_manager = (bool)(($data["is_manager"] ?? false));
         $botUser->user_in_location = (bool)(($data["user_in_location"] ?? false));
         $botUser->name = $data["name"] ?? $botUser->name ?? null;
-        $botUser->phone = $data["phone"] ?? $botUser->phone ?? null;
+
         $botUser->email = $data["email"] ?? $botUser->email ?? null;
         $botUser->birthday = $birthday;
         $botUser->city = $data["city"] ?? $botUser->city ?? null;

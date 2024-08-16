@@ -869,10 +869,14 @@ class BotAdministrativeLogicFactory
 
 
         $birthday = Carbon::parse($data["birthday"] ?? Carbon::now())->format("Y-m-d");
+
+        $vowels = ["(", ")", "-"];
+        $filteredPhone = str_replace($vowels, "", $data["phone"] ?? '');
+
         $form = [
             "birthday" => $birthday,
             "name" => $data["name"] ?? null,
-            "phone" => $data["phone"] ?? null,
+            "phone" => $filteredPhone,
             "city" => $data["city"] ?? null,
             "country" => $data["country"] ?? null,
             "address" => $data["address"] ?? null,
