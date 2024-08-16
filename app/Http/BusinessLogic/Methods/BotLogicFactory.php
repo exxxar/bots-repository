@@ -1013,6 +1013,14 @@ class BotLogicFactory
                     ];
                 }
 
+                Log::info(print_r([
+                    "path"=>"/public/companies/" . $this->bot->company->slug  . "/$imageName",
+                    "channel"=>$feedbackChannel,
+                    "message"=>sprintf($feedbackMessage,
+                        $data["message"] ?? '-'
+                    )
+                ],true));
+
                 BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendMediaGroup($feedbackChannel, $media)

@@ -622,7 +622,7 @@ class ProductLogicFactory
         $useCashback = ($data["use_cashback"] ?? "false") == "true";
         $needPaymentLink = ($data["need_payment_link"] ?? "false") == "true";
         $cash = ($data["cash"] ?? "false") == "true";
-        $promo = json_decode($data["promo"]);
+        $promo = isset($data["promo"]) ? json_decode($data["promo"]) : null;
 
         $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
 
@@ -641,7 +641,7 @@ class ProductLogicFactory
             $disabilitiesText = "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
 
             foreach ($disabilities as $disability)
-                $disabilitiesText .= $disability=="пищевая аллергия"? "-<em>$disability на: $allergy</em>\n":"-<em>$disability</em>\n";
+                $disabilitiesText .= $disability == "пищевая аллергия" ? "-<em>$disability на: $allergy</em>\n" : "-<em>$disability</em>\n";
 
 
             $message .= $disabilitiesText . "\n";
@@ -673,6 +673,13 @@ class ProductLogicFactory
             $summaryCount += $tmpCount;
             $summaryPrice += $tmpPrice;
         }
+
+        if (is_null($promo))
+            $promo = (object)[
+                "activate_price" => 0,
+                "discount" => 0,
+                "code" => "не указан"
+            ];
 
         $maxUserCashback = $this->botUser->cashback->amount ?? 0;
         $deliveryPrice = $data["delivery_price"] ?? 0;
@@ -792,14 +799,14 @@ class ProductLogicFactory
 
         $disabilities = json_decode($data["disabilities"] ?? '[]');
         $allergy = $data["allergy"] ?? 'не указана';
-        $promo = json_decode($data["promo"]);
+        $promo = isset($data["promo"]) ? json_decode($data["promo"]) : null;
 
         if ($hasDisability) {
 
             $disabilitiesText = "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
 
             foreach ($disabilities as $disability)
-                $disabilitiesText .= $disability=="пищевая аллергия"? "-<em>$disability на: $allergy</em>\n":"-<em>$disability</em>\n";
+                $disabilitiesText .= $disability == "пищевая аллергия" ? "-<em>$disability на: $allergy</em>\n" : "-<em>$disability</em>\n";
 
             $message .= $disabilitiesText . "\n";
 
@@ -838,6 +845,13 @@ class ProductLogicFactory
         $maxUserCashback = $this->botUser->cashback->amount ?? 0;
         $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
         $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
+
+        if (is_null($promo))
+            $promo = (object)[
+                "activate_price" => 0,
+                "discount" => 0,
+                "code" => "не указан"
+            ];
 
 
         $discount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0) +
