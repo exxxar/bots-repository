@@ -697,7 +697,7 @@ class BotController extends Controller
             ->where("id", $request->bot_id)
             ->first();
 
-        return BusinessLogic::bots()
+        BusinessLogic::bots()
             ->setBot($bot)
             ->updateWebHookAndConfig();
     }

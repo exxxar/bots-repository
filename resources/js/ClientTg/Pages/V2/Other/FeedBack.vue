@@ -161,8 +161,11 @@ export default {
                         data.append(key, item)
                 });
 
-            if (typeof this.callbackForm.images.length > 0) {
-                data.append('photos', this.callbackForm.images);
+            if (this.callbackForm.images.length > 0) {
+                this.callbackForm.images.forEach(img => {
+                    data.append('photos[]', img);
+                })
+
                 data.delete("images")
             }
 
