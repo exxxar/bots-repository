@@ -1014,22 +1014,12 @@ class BotLogicFactory
                         "caption" => "$imageName"
                     ];
 
-                    Log::info(print_r([
-                        "path" => env("APP_URL") . "/images/" . $this->bot->company->slug . "/" . $imageName,
-
-                    ], true));
                 }
 
-                Log::info(print_r([
-                    "channel" => $feedbackChannel,
-                    "message" => sprintf($feedbackMessage,
-                        $data["message"] ?? '-'
-                    )
-                ], true));
 
                 BotMethods::bot()
                     ->whereBot($this->bot)
-                    ->sendMediaGroup($feedbackChannel, $media)
+                    ->sendMediaGroup($feedbackChannel, json_encode($media))
                     ->sendMessage($feedbackChannel, sprintf($feedbackMessage,
                         $data["message"] ?? '-'
                     ));
