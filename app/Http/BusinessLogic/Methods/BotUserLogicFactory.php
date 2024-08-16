@@ -153,8 +153,8 @@ class BotUserLogicFactory
                 ->where(function ($q) use ($search) {
                     $q->orWhere("name", 'like', "%$search%")
                         ->orWhere("phone", 'like', "%$search%")
-                        ->orWhere("fio_from_telegram", 'like', "%$search%")
-                        ->orWhere("telegram_chat_id", 'like', "%$search%");
+                        ->orWhere("fio_from_telegram", 'like', "%$search%");
+                    //->orWhere("telegram_chat_id", 'like', "%$search%");
                 });
 
         }

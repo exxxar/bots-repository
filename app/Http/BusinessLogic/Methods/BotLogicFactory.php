@@ -997,8 +997,6 @@ class BotLogicFactory
 
         if (!is_null($uploadedPhotos)) {
 
-
-            Log::info("count uploaded photos" . count($uploadedPhotos ?? []));
             if (count($uploadedPhotos) > 1) {
                 $media = [];
                 foreach ($uploadedPhotos as $key => $photo) {
