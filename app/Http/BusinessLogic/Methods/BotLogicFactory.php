@@ -998,6 +998,7 @@ class BotLogicFactory
         if (!is_null($uploadedPhotos)) {
 
 
+            Log::info("count uploaded photos" . count($uploadedPhotos ?? []));
             if (count($uploadedPhotos) > 1) {
                 $media = [];
                 foreach ($uploadedPhotos as $key => $photo) {
@@ -1012,15 +1013,18 @@ class BotLogicFactory
                         "type" => "photo",
                         "caption" => "$imageName"
                     ];
+
+                    Log::info(print_r([
+                        "path" => "/public/companies/" . $this->bot->company->slug . "/$imageName",
+                        "channel" => $feedbackChannel,
+                    ], true));
                 }
 
-              /*  Log::info(print_r([
-                    "path" => "/public/companies/" . $this->bot->company->slug . "/$imageName",
-                    "channel" => $feedbackChannel,
+                Log::info(print_r([
                     "message" => sprintf($feedbackMessage,
                         $data["message"] ?? '-'
                     )
-                ], true));*/
+                ], true));
 
                 BotMethods::bot()
                     ->whereBot($this->bot)
