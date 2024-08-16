@@ -1009,18 +1009,19 @@ class BotLogicFactory
                     $photo->storeAs("/public/companies/" . $this->bot->company->slug . "/$imageName");
 
                     $media[] = [
-                        "media" => env("APP_URL") . "/images-by-bot-id/" . $this->bot->id . "/" . $imageName,
+                        "media" => env("APP_URL") . "/images/" . $this->bot->company->slug . "/" . $imageName,
                         "type" => "photo",
                         "caption" => "$imageName"
                     ];
 
                     Log::info(print_r([
-                        "path" => "/public/companies/" . $this->bot->company->slug . "/$imageName",
-                        "channel" => $feedbackChannel,
+                        "path" => env("APP_URL") . "/images/" . $this->bot->company->slug . "/" . $imageName,
+
                     ], true));
                 }
 
                 Log::info(print_r([
+                    "channel" => $feedbackChannel,
                     "message" => sprintf($feedbackMessage,
                         $data["message"] ?? '-'
                     )
