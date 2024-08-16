@@ -124,20 +124,21 @@ class CashBackListener
                 $index++;
             }
 
-            BotMethods::bot()
-                ->whereBot($bot)
-                ->sendInlineKeyboard(
-                    $botUserUser->telegram_chat_id,
-                    "Пожалуйста, поставьте оценку нашей работе!", [
-                        [
-                            ["text" => "😡", "callback_data" => "/send_review 0"],
-                            ["text" => "😕", "callback_data" => "/send_review 1"],
-                            ["text" => "😐", "callback_data" => "/send_review 2"],
-                            ["text" => "🙂", "callback_data" => "/send_review 3"],
-                            ["text" => "😁", "callback_data" => "/send_review 4"],
+            if ($event->needUserReview)
+                BotMethods::bot()
+                    ->whereBot($bot)
+                    ->sendInlineKeyboard(
+                        $botUserUser->telegram_chat_id,
+                        "Пожалуйста, поставьте оценку нашей работе!", [
+                            [
+                                ["text" => "😡", "callback_data" => "/send_review 0"],
+                                ["text" => "😕", "callback_data" => "/send_review 1"],
+                                ["text" => "😐", "callback_data" => "/send_review 2"],
+                                ["text" => "🙂", "callback_data" => "/send_review 3"],
+                                ["text" => "😁", "callback_data" => "/send_review 4"],
+                            ]
                         ]
-                    ]
-                );
+                    );
         }
 
         if ($event->directionEnum == CashBackDirectionEnum::Debiting) {

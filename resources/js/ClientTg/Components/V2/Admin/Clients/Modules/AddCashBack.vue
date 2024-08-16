@@ -47,6 +47,15 @@
 
                         <div class="form-check my-3">
                             <input class="form-check-input"
+                                   v-model="cashbackForm.need_user_review"
+                                   type="checkbox" value="" id="need_user_review">
+                            <label class="form-check-label" for="need_user_review">
+                                Нужен отзыв от пользователя
+                            </label>
+                        </div>
+
+                        <div class="form-check my-3">
+                            <input class="form-check-input"
                                    v-model="cashbackForm.need_custom_percents"
                                    type="checkbox" value="" id="need_custom_cashback_amount">
                             <label class="form-check-label" for="need_custom_cashback_amount">
@@ -106,6 +115,7 @@ export default {
             cashbackForm: {
                 percent: null,
                 need_custom_percents: false,
+                need_user_review: false,
                 category: null,
                 amount: null,
                 info: null

@@ -59,15 +59,17 @@
                     <span class="text-primary fw-bold">+</span>
                     <input type="file" id="menu-photos" accept="image/*"
                            required
+                           multiple
                            @change="onChangePhotos"
                            style="display:none;"/>
 
                 </label>
                 <div class="mb-2 img-preview" style="margin-right: 10px;"
-                     v-if="callbackForm.image">
-                    <img v-lazy="getPhoto(callbackForm.image).imageUrl">
+                     v-for="(img, index) in callbackForm.images"
+                     v-if="(callbackForm.images||[]).length>0">
+                    <img v-lazy="getPhoto(img).imageUrl">
                     <div class="remove">
-                        <a @click="removePhoto()">Удалить</a>
+                        <a @click="removePhoto(index)">Удалить</a>
                     </div>
                 </div>
 
@@ -103,7 +105,7 @@ export default {
                 name: null,
                 phone: null,
                 message: null,
-                image: null
+                images: []
             },
         }
     },
@@ -136,14 +138,15 @@ export default {
     },
     methods: {
         onChangePhotos(e) {
-            const file = e.target.files[0]
-            this.callbackForm.image = file
+            const files = e.target.files
+            for (let i = 0; i < files.length; i++)
+                this.callbackForm.images.push(files[i])
         },
         getPhoto(imgObject) {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
-        removePhoto() {
-            this.callbackForm.image = null
+        removePhoto(index) {
+            this.locationForm.images.splice(index, 1)
         },
         submitCallback() {
             let data = new FormData();
@@ -158,9 +161,9 @@ export default {
                         data.append(key, item)
                 });
 
-            if (typeof this.callbackForm.image != "string") {
-                data.append('photo', this.callbackForm.image);
-                data.delete("image")
+            if (typeof this.callbackForm.images.length > 0) {
+                data.append('photos', this.callbackForm.images);
+                data.delete("images")
             }
 
             this.$store.dispatch("feedBackForm", {
@@ -172,6 +175,7 @@ export default {
                     message: null,
                     name: null,
                     phone: null,
+                    images: []
                 }
 
                 this.$notify({

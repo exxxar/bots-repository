@@ -14,6 +14,22 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
                 фортуны: <span v-bind:class="{'text-primary fw-bold':form.wheel_of_fortune.can_play}">вкл</span> \
                 <span v-bind:class="{'text-primary fw-bold':!form.wheel_of_fortune.can_play}">выкл</span></label>
         </div>
+        <p class="alert alert-light mb-2">
+            Выберите интервал автоматического обновления розыгрыша, доступны следующие варианты: <span
+            class="text-primary"
+            @click="form.interval = item.value"
+            v-bind:class="{'fw-bold':form.interval === item.value}"
+            v-for="item in intervals">{{ item.title || '-' }}, </span>
+        </p>
+        <div class="form-floating mb-2">
+            <select class="form-select"
+                    v-model="form.interval"
+                    required
+                    id="interval" aria-label="Floating label select example">
+                <option :value="item.value" v-for="item in intervals">{{ item.title || '-' }}</option>
+            </select>
+            <label for="interval">Период обновления</label>
+        </div>
         <div class="form-floating mb-2">
                 <textarea class="form-control"
                           v-model="form.wheel_of_fortune.rules"
@@ -23,7 +39,9 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
                           id="script-settings-wheel-of-fortune-can_play"></textarea>
             <label for="script-settings-disabled_text">Правила колеса фортуны
                 <span
-                    v-if="(form.wheel_of_fortune.rules||'').length>0">{{ (form.wheel_of_fortune.rules || '').length }}/4000</span>
+                    v-if="(form.wheel_of_fortune.rules||'').length>0">{{
+                        (form.wheel_of_fortune.rules || '').length
+                    }}/4000</span>
             </label>
         </div>
 
@@ -172,13 +190,28 @@ export default {
     data() {
         return {
             loaded: true,
-            loaded_params:false,
+            loaded_params: false,
             need_auto_random_smiles: true,
             smiles: ["🥤", "🥗", "🍔", "🍗", "🍟", "🥓", "🌯", "🍱", "🍜", "🍲", "🍧", "🍨", "🧁", "🥞",
-                 "🤖", "🎲", "🎯", "😊", "😎", "🌻", "👽", "💌", "📚", "🐶", "👻", "🏀", "👓", "🎓",
-                "1️⃣","2️⃣",'3️⃣',"4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟","💡","🚀","⭐","💎","☘","🏆","🎁"],
+                "🤖", "🎲", "🎯", "😊", "😎", "🌻", "👽", "💌", "📚", "🐶", "👻", "🏀", "👓", "🎓",
+                "1️⃣", "2️⃣", '3️⃣', "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟", "💡", "🚀", "⭐", "💎", "☘", "🏆", "🎁"],
+            intervals: [
+                {
+                    title: 'Один день',
+                    value: 1,
+                },
+                {
+                    title: 'Одна неделя',
+                    value: 7,
+                },
+                {
+                    title: 'Один месяц',
+                    value: 30,
+                }
+            ],
             form: {
                 win_message: null,
+                interval: 1,
                 wheel_of_fortune: {
                     can_play: true,
                     rules: 'Колесо фортуны доступно 1 раз в сутки. В качестве приза вы можете выиграть 1 из предложенных призов и воспользоваться ими в заведении или на доставке:) Приятного отдыха!',

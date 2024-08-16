@@ -22,6 +22,7 @@ class CashBackEvent
     public string $info;
     public float $amount;
     public $percent;
+    public $needUserReview;
 
     /**
      * Create a new event instance.
@@ -33,7 +34,8 @@ class CashBackEvent
         float    $amount,
         string    $info,
         Direction $directionEnum,
-        $percent = null
+        $percent = null,
+        bool $needUserReview = true,
     )
     {
         $this->botId = $botId;
@@ -43,6 +45,7 @@ class CashBackEvent
         $this->info = $info;
         $this->directionEnum = $directionEnum;
         $this->percent = $percent;
+        $this->needUserReview = $needUserReview;
     }
 
     /**

@@ -134,6 +134,7 @@ class CashBackSubListener
             ]);
 
 
+            if ($event->needUserReview)
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendInlineKeyboard(

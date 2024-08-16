@@ -489,6 +489,7 @@ import WheelCustomV2 from "@/ClientTg/Pages/V2/Games/WheelCustom.vue";
 import AdminMenuV2 from "@/ClientTg/Pages/V2/Admin/AdminMenu.vue";
 import BotManagerV2 from "@/ClientTg/Pages/V2/Admin/BotManager.vue";
 import PageManagerV2 from "@/ClientTg/Pages/V2/Admin/Pages.vue";
+import IntegrationsV2 from "@/ClientTg/Pages/V2/Admin/IntegrationMenu.vue";
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
@@ -681,6 +682,12 @@ export const simpleRoutes = [
         path: simplePrefix + '/admin/pages',
         component: PageManagerV2,
         meta: {title: 'Страницы'}
+    },
+    {
+        name: 'IntegrationsV2',
+        path: simplePrefix + '/admin/integrations',
+        component: IntegrationsV2,
+        meta: {title: 'Интеграции'}
     },
 
 ];

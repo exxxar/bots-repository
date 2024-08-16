@@ -383,6 +383,8 @@ class BotAdministrativeLogicFactory
         if (is_null($userBotUser) || is_null($adminBotUser))
             throw new HttpException(404, "Пользователь не найден");
 
+        $needUserReview = ($data["need_user_review"] ?? false) == "true";
+
         if (!is_null($data["category"] ?? null)) {
             /*   BotMethods::bot()
                    ->whereBot($this->bot)
@@ -395,7 +397,8 @@ class BotAdministrativeLogicFactory
                 ((float)$data["amount"] ?? 0),
                 $data["info"],
                 CashBackDirectionEnum::Crediting,
-                $percent
+                $percent,
+                $needUserReview
             ));
             return;
         }
@@ -408,7 +411,8 @@ class BotAdministrativeLogicFactory
             ((float)$data["amount"] ?? 0),
             $data["info"],
             CashBackDirectionEnum::Crediting,
-            $percent
+            $percent,
+            $needUserReview
         ));
     }
 

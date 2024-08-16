@@ -28,13 +28,13 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                 </div>
             </div>
         </div>
-        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
+        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2">
             <div class="col">
                 <button type="button"
                         @click="goTo('ProfileV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/profile.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Профиль</p>
@@ -49,7 +49,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         style="min-height:250px;"
                         :disabled="script_data.is_disabled"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/shop.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Магазин</p>
@@ -65,7 +65,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         @click="goTo('ShopCartV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/basket.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Корзина
@@ -83,7 +83,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         @click="goTo('OrdersV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/history.png'" class="img-fluid" alt="">
 
                         <p class="my-2"> История заказов</p>
@@ -101,10 +101,10 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         style="min-height:250px;"
 
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/events.png'" class="img-fluid" alt="">
 
-                        <p class="my-2"> Ежедневный розыгрыш</p>
+                        <p class="my-2"> Розыгрыши</p>
                         <span style="font-size:12px;" v-if="!script_data.wheel_of_fortune.can_play||!loadScriptData"><i
                             class="fa-solid fa-lock"></i> закрыто</span>
                     </div>
@@ -118,7 +118,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                                     @click="goTo('AdminV2')"
                                     style="min-height:250px;"
                                     class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
-                                <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                                <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                                     <img v-lazy="'/images/shop-v2/home.png'" class="img-fluid" alt="">
 
                                     <p class="my-2">Админ.панель</p>
@@ -135,7 +135,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                                     @click="goTo('WheelOfFortuneV2')"
                                     style="min-height:250px;"
                                     class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
-                                <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                                <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                                     <img v-lazy="'/images/shop-v2/gift.png'" class="img-fluid" alt="">
 
                                     <p class="my-2"> Колесо фортуны</p>
@@ -152,7 +152,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         @click="goTo('ContactsV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm btn-outline-primary w-100 border-0 mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/contacts.png'" class="img-fluid" alt="">
 
                         <p class="my-2">О Нас & Контакты</p>
@@ -167,13 +167,13 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
         <h6 class="opacity-75 my-3 text-center" v-if="getSelf.is_admin"><i
             class="fa-solid fa-house-lock mr-2 text-primary"></i>Административные сервисы</h6>
 
-        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2" v-if="getSelf.is_admin">
+        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4  g-2" v-if="getSelf.is_admin">
             <div class="col">
                 <button type="button"
                         @click="goTo('ClientsV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/clients.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление клиентами</p>
@@ -187,7 +187,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         @click="goTo('MailingV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/mail.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление рассылками</p>
@@ -201,7 +201,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         @click="goTo('ShopV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/products.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление товарами</p>
@@ -215,7 +215,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         @click="goTo('AdminOrdersV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/orders.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление заказами</p>
@@ -229,7 +229,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         @click="goTo('PromoCodesV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/promo.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление промокодами</p>
@@ -244,7 +244,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         @click="goTo('StatisticV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Статистика</p>
@@ -258,7 +258,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         data-bs-toggle="modal" data-bs-target="#script-setting-editor"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
                         <img v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Настройка скрипта</p>

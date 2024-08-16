@@ -581,11 +581,17 @@ class SimpleDeliveryController extends SlugController
 
         $action->max_attempts = $maxAttempts;
 
-        if (!is_null($action->completed_at ?? null))
-            if (Carbon::now()->timestamp - Carbon::parse($action->completed_at)->timestamp >= 86400) {
+        if (!is_null($action->completed_at ?? null)) {
+            $interval = (Collection::make($slug->config)
+                ->where("key", "interval")
+                ->first())["value"] ?? 1;
+
+            if (Carbon::now()->timestamp - Carbon::parse($action->completed_at)->timestamp >= 86400 * $interval) {
                 $action->current_attempts = 0;
                 $action->completed_at = null;
             }
+        }
+
 
         if (is_null($action->completed_at ?? null)) {
             $action->current_attempts = 0;

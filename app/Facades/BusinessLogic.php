@@ -4,6 +4,7 @@ namespace App\Facades;
 
 
 use App\Http\BusinessLogic\Methods\BotMediaLogicFactory as MediaLogic;
+use App\Http\BusinessLogic\Methods\IIKOLogicFactory as IIKOLogic;
 use App\Http\BusinessLogic\Methods\BotPageLogicFactory as PageLogic;
 use App\Http\BusinessLogic\Methods\FrontPadLogicFactory as FrontPadLogic;
 use App\Http\BusinessLogic\Methods\InlineQueryLogicFactory as InlineQueryLogic;
@@ -52,6 +53,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static QueueLogic mailing()
  * @method static FrontPadLogic frontPad()
  * @method static ReviewLogic review()
+ * @method static IIKOLogic iiko()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

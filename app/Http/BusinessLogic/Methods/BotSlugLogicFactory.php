@@ -368,9 +368,10 @@ class BotSlugLogicFactory
         $data["can_use_card"] = (($data["can_use_card"] ?? false) == "true");
         $data["is_disabled"] = (($data["is_disabled"] ?? false) == "true");
         $data["need_pay_after_call"] = (($data["need_pay_after_call"] ?? false) == "true");
-        $data["price_per_km"] = $data["price_per_km"] ?? 0;
-        $data["free_shipping_starts_from"] = $data["free_shipping_starts_from"] ?? 0;
-        $data["min_base_delivery_price"] = $data["min_base_delivery_price"] ?? 0;
+        $data["price_per_km"] = (int)($data["price_per_km"] ?? 0);
+        $data["interval"] = (int)($data["interval"] ?? 1);
+        $data["free_shipping_starts_from"] =  (int)($data["free_shipping_starts_from"] ?? 0);
+        $data["min_base_delivery_price"] = (int)($data["min_base_delivery_price"] ?? 0);
         $data["wheel_of_fortune"] = json_decode($data["wheel_of_fortune"] ?? '[]');
 
         $config = Collection::make($slug->config ?? []);

@@ -5,6 +5,7 @@ namespace App\Http\BusinessLogic;
 use App\Http\BusinessLogic\Methods\AmoLogicFactory;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory;
 use App\Http\BusinessLogic\Methods\FrontPadLogicFactory;
+use App\Http\BusinessLogic\Methods\IIKOLogicFactory;
 use App\Http\BusinessLogic\Methods\InlineQueryLogicFactory;
 use App\Http\BusinessLogic\Methods\MailingLogicFactory;
 use App\Http\BusinessLogic\Methods\PaymentLogicFactory;
@@ -52,6 +53,7 @@ class BusinessLogic
     protected MailingLogicFactory $mailing;
     protected FrontPadLogicFactory $frontPad;
     protected ReviewLogicFactory $review;
+    protected IIKOLogicFactory $iiko;
 
     public function __construct()
     {
@@ -78,6 +80,7 @@ class BusinessLogic
         $this->mailing = new MailingLogicFactory();
         $this->frontPad = new FrontPadLogicFactory();
         $this->review = new ReviewLogicFactory();
+        $this->iiko = new IIKOLogicFactory();
     }
 
     public function bots(): BotLogicFactory
@@ -90,6 +93,10 @@ class BusinessLogic
         return $this->review;
     }
 
+    public function iiko(): IIKOLogicFactory
+    {
+        return $this->iiko;
+    }
 
     public function mailing(): MailingLogicFactory
     {

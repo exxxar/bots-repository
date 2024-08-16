@@ -973,9 +973,9 @@ class BotLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
-    public function sendFeedback(array $data, $uploadedPhoto = null): void
+    public function sendFeedback(array $data, $uploadedPhotos = null): void
     {
-        if (is_null($this->bot) || is_null($this->botUser) )
+        if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(403, "Не выполнены условия функции");
 
         $validator = Validator::make($data, [
@@ -995,22 +995,48 @@ class BotLogicFactory
 
         $thread = $this->bot->topics["callback"] ?? null;
 
-        if (!is_null($uploadedPhoto)) {
-            $ext = $uploadedPhoto->getClientOriginalExtension();
+        if (!is_null($uploadedPhotos)) {
 
-            $imageName = Str::uuid() . "." . $ext;
+            if (count($uploadedPhotos) > 1) {
+                $media = [];
+                foreach ($uploadedPhotos as $photo) {
+                    $ext = $photo->getClientOriginalExtension();
 
-            $uploadedPhoto->storeAs("$imageName");
+                    $imageName = Str::uuid() . "." . $ext;
 
-            BotMethods::bot()
-                ->whereBot($this->bot)
-                ->sendPhoto(
-                    $feedbackChannel,
-                    sprintf($feedbackMessage,
+                    $photo->storeAs("/public/companies/" . $this->bot->company->slug  . "/$imageName");
+
+                    $media[] = [
+                        "media" => env("APP_URL") . "/images-by-bot-id/" . $this->bot->id . "/" . $imageName,
+                        "type" => "photo",
+                        "caption" => "$imageName"
+                    ];
+                }
+
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendMediaGroup($feedbackChannel, $media)
+                    ->sendMessage($feedbackChannel, sprintf($feedbackMessage,
                         $data["message"] ?? '-'
-                    ),
-                    InputFile::create(storage_path() . "/app/$imageName")
-                );
+                    ));
+            } else {
+                $ext = $uploadedPhotos[0]->getClientOriginalExtension();
+
+                $imageName = Str::uuid() . "." . $ext;
+
+                $uploadedPhotos[0]->storeAs("$imageName");
+
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendPhoto(
+                        $feedbackChannel,
+                        sprintf($feedbackMessage,
+                            $data["message"] ?? '-'
+                        ),
+                        InputFile::create(storage_path() . "/app/$imageName")
+                    );
+            }
+
         } else {
             BotMethods::bot()
                 ->whereBot($this->bot)
