@@ -409,13 +409,7 @@ export default {
                 email: null,
 
                 schedule: [
-                    {
-                        day: 'Воскресенье',
-                        start_at: '08:00',
-                        end_at: '20:00',
-                        closed: false,
-                        closed_comment: 'Выходной',
-                    },
+
                     {
                         day: 'Понедельник',
                         start_at: '08:00',
@@ -453,6 +447,13 @@ export default {
                     },
                     {
                         day: 'Суббота',
+                        start_at: '08:00',
+                        end_at: '20:00',
+                        closed: false,
+                        closed_comment: 'Выходной',
+                    },
+                    {
+                        day: 'Воскресенье',
                         start_at: '08:00',
                         end_at: '20:00',
                         closed: false,

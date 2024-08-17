@@ -1,9 +1,10 @@
 <template>
+
     <ul class="list-group">
         <li
             v-for="(item, index) in schedule"
             class="list-group-item d-flex justify-content-between"
-            v-bind:class="{'current-day text-primary fw-bold':(new Date()).getDay()-1 === index}"
+            v-bind:class="{'current-day text-primary fw-bold':(new Date()).getUTCDay() === index}"
             aria-current="true">
             <span>{{item.day || '-'}}</span>
             <span

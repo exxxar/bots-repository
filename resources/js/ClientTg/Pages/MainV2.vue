@@ -79,10 +79,8 @@ export default {
 
             if (schedule && (schedule || []).length > 0) {
 
-                console.log(schedule)
-                const day = (new Date()).getDay();
+                const day = (new Date()).getUTCDay();
 
-                console.log("day=>", day)
                 const hours = (new Date()).getHours();
                 const minutes = (new Date()).getMinutes();
 
@@ -107,7 +105,7 @@ export default {
                     isWork = true;
 
 
-                if ((hours > tmpStartHours || hours < tmpEndHours) && tmpStartHours >= tmpEndHours)
+                if ((hours > tmpStartHours || hours <= tmpEndHours) && tmpStartHours >= tmpEndHours)
                     isWork = true;
 
 
