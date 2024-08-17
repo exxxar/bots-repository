@@ -491,6 +491,14 @@ import BotManagerV2 from "@/ClientTg/Pages/V2/Admin/BotManager.vue";
 import PageManagerV2 from "@/ClientTg/Pages/V2/Admin/Pages.vue";
 import IntegrationsV2 from "@/ClientTg/Pages/V2/Admin/IntegrationMenu.vue";
 
+import AmoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Amo.vue";
+import DialogsV2 from "@/ClientTg/Pages/V2/Admin/Dialogs.vue";
+import SlugsV2 from "@/ClientTg/Pages/V2/Admin/Slugs.vue";
+import YClientsV2 from "@/ClientTg/Pages/V2/Admin/Integrations/YClients.vue";
+import IikoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Iiko.vue";
+import BitrixV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Bitrix.vue";
+import FrontPadV2 from "@/ClientTg/Pages/V2/Admin/Integrations/FrontPad.vue";
+
 const simplePrefix = "/s"
 export const simpleRoutes = [
 
@@ -690,6 +698,48 @@ export const simpleRoutes = [
         meta: {title: 'Интеграции'}
     },
 
+    {
+        name: 'AmoV2',
+        path: simplePrefix + '/admin/amo',
+        component: AmoV2,
+        meta: {title: 'AMO'}
+    },
+    {
+        name: 'BitrixV2',
+        path: simplePrefix + '/admin/bitrix',
+        component: BitrixV2,
+        meta: {title: 'Bitrix24'}
+    },
+    {
+        name: 'IikoV2',
+        path: simplePrefix + '/admin/iiko',
+        component: IikoV2,
+        meta: {title: 'IIKO'}
+    },
+    {
+        name: 'FrontPadV2',
+        path: simplePrefix + '/admin/frontpad',
+        component: FrontPadV2,
+        meta: {title: 'FrontPad'}
+    },
+    {
+        name: 'DialogsV2',
+        path: simplePrefix + '/admin/dialogs',
+        component: DialogsV2,
+        meta: {title: 'Диалоги'}
+    },
+    {
+        name: 'SlugsV2',
+        path: simplePrefix + '/admin/scripts',
+        component: SlugsV2,
+        meta: {title: 'Скрипты'}
+    },
+    {
+        name: 'YClientsV2',
+        path: simplePrefix + '/admin/y-clients',
+        component: YClientsV2,
+        meta: {title: 'YClients'}
+    },
 ];
 
 

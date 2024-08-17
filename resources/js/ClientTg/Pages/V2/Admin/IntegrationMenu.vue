@@ -3,7 +3,7 @@
         <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
             <div class="col">
                 <button type="button"
-                        @click="goTo('ClientsV2')"
+                        @click="goTo('IikoV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
@@ -17,7 +17,7 @@
 
             <div class="col">
                 <button type="button"
-                        @click="goTo('MailingV2')"
+                        @click="goTo('AmoV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
@@ -31,7 +31,7 @@
 
             <div class="col">
                 <button type="button"
-                        @click="goTo('ShopV2')"
+                        @click="goTo('BitrixV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
@@ -45,7 +45,7 @@
 
             <div class="col">
                 <button type="button"
-                        @click="goTo('AdminOrdersV2')"
+                        @click="goTo('YClientsV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">
@@ -59,7 +59,7 @@
 
             <div class="col">
                 <button type="button"
-                        @click="goTo('PromoCodesV2')"
+                        @click="goTo('FrontPadV2')"
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column">

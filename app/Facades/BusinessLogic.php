@@ -27,10 +27,12 @@ use App\Http\BusinessLogic\Methods\GeoLogicFactory as GeoLogic;
 use App\Http\BusinessLogic\Methods\DeliveryLogicFactory as DeliveryLogic;
 use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory as PromoCodesLogic;
 use App\Http\BusinessLogic\Methods\MailingLogicFactory as QueueLogic;
+use App\Http\BusinessLogic\Methods\BitrixLogicFactory as BitrixLogic;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static BotLogic bots()
+ * @method static BitrixLogic bitrix()
  * @method static PageLogic pages()
  * @method static SlugLogic slugs()
  * @method static ProductLogic products()

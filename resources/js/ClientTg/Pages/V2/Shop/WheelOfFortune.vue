@@ -24,6 +24,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                 <WheelOfFortuneShopVariant
                     :can-play="canPlay"
                     :is-admin="false"
+                    :interval="script_data.interval || 1"
                     :action-data="action"
                     v-if="(script_data.wheel_of_fortune.items||[]).length>=3"
                     v-on:win="winHandler"
@@ -47,7 +48,8 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
     <!-- Modal -->
     <div
         v-if="(getSelf||{is_admin:false}).is_admin"
-        class="modal fade" id="shop-wheel-form-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        class="modal fade" id="shop-wheel-form-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">

@@ -57,7 +57,7 @@
                 class="fw-bold text-primary">{{ form.win.mark || 'не указано' }}</span></p>
             <hr class="mb-2 p-0" v-if="completed_at">
             <p class="mb-0" v-if="completed_at"><span class="fw-bold">Внимание!</span> Приз возможно получить только
-                течении 24часов с момента выигрыша:
+                течении <span class="fw-bold text-primary">{{ preparedInterval }}</span> с момента выигрыша:
                 <span class="fw-bold text-primary">{{ $filters.currentFull(completed_at) }}</span>
             </p>
         </div>
@@ -70,9 +70,23 @@ import {Wheel} from "vue3-fortune-wheel";
 
 
 export default {
-    props: ["modelValue", "canPlay", "actionData", "isAdmin"],
+    props: ["modelValue", "canPlay", "actionData", "isAdmin", "interval"],
     computed: {
+        preparedInterval() {
+            if (!this.interval)
+                return "24 часа"
 
+            switch (this.interval) {
+                default:
+                case 1:
+                    return "одного дня";
+                case 7:
+                    return "7 дней";
+                case 30:
+                    return "одного месяца"
+            }
+
+        },
         enabledToPlay() {
             if (this.isAdmin)
                 return true

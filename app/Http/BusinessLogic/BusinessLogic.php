@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic;
 
 use App\Http\BusinessLogic\Methods\AmoLogicFactory;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory;
+use App\Http\BusinessLogic\Methods\BitrixLogicFactory;
 use App\Http\BusinessLogic\Methods\FrontPadLogicFactory;
 use App\Http\BusinessLogic\Methods\IIKOLogicFactory;
 use App\Http\BusinessLogic\Methods\InlineQueryLogicFactory;
@@ -31,6 +32,7 @@ use App\Http\BusinessLogic\Methods\ProductLogicFactory;
 class BusinessLogic
 {
     protected AmoLogicFactory $amo;
+    protected BitrixLogicFactory $bitrix;
     protected PaymentLogicFactory $payment;
     protected QuizLogicFactory $quiz;
     protected AppointmentLogicFactory $appointment;
@@ -58,6 +60,7 @@ class BusinessLogic
     public function __construct()
     {
         $this->amo = new AmoLogicFactory();
+        $this->bitrix = new BitrixLogicFactory();
         $this->payment = new PaymentLogicFactory();
         $this->quiz = new QuizLogicFactory();
         $this->appointment = new AppointmentLogicFactory();
@@ -91,6 +94,11 @@ class BusinessLogic
     public function review(): ReviewLogicFactory
     {
         return $this->review;
+    }
+
+    public function bitrix(): BitrixLogicFactory
+    {
+        return $this->bitrix;
     }
 
     public function iiko(): IIKOLogicFactory
