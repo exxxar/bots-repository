@@ -56,7 +56,7 @@ export default {
     created() {
         window.currentBot = this.bot.data
 
-        const schedule =  window.currentBot.company.schedule || [];
+        const schedule = window.currentBot.company.schedule || [];
 
         window.isCorrectSchedule = (schedule) => {
             if ((schedule || []).length < 7)
@@ -72,13 +72,12 @@ export default {
 
         if (window.isCorrectSchedule(schedule)) {
 
-            if (!schedule || (schedule||[]).length===0)
-            {
+            if (!schedule || (schedule || []).length === 0) {
                 window.currentBot.company.is_work = true
             }
 
 
-            if (schedule&&(schedule||[]).length>0) {
+            if (schedule && (schedule || []).length > 0) {
 
                 console.log(schedule)
                 const day = (new Date()).getDay();
@@ -97,45 +96,51 @@ export default {
 
                 let isWork = false
 
-                if (tmpStartHours===hours)
-                    isWork = minutes>=tmpStartMinutes
+                if (tmpStartHours === hours)
+                    isWork = minutes >= tmpStartMinutes
 
-                if (tmpEndHours===hours)
-                    isWork = minutes<tmpEndMinutes
+                if (tmpEndHours === hours)
+                    isWork = minutes < tmpEndMinutes
 
-                if (hours>tmpStartHours && hours<tmpEndHours)
+
+                if (hours > tmpStartHours && hours < tmpEndHours && tmpStartHours <= tmpEndHours)
                     isWork = true;
 
-                window.currentBot.company.is_work = !(schedule[day].closed||false)&&isWork
+
+                if ((hours > tmpStartHours || hours < tmpEndHours) && tmpStartHours >= tmpEndHours)
+                    isWork = true;
+
+
+                window.currentBot.company.is_work = !(schedule[day].closed || false) && isWork
             }
 
         }
 
 
-      /*  if (!($schedule[$day]["closed"] ?? false)) {
-            $startHour = explode(":", $schedule[$day]["start_at"])[0] ?? 0;
-            $endHour = explode(":", $schedule[$day]["end_at"])[0] ?? 23;
+        /*  if (!($schedule[$day]["closed"] ?? false)) {
+              $startHour = explode(":", $schedule[$day]["start_at"])[0] ?? 0;
+              $endHour = explode(":", $schedule[$day]["end_at"])[0] ?? 23;
 
-            return response()->json(
-                [
-                    'schedule' => $schedule,
-                'current_day' => $day,
-                'opened_comment' => $openedComment,
-                'closed_comment' => $closedComment,
-                'is_work' => $hour >= (int)$startHour && $hour <= (int)$endHour,
-        ]
+              return response()->json(
+                  [
+                      'schedule' => $schedule,
+                  'current_day' => $day,
+                  'opened_comment' => $openedComment,
+                  'closed_comment' => $closedComment,
+                  'is_work' => $hour >= (int)$startHour && $hour <= (int)$endHour,
+          ]
 
-        );*/
+          );*/
         window.currentScript = this.slug_id || null
 
         this.$store.dispatch("loadSelf").then(() => {
             window.self = this.getSelf
         })
 
-        this.$notify( {
-            title:'Главная',
-            text:"Успешно!",
-            type:"success",
+        this.$notify({
+            title: 'Главная',
+            text: "Успешно!",
+            type: "success",
         });
 
     },
