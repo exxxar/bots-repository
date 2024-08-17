@@ -6,21 +6,34 @@
         </button>
 
         <div
-            class="dropdown-menu item-with-text cursor-pointer text-muted p-2">
+            style="min-width:300px;"
+            class="dropdown-menu cursor-pointer text-muted p-2">
             <form v-on:submit.prevent="requestTelegramChannelId">
-                <input type="text"
-                       class="form-control mb-2" id="search-description-text"
-                       v-model="channelLink"
-                       @change="checkLink"
-                       placeholder="@telegram_channel" required/>
+
+                <div class="input-group">
+                    <div class="form-floating">
+                        <input type="text"
+                               class="form-control" id="search-description-text"
+                               v-model="channelLink"
+                               @change="checkLink"
+                               placeholder="@telegram_channel" required/>
+                        <label for="">Ссылка на канал</label>
+                    </div>
+                    <button
+                        :disabled="!token"
+                        class="btn btn-outline-primary">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+
+
+                </div>
+
+
                 <div v-if="!token" class="alert alert-danger mb-2" role="alert">
                     Вам необходимо указать тоукен бота!
                 </div>
 
-                <button
-                    :disabled="!token"
-                    class="btn btn-outline-primary w-100">Узнать id канала
-                </button>
+
             </form>
 
         </div>
@@ -82,7 +95,7 @@ export default {
 .item-with-text {
     max-height: 300px;
     max-width: 500px;
-    min-width: 500px !important;
+    min-width: 100% !important;
     overflow-y: auto;
 }
 </style>

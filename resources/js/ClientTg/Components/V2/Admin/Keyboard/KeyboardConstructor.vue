@@ -30,7 +30,8 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
         <button
             title="добавление в нижнюю часть новой строки (кнопки)"
             type="button"
-            class="btn btn-link mb-2 w-100 mr-2"
+            class="btn btn-link mb-2 w-100"
+            style="font-size:12px;"
             v-if="selectedRow==null"
             @click="addRow"><i class="fa-solid fa-arrow-down"></i> Добавить строку
         </button>
@@ -116,8 +117,9 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                     @click="selectIndex(rowIndex, colIndex)"
                     v-for="(col, colIndex) in row">
                     <input
+                        style="font-size:10px;"
                         type="text"
-                        class="btn btn-outline-primary w-100"
+                        class="btn btn-outline-light text-primary w-100"
                         v-model="keyboard[rowIndex][colIndex].text"
                     />
                     <!--                    <button type="button"
@@ -130,7 +132,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                         <button
 
                             style="border-radius:0 5px 5px 0px;"
-                            class="btn btn btn-outline-primary" type="button" data-bs-toggle="dropdown"
+                            class="btn btn-outline-light text-primary" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             <i class="fa-solid fa-bars"></i>
                         </button>
@@ -219,7 +221,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
             <div class="col-12 mb-2">
                 <button type="button"
                         @click="mode=0"
-                        class="btn btn-outline-primary">Назад
+                        class="btn btn-outline-light text-primary">Назад
                 </button>
             </div>
             <form class="col-12">
@@ -252,7 +254,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
 
 
                 </div>
-                <hr class="m-0">
+
 
                 <div class="form-floating mb-2" v-if="type==='inline'">
 
@@ -418,7 +420,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
 
             </form>
         </div>
-
+        <hr>
     </div>
 
     <div class="modal fade" :id="'page-list-in-keyboard-'+uuid" tabindex="-1" aria-labelledby="exampleModalLabel"

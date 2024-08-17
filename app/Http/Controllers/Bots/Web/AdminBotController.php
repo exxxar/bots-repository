@@ -147,8 +147,6 @@ class AdminBotController extends Controller
     }
 
 
-
-
     /**
      * @throws ValidationException
      */
@@ -264,6 +262,27 @@ class AdminBotController extends Controller
         return response()->noContent();
     }
 
+    public function getBotAdminMenu2()
+    {
+        $botUser = BotManager::bot()->currentBotUser();
+
+        if (!$botUser->is_admin) {
+            BotManager::bot()->reply("Вы не являетесь администратором данного бота!");
+            return;
+        }
+
+        $bot = BotManager::bot()->getSelf();
+
+        \App\Facades\BotManager::bot()
+            ->replyInlineKeyboard("Административная панель (Версия 2)", [
+                [
+                    ["text" => "Открыть", "web_app" => [
+                        "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route#/s/admin/menu"//"/restaurant/active-admins/$bot->bot_domain"
+                    ]],
+                ],
+            ]);
+    }
+
     public function getBotAdminMenu()
     {
 
@@ -276,26 +295,14 @@ class AdminBotController extends Controller
 
         $bot = BotManager::bot()->getSelf();
 
-        $menu = BotMenuTemplate::query()
-            ->updateOrCreate(
-                [
-                    'bot_id' => $bot->id,
-                    'type' => 'inline',
-                    'slug' => "menu_admin_main",
-
-                ],
-                [
-                    'menu' => [
-                        [
-                            ["text" => "Открыть", "web_app" => [
-                                "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/admin-main"//"/restaurant/active-admins/$bot->bot_domain"
-                            ]],
-                        ],
-                    ],
-                ]);
-
         \App\Facades\BotManager::bot()
-            ->replyInlineKeyboard("Административная панель", $menu->menu);
+            ->replyInlineKeyboard("Административная панель", [
+                [
+                    ["text" => "Открыть", "web_app" => [
+                        "url" => env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route#/admin-main"//"/restaurant/active-admins/$bot->bot_domain"
+                    ]],
+                ],
+            ]);
 
     }
 
@@ -355,8 +362,8 @@ class AdminBotController extends Controller
         $request->validate([
             "name" => "required",
             "phone" => "required",
-           // "birthday" => "required",
-          //  "city" => "required",
+            // "birthday" => "required",
+            //  "city" => "required",
             //"country" => "required",
             //"address" => "required",
             "sex" => "required",

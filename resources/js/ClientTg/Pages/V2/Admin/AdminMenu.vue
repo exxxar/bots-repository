@@ -148,7 +148,7 @@
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/integrations.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Интеграции</p>
                     </div>
