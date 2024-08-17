@@ -277,7 +277,7 @@ class AdminBotController extends Controller
             ->replyInlineKeyboard("Административная панель (Версия 2)", [
                 [
                     ["text" => "Открыть", "web_app" => [
-                        "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route#/s/admin/menu"//"/restaurant/active-admins/$bot->bot_domain"
+                        "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&hide_menu#/s/admin/menu"//"/restaurant/active-admins/$bot->bot_domain"
                     ]],
                 ],
             ]);
