@@ -90,7 +90,12 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
                 <div>
                     <i class="fa-solid fa-a text-danger mr-2" v-if="item.is_admin"></i>
                     <i class="fa-solid fa-u text-success mr-2" v-else></i>
-                    <span style="font-size:12px;">{{ item.name || item.fio_from_telegram || 'Не указано' }}</span>
+                    <span
+                        v-if="(item.name || item.fio_from_telegram || 'Не указано').length>26"
+                        style="font-size:12px;">{{ (item.name || item.fio_from_telegram || 'Не указано').substring(0,26) }}...</span>
+                    <span
+                        style="font-size:12px;"
+                        v-else>{{ item.name || item.fio_from_telegram || 'Не указано' }}</span>
                 </div>
 
                 <strong style="font-size:12px;">{{ item.phone || 'Телефон не указан' }}</strong>

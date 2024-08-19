@@ -33,13 +33,17 @@ import UserProfileCard from "@/ClientTg/Components/V2/Admin/Clients/UserProfileC
                 </ul>
             </div>
             <div class="col-12" v-show="tab===0">
+
                 <UserSearchForm
                     :selected-bot-user="selected_bot_user"
                     v-on:cancel="cancelUserSelected"
                     v-on:select="selectUser"/>
             </div>
+
             <div class="col-12" v-show="request_telegram_chat_id&&tab===1">
-                <UserProfileCard :bot-user="selected_bot_user"></UserProfileCard>
+                <UserProfileCard
+                    v-if="selected_bot_user"
+                    :bot-user="selected_bot_user"></UserProfileCard>
             </div>
         </div>
     </div>
@@ -80,9 +84,10 @@ export default {
         let user = JSON.parse(urlParams.get('user'));
 
         if (user) {
-            this.request_telegram_chat_id = user
 
+            this.request_telegram_chat_id = user
             this.loadReceiverUserData()
+
         }
 
         this.tg.BackButton.show()
@@ -102,28 +107,29 @@ export default {
             this.selected_bot_user = null
             this.request_telegram_chat_id = null
         },
-        cancelUserSelected(){
+        cancelUserSelected() {
             this.request_telegram_chat_id = null
             this.selected_bot_user = null
             window.scroll(0, 0)
         },
         selectUser(user) {
             this.request_telegram_chat_id = user.telegram_chat_id
-            this.tab = 1
-            window.scroll(0, 0)
+
             this.loadReceiverUserData()
         },
 
         loadReceiverUserData() {
             this.loading = true
+            this.selected_bot_user = null
+
             this.$store.dispatch("loadReceiverUserData", {
                 dataObject: {
                     user_telegram_chat_id: this.request_telegram_chat_id
                 },
             }).then(resp => {
                 this.selected_bot_user = resp.data
+                this.request_telegram_chat_id = this.selected_bot_user.telegram_chat_id
                 this.loading = false
-
                 this.tab = 1
                 window.scroll(0, 0)
             }).catch(() => {

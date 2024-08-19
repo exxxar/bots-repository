@@ -194,11 +194,11 @@
       "_index.es-bac3219e.js"
     ]
   },
-  "_V1Layout-7fe62157.js": {
+  "_V1Layout-c12a1562.js": {
     "css": [
       "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-7fe62157.js",
+    "file": "assets/V1Layout-c12a1562.js",
     "imports": [
       "_index.es-bac3219e.js",
       "resources/js/ClientTg/app.js"
@@ -257,17 +257,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-8133e231.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-8133e231.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-8133e231.css",
     "isEntry": true,
-    "src": "resources/css/ClientTg/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-fd938442.js",
@@ -598,11 +598,11 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-ff44afc5.js",
+    "file": "assets/MainV1-60fc1955.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-bac3219e.js",
-      "_V1Layout-7fe62157.js",
+      "_V1Layout-c12a1562.js",
       "resources/js/ClientTg/app.js",
       "_BotMediaList-166fc8f2.js",
       "_Pagination-fa992967.js",
@@ -644,9 +644,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Error.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-b8b1054c.js",
+    "file": "assets/Result-30fbf769.js",
     "imports": [
-      "_V1Layout-7fe62157.js",
+      "_V1Layout-c12a1562.js",
       "resources/js/ClientTg/app.js",
       "_index.es-bac3219e.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -689,7 +689,7 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.vue"
   },
   "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue": {
-    "file": "assets/CashBack-de5f87d2.js",
+    "file": "assets/CashBack-601821ce.js",
     "imports": [
       "resources/js/ClientTg/app.js",
       "_index.es-bac3219e.js",
@@ -709,9 +709,9 @@
     "src": "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-5bb2b541.js",
+    "file": "assets/Result-25807490.js",
     "imports": [
-      "_V1Layout-7fe62157.js",
+      "_V1Layout-c12a1562.js",
       "_index.es-bac3219e.js",
       "resources/js/ClientTg/app.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -747,7 +747,7 @@
       "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-be2e8804.js",
+    "file": "assets/app-d118d26e.js",
     "imports": [
       "_index.es-bac3219e.js",
       "__plugin-vue_export-helper-c27b6911.js",
