@@ -15,7 +15,7 @@ import UserProfileCard from "@/ClientTg/Components/V2/Admin/Clients/UserProfileC
                             @click="tab=0"
                             style="font-weight:bold;"
                             v-bind:class="{'active':tab===0}"
-                            aria-current="page"><i class="fa-solid fa-users mr-2"></i>Пользователи
+                            aria-current="page"><i class="fa-solid fa-users mr-2"></i>Клиенты
                         </button>
                     </li>
                     <li class="nav-item">
@@ -85,7 +85,7 @@ export default {
 
         const urlParams = new URLSearchParams(window.location.search);
         let user = JSON.parse(urlParams.get('user'));
-        let needClose = JSON.parse(urlParams.get('hide_menu')) || false;
+        let needClose = urlParams.get('hide_menu') || false;
 
         if (user) {
 
