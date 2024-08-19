@@ -85,13 +85,11 @@ export default {
 
         const urlParams = new URLSearchParams(window.location.search);
         let user = JSON.parse(urlParams.get('user'));
-        let needClose = urlParams.get('hide_menu') || false;
+        let needClose = urlParams.has('hide_menu') || false;
 
         if (user) {
-
             this.request_telegram_chat_id = user
             this.loadReceiverUserData()
-
         }
 
         this.tg.BackButton.show()
