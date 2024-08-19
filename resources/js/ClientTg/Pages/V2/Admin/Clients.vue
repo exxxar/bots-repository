@@ -42,9 +42,9 @@ import UserProfileCard from "@/ClientTg/Components/V2/Admin/Clients/UserProfileC
 
             <div class="col-12" v-if="tab===1">
                 <UserProfileCard
-                    v-if="selected_bot_user"
+                    v-if="loadedUser"
                     v-model="selected_bot_user"></UserProfileCard>
-                <div class="alert alert-light" v-else>
+                <div class="alert alert-light mt-2" v-else>
                     Пользователь еще не выбран!
                 </div>
             </div>
@@ -59,7 +59,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-            loading: false,
+            loadedUser:false,
             tab: 0,
             request_telegram_chat_id: null,
             selected_bot_user: null,
@@ -122,7 +122,7 @@ export default {
         },
 
         loadReceiverUserData() {
-            this.loading = true
+            this.loadedUser = false
             this.selected_bot_user = null
 
             this.$store.dispatch("loadReceiverUserData", {
@@ -130,16 +130,16 @@ export default {
                     user_telegram_chat_id: this.request_telegram_chat_id
                 },
             }).then(resp => {
+                this.selected_bot_user = resp.data
+                this.request_telegram_chat_id = this.selected_bot_user.telegram_chat_id
+
                 this.$nextTick(()=>{
-                    this.selected_bot_user = resp.data
-                    //this.request_telegram_chat_id = this.selected_bot_user.telegram_chat_id
-                    this.loading = false
+                    this.loadedUser = true
                     this.tab = 1
                     window.scroll(0, 0)
                 })
             }).catch(() => {
-                this.selected_bot_user = null
-                this.loading = false
+                this.loadedUser = false
             })
         },
 
