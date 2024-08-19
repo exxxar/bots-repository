@@ -12,10 +12,9 @@ import RequestUserProfile from "@/ClientTg/Components/V2/Admin/Clients/Modules/R
 import RequestInvoice from "@/ClientTg/Components/V2/Admin/Clients/Modules/RequestInvoice.vue";
 import CashBackList from "@/ClientTg/Components/V2/CashBack/CashBackList.vue";
 </script>
-<template>
-
-
+<template v-if="botUser">
     <div class="btn-group w-100 my-3 px-3"
+
          style="overflow-x:auto;"
          role="group" aria-label="Basic example">
         <button type="button"
