@@ -58,7 +58,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-            loadedUser:false,
+            loadedUser: false,
             tab: 0,
             request_telegram_chat_id: null,
             selected_bot_user: null,
@@ -78,12 +78,14 @@ export default {
     },
 
     mounted() {
+
         if (this.getSelf) {
             this.selected_bot_user = this.getSelf
         }
 
         const urlParams = new URLSearchParams(window.location.search);
         let user = JSON.parse(urlParams.get('user'));
+        let needClose = JSON.parse(urlParams.get('hide_menu')) || false;
 
         if (user) {
 
@@ -94,10 +96,14 @@ export default {
 
         this.tg.BackButton.show()
 
+
         this.tg.BackButton.onClick(() => {
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
 
-            this.$router.back()
+            if (needClose)
+                this.tg.close()
+            else
+                this.$router.back()
         })
 
     },
@@ -132,7 +138,7 @@ export default {
                 this.selected_bot_user = resp.data
                 this.request_telegram_chat_id = this.selected_bot_user.telegram_chat_id
 
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.loadedUser = true
                     this.tab = 1
                     window.scroll(0, 0)
