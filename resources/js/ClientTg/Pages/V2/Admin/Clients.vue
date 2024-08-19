@@ -40,7 +40,7 @@ import UserProfileCard from "@/ClientTg/Components/V2/Admin/Clients/UserProfileC
                     v-on:select="selectUser"/>
             </div>
 
-            <div class="col-12" v-show="request_telegram_chat_id&&tab===1">
+            <div class="col-12" v-show="selected_bot_user&&tab===1">
                 <UserProfileCard
                     v-if="selected_bot_user"
                     :bot-user="selected_bot_user"></UserProfileCard>
