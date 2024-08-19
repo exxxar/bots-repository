@@ -23,7 +23,7 @@ import UserProfileCard from "@/ClientTg/Components/V2/Admin/Clients/UserProfileC
                             type="button"
                             class="nav-link"
                             @click="tab=1"
-                            :disabled="!request_telegram_chat_id"
+                            :disabled="!selected_bot_user"
                             style="font-weight:bold;"
                             v-bind:class="{'active':tab===1}"
                         ><i class="fa-solid fa-user-secret mr-2"></i>Результат
@@ -33,7 +33,6 @@ import UserProfileCard from "@/ClientTg/Components/V2/Admin/Clients/UserProfileC
                 </ul>
             </div>
             <div class="col-12" v-show="tab===0">
-
                 <UserSearchForm
                     :selected-bot-user="selected_bot_user"
                     v-on:cancel="cancelUserSelected"
