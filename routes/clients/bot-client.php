@@ -272,13 +272,14 @@ Route::prefix("bot-client")
                     ->middleware(["slug"]);
                 Route::post("/checkout-link", [ProductController::class, "createCheckoutLink"])
                     ->middleware(["slug"]);
-
+                Route::post("/products/store-category", [ProductController::class, "storeCategory"]);
                 Route::post("/products/by-ids", [ProductController::class, "getProductsByIds"]);
                 Route::post("/products/random", [ProductController::class, "randomProducts"]);
                 Route::post("/products/categories", [ProductController::class, "getCategories"]);
                 Route::post("/products/add-product", [ProductController::class, "saveProduct"]);
                 Route::post("/products/remove-all-products", [ProductController::class, "removeAllProducts"]);
                 Route::delete("/products/remove-category/{categoryId}", [ProductController::class, "removeCategoryId"]);
+                Route::post("/products/categories/status/{id}", [ProductController::class, "changeCategoryStatus"]);
                 Route::post("/products/add-category", [ProductController::class, "storeCategory"]);
                 Route::post("/products/in-category", [ProductController::class, "getProductsInCategory"]);
                 Route::post("/products/category/{productId}", [ProductController::class, "getCategory"]);

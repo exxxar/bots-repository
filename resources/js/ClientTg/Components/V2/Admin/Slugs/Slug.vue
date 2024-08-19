@@ -1,25 +1,22 @@
 <script setup>
-import SlugForm from '@/ClientTg/Components/V1/Admin/Slugs/SlugForm.vue'
+import SlugForm from '@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue'
 
 </script>
 <template>
-
-    <div class="btn w-100 text-left border-blue2-light p-2" type="button">
+    <div class="alert alert-light w-100 mb-1" type="button">
         <p @click="toggleMenu" class="w-100 mb-0">
             <i v-if="showMenu" class="fa-solid fa-chevron-up"></i>
             <i v-else class="fa-solid fa-chevron-down"></i>
             {{ item.command || 'Нет команды' }}
         </p>
 
-        <div class="py-2" v-if="showMenu">
-
-            <div class="d-flex justify-content-between align-items-center">
+        <template v-if="showMenu">
                 <a
-                    @click="switchEditor"
+                    data-bs-toggle="modal" :data-bs-target="'#slug-modal-editor-'+item.id"
                     href="javascript:void(0)"
                     title="Редактировать команду"
                     style="width:auto;"
-                    class="btn btn-m btn-full rounded-xs text-uppercase font-900 shadow-s bg-mint-dark"
+                    class="btn btn-outline-light text-primary mr-2"
 
                 >
                     <i class="fa-regular fa-pen-to-square" v-if="!edit"></i>
@@ -28,7 +25,7 @@ import SlugForm from '@/ClientTg/Components/V1/Admin/Slugs/SlugForm.vue'
 
                 <a href="javascript:void(0)"
                    @click="switchSimple"
-                   class="btn btn-m btn-full rounded-xs text-uppercase font-900 shadow-s bg-mint-dark"
+                   class="btn btn-outline-light text-primary mr-2"
 
                 >
                     <i v-if="simple" class="fa-solid fa-arrow-up-short-wide"></i>
@@ -39,7 +36,7 @@ import SlugForm from '@/ClientTg/Components/V1/Admin/Slugs/SlugForm.vue'
                 <a
                     href="javascript:void(0)"
                     title="Дублировать команду"
-                    class="btn btn-m btn-full  rounded-xs text-uppercase font-900 shadow-s bg-mint-dark"
+                    class="btn btn-outline-light text-primary mr-2"
                     @click="duplicateSlug">
                     <i class="fa-solid fa-clone"></i>
                 </a>
@@ -47,18 +44,13 @@ import SlugForm from '@/ClientTg/Components/V1/Admin/Slugs/SlugForm.vue'
                 <a
                     href="javascript:void(0)"
                     title="Дублировать команду"
-                    class="btn btn-m btn-full  rounded-xs text-uppercase font-900 shadow-s bg-red1-dark"
+                    class="btn btn-outline-light text-primary mr-2"
                     @click="removeSlug">
                     <i class="fa-regular fa-trash-can color-white"></i>
                 </a>
+        </template>
 
-
-            </div>
-
-
-        </div>
-
-        <ol v-if="!simple&&!edit" class="list-group list-group-numbered mt-2">
+        <ol v-if="!simple" class="list-group my-2 p-0">
             <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
                     <div class="fw-bold">Идентификатор</div>
@@ -115,12 +107,26 @@ import SlugForm from '@/ClientTg/Components/V1/Admin/Slugs/SlugForm.vue'
             </li>
         </ol>
 
-        <SlugForm :item="item"
-                  v-if="!load&&edit"
-                  v-on:callback="slugFormCallback"
-        />
+
     </div>
 
+    <div class="modal fade" :id="'slug-modal-editor-'+item.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <SlugForm :item="item"
+                              v-if="!load"
+                              v-on:callback="slugFormCallback"
+                    />
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 </template>
 

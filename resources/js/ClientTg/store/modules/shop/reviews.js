@@ -50,9 +50,6 @@ const actions = {
 
 
     async loadReviews(context, payload = {dataObject: null, page: 0, size: 12}) {
-        let data = {
-            ...payload.dataObject
-        }
 
         let page = payload.page || 0
         let size = payload.size || 20
@@ -61,7 +58,7 @@ const actions = {
         let link = `${BASE_REVIEWS_LINK}?page=${page}&size=${size}`
         let method = 'POST'
 
-        let _axios = util.makeAxiosFactory(link, method, data)
+        let _axios = util.makeAxiosFactory(link, method, payload.dataObject)
 
         return _axios.then((response) => {
             let dataObject = response.data

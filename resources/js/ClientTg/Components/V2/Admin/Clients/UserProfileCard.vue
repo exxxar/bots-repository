@@ -1,5 +1,5 @@
 <script setup>
-
+import OrderList from "@/ClientTg/Components/V2/Admin/Orders/OrderList.vue";
 import UserInfo from '@/ClientTg/Components/V2/Admin/Clients/UserInfo.vue';
 import Pagination from '@/ClientTg/Components/V1/Pagination.vue'
 
@@ -15,7 +15,9 @@ import CashBackList from "@/ClientTg/Components/V2/CashBack/CashBackList.vue";
 <template>
 
 
-    <div class="btn-group w-100 my-3" role="group" aria-label="Basic example">
+    <div class="btn-group w-100 my-3 px-3"
+         style="overflow-x:auto;"
+         role="group" aria-label="Basic example">
         <button type="button"
                 v-bind:class="{'btn-primary':tab===0,'btn-outline-primary':tab!==0}"
                 @click="tab=0"
@@ -31,6 +33,11 @@ import CashBackList from "@/ClientTg/Components/V2/CashBack/CashBackList.vue";
                 v-bind:class="{'btn-primary':tab===1,'btn-outline-primary':tab!==1}"
                 class="btn">CashBack
         </button>
+        <button type="button"
+                @click="tab=3"
+                v-bind:class="{'btn-primary':tab===3,'btn-outline-primary':tab!==3}"
+                class="btn">Заказы
+        </button>
     </div>
 
     <div v-if="tab===0">
@@ -44,6 +51,12 @@ import CashBackList from "@/ClientTg/Components/V2/CashBack/CashBackList.vue";
         <CashBackList
             v-if="botUser"
             :bot-user="botUser"></CashBackList>
+    </div>
+
+    <div v-if="tab===3">
+        <OrderList
+            v-if="botUser"
+            :bot-user="botUser"></OrderList>
     </div>
 
     <div v-if="botUser&&tab===2">

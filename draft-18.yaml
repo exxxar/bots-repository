@@ -1,0 +1,19 @@
+models:
+  FrontPad:
+    bot_id: id foreign:bots nullable
+    hook_url: string:255 nullable comment:'url для отправки вебхука по текущему заказу'
+    channel: string:255 nullable comment:'канал продаж'
+    affiliate: string:255 nullable comment:'филиал'
+    point: string:255 nullable comment:'точка продаж'
+    token: string:255 nullable comment:'тоукен интеграции'
+    relationships:
+      belongsTo: Bot
+
+seeders: FrontPad
+
+controllers:
+  FrontPad:
+    resource: api
+
+
+

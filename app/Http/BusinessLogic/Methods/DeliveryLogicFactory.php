@@ -369,6 +369,7 @@ class DeliveryLogicFactory
         $search = $data["search"] ?? null;
         $orderBy = $data["order_by"] ?? "id";
         $direction = $data["direction"] ?? "asc";
+        $botUserId = $data["bot_user_id"] ?? null;
 
         $orders = Order::query()
             ->where("bot_id", $this->bot->id);
@@ -377,8 +378,8 @@ class DeliveryLogicFactory
             $orders = $orders->where("id", "like", "%$search%");
         }
 
-        if (!$needAll)
-            $orders = $orders->where("customer_id", $this->botUser->id);
+        if (!$needAll || !is_null($botUserId))
+            $orders = $orders->where("customer_id", $botUserId ?? $this->botUser->id);
 
 
         $orders = $orders

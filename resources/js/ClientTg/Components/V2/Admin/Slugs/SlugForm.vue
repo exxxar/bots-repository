@@ -2,77 +2,72 @@
 import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
 </script>
 <template>
-    <form id="slugForm" v-on:submit.prevent="submit">
+    <form id="slugForm"
+          style="padding-bottom:100px;"
+          v-on:submit.prevent="submit">
         <div class="form-floating mb-2">
-            <label for="floatingInput">Команда</label>
             <input type="text"
                    v-model="slugForm.command"
                    class="form-control" id="floatingInput" placeholder="name@example.com" required>
-
+            <label for="floatingInput">Команда</label>
         </div>
-
         <div class="form-floating mb-2">
-            <label for="floatingInput">Описание скрипта</label>
             <textarea
                 v-model="slugForm.comment"
-                style="min-height: 200px;"
+                style="min-height: 100px;"
                 class="form-control font-12" id="floatingInput" placeholder="name@example.com" required>
             </textarea>
-
+            <label for="floatingInput">Описание скрипта</label>
         </div>
-
-
         <h6>
             Параметры скрипта
         </h6>
-
-
-        <p class="mb-2">Фильтры:
-            <span class="badge mb-1 bg-gray-100 cursor-pointer mr-1"
+        <p
+            v-if="(configTypes||[]).length>0"
+            class="mb-0">Фильтры:
+            <span class="badge mb-1 cursor-pointer mx-1"
                   @click="toggleFilter(item.type)"
-                  v-bind:class="{'bg-info text-white': filters.indexOf(item.type)>=0}"
+                  v-bind:class="{'bg-primary text-white': filters.indexOf(item.type)>=0,'bg-secondary':filters.indexOf(item.type)===-1}"
                   v-for="(item, index) in configTypes"> {{ item.type }}</span>
         </p>
-
-        <hr>
-        <div v-if="filteredConfigs.length>0">
-            <div class="mb-1"
+        <div
+            v-if="filteredConfigs.length>0">
+            <div class="mb-1 alert alert-light py-2 px-2"
                  v-for="(item, index) in filteredConfigs">
 
-                <button
-                    @click="removeConfigItem(index)"
-                    class="btn btn-outline-info" type="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-                <button
-                    @click="move(index, 0)"
-                    style="margin-left: 5px;"
-                    class="btn btn-outline-info" type="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-caret-left"></i>
-                </button>
-                <button
-                    @click="move(index, 1)"
-                    style="margin-left: 5px;"
-                    class="btn btn-outline-info" type="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-caret-right"></i>
-                </button>
+<!--
+                <div class="dropdown w-100 d-flex justify-content-end">
+                    <a href="javascript:void(0)" class=" text-primary p-1 rounded-0" type="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-bars"></i>
+                    </a>
+                    <ul class="dropdown-menu ">
+                        <li><a
+                            @click="removeConfigItem(index)"
+                            class="dropdown-item" href="javascript:void(0)"> <i class="fa-solid fa-trash-can"></i>
+                            Удалить</a></li>
+                        <li><a class="dropdown-item"
+                               @click="move(index, 0)"
+                               href="javascript:void(0)"><i class="fa-solid fa-caret-left"></i> Назад</a></li>
+                        <li><a class="dropdown-item"
+                               @click="move(index, 1)"
+                               href="javascript:void(0)"> <i class="fa-solid fa-caret-right"></i> Вперед</a></li>
+                    </ul>
+                </div>
+-->
 
                 <div class="form-floating mb-1"
                      v-if="filteredConfigs[index].type==='text' || filteredConfigs[index].type==='channel'">
-                    <label :for="'field-input-'+index">Значение для
-                        <strong>{{ filteredConfigs[index].key }}</strong></label>
+
                     <input type="text" class="form-control" :id="'field-input-'+index"
                            v-model="filteredConfigs[index].value"
                            placeholder="name@example.com">
-
+                    <label :for="'field-input-'+index">Значение для
+                        <strong>{{ filteredConfigs[index].key }}</strong></label>
                 </div>
-
                 <div
                     v-if="filteredConfigs[index].type==='boolean'"
-                    class="form-check mb-1 mt-2">
+                    class="form-check mb-1  form-switch">
                     <input class="form-check-input"
                            v-model="filteredConfigs[index].value"
                            type="checkbox" value="false" :id="'filtered-config-'+index+'-checkbox'">
@@ -81,35 +76,33 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
                         <strong>{{ filteredConfigs[index].key }}</strong>
                     </label>
                 </div>
-
                 <div
                     v-if="filteredConfigs[index].type==='geo'"
-                    class="form-floating mb-1 mt-2">
-                    <label :for="'filtered-config-'+index+'-geo'">Значение для
-                        <strong>{{ filteredConfigs[index].key }}</strong></label>
+                    class="form-floating mb-1 ">
+
                     <input class="form-control"
                            v-mask="'##.######,##.######'"
                            placeholder="##.######,##.######"
                            v-model="filteredConfigs[index].value"
                            type="text" :id="'filtered-config-'+index+'-geo'">
-
+                    <label :for="'filtered-config-'+index+'-geo'">Значение для
+                        <strong>{{ filteredConfigs[index].key }}</strong></label>
                 </div>
-
                 <div
                     v-if="filteredConfigs[index].type==='phone'"
-                    class="form-floating mb-1 mt-2">
-                    <label :for="'filtered-config-'+index+'-phone'">Значение для
-                        <strong>{{ filteredConfigs[index].key }}</strong></label>
+                    class="form-floating mb-1 ">
+
                     <input class="form-control"
                            v-mask="'+7(###)###-##-##'"
                            placeholder="+7(###)###-##-##"
                            v-model="filteredConfigs[index].value"
                            type="text" :id="'filtered-config-'+index+'-phone'">
-
+                    <label :for="'filtered-config-'+index+'-phone'">Значение для
+                        <strong>{{ filteredConfigs[index].key }}</strong></label>
                 </div>
                 <div
                     v-if="filteredConfigs[index].type==='json'"
-                    class="form-floating mb-1 mt-2">
+                    class="mb-1 ">
                     <label class="form-label" id="bot-domain">JSON-код</label>
                     <Vue3JsonEditor
                         :mode="'code'"
@@ -118,10 +111,9 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
                         :expandedOnStart="true"
                     />
                 </div>
-
                 <div
                     v-if="filteredConfigs[index].type==='color'"
-                    class="form-check mb-1 mt-2">
+                    class="form-check mb-1 ">
                     <label :for="'filtered-config-'+index+'-color'">
                         <p v-bind:style="{'color':filteredConfigs[index].value}">Цвет:
                             {{ filteredConfigs[index].value }} для <strong>{{ filteredConfigs[index].key }}</strong></p>
@@ -131,34 +123,37 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
                            type="color" :id="'filtered-config-'+index+'-color'">
 
                 </div>
+                <div class="form-floating mb-1" v-if="filteredConfigs[index].type==='large-text'">
 
-                <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='large-text'">
-                    <label :for="'field-input-'+index">Значение для
-                        <strong>{{ filteredConfigs[index].key }}</strong></label>
                     <textarea class="form-control font-12" :id="'field-input-'+index"
                               v-model="filteredConfigs[index].value"
                               style="min-height: 200px;"
                               placeholder="name@example.com">
                             </textarea>
-
+                    <label :for="'field-input-'+index">Значение для
+                        <strong>{{ filteredConfigs[index].key }}</strong></label>
                 </div>
+                <template v-if="filteredConfigs[index].type==='image'">
+                    <div class="form-floating mb-3">
 
-                <div class="form-floating mb-3" v-if="filteredConfigs[index].type==='image'">
-                    <label :for="'field-input-'+index">FileId ссылка на изображение</label>
-                    <input class="form-control mb-2" :id="'field-input-'+index"
-                           type="text"
-                           disabled="true"
-                           v-model="filteredConfigs[index].value"
-                           placeholder="name@example.com" >
+                        <input class="form-control mb-2" :id="'field-input-'+index"
+                               type="text"
+                               disabled="true"
+                               v-model="filteredConfigs[index].value"
+                               placeholder="name@example.com">
+                        <label :for="'field-input-'+index">FileId ссылка на изображение</label>
+
+
+                    </div>
 
                     <BotMediaList
                         :need-video="false"
                         :need-photo="true"
                         :selected="[filteredConfigs[index].value]"
                         v-on:select="selectPhoto($event, index)"></BotMediaList>
-                </div>
 
-                <div class="divider divider-small my-3 bg-highlight "></div>
+                </template>
+                <p class="fst-italic mb-0">{{item.description||'Описания нет'}}</p>
             </div>
 
 
@@ -168,21 +163,23 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
             <p class="mb-0">Параметры скрипта еще не добавлены</p>
 
         </div>
-
-        <button class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-mint-dark w-100">
+        <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+             style="border-radius:10px 10px 0px 0px;">
+            <button class="btn btn-primary w-100 p-3 rounded-3 shadow-lg text-center">
             <span v-if="slugForm.id==null">
                 Сохранить команду
             </span>
-            <span v-else>
+                <span v-else>
                 Обновить команду
             </span>
-        </button>
-
+            </button>
+        </nav>
     </form>
 </template>
 <script>
 import {mapGetters} from "vuex";
 import {Vue3JsonEditor} from 'vue3-json-editor'
+
 export default {
     components: {
         Vue3JsonEditor
@@ -293,14 +290,14 @@ export default {
     },
 
     methods: {
-        move(index, direction = 0){
+        move(index, direction = 0) {
             let tmp = this.slugForm.config[index]
 
             let maxConfigElements = this.slugForm.config.length || 0
 
             let newIndex = direction === 0 ?
-                index -1 >= 0 ?index - 1 : maxConfigElements-1 :
-                index < maxConfigElements-1 ? index + 1 : 0
+                index - 1 >= 0 ? index - 1 : maxConfigElements - 1 :
+                index < maxConfigElements - 1 ? index + 1 : 0
 
             this.slugForm.config[index] = this.slugForm.config[newIndex]
             this.slugForm.config[newIndex] = tmp
@@ -373,7 +370,7 @@ export default {
             }
 
         },
-        selectPhoto(event, index){
+        selectPhoto(event, index) {
             this.filteredConfigs[index].value = event.file_id
         }
     }

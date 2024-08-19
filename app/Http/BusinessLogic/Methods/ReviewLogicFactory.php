@@ -91,16 +91,18 @@ class ReviewLogicFactory
     }
 
 
-    public function reviews($size = null): ReviewCollection
+    public function reviews(array $data, $size = null): ReviewCollection
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Условия функции не выполнены!");
+
+        $botUserId = $data["bot_user_id"] ?? null;
 
         $size = $size ?? config('app.results_per_page');
 
         $reviews = Review::query()
             ->with(["product"])
-            ->where("bot_id", $this->bot->id)
+            ->where("bot_id", is_null($botUserId) ? $this->bot->id : $botUserId)
             ->where("bot_user_id", $this->botUser->id)
             ->whereNotNull("product_id")
             ->paginate($size);
@@ -163,6 +165,7 @@ class ReviewLogicFactory
             ->whereBot($this->bot)
             ->sendMessage($this->botUser->telegram_chat_id, $message);
     }
+
     /**
      * @throws ValidationException
      * @throws HttpException

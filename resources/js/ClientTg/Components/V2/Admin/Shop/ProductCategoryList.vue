@@ -1,5 +1,6 @@
 <script setup>
 import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
+import CategoryForm from "@/ClientTg/Components/V2/Admin/Shop/CategoryForm.vue";
 </script>
 <template>
     <form class="input-group mb-2"
@@ -21,14 +22,14 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 
     <div class="form-floating my-2">
         <select
-            @change="loadOrders(0)"
+            @change="loadProductCategories(0)"
             v-model="sort.param"
             class="form-select" id="floatingSelect" aria-label="Floating label select example">
-            <option value="id">По номеру заказа</option>
-            <option value="is_cashback_crediting">По начислению CashBack</option>
+            <option value="id">По id</option>
+            <option value="title">По названию</option>
             >
-            <option value="summary_price">По цене заказа</option>
-            <option value="product_count">По числу товара в заказе</option>
+            <option value="order_position">По позиции выдачи</option>
+            <option value="is_active">По статусу</option>
             <option value="updated_at">По дате добавления</option>
         </select>
         <label for="floatingSelect">Сортировать заказы по</label>
@@ -45,47 +46,135 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
     </p>
 
     <p>Всего категорий: <span v-if="paginate">{{ paginate.meta.total || 0 }}</span></p>
-    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
-        <div class="col" v-for="(item, index)  in filteredProductCategories">
-            <div
-                data-bs-toggle="modal"
-                data-bs-target="#product-form-edit"
-                @click="selectProductCategory(item)"
-                class="card">
-                <div class="card-body">
-                    {{ item.title }}
 
-                    <input type="number"
-                           @change="updateCategory(item)"
-                           v-model="item.order_position"
-                           class="form-control">
+    <template v-if="filteredProductCategories.length>0">
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-2">
 
-                    <button
-                        title="Удалить товар"
-                        @click="removeProductCategory(item)"
-                        class="btn btn-outline-danger">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
+            <div class="col">
+                <ul class="list-group">
+                    <li class="list-group-item"
+                        @click="selectProductCategory(item)"
+                        v-for="(item, index)  in filteredProductCategories">
+                        <p class="mb-2 d-flex justify-content-between">
+                            <span class="fw-bold">  {{ item.title }}</span>
+
+                            <a href="javascript:void(0)"
+                               data-bs-toggle="modal" :data-bs-target="'#category-item-form-'+index"
+                               class="text-secondary"><i class="fa-regular fa-pen-to-square"></i></a>
+                        </p>
+
+                        <div class="input-group">
+                            <button type="button"
+                                    @click="changeCategoryStatus(item)"
+                                    class="btn border-light">
+                                <i
+                                    v-bind:class="{'text-light':!item.is_active, 'text-success':item.is_active}"
+                                    class="fa-solid fa-check-double"></i>
+                            </button>
+
+                            <div class="form-floating">
+                                <input type="number"
+                                       @change="updateCategory(item)"
+                                       v-model="item.order_position"
+                                       class="form-control border-light">
+                                <label for="">Позиция в выдаче</label>
+                            </div>
+
+
+                            <button
+                                title="Удалить товар"
+                                data-bs-toggle="modal" :data-bs-target="'#remove-category-modal-'+index"
+
+                                class="btn border-light ">
+                                <i class="fa-solid fa-trash-can text-danger"></i>
+                            </button>
+                        </div>
+
+                        <div class="modal fade" :id="'category-item-form-'+index" tabindex="-1"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-fullscreen">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <CategoryForm
+                                            v-on:callback="loadProductCategories(0)"
+                                            :item="item"></CategoryForm>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" :id="'remove-category-modal-'+index" tabindex="-1"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Удаление категории</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Вы действительно хотите удалить <strong
+                                        class="text-primary fw-bold">{{ item.title || '-' }}?</strong>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть
+                                        </button>
+                                        <button type="button"
+                                                @click="removeProductCategory(item)"
+                                                class="btn btn-primary">Да, удалить
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <Pagination
+            v-on:pagination_page="nextProductCategories"
+            v-if="paginate"
+            :pagination="paginate"/>
+    </template>
+
+    <p class="alert alert-light" v-else>
+        К сожалению, вы еще не добавили ни одной категории продуктов!
+    </p>
+
+
+    <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+         style="border-radius:10px 10px 0px 0px;">
+        <button
+            style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            data-bs-toggle="modal" data-bs-target="#category-form"
+            class="btn btn-primary w-100 p-3 rounded-3 shadow-lg text-center ">
+
+            Добавить категорию
+        </button>
+    </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="category-form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="card-footer">
-                    <button type="button"
-                            @click="changeCategoryStatus(item)"
-                            class="btn btn-outline-success w-100">
-                        <span v-if="item.is_active">Активная</span>
-                        <span v-else>Не активная</span>
-                    </button>
+                <div class="modal-body">
+                    <CategoryForm v-on:callback="loadProductCategories(0)"></CategoryForm>
                 </div>
             </div>
         </div>
     </div>
-
-
-    <Pagination
-        v-on:pagination_page="nextProductCategories"
-        v-if="paginate"
-        :pagination="paginate"/>
-
-
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -97,7 +186,7 @@ export default {
             categories: [],
             paginate: null,
             sort: {
-                param: null,
+                param: 'id',
                 direction: 'asc'
             },
         }
@@ -110,16 +199,16 @@ export default {
         filteredProductCategories() {
 
             if (!this.search)
-                return this.categories.sort((a, b) =>
+                return this.categories/*.sort((a, b) =>
                     this.sort.direction === "asc" ?
                         a.order_position - b.order_position :
-                        b.order_position - a.order_position)
+                        b.order_position - a.order_position)*/
 
             return this.categories.filter(category => category.title.toLowerCase().trim().indexOf(this.search.toLowerCase().trim()) >= 0)
-                .sort((a, b) =>
-                    this.sort.direction === "asc" ?
-                        a.order_position - b.order_position :
-                        b.order_position - a.order_position)
+            /*   .sort((a, b) =>
+                   this.sort.direction === "asc" ?
+                       a.order_position - b.order_position :
+                       b.order_position - a.order_position)*/
         },
     },
     mounted() {
@@ -177,15 +266,28 @@ export default {
         },
 
         removeProductCategory(item) {
-            this.$store.dispatch("removeProductCategory", item.id).then((response) => {
+            this.$store.dispatch("removeProductCategory", {
+                category_id: item.id
+            }).then((response) => {
 
                 this.$notify({
                     title: "Конструктор ботов",
                     text: "Продукт успешно удален!",
                     type: 'success'
                 });
-            }).catch(err => {
 
+                this.loadProductCategories()
+
+                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
+            }).catch(err => {
+                this.loadProductCategories()
+                this.$notify({
+                    title: "Конструктор ботов",
+                    text: "Ошибка удаления категории!",
+                    type: 'error'
+                });
+
+                document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
             })
         },
 
@@ -193,9 +295,12 @@ export default {
             return this.$store.dispatch("loadCategories", {
                 dataObject: {
                     bot_id: this.bot.id,
-                    search: this.search
+                    search: this.search,
+                    order_by: this.sort.param,
+                    direction: this.sort.direction
                 },
-                page: page
+                page: page,
+                size: 10,
             }).then(() => {
                 this.categories = this.getCategories
                 this.paginate = this.getCategoriesPaginateObject

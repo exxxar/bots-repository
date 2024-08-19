@@ -178,6 +178,7 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
             <p>Демонстрация заполнения</p>
             <WheelOfFortuneShopVariant
                 :is-admin="true"
+                :interval="form.interval"
                 v-if="loaded&&(form.wheel_of_fortune.items||[]).length>=3"
                 v-model="form.wheel_of_fortune.items"></WheelOfFortuneShopVariant>
         </div>

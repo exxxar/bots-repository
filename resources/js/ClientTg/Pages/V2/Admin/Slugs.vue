@@ -1,24 +1,20 @@
 <script setup>
 
-import BotSlugList from "@/ClientTg/Components/V1/Admin/Slugs/BotSlugList.vue";
+import BotSlugList from "@/ClientTg/Components/V2/Admin/Slugs/BotSlugList.vue";
 
 
 </script>
 <template>
-
-
-    <div class="card card-style" >
-        <div class="card-body">
-            <BotSlugList
-                :bot="bot"
-                v-if="!load"
-            />
-
-
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-12">
+                <BotSlugList
+                    :bot="bot"
+                    v-if="!load"
+                />
+            </div>
         </div>
     </div>
-
-
 </template>
 <script>
 

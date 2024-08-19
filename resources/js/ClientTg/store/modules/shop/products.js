@@ -48,6 +48,30 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async changeProductCategoryStatus(context, payload) {
+        let link = `${BASE_PRODUCTS_LINK}/categories/status/${payload}`
+
+        let _axios = util.makeAxiosFactory(link,"POST")
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async storeProductCategory(context, payload = {category: null}) {
+        let link = `${BASE_PRODUCTS_LINK}/store-category`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async addProductCategory(context, payload = {category: null}) {
         let link = `${BASE_PRODUCTS_LINK}/add-category`
 
@@ -179,7 +203,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadCategories(context, payload = {page: 0, size: 100}) {
+    async loadCategories(context, payload = {page: 0, size: 100,dataObject:null}) {
 
         let page = payload.page || 0
         let size = payload.size || 5
@@ -187,7 +211,7 @@ const actions = {
         let link = `${BASE_PRODUCTS_LINK}/categories?page=${page}&size=${size}`
         let method = 'POST'
 
-        let _axios = util.makeAxiosFactory(link, method)
+        let _axios = util.makeAxiosFactory(link, method, payload.dataObject)
 
         return _axios.then((response) => {
             const dataObject = response.data

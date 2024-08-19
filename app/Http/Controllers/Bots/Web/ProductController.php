@@ -71,7 +71,9 @@ class ProductController extends Controller
     }
 
 
-
+    /**
+     * @throws ValidationException
+     */
     public function getAllOrders(Request $request): \App\Http\Resources\OrderCollection
     {
         return BusinessLogic::delivery()
@@ -97,7 +99,7 @@ class ProductController extends Controller
         return BusinessLogic::review()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->reviews( $request->get("size") ?? config('app.results_per_page'));
+            ->reviews( $request->all(), $request->get("size") ?? config('app.results_per_page'));
     }
     public function getReviewsByProductId(Request $request): \App\Http\Resources\ReviewCollection
     {
@@ -173,6 +175,13 @@ class ProductController extends Controller
     }
 
 
+    public function changeCategoryStatus(Request $request, $categoryId): \App\Http\Resources\ProductCategoryResource
+    {
+        return BusinessLogic::products()
+            ->setBot($request->bot ?? null)
+            ->changeCategoryStatus($categoryId);
+    }
+
     public function removeCategoryId(Request $request, $categoryId): ProductCategoryResource
     {
         return BusinessLogic::products()
@@ -223,7 +232,10 @@ class ProductController extends Controller
     {
         return BusinessLogic::products()
             ->setBot($request->bot ?? null)
-            ->categories();
+            ->categories(
+                true,
+                $request->all(),
+                $request->get("size") ?? config('app.results_per_page'));
     }
 
     public function getProduct(Request $request, $productId): ProductResource

@@ -3,15 +3,15 @@
 import Pagination from '@/ClientTg/Components/V1/Pagination.vue';
 
 
-import GlobalSlugList from "@/ClientTg/Components/V1/Admin/Slugs/GlobalSlugList.vue";
+import GlobalSlugList from "@/ClientTg/Components/V2/Admin/Slugs/GlobalSlugList.vue";
 
-import Slug from '@/ClientTg/Components/V1/Admin/Slugs/Slug.vue'
+import Slug from '@/ClientTg/Components/V2/Admin/Slugs/Slug.vue'
 </script>
 <template>
 
     <button type="button"
             @click="show=!show"
-            class="btn btn-m btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s bg-red1-light w-100">
+            class="btn btn-outline-light text-primary mb-2 w-100">
         <span v-if="!show"><i class="fa-solid fa-scroll"></i> Добавить глобальный скрипт</span>
         <span v-else><i class="fa-regular fa-square-minus"></i> Свернуть форму добавления</span>
     </button>
@@ -24,7 +24,7 @@ import Slug from '@/ClientTg/Components/V1/Admin/Slugs/Slug.vue'
                         v-on:callback="loadSlugs"/>
     </div>
 
-    <div class="form-floating mb-3">
+    <div class="form-floating mb-2">
         <label for="floatingInput">Быстрый поиск команды</label>
         <input type="search"
                v-model="ownSearch"
@@ -44,7 +44,7 @@ import Slug from '@/ClientTg/Components/V1/Admin/Slugs/Slug.vue'
     </div>
 
 
-    <div class="mb-1 "
+    <div class="mb-0 "
          v-if="slugs&&bot"
          v-for="(slug, index) in filteredSlugs">
         <Slug :item="slug"
@@ -63,7 +63,7 @@ import Slug from '@/ClientTg/Components/V1/Admin/Slugs/Slug.vue'
 
     <div class="mb-3" v-if="filteredSlugs.length===0">
 
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-light" role="alert">
             У Вас еще нет добавленных скриптов!
         </div>
 

@@ -4,55 +4,53 @@ import Pagination from '@/ClientTg/Components/V1/Pagination.vue';
 <template>
 
 
-    <div class="list-group list-custom-large d-flex flex-wrap" v-if="filteredAllSlugs.length>0">
+    <ul class="list-group " v-if="filteredAllSlugs.length>0">
 
-        <div v-for="(item, index) in filteredAllSlugs" class="w-100">
-            <a href="javascript:void(0)"
-               v-if="item"
-               @click="selectSlug(item)" class="d-block w-100" style="min-height: 70px;">
-                <i class=" font-14 fa-solid fa-scroll rounded-xl shadow-xl bg-blue2-dark"></i>
-                <span style="line-height: 100%;padding-top:10px;    padding-right: 51px;">{{item.command || 'Не указана'}}</span>
-                <strong>{{ item.slug }}</strong>
-                <span class="badge bg-red2-dark font-8">#{{item.id}}</span>
-                <i class="fa-solid fa-scroll"></i>
-            </a>
+        <li v-for="(item, index) in filteredAllSlugs" class="w-100 list-group-item">
+            <p v-if="item"
+               @click="selectSlug(item)" class="mb-2">
+                <i class="fa-solid fa-scroll text-primary"></i>
+                <span >{{item.command || 'Не указана'}}</span>
+            </p>
 
             <form v-on:submit.prevent="addSlug"
                   v-if="slugForm.id==item.id&&filteredAllSlugs.length>0"
                   class="mb-0 d-flex flex-wrap">
 
 
-                    <div class="mb-3">
-                        <div class="border-green1-dark pl-3 border-left border-top-0 border-bottom-0 border-right-0 my-3">
-                            <p>
-                                Вы можете добавить данный скрипт изменив сразу название команды на нужное непосредственно ВАМ!
-                                Меняется только название.
-                            </p>
+                    <div class="mb-2">
+                        <div class="alert alert-light mb-2">
+                            Вы можете добавить данный скрипт изменив сразу название команды на нужное непосредственно ВАМ!
+                            Меняется только название.
                         </div>
 
-                        <input type="text" class="form-control w-100"
-                               placeholder="Команда"
-                               aria-label="Команда"
-                               v-model="slugForm.command"
-                               maxlength="255"
-                               aria-describedby="bot-domain" required>
+                        <div class="form-floating">
+                            <input type="text" class="form-control"
+                                   placeholder="Команда"
+                                   aria-label="Команда"
+                                   v-model="slugForm.command"
+                                   maxlength="255"
+                                   aria-describedby="bot-domain" required>
+                            <label for="">Команда</label>
+                        </div>
+
                     </div>
 
 
                     <button
                         :disabled="slugForm.slug==null"
-                        class="btn btn-m btn-full mb-0 rounded-xs text-uppercase font-900 shadow-s bg-green1-dark w-100 p-3">Добавить скрипт в бота
+                        class="btn btn-primary w-100 p-3">Добавить скрипт в бота
                     </button>
 
 
 
 
             </form>
-        </div>
+        </li>
 
 
 
-    </div>
+    </ul>
 
 
     <Pagination
@@ -153,6 +151,18 @@ export default {
             this.loadAllSlugs(index)
         },
         selectSlug(item) {
+
+            if ( this.slugForm.id === item.id)
+            {
+                this.slugForm.id = null
+                this.slugForm.slug = null
+                this.slugForm.comment = null
+                this.slugForm.command = null
+                this.slugForm.config = []
+                this.slugForm.is_global = false
+                return
+            }
+
             this.slugForm.id = item.id || null
             this.slugForm.slug = item.slug
             this.slugForm.comment = item.comment

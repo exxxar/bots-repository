@@ -174,12 +174,16 @@ class ProductLogicFactory
     /**
      * @throws HttpException
      */
-    public function categories($isFull = false): ProductCategoryCollection
+    public function categories($isFull = false, array $data = [], $size = null): ProductCategoryCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
         $size = $size ?? config('app.results_per_page');
+
+        $order = $data["order_by"] ?? "updated_at";
+        $direction = $data["direction"] ?? "desc";
+
 
         $categories = ProductCategory::query()
             ->where("bot_id", $this->bot->id);
@@ -188,7 +192,9 @@ class ProductLogicFactory
             $categories = $categories
                 ->where("is_active", true);
 
-        $categories = $categories->paginate($size);
+        $categories = $categories
+            ->orderBy($order, $direction)
+            ->paginate($size);
 
         return new ProductCategoryCollection($categories);
     }
@@ -699,6 +705,8 @@ class ProductLogicFactory
 
         $address = (($data["city"] ?? "") . "," . ($data["street"] ?? "") . "," . ($data["building"] ?? ""));
 
+        $this->contactsPrepare($data);
+
 
         $order = Order::query()->create([
             'bot_id' => $this->bot->id,
@@ -910,6 +918,8 @@ class ProductLogicFactory
             ->prepareReviews($order->id, $ids);
 
         $message .= "Итого: $summaryPrice руб. за $summaryCount ед. " . ($discount > 0 ? "Скидка: $discount руб." : "") . (!is_null($promo->code ?? null) ? " скидка за промокод '$promo->code' составляет $promo->discount руб. (уже учтена)" : "");
+
+        $this->contactsPrepare($data);
 
         $userInfo = !$needPickup ?
             sprintf(($whenReady ? "🟢" : "🟡") . "Заказ №: %s\nИдентификатор клиента: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nЦена доставки(тест): %s \nДистанция(тест): %s \nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
@@ -1261,5 +1271,20 @@ class ProductLogicFactory
             ->first();
 
         return new ProductCategoryResource($category);
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    private function contactsPrepare(array $data): void
+    {
+        $vowels = ["(", ")", "-"];
+        $filteredPhone = !is_null($data["phone"] ?? $this->botUser->phone ?? null) ?
+            str_replace($vowels, "", $data["phone"] ?? $this->botUser->phone) : null;
+
+        $this->botUser->name = $data["name"] ?? $this->botUser->name ?? null;
+        $this->botUser->phone = $filteredPhone;
+        $this->botUser->save();
     }
 }
