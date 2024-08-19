@@ -90,12 +90,13 @@ import CashBackList from "@/ClientTg/Components/V2/CashBack/CashBackList.vue";
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["botUser"],
+    props: ["modelValue"],
     data() {
         return {
             loading: false,
             reloadUsers: false,
             tab: 0,
+            botUser:null,
             request_telegram_chat_id: null,
 
         }
@@ -105,6 +106,12 @@ export default {
         currentBot() {
             return window.currentBot
         }
+    },
+    mounted() {
+        if (this.modelValue)
+            this.$nextTick(()=>{
+                this.botUser = this.modelValue
+            })
     },
     methods: {
         updateUserInfo() {

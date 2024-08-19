@@ -186,14 +186,14 @@ class StartCodesHandlerController extends Controller
             switch ($code) {
                 default:
                 case "001":
-                    $text = "Основная административная панель";
+                    $text = "Админ панель";
                     $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu#/s/admin/clients";
 
 
                     break;
 
                 case "003":
-                    $text = "Обратная связь с пользователем";
+                    $text = "Обратная связь";
                     $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu#/s/admin/clients";
 
                     break;
@@ -209,7 +209,7 @@ class StartCodesHandlerController extends Controller
 
             $requestKeyboard = [
                 [
-                    ["text" => "\xF0\x9F\x8E\xB0Перейти в административное меню",
+                    ["text" => "\xF0\x9F\x8E\xB0Админ меню",
                         "web_app" => [
                             "url" => $path
                         ]
@@ -320,7 +320,7 @@ class StartCodesHandlerController extends Controller
                 )
                 ->sendMessage(
                     $botUser->telegram_chat_id,
-                    "Вас и вашего друга $userName2 теперь объеденяет еще и CashBack;)"
+                    "Вас и вашего друга $userName2 теперь обьеденяет еще и CashBack;)"
                 );
         }
 

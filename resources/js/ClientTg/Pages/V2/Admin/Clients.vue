@@ -41,8 +41,9 @@ import UserProfileCard from "@/ClientTg/Components/V2/Admin/Clients/UserProfileC
             </div>
 
             <div class="col-12" v-if="selected_bot_user!=null&&tab===1">
+                {{selected_bot_user}}
                 <UserProfileCard
-                    :bot-user="selected_bot_user"></UserProfileCard>
+                    v-model="selected_bot_user"></UserProfileCard>
             </div>
         </div>
     </div>
@@ -126,11 +127,13 @@ export default {
                     user_telegram_chat_id: this.request_telegram_chat_id
                 },
             }).then(resp => {
-                this.selected_bot_user = resp.data
-                //this.request_telegram_chat_id = this.selected_bot_user.telegram_chat_id
-                this.loading = false
-                this.tab = 1
-                window.scroll(0, 0)
+                this.$nextTick(()=>{
+                    this.selected_bot_user = resp.data
+                    //this.request_telegram_chat_id = this.selected_bot_user.telegram_chat_id
+                    this.loading = false
+                    this.tab = 1
+                    window.scroll(0, 0)
+                })
             }).catch(() => {
                 this.selected_bot_user = null
                 this.loading = false
