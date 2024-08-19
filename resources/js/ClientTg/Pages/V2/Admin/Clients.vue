@@ -40,10 +40,13 @@ import UserProfileCard from "@/ClientTg/Components/V2/Admin/Clients/UserProfileC
                     v-on:select="selectUser"/>
             </div>
 
-            <div class="col-12" v-if="selected_bot_user!=null&&tab===1">
-                {{selected_bot_user}}
+            <div class="col-12" v-if="tab===1">
                 <UserProfileCard
+                    v-if="selected_bot_user"
                     v-model="selected_bot_user"></UserProfileCard>
+                <div class="alert alert-light" v-else>
+                    Пользователь еще не выбран!
+                </div>
             </div>
         </div>
     </div>
