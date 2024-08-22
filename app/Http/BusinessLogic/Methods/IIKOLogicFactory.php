@@ -3,8 +3,11 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Http\Resources\AmoCrmResource;
+use App\Http\Resources\IikoResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
+use App\Models\Iiko;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -29,40 +32,222 @@ class IIKOLogicFactory
     }
 
     /**
-     * @throws ValidationException
+     * @throws HttpException
      */
-    public function createOrUpdate(array $data): AmoCrmResource
+    public function getToken($apiLogin = null): mixed
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(400, "Условия функции не выполнены!");
+
+        $iiko = $this->bot->iiko ?? null;
+
+        if (is_null($iiko)) {
+            $iiko = Iiko::query()
+                ->create([
+                    'bot_id' => $this->bot->id,
+                    'api_login' => $apiLogin,
+                    'organization_id' => null,
+                    'terminal_group_id' => null,
+                ]);
+        }
+
+        if (!is_null($iiko) && !is_null($apiLogin)) {
+            $iiko->api_login = $apiLogin;
+            $iiko->save();
+        }
+
+        if (is_null($iiko->api_login ?? null))
+            throw new HttpException(400, "API логин не задан");
+
+        $url = config('iiko.api_url');
+
+        $result = Http::post("$url/1/access_token", [
+            'apiLogin' => $iiko->api_login,
+        ]);
+
+        if ($result->status() != 200)
+            throw new HttpException($result->status(), $result->json("errorDescription"));
+
+        return $result->json("token") ?? null;
+
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function get(): IikoResource
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
+        $iiko = $this->bot->iiko ?? null;
+
+        if (is_null($iiko))
+            $iiko = Iiko::query()
+                ->create([
+                    'bot_id' => $this->bot->id,
+                    'api_login' => null,
+                    'organization_id' => null,
+                    'terminal_group_id' => null,
+                ]);
+
+
+        return new IikoResource($iiko);
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function organizations($token): mixed
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $url = config('iiko.api_url');
+
+        $result = Http::asJson()
+            ->withToken(trim($token))
+            ->post("$url/1/organizations", [
+                'organizationIds' => [],
+                'returnAdditionalInfo' => true,
+                'includeDisabled' => true,
+                'returnExternalData' => ["string"],
+            ]);
+
+
+        return $result->json("organizations") ?? null;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function terminals($token, $organizationId): mixed
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $url = config('iiko.api_url');
+
+        $result = Http::asJson()
+            ->withToken(trim($token))
+            ->post("$url/1/terminal_groups", [
+                'organizationIds' => [$organizationId],
+                'includeDisabled' => true,
+                'returnExternalData' => ["string"],
+            ]);
+
+        return $result->json("terminalGroups") ?? null;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function menus(): mixed
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $url = config('iiko.api_url');
+
+        $token = $this->getToken();
+
+        $organizationId = $this->bot->iiko->organization_id ?? null;
+
+        if (is_null($organizationId))
+            throw new HttpException(404, "Организация не найдена!");
+
+        $result = Http::asJson()
+            ->withToken(trim($token))
+            ->post("$url/2/menu", [
+                'organizationId' => $organizationId,
+                'startRevision' => 0,
+
+            ]);
+
+        return $result->json("externalMenus") ?? null;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function products($menuId): mixed
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $url = config('iiko.api_url');
+
+        $token = $this->getToken();
+
+        $organizationId = $this->bot->iiko->organization_id ?? null;
+
+        if (is_null($organizationId))
+            throw new HttpException(404, "Организация не найдена!");
+
+        $result = Http::asJson()
+            ->withToken(trim($token))
+            ->post("$url/2/menu/by_id", [
+                'organizationIds' => [$organizationId],
+                'externalMenuId' => $menuId,
+        ]);
+
+
+        return $result->json() ?? null;
+    }
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function store(array $data): IikoResource
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(400, "Условия функции не выполнены!");
+
         $validator = Validator::make($data, [
-            "client_id" => "required",
-            "client_secret" => "required",
-            "auth_code" => "required",
-            "subdomain" => "required",
+            "api_login" => "required",
         ]);
 
         if ($validator->fails())
             throw new ValidationException($validator);
 
+        $iiko = Iiko::query()
+            ->where("api_login", $data["api_login"])
+            ->where("bot_id", $this->bot->id)
+            ->first();
 
-        //$redirectUri = 'https://your-cashman.com/crm/amo/' . $bot->bot_domain;
+        $tmp = [
+            'bot_id' => $this->bot->id,
+            'api_login' => $data["api_login"] ?? null,
+            'organization_id' => $data["organization_id"] ?? null,
+            'terminal_group_id' => $data["terminal_group_id"] ?? null,
+        ];
 
+        if (is_null($iiko))
+            $iiko = Iiko::query()
+                ->create($tmp);
+        else
+            $iiko->update($tmp);
 
-        $amo = AmoCrm::query()->updateOrCreate(
-            [
-                'bot_id' => $this->bot->id,
-            ],
-            [
-                'client_id' => $data["client_id"],
-                'client_secret' => $data["client_secret"],
-                'auth_code' => $data["auth_code"],
-                'redirect_uri' => $this->bot->bot_domain,
-                'subdomain' => $data["subdomain"],
-                'fields' => is_null($data["fields"] ?? null) ? null : json_decode($data["fields"]),
-            ]);
+        return new IikoResource($iiko);
+    }
 
-        return new AmoCrmResource($amo);
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function storeProductsAndCategories(array $data){
+
+        if (is_null($this->bot))
+            throw new HttpException(400, "Условия функции не выполнены!");
+
+        $validator = Validator::make($data, [
+            "api_login" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
     }
 }

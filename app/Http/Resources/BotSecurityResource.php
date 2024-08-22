@@ -40,7 +40,7 @@ class BotSecurityResource extends JsonResource
             'warnings' => BotWarningResource::collection($this->whenLoaded("warnings")),
             'company' => new CompanySecurityResource($this->whenLoaded('company')),
             'field_settings' => !isset($this->fieldSettings) ? null : BotCustomFieldSettingResource::collection($this->whenLoaded('fieldSettings')),
-
+            'iiko' => new IikoResource($this->whenLoaded("iiko")),
             //'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
             //'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),
         ];

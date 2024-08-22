@@ -286,6 +286,19 @@ Route::prefix("bot-client")
                 Route::post("/products/{productId}", [ProductController::class, "getProduct"]);
             });
 
+        Route::prefix("iiko")
+            ->controller(\App\Http\Controllers\Bots\Web\IikoController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function(){
+                Route::post('/', "index");
+                Route::post('/token', "getToken");
+                Route::post('/organizations', "getOrganizations");
+                Route::post('/terminals', "getTerminals");
+                Route::post('/menu', "getMenu");
+                Route::post('/products', "getProducts");
+                Route::post('/store', "store");
+            });
+
         Route::prefix("admins")
             ->controller(AdminBotController::class)
             ->group(function () {

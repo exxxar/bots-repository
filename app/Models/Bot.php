@@ -93,7 +93,7 @@ class Bot extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    protected $with = ["company", "amo", "warnings", "fieldSettings",'YClients','frontPad'];
+    protected $with = ["company", "amo", "warnings", "fieldSettings", 'YClients', 'frontPad','iiko'];
     protected $appends = ['topics'];
 
     public function getTopicsAttribute()
@@ -196,5 +196,9 @@ class Bot extends Model
         return $this->hasMany(BotWarning::class);
     }
 
+    public function iiko(): HasOne
+    {
+        return $this->hasOne(Iiko::class);
+    }
 
 }

@@ -35,6 +35,7 @@ import promocodes from "./modules/promocodes";
 import orders from "./modules/shop/orders"
 import reviews from "./modules/shop/reviews"
 import mailing from "./modules/mailing"
+import iiko from "./modules/iiko"
 
 import util from "./modules/utilites";
 
@@ -160,6 +161,7 @@ export default createStore({
         orders,
         friendsGame,
         mailing,
+        iiko,
         reviews
     }
 })

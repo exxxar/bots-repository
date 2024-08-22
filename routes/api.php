@@ -173,3 +173,10 @@ Route::apiResource('reviews', App\Http\Controllers\ReviewController::class);
 
 
 Route::apiResource('sub-shops', App\Http\Controllers\SubShopController::class);
+
+
+Route::apiResource('shops', App\Http\Controllers\ShopController::class);
+
+Route::apiResource('bitrixes', App\Http\Controllers\BitrixController::class);
+
+Route::apiResource('iikos', \App\Http\Controllers\Bots\Web\IikoController::class);

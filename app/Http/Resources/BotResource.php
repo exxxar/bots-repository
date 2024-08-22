@@ -58,6 +58,7 @@ class BotResource extends JsonResource
             'amo' => new AmoCrmResource($this->whenLoaded("amo")),
             'frontPad' => new FrontPadResource($this->whenLoaded("frontPad")),
             'y_clients' => new YClientResource($this->whenLoaded("YClients")),
+            'iiko' => new IikoResource($this->whenLoaded("iiko")),
             'blocked_at' => $this->blocked_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

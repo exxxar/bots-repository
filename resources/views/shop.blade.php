@@ -32,5 +32,6 @@
 @inertia
 <script type="text/javascript" src="/shop/scripts/jquery.js"></script>
 <script type="text/javascript" src="/shop/scripts/bootstrap.min.js"></script>
+
 </body>
 </html>

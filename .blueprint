@@ -1,14 +1,34 @@
 created:
-    - app/Http/Controllers/SubShopController.php
-    - database/factories/SubShopFactory.php
-    - database/migrations/2024_07_20_211303_create_sub_shops_table.php
-    - app/Models/SubShop.php
-    - database/seeders/SubShopSeeder.php
-    - tests/Feature/Http/Controllers/SubShopControllerTest.php
-    - app/Http/Requests/SubShopStoreRequest.php
-    - app/Http/Requests/SubShopUpdateRequest.php
-    - app/Http/Resources/SubShopCollection.php
-    - app/Http/Resources/SubShopResource.php
+    - app/Http/Controllers/ShopController.php
+    - app/Http/Controllers/BitrixController.php
+    - app/Http/Controllers/IikoController.php
+    - database/factories/BitrixFactory.php
+    - database/factories/IikoFactory.php
+    - database/factories/ShopFactory.php
+    - database/migrations/2024_08_21_140443_create_bitrixes_table.php
+    - database/migrations/2024_08_21_140444_create_iikos_table.php
+    - database/migrations/2024_08_21_140445_create_shops_table.php
+    - app/Models/Bitrix.php
+    - app/Models/Iiko.php
+    - app/Models/Shop.php
+    - database/seeders/ShopSeeder.php
+    - database/seeders/BitrixSeeder.php
+    - database/seeders/IikoSeeder.php
+    - tests/Feature/Http/Controllers/ShopControllerTest.php
+    - tests/Feature/Http/Controllers/BitrixControllerTest.php
+    - tests/Feature/Http/Controllers/IikoControllerTest.php
+    - app/Http/Requests/ShopStoreRequest.php
+    - app/Http/Requests/ShopUpdateRequest.php
+    - app/Http/Requests/BitrixStoreRequest.php
+    - app/Http/Requests/BitrixUpdateRequest.php
+    - app/Http/Requests/IikoStoreRequest.php
+    - app/Http/Requests/IikoUpdateRequest.php
+    - app/Http/Resources/ShopCollection.php
+    - app/Http/Resources/ShopResource.php
+    - app/Http/Resources/BitrixCollection.php
+    - app/Http/Resources/BitrixResource.php
+    - app/Http/Resources/IikoCollection.php
+    - app/Http/Resources/IikoResource.php
 updated:
     - routes/api.php
 models:
@@ -73,3 +93,6 @@ models:
     BotDialogAnswer: { bot_dialog_command_id: 'id foreign:bot_dialog_commands', answer: 'string:255 nullable', pattern: 'string:255 nullable', next_bot_dialog_command_id: 'id foreign:bot_dialog_commands', relationships: { belongsTo: BotDialogCommand } }
     FrontPad: { bot_id: 'id foreign:bots nullable', hook_url: "string:255 nullable comment:'url для отправки вебхука по текущему заказу'", channel: "string:255 nullable comment:'канал продаж'", affiliate: "string:255 nullable comment:'филиал'", point: "string:255 nullable comment:'точка продаж'", token: "string:255 nullable comment:'тоукен интеграции'", relationships: { belongsTo: Bot } }
     SubShop: { bot_id: 'id foreign:bots nullable', title: "string:255 nullable comment:'название внутреннего магазина'", keyword: "string:255 nullable comment:'идентификатор-метка магазина'", image: 'string:255 nullable', schedule: 'json nullable', config: "json nullable comment:'дополнительная настройка магазина'", is_active: 'boolean default:true', relationships: { belongsTo: Bot } }
+    Bitrix: { bot_id: 'id foreign:bots nullable', host: 'string:255 nullable', client_id: 'string:255 nullable', client_secret: 'string:255 nullable', scopes: 'json nullable', relationships: { belongsTo: Bot } }
+    Iiko: { bot_id: 'id foreign:bots nullable', api_login: 'string:255 nullable', organization_id: 'string:255 nullable', terminal_group_id: 'string:255 nullable', relationships: { belongsTo: Bot } }
+    Shop: { bot_id: 'id foreign:bots nullable', title: 'string:255 nullable', image: 'string:255 nullable', key: "string:255 nullable comment:'для распределения товаров'", is_default: 'boolean default:false', config: 'json nullable', relationships: { belongsTo: Bot } }
