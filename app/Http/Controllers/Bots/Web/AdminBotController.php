@@ -89,6 +89,19 @@ class AdminBotController extends Controller
 
     }
 
+    protected function requestUserReview(Request $request){
+        $request->validate([
+            "telegram_chat_id" => "required",
+        ]);
+
+
+        BusinessLogic::administrative()
+            ->setBotUser($request->botUser ?? null)
+            ->setBot($request->bot ?? null)
+            ->requestReview($request->all());
+
+        return response()->noContent();
+    }
     /**
      * @throws ValidationException
      */

@@ -54,11 +54,11 @@ class BotManager extends BotCore
         return $this;
     }
 
-    protected function checkIsWorking()
+    protected function checkIsWorking(): bool
     {
-        return $this->getSelf()->is_active &&
-            $this->getSelf()->balance > 0 &&
-            is_null($this->getSelf()->deleted_at);
+        return ($this->getSelf()->is_active ?? false) &&
+            ($this->getSelf()->balance ?? 0) > 0 &&
+            is_null($this->getSelf()->deleted_at ?? null);
     }
 
     protected function createUser($from)
@@ -142,6 +142,16 @@ class BotManager extends BotCore
 
     }
 
+    protected function checkIsUserBlocked(): bool
+    {
+        if (!is_null($this->botUser->blocked_at ?? null)) {
+            $this->reply($this->botUser->blocked_message ??
+                "Мы заметили у вас подозрительную активность и временно ограничили доступ. Хорошего дня!");
+            return true;
+        }
+        return false;
+    }
+
     protected function botStatusHandler(): BotStatusEnum
     {
         if ($this->checkIsWorking())
@@ -178,7 +188,6 @@ class BotManager extends BotCore
     {
         return $this->slugs;
     }
-
 
 
     private function prepareServerURL($serverKey = "main")

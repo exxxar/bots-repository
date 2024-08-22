@@ -307,6 +307,11 @@ Route::prefix("bot-client")
                 Route::post('/request', "requestCashBack")
                     ->middleware(["tgAuth.any"]);
 
+                Route::post('/request-review', "requestUserReview")
+                    ->middleware(["tgAuth.admin"]);
+
+
+
                 Route::post('/send-invoice', "sendInvoice")
                     ->middleware(["tgAuth.admin"]);
 

@@ -11,6 +11,7 @@ import RefreshUserMenu from "@/ClientTg/Components/V2/Admin/Clients/Modules/Refr
 import RequestUserProfile from "@/ClientTg/Components/V2/Admin/Clients/Modules/RequestUserProfile.vue";
 import RequestInvoice from "@/ClientTg/Components/V2/Admin/Clients/Modules/RequestInvoice.vue";
 import CashBackList from "@/ClientTg/Components/V2/CashBack/CashBackList.vue";
+import RequestReview from "@/ClientTg/Components/V2/Admin/Clients/Modules/RequestReview.vue";
 </script>
 <template v-if="botUser">
     <div class="btn-group w-100 my-3 px-3"
@@ -60,9 +61,14 @@ import CashBackList from "@/ClientTg/Components/V2/CashBack/CashBackList.vue";
 
     <div v-if="botUser&&tab===2">
 
+
         <MessageToUser
             class="mb-2"
             :bot-user="botUser"></MessageToUser>
+
+        <RequestReview
+            class="mb-2"
+            :bot-user="botUser"></RequestReview>
 
         <RemoveCashBack class="mb-2"
                         :bot-user="botUser"></RemoveCashBack>

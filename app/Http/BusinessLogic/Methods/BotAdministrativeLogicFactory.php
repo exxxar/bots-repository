@@ -279,6 +279,43 @@ class BotAdministrativeLogicFactory
         return new BotUserCollection($botUsers);
     }
 
+
+    /**
+     * @throws ValidationException
+     */
+    public function requestReview(array $data): void
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "telegram_chat_id" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $tmp_user_id = (string)$data["telegram_chat_id"];
+        $message = $data["message"] ?? null;
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendInlineKeyboard(
+                $tmp_user_id,
+                $message ?? "Пожалуйста, поставьте оценку нашей работе!", [
+                    [
+                        ["text" => "😡", "callback_data" => "/send_review 0"],
+                        ["text" => "😕", "callback_data" => "/send_review 1"],
+                        ["text" => "😐", "callback_data" => "/send_review 2"],
+                        ["text" => "🙂", "callback_data" => "/send_review 3"],
+                        ["text" => "😁", "callback_data" => "/send_review 4"],
+                    ]
+                ]
+            );
+
+    }
+
+
     /**
      * @throws ValidationException
      */

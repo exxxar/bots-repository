@@ -66,6 +66,8 @@ abstract class BotCore
 
     protected abstract function botStatusHandler(): BotStatusEnum;
 
+    protected abstract function checkIsUserBlocked(): bool;
+
     protected abstract function nextBotDialog($text): void;
 
     protected abstract function startBotDialog($dialogCommandId, $botUser = null): void;
@@ -831,10 +833,8 @@ abstract class BotCore
         else
             $this->createUser($message->from);
 
-        if (!is_null($this->currentBotUser()->blocked_at ?? null)) {
-            $this->reply($this->currentBotUser()->blocked_message ?? "Вам ограничен доступ!");
+        if ($this->checkIsUserBlocked())
             return;
-        }
 
         try {
             if (isset($update["message"]["successful_payment"])) {
@@ -844,6 +844,7 @@ abstract class BotCore
         } catch (\Exception $e) {
             Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
         }
+
 
 
         try {
@@ -864,7 +865,7 @@ abstract class BotCore
 
             $botStatus = $this->botStatusHandler();
 
-            if ($botStatus != BotStatusEnum::Working)
+            if ($botStatus->value != BotStatusEnum::Working->value)
                 return;
 
             if ($this->currentBotUserInDialog()) {
