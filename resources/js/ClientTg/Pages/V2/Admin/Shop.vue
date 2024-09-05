@@ -39,7 +39,7 @@ import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.v
                     <span class="spinner-border text-warning ml-2" style="border-width: 2px; width: 1rem;height: 1rem;" role="status"></span>
                 </p>
                 <a
-                    @click="link"
+                    @click="open(link)"
                     v-if="link"
                     href="javascript:void(0)"
                     target="_blank"
