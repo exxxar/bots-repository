@@ -1,34 +1,15 @@
 created:
-    - app/Http/Controllers/ShopController.php
-    - app/Http/Controllers/BitrixController.php
-    - app/Http/Controllers/IikoController.php
-    - database/factories/BitrixFactory.php
-    - database/factories/IikoFactory.php
-    - database/factories/ShopFactory.php
-    - database/migrations/2024_08_21_140443_create_bitrixes_table.php
-    - database/migrations/2024_08_21_140444_create_iikos_table.php
-    - database/migrations/2024_08_21_140445_create_shops_table.php
-    - app/Models/Bitrix.php
-    - app/Models/Iiko.php
-    - app/Models/Shop.php
-    - database/seeders/ShopSeeder.php
-    - database/seeders/BitrixSeeder.php
-    - database/seeders/IikoSeeder.php
-    - tests/Feature/Http/Controllers/ShopControllerTest.php
-    - tests/Feature/Http/Controllers/BitrixControllerTest.php
-    - tests/Feature/Http/Controllers/IikoControllerTest.php
-    - app/Http/Requests/ShopStoreRequest.php
-    - app/Http/Requests/ShopUpdateRequest.php
-    - app/Http/Requests/BitrixStoreRequest.php
-    - app/Http/Requests/BitrixUpdateRequest.php
-    - app/Http/Requests/IikoStoreRequest.php
-    - app/Http/Requests/IikoUpdateRequest.php
-    - app/Http/Resources/ShopCollection.php
-    - app/Http/Resources/ShopResource.php
-    - app/Http/Resources/BitrixCollection.php
-    - app/Http/Resources/BitrixResource.php
-    - app/Http/Resources/IikoCollection.php
-    - app/Http/Resources/IikoResource.php
+    - app/Http/Controllers/ProductCollectionController.php
+    - database/factories/ProductCollectionFactory.php
+    - database/migrations/2024_08_31_201637_create_product_collections_table.php
+    - database/migrations/2024_08_31_201638_create_product_product_collection_table.php
+    - app/Models/ProductCollection.php
+    - database/seeders/ProductCollectionSeeder.php
+    - tests/Feature/Http/Controllers/ProductCollectionControllerTest.php
+    - app/Http/Requests/ProductCollectionStoreRequest.php
+    - app/Http/Requests/ProductCollectionUpdateRequest.php
+    - app/Http/Resources/ProductCollectionCollection.php
+    - app/Http/Resources/ProductCollectionResource.php
 updated:
     - routes/api.php
 models:
@@ -96,3 +77,4 @@ models:
     Bitrix: { bot_id: 'id foreign:bots nullable', host: 'string:255 nullable', client_id: 'string:255 nullable', client_secret: 'string:255 nullable', scopes: 'json nullable', relationships: { belongsTo: Bot } }
     Iiko: { bot_id: 'id foreign:bots nullable', api_login: 'string:255 nullable', organization_id: 'string:255 nullable', terminal_group_id: 'string:255 nullable', relationships: { belongsTo: Bot } }
     Shop: { bot_id: 'id foreign:bots nullable', title: 'string:255 nullable', image: 'string:255 nullable', key: "string:255 nullable comment:'для распределения товаров'", is_default: 'boolean default:false', config: 'json nullable', relationships: { belongsTo: Bot } }
+    ProductCollection: { bot_id: 'id foreign:bots nullable', owner_id: 'foreign:bot_users nullable', title: 'string:255 nullable', image: 'string:255 nullable', description: 'longtext nullable', is_public: 'boolean default:false', is_active: 'boolean default:false', discount: "integer default:0 comment:'скидка на набор в %'", order_position: 'integer default:0', config: 'json nullable', relationships: { belongsTo: 'Bot, BotUser', belongsToMany: Product } }

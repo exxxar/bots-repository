@@ -60,11 +60,31 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 
     <p>Всего товаров: <span v-if="paginate">{{paginate.meta.total || 0}}</span></p>
 
-    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
+    <div
+        v-if="!isSimple"
+        class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
         <div class="col"  v-for="(product, index) in filteredProducts">
             <ProductCard
+                v-bind:class="{'selected':(selected||[]).indexOf(product.id)!=-1}"
                 v-on:select="selectProduct(product)"
                 :item="product"/>
+        </div>
+    </div>
+    <div
+        class="row"
+        v-else>
+        <div class="col-12" >
+
+            <ul class="list-group">
+                <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                    @click="selectProduct(product)"
+                    v-bind:class="{'bg-success text-white fw-bold':(selected||[]).indexOf(product.id)!=-1}"
+                    v-for="(product, index) in filteredProducts">
+                    {{product.title}}
+                </li>
+            </ul>
+
         </div>
     </div>
 
@@ -80,6 +100,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 import {mapGetters} from "vuex";
 
 export default {
+    props:["selected","isSimple"],
     data() {
         return {
             search: null,

@@ -7,6 +7,9 @@ use App\Http\Resources\IikoResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\Iiko;
+use App\Models\Product;
+use App\Models\ProductCategory;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -190,7 +193,7 @@ class IIKOLogicFactory
             ->post("$url/2/menu/by_id", [
                 'organizationIds' => [$organizationId],
                 'externalMenuId' => $menuId,
-        ]);
+            ]);
 
 
         return $result->json() ?? null;
@@ -238,16 +241,77 @@ class IIKOLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
-    public function storeProductsAndCategories(array $data){
+    public function storeProductsAndCategories(array $data): void
+    {
 
         if (is_null($this->bot))
             throw new HttpException(400, "Условия функции не выполнены!");
 
         $validator = Validator::make($data, [
-            "api_login" => "required",
+            "products" => "required",
         ]);
 
         if ($validator->fails())
             throw new ValidationException($validator);
+
+        $products = Product::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        foreach ($products as $product) {
+            $product->in_stop_list_at = Carbon::now();
+            $product->deleted_at = Carbon::now();
+            $product->save();
+        }
+
+        foreach ($data["products"] as $product) {
+            $product = (object)$product;
+
+            $tmpProduct = Product::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("iiko_article", $product->id)
+                ->first();
+
+            $tmp = [
+                'article' => $product->sku ?? null,
+                'vk_product_id' => null,
+                'frontpad_article' => null,
+                'iiko_article' => $product->id ?? null,
+                'title' => $product->name ?? null,
+                'description' => $product->description ?? null,
+                'images' => [$product->image ?? null],
+                'type' => 0,
+                'old_price' => 0,
+                'current_price' => $product->price ?? 0,
+                'variants',
+                'in_stop_list_at' => $product->in_stop ? Carbon::now() : null,
+                'bot_id' => $this->bot->id,
+                'deleted_at' => null
+            ];
+
+            if (is_null($tmpProduct))
+                $tmpProduct = Product::query()
+                    ->create($tmp);
+            else
+                $tmpProduct->update($tmp);
+
+            $category = $product->category;
+
+            $tmpProductCategory = ProductCategory::query()
+                ->where("title", $category)
+                ->where("bot_id", $this->bot->id)
+                ->first();
+
+            if (is_null($tmpProductCategory))
+                $tmpProductCategory = ProductCategory::query()
+                    ->create([
+                        'title' => $category,
+                        'bot_id' => $this->bot->id,
+                    ]);
+
+            $tmpProduct->productCategories()->attach([$tmpProductCategory->id]);
+        }
+
+
     }
 }

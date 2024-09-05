@@ -14,40 +14,50 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
             <p class="mb-0 fw-bold">Администратор еще не добавили виджет Яндекс.Карты с расположением заведения!</p>
         </div>
 
-    <h6 class="my-3" >{{bot.company.address||'Адрес вашего заведения'}}</h6>
-    <h6 class="opacity-75 mb-3 d-flex justify-content-between align-items-center">Контактная информация <a
-        v-if="(getSelf||{is_admin:false}).is_admin"
-        data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
-        href="javascript:void(0)" class="text-primary ml-2"><i class="fa-solid fa-pen-to-square"></i></a></h6>
+        <h6 class="my-3">{{ bot.company.address || 'Адрес вашего заведения' }}</h6>
+        <h6 class="opacity-75 mb-3 d-flex justify-content-between align-items-center">Контактная информация <a
+            v-if="(getSelf||{is_admin:false}).is_admin"
+            data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
+            href="javascript:void(0)" class="text-primary ml-2"><i class="fa-solid fa-pen-to-square"></i></a></h6>
 
-    <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Телефон</span>
-            <span class="text-primary fw-bold" style="font-size:12px;">{{phone || '-'}}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Инста</span>
-            <span class="text-primary fw-bold" style="font-size:12px;">{{links.inst || '-'}}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Вконтакте</span>
-            <span class="text-primary fw-bold" style="font-size:12px;">{{links.vk || '-'}}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between"
-            aria-current="true">
-            <span>Почта</span>
-            <span class="text-primary fw-bold" style="font-size:12px;">{{company.email || '-'}}</span>
-        </li>
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between"
+                aria-current="true">
+                <span>Телефон</span>
+                <span class="text-primary fw-bold" style="font-size:12px;">{{ phone || '-' }}</span>
+            </li>
+            <li
+                v-if="links.inst"
+                class="list-group-item d-flex justify-content-between"
+                aria-current="true">
+                <span>Инста</span>
+                <span class="text-primary fw-bold" style="font-size:12px;">{{ links.inst || '-' }}</span>
+            </li>
+            <li
+                v-if="links.vk"
+                class="list-group-item d-flex justify-content-between"
+                aria-current="true">
+                <span>Вконтакте</span>
+                <span class="text-primary fw-bold" style="font-size:12px;">{{ links.vk || '-' }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between"
+                aria-current="true">
+                <span>Почта</span>
+                <span class="text-primary fw-bold" style="font-size:12px;">{{ company.email || '-' }}</span>
+            </li>
+            <li
+                v-if="links.site"
+                class="list-group-item d-flex justify-content-between"
+                aria-current="true">
+                <span>Почта</span>
+                <span class="text-primary fw-bold" style="font-size:12px;">{{ links.site || '-' }}</span>
+            </li>
+        </ul>
 
-    </ul>
-
-    <h6 class="opacity-75 my-3 d-flex justify-content-between align-items-center">Прием заказов осуществляется <a
-        v-if="(getSelf||{is_admin:false}).is_admin"
-        data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
-        href="javascript:void(0)" class="text-primary ml-2"><i class="fa-solid fa-pen-to-square"></i></a></h6>
+        <h6 class="opacity-75 my-3 d-flex justify-content-between align-items-center">Прием заказов осуществляется <a
+            v-if="(getSelf||{is_admin:false}).is_admin"
+            data-bs-toggle="modal" data-bs-target="#edit-shop-footer-description-modal"
+            href="javascript:void(0)" class="text-primary ml-2"><i class="fa-solid fa-pen-to-square"></i></a></h6>
 
         <ScheduleList
             v-if="isCorrectSchedule"
@@ -55,10 +65,10 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
         <div class="alert alert-danger" v-else>
             <p class="mb-0 fw-bold">График работ еще не составлен:)</p>
         </div>
-<!--        <h6 class="opacity-75 my-3">Специальные возможности</h6>
-        <button class="btn btn-outline-primary w-100 mb-2">Пригласить администратора</button>
-        <button class="btn btn-outline-primary w-100 mb-2">Запросить CashBack</button>
-        <button class="btn btn-outline-primary w-100 mb-2">Забронировать столик</button>-->
+        <!--        <h6 class="opacity-75 my-3">Специальные возможности</h6>
+                <button class="btn btn-outline-primary w-100 mb-2">Пригласить администратора</button>
+                <button class="btn btn-outline-primary w-100 mb-2">Запросить CashBack</button>
+                <button class="btn btn-outline-primary w-100 mb-2">Забронировать столик</button>-->
     </div>
 
 </template>
@@ -90,25 +100,26 @@ export default {
         tg() {
             return window.Telegram.WebApp;
         },
-        bot(){
+        bot() {
             return window.currentBot
         },
-        isCorrectSchedule(){
-          return window.isCorrectSchedule(this.bot.company.schedule);
+        isCorrectSchedule() {
+            return window.isCorrectSchedule(this.bot.company.schedule);
         },
-        company(){
+        company() {
             return this.bot.company
         },
-        phone(){
+        phone() {
             if (!this.bot.company.phones)
                 return null
-          return this.bot.company.phones[0] || null
+            return this.bot.company.phones[0] || null
         },
-        links(){
+        links() {
             return {
-                inst: (this.bot.company.links||{inst:null}).inst || null,
-                vk: (this.bot.company.links||{inst:null}).vk || null,
-                map_link: (this.bot.company.links||{inst:null}).map_link || null,
+                inst: (this.bot.company.links || {inst: null}).inst || null,
+                vk: (this.bot.company.links || {vk: null}).vk || null,
+                map_link: (this.bot.company.links || {map_link: null}).map_link || null,
+                site: (this.bot.company.links || {site: null}).site || null,
             }
         }
     },
@@ -122,10 +133,7 @@ export default {
             this.$router.back()
         })
     },
-    methods:{
-
-
-    }
+    methods: {}
 }
 </script>
 <style>

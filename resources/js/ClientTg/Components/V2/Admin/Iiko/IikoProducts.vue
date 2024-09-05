@@ -1,5 +1,5 @@
 <template>
-    <ul class="list-group">
+    <ul class="list-group" v-if="menus.length>0">
         <li
             v-for="item in menus"
             @click="selectMenu(item)"
@@ -8,11 +8,24 @@
         </li>
 
     </ul>
+    <div
+        v-else
+        class="alert alert-light my-2 d-flex justify-content-center align-items-center" role="alert">
+        <div class="d-flex justify-content-center align-items-center flex-column">
+            <div class="spinner-grow text-primary my-3" role="status">
+                <span class="visually-hidden">Загружаем....</span>
+            </div>
+            <p>Загружаем список меню...</p>
+        </div>
+
+    </div>
     <hr
         v-if="products.length>0"
         class="mt-3 mb-0 p-0">
 
-    <template v-for="(category, catIndex) in products">
+    <template
+        v-if="products.length>0"
+        v-for="(category, catIndex) in products">
         <h6 class="my-2">{{ category.name }}</h6>
 
         <ul class="list-group">
@@ -38,8 +51,21 @@
 
     </template>
 
+    <div
+        v-if="need_load_products"
+        class="alert alert-light my-2 d-flex justify-content-center align-items-center" role="alert">
+        <div class="d-flex justify-content-center align-items-center flex-column">
+            <div class="spinner-grow text-primary my-3" role="status">
+                <span class="visually-hidden">Загружаем....</span>
+            </div>
+            <p>Загружаем список товаров из меню...</p>
+        </div>
+
+    </div>
+
     <button
         v-if="products.length>0"
+        @click="submit"
         style="z-index: 100;bottom:10px;"
         type="button" class="btn btn-primary w-100 p-3 my-3 position-sticky">Сохранить товары
     </button>
@@ -76,11 +102,13 @@
 export default {
     data() {
         return {
+            need_load_products: false,
             selected_menu: null,
             selected_product: null,
             menus: [],
             categories: [],
-            products: []
+            products: [],
+
         }
     },
     mounted() {
@@ -110,6 +138,7 @@ export default {
             })
         },
         getProducts() {
+            this.need_load_products = true
             this.$store.dispatch("getIikoProducts", {
                 menu_id: (this.selected_menu || {id: null}).id
             })
@@ -122,7 +151,10 @@ export default {
                             prod.need_add = true
                         })
                     })
+
+                    this.need_load_products = false
                 }).catch(err => {
+                this.need_load_products = false
                 this.$notify({
                     title: "Упс!",
                     text: "Ошибка получения токена",
@@ -130,6 +162,46 @@ export default {
                 });
             })
         },
+        submit() {
+
+
+            let products = []
+
+
+            this.products.forEach(cat => {
+                    cat.items.forEach(prod => {
+                        products.push({
+                            id: prod.itemId || null,
+                            sku: prod.sku || null,
+                            name: prod.name || null,
+                            description: prod.description || null,
+                            category: cat.name,
+                            in_stop: !prod.need_add,
+                            price: prod.itemSizes[0].prices[0].price || 0,
+                            image: prod.itemSizes[0].buttonImageUrl || null
+                        })
+
+                    })
+                }
+            )
+            this.$store.dispatch("storeIikoProducts", {
+                products: products
+            }).then((response) => {
+                this.$notify({
+                    title: "Отлично!",
+                    text: "Товары и категории успешно сохранены",
+                    type: "success"
+                });
+            }).catch(err => {
+                this.$notify({
+                    title: "Упс!",
+                    text: "Ошибка сохранения параметров",
+                    type: "error"
+                });
+            })
+
+
+        }
     }
 }
 </script>

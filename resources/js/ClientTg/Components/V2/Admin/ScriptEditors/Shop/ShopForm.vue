@@ -11,6 +11,19 @@
                 v-bind:class="{'text-primary fw-bold':form.is_disabled}">выкл</span></label>
         </div>
 
+        <p class="alert alert-light mb-2">Вы можете разрешить или запретить клиентам оставлять заказы вне рабочего времени вашего сервиса.
+            Если переключатель выключен, то покупки будут доступны <span v-bind:class="{'text-primary fw-bold':!form.can_buy_after_closing}">согласно графика</span>
+            работы вашего заведения, а если включен - <span v-bind:class="{'text-primary fw-bold':form.can_buy_after_closing}">всегда</span>.</p>
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.can_buy_after_closing"
+                   role="switch" id="script-settings-can_buy_after_closing">
+            <label class="form-check-label" for="script-settings-can_buy_after_closing">Покупки после закрытия: <span
+                v-bind:class="{'text-primary fw-bold':form.can_buy_after_closing}">вкл</span> \ <span
+                v-bind:class="{'text-primary fw-bold':!form.can_buy_after_closing}">выкл</span></label>
+        </div>
+
         <p class="alert alert-light mb-2">Текст для клиентов, который отображается пользователю если магазин в
             данный момент выключен администратором</p>
         <div class="form-floating mb-2">
@@ -143,6 +156,7 @@ export default {
                 delivery_price_text: null,
                 min_price: 80,
                 is_disabled: false,
+                can_buy_after_closing: false,
                 can_use_cash: true,
                 can_use_card: true,
                 need_pay_after_call: false,

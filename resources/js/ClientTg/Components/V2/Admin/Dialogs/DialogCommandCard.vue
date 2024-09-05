@@ -1,25 +1,32 @@
 <script setup>
-import BotDialogCommandForm from "@/ClientTg/Components/V1/Admin/Dialogs/BotDialogCommandForm.vue";
+import BotDialogCommandForm from "@/ClientTg/Components/V2/Admin/Dialogs/BotDialogCommandForm.vue";
 </script>
 <template>
 
-    <div class="btn w-100 text-left border-blue2-light" type="button">
-        <p @click="showMenu=!showMenu" class="w-100 mb-0">
-            <i v-if="showMenu" class="fa-solid fa-chevron-up"></i>
-            <i v-else class="fa-solid fa-chevron-down"></i>
-            {{ item.pre_text || 'Нет команды' }}
-        </p>
-
-
-        <BotDialogCommandForm
-            v-if="showMenu"
-            :bot="bot"
-            :item="item"/>
-
+    <div
+        data-bs-toggle="modal" :data-bs-target="'#open-dialog-editor-'+item.id"
+        class="btn d-flex justify-content-start align-items-start" type="button">
+        <span class="badge bg-primary mr-2">#{{item.id}}</span>
+        <p class="mb-0" style="line-height:100%; font-size:10px; text-align:left;"> {{ item.pre_text || 'Нет команды' }}</p>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" :id="'open-dialog-editor-'+item.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <BotDialogCommandForm
+                        :bot="bot"
+                        :item="item"/>
+                </div>
 
-
+            </div>
+        </div>
+    </div>
 
 
 

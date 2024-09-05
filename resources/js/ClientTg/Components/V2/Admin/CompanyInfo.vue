@@ -77,6 +77,12 @@
                    class="form-control" id="floatingInput" placeholder="name@example.com">
             <label for="floatingInput">Почта</label>
         </div>
+        <div class="form-floating mb-2">
+            <input type="url"
+                   v-model="companyForm.links.site"
+                   class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Сайт</label>
+        </div>
         <h6 class="opacity-75 my-2">Расположение заведения</h6>
         <div class="form-floating mb-2">
             <input type="text"
@@ -405,6 +411,7 @@ export default {
                     vk: null,
                     inst: null,
                     map_link: null,
+                    site: null,
                 },
                 email: null,
 
@@ -486,6 +493,7 @@ export default {
         this.companyForm.description = company.description || null
         this.companyForm.email = company.email || null
         this.companyForm.address = company.address || null
+
         this.companyForm.phones = company.phones || ['+7']
 
         this.botForm.payment_provider_token = this.currentBot.payment_provider_token || null
@@ -499,7 +507,7 @@ export default {
 
 
         let isCorrectLinks = (links = []) => {
-            let params = ['inst', 'vk', 'map_link']
+            let params = ['inst', 'vk', 'map_link','site']
             let isCorrect = false
             let correctCount = 0;
             Object.keys(links).forEach(key => {

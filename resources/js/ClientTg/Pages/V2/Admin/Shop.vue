@@ -2,6 +2,7 @@
 import ProductForm from "@/ClientTg/Components/V2/Admin/Shop/ProductForm.vue";
 import ProductList from "@/ClientTg/Components/V2/Admin/Shop/ProductList.vue";
 import ProductCategoryList from "@/ClientTg/Components/V2/Admin/Shop/ProductCategoryList.vue";
+import CollectionList from "@/ClientTg/Components/V2/Admin/Shop/CollectionList.vue";
 </script>
 <template>
 
@@ -38,50 +39,68 @@ import ProductCategoryList from "@/ClientTg/Components/V2/Admin/Shop/ProductCate
                     <span class="spinner-border text-warning ml-2" style="border-width: 2px; width: 1rem;height: 1rem;" role="status"></span>
                 </p>
                 <a
-                    @click="open(link)"
+                    @click="link"
                     v-if="link"
                     href="javascript:void(0)"
-                    type="button"
+                    target="_blank"
                     class="btn btn-primary p-3 w-100">
                     <i class="fa-brands fa-vk mr-2"></i> Обновить товар из ВК
                 </a>
             </div>
 
-            <div class="col-12 py-2">
-                <ul class="nav nav-tabs justify-content-center catalog-tabs">
-                    <li class="nav-item">
-                        <button
-                            type="button"
-                            class="nav-link"
-                            @click="tab=0"
-                            style="font-weight:bold;"
-                            v-bind:class="{'active':tab===0}"
-                            aria-current="page"><i class="fa-solid fa-users mr-2"></i>Товары
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button
-                            type="button"
-                            class="nav-link"
-                            @click="tab=2"
-                            style="font-weight:bold;"
-                            v-bind:class="{'active':tab===2}"
-                        ><i class="fa-solid fa-user-secret mr-2"></i>Категории
-                        </button>
-                    </li>
-
-
-                </ul>
+            <div class="col-12" v-if="currentBot.iiko">
+                <a
+                    @click="goTo('IikoV2')"
+                    href="javascript:void(0)"
+                    class="btn btn-primary p-3 w-100 my-2">
+                    <i class="fa-solid fa-gears mr-2"></i> Обновить товар из IIKO
+                </a>
             </div>
 
-            <div class="col-12" v-show="tab===0">
+            <div class="col-12 py-2">
+                <div class="btn-group w-100 px-3 catalog-tabs py-2" style="overflow-x:auto;">
+                    <button
+                        type="button"
+                        class="btn-outline-primary btn p-3"
+                        @click="tab=0"
+                        style="min-width:150px;line-height:100%;"
+                        v-bind:class="{'active':tab===0}"
+                        aria-current="page"><i class="fa-solid fa-users mr-2"></i>Товары
+                    </button>
+                    <button
+                        type="button"
+                        class="btn-outline-primary btn p-3"
+                        @click="tab=2"
+                        style="min-width:150px;line-height:100%"
+                        v-bind:class="{'active':tab===2}"
+                    ><i class="fa-solid fa-user-secret mr-2"></i>Категории
+                    </button>
+                    <button
+                        type="button"
+                        class="btn-outline-primary btn p-3"
+                        @click="tab=3"
+                        style="min-width:300px;line-height:100%;"
+                        v-bind:class="{'active':tab===3}"
+                    ><i class="fa-solid fa-box-open mr-2"></i> Подборки товара (комбо)
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="col-12" v-if="tab===0">
                 <ProductList
                     v-if="!load"
                     v-on:select="selectProduct"
                 />
             </div>
 
-            <div class="col-12" v-show="tab===1">
+            <div class="col-12" v-if="tab===3">
+                <CollectionList
+                    v-if="!load"
+                />
+            </div>
+
+            <div class="col-12" v-if="tab===1">
                 <ProductForm
                     :item="selectedProduct"
                     v-if="!load"
@@ -89,18 +108,11 @@ import ProductCategoryList from "@/ClientTg/Components/V2/Admin/Shop/ProductCate
                 />
             </div>
 
-            <div class="col-12" v-show="tab===2">
+            <div class="col-12" v-if="tab===2">
                 <ProductCategoryList></ProductCategoryList>
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
 
 
 </template>
@@ -114,7 +126,6 @@ export default {
             load: false,
             url: null,
             link: null,
-            bot: null,
             selectedProduct: null,
             botForm: {
                 vk_shop_link: null,
@@ -125,6 +136,9 @@ export default {
         tg() {
             return window.Telegram.WebApp;
         },
+        currentBot(){
+            return window.currentBot
+        }
     },
     mounted() {
         this.updateProducts()
@@ -139,6 +153,9 @@ export default {
         })
     },
     methods: {
+        goTo(name) {
+            this.$router.push({name: name})
+        },
         updateShopLink() {
             this.load = true
             this.$store.dispatch("updateShopLink",{

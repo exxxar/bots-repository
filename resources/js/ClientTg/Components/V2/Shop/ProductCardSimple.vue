@@ -3,49 +3,51 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 </script>
 <template>
 
-<div class="card border-0">
-    <div class="card-body p-1">
-        <div class="d-flex">
-            <div class="mr-auto"
-                 @click="addToCart"
-                 style="max-height: 100px;">
-                <img v-lazy="item.images[0]"
-                     style="object-fit: cover;height: 100%;"
-                     class="rounded-2" width="110">
-            </div>
-            <div class="w-100 px-2 d-flex flex-column justify-content-between">
-                <h6 class="pb-0 mb-0 fw-bold" style="font-size:14px;">{{item.title || 'не указано'}}</h6>
+    <div class="card border-0">
+        <div class="card-body p-1">
+            <div class="d-flex">
+                <div class="mr-auto"
+                     @click="addToCart"
+                     style="max-height: 100px;">
+                    <img v-lazy="item.images[0]"
+                         style="object-fit: cover;height: 100%;"
+                         class="rounded-2" width="110">
+                </div>
+                <div class="w-100 px-2 d-flex flex-column justify-content-between">
+                    <h6 class="pb-0 mb-0 fw-bold" style="font-size:14px;">{{ item.title || 'не указано' }}</h6>
 
-                <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">
-                    <span>{{item.current_price || 0}}₽</span>
-                    <span>={{item.current_price * inCart(item.id)}}₽</span>
-                </h6>
-                <div class="d-flex w-100">
+                    <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">
+                        <span>{{ item.current_price || 0 }}₽</span>
+                        <span>={{ item.current_price * inCart(item.id) }}₽</span>
+                    </h6>
+                    <div class="d-flex w-100">
 
-                    <button type="button"
-                            v-if="inCart(item.id)===0"
-                            @click="incProductCart"
-                            class="btn btn-sm btn-primary w-100 rounded-3">{{item.current_price || 0}}<sup class="font-10 opacity-50">.00</sup>₽</button>
-
-                    <div class="btn-group w-100" v-if="inCart(item.id)>0">
                         <button type="button"
-                                :disabled="item.in_stop_list_at"
-                                @click="decProductCart"
-                                class="btn btn-sm btn-primary">-</button>
-                        <button type="button" class="btn btn-sm ">{{ checkInCart }}</button>
-                        <button type="button"
-                                :disabled="item.in_stop_list_at"
+                                v-if="inCart(item.id)===0"
                                 @click="incProductCart"
-                                class="btn btn-sm  btn-primary">+</button>
+                                class="btn btn-sm btn-primary w-100 rounded-3">{{ item.current_price || 0 }}<sup
+                            class="font-10 opacity-50">.00</sup>₽
+                        </button>
+
+                        <div class="btn-group w-100" v-if="inCart(item.id)>0">
+                            <button type="button"
+                                    :disabled="item.in_stop_list_at"
+                                    @click="decProductCart"
+                                    class="btn btn-sm btn-primary">-
+                            </button>
+                            <button type="button" class="btn btn-sm ">{{ checkInCart }}</button>
+                            <button type="button"
+                                    :disabled="item.in_stop_list_at"
+                                    @click="incProductCart"
+                                    class="btn btn-sm  btn-primary">+
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
-
     </div>
-</div>
-
-
 
 
 </template>
@@ -54,25 +56,25 @@ import {mapGetters} from "vuex";
 
 export default {
     props: ["item"],
-    data(){
+    data() {
         return {
-            showCart:false
+            showCart: false
         }
     },
-    computed:{
+    computed: {
         ...mapGetters(['inCart']),
         checkInCart() {
             return this.inCart(this.item.id)
         },
-        currentPrice(){
+        currentPrice() {
             return this.item.current_price / 100
         },
-        oldPrice(){
+        oldPrice() {
             return this.item.old_price / 100
         }
     },
-    methods:{
-        addToCart(){
+    methods: {
+        addToCart() {
             this.$cart.add(this.item)
         },
         incProductCart() {
@@ -82,9 +84,9 @@ export default {
                 this.$store.dispatch("incQuantity", this.item.id)
 
             this.$notify({
-                title:"Добавление товара",
+                title: "Добавление товара",
                 text: 'Товар успешно добавлен',
-                type:'success'
+                type: 'success'
             })
         },
         decProductCart() {
@@ -95,9 +97,9 @@ export default {
                 this.$store.dispatch("decQuantity", this.item.id)
 
             this.$notify({
-                title:"Добавление товара",
+                title: "Добавление товара",
                 text: 'Товар успешно удален',
-                type:'success'
+                type: 'success'
             })
         }
     }

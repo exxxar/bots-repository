@@ -296,6 +296,7 @@ Route::prefix("bot-client")
                 Route::post('/terminals', "getTerminals");
                 Route::post('/menu', "getMenu");
                 Route::post('/products', "getProducts");
+                Route::post('/store-products', "storeProducts");
                 Route::post('/store', "store");
             });
 
@@ -416,6 +417,17 @@ Route::prefix("bot-client")
                 Route::post("/page-update", "updatePage");
                 Route::post("/duplicate/{pageId}", "duplicate");
                 Route::post("/remove/{pageId}", "destroy");
+            });
+
+        Route::prefix("product-collections")
+            ->controller(\App\Http\Controllers\Bots\Web\ProductCollectionController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function () {
+                Route::post("/", "index");
+                Route::post("/global", "globalList");
+                Route::post("/store", "store");
+                Route::post("/duplicate/{collectionId}", "duplicate");
+                Route::post("/remove/{collectionId}", "destroy");
             });
 
         Route::prefix("bots")

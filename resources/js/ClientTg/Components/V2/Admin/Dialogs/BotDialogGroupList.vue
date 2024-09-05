@@ -1,61 +1,29 @@
 <script setup>
 import Pagination from '@/ClientTg/Components/V1/Pagination.vue';
-import DialogCommandCard from "@/ClientTg/Components/V1/Admin/Dialogs/DialogCommandCard.vue";
-import BotDialogCommandForm from "@/ClientTg/Components/V1/Admin/Dialogs/BotDialogCommandForm.vue";
+import DialogCommandCard from "@/ClientTg/Components/V2/Admin/Dialogs/DialogCommandCard.vue";
+import BotDialogCommandForm from "@/ClientTg/Components/V2/Admin/Dialogs/BotDialogCommandForm.vue";
 
 </script>
 <template>
 
-<!--    <div class="mb-3">
-        <input type="search" class="form-control mb-2"
-               placeholder="Поиск группы"
-               aria-label="Поиск группы"
-               v-model="search"
-               aria-describedby="button-addon2">
-        <button class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-blue2-dark w-100"
-                @click="loadGroups"
-                type="button"
-                id="button-addon2">Найти
-        </button>
-    </div>
 
-    <div class="divider divider-small my-3 bg-highlight "></div>-->
 
-    <button
-        type="button"
-        @click="needCreate=!needCreate"
 
-        class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark w-100">
 
-        <span v-if="!needCreate">
-            <i class="fa-regular fa-comment-dots mr-2"></i>Создать новый диалог
-        </span>
-        <span v-else>
-            <i class="fa-solid fa-chevron-up mr-2"></i>Скрыть создание диалога
-        </span>
+    <template
+        v-if="dialog_groups.length>0">
 
-    </button>
-
-    <BotDialogCommandForm
-        v-if="bot&&needCreate"
-        v-on:callback="loadGroups"
-        :bot="bot"/>
-
-    <div class="divider divider-small my-3 bg-highlight "></div>
-
-    <div v-if="dialog_groups.length>0">
-
-        <div class="mb-2" v-for="(group, index) in dialog_groups">
-            <div v-if="group.bot_dialog_commands.length>0">
-                <div class="mb-2"
+        <div v-for="(group, index) in dialog_groups">
+            <ul class="list-group" v-if="group.bot_dialog_commands.length>0">
+                <li class="list-group-item p-2"
                      v-for="(command, index) in group.bot_dialog_commands">
                     <DialogCommandCard
                         v-if="bot"
                         :bot="bot"
                         v-on:callback="loadGroups"
                         :item="command"/>
-                </div>
-            </div>
+                </li>
+            </ul>
 
 
             <p v-else>Диалоговых скриптов не найдено</p>
@@ -64,7 +32,7 @@ import BotDialogCommandForm from "@/ClientTg/Components/V1/Admin/Dialogs/BotDial
         </div>
 
 
-    </div>
+    </template>
     <div class="row" v-else>
         <div class="col-12">
             <div class="alert alert-warning" role="alert">
@@ -73,6 +41,32 @@ import BotDialogCommandForm from "@/ClientTg/Components/V1/Admin/Dialogs/BotDial
         </div>
     </div>
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="create-bot-dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <BotDialogCommandForm
+                        v-if="bot"
+                        v-on:callback="loadGroups"
+                        :bot="bot"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button
+        style="z-index: 100;bottom:10px;"
+        type="button"
+        data-bs-toggle="modal" data-bs-target="#create-bot-dialog"
+        class="btn btn-primary p-3 w-100 my-2  position-sticky">
+        <i class="fa-regular fa-comment-dots mr-2"></i>Создать новый диалог
+    </button>
 
 </template>
 <script>

@@ -1,5 +1,5 @@
 <script setup>
-import BotMenuConstructor from "@/ClientTg/Components/V1/Admin/Keyboards/KeyboardConstructor.vue";
+import BotMenuConstructor from "@/ClientTg/Components/V2/Admin/Keyboard/KeyboardConstructor.vue";
 
 </script>
 <template>
@@ -18,14 +18,14 @@ import BotMenuConstructor from "@/ClientTg/Components/V1/Admin/Keyboards/Keyboar
 
 
         <div class="form-floating mb-2">
-            <label :for="'commandForm-pre-text-'+commandForm.id" class="font-12">Текст диалога</label>
+
             <textarea
                 style="min-height:200px;"
                 class="form-control font-12" :id="'commandForm-pre-text-'+commandForm.id"
                 placeholder="Начни с малого..." v-model="commandForm.pre_text" required>
 
             </textarea>
-
+            <label :for="'commandForm-pre-text-'+commandForm.id" class="font-12">Текст диалога</label>
         </div>
 
         <div class="mb-2">
@@ -41,26 +41,26 @@ import BotMenuConstructor from "@/ClientTg/Components/V1/Admin/Keyboards/Keyboar
         </div>
 
         <div class="form-floating mb-2" v-if="!commandForm.is_empty">
-            <label :for="'commandForm-post-text-'+commandForm.id" class="font-12">Текст после успешного завершения
-                диалога</label>
+
             <textarea
                 style="min-height:200px;"
                 class="form-control font-12"
                 :id="'commandForm-post-text-'+commandForm.id"
                 placeholder="Начни с малого..." v-model="commandForm.post_text" required>
             </textarea>
-
+            <label :for="'commandForm-post-text-'+commandForm.id" class="font-12">Текст после успешного завершения
+                диалога</label>
         </div>
 
         <div class="form-floating mb-2" v-if="!commandForm.is_empty">
-            <label :for="'commandForm-error-text-'+commandForm.id" class="font-12">Текст на случай ошибки корректности
-                данных</label>
+
             <textarea
                 style="min-height:200px;"
                 class="form-control font-12" :id="'commandForm-error-text-'+commandForm.id"
                 placeholder="Начни с малого..." v-model="commandForm.error_text" required>
             </textarea>
-
+            <label :for="'commandForm-error-text-'+commandForm.id" class="font-12">Текст на случай ошибки корректности
+                данных</label>
         </div>
 
 
@@ -68,29 +68,32 @@ import BotMenuConstructor from "@/ClientTg/Components/V1/Admin/Keyboards/Keyboar
         <div class="mb-2" v-if="!commandForm.is_empty">
 
 
-            <div class="mb-2">
-                <label class="form-label font-12" :for="'commandForm-result-channel-'+commandForm.id">Регулярное выражение для
-                    автоматической проверки данных
+            <div class="form-floating mb-2">
 
-                </label>
                 <select id="next-dialog-select" class="form-select form-control font-12" v-model="commandForm.input_pattern">
                     <option :value="item.expression"
                             v-for="item in expressions">{{ item.description || '-' }}
                     </option>
                 </select>
+                <label class="form-label font-12" :for="'commandForm-result-channel-'+commandForm.id">Регулярное выражение для
+                    автоматической проверки данных
+                </label>
             </div>
 
-            <label :for="'custom-regular-expression'+commandForm.id" class="font-12">или впишите своё</label>
-            <input :id="'custom-regular-expression'+commandForm.id" type="text" class="form-control"
-                   placeholder="Регулярное выражение"
-                   aria-label="Регулярное выражение"
-                   v-model="commandForm.input_pattern"
-                   maxlength="255"
-                   aria-describedby="commandForm-input-pattern">
+            <div class="form-floating">
+                <input :id="'custom-regular-expression'+commandForm.id" type="text" class="form-control"
+                       placeholder="Регулярное выражение"
+                       aria-label="Регулярное выражение"
+                       v-model="commandForm.input_pattern"
+                       maxlength="255"
+                       aria-describedby="commandForm-input-pattern">
+                <label :for="'custom-regular-expression'+commandForm.id" class="font-12">или впишите своё</label>
+
+            </div>
+
         </div>
 
-        <div class="mb-2" v-if="!commandForm.is_empty">
-            <label :for="'next-dialog-select'+commandForm.id" class="font-12">Следующий диалог</label>
+        <div class="form-floating mb-2" v-if="!commandForm.is_empty">
             <select :id="'next-dialog-select'+commandForm.id" class="form-select form-control font-12"
                     aria-label="Default select example">
                 <option :value="null" selected>Не указан</option>
@@ -99,6 +102,7 @@ import BotMenuConstructor from "@/ClientTg/Components/V1/Admin/Keyboards/Keyboar
                 </option>
 
             </select>
+            <label :for="'next-dialog-select'+commandForm.id" class="font-12">Следующий диалог</label>
         </div>
 
         <div class="mb-2">
@@ -234,13 +238,13 @@ import BotMenuConstructor from "@/ClientTg/Components/V1/Admin/Keyboards/Keyboar
 
         </div>
 
-        <div class="mb-2">
-            <button type="submit"
-                    class="btn btn-m btn-full mb-2 rounded-xs text-uppercase font-900 shadow-s bg-green2-dark w-100">
-                <span v-if="commandForm.id">Обновить диалог</span>
-                <span v-else>Добавить диалог</span>
-            </button>
-        </div>
+        <button
+            style="z-index: 100;bottom:10px;"
+            type="submit" class="btn btn-primary w-100 p-3 my-3 position-sticky">
+            <span v-if="commandForm.id">Обновить диалог</span>
+            <span v-else>Добавить диалог</span>
+        </button>
+
 
         <div class="divider divider-small my-3 bg-highlight " v-if="commandForm.id"></div>
 

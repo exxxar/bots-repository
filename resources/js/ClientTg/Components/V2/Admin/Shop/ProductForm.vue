@@ -313,7 +313,7 @@
 
             <button
                 type="submit"
-                class="btn btn-primary w-100 sticky-bottom bottom-0">
+                class="btn btn-primary w-100 sticky-bottom bottom-0 p-3">
                 Сохранить товар
             </button>
         </form>

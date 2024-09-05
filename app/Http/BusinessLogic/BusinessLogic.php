@@ -10,6 +10,7 @@ use App\Http\BusinessLogic\Methods\IIKOLogicFactory;
 use App\Http\BusinessLogic\Methods\InlineQueryLogicFactory;
 use App\Http\BusinessLogic\Methods\MailingLogicFactory;
 use App\Http\BusinessLogic\Methods\PaymentLogicFactory;
+use App\Http\BusinessLogic\Methods\ProductCollectionLogicFactory;
 use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory;
 use App\Http\BusinessLogic\Methods\QuizLogicFactory;
 use App\Http\BusinessLogic\Methods\ReviewLogicFactory;
@@ -32,6 +33,7 @@ use App\Http\BusinessLogic\Methods\ProductLogicFactory;
 class BusinessLogic
 {
     protected AmoLogicFactory $amo;
+    protected ProductCollectionLogicFactory $collection;
     protected BitrixLogicFactory $bitrix;
     protected PaymentLogicFactory $payment;
     protected QuizLogicFactory $quiz;
@@ -84,11 +86,17 @@ class BusinessLogic
         $this->frontPad = new FrontPadLogicFactory();
         $this->review = new ReviewLogicFactory();
         $this->iiko = new IIKOLogicFactory();
+        $this->collection = new ProductCollectionLogicFactory();
     }
 
     public function bots(): BotLogicFactory
     {
         return $this->bot;
+    }
+
+    public function collection(): ProductCollectionLogicFactory
+    {
+        return $this->collection;
     }
 
     public function review(): ReviewLogicFactory

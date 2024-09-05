@@ -89,4 +89,20 @@ class IikoController extends Controller
     }
 
 
+    /**
+     * @throws ValidationException
+     */
+    public function storeProducts(Request $request): void
+    {
+        $request->validate([
+            "products" => "required"
+        ]);
+
+        BusinessLogic::iiko()
+            ->setBot($request->bot ?? null)
+            ->storeProductsAndCategories($request->all());
+    }
+
+
+
 }

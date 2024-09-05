@@ -36,6 +36,7 @@ import orders from "./modules/shop/orders"
 import reviews from "./modules/shop/reviews"
 import mailing from "./modules/mailing"
 import iiko from "./modules/iiko"
+import collections from "./modules/collections"
 
 import util from "./modules/utilites";
 
@@ -156,6 +157,7 @@ export default createStore({
         chatHistory,
         profileForm,
         appointments,
+        collections,
         payments,
         promocodes,
         orders,

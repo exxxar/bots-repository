@@ -141,6 +141,11 @@ class VKProductController extends Controller
 
                 if (!is_null($fpObject))
                     $results->total_frontpad_count++;
+                else{
+                    $fpnfi = $results->front_pad_not_found_items ?? [];
+                    $fpnfi[] = $vkProduct->title;
+                    $results->front_pad_not_found_items = $fpnfi;
+                }
             }
 
             $tmpProduct = [
@@ -372,6 +377,7 @@ class VKProductController extends Controller
             "created_product_count" => 0,
             "updated_product_count" => 0,
             "total_frontpad_count" => 0,
+            "front_pad_not_found_items" => [],
         ];
 
         try {
@@ -421,7 +427,7 @@ class VKProductController extends Controller
                 $this->importProducts($vkProducts, $bot, null, $results);
             }
 
-            Log::info("all product ids=>" . print_r(array_values($this->tmpProducts), true));
+           /// Log::info("all product ids=>" . print_r(array_values($this->tmpProducts), true));
         } catch (\Exception $e) {
             Log::info($e->getMessage() . " " . $e->getLine());
             Inertia::setRootView("shop");

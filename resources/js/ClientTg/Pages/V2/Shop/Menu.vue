@@ -269,6 +269,15 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
         </div>
     </div>
 
+    <div class="menu-preloader" v-if="!loadScriptData">
+        <div class="d-flex flex-column align-items-center">
+            <div class="spinner-grow bg-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="py-2">Загружаем...</p>
+        </div>
+    </div>
+
     <div class="modal fade" id="script-setting-editor" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
@@ -317,6 +326,7 @@ export default {
         return {
             loadScriptData: false,
             script_data: {
+                is_disabled:true,
                 wheel_of_fortune: {
                     can_play: false,
                 }
@@ -377,3 +387,18 @@ export default {
     }
 }
 </script>
+<style>
+.menu-preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1033;
+    width: 100%;
+    height: 100vh;
+    background-color: #000000d9;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>

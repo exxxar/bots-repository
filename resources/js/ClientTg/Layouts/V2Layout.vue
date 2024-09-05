@@ -167,9 +167,16 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                     </li>
                     <li v-if="bot.company.email"><p class="mb-0">Почта</p></li>
                     <li><a :href="'mailto:'+bot.company.email"
+                           target="_blank"
                            v-if="bot.company.email"
                            class="text-decoration-none fw-bold"
                     >{{ bot.company.email }}</a></li>
+                    <li v-if="links.site"><p class="mb-0">Сайт</p></li>
+                    <li><a :href="links.site"
+                           target="_blank"
+                           v-if="links.site"
+                           class="text-decoration-none fw-bold"
+                    >{{ links.site }}</a></li>
                 </ul>
             </div>
 
@@ -299,8 +306,9 @@ export default {
         links() {
             return {
                 inst: (this.bot.company.links || {inst: null}).inst || null,
-                vk: (this.bot.company.links || {inst: null}).vk || null,
-                map_link: (this.bot.company.links || {inst: null}).map_link || null,
+                vk: (this.bot.company.links || {vk: null}).vk || null,
+                map_link: (this.bot.company.links || {map_link: null}).map_link || null,
+                site: (this.bot.company.links || {site: null}).site || null,
             }
         }
     },

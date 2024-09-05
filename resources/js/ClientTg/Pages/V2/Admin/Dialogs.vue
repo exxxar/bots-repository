@@ -1,13 +1,16 @@
 <script setup>
-import BotDialogGroupList from "@/ClientTg/Components/V1/Admin/Dialogs/BotDialogGroupList.vue";
+import BotDialogGroupList from "@/ClientTg/Components/V2/Admin/Dialogs/BotDialogGroupList.vue";
 </script>
 <template>
 
-    <div class="card card-style">
-        <div class="card-body">
-            <BotDialogGroupList
-                :bot="bot"
-                v-if="!load"/>
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-12">
+                <BotDialogGroupList
+                    :bot="bot"
+                    v-if="!load"/>
+            </div>
+
         </div>
     </div>
 

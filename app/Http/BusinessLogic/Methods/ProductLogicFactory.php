@@ -774,8 +774,11 @@ class ProductLogicFactory
 
 
         $tmpProducts = json_decode($data["products"]);
+        $tmpCollections = json_decode($data["collections"]);
+
         $ids = Collection::make($tmpProducts)
             ->pluck("id");
+
 
         $usePaymentSystem = (Collection::make($this->slug->config)
             ->where("key", "use_payment_system")
@@ -823,14 +826,12 @@ class ProductLogicFactory
 
         $tmpOrderProductInfo = [];
         foreach ($products as $product) {
-
             $tmpCount = array_values(array_filter($tmpProducts, function ($item) use ($product) {
                 return $item->id === $product->id;
             }))[0]->count ?? 0;
 
-
             $tmpPrice = ($product->current_price ?? 0) * $tmpCount;
-            $message .= sprintf("%s x%s=%s руб.\n",
+            $message .= sprintf("💎%s x%s=%s руб.\n",
                 $product->title,
                 $tmpCount,
                 $tmpPrice
@@ -846,8 +847,40 @@ class ProductLogicFactory
 
             $summaryCount += $tmpCount;
             $summaryPrice += $tmpPrice;
+        }
 
+        $message .="\n";
+        foreach ($tmpCollections as $collection) {
 
+            $collection = (object)$collection;
+            $collectionTitles = "";
+            $tmpPrice = $collection->data->current_price ?? 0;
+            $tmpCount = $collection->count ?? 0;
+
+            foreach (($collection->data->products ?? []) as $product) {
+                if ($product->is_checked) {
+                    $collectionTitles .= "-".$product->title."\n";
+
+                    $tmpOrderProductInfo[] = (object)[
+                        "title" => "Коллекция `".($collection->data->title)."`: ".$product->title,
+                        "count" => 1,
+                        "price" => 0,
+                        'frontpad_article' => $product->frontpad_article ?? null,
+                        'iiko_article' => $product->iiko_article ?? null,
+                    ];
+                }
+            }
+
+            $tmpPrice = $tmpPrice * $tmpCount;
+            $message .= sprintf("💎Коллекция `%s` x%s=%s руб.:\n%s\n",
+                ($collection->data->title),
+                $tmpCount,
+                $tmpPrice,
+                $collectionTitles,
+            );
+
+            $summaryCount += $tmpCount;
+            $summaryPrice += $tmpPrice;
         }
 
         $maxUserCashback = $this->botUser->cashback->amount ?? 0;

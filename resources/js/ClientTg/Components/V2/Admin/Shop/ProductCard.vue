@@ -5,7 +5,9 @@ import ProductForm from "@/ClientTg/Components/V2/Admin/Shop/ProductForm.vue";
 </script>
 <template>
 
-    <div class="card  product-card">
+    <div
+        @click="select"
+        class="card  product-card">
         <div
             @click="showProductDetails"
             class="img-container">
@@ -201,6 +203,9 @@ export default {
         this.selected_image = this.item.images[0] || null
     },
     methods: {
+        select(){
+          this.$emit("select", this.item)
+        },
         nextReviews(index) {
             this.loadReviews(index)
         },

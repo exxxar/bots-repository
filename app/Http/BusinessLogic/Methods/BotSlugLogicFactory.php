@@ -367,6 +367,7 @@ class BotSlugLogicFactory
         $data["can_use_cash"] = (($data["can_use_cash"] ?? false) == "true");
         $data["can_use_card"] = (($data["can_use_card"] ?? false) == "true");
         $data["is_disabled"] = (($data["is_disabled"] ?? false) == "true");
+        $data["can_buy_after_closing"] = (($data["can_buy_after_closing"] ?? false) == "true");
         $data["need_pay_after_call"] = (($data["need_pay_after_call"] ?? false) == "true");
         $data["price_per_km"] = (int)($data["price_per_km"] ?? 0);
         $data["interval"] = (int)($data["interval"] ?? 1);

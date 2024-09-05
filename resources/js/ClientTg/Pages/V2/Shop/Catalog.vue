@@ -3,6 +3,7 @@ import ProductCategories from "@/ClientTg/Components/V2/Shop/ProductCategories.v
 import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
 import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
+import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
 </script>
 <template>
 
@@ -10,7 +11,7 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
          v-touch:swipe.right="doSwipeRight" class="d-flex flex-column">
 
         <div class="p-2" v-if="settings.is_disabled">
-            <div class="alert alert-danger mb-0" >
+            <div class="alert alert-danger mb-0">
                 <p class="mb-0" v-html="settings.disabled_text"></p>
             </div>
         </div>
@@ -23,7 +24,8 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
                            class="form-control border-light" id="search-product" placeholder="name@example.com">
                     <label for="search-product">Поиск по товарам</label>
                 </div>
-                <button class="btn btn-outline-light " type="button" id="button-addon2"><i class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
+                <button class="btn btn-outline-light " type="button" id="button-addon2"><i
+                    class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
             </div>
         </div>
 
@@ -63,6 +65,15 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
                         aria-current="true">
                         Все категории товаров
                     </a>
+                    <a
+                        v-if="collections.length>0"
+                        href="javascript:void(0)"
+                        @click="selectCategory({id:'combo'})"
+                        style="font-weight:bold;"
+                        class="list-group-item list-group-item-action d-flex justify-content-between p-3"
+                        aria-current="true">
+                        Комбо-меню<span class="badge text-bg-primary">{{ collections.length || 0 }}</span>
+                    </a>
 
                     <a
                         href="javascript:void(0)"
@@ -96,6 +107,46 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
             style="min-height:100vh;"
             class="album">
             <div class="container g-2">
+
+                <div
+                    v-if="load_collection"
+                    class="d-flex flex-column align-items-center py-5">
+                    <div class="spinner-grow bg-primary" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="py-2">Загружаем комбо-меню...</p>
+                </div>
+
+
+                <template
+                    v-if="collections.length>0">
+                    <h5 class="my-4 divider" id="cat-combo">Комбо меню</h5>
+                    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
+                        <div class="col"
+                             v-for="(collection, index) in collections">
+
+                            <CollectionCard
+                                :item="collection"
+                            />
+                        </div>
+
+
+                    </div>
+                    <div
+                        v-if="collections_paginate?.meta.last_page > 1"
+                        class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                        <div class="col" >
+                            <Pagination
+                                :simple="true"
+                                v-on:pagination_page="nextCollections"
+                                v-if="collections_paginate"
+                                :pagination="collections_paginate"/>
+                        </div>
+                    </div>
+                </template>
+
+
+
                 <template
                     v-if="filteredCategories.length>0"
                     v-for="cat in filteredCategories">
@@ -123,20 +174,7 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
                     </button>
                 </div>
 
-                <!--                <p class="mb-2 text-center" v-if="paginate"><small>Всего товаров найдено ({{
-                                        paginate.meta.total
-                                    }})</small></p>
 
-                                <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2"
-                                     v-if="(products||[]).length>0">
-                                    <div class="col"
-                                         v-for="(product, index) in products">
-                                        <ProductCard
-                                            :item="product"
-                                        />
-                                    </div>
-
-                                </div>-->
             </div>
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -155,9 +193,12 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
 
     </div>
 
-    <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
-         style="border-radius:10px 10px 0px 0px;">
+    <nav
+
+        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+        style="border-radius:10px 10px 0px 0px;">
         <button
+            v-if="canBy"
             @click="goToCart"
             style="box-shadow: 1px 1px 6px 0px #0000004a;"
             class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between ">
@@ -166,6 +207,13 @@ import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
             </i><sup class="bg-white text-primary sup-badge" v-if="cartTotalCount>0">{{ cartTotalCount }}</sup>Корзина </span>
             <strong>{{ cartTotalPrice || 0 }}<sup class="font-10 opacity-50">.00</sup>₽</strong>
         </button>
+        <p
+            v-else
+            style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            class="btn btn-secondary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between "
+        >
+            В данный момент покупки недоступны
+        </p>
     </nav>
 
     <div class="catalog-preloader" v-if="load_content">
@@ -189,9 +237,11 @@ export default {
         return {
             tab: 1,
             load_content: false,
+            load_collection:false,
             settings: {
-                is_disabled:false,
-                disabled_text:null,
+                is_disabled: false,
+                can_buy_after_closing: false,
+                disabled_text: null,
                 can_use_cash: true,
                 delivery_price_text: null,
                 min_price: 0,
@@ -206,6 +256,8 @@ export default {
             isCollapsed: true,
             search: null,
             products: [],
+            collections: [],
+            collections_paginate: [],
             products_with_categories: [],
             paginate: null,
             categories: [],
@@ -239,7 +291,20 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getProducts', 'getCategories', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+        ...mapGetters([
+            'getCollections',
+            'getCollectionsPaginateObject',
+            'getProducts',
+            'getCategories', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+        canBy() {
+            if (!window.isCorrectSchedule(this.bot.company.schedule))
+                return true
+
+            return (this.bot.company || {is_work: true}).is_work || this.settings.can_buy_after_closing
+        },
+        bot() {
+            return window.currentBot
+        },
         colorTheme() {
             const theme = document.querySelector("[data-bs-theme]").getAttribute('data-bs-theme')
             return "background-color:" + (theme === "light" ? "white" : "#212529");
@@ -274,6 +339,7 @@ export default {
 
             return this.products.filter(product => product.categories.findIndex(cat => this.categories.indexOf(cat.id) !== -1) !== -1)
         },
+
         tg() {
             return window.Telegram.WebApp;
         },
@@ -290,6 +356,7 @@ export default {
         //this.clearCart();
 
         this.loadProducts()
+        this.loadCollections()
         this.loadShopModuleData()
 
         if (this.cartProducts.length > 0)
@@ -407,6 +474,9 @@ export default {
         nextProducts(index) {
             this.loadProducts(index)
         },
+        nextCollections(index) {
+            this.loadCollections(index)
+        },
         loadShopModuleData() {
             return this.$store.dispatch("loadShopModuleData").then((resp) => {
                 this.$nextTick(() => {
@@ -417,7 +487,27 @@ export default {
                 })
             })
         },
+        loadCollections(page = 0) {
+            this.load_content = true
+            this.load_collection = true
+            return this.$store.dispatch("loadGlobalCollections", {
+                page: page
+            }).then((resp) => {
+                this.collections = this.getCollections
+                this.collections_paginate =  this.getCollectionsPaginateObject
 
+                this.load_content = false
+                this.load_collection = false
+                window.scroll(0, 80);
+            }).catch(() => {
+                this.load_content = false
+                this.load_collection = false
+
+                this.$store.dispatch("clearCart").then(() => {
+                    this.loadCollections()
+                })
+            })
+        },
         loadProducts(page = 0) {
             this.tab = 1
             this.load_content = true

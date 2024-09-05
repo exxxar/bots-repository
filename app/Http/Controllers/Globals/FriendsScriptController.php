@@ -14,6 +14,7 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class FriendsScriptController extends SlugController
 {
+
     public function config(Bot $bot)
     {
 
@@ -57,26 +58,48 @@ class FriendsScriptController extends SlugController
 
     }
 
+
     public function inviteFriends(...$config)
     {
         $bot = BotManager::bot()->getSelf();
 
         $botUser = BotManager::bot()->currentBotUser();
 
-        $botDomain = $bot->bot_domain;
 
-        $qr = "https://t.me/$botDomain?start=" .
-            base64_encode("011" . BotManager::bot()->getCurrentChatId());
+        function prepareContent($text, $botUser, $bot): array|string
+        {
+            $botDomain = $bot->bot_domain;
 
-        $mainText = (Collection::make($config[1])
-            ->where("key", "main_text")
-            ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\n Вы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой ";
+            $qr = "https://t.me/$botDomain?start=" .
+                base64_encode("011" . BotManager::bot()->getCurrentChatId());
 
-        $referralText = (Collection::make($config[1])
-            ->where("key", "referral_text")
-            ->first())["value"] ?? "Вы пригласили <b>%s друзей</b>\n Вы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой ";
+            $name = $botUser->name ?? 'Имя не указано';
+            $phone = $botUser->phone ?? 'Телефон не указан';
+
+            $friendCount = ReferralHistory::query()
+                ->where("user_sender_id", $botUser->user_id)
+                ->where("bot_id", $bot->id)
+                ->count();
+
+            $qr = "<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>";
+
+            $text = str_replace(["{{name}}"], $name ?? 'имя не указано', $text);
+            $text = str_replace(["{{phone}}"], $phone ?? 'телефон не указан', $text);
+            $text = str_replace(["{{qr}}"], $qr, $text);
+            $text = str_replace(["{{friendsCount}}"], $friendCount ?? '0', $text);
+            return str_replace(["{{username}}"], "@" . ($username ?? 'имя не указано'), $text);
+
+        }
+
+        $mainText = ((Collection::make($config[1])
+                ->where("key", "main_text")
+                ->first())["value"] ?? "Вы пригласили <b>{{friendsCount}} друзей</b>\n Вы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой") . "\n{{qr}}";
+
+        $referralText = ((Collection::make($config[1])
+                ->where("key", "referral_text")
+                ->first())["value"] ?? "Вы пригласили <b>{{friendsCount}} друзей</b>\n Вы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой") . "\n{{qr}}";
 
 
         $imgPath = (Collection::make($config[1])
@@ -87,19 +110,10 @@ class FriendsScriptController extends SlugController
             $imgPath;
 
 
-        $friendCount = ReferralHistory::query()
-            ->where("user_sender_id", $botUser->user_id)
-            ->where("bot_id", $bot->id)
-            ->count();
-
         \App\Facades\BotManager::bot()
-            ->reply(sprintf($mainText, $friendCount)."\n<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>");
+            ->reply(prepareContent($mainText, $botUser, $bot));
 
-        try {
-            $message = sprintf($referralText, $qr, $qr);
-        } catch (\Exception $e) {
-            $message = "Упс, у вас что-то с параметрами сообщения";
-        }
+        $message = prepareContent($referralText, $botUser, $bot);
 
         if (is_null($imgPath))
             \App\Facades\BotManager::bot()

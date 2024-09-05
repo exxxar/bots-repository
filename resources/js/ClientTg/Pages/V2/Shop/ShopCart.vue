@@ -1,5 +1,6 @@
 <script setup>
 import ProductCardSimple from "@/ClientTg/Components/V2/Shop/ProductCardSimple.vue";
+import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSimple.vue";
 import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
 </script>
 <template>
@@ -20,7 +21,13 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
             </div>
             <div class="row">
                 <div class="col-12" v-for="(item, index) in cartProducts">
-                    <ProductCardSimple :item="item.product"/>
+                    <ProductCardSimple
+                        v-if="(item.type||'product')==='product'"
+                        :item="item.product"/>
+
+                <CollectionCardSimple
+                        v-if="(item.type||'product')==='collection'"
+                        :item="item.product"/>
                 </div>
             </div>
 
@@ -625,6 +632,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
         </div>
     </div>
     <nav
+        v-if="canBy"
         class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
         style="border-radius:10px 10px 0px 0px;">
         <div v-if="cartProducts.length>0" class="w-100">
@@ -652,6 +660,19 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
             </button>
         </div>
     </nav>
+
+    <nav
+        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+        style="border-radius:10px 10px 0px 0px;"
+        v-else>
+        <p
+
+            style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            class="btn btn-secondary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-between "
+        >
+            В данный момент покупки недоступны
+        </p>
+    </nav>
 </template>
 <script>
 
@@ -674,6 +695,7 @@ export default {
                 payment_info: 0,
                 need_category_by_page: false,
                 need_pay_after_call: false,
+                can_buy_after_closing: false,
                 free_shipping_starts_from: 0,
             },
             spent_time_counter: 0,
@@ -773,6 +795,18 @@ export default {
     },
     computed: {
         ...mapGetters(['getProducts', 'cartProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+        canBy() {
+           // return false
+            if (!window.isCorrectSchedule(this.bot.company.schedule))
+                return true
+
+            return (this.bot.company || {is_work: true}).is_work || this.settings.can_buy_after_closing
+        },
+
+        bot() {
+            return window.currentBot
+        },
+
         canRequestDeliverPrice() {
             return this.need_request_delivery_price && this.deliveryForm.city != null && this.deliveryForm.street != null && this.deliveryForm.building != null;
         },

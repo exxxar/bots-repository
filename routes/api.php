@@ -180,3 +180,6 @@ Route::apiResource('shops', App\Http\Controllers\ShopController::class);
 Route::apiResource('bitrixes', App\Http\Controllers\BitrixController::class);
 
 Route::apiResource('iikos', \App\Http\Controllers\Bots\Web\IikoController::class);
+
+
+Route::apiResource('product-collections', \App\Http\Controllers\Bots\Web\ProductCollectionController::class);

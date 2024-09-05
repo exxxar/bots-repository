@@ -1,40 +1,25 @@
 models:
-  Bitrix:
+  ProductCollection:
     bot_id: id foreign:bots nullable
-    host: string:255 nullable
-    client_id: string:255 nullable
-    client_secret: string:255 nullable
-    scopes: json nullable
-    relationships:
-      belongsTo: Bot
-
-  Iiko:
-    bot_id: id foreign:bots nullable
-    api_login: string:255 nullable
-    organization_id: string:255 nullable
-    terminal_group_id: string:255 nullable
-    relationships:
-      belongsTo: Bot
-
-  Shop:
-    bot_id: id foreign:bots nullable
+    owner_id: foreign:bot_users nullable
     title: string:255 nullable
     image: string:255 nullable
-    key: string:255 nullable comment:'для распределения товаров'
-    is_default: boolean default:false
+    description: longtext nullable
+    is_public: boolean default:false
+    is_active: boolean default:false
+    discount: integer default:0 comment:'скидка на набор в %'
+    order_position: integer default:0
     config: json nullable
     relationships:
-      belongsTo: Bot
+      belongsTo: Bot, BotUser
+      belongsToMany: Product
 
 
-seeders: Shop,   Bitrix,   Iiko
+seeders:  ProductCollection
 
 controllers:
-  Shop:
+  ProductCollection:
     resource: api
-  Bitrix:
-    resource: api
-  Iiko:
-    resource: api
+
 
 

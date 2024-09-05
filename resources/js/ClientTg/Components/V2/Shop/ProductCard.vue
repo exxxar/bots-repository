@@ -2,7 +2,7 @@
 import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 </script>
-<template>
+<template v-if="item">
 
     <div class="card  border-0 product-card">
         <div
@@ -10,7 +10,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
             class="img-container">
             <img
                 class="rounded-3"
-
+                v-if="(item.images||[]).length>0"
                 v-lazy="item.images[0]">
             <div class="controls">
                 <div class="top d-flex justify-content-between w-100 align-items-center">
@@ -33,45 +33,66 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 
             <!--            <h6 class="d-flex justify-content-center mb-3"><Rating :rating="item.rating"></Rating> </h6>-->
 
-            <div
-                v-if="!item.in_stop_list_at"
-                class="d-flex justify-content-between align-items-center px-2">
-                <button type="button"
-                        v-if="inCart(item.id)===0"
-                        @click="incProductCart"
-                        style="font-size:12px;"
-                        class="btn btn-md btn-light w-100 rounded-3">
-                    {{ item.current_price || 0 }}₽
-                    <span class="text-decoration-line-through" style="font-size:10px;"
-                          v-if="item.old_price>0">{{ item.old_price || 0 }}₽</span>
-                </button>
 
-                <div class="btn-group w-100 rounded-3" v-if="inCart(item.id)>0">
+            <template v-if="collectionMode">
+                <div
+                    class="d-flex justify-content-between align-items-center px-2">
                     <button type="button"
-                            :disabled="item.in_stop_list_at"
-                            @click="decProductCart"
-                            class="btn btn-md btn-primary">-
-                    </button>
-                    <button type="button" class="btn btn-md btn-primary ">{{ checkInCart }}</button>
-                    <button type="button"
-                            :disabled="item.in_stop_list_at"
-                            @click="incProductCart"
-                            class="btn btn-md btn-primary">+
+                            @click="selectInCollection(item)"
+                            style="font-size:12px;"
+                            v-bind:class="{'btn-primary':item.is_checked,'btn-light':!item.is_checked}"
+                            class="btn btn-md w-100 rounded-2 mb-2">
+                        <span v-if="item.is_checked"><i class="fa-solid fa-check-double mr-2"></i> Выбрано</span>
+                        <span v-else>Выбрать</span>
                     </button>
                 </div>
-            </div>
-            <div v-else class="px-2">
+            </template>
+
+            <template v-else>
+                <div
+                    v-if="!item.in_stop_list_at"
+                    class="d-flex justify-content-between align-items-center px-2">
+
+                    <button type="button"
+                            v-if="inCart(item.id)===0"
+                            @click="incProductCart"
+                            style="font-size:12px;"
+                            class="btn btn-sm btn-light w-100 rounded-3">
+                        {{ item.current_price || 0 }}₽
+                        <span class="text-decoration-line-through" style="font-size:10px;"
+                              v-if="item.old_price>0">{{ item.old_price || 0 }}₽</span>
+                    </button>
+
+                    <div class="btn-group w-100 rounded-3" v-if="inCart(item.id)>0">
+                        <button type="button"
+                                :disabled="item.in_stop_list_at"
+                                style="border-radius:6px 0px 0px 6px;"
+                                @click="decProductCart"
+                                class="btn btn-sm btn-primary">-
+                        </button>
+                        <button type="button" class="btn btn-sm btn-primary ">{{ checkInCart }}</button>
+                        <button type="button"
+                                :disabled="item.in_stop_list_at"
+                                @click="incProductCart"
+                                style="border-radius:0px 6px 6px 0px;"
+                                class="btn btn-sm btn-primary">+
+                        </button>
+                    </div>
+                </div>
+                <div v-else class="px-2">
                 <span
                     style="font-size:12px;"
                     class="btn btn-outline-secondary rounded-3 py-2 btn-md w-100 d-flex justify-content-center align-items-center"><i
                     class="fa-solid fa-lock mr-2"></i> нет в наличии</span>
-            </div>
+                </div>
+            </template>
+
         </div>
     </div>
 
 
     <!-- Modal -->
-    <div class="modal fade" :id="'product-modal-info'+item.id" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" :id="'product-modal-info'+uuid" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
             <div class="modal-content">
@@ -82,24 +103,32 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                 <div class="modal-body">
                     <div class="card border-0" v-if="item">
                         <img
-                            style="min-height:350px;object-fit:contain;"
+                            style="min-height:350px;object-fit:cover;"
                             v-lazy="selected_image"
-                             class="card-img" alt="...">
+                            class="card-img" alt="...">
 
                         <div class="card-img-overlay d-flex flex-column justify-content-between p-0">
-                            <div class="shadow-bg">
+                            <div class="shadow-bg" style="min-height:70px;">
                                 <h6 class="text-left text-white" style="font-weight:700; line-height:100%;">
                                     {{ (item.title || 'Не указан') }}</h6>
-                                <p class="text-left mb-0 text-white">Цена <strong
-                                    class="text-primary fw-bold">{{ item.current_price || 0 }}₽</strong></p>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="text-left mb-0 text-white">Цена <strong
+                                        class="text-primary fw-bold">{{ item.current_price || 0 }}₽</strong></p>
+                                    <span
+                                        v-if="discount>0"
+                                        class="badge bg-primary fw-bold ">-{{ discount || 0 }}%</span>
+
+                                </div>
+
                             </div>
 
 
                         </div>
                     </div>
 
-                    <div class="row g-2 row-cols-5" v-if="item.images.length>1">
-                        <div class="col"  v-for="img in item.images">
+                    <div class="row g-2 row-cols-5" v-if="(item.images||[]).length>1">
+                        <div class="col" v-for="img in item.images">
                             <img
                                 style="min-height:60px;object-fit:contain;"
                                 @click="selected_image = img"
@@ -161,7 +190,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                         </div>
                         <div
                             v-if="reviews.length===0&&loading_reviews"
-                            class="alert alert-light my-2 d-flex justify-content-center align-items-center" role="alert">
+                            class="alert alert-light my-2 d-flex justify-content-center align-items-center"
+                            role="alert">
                             <div class="d-flex justify-content-center align-items-center flex-column">
                                 <div class="spinner-grow text-primary my-3" role="status">
                                     <span class="visually-hidden">Загружаем....</span>
@@ -222,14 +252,15 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 </template>
 <script>
 import {mapGetters} from "vuex";
+import {v4 as uuidv4} from "uuid";
 
 export default {
-    props: ["item", "displayType"],
+    props: ["item", "displayType", "collectionMode", "canSelect"],
     data() {
         return {
             tab: 0,
-            selected_image:null,
-            loading_reviews:false,
+            selected_image: null,
+            loading_reviews: false,
             showCart: false,
             reviews: [],
             paginate: null,
@@ -246,10 +277,16 @@ export default {
         checkInCart() {
             return this.inCart(this.item.id)
         },
+        discount() {
+            return this.oldPrice > 0 ? Math.round((this.currentPrice / this.oldPrice) * 100) : 0
+        },
+        uuid() {
+            return uuidv4();
+        }
 
     },
     mounted() {
-        this.selected_image = this.item.images[0] || null
+        this.selected_image = (this.item.images || []).length > 0 ? this.item.images[0] : null
     },
     methods: {
         nextReviews(index) {
@@ -274,7 +311,7 @@ export default {
             })
         },
         showProductDetails() {
-            const myModal = new bootstrap.Modal(document.getElementById('product-modal-info' + this.item.id), {})
+            const myModal = new bootstrap.Modal(document.getElementById('product-modal-info' + this.uuid), {})
             myModal.show()
         },
         goToProduct() {
@@ -305,6 +342,10 @@ export default {
                 text: 'Товар успешно удален',
                 type: 'success'
             })
+        },
+        selectInCollection(product) {
+            if (this.canSelect)
+                this.$emit("select-in-collection", product)
         }
     }
 }

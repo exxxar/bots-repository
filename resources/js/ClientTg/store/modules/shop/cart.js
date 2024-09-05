@@ -38,7 +38,8 @@ const getters = {
         let sum = 0;
 
         state.items.forEach((item) => {
-            sum += item.product.current_price * item.quantity
+            if (item.product)
+                sum += item.product.current_price * item.quantity
         });
         return sum
     }
@@ -50,9 +51,10 @@ const actions = {
 
         let products = []
         context.state.items.forEach(item => {
-            if (item.product)
+            if (item.product && (item.type || 'product') === 'product')
                 products.push({
                     id: item.product.id,
+                    type: item.type || 'product',
                     count: item.quantity || 0
                 })
         })
@@ -73,16 +75,25 @@ const actions = {
     async startCheckout(context, payload = {deliveryForm: null}) {
 
         let products = []
+        let collections = []
         context.state.items.forEach(item => {
-            if (item.product)
+            if (item.product && (item.type || 'product') === 'product')
                 products.push({
                     id: item.product.id,
+                    type: item.type || 'product',
+                    count: item.quantity || 0
+                })
+
+            if (item.product && (item.type || 'product') === 'collection')
+                collections.push({
+                    data: item.product,
+                    type: item.type || 'collection',
                     count: item.quantity || 0
                 })
         })
 
         payload.deliveryForm.append("products", JSON.stringify(products))
-
+        payload.deliveryForm.append("collections", JSON.stringify(collections))
 
 
         let link = `/bot-client/shop/checkout-instruction`
@@ -101,8 +112,20 @@ const actions = {
 
         let ids = []
         context.state.items.forEach(item => {
-            ids.push(item.product.id)
+            if (item.product && (item.type || 'product') === 'product')
+                ids.push(item.product.id)
+
+            if (item.product && (item.type || 'product') === 'collection') {
+                const productCollection = item.product.products || []
+                productCollection.forEach(p => {
+                    if (ids.indexOf(p.id) === -1)
+                        ids.push(p.id)
+                })
+            }
         })
+
+        if (ids.length === 0)
+            return
 
         let data = util.loadActualProducts(ids)
 
@@ -110,7 +133,16 @@ const actions = {
             let products = response;
 
             context.state.items.forEach(item => {
-                item.product = products.find(sub => sub.id === item.product.id)
+                if (item.product && (item.type || 'product') === 'product')
+                    item.product = products.find(sub => sub.id === item.product.id)
+
+                if (item.product && (item.type || 'product') === 'collection') {
+                    item.product.products.forEach(p=>{
+                        const tmpP = products.find(sub => sub.id === p.id)
+                        p.current_price = tmpP.current_price || 0
+                        p.old_price = tmpP.old_price || 0
+                    })
+                }
             })
 
         }).catch(err => {
@@ -122,6 +154,9 @@ const actions = {
         state.items = localStorage.getItem('vuejs__store') == null ? [] : JSON.parse(localStorage.getItem('vuejs__store'))
         return state.items
     },
+    addCollectionToCart({state, commit}, collection) {
+        commit('pushCollectionToCart', collection);
+    },
     addProductToCart({state, commit}, product) {
 
         commit('pushProductToCart', product);
@@ -130,11 +165,16 @@ const actions = {
         commit('setItemQuantity', prod);
     },
     incQuantity({state, commit}, id) {
+        console.log("incQuantity", id)
         commit('incrementItemQuantity', id);
     },
     decQuantity({state, commit}, id) {
         commit('decrementItemQuantity', id);
     },
+    removeCollectionFromCart({state, commit}, id) {
+        commit('removeItem', id);
+    },
+
     removeProduct({state, commit}, id) {
         commit('removeItem', id);
     },
@@ -146,11 +186,28 @@ const actions = {
 // mutations
 const mutations = {
 
+    pushCollectionToCart(state, collection) {
+
+        const cartItem = state.items.find(item => item.product.id === collection.id)
+        if (!cartItem)
+            state.items.push({
+                product: collection,
+                type: 'collection',
+                quantity: 1
+            })
+        else
+            cartItem.quantity++;
+
+
+        localStorage.setItem('cashman_basket', JSON.stringify(state.items));
+    },
+
     pushProductToCart(state, product) {
         const cartItem = state.items.find(item => item.product.id === product.id)
         if (!cartItem)
             state.items.push({
                 product,
+                type: 'product',
                 quantity: 1
             })
         else
@@ -162,6 +219,7 @@ const mutations = {
 
 
     incrementItemQuantity(state, id) {
+        console.log("increment", id)
         const cartItem = state.items.find(item => item.product.id === id)
         cartItem.quantity++
 
