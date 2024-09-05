@@ -13,7 +13,7 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                     <img
                         class="rounded-2" width="110"
                         style="object-fit: cover;height: 100%;"
-                        v-lazy="'/images-by-company-id/'+bot.company_id+'/'+item.image" alt="">
+                        v-lazy="'/images-by-company-id/'+bot.company.id+'/'+item.image" alt="">
 
                 </div>
                 <div class="w-100 px-2 d-flex flex-column justify-content-between">
