@@ -7,7 +7,7 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
     <img
         v-if="item.image"
         class="card-img-top"
-        v-lazy="'/images-by-company-id/'+bot.company_id+'/'+item.image" alt="">
+        v-lazy="'/images-by-company-id/'+bot.company.id+'/'+item.image" alt="">
 
 
     <h5 class="card-title">{{ item.title || '-' }}</h5>

@@ -12,7 +12,7 @@ import ProductCollectionView from "@/ClientTg/Components/V2/Shop/ProductCollecti
             <img
                 v-if="item.image"
                 class="rounded-3"
-                v-lazy="'/images-by-company-id/'+bot.company_id+'/'+item.image" alt="">
+                v-lazy="'/images-by-company-id/'+bot.company.id+'/'+item.image" alt="">
 
             <div class="controls">
                 <div class="top d-flex justify-content-end w-100 align-items-center">
