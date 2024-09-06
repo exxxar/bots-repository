@@ -46,7 +46,7 @@ BotManager::bot()
     ->route("/reset_all_bot_users (yes|[0-9a-zA-Z]+)", "resetAllBotUsers")
     ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     ->route("/diagnostic ([0-9]+)", "getDiagnosticTable")
-   // ->fallbackDocument("uploadAnyKindOfMedia")
+    // ->fallbackDocument("uploadAnyKindOfMedia")
     ->fallbackAudio("uploadAnyKindOfMedia")
     ->fallbackSticker("uploadAnyKindOfMedia")
     ->fallbackVideo("uploadAnyKindOfMedia");
@@ -66,7 +66,7 @@ BotManager::bot()
         Log::info(print_r($files, true));
         $botUser = BotManager::bot()->currentBotUser();
         $bot = BotManager::bot()->getSelf();
-        $fileToSend = $files[count($files) - 1]->file_id ?? null;
+        $fileToSend = typeOf($files) == "array" ? $files[count($files) - 1]->file_id ?? null : $files->file_id;
 
         $count = 0;
 
@@ -209,7 +209,7 @@ BotManager::bot()
 
         BotManager::bot()
             ->sendMessage(
-                $botUser->telegram_chat_id,"Спасибо! Ваш файл загружен!");
+                $botUser->telegram_chat_id, "Спасибо! Ваш файл загружен!");
     })
     ->fallbackPhoto(function (...$data) {
         $caption = $data[2] ?? null;
@@ -250,7 +250,7 @@ BotManager::bot()
         $channel = $bot->order_channel ?? $bot->main_channel ?? null;
 
         if (is_null($photoToSend) || is_null($channel)) {
-            Log::info("Ошибка отправки фотографии!".print_r($photoToSend, true)." ".print_r($channel, true));
+            Log::info("Ошибка отправки фотографии!" . print_r($photoToSend, true) . " " . print_r($channel, true));
             BotManager::bot()->reply("Ошибка отправки фотографии!");
             return;
         }
@@ -357,7 +357,7 @@ BotManager::bot()
 
         BotManager::bot()
             ->sendMessage(
-                $botUser->telegram_chat_id,"Спасибо! Ваше фото загружено!");
+                $botUser->telegram_chat_id, "Спасибо! Ваше фото загружено!");
     });
 
 BotManager::bot()
