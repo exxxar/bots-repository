@@ -61,6 +61,7 @@ BotManager::bot()
         $caption = $data[2] ?? null;
         $files = $data[3] ?? null;
 
+        Log::info(print_r($files, true));
         $botUser = BotManager::bot()->currentBotUser();
         $bot = BotManager::bot()->getSelf();
         $fileToSend = $files[count($files) - 1]->file_id ?? null;
