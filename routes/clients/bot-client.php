@@ -421,14 +421,14 @@ Route::prefix("bot-client")
 
         Route::prefix("product-collections")
             ->controller(\App\Http\Controllers\Bots\Web\ProductCollectionController::class)
-            ->middleware(["tgAuth.admin"])
+            ->middleware(["tgAuth.any"])
             ->group(function () {
                 Route::post("/", "index");
-                Route::post("/global", "globalList")
-                    ->middleware(["tgAuth.any"]);
-                Route::post("/store", "store");
-                Route::post("/duplicate/{collectionId}", "duplicate");
-                Route::post("/remove/{collectionId}", "destroy");
+                Route::post("/global", "globalList");
+
+                Route::post("/store", "store")->middleware(["tgAuth.admin"]);
+                Route::post("/duplicate/{collectionId}", "duplicate")->middleware(["tgAuth.admin"]);
+                Route::post("/remove/{collectionId}", "destroy")->middleware(["tgAuth.admin"]);
             });
 
         Route::prefix("bots")
