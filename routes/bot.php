@@ -63,7 +63,7 @@ BotManager::bot()
 
         $botUser = BotManager::bot()->currentBotUser();
         $bot = BotManager::bot()->getSelf();
-        $fileToSend = $photos[count($files) - 1]->file_id ?? null;
+        $fileToSend = $files[count($files) - 1]->file_id ?? null;
 
         $count = 0;
 
