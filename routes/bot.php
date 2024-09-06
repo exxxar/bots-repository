@@ -58,6 +58,8 @@ BotManager::bot()
 
 BotManager::bot()
     ->fallbackDocument(function (...$data) {
+        Log::info(print_r($data, true));
+
         $caption = $data[2] ?? null;
         $files = $data[3] ?? null;
 
