@@ -46,7 +46,7 @@ BotManager::bot()
     ->route("/reset_all_bot_users (yes|[0-9a-zA-Z]+)", "resetAllBotUsers")
     ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     ->route("/diagnostic ([0-9]+)", "getDiagnosticTable")
-    ->fallbackDocument("uploadAnyKindOfMedia")
+   // ->fallbackDocument("uploadAnyKindOfMedia")
     ->fallbackAudio("uploadAnyKindOfMedia")
     ->fallbackSticker("uploadAnyKindOfMedia")
     ->fallbackVideo("uploadAnyKindOfMedia");
@@ -57,6 +57,157 @@ BotManager::bot()
     ->inline("inlineHandler");
 
 BotManager::bot()
+    ->fallbackDocument(function (...$data) {
+        $caption = $data[2] ?? null;
+        $files = $data[3] ?? null;
+
+        $botUser = BotManager::bot()->currentBotUser();
+        $bot = BotManager::bot()->getSelf();
+        $fileToSend = $photos[count($files) - 1]->file_id ?? null;
+
+        $count = 0;
+
+        if ($botUser->is_admin || $botUser->is_manager) {
+            $media = \App\Models\BotMedia::query()->updateOrCreate([
+                'bot_id' => $bot->id,
+                'bot_user_id' => $botUser->id,
+                'file_id' => $fileToSend,
+            ], [
+                'caption' => $caption,
+                'type' => "photo"
+            ]);
+
+            $tmp = "<b>#$media->id</b> (<code>$fileToSend</code>),";
+            $count++;
+
+            BotManager::bot()
+                ->reply("Документы ($count шт.) добавлены в медиа пространство бота с идентификаторами: $tmp - для просмотра доступных медиа используйте /media");
+
+        }
+
+
+        $caption = !is_null($caption) ? $caption : 'Без подписи';
+
+        /*if (!str_contains($caption, "оплата")) {
+            BotManager::bot()->reply("Фотография в описании должна содержать ключевое слово, например: оплата");
+            return;
+        }*/
+
+        $channel = $bot->order_channel ?? $bot->main_channel ?? null;
+
+        if (is_null($fileToSend) || is_null($channel)) {
+            BotManager::bot()->reply("Ошибка отправки документа!");
+            return;
+        }
+
+
+        $name = \App\Facades\BotMethods::prepareUserName($botUser);
+
+        $id = $botUser->telegram_chat_id;
+
+        $phone = $botUser->phone ?? 'Не указан';
+
+        $link = "https://t.me/$bot->bot_domain?start=" .
+            base64_encode("001" . $botUser->telegram_chat_id);
+
+        $order = Order::query()
+            ->where("bot_id", $bot->id)
+            ->where("customer_id", $botUser->id)
+            ->orderBy("updated_at", "DESC")
+            ->first();
+
+        $historyLink = "https://t.me/$bot->bot_domain?start=" . (
+            !is_null($order) ?
+                base64_encode("001" . $botUser->telegram_chat_id . "O" . $order->id) :
+                base64_encode("001" . $botUser->telegram_chat_id)
+            );
+
+        $thread = $bot->topics["orders"] ?? null;
+
+
+        if (is_null($order)) {
+
+            $keyboard = [
+                [
+                    ["text" => "Работа с пользователем", "url" => $link]
+                ]
+            ];
+
+            BotManager::bot()
+                ->sendDocument(
+                    $channel,
+                    "#фото\n" .
+                    "Идентификатор: $id\n" .
+                    "Пользователь: $name\n" .
+                    "Телефон: $phone\n\n" .
+                    "Подпись к фото: $caption\n\n",
+                    $fileToSend,
+                    $thread
+                );
+            BotManager::bot()
+                ->replyInlineKeyboard("Действия над пользователем:", $keyboard);
+
+            BotManager::bot()
+                ->sendMessage(
+                    $botUser->telegram_chat_id,
+                    "Спасибо! Ваш файл загружен!");
+
+            return;
+        }
+
+        $from = "не указан источник";
+        $products = "нет продуктов";
+        if (!empty($order->product_details)) {
+
+            $products = "";
+
+            foreach ($order->product_details as $detail) {
+                $detail = (object)$detail;
+                $from = $detail->from ?? 'Не указано';
+                if (is_array($detail->products)) {
+                    foreach ($detail->products as $product) {
+                        $product = (object)$product;
+                        $products .= "$product->title x$product->count = $product->price ₽\n";
+                    }
+
+                } else
+                    $products .= "Текст заказа: $detail->products\n";
+
+            }
+        }
+
+
+        $text = "Заказ #$order->id\nПрислан из $from:\n<em>$products</em>Дата заказа: " . Carbon::parse($order->created_at)
+                ->format("Y-m-d H:i:s");
+
+
+        BotManager::bot()
+            ->sendDocument(
+                $channel,
+                "#оплатачеком\n" .
+                "Идентификатор: $id\n" .
+                "Пользователь: $name\n" .
+                "Телефон: $phone\n\n" .
+                "Параметры заказа:\n$text\n",
+                $fileToSend,
+                $thread
+            );
+
+        BotManager::bot()
+            ->replyInlineKeyboard("Действия над пользователем:", [
+                [
+                    ["text" => "📜Заказ пользователя", "url" => $historyLink]
+                ],
+                [
+                    ["text" => "👩🏻‍💻Работа с пользователем", "url" => $link]
+                ],
+
+            ]);
+
+        BotManager::bot()
+            ->sendMessage(
+                $botUser->telegram_chat_id,"Спасибо! Ваш файл загружен!");
+    })
     ->fallbackPhoto(function (...$data) {
         $caption = $data[2] ?? null;
         $photos = $data[3] ?? null;
