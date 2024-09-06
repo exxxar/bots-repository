@@ -10,7 +10,7 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
         v-lazy="'/images-by-company-id/'+bot.company.id+'/'+item.image" alt="">
 
 
-    <h5 class="card-title">{{ item.title || '-' }}</h5>
+    <h5 class="card-title my-3 fw-bold">{{ item.title || '-' }}</h5>
     <p class="card-text">{{ item.description || '-' }}</p>
     <p class="card-text fw-bold text-center p-3 border-primary border text-primary">
 
@@ -98,7 +98,7 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
         class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
         style="border-radius:10px 10px 0px 0px;">
 
-        <div class="d-flex w-100">
+        <div class="d-flex w-100 flex-column">
 
             <button type="button"
                     :disabled="summaryPrice===0"
@@ -213,12 +213,13 @@ export default {
         }
     },
     mounted() {
-
+        this.item.collection_id = this.item.id
+        this.item.id = this.uuid
     },
     methods: {
         incCollectionCart() {
             if (this.checkInCart === 0)
-                this.$store.dispatch("addCollectionToCart", this.item)
+                this.addCollectionToCart()
             else
                 this.$store.dispatch("incQuantity", this.item.id)
 
@@ -242,7 +243,8 @@ export default {
             })
         },
         addCollectionToCart() {
-            this.item.current_price = this.discountPrice
+
+
             this.$store.dispatch("addCollectionToCart", this.item).then(() => {
                 this.$notify({
                     title: "Добавление товара",

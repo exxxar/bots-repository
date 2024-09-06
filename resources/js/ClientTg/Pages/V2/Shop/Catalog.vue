@@ -126,16 +126,25 @@ import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
                              v-for="(collection, index) in collections">
 
                             <CollectionCard
+                                v-if="!collection.need_refresh"
                                 :item="collection"
                             />
+                            <div
+                                v-if="inCart(collection.id)"
+                                class="px-2">
+                                <button
+                                    class="btn btn-success btn-sm w-100"
+                                    @click="duplicateForUsers(collection, index)"
+                                    type="button">Новый вариант
+                                </button>
+                            </div>
+
                         </div>
-
-
                     </div>
                     <div
                         v-if="collections_paginate?.meta.last_page > 1"
                         class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                        <div class="col" >
+                        <div class="col">
                             <Pagination
                                 :simple="true"
                                 v-on:pagination_page="nextCollections"
@@ -144,7 +153,6 @@ import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
                         </div>
                     </div>
                 </template>
-
 
 
                 <template
@@ -157,6 +165,7 @@ import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
                              v-for="(product, index) in cat.products">
 
                             <ProductCard
+
                                 :item="product"
                             />
                         </div>
@@ -230,6 +239,7 @@ import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
 <script>
 
 import {mapGetters} from "vuex";
+import {v4 as uuidv4} from "uuid";
 
 export default {
 
@@ -237,7 +247,7 @@ export default {
         return {
             tab: 1,
             load_content: false,
-            load_collection:false,
+            load_collection: false,
             settings: {
                 is_disabled: false,
                 can_buy_after_closing: false,
@@ -292,10 +302,16 @@ export default {
     },
     computed: {
         ...mapGetters([
+            'inCart',
             'getCollections',
             'getCollectionsPaginateObject',
             'getProducts',
             'getCategories', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+
+        uuid() {
+            const data = uuidv4();
+            return data
+        },
         canBy() {
             if (!window.isCorrectSchedule(this.bot.company.schedule))
                 return true
@@ -494,7 +510,7 @@ export default {
                 page: page
             }).then((resp) => {
                 this.collections = this.getCollections
-                this.collections_paginate =  this.getCollectionsPaginateObject
+                this.collections_paginate = this.getCollectionsPaginateObject
 
                 this.load_content = false
                 this.load_collection = false
@@ -507,6 +523,16 @@ export default {
                     this.loadCollections()
                 })
             })
+        },
+        duplicateForUsers(collection, index) {
+            const c = JSON.parse(JSON.stringify(collection));
+            c.current_price = 0
+            this.collections.push(c)
+            this.collections[index].need_refresh = true
+            this.$nextTick(()=>{
+                this.collections[index].need_refresh = false
+            })
+
         },
         loadProducts(page = 0) {
             this.tab = 1

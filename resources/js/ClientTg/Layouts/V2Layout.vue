@@ -180,7 +180,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 </ul>
             </div>
 
-            <!--            <div class="dropdown" v-if="(getSelf||{is_admin:false}).is_admin">
+                        <div class="dropdown" v-if="(getSelf||{is_admin:false}).is_admin">
                             <button class="btn btn-light w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                 Тема оформления
@@ -196,7 +196,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                                     </button>
                                 </li>
                             </ul>
-                        </div>-->
+                        </div>
         </div>
     </div>
 

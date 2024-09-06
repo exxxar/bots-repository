@@ -192,6 +192,7 @@ const mutations = {
         if (!cartItem)
             state.items.push({
                 product: collection,
+                collection_id: collection.collection_id,
                 type: 'collection',
                 quantity: 1
             })

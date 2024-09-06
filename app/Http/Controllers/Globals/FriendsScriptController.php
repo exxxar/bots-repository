@@ -70,7 +70,7 @@ class FriendsScriptController extends SlugController
         {
             $botDomain = $bot->bot_domain;
 
-            $qr = "https://t.me/$botDomain?start=" .
+            $qrLink = "https://t.me/$botDomain?start=" .
                 base64_encode("011" . BotManager::bot()->getCurrentChatId());
 
             $name = $botUser->name ?? 'Имя не указано';
@@ -81,11 +81,13 @@ class FriendsScriptController extends SlugController
                 ->where("bot_id", $bot->id)
                 ->count();
 
-            $qr = "<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qr'>QR-код</a>";
+
+            $qr = "<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qrLink'>QR-код</a>";
 
             $text = str_replace(["{{name}}"], $name ?? 'имя не указано', $text);
             $text = str_replace(["{{phone}}"], $phone ?? 'телефон не указан', $text);
             $text = str_replace(["{{qr}}"], $qr, $text);
+            $text = str_replace(["{{qrLink}}"], $qrLink, $text);
             $text = str_replace(["{{friendsCount}}"], $friendCount ?? '0', $text);
             return str_replace(["{{username}}"], "@" . ($username ?? 'имя не указано'), $text);
 
@@ -94,12 +96,12 @@ class FriendsScriptController extends SlugController
         $mainText = ((Collection::make($config[1])
                 ->where("key", "main_text")
                 ->first())["value"] ?? "Вы пригласили <b>{{friendsCount}} друзей</b>\n Вы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой") . "\n{{qr}}";
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой") . "\n\n{{qrLink}}";
 
         $referralText = ((Collection::make($config[1])
                 ->where("key", "referral_text")
                 ->first())["value"] ?? "Вы пригласили <b>{{friendsCount}} друзей</b>\n Вы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой") . "\n{{qr}}";
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой") . "\n\n{{qrLink}}";
 
 
         $imgPath = (Collection::make($config[1])

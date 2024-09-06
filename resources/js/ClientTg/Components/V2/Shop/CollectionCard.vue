@@ -92,6 +92,7 @@ import ProductCollectionView from "@/ClientTg/Components/V2/Shop/ProductCollecti
 </template>
 <script>
 import {mapGetters} from "vuex";
+import {v4 as uuidv4} from "uuid";
 
 export default {
     props: ["item"],
@@ -107,6 +108,10 @@ export default {
     },
     computed: {
         ...mapGetters(['inCart']),
+        uuid() {
+            const data = uuidv4();
+            return data
+        },
         discountPrice() {
             return Math.round(this.summaryPrice * (1 - ((this.item.discount === 0 ? 1 : this.item.discount) / 100)))
         },
@@ -128,6 +133,9 @@ export default {
 
     },
     mounted() {
+        this.item.collection_id = this.item.id
+        this.item.id = this.uuid
+
         this.selected_image = (this.item.images || []).length > 0 ? this.item.images[0] : null
     },
     methods: {
