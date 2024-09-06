@@ -58,7 +58,6 @@ BotManager::bot()
 
 BotManager::bot()
     ->fallbackDocument(function (...$data) {
-        Log::info(print_r($data, true));
 
         $caption = $data[2] ?? null;
         $files = $data[3] ?? null;
@@ -147,7 +146,7 @@ BotManager::bot()
                     $thread
                 );
             BotManager::bot()
-                ->replyInlineKeyboard("Действия над пользователем:", $keyboard);
+                ->sendInlineKeyboard($channel, "Действия над пользователем:", $keyboard, $thread);
 
             BotManager::bot()
                 ->sendMessage(
@@ -195,16 +194,19 @@ BotManager::bot()
                 $thread
             );
 
-        BotManager::bot()
-            ->replyInlineKeyboard("Действия над пользователем:", [
-                [
-                    ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                ],
-                [
-                    ["text" => "👩🏻‍💻Работа с пользователем", "url" => $link]
-                ],
+        $keyboard = [
+            [
+                ["text" => "📜Заказ пользователя", "url" => $historyLink]
+            ],
+            [
+                ["text" => "👩🏻‍💻Работа с пользователем", "url" => $link]
+            ],
 
-            ]);
+        ];
+
+        BotManager::bot()
+            ->sendInlineKeyboard($channel, "Действия над пользователем:", $keyboard, $thread);
+
 
         BotManager::bot()
             ->sendMessage(
