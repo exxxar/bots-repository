@@ -268,7 +268,7 @@ trait BotDialogTrait
                     }
                 }
 
-                if (!is_null($item->pattern ?? null)) {
+                if (strlen(trim($item->pattern ?? ''))>0) {
                     if (preg_match($item->pattern, $text)) {
                         $tmpItem = $item;
                         $isAnswerFound = true;
@@ -631,7 +631,7 @@ trait BotDialogTrait
                 return;
 
 
-            $data =[
+            $data = [
                 "answers" => $variables ?? [],
                 "user" => (object)[
                     "telegram_chat_id" => $botUser->telegram_chat_id,
@@ -640,9 +640,9 @@ trait BotDialogTrait
                 ]
             ];
 
-            Mail::send('emails.result', $data, function($message) use ($botDomain, $mail, $botDialogCommand, $botUser) {
-                $message->to($mail, $botDomain)->subject("Диалог #$botDialogCommand->id - от пользователя ".($botUser->telegram_chat_id ?? '-'));
-                $message->from(env("APP_EMAIL"),'YourCashman:'.$botDomain);
+            Mail::send('emails.result', $data, function ($message) use ($botDomain, $mail, $botDialogCommand, $botUser) {
+                $message->to($mail, $botDomain)->subject("Диалог #$botDialogCommand->id - от пользователя " . ($botUser->telegram_chat_id ?? '-'));
+                $message->from(env("APP_EMAIL"), 'YourCashman:' . $botDomain);
             });
         }
 

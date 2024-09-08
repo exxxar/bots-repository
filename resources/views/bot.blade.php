@@ -135,7 +135,7 @@
             window.Telegram.WebApp.showAlert("Вы сейчас офлайн!")
         });
 
-        let theme = localStorage.getItem("cashman_global_admin_theme") || null
+        let theme = localStorage.getItem("cashman_global_client_theme") || null
 
         if (theme) {
             let changeTheme = document.querySelector("#theme")

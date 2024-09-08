@@ -141,7 +141,7 @@ class VKProductController extends Controller
 
                 if (!is_null($fpObject))
                     $results->total_frontpad_count++;
-                else{
+                else {
                     $fpnfi = $results->front_pad_not_found_items ?? [];
                     $fpnfi[] = $vkProduct->title;
                     $results->front_pad_not_found_items = $fpnfi;
@@ -155,7 +155,7 @@ class VKProductController extends Controller
                 'title' => $vkProduct->title ?? '-',
                 'description' => $vkProduct->description ?? '-',
                 'images' => [
-                        $vkProduct->thumb_photo
+                    $vkProduct->thumb_photo
                 ],
                 'type' => 0,
                 'old_price' => isset($vkProduct->price["old_amount"]) ? $vkProduct->price["old_amount"] / 100 : 0,
@@ -163,7 +163,7 @@ class VKProductController extends Controller
                 'variants' => empty($variants) ? null : $variants,
                 'in_stop_list_at' => $vkProduct->availability == 0 ? null : Carbon::now(),
                 'bot_id' => $bot->id,
-                'deleted_at'=>null
+                'deleted_at' => null
             ];
 
 
@@ -175,7 +175,7 @@ class VKProductController extends Controller
                 $results->updated_product_count++;
             }
 
-            if (!in_array($product->id , $this->tmpProducts))
+            if (!in_array($product->id, $this->tmpProducts))
                 $this->tmpProducts[] = $product->id ?? null;
             else {
                 $product->productCategories()->attach($tmpCategoryForSync);
@@ -299,33 +299,12 @@ class VKProductController extends Controller
         }
     }
 
-    public function callback(Request $request)
+    public function shopMode($bot, $code)
     {
-        ini_set('max_execution_time', '30000');
-        ini_set('memory_limit', '-1');
-        if (!isset($request["code"]))
-            return response()->noContent(400);
-
-
         $oauth = new VKOAuth();
         $client_id = env("VK_CLIENT_ID");
         $client_secret = env('VK_CLIENT_SECRET');
         $redirect_uri = env("APP_URL") . '/bot-client/vk-callback';
-        $code = $request->code;
-        $state = $request->state; //bot domain
-
-
-        $bot = Bot::query()
-            ->with(["frontPad"])
-            ->where("bot_domain", $state)
-            ->first();
-
-
-        if (is_null($bot))
-            return response()->noContent(404);
-
-        if (is_null($bot->vk_shop_link))
-            return response()->noContent(404);
 
         $products = Product::query()
             ->where("bot_id", $bot->id)
@@ -406,7 +385,7 @@ class VKProductController extends Controller
 
                     $vkProducts = ((object)$response)->items;
 
-                   // Log::info("Альбом=>".$album->title." товары в альбоме ".print_r($vkProducts, true));
+                    // Log::info("Альбом=>".$album->title." товары в альбоме ".print_r($vkProducts, true));
 
                     $this->importProducts($vkProducts, $bot, $album, $results);
 
@@ -427,7 +406,7 @@ class VKProductController extends Controller
                 $this->importProducts($vkProducts, $bot, null, $results);
             }
 
-           /// Log::info("all product ids=>" . print_r(array_values($this->tmpProducts), true));
+            /// Log::info("all product ids=>" . print_r(array_values($this->tmpProducts), true));
         } catch (\Exception $e) {
             Log::info($e->getMessage() . " " . $e->getLine());
             Inertia::setRootView("shop");
@@ -452,6 +431,223 @@ class VKProductController extends Controller
             'message' => "Товары успешно добавлены!",
             'data' => json_encode($results)
         ]);
+    }
+
+    public function marketplaceMode($bot, $code)
+    {
+        $oauth = new VKOAuth();
+        $client_id = env("VK_CLIENT_ID");
+        $client_secret = env('VK_CLIENT_SECRET');
+        $redirect_uri = env("APP_URL") . '/bot-client/vk-callback';
+
+        $tmpScreenName = substr($bot->vk_shop_link, strpos($bot->vk_shop_link, "https://vk.com/") + strlen("https://vk.com/"));
+
+        $response = $oauth->getAccessToken($client_id, $client_secret, $redirect_uri, $code);
+        $access_token = $response['access_token'] ?? null;
+
+        $vk = new VKApiClient();
+
+        try {
+
+            $response = $vk->utils()->resolveScreenName($access_token, [
+                'screen_name' => $tmpScreenName ?? null,
+            ]);
+
+
+        } catch (\Exception $e) {
+            return response()->noContent(404);
+
+        }
+
+        $data = ((object)$response);
+
+        if (is_null($data))
+            return response()->noContent(400);
+
+        if ($data->type != "group" && $data->type != "page")
+            return response()->noContent(400);
+
+/*
+
+
+            Schema::disableForeignKeyConstraints();
+            MenuCategory::truncate();
+            RestoranInCategory::truncate();
+            RestMenu::truncate();
+            Schema::enableForeignKeyConstraints();
+
+
+            $token = $auth->getToken($request->get('code'));
+
+            $api = new Client('5.131');
+            $api->setDefaultToken($token);
+
+            $tmp_ids = [["id" => "-136275935", "base" => true]];
+            $restorans = Restoran::select(["vk_group_id"])->whereNotNull("vk_group_id")->get();
+
+            if (count($restorans) > 0)
+                foreach ($restorans as $rest)
+                    array_push($tmp_ids, ["id" => $rest->vk_group_id, "base" => false]
+                    );
+
+            foreach ($tmp_ids as $tmp_id) {
+                $response = $api->request('market.getAlbums', [
+                    'owner_id' => $tmp_id["id"],
+                    'count' => 50
+                ]);
+
+
+                foreach ($response["response"]["items"] as $item) {
+                    //echo $item["id"].$item["title"]." ".$item["photo"]["photo_807"]."<br>";
+
+                    $response2 = $api->request('market.get', [
+                        'owner_id' => $tmp_id["id"],
+                        'album_id' => $item["id"],
+                        'count' => 200,
+                    ]);
+
+
+                    foreach ($response2["response"]["items"] as $item2) {
+                        //echo $item2["description"]." ".$item2["price"]["text"]." ".$item2["thumb_photo"]." ".$item2["title"]."<br>";
+
+
+                        //preg_match_all('|\d+|', $item2["description"], $matches);
+                        preg_match_all('/(#\w+)/u', $item2["description"], $matches);
+
+                        // $count = $matches[0][0] ?? 0;
+                        //dd($matches);
+
+
+                        $cat = count($matches[0]) > 0 ? $matches[0][0] : "#безкатегории";
+
+
+                        $category = MenuCategory::where("name", $cat)->first();
+                        if (is_null($category)) {
+                            $category = MenuCategory::create([
+                                "name" => $cat
+                            ]);
+                        }
+
+
+                        //preg_match_all('|\d+|', $item2["price"]["text"], $matches);
+
+                        $price = intval($item2["price"]["amount"]) / 100;//$matches[0][0] ?? 0;
+                        $tmp_old_price = isset($item2["price"]["old_amount"]) ? intval($item2["price"]["old_amount"]) / 100 : 0;
+
+                        $rest = Restoran::with(["categories"])
+                            ->where("name", $item["title"])->distinct('parent_id')->first();
+
+                        if (is_null($rest))
+                            continue;
+
+
+                        $description = $item2["description"];
+
+                        preg_match_all('/([0-9]+).грамм/i', $description, $media);
+
+                        $weight = count($matches) >= 2 ? ($media[1][0] ?? 0) : 0;
+
+                        $food_status = [
+                            "Акция!" => FoodStatusEnum::Promotion,
+                            "Скидка!" => FoodStatusEnum::Promotion,
+                            "Топ!" => FoodStatusEnum::InTheTop,
+                            "Хит продаж!" => FoodStatusEnum::BestSeller,
+                            "Новинка!" => FoodStatusEnum::NewFood,
+                            "На вес!" => FoodStatusEnum::WeightFood,
+                        ];
+
+                        $food_status_index = null;
+
+                        foreach ($food_status as $key => $status)
+                            if (mb_strpos(mb_strtolower($description), mb_strtolower($key)))
+                                $food_status_index = $key;
+
+                        $product = RestMenu::create([
+                            'food_name' => $item2["title"],
+                            'food_remark' => $description,
+                            'food_ext' => $weight ?? 0,
+                            'food_sub' => $this->prepareSub($description),
+                            'food_price' => $price,
+                            'food_discount_price' => $tmp_old_price,
+                            'food_status' => is_null($food_status_index) ? FoodStatusEnum::Unset : $food_status[$food_status_index],
+                            'rest_id' => $rest->id,
+                            'food_category_id' => $category->id,
+                            'food_img' => $item2["thumb_photo"],
+                            'stop_list' => false,
+                        ]);
+
+                        if (!is_null($food_status_index))
+                            if ($food_status[$food_status_index] === FoodStatusEnum::Promotion) {
+                                $promotion = Promotion::where('product->food_name', $product->food_name)
+                                    ->where('product->rest_id', $product->rest_id)
+                                    ->first();
+
+                                if (is_null($promotion))
+                                    Promotion::create([
+                                        'product' => $product
+                                    ]);
+                            }
+
+
+                        if (is_null($rest->categories()->find($category->id)))
+                            RestoranInCategory::create([
+                                'category_id' => $category->id,
+                                'restoran_id' => $rest->id
+                            ]);
+
+
+                        $rate = Rating::create([
+                            'content_type' => \App\Enums\ContentTypeEnum::Menu,
+                            'content_id' => $product->id,
+                        ]);
+
+                        $product->rating_id = $rate->id;
+                        $product->save();
+                    }
+
+
+                    sleep(2);
+
+                }
+            }
+            //dd($response["items"]);
+
+        */
+
+    }
+
+    public function callback(Request $request)
+    {
+        ini_set('max_execution_time', '30000');
+        ini_set('memory_limit', '-1');
+        if (!isset($request["code"]))
+            return response()->noContent(400);
+
+        $code = $request->code;
+        $state = $request->state; //bot domain
+
+
+        $bot = Bot::query()
+            ->with(["frontPad"])
+            ->where("bot_domain", $state)
+            ->first();
+
+      //  $shopMode = $bot->shop_mode ?? 0;
+
+
+        if (is_null($bot))
+            return response()->noContent(404);
+
+        if (is_null($bot->vk_shop_link))
+            return response()->noContent(404);
+
+    //    if ($shopMode == 0)
+            return $this->shopMode($bot, $code);
+/*
+        if ($shopMode == 1)
+            return $this->marketplaceMode($bot, $code);*/
+
+
         // dd($response);
     }
 }
