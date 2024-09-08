@@ -54,7 +54,6 @@ class BotDialogGroupController extends Controller
     public function commandList(Request $request): BotDialogCommandCollection
     {
         $bot = Bot::query()
-            ->with(["company"])
             ->where("id", $request->botId ?? $request->bot_id ?? null)
             ->first();
 

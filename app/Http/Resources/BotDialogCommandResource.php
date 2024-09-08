@@ -17,7 +17,7 @@ class BotDialogCommandResource extends JsonResource
 
         $step = 0;
 
-        $this->recursiveChain($this->id, $chain, $step);
+       // $this->recursiveChain($this->id, $chain, $step);
 
         return [
             'id' => $this->id,
