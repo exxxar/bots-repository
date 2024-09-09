@@ -147,6 +147,7 @@ class PromoCodesLogicFactory
 
         return (object)[
             "discount" => $code->cashback_amount,
+            "discount_in_percent" => $code->config["discount_in_percent"] ?? false,
             "activate_price" => $code->activate_price,
         ];
     }

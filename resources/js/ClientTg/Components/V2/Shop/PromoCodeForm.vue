@@ -53,6 +53,7 @@ export default {
             spent_time_counter: 0,
             is_requested: false,
             discount:0,
+            discount_in_percent:false,
             activate_price:0,
             promocodeForm: {
                 code: null,
@@ -105,6 +106,7 @@ export default {
                 this.is_requested = false
 
                 this.discount = resp.discount || 0
+                this.discount_in_percent = resp.discount_in_percent || false
                 this.activate_price = resp.activate_price || 0
                 this.$notify({
                     title: "Промокод",
@@ -115,6 +117,7 @@ export default {
                 this.$emit("callback",{
                     code:this.promocodeForm.code || null,
                     discount: this.discount || 0,
+                    discount_in_percent: this.discount_in_percent || false,
                     activate_price: this.activate_price || 0
                 })
 
@@ -126,6 +129,7 @@ export default {
                 this.$emit("callback",{
                     code:this.promocodeForm.code || null,
                     discount: 0,
+                    discount_in_percent: false,
                     activate_price: 0
                 })
 

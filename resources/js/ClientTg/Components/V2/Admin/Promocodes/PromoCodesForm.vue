@@ -38,13 +38,44 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
             <label for="floatingInput"> Максимальное число активаций кода</label>
         </div>
 
-        <div class="form-floating mb-2">
+        <div class="alert alert-light mb-2">
+            Данный параметр позволяет настроить скидку при покупке товаров в магазине в
+            <span
+                class="text-primary"
+                v-bind:class="{'fw-bold':promoCodeForm.config.discount_in_percent}">%</span> или в
+            <span
+                class="text-primary"
+                v-bind:class="{'fw-bold':!promoCodeForm.config.discount_in_percent}">рублях</span>
+        </div>
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   v-model="promoCodeForm.config.discount_in_percent"
+                   type="checkbox" role="switch" id="discount_in_percent">
+            <label class="form-check-label"
+                   for="discount_in_percent">Скидка в процентах</label>
+        </div>
+
+        <div
+            v-if="!promoCodeForm.config.discount_in_percent"
+            class="form-floating mb-2">
             <input type="number"
                    step="1"
                    min="1"
                    v-model="promoCodeForm.cashback_amount"
                    class="form-control" id="floatingInput" placeholder="name@example.com" required>
-            <label for="floatingInput"> Величина скидки \ CashBack</label>
+            <label for="floatingInput"> Величина скидки \ CashBack, руб</label>
+        </div>
+
+        <div
+            v-if="promoCodeForm.config.discount_in_percent"
+            class="form-floating mb-2">
+            <input type="number"
+                   step="1"
+                   min="1"
+                   max="100"
+                   v-model="promoCodeForm.cashback_amount"
+                   class="form-control" id="floatingInput" placeholder="name@example.com" required>
+            <label for="floatingInput"> Величина скидки \ CashBack, %</label>
         </div>
 
         <div class="form-floating mb-2">
@@ -93,6 +124,9 @@ export default {
                 is_active: false,
                 available_to: null,
                 activate_price: 0,
+                config: {
+                    discount_in_percent: false,
+                },
 
             }
         }
@@ -123,7 +157,12 @@ export default {
                     cashback_amount: this.code.cashback_amount || 0,
                     max_activation_count: this.code.max_activation_count || 1,
                     is_active: this.code.is_active || false,
-                    available_to:  this.code.available_to ? this.$filters.local(this.code.available_to) : null
+                    available_to: this.code.available_to ? this.$filters.local(this.code.available_to) : null
+
+                }
+
+                if (this.code.config) {
+                    this.promoCodeForm.config.discount_in_percent = this.code.config.discount_in_percent || false
                 }
 
 
@@ -156,7 +195,10 @@ export default {
                     description: null,
                     cashback_amount: 0,
                     max_activation_count: 1,
-                    is_active: false
+                    is_active: false,
+                    config: {
+                        discount_in_percent: false,
+                    }
                 }
 
                 this.$emit("callback", response.data)

@@ -25,7 +25,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         v-if="(item.type||'product')==='product'"
                         :item="item.product"/>
 
-                <CollectionCardSimple
+                    <CollectionCardSimple
                         v-if="(item.type||'product')==='collection'"
                         :item="item.product"/>
                 </div>
@@ -67,7 +67,9 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
             <div class="card mb-3">
                 <div class="card-body">
                     <h6>Товаров в корзине <strong class="fw-bold">{{ cartTotalCount }} ед.</strong></h6>
-                    <h6>Общая цена товаров <strong class="fw-bold">{{ cartTotalPrice - deliveryForm.promo.discount }}₽</strong>
+                    <h6>Общая цена товаров <strong class="fw-bold">{{
+                            cartTotalPrice - deliveryForm.promo.discount
+                        }}₽</strong>
                         <strong
                             v-if="(deliveryForm.promo.discount||0)>0"
                             class="text-success fw-bold"> (-{{ deliveryForm.promo.discount }}₽)</strong>
@@ -190,7 +192,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.name"
                        class="form-control" id="deliveryForm-name"
                        placeholder="Иванов Иван Иванович" required>
-                <label for="deliveryForm-name">Ф.И.О.  <span class="fw-bold text-danger">*</span></label>
+                <label for="deliveryForm-name">Ф.И.О. <span class="fw-bold text-danger">*</span></label>
             </div>
 
             <div class="form-floating mb-3">
@@ -199,7 +201,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.phone"
                        class="form-control" id="deliveryForm-phone"
                        placeholder="+7(000)000-00-00" required>
-                <label for="deliveryForm-phone">Номер телефона  <span class="fw-bold text-danger">*</span></label>
+                <label for="deliveryForm-phone">Номер телефона <span class="fw-bold text-danger">*</span></label>
             </div>
 
 
@@ -210,7 +212,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.city"
                        class="form-control" id="deliveryForm-city"
                        placeholder="Ваш город" required>
-                <label for="deliveryForm-city">Ваш город  <span class="fw-bold text-danger">*</span></label>
+                <label for="deliveryForm-city">Ваш город <span class="fw-bold text-danger">*</span></label>
             </div>
 
             <div
@@ -220,7 +222,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.street"
                        class="form-control" id="deliveryForm-street"
                        placeholder="Улица" required>
-                <label for="deliveryForm-street">Улица  <span class="fw-bold text-danger">*</span></label>
+                <label for="deliveryForm-street">Улица <span class="fw-bold text-danger">*</span></label>
             </div>
 
 
@@ -231,7 +233,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                        v-model="deliveryForm.building"
                        class="form-control" id="deliveryForm-building"
                        placeholder="Номер дома" required>
-                <label for="deliveryForm-building">Номер дома  <span class="fw-bold text-danger">*</span></label>
+                <label for="deliveryForm-building">Номер дома <span class="fw-bold text-danger">*</span></label>
             </div>
 
             <div
@@ -362,7 +364,8 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                 <a href="javascript:void(0)"
                    class="list-group-item list-group-item-action p-3 d-flex justify-content-between"
                    aria-current="true">
-                    <label for="switch-5"> <i class="fa-solid fa-person-dots-from-line mr-2"></i> Пищевая аллергия</label>
+                    <label for="switch-5"> <i class="fa-solid fa-person-dots-from-line mr-2"></i> Пищевая
+                        аллергия</label>
                     <input type="checkbox"
                            class="form-check-input"
                            value="пищевая аллергия"
@@ -746,7 +749,7 @@ export default {
                 image_info: null,
                 delivery_price: 0,
                 distance: 0,
-                allergy:null,
+                allergy: null,
             },
         }
     },
@@ -791,12 +794,11 @@ export default {
         },
 
 
-
     },
     computed: {
         ...mapGetters(['getProducts', 'cartProducts', 'getProductsPaginateObject', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
         canBy() {
-           // return false
+            // return false
             if (!window.isCorrectSchedule(this.bot.company.schedule))
                 return true
 
@@ -1072,7 +1074,11 @@ export default {
         },
         activateDiscount(item) {
 
-            this.deliveryForm.promo.discount = item.discount || 0
+            if (item.discount_in_percent)
+                this.deliveryForm.promo.discount = (this.cartTotalPrice * item.discount)/100
+            else
+                this.deliveryForm.promo.discount = item.discount || 0
+
             this.deliveryForm.promo.activate_price = item.activate_price || 0
             this.deliveryForm.promo.code = item.code || null
 

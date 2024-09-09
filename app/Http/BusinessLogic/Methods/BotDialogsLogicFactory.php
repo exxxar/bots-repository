@@ -488,6 +488,7 @@ class BotDialogsLogicFactory
         $answer->update([
             'answer' => $tmp->answer ?? null,
             'pattern' => $tmp->pattern ?? null,
+            'need_print' => $tmp->need_print ?? true,
             'custom_stored_value' => $tmp->custom_stored_value ?? null,
             'next_bot_dialog_command_id' => $tmp->next_bot_dialog_command_id ?? null,
         ]);

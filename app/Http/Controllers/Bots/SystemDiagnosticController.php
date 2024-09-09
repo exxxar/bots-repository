@@ -866,6 +866,7 @@ class SystemDiagnosticController extends Controller
                 "user_telegram_chat_id" =>$botUser->telegram_chat_id,
                 "amount" => $order->summary_price,
                 "info" => "Автоматическое начисление CashBack после заказа",
+                "need_user_review"=>true
             ]);
 
         BotManager::bot()

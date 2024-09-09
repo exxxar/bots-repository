@@ -17,6 +17,7 @@ class BotDialogCommandResource extends JsonResource
 
         $step = 0;
 
+        //возможно, стоит заменить на отдельный запрос просчета цепочки для конкретной сущности
        // $this->recursiveChain($this->id, $chain, $step);
 
         return [

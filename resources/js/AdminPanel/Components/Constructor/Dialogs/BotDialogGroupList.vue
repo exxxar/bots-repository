@@ -278,8 +278,19 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                 class="small font-bold m-0">Ответ<i class="fa-solid fa-angles-right mx-2"></i>диалог</p>
 
                             <table>
-                                <tr v-for="answ in command.answers">
-                                    <td style="width:150px;">{{ answ.answer }}</td>
+                                <tr v-for="(answ, aindex) in command.answers">
+                                    <td style="width:150px;">
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   @change="updateAnswer(answ)"
+                                                   v-model="command.answers[aindex].need_print"
+                                                   type="checkbox" value="" :id="'answ-'+aindex+'-command-'+command.id">
+                                            <label class="form-check-label"
+                                                   :for="'answ-'+aindex+'-command-'+command.id">
+                                                {{ answ.answer }}
+                                            </label>
+                                        </div>
+                                    </td>
                                     <td style="width:90px;" class="cursor-pointer"
                                         @click="loadAndOpenEditor(answ.next_bot_dialog_command_id)"><i
                                         class="fa-solid fa-angles-right mx-2"></i>{{ answ.next_bot_dialog_command_id }}
@@ -294,7 +305,9 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                                 class="btn btn-link m-0 p-0 text-decoration-none" type="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <span
-                                                    v-if="answ.custom_stored_value">{{ answ.custom_stored_value || '-' }}</span>
+                                                    v-if="answ.custom_stored_value">{{
+                                                        answ.custom_stored_value || '-'
+                                                    }}</span>
                                                 <span v-else>нажмите, чтобы добавить</span>
                                             </button>
                                             <div class="dropdown-menu p-2">
@@ -326,7 +339,9 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                     </td>
                                     <td class="cursor-pointer"
                                         @click="loadAndOpenEditor(command.next_bot_dialog_command_id)"><i
-                                        class="fa-solid fa-angles-right mx-2"></i>{{ command.next_bot_dialog_command_id || '-' }}
+                                        class="fa-solid fa-angles-right mx-2"></i>{{
+                                            command.next_bot_dialog_command_id || '-'
+                                        }}
                                         <small><i
                                             class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small>
                                     </td>
@@ -460,7 +475,7 @@ export default {
         })
     },
     methods: {
-        updateDialogCommand(command){
+        updateDialogCommand(command) {
             let data = new FormData();
             Object.keys(command)
                 .forEach(key => {
@@ -484,7 +499,7 @@ export default {
                     text: "Успешная обработка диалоговой команды",
                     type: 'success'
                 });
-            }).catch(()=>{
+            }).catch(() => {
                 this.$notify({
                     title: "Конструктор ботов",
                     text: "Ошибка обработки диалоговой команды",
@@ -494,9 +509,9 @@ export default {
         },
         updateAnswer(answ) {
             this.$store.dispatch("updatedDialogAnswer", {
-                    ...answ,
-                    bot_id: this.bot.id,
-                }).then((response) => {
+                ...answ,
+                bot_id: this.bot.id,
+            }).then((response) => {
                 this.$notify({
                     title: "Конструктор ботов",
                     text: "Текст успешно обновлен",

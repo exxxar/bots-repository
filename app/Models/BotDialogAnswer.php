@@ -19,6 +19,7 @@ class BotDialogAnswer extends Model
         'bot_dialog_command_id',
         'answer',
         'pattern',
+        'need_print',
         'custom_stored_value',
         'next_bot_dialog_command_id',
     ];
@@ -31,6 +32,7 @@ class BotDialogAnswer extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_dialog_command_id' => 'integer',
+        'need_print' => 'boolean',
         'next_bot_dialog_command_id' => 'integer',
     ];
 

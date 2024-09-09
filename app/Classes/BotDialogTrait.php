@@ -233,6 +233,7 @@ trait BotDialogTrait
             $var->custom_stored_value = $botDialogCommand->custom_stored_value;
         }
 
+
         $tmpVariables[] = $var;
 
         $dialog->variables = $tmpVariables;
@@ -268,7 +269,7 @@ trait BotDialogTrait
                     }
                 }
 
-                if (strlen(trim($item->pattern ?? ''))>0) {
+                if (strlen(trim($item->pattern ?? '')) > 0) {
                     if (preg_match($item->pattern, $text)) {
                         $tmpItem = $item;
                         $isAnswerFound = true;
@@ -292,6 +293,7 @@ trait BotDialogTrait
                         $var = (object)$tmpVariables[$index];
                         if ($var->key == $tmpV) {
                             $var->custom_stored_value = $tmpItem->custom_stored_value ?? null;
+                            $var->need_print = $tmpItem->need_print ?? true;
                             $tmpVariables[$index] = $var;
                         }
 
@@ -466,7 +468,9 @@ trait BotDialogTrait
         foreach ($variables as $data) {
 
             $data = (object)$data;
-            $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
+
+            if (($data->need_print ?? true))
+                $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
 

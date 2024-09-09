@@ -26,6 +26,7 @@ class PromoCode extends Model
         'is_active',
         'activate_price',
         'available_to',
+        'config',
     ];
 
     /**
@@ -37,6 +38,7 @@ class PromoCode extends Model
         'id' => 'integer',
         'bot_id' => 'integer',
         'slot_amount' => 'integer',
+        'config' => 'array',
         'cashback_amount' => 'double',
         'activate_price' => 'double',
         'is_active' => 'boolean',

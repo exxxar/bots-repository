@@ -450,12 +450,24 @@ import BotDialogVariablesHelper from "@/AdminPanel/Components/Constructor/Dialog
                             <th scope="row">{{ index + 1 }}</th>
 
                             <td>
-                                <div class="form-floating">
-                                    <input type="text"
-                                           v-model="commandForm.answers[index].answer"
-                                           class="form-control" id="floatingInput" placeholder="name@example.com">
-                                    <label for="floatingInput">Точный текст ответа</label>
+
+
+
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1">
+                                        <input class="form-check-input"
+                                               v-model="commandForm.answers[index].need_print"
+                                               type="checkbox" value="" id="flexCheckDefault">
+                                    </span>
+                                    <div class="form-floating">
+                                        <input type="text"
+                                               v-model="commandForm.answers[index].answer"
+                                               class="form-control" id="floatingInput" placeholder="name@example.com">
+                                        <label for="floatingInput">Точный текст ответа</label>
+                                    </div>
                                 </div>
+
+
                             </td>
 
                             <td>
@@ -828,7 +840,6 @@ export default {
                 }
 
 
-
                 if (this.item.send_params) {
                     this.commandForm.send_params.format = this.item.send_params.format || null
                     this.commandForm.send_params.send_by_text = this.item.send_params.send_by_text || true
@@ -884,6 +895,7 @@ export default {
                 id: null,
                 bot_dialog_command_id: null,
                 answer: null,
+                need_print: true,
                 pattern: null,
                 custom_stored_value: null,
                 next_bot_dialog_command_id: null,
