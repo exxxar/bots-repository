@@ -56,7 +56,7 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
         </div>
 
         <div
-            v-if="!promoCodeForm.config.discount_in_percent"
+            v-if="!promoCodeForm.config?.discount_in_percent"
             class="form-floating mb-2">
             <input type="number"
                    step="1"
@@ -67,7 +67,7 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
         </div>
 
         <div
-            v-if="promoCodeForm.config.discount_in_percent"
+            v-if="promoCodeForm.config?.discount_in_percent"
             class="form-floating mb-2">
             <input type="number"
                    step="1"

@@ -1029,7 +1029,7 @@ trait BotBaseMethodsTrait
      * @param mixed $messageThreadId
      * @return $this|BotManager|BotMethods
      */
-    private function extractedMessage($message, array $tmp, $chatId, mixed $messageThreadId): BotBaseMethodsTrait|BotMethods|BotManager
+    private function extractedMessage($message, array $tmp, $chatId, mixed $messageThreadId = null): BotBaseMethodsTrait|BotMethods|BotManager
     {
         if (mb_strlen($message ?? '') >= 4000) {
             $subMessage = mb_substr($message, 0, 4000);

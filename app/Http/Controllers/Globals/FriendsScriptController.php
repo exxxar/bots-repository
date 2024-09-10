@@ -10,6 +10,7 @@ use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\ReferralHistory;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
 
 class FriendsScriptController extends SlugController
@@ -112,6 +113,7 @@ class FriendsScriptController extends SlugController
             $imgPath;
 
 
+        Log::info("text in friends script:$mainText");
         \App\Facades\BotManager::bot()
             ->reply(prepareContent($mainText, $botUser, $bot));
 
