@@ -38,7 +38,11 @@
         <span
             v-if="discount>0"
             style="min-width:110px;font-size:12px;"
-            class="input-group-text bg-transparent border-light fw-bold text-primary text-center" id="basic-addon1">-{{discount}} руб.</span>
+            class="input-group-text bg-transparent border-light fw-bold text-primary text-center" id="basic-addon1">
+            -{{discount}}
+            <span v-if="discount_in_percent">%</span>
+            <span v-if="!discount_in_percent">руб</span>
+        </span>
     </div>
 
 </template>
