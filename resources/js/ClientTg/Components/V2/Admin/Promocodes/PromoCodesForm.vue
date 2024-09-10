@@ -56,7 +56,7 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
         </div>
 
         <div
-            v-if="!promoCodeForm.config?.discount_in_percent"
+            v-if="!promoCodeForm.config.discount_in_percent"
             class="form-floating mb-2">
             <input type="number"
                    step="1"
@@ -67,7 +67,7 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
         </div>
 
         <div
-            v-if="promoCodeForm.config?.discount_in_percent"
+            v-if="promoCodeForm.config.discount_in_percent"
             class="form-floating mb-2">
             <input type="number"
                    step="1"
@@ -142,9 +142,18 @@ export default {
         promoCodeForm: {
             handler(val) {
                 this.need_reset = true
+
             },
             deep: true
         },
+        'promoCodeForm.config.discount_in_percent': {
+            handler(val) {
+                if (this.promoCodeForm.config.discount_in_percent && this.promoCodeForm.cashback_amount > 100)
+                    this.promoCodeForm.cashback_amount = 50
+            },
+            deep: true
+        },
+
     },
     mounted() {
 
@@ -162,7 +171,9 @@ export default {
                 }
 
                 if (this.code.config) {
-                    this.promoCodeForm.config.discount_in_percent = this.code.config.discount_in_percent || false
+                    this.promoCodeForm.config = {
+                        discount_in_percent: this.code.config.discount_in_percent || false
+                    }
                 }
 
 
