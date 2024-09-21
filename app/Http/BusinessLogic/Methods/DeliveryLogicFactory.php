@@ -117,12 +117,12 @@ class DeliveryLogicFactory
                 "amount" => $order->summary_price,
                 "info" => "Автоматическое начисление CashBack после заказа",
             ]);
-
+/*
         BotMethods::bot()
             ->whereBot($this->bot)
             ->sendMessage(
                 $this->botUser->telegram_chat_id,
-                "Операция выполнена успешно!");
+                "Операция выполнена успешно!");*/
     }
 
 

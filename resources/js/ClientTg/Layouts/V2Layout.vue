@@ -380,7 +380,7 @@ export default {
     mounted() {
 
 
-        let theme = localStorage.getItem("cashman_global_client_theme") || null
+        let theme = localStorage.getItem("cashman_global_client_theme_"+(this.bot.bot_domain || 'any_bot')) || null
 
         if (theme) {
             this.$nextTick(() => {
@@ -399,7 +399,7 @@ export default {
         switchTheme(index) {
             let changeTheme = document.querySelector("#theme")
             changeTheme.href = this.themes[index].href //`./theme${index}.bootstrap.min.css`
-            localStorage.setItem("cashman_global_client_theme", changeTheme.href)
+            localStorage.setItem("cashman_global_client_theme_"+(this.bot.bot_domain || 'any_bot'), changeTheme.href)
 
 
             this.$nextTick(() => {
