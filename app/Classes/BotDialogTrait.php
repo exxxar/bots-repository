@@ -266,7 +266,7 @@ trait BotDialogTrait
                 if (!is_null($item->answer ?? null)) {
                     if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
                         $tmpItem = (object)$item->toArray();
-                        $tmpItem->need_print = 0;
+                        $tmpItem->need_print =   $tmpItem->need_print ?? 0;
                         $isAnswerFound = true;
                         break;
                     }
@@ -306,7 +306,7 @@ trait BotDialogTrait
                     }
 
                     $dialog->variables = $tmpVariables;
-                    $dialog->save();
+                //    $dialog->save();
                 }
 
 
@@ -374,7 +374,7 @@ trait BotDialogTrait
                 }
 
                 $dialog->variables = $tmpVariables;
-                $dialog->save();
+              //  $dialog->save();
             }
 
             BotDialogResult::query()->create([
