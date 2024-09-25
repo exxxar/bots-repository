@@ -269,7 +269,7 @@ trait BotDialogTrait
                         $tmpItem = (object)$item;
                         $tmpItem->need_print = $tmpItem->need_print ?? false;
                         $isAnswerFound = true;
-                        break;d
+                        break;
                     }
                 }
 
