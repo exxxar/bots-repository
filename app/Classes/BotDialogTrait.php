@@ -226,7 +226,8 @@ trait BotDialogTrait
 
         $var = (object)[
             "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
-            "value" => "$text"
+            "value" => "$text",
+            "need_print"=>true,
         ];
 
         if (!is_null($botDialogCommand->custom_stored_value ?? null)) {
