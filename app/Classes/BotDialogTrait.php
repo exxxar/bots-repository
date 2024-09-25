@@ -227,7 +227,7 @@ trait BotDialogTrait
         $var = (object)[
             "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
             "value" => "$text",
-            "need_print"=>true,
+
         ];
 
         if (!is_null($botDialogCommand->custom_stored_value ?? null)) {
@@ -265,6 +265,7 @@ trait BotDialogTrait
                 if (!is_null($item->answer ?? null)) {
                     if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
                         $tmpItem = $item;
+                        $tmpItem["need_print"] = $tmpItem["need_print"] ?? false;
                         $isAnswerFound = true;
                         break;
                     }
@@ -273,6 +274,7 @@ trait BotDialogTrait
                 if (strlen(trim($item->pattern ?? '')) > 0) {
                     if (preg_match($item->pattern, $text)) {
                         $tmpItem = $item;
+                        $tmpItem["need_print"] = $tmpItem["need_print"] ?? false;
                         $isAnswerFound = true;
                         break;
                     }
