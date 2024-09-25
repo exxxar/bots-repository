@@ -227,7 +227,7 @@ trait BotDialogTrait
         $var = (object)[
             "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
             "value" => "$text",
-            "need_print" => false,
+            "need_print" => 0,
             "custom_stored_value" => null,
         ];
 
@@ -266,8 +266,7 @@ trait BotDialogTrait
                 if (!is_null($item->answer ?? null)) {
                     if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
                         $tmpItem = (object)$item->toArray();
-                        $tmpItem->need_print = $tmpItem->need_print ?? false;
-                        Log::info("test2=>" . print_r($tmpItem, true));
+                        $tmpItem->need_print = 0;
                         $isAnswerFound = true;
                         break;
                     }
@@ -276,8 +275,7 @@ trait BotDialogTrait
                 if (strlen(trim($item->pattern ?? '')) > 0) {
                     if (preg_match($item->pattern, $text)) {
                         $tmpItem = (object)$item->toArray();
-                        $tmpItem->need_print = $tmpItem->need_print ?? false;
-                        Log::info("test2=>" . print_r($tmpItem, true));
+                        $tmpItem->need_print = 0;
                         $isAnswerFound = true;
                         break;
                     }
@@ -297,17 +295,18 @@ trait BotDialogTrait
 
                     for ($index = 0; $index < count($tmpVariables); $index++) {
                         $var = (object)$tmpVariables[$index];
-                        //$var->need_print = $tmpItem->need_print ?? false;
+
 
                         if ($var->key == $tmpV) {
                             $var->custom_stored_value = $tmpItem->custom_stored_value ?? null;
+                            $var->need_print = $tmpItem->need_print ?? 0;
                             $tmpVariables[$index] = $var;
                         }
 
                     }
 
                     $dialog->variables = $tmpVariables;
-
+                    $dialog->save();
                 }
 
 
@@ -375,6 +374,7 @@ trait BotDialogTrait
                 }
 
                 $dialog->variables = $tmpVariables;
+                $dialog->save();
             }
 
             BotDialogResult::query()->create([
