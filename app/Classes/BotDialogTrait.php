@@ -265,7 +265,11 @@ trait BotDialogTrait
             foreach ($botDialogCommand->answers as $item) {
 
                 if (!is_null($item->answer ?? null)) {
+
                     if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
+
+                        Log::info("совпал ответ $text == $item->answer ".print_r($item->toArray(), true));
+
                         $tmpItem = (object)$item;
                         $tmpItem->need_print = $tmpItem->need_print ?? false;
                         $isAnswerFound = true;
