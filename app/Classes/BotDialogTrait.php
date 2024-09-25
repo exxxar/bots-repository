@@ -291,9 +291,10 @@ trait BotDialogTrait
 
                     for ($index = 0; $index < count($tmpVariables); $index++) {
                         $var = (object)$tmpVariables[$index];
+                        $var->need_print = $tmpItem->need_print ?? false;
+
                         if ($var->key == $tmpV) {
                             $var->custom_stored_value = $tmpItem->custom_stored_value ?? null;
-                            $var->need_print = $tmpItem->need_print ?? true;
                             $tmpVariables[$index] = $var;
                         }
 
@@ -466,12 +467,10 @@ trait BotDialogTrait
         }
 
         foreach ($variables as $data) {
-
             $data = (object)$data;
-
-            Log::info("vr=>".print_r($data,true));
-            if (($data->need_print ?? false))
-                $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
+            Log::info(print_r($data, true));
+            if (!isset($data->need_print) || ($data->need_print ?? false))
+                    $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
 
