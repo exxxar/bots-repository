@@ -295,7 +295,7 @@ trait BotDialogTrait
                     ->where("id", $tmpItem->next_bot_dialog_command_id)
                     ->first();
 
-                if (!is_null($tmpItem->custom_stored_value ?? null)) {
+                //if (!is_null($tmpItem->custom_stored_value ?? null)) {
 
                     $tmpV = $botDialogCommand->use_result_as ?? null;
                     $tmpVariables = $dialog->variables ?? [];
@@ -305,6 +305,7 @@ trait BotDialogTrait
 
                         if ($var->key == $tmpV) {
                             $var->custom_stored_value = $tmpItem->custom_stored_value ?? null;
+                            $var->need_print = $tmpItem->need_print ?? false;
                             $tmpVariables[$index] = $var;
                         }
 
@@ -312,7 +313,7 @@ trait BotDialogTrait
 
                     $dialog->variables = $tmpVariables;
                 //    $dialog->save();
-                }
+               // }
 
                 Log::info("viriables_on_step=>".print_r($dialog->variables, true));
 
