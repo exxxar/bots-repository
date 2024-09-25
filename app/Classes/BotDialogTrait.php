@@ -227,8 +227,8 @@ trait BotDialogTrait
         $var = (object)[
             "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
             "value" => "$text",
-   /*         "need_print" => 0,
-            "custom_stored_value" => null,*/
+            "need_print" => 0,
+            "custom_stored_value" => null,
         ];
 
         if (!is_null($botDialogCommand->custom_stored_value ?? null)) {
@@ -263,7 +263,7 @@ trait BotDialogTrait
 
             $tmpItem = null;
             foreach ($botDialogCommand->answers as $item) {
-                Log::info("answer=>".print_r($item->toArray(), true));
+
                 if (!is_null($item->answer ?? null)) {
                     if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
                         $tmpItem = (object)$item->toArray();
@@ -276,11 +276,13 @@ trait BotDialogTrait
                 if (strlen(trim($item->pattern ?? '')) > 0) {
                     if (preg_match($item->pattern, $text)) {
                         $tmpItem = (object)$item->toArray();
-                        $tmpItem->need_print = 0;
+                        $tmpItem->need_print = $tmpItem->need_print ?? 0;
                         $isAnswerFound = true;
                         break;
                     }
                 }
+
+
             }
 
             if (!is_null($tmpItem)) {
@@ -477,7 +479,7 @@ trait BotDialogTrait
         foreach ($variables as $data) {
             $data = (object)$data;
             Log::info("result=>".print_r($data, true));
-            if ($data->need_print ?? false)
+            if ((boolean)$data->need_print)
                 $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
