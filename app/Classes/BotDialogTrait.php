@@ -479,7 +479,7 @@ trait BotDialogTrait
         foreach ($variables as $data) {
             $data = (object)$data;
             Log::info("result=>".print_r($data, true));
-            if ((boolean)$data->need_print)
+            if ($data->need_print ?? false)
                 $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
