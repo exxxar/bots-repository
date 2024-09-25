@@ -271,7 +271,7 @@ trait BotDialogTrait
                         Log::info("совпал ответ $text == $item->answer ".print_r($item->toArray(), true));
 
                         $tmpItem = (object)$item;
-                        $tmpItem->need_print = $tmpItem->need_print ?? false;
+                        $tmpItem->need_print = $item->need_print ?? false;
                         $isAnswerFound = true;
                         break;
                     }
@@ -280,7 +280,7 @@ trait BotDialogTrait
                 if (strlen(trim($item->pattern ?? '')) > 0) {
                     if (preg_match($item->pattern, $text)) {
                         $tmpItem = (object)$item;
-                        $tmpItem->need_print = $tmpItem->need_print ?? false;
+                        $tmpItem->need_print = $item->need_print ?? false;
                         $isAnswerFound = true;
                         break;
                     }
@@ -303,10 +303,8 @@ trait BotDialogTrait
                     for ($index = 0; $index < count($tmpVariables); $index++) {
                         $var = (object)$tmpVariables[$index];
 
-
                         if ($var->key == $tmpV) {
                             $var->custom_stored_value = $tmpItem->custom_stored_value ?? null;
-                            $var->need_print = $tmpItem->need_print ?? 0;
                             $tmpVariables[$index] = $var;
                         }
 
@@ -316,6 +314,7 @@ trait BotDialogTrait
                 //    $dialog->save();
                 }
 
+                Log::info("viriables_on_step=>".print_r($dialog->variables, true));
 
                 BotDialogResult::query()->create([
                     'bot_user_id' => $botUser->id,
