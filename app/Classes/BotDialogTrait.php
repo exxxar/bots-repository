@@ -227,7 +227,8 @@ trait BotDialogTrait
         $var = (object)[
             "key" => $botDialogCommand->use_result_as ?? "key_$dialog->id",
             "value" => "$text",
-
+            "need_print" => false,
+            "custom_stored_value" => null,
         ];
 
         if (!is_null($botDialogCommand->custom_stored_value ?? null)) {
@@ -264,9 +265,9 @@ trait BotDialogTrait
             foreach ($botDialogCommand->answers as $item) {
                 if (!is_null($item->answer ?? null)) {
                     if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
-                        $tmpItem = $item;
+                        $tmpItem = (object)$item->toArray();
                         $tmpItem->need_print = $tmpItem->need_print ?? false;
-                        Log::info("test1=>".print_r($tmpItem, true));
+                        Log::info("test2=>" . print_r($tmpItem, true));
                         $isAnswerFound = true;
                         break;
                     }
@@ -274,9 +275,9 @@ trait BotDialogTrait
 
                 if (strlen(trim($item->pattern ?? '')) > 0) {
                     if (preg_match($item->pattern, $text)) {
-                        $tmpItem = $item;
+                        $tmpItem = (object)$item->toArray();
                         $tmpItem->need_print = $tmpItem->need_print ?? false;
-                        Log::info("test2=>".print_r($tmpItem, true));
+                        Log::info("test2=>" . print_r($tmpItem, true));
                         $isAnswerFound = true;
                         break;
                     }
@@ -476,7 +477,7 @@ trait BotDialogTrait
             $data = (object)$data;
             Log::info(print_r($data, true));
             if (!isset($data->need_print) || ($data->need_print ?? false))
-                    $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
+                $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
 
