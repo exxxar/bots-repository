@@ -360,6 +360,7 @@ trait BotDialogTrait
 
                 for ($index = 0; $index < count($tmpVariables); $index++) {
                     $var = (object)$tmpVariables[$index];
+                    $var->need_print = $botDialogCommand->need_print ?? false;
                     if ($var->key == $tmpV) {
                         $var->custom_stored_value = $botDialogCommand->custom_stored_value ?? null;
                         $tmpVariables[$index] = $var;
