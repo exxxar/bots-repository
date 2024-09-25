@@ -263,10 +263,11 @@ trait BotDialogTrait
 
             $tmpItem = null;
             foreach ($botDialogCommand->answers as $item) {
+                Log::info("answer=>".print_r($item->toArray(), true));
                 if (!is_null($item->answer ?? null)) {
                     if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
                         $tmpItem = (object)$item->toArray();
-                        $tmpItem->need_print =   $tmpItem->need_print ?? 0;
+                        $tmpItem->need_print = $tmpItem->need_print ?? 0;
                         $isAnswerFound = true;
                         break;
                     }
@@ -475,8 +476,8 @@ trait BotDialogTrait
 
         foreach ($variables as $data) {
             $data = (object)$data;
-            Log::info(print_r($data, true));
-            if (!isset($data->need_print) || ($data->need_print ?? false))
+            Log::info("result=>".print_r($data, true));
+            if ($data->need_print ?? false)
                 $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
