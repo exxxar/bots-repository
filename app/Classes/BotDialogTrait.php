@@ -470,7 +470,7 @@ trait BotDialogTrait
             $data = (object)$data;
 
             Log::info("vr=>".print_r($data,true));
-            if (($data->need_print ?? true))
+            if (($data->need_print ?? false))
                 $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
         }
 
