@@ -266,17 +266,17 @@ trait BotDialogTrait
 
                 if (!is_null($item->answer ?? null)) {
                     if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
-                        $tmpItem = (object)$item->toArray();
-                        $tmpItem->need_print = $tmpItem->need_print ?? 0;
+                        $tmpItem = (object)$item;
+                        $tmpItem->need_print = $tmpItem->need_print ?? false;
                         $isAnswerFound = true;
-                        break;
+                        break;d
                     }
                 }
 
                 if (strlen(trim($item->pattern ?? '')) > 0) {
                     if (preg_match($item->pattern, $text)) {
-                        $tmpItem = (object)$item->toArray();
-                        $tmpItem->need_print = $tmpItem->need_print ?? 0;
+                        $tmpItem = (object)$item;
+                        $tmpItem->need_print = $tmpItem->need_print ?? false;
                         $isAnswerFound = true;
                         break;
                     }
@@ -478,9 +478,12 @@ trait BotDialogTrait
 
         foreach ($variables as $data) {
             $data = (object)$data;
-            Log::info("result=>".print_r($data, true));
-            if ($data->need_print ?? false)
+
+            if ($data->need_print ?? false) {
+                Log::info("need_print_data=>".print_r($data, true));
                 $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
+
+            }
         }
 
 
