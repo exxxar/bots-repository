@@ -303,7 +303,7 @@ trait BotDialogTrait
                     for ($index = 0; $index < count($tmpVariables); $index++) {
                         $var = (object)$tmpVariables[$index];
 
-                        if ($var->key == $tmpV) {
+                        if ($var->key == $tmpV || $var->key == "key_$dialog->id") {
                             $var->custom_stored_value = $tmpItem->custom_stored_value ?? null;
                             $var->need_print = $tmpItem->need_print ?? false;
                         }
