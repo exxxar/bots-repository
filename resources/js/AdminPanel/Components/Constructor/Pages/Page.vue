@@ -10,19 +10,33 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.vue";
+import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm.vue";
 </script>
 <template>
 
-    <div class="row pt-3" v-if="pageForm.id">
+    <div class="row mt-2">
         <div class="col-12">
-            <div class="alert alert-info" role="alert">
-                <strong>Внимание!</strong> Вы в режиме редактирования страницы (кнопки) <strong style="font-size:16px;">{{
+            <div class="alert alert-light" role="alert">
+                <strong class="fw-bold">Внимание!</strong> Вы можете создать сразу все страницы через <a
+                href="javascript:void(0)"
+                class="text-primary fw-bold"
+                @click="fastCreate"><i class="fa-solid fa-bolt"></i> быстрое создание страниц</a>, а затем наполнить их контентом!
+            </div>
+        </div>
+    </div>
+
+    <div class="row" v-if="pageForm.id">
+        <div class="col-12">
+            <div class="alert alert-light" role="alert">
+                <strong class="fw-bold">Внимание!</strong> Вы в режиме редактирования страницы (кнопки) <strong style="font-size:16px;">{{
                     page.slug ? page.slug.command : 'Без названия'
                 }}</strong>, если хотите создать новую нажмите <a
                 href="javascript:void(0)" class="btn btn-primary ml-2" @click="clearForm">Создать новую страницу</a>
             </div>
         </div>
     </div>
+
+
     <form
         v-if="bot"
         id="page-construct"
@@ -1099,6 +1113,26 @@ import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.v
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="fast-pages-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Быстрое создание страниц</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <FastPageForm v-on:callback="callbackFastPageCreate"></FastPageForm>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Не сохранять</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Modal -->
     <div class="modal fade" id="save-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1345,6 +1379,7 @@ export default {
             links: [],
             saveModal: null,
             pageModal: null,
+            fastPageModal: null,
             pagePreviewModal: null,
             page: null,
 
@@ -1633,6 +1668,19 @@ export default {
     },
 
     methods: {
+        callbackFastPageCreate(){
+            this.loaded_page_list = false
+
+            this.$nextTick(() => {
+                this.loaded_page_list = true
+            })
+
+            this.fastPageModal.hide()
+        },
+        fastCreate(){
+            this.fastPageModal = new bootstrap.Modal(document.getElementById('fast-pages-create'), {})
+            this.fastPageModal.show()
+        },
         chainCollapseTest(item) {
             return this.page == null ?
                 this.links.filter(link => link.id == item.id).length > 1 :

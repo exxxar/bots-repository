@@ -67,7 +67,7 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                 </thead>
                 <tbody>
                 <template v-for="(command,index) in dialog_commands">
-                    <tr>
+                    <tr :id="'key-'+command.id">
                         <td style="width:40px;">
                           <span
                               @click="toggleEditMode(command)"
@@ -292,10 +292,22 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                         </div>
                                     </td>
                                     <td style="width:90px;" class="cursor-pointer"
-                                        @click="loadAndOpenEditor(answ.next_bot_dialog_command_id)"><i
-                                        class="fa-solid fa-angles-right mx-2"></i>{{ answ.next_bot_dialog_command_id }}
-                                        <small><i
-                                            class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small>
+                                    >
+                                        <p class="d-flex m-0 align-items-center">
+                                            <a :href="'#key-'+answ.next_bot_dialog_command_id" class="mx-2"><i
+                                                class="fa-solid fa-anchor"></i></a>
+
+                                            <i
+                                                class="fa-solid fa-angles-right mr-1"></i>
+                                            <span
+                                                class="d-flex"
+                                                @click="loadAndOpenEditor(answ.next_bot_dialog_command_id)">
+
+                                                {{answ.next_bot_dialog_command_id}}
+                                        <small class="ml-1"><i
+                                            class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small></span>
+                                        </p>
+
                                     </td>
                                     <td><i class="fa-solid fa-arrow-right-long mx-2"></i></td>
                                     <td style="max-width: 770px;">
@@ -335,15 +347,25 @@ import BotDialogCommandForm from "@/AdminPanel/Components/Constructor/Dialogs/Bo
                                         <span class="text-success font-bold"
                                               v-if="(command.answers||[]).length===0&&!command.is_inform">Любой ответ</span>
                                         <span class="text-warning font-bold"
-                                              v-if="(command.answers||[]).length===0&&command.is_inform">Переход к диалогу</span>
+                                              v-if="(command.answers||[]).length===0&&command.is_inform">
+                                            Переход к диалогу
+                                        </span>
                                     </td>
-                                    <td class="cursor-pointer"
-                                        @click="loadAndOpenEditor(command.next_bot_dialog_command_id)"><i
-                                        class="fa-solid fa-angles-right mx-2"></i>{{
-                                            command.next_bot_dialog_command_id || '-'
-                                        }}
-                                        <small><i
-                                            class="fa-solid fa-arrow-up-right-from-square text-primary"></i></small>
+                                    <td class="cursor-pointer">
+
+                                        <p class="d-flex mb-0">
+                                            <a :href="'#key-'+command.next_bot_dialog_command_id" class="mx-2"><i class="fa-solid fa-anchor"></i></a>
+
+                                            <span @click="loadAndOpenEditor(command.next_bot_dialog_command_id)" class="d-flex align-items-center">
+                                             <i class="fa-solid fa-angles-right mr-1"></i>
+                                                {{command.next_bot_dialog_command_id || '-' }}
+                                                <small class="ml-1">
+                                                    <i class="fa-solid fa-arrow-up-right-from-square text-primary"></i>
+                                                </small>
+                                            </span>
+
+                                        </p>
+
                                     </td>
                                     <td v-if="command.custom_stored_value"><i
                                         class="fa-solid fa-arrow-right-long mx-2"></i></td>

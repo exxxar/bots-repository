@@ -116,6 +116,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async addMultiPages(context, payload = {pages: null}) {
+        let link = `${BASE_PAGES_LINK}/add-pages`
+
+        let _axios = util.makeAxiosFactory(link,"POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async createPage(context, payload = {pageForm: null}) {
         let link = `${BASE_PAGES_LINK}/page`
 

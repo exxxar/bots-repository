@@ -26,11 +26,10 @@ class BotPageController extends Controller
     public function loadChains(Request $request)
     {
         $request->validate([
-            "start_page_id"=>"required",
+            "start_page_id" => "required",
         ]);
 
         $pages = [];
-
 
 
         $page = BotPage::query()
@@ -40,7 +39,7 @@ class BotPageController extends Controller
             return response()->noContent(404);
 
         $ids = [];
-        while(true){
+        while (true) {
             $page = BotPage::query()
                 ->find($page->next_page_id);
 
@@ -61,32 +60,34 @@ class BotPageController extends Controller
         return new BotPageCollection($pages);
 
     }
-    public function updateChains(Request $request){
+
+    public function updateChains(Request $request)
+    {
 
         $request->validate([
-            "start_page_id"=>"required",
-            "links"=>"required"
+            "start_page_id" => "required",
+            "links" => "required"
         ]);
 
 
         $links = [$request->start_page_id, ...($request->links ?? [])];
 
 
-        for ($index=0;$index<count($links)-1;$index++)
-        {
+        for ($index = 0; $index < count($links) - 1; $index++) {
             $page = BotPage::query()
                 ->find($links[$index]);
 
             if (is_null($page))
                 continue;
 
-            $page->next_page_id = $links[$index+1];
+            $page->next_page_id = $links[$index + 1];
             $page->save();
         }
 
         return \response()->noContent();
 
     }
+
     /**
      * @throws \HttpException
      */
@@ -137,6 +138,20 @@ class BotPageController extends Controller
     {
         return BusinessLogic::pages()
             ->restore($pageId);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function addPages(Request $request)
+    {
+        $request->validate([
+            "pages" => "required|array",
+        ]);
+
+        BusinessLogic::pages()
+            ->setBot(Bot::query()->find($request->bot_id ?? null))
+            ->addPages($request->all());
     }
 
     /**

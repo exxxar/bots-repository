@@ -311,6 +311,7 @@ Route::prefix("admin")
             ->group(function () {
                 Route::post("/", "index");
                 Route::post("/page", "createPage");
+                Route::post("/add-pages", "addPages");
                 Route::post("/update-chains", "updateChains");
                 Route::post("/load-chains", "loadChains");
                 Route::post("/page-update", "updatePage");
