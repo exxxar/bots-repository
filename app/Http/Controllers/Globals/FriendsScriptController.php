@@ -90,6 +90,7 @@ class FriendsScriptController extends SlugController
             $text = str_replace(["{{qr}}"], $qr, $text);
             $text = str_replace(["{{qrLink}}"], $qrLink, $text);
             $text = str_replace(["{{friendsCount}}"], $friendCount ?? '0', $text);
+            $text = str_replace(["%s"], $friendCount ?? '0', $text);
             return str_replace(["{{username}}"], "@" . ($username ?? 'имя не указано'), $text);
 
         }
@@ -97,7 +98,7 @@ class FriendsScriptController extends SlugController
         $mainText = ((Collection::make($config[1])
                 ->where("key", "main_text")
                 ->first())["value"] ?? "Вы пригласили <b>{{friendsCount}} друзей</b>\n Вы можете пригласить друзей показав им QR код или скопировать реферальную ссылку и поделиться ей в Соц Сетях или других мессенджерах.
-Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой") . "\n\n{{qrLink}}";
+Чтобы пригласить с помощью Телеграм, для этого нажмите на стрелочку рядом с ссылкой");
 
         $referralText = ((Collection::make($config[1])
                 ->where("key", "referral_text")
