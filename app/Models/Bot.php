@@ -93,7 +93,8 @@ class Bot extends Model
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    protected $with = ["company", "amo", "warnings", "fieldSettings", 'YClients', 'frontPad','iiko'];
+    protected $with = ["company", "amo", "warnings", "fieldSettings",
+        'YClients', 'frontPad','iiko', 'bitrix'];
     protected $appends = ['topics'];
 
     public function getTopicsAttribute()
@@ -153,6 +154,11 @@ class Bot extends Model
     public function baskets(): HasMany
     {
         return $this->hasMany(Basket::class);
+    }
+
+    public function bitrix(): HasMany
+    {
+        return $this->hasMany(Bitrix::class);
     }
 
     public function products(): HasMany

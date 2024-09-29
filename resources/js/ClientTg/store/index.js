@@ -36,6 +36,7 @@ import orders from "./modules/shop/orders"
 import reviews from "./modules/shop/reviews"
 import mailing from "./modules/mailing"
 import iiko from "./modules/iiko"
+import bitrix from "./modules/bitrix"
 import collections from "./modules/collections"
 
 import util from "./modules/utilites";
@@ -164,6 +165,7 @@ export default createStore({
         friendsGame,
         mailing,
         iiko,
-        reviews
+        reviews,
+        bitrix
     }
 })

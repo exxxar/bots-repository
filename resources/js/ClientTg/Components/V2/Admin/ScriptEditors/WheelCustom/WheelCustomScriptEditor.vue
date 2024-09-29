@@ -88,31 +88,82 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
                 Призы, которые может выиграть пользователь, максимум <strong class="fw-bold text-primary">10</strong>
             </p>
             <p class="mb-0"
-               v-if="form.wheels.length===0"><strong class="fw-bold text-primary">Внимание!</strong> Вы еще не добавили ни одного приза в колесо!</p>
+               v-if="form.wheels.length===0"><strong class="fw-bold text-primary">Внимание!</strong> Вы еще не добавили
+                ни одного приза в колесо!</p>
         </div>
-        <div class="input-group mb-2 align-items-start"
-             v-if="form.wheels.length>0"
-             v-for="(item, index) in form.wheels">
-            <div class="form-floating">
 
+        <template v-if="form.wheels.length>0"
+                  v-for="(item, index) in form.wheels">
+
+            <div class="input-group mb-2 align-items-start">
+                <div class="form-floating">
                 <textarea class="form-control border-light"
                           v-model="form.wheels[index].value"
                           maxlength="4000"
                           style="min-height:100px;"
                           placeholder="Leave a comment here"
                           id="script-settings-wheel-of-fortune-can_play" required></textarea>
-                <label for="script-settings-disabled_text">#{{ index + 1 }} - описание приза
-                    <span
-                        v-if="(form.wheels[index].value||'').length>0">{{
-                            (form.wheels[index].value || '').length
-                        }}/4000</span>
-                </label>
-            </div>
-            <button type="button"
-                    @click="removeWheel(index)"
-                    class="btn btn-outline-light"><i class="fa-solid fa-trash text-danger"></i></button>
-        </div>
+                    <label for="script-settings-disabled_text">#{{ index + 1 }} - описание приза
+                        <span
+                            v-if="(form.wheels[index].value||'').length>0">{{
+                                (form.wheels[index].value || '').length
+                            }}/4000</span>
+                    </label>
+                </div>
 
+                <div class="dropdown">
+                    <button
+                        v-bind:style="{'background-color':form.wheels[index].bg_color}"
+                        class="ml-2 btn dropdown-toggle btn-outline-light" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu" style="min-width:300px;">
+                        <div class="dropdown-item">
+                            <input type="color"
+                                   @change="changeWheelColor(index)"
+                                   v-model="form.wheels[index].bg_color"
+                                   style="min-height:30px;"
+                                   class="form-control p-0" id="floatingInput" placeholder="name@example.com">
+                        </div>
+
+                        <div
+                            style="max-height: 200px;overflow-y: auto;"
+                            class="row row-cols-5 w-100 p-2">
+                            <div
+                                class="col mb-2" v-for="smile in smiles">
+                                <a
+                                    v-bind:class="{'bg-primary':smile===(form.wheels[index]||{smile:null}).smile}"
+                                    @click="addSmile(index, smile)"
+                                    href="javascript:void(0)"
+                                    class="btn btn-outline-light"
+                                >{{ smile }}</a>
+                            </div
+                            >
+                        </div>
+
+                        <hr class="dropdown-divider p-0">
+                        <div class="dropdown-item">
+                            <button type="button"
+                                    @click="removeWheel(index)"
+                                    class="btn btn-outline-danger w-100"><i class="fa-solid fa-trash text-danger"></i>
+                                Удалить
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <!--                <div class="d-flex flex-column px-2">
+
+
+
+                                </div>-->
+
+            </div>
+
+
+        </template>
 
         <button
             type="button"
@@ -129,10 +180,13 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
 </template>
 <script>
 export default {
-    props:["modelValue"],
+    props: ["modelValue"],
     data() {
         return {
-            loaded_params:false,
+            smiles: ["🥤", "🥗", "🍔", "🍗", "🍟", "🥓", "🌯", "🍱", "🍜", "🍲", "🍧", "🍨", "🧁", "🥞",
+                "🤖", "🎲", "🎯", "😊", "😎", "🌻", "👽", "💌", "📚", "🐶", "👻", "🏀", "👓", "🎓",
+                "1️⃣", "2️⃣", '3️⃣', "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟", "💡", "🚀", "⭐", "💎", "☘", "🏆", "🎁"],
+            loaded_params: false,
             form: {
                 can_play: true,
                 rules_text: null,
@@ -162,6 +216,9 @@ export default {
 
     },
     methods: {
+        changeWheelColor(index) {
+            console.log(this.form.wheels[index])
+        },
         removeWheel(index) {
             this.form.wheels.splice(index, 1)
 
@@ -188,15 +245,17 @@ export default {
                     text: 'Новый приз успешно добавлен',
                     type: 'success'
                 })
-            }
-
-            else{
+            } else {
                 this.$notify({
                     title: 'Колесо фортуны',
                     text: 'Вы уже добавили максимальное число призов!',
                     type: 'error'
                 })
             }
+        },
+
+        addSmile(index, smile) {
+            this.form.wheels[index].smile = smile
         },
         submit() {
             let data = new FormData();

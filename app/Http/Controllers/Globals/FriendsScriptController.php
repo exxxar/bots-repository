@@ -52,10 +52,10 @@ class FriendsScriptController extends SlugController
             ]
         ];
 
-        if (count($model->config ?? []) != count($params)) {
+
             $model->config = $params;
             $model->save();
-        }
+
 
     }
 
@@ -82,6 +82,13 @@ class FriendsScriptController extends SlugController
                 ->where("bot_id", $bot->id)
                 ->count();
 
+            $can_be_tags = ["b","i"];
+
+            foreach ($can_be_tags as $tag){
+                if (strpos($text, "<$tag>")>=0 && !strpos($text, "</$tag>")
+                    || strpos($text, "</$tag>")>=0 && !strpos($text, "<$tag>"))
+                       $text = str_replace(["<$tag>","</$tag>"], '', $text);
+            }
 
             $qr = "<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qrLink'>QR-код</a>";
 

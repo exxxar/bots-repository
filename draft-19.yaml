@@ -1,13 +1,4 @@
 models:
-  Bitrix:
-    bot_id: id foreign:bots nullable
-    host: string:255 nullable
-    client_id: string:255 nullable
-    client_secret: string:255 nullable
-    scopes: json nullable
-    relationships:
-      belongsTo: Bot
-
   Iiko:
     bot_id: id foreign:bots nullable
     api_login: string:255 nullable
@@ -27,12 +18,10 @@ models:
       belongsTo: Bot
 
 
-seeders: Shop,   Bitrix,   Iiko
+seeders: Shop,     Iiko
 
 controllers:
   Shop:
-    resource: api
-  Bitrix:
     resource: api
   Iiko:
     resource: api

@@ -130,6 +130,7 @@ import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
                             <p class="mb-0 font-10" v-else>без описания</p>
                         </div>
 
+
                         <div class="form-floating mb-1"
                              v-if="filteredConfigs[index].type==='text' || filteredConfigs[index].type==='channel'">
                             <input type="text" class="form-control" :id="'field-input-'+index"

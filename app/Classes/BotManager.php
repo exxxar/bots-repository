@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use App\Enums\BotStatusEnum;
+use App\Facades\BusinessLogic;
 use App\Models\Bot;
 use App\Models\BotExternalRequest;
 use App\Models\BotMenuSlug;
@@ -120,6 +121,13 @@ class BotManager extends BotCore
                     'bot_id' => $this->getSelf()->id,
                     'amount' => 0,
                 ]);
+
+
+                BusinessLogic::bitrix()
+                    ->setBotUser($this->getSelf())
+                    ->setBot($this->botUser)
+                    ->addLead("Регистрация в боте");
+
             } catch (\Exception $e) {
                 Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
             }

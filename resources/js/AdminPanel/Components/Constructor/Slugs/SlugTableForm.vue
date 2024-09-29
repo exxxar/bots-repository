@@ -60,7 +60,7 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                           v-for="(item, index) in configTypes"> {{ item.type }}</span>
                 </p>
 
-                <p >Вы можете подгрузить отсутствующие параметры конфигурации</p>
+                <p>Вы можете подгрузить отсутствующие параметры конфигурации</p>
                 <button
                     type="button"
                     @click="loadSlugParentParams"
@@ -156,7 +156,6 @@ import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
                                            placeholder="name@example.com">
                                     <label :for="'field-input-'+index">Значение</label>
                                 </div>
-
 
                                 <div
                                     v-if="filteredConfigs[index].type==='boolean'"

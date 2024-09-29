@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -39,6 +40,27 @@ use Yclients\YclientsApi;
 |
 */
 
+/*Route::get("/test-bitrix", function (Request $request) {
+    $bot = Bot::query()->where("bot_domain", "isushibot")
+        ->first();
+
+    $botUser = BotUser::query()
+        ->where("bot_id", $bot->id)
+        ->first();
+
+    BusinessLogic::bitrix()
+        ->setBot($bot)
+        ->store([
+            "url" => "https://b24-dgwnf2.bitrix24.ru/rest/1/rr20zdmgguh3kll1/",
+            "is_active" => true
+        ]);
+
+    BusinessLogic::bitrix()
+        ->setBot($bot)
+        ->setBotUser($botUser)
+        ->addLead("Тест ссылок");
+});*/
+
 Route::view("/page-not-found", "error-node")->name("error-node");
 
 
@@ -48,13 +70,13 @@ Route::middleware(["check-node"])
         require __DIR__ . '/clients/landing.php';
         require __DIR__ . '/auth.php';
 
-        Route::get("/test-mail", function (){
+        Route::get("/test-mail", function () {
             $to_name = 'exxxar';
             $to_email = 'exxxar@gmail.com';
-            $data = array('name'=>"Sam Jose", "body" => "Test mail");
-            Mail::send('emails.emails', $data, function($message) use ($to_name, $to_email) {
+            $data = array('name' => "Sam Jose", "body" => "Test mail");
+            Mail::send('emails.emails', $data, function ($message) use ($to_name, $to_email) {
                 $message->to($to_email, $to_name)->subject('Artisans Web Testing Mail');
-                $message->from('inbox@your-cashman.com','Artisans Web');
+                $message->from('inbox@your-cashman.com', 'Artisans Web');
             });
         });
 

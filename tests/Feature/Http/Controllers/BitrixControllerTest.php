@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\BitrixController
+ * @see \App\Http\Controllers\Bots\Web\BitrixController
  */
 final class BitrixControllerTest extends TestCase
 {
@@ -32,7 +32,7 @@ final class BitrixControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BitrixController::class,
+            \App\Http\Controllers\Bots\Web\BitrixController::class,
             'store',
             \App\Http\Requests\BitrixStoreRequest::class
         );
@@ -66,7 +66,7 @@ final class BitrixControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BitrixController::class,
+            \App\Http\Controllers\Bots\Web\BitrixController::class,
             'update',
             \App\Http\Requests\BitrixUpdateRequest::class
         );

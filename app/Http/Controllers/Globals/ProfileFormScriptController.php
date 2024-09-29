@@ -259,6 +259,11 @@ class ProfileFormScriptController extends SlugController
             });
         }
 
+        BusinessLogic::bitrix()
+            ->setBotUser($request->botUser ?? null)
+            ->setBot($request->bot ?? null)
+            ->addLead("Заполнение профиля");
+
         return response()->noContent();
     }
 

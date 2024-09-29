@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Globals;
 use App\Classes\SlugController;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
+use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ActionStatusResource;
 use App\Http\Resources\BotMenuSlugResource;
@@ -108,12 +109,14 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 "type" => "text",
                 "key" => "wheel_text",
                 "value" => "№1",
+                "bg_color" => null,
 
             ],
             [
                 "type" => "text",
                 "key" => "wheel_text",
                 "value" => "№2",
+                "bg_color" => null,
 
             ],
             [
@@ -126,36 +129,42 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 "type" => "text",
                 "key" => "wheel_text",
                 "value" => "№4",
+                "bg_color" => null,
 
             ],
             [
                 "type" => "text",
                 "key" => "wheel_text",
                 "value" => "№5",
+                "bg_color" => null,
 
             ],
             [
                 "type" => "text",
                 "key" => "wheel_text",
                 "value" => "№6",
+                "bg_color" => null,
 
             ],
             [
                 "type" => "text",
                 "key" => "wheel_text",
                 "value" => "№7",
+                "bg_color" => null,
 
             ],
             [
                 "type" => "text",
                 "key" => "wheel_text",
                 "value" => "№8",
+                "bg_color" => null,
 
             ],
             [
                 "type" => "text",
                 "key" => "wheel_text",
                 "value" => "№9",
+                "bg_color" => null,
 
             ],
         ];
@@ -255,6 +264,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $filteredPhone = str_replace($vowels, "", $winnerPhone);
 
         $winMessage = str_replace(["{{name}}"], $winnerName ?? 'имя не указано', $winMessage);
+        $winMessage = str_replace(["%s"], $winnerName ?? 'имя не указано', $winMessage);
         $winMessage = str_replace(["{{phone}}"], $winnerPhone ?? 'телефон не указан', $winMessage);
         $winMessage = str_replace(["{{prize}}"], $winnerDescription ?? 'описание приза не указано', $winMessage);
         $winMessage = str_replace(["{{username}}"], "@" . ($username ?? 'имя не указано'), $winMessage);
@@ -286,6 +296,11 @@ class WheelOfFortuneCustomScriptController extends SlugController
 
 
         }
+
+        BusinessLogic::bitrix()
+            ->setBotUser($bot)
+            ->setBot($botUser)
+            ->addLead("Участие в колесе фортуны");
 
         return response()->noContent();
     }
@@ -358,8 +373,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "max_attempts" => 1,
             "can_play" => true,
             "wheels" => array_values(Collection::make($slug->config ?? [])
-                ->where("key", "wheel_text")
-                ->toArray()) ?? [],
+                    ->where("key", "wheel_text")
+                    ->toArray()) ?? [],
             "win_message" => "{{name}}, вы приняли участие в розыгрыше и выиграли приз {{prize}}. Наш менеджер свяжется с вами в ближайшее время!",
         ];
 
@@ -422,14 +437,17 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $tmp = $slug->config ?? [];
 
         foreach ($tmp as $key => $item) {
-            if ($item["key"] == "wheel_text" || $item["key"]=="wheels") {
+            if ($item["key"] == "wheel_text" || $item["key"] == "wheels") {
                 unset($tmp[$key]);
                 continue;
             }
 
             $configItem = $config->where("key", $item["key"])->first() ?? null;
             $configItem["value"] = $data[$item["key"]] ?? null;
+            $configItem["bg_color"] = isset($item["bg_color"]) ? $data[$item["bg_color"]] ?? null : null;
+            $configItem["smile"] = isset($item["smile"]) ? $data[$item["smile"]] ?? null : null;
             $tmp[$key] = $configItem;
+
 
         }
 
@@ -453,7 +471,9 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 $tmp[] = [
                     "key" => $wheel->key,
                     "type" => $wheel->type,
-                    "value" => $wheel->value
+                    "value" => $wheel->value,
+                    "bg_color" => $wheel->bg_color ?? null,
+                    "smile" => $wheel->smile ?? null
                 ];
             }
 

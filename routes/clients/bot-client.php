@@ -300,6 +300,13 @@ Route::prefix("bot-client")
                 Route::post('/store', "store");
             });
 
+        Route::prefix("bitrix")
+            ->controller(\App\Http\Controllers\Bots\Web\BitrixController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function(){
+                Route::post('/store', "store");
+            });
+
         Route::prefix("admins")
             ->controller(AdminBotController::class)
             ->group(function () {

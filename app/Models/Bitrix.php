@@ -17,10 +17,10 @@ class Bitrix extends Model
      */
     protected $fillable = [
         'bot_id',
-        'host',
-        'client_id',
-        'client_secret',
-        'scopes',
+        'url',
+        'is_active',
+        'config',
+
     ];
 
     /**
@@ -31,7 +31,8 @@ class Bitrix extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
-        'scopes' => 'array',
+        'is_active' => 'boolean',
+        'config' => 'array',
     ];
 
     public function bot(): BelongsTo

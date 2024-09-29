@@ -16,10 +16,9 @@ return new class extends Migration
         Schema::create('bitrixes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bot_id')->nullable()->constrained();
-            $table->string('host', 255)->nullable();
-            $table->string('client_id', 255)->nullable();
-            $table->string('client_secret', 255)->nullable();
-            $table->json('scopes')->nullable();
+            $table->string('url', 255)->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->json('config')->nullable();
             $table->timestamps();
         });
 

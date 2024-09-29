@@ -1,5 +1,6 @@
 <script setup>
-import WheelCustomScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/WheelCustom/WheelCustomScriptEditor.vue";
+import WheelCustomScriptEditor
+    from "@/ClientTg/Components/V2/Admin/ScriptEditors/WheelCustom/WheelCustomScriptEditor.vue";
 </script>
 <template>
 
@@ -53,11 +54,12 @@ import WheelCustomScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditor
                         </p>
 
                         <h6 class="mt-3 mb-2 text-center fw-bold">Как получить приз</h6>
-                        <p class="mb-0 fst-italic" v-if="script_data.callback_message" v-html="script_data.callback_message"></p>
+                        <p class="mb-0 fst-italic" v-if="script_data.callback_message"
+                           v-html="script_data.callback_message"></p>
                     </div>
                 </div>
                 <div v-else
-                    class="alert alert-light d-flex flex-column align-items-center justify-content-center">
+                     class="alert alert-light d-flex flex-column align-items-center justify-content-center">
                     Подготавливаем информацию по вашим розыгрышам...
                     <div class="spinner-border text-primary my-3" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -117,7 +119,8 @@ import WheelCustomScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditor
                         v-if="action.data">
                         <p class="mb-2 d-flex justify-content-between">Название приза <strong
                             class="fw-bold text-primary text-right">{{ item.description || 'Отсутствует' }}</strong></p>
-                        <p class="mb-2 d-flex justify-content-between">Победитель <strong class="fw-bold text-primary text-right">{{
+                        <p class="mb-2 d-flex justify-content-between">Победитель <strong
+                            class="fw-bold text-primary text-right">{{
                                 item.name || 'Не указано'
                             }}</strong></p>
                         <p class="mb-2 d-flex justify-content-between">Телефон <strong
@@ -175,10 +178,10 @@ export default {
 
     data() {
         return {
-            smiles: ["💙","💜","💚","💰","👑",'🍩',"⚽","🦖","🌺","🌷","🐾","⏳","💊","💡","🚀","⭐","💎","☘","🏆","🎁"],
+            smiles: ["💙", "💜", "💚", "💰", "👑", '🍩', "⚽", "🦖", "🌺", "🌷", "🐾", "⏳", "💊", "💡", "🚀", "⭐", "💎", "☘", "🏆", "🎁"],
             rules: null,
             action: null,
-            script_data:null,
+            script_data: null,
             selected_prize: null,
             wheelDataLoaded: false,
             winForm: {
@@ -272,7 +275,7 @@ export default {
     mounted() {
         this.wheelDataLoaded = false
         this.loadServiceData().then(() => {
-            this.prepareUserData().then(()=>{
+            this.prepareUserData().then(() => {
                 this.wheelDataLoaded = true
             })
         })
@@ -373,9 +376,9 @@ export default {
                 wheels.forEach(item => {
 
                     let success = false
-                    let value = index+1
+                    let value = index + 1
                     while (!success) {
-                        value = this.smiles[getRandomInt(0,this.smiles.length - 1)]
+                        value = this.smiles[getRandomInt(0, this.smiles.length - 1)]
                         if (tmpValues.indexOf(value) === -1) {
                             tmpValues.push(value)
                             success = true
@@ -384,8 +387,8 @@ export default {
 
                     this.items.push({
                         id: index + 1,
-                        value: value,
-                        bgColor: index % 2 === 0 ? "#9a1717" : "#ffffff",
+                        value: item.smile != null ? item.smile : value,
+                        bgColor: item.bg_color != null ? item.bg_color : index % 2 === 0 ? "#9a1717" : "#ffffff",
                         color: "#9a1717",
                         description: item.value
                     })

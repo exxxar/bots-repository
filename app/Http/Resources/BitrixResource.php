@@ -15,11 +15,9 @@ class BitrixResource extends JsonResource
         return [
             'id' => $this->id,
             'bot_id' => $this->bot_id,
-            'host' => $this->host,
-            'client_id' => $this->client_id,
-            'client_secret' => $this->client_secret,
-            'scopes' => $this->scopes,
-            'bot' => BotResource::make($this->whenLoaded('bot')),
+            'url' => $this->url ?? null,
+            'is_active' => $this->is_active ?? true,
+            'config' => $this->config ?? [],
         ];
     }
 }

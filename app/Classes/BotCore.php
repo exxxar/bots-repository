@@ -7,6 +7,7 @@ use App\Enums\CashBackDirectionEnum;
 use App\Events\CashBackEvent;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
+use App\Facades\BusinessLogic;
 use App\Facades\InlineQueryService;
 use App\Models\Basket;
 use App\Models\BotMenuSlug;
@@ -858,6 +859,11 @@ abstract class BotCore
                 $botUser = $this->currentBotUser();
                 $botUser->phone = $item->message->contact->phone_number ?? $botUser->phone ?? null;
                 $botUser->save();
+
+                BusinessLogic::bitrix()
+                    ->setBotUser($this->getSelf())
+                    ->setBot($this->currentBotUser())
+                    ->addLead("Отправил свой номер в бот");
             }
 
 

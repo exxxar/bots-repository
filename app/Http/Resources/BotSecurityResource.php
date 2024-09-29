@@ -13,6 +13,8 @@ class BotSecurityResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+
         return [
             'id' => $this->id,
 
@@ -41,6 +43,8 @@ class BotSecurityResource extends JsonResource
             'company' => new CompanySecurityResource($this->whenLoaded('company')),
             'field_settings' => !isset($this->fieldSettings) ? null : BotCustomFieldSettingResource::collection($this->whenLoaded('fieldSettings')),
             'iiko' => new IikoResource($this->whenLoaded("iiko")),
+            'bitrix' => !isset($this->bitrix) ? [] : BitrixResource::collection($this->whenLoaded('bitrix')),
+
             //'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
             //'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),
         ];
