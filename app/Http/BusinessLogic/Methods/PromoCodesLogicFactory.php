@@ -358,7 +358,7 @@ class PromoCodesLogicFactory
             'activate_price' => $data["activate_price"] ?? 0,
             'max_activation_count' => $data["max_activation_count"] ?? 1,
             'is_active' => ($data["is_active"] ?? false) == "true",
-            'available_to' => is_null($data["available_to"]) ? null : Carbon::parse($data["available_to"]),
+            'available_to' => !isset($data["available_to"]) ? null : Carbon::parse($data["available_to"]),
             'config' =>isset($data["config"]) ? json_decode($data["config"] ) : (object)[
                 "discount_in_percent"=>false
             ],

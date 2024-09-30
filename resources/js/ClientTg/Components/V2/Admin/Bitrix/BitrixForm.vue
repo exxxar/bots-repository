@@ -84,7 +84,7 @@ export default {
                     type: "success"
                 });
 
-                window.location.reload()
+               this.$emit("callback")
             }).catch(err => {
 
             })

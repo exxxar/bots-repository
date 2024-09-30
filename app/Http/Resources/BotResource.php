@@ -66,7 +66,7 @@ class BotResource extends JsonResource
             'company' => new CompanyResource($this->whenLoaded('company')),
             //'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
             'field_settings' => !isset($this->fieldSettings) ? null : BotCustomFieldSettingResource::collection($this->whenLoaded('fieldSettings')),
-            'bitrix' => !isset($this->bitrix) ? [] : BitrixResource::collection($this->whenLoaded('bitrix')),
+           // 'bitrix' => !isset($this->bitrix) ? [] : BitrixResource::collection($this->whenLoaded('bitrix')),
 
             //'productCategories' => ProductCategoryCollection::make($this->whenLoaded('productCategories')),
         ];

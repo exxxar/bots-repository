@@ -3,10 +3,13 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Http\Resources\AmoCrmResource;
+use App\Http\Resources\BitrixCollection;
 use App\Http\Resources\BitrixResource;
+use App\Http\Resources\IikoResource;
 use App\Models\AmoCrm;
 use App\Models\Bitrix;
 use App\Models\Bot;
+use App\Models\Iiko;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -41,6 +44,21 @@ class BitrixLogicFactory
 
         $this->botUser = $botUser;
         return $this;
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function get(): BitrixCollection
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $bitrix = Bitrix::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        return new BitrixCollection($bitrix);
     }
 
     /**

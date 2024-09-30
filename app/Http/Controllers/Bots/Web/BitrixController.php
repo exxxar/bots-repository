@@ -8,6 +8,7 @@ use App\Http\Requests\BitrixStoreRequest;
 use App\Http\Requests\BitrixUpdateRequest;
 use App\Http\Resources\BitrixCollection;
 use App\Http\Resources\BitrixResource;
+use App\Http\Resources\IikoResource;
 use App\Models\Bitrix;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,6 +17,12 @@ use Illuminate\Validation\ValidationException;
 class BitrixController extends Controller
 {
 
+    public function index(Request $request): BitrixCollection
+    {
+        return BusinessLogic::bitrix()
+            ->setBot($request->bot ?? null)
+            ->get();
+    }
 
     /**
      * @throws ValidationException

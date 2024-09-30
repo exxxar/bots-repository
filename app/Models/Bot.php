@@ -94,7 +94,7 @@ class Bot extends Model
     ];
 
     protected $with = ["company", "amo", "warnings", "fieldSettings",
-        'YClients', 'frontPad','iiko', 'bitrix'];
+        'YClients', 'frontPad','iiko', ];
     protected $appends = ['topics'];
 
     public function getTopicsAttribute()
