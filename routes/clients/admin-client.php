@@ -312,6 +312,7 @@ Route::prefix("admin")
                 Route::post("/", "index");
                 Route::post("/page", "createPage");
                 Route::post("/add-pages", "addPages");
+                Route::post("/add-pages-by-keyboard", "addPagesByKeyboard");
                 Route::post("/update-chains", "updateChains");
                 Route::post("/load-chains", "loadChains");
                 Route::post("/page-update", "updatePage");

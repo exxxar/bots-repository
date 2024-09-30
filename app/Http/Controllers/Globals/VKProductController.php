@@ -306,6 +306,7 @@ class VKProductController extends Controller
         $client_secret = env('VK_CLIENT_SECRET');
         $redirect_uri = env("APP_URL") . '/bot-client/vk-callback';
 
+
         $products = Product::query()
             ->where("bot_id", $bot->id)
             ->get();
@@ -623,9 +624,11 @@ class VKProductController extends Controller
         if (!isset($request["code"]))
             return response()->noContent(400);
 
-        $code = $request->code;
-        $state = $request->state; //bot domain
+        $code = $request->code ?? null;
+        $state = $request->state ?? null; //bot domain
 
+        if (is_null($code)||is_null($state))
+            return response()->noContent(404);
 
         $bot = Bot::query()
             ->with(["frontPad"])

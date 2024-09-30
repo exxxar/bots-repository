@@ -76,7 +76,6 @@ class BitrixLogicFactory
         if ($validator->fails())
             throw new ValidationException($validator);
 
-
         $id = $data["id"] ?? null;
 
         $tmp = [

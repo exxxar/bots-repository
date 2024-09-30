@@ -140,6 +140,22 @@ class BotPageController extends Controller
             ->restore($pageId);
     }
 
+
+    /**
+     * @throws ValidationException
+     */
+    public function addPagesByKeyboard(Request $request)
+    {
+        $request->validate([
+            "keyboard" => "required",
+            "settings" => "required",
+        ]);
+
+        BusinessLogic::pages()
+            ->setBot(Bot::query()->find($request->bot_id ?? null))
+            ->addPagesByKeyboard($request->all());
+    }
+
     /**
      * @throws ValidationException
      */

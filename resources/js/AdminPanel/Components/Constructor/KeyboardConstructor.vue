@@ -451,7 +451,12 @@ export default {
         }
     },
     watch: {
-
+        settings: {
+            handler: function (newValue) {
+                this.$emit("save-settings", this.settings)
+            },
+            deep: true
+        },
         need_login_url: {
             handler: function (newValue) {
                 if (this.need_login_url)
@@ -508,14 +513,14 @@ export default {
 
 
         this.$nextTick(() => {
-            this.keyboard = this.modelValue.menu
+            this.keyboard = this.modelValue?.menu || []
 
-            if (this.modelValue.settings) {
-                this.settings.resize_keyboard = this.modelValue.settings.resize_keyboard || true
-                this.settings.one_time_keyboard = this.modelValue.settings.one_time_keyboard || false
-                this.settings.input_field_placeholder = this.modelValue.settings.input_field_placeholder || null
-                this.settings.is_persistent = this.modelValue.settings.is_persistent || false
-                
+            if (this.modelValue?.settings) {
+                this.settings.resize_keyboard = this.modelValue?.settings.resize_keyboard || true
+                this.settings.one_time_keyboard = this.modelValue?.settings.one_time_keyboard || false
+                this.settings.input_field_placeholder = this.modelValue?.settings.input_field_placeholder || null
+                this.settings.is_persistent = this.modelValue?.settings.is_persistent || false
+
                 if (this.settings.input_field_placeholder != null)
                     this.need_input_field_placeholder = true
             }

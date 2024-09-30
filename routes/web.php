@@ -40,6 +40,40 @@ use Yclients\YclientsApi;
 |
 */
 
+Route::get("/calc/{arg1}/{arg2}/{op}", function ($arg1, $arg2, $op) {
+    /*$argument1 = $arg1 ?? 0; //a
+    $argument2 = $arg2 ?? 0; //b
+    $agregator = 0; //c
+
+    $operation = $op ?? 0;
+
+    switch ($operation) {
+        default:
+        case 0:
+            $agregator = $argument1 + $argument2;
+            break;
+        case 1:
+            $agregator = $argument1 - $argument2;
+            break;
+        case 2:
+            $agregator = $argument1 * $argument2;
+            break;
+        case 3:
+
+            if ($argument2 == 0) {
+                echo "На ноль делить нельзя!";
+                break;
+            }
+
+            $agregator = $argument1 / $argument2;
+            break;
+    }
+
+
+    $tmpOperations = ["+","-","*","\\"];
+    echo "Результат работы калькулятора: ".$argument1 ." ".$tmpOperations[$operation] ." ".$argument2 ."=". $agregator;*/
+})->where(["op" => "[0-3]{1}", "arg1" => "[-0-9]+", "arg2" => "[-0-9]+"]);
+
 /*Route::get("/test-bitrix", function (Request $request) {
     $bot = Bot::query()->where("bot_domain", "isushibot")
         ->first();

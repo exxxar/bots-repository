@@ -42,7 +42,7 @@ class BotPageLogicFactory
     /**
      * @throws HttpException
      */
-    public function list($search = null, $size = null, $needDeleted = false, $needNewFirst = false ,$order = "updated_at", $direction = "desc"): BotPageCollection
+    public function list($search = null, $size = null, $needDeleted = false, $needNewFirst = false, $order = "updated_at", $direction = "desc"): BotPageCollection
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -164,6 +164,78 @@ class BotPageLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
+    public function addPagesByKeyboard(array $pageData): void
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($pageData, [
+            "keyboard" => "required",
+            "settings" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $company = Company::query()
+            ->where("id", $this->bot->company_id)
+            ->first();
+
+        if (is_null($company))
+            throw new HttpException(404, "Компания (клиент) не найдена!");
+
+        $keyboard = $pageData["keyboard"];
+
+        $pages = [];
+        foreach ($keyboard as $row) {
+            foreach ($row as $col)
+                $pages[] = $col["text"] ?? $col;
+        }
+
+        $strSlug = Str::uuid();
+        $menu = BotMenuTemplate::query()->create([
+            'bot_id' => $this->bot->id,
+            'type' => "reply",
+            'slug' => $strSlug,
+            'menu' => $keyboard,
+            'settings' => $pageData["settings"],
+        ]);
+
+        foreach ($pages as $pageName) {
+
+            $findPage = !is_null(BotMenuSlug::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("command", "$pageName")
+                ->first());
+
+            if ($findPage)
+                continue;
+
+            $strSlug = Str::uuid();
+            $slug = BotMenuSlug::query()->create([
+                'bot_id' => $this->bot->id,
+                'command' => $pageName,
+                'comment' => "Автоматически созданная страница $pageName",
+                'slug' => $strSlug,
+            ]);
+
+            $tmp = [
+                'bot_menu_slug_id' => $slug->id,
+                'content' => "Контент страницы $pageName",
+                'reply_keyboard_id' => $menu->id,
+                'bot_id' => $this->bot->id,
+            ];
+            $page = BotPage::query()->create($tmp);
+        }
+
+        $this->bot->updated_at = Carbon::now();
+        $this->bot->save();
+    }
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
     public function addPages(array $pageData): void
     {
         if (is_null($this->bot))
@@ -185,20 +257,20 @@ class BotPageLogicFactory
 
         $keyboard = [];
 
-        $index= 0;
+        $index = 0;
         $row = [];
         foreach ($pageData["pages"] as $pageName) {
-            $row[] = ["text"=>$pageName];
+            $row[] = ["text" => $pageName];
             $index++;
-            if ($index == 2){
-                $keyboard[]  = $row;
+            if ($index == 2) {
+                $keyboard[] = $row;
                 $row = [];
                 $index = 0;
             }
         }
 
-        if (count($row)>0)
-            $keyboard[]  = $row;
+        if (count($row) > 0)
+            $keyboard[] = $row;
 
         $strSlug = Str::uuid();
         $menu = BotMenuTemplate::query()->create([
@@ -218,7 +290,7 @@ class BotPageLogicFactory
 
             $findPage = !is_null(BotMenuSlug::query()
                 ->where("bot_id", $this->bot->id)
-                ->where("command","$pageName")
+                ->where("command", "$pageName")
                 ->first());
 
             if ($findPage)
@@ -233,10 +305,10 @@ class BotPageLogicFactory
             ]);
 
             $tmp = [
-                'bot_menu_slug_id'=>$slug->id,
-                'content'=>"Контент страницы $pageName",
-                'reply_keyboard_id'=>$menu->id,
-                'bot_id'=>$this->bot->id,
+                'bot_menu_slug_id' => $slug->id,
+                'content' => "Контент страницы $pageName",
+                'reply_keyboard_id' => $menu->id,
+                'bot_id' => $this->bot->id,
             ];
             $page = BotPage::query()->create($tmp);
         }
@@ -356,7 +428,7 @@ class BotPageLogicFactory
             'command' => $tmp->command,
             'comment' => $tmp->comment,
             'slug' => $strSlug,
-          //  'next_page_id' => $tmp->next_page_id,
+            //  'next_page_id' => $tmp->next_page_id,
         ]);
 
         $tmp->bot_menu_slug_id = $slug->id;
