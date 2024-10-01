@@ -16,6 +16,7 @@ import BitrixForm from "@/ClientTg/Components/V2/Admin/Bitrix/BitrixForm.vue";
                 <template v-if="!load">
                     <ul class="list-group mb-2" v-if="(bitrix||[]).length>0">
                         <li class="list-group-item"
+                            style="word-wrap: break-word;"
                             @click="selectItem(item)"
                             v-bind:class="{'border-success':item.is_active,'border-error':!item.is_active, 'bg-success text-white':(selected||{id:null}).id===item.id}"
                             v-for="item in bitrix">{{ item.url || 'не указан' }}
