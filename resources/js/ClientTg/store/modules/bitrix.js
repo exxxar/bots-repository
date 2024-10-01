@@ -13,7 +13,7 @@ const getters = {
 
 const actions = {
     async loadBitrix(context, payload) {
-        let link = `${ BASE_BITRIX_LINK}/`
+        let link = `${ BASE_BITRIX_LINK}/load-connections`
         let _axios = util.makeAxiosFactory(link, 'POST', payload)
         return _axios.then((response) => {
             return Promise.resolve(response.data);

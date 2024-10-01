@@ -304,7 +304,7 @@ Route::prefix("bot-client")
             ->controller(\App\Http\Controllers\Bots\Web\BitrixController::class)
             ->middleware(["tgAuth.admin"])
             ->group(function(){
-                Route::post('/', "index");
+                Route::post('/load-connections', "index");
                 Route::post('/store', "store");
             });
 
