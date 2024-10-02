@@ -157,7 +157,7 @@ class BitrixLogicFactory
 
                 ]);
 
-            Log::info("Bitrix result=>".print_r($result, true));
+            Log::info("Bitrix result=>".print_r($result->body(), true));
             return $result->status();
         } catch (\Exception $exception) {
             Log::info("Что-то не так с Bitrix");
