@@ -102,7 +102,7 @@ class BitrixLogicFactory
     /**
      * @throws ValidationException
      */
-    public function check(array $data): void
+    public function check(array $data): int
     {
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
@@ -156,10 +156,12 @@ class BitrixLogicFactory
                     ],
 
                 ]);
+
+            return $result->status();
         } catch (\Exception $exception) {
             Log::info("Что-то не так с Bitrix");
+            return 400;
         }
-
 
     }
 

@@ -49,12 +49,12 @@ class BitrixController extends Controller
             "url" => "required",
         ]);
 
-        BusinessLogic::bitrix()
+        $status = BusinessLogic::bitrix()
             ->setBotUser($request->botUser ?? null)
             ->setBot($request->bot ?? null)
             ->check($request->all());
 
-        return response()->json();
+        return response()->json($status ?? 400);
     }
 
 
