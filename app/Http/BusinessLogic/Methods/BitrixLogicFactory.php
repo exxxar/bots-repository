@@ -99,6 +99,71 @@ class BitrixLogicFactory
         return new BitrixResource($bitrix);
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function check(array $data): void
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "url" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $name = mb_split(" ", $this->botUser->name);
+
+        $url = $data["url"];
+
+        try {
+            $result = Http::asJson()
+                ->post("$url/crm.lead.add.json", [
+                    'fields' => (object)[
+                        "TITLE" => "Бот " . ($this->bot->bot_domain ?? '-') . ": " . ($title ?? "Новый лид"),
+                        "NAME" => $name[0] ?? $this->botUser->name ?? $this->botUser->telegram_chat_id,
+                        "LAST_NAME" => $name[1] ?? $this->botUser->username ?? $this->botUser->telegram_chat_id,
+                        "ADDRESS" => $this->botUser->address ?? null,
+                        "ADDRESS_CITY" => $this->botUser->city ?? null,
+                        "ADDRESS_COUNTRY" => $this->botUser->country ?? null,
+                        "BIRTHDATE" => $this->botUser->birthday ?? null,
+                        "EMAIL" => [
+                            (object)[
+                                "VALUE" => $this->botUser->email ?? null,
+                                "VALUE_TYPE" => "CLIENT"
+                            ]
+                        ],
+                        "PHONE" => [
+                            (object)[
+                                "VALUE" => $this->botUser->phone ?? null,
+                                "VALUE_TYPE" => "CLIENT"
+                            ]
+                        ],
+                        "WEB" => [
+
+                            (object)[
+                                "VALUE" => "https://t.me/" . $this->bot->bot_domain . "?start=" . base64_encode("003" . $this->botUser->telegram_chat_id),
+                                "VALUE_TYPE" => "BOT"
+                            ],
+                            (object)[
+                                "VALUE" => !is_null($this->botUser->username) ? "https://t.me/" . $this->botUser->username : null,
+                                "VALUE_TYPE" => "TELEGRAM"
+                            ]
+
+                        ],
+                    ],
+
+                ]);
+        } catch (\Exception $exception) {
+            Log::info("Что-то не так с Bitrix");
+        }
+
+
+    }
+
+
     public function addLead(string $title = null): void
     {
         if (is_null($this->bot) || is_null($this->botUser))

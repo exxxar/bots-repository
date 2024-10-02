@@ -306,6 +306,7 @@ Route::prefix("bot-client")
             ->group(function(){
                 Route::post('/load-connections', "index");
                 Route::post('/store', "store");
+                Route::post('/check', "check");
             });
 
         Route::prefix("admins")

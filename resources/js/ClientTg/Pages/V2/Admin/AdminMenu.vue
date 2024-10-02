@@ -142,7 +142,7 @@
                 </button>
             </div>
 
-            <div class="col">
+<!--            <div class="col">
                 <button type="button"
                         @click="goTo('SlugsV2')"
                         style="min-height:250px;"
@@ -154,7 +154,7 @@
                     </div>
 
                 </button>
-            </div>
+            </div>-->
 
             <div class="col">
                 <button type="button"

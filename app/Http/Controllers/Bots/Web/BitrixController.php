@@ -24,6 +24,7 @@ class BitrixController extends Controller
             ->get();
     }
 
+
     /**
      * @throws ValidationException
      */
@@ -37,6 +38,23 @@ class BitrixController extends Controller
         return BusinessLogic::bitrix()
             ->setBot($request->bot ?? null)
             ->store($request->all());
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function check(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            "url" => "required",
+        ]);
+
+        BusinessLogic::bitrix()
+            ->setBotUser($request->botUser ?? null)
+            ->setBot($request->bot ?? null)
+            ->check($request->all());
+
+        return response()->json();
     }
 
 

@@ -27,7 +27,7 @@ import BitrixForm from "@/ClientTg/Components/V2/Admin/Bitrix/BitrixForm.vue";
                         <strong class="fw-bold text-primary">Внимание!</strong> Еще нет добавленных данных по CRM
                     </div>
                 </template>
-                <div class="content" v-else>
+                <div class="alert-light alert" v-else>
                     <p>Загружаем данные...</p>
                     <div class="d-flex justify-content-center w-100">
                         <div class="spinner-border color-orange-dark" role="status">

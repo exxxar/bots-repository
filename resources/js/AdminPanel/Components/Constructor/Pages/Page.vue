@@ -1340,8 +1340,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
             </div>
         </div>
     </div>
-    -
-
 
     <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas"
          data-bs-keyboard="true"

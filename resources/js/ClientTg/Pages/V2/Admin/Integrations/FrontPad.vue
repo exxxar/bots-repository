@@ -5,11 +5,27 @@ import FrontPadForm from "@/ClientTg/Components/V2/Admin/FrontPad/FrontPadForm.v
 </script>
 <template>
 
-    <FrontPadForm
-        :bot="bot"
-        :data="bot.frontPad"
-        v-if="!load&&bot"
-    />
+    <div class="container my-3">
+        <div class="row">
+            <div class="col-12">
+                <FrontPadForm
+                    :bot="bot"
+                    :data="bot.frontPad"
+                    v-if="!load&&bot"
+                />
+                <div class="alert alert-light" v-else>
+                    <p class="text-center">Загружаем данные...</p>
+                    <div class="d-flex justify-content-center w-100">
+                        <div class="spinner-border color-orange-dark" role="status">
+                            <span class="sr-only">Загрузка...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 </template>

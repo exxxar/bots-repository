@@ -22,6 +22,17 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async checkBitrixURL(context, payload) {
+        let link = `${BASE_BITRIX_LINK}/check`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.bitrixForm)
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async storeBitrix(context, payload) {
         let link = `${BASE_BITRIX_LINK}/store`
 

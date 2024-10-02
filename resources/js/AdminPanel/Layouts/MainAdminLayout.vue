@@ -18,8 +18,9 @@ import Chat from "@/AdminPanel/Components/Chat/ChatMini.vue";
         class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 cursor-pointer align-items-center d-flex"
            data-bs-toggle="modal" data-bs-target="#selected-company-bot-info">CashMan:
-            <span v-if="bot" style="font-size:12px;margin-left:10px;"><a :href="'https://t.me/'+(bot.bot_domain||'botfather')"
-                                target="_blank">{{ bot.bot_domain || 'Без имени' }}</a> </span>
+            <span v-if="bot" style="font-size:12px;margin-left:10px;"><a
+                :href="'https://t.me/'+(bot.bot_domain||'botfather')"
+                target="_blank">{{ bot.bot_domain || 'Без имени' }}</a> </span>
 
         </a>
         <button class="navbar-toggler position-absolute d-md-none collapsed"
@@ -123,11 +124,17 @@ import Chat from "@/AdminPanel/Components/Chat/ChatMini.vue";
         </div>
     </div>
 
-    <div class="theme-switcher d-none d-md-block">
+    <div class="theme-switcher d-none d-md-flex flex-column">
         <button id="switch-theme"
                 data-bs-toggle="modal" data-bs-target="#theme-switch-modal"
                 class="btn btn-primary">
             <i class="fa-solid fa-palette"></i>
+        </button>
+
+        <button
+            @click="changeLight"
+            class="btn btn-primary mt-2">
+            <i class="fa-solid fa-moon"></i>
         </button>
     </div>
 
@@ -147,7 +154,7 @@ import Chat from "@/AdminPanel/Components/Chat/ChatMini.vue";
                                 v-for="(theme, index) in themes"
                                 v-bind:class="{'active':currentTheme.indexOf(theme.href)!=-1}"
                                 class="list-group-item list-group-item-action " aria-current="true">
-                            {{theme.title || '-'}}
+                            {{ theme.title || '-' }}
                         </button>
                     </div>
                 </div>
@@ -158,23 +165,23 @@ import Chat from "@/AdminPanel/Components/Chat/ChatMini.vue";
         </div>
     </div>
     <!-- Modal -->
-<!--    <div class="modal fade" id="chat-window" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <Chat v-if="bot" :domain="'cashman_login_bot'"/>
+    <!--    <div class="modal fade" id="chat-window" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <Chat v-if="bot" :domain="'cashman_login_bot'"/>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="chat-dialog-btn">
-        <button class="btn btn-primary text-white"
-                data-bs-toggle="modal" data-bs-target="#chat-window"
-        >
-            <i class="fa-regular fa-comments"></i>
-        </button>
-    </div>-->
+        <div class="chat-dialog-btn">
+            <button class="btn btn-primary text-white"
+                    data-bs-toggle="modal" data-bs-target="#chat-window"
+            >
+                <i class="fa-regular fa-comments"></i>
+            </button>
+        </div>-->
 
 
     <div class="offcanvas offcanvas-start" tabindex="-1" id="profile-sidebar" aria-labelledby="offcanvasExampleLabel">
@@ -195,78 +202,78 @@ import Chat from "@/AdminPanel/Components/Chat/ChatMini.vue";
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["active","needMenu"],
+    props: ["active", "needMenu"],
     data() {
         return {
             load: false,
             bot: null,
-            is_chat_open:false,
-            currentTheme:'',
+            is_chat_open: false,
+            currentTheme: '',
             company: null,
-            themes:[
+            themes: [
                 {
-                    title:'Тема 1',
+                    title: 'Тема 1',
                     href: '/theme1.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 2',
+                    title: 'Тема 2',
                     href: '/theme2.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 3',
+                    title: 'Тема 3',
                     href: '/theme3.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 4',
+                    title: 'Тема 4',
                     href: '/theme4.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 5',
+                    title: 'Тема 5',
                     href: '/theme5.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 6',
+                    title: 'Тема 6',
                     href: '/theme6.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 7',
+                    title: 'Тема 7',
                     href: '/theme7.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 8',
+                    title: 'Тема 8',
                     href: '/theme8.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 9',
+                    title: 'Тема 9',
                     href: '/theme9.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 10',
+                    title: 'Тема 10',
                     href: '/theme10.bootstrap.min.css',
                 }
                 ,
                 {
-                    title:'Тема 11',
+                    title: 'Тема 11',
                     href: '/theme11.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 12',
+                    title: 'Тема 12',
                     href: '/theme12.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 13',
+                    title: 'Тема 13',
                     href: '/theme13.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 14',
+                    title: 'Тема 14',
                     href: '/theme14.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 15',
+                    title: 'Тема 15',
                     href: '/theme15.bootstrap.min.css',
                 },
                 {
-                    title:'Тема 16',
+                    title: 'Тема 16',
                     href: '/theme16.bootstrap.min.css',
                 }
             ]
@@ -293,17 +300,18 @@ export default {
         this.loadCurrentBot()
 
 
+        let theme = localStorage.getItem("cashman_global_admin_theme") || null
+        let light = localStorage.getItem("cashman_global_admin_light") || null
 
-        let theme =  localStorage.getItem("cashman_global_admin_theme") || null
-
-        if (theme)
-        {
-            this.$nextTick(()=>{
+        if (theme) {
+            this.$nextTick(() => {
                 this.currentTheme = theme
             })
         }
 
-
+        if (light) {
+            this.changeLight(light)
+        }
 
         window.addEventListener('store_current_bot-change-event', (event) => {
             this.bot = this.getCurrentBot
@@ -315,16 +323,37 @@ export default {
     },
 
     methods: {
-        hasRole(role){
+        changeLight(mode = null) {
+            let lighting = document.querySelector("html")
+
+            if (mode != null && (mode === 'light' || mode === 'dark')) {
+                lighting.setAttribute("data-bs-theme", mode);
+                localStorage.setItem("cashman_global_admin_light", mode)
+                return
+            }
+
+            if (lighting.hasAttribute('data-bs-theme')) {
+                let type = lighting.getAttribute('data-bs-theme')
+                lighting.setAttribute("data-bs-theme", type === "dark" ? "light" : "dark");
+            } else {
+                lighting.setAttribute("data-bs-theme", "dark");
+            }
+
+
+            localStorage.setItem("cashman_global_admin_light", lighting.getAttribute('data-bs-theme') || 'light')
+
+
+        },
+        hasRole(role) {
             return window.hasRole(role) || false
         },
-        switchTheme(index){
+        switchTheme(index) {
             let changeTheme = document.querySelector("#theme")
             changeTheme.href = this.themes[index].href //`./theme${index}.bootstrap.min.css`
             localStorage.setItem("cashman_global_admin_theme", changeTheme.href)
 
 
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.currentTheme = changeTheme.href
             })
 
@@ -527,7 +556,7 @@ body {
 }
 
 .border-bottom-active {
-    border-bottom:1px white solid;
+    border-bottom: 1px white solid;
 }
 
 .theme-switcher {
