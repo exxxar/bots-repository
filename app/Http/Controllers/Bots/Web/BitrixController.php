@@ -43,7 +43,7 @@ class BitrixController extends Controller
     /**
      * @throws ValidationException
      */
-    public function check(Request $request): \Illuminate\Http\JsonResponse
+    public function check(Request $request): Response
     {
         $request->validate([
             "url" => "required",
@@ -54,7 +54,7 @@ class BitrixController extends Controller
             ->setBot($request->bot ?? null)
             ->check($request->all());
 
-        return response()->json($status ?? 400);
+        return response()->noContent($status ?? 400);
     }
 
 
