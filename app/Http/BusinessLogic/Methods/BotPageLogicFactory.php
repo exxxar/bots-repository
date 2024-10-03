@@ -2,6 +2,7 @@
 
 namespace App\Http\BusinessLogic\Methods;
 
+use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
 use App\Http\Resources\BotPageCollection;
 use App\Http\Resources\BotPageResource;
@@ -188,8 +189,11 @@ class BotPageLogicFactory
 
         $pages = [];
         foreach ($keyboard as $row) {
-            foreach ($row as $col)
+            foreach ($row as $col) {
+                $col = (array)$col;
                 $pages[] = $col["text"] ?? $col;
+            }
+
         }
 
         $strSlug = Str::uuid();
@@ -345,8 +349,14 @@ class BotPageLogicFactory
 
         $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
 
+        $needPageCreateFromKeyboard = $pageData["need_page_create_from_keyboard"] ?? false;
+
         $tmp = (object)$pageData;
         unset($tmp->photos);
+
+        if ($needPageCreateFromKeyboard)
+            unset($tmp->need_page_create_from_keyboard);
+
         $tmp->images = count($photos) == 0 ? null : $photos;
 
         $replyKeyboard = $tmp->reply_keyboard ?? null;
@@ -389,6 +399,15 @@ class BotPageLogicFactory
             ]);
 
             $tmp->reply_keyboard_id = $menu->id;
+
+            if ($needPageCreateFromKeyboard) {
+                $this->addPagesByKeyboard(
+                    [
+                        "keyboard" => $keyboard,
+                        "settings" => $replyKeyboardSettings,
+                    ]
+                );
+            }
 
         }
 
@@ -444,6 +463,7 @@ class BotPageLogicFactory
         $this->bot->updated_at = Carbon::now();
         $this->bot->save();
 
+
         $page = BotPage::query()->find($page->id);
 
         return new BotPageResource($page);
@@ -494,7 +514,12 @@ class BotPageLogicFactory
         $tmp->need_log_user_action = (bool)($tmp->need_log_user_action ?? false);
         $tmp->content = $tmp->content ?? "";
 
+        $needPageCreateFromKeyboard = $pageData["need_page_create_from_keyboard"] ?? false;
+
         unset($tmp->photos);
+
+        if ($needPageCreateFromKeyboard)
+            unset($tmp->need_page_create_from_keyboard);
 
         $images = $tmp->images ?? null;
 
@@ -544,9 +569,20 @@ class BotPageLogicFactory
                     'menu' => $keyboard,
                     'settings' => $replyKeyboardSettings,
                 ]);
+
+
             }
 
             $tmp->reply_keyboard_id = $menu->id;
+
+            if ($needPageCreateFromKeyboard) {
+                $this->addPagesByKeyboard(
+                    [
+                        "keyboard" => $keyboard,
+                        "settings" => $replyKeyboardSettings,
+                    ]
+                );
+            }
         }
 
         if (!is_null($inlineKeyboard)) {

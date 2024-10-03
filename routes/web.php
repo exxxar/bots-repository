@@ -74,26 +74,15 @@ Route::get("/calc/{arg1}/{arg2}/{op}", function ($arg1, $arg2, $op) {
     echo "Результат работы калькулятора: ".$argument1 ." ".$tmpOperations[$operation] ." ".$argument2 ."=". $agregator;*/
 })->where(["op" => "[0-3]{1}", "arg1" => "[-0-9]+", "arg2" => "[-0-9]+"]);
 
-/*Route::get("/test-bitrix", function (Request $request) {
+Route::get("/test-bitrix", function (Request $request) {
     $bot = Bot::query()->where("bot_domain", "isushibot")
         ->first();
 
-    $botUser = BotUser::query()
-        ->where("bot_id", $bot->id)
-        ->first();
-
-    BusinessLogic::bitrix()
+    $dd = BusinessLogic::bitrix()
         ->setBot($bot)
-        ->store([
-            "url" => "https://b24-dgwnf2.bitrix24.ru/rest/1/rr20zdmgguh3kll1/",
-            "is_active" => true
-        ]);
-
-    BusinessLogic::bitrix()
-        ->setBot($bot)
-        ->setBotUser($botUser)
-        ->addLead("Тест ссылок");
-});*/
+        ->statusList("https://nextit.bitrix24.ru/rest/1/o517zr44r0vbz2yn/");
+    dd($dd);
+});
 
 Route::view("/page-not-found", "error-node")->name("error-node");
 

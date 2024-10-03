@@ -605,14 +605,6 @@
 
                                 </div>
 
-
-                                <button
-                                    :disabled="!botForm.bot_token"
-                                    type="submit"
-                                    class="btn btn-m btn-full mb-0 rounded-s text-uppercase font-900 shadow-s bg-red1-light w-100">
-                                    Сохранить настройки
-                                </button>
-
                             </div>
                         </div>
 
@@ -845,6 +837,21 @@
                             </div>
                         </div>
                     </tempalte>
+
+                    <nav
+
+                        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+                        style="border-radius:10px 10px 0px 0px;">
+                        <button
+                            :disabled="!botForm.bot_token"
+                            type="submit"
+                            class="btn btn-primary p-3 w-100">
+                            Сохранить настройки
+                        </button>
+                    </nav>
+
+
+
                 </form>
 
             </div>

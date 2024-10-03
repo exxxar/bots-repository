@@ -404,6 +404,16 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                 v-else
                                 :type="'reply'"
                                 v-model="pageForm.reply_keyboard"/>
+
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"
+                                       v-model="need_page_create_from_keyboard"
+                                       type="checkbox" role="switch" id="need-page-create-from-keyboard">
+                                <label class="form-check-label" for="need-page-create-from-keyboard">
+                                    Нужно создать страницы на основе клавиатуры
+                                </label>
+                            </div>
                         </div>
                     </div>
 
@@ -1373,6 +1383,9 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
+
+            need_page_create_from_keyboard:false,
+
             tab: 0,
             links: [],
             saveModal: null,
@@ -1893,6 +1906,8 @@ export default {
                         data.append(key, item)
                 });
 
+            if (this.need_page_create_from_keyboard)
+                data.append("need_page_create_from_keyboard", this.need_page_create_from_keyboard)
 
             if (this.bot)
                 data.append("bot_id", this.bot.id)

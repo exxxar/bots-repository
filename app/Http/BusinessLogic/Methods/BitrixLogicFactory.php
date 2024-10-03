@@ -129,6 +129,7 @@ class BitrixLogicFactory
                         "ADDRESS_CITY" => $this->botUser->city ?? null,
                         "ADDRESS_COUNTRY" => $this->botUser->country ?? null,
                         "BIRTHDATE" => $this->botUser->birthday ?? null,
+                        "UTM_SOURCE" => "Бот " . ($this->bot->bot_domain ?? '-'),
                         "EMAIL" => [
                             (object)[
                                 "VALUE" => $this->botUser->email ?? null,
@@ -157,11 +158,35 @@ class BitrixLogicFactory
 
                 ]);
 
-            Log::info("Bitrix result=>".print_r($result->body(), true));
+            Log::info("Bitrix result=>" . print_r($result->body(), true));
             return $result->status();
         } catch (\Exception $exception) {
             Log::info("Что-то не так с Bitrix");
             return 400;
+        }
+
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function statusList(string $url)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+
+        try {
+            $result = Http::asJson()
+                ->post("$url/crm.status.list ", [
+                    "order" => (object)["SORT" => "ASC"],
+                    "filter" => (object)["ENTITY_ID" => "SOURCE"],
+                ]);
+
+            return $result->json();
+        } catch (\Exception $exception) {
+
+            return null;
         }
 
     }
