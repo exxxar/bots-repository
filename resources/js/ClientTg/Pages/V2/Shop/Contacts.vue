@@ -34,7 +34,7 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
                 aria-current="true">
                 <span>Инста</span>
                 <span class="text-primary fw-bold" style="font-size:12px;">
-                      <a :href="'instagram.com/'+links.inst" target="_blank">@{{ links.inst || '-' }}</a>
+                      <a :href="'https://instagram.com/'+links.inst" target="_blank">@{{ links.inst || '-' }}</a>
                 </span>
             </li>
             <li
@@ -43,7 +43,7 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
                 aria-current="true">
                 <span>Вконтакте</span>
                 <span class="text-primary fw-bold" style="font-size:12px;">
-                    <a :href="links.vk" target="_blank">{{ links.vk || '-' }}</a>
+                    <a :href="'https://vk.com/'+links.vk" target="_blank">{{ links.vk || '-' }}</a>
                 </span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
