@@ -24,33 +24,41 @@ import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Телефон</span>
-                <span class="text-primary fw-bold" style="font-size:12px;">{{ phone || '-' }}</span>
+                <span class="text-primary fw-bold" style="font-size:12px;">
+                       <a :href="'tel:'+links.phone" target="_blank">{{ phone || '-' }}</a>
+                 </span>
             </li>
             <li
                 v-if="links.inst"
                 class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Инста</span>
-                <span class="text-primary fw-bold" style="font-size:12px;">{{ links.inst || '-' }}</span>
+                <span class="text-primary fw-bold" style="font-size:12px;">
+                      <a :href="'instagram.com/'+links.inst" target="_blank">@{{ links.inst || '-' }}</a>
+                </span>
             </li>
             <li
                 v-if="links.vk"
                 class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Вконтакте</span>
-                <span class="text-primary fw-bold" style="font-size:12px;">{{ links.vk || '-' }}</span>
+                <span class="text-primary fw-bold" style="font-size:12px;">
+                    <a :href="links.vk" target="_blank">{{ links.vk || '-' }}</a>
+                </span>
             </li>
             <li class="list-group-item d-flex justify-content-between"
                 aria-current="true">
                 <span>Почта</span>
-                <span class="text-primary fw-bold" style="font-size:12px;">{{ company.email || '-' }}</span>
+                <span class="text-primary fw-bold" style="font-size:12px;">
+                    <a :href="'mailto:'+company.email" target="_blank">{{ company.email || '-' }}</a>
+                </span>
             </li>
             <li
                 v-if="links.site"
                 class="list-group-item d-flex justify-content-between"
                 aria-current="true">
-                <span>Почта</span>
-                <span class="text-primary fw-bold" style="font-size:12px;">{{ links.site || '-' }}</span>
+                <span>Сайт</span>
+                <span class="text-primary fw-bold" style="font-size:12px;"><a :href="links.site" target="_blank">{{ links.site || '-' }}</a></span>
             </li>
         </ul>
 
