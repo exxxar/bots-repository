@@ -139,7 +139,7 @@ import ProductCollectionView from "@/ClientTg/Components/V2/Shop/ProductCollecti
         </div>
     </div>
 
-    <div class="modal fade" :id="'collection-item-form'" tabindex="-1"
+   <div class="modal fade" :id="'collection-item-form'" tabindex="-1"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
@@ -171,7 +171,7 @@ import ProductCollectionView from "@/ClientTg/Components/V2/Shop/ProductCollecti
                 <div class="modal-body"
                      v-if="selected&&loaded">
                     Вы действительно хотите удалить <strong
-                    class="text-primary fw-bold">{{ selected.title || '-' }}?</strong>
+                    class="text-primary fw-bold">{{ selected.title || '-' }} (#{{selected.id || '-'}})?</strong>
                 </div>
                 <div class="modal-footer"
                      v-if="selected&&loaded">
@@ -243,6 +243,8 @@ export default {
         openRemoveModal(item){
             this.loaded = false
             this.selected = item
+
+
 
             const modal = new bootstrap.Modal('#remove-collection-modal', {})
             modal.show()

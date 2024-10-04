@@ -436,8 +436,9 @@ Route::prefix("bot-client")
                 Route::post("/global", "globalList");
 
                 Route::post("/store", "store")->middleware(["tgAuth.admin"]);
-                Route::post("/duplicate/{collectionId}", "duplicate")->middleware(["tgAuth.admin"]);
                 Route::post("/remove/{collectionId}", "destroy")->middleware(["tgAuth.admin"]);
+                Route::post("/duplicate/{collectionId}", "duplicate")->middleware(["tgAuth.admin"]);
+
             });
 
         Route::prefix("bots")

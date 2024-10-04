@@ -79,9 +79,6 @@ const actions = {
         })
     },
     async duplicateCollection(context, payload= {collectionId: null}){
-
-
-
         let link = `${BASE_COLLECTIONS_LINK}/duplicate/${payload.dataObject.collectionId}`
         let _axios = util.makeAxiosFactory(link, 'POST')
         return _axios.then((response) => {
@@ -92,8 +89,6 @@ const actions = {
         })
     },
     async removeProductCollection(context, payload= {collectionId: null}){
-
-
         let link = `${BASE_COLLECTIONS_LINK}/remove/${payload.collectionId}`
         let _axios = util.makeAxiosFactory(link, 'POST')
 

@@ -100,7 +100,7 @@ class FriendsGameScriptController extends SlugController
                 "type" => "text",
                 "key" => "callback_message",
                 "value" => "Спасибо за ваше участие! Вы выиграли приз!
-Когда будете готовы сделать заказ, позвоните по номеру: +7 (999) 418-28-84 и при заказе, обязательно, уточните что вы выиграли в «Колесо Фортуны»",
+Когда будете готовы сделать заказ, позвоните по номеру: +7 (999) 418-28-84 и при заказе, обязательно, уточните что вы выиграли в «Игре друзей»",
 
             ],
             [
@@ -135,11 +135,13 @@ class FriendsGameScriptController extends SlugController
         $action = ActionStatus::prepare($botUser, $bot, $slug, $maxAttempts);
 
 
+
         if (is_null($action->data ?? null))
             return response()->noContent(400);
 
-        $isStarted = $action->data->start_at ?? null;
-        $isCompleted = $action->data->complete_at ?? null;
+        $data = (object)$action->data;
+        $isStarted = $data->start_at ?? null;
+        $isCompleted = $data->complete_at ?? null;
 
         if (is_null($isStarted) || !is_null($isCompleted))
             return response()->noContent(400);

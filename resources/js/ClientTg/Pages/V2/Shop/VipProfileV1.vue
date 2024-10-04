@@ -55,7 +55,7 @@
                         <div class="row mb-2">
                             <div class="col-6">
                                 <div
-                                    v-bind:class="{'bg-primary':vipForm.sex}"
+                                    v-bind:class="{'bg-primary text-white':vipForm.sex}"
                                     @click="vipForm.sex = true"
                                     class="btn p-2 w-100 btn-outline-primary d-flex justify-content-between flex-column align-items-center ">
                                     <i class="fa-solid fa-mars font-28"></i>
@@ -64,7 +64,7 @@
                             </div>
                             <div class="col-6">
                                 <div
-                                    v-bind:class="{'bg-highlight ':!vipForm.sex}"
+                                    v-bind:class="{'bg-primary text-white':!vipForm.sex}"
                                     @click="vipForm.sex = false"
                                     class="btn p-2 w-100 btn-outline-primary d-flex justify-content-between flex-column align-items-center ">
                                     <i class="fa-solid fa-mars font-28"></i>

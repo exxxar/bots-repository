@@ -186,7 +186,7 @@
                                 <button
                                     type="button"
                                     @click="botUserForm.sex = true"
-                                    v-bind:class="{'btn-info':botUserForm.sex,'btn-outline-secondary':!botUserForm.sex}"
+                                    v-bind:class="{'btn-info text-white':botUserForm.sex,'btn-outline-secondary':!botUserForm.sex}"
                                     class="w-100 btn">
                                     <i class="fa-solid fa-mars mr-1"></i> Муж
                                 </button>
@@ -195,7 +195,7 @@
                                 <button
                                     type="button"
                                     @click="botUserForm.sex = false"
-                                    v-bind:class="{'btn-info':!botUserForm.sex,'btn-outline-secondary':botUserForm.sex}"
+                                    v-bind:class="{'btn-info text-white':!botUserForm.sex,'btn-outline-secondary':botUserForm.sex}"
                                     class="w-100 btn">
                                     <i class="fa-solid fa-venus mr-1"></i> Жен
                                 </button>

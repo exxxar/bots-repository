@@ -67,13 +67,18 @@
                             class="btn w-100 btn-success p-3"
                             @click="start">Приступить к заданию</button>
                 </div>
-                <div v-else>
-                    <p v-if="friendsForm.start_at!=null">Задание начато <strong>{{friendsForm.start_at}}</strong></p>
-                    <p v-if="friendsForm.complete_at!=null">Задание завершено <strong>{{friendsForm.complete_at}}</strong></p>
-                    <button type="button"
-                            @click="complete"
-                            :disabled="progress<100||friendsForm.complete_at!=null||friendsForm.start_at==null"
-                            class="btn btn-primary p-3 w-100">Получить награды</button>
+                <div
+                    class="card mt-3"
+                    v-else>
+                    <div class="card-body">
+                        <p class="mt-2 mb-0" v-if="friendsForm.start_at!=null">Задание начато <strong class="fw-bold text-primary">{{friendsForm.start_at}}</strong></p>
+                        <p class="mt-2 mb-2"  v-if="friendsForm.complete_at!=null">Задание завершено <strong class="fw-bold text-primary">{{friendsForm.complete_at}}</strong></p>
+                        <button type="button"
+                                @click="complete"
+                                :disabled="progress<100||friendsForm.complete_at!=null||friendsForm.start_at==null"
+                                class="btn btn-primary p-3 w-100">Получить награды</button>
+                    </div>
+
                 </div>
             </div>
         </div>
