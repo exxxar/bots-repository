@@ -108,6 +108,9 @@
 
         <img v-lazy="qr" class="img-thumbnail" alt="...">
 
+        <button type="button"
+                @click="copyToClipboard"
+                class="btn btn-outline-primary mt-2 w-100"><i class="fa-solid fa-link mr-2"></i>Ваша реферальная ссылка</button>
 
         <!-- Modal -->
         <div class="modal fade" id="edit-profile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -302,7 +305,13 @@ export default {
 
     },
     methods: {
-
+        copyToClipboard(){
+            navigator.clipboard.writeText(this.link)
+            this.$notify({
+                title: "Реферальная ссылка",
+                text: "Ваша ссылка успешно скопирована в буфер!",
+            })
+        },
         submitProfile() {
             this.$store.dispatch('updateProfile', {
                 botUserForm: this.botUserForm

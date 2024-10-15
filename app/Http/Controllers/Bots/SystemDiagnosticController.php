@@ -602,7 +602,7 @@ class SystemDiagnosticController extends Controller
                 ->editMessageText(
                     $botUser->telegram_chat_id,
                     $messageId,
-                    "Благодарим вас за вашу оценку, так же вы можете отправить нам фото отзыв и получить дополнительный КэшБэк на ваш счет 💖"
+                    "Благодарим вас за вашу оценку💖"
                 )
                 ->editInlineKeyboard(
                     $botUser->telegram_chat_id,

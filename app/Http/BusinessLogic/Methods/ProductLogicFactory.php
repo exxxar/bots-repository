@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic\Methods;
 
 use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTypeEnum;
+use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Utilites\LogicUtilities;
@@ -849,7 +850,7 @@ class ProductLogicFactory
             $summaryPrice += $tmpPrice;
         }
 
-        $message .="\n";
+        $message .= "\n";
         foreach ($tmpCollections as $collection) {
 
             $collection = (object)$collection;
@@ -859,10 +860,10 @@ class ProductLogicFactory
 
             foreach (($collection->data->products ?? []) as $product) {
                 if ($product->is_checked) {
-                    $collectionTitles .= "-".$product->title."\n";
+                    $collectionTitles .= "-" . $product->title . "\n";
 
                     $tmpOrderProductInfo[] = (object)[
-                        "title" => "Коллекция `".($collection->data->title)."`: ".$product->title,
+                        "title" => "Коллекция `" . ($collection->data->title) . "`: " . $product->title,
                         "count" => 1,
                         "price" => 0,
                         'frontpad_article' => $product->frontpad_article ?? null,
@@ -1014,9 +1015,17 @@ class ProductLogicFactory
 
         BotMethods::bot()
             ->whereBot($this->bot)
-            ->sendMessage(
+            ->sendInlineKeyboard(
                 $this->botUser->telegram_chat_id,
-                "Спасибо, ваш заказ появился в нашей системе:\n\n<em>$message</em>\n\n$paymentInfo" ?? "Данные не найдены"
+                ("Спасибо, ваш заказ появился в нашей системе:\n\n<em>$message</em>\n\n$paymentInfo" ?? "Данные не найдены") .
+                "\nВы можете оставить отзыв с фото и получить от нас дополнительный КэшБэк!",
+                [
+                    [
+                        ["text" => "📢Написать отзыв с фото", "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/simple/" . $this->bot->bot_domain . "?slug=route&hide_menu#/s/feedback"
+                        ]],
+                    ],
+                ]
             );
 
 
