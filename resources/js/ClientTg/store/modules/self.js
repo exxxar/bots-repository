@@ -12,6 +12,19 @@ const getters = {
 }
 
 const actions = {
+    async switchToMainMenu(context) {
+        let link = `${BASE_SELF_LINK}/switch-to-main-menu`
+
+
+        let _axios = util.makeAxiosFactory(link, 'POST')
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadSelf(context) {
 
         let link = `${BASE_SELF_LINK}/self`

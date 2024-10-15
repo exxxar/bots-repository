@@ -713,11 +713,14 @@ class BotManager extends BotCore
         return true;
     }
 
+
+
     public function runPage(int $pageId, $bot = null, $botUser = null): bool
     {
 
         if (!is_null($bot)) {
             $this->setApiToken($bot->bot_domain);
+            $this->setBot($bot);
             include_once base_path('routes/bot.php');
         }
 

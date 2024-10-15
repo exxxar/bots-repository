@@ -278,6 +278,19 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
         </div>
     </div>
 
+    <nav
+
+        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+        style="border-radius:10px 10px 0px 0px;">
+        <button
+            style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            @click="startMenu"
+            class="btn btn-primary w-100 p-3 rounded-3 shadow-lg">
+
+            <i class="fa-brands fa-telegram"></i> Главное меню
+        </button>
+    </nav>
+
     <div class="modal fade" id="script-setting-editor" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
@@ -326,7 +339,7 @@ export default {
         return {
             loadScriptData: false,
             script_data: {
-                is_disabled:true,
+                is_disabled: true,
                 wheel_of_fortune: {
                     can_play: false,
                 }
@@ -366,6 +379,12 @@ export default {
         })
     },
     methods: {
+        startMenu() {
+            this.$store.dispatch("switchToMainMenu")
+            this.tg.close();
+
+
+        },
         goTo(name) {
             this.$router.push({name: name})
         },

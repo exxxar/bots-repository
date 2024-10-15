@@ -35,6 +35,36 @@ class BotController extends Controller
         return response()->json(BusinessLogic::bots()->getCurrentServers());
     }
 
+    public function switchToMainMenu(Request $request)
+    {
+
+        $bot = $request->bot ?? null;
+
+        $slug = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where(function ($q) {
+                $q->where("command", ".*start")
+                    ->orWhere("command", "/start");
+            })->first();
+
+        if (is_null($slug))
+            return response()->noContent(404);
+
+        $page = BotPage::query()
+            ->where("bot_menu_slug_id", $slug->id)
+            ->where("bot_id", $bot->id)
+            ->first();
+
+        if (is_null($page))
+            return response()->noContent(404);
+
+        BotManager::bot()
+            ->runPage($page->id,
+                $bot,
+                $request->botUser ?? null);
+
+        return response()->noContent();
+    }
 
     /**
      * @throws ValidationException
@@ -163,7 +193,7 @@ class BotController extends Controller
         BusinessLogic::bots()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-           // ->setSlug($request->slug ?? null)
+            // ->setSlug($request->slug ?? null)
             ->sendFeedback($request->all(),
                 $request->hasFile('photos') ? $request->file('photos') : null);
 

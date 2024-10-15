@@ -13,6 +13,7 @@ const getters = {
 }
 
 const actions = {
+
     async loadCurrentBotFields(context){
         let link = `${BASE_BOTS_LINK}/load-fields`
         let method = 'GET'
