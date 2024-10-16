@@ -12,6 +12,7 @@ use App\Models\Company;
 use App\Models\ReferralHistory;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use danog\Decoder\FileId;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -26,6 +27,8 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Mpdf\HTMLParserMode;
+use Mpdf\Mpdf;
 use Telegram\Bot\FileUpload\InputFile;
 use Yclients\YclientsApi;
 
@@ -40,39 +43,21 @@ use Yclients\YclientsApi;
 |
 */
 
-Route::get("/calc/{arg1}/{arg2}/{op}", function ($arg1, $arg2, $op) {
-    /*$argument1 = $arg1 ?? 0; //a
-    $argument2 = $arg2 ?? 0; //b
-    $agregator = 0; //c
+Route::get("/pdf-menu", function () {
+    $mpdf = new Mpdf();
+    $current_date = Carbon::now("+3:00")->format("Y-m-d H:i:s");
 
-    $operation = $op ?? 0;
+    $number = Str::uuid();
 
-    switch ($operation) {
-        default:
-        case 0:
-            $agregator = $argument1 + $argument2;
-            break;
-        case 1:
-            $agregator = $argument1 - $argument2;
-            break;
-        case 2:
-            $agregator = $argument1 * $argument2;
-            break;
-        case 3:
+    $stylesheet = file_get_contents('https://getbootstrap.com/docs/5.3/dist/css/bootstrap.min.css'); // external css
 
-            if ($argument2 == 0) {
-                echo "На ноль делить нельзя!";
-                break;
-            }
+    $mpdf->WriteHTML(view("pdf.menu", [
+        "style"=>$stylesheet
+    ]));
 
-            $agregator = $argument1 / $argument2;
-            break;
-    }
+    $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::DOWNLOAD);
 
-
-    $tmpOperations = ["+","-","*","\\"];
-    echo "Результат работы калькулятора: ".$argument1 ." ".$tmpOperations[$operation] ." ".$argument2 ."=". $agregator;*/
-})->where(["op" => "[0-3]{1}", "arg1" => "[-0-9]+", "arg2" => "[-0-9]+"]);
+});
 
 Route::get("/test-bitrix", function (Request $request) {
     $bot = Bot::query()->where("bot_domain", "isushibot")

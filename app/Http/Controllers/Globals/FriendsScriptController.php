@@ -9,6 +9,7 @@ use App\Models\Bot;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
 use App\Models\ReferralHistory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\FileUpload\InputFile;
@@ -59,48 +60,33 @@ class FriendsScriptController extends SlugController
 
     }
 
+    public function loadScriptVariants(Request $request){
+
+        $bot = $request->bot ?? null;
+
+        //SELECT * FROM `bot_menu_slugs` WHERE (`slug`="global_friends_main" AND `bot_id`=21) OR `parent_slug_id`=1531 OR `parent_slug_id`=1574
+        $scripts = BotMenuSlug::query()
+            ->where("slug","global_friends_main")
+            ->where("bot_id",$bot->id)
+            ->get();
+
+        $ids = $scripts->pluck("id");
+
+        $parentScripts = BotMenuSlug::query()
+            ->where("bot_id",$bot->id)
+            ->whereIn("parent_slug_id", $ids)
+            ->get();
+
+        return [...$scripts->toArray(), ...$parentScripts->toArray()];
+    }
+
+
 
     public function inviteFriends(...$config)
     {
         $bot = BotManager::bot()->getSelf();
 
         $botUser = BotManager::bot()->currentBotUser();
-
-
-        function prepareContent($text, $botUser, $bot): array|string
-        {
-            $botDomain = $bot->bot_domain;
-
-            $qrLink = "https://t.me/$botDomain?start=" .
-                base64_encode("011" . BotManager::bot()->getCurrentChatId());
-
-            $name = $botUser->name ?? 'Имя не указано';
-            $phone = $botUser->phone ?? 'Телефон не указан';
-
-            $friendCount = ReferralHistory::query()
-                ->where("user_sender_id", $botUser->user_id)
-                ->where("bot_id", $bot->id)
-                ->count();
-
-            $can_be_tags = ["b","i"];
-
-            foreach ($can_be_tags as $tag){
-                if (strpos($text, "<$tag>")>=0 && !strpos($text, "</$tag>")
-                    || strpos($text, "</$tag>")>=0 && !strpos($text, "<$tag>"))
-                       $text = str_replace(["<$tag>","</$tag>"], '', $text);
-            }
-
-            $qr = "<a href='https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qrLink'>QR-код</a>";
-
-            $text = str_replace(["{{name}}"], $name ?? 'имя не указано', $text);
-            $text = str_replace(["{{phone}}"], $phone ?? 'телефон не указан', $text);
-            $text = str_replace(["{{qr}}"], $qr, $text);
-            $text = str_replace(["{{qrLink}}"], $qrLink, $text);
-            $text = str_replace(["{{friendsCount}}"], $friendCount ?? '0', $text);
-            $text = str_replace(["%s"], $friendCount ?? '0', $text);
-            return str_replace(["{{username}}"], "@" . ($username ?? 'имя не указано'), $text);
-
-        }
 
         $mainText = ((Collection::make($config[1])
                 ->where("key", "main_text")
@@ -121,11 +107,10 @@ class FriendsScriptController extends SlugController
             $imgPath;
 
 
-        Log::info("text in friends script:$mainText");
         \App\Facades\BotManager::bot()
-            ->reply(prepareContent($mainText, $botUser, $bot));
+            ->reply($this->prepareContent($mainText, $botUser, $bot));
 
-        $message = prepareContent($referralText, $botUser, $bot);
+        $message = $this->prepareContent($referralText, $botUser, $bot);
 
         if (is_null($imgPath))
             \App\Facades\BotManager::bot()

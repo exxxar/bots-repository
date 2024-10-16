@@ -35,6 +35,20 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
             <div class="mb-1 alert alert-light py-2 px-2"
                  v-for="(item, index) in filteredConfigs">
 
+                <div v-if="filteredConfigs[index].type==='large-text' || filteredConfigs[index].type==='text'">
+                    Вы можете выбрать параметры для подстановки значений
+                    <div class="dropdown d-inline-flex">
+                        <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li v-for="templ in templates"><a class="dropdown-item"
+                                                              @click="filteredConfigs[index].value += '<b>'+templ.key+'</b>'"
+                                                              href="javascript:void(0)">{{templ.title}}</a></li>
+
+                        </ul>
+                    </div>
+                </div>
 <!--
                 <div class="dropdown w-100 d-flex justify-content-end">
                     <a href="javascript:void(0)" class=" text-primary p-1 rounded-0" type="button"
@@ -167,10 +181,10 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
              style="border-radius:10px 10px 0px 0px;">
             <button class="btn btn-primary w-100 p-3 rounded-3 shadow-lg text-center">
             <span v-if="slugForm.id==null">
-                Сохранить команду
+                Сохранить
             </span>
                 <span v-else>
-                Обновить команду
+                Обновить
             </span>
             </button>
         </nav>
@@ -189,7 +203,36 @@ export default {
         return {
             filters: [],
             simple: true,
-
+            templates:[
+                {
+                    key:"{{name}}",
+                    title:"Имя пользователя"
+                },
+                {
+                    key:"{{phone}}",
+                    title:"Телефон пользователя"
+                },
+                {
+                    key:"{{qr}}",
+                    title:"QR-код"
+                },
+                {
+                    key:"{{qrLink}}",
+                    title:"Реферальная ссылка"
+                },
+                {
+                    key:"{{friendsCount}}",
+                    title:"Число друзей"
+                },
+                {
+                    key:"{{username}}",
+                    title:"Название аккаунта"
+                },
+                {
+                    key:"{{cashBack}}",
+                    title:"Сумма кэшбэка на аккаунте"
+                },
+            ],
             configTypes: [
                 {
                     title: 'Текстовый или числовой параметр',
@@ -266,7 +309,7 @@ export default {
     computed: {
         ...mapGetters(['getCurrentBot']),
         filteredConfigs() {
-            if (this.filters.length == 0)
+            if (this.filters.length === 0)
                 return this.slugForm.config
 
             return this.slugForm.config.filter(item => this.filters.indexOf(item.type) >= 0)
@@ -330,10 +373,11 @@ export default {
                 slugForm: data
             }).then((response) => {
 
-                this.$botNotification.notification(
-                    "Команды",
-                    "Команда успешно обновлена",
-                );
+                this.$notify({
+                    title: "Редактор",
+                    text: "Данные успешно сохранены",
+                    type: "success"
+                })
 
                 if (this.slugForm.id === null) {
                     this.slugForm.id = null
@@ -348,7 +392,11 @@ export default {
 
                 this.$emit("callback")
             }).catch(err => {
-
+                this.$notify({
+                    title: "Редактор",
+                    text: "Ошибка сохранения данных",
+                    type: "error"
+                })
             })
 
         },

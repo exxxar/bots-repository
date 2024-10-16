@@ -4,6 +4,7 @@ import cashBack from './modules/cashback';
 import admins from './modules/admins';
 
 import products from './modules/shop/products';
+import friends from './modules/globals/friends';
 import ingredients from './modules/ingrediens';
 
 import wheelOfFortune from "./modules/globals/wheelOfFortune";
@@ -165,6 +166,7 @@ export default createStore({
         friendsGame,
         mailing,
         iiko,
+        friends,
         reviews,
         bitrix
     }

@@ -1,3 +1,6 @@
+<script setup>
+import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
+</script>
 <template>
     <ul class="nav nav-tabs mb-2">
         <li class="nav-item">
@@ -12,6 +15,12 @@
                v-bind:class="{'active fw-bold':tab===1}"
                @click="tab=1"
                href="javascript:void(0)">CashBack</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link "
+               v-bind:class="{'active fw-bold':tab===2}"
+               @click="tab=2"
+               href="javascript:void(0)">Мои друзья</a>
         </li>
     </ul>
     <form
@@ -154,7 +163,8 @@
         v-if="tab===1"
         v-on:submit.prevent="submitBotForm">
         <div class="alert alert-light mb-2">
-            Максимальное значение CashBack, которое пользователь может списать во время покупки в магазине, в % от цены заказа.
+            Максимальное значение CashBack, которое пользователь может списать во время покупки в магазине, в % от цены
+            заказа.
         </div>
         <div class="form-floating mb-2">
             <input type="number"
@@ -168,7 +178,7 @@
         </div>
 
         <div class="alert alert-light mb-2">
-           Уровни автоматического начисления CashBack по реферальной программе, в %.
+            Уровни автоматического начисления CashBack по реферальной программе, в %.
         </div>
         <div class="form-floating mb-2">
             <input type="number"
@@ -247,8 +257,6 @@
                 </div>
 
 
-
-
             </div>
 
             <button
@@ -289,7 +297,7 @@
             </div>
 
 
-            <template  v-for="(warn, index) in botForm.warnings">
+            <template v-for="(warn, index) in botForm.warnings">
 
                 <p class="m-0 fst-italic">{{ getWarning(warn.rule_key).title || 'Не найдено' }}</p>
                 <div class="input-group mb-2">
@@ -329,12 +337,35 @@
             type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
         </button>
     </form>
+
+    <template v-if="tab===2">
+        <h6 class="fw-bold">Варианты скрипта</h6>
+        <ul class="list-group mb-2" v-if="(scripts||[]).length>0">
+            <li
+                @click="selectScript(item)"
+                v-for="item in scripts"
+                v-bind:class="{'bg-primary text-white':(selected_script||{id:null}).id===item.id}"
+                class="list-group-item d-flex justify-content-between">{{ item.command || '-' }} <small class="fw-bold">#{{
+                    item.id
+                }}</small>
+            </li>
+        </ul>
+        <h6 class="fw-bold">Редактор</h6>
+        <SlugForm :item="selected_script"
+                  v-on:callback="callbackScriptChange"
+                  v-if="load_script"/>
+    </template>
+
+
 </template>
 <script>
 export default {
     data() {
         return {
-            tab:0,
+            scripts: [],
+            selected_script: null,
+            load_script: true,
+            tab: 0,
             need_cashback_config: false,
             need_cashback_rules: false,
             need_cashback_fired: false,
@@ -392,7 +423,7 @@ export default {
             ],
             selected_warning: null,
             botForm: {
-                warnings:[],
+                warnings: [],
                 payment_provider_token: null,
                 auto_cashback_on_payments: false,
                 level_1: 0,
@@ -485,6 +516,12 @@ export default {
             })
         }
     },
+    watch: {
+        tab(oldV, newV) {
+            if (this.tab === 2)
+                this.loadFriendsScriptVariants()
+        }
+    },
     mounted() {
         const company = this.currentBot.company
 
@@ -510,7 +547,7 @@ export default {
             if (!links)
                 return false
 
-            let params = ['inst', 'vk', 'map_link','site']
+            let params = ['inst', 'vk', 'map_link', 'site']
             let isCorrect = false
             let correctCount = 0;
             Object.keys(links).forEach(key => {
@@ -559,16 +596,16 @@ export default {
 
 
             this.$store.dispatch("updateBotParams", {
-                    botForm: data
-                }).then((response) => {
-                    this.$notify({
-                        title: "Информация о боте",
-                        text: "Информация о боте успешно обновлена!",
-                        type: "success"
-                    })
-                    this.$emit("callback", response.data)
+                botForm: data
+            }).then((response) => {
+                this.$notify({
+                    title: "Информация о боте",
+                    text: "Информация о боте успешно обновлена!",
+                    type: "success"
+                })
+                this.$emit("callback", response.data)
 
-                    window.location.reload()
+                window.location.reload()
             }).catch(err => {
                 this.$notify({
                     title: "Информация о боте",
@@ -578,6 +615,33 @@ export default {
             })
 
         },
+        callbackScriptChange() {
+            this.loadFriendsScriptVariants()
+        },
+        loadFriendsScriptVariants() {
+            this.selected_script = null
+            this.load_script = false
+            this.$store.dispatch("friendsLoadScriptVariants")
+                .then((response) => {
+                    this.load_script = true
+                    this.scripts = response || []
+                    if (this.scripts.length > 0)
+                        this.selectScript(this.scripts[0])
+
+                })
+                .catch(err => {
+                    this.load_script = true
+                })
+        },
+        selectScript(item) {
+            this.selected_script = null
+            this.load_script = false
+            this.$nextTick(() => {
+                this.selected_script = item
+                this.load_script = true
+            })
+        },
+
         submitCompanyForm() {
             let data = new FormData();
             Object.keys(this.companyForm)

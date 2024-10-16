@@ -462,6 +462,7 @@ export const deliveryRoutes = [
 ];
 
 import CatalogV2 from '@/ClientTg/Pages/V2/Shop/Catalog.vue';
+import WaiterCatalogV2 from '@/ClientTg/Pages/V2/Waiter/Catalog.vue';
 import ContactsV2 from '@/ClientTg/Pages/V2/Shop/Contacts.vue';
 import OrdersV2 from '@/ClientTg/Pages/V2/Shop/MyOrders.vue';
 import ProfileV2 from '@/ClientTg/Pages/V2/Shop/Profile.vue';
@@ -506,6 +507,12 @@ export const simpleRoutes = [
         name: 'CatalogV2',
         path: simplePrefix + '/catalog',
         component: CatalogV2,
+        meta: {title: 'Каталог'}
+    },
+    {
+        name: 'WaiterCatalogV2',
+        path: simplePrefix + '/waiter',
+        component: WaiterCatalogV2,
         meta: {title: 'Каталог'}
     },
 

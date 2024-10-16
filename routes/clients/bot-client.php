@@ -99,6 +99,15 @@ Route::prefix("bot-client")
                 Route::post('/finish-game', "finishGame");
             });
 
+        Route::prefix("friends")
+            ->controller(\App\Http\Controllers\Globals\FriendsScriptController::class)
+            ->middleware(["tgAuth.any", "slug"])
+            ->group(function () {
+                Route::post('/load-script-variants', "loadScriptVariants");
+                Route::post('/store', "store");
+                Route::delete('/remove/{id}', "destroy");
+            });
+
         Route::prefix("media")
             ->controller(\App\Http\Controllers\Bots\MediaController::class)
             ->middleware(["tgAuth.admin"])

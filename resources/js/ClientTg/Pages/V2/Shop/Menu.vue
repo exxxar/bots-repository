@@ -367,11 +367,9 @@ export default {
 
         this.loadScriptModuleData()
 
-        console.log("menu")
         this.tg.BackButton.onClick(() => {
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
 
-            console.log("menu BackButton")
             if (this.$route.name === "MenuV2")
                 this.tg.close()
             else
@@ -399,7 +397,6 @@ export default {
                     })
 
                     this.loadScriptData = true
-                    console.log("uploaded data", this.script_data)
                 })
             })
         },
