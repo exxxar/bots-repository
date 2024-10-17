@@ -42,8 +42,17 @@ export default {
                     waiter: null, //официант
                     //данные поля можно сделать в отдельной таблице многие ко многим
                     //или завести таблицу истории
-                    persons:[], // персоны за столом
-                    order:[],
+                    persons:[
+                       //список пользователей бота
+                    ], // персоны за столом
+                    order:[
+                        {
+                            product_id:null,
+                            count:0,
+                            bot_user_id:null,
+                            created_at:null,
+                        }
+                    ],
                     start_at: null, //начал использоваться
                     closed_at: null, //закончил использоваться
                 }

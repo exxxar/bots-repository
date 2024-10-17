@@ -403,6 +403,7 @@ class BotAdministrativeLogicFactory
             "user_telegram_chat_id" => "required",
             "amount" => "required",
             "info" => "required",
+            "message" => "",
         ]);
 
         if ($validator->fails())
@@ -451,6 +452,14 @@ class BotAdministrativeLogicFactory
             $percent,
             $needUserReview
         ));
+
+        if (isset($data["message"]))
+            BotManager::bot()
+                ->setBot($this->bot)
+                ->sendMessage(
+                    $this->botUser->telegram_chat_id,
+                    $data["message"] ?? "Спасибо за использование нашего сервиса!"
+                );
     }
 
     /**

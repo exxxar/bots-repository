@@ -130,6 +130,7 @@ class AdminBotController extends Controller
             "user_telegram_chat_id" => "required",
             "amount" => "required",
             "info" => "required",
+            "message" => "",
         ]);
 
         BusinessLogic::administrative()

@@ -89,6 +89,15 @@
                                       id="bill-info" rows="3" required></textarea>
                             <label for="bill-info" class="form-label">Информация о чеке, номер</label>
                         </div>
+
+                        <div class="form-floating mb-3">
+
+                            <textarea class="form-control"
+                                      placeholder="Комментарий"
+                                      v-model="cashbackForm.message"
+                                      id="message" style="min-height:150px;"></textarea>
+                            <label for="message" class="form-label">Комментарий для пользователя</label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button
@@ -118,6 +127,7 @@ export default {
                 need_user_review: false,
                 category: null,
                 amount: null,
+                message: null,
                 info: null
             }
         }
@@ -146,6 +156,7 @@ export default {
                 this.loading = false
                 this.cashbackForm.amount = 0
                 this.cashbackForm.info = null
+                this.cashbackForm.message = null
                 this.$emit("callback")
                 this.$notify({
                     title: 'Отлично!',

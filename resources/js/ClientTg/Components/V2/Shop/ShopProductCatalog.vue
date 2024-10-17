@@ -619,8 +619,8 @@ export default {
 
 .catalog-tabs {
     .nav-item {
-        position: relative;
-        bottom: -1px;
+      //  position: relative;
+      //  bottom: -1px;
     }
 }
 
