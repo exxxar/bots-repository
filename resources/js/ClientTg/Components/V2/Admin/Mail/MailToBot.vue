@@ -22,12 +22,6 @@ import MailingTable from "@/ClientTg/Components/V2/Admin/Mail/MailingTable.vue";
             </label>
         </div>
 
-        <div class="form-floating mb-2">
-            <input type="datetime-local" class="form-control"
-                   v-model="mailForm.cron_time" required
-                   id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Планируемое время</label>
-        </div>
 
         <div class="form-check">
             <input class="form-check-input"
@@ -40,10 +34,40 @@ import MailingTable from "@/ClientTg/Components/V2/Admin/Mail/MailingTable.vue";
         </div>
 
         <div class="mb-2" v-if="need_page_images">
-            <BotMediaList
-                :need-photo="true"
-                :selected="mailForm.images"
-                v-on:select="selectImages"></BotMediaList>
+            <div class="divider my-3">Изображения</div>
+            <p class="mb-2" v-if="(mailForm.images||[]).length>0">Выбрано <span
+                class="fw-bold text-primary">{{ mailForm.images.length }}</span> из <span class="fw-bold text-primary">10</span>
+                изображений. Нажмите <span class="fw-bold text-danger text-decoration-underline cursor-pointer"
+                                           @click="clearImages">очистить</span> чтоб отменить выбор изображений.</p>
+            <button type="button" class="btn btn-outline-light text-primary w-100 p-3" data-bs-toggle="modal"
+                    data-bs-target="#select-images">
+                <i class="fa-solid fa-image mr-2"></i> Выбрать изображение
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="select-images" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <BotMediaList
+                                :need-photo="true"
+                                :selected="mailForm.images"
+                                v-on:select="selectImages"></BotMediaList>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                    v-bind:class="{'btn-secondary':(mailForm.images||[]).length===0,'btn-primary':(mailForm.images||[]).length>0}"
+                                    class="btn  w-100 p-3" data-bs-dismiss="modal">
+                                <span v-if="(mailForm.images||[]).length===0">Закрыть</span>
+                                <span v-if="(mailForm.images||[]).length>0">Выбрать и закрыть</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
 
@@ -57,32 +81,55 @@ import MailingTable from "@/ClientTg/Components/V2/Admin/Mail/MailingTable.vue";
         </div>
 
         <div class="mb-2" v-if="need_inline_menu">
-
-            <button class="btn mb-2 w-100" type="button"
-                    v-bind:class="{'btn-outline-primary':!showInlineTemplateSelector,'btn-primary':showInlineTemplateSelector}"
-                    @click="showInlineTemplateSelector = !showInlineTemplateSelector"
+            <div class="divider my-3">Меню</div>
+            <button class="btn mb-2 w-100 p-3 btn-outline-light text-primary" type="button"
+                    data-bs-toggle="modal" data-bs-target="#show-keyboard-template-list"
             >
-
-                <span v-if="!showInlineTemplateSelector">  Открыть шаблоны меню</span>
-                <span v-else> Скрыть шаблоны меню</span>
+                Открыть шаблоны меню
             </button>
 
-            <KeyboardList
-                class="mb-2"
-                :type="'inline'"
-                v-if="showInlineTemplateSelector"
-                v-on:select="selectInlineKeyboard"
-                :select-mode="true"/>
+            <!-- Modal -->
+            <div class="modal fade" id="show-keyboard-template-list" data-bs-backdrop="static" data-bs-keyboard="false"
+                 tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <KeyboardList
+                                class="mb-2"
+                                :type="'inline'"
+                                v-on:select="selectInlineKeyboard"
+                                :select-mode="true"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary p-3 w-100"
+                                    id="show-keyboard-template-list-btn-close"
+                                    data-bs-dismiss="modal">Выбрать и закрыть
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <KeyboardConstructor
                 :type="'inline'"
-                v-else
+                v-if="!showInlineTemplateSelector"
                 v-on:save="saveInlineKeyboard"
                 :edited-keyboard="mailForm.inline_keyboard"/>
 
 
         </div>
 
+        <div class="alert alert-light mb-2">
+            Вы можете указать <span class="fw-bold text-primary">любое время</span> для рассылки! Наши рассылки
+            запускаются <span class="fw-bold text-primary">каждые 2 часа</span> и будут выполнены, если указанное вами
+            время уже наступило.
+        </div>
+        <div class="form-floating mb-2">
+            <input type="datetime-local" class="form-control"
+                   v-model="mailForm.cron_time" required
+                   id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Планируемое время</label>
+        </div>
 
         <button
             type="submit" class="btn btn-primary w-100 p-3">
@@ -92,9 +139,7 @@ import MailingTable from "@/ClientTg/Components/V2/Admin/Mail/MailingTable.vue";
 
     </form>
 
-    <h6 class="opacity-75 mb-3 text-center"><i class="fa-solid fa-hourglass-half  text-primary mr-2 my-3"></i> Рассылки
-        в
-        очереди</h6>
+    <div class="divider my-3"><i class="fa-solid fa-hourglass-half  text-primary mr-2"></i> Рассылки в очереди</div>
 
 
     <MailingTable
@@ -134,16 +179,16 @@ export default {
     },
     watch: {
         'need_inline_menu': {
-            handler: function(newValue) {
-                if (!this.need_inline_menu){
-                    this.mailForm.inline_keyboard = null
+            handler: function (newValue) {
+                if (!this.need_inline_menu) {
+                   // this.mailForm.inline_keyboard = null
                 }
             },
             deep: true
         },
         'need_page_images': {
-            handler: function(newValue) {
-                if (!this.need_page_images){
+            handler: function (newValue) {
+                if (!this.need_page_images) {
                     this.mailForm.images = []
                 }
             },
@@ -156,27 +201,45 @@ export default {
         }
     },
     methods: {
+        clearImages() {
+            this.mailForm.images = []
+
+            this.$notify({
+                title: "Отлично!",
+                text: "Изображения успешно очищены!",
+                type: "success"
+            });
+        },
         selectMailing(item) {
-            console.log("select", item)
+
+            if (item.inline_keyboard)
+                this.need_inline_menu = true
+
             this.load_form = false
             this.$nextTick(() => {
+
                 this.mailForm.id = item.id || null
                 this.mailForm.cron_time = item.cron_time ? this.$filters.local(item.cron_time) : null
                 this.mailForm.images = item.images || []
-                this.mailForm.inline_keyboard = item.inline_keyboard || null
                 this.mailForm.message = item.content || null
-
                 this.load_form = true
 
                 if (this.mailForm.images.length > 0)
                     this.need_page_images = true
+
+                if (item.inline_keyboard) {
+                    this.mailForm.inline_keyboard = {
+                        menu:JSON.parse(item.inline_keyboard),
+                    }
+                }
+
                 window.scroll(0, 0)
             })
 
 
         },
         selectImages(item) {
-            if (!this.mailForm.images|| typeof this.mailForm.images=="string" )
+            if (!this.mailForm.images || typeof this.mailForm.images == "string")
                 this.mailForm.images = []
 
             let index = this.mailForm.images.indexOf(item.file_id)
@@ -241,10 +304,17 @@ export default {
             this.mailForm.inline_keyboard = keyboard
         },
         selectInlineKeyboard(keyboard) {
-            this.mailForm.inline_keyboard = keyboard
 
+            this.showInlineTemplateSelector = true
+            this.$nextTick(() => {
+                this.mailForm.inline_keyboard = keyboard
 
-            this.showInlineTemplateSelector = false;
+                this.showInlineTemplateSelector = false;
+            })
+
+            let modal = document.querySelector("#show-keyboard-template-list-btn-close")
+            if (modal)
+                modal.click()
         },
 
         getPhoto(imgObject) {

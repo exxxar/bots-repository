@@ -5,215 +5,219 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
 <template>
 
     <div v-if="!editor&&mode===0">
-    <Popper>
-        <p class="mb-2"><i class="fa-regular fa-circle-question mr-1"></i>Инструкция</p>
-        <template #content>
-            <div class="text-left w-100 ">
-                <p class="mb-0 text-white"><i class="fa-solid fa-arrow-down"></i> - добавление в нижнюю часть новой
-                    строки (кнопки)</p>
-                <p class="mb-0 text-white"><i class="fa-solid fa-arrow-turn-up"></i> - добавление строки над выбранной
-                    строкой</p>
-                <p class="mb-0 text-white"><i class="fa-solid fa-arrow-turn-down"></i> - добавление строки под выбранной
-                    строкой</p>
-                <p class="mb-0 text-white"><i class="fa-solid fa-plus"></i> - добавление кнопки на строку</p>
-                <p class="mb-0 text-white"><i class="fa-solid fa-minus"></i> - удаление крайней левой кнопки из строки
-                    либо самой строки</p>
-                <p class="mb-0 text-white"><i class="fa-solid fa-xmark"></i> - отмена выделения</p>
-            </div>
-
-        </template>
-    </Popper>
-
-
-    <div class="mb-2 d-flex">
-
-        <button
-            title="добавление в нижнюю часть новой строки (кнопки)"
-            type="button"
-            class="btn btn-link mb-2 w-100"
-            style="font-size:12px;"
-            v-if="selectedRow==null"
-            @click="addRow"><i class="fa-solid fa-arrow-down"></i> Добавить строку
-        </button>
-        <button
-            type="button"
-            title="добавление строки над выбранной строкой"
-            class="btn btn-primary mb-2 mr-2"
-            v-if="selectedRow!=null"
-            @click="addRowAbove"><i class="fa-solid fa-arrow-turn-up"></i>
-        </button>
-        <button
-            type="button"
-            title="добавление строки под выбранной строкой"
-            class="btn btn-primary mb-2 mr-2"
-            v-if="selectedRow!=null"
-            @click="addRowBelow"><i class="fa-solid fa-arrow-turn-down"></i>
-        </button>
-
-
-        <button
-            type="button"
-            class="btn btn-primary mb-2 mr-2"
-            v-if="selectedRow!=null"
-            @click="moveRow(0)"><i class="fa-solid fa-arrows-up-to-line"></i>
-        </button>
-
-        <button
-            type="button"
-            class="btn btn-primary mb-2 mr-2"
-            v-if="selectedRow!=null"
-            @click="moveRow(1)"><i class="fa-solid fa-arrows-down-to-line"></i>
-        </button>
-
-        <button
-            type="button"
-            class="btn btn-outline-danger mb-2 mr-2"
-            v-if="selectedRow!=null"
-            @click="selectedRow=null"><i class="fa-solid fa-xmark"></i>
-        </button>
-
-
-    </div>
-
-
-    <p v-if="(keyboard||[]).length===0" class="text-danger font-weight-bold p-0 m-0">Элементы клавиатуры еще не добавлены</p>
-
-    <div v-if="(keyboard||[]).length>0">
-        <div class="row mb-0"
-
-             v-for="(row, rowIndex) in keyboard">
-            <!--            <div class="col-2 d-flex justify-content-around p-2">
-                            <button
-                                type="button"
-                                title="добавление кнопки на строку"
-                                class="btn btn-link w-100"
-                                @click="addColToRow(rowIndex)"><i class="fa-solid fa-plus"></i>
-                            </button>
-                            <button
-                                type="button"
-                                title="удаление крайней левой кнопки из строки либо самой строки"
-                                class="btn btn-link w-100"
-                                @click="removeColFromRow(rowIndex)"><i class="fa-solid fa-minus"></i>
-                            </button>
-
-                            <button
-                                type="button"
-                                class="btn btn-link w-100"
-                                @click="moveCol(rowIndex,0)"><i class="fa-solid fa-caret-left"></i>
-                            </button>
-
-                            <button
-                                type="button"
-                                class="btn btn-link w-100"
-                                @click="moveCol(rowIndex, 1)"><i class="fa-solid fa-caret-right"></i>
-                            </button>
-
-                        </div>-->
-            <div class="col-12 d-flex justify-content-center">
-
-                <div
-                    style="margin-right:5px;"
-                    class="btn-group dropdown-center w-100 mb-1"
-                    @click="selectIndex(rowIndex, colIndex)"
-                    v-for="(col, colIndex) in row">
-                    <input
-                        style="font-size:10px;"
-                        type="text"
-                        class="btn btn-outline-light text-primary w-100"
-                        v-model="keyboard[rowIndex][colIndex].text"
-                    />
-                    <!--                    <button type="button"
-                                                @click="openKeyboardEditorMenu(rowIndex,colIndex)"
-                                                class="btn btn-outline-primary" aria-expanded="false"
-                                                data-bs-reference="parent">
-                                            <i class="fa-solid fa-bars"></i>
-                                        </button>-->
-                    <div class="dropdown">
-                        <button
-
-                            style="border-radius:0 5px 5px 0px;"
-                            class="btn btn-outline-light text-primary" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fa-solid fa-bars"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item"
-                                   @click="openKeyboardEditorMenu(rowIndex,colIndex)"
-                                   href="javascript:void(0)">Редактор</a></li>
-
-                            <li>
-                                <a
-                                    href="javascript:void(0)"
-                                    title="добавление кнопки на строку"
-                                    class="dropdown-item"
-                                    v-if="selectedRow!=null"
-                                    @click="addColToRow()"><i class="fa-solid fa-plus"> </i> Добавить
-                                </a>
-                            </li>
-
-
-                            <li>
-                                <a
-                                    href="javascript:void(0)"
-                                    title="удаление крайней левой кнопки из строки либо самой строки"
-                                    class="dropdown-item"
-                                    v-if="selectedRow!=null"
-                                    @click="removeColFromRow()"><i class="fa-solid fa-minus"> </i> Удалить
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="javascript:void(0)"
-                                    class="dropdown-item"
-                                    v-if="selectedRow!=null"
-                                    @click="moveCol(0)"><i class="fa-solid fa-caret-left"> </i> Переместить
-                                </a>
-                            </li>
-
-
-                            <li>
-                                <a
-                                    href="javascript:void(0)"
-                                    class="dropdown-item"
-                                    v-if="selectedRow!=null"
-                                    @click="moveCol(1)"><i class="fa-solid fa-caret-right"> </i> Переместить
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div>
-
+        <Popper>
+            <p class="mb-2"><i class="fa-regular fa-circle-question mr-1"></i>Инструкция</p>
+            <template #content>
+                <div class="text-left w-100 ">
+                    <p class="mb-0 text-white"><i class="fa-solid fa-arrow-down"></i> - добавление в нижнюю часть новой
+                        строки (кнопки)</p>
+                    <p class="mb-0 text-white"><i class="fa-solid fa-arrow-turn-up"></i> - добавление строки над
+                        выбранной
+                        строкой</p>
+                    <p class="mb-0 text-white"><i class="fa-solid fa-arrow-turn-down"></i> - добавление строки под
+                        выбранной
+                        строкой</p>
+                    <p class="mb-0 text-white"><i class="fa-solid fa-plus"></i> - добавление кнопки на строку</p>
+                    <p class="mb-0 text-white"><i class="fa-solid fa-minus"></i> - удаление крайней левой кнопки из
+                        строки
+                        либо самой строки</p>
+                    <p class="mb-0 text-white"><i class="fa-solid fa-xmark"></i> - отмена выделения</p>
                 </div>
 
+            </template>
+        </Popper>
 
-            </div>
+
+        <div class="mb-2 d-flex">
+
+            <button
+                title="добавление в нижнюю часть новой строки (кнопки)"
+                type="button"
+                class="btn btn-link mb-2 w-100"
+                style="font-size:12px;"
+                v-if="selectedRow==null"
+                @click="addRow"><i class="fa-solid fa-arrow-down"></i> Добавить строку
+            </button>
+            <button
+                type="button"
+                title="добавление строки над выбранной строкой"
+                class="btn btn-primary mb-2 mr-2"
+                v-if="selectedRow!=null"
+                @click="addRowAbove"><i class="fa-solid fa-arrow-turn-up"></i>
+            </button>
+            <button
+                type="button"
+                title="добавление строки под выбранной строкой"
+                class="btn btn-primary mb-2 mr-2"
+                v-if="selectedRow!=null"
+                @click="addRowBelow"><i class="fa-solid fa-arrow-turn-down"></i>
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary mb-2 mr-2"
+                v-if="selectedRow!=null"
+                @click="moveRow(0)"><i class="fa-solid fa-arrows-up-to-line"></i>
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary mb-2 mr-2"
+                v-if="selectedRow!=null"
+                @click="moveRow(1)"><i class="fa-solid fa-arrows-down-to-line"></i>
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-outline-danger mb-2 mr-2"
+                v-if="selectedRow!=null"
+                @click="selectedRow=null"><i class="fa-solid fa-xmark"></i>
+            </button>
+
+
         </div>
 
 
-    </div>
+        <p v-if="(keyboard||[]).length===0" class="text-danger font-weight-bold p-0 m-0">Элементы клавиатуры еще не
+            добавлены</p>
 
-    <div class="form-check">
-        <input class="form-check-input"
-               type="checkbox"
-               v-model="showCode"
-               :id="'showCode'+uuid">
-        <label class="form-check-label" :for="'showCode'+uuid">
-            Отобразить код
-        </label>
-    </div>
+        <div v-if="(keyboard||[]).length>0">
+            <div class="row mb-0"
 
-    <div class="mb-0" v-if="showCode">
-        <label class="form-label" id="bot-domain">JSON-код клавиатуры</label>
-        <Vue3JsonEditor
-            v-if="!load"
-            :mode="'code'"
-            v-model="keyboard"
-            :show-btns="false"
-            :expandedOnStart="true"
-            @json-change="onJsonChange"
-        />
-    </div>
+                 v-for="(row, rowIndex) in keyboard">
+                <!--            <div class="col-2 d-flex justify-content-around p-2">
+                                <button
+                                    type="button"
+                                    title="добавление кнопки на строку"
+                                    class="btn btn-link w-100"
+                                    @click="addColToRow(rowIndex)"><i class="fa-solid fa-plus"></i>
+                                </button>
+                                <button
+                                    type="button"
+                                    title="удаление крайней левой кнопки из строки либо самой строки"
+                                    class="btn btn-link w-100"
+                                    @click="removeColFromRow(rowIndex)"><i class="fa-solid fa-minus"></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-link w-100"
+                                    @click="moveCol(rowIndex,0)"><i class="fa-solid fa-caret-left"></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-link w-100"
+                                    @click="moveCol(rowIndex, 1)"><i class="fa-solid fa-caret-right"></i>
+                                </button>
+
+                            </div>-->
+                <div class="col-12 d-flex justify-content-center">
+
+                    <div
+                        style="margin-right:5px;"
+                        class="btn-group dropdown-center w-100 mb-1"
+                        @click="selectIndex(rowIndex, colIndex)"
+                        v-for="(col, colIndex) in row">
+                        <input
+                            style="font-size:10px;"
+                            type="text"
+                            class="btn btn-outline-light text-primary w-100"
+                            v-model="keyboard[rowIndex][colIndex].text"
+                        />
+                        <!--                    <button type="button"
+                                                    @click="openKeyboardEditorMenu(rowIndex,colIndex)"
+                                                    class="btn btn-outline-primary" aria-expanded="false"
+                                                    data-bs-reference="parent">
+                                                <i class="fa-solid fa-bars"></i>
+                                            </button>-->
+                        <div class="dropdown">
+                            <button
+
+                                style="border-radius:0 5px 5px 0px;"
+                                class="btn btn-outline-light text-primary" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="fa-solid fa-bars"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item"
+                                       @click="openKeyboardEditorMenu(rowIndex,colIndex)"
+                                       href="javascript:void(0)">Редактор</a></li>
+
+                                <li>
+                                    <a
+                                        href="javascript:void(0)"
+                                        title="добавление кнопки на строку"
+                                        class="dropdown-item"
+                                        v-if="selectedRow!=null"
+                                        @click="addColToRow()"><i class="fa-solid fa-plus"> </i> Добавить
+                                    </a>
+                                </li>
+
+
+                                <li>
+                                    <a
+                                        href="javascript:void(0)"
+                                        title="удаление крайней левой кнопки из строки либо самой строки"
+                                        class="dropdown-item"
+                                        v-if="selectedRow!=null"
+                                        @click="removeColFromRow()"><i class="fa-solid fa-minus"> </i> Удалить
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        href="javascript:void(0)"
+                                        class="dropdown-item"
+                                        v-if="selectedRow!=null"
+                                        @click="moveCol(0)"><i class="fa-solid fa-caret-left"> </i> Переместить
+                                    </a>
+                                </li>
+
+
+                                <li>
+                                    <a
+                                        href="javascript:void(0)"
+                                        class="dropdown-item"
+                                        v-if="selectedRow!=null"
+                                        @click="moveCol(1)"><i class="fa-solid fa-caret-right"> </i> Переместить
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="showCode"
+                   :id="'showCode'+uuid">
+            <label class="form-check-label" :for="'showCode'+uuid">
+                Отобразить код
+            </label>
+        </div>
+
+        <div class="mb-0" v-if="showCode">
+            <label class="form-label" id="bot-domain">JSON-код клавиатуры</label>
+            <Vue3JsonEditor
+                v-if="!load"
+                :mode="'code'"
+                v-model="keyboard"
+                :show-btns="false"
+                :expandedOnStart="true"
+                @json-change="onJsonChange"
+            />
+        </div>
     </div>
 
     <div v-if="mode===1">
@@ -702,7 +706,9 @@ export default {
 
             this.select.row = rowIndex
             this.select.col = colIndex
-            this.select.text = this.keyboard[rowIndex][colIndex].text
+
+            if (this.keyboard[rowIndex])
+                this.select.text = this.keyboard[rowIndex][colIndex].text
 
             this.load = true
             this.$nextTick(() => {

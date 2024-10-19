@@ -46,7 +46,7 @@ BotManager::bot()
     ->route("/reset_all_bot_users (yes|[0-9a-zA-Z]+)", "resetAllBotUsers")
     ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     ->route("/diagnostic ([0-9]+)", "getDiagnosticTable")
-    // ->fallbackDocument("uploadAnyKindOfMedia")
+    //->fallbackDocument("uploadAnyKindOfMedia")
     ->fallbackAudio("uploadAnyKindOfMedia")
     ->fallbackSticker("uploadAnyKindOfMedia")
     ->fallbackVideo("uploadAnyKindOfMedia");
@@ -75,7 +75,7 @@ BotManager::bot()
                 'file_id' => $fileToSend,
             ], [
                 'caption' => $caption,
-                'type' => "photo"
+                'type' => "document"
             ]);
 
             $tmp = "<b>#$media->id</b> (<code>$fileToSend</code>),";
@@ -137,11 +137,11 @@ BotManager::bot()
             BotManager::bot()
                 ->sendDocument(
                     $channel,
-                    "#фото\n" .
+                    "#документ\n" .
                     "Идентификатор: $id\n" .
                     "Пользователь: $name\n" .
                     "Телефон: $phone\n\n" .
-                    "Подпись к фото: $caption\n\n",
+                    "Подпись к документу: $caption\n\n",
                     $fileToSend,
                     $thread
                 );
