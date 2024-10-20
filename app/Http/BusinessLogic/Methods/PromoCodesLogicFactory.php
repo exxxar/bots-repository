@@ -226,6 +226,7 @@ class PromoCodesLogicFactory
             }
         }
 
+
         if ($code->cashback_amount > 0) {
 
             $admin = BotUser::query()

@@ -52,7 +52,8 @@ export default {
             if (!window.isCorrectSchedule(this.bot.company.schedule))
                 return true
 
-            return (this.bot.company || {is_work: true}).is_work || this.settings.can_buy_after_closing
+
+            return (this.bot.company || {is_work: true}).is_work || this.settings ? this.settings.can_buy_after_closing : false
         },
     },
     methods: {

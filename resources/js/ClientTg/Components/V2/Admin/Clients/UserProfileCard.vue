@@ -12,6 +12,7 @@ import RequestUserProfile from "@/ClientTg/Components/V2/Admin/Clients/Modules/R
 import RequestInvoice from "@/ClientTg/Components/V2/Admin/Clients/Modules/RequestInvoice.vue";
 import CashBackList from "@/ClientTg/Components/V2/CashBack/CashBackList.vue";
 import RequestReview from "@/ClientTg/Components/V2/Admin/Clients/Modules/RequestReview.vue";
+import LastOrderHandler from "@/ClientTg/Components/V2/Admin/Clients/Modules/LastOrderHandler.vue";
 </script>
 <template v-if="botUser">
     <div class="btn-group w-100 my-3 px-3"
@@ -60,8 +61,15 @@ import RequestReview from "@/ClientTg/Components/V2/Admin/Clients/Modules/Reques
     </div>
 
     <div v-if="botUser&&tab===2">
+        <template v-if="work_with_orders">
+            <div class="divider" >Управление заказом</div>
+            <p class="text-center my-3 fw-bold text-primary">Заказ №{{order_id}}</p>
+            <LastOrderHandler class="mb-2"
+                              :order-id="order_id"
+                              :bot-user="botUser"></LastOrderHandler>
+        </template>
 
-
+        <div class="divider">Сервисы</div>
         <MessageToUser
             class="mb-2"
             :bot-user="botUser"></MessageToUser>
@@ -99,8 +107,10 @@ export default {
     props: ["modelValue"],
     data() {
         return {
+            work_with_orders:false,
             loading: false,
             reloadUsers: false,
+            order_id:null,
             tab: 0,
             botUser:null,
             request_telegram_chat_id: null,
@@ -114,6 +124,15 @@ export default {
         }
     },
     mounted() {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        this.order_id = JSON.parse(urlParams.get('order_id'));
+
+        if (this.order_id) {
+            this.work_with_orders = true
+        }
+
+
         if (this.modelValue)
             this.$nextTick(()=>{
                 this.botUser = this.modelValue

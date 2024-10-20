@@ -183,29 +183,41 @@ class StartCodesHandlerController extends Controller
 
         $attachedKeyboard = [];
         if ($botUser->is_admin) {
-            switch ($code) {
-                default:
-                case "001":
-                    $text = "Админ панель";
-                    $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu#/s/admin/clients";
-
-
-                    break;
-
-                case "003":
-                    $text = "Обратная связь";
-                    $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu#/s/admin/clients";
-
-                    break;
-
-
-            }
 
 
             $requestBotUser = BotUser::query()
                 ->where("bot_id", $bot->id)
                 ->where("telegram_chat_id", $request_id ?? null)
                 ->first();
+
+            $order = Order::query()
+                ->where("bot_id", $bot->id)
+                ->where("customer_id", $requestBotUser->id)
+                ->orderBy("created_at", "DESC")
+                ->first();
+
+            $tmpOrderURIId = "";
+            if (!is_null($order))
+                $tmpOrderURIId = "&order_id=$order->id";
+
+            switch ($code) {
+                default:
+                case "001":
+                    $text = "Админ панель";
+                    $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu$tmpOrderURIId#/s/admin/clients";
+
+
+                    break;
+
+                case "003":
+                    $text = "Обратная связь";
+                    $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu$tmpOrderURIId#/s/admin/clients";
+
+                    break;
+
+
+            }
+
 
             $requestKeyboard = [
                 [
@@ -219,6 +231,7 @@ class StartCodesHandlerController extends Controller
 
             ];
 
+
             $order = Order::query()
                 ->where("bot_id", $bot->id)
                 ->where("customer_id", $requestBotUser->id)
@@ -226,14 +239,14 @@ class StartCodesHandlerController extends Controller
                 ->first();
 
             if (!is_null($order)) {
-                if (!($order->is_cashback_crediting ?? true)){
+                if (!($order->is_cashback_crediting ?? true)) {
                     $requestKeyboard[] = [
                         ["text" => "💸Начислить пользователю CashBack",
                             "callback_data" => "/auto_send_cashback $request_id"],
                     ];
                 }
 
-                if ($order->status == OrderStatusEnum::NewOrder->value){
+                if ($order->status == OrderStatusEnum::NewOrder->value) {
                     $requestKeyboard[] = [
                         ["text" => "🚛Передать на доставку",
                             "callback_data" => "/send_to_delivery $request_id"],
@@ -320,7 +333,7 @@ class StartCodesHandlerController extends Controller
                 )
                 ->sendMessage(
                     $botUser->telegram_chat_id,
-                    "Вас и вашего друга $userName2 теперь обьеденяет еще и CashBack;)"
+                    "Вас и вашего друга $userName2 теперь объеденяет еще и CashBack;)"
                 );
         }
 
@@ -346,7 +359,8 @@ class StartCodesHandlerController extends Controller
 
     }
 
-    private function userOrder($telegramChatId, $orderId)
+    private
+    function userOrder($telegramChatId, $orderId)
     {
 
         $bot = BotManager::bot()->getSelf();

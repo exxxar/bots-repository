@@ -10,6 +10,8 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
 
 
     <div class="container shadow-lg border " v-if="botUser">
+
+
         <div class="row">
             <div class="col-lg-3 col-md-6 border-right bg-primary" v-if="botUser.manager">
                 <div
@@ -621,11 +623,14 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-body">
+                <div class="modal-body" v-if="botUser.manager">
                     <h6 class="text-center">Активируйте ваш ключ и получите дополнительные слоты</h6>
                     <PromoCodeActivateForm
                         v-on:callback="prepareManager"
                         :bot="bot"></PromoCodeActivateForm>
+                </div>
+                <div class="modal-body" v-else>
+                    <div class="alert alert-primary">Вы не являетесь менеджером!</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>

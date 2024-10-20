@@ -8,6 +8,7 @@ import UserProfileCard from "@/ClientTg/Components/V2/Admin/Clients/UserProfileC
         <div class="row">
             <div class="col-12">
                 <ul class="nav nav-tabs justify-content-center catalog-tabs">
+
                     <li class="nav-item">
                         <button
                             type="button"
