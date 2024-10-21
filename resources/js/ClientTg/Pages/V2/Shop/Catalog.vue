@@ -3,7 +3,7 @@ import ShopProductCatalog from "@/ClientTg/Components/V2/Shop/ShopProductCatalog
 </script>
 <template>
 
-    <ShopProductCatalog/>
+    <ShopProductCatalog :settings="settings"/>
 
     <nav
 
@@ -35,7 +35,20 @@ import {mapGetters} from "vuex";
 
 export default {
     data() {
-        return {}
+        return {
+            settings: {
+                is_disabled: false,
+                can_buy_after_closing: false,
+                disabled_text: null,
+                can_use_cash: true,
+                delivery_price_text: null,
+                min_price: 0,
+                min_price_for_cashback: 0,
+                menu_list_type: 0,
+                need_category_by_page: false,
+                need_pay_after_call: false,
+            },
+        }
     },
     computed: {
         ...mapGetters([
@@ -56,9 +69,22 @@ export default {
             return (this.bot.company || {is_work: true}).is_work || this.settings ? this.settings.can_buy_after_closing : false
         },
     },
+    mounted() {
+        this.loadShopModuleData()
+    },
     methods: {
         goToCart() {
             this.$router.push({name: 'ShopCartV2'})
+        },
+        loadShopModuleData() {
+            return this.$store.dispatch("loadShopModuleData").then((resp) => {
+                this.$nextTick(() => {
+                    Object.keys(resp).forEach(item => {
+                        this.settings[item] = resp[item]
+                        console.log("settings", this.settings[item], item)
+                    })
+                })
+            })
         },
 
     }

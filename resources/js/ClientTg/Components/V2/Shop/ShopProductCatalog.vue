@@ -215,24 +215,13 @@ import {mapGetters} from "vuex";
 import {v4 as uuidv4} from "uuid";
 
 export default {
-
+    props:["settings"],
     data() {
         return {
             tab: 1,
             load_content: false,
             load_collection: false,
-            settings: {
-                is_disabled: false,
-                can_buy_after_closing: false,
-                disabled_text: null,
-                can_use_cash: true,
-                delivery_price_text: null,
-                min_price: 0,
-                min_price_for_cashback: 0,
-                menu_list_type: 0,
-                need_category_by_page: false,
-                need_pay_after_call: false,
-            },
+
             product_type_display: 1,
             spent_time_counter: 0,
             is_requested: false,
@@ -341,7 +330,6 @@ export default {
 
         this.loadProducts()
         this.loadCollections()
-        this.loadShopModuleData()
 
         if (this.cartProducts.length > 0)
             this.loadActualProducts()
@@ -456,16 +444,7 @@ export default {
         nextCollections(index) {
             this.loadCollections(index)
         },
-        loadShopModuleData() {
-            return this.$store.dispatch("loadShopModuleData").then((resp) => {
-                this.$nextTick(() => {
-                    Object.keys(resp).forEach(item => {
-                        this.settings[item] = resp[item]
-                        console.log("settings", this.settings[item], item)
-                    })
-                })
-            })
-        },
+
         loadCollections(page = 0) {
             this.load_content = true
             this.load_collection = true
