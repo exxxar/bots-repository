@@ -323,7 +323,7 @@ class DeliveryLogicFactory
 
         $order = Order::query()
             ->where("bot_id", $this->bot->id)
-            ->where("customer_id", $this->botUser->id)
+            //->where("customer_id", $this->botUser->id)
             ->where("id", $orderId)
             ->orderBy("created_at", "DESC")
             ->first();
