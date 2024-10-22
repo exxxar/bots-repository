@@ -101,11 +101,11 @@ Route::prefix("bot-client")
 
         Route::prefix("friends")
             ->controller(\App\Http\Controllers\Globals\FriendsScriptController::class)
-            ->middleware(["tgAuth.any", "slug"])
+            ->middleware(["tgAuth.any"])
             ->group(function () {
                 Route::post('/load-script-variants', "loadScriptVariants");
-                Route::post('/store', "store");
-                Route::delete('/remove/{id}', "destroy");
+                Route::post('/store', "store")->middleware(["slug"]);
+                Route::delete('/remove/{id}', "destroy")->middleware(["slug"]);
             });
 
         Route::prefix("media")
@@ -260,6 +260,7 @@ Route::prefix("bot-client")
                         Route::post("/", [ProductController::class, "getOrders"]);
                         Route::post("/all", [ProductController::class, "getAllOrders"])->middleware(["tgAuth.admin"]);
                         Route::post("/repeat-order", [ProductController::class, "repeatOrder"]);
+                        Route::post("/get-order-by-id", [ProductController::class, "loadOrderById"]);
                         Route::post("/add-cashback-to-order", [ProductController::class, "addCashBackToOrder"])->middleware(["tgAuth.admin"]);
                         Route::post("/get-delivery-price", [ProductController::class, "getDeliveryPrice"])
                             ->middleware(["slug"]);

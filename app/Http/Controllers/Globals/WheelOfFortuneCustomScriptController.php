@@ -354,7 +354,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
     /**
      * @throws HttpException
      */
-    public function loadData(Request $request): \Illuminate\Http\JsonResponse
+    public function loadData(Request $request)
     {
 
         $bot = $request->bot ?? null;
@@ -372,31 +372,43 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "btn_text" => "Поехали!",
             "max_attempts" => 1,
             "can_play" => true,
-            "wheels" => array_values(Collection::make($slug->config ?? [])
-                    ->where("key", "wheel_text")
-                    ->toArray()) ?? [],
+            "wheels" => Collection::make($slug->config ?? [])
+                ->where("key", "wheel_text")
+                ->skip(0)
+                ->take(20)
+                ->values()
+                ->toArray(),
             "win_message" => "{{name}}, вы приняли участие в розыгрыше и выиграли приз {{prize}}. Наш менеджер свяжется с вами в ближайшее время!",
         ];
 
 
-        if (!is_null($slug->config ?? null)) {
+        $configCollection = Collection::make($slug->config)
+            ->where("key", "!=", "wheel_text")
+            ->all();
+
+
+        if (!is_null($configCollection ?? null)) {
             $tmp = [];
 
-            foreach ($slug->config ?? [] as $item) {
+            foreach ($configCollection ?? [] as $item) {
                 $item = (object)$item;
-                $tmp[$item->key] = is_null($item->value ?? null) ? ($dictionary[$item->key] ?? null) : $item->value;
+                $tmp[$item->key] = is_null($item->value ?? null) ? ($dictionary[$item->key] ?? "") : $item->value;
             }
+
 
             foreach ($dictionary as $key => $item) {
-                if (!isset($tmp[$key]))
-                    $tmp[$key] = $item;
+
+                if (!is_null($key ?? null))
+                    if (!array_key_exists($key, $tmp))
+                        $tmp["$key"] = $item;
+
+
             }
 
-
-            return response()->json($tmp);
+            return $tmp;
         }
 
-        return response()->json($dictionary);
+        return $dictionary;
 
     }
 

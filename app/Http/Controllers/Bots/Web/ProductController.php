@@ -152,6 +152,21 @@ class ProductController extends Controller
             ->addCashBackToOrder($request->all());
     }
 
+    public function loadOrderById(Request $request): \App\Http\Resources\OrderResource
+    {
+        $request->validate([
+            "order_id" => "required"
+        ]);
+
+        return BusinessLogic::delivery()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->getOrder($request->order_id ?? null);
+    }
+
+    /**
+     * @throws ValidationException
+     */
     public function repeatOrder(Request $request): ProductCollection
     {
         $request->validate([

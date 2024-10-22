@@ -62,8 +62,7 @@ import LastOrderHandler from "@/ClientTg/Components/V2/Admin/Clients/Modules/Las
 
     <div v-if="botUser&&tab===2">
         <template v-if="work_with_orders">
-            <div class="divider" >Управление заказом</div>
-            <p class="text-center my-3 fw-bold text-primary">Заказ №{{order_id}}</p>
+
             <LastOrderHandler class="mb-2"
                               :order-id="order_id"
                               :bot-user="botUser"></LastOrderHandler>
@@ -95,7 +94,6 @@ import LastOrderHandler from "@/ClientTg/Components/V2/Admin/Clients/Modules/Las
 
         <RequestInvoice class="mb-2"
                         :bot-user="botUser"></RequestInvoice>
-
 
     </div>
 </template>

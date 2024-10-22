@@ -556,6 +556,7 @@ class SimpleDeliveryController extends SlugController
         $botUser = $request->botUser ?? null;
         $slug = $request->slug ?? null;
 
+
         if (is_null($bot) || is_null($botUser) || is_null($slug))
             throw new HttpException(400, "Не заданы необходимые параметры функции");
 
@@ -567,16 +568,21 @@ class SimpleDeliveryController extends SlugController
             ->where("slug_id", $slug->id)
             ->first();
 
+
         if (is_null($action))
-            $action = ActionStatus::query()
-                ->create([
-                    'user_id' => $botUser->user_id,
-                    'bot_id' => $bot->id,
-                    'slug_id' => $slug->id,
-                    'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0,
-                    'bot_user_id' => $botUser->id
-                ]);
+
+                $action = ActionStatus::query()
+                    ->create([
+                        'user_id' => $botUser->user_id,
+                        'bot_id' => $bot->id,
+                        'slug_id' => $slug->id,
+                        'max_attempts' => $maxAttempts,
+                        'current_attempts' => 0,
+                        'bot_user_id' => $botUser->id
+                    ]);
+
+
+
 
 
         $action->max_attempts = $maxAttempts;

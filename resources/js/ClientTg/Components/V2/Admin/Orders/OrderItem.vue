@@ -20,7 +20,7 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
         <p><i class="fa-solid fa-stopwatch mr-1 text-primary"></i> Время заказа {{ item.created_at }}
 
         </p>
-        <ul>
+        <ul v-if="(item.product_details||[]).length>0">
             <li v-for="product in  item.product_details[0].products">{{ product.title }}</li>
         </ul>
 

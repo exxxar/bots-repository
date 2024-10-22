@@ -8,6 +8,7 @@ use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
 use App\Http\Resources\AmoCrmResource;
 use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\ProductCollection;
 use App\Models\AmoCrm;
 use App\Models\Bot;
@@ -117,12 +118,12 @@ class DeliveryLogicFactory
                 "amount" => $order->summary_price,
                 "info" => "Автоматическое начисление CashBack после заказа",
             ]);
-/*
-        BotMethods::bot()
-            ->whereBot($this->bot)
-            ->sendMessage(
-                $this->botUser->telegram_chat_id,
-                "Операция выполнена успешно!");*/
+        /*
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendMessage(
+                        $this->botUser->telegram_chat_id,
+                        "Операция выполнена успешно!");*/
     }
 
 
@@ -313,6 +314,27 @@ class DeliveryLogicFactory
     public function declineOrder($orderId)
     {
         //отмена заказа доставщиком и возврат в активные заказы
+    }
+
+    public function getOrder($orderId): OrderResource
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Бот не найден!");
+
+        $order = Order::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("customer_id", $this->botUser->id)
+            ->where("id", $orderId)
+            ->orderBy("created_at", "DESC")
+            ->first();
+
+
+        if (is_null($order))
+            throw new HttpException(404, "Заказ не найден!");
+
+
+        return new OrderResource($order);
+
     }
 
     /**

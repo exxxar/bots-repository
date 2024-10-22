@@ -332,7 +332,7 @@
         </div>
 
         <div class="row mb-0">
-            <p class="col-12 my-2">Заблокирован</p>
+            <p class="col-12 my-2">Блокировка пользователя</p>
             <div class="col-6">
                 <button
                     type="button"
@@ -352,10 +352,17 @@
                 </button>
             </div>
             <div class="col-12" v-if="botUserForm.is_blocked">
-                <label for="">Сообщение блокировки</label>
-                <input type="text" class="form-control"
-                       v-model="botUserForm.blocked_message"
-                       placeholder="Увы и ах.. ">
+
+                <div class="form-floating my-2">
+                     <textarea type="text" class="form-control"
+                               v-model="botUserForm.blocked_message"
+                               style="min-height:150px;"
+                               placeholder="Увы и ах.. ">
+                     </textarea>
+                    <label for="">Сообщение блокировки</label>
+                </div>
+
+
             </div>
         </div>
 

@@ -20,7 +20,7 @@ const getters = {
 
 const actions = {
 
-    async addCashBackToOrder(context, payload = {order_id:null}) {
+    async addCashBackToOrder(context, payload = {order_id: null}) {
         let link = `${BASE_ORDERS_LINK}/add-cashback-to-order`
 
         let _axios = util.makeAxiosFactory(link, "POST", payload)
@@ -44,7 +44,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadAllOrders(context, payload = {dataObject: {search: null, categories:null}, page: 0, size: 12}) {
+    async loadAllOrders(context, payload = {dataObject: {search: null, categories: null}, page: 0, size: 12}) {
         let data = {
             ...payload.dataObject
         }
@@ -68,7 +68,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadOrders(context, payload = {dataObject: {search: null, categories:null}, page: 0, size: 12}) {
+    async loadOrders(context, payload = {dataObject: {search: null, categories: null}, page: 0, size: 12}) {
         let data = {
             ...payload.dataObject
         }
@@ -96,6 +96,18 @@ const actions = {
         let link = `${BASE_ORDERS_LINK}/repeat-order`
 
         let _axios = util.makeAxiosFactory(link, "POST", payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async loadOrderById(context, payload = {dataObject: {order_id: null}}) {
+        let link = `${BASE_ORDERS_LINK}/get-order-by-id`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload.dataObject)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

@@ -34,7 +34,7 @@ class ActionStatus extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+
         'user_id' => 'integer',
         'bot_user_id' => 'integer',
         'bot_id' => 'integer',
