@@ -67,7 +67,7 @@ class FriendsScriptController extends SlugController
         //SELECT * FROM `bot_menu_slugs` WHERE (`slug`="global_friends_main" AND `bot_id`=21) OR `parent_slug_id`=1531 OR `parent_slug_id`=1574
         $scripts = BotMenuSlug::query()
             ->where("slug","global_friends_main")
-            ->where("bot_id",$bot->id)
+            //->where("bot_id",$bot->id)
             ->get();
 
         $ids = $scripts->pluck("id");
