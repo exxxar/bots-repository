@@ -399,10 +399,16 @@
             </button>
         </div>
 
+        <nav
+
+            class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+            style="border-radius:10px 10px 0px 0px;">
+
         <button type="submit"
                 class="btn btn-primary p-3 my-3 w-100">
             Сохранить
         </button>
+        </nav>
     </form>
 
 </template>

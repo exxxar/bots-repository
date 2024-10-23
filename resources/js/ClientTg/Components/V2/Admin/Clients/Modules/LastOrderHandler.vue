@@ -5,9 +5,9 @@ import OrderItem from "@/ClientTg/Components/V2/Admin/Orders/OrderItem.vue";
 
 <template>
 
-    <div class="divider" >Управление заказом</div>
+    <div class="divider mb-3" >Управление заказом</div>
 
-    <template v-if="loaded">
+    <template v-if="loaded&&errors.length===0">
         <p class="text-center my-3 fw-bold text-primary d-flex justify-content-between">
             <span>Заказ №{{orderId}}</span>
             <a
@@ -117,11 +117,18 @@ import OrderItem from "@/ClientTg/Components/V2/Admin/Orders/OrderItem.vue";
 
     </template>
     <div class="alert alert-light d-flex flex-column align-items-center justify-content-center" v-else>
-        Данные о заказе еще не загружены!
+       <template v-if="errors.length===0">
+       Данные о заказе еще не загружены!
 
-        <div class="spinner-border text-primary mt-3" role="status">
+        <div class="spinner-border text-primary mt-3"
+
+             role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
+       </template>
+        <template v-else>
+            <p class="mb-0" v-for="error in errors"><i class="fa-solid fa-triangle-exclamation text-danger"></i> {{error}}</p>
+        </template>
     </div>
 
     <!-- Modal -->
@@ -245,6 +252,7 @@ export default {
             order: {
                 status: 0
             },
+            errors:[],
             settings: {
                 order_status_0: null, //NewOrder
                 order_status_1: null, //InDelivery
@@ -262,6 +270,7 @@ export default {
     },
     methods: {
         loadOrderById() {
+            this.errors = []
             this.loaded = false
             this.$store.dispatch("loadOrderById", {
                 dataObject: {
@@ -276,6 +285,8 @@ export default {
                     text: 'Ошибка загрузки заказа',
                     type: 'error'
                 })
+
+                this.errors.push(`Заказ #${this.orderId} не найден в системе!`)
             })
         },
         autoCashback() {

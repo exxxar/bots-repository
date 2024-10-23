@@ -66,11 +66,32 @@ import WheelCustomScriptEditor
                     </div>
                 </div>
 
-                <div class=" w-100 py-2 alert alert-light">
-                    <p v-for="(item, index) in items" v-if="!selected_prize"
-                       @click="selectPrize(index)"
-                       class="mb-0">{{ item.value }} - {{ item.description }}</p>
-                </div>
+
+
+                    <p
+                        v-bind:class="{'alert-primary':!show_prizes,'alert-light': show_prizes}"
+                        class="my-2 d-flex justify-content-between alert  rounded-2 align-items-center">
+                        <span>
+                            <i class="fa-solid fa-dharmachakra"></i> Доступны призы
+                        </span>
+                        <button type="button" class="btn btn-light text-primary rounded-5"
+                                @click="show_prizes=false"
+                                v-if="show_prizes">Скрыть</button>
+                        <button type="button"
+                                @click="show_prizes=true"
+                                class="btn btn-primary rounded-5" v-else>Показать</button>
+                    </p>
+
+                    <template v-if="show_prizes">
+                        <div class="alert alert-light w-100">
+                            <p
+                                v-for="(item, index) in items" v-if="!selected_prize"
+                                @click="selectPrize(index)"
+                                class="mb-0">{{ item.value }} - {{ item.description }}</p>
+                        </div>
+
+                    </template>
+
 
                 <div class="wrap">
                     <Wheel
@@ -183,6 +204,7 @@ export default {
             action: null,
             script_data: null,
             selected_prize: null,
+            show_prizes: false,
             wheelDataLoaded: false,
             winForm: {
                 win: null,
