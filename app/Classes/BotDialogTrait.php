@@ -500,13 +500,13 @@ trait BotDialogTrait
             $step++;
         }
 
-        foreach ($variables as $data) {
+       /* foreach ($variables as $data) {
             $data = (object)$data;
 
             if ($data->need_print ?? false) {
                 $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
             }
-        }
+        }*/
 
 
         if (!is_null($botDialogCommand->rules ?? null)) {
