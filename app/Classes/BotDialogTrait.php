@@ -489,7 +489,7 @@ trait BotDialogTrait
 
                 $resultData .= "Вопрос #$step: <i>" . ($variable->key ?? '') . "</i>\n";
                 if ($variable->need_print ?? false)
-                    $resultData .= "<i>" . ($data->text ?? '-') . "</i>\n\n";
+                    $resultData .= "🟢Ответ <i>" . ($data->text ?? '-') . "</i>\n\n";
                 // Log::info(print_r($data, true));
             }
 
