@@ -217,18 +217,6 @@ trait BotDialogTrait
 
         $tmpSummary = $dialog->summary_input_data ?? [];
 
-
-        $dialog->current_input_data = is_null($text ?? null) ? null : (object)[
-            "text" => $text,
-            "question_text" => $botDialogCommand->pre_text ?? null,
-            "question_id" => $botDialogCommand->id ?? null
-        ];
-
-        $tmpSummary[] = $dialog->current_input_data;
-
-        $dialog->summary_input_data = $tmpSummary;
-        $dialog->completed_at = Carbon::now();
-
         $tmpVariables = $dialog->variables ?? [];
 
         $var = (object)[
@@ -237,6 +225,20 @@ trait BotDialogTrait
             "need_print" => count($botDialogCommand->answers ?? []) == 0,
             "custom_stored_value" => null,
         ];
+
+        $dialog->current_input_data = is_null($text ?? null) ? null : (object)[
+            "text" => $text,
+            "question_text" => $botDialogCommand->pre_text ?? null,
+            "question_id" => $botDialogCommand->id ?? null,
+            "variable"=>$var
+        ];
+
+        $tmpSummary[] = $dialog->current_input_data;
+
+        $dialog->summary_input_data = $tmpSummary;
+        $dialog->completed_at = Carbon::now();
+
+
 
         if (!is_null($botDialogCommand->custom_stored_value ?? null)) {
             $var->custom_stored_value = $botDialogCommand->custom_stored_value;
@@ -483,8 +485,11 @@ trait BotDialogTrait
         foreach ($dialogData as $data) {
             $data = (object)$data;
 
-            if (!is_null($data->question_text ?? null))
+            if (!is_null($data->question_text ?? null)) {
                 $resultData .= ($data->question_id ?? $step) . "=>" . ($data->text ?? '-') . "\n";
+                Log::info(print_r($data, true));
+            }
+
 
             if (is_string($data))
                 $resultData .= "Шаг $step: $data \n";
