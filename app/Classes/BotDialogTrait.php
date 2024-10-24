@@ -480,6 +480,7 @@ trait BotDialogTrait
 
         $resultData = "Диалог с пользователем <b>#$botUser->id</b> [<b>#$botDialogCommand->id</b>]: \n";
 
+        $tmpQ = [];
         $step = 1;
         foreach ($dialogData as $data) {
             $data = (object)$data;
@@ -487,10 +488,13 @@ trait BotDialogTrait
             if (!is_null($data->question_text ?? null)) {
                 $variable = (object)$data->variable;
 
-                $resultData .= "Вопрос #$step: <i>" . ($variable->key ?? '') . "</i>\n";
-                if ($variable->need_print ?? false)
-                    $resultData .= "🟢Ответ <i>" . ($data->text ?? '-') . "</i>\n\n";
-                // Log::info(print_r($data, true));
+                if (!in_array($data->question_id ?? -1, $tmpQ)) {
+                    $resultData .= "Вопрос #$step: <i>" . ($variable->key ?? '') . "</i>\n";
+                    if ($variable->need_print ?? false)
+                        $resultData .= "🟢Ответ: <b>" . ($data->text ?? '-') . "</b>\n\n";
+
+                    $tmpQ[] = $data->question_id ?? -1;
+                }
             }
 
 
@@ -500,13 +504,13 @@ trait BotDialogTrait
             $step++;
         }
 
-       /* foreach ($variables as $data) {
-            $data = (object)$data;
+        /* foreach ($variables as $data) {
+             $data = (object)$data;
 
-            if ($data->need_print ?? false) {
-                $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
-            }
-        }*/
+             if ($data->need_print ?? false) {
+                 $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
+             }
+         }*/
 
 
         if (!is_null($botDialogCommand->rules ?? null)) {
