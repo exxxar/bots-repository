@@ -484,7 +484,7 @@ trait BotDialogTrait
             $data = (object)$data;
 
             if (!is_null($data->question_text ?? null))
-                $resultData .= ($data->question_text ?? $step) . "=>" . ($data->text ?? '-') . "\n";
+                $resultData .= ($data->question_id ?? $step) . "=>" . ($data->text ?? '-') . "\n";
 
             if (is_string($data))
                 $resultData .= "Шаг $step: $data \n";
