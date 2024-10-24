@@ -487,8 +487,9 @@ trait BotDialogTrait
             if (!is_null($data->question_text ?? null)) {
                 $variable = (object)$data->variable;
 
+                $resultData .= "Вопрос #$step: <i>" . ($variable->key ?? '') . "</i>\n";
                 if ($variable->need_print ?? false)
-                    $resultData .= "Вопрос ".$step . ":\n<i>" . ($variable->key ?? '') . ":" . ($data->text ?? '-') . "</i>\n";
+                    $resultData .= "<i>" ($data->text ?? '-') . "</i>\n\n";
                 // Log::info(print_r($data, true));
             }
 
