@@ -230,14 +230,13 @@ trait BotDialogTrait
             "text" => $text,
             "question_text" => $botDialogCommand->pre_text ?? null,
             "question_id" => $botDialogCommand->id ?? null,
-            "variable"=>$var
+            "variable" => $var
         ];
 
         $tmpSummary[] = $dialog->current_input_data;
 
         $dialog->summary_input_data = $tmpSummary;
         $dialog->completed_at = Carbon::now();
-
 
 
         if (!is_null($botDialogCommand->custom_stored_value ?? null)) {
@@ -486,8 +485,11 @@ trait BotDialogTrait
             $data = (object)$data;
 
             if (!is_null($data->question_text ?? null)) {
-                $resultData .= ($data->question_id ?? $step) . "=>" . ($data->text ?? '-') . "\n";
-                Log::info(print_r($data, true));
+                $variable = (object)$data->variable;
+
+                if ($variable->need_print ?? false)
+                    $resultData .= "Вопрос ".$step . ":\n<i>" . ($variable->key ?? '') . ":" . ($data->text ?? '-') . "</i>\n";
+                // Log::info(print_r($data, true));
             }
 
 
