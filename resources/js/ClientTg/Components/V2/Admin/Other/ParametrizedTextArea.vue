@@ -19,12 +19,14 @@
         <div class="form-floating">
                 <textarea class="form-control"
                           v-model="message"
+
                           :maxlength="maxlength||'4000'"
                           style="min-height:150px;"
                           :required="required||false"
                           placeholder="Leave a comment here"
-                          id="script-settings-wheel-of-fortune-can_play"></textarea>
-            <label for="script-settings-disabled_text">
+
+                          :id="'script-settings-text'+uuid"></textarea>
+            <label :for="'script-settings-text'+uuid">
                 <slot name="title"></slot>
                 <span v-if="(message||'').length>0">{{ (message || '').length }}/{{ maxlength || 4000 }}</span>
             </label>
@@ -33,11 +35,20 @@
 
 </template>
 <script>
+import {v4 as uuidv4} from "uuid";
 export default {
     props: ["modelValue", "maxlength", "params","required"],
+    computed:{
+        uuid() {
+            return uuidv4();
+        }
+    },
     data() {
         return {
             message: null,
+            selection:{
+              start: 0,
+            },
             settings: [
                 {
                     title: 'Имя пользователя',
@@ -76,11 +87,17 @@ export default {
         })
     },
     methods: {
+        insert( text){
+            let cursorPosition = document.querySelector('#script-settings-text'+this.uuid).selectionStart || 0;
+            let tmp = this.message;
+            this.message = tmp.slice(0, cursorPosition)
+                + '<b>' + text+'</b>' + tmp.slice(cursorPosition);
+        },
         addCommand(item) {
             if (!this.message)
                 this.message = ""
 
-            this.message += item.key
+            this.insert(item.key)
         }
     }
 }

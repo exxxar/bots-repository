@@ -1472,6 +1472,7 @@ class BotLogicFactory
         $tmp->server = $request->server ?? null;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
+        $tmp->config = isset($data["config"]) ? json_decode($data["config"] ?? '[]') : null;
 
         $tmp->menu = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
         $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
@@ -1685,6 +1686,7 @@ class BotLogicFactory
         $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
         $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
         $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
+        $tmp->config = isset($data["config"]) ? json_decode($data["config"] ?? '[]') : null;
         $tmp->menu = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
         $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
         $tmp->is_active = true;

@@ -85,7 +85,7 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
         <div class="alert alert-light mb-2">
             <p class="mb-0">
                 <i class="fa-solid fa-trophy text-primary"></i>
-                Призы, которые может выиграть пользователь, максимум <strong class="fw-bold text-primary">10</strong>
+                Призы, которые может выиграть пользователь, максимум <strong class="fw-bold text-primary">20</strong>
             </p>
             <p class="mb-0"
                v-if="form.wheels.length===0"><strong class="fw-bold text-primary">Внимание!</strong> Вы еще не добавили
@@ -167,7 +167,7 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
 
         <button
             type="button"
-            v-if="form.wheels.length<10"
+            v-if="form.wheels.length<20"
             @click="addWheel"
             class="btn btn-outline-primary p-3 w-100 mb-5">Добавить приз
         </button>
@@ -232,7 +232,7 @@ export default {
             if (!this.form.wheels)
                 this.form.wheels = []
 
-            if (this.form.wheels.length < 10) {
+            if (this.form.wheels.length < 20) {
 
                 this.form.wheels.push({
                     key: "wheel_text",

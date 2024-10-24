@@ -43,7 +43,7 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
                         </button>
                         <ul class="dropdown-menu">
                             <li v-for="templ in templates"><a class="dropdown-item"
-                                                              @click="filteredConfigs[index].value += '<b>'+templ.key+'</b>'"
+                                                              @click="insert(index, templ)"
                                                               href="javascript:void(0)">{{templ.title}}</a></li>
 
                         </ul>
@@ -71,7 +71,7 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
 -->
 
                 <div class="form-floating mb-1"
-                     v-if="filteredConfigs[index].type==='text' || filteredConfigs[index].type==='channel'">
+                     v-if="filteredConfigs[index].type==='channel'">
 
                     <input type="text" class="form-control" :id="'field-input-'+index"
                            v-model="filteredConfigs[index].value"
@@ -137,16 +137,18 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
                            type="color" :id="'filtered-config-'+index+'-color'">
 
                 </div>
-                <div class="form-floating mb-1" v-if="filteredConfigs[index].type==='large-text'">
-
-                    <textarea class="form-control font-12" :id="'field-input-'+index"
+                <template v-if="filteredConfigs[index].type==='large-text'">
+                    <div class="form-floating mb-1" >
+                            <textarea class="form-control font-12" :id="'field-input-'+index"
                               v-model="filteredConfigs[index].value"
                               style="min-height: 200px;"
                               placeholder="name@example.com">
                             </textarea>
-                    <label :for="'field-input-'+index">Значение для
-                        <strong>{{ filteredConfigs[index].key }}</strong></label>
-                </div>
+                        <label :for="'field-input-'+index">Значение для
+                            <strong>{{ filteredConfigs[index].key }}</strong></label>
+                    </div>
+                </template>
+
                 <template v-if="filteredConfigs[index].type==='image'">
                     <div class="form-floating mb-3">
 
@@ -160,14 +162,33 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
 
                     </div>
 
+                    <button type="button"
+                            @click="filteredConfigs[index].gallery_visible = !filteredConfigs[index].gallery_visible"
+                            class="btn btn-primary w-100 mb-2"  >
+                        <i class="fa-regular fa-images mr-2"></i>
+                       <span v-if="!filteredConfigs[index].gallery_visible">Открыть галерею</span>
+                       <span v-else>Закрыть галерею</span>
+                    </button>
+
                     <BotMediaList
+                        v-if="filteredConfigs[index].gallery_visible"
                         :need-video="false"
                         :need-photo="true"
                         :selected="[filteredConfigs[index].value]"
                         v-on:select="selectPhoto($event, index)"></BotMediaList>
 
                 </template>
-                <p class="fst-italic mb-0">{{item.description||'Описания нет'}}</p>
+                <p class="fw-bold mb-0 d-flex justify-content-between">Описание скрипта
+                    <span class="text-primary" @click="item.can_edit_description=!item.can_edit_description"><i class="fa-regular fa-pen-to-square "></i></span>
+                </p>
+                <p class="fst-italic mb-0" v-if="!item.can_edit_description">{{filteredConfigs[index].description||'Описания нет'}}</p>
+                <div class="form-floating" v-else>
+                    <textarea class="form-control"
+                              :id="'description-input-'+index"
+                              v-model="filteredConfigs[index].description"
+                              placeholder="Leave a comment here"></textarea>
+                    <label :for="'description-input-'+index">Описание</label>
+                </div>
             </div>
 
 
@@ -333,6 +354,12 @@ export default {
     },
 
     methods: {
+        insert(index, templ){
+            let cursorPosition = document.querySelector('#field-input-'+index).selectionStart || 0;
+            let tmp = this.filteredConfigs[index].value;
+            this.filteredConfigs[index].value = tmp.slice(0, cursorPosition)
+                + '<b>' + templ.key+'</b>' + tmp.slice(cursorPosition);
+        },
         move(index, direction = 0) {
             let tmp = this.slugForm.config[index]
 

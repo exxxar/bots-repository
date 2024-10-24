@@ -216,9 +216,16 @@ trait BotDialogTrait
         }
 
         $tmpSummary = $dialog->summary_input_data ?? [];
-        $tmpSummary[] = $text;
 
-        $dialog->current_input_data = $text ?? null;
+
+        $dialog->current_input_data = is_null($text ?? null) ? null : (object)[
+            "text" => $text,
+            "question_text" => $botDialogCommand->pre_text ?? null,
+            "question_id" => $botDialogCommand->id ?? null
+        ];
+
+        $tmpSummary[] = $dialog->current_input_data;
+
         $dialog->summary_input_data = $tmpSummary;
         $dialog->completed_at = Carbon::now();
 
@@ -268,7 +275,7 @@ trait BotDialogTrait
 
                     if (mb_strtolower(trim($text)) == mb_strtolower(trim($item->answer))) {
 
-                        Log::info("совпал ответ $text == $item->answer ".print_r($item->toArray(), true));
+                        Log::info("совпал ответ $text == $item->answer " . print_r($item->toArray(), true));
 
                         $tmpItem = (object)$item;
                         $tmpItem->need_print = $item->need_print ?? false;
@@ -297,24 +304,24 @@ trait BotDialogTrait
 
                 //if (!is_null($tmpItem->custom_stored_value ?? null)) {
 
-                    $tmpV = $botDialogCommand->use_result_as ?? null;
-                    $tmpVariables = $dialog->variables ?? [];
+                $tmpV = $botDialogCommand->use_result_as ?? null;
+                $tmpVariables = $dialog->variables ?? [];
 
-                    for ($index = 0; $index < count($tmpVariables); $index++) {
-                        $var = (object)$tmpVariables[$index];
+                for ($index = 0; $index < count($tmpVariables); $index++) {
+                    $var = (object)$tmpVariables[$index];
 
-                        if ($var->key == $tmpV || $var->key == "key_$dialog->id") {
-                            $var->custom_stored_value = $tmpItem->custom_stored_value ?? null;
-                            $var->need_print = $tmpItem->need_print ?? false;
-                        }
-                        $tmpVariables[$index] = $var;
+                    if ($var->key == $tmpV || $var->key == "key_$dialog->id") {
+                        $var->custom_stored_value = $tmpItem->custom_stored_value ?? null;
+                        $var->need_print = $tmpItem->need_print ?? false;
                     }
+                    $tmpVariables[$index] = $var;
+                }
 
-                    $dialog->variables = $tmpVariables;
+                $dialog->variables = $tmpVariables;
                 //    $dialog->save();
-               // }
+                // }
 
-                Log::info("viriables_on_step=>".print_r($dialog->variables, true));
+                Log::info("viriables_on_step=>" . print_r($dialog->variables, true));
 
                 BotDialogResult::query()->create([
                     'bot_user_id' => $botUser->id,
@@ -380,7 +387,7 @@ trait BotDialogTrait
                 }
 
                 $dialog->variables = $tmpVariables;
-              //  $dialog->save();
+                //  $dialog->save();
             }
 
             BotDialogResult::query()->create([
@@ -474,7 +481,13 @@ trait BotDialogTrait
 
         $step = 1;
         foreach ($dialogData as $data) {
-            $resultData .= "Шаг $step: $data \n";
+            $data = (object)$data;
+
+            if (!is_null($data->question_text ?? null))
+                $resultData .= $data->quest_text . "=>" . $data->text . "\n";
+
+            if (is_string($data))
+                $resultData .= "Шаг $step: $data \n";
 
             $step++;
         }
@@ -483,9 +496,7 @@ trait BotDialogTrait
             $data = (object)$data;
 
             if ($data->need_print ?? false) {
-                Log::info("need_print_data=>".print_r($data, true));
                 $resultData .= $data->key . "=" . $data->value . "(" . ($data->custom_stored_value ?? '-') . ")\n";
-
             }
         }
 
