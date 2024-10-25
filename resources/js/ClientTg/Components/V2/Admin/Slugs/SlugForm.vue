@@ -137,6 +137,17 @@ import BotMediaList from "@/ClientTg/Components/V1/BotMediaList.vue";
                            type="color" :id="'filtered-config-'+index+'-color'">
 
                 </div>
+
+                <template v-if="filteredConfigs[index].type==='text'">
+                    <div class="form-floating mb-1" >
+                            <input type="text" class="form-control font-12" :id="'field-input-'+index"
+                                      v-model="filteredConfigs[index].value"
+                                      placeholder="name@example.com"/>
+                        <label :for="'field-input-'+index">Значение для
+                            <strong>{{ filteredConfigs[index].key }}</strong></label>
+                    </div>
+                </template>
+
                 <template v-if="filteredConfigs[index].type==='large-text'">
                     <div class="form-floating mb-1" >
                             <textarea class="form-control font-12" :id="'field-input-'+index"

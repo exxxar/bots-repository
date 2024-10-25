@@ -1129,7 +1129,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                         <div class="form-floating">
                             <input type="text"
                                    v-model="pageForm.password"
-                                   class="form-control" id="floatingPassword" placeholder="Пароль">
+                                   class="form-control" id="floatingPassword" placeholder="Пароль" required>
                             <label for="floatingPassword">Пароль страницы</label>
                         </div>
 
