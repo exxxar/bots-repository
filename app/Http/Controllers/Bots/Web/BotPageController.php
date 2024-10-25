@@ -47,6 +47,14 @@ class BotPageController extends Controller
         if (is_null($action))
             return response()->noContent(404);
 
+        if ($page->password != ($request->password ?? null)) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage($botUser->telegram_chat_id, "Ошибка ввода пароля страницы!");
+            return response()->noContent(400);
+        }
+
+
         $action->data = (object)[
             "activate_at" => Carbon::now()
         ];

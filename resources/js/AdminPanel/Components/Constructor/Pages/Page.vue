@@ -1656,7 +1656,7 @@ export default {
                 if (this.pageForm.sticker)
                     this.need_page_sticker = true
 
-                if (this.pageForm.password)
+                if (this.pageForm.password != null)
                     this.need_secure_page = true
 
                 this.need_clean = true
