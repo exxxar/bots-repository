@@ -16,6 +16,8 @@ class BotPageResource extends JsonResource
             'id' => $this->id ?? null,
             'slug' => $this->whenLoaded('slug'),
             'content' => $this->content ?? null,
+            'password'=> $this->password ?? null,
+            'password_description'=> $this->password_description ?? null,
             'images' => $this->images ?? null,
             'videos' => $this->videos ?? null,
             'audios' => $this->audios ?? null,
@@ -41,6 +43,8 @@ class BotPageResource extends JsonResource
             'rules_if_message'=> $this->rules_if_message ?? null,
             'rules_else_message'=> $this->rules_else_message ?? null,
             'deleted_at'=> $this->deleted_at ?? null,
+
+
         ];
     }
 }

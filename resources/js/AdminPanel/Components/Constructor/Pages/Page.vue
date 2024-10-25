@@ -20,7 +20,8 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                 <strong class="fw-bold">Внимание!</strong> Вы можете создать сразу все страницы через <a
                 href="javascript:void(0)"
                 class="text-primary fw-bold"
-                @click="fastCreate"><i class="fa-solid fa-bolt"></i> быстрое создание страниц</a>, а затем наполнить их контентом!
+                @click="fastCreate"><i class="fa-solid fa-bolt"></i> быстрое создание страниц</a>, а затем наполнить их
+                контентом!
             </div>
         </div>
     </div>
@@ -28,7 +29,8 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
     <div class="row" v-if="pageForm.id">
         <div class="col-12">
             <div class="alert alert-light" role="alert">
-                <strong class="fw-bold">Внимание!</strong> Вы в режиме редактирования страницы (кнопки) <strong style="font-size:16px;">{{
+                <strong class="fw-bold">Внимание!</strong> Вы в режиме редактирования страницы (кнопки) <strong
+                style="font-size:16px;">{{
                     page.slug ? page.slug.command : 'Без названия'
                 }}</strong>, если хотите создать новую нажмите <a
                 href="javascript:void(0)" class="btn btn-primary ml-2" @click="clearForm">Создать новую страницу</a>
@@ -336,7 +338,18 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                             <span>Правила</span>
                         </a>
                     </li>
-
+                    <li
+                        class="nav-item "
+                        @click="tab=11"
+                    >
+                        <a
+                            v-bind:class="{'active':tab===11,'primary-mark':need_secure_page}"
+                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
+                            href="javascript:void(0)">
+                            <i class="fa fa-key" aria-hidden="true"></i>
+                            <span>Безопасная страница</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
@@ -451,7 +464,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                 </div>
             </div>
 
-
             <div v-show="tab===1">
                 <div class="col-12 mb-2" v-if="need_inline_menu">
                     <div class="form-check">
@@ -530,7 +542,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                     </div>
                 </div>
             </div>
-
 
             <div v-show="tab===2">
                 <div class="col-12 mb-2" v-if="need_page_images">
@@ -725,7 +736,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                 </div>
             </div>
 
-
             <div v-show="tab===5">
                 <div class="col-12 mb-2" v-if="need_page_audios">
                     <div class="form-check">
@@ -910,7 +920,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                 </div>
             </div>
 
-
             <div v-show="tab===8">
                 <div class="col-12 mb-2" v-if="need_attach_slug">
 
@@ -995,7 +1004,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                     </div>
                 </div>
             </div>
-
 
             <div v-show="tab===9">
                 <div class="col-12 mb-2" v-if="need_attach_dialog">
@@ -1094,6 +1102,81 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                             </button>
                             <a href="https://telegra.ph/Pravila-na-stranice-01-03"
                                target="_blank"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                            >
+                                Подробнее
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-show="tab===11">
+                <div class="col-12 mb-2" v-if="need_secure_page">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_secure_page"
+                               type="checkbox" id="need-secure-page">
+                        <label class="form-check-label" for="need-secure-pag">
+                            Безопасная страница
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 mb-2" v-if="need_secure_page">
+
+                    <div class="input-group mb-2">
+
+                        <div class="form-floating">
+                            <input type="text"
+                                   v-model="pageForm.password"
+                                   class="form-control" id="floatingPassword" placeholder="Пароль">
+                            <label for="floatingPassword">Пароль страницы</label>
+                        </div>
+
+                        <span class="input-group-text" id="basic-addon1">
+                            <a href="javascript:void(0)" @click="renewPassword"> <i class="fa fa-refresh"
+                                                                                    aria-hidden="true"></i></a>
+                        </span>
+                    </div>
+
+
+                    <div class="form-floating">
+                        <textarea class="form-control"
+                                  v-model="pageForm.password_description"
+                                  placeholder="Пояснение" id="floatingTextarea2" style="height: 200px"></textarea>
+                        <label for="floatingTextarea2">
+                            Пояснение для пользователя
+                            <span class="small"
+                                  v-if="(pageForm.password_description||'').length>0">{{
+                                    pageForm.password_description.length
+                                }}/512</span>
+                        </label>
+                    </div>
+
+                </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Безопасная страница</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Создайте безопасную страницу, доступ к которой будет только у тех людей, кому вы дадите
+                            пароль! Люди, которые получат один раз пароль, смогут постоянно заходить на данную страницу,
+                            даже если вы смените его.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_secure_page"
+                                @click="need_secure_page=true"
+                                v-bind:class="{'btn-primary':!need_secure_page,'btn-outline-secondary':need_secure_page}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <a href="https://telegra.ph/Nizhnee-menyu-bota-01-03" target="_blank"
                                class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
                             >
                                 Подробнее
@@ -1384,7 +1467,7 @@ export default {
     data() {
         return {
 
-            need_page_create_from_keyboard:false,
+            need_page_create_from_keyboard: false,
 
             tab: 0,
             links: [],
@@ -1417,6 +1500,7 @@ export default {
             need_attach_dialog: false,
             need_attach_slug: false,
             need_rules: false,
+            need_secure_page: false,
 
             bot: null,
             pageForm: {
@@ -1425,6 +1509,9 @@ export default {
                 command: null,
                 slug: null,
                 comment: null,
+
+                password: null,
+                password_description: null,
 
                 videos: [],
                 images: [],
@@ -1452,7 +1539,13 @@ export default {
         }
     },
     watch: {
+        'need_secure_page': function (newVal, oldVal) {
+            if (!this.need_secure_page) {
+                this.pageForm.password = null
+                this.pageForm.password_description = null
+            }
 
+        },
         'need_page_images': function (newVal, oldVal) {
             if (!this.need_page_images) {
                 this.photos = []
@@ -1562,6 +1655,9 @@ export default {
 
                 if (this.pageForm.sticker)
                     this.need_page_sticker = true
+
+                if (this.pageForm.password)
+                    this.need_secure_page = true
 
                 this.need_clean = true
             },
@@ -1679,7 +1775,7 @@ export default {
     },
 
     methods: {
-        callbackFastPageCreate(){
+        callbackFastPageCreate() {
             this.loaded_page_list = false
 
             this.$nextTick(() => {
@@ -1688,7 +1784,7 @@ export default {
 
             this.fastPageModal.hide()
         },
-        fastCreate(){
+        fastCreate() {
             this.fastPageModal = new bootstrap.Modal(document.getElementById('fast-pages-create'), {})
             this.fastPageModal.show()
         },
@@ -1705,6 +1801,16 @@ export default {
             }).then((response) => {
                 this.links = response.data
             })
+        },
+        renewPassword() {
+
+            let letters = '0123456789ABCDEF';
+            let tmp = "";
+            for (let i = 0; i < 10; i++) {
+                tmp += letters[Math.floor(Math.random() * letters.length)];
+            }
+
+            this.pageForm.password = tmp
         },
         removeLink(index) {
             this.links.splice(index, 1)
@@ -1731,6 +1837,7 @@ export default {
             this.need_attach_page = false
             this.need_attach_dialog = false
             this.need_attach_slug = false
+            this.need_secure_page = false
             this.need_rules = false
 
             this.links = []
@@ -1741,6 +1848,8 @@ export default {
                 this.pageForm.id = page.id
                 this.pageForm.slug_id = page.slug ? page.slug.id : null
                 this.pageForm.content = page.content
+                this.pageForm.password = page.password || null
+                this.pageForm.password_description = page.password_description || null
                 this.pageForm.command = page.slug ? page.slug.command : null
                 this.pageForm.slug = page.slug ? page.slug.slug : null
                 this.pageForm.comment = page.slug ? page.slug.comment : null

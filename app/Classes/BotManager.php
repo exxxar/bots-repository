@@ -433,6 +433,21 @@ class BotManager extends BotCore
             );
         }
 
+        if (!is_null($page->password ?? null) ) {
+            $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&page_id=$page->id#/enter-page-password";
+
+            $this->replyInlineKeyboard($page->password_description ?? 'Страница защищена ключом!', [
+                [
+                    ["text" => "💎Ввести ключ",
+                        "web_app" => [
+                            "url" => $path
+                        ]
+                    ],
+                ]
+            ]);
+            return;
+        }
+
         $inlineKeyboard = $page->inlineKeyboard ?? null;
         $replyKeyboard = $page->replyKeyboard ?? null;
 

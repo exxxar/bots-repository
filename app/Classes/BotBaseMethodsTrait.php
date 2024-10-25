@@ -852,7 +852,7 @@ trait BotBaseMethodsTrait
         try {
             $data = $this->bot->sendPhoto($tmp);
         } catch (\Exception $e) {
-            Log::info("error in sendPhoto".$e);
+            Log::info("error in sendPhoto ".$e->getMessage());
             empty($keyboard ?? []) ?
                 $this->sendMessage($chatId, $caption ?? 'Ошибочка...', $messageThreadId) :
                 $this->sendInlineKeyboard($chatId, $caption ?? 'Ошибочка...', $keyboard, $messageThreadId);

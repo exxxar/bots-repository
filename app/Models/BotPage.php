@@ -20,6 +20,8 @@ class BotPage extends Model
     protected $fillable = [
         'bot_menu_slug_id',
         'content',
+        'password',
+        'password_description',
         'images',
         'videos',
         'audios',

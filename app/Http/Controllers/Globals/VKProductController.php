@@ -638,7 +638,6 @@ class VKProductController extends Controller
 
       //  $shopMode = $bot->shop_mode ?? 0;
 
-
         if (is_null($bot))
             return response()->noContent(404);
 
