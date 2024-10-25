@@ -52,7 +52,7 @@ class BotPageController extends Controller
         ];
         $action->save();
 
-        \App\Facades\BotManager::bot()->runPage($request->page_id);
+        \App\Facades\BotManager::bot()->runPage($request->page_id, $bot, $botUser);
 
         return response()->noContent();
     }
