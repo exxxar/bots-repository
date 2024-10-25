@@ -312,6 +312,7 @@ class VKProductController extends Controller
             ->get();
 
         foreach ($products as $product) {
+            Log::info("ПРОДУКТ => ".$product->id." ".$product->title ." ".$product->bot_id);
             $product->in_stop_list_at = Carbon::now();
             $product->deleted_at = Carbon::now();
             $product->save();

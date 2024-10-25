@@ -205,14 +205,11 @@ class StartCodesHandlerController extends Controller
                 case "001":
                     $text = "Админ панель";
                     $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu$tmpOrderURIId#/s/admin/clients";
-
-
                     break;
 
                 case "003":
                     $text = "Обратная связь";
                     $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu$tmpOrderURIId#/s/admin/clients";
-
                     break;
 
 

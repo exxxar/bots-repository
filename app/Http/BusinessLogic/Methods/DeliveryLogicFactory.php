@@ -441,7 +441,6 @@ class DeliveryLogicFactory
             "search" => "",
             "order_by" => "",
             "direction" => "",
-
         ]);
 
 

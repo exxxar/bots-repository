@@ -270,12 +270,12 @@ export default {
             errors: [],
             spent_time_counter: 0,
             settings: {
-                order_status_0: null, //NewOrder
-                order_status_1: null, //InDelivery
-                order_status_2: null, //Completed
-                order_status_3: null, //Decline
-                order_status_4: null, //ReadyForDelivery
-                order_status_5: null, //StartsCooking
+                order_status_0: "Статус вашего заказа установлен как 'Принят в работу'", //NewOrder
+                order_status_1: "Статус вашего заказа изменен на 'Доставляется'", //InDelivery
+                order_status_2: "Статус вашего заказа изменен на 'Завершен'", //Completed
+                order_status_3: "Статус вашего заказа изменен на 'Отменен'", //Decline
+                order_status_4: "Статус вашего заказа изменен на 'Готов к доставке'", //ReadyForDelivery
+                order_status_5: "Статус вашего заказа изменен на 'Передан на кухню'", //StartsCooking
             }
 
         }
@@ -290,12 +290,12 @@ export default {
             this.loadOrderById()
 
         if (this.currentBot.config) {
-            this.settings.order_status_0 = this.currentBot.config.order_status_0 || null
-            this.settings.order_status_1 = this.currentBot.config.order_status_1 || null
-            this.settings.order_status_2 = this.currentBot.config.order_status_2 || null
-            this.settings.order_status_3 = this.currentBot.config.order_status_3 || null
-            this.settings.order_status_4 = this.currentBot.config.order_status_4 || null
-            this.settings.order_status_5 = this.currentBot.config.order_status_5 || null
+            this.settings.order_status_0 = this.currentBot.config.order_status_0 || "Статус вашего заказа установлен как 'Принят в работу'"
+            this.settings.order_status_1 = this.currentBot.config.order_status_1 || "Статус вашего заказа изменен на 'Доставляется'"
+            this.settings.order_status_2 = this.currentBot.config.order_status_2 || "Статус вашего заказа изменен на 'Завершен'"
+            this.settings.order_status_3 = this.currentBot.config.order_status_3 || "Статус вашего заказа изменен на 'Отменен'"
+            this.settings.order_status_4 = this.currentBot.config.order_status_4 || "Статус вашего заказа изменен на 'Готов к доставке'"
+            this.settings.order_status_5 = this.currentBot.config.order_status_5 || "Статус вашего заказа изменен на 'Передан на кухню'"
         }
 
         if (localStorage.getItem("cashman_order_cashback_add_counter") != null) {

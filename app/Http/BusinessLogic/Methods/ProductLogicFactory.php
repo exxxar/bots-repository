@@ -446,6 +446,7 @@ class ProductLogicFactory
 
         $product->delete();
 
+        Log::info("запустилось удаление продуктов!");
         return new ProductResource($tmpProduct);
     }
 
@@ -537,7 +538,7 @@ class ProductLogicFactory
             $product->delete();
         }
 
-
+        Log::info("запустилось удаление ВСЕХ продуктов!");
     }
 
     /**
