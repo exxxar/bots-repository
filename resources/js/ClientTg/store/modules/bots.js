@@ -27,6 +27,22 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async storeMessageSettings(context, payload = {dataObject: null}) {
+
+        let link = `${BASE_BOTS_LINK}/store-message-settings`
+        let method = 'POST'
+        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async storeBotFields(context, payload = {dataObject: null}) {
 
         let link = `${BASE_BOTS_LINK}/store-fields`

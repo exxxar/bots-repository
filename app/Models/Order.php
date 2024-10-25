@@ -53,6 +53,7 @@ class Order extends Model
         'id' => 'integer',
         'bot_id' => 'integer',
         'deliveryman_id' => 'integer',
+        'status' => 'integer',
         'customer_id' => 'integer',
         'is_cashback_crediting' => 'boolean',
         'delivery_service_info' => 'array',

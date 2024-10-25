@@ -260,6 +260,9 @@ Route::prefix("bot-client")
                         Route::post("/", [ProductController::class, "getOrders"]);
                         Route::post("/all", [ProductController::class, "getAllOrders"])->middleware(["tgAuth.admin"]);
                         Route::post("/repeat-order", [ProductController::class, "repeatOrder"]);
+                        Route::post("/decline-order", [ProductController::class, "declineOrder"]);
+                        Route::post("/change-order-status", [ProductController::class, "changeStatusOrder"])
+                            ->middleware(["tgAuth.admin"]);
                         Route::post("/get-order-by-id", [ProductController::class, "loadOrderById"]);
                         Route::post("/add-cashback-to-order", [ProductController::class, "addCashBackToOrder"])->middleware(["tgAuth.admin"]);
                         Route::post("/get-delivery-price", [ProductController::class, "getDeliveryPrice"])
@@ -500,6 +503,10 @@ Route::prefix("bot-client")
                     ->middleware(["tgAuth.manager"]);
                 Route::post("/store-fields", "storeBotFields")
                     ->middleware(["tgAuth.admin"]);
+                Route::post("/store-message-settings", "storeMessageSettings")
+                    ->middleware(["tgAuth.admin"]);
+
+
                 Route::get("/load-fields", "loadBotFields");
                 Route::post('/manager-switch-status', "switchBotStatusManager")
                     ->middleware(["tgAuth.manager"]);

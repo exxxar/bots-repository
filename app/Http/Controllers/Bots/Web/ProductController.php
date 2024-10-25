@@ -23,6 +23,25 @@ use Illuminate\Validation\ValidationException;
 class ProductController extends Controller
 {
 
+    public function changeStatusOrder(Request $request): \Illuminate\Http\Response
+    {
+        $request->validate([
+            "order_id" => "required",
+            "status" => "required"
+        ]);
+
+        BusinessLogic::delivery()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->changeStatusOrder(
+                $request->order_id ?? null,
+                $request->status ?? 0,
+                $request->user_telegram_chat_id ?? null
+            );
+
+        return response()->noContent();
+    }
+
     /**
      * @throws ValidationException
      */
@@ -63,10 +82,10 @@ class ProductController extends Controller
             ->setSlug($request->slug ?? null)
             ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
 
-        $distance = $tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0,2) : 0;
+        $distance = $tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0;
         return response()->json([
             "distance" => $distance,
-            "price" => round($min_base_delivery_price + $distance * $price_per_km,2)
+            "price" => round($min_base_delivery_price + $distance * $price_per_km, 2)
         ]);
     }
 
@@ -83,6 +102,9 @@ class ProductController extends Controller
 
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function getOrders(Request $request): \App\Http\Resources\OrderCollection
     {
         return BusinessLogic::delivery()
@@ -99,13 +121,14 @@ class ProductController extends Controller
         return BusinessLogic::review()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->reviews( $request->all(), $request->get("size") ?? config('app.results_per_page'));
+            ->reviews($request->all(), $request->get("size") ?? config('app.results_per_page'));
     }
+
     public function getReviewsByProductId(Request $request): \App\Http\Resources\ReviewCollection
     {
 
         $request->validate([
-            "product_id"=>"required"
+            "product_id" => "required"
         ]);
 
         return BusinessLogic::review()
@@ -114,12 +137,14 @@ class ProductController extends Controller
             ->reviewsByProductId($request->product_id, $request->get("size") ?? config('app.results_per_page'));
     }
 
-    public function notifyUser(Request $request){
-         BusinessLogic::review()
+    public function notifyUser(Request $request)
+    {
+        BusinessLogic::review()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
             ->notifyUserForReview($request->all());
     }
+
     /**
      * @throws ValidationException
      */
@@ -135,13 +160,14 @@ class ProductController extends Controller
             ->setBotUser($request->botUser ?? null)
             ->store($request->all(),
                 $request->hasFile('photo') ?
-                $request->file('photo') : null);
+                    $request->file('photo') : null);
     }
 
     /**
      * @throws ValidationException
      */
-    public function addCashBackToOrder(Request $request){
+    public function addCashBackToOrder(Request $request)
+    {
         $request->validate([
             "order_id" => "required"
         ]);
@@ -162,6 +188,20 @@ class ProductController extends Controller
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
             ->getOrder($request->order_id ?? null);
+    }
+
+    public function declineOrder(Request $request): \Illuminate\Http\Response
+    {
+        $request->validate([
+            "order_id" => "required"
+        ]);
+
+        BusinessLogic::delivery()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->declineOrder($request->order_id ?? null);
+
+        return response()->noContent();
     }
 
     /**

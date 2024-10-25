@@ -19,7 +19,18 @@ const getters = {
 }
 
 const actions = {
+    async declineOrder(context, payload = {dataObject: {order_id: null}}) {
+        let link = `${BASE_ORDERS_LINK}/decline-order`
 
+        let _axios = util.makeAxiosFactory(link, "POST", payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async addCashBackToOrder(context, payload = {order_id: null}) {
         let link = `${BASE_ORDERS_LINK}/add-cashback-to-order`
 
@@ -106,6 +117,19 @@ const actions = {
     },
     async loadOrderById(context, payload = {dataObject: {order_id: null}}) {
         let link = `${BASE_ORDERS_LINK}/get-order-by-id`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+
+    async changeOrderStatus(context, payload = {dataObject: {status: null}}) {
+        let link = `${BASE_ORDERS_LINK}/change-order-status`
 
         let _axios = util.makeAxiosFactory(link, "POST", payload.dataObject)
 

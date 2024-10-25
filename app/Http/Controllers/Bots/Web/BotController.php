@@ -93,6 +93,15 @@ class BotController extends Controller
     /**
      * @throws ValidationException
      */
+    public function storeMessageSettings(Request $request): \App\Http\Resources\BotSecurityResource
+    {
+        return BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->storeMessageSettings($request->all());
+    }
+    /**
+     * @throws ValidationException
+     */
     public function storeBotFields(Request $request): \App\Http\Resources\BotCustomFieldSettingCollection
     {
         $request->validate([

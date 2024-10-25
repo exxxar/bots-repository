@@ -62,7 +62,6 @@ import LastOrderHandler from "@/ClientTg/Components/V2/Admin/Clients/Modules/Las
 
     <div v-if="botUser&&tab===2">
         <template v-if="work_with_orders">
-
             <LastOrderHandler class="mb-2"
                               :order-id="order_id"
                               :bot-user="botUser"></LastOrderHandler>
@@ -105,12 +104,12 @@ export default {
     props: ["modelValue"],
     data() {
         return {
-            work_with_orders:false,
+            work_with_orders: false,
             loading: false,
             reloadUsers: false,
-            order_id:null,
+            order_id: null,
             tab: 0,
-            botUser:null,
+            botUser: null,
             request_telegram_chat_id: null,
 
         }
@@ -132,8 +131,11 @@ export default {
 
 
         if (this.modelValue)
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.botUser = this.modelValue
+
+                if (this.work_with_orders)
+                    this.tab = 2
             })
     },
     methods: {

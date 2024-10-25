@@ -221,7 +221,7 @@ class StartCodesHandlerController extends Controller
 
             $requestKeyboard = [
                 [
-                    ["text" => "\xF0\x9F\x8E\xB0Админ меню",
+                    ["text" => "\xF0\x9F\x8E\xB0Управление клиентом",
                         "web_app" => [
                             "url" => $path
                         ]
@@ -232,7 +232,7 @@ class StartCodesHandlerController extends Controller
             ];
 
 
-            $order = Order::query()
+        /*    $order = Order::query()
                 ->where("bot_id", $bot->id)
                 ->where("customer_id", $requestBotUser->id)
                 ->orderBy("created_at", "DESC")
@@ -257,7 +257,7 @@ class StartCodesHandlerController extends Controller
                             "callback_data" => "/success_complete_order $request_id"],
                     ];
                 }
-            }
+            }*/
 
 
             BotManager::bot()->replyInlineKeyboard(

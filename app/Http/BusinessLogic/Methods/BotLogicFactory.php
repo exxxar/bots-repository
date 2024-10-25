@@ -832,6 +832,32 @@ class BotLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
+    public function storeMessageSettings(array $data): BotSecurityResource
+    {
+        if (is_null($this->bot))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+
+        $settings = $data["settings"] ?? [];
+
+        $config = $this->bot->config ?? [];
+
+        foreach ($settings as $key => $value) {
+            $config[$key] = $value ?? null;
+        }
+
+        $this->bot->config = $config;
+        $this->bot->save();
+
+        return new BotSecurityResource($this->bot);
+
+    }
+
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
     public function storeBotFields(array $data): BotCustomFieldSettingCollection
     {
         if (is_null($this->bot))
@@ -877,6 +903,7 @@ class BotLogicFactory
         return new BotCustomFieldSettingCollection($fields);
 
     }
+
 
     /**
      * @throws ValidationException

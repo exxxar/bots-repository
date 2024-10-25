@@ -311,9 +311,21 @@ class DeliveryLogicFactory
         //выставить рейтинг
     }
 
-    public function declineOrder($orderId)
+    public function declineOrder($orderId): void
     {
-        //отмена заказа доставщиком и возврат в активные заказы
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Бот не найден!");
+
+        $order = Order::query()
+            ->where("id", $orderId)
+            ->first();
+
+        if (is_null($order))
+            throw new HttpException(404, "Заказ не найден!");
+
+        $order->status = OrderStatusEnum::Decline->value;
+        $order->save();
+
     }
 
     public function getOrder($orderId): OrderResource
@@ -363,6 +375,54 @@ class DeliveryLogicFactory
             ->get();
 
         return new ProductCollection($products);
+
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function changeStatusOrder($orderId, $status = 0, $telegramChatId = null): void
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Бот не найден!");
+
+        $order = Order::query()
+            ->where("id", $orderId)
+            ->first();
+
+        if (is_null($order))
+            throw new HttpException(404, "Заказ не найден!");
+
+
+        $order->status = $status ?? 0;
+        $order->save();
+
+        $messages = $this->bot->config ?? [];
+
+        $customer = BotUser::query()
+            ->where("id", $order->customer_id ?? null)
+            ->first();
+
+        $templates = [
+            "order_status_0" => "Статус вашего заказа установлен как 'Принят в работу'", //NewOrder
+            "order_status_1" => "Статус вашего заказа изменен на 'Доставляется'", //InDelivery
+            "order_status_2" => "Статус вашего заказа изменен на 'Завершен'", //Completed
+            "order_status_3" => "Статус вашего заказа изменен на 'Отменен'", //Decline
+            "order_status_4" => "Статус вашего заказа изменен на 'Готов к доставке'", //ReadyForDelivery
+            "order_status_5" => "Статус вашего заказа изменен на 'Передан на кухню'", //StartsCooking
+        ];
+
+
+        if (!is_null($telegramChatId ?? $customer->telegram_chat_id ?? null)) {
+            $changeStatusMessage = $messages["order_status_" . ($status ?? 0)] ??
+                $templates["order_status_" . ($status ?? 0)] ??
+                'Ваш заказ №' . $order->id;
+
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage($telegramChatId ?? $customer->telegram_chat_id,
+                    $changeStatusMessage);
+        }
 
     }
 
