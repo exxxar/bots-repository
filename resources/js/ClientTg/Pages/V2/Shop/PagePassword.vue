@@ -7,7 +7,8 @@
                     <div class="card-body">
                         <h5 class="text-center fw-bold my-3">Приветствуем!</h5>
                         <p class="text-center fst-italic">
-                            У вас есть пароль от данной страницы? Отлично! Активируйте его прямо сейчас и наслаждайтесь эксклюзивными
+                            У вас есть пароль от данной страницы? Отлично! Активируйте его прямо сейчас и наслаждайтесь
+                            эксклюзивными
                             преимуществами! </p>
                         <form v-on:submit.prevent="submit">
 
@@ -15,7 +16,8 @@
                                 <input type="text"
                                        v-model="passwordForm.password"
                                        class="form-control" id="floatingInput" placeholder="name@example.com" required>
-                                <label for="floatingInput"> <i class="input-icon fa-solid fa-terminal"></i> Ваш пароль</label>
+                                <label for="floatingInput"> <i class="input-icon fa-solid fa-terminal"></i> Ваш
+                                    пароль</label>
                             </div>
 
 
@@ -52,12 +54,16 @@ export default {
             is_requested: false,
             passwordForm: {
                 password: null,
-                page_id:null,
+                page_id: null,
             },
 
         };
     },
-
+    computed: {
+        tg() {
+            return window.Telegram.WebApp;
+        },
+    },
     mounted() {
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -92,7 +98,6 @@ export default {
                 passwordForm: this.passwordForm
             }).then(resp => {
 
-
                 this.$notify({
                     title: 'Пароль страницы',
                     text: "Пароль страницы успешно активирован!",
@@ -100,6 +105,8 @@ export default {
                 })
 
                 this.passwordForm.password = null
+
+                this.tg.close()
             }).catch(() => {
 
                 this.$notify({
