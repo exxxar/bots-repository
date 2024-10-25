@@ -433,7 +433,7 @@ class BotManager extends BotCore
         }
 
         if (!is_null($page->password ?? null) ) {
-            $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&page_id=$page->id#/enter-page-password";
+            $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&page_id=$page->id#/s/enter-page-password";
 
             $action = ActionStatus::query()
                 ->where("user_id", $botUser->user_id)
