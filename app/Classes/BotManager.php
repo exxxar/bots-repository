@@ -457,7 +457,7 @@ class BotManager extends BotCore
 
             $isActivated = $action->data["activate_at"] ?? null;
 
-            if (!$isActivated) {
+            if (is_null($isActivated)) {
                 $this->replyInlineKeyboard($page->password_description ?? 'Страница защищена ключом!', [
                     [
                         ["text" => "💎Ввести ключ",
