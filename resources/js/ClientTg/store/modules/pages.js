@@ -39,6 +39,19 @@ const actions = {
             return Promise.reject(err);
         })
     },
+
+    async activatePassword(context, payload= {passwordForm: null}){
+
+        let link = `${BASE_PAGES_LINK}/activate-page-password`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload.passwordForm)
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async updatePage(context, payload= {pageForm: null}){
 
         let link = `${BASE_PAGES_LINK}/page-update`

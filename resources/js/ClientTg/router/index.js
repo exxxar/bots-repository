@@ -481,6 +481,7 @@ import ShopV2 from '@/ClientTg/Pages/V2/Admin/Shop.vue';
 import AdminOrdersV2 from '@/ClientTg/Pages/V2/Admin/Orders.vue';
 import StatisticV2 from '@/ClientTg/Pages/V2/Admin/Statistic.vue';
 import PromoCodesV2 from '@/ClientTg/Pages/V2/Admin/Promocodes.vue';
+import PagePasswordV2 from '@/ClientTg/Pages/V2/Shop/PagePassword.vue';
 import InstaQuestV2 from "@/ClientTg/Pages/V2/Shop/InstaQuest.vue";
 import FriendsGameV2 from "@/ClientTg/Pages/V2/Shop/FriendsGame.vue";
 import PromoCodeFormV2 from "@/ClientTg/Pages/V2/Shop/PromoCode.vue";
@@ -499,6 +500,7 @@ import YClientsV2 from "@/ClientTg/Pages/V2/Admin/Integrations/YClients.vue";
 import IikoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Iiko.vue";
 import BitrixV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Bitrix.vue";
 import FrontPadV2 from "@/ClientTg/Pages/V2/Admin/Integrations/FrontPad.vue";
+
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
@@ -644,6 +646,12 @@ export const simpleRoutes = [
         path: simplePrefix + '/admin/promocodes',
         component: PromoCodesV2,
         meta: {title: 'Промокоды'}
+    },
+    {
+        name: 'PagePasswordV2',
+        path: simplePrefix + '/enter-page-password',
+        component: PagePasswordV2,
+        meta: {title: 'Ввод ключа'}
     },
 
     {

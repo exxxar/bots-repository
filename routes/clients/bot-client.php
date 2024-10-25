@@ -436,13 +436,14 @@ Route::prefix("bot-client")
 
         Route::prefix("pages")
             ->controller(BotPageController::class)
-            ->middleware(["tgAuth.admin"])
             ->group(function () {
-                Route::post("/", "index");
-                Route::post("/page", "createPage");
-                Route::post("/page-update", "updatePage");
-                Route::post("/duplicate/{pageId}", "duplicate");
-                Route::post("/remove/{pageId}", "destroy");
+                Route::post("/", "index") ->middleware(["tgAuth.admin"]);
+                Route::post("/page", "createPage") ->middleware(["tgAuth.admin"]);
+                Route::post("/page-update", "updatePage")->middleware(["tgAuth.admin"]);
+                Route::post("/activate-page-password", "activatePagePassword")
+                    ->middleware(["tgAuth.any"]);
+                Route::post("/duplicate/{pageId}", "duplicate")->middleware(["tgAuth.admin"]);
+                Route::post("/remove/{pageId}", "destroy")->middleware(["tgAuth.admin"]);
             });
 
         Route::prefix("product-collections")

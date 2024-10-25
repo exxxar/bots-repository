@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Enums\BotStatusEnum;
 use App\Facades\BusinessLogic;
+use App\Models\ActionStatus;
 use App\Models\Bot;
 use App\Models\BotExternalRequest;
 use App\Models\BotMenuSlug;
@@ -407,15 +408,13 @@ class BotManager extends BotCore
             return;
         }
 
+        $botUser = $this->currentBotUser();
+        $slug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
+
         if ($page->need_log_user_action ?? false) {
             $thread = $bot->topics["response"] ?? null;
-
             $botDomain = $this->getSelf()->bot_domain;
             $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->currentBotUser()->telegram_chat_id);
-
-            $botUser = $this->currentBotUser();
-
-            $slug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
 
             $pageName = is_null($slug) ? "Не указано имя страницы" : ($slug->command ?? $slug->id ?? '-');
             $tgDomain = $botUser->username ?? null;
@@ -436,16 +435,41 @@ class BotManager extends BotCore
         if (!is_null($page->password ?? null) ) {
             $path = env("APP_URL") . "/bot-client/$bot->bot_domain?slug=route&page_id=$page->id#/enter-page-password";
 
-            $this->replyInlineKeyboard($page->password_description ?? 'Страница защищена ключом!', [
-                [
-                    ["text" => "💎Ввести ключ",
-                        "web_app" => [
-                            "url" => $path
-                        ]
-                    ],
-                ]
-            ]);
-            return;
+            $action = ActionStatus::query()
+                ->where("user_id", $botUser->user_id)
+                ->where("bot_id", $bot->id)
+                ->where("slug_id", $slug->id)
+                ->first();
+
+            if (is_null($action))
+                $action = ActionStatus::query()
+                    ->create([
+                        'user_id' => $botUser->user_id,
+                        'bot_id' => $bot->id,
+                        'slug_id' => $slug->id,
+                        'max_attempts' => 1,
+                        'current_attempts' => 0,
+                        'data'=>(object)[
+                            "activate_at" => null,
+                        ],
+                        'bot_user_id' => $botUser->id
+                    ]);
+
+            $isActivated = $action->data["activate_at"] ?? null;
+
+            if (!$isActivated) {
+                $this->replyInlineKeyboard($page->password_description ?? 'Страница защищена ключом!', [
+                    [
+                        ["text" => "💎Ввести ключ",
+                            "web_app" => [
+                                "url" => $path
+                            ]
+                        ],
+                    ]
+                ]);
+                return;
+            }
+
         }
 
         $inlineKeyboard = $page->inlineKeyboard ?? null;
