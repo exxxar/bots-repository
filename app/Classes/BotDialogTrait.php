@@ -480,7 +480,7 @@ trait BotDialogTrait
 
         $resultData = "Диалог с пользователем <b>#$botUser->id</b> [<b>#$botDialogCommand->id</b>]: \n";
 
-        $tmpQ = [];
+
         $step = 1;
         foreach ($dialogData as $data) {
             $data = (object)$data;
@@ -488,15 +488,10 @@ trait BotDialogTrait
             if (!is_null($data->question_text ?? null)) {
                 $variable = (object)$data->variable;
 
-                if (!in_array($data->question_id ?? -1, $tmpQ)) {
-                    $resultData .= "Вопрос #$step: <i>" . ($variable->key ?? '') . "</i> => " . ($data->text ?? '-') . "\n";
-                    if ($variable->need_print ?? false)
-                        $resultData .= "🟢Ответ: <b>" . ($data->text ?? '-') . "</b>\n\n";
+                $resultData .= "Вопрос #$step [" . ($data->question_id ?? '-') . "]: <i>" . ($variable->key ?? '') . "</i> => " . ($data->text ?? '-') . "\n";
 
-                    $tmpQ[] = $data->question_id ?? -1;
-                }
-
-
+                if ($variable->need_print ?? false)
+                    $resultData .= "🟢Ответ: <b>" . ($data->text ?? '-') . "</b>\n\n";
             }
 
 
