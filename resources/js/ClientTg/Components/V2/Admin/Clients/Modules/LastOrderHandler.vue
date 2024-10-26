@@ -48,6 +48,7 @@ import OrderItem from "@/ClientTg/Components/V2/Admin/Orders/OrderItem.vue";
             </button>
         </div>
 
+
         <div class="btn-group mb-2 w-100" role="group">
             <button type="button"
                     v-bind:class="{'current-step text-primary fw-bold':order.status === 1}"
@@ -103,6 +104,14 @@ import OrderItem from "@/ClientTg/Components/V2/Admin/Orders/OrderItem.vue";
             </button>
         </div>
 
+        <div class="divider my-3">Самовывоз</div>
+
+        <button type="button"
+                data-bs-toggle="modal" data-bs-target="#order-self-delivery"
+
+                class="btn btn-outline-success p-3 w-100"><i class="fa fa-shopping-bag mr-2" aria-hidden="true"></i>Готово (самовывоз)
+        </button>
+
         <div class="divider my-3">Отмена заказа</div>
         <div class="btn-group mb-2 w-100" role="group">
             <button type="button"
@@ -141,6 +150,42 @@ import OrderItem from "@/ClientTg/Components/V2/Admin/Orders/OrderItem.vue";
             <p class="mb-0" v-for="error in errors"><i class="fa-solid fa-triangle-exclamation text-danger"></i>
                 {{ error }}</p>
         </template>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="order-self-delivery" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Самовывоз</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form v-on:submit.prevent="sendPickupMessage">
+                        <div class="form-floating mb-3">
+
+                            <textarea class="form-control"
+                                      placeholder="Текст сообщения"
+                                      v-model="pickupForm.info"
+                                      id="pickup-form-info" style="min-height:200px;" required></textarea>
+                            <label for="pickup-form-info" class="form-label">Написать сообщение</label>
+
+
+                        </div>
+
+                        <button
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                            type="submit"
+                            class="btn btn-primary w-100 p-3">
+                            Отправить
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <!-- Modal -->
@@ -276,6 +321,9 @@ export default {
                 order_status_3: "Статус вашего заказа изменен на 'Отменен'", //Decline
                 order_status_4: "Статус вашего заказа изменен на 'Готов к доставке'", //ReadyForDelivery
                 order_status_5: "Статус вашего заказа изменен на 'Передан на кухню'", //StartsCooking
+            },
+            pickupForm:{
+                info:"Ваш заказ готов!",
             }
 
         }
@@ -303,6 +351,28 @@ export default {
         }
     },
     methods: {
+        sendPickupMessage(){
+            this.$store.dispatch("userMessage", {
+                dataObject: {
+                    user_telegram_chat_id: this.botUser.telegram_chat_id,
+                    ...this.pickupForm
+                }
+            }).then((resp) => {
+                this.pickupForm.info = null
+                this.$notify({
+                    title: 'Отлично!',
+                    text: 'Вы отправили пользователю сообщение',
+                    type: 'success'
+                })
+            }).catch(() => {
+
+                this.$notify({
+                    title: 'Упс...!',
+                    text: 'Ошибочка...',
+                    type: 'error'
+                })
+            })
+        },
         loadOrderById() {
             this.errors = []
             this.loaded = false

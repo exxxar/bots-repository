@@ -167,6 +167,31 @@ class StartCodesHandlerController extends Controller
 
     }
 
+    public function runPageAction(...$data)
+    {
+        $bot = BotManager::bot()
+            ->getSelf();
+
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        $code = $data[1] ?? null;
+        $request_id = $data[2] ?? null;
+        $utm = $data[3] ?? null;
+
+        $channel = $bot->order_channel ??
+            null;
+
+        if (!is_null($channel))
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendMessage($channel, "Переход в бота из $utm");
+
+        if ($code == "004")
+            BotManager::bot()->runPage($request_id);
+
+    }
+
     public function referralAction(...$data)
     {
 
@@ -229,32 +254,32 @@ class StartCodesHandlerController extends Controller
             ];
 
 
-        /*    $order = Order::query()
-                ->where("bot_id", $bot->id)
-                ->where("customer_id", $requestBotUser->id)
-                ->orderBy("created_at", "DESC")
-                ->first();
+            /*    $order = Order::query()
+                    ->where("bot_id", $bot->id)
+                    ->where("customer_id", $requestBotUser->id)
+                    ->orderBy("created_at", "DESC")
+                    ->first();
 
-            if (!is_null($order)) {
-                if (!($order->is_cashback_crediting ?? true)) {
-                    $requestKeyboard[] = [
-                        ["text" => "💸Начислить пользователю CashBack",
-                            "callback_data" => "/auto_send_cashback $request_id"],
-                    ];
-                }
+                if (!is_null($order)) {
+                    if (!($order->is_cashback_crediting ?? true)) {
+                        $requestKeyboard[] = [
+                            ["text" => "💸Начислить пользователю CashBack",
+                                "callback_data" => "/auto_send_cashback $request_id"],
+                        ];
+                    }
 
-                if ($order->status == OrderStatusEnum::NewOrder->value) {
-                    $requestKeyboard[] = [
-                        ["text" => "🚛Передать на доставку",
-                            "callback_data" => "/send_to_delivery $request_id"],
-                    ];
+                    if ($order->status == OrderStatusEnum::NewOrder->value) {
+                        $requestKeyboard[] = [
+                            ["text" => "🚛Передать на доставку",
+                                "callback_data" => "/send_to_delivery $request_id"],
+                        ];
 
-                    $requestKeyboard[] = [
-                        ["text" => "✅Ваш заказ уже готов",
-                            "callback_data" => "/success_complete_order $request_id"],
-                    ];
-                }
-            }*/
+                        $requestKeyboard[] = [
+                            ["text" => "✅Ваш заказ уже готов",
+                                "callback_data" => "/success_complete_order $request_id"],
+                        ];
+                    }
+                }*/
 
 
             BotManager::bot()->replyInlineKeyboard(

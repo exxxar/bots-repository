@@ -1197,9 +1197,11 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                 </div>
                 <div class="col-12 mb-2" v-if="need_payed_page">
 
-                    <div class="alert alert-light" v-if="bot.payment_provider_token == null">Вы не добавили тоукен платежной системы в <span
-                        @click="goToBotSettings"
-                        class="cursor-pointer text-primary fw-bold text-decoration-underline">настройках бота!</span></div>
+                    <div class="alert alert-light" v-if="bot.payment_provider_token == null">Вы не добавили тоукен
+                        платежной системы в <span
+                            @click="goToBotSettings"
+                            class="cursor-pointer text-primary fw-bold text-decoration-underline">настройках бота!</span>
+                    </div>
 
                     <div class="form-floating mb-2">
                         <input type="number"
@@ -1381,10 +1383,24 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                         </div>
 
                         <div class="col-12 mb-2" v-if="pageForm.id&&need_show_qr_and_link">
-                            <p>Ссылка на текущую страницу: <span class="bg-secondary font-bold cursor-pointer"
-                                                                 @click="copyToClipBoard(pageLink)">{{
+                            <p class="mb-2">Ссылка на текущую страницу: <span
+                                style="word-wrap:break-word;"
+                                class="bg-secondary text-white font-bold cursor-pointer"
+                                @click="copyToClipBoard(pageLink)">{{
                                     pageLink
                                 }}</span></p>
+
+                            <div class="alert alert-info mb-2">
+                                Внимание! Используйте метки на английском языке или число!
+                            </div>
+                            <div class="form-floating mb-2">
+                                <input type="text"
+                                       maxlength="100"
+                                       v-model="utm_source"
+                                       class="form-control" id="utm-source" placeholder="name@example.com">
+                                <label for="utm-source">Укажите метку для статистики</label>
+                            </div>
+
                             <div class="d-flex justify-content-center">
                                 <img v-lazy="qr" style="width:200px;height:200px;">
                             </div>
@@ -1559,6 +1575,7 @@ export default {
             showMenu: false,
 
             need_show_qr_and_link: false,
+            utm_source: null,
             need_stay_after_save: true,
             need_show_global_slug_list: false,
             need_page_sticker: false,
@@ -1744,7 +1761,7 @@ export default {
                 if (this.pageForm.password != null)
                     this.need_secure_page = true
 
-                if (this.pageForm.price!=null)
+                if (this.pageForm.price != null)
                     this.need_payed_page = true
 
                 this.need_clean = true
@@ -1755,7 +1772,7 @@ export default {
     computed: {
         ...mapGetters(['getCurrentBot']),
         qr() {
-            return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.link
+            return "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=" + this.pageLink
         },
         selectedLinkIds() {
             let links = this.links.map(o => o["id"])
@@ -1788,7 +1805,10 @@ export default {
                 tmpId += "0"
             tmpId += this.pageForm.id;
 
-            return "https://t.me/" + this.getCurrentBot.bot_domain + "?start=" + btoa("004" + tmpId);
+            return "https://t.me/" + this.getCurrentBot.bot_domain + "?start="
+                + btoa("004" + tmpId + (this.utm_source != null ? "utm" + this.utm_source : ""))
+
+
         }
     },
     mounted() {
@@ -1865,7 +1885,7 @@ export default {
     },
 
     methods: {
-        goToBotSettings(){
+        goToBotSettings() {
             this.$emit("bot-settings")
         },
         callbackFastPageCreate() {

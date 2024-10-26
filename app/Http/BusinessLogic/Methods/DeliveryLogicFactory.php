@@ -116,6 +116,7 @@ class DeliveryLogicFactory
             ->addCashBack([
                 "user_telegram_chat_id" => $client->telegram_chat_id,
                 "amount" => $order->summary_price,
+                "need_user_review"=>true,
                 "info" => "Автоматическое начисление CashBack после заказа",
             ]);
         /*
