@@ -9,6 +9,7 @@ use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
 use App\Facades\InlineQueryService;
+use App\Models\ActionStatus;
 use App\Models\Basket;
 use App\Models\BotMenuSlug;
 use App\Models\BotMenuTemplate;
@@ -698,7 +699,40 @@ abstract class BotCore
         }
 
 
+        $pageId = $transaction->products_info["page_id"] ?? null;
         $product = $transaction->products_info["payload"] ?? 'не указан продавцом';
+
+        if (!is_null($pageId)) {
+            $page = BotPage::query()
+                ->where("id", $pageId)
+                ->first();
+
+            $action = ActionStatus::query()
+                ->where("user_id", $botUser->user_id)
+                ->where("bot_id", $bot->id)
+                ->where("slug_id", $page->bot_menu_slug_id ?? null)
+                ->first();
+
+            if (is_null($action))
+                return;
+
+            $action->data = (object)[
+                "payed_at" => Carbon::now()
+            ];
+            $action->save();
+
+            \App\Facades\BotManager::bot()
+                ->runPage($page->id, $bot, $botUser);
+
+            $transaction->update([
+                'status' => 2,
+                'order_info' => $orderInfo,
+                'telegram_payment_charge_id' => $telegramPaymentChargeId,
+                'provider_payment_charge_id' => $providerPaymentChargeId,
+                'completed_at' => Carbon::now()
+            ]);
+            return;
+        }
 
         \App\Facades\BotMethods::bot()
             ->whereBot($bot)

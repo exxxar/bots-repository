@@ -523,6 +523,7 @@ class BotManager extends BotCore
                     'total_amount' => $price,
                     'status' => 0,
                     'products_info' => (object)[
+                        "page_id" => $page->id ?? null,
                         "payload" => $payloadData ?? null,
                         "prices" => $prices,
                     ],
