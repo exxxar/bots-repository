@@ -182,10 +182,10 @@ class StartCodesHandlerController extends Controller
         $channel = $bot->order_channel ??
             null;
 
-        //if (!is_null($channel))
+        if (!is_null($channel))
             BotMethods::bot()
                 ->whereBot($bot)
-                ->sendMessage($botUser->telegram_chat_id, "Переход в бота из $utm");
+                ->sendMessage($channel, "Переход в бота из $utm");
 
         if ($code == "004")
             BotManager::bot()->runPage($request_id);
