@@ -22,6 +22,8 @@ class BotPage extends Model
         'content',
         'password',
         'password_description',
+        'price',
+        'price_description',
         'images',
         'videos',
         'audios',

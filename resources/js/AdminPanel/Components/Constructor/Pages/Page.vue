@@ -254,18 +254,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                             <span>Видео</span>
                         </a>
                     </li>
-                    <li
-                        class="nav-item "
-                        @click="tab=4"
-                    >
-                        <a
-                            v-bind:class="{'active':tab===4,'primary-mark':need_page_sticker}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
-                            href="javascript:void(0)">
-                            <i class="fa-regular fa-note-sticky"></i>
-                            <span>Стикеры</span>
-                        </a>
-                    </li>
 
                     <li
                         class="nav-item "
@@ -326,29 +314,39 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                             <span>Начало диалога</span>
                         </a>
                     </li>
+
                     <li
                         class="nav-item "
-                        @click="tab=10"
                     >
-                        <a
-                            v-bind:class="{'active':tab===10,'primary-mark':need_rules}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
-                            href="javascript:void(0)">
-                            <i class="fa-solid fa-scale-balanced"></i>
-                            <span>Правила</span>
-                        </a>
-                    </li>
-                    <li
-                        class="nav-item "
-                        @click="tab=11"
-                    >
-                        <a
-                            v-bind:class="{'active':tab===11,'primary-mark':need_secure_page}"
-                            class="nav-link  d-flex flex-column justify-content-center align-items-center font-12"
-                            href="javascript:void(0)">
-                            <i class="fa fa-key" aria-hidden="true"></i>
-                            <span>Безопасная страница</span>
-                        </a>
+                        <div class="dropdown">
+                            <button
+                                class="nav-link dropdown-toggle d-flex flex-column justify-content-center align-items-center font-12"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-hamburger"></i> Другие возможности
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li @click="tab=10"><a class="dropdown-item"
+                                                       v-bind:class="{'active':tab===10,'primary-mark':need_rules}"
+                                                       href="javascript:void(0)">
+                                    <i class="fa-solid fa-scale-balanced"></i> Правила на странице</a>
+                                </li>
+                                <li @click="tab=11"><a class="dropdown-item"
+                                                       v-bind:class="{'active':tab===11,'primary-mark':need_secure_page}"
+                                                       href="javascript:void(0)">
+                                    <i class="fa fa-key" aria-hidden="true"></i> Безопасная страница</a>
+                                </li>
+                                <li @click="tab=12"><a class="dropdown-item"
+                                                       v-bind:class="{'active':tab===12,'primary-mark':need_payed_page}"
+                                                       href="javascript:void(0)">
+                                    <i class="fa fa-money-bill" aria-hidden="true"></i> Платная страница</a>
+                                </li>
+                                <li @click="tab=4"><a class="dropdown-item"
+                                                      v-bind:class="{'active':tab===4,'primary-mark':need_page_sticker}"
+                                                      href="javascript:void(0)">
+                                    <i class="fa-regular fa-note-sticky"></i> Стикеры</a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -1117,7 +1115,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                         <input class="form-check-input"
                                v-model="need_secure_page"
                                type="checkbox" id="need-secure-page">
-                        <label class="form-check-label" for="need-secure-pag">
+                        <label class="form-check-label" for="need-secure-page">
                             Безопасная страница
                         </label>
                     </div>
@@ -1173,6 +1171,80 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                 :disabled="need_secure_page"
                                 @click="need_secure_page=true"
                                 v-bind:class="{'btn-primary':!need_secure_page,'btn-outline-secondary':need_secure_page}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                Добавить
+                            </button>
+                            <a href="https://telegra.ph/Nizhnee-menyu-bota-01-03" target="_blank"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                            >
+                                Подробнее
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-show="tab===12">
+                <div class="col-12 mb-2" v-if="need_payed_page">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               v-model="need_payed_page"
+                               type="checkbox" id="need-payed-page">
+                        <label class="form-check-label" for="need-payed-page">
+                            Платная страница
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 mb-2" v-if="need_payed_page">
+
+                    <div class="alert alert-light" v-if="bot.payment_provider_token == null">Вы не добавили тоукен платежной системы в <span
+                        @click="goToBotSettings"
+                        class="cursor-pointer text-primary fw-bold text-decoration-underline">настройках бота!</span></div>
+
+                    <div class="form-floating mb-2">
+                        <input type="number"
+                               min="100"
+                               :disabled="bot.payment_provider_token == null"
+                               v-model="pageForm.price"
+                               class="form-control" id="page-price" placeholder="Цена" required>
+                        <label for="page-price">Цена за открытие страницы, руб</label>
+                    </div>
+
+
+                    <div class="form-floating">
+                        <textarea class="form-control"
+                                  :disabled="bot.payment_provider_token == null"
+                                  v-model="pageForm.price_description"
+                                  placeholder="Пояснение" id="floatingTextarea2" style="height: 200px"></textarea>
+                        <label for="floatingTextarea2">
+                            Пояснение для пользователя
+                            <span class="small"
+                                  v-if="(pageForm.price_description||'').length>0">{{
+                                    pageForm.price_description.length
+                                }}/512</span>
+                        </label>
+                    </div>
+
+                </div>
+                <div class="col-12 mb-2" v-else>
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Платная страница</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                            Данная страница позволяет запросить оплату с пользователя за её просмотр. Задайте цену
+                            страницы, описание перед оплатой и др. настройки оплаты. Пользователи, оплатившие услугу,
+                            получат постоянный доступ к этой странице.
+                        </p>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                :disabled="need_payed_page"
+                                @click="need_payed_page=true"
+                                v-bind:class="{'btn-primary':!need_payed_page,'btn-outline-secondary':need_payed_page}"
                                 class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
                                 Добавить
                             </button>
@@ -1501,6 +1573,7 @@ export default {
             need_attach_slug: false,
             need_rules: false,
             need_secure_page: false,
+            need_payed_page: false,
 
             bot: null,
             pageForm: {
@@ -1512,6 +1585,9 @@ export default {
 
                 password: null,
                 password_description: null,
+
+                price: null,
+                price_description: null,
 
                 videos: [],
                 images: [],
@@ -1539,6 +1615,15 @@ export default {
         }
     },
     watch: {
+
+
+        'need_payed_page': function (newVal, oldVal) {
+            if (!this.need_payed_page) {
+                this.pageForm.price = null
+                this.pageForm.price_description = null
+            }
+
+        },
         'need_secure_page': function (newVal, oldVal) {
             if (!this.need_secure_page) {
                 this.pageForm.password = null
@@ -1659,6 +1744,9 @@ export default {
                 if (this.pageForm.password != null)
                     this.need_secure_page = true
 
+                if (this.pageForm.price!=null)
+                    this.need_payed_page = true
+
                 this.need_clean = true
             },
             deep: true
@@ -1687,6 +1775,8 @@ export default {
                 this.need_attach_page ||
                 this.need_attach_dialog ||
                 this.need_attach_slug ||
+                this.need_secure_page ||
+                this.need_payed_page ||
                 this.need_rules
         },
         pageLink() {
@@ -1775,6 +1865,9 @@ export default {
     },
 
     methods: {
+        goToBotSettings(){
+            this.$emit("bot-settings")
+        },
         callbackFastPageCreate() {
             this.loaded_page_list = false
 
@@ -1838,6 +1931,7 @@ export default {
             this.need_attach_dialog = false
             this.need_attach_slug = false
             this.need_secure_page = false
+            this.need_payed_page = false
             this.need_rules = false
 
             this.links = []
@@ -1850,6 +1944,8 @@ export default {
                 this.pageForm.content = page.content
                 this.pageForm.password = page.password || null
                 this.pageForm.password_description = page.password_description || null
+                this.pageForm.price = page.price || null
+                this.pageForm.price_description = page.price_description || null
                 this.pageForm.command = page.slug ? page.slug.command : null
                 this.pageForm.slug = page.slug ? page.slug.slug : null
                 this.pageForm.comment = page.slug ? page.slug.comment : null
@@ -1952,6 +2048,10 @@ export default {
                 slug: null,
                 comment: null,
                 sticker: null,
+                password: null,
+                password_description: null,
+                price: null,
+                price_description: null,
                 images: [],
                 reply_keyboard: null,
                 inline_keyboard: null,
@@ -1990,6 +2090,8 @@ export default {
             this.need_page_audios = false
             this.need_page_documents = false
             this.need_page_sticker = false
+            this.need_payed_page = false
+            this.need_secure_page = false
 
             this.links = [];
 

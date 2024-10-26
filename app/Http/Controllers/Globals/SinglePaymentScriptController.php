@@ -123,10 +123,10 @@ class SinglePaymentScriptController extends SlugController
             ]
         ];
 
-        if (count($model->config ?? []) != count($params)) {
-            $model->config = $params;
-            $model->save();
-        }
+
+        $model->config = $params;
+        $model->save();
+
 
     }
 
@@ -207,7 +207,7 @@ class SinglePaymentScriptController extends SlugController
             "need_shipping_address" => (Collection::make($config[1])
                     ->where("key", "need_shipping_address")
                     ->first())["value"] ?? false,
-                "send_phone_number_to_provider" => (Collection::make($config[1])
+            "send_phone_number_to_provider" => (Collection::make($config[1])
                     ->where("key", "need_send_phone_number_to_provider")
                     ->first())["value"] ?? false,
             "send_email_to_provider" => (Collection::make($config[1])
@@ -235,18 +235,17 @@ class SinglePaymentScriptController extends SlugController
         $providerData = (object)[
             "receipt" => [
                 (object)[
-                    "description"=>"$title $description",
-                    "quantity"=>"1.00",
-                    "amount"=>(object)[
-                        "value"=>$price/100,
-                        "currency"=>$currency
+                    "description" => "$title $description",
+                    "quantity" => "1.00",
+                    "amount" => (object)[
+                        "value" => $price / 100,
+                        "currency" => $currency
                     ],
-                    "vat_code"=>$taxSystemCode
+                    "vat_code" => $taxSystemCode
                 ]
             ]
         ];
 
-        Log::info("provider=>$providerToken");
 
         \App\Facades\BotManager::bot()
             ->replyInvoice(

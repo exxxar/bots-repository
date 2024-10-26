@@ -120,8 +120,6 @@ import FrontPadForm from "@/AdminPanel/Components/Constructor/FrontPad/FrontPadF
     </div>
 
     <div v-if="step===0" class="pb-5 mb-5">
-
-
         <BotForm
             v-on:callback="botCallbackUpdate"
             :bot="bot"
@@ -199,6 +197,7 @@ import FrontPadForm from "@/AdminPanel/Components/Constructor/FrontPad/FrontPadF
             <Page
                 v-if="!loadPage"
                 :page="page"
+                v-on:bot-settings="botSettingsCallback"
                 v-on:callback="pageCallback"/>
         </div>
 
@@ -309,6 +308,14 @@ export default {
                 this.loadPage = false
 
             });
+        },
+        botSettingsCallback(){
+            this.step = 0
+            document.documentElement.scrollTop = 200;
+            this.$nextTick(()=>{
+                window.dispatchEvent(new CustomEvent('add-payment-system-event'));
+
+            })
         },
         pageCallback(page) {
             this.page = page

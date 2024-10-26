@@ -617,6 +617,7 @@ import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/T
 
 
                     <input type="text" class="form-control"
+                           id="payment_provider_token-input"
                            placeholder="Токен"
                            aria-label="Токен"
                            v-model="botForm.payment_provider_token"
@@ -1445,6 +1446,23 @@ export default {
 
         window.addEventListener('store_current_company-change-event', (event) => {
             this.company = this.getCurrentCompany
+        });
+
+        window.addEventListener('add-payment-system-event', (event) => {
+            this.tab = 1
+            this.need_payments = true
+
+            this.$nextTick(() => {
+                let paymentTokenInput = document.querySelector("#payment_provider_token-input")
+                paymentTokenInput.classList = "form-control border-danger";
+                paymentTokenInput.focus()
+
+                setTimeout(()=>{
+                    let paymentTokenInput = document.querySelector("#payment_provider_token-input")
+                    paymentTokenInput.classList = "form-control";
+                }, 5000)
+            })
+
         });
 
         if (this.bot)

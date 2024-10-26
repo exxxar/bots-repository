@@ -12,6 +12,7 @@ use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\Role;
+use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -432,7 +433,7 @@ class BotManager extends BotCore
             );
         }
 
-        if (!is_null($page->password ?? null) ) {
+        if (!is_null($page->password ?? null)) {
             $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&page_id=$page->id#/s/enter-page-password";
 
             $action = ActionStatus::query()
@@ -449,7 +450,7 @@ class BotManager extends BotCore
                         'slug_id' => $slug->id,
                         'max_attempts' => 1,
                         'current_attempts' => 0,
-                        'data'=>(object)[
+                        'data' => (object)[
                             "activate_at" => null,
                         ],
                         'bot_user_id' => $botUser->id
@@ -467,6 +468,104 @@ class BotManager extends BotCore
                         ],
                     ]
                 ]);
+                return;
+            }
+
+        }
+
+
+        if (!is_null($page->price ?? null)) {
+
+            $action = ActionStatus::query()
+                ->where("user_id", $botUser->user_id)
+                ->where("bot_id", $bot->id)
+                ->where("slug_id", $slug->id)
+                ->first();
+
+            if (is_null($action))
+                $action = ActionStatus::query()
+                    ->create([
+                        'user_id' => $botUser->user_id,
+                        'bot_id' => $bot->id,
+                        'slug_id' => $slug->id,
+                        'max_attempts' => 1,
+                        'current_attempts' => 0,
+                        'data' => (object)[
+                            "payed_at" => null,
+                        ],
+                        'bot_user_id' => $botUser->id
+                    ]);
+
+            $isPayed = $action->data["payed_at"] ?? null;
+
+            if (is_null($isPayed)) {
+
+                $price = $page->price * 100;
+
+                $prices = [
+                    [
+                        "label" => "Оплата электронного контента",
+                        "amount" => $price
+                    ]
+                ];
+
+                $payload = bin2hex(Str::uuid());
+
+                $providerToken = $bot->payment_provider_token;
+                $currency = "RUB";
+
+                Transaction::query()->create([
+                    'user_id' => $botUser->user_id,
+                    'bot_user_id' => $botUser->id,
+                    'bot_id' => $bot->id,
+                    'payload' => $payload,
+                    'currency' => $currency,
+                    'total_amount' => $price,
+                    'status' => 0,
+                    'products_info' => (object)[
+                        "payload" => $payloadData ?? null,
+                        "prices" => $prices,
+                    ],
+                ]);
+
+                $needs = [
+                    "need_name" => false,
+                    "need_phone_number" => false,
+                    "need_email" => false,
+                    "need_shipping_address" => false,
+                    "send_phone_number_to_provider" => false,
+                    "send_email_to_provider" => false,
+                    "is_flexible" => false,
+                    "disable_notification" => false,
+                    "protect_content" => false,
+                ];
+
+                $keyboard = [
+                    [
+                        ["text" => "💎Оплатить", "pay" => true],
+                    ],
+
+                ];
+
+                $providerData = (object)[
+                    "receipt" => [
+                        (object)[
+                            "description" => "Оплата электронного контента",
+                            "quantity" => "1.00",
+                            "amount" => (object)[
+                                "value" => $price / 100,
+                                "currency" => $currency
+                            ],
+                            "vat_code" => 1
+                        ]
+                    ]
+                ];
+
+                \App\Facades\BotManager::bot()
+                    ->replyInvoice(
+                        "Электронный контент", "Оплата доступа к контенту", $prices, $payload, $providerToken, $currency, $needs, $keyboard,
+                        $providerData
+                    );
                 return;
             }
 
@@ -751,7 +850,6 @@ class BotManager extends BotCore
 
         return true;
     }
-
 
 
     public function runPage(int $pageId, $bot = null, $botUser = null): bool
