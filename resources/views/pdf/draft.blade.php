@@ -40,9 +40,9 @@
 <h6>Уникальный идентификатор чека #{{$payload}}</h6>
 <hr>
 <ul>
-    <li>Дата оплаты <strong>{{$current_date}}</strong></li>
-    <li>Валюта <strong>{{$currency}}</strong></li>
-    <li>Сумма в чеке <strong>{{$total_amount}} руб.</strong></li>
+    <li>Дата оплаты <strong>{{$current_date ?? Carbon\Carbon::now()}}</strong></li>
+    <li>Валюта <strong>{{$currency ?? 'рубли'}}</strong></li>
+    <li>Сумма в чеке <strong>{{$total_amount ?? 0}} руб.</strong></li>
     <li>Идентификатор оплаты провайдера <strong>{{$provider_payment_charge_id}}</strong></li>
     <li>Идентификатор оплаты телеграм <strong>{{$telegram_payment_charge_id}}</strong></li>
 </ul>
