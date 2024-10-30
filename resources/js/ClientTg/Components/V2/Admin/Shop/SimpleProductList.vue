@@ -1,5 +1,5 @@
 <script setup>
-import ProductCard from "@/ClientTg/Components/V2/Admin/Shop/ProductCard.vue";
+import ProductCard from "@/ClientTg/Components/V2/Admin/Shop/AdminProductCard.vue";
 import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 </script>
 <template>

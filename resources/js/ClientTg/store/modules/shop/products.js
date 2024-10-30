@@ -108,6 +108,18 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async removeShopProduct(context, id) {
+        let link = `${BASE_PRODUCTS_LINK}/${id}`
+        let method = 'DELETE'
+        let _axios = util.makeAxiosFactory(link, method)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadProductsByCategory(context) {
 
         let link = `${BASE_PRODUCTS_LINK}-by-category`

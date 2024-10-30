@@ -301,6 +301,8 @@ Route::prefix("bot-client")
                 Route::post("/products/in-category", [ProductController::class, "getProductsInCategory"]);
                 Route::post("/products/category/{productId}", [ProductController::class, "getCategory"]);
                 Route::post("/products/{productId}", [ProductController::class, "getProduct"]);
+                Route::delete("/products/{productId}", [ProductController::class, "destroy"])
+                    ->middleware(["tgAuth.admin"]);
             });
 
         Route::prefix("iiko")
