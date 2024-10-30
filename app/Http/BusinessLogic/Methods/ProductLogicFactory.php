@@ -261,6 +261,12 @@ class ProductLogicFactory
         $photos = !is_null($uploadedPhotos) ?
             $this->uploadPhotos("/public/companies/$slug", $uploadedPhotos) : [];
 
+        if (count($photos) > 0)
+            for ($i = 0; $i < count($photos); $i++) {
+                $photos[$i] = "/images-by-bot-id/" . $this->bot->id . "/" . $photos[$i];
+            }
+
+
         $images = $data["images"] ?? null;
 
         if (!is_null($images))
