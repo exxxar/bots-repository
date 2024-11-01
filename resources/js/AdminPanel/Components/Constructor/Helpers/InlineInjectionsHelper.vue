@@ -55,8 +55,10 @@
             <div
                 class="dropdown-menu item-with-text cursor-pointer text-muted p-2">
 
-                <li><a class="dropdown-item" @click="expressionsSelect(item)"
-                       v-for="item in expressions">{{ item.description || '-' }}</a>
+                <li @click="expressionsSelect(item)"
+                    v-for="item in expressions"><a class="dropdown-item" href="javascript:void(0)" v-html="item.description"></a>
+
+
                 </li>
 
             </div>
@@ -123,73 +125,77 @@ export default {
             expressions: [
                 {
                     expression: "{{userName}}",
-                    description: 'Имя пользователя'
+                    description: '<i class="fa-solid fa-signature mr-2"></i>Имя пользователя'
                 },
 
                 {
                     expression: "{{level_1_percent}}",
-                    description: 'Процент кэшбэка 1 уровня'
+                    description: '<i class="fa-solid fa-1 mr-2"></i>Процент кэшбэка 1 уровня'
                 },
 
                 {
                     expression: "{{level_2_percent}}",
-                    description: 'Процент кэшбэка 2 уровня'
+                    description: '<i class="fa-solid fa-2 mr-2"></i>Процент кэшбэка 2 уровня'
                 },
 
                 {
                     expression: "{{level_3_percent}}",
-                    description: 'Процент кэшбэка 3 уровня'
+                    description: '<i class="fa-solid fa-3 mr-2"></i>Процент кэшбэка 3 уровня'
                 },
 
                 {
                     expression: "{{cashback_fire_percent}}",
-                    description: 'Процент сжигания кэшбэка'
+                    description: '<i class="fa-solid fa-fire mr-2"></i>Процент сжигания кэшбэка'
                 },
 
                 {
                     expression: "{{is_admin}}",
-                    description: 'Статус администратора'
+                    description: '<i class="fa-solid fa-user-tie mr-2"></i>Статус администратора'
                 },
 
                 {
                     expression: "{{is_work}}",
-                    description: 'Статус работника'
+                    description: '<i class="fa-solid fa-building mr-2"></i>Статус работника'
                 },
 
                 {
                     expression: "{{is_vip}}",
-                    description: 'Статус VIP'
+                    description: '<i class="fa-solid fa-crown mr-2"></i>Статус VIP'
                 },
 
                 {
                     expression: "{{is_manager}}",
-                    description: 'Статус менеджера'
+                    description: '<i class="fa-solid fa-people-roof mr-2"></i>Статус менеджера'
                 },
 
                 {
                     expression: "{{is_deliveryman}}",
-                    description: 'Статус доставщика'
+                    description: '<i class="fa-solid fa-truck-ramp-box mr-2"></i>Статус доставщика'
                 },
 
                 {
                     expression: "{{sex}}",
-                    description: 'Пол клиента'
+                    description: '<i class="fa-solid fa-venus-mars mr-2"></i>Пол клиента'
+                },
+                {
+                    expression: "{{friendsCount}}",
+                    description: '<i class="fa-solid fa-user-group mr-2"></i>Число друзей пользователя'
                 },
                 {
                     expression: "{{cashback}}",
-                    description: 'Сумма КэшБэк пользователя'
+                    description: '<i class="fa-solid fa-coins mr-2"></i>Сумма КэшБэк пользователя'
                 },
                 {
                     expression: '{{telegramChatId}}',
-                    description: 'Идентификатор чата'
+                    description: '<i class="fa-brands fa-telegram mr-2"></i>Идентификатор чата'
                 },
                 {
                     expression: '{{referralLink}}',
-                    description: 'Реферальная ссылка'
+                    description: '<i class="fa-solid fa-link mr-2"></i>Реферальная ссылка'
                 },
                 {
                     expression: '{{referralQr}}',
-                    description: 'Реферальный QR-код'
+                    description: '<i class="fa-solid fa-qrcode mr-2"></i>Реферальный QR-код'
                 },
 
             ]

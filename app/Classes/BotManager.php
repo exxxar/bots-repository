@@ -11,6 +11,7 @@ use App\Models\BotMenuSlug;
 use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\CashBack;
+use App\Models\ReferralHistory;
 use App\Models\Role;
 use App\Models\Transaction;
 use App\Models\User;
@@ -592,10 +593,16 @@ class BotManager extends BotCore
         $cashback = $this->botUser->cashBack->amount ?? 0;
         $content = str_replace(["{{cashback}}"], $cashback, $content);
 
+        $friendCount = ReferralHistory::query()
+            ->where("user_sender_id", $botUser->user_id)
+            ->where("bot_id", $bot->id)
+            ->count();
+
         $content = str_replace(["{{level_1_percent}}"], $bot->level_1 ?? 0, $content);
         $content = str_replace(["{{level_2_percent}}"], $bot->level_2 ?? 0, $content);
         $content = str_replace(["{{level_3_percent}}"], $bot->level_3 ?? 0, $content);
         $content = str_replace(["{{cashback_fire_percent}}"], $bot->cashback_fire_percent ?? 0, $content);
+        $content = str_replace(["{{friendsCount}}"], $friendCount ?? 0, $content);
         $content = str_replace(["{{is_admin}}"], ($this->botUser->is_admin ?? false) ? "Вы администратор" : "Вы не администратор", $content);
         $content = str_replace(["{{is_work}}"], ($this->botUser->is_work ?? false) ? "Вы за работой" : "Вы не работаете", $content);
         $content = str_replace(["{{is_vip}}"], ($this->botUser->is_vip ?? false) ? "Вы VIP-клиент" : "У вас еще нет статуса VIP", $content);
