@@ -120,14 +120,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
         <div class="row">
             <div class="col-md-8 col-12 mb-2">
                 <label class="form-label" id="bot-domain">
-                    <Popper>
-                        <i class="fa-regular fa-circle-question mr-1"></i>
-                        <template #content>
-                            <div> Команда должна начинаться с символа . и *<br>
-                                Например: .*Меню<br>
-                            </div>
-                        </template>
-                    </Popper>
                     Команда
                     <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                 </label>
@@ -173,25 +165,16 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
 
 
             <div class="col-12 mb-2">
-                <label class="form-label d-flex justify-content-between align-items-center mb-0" id="bot-domain">
-                    <div>
-                        <Popper>
-                            <i class="fa-regular fa-circle-question mr-1"></i>
-                            <template #content>
-                                <div>
-                                    Текстовый редактор. Данный текст будет в таком<br>
-                                    же виде отображен в посте в телеграм.
-                                </div>
-                            </template>
-                        </Popper>
+                <div class="d-flex justify-content-between">
+                    <label class="form-label  mb-0" id="bot-domain">
                         Текстовое содержимое страницы
                         <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                    </div>
+                    </label>
                     <InlineInjectionsHelper
                         v-model="pageForm.content"
                         :field-id="'#main-text-field'"
-                      />
-                </label>
+                    />
+                </div>
 
 
                 <div class="form-floating">

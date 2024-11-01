@@ -1,6 +1,6 @@
 <template>
 
-    <div class="d-flex justify-content-between">
+    <div class="d-inline-flex">
         <button type="button"
                 @click="openFontModal"
                 data-bs-toggle="tooltip"
