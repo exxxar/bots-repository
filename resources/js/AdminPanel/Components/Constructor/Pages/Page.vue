@@ -187,7 +187,10 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                         Текстовое содержимое страницы
                         <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
                     </div>
-                    <InlineInjectionsHelper param="content" v-on:callback="injectContent"/>
+                    <InlineInjectionsHelper
+                        v-model="pageForm.content"
+                        :field-id="'#main-text-field'"
+                      />
                 </label>
 
 
@@ -196,8 +199,8 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                           v-model="pageForm.content"
                                           maxlength="4096"
                                           placeholder="Введите текст"
-                                          id="floatingTextarea2" style="min-height: 150px"></textarea>
-                    <label for="floatingTextarea2">Содержимое страницы <span
+                                          id="main-text-field" style="min-height: 150px"></textarea>
+                    <label for="main-text-field">Содержимое страницы <span
                         v-if="pageForm.content">{{ pageForm.content.length }}/4096 </span></label>
                 </div>
 
@@ -2053,12 +2056,7 @@ export default {
             if (!inLinks)
                 this.links.push(item)
         },
-        injectContent(data) {
-            if (this.pageForm.content)
-                this.pageForm.content += data.text
-            else
-                this.pageForm.content = data.text
-        },
+
         clearForm() {
             this.photos = []
             this.pageForm = {
