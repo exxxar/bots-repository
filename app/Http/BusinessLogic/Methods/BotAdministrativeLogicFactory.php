@@ -488,7 +488,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             BotManager::bot()
                 ->setBot($this->bot)
                 ->sendMessage(
-                    $this->botUser->telegram_chat_id,
+                    $userBotUser->telegram_chat_id,
                     $data["message"] ?? "Спасибо за использование нашего сервиса!"
                 );
     }
