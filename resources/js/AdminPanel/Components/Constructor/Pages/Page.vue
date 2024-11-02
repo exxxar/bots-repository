@@ -1377,7 +1377,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                 }}</span></p>
 
                             <div class="alert alert-info mb-2">
-                                Внимание! Используйте метки на английском языке или число!
+                                <strong class="fw-bold">Внимание!</strong> Используйте метки <strong class="fw-bold text-primary">на английском языке</strong> или <strong class="fw-bold text-primary">число</strong>!
                             </div>
                             <div class="form-floating mb-2">
                                 <input type="text"
