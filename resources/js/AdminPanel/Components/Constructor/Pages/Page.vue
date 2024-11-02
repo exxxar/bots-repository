@@ -1535,7 +1535,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
 <script>
 
 import {mapGetters} from "vuex";
-
+import { Base64 } from 'js-base64';
 
 export default {
     data() {
@@ -1792,7 +1792,7 @@ export default {
             tmpId += this.pageForm.id;
 
             return "https://t.me/" + this.getCurrentBot.bot_domain + "?start="
-                + btoa("004" + tmpId + (this.utm_source != null ? "utm" + this.utm_source : ""))
+                + Base64.encode("004" + tmpId + (this.utm_source != null ? "utm" + this.utm_source : ""))
 
 
         }

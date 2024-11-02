@@ -323,7 +323,7 @@ export default {
                 order_status_5: "Статус вашего заказа изменен на 'Передан на кухню'", //StartsCooking
             },
             pickupForm:{
-                info:"Ваш заказ готов!",
+                info:null,
             }
 
         }

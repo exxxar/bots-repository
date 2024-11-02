@@ -215,15 +215,20 @@ class StartCodesHandlerController extends Controller
                 ->where("telegram_chat_id", $request_id ?? null)
                 ->first();
 
-            $order = Order::query()
-                ->where("bot_id", $bot->id)
-                ->where("customer_id", $requestBotUser->id)
-                ->orderBy("created_at", "DESC")
-                ->first();
-
             $tmpOrderURIId = "";
-            if (!is_null($order))
-                $tmpOrderURIId = "&order_id=$order->id";
+
+            if (!is_null($requestBotUser))
+            {
+                $order = Order::query()
+                    ->where("bot_id", $bot->id)
+                    ->where("customer_id", $requestBotUser->id)
+                    ->orderBy("created_at", "DESC")
+                    ->first();
+
+
+                if (!is_null($order))
+                    $tmpOrderURIId = "&order_id=$order->id";
+            }
 
             switch ($code) {
                 default:

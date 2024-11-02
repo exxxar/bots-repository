@@ -206,7 +206,7 @@ export default {
                 {sump: 444, m: 1000, y: 500, },
 
             ],
-            direction: 'vertical',
+            direction: 'horizontal',
             margin: {
                 left: 0,
                 top: 20,

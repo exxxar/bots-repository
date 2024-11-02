@@ -85,7 +85,7 @@ import WheelCustomScriptEditor
                     <template v-if="show_prizes">
                         <div class="alert alert-light w-100">
                             <p
-                                v-for="(item, index) in items" v-if="!selected_prize"
+                                v-for="(item, index) in items"
                                 @click="selectPrize(index)"
                                 class="mb-0">{{ item.value }} - {{ item.description }}</p>
                         </div>

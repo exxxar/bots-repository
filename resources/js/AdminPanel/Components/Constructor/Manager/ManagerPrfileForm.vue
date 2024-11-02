@@ -621,8 +621,9 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
     <!-- Modal -->
     <div class="modal fade" id="activate-promo-code" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog" >
             <div class="modal-content">
+                <template v-if="botUser">
                 <div class="modal-body" v-if="botUser.manager">
                     <h6 class="text-center">Активируйте ваш ключ и получите дополнительные слоты</h6>
                     <PromoCodeActivateForm
@@ -635,6 +636,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                 </div>
+                </template>
             </div>
         </div>
     </div>
