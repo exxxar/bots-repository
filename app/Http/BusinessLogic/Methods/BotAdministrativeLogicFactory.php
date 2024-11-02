@@ -102,8 +102,9 @@ class BotAdministrativeLogicFactory
         $endOfMonth = $date->endOfMonth()
             ->format("Y-m-d H:i:s");
 
+        $botId = $this->bot->id;
         $sum = DB::query()
-            ->select(DB::raw("SUM(`summary_price`) as sump,MONTH(`created_at`) as m, YEAR(`created_at`) as y FROM `orders` WHERE `bot_id`=21
+            ->select(DB::raw("SUM(`summary_price`) as sump,MONTH(`created_at`) as m, YEAR(`created_at`) as y FROM `orders` WHERE `bot_id`=$botId
 GROUP BY MONTH(`created_at`), YEAR(`created_at`)
 ORDER  BY MONTH(`created_at`) ASC"))->get();
 
