@@ -25,12 +25,14 @@ use App\Models\CashBackHistory;
 use App\Models\ChatLog;
 use App\Models\CustomField;
 use App\Models\ManagerProfile;
+use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\YClients;
 use Carbon\Carbon;
 use Exception;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -93,10 +95,38 @@ class BotAdministrativeLogicFactory
         if (!$this->botUser->is_admin)
             throw new HttpException(403, "Пользователь не является администратором");
 
+        $date = Carbon::now()
+            ->subMonths(4);
+        $startOfMonth = $date->startOfMonth()
+            ->format("Y-m-d H:i:s");
+        $endOfMonth = $date->endOfMonth()
+            ->format("Y-m-d H:i:s");
+
+        $sum = DB::query()
+            ->select(DB::raw("SUM(`summary_price`) as sump,MONTH(`created_at`) as m, YEAR(`created_at`) as y FROM `orders` WHERE `bot_id`=21
+GROUP BY MONTH(`created_at`), YEAR(`created_at`)
+ORDER  BY MONTH(`created_at`) ASC"))->get();
+
         return [
             "users_in_bd" => BotUser::query()
                 ->where("bot_id", $this->bot->id)
                 ->count(),
+            'orders' => (object)[
+                "start_at"=>$startOfMonth,
+                "end_at"=>$endOfMonth,
+                "sum" => $sum,/*Order::query()
+                   // ->where("bot_id")
+                    ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
+                    ->sum("summary_price"),*/
+                "count_products" => Order::query()
+                  //  ->where("bot_id")
+                    ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
+                    ->sum("product_count"),
+                "count_orders" => Order::query()
+                  //  ->where("bot_id")
+                    ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
+                    ->count(),
+            ],
             "users_in_bd_today" => BotUser::query()
                 ->where("bot_id", $this->bot->id)
                 ->whereDate('updated_at', Carbon::today())
