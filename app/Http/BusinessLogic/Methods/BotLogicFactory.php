@@ -2273,7 +2273,6 @@ class BotLogicFactory
         $content = $data["message"] ?? null;
         if (count($photos) > 1) {
 
-            Log::info(print_r($photos, true));
             $media = [];
             foreach ($photos as $image) {
                 $media[] = [
@@ -2286,7 +2285,6 @@ class BotLogicFactory
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendMediaGroup($channel, json_encode($media));
-
 
             if (!is_null($content))
                 BotMethods::bot()
