@@ -46,6 +46,7 @@ class SystemDiagnosticController extends Controller
     public function uploadFilesToBot(...$data){
 
         $bot = BotManager::bot()->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
 
         BotManager::bot()
            ->sendInlineKeyboard($botUser->telegram_chat_id ?? null,
