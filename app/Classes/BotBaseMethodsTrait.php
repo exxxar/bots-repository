@@ -963,9 +963,7 @@ trait BotBaseMethodsTrait
             Log::info("tmp=>".print_r($tmp, true));
             $this->bot->sendMediaGroup($tmp);
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . " " .
-                $e->getTrace() . " " .
-                $e->getLine());
+            Log::error( $e);
         }
 
         return $this;
