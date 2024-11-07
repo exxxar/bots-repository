@@ -196,7 +196,7 @@ trait BotDialogTrait
 
             $bot = $this->getSelf();
 
-            $this->sendReplyKeyboard($botUser->telegram_chat_id ?? null,
+            $this->sendInlineKeyboard($botUser->telegram_chat_id ?? null,
                 "🗃️Менеджер файлов",
                 [
                     [
