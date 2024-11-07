@@ -174,8 +174,13 @@ Route::middleware(["check-node"])
         });
 
         Route::get('/', function () {
-            Inertia::setRootView("landing");
+            Inertia::setRootView("landing-new");
             return Inertia::render('LandingPage');
+        });
+
+        Route::get('/history', function () {
+            Inertia::setRootView("landing");
+            return Inertia::render('LandingForProjectPage');
         });
 
         Route::get("/auth/telegram/{domain}/callback", [AuthenticatedSessionController::class, "telegramAuth"]);

@@ -62,6 +62,9 @@ Route::prefix("bot-client")
         Route::post('/feedback', [BotController::class, "sendFeedback"])
             ->middleware(["tgAuth.any"]);
 
+        Route::post('/upload-file', [BotController::class, "uploadFile"])
+            ->middleware(["tgAuth.any"]);
+
         Route::prefix("wheel-of-fortune")
             ->controller(WheelOfFortuneScriptController::class)
             ->middleware(["tgAuth.any", "slug"])

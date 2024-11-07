@@ -2246,6 +2246,91 @@ class BotLogicFactory
 
     }
 
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function uploadFilesFromForm(array $data,
+                                        array $uploadedPhotos = null,
+                                        array $uploadedDocuments = null,
+                                        array $uploadedVideos = null): void
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+
+        $channel = $this->bot->order_channel ?? null;
+
+        $slug = $this->bot->company->slug;
+
+        $photos = $this->uploadFiles("/public/companies/$slug", $uploadedPhotos);
+        $documents = $this->uploadFiles("/public/companies/$slug", $uploadedDocuments);
+        $videos = $this->uploadFiles("/public/companies/$slug", $uploadedVideos);
+
+        $isSend = false;
+        $content = $data["message"] ?? null;
+        if (count($photos) > 1) {
+
+            $media = [];
+            foreach ($photos as $image) {
+                $media[] = [
+                    "media" => env("APP_URL") . "/images-by-bot-id/" . $this->bot->id . "/" . $image,
+                    "type" => "photo",
+                    "caption" => "$image"
+                ];
+            }
+
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMediaGroup($channel, $media);
+
+            if (!is_null($content))
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendMessage($channel, $content);
+
+            $isSend = true;
+        }
+
+
+        if (count($photos) == 1) {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendPhoto($channel, $content,
+                    InputFile::create(storage_path("app/public") . "/companies/" . $slug . "/" . $photos[0])
+                );
+            $isSend = true;
+        }
+
+        if (count($videos) == 1) {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendVideo($channel, !$isSend ? $content : null,
+                    InputFile::create(storage_path("app/public") . "/companies/" . $slug . "/" . $videos[0])
+                );
+            $isSend = true;
+        }
+
+
+        if (count($documents) == 1) {
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendDocument($channel, !$isSend ? $content : null ,
+                    InputFile::create(storage_path("app/public") . "/companies/" . $slug . "/" . $documents[0])
+                );
+
+            $isSend = true;
+        }
+
+
+        if (!is_null($content) && !$isSend)
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendMessage($channel, $content);
+    }
+
     /**
      * @throws HttpException
      * @throws ValidationException

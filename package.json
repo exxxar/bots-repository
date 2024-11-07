@@ -45,6 +45,7 @@
         "vue-circular-count-down-timer": "^2.0.0",
         "vue-core-video-player": "^0.2.0",
         "vue-diagram-editor": "^1.2.1",
+        "vue-files-preview": "^1.0.34",
         "vue-flow": "^0.3.0",
         "vue-moment": "^4.1.0",
         "vue-multiselect": "^2.1.7",

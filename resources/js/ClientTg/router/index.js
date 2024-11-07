@@ -500,11 +500,18 @@ import YClientsV2 from "@/ClientTg/Pages/V2/Admin/Integrations/YClients.vue";
 import IikoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Iiko.vue";
 import BitrixV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Bitrix.vue";
 import FrontPadV2 from "@/ClientTg/Pages/V2/Admin/Integrations/FrontPad.vue";
+import UploadV2 from "@/ClientTg/Pages/V2/Other/FileUpload.vue";
 
 
 const simplePrefix = "/s"
 export const simpleRoutes = [
 
+    {
+        name: 'UploadV2',
+        path: simplePrefix + '/upload',
+        component: UploadV2,
+        meta: {title: 'Загрузка файлов'}
+    },
     {
         name: 'CatalogV2',
         path: simplePrefix + '/catalog',

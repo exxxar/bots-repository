@@ -82,7 +82,7 @@
             </p>
 
             <button type="submit"
-                    :disabled="sending&&!callbackForm.image"
+                    :disabled="sending&&(callbackForm.images||[]).length===0"
                     class="btn btn-primary mt-2 p-3 w-100">
                 Отправить сообщение
             </button>

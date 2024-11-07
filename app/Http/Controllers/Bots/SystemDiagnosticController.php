@@ -1422,6 +1422,7 @@ class SystemDiagnosticController extends Controller
             ]);
     }
 
+
     public function helpBot(...$data)
     {
         BotManager::bot()

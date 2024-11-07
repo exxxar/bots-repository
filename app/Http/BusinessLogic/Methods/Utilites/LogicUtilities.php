@@ -3,25 +3,34 @@
 namespace App\Http\BusinessLogic\Methods\Utilites;
 
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 trait LogicUtilities
 {
-    protected function uploadPhotos($path, array $uploadedFiles = null): array
+    protected function uploadFiles($path, array $uploadedFiles = null): array
     {
         if (is_null($uploadedFiles))
             return [];
 
-        $photos = [];
+        $files = [];
         foreach ($uploadedFiles as $key => $file) {
             $ext = $file->getClientOriginalExtension();
 
-            $imageName = Str::uuid() . "." . $ext;
+            $fileName = Str::uuid() . "." . $ext;
 
-            $file->storeAs("$path/$imageName");
-            $photos[] = $imageName;
+            $file->storeAs("$path/$fileName");
+            $files[] = $fileName;
         }
 
-        return $photos;
+        return $files;
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    protected function uploadPhotos($path, array $uploadedFiles = null): array
+    {
+        return $this->uploadFiles($path, $uploadedFiles);
     }
 
     protected function uploadPhoto($path, $uploadedFile = null): ?string

@@ -99,6 +99,7 @@ class BotController extends Controller
             ->setBot($request->bot ?? null)
             ->storeMessageSettings($request->all());
     }
+
     /**
      * @throws ValidationException
      */
@@ -187,6 +188,22 @@ class BotController extends Controller
 
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function uploadFile(Request $request): Response
+    {
+        BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->uploadFilesFromForm($request->all(),
+                $request->hasFile('photos') ? $request->file('photos') : null,
+                $request->hasFile('documents') ? $request->file('documents') : null,
+                $request->hasFile('videos') ? $request->file('videos') : null,
+            );
+
+        return response()->noContent();
+    }
 
     /**
      * @throws ValidationException

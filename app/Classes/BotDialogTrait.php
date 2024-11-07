@@ -192,6 +192,27 @@ trait BotDialogTrait
                 "Диалог преждевременно завершен!");
         }
 
+        if (trim(strtolower($text)) === "/upload") {
+
+            $bot = $this->getSelf();
+
+            $this->sendReplyKeyboard($botUser->telegram_chat_id ?? null,
+                "🗃️Менеджер файлов",
+                [
+                    [
+                        [
+                            "text" => "📂Открыть",
+                            "web_app" => [
+                                "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&hide_menu#/s/upload"
+                            ]
+                        ],
+                    ],
+
+                ]);
+
+            return;
+        }
+
         $dialog = BotDialogResult::query()
             ->with(["botDialogCommand"])
             ->where("bot_user_id", $botUser->id)

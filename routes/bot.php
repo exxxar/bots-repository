@@ -21,6 +21,7 @@ BotManager::bot()
     ->route("/.*Мой id|.*мой id", "getMyId")
     ->route("/about", "aboutBot")
     ->route("/help", "helpBot")
+
     ->route("/democircle", "democircle")
     ->route("/testdiсe", "demodice")
     ->route("/testconfig", "testConfig")
