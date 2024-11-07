@@ -7,7 +7,7 @@ use Illuminate\Validation\ValidationException;
 
 trait LogicUtilities
 {
-    protected function uploadFiles($path, array $uploadedFiles = null): array
+    protected function uploadFiles($path, array $uploadedFiles = null)
     {
         if (is_null($uploadedFiles))
             return [];
@@ -28,7 +28,7 @@ trait LogicUtilities
     /**
      * @throws ValidationException
      */
-    protected function uploadPhotos($path, array $uploadedFiles = null): array
+    protected function uploadPhotos($path, array $uploadedFiles = null)
     {
         return $this->uploadFiles($path, $uploadedFiles);
     }
