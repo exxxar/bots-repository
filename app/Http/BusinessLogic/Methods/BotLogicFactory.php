@@ -2287,13 +2287,14 @@ class BotLogicFactory
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendMediaGroup($channel, $media);
+            Log::info("we are here 2");
 
             if (!is_null($content))
                 BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendMessage($channel, $content);
 
-            Log::info("we are here 2");
+
             $isSend = true;
         }
 

@@ -953,12 +953,14 @@ trait BotBaseMethodsTrait
             "media" => $media,
         ];
 
+        Log::info("media=>".print_r($media, true));
         if ($this->isWebMode) {
             $this->pushWebMessage($tmp);
             return $this;
         }
 
         try {
+            Log::info("tmp=>".print_r($tmp, true));
             $this->bot->sendMediaGroup($tmp);
         } catch (\Exception $e) {
             Log::error($e->getMessage() . " " .
