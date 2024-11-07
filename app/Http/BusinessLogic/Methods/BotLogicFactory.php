@@ -2273,6 +2273,7 @@ class BotLogicFactory
         $content = $data["message"] ?? null;
         if (count($photos) > 1) {
 
+            Log::info(print_r($photos, true));
             $media = [];
             foreach ($photos as $image) {
                 $media[] = [
@@ -2282,6 +2283,7 @@ class BotLogicFactory
                 ];
             }
 
+            Log::info("we are here 1");
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendMediaGroup($channel, $media);
@@ -2291,6 +2293,7 @@ class BotLogicFactory
                     ->whereBot($this->bot)
                     ->sendMessage($channel, $content);
 
+            Log::info("we are here 2");
             $isSend = true;
         }
 
@@ -2298,7 +2301,7 @@ class BotLogicFactory
         if (count($photos) == 1) {
             BotMethods::bot()
                 ->whereBot($this->bot)
-                ->sendPhoto($channel, $content,
+                ->sendPhoto($channel, $content ?? null,
                     InputFile::create(storage_path("app/public") . "/companies/" . $slug . "/" . $photos[0])
                 );
             $isSend = true;
