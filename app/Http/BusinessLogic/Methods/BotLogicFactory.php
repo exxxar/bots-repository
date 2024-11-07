@@ -2283,11 +2283,10 @@ class BotLogicFactory
                 ];
             }
 
-            Log::info("we are here 1");
             BotMethods::bot()
                 ->whereBot($this->bot)
-                ->sendMediaGroup($channel, $media);
-            Log::info("we are here 2");
+                ->sendMediaGroup($channel, json_encode($media));
+
 
             if (!is_null($content))
                 BotMethods::bot()
@@ -2394,7 +2393,7 @@ class BotLogicFactory
 
             BotMethods::bot()
                 ->whereBot($this->bot)
-                ->sendMediaGroup($channel, $media)
+                ->sendMediaGroup($channel, json_encode($media))
                 ->sendInlineKeyboard($channel, $content, $inlineKeyboard);
 
 
