@@ -2257,8 +2257,8 @@ class BotLogicFactory
                                         array $uploadedVideos = null): void
     {
 
-        if (is_null($this->bot))
-            throw new HttpException(404, "Бот не найден!");
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Не хватает критериев функции!");
 
 
         $channel = $this->bot->order_channel ?? null;
@@ -2317,7 +2317,7 @@ class BotLogicFactory
         if (count($documents) == 1) {
             BotMethods::bot()
                 ->whereBot($this->bot)
-                ->sendDocument($channel, !$isSend ? $content : null ,
+                ->sendDocument($channel, !$isSend ? $content : null,
                     InputFile::create(storage_path("app/public") . "/companies/" . $slug . "/" . $documents[0])
                 );
 
@@ -2329,6 +2329,10 @@ class BotLogicFactory
             BotMethods::bot()
                 ->whereBot($this->bot)
                 ->sendMessage($channel, $content);
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage($this->botUser->telegram_chat_id, "Файлы успешно загружены!");
     }
 
     /**
