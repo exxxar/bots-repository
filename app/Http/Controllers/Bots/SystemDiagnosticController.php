@@ -43,6 +43,26 @@ class SystemDiagnosticController extends Controller
             ->replyDice();
     }
 
+    public function uploadFilesToBot(...$data){
+
+        $bot = BotManager::bot()->getSelf();
+
+        BotManager::bot()
+           ->sendInlineKeyboard($botUser->telegram_chat_id ?? null,
+            "🗃️Менеджер файлов",
+            [
+                [
+                    [
+                        "text" => "📂Открыть",
+                        "web_app" => [
+                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&hide_menu#/s/upload"
+                        ]
+                    ],
+                ],
+
+            ]);
+    }
+
     public function uploadAnyKindOfMedia(...$data)
     {
         $caption = $data[2] ?? null;
@@ -50,7 +70,6 @@ class SystemDiagnosticController extends Controller
         $type = $data[4] ?? "document";
 
         $botUser = BotManager::bot()->currentBotUser();
-
 
         if (!$botUser->is_admin && !$botUser->is_manager) {
             BotManager::bot()
