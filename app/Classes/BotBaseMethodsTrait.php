@@ -950,7 +950,7 @@ trait BotBaseMethodsTrait
 
         $tmp = [
             "chat_id" => $chatId,
-            "media" => $media,
+            "media" => json_encode($media),
         ];
 
         Log::info("media=>".print_r($media, true));
