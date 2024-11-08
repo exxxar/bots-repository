@@ -17,26 +17,30 @@
 
             <h6 class="my-2 text-center fw-bold">Прикрепить фотографию
             </h6>
-            <div class="photo-preview d-flex justify-content-center flex-wrap w-100 my-2">
-                <label for="menu-photos" style="margin-right: 10px;" class="photo-loader ml-2">
-                    <span class="text-primary fw-bold">+</span>
-                    <input type="file" id="menu-photos" accept="image/*"
-                           multiple
-                           max="10"
-                           @change="onChangePhotos"
-                           style="display:none;"/>
 
-                </label>
-                <div class="mb-2 img-preview" style="margin-right: 10px;"
-                     v-for="(img, index) in callbackForm.images"
-                     v-if="(callbackForm.images||[]).length>0">
-                    <img v-lazy="getPhoto(img).imageUrl">
-                    <div class="remove">
-                        <a @click="removePhoto(index)">Удалить</a>
-                    </div>
-                </div>
 
+            <div class="form-floating mb-2">
+                <input type="file" id="menu-photo" accept="image/*"
+                       multiple
+                       @change="onChangePhotos"
+                       class="form-control"
+                       placeholder="name@example.com">
+                <label for="menu-photo">Фотографии</label>
             </div>
+
+            <ol class="list-group list-group-numbered mb-2">
+                <li class="list-group-item d-flex justify-content-between align-items-start"
+                    v-for="(photo, index) in callbackForm.images">
+                    <div class="ms-2 me-auto" style="word-break: break-all;">
+                        {{ photo.name || 'не указан' }}
+                    </div>
+                    <span
+                        @click="removePhoto(index)"
+                        class="badge text-bg-primary rounded-pill">
+                        удалить
+                    </span>
+                </li>
+            </ol>
             <h6 class="my-2 text-center fw-bold">Прикрепить видео</h6>
 
             <div class="form-floating mb-2">
@@ -50,11 +54,13 @@
 
             <ol class="list-group list-group-numbered mb-2">
                 <li class="list-group-item d-flex justify-content-between align-items-start"
-                    v-for="video in callbackForm.videos">
+                    v-for="(video, index) in callbackForm.videos">
                     <div class="ms-2 me-auto" style="word-break: break-all;">
                         {{ video.name || 'не указан' }}
                     </div>
-                    <span class="badge text-bg-primary rounded-pill">
+                    <span
+                        @click="removeVideo(index)"
+                        class="badge text-bg-primary rounded-pill">
                         удалить
                     </span>
                 </li>
@@ -73,11 +79,13 @@
 
             <ol class="list-group list-group-numbered mb-2">
                 <li class="list-group-item d-flex justify-content-between align-items-start"
-                    v-for="doc in callbackForm.documents">
+                    v-for="(doc, index) in callbackForm.documents">
                     <div class="ms-2 me-auto" style="word-break: break-all;">
                         {{ doc.name || 'не указан' }}
                     </div>
-                    <span class="badge text-bg-primary rounded-pill">
+                    <span
+                        @click="removeDocument(index)"
+                        class="badge text-bg-primary rounded-pill">
                         удалить
                     </span>
                 </li>
@@ -148,14 +156,14 @@ export default {
     },
     methods: {
         onChangePhotos(e) {
-            const files = e.target.files
+            const files = e.target.files||[]
 
 
             for (let i = 0; i < Math.min(files.length, 9); i++)
                 this.callbackForm.images.push(files[i])
         },
         onChangeVideos(e) {
-            const files = e.target.files
+            const files = e.target.files||[]
             for (let i = 0; i < Math.min(files.length, 9); i++) {
                 this.callbackForm.videos.push(files[i])
 
@@ -163,7 +171,7 @@ export default {
 
         },
         onChangeDocuments(e) {
-            const files = e.target.files
+            const files = e.target.files||[]
             for (let i = 0; i < Math.min(files.length, 9); i++)
                 this.callbackForm.documents.push(files[i])
         },
@@ -171,7 +179,13 @@ export default {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
         removePhoto(index) {
-            this.locationForm.images.splice(index, 1)
+            this.callbackForm.images.splice(index, 1)
+        },
+        removeVideo(index) {
+            this.callbackForm.images.splice(index, 1)
+        },
+        removeDocument(index) {
+            this.callbackForm.images.splice(index, 1)
         },
         submitCallback() {
             let data = new FormData();

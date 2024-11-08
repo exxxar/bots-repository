@@ -146,7 +146,7 @@ export default {
             return {imageUrl: URL.createObjectURL(imgObject)}
         },
         removePhoto(index) {
-            this.locationForm.images.splice(index, 1)
+            this.callbackForm.images.splice(index, 1)
         },
         submitCallback() {
             let data = new FormData();
