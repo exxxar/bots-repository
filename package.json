@@ -60,6 +60,7 @@
         "vue3-charts": "^1.1.33",
         "vue3-countdown": "^1.0.6",
         "vue3-datepicker": "^0.4.0",
+        "vue3-file-selector": "^1.0.3",
         "vue3-fortune-wheel": "^1.1.37",
         "vue3-json-editor": "^1.1.5",
         "vue3-lazyload": "^0.3.6",

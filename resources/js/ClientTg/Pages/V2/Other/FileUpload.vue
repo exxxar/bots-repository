@@ -12,6 +12,24 @@
             документ.
         </p>
 
+        <FileSelector v-model="files">
+            <Dropzone v-slot="{ hovered }">
+                <div
+                    class="block w-full h-64 rounded-lg border-4 border-dashed border-gray-400 transition-colors duration-150 flex flex-col space-y-4 justify-center items-center"
+                    :class="{ 'border-blue-200': hovered }"
+                >
+                    <ul>
+                        <li v-for="file in files" :key="file.name">
+                            {{ file.name }}
+                        </li>
+                    </ul>
+                    <DialogButton class="bg-indigo-400 rounded text-white px-2 py-1"
+                    >Add files...</DialogButton
+                    >
+                </div>
+            </Dropzone>
+        </FileSelector>
+
         <form v-on:submit.prevent="submitCallback">
 
 
@@ -143,11 +161,23 @@
 </template>
 <script>
 
-
+import { ref } from 'vue'
+import { FileSelector, Dropzone, DialogButton } from 'vue3-file-selector'
 import {mapGetters} from "vuex";
 
 export default {
+    components: {
+        FileSelector,
+        Dropzone,
+        DialogButton
+    },
+    setup () {
+        const files = ref([])
 
+        return {
+            files
+        }
+    },
     data() {
         return {
             file: null,
