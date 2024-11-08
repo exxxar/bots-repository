@@ -23,8 +23,9 @@
                 <input type="file" id="menu-photos-upload" accept="image/*"
                        @change="onChangePhotos"
                        class="form-control"
-                       multiple="true"
-                       placeholder="name@example.com">
+                       placeholder="name@example.com"
+                       ref="file" multiple="multiple"
+                >
                 <label for="menu-photos-upload">Фотографии</label>
             </div>
 
