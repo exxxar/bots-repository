@@ -57,7 +57,7 @@
 
                 <div class="form-floating mb-2">
                     <input type="file" id="menu-video" accept="video/*"
-                           max="10"
+                           :disabled="(callbackForm.videos||[]).length===1"
                            @change="onChangeVideos"
                            class="form-control"
                            placeholder="name@example.com">
@@ -93,7 +93,7 @@
 
                 <div class="form-floating mb-2">
                     <input type="file" id="menu-document" accept="application/pdf"
-                           max="10"
+                           :disabled="(callbackForm.documents||[]).length===1"
                            @change="onChangeDocuments"
                            class="form-control"
                            placeholder="name@example.com">
