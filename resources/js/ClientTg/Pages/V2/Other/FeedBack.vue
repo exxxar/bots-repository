@@ -59,7 +59,6 @@
                     <span class="text-primary fw-bold">+</span>
                     <input type="file" id="menu-photos" accept="image/*"
                            required
-                           multiple="multiple"
                            @change="onChangePhotos"
                            style="display:none;"/>
 

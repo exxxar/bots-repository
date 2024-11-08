@@ -24,7 +24,6 @@
                        @change="onChangePhotos"
                        class="form-control"
                        placeholder="name@example.com"
-                       ref="file" multiple="multiple"
                 >
                 <label for="menu-photos-upload">Фотографии</label>
             </div>
