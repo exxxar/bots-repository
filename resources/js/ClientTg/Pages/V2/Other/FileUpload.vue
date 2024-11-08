@@ -30,6 +30,8 @@
                 <label for="menu-photos-upload">Фотографии</label>
             </div>
 
+            {{test}}
+            {{callbackForm.images}}
             <ol class="list-group list-group-numbered mb-2">
                 <li class="list-group-item d-flex justify-content-between align-items-start"
                     v-for="(photo, index) in callbackForm.images">
@@ -150,6 +152,7 @@ export default {
 
     data() {
         return {
+            test:null,
             file: null,
             sending: false,
             need_video: false,
@@ -197,10 +200,13 @@ export default {
     },
     methods: {
         onChangePhotos(e) {
+            this.test += "test!";
             const files = e.target.files || []
-
+            this.test += "len="+files.length;
             for (let i = 0; i < files.length; i++)
                 this.callbackForm.images.push(files[i])
+
+            this.test += "uploaded";
         },
         onChangeVideos(e) {
             const files = e.target.files || []
