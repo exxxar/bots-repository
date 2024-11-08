@@ -194,11 +194,11 @@
       "_index.es-87f808e1.js"
     ]
   },
-  "_V1Layout-34496f1e.js": {
+  "_V1Layout-ff00edfb.js": {
     "css": [
       "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-34496f1e.js",
+    "file": "assets/V1Layout-ff00edfb.js",
     "imports": [
       "_index.es-87f808e1.js",
       "resources/js/ClientTg/app.js"
@@ -607,11 +607,11 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-811f4884.js",
+    "file": "assets/MainV1-9ff4229e.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-87f808e1.js",
-      "_V1Layout-34496f1e.js",
+      "_V1Layout-ff00edfb.js",
       "resources/js/ClientTg/app.js",
       "_BotMediaList-1361456d.js",
       "_Pagination-221154ef.js",
@@ -635,7 +635,7 @@
     "css": [
       "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/MainV2-f76af78f.js",
+    "file": "assets/MainV2-8e64c4b1.js",
     "imports": [
       "_index.es-87f808e1.js",
       "resources/js/ClientTg/app.js",
@@ -664,9 +664,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Error.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-1a35ddef.js",
+    "file": "assets/Result-08b57f1a.js",
     "imports": [
-      "_V1Layout-34496f1e.js",
+      "_V1Layout-ff00edfb.js",
       "resources/js/ClientTg/app.js",
       "_index.es-87f808e1.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -709,7 +709,7 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.vue"
   },
   "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue": {
-    "file": "assets/CashBack-0e58d762.js",
+    "file": "assets/CashBack-867db887.js",
     "imports": [
       "resources/js/ClientTg/app.js",
       "_index.es-87f808e1.js",
@@ -729,9 +729,9 @@
     "src": "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-905b05df.js",
+    "file": "assets/Result-f24cdf6b.js",
     "imports": [
-      "_V1Layout-34496f1e.js",
+      "_V1Layout-ff00edfb.js",
       "_index.es-87f808e1.js",
       "resources/js/ClientTg/app.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -767,7 +767,7 @@
       "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-0e26d4b1.js",
+    "file": "assets/app-e98b19c5.js",
     "imports": [
       "_index.es-87f808e1.js",
       "__plugin-vue_export-helper-c27b6911.js",
