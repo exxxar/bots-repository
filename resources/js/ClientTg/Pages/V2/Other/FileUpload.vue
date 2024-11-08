@@ -14,19 +14,17 @@
 
         <form v-on:submit.prevent="submitCallback">
 
-
             <h6 class="my-2 text-center fw-bold">Прикрепить фотографию
             </h6>
 
-            {{test||null}}
-
             <div class="form-floating mb-2">
-                <input type="file" id="menu-photos-upload" accept="image/*"
+                <input type="file" id="menu-photos-upload"
+                       accept="image/*"
                        @change="onChangePhotos"
                        class="form-control"
-                       ref="file" multiple="multiple"
                        :disabled="(callbackForm.images||[]).length===10"
                        placeholder="name@example.com"
+                       :multiple="true"
                 >
                 <label for="menu-photos-upload">Фотографии</label>
             </div>
@@ -184,21 +182,7 @@ export default {
         self() {
             return this.getSelf
         },
-        test(){
-            let tmp = "";
-            if (!this.$refs.file)
-                return "";
 
-            if ((this.$refs.file.files||[]).length===0)
-                return "";
-
-            for (let i = 0; i < this.$refs.file.files.length; i++ ){
-                let file = this.$refs.file.files[i];
-                tmp = 'files[' + i + ']'
-            }
-
-            return tmp
-        },
         canSend() {
             return !this.sending && ((this.callbackForm.images || []).length > 0 ||
                 (this.callbackForm.videos || []).length > 0 ||
