@@ -161,7 +161,22 @@ export default {
             },
         }
     },
-
+    watch: {
+        'need_video': {
+            handler: function (newValue) {
+                if (!this.need_video)
+                    this.callbackForm.videos = []
+            },
+            deep: true
+        },
+        'need_document': {
+            handler: function (newValue) {
+                if (!this.need_video)
+                    this.callbackForm.documents = []
+            },
+            deep: true
+        },
+    },
     computed: {
         ...mapGetters(['getSelf']),
         self() {
@@ -183,13 +198,12 @@ export default {
         onChangePhotos(e) {
             const files = e.target.files || []
 
-
-            for (let i = 0; i < Math.min(files.length, 9); i++)
+            for (let i = 0; i < files.length; i++)
                 this.callbackForm.images.push(files[i])
         },
         onChangeVideos(e) {
             const files = e.target.files || []
-            for (let i = 0; i < Math.min(files.length, 9); i++) {
+            for (let i = 0; i < files.length; i++) {
                 this.callbackForm.videos.push(files[i])
 
             }
@@ -197,7 +211,7 @@ export default {
         },
         onChangeDocuments(e) {
             const files = e.target.files || []
-            for (let i = 0; i < Math.min(files.length, 9); i++)
+            for (let i = 0; i < files.length; i++)
                 this.callbackForm.documents.push(files[i])
         },
         getPhoto(imgObject) {
