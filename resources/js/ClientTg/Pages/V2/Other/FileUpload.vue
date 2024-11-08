@@ -36,61 +36,84 @@
                     </div>
                     <span
                         @click="removePhoto(index)"
-                        class="badge text-bg-primary rounded-pill">
+                        class="badge text-bg-primary rounded-pill cursor-pointer">
                         удалить
                     </span>
                 </li>
             </ol>
-            <h6 class="my-2 text-center fw-bold">Прикрепить видео</h6>
 
-            <div class="form-floating mb-2">
-                <input type="file" id="menu-video" accept="video/*"
-                       max="10"
-                       @change="onChangeVideos"
-                       class="form-control"
-                       placeholder="name@example.com">
-                <label for="menu-video">Видео</label>
+            <div class="form-check mb-2">
+                <input class="form-check-input"
+                       v-model="need_video"
+                       type="checkbox" value="" id="need_attach_video">
+                <label class="form-check-label" for="need_attach_video">
+                    Нужно прикрепить видео
+                </label>
             </div>
 
-            <ol class="list-group list-group-numbered mb-2">
-                <li class="list-group-item d-flex justify-content-between align-items-start"
-                    v-for="(video, index) in callbackForm.videos">
-                    <div class="ms-2 me-auto" style="word-break: break-all;">
-                        {{ video.name || 'не указан' }}
-                    </div>
-                    <span
-                        @click="removeVideo(index)"
-                        class="badge text-bg-primary rounded-pill">
+            <template v-if="need_video">
+                <h6 class="mb-2 text-center fw-bold">Прикрепить видео</h6>
+
+                <div class="form-floating mb-2">
+                    <input type="file" id="menu-video" accept="video/*"
+                           max="10"
+                           @change="onChangeVideos"
+                           class="form-control"
+                           placeholder="name@example.com">
+                    <label for="menu-video">Видео</label>
+                </div>
+
+                <ol class="list-group list-group-numbered mb-2">
+                    <li class="list-group-item d-flex justify-content-between align-items-start"
+                        v-for="(video, index) in callbackForm.videos">
+                        <div class="ms-2 me-auto" style="word-break: break-all;">
+                            {{ video.name || 'не указан' }}
+                        </div>
+                        <span
+                            @click="removeVideo(index)"
+                            class="badge text-bg-primary rounded-pill cursor-pointer">
                         удалить
                     </span>
-                </li>
-            </ol>
+                    </li>
+                </ol>
+            </template>
 
-            <h6 class="my-3 text-center fw-bold">Прикрепить файл</h6>
-
-            <div class="form-floating mb-2">
-                <input type="file" id="menu-document" accept="application/pdf"
-                       max="10"
-                       @change="onChangeDocuments"
-                       class="form-control"
-                       placeholder="name@example.com">
-                <label for="menu-document">Документ</label>
+            <div class="form-check mb-2">
+                <input class="form-check-input"
+                       v-model="need_document"
+                       type="checkbox" value="" id="need_attach_file">
+                <label class="form-check-label" for="need_attach_file">
+                    Нужно прикрепить файл
+                </label>
             </div>
 
-            <ol class="list-group list-group-numbered mb-2">
-                <li class="list-group-item d-flex justify-content-between align-items-start"
-                    v-for="(doc, index) in callbackForm.documents">
-                    <div class="ms-2 me-auto" style="word-break: break-all;">
-                        {{ doc.name || 'не указан' }}
-                    </div>
-                    <span
-                        @click="removeDocument(index)"
-                        class="badge text-bg-primary rounded-pill">
+            <template v-if="need_document">
+                <h6 class="mb-2 text-center fw-bold">Прикрепить файл</h6>
+
+                <div class="form-floating mb-2">
+                    <input type="file" id="menu-document" accept="application/pdf"
+                           max="10"
+                           @change="onChangeDocuments"
+                           class="form-control"
+                           placeholder="name@example.com">
+                    <label for="menu-document">Документ</label>
+                </div>
+
+                <ol class="list-group list-group-numbered mb-2">
+                    <li class="list-group-item d-flex justify-content-between align-items-start"
+                        v-for="(doc, index) in callbackForm.documents">
+                        <div class="ms-2 me-auto" style="word-break: break-all;">
+                            {{ doc.name || 'не указан' }}
+                        </div>
+                        <span
+                            @click="removeDocument(index)"
+                            class="badge text-bg-primary rounded-pill cursor-pointer">
                         удалить
                     </span>
-                </li>
-            </ol>
+                    </li>
+                </ol>
 
+            </template>
 
             <div class="form-floating">
                     <textarea class="form-control"
@@ -128,6 +151,8 @@ export default {
         return {
             file: null,
             sending: false,
+            need_video: false,
+            need_document: false,
             callbackForm: {
                 message: null,
                 images: [],
@@ -156,14 +181,14 @@ export default {
     },
     methods: {
         onChangePhotos(e) {
-            const files = e.target.files||[]
+            const files = e.target.files || []
 
 
             for (let i = 0; i < Math.min(files.length, 9); i++)
                 this.callbackForm.images.push(files[i])
         },
         onChangeVideos(e) {
-            const files = e.target.files||[]
+            const files = e.target.files || []
             for (let i = 0; i < Math.min(files.length, 9); i++) {
                 this.callbackForm.videos.push(files[i])
 
@@ -171,7 +196,7 @@ export default {
 
         },
         onChangeDocuments(e) {
-            const files = e.target.files||[]
+            const files = e.target.files || []
             for (let i = 0; i < Math.min(files.length, 9); i++)
                 this.callbackForm.documents.push(files[i])
         },
@@ -182,10 +207,10 @@ export default {
             this.callbackForm.images.splice(index, 1)
         },
         removeVideo(index) {
-            this.callbackForm.images.splice(index, 1)
+            this.callbackForm.videos.splice(index, 1)
         },
         removeDocument(index) {
-            this.callbackForm.images.splice(index, 1)
+            this.callbackForm.documents.splice(index, 1)
         },
         submitCallback() {
             let data = new FormData();
