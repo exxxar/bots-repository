@@ -20,12 +20,12 @@
 
 
             <div class="form-floating mb-2">
-                <input type="file" id="menu-photo" accept="image/*"
+                <input type="file" id="menu-photos-upload" accept="image/*"
                        multiple
                        @change="onChangePhotos"
                        class="form-control"
                        placeholder="name@example.com">
-                <label for="menu-photo">Фотографии</label>
+                <label for="menu-photos-upload">Фотографии</label>
             </div>
 
             <ol class="list-group list-group-numbered mb-2">
