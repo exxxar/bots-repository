@@ -127,7 +127,7 @@
 <script>
     window.onload = function () {
         let bot = window.currentBot || null
-        console.log("in layout", bot)
+
         window.addEventListener('online', () => {
             /*  window.Telegram.WebApp.showAlert("Вы снова онлайн!")*/
             console.log("вы снова онлайн")
@@ -137,7 +137,7 @@
             window.Telegram.WebApp.showAlert("Вы сейчас офлайн!")
         });
 
-        let theme = localStorage.getItem("cashman_global_client_theme_"+(bot.bot_domain || 'any_bot')) || null
+        let theme = localStorage.getItem("cashman_global_client_theme_" + ((bot || {bot_domain: null}).bot_domain || 'any_bot')) || null
 
         if (theme) {
             let changeTheme = document.querySelector("#theme")
