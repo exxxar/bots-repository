@@ -21,7 +21,6 @@
 
             <div class="form-floating mb-2">
                 <input type="file" id="menu-photos-upload" accept="image/*"
-                       multiple
                        @change="onChangePhotos"
                        class="form-control"
                        placeholder="name@example.com">
