@@ -18,20 +18,19 @@
             <h6 class="my-2 text-center fw-bold">Прикрепить фотографию
             </h6>
 
+            {{test}}
 
             <div class="form-floating mb-2">
                 <input type="file" id="menu-photos-upload" accept="image/*"
                        @change="onChangePhotos"
                        class="form-control"
-                       :multiple="true"
+                       ref="file" multiple="multiple"
                        :disabled="(callbackForm.images||[]).length===10"
                        placeholder="name@example.com"
                 >
                 <label for="menu-photos-upload">Фотографии</label>
             </div>
 
-            {{test}}
-            {{callbackForm.images}}
             <ol class="list-group list-group-numbered mb-2">
                 <li class="list-group-item d-flex justify-content-between align-items-start"
                     v-for="(photo, index) in callbackForm.images">
@@ -152,7 +151,6 @@ export default {
 
     data() {
         return {
-            test:null,
             file: null,
             sending: false,
             need_video: false,
@@ -186,6 +184,15 @@ export default {
         self() {
             return this.getSelf
         },
+        test(){
+            let tmp = "";
+            for (let i = 0; i < this.$refs.file.files.length; i++ ){
+                let file = this.$refs.file.files[i];
+                tmp = 'files[' + i + ']'
+            }
+
+            return tmp
+        },
         canSend() {
             return !this.sending && ((this.callbackForm.images || []).length > 0 ||
                 (this.callbackForm.videos || []).length > 0 ||
@@ -200,13 +207,10 @@ export default {
     },
     methods: {
         onChangePhotos(e) {
-            this.test += "test!";
             const files = e.target.files || []
-            this.test += "len="+files.length;
+
             for (let i = 0; i < files.length; i++)
                 this.callbackForm.images.push(files[i])
-
-            this.test += "uploaded";
         },
         onChangeVideos(e) {
             const files = e.target.files || []
