@@ -18,7 +18,7 @@
             <h6 class="my-2 text-center fw-bold">Прикрепить фотографию
             </h6>
 
-            {{test}}
+            {{test||null}}
 
             <div class="form-floating mb-2">
                 <input type="file" id="menu-photos-upload" accept="image/*"
@@ -186,6 +186,12 @@ export default {
         },
         test(){
             let tmp = "";
+            if (!this.$refs.file)
+                return "";
+
+            if ((this.$refs.file.files||[]).length===0)
+                return "";
+
             for (let i = 0; i < this.$refs.file.files.length; i++ ){
                 let file = this.$refs.file.files[i];
                 tmp = 'files[' + i + ']'
