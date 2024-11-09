@@ -178,6 +178,26 @@ Route::middleware(["check-node"])
             return Inertia::render('LandingPage');
         });
 
+        Route::get('/politics', function () {
+            Inertia::setRootView("landing-new");
+            return Inertia::render('PoliticsPage');
+        });
+
+        Route::get('/terms', function () {
+            Inertia::setRootView("landing-new");
+            return Inertia::render('TermsPage');
+        });
+
+        Route::get('/partner-terms', function () {
+            Inertia::setRootView("landing-new");
+            return Inertia::render('PartnerTermsPage');
+        });
+
+        Route::get('/wiki', function () {
+            Inertia::setRootView("landing-new");
+            return Inertia::render('WikiPage');
+        });
+
         Route::get('/history', function () {
             Inertia::setRootView("landing");
             return Inertia::render('LandingForProjectPage');

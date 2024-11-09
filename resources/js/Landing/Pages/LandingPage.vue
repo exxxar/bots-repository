@@ -1,6 +1,6 @@
 <script setup>
 import Layout from "../Layouts/ClientNewLayout.vue";
-
+import Header from "@/Landing/Components/Header.vue";
 import AudioPlayer from 'vue3-audio-player'
 import 'vue3-audio-player/dist/style.css'
 </script>
@@ -19,7 +19,7 @@ import 'vue3-audio-player/dist/style.css'
                                 <div class="img-wrap-center">
                                     <video autoplay="autoplay" loop="loop" playsinline="playsinline" muted="muted">
                                         <!-- <source src="/landingNew/storage/site/video/headerBlock-bg-video.webm" type="video/webm"/> -->
-                                        <source src="/landingNew/storage/site/video/hero-white.mp4" type="video/mp4"/>
+                                        <source src="/landingNew/storage/site/video/cashman.mp4" type="video/mp4"/>
                                     </video>
                                 </div>
                             </div>
@@ -31,10 +31,10 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="headerBlock__btn-wrap">
 
                                 <a class="headerBlock__btn btn btn-primary" href="#">Начать
-                                    бесплатно</a>
+                                    использовать</a>
 
                                 <a class="headerBlock__btn btn btn-outline-secondary" target="_blank"
-                                   href="https://t.me/this_burger_bot">
+                                   href="https://t.me/GastroPab_Ezh_bot">
                                     Открыть демо-бота
                                 </a>
                             </div>
@@ -86,7 +86,9 @@ import 'vue3-audio-player/dist/style.css'
                         <div class="col-6 col-lg-4">
                             <div class="sReasons__item">
                                 <div class="sReasons__img-wrap">
-                                    <div class="img-wrap-center" data-json="/landingNew/storage/site/json/menu.json"></div>
+                                    <div class="img-wrap-center">
+                                        <img src="/landingNew/storage/site/img/1.gif" alt="">
+                                    </div>
                                 </div>
                                 <h6>Меню заведения</h6>
                                 <p>Ваш клиент может ознакомиться с&nbsp;меню вашего ресторана в&nbsp;чат-боте</p>
@@ -95,7 +97,9 @@ import 'vue3-audio-player/dist/style.css'
                         <div class="col-6 col-lg-4">
                             <div class="sReasons__item">
                                 <div class="sReasons__img-wrap">
-                                    <div class="img-wrap-center" data-json="/landingNew/storage/site/json/orders.json"></div>
+                                    <div class="img-wrap-center">
+                                        <img src="/landingNew/storage/site/img/2.gif" alt="">
+                                    </div>
                                 </div>
                                 <h6>Заказы</h6>
                                 <p>Получайте заказы на&nbsp;доставку и&nbsp;самовывоз с&nbsp;онлайн-оплатой или оплатой
@@ -105,7 +109,9 @@ import 'vue3-audio-player/dist/style.css'
                         <div class="col-6 col-lg-4">
                             <div class="sReasons__item">
                                 <div class="sReasons__img-wrap">
-                                    <div class="img-wrap-center" data-json="/landingNew/storage/site/json/clients.json"></div>
+                                    <div class="img-wrap-center">
+                                        <img src="/landingNew/storage/site/img/4.gif" alt="">
+                                    </div>
                                 </div>
                                 <h6>Клиентская база</h6>
                                 <p>Каждый клиент вступивший в&nbsp;чат-бот остается в&nbsp;системе. Вы&nbsp;видите
@@ -115,7 +121,9 @@ import 'vue3-audio-player/dist/style.css'
                         <div class="col-6 col-lg-4">
                             <div class="sReasons__item">
                                 <div class="sReasons__img-wrap">
-                                    <div class="img-wrap-center" data-json="/landingNew/storage/site/json/mailing.json"></div>
+                                    <div class="img-wrap-center">
+                                        <img src="/landingNew/storage/site/img/5.gif" alt="">
+                                    </div>
                                 </div>
                                 <h6>Рассылки</h6>
                                 <p>Стимулируйте клиентов к&nbsp;заказам или&nbsp;приглашайте в&nbsp;ресторан с&nbsp;помощью
@@ -125,7 +133,9 @@ import 'vue3-audio-player/dist/style.css'
                         <div class="col-6 col-lg-4">
                             <div class="sReasons__item">
                                 <div class="sReasons__img-wrap">
-                                    <div class="img-wrap-center" data-json="/landingNew/storage/site/json/bonus.json"></div>
+                                    <div class="img-wrap-center">
+                                        <img src="/landingNew/storage/site/img/3.gif" alt="">
+                                    </div>
                                 </div>
                                 <h6>Бонусная система</h6>
                                 <p>Начисляйте бонусные рубли клиентам при авторизации в&nbsp;чат-боте, а&nbsp;также
@@ -282,12 +292,12 @@ import 'vue3-audio-player/dist/style.css'
                         </div>
                     </div>
                     <div class="sCapabilities__qr-wrap">
-                        <div class="sCapabilities__qr-img"><img src="/landingNew/storage/site/img/svg/qr.svg" alt=""
+                        <div class="sCapabilities__qr-img"><img src="http://qrcoder.ru/code/?https%3A%2F%2Ft.me%2FGastroPab_Ezh_bot&10&0" alt=""
                                                                 loading="lazy"/>
                         </div>
                         <div class="sCapabilities__qr-content">
                             <h6>Откройте и посмотрите <img src="/landingNew/storage/site/img/eyes.png" alt="" loading="lazy"/> <a
-                                target="_blank" href="https://t.me/this_burger_bot"><span>пример</span></a> чат-бота
+                                target="_blank" href="https://t.me/GastroPab_Ezh_bot"><span>пример</span></a> чат-бота
                             </h6>
                             <p>Наведите камеру на QR-код</p>
                         </div>
@@ -311,8 +321,7 @@ import 'vue3-audio-player/dist/style.css'
                                 <h6>Создание чат-бота</h6>
                             </div>
                             <div class="dd-group__content dd-content-js">Создание чат-бота не&nbsp;займет у&nbsp;вас
-                                более 5&nbsp;минут, а&nbsp;также в&nbsp;личном кабинете вы&nbsp;найдете все необходимые
-                                подсказки по&nbsp;созданию чат-бота в&nbsp;Telegram
+                                более 5&nbsp;минут. По пути создания вас проведет опытный менеджер, который вместе с вами создаст подходящее для вас решение.
                             </div>
                         </div>
                         <div class="dd-group__item">
@@ -392,8 +401,9 @@ import 'vue3-audio-player/dist/style.css'
                         </div>
                         <div class="dd-group__item">
                             <div class="dd-group__head dd-head-js">
-                                <div class="dd-group__icon-wrap"><img src="/landingNew/storage/site/img/svg/sControl-icon-7.svg"
-                                                                      alt="" loading="lazy"/>
+                                <div class="dd-group__icon-wrap">
+                                    <img src="/landingNew/storage/site/img/svg/sControl-icon-7.svg"
+                                         alt="" loading="lazy"/>
                                 </div>
                                 <h6>Аналитика</h6>
                             </div>
@@ -456,7 +466,7 @@ import 'vue3-audio-player/dist/style.css'
                             <thead>
                             <tr>
                                 <th></th>
-                                <th><img src="/landingNew/storage/site/img/svg/logo2.svg" alt="" loading="lazy"/>
+                                <th>   <a class="bg-light px-3 text-gradient fs-6 fw-lighter" href="#page-top"> Next IT </a>
                                 </th>
                                 <th>Агрегатор</th>
                                 <th>Свой сайт или&nbsp;мобильное приложение</th>
@@ -509,7 +519,10 @@ import 'vue3-audio-player/dist/style.css'
                         получения заказов параллельно с&nbsp;агрегаторами
                     </div>
 
-                    <a class="sCompare__btn btn btn-primary" href="#">Попробовать бесплатно</a>
+                    <a class="sCompare__btn btn btn-primary"
+                       data-bs-toggle="modal"
+                       data-bs-target="#feedbackModal"
+                       href="#">Попробовать бесплатно</a>
 
                 </div>
             </section>
@@ -572,29 +585,25 @@ import 'vue3-audio-player/dist/style.css'
                                 </div>
                             </div>
                         </div>
-                        <div class="sWhyTelegramBot__arrow-wrap">
+<!--                        <div class="sWhyTelegramBot__arrow-wrap">
                             <div class="swiper-button-hand swiper-button-hand-prev swiper-button-prev">
-                                <svg class="icon icon-chevron-left ">
-                                    <use xlink:href="/landingNew/storage/site/img/svg/sprite.svg#chevron-left"></use>
-                                </svg>
+                                <i class="fa-solid fa-arrow-left"></i>
                             </div>
                             <div class="swiper-button-hand swiper-button-hand-next swiper-button-next">
-                                <svg class="icon icon-chevron-right ">
-                                    <use xlink:href="/landingNew/storage/site/img/svg/sprite.svg#chevron-right"></use>
-                                </svg>
+                                <i class="fa-solid fa-arrow-right"></i>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </section>
             <!-- end sWhyTelegramBot-->
             <!-- start sChooseTariff-->
-            <section class="sChooseTariff section" id="sChooseTariff">
+<!--            <section class="sChooseTariff section" id="sChooseTariff">
                 <div class="container">
                     <div class="section-title text-center">
                         <h2>Выберите свой тариф</h2>
                     </div>
-                    <div class="sChooseTariff__slider swiper defaultSwiper defaultSwiper--js">
+                    <div class="sChooseTariff__slider swiper defaultSwiper defaultSwiper&#45;&#45;js">
                         <div class="swiper-wrapper">
                             <div class="sChooseTariff__slide swiper-slide">
                                 <div class="sChooseTariff__item">
@@ -614,11 +623,11 @@ import 'vue3-audio-player/dist/style.css'
                                         <li>До 3 рассылок</li>
                                         <li>До 1 зон доставки</li>
 
-                                        <li style="--mark: url('../img/svg/bad.svg')">Онлайн-оплата</li>
+                                        <li style="&#45;&#45;mark: url('../img/svg/bad.svg')">Онлайн-оплата</li>
 
-                                        <li style="--mark: url('../img/svg/bad.svg')">API</li>
+                                        <li style="&#45;&#45;mark: url('../img/svg/bad.svg')">API</li>
 
-                                        <li style="--mark: url('../img/svg/bad.svg')">Скрытие логотипа</li>
+                                        <li style="&#45;&#45;mark: url('../img/svg/bad.svg')">Скрытие логотипа</li>
                                     </ul>
                                     <a class="sChooseTariff__inner-btn btn btn-success" href="/cabinet">Выбрать
                                         тариф</a></div>
@@ -643,7 +652,7 @@ import 'vue3-audio-player/dist/style.css'
 
                                         <li>Онлайн оплата</li>
 
-                                        <li style="--mark: url('../img/svg/bad.svg')">API</li>
+                                        <li style="&#45;&#45;mark: url('../img/svg/bad.svg')">API</li>
 
                                         <li>Скрытие логотипа</li>
                                     </ul>
@@ -713,11 +722,11 @@ import 'vue3-audio-player/dist/style.css'
                         Оплата по&nbsp;тарифу списывается ежедневно с&nbsp;баланса личного кабинета. Минимальная сумма
                         пополнения&nbsp;&mdash; 1000&nbsp;₽
                     </div>
-                    <!-- <a class="sChooseTariff__btn btn btn-outline-primary" href="#" data-src="modal-tariffs" data-fancybox="modal">
+                    &lt;!&ndash; <a class="sChooseTariff__btn btn btn-outline-primary" href="#" data-src="modal-tariffs" data-fancybox="modal">
             Все тарифы списком
-        </a> -->
+        </a> &ndash;&gt;
                 </div>
-            </section>
+            </section>-->
             <!-- end sChooseTariff-->
             <!-- start sFAQBlock-->
             <section class="sFAQBlock section" id="sFAQBlock">
@@ -760,97 +769,187 @@ import 'vue3-audio-player/dist/style.css'
                             </li>
                         </ol>
                     </div>
-                    <div class="dd-group dd-group-js">
-                        <div class="dd-group__item">
-                            <div class="dd-group__head dd-head-js">Сколько это стоит?
-                            </div>
-                            <div class="dd-group__content dd-content-js">
-                                <p>Стоимость стартового тарифа при оплате за&nbsp;месяц начинается от&nbsp;89&nbsp;рублей
-                                    в&nbsp;день. Наша матрица тарифов устроена так, чтобы каждый ресторан выбрал
-                                    наиболее подходящий для себя тариф и&nbsp;при этом не&nbsp;платил
-                                    за&nbsp;ненужные возможности.</p>
-                                <p>Чем дороже тариф, тем больше его ценность и&nbsp;возможности. Помимо платных тарифов
-                                    у&nbsp;нас предусмотрен бесплатный тариф Free с&nbsp;ограниченным функционалом.</p>
-                                <p>Также мы&nbsp;предоставляем 14&nbsp;дней бесплатного пользования на&nbsp;тарифах
-                                    Старт и&nbsp;Стандарт.</p>
-                                <a class="dd-group__btn btn btn-outline-primary" href="/tarif">Перейти в тарифы</a>
-                            </div>
-                        </div>
-                        <div class="dd-group__item">
-                            <div class="dd-group__head dd-head-js">Как мы будем узнавать о новых заказах?
-                            </div>
-                            <div class="dd-group__content dd-content-js">
-                                <p>После того, как вы&nbsp;настроите чат-бота и&nbsp;разместите QR-код в&nbsp;ресторане
-                                    вы&nbsp;начнете получать заказы. Уведомления о&nbsp;новых заказах вы&nbsp;увидите в&nbsp;личном
-                                    кабинете, а&nbsp;также они будут приходить
-                                    в&nbsp;специальный чат-бот, ссылку на&nbsp;которого вы&nbsp;найдете в&nbsp;личном
-                                    кабинете своего чат-бота.</p>
-                                <p>Дополнительно вы&nbsp;можете подключить звонок на&nbsp;указанный номер телефона с&nbsp;уведомлением
-                                    о&nbsp;новом заказе, это бесплатно.</p>
+
+                    <div class="accordion accordion-flush my-5" id="accordionFlushExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button bg-transparent collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                    <h6>Сколько это стоит?</h6>
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p>Стоимость стартового тарифа при оплате за&nbsp;месяц начинается от&nbsp;89&nbsp;рублей
+                                        в&nbsp;день. Наша матрица тарифов устроена так, чтобы каждый ресторан выбрал
+                                        наиболее подходящий для себя тариф и&nbsp;при этом не&nbsp;платил
+                                        за&nbsp;ненужные возможности.</p>
+                                    <p>Чем дороже тариф, тем больше его ценность и&nbsp;возможности. Помимо платных тарифов
+                                        у&nbsp;нас предусмотрен бесплатный тариф Free с&nbsp;ограниченным функционалом.</p>
+                                    <p>Также мы&nbsp;предоставляем 14&nbsp;дней бесплатного пользования на&nbsp;тарифах
+                                        Старт и&nbsp;Стандарт.</p>
+                                    <a class="dd-group__btn btn btn-outline-primary" href="/tarif">Перейти в тарифы</a>
+                                </div>
                             </div>
                         </div>
-                        <div class="dd-group__item">
-                            <div class="dd-group__head dd-head-js">Как изменить меню, цены, данные о ресторане после
-                                запуска чат-бота?
-                            </div>
-                            <div class="dd-group__content dd-content-js">
-                                <p>Управление меню и&nbsp;ценами, информацией о&nbsp;ресторане будет доступно вам в&nbsp;личном
-                                    кабинете в&nbsp;любое время 24&nbsp;часа в&nbsp;сутки.</p>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button bg-transparent collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                    <h6>Как мы будем узнавать о новых заказах?</h6>
+                                </button>
+                            </h2>
+                            <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p>После того, как вы&nbsp;настроите чат-бота и&nbsp;разместите QR-код в&nbsp;ресторане
+                                        вы&nbsp;начнете получать заказы. Уведомления о&nbsp;новых заказах вы&nbsp;увидите в&nbsp;личном
+                                        кабинете, а&nbsp;также они будут приходить
+                                        в&nbsp;специальный чат-бот, ссылку на&nbsp;которого вы&nbsp;найдете в&nbsp;личном
+                                        кабинете своего чат-бота.</p>
+                                    <p>Дополнительно вы&nbsp;можете подключить звонок на&nbsp;указанный номер телефона с&nbsp;уведомлением
+                                        о&nbsp;новом заказе, это бесплатно.</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="dd-group__item">
-                            <div class="dd-group__head dd-head-js">Что делать, если закончились продукты для каких-либо
-                                блюд?
-                            </div>
-                            <div class="dd-group__content dd-content-js">
-                                <p>Вы&nbsp;можете одним касанием поставить блюдо в&nbsp;стоп-лист в&nbsp;личном кабинете
-                                    вашего чат-бота.</p>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header ">
+                                <button class="accordion-button bg-transparent collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                   <h6>Как изменить меню, цены, данные о ресторане после
+                                       запуска чат-бота?</h6>
+                                </button>
+                            </h2>
+                            <div id="flush-collapseThree" class="accordion-collapse collapse " data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p>Управление меню и&nbsp;ценами, информацией о&nbsp;ресторане будет доступно вам в&nbsp;личном
+                                        кабинете в&nbsp;любое время 24&nbsp;часа в&nbsp;сутки.</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="dd-group__item">
-                            <div class="dd-group__head dd-head-js">Как мне продвигать чат-бота?
-                            </div>
-                            <div class="dd-group__content dd-content-js">
-                                <p>Разместите рекламную продукцию с&nbsp;QR-кодом чат-бота в&nbsp;своем заведении:
-                                    тейбл-тент, наклейки на&nbsp;стол, наклейка на&nbsp;дверь. Кладите листовки с&nbsp;QR-кодом
-                                    чат-бота в&nbsp;заказы на&nbsp;доставку. Мы&nbsp;рекомендуем
-                                    использовать бонусные баллы за&nbsp;авторизацию в&nbsp;чат-боте, например 300
-                                    бонусных баллов, чтобы простимулировать клиентов в&nbsp;чат-боте.</p>
-                            </div>
-                        </div>
-                        <div class="dd-group__item">
-                            <div class="dd-group__head dd-head-js">Сколько чат-ботов можно создать на одном аккаунте?
-                            </div>
-                            <div class="dd-group__content dd-content-js">
-                                <p>Сколько угодно. Для каждого чат-бота необходимо выбрать собственный тариф.</p>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header ">
+                                <button class="accordion-button bg-transparent collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseThree">
+                                    <h6>Что делать, если закончились продукты для каких-либо
+                                        блюд?</h6>
+                                </button>
+                            </h2>
+                            <div id="flush-collapseFour" class="accordion-collapse collapse " data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p>Вы&nbsp;можете одним касанием поставить блюдо в&nbsp;стоп-лист в&nbsp;личном кабинете
+                                        вашего чат-бота.</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="dd-group__item">
-                            <div class="dd-group__head dd-head-js">Я хочу стать вашим партнером, что делать?
-                            </div>
-                            <div class="dd-group__content dd-content-js">
-                                <p>Ознакомиться с условиями партнерской программой можно в разделе <a href="/tarif">Партнерка</a>,
-                                    а также на странице <a href="/partner-terms">Условия партнерской программы</a>.
-                                    Чтобы стать партнером зарегистрируйтесь и перейдите
-                                    в раздел "партнерка" в личном кабинете.</p>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header ">
+                                <button class="accordion-button bg-transparent collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseThree">
+                                    <h6>Как мне продвигать чат-бота?</h6>
+                                </button>
+                            </h2>
+                            <div id="flush-collapseFive" class="accordion-collapse collapse " data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p>Разместите рекламную продукцию с&nbsp;QR-кодом чат-бота в&nbsp;своем заведении:
+                                        тейбл-тент, наклейки на&nbsp;стол, наклейка на&nbsp;дверь. Кладите листовки с&nbsp;QR-кодом
+                                        чат-бота в&nbsp;заказы на&nbsp;доставку. Мы&nbsp;рекомендуем
+                                        использовать бонусные баллы за&nbsp;авторизацию в&nbsp;чат-боте, например 300
+                                        бонусных баллов, чтобы простимулировать клиентов в&nbsp;чат-боте.</p>
+
+                                </div>
                             </div>
                         </div>
-                        <div class="dd-group__item">
-                            <div class="dd-group__head dd-head-js">Передаете ли вы информацию третьим лицам?
+
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header ">
+                                <button class="accordion-button bg-transparent collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseThree">
+                                    <h6>Сколько чат-ботов можно создать на одном аккаунте?</h6>
+                                </button>
+                            </h2>
+                            <div id="flush-collapseSix" class="accordion-collapse collapse " data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p>Сколько угодно. Для каждого чат-бота необходимо выбрать собственный тариф.</p>
+                                </div>
                             </div>
-                            <div class="dd-group__content dd-content-js">
-                                <p>Нет, мы&nbsp;не&nbsp;передаем информацию о&nbsp;пользователях третьим лицам. Более
-                                    того, не&nbsp;все сотрудники имеют доступ к&nbsp;базе данных, а&nbsp;только
-                                    ограниченный список лиц.</p>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header ">
+                                <button class="accordion-button bg-transparent collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseThree">
+                                    <h6>Я хочу стать вашим партнером, что делать?</h6>
+                                </button>
+                            </h2>
+                            <div id="flush-collapseSeven" class="accordion-collapse collapse " data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p>Ознакомиться с условиями партнерской программой можно в разделе <a href="/tarif">Партнерка</a>,
+                                        а также на странице <a href="/partner-terms">Условия партнерской программы</a>.
+                                        Чтобы стать партнером зарегистрируйтесь и перейдите
+                                        в раздел "партнерка" в личном кабинете.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header ">
+                                <button class="accordion-button bg-transparent collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEight" aria-expanded="false" aria-controls="flush-collapseThree">
+                                    <h6>Передаете ли вы информацию третьим лицам?</h6>
+                                </button>
+                            </h2>
+                            <div id="flush-collapseEight" class="accordion-collapse collapse " data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <p>Нет, мы&nbsp;не&nbsp;передаем информацию о&nbsp;пользователях третьим лицам. Более
+                                        того, не&nbsp;все сотрудники имеют доступ к&nbsp;базе данных, а&nbsp;только
+                                        ограниченный список лиц.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
             <!-- end sFAQBlock -->
+
+            <section class="cta section" >
+                <div class="container px-5 py-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2 class="text-dark display-1 lh-1 mb-4">
+                                А вот что<br>мы уже создали
+                            </h2>
+                            <a class="btn btn-outline-primary py-3 px-4 mb-3"
+                               data-bs-toggle="modal"
+                               data-bs-target="#feedbackModal"
+                               href="#prices"
+                               target="_blank">
+                                Начни создавать с нами</a>
+
+                        </div>
+                        <div class="col-md-6">
+                            <perfect-scrollbar
+                                ref="scroll"
+                                class="ps-container w-100">
+
+                                <div class="row">
+                                    <div class="col-md-4" v-for="bot in bots">
+                                        <a
+                                            target="_blank"
+                                            :href="'https://t.me/'+(bot.bot_domain||'nextitgroup_bot')"
+                                            class="card bot-card">
+                                            <div class="card-body">
+                                                <img
+                                                    v-if="bot.image"
+                                                    v-lazy="'/images-by-bot-id/'+bot.id+'/'+bot.image">
+                                                <i v-else class="fa-solid fa-robot"></i>
+                                                <p class="mb-0 fw-bold text-primary"> {{ bot.bot_domain }}</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </perfect-scrollbar>
+                        </div>
+                    </div>
+                </div>
+            </section>
             <!-- start sReviews-->
-            <section class="sReviews section" id="sReviews">
+<!--            <section class="sReviews section" id="sReviews">
                 <div class="container">
                     <div class="section-title text-center">
                         <h2>Отзывы наших клиентов</h2>
@@ -862,12 +961,12 @@ import 'vue3-audio-player/dist/style.css'
                             4.9 из 5
                         </div>
                     </div>
-                    <div class="sReviews__slider swiper defaultSwiper defaultSwiper--js">
+                    <div class="sReviews__slider swiper defaultSwiper defaultSwiper&#45;&#45;js">
                         <div class="swiper-wrapper">
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #009FE3"><span>К</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #009FE3"><span>К</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Катерина Ю.</div>
@@ -904,7 +1003,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #4BB14B"><span>С</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #4BB14B"><span>С</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Святослав Л.</div>
@@ -940,7 +1039,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #6F64EC"><span>Р</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #6F64EC"><span>Р</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Руслан Кашапов</div>
@@ -976,7 +1075,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #009FE3"><span>А</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #009FE3"><span>А</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Анонимный отзыв</div>
@@ -1014,7 +1113,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #4BB14B"><span>В</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #4BB14B"><span>В</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Вадим Репин</div>
@@ -1053,7 +1152,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #6F64EC"><span>Б</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #6F64EC"><span>Б</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Бедоевский БЛОГ</div>
@@ -1090,7 +1189,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #F5B04D"><span>К</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #F5B04D"><span>К</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Кирилл Бефидел</div>
@@ -1127,7 +1226,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #4BB14B"><span>Р</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #4BB14B"><span>Р</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Рано Яхина</div>
@@ -1165,7 +1264,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #6F64EC"><span>О</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #6F64EC"><span>О</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Ольга Ж</div>
@@ -1201,7 +1300,7 @@ import 'vue3-audio-player/dist/style.css'
                             <div class="sReviews__slide swiper-slide">
                                 <div class="sReviews__item">
                                     <div class="sReviews__head">
-                                        <div class="sReviews__img-wrap" style="--bgColor: #F5B04D"><span>А</span>
+                                        <div class="sReviews__img-wrap" style="&#45;&#45;bgColor: #F5B04D"><span>А</span>
                                         </div>
                                         <div class="sReviews__text">
                                             <div class="h6">Антон Мельников</div>
@@ -1251,7 +1350,7 @@ import 'vue3-audio-player/dist/style.css'
                         </div>
                     </div>
                 </div>
-            </section>
+            </section>-->
             <!-- end sReviews-->
             <!-- start sTryIt-->
             <section class="sTryIt section" id="sTryIt">
@@ -1259,7 +1358,10 @@ import 'vue3-audio-player/dist/style.css'
                     <div class="sTryIt__wrap">
                         <h2>Попробуйте уже сегодня</h2>
                         <p>Создайте WebApp чат-бота за 5 минут без разработчиков и магии</p>
-                        <a class="btn btn-primary" href="#">Попробовать бесплатно</a>
+                        <a class="btn btn-primary"
+                           data-bs-toggle="modal"
+                           data-bs-target="#feedbackModal"
+                           href="#">Попробовать</a>
                         <img src="/landingNew/storage/site/img/sTryIt-bg.png" alt=""/>
                     </div>
                 </div>
@@ -1560,6 +1662,15 @@ export default {
         p {
             color: black;
         }
+    }
+}
+
+
+.cta {
+    .container {
+        background-image: url(/landing/images/imgpreview.jpg);
+        background-size: cover;
+        border-radius: 10px;
     }
 }
 </style>

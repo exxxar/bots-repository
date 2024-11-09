@@ -40,6 +40,9 @@
 
 @inertia
 
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Bootstrap core JS-->
 <script src="/landingNew/storage/site/libs/jquery/jquery.min.js"></script>
 <script src="/landingNew/storage/site/libs/@fancyapps/ui/fancybox.umd.js"></script>

@@ -15,7 +15,7 @@ import Layout from "@/ClientTg/Layouts/V2Layout.vue";
 <template>
     <Layout>
         <template #default>
-            <notifications position="top right" width="100%" speed="100"/>
+            <notifications position="top right" width="100%" speed="10"/>
 
             <router-view
                 :bot="bot"/>

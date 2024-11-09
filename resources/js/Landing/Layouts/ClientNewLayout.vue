@@ -1,259 +1,29 @@
 <script setup>
 
-import {Head} from '@inertiajs/vue3'
+import {Head as VueHead} from '@inertiajs/vue3'
 
+import Header from "@/Landing/Components/Header.vue"
+import Footer from "@/Landing/Components/Footer.vue"
 </script>
 <template>
 
-    <Head>
+    <VueHead>
         <title>CashMan - система твоего бизнеса внутри</title>
         <meta name="description" content="CashMan - система твоего бизнеса внутри"/>
-    </Head>
+    </VueHead>
 
     <notifications position="top right"/>
 
     <div class="main-wrapper">
-        <!-- start header-->
-        <header class="header" id="header">
-            <!-- start top-nav-->
-            <div class="top-nav block-with-lazy">
-                <div class="container">
-                    <div class="top-nav__row row">
-                        <div class="col col-lg-auto">
-                            <a class="top-nav__logo" href="/">
-                                <img src="storage/site/img/svg/logo.svg" alt="" loading="lazy"/>
-                            </a>
-                        </div>
-                        <div class="col-0 col-lg order-lg-0 order-last">
-                            <div class="menu-mobile menu-mobile--js">
-                                <div class="container p-lg-0">
-                                    <div class="menu-mobile__inner">
-                                        <a class="top-nav__login" href="#">
-                                            <svg class="icon icon-logIn ">
-                                                <use xlink:href="storage/site/img/svg/sprite.svg#logIn"></use>
-                                            </svg>
-                                            Кабинет
-                                        </a>
-                                        <nav>
-                                            <ul class="menu" itemscope="itemscope"
-                                                itemtype="http://schema.org/SiteNavigationElement">
-                                                <li class="menu-item menu-item-active" itemprop="item">
-                                                    <a href="/" itemprop="url">О сервисе</a>
-                                                </li>
-                                                <li class="menu-item " itemprop="item">
-                                                    <a href="/tarif" itemprop="url">Тарифы</a></li>
+        <Header/>
 
-                                                <li class="menu-item " itemprop="item">
-                                                    <a href="/blog" itemprop="url">Блог</a></li>
-                                                <li class="menu-item " itemprop="item">
-                                                    <a href="/wiki" itemprop="url">База знаний</a></li>
-
-                                                <li class="menu-item " itemprop="item">
-                                                    <a href="/contact" itemprop="url">Контакты</a></li>
-
-                                                <li class="menu-item menu-item-has-children menu-dropdown--js">
-                                                    <div class="dropdownBtn dropdownBtn--js">Еще</div>
-                                                    <ul class="sub-menu dropdown-container">
-                                                        <li class="menu-item">
-                                                            <a class="disabled" href="#" itemprop="url"
-                                                               onclick="return false">
-                                                                Бот под ключ<span class="badge bg-success">скоро</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </nav>
-                                        <div class="top-nav__mob-content">
-                                            <a class="top-nav__tel" href="tel:+79276990585">
-                                                +7 (927) 699-05-85
-                                            </a>
-                                            <div class="top-nav__text">
-                                                г. Самара, ул. Партизанская 86, оф. 341
-                                            </div>
-                                            <a class="top-nav__mail" href="mailto:">
-                                                info@nextit.ru
-                                            </a>
-                                            <a class="top-nav__tech-help" href="https://t.me/exxxar" target="_blank">
-                                                <div class="top-nav__icon-wrap">
-                                                    <svg class="icon icon-telegram ">
-                                                        <use
-                                                            xlink:href="storage/site/img/svg/sprite.svg#telegram"></use>
-                                                    </svg>
-                                                </div>
-                                                Техподдержка в Telegram
-                                            </a>
-                                            <div class="soc">
-                                                <a class="soc__item" href="https://t.me/exxxar" target="_blank"
-                                                   style="--iconColor: #009FE3;">
-                                                    <svg class="icon icon-telegram ">
-                                                        <use
-                                                            xlink:href="storage/site/img/svg/sprite.svg#telegram"></use>
-                                                    </svg>
-                                                </a>
-                                                <a class="soc__item" href="#" target="_blank"
-                                                   style="--iconColor: #E21A20;">
-                                                    <svg class="icon icon-youtube ">
-                                                        <use xlink:href="storage/site/img/svg/sprite.svg#youtube"></use>
-                                                    </svg>
-                                                </a>
-                                                <a class="soc__item" href="https://vk.com/exxxr" target="_blank"
-                                                   style="--iconColor: #0077FF;">
-                                                    <svg class="icon icon-vk ">
-                                                        <use xlink:href="storage/site/img/svg/sprite.svg#vk"></use>
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                            <a class="top-nav__lang" href="/en">En<img
-                                                src="storage/site/img/svg/english.svg" alt="" loading="lazy"/>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-auto ms-auto">
-                            <a class="top-nav__btn-reg btn btn-outline-primary"
-                               href="#">Войти</a>
-                        </div>
-                        <div class="col-auto d-lg-none">
-                            <div class="toggle-menu-mobile toggle-menu-mobile--js d-lg-none">
-                                <span></span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <!-- end top-nav-->
-        </header>
-        <!-- end header-->
         <main>
             <slot/>
         </main>
-        <footer class="footer section">
-            <div class="container">
-                <div class="footer__wrapper">
-                    <div class="footer__row row">
-                        <div class="col-md-3 order-1">
-                            <a class="footer__logo" href="#"><img src="storage/site/img/svg/logo.svg" alt=""
-                                                                  loading="lazy"/>
-                            </a>
-                            <div class="footer__text-wrap">
-                                <p>ИП Каспор Н.А.</p>
-                                <p>ИНН 636205134795</p>
-                                <p>ОГРНИП 313633019800069</p>
-                                <p>Соответствует 54-ФЗ и 152-ФЗ</p>
-                            </div>
-                        </div>
-                        <div class="col-md-auto d-none d-md-block order-first order-md-2">
-                            <div class="footer__wrap">
-                                <div class="footer__title">Основные разделы
-                                </div>
-                                <ul>
-                                    <li><a href="/">О сервисе</a></li>
-                                    <li><a href="/tarif">Тарифы</a></li>
-                                    <li><a href="/referal">Партнерка</a></li>
-                                    <li><a href="/blog">Блог</a></li>
-                                    <li><a href="/wiki">База знаний</a></li>
-                                    <li><a href="/contact">Контакты</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-auto d-none d-md-block order-md-3">
-                            <div class="footer__wrap footer__wrap--2">
-                                <div class="footer__title">Еще</div>
-                                <ul>
-                                    <!-- <li>
-                                <a href="/develop">API</a>
-                            </li> -->
-                                    <li>
-                                        <a class="disabled" href="#" onclick="return false">
-                                            Бот под ключ<span class="badge bg-success">скоро</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col order-md-4">
-                            <div class="footer__link-wrap">
 
-                                <a class="footer__btn btn btn-outline-primary" href="#">Личный
-                                    кабинет</a>
-                                <a class="footer__tel" href="tel:+79276990585">
-                                    +7 (927) 699-05-85
-                                </a>
-                                <div class="footer__text">
-                                    г. Самара, ул. Партизанская 88
-                                </div>
-                                <a class="footer__mail" href="mailto:">
-                                    info@nextit.ru
-                                </a>
-                                <a class="footer__tech-help" href="https://t.me/exxxar" target="_blank">
-                                    <div class="footer__icon-wrap">
-                                        <svg class="icon icon-telegram ">
-                                            <use xlink:href="storage/site/img/svg/sprite.svg#telegram"></use>
-                                        </svg>
-                                    </div>
-                                    Техподдержка в Telegram
-                                </a>
-                                <div class="soc">
-                                    <a class="soc__item" href="https://t.me/exxxar" target="_blank"
-                                       style="--iconColor: #009FE3;">
-                                        <svg class="icon icon-telegram ">
-                                            <use xlink:href="storage/site/img/svg/sprite.svg#telegram"></use>
-                                        </svg>
-                                    </a>
-                                    <a class="soc__item" href="#" target="_blank" style="--iconColor: #E21A20;">
-                                        <svg class="icon icon-youtube ">
-                                            <use xlink:href="storage/site/img/svg/sprite.svg#youtube"></use>
-                                        </svg>
-                                    </a>
-                                    <a class="soc__item" href="https://vk.com/exxxar" target="_blank"
-                                       style="--iconColor: #0077FF;">
-                                        <svg class="icon icon-vk ">
-                                            <use xlink:href="storage/site/img/svg/sprite.svg#vk"></use>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 order-3 order-md-5">
-                            <div class="footer__inner-row row">
-                                <div class="col-md-auto"><a href="/politics">Политика конфиденциальности</a></div>
-                                <div class="col-md-auto"><a href="/terms">Пользовательское соглашение</a></div>
-                                <div class="col-md-auto"><a href="/partner-terms">Условия партнерской программы</a>
-                                </div>
-                                <div class="col-md-auto ms-auto">
-                                    <a class="footer__lang" href="/en">En<img src="storage/site/img/svg/english.svg"
-                                                                              alt="" loading="lazy"/>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="footer__bottom-row row">
-                        <div class="col-md order-2 order-md-1">
-                            <p>© 2021 - <span></span> NextIt. Все права защищены</p>
-                        </div>
-                        <div class="col-md text-md-center order-1 order-md-2">
-                            <iframe src="https://yandex.ru/sprav/widget/rating-badge/13664003329" width="150"
-                                    height="50" frameborder="0"></iframe>
-                        </div>
-                        <div class="col-md text-md-end order-3 order-md-3">
-                            <div class="footer__scrollTop footer__scrollTop--js">Наверх
-                                <div class="footer__scrollTop-icon">
-                                    <svg class="icon icon-chevron-up ">
-                                        <use xlink:href="storage/site/img/svg/sprite.svg#chevron-up"></use>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+
+        <Footer/>
+
         <div id="modal-stories" style="display: none">
             <div class="modal-slider">
                 <div class="modal-slider__arrow-wrap">
@@ -496,6 +266,112 @@ import {Head} from '@inertiajs/vue3'
         <!-- #modal-tariffs-->
         <!-- end modals-->
     </div>
+
+
+    <!-- Feedback Modal-->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-primary-to-secondary p-4">
+                    <h5 class="modal-title font-alt text-white" id="feedbackModalLabel">Заказать обратную
+                        связь</h5>
+                    <button class="btn-close btn-close-white" type="button" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body border-0 p-4">
+                    <form id="contactForm" v-on:submit.prevent="submitMail">
+                        <!-- Name input-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control"
+                                   v-model="feedbackForm.name"
+                                   id="name" type="text" placeholder="Введите ваше имя..."
+                                   data-sb-validations="required" required/>
+                            <label for="name">Ваше Ф.И.О.</label>
+                            <div class="invalid-feedback" data-sb-feedback="name:required">Является обязательным
+                            </div>
+                        </div>
+                        <!-- Email address input-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control"
+                                   v-model="feedbackForm.email"
+                                   id="email" type="email" placeholder="name@example.com"/>
+                            <label for="email">Ваша почта</label>
+                            <div class="invalid-feedback" data-sb-feedback="email:required">An email is
+                                required.
+                            </div>
+                            <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.
+                            </div>
+                        </div>
+                        <!-- Phone number input-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control"
+                                   v-mask="'+7(###)###-##-##'"
+                                   v-model="feedbackForm.phone"
+                                   id="phone" type="text" placeholder="+7(123)456-78-90"
+                                   data-sb-validations="required" required/>
+                            <label for="phone">Номер телефона</label>
+                            <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is
+                                required.
+                            </div>
+                        </div>
+                        <!-- Phone number input-->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="time"
+                                   v-model="feedbackForm.time"
+                                   type="time" placeholder="12:00"/>
+                            <label for="phone">Когда вам удобно?</label>
+                            <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is
+                                required.
+                            </div>
+                        </div>
+                        <!-- Message input-->
+                        <div class="form-floating mb-3">
+                                    <textarea
+                                        v-model="feedbackForm.message"
+                                        class="form-control" id="message" type="text"
+                                        placeholder="Текст вашего сообщения" style="height: 10rem"
+                                        data-sb-validations="required" required></textarea>
+                            <label for="message">Сообщение менеджеру</label>
+                            <div class="invalid-feedback" data-sb-feedback="message:required">A message is
+                                required.
+                            </div>
+                        </div>
+                        <!-- Submit success message-->
+                        <!---->
+                        <!-- This is what your users will see when the form-->
+                        <!-- has successfully submitted-->
+                        <div v-if="success"
+                             id="submitSuccessMessage">
+                            <div class="text-center mb-3">
+                                <div class="fw-bolder">Спасибо! Вы успешно отправили заявку!</div>
+                                Наш менеджер свяжется с вами!
+                                <br/>
+                            </div>
+                        </div>
+                        <!-- Submit error message-->
+                        <!---->
+                        <!-- This is what your users will see when there is-->
+                        <!-- an error submitting the form-->
+                        <div
+                            v-if="error"
+                            id="submitErrorMessage">
+                            <div class="text-center text-danger mb-3">Ошибка отправки заявки</div>
+                        </div>
+                        <!-- Submit Button-->
+                        <div class="d-grid">
+                            <button
+                                class="btn btn-light bg-gradient-primary-to-secondary text-white rounded-pill btn-lg"
+                                id="submitButton"
+                                type="submit">Отправить заявку
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 <script>
 
@@ -503,10 +379,148 @@ import {Head} from '@inertiajs/vue3'
 export default {
     props: ["active"],
     data() {
+
+        let currentDate = new Date();
+        let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes()
+
+
         return {
-            load: false,
-            bot: null,
-            company: null
+            success: false,
+            error: false,
+            need_start: false,
+            services: [
+                {
+                    title: "Сбор заявок",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Редактор ботов",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Работа с медиа-файлами",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Внутренняя CRM",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Редактор ботов",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Перенос клиентской базы",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Инструменты оператора",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Статистика",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+
+                {
+                    title: "Запись/бронирование",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Система Cashback",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Колесо фортуны",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Instagram Quest",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Работа с API",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+
+                {
+                    title: "Высокая нагрузка",
+                    in_start: true,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Оплаты в боте",
+                    in_start: false,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Программируемая логика",
+                    in_start: false,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Рассылки",
+                    in_start: false,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Bitrix, AmoCRM",
+                    in_start: false,
+                    in_business: true,
+                    in_premium: true
+                },
+                {
+                    title: "Интеграция интернет-магазина",
+                    in_start: false,
+                    in_business: false,
+                    in_premium: true
+                },
+                {
+                    title: "Внутренний Landing-page",
+                    in_start: false,
+                    in_business: false,
+                    in_premium: true
+                }
+
+            ],
+            bots: [],
+            feedbackForm: {
+                name: null,
+                email: null,
+                phone: null,
+                time: currentTime,
+                message: 'Добрый день! Заинтересовала данная система, хочу запросить перезвон менеджера для обсуждения деталей!'
+            }
         }
     },
     computed: {},
@@ -516,11 +530,81 @@ export default {
 
     },
 
-    methods: {}
+    methods: {
+        submitMail() {
+            this.success = false
+            this.error = false
+
+            let data = new FormData();
+            Object.keys(this.feedbackForm)
+                .forEach(key => {
+                    const item = this.feedbackForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+
+            this.$store.dispatch("sendToChannel", {
+                mailForm: data
+            }).then((response) => {
+                this.load = true
+
+                this.success = true
+                let currentDate = new Date();
+                let currentTime = currentDate.getHours() + ":" + currentDate.getMinutes()
+
+                this.feedbackForm = {
+                    name: null,
+                    email: null,
+                    phone: null,
+                    time: currentTime,
+                    message: 'Добрый день! Заинтересовала данная система, хочу запросить перезвон менеджера для обсуждения деталей!'
+                }
+                this.$notify({
+                    title: "CashMan",
+                    text: "Сообщение отправлено!",
+                    type: 'success'
+                });
+            }).catch(err => {
+
+                this.error = true
+                this.$notify({
+                    title: "CashMan",
+                    text: "Упс... ошибочка!",
+                    type: 'error'
+                });
+            })
+
+
+        },
+        play() {
+            let audio = new Audio('/promo.mp3');
+            audio.play();
+        },
+        loadBots() {
+            this.$store.dispatch("loadSimpleBots").then(() => {
+                this.bots = this.getBots || []
+            })
+        }
+    }
 }
 </script>
 
 <style lang="scss">
+
+.bg-gradient-primary-to-secondary {
+    background: linear-gradient(45deg, #2196F3, #03A9F4) !important;
+}
+
+.text-gradient {
+    background: -webkit-linear-gradient(#2196F3, #03A9F4);
+    background-clip: initial;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .bg-dots-darker {
     background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E");
 }
