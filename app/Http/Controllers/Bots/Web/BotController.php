@@ -39,7 +39,7 @@ class BotController extends Controller
     public function switchToPage(Request $request)
     {
 
-        $request = $request->validate([
+        $request->validate([
            "page"=>"required"
         ]);
 

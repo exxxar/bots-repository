@@ -163,7 +163,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
             </div>
         </div>
 
-        <div class="divider my-3"> Дополнительно </div>
+        <div class="divider my-3"> Дополнительно</div>
         <button
             style="box-shadow: 1px 1px 6px 0px #0000004a;"
             @click="switchToPage('Колесо фортуны')"
@@ -394,12 +394,17 @@ export default {
     },
     methods: {
         switchToPage(page) {
-            this.$store.dispatch("switchToPage",{
-                page:page
+            this.$store.dispatch("switchToPage", {
+                page: page
+            }).then(() => {
+                this.tg.close();
+            }).catch(() => {
+                this.$notify({
+                    title: "Упс...",
+                    text: "Данная функция временно недоступна...",
+                    type: "error"
+                })
             })
-            this.tg.collapse();
-
-
         },
         startMenu() {
             this.$store.dispatch("switchToMainMenu")
