@@ -35,6 +35,44 @@ class BotController extends Controller
         return response()->json(BusinessLogic::bots()->getCurrentServers());
     }
 
+
+    public function switchToPage(Request $request)
+    {
+
+        $request = $request->validate([
+           "page"=>"required"
+        ]);
+
+        $pageName = $request->page ?? null;
+
+        $bot = $request->bot ?? null;
+
+        $slug = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->where(function ($q) use ($pageName){
+                $q->where("command", ".*$pageName")
+                    ->orWhere("command", "/$pageName");
+            })->first();
+
+        if (is_null($slug))
+            return response()->noContent(404);
+
+        $page = BotPage::query()
+            ->where("bot_menu_slug_id", $slug->id)
+            ->where("bot_id", $bot->id)
+            ->first();
+
+        if (is_null($page))
+            return response()->noContent(404);
+
+        BotManager::bot()
+            ->runPage($page->id,
+                $bot,
+                $request->botUser ?? null);
+
+        return response()->noContent();
+    }
+
     public function switchToMainMenu(Request $request)
     {
 

@@ -163,6 +163,22 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
             </div>
         </div>
 
+        <div class="divider my-3"> Дополнительно </div>
+        <button
+            style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            @click="switchToPage('Колесо фортуны')"
+            class="btn btn-outline-light text-primary w-100 p-3 rounded-3 shadow-sm mb-2">
+
+            <i class="fa fa-dot-circle"></i> Колесо фортуны
+        </button>
+
+        <button
+            style="box-shadow: 1px 1px 6px 0px #0000004a;"
+            @click="switchToPage('Пригласить друзей')"
+            class="btn  btn-outline-light text-primary mb-2 w-100 p-3 rounded-3 shadow-sm ">
+
+            <i class="fa fa-people-carry "></i> Пригласить друзей
+        </button>
 
         <h6 class="opacity-75 my-3 text-center" v-if="getSelf.is_admin"><i
             class="fa-solid fa-house-lock mr-2 text-primary"></i>Административные сервисы</h6>
@@ -377,6 +393,14 @@ export default {
         })
     },
     methods: {
+        switchToPage(page) {
+            this.$store.dispatch("switchToPage",{
+                page:page
+            })
+            this.tg.close();
+
+
+        },
         startMenu() {
             this.$store.dispatch("switchToMainMenu")
             this.tg.close();

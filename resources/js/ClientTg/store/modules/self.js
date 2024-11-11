@@ -12,6 +12,19 @@ const getters = {
 }
 
 const actions = {
+    async switchToPage(context, payload = {page:null}) {
+        let link = `${BASE_SELF_LINK}/switch-to-page`
+
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async switchToMainMenu(context) {
         let link = `${BASE_SELF_LINK}/switch-to-main-menu`
 
