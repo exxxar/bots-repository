@@ -35,7 +35,7 @@ Route::prefix("bot-client")
         Route::post("/switch-to-main-menu", [BotController::class, "switchToMainMenu"])
             ->middleware(["tgAuth.any"]);
 
-        Route::post("/ switch-to-page", [BotController::class, "switchToPage"])
+        Route::post("/switch-to-page", [BotController::class, "switchToPage"])
             ->middleware(["tgAuth.any"]);
 
 
