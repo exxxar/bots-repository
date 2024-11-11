@@ -397,7 +397,7 @@ export default {
             this.$store.dispatch("switchToPage",{
                 page:page
             })
-            this.tg.close();
+            this.tg.collapse();
 
 
         },
