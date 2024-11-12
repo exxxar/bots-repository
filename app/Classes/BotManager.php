@@ -610,7 +610,9 @@ class BotManager extends BotCore
 
 
                 if (!is_null($adminBotUser)) {
-                    $action->data["cashback_at"] = Carbon::now();
+                    $action->data = (object)[
+                        "cashback_at" => Carbon::now(),
+                    ];
                     $action->save();
 
                     event(new CashBackEvent(
