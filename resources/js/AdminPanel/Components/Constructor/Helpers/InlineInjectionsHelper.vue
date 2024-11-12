@@ -1,6 +1,18 @@
 <template>
 
     <div class="d-inline-flex">
+
+
+<!--        <button type="button"
+                @click="openReLinkModal"
+                data-bs-toggle="tooltip"
+                data-bs-title="Добавить кнопку с пересылкой ссылки друзьям"
+                class="btn btn-link"><i class="fa-solid fa-sack-dollar"></i></button>-->
+        <button type="button"
+                @click="openReLinkModal"
+                data-bs-toggle="tooltip"
+                data-bs-title="Добавить кнопку с пересылкой ссылки друзьям"
+                class="btn btn-link">      <i class="fa-solid fa-arrow-up-right-from-square"></i></button>
         <button type="button"
                 @click="openFontModal"
                 data-bs-toggle="tooltip"
@@ -89,12 +101,54 @@
                     <div class="alert alert-light mb-2">
                         <strong class="fw-bold">Внимание!</strong> Добавьте ссылку, на которую должен перейти пользователь!
                     </div>
-                    <div class="form-floating mb-2 p-2">
+                    <div class="form-floating mb-2">
                         <input type="text"
                                v-model="link"
                                class="form-control" id="floatingInput" placeholder="name@example.com" required>
                         <label for="floatingInput">Ссылка</label>
                     </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="p-2 w-100">
+                            <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Отмена
+                            </button>
+                        </div>
+                        <div class="p-2 w-100">
+                            <button type="submit"
+                                    class="btn btn-primary w-100">Сохранить
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="relink-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" v-on:submit.prevent="reLinkSubmit">
+
+                <div class="modal-body">
+                    <div class="alert alert-light mb-2">
+                        <strong class="fw-bold">Внимание!</strong> Вы создаете кнопку к тексту, по которой пользователь сможет поделиться ссылкой и текстом к ней!
+                    </div>
+                    <div class="form-floating mb-2">
+                        <input type="url"
+                               v-model="reLinkForm.url"
+                               class="form-control" id="floatingInput" placeholder="name@example.com" required>
+                        <label for="floatingInput">Ссылка,url</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <textarea class="form-control"
+                                  v-model="reLinkForm.text"
+                                  placeholder="Leave a comment here" id="floatingTextarea2" style="min-height: 100px" required></textarea>
+                        <label for="floatingTextarea2">Текст к ссылке</label>
+                    </div>
+
                     <div class="d-flex justify-content-center">
                         <div class="p-2 w-100">
                             <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Отмена
@@ -122,6 +176,11 @@ export default {
             link: null,
             linkModal: null,
             fontModal: null,
+            relinkModal: null,
+            reLinkForm:{
+              url:null,
+              text:null,
+            },
             expressions: [
                 {
                     expression: "{{userName}}",
@@ -207,23 +266,30 @@ export default {
 
         this.linkModal = new bootstrap.Modal(document.getElementById('link-enter-modal'), {})
         this.fontModal = new bootstrap.Modal(document.getElementById('font-choose-modal'), {})
+        this.relinkModal = new bootstrap.Modal(document.getElementById('relink-modal'), {})
     },
     methods: {
+        openReLinkModal(){
+            this.relinkModal.show();
+        },
         openFontModal(){
           this.fontModal.show();
+        },
+        reLinkSubmit(){
+            this.$emit("submit-relink",this.reLinkForm)
+            this.relinkModal.hide()
         },
         getFieldSelection() {
             let start = document.querySelector(this.fieldId).selectionStart || 0;
             let end = document.querySelector(this.fieldId).selectionEnd || 0;
 
-            console.log(this.modelValue)
             return {
                 start: start,
                 end: end,
             }
         },
         useTemplate(startTemplate, endTemplate) {
-            console.log("Test")
+
             let range = this.getFieldSelection()
             let tmp = this.modelValue || '';
             let firstPart = tmp.slice(0, range.start)

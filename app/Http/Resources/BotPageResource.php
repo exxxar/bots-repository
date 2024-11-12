@@ -19,6 +19,7 @@ class BotPageResource extends JsonResource
             'password'=> $this->password ?? null,
             'password_description'=> $this->password_description ?? null,
             'price'=> $this->price ?? null,
+            'cashback'=> $this->cashback ?? null,
             'price_description'=> $this->price_description ?? null,
             'images' => $this->images ?? null,
             'videos' => $this->videos ?? null,

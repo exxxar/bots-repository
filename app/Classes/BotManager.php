@@ -3,6 +3,8 @@
 namespace App\Classes;
 
 use App\Enums\BotStatusEnum;
+use App\Enums\CashBackDirectionEnum;
+use App\Events\CashBackEvent;
 use App\Facades\BusinessLogic;
 use App\Models\ActionStatus;
 use App\Models\Bot;
@@ -568,6 +570,55 @@ class BotManager extends BotCore
                         "Электронный контент", "Оплата доступа к контенту", $prices, $payload, $providerToken, $currency, $needs, $keyboard,
                         $providerData
                     );
+                return;
+            }
+
+        }
+
+        if (!is_null($page->cashback ?? null)) {
+
+            $action = ActionStatus::query()
+                ->where("user_id", $botUser->user_id)
+                ->where("bot_id", $bot->id)
+                ->where("slug_id", $slug->id)
+                ->first();
+
+            if (is_null($action))
+                $action = ActionStatus::query()
+                    ->create([
+                        'user_id' => $botUser->user_id,
+                        'bot_id' => $bot->id,
+                        'slug_id' => $slug->id,
+                        'max_attempts' => 1,
+                        'current_attempts' => 0,
+                        'data' => (object)[
+                            "cashback_at" => null,
+                        ],
+                        'bot_user_id' => $botUser->id
+                    ]);
+
+            $isCreditedCashback = $action->data["cashback_at"] ?? null;
+
+            if (is_null($isCreditedCashback)) {
+
+                $tmpTotalAmount = $page->cashback;
+
+                $adminBotUser = BotUser::query()
+                    ->where("bot_id", $bot->id)
+                    ->where("is_admin", true)
+                    ->first();
+
+
+                if (!is_null($adminBotUser))
+                    event(new CashBackEvent(
+                        (int)$bot->id,
+                        (int)$botUser->user_id,
+                        (int)$adminBotUser->user_id,
+                        ((float)$tmpTotalAmount ?? 0),
+                        "Начисление бонусов за переход",
+                        CashBackDirectionEnum::Crediting
+                    ));
+
                 return;
             }
 

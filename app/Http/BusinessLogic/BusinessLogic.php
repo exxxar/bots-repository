@@ -14,6 +14,7 @@ use App\Http\BusinessLogic\Methods\ProductCollectionLogicFactory;
 use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory;
 use App\Http\BusinessLogic\Methods\QuizLogicFactory;
 use App\Http\BusinessLogic\Methods\ReviewLogicFactory;
+use App\Http\BusinessLogic\Methods\StatisticLogicFactory;
 use App\Http\BusinessLogic\Methods\YClientLogicFactory;
 use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory;
 use App\Http\BusinessLogic\Methods\BotDialogsLogicFactory;
@@ -58,6 +59,7 @@ class BusinessLogic
     protected FrontPadLogicFactory $frontPad;
     protected ReviewLogicFactory $review;
     protected IIKOLogicFactory $iiko;
+    protected StatisticLogicFactory $stat;
 
     public function __construct()
     {
@@ -87,11 +89,17 @@ class BusinessLogic
         $this->review = new ReviewLogicFactory();
         $this->iiko = new IIKOLogicFactory();
         $this->collection = new ProductCollectionLogicFactory();
+        $this->stat = new StatisticLogicFactory();
     }
 
     public function bots(): BotLogicFactory
     {
         return $this->bot;
+    }
+
+    public function stat(): StatisticLogicFactory
+    {
+        return $this->stat;
     }
 
     public function collection(): ProductCollectionLogicFactory

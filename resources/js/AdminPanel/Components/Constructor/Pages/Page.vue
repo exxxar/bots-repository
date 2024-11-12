@@ -119,10 +119,15 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
         </div>
         <div class="row">
             <div class="col-md-8 col-12 mb-2">
-                <label class="form-label" id="bot-domain">
-                    Команда
-                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                </label>
+                <div class="d-flex justify-content-between">
+                    <label class="form-label" id="bot-domain">
+                        Команда
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                    </label>
+
+                </div>
+
+
                 <input type="text" class="form-control"
                        placeholder="Команда"
                        aria-label="Команда"
@@ -132,6 +137,8 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
             </div>
 
             <div class="col-md-4 col-12 mb-2 d-flex justify-content-end align-items-end">
+
+
                 <div class="btn-group"
                      style="background:white;"
                      role="group" aria-label="Basic example">
@@ -172,6 +179,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                     </label>
                     <InlineInjectionsHelper
                         v-model="pageForm.content"
+                        v-on:submit-relink="submitReLink"
                         :field-id="'#main-text-field'"
                     />
                 </div>
@@ -326,6 +334,11 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                                        href="javascript:void(0)">
                                     <i class="fa fa-money-bill" aria-hidden="true"></i> Платная страница</a>
                                 </li>
+                                <li @click="tab=13"><a class="dropdown-item"
+                                                       v-bind:class="{'active':tab===13,'primary-mark':need_cashback_page}"
+                                                       href="javascript:void(0)">
+                                    <i class="fa-solid fa-sack-dollar"></i> Начислить бонусы</a>
+                                </li>
                                 <li @click="tab=4"><a class="dropdown-item"
                                                       v-bind:class="{'active':tab===4,'primary-mark':need_page_sticker}"
                                                       href="javascript:void(0)">
@@ -477,6 +490,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
 
 
                         <div class="card-body">
+
                             <KeyboardList
                                 class="mb-2"
                                 :type="'inline'"
@@ -1245,6 +1259,51 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                     </div>
                 </div>
             </div>
+
+            <div v-show="tab===13">
+
+
+                <div class="col-12 mb-2">
+                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-2">
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
+                        </div>
+
+
+                        <h1 class="text-body-emphasis">Начисление бонусов</h1>
+                        <p class="col-lg-8 mx-auto fs-5 text-muted">
+                        При переходе на данную страницу пользователь разово может получить указанную сумму бонусов! Начисление произойдет перед выводом контента страницы.
+                        </p>
+                        <div class="row d-flex justify-content-center my-5" v-if="need_cashback_page">
+                           <div class="col-md-4">
+                               <div class="form-floating mb-2 w-100">
+                                   <input type="number"
+                                          min="0"
+                                          v-model="pageForm.cashback"
+                                          class="form-control w-100" id="page-price" placeholder="Бонусы" required>
+                                   <label for="page-price">Сумма начисления бонусов, руб</label>
+                               </div>
+                           </div>
+                        </div>
+                        <div class="d-inline-flex gap-2 mb-5">
+                            <button
+                                @click="need_cashback_page=!need_cashback_page"
+                                v-bind:class="{'btn-primary':!need_cashback_page,'btn-danger':need_cashback_page}"
+                                class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                <span v-if="!need_cashback_page">Добавить</span>
+                                <span v-if="need_cashback_page">Убрать</span>
+                            </button>
+
+                            <a href="https://telegra.ph/Nizhnee-menyu-bota-01-03" target="_blank"
+                               class="d-inline-flex align-items-center btn btn-outline-secondary btn-lg px-4 rounded-pill"
+                            >
+                                Подробнее
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </form>
@@ -1377,7 +1436,9 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                 }}</span></p>
 
                             <div class="alert alert-info mb-2">
-                                <strong class="fw-bold">Внимание!</strong> Используйте метки <strong class="fw-bold text-primary">на английском языке</strong> или <strong class="fw-bold text-primary">число</strong>!
+                                <strong class="fw-bold">Внимание!</strong> Используйте метки <strong
+                                class="fw-bold text-primary">на английском языке</strong> или <strong
+                                class="fw-bold text-primary">число</strong>!
                             </div>
                             <div class="form-floating mb-2">
                                 <input type="text"
@@ -1535,7 +1596,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
 <script>
 
 import {mapGetters} from "vuex";
-import { Base64 } from 'js-base64';
+import {Base64} from 'js-base64';
 
 export default {
     data() {
@@ -1577,6 +1638,7 @@ export default {
             need_rules: false,
             need_secure_page: false,
             need_payed_page: false,
+            need_cashback_page: false,
 
             bot: null,
             pageForm: {
@@ -1590,6 +1652,7 @@ export default {
                 password_description: null,
 
                 price: null,
+                cashback: null,
                 price_description: null,
 
                 videos: [],
@@ -1618,7 +1681,12 @@ export default {
         }
     },
     watch: {
+        'need_cashback_page': function (newVal, oldVal) {
+            if (!this.need_cashback_page) {
+                this.pageForm.cashback = null
+            }
 
+        },
 
         'need_payed_page': function (newVal, oldVal) {
             if (!this.need_payed_page) {
@@ -1750,6 +1818,9 @@ export default {
                 if (this.pageForm.price != null)
                     this.need_payed_page = true
 
+                if (this.pageForm.cashback != null)
+                    this.need_cashback_page = true
+
                 this.need_clean = true
             },
             deep: true
@@ -1780,6 +1851,7 @@ export default {
                 this.need_attach_slug ||
                 this.need_secure_page ||
                 this.need_payed_page ||
+                this.need_cashback_page ||
                 this.need_rules
         },
         pageLink() {
@@ -1871,6 +1943,34 @@ export default {
     },
 
     methods: {
+        submitReLink(event) {
+            this.need_inline_menu = true
+            this.tab = 1
+
+            let btn = {
+                text: '🔗Поделиться ссылкой',
+                url: `https://t.me/share/url?url=${event.url}&text=${event.text}`,
+            }
+
+            console.log("menu", this.pageForm.inline_keyboard)
+            if (this.pageForm.inline_keyboard == null)
+                this.pageForm.inline_keyboard =
+                    {
+                        menu: [
+                            [
+                                {
+                                    ...btn
+                                }
+                            ]
+                        ]
+                    }
+            else
+                this.pageForm.inline_keyboard.push([{
+                    ...btn
+                }])
+
+
+        },
         goToBotSettings() {
             this.$emit("bot-settings")
         },
@@ -1938,6 +2038,7 @@ export default {
             this.need_attach_slug = false
             this.need_secure_page = false
             this.need_payed_page = false
+            this.need_cashback_page = false
             this.need_rules = false
 
             this.links = []
@@ -1951,6 +2052,7 @@ export default {
                 this.pageForm.password = page.password || null
                 this.pageForm.password_description = page.password_description || null
                 this.pageForm.price = page.price || null
+                this.pageForm.cashback = page.cashback || null
                 this.pageForm.price_description = page.price_description || null
                 this.pageForm.command = page.slug ? page.slug.command : null
                 this.pageForm.slug = page.slug ? page.slug.slug : null
@@ -2052,6 +2154,7 @@ export default {
                 password: null,
                 password_description: null,
                 price: null,
+                cashback: null,
                 price_description: null,
                 images: [],
                 reply_keyboard: null,
@@ -2092,6 +2195,7 @@ export default {
             this.need_page_documents = false
             this.need_page_sticker = false
             this.need_payed_page = false
+            this.need_cashback_page = false
             this.need_secure_page = false
 
             this.links = [];

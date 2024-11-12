@@ -1,0 +1,421 @@
+<template>
+    <div class="container">
+        <div class="row my-3">
+            <div class="col-md-4" v-if="need_date_range">
+                <VueDatePicker v-model="date" locale="ru" range></VueDatePicker>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-check form-switch">
+                    <input class="form-check-input"
+                           v-model="need_date_range"
+                           type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">
+                        Использовать временной период
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row" >
+            <div class="col-6">
+                <h6 class="my-3 fw-bold">Основная статистика</h6>
+                <p class="fst-italic">
+                    Сводка всех показателей эффективности работы системы
+                </p>
+                <table class="table" v-if="statistic">
+                    <thead>
+                    <tr class="bg-light">
+                        <th scope="col" style="width:200px;">Ключ</th>
+                        <th scope="col">Значение</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">Всего пользователей в БД</th>
+                        <td class="font-weight-bold">{{ statistic.users_in_bd || 0 }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Всего VIP</th>
+                        <td class="font-weight-bold">{{ statistic.vip_in_bd || 0 }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Администраторы в БД</th>
+                        <td class="font-weight-bold">{{ statistic.admin_in_bd || 0 }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Администраторы за работой</th>
+                        <td class="font-weight-bold">{{ statistic.work_admin_in_bd || 0 }}</td>
+                    </tr>
+
+
+                    <tr>
+                        <th scope="row">Всего кэшбэка на счету у пользователей, руб</th>
+                        <td class="font-weight-bold">{{ (statistic.summary_cashback || 0).toFixed(2) }}
+                            <strong
+                                v-if="statistic.summary_cashback_people_count">({{ statistic.summary_cashback_people_count }}
+                                чел)</strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Всего кэшбэка начислено пользователям, руб</th>
+                        <td class="font-weight-bold">{{ (statistic.cashback_summary_up || 0).toFixed(2) }}
+                            <strong
+                                v-if="statistic.cashback_summary_up_people_count">({{ statistic.cashback_summary_up_people_count }}
+                                чел)</strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Всего кэшбэка списано у пользователей, руб</th>
+                        <td class="font-weight-bold">{{ (statistic.cashback_summary_down || 0).toFixed(2) }}
+                            <strong
+                                v-if="statistic.cashback_summary_down_people_count">({{ statistic.cashback_summary_down_people_count }}
+                                чел)</strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Всего начислено кэшбэка первого уровня, руб</th>
+                        <td class="font-weight-bold">{{ (statistic.cashback_up_level_1 || 0).toFixed(2) }}
+                            <strong
+                                v-if="statistic.cashback_up_level_1_people_count">({{ statistic.cashback_up_level_1_people_count }}
+                                чел)</strong>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Всего начислено кэшбэка второго уровня, руб</th>
+                        <td class="font-weight-bold">{{ (statistic.cashback_up_level_2 || 0).toFixed(2) }}
+                            <strong
+                                v-if="statistic.cashback_up_level_2_people_count">({{ statistic.cashback_up_level_2_people_count }}
+                                чел)</strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Всего начислено кэшбэка третьего уровня, руб</th>
+                        <td class="font-weight-bold">{{ (statistic.cashback_up_level_3 || 0).toFixed(2) }}
+                            <strong
+                                v-if="statistic.cashback_up_level_3_people_count">({{ statistic.cashback_up_level_3_people_count }}
+                                чел)</strong>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+
+
+                <a href="javascript:void(0)"
+                   @click="downloadBotStatistic"
+                   class="btn w-100 btn-outline-info p-3">
+                    <i class="fa-regular fa-file-excel mr-2"></i> Скачать статистику
+                </a>
+            </div>
+            <div class="col-6">
+                <div class="row my-3 sticky-charts ">
+                    <div class="col-12">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   @click="tab=0"
+                                   v-bind:class="{'active':tab===0}"
+                                   aria-current="page" href="#">Пользователи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   @click="tab=1"
+                                   v-bind:class="{'active':tab===1}"
+                                   aria-current="page" href="#">Бонусы</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   @click="tab=2"
+                                   v-bind:class="{'active':tab===2}"
+                                   aria-current="page" href="#">Продажи</a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="col-12" v-if="tab===0">
+                        <div class="d-flex justify-content-center mb-3">
+                            <Chart
+                                v-if="loadedChart&&(users||[]).length>0"
+                                :size="{ width: 500, height: 320 }"
+                                :data="users"
+                                :margin="margin"
+                                :direction="direction"
+                                :axis="axis">
+
+                                <template #layers>
+
+                                    <Grid strokeDasharray="2,2"/>
+                                    <Bar :dataKeys="['m','count']" :barStyle="{ fill: '#ffe775' }"/>
+                                    <Marker :value="1000" label="Avg." color="#e76f51" strokeWidth="2"
+                                            strokeDasharray="6 6"/>
+                                </template>
+
+                                <template #widgets>
+                                    <Tooltip
+                                        borderColor="#48CAE4"
+                                        :config="tooltipConfig"
+                                    />
+                                </template>
+
+                            </Chart>
+                            <p class="text-danger my-2" v-else>Статистика еще не загружена или её нет</p>
+                        </div>
+                    </div>
+                    <div class="col-12" v-if="tab===1">
+                        <h6 class="my-2">Начисления</h6>
+                        <div class="d-flex justify-content-center mb-3" >
+
+                            <Chart
+                                v-if="loadedChart&&(cashback_up||[]).length>0"
+                                :size="{ width: 500, height: 320 }"
+                                :data="cashback_up"
+                                :margin="margin"
+                                :direction="direction"
+                                :axis="axis">
+
+                                <template #layers>
+
+                                    <Grid strokeDasharray="2,2"/>
+                                    <Bar :dataKeys="['m','sum']" :barStyle="{ fill: '#ffe775' }"/>
+                                    <Marker :value="1000" label="Avg." color="#e76f51" strokeWidth="2"
+                                            strokeDasharray="6 6"/>
+                                </template>
+
+                                <template #widgets>
+                                    <Tooltip
+                                        borderColor="#48CAE4"
+                                        :config="tooltipConfig"
+                                    />
+                                </template>
+
+                            </Chart>
+                            <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
+                        </div>
+                        <h6 class="my-2">Списания</h6>
+                        <div class="d-flex justify-content-center mb-3">
+
+                            <Chart
+                                v-if="loadedChart&&(cashback_down||[]).length>0"
+                                :size="{ width: 500, height: 320 }"
+                                :data="cashback_down"
+                                :margin="margin"
+                                :direction="direction"
+                                :axis="axis">
+
+                                <template #layers>
+
+                                    <Grid strokeDasharray="2,2"/>
+                                    <Bar :dataKeys="['m','sum']" :barStyle="{ fill: '#ffe775' }"/>
+                                    <Marker :value="1000" label="Avg." color="#e76f51" strokeWidth="2"
+                                            strokeDasharray="6 6"/>
+                                </template>
+
+                                <template #widgets>
+                                    <Tooltip
+                                        borderColor="#48CAE4"
+                                        :config="tooltipConfig"
+                                    />
+                                </template>
+
+                            </Chart>
+                            <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
+                        </div>
+                    </div>
+                    <div class="col-12" v-if="tab===2">
+                        <div class="d-flex justify-content-center mb-3">
+                            <Chart
+                                v-if="loadedChart&&(orders||[]).length>0"
+                                :size="{ width: 500, height: 320 }"
+                                :data="orders"
+                                :margin="margin"
+                                :direction="direction"
+                                :axis="axis">
+
+                                <template #layers>
+
+                                    <Grid strokeDasharray="2,2"/>
+                                    <Bar :dataKeys="['m','sump']" :barStyle="{ fill: '#ffe775' }"/>
+                                    <Marker :value="1000" label="Avg." color="#e76f51" strokeWidth="2"
+                                            strokeDasharray="6 6"/>
+                                </template>
+
+                                <template #widgets>
+                                    <Tooltip
+                                        borderColor="#48CAE4"
+                                        :config="tooltipConfig"
+                                    />
+                                </template>
+
+                            </Chart>
+                            <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</template>
+<script>
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+import {mapGetters} from "vuex";
+import {saveAs} from 'file-saver';
+import {Chart, Grid, Line, Bar, Tooltip} from 'vue3-charts'
+
+export default {
+    props: ["bot"],
+    components: {Chart, Grid, Line, Bar, Tooltip, VueDatePicker},
+    data() {
+        return {
+            need_date_range: false,
+            date: null,
+            tab: 0,
+            botUser: null,
+            loadedChart: false,
+            statistic: null,
+            loading: false,
+            tooltipConfig: {
+                sump: {label: 'Сумма продаж', color: '#5d1010'},
+                m: {label: 'Месяц', color: '#54a375'},
+                y: {label: 'Год', color: '#0ea9cb'},
+
+            },
+            orders: [
+                {sump: 0, m: 1, y: 2020,},
+                {sump: 111, m: 2, y: 2020,},
+                {sump: 222, m: 3, y: 2020,},
+                {sump: 333, m: 4, y: 2020,},
+                {sump: 444, m: 5, y: 2020,},
+
+            ],
+            users: [
+                {count: 0, m: 1, y: 2020,},
+                {count: 111, m: 2, y: 2020,},
+                {count: 222, m: 3, y: 2020,},
+                {count: 333, m: 4, y: 2020,},
+                {count: 444, m: 5, y: 2020,},
+
+            ],
+
+            cashback_up: [
+                {sum: 0, m: 1, y: 2020,},
+                {sum: 111, m: 2, y: 2020,},
+                {sum: 222, m: 3, y: 2020,},
+                {sum: 333, m: 4, y: 2020,},
+                {sum: 444, m: 5, y: 2020,},
+
+
+            ],
+
+            cashback_down: [
+                {sum: 0, m: 1, y: 2020,},
+                {sum: 111, m: 2, y: 2020,},
+                {sum: 222, m: 3, y: 2020,},
+                {sum: 333, m: 4, y: 2020,},
+                {sum: 444, m: 5, y: 2020,},
+
+
+            ],
+            direction: 'horizontal',
+            margin: {
+                left: 0,
+                top: 20,
+                right: 20,
+                bottom: 0
+            },
+            axis: {
+                primary: {
+                    type: 'band'
+                },
+                secondary: {
+                    domain: ['dataMin', 'dataMax + 100'],
+                    type: 'linear',
+                    ticks: 11
+                }
+            }
+        }
+    },
+    computed: {},
+    watch: {
+        'need_date_range': function () {
+            this.prepareStatistic()
+        },
+        'date': function () {
+            this.prepareStatistic()
+        }
+    },
+    mounted() {
+
+        const startDate = new Date();
+        const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+        this.date = [startDate, endDate];
+
+        this.prepareStatistic()
+    },
+    methods: {
+        prepareStatistic() {
+            this.loadedChart = false
+            return this.$store.dispatch("statisticLoad", {
+                bot_id: this.bot.id,
+                date: this.date,
+                need_all: !this.need_date_range
+            })
+                .then((response) => {
+                    this.statistic = response.statistic
+                    this.orders = this.statistic.orders.sum
+                    this.users = this.statistic.users.sum
+                    this.cashback_up = this.statistic.cashback_up.sum
+                    this.cashback_down = this.statistic.cashback_down.sum
+                    this.loadedChart = true
+                })
+        },
+        downloadBotStatistic() {
+            this.$notify({
+                title: "Внимание!",
+                text: "Начался формироваться документ статистики!",
+            });
+
+            this.$store.dispatch("downloadBotStatistic").then((resp) => {
+                // saveAs(resp.data, 'result.xlsx');
+
+                this.$notify({
+                    title: "Отлично!",
+                    text: "Документ успешно сформирован",
+                    type: "success"
+                });
+            }).catch(() => {
+
+                this.$notify({
+                    title: "Упс!",
+                    text: "Что-то пошло не так...",
+                    type: "error"
+                });
+
+            })
+        },
+
+    }
+}
+</script>
+<style>
+.sticky-charts {
+    position: sticky;
+    top: 100px;
+}
+</style>

@@ -20,6 +20,19 @@ const getters = {
 }
 
 const actions = {
+    async statisticLoad(context, payload = {bot_id:null}) {
+
+        let link = `${BASE_BOTS_LINK}/load-statistic`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async saveYClients(context, payload = {yClientsForm: null}) {
 
         let link = `${BASE_BOTS_LINK}/save-y-clients`

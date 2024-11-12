@@ -19,18 +19,23 @@ import Quizzes from "@/AdminPanel/Components/Constructor/Quiz/Quizzes.vue";
 import InlineQuery from "@/AdminPanel/Components/Constructor/InlineQuery/InlineQuery.vue";
 import PromoCodes from "@/AdminPanel/Components/Constructor/PromoCodes/PromoCodes.vue";
 import FrontPadForm from "@/AdminPanel/Components/Constructor/FrontPad/FrontPadForm.vue";
+import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.vue";
 </script>
 <template>
 
     <div class="d-flex custom-dropdown justify-content-between align-items-center">
         <div class="btn-group">
             <button type="button" class="btn btn-primary text-primary"
-                    v-bind:class="{'bg-primary text-white':step==0}"
+                    v-bind:class="{'bg-primary text-white':step===0}"
                     @click="setStep(0)"><i class="fa-solid fa-info mr-2"></i>Информация о боте
             </button>
             <button type="button" class="btn btn-primary text-primary"
-                    v-bind:class="{'bg-primary text-white':step==4}"
+                    v-bind:class="{'bg-primary text-white':step===4}"
                     @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы (кнопки бота)
+            </button>
+            <button type="button" class="btn btn-primary text-primary"
+                    v-bind:class="{'bg-primary text-white':step===18}"
+                    @click="setStep(18)"><i class="fa-solid fa-chart-column mr-2"></i>Статистика
             </button>
         </div>
 
@@ -97,6 +102,12 @@ import FrontPadForm from "@/AdminPanel/Components/Constructor/FrontPad/FrontPadF
 
     </div>
 
+
+    <div v-if="step===18" class="pb-5 mb-5">
+        <Statistic :bot="bot"
+                    v-if="!load">
+        </Statistic>
+    </div>
 
     <div v-if="step===14" class="pb-5 mb-5">
         <Quizzes

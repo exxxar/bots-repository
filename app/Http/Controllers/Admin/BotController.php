@@ -23,6 +23,31 @@ use Illuminate\Validation\ValidationException;
 class BotController extends Controller
 {
 
+    public function statistic(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            "date" => "required"
+        ]);
+
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->bot_id)
+            ->first();
+
+        $botUser = $request->botUser ?? null;
+
+        $statistics = BusinessLogic::stat()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser)
+            ->base($request->date[0] ?? null,
+                $request->date[1] ?? null,
+                $request->need_all ?? false);
+
+        return response()->json([
+            'statistic' => $statistics
+        ]);
+    }
+
     public function loadCurrentServerList(): \Illuminate\Http\JsonResponse
     {
         return response()->json(BusinessLogic::bots()->getCurrentServers());
@@ -250,7 +275,7 @@ class BotController extends Controller
 
         $logic = BusinessLogic::slugs();
 
-        if ($request->botUser->is_manager&&!$request->botUser->is_admin)
+        if ($request->botUser->is_manager && !$request->botUser->is_admin)
             $logic = $logic->setBotUser($request->botUser);
 
 
@@ -359,7 +384,7 @@ class BotController extends Controller
 
         $logic = BusinessLogic::bots();
 
-        if ($request->botUser->is_manager&&!$request->botUser->is_admin)
+        if ($request->botUser->is_manager && !$request->botUser->is_admin)
             $logic = $logic->setBotUser($request->botUser);
 
         return $logic
@@ -373,7 +398,7 @@ class BotController extends Controller
 
         $logic = BusinessLogic::bots();
 
-        if ($request->botUser->is_manager&&!$request->botUser->is_admin)
+        if ($request->botUser->is_manager && !$request->botUser->is_admin)
             $logic = $logic->setBotUser($request->botUser);
 
         return $logic
@@ -671,10 +696,10 @@ class BotController extends Controller
             "maintenance_message" => "required",
             //"welcome_message" => "required",
             "level_1" => "required",
-           // "company_id" => "required",
-        ],[
+            // "company_id" => "required",
+        ], [
             //"company_id"=>"Вы не указали идентификатор Клиента (Компании)",
-            "bot_domain"=>"Доменное имя не должно быть пустым и должно быть уникальным!",
+            "bot_domain" => "Доменное имя не должно быть пустым и должно быть уникальным!",
         ]);
 
         $botUser = $request->botUser ?? null;

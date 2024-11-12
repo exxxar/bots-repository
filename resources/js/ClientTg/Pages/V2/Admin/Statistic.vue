@@ -45,40 +45,52 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
                     <tr>
                         <th scope="row">Выдано кэшбэка за день, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_day_up || 0).toFixed(2) }}
-                            <strong v-if="statistic.cashback_day_up_people_count">({{statistic.cashback_day_up_people_count}} чел)</strong>
+                            <strong
+                                v-if="statistic.cashback_day_up_people_count">({{ statistic.cashback_day_up_people_count }}
+                                чел)</strong>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Списано кэшбэка за день, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_day_down || 0).toFixed(2) }}
-                            <strong v-if="statistic.cashback_day_down_people_count">({{statistic.cashback_day_down_people_count}} чел)</strong>
+                            <strong
+                                v-if="statistic.cashback_day_down_people_count">({{ statistic.cashback_day_down_people_count }}
+                                чел)</strong>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Всего кэшбэка на счету у пользователей, руб</th>
                         <td class="font-weight-bold">{{ (statistic.summary_cashback || 0).toFixed(2) }}
-                            <strong v-if="statistic.summary_cashback_people_count">({{statistic.summary_cashback_people_count}} чел)</strong>
+                            <strong
+                                v-if="statistic.summary_cashback_people_count">({{ statistic.summary_cashback_people_count }}
+                                чел)</strong>
                         </td>
                     </tr>
 
                     <tr>
                         <th scope="row">Всего кэшбэка начислено пользователям, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_summary_up || 0).toFixed(2) }}
-                            <strong v-if="statistic.cashback_summary_up_people_count">({{statistic.cashback_summary_up_people_count}} чел)</strong>
+                            <strong
+                                v-if="statistic.cashback_summary_up_people_count">({{ statistic.cashback_summary_up_people_count }}
+                                чел)</strong>
                         </td>
                     </tr>
 
                     <tr>
                         <th scope="row">Всего кэшбэка списано у пользователей, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_summary_down || 0).toFixed(2) }}
-                            <strong v-if="statistic.cashback_summary_down_people_count">({{statistic.cashback_summary_down_people_count}} чел)</strong>
+                            <strong
+                                v-if="statistic.cashback_summary_down_people_count">({{ statistic.cashback_summary_down_people_count }}
+                                чел)</strong>
                         </td>
                     </tr>
 
                     <tr>
                         <th scope="row">Всего за день начислено кэшбэка первого уровня, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_day_up_level_1 || 0).toFixed(2) }}
-                            <strong v-if="statistic.cashback_day_up_level_1_people_count">({{statistic.cashback_day_up_level_1_people_count}} чел)</strong>
+                            <strong
+                                v-if="statistic.cashback_day_up_level_1_people_count">({{ statistic.cashback_day_up_level_1_people_count }}
+                                чел)</strong>
                         </td>
 
                     </tr>
@@ -86,14 +98,18 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
                     <tr>
                         <th scope="row">Всего за день начислено кэшбэка второго уровня, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_day_up_level_2 || 0).toFixed(2) }}
-                            <strong v-if="statistic.cashback_day_up_level_2_people_count">({{statistic.cashback_day_up_level_2_people_count}} чел)</strong>
+                            <strong
+                                v-if="statistic.cashback_day_up_level_2_people_count">({{ statistic.cashback_day_up_level_2_people_count }}
+                                чел)</strong>
                         </td>
                     </tr>
 
                     <tr>
                         <th scope="row">Всего за день начислено кэшбэка третьего уровня, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_day_up_level_3 || 0).toFixed(2) }}
-                            <strong v-if="statistic.cashback_day_up_level_3_people_count">({{statistic.cashback_day_up_level_3_people_count}} чел)</strong>
+                            <strong
+                                v-if="statistic.cashback_day_up_level_3_people_count">({{ statistic.cashback_day_up_level_3_people_count }}
+                                чел)</strong>
                         </td>
                     </tr>
 
@@ -137,8 +153,8 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
                     :axis="axis">
 
                     <template #layers>
-                        <Grid strokeDasharray="2,2" />
-                        <Area :dataKeys="['m', 'sump']" type="monotone" :areaStyle="{ fill: 'url(#grad)' }" />
+                        <Grid strokeDasharray="2,2"/>
+                        <Area :dataKeys="['m', 'sump']" type="monotone" :areaStyle="{ fill: 'url(#grad)' }"/>
                         <Line
                             :dataKeys="['m', 'sump']"
                             type="monotone"
@@ -149,8 +165,8 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
 
                         <defs>
                             <linearGradient id="grad" gradientTransform="rotate(90)">
-                                <stop offset="0%" stop-color="#be90ff" stop-opacity="1" />
-                                <stop offset="100%" stop-color="white" stop-opacity="0.4" />
+                                <stop offset="0%" stop-color="#be90ff" stop-opacity="1"/>
+                                <stop offset="100%" stop-color="white" stop-opacity="0.4"/>
                             </linearGradient>
                         </defs>
                     </template>
@@ -184,26 +200,27 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
 import {mapGetters} from "vuex";
 import {saveAs} from 'file-saver';
 import {Chart, Grid, Line, Bar, Tooltip} from 'vue3-charts'
+
 export default {
     components: {Chart, Grid, Line, Bar, Tooltip},
     data() {
         return {
             botUser: null,
-            loadedChart:false,
+            loadedChart: false,
             statistic: null,
             loading: false,
-            tooltipConfig:{
-                sump: { label:'Сумма продаж', color: '#5d1010' },
-                m: {  label:'Месяц', color: '#54a375' },
-                y: {  label:'Год', color: '#0ea9cb' },
+            tooltipConfig: {
+                sump: {label: 'Сумма продаж', color: '#5d1010'},
+                m: {label: 'Месяц', color: '#54a375'},
+                y: {label: 'Год', color: '#0ea9cb'},
 
             },
             chart: [
-                {sump: 0, m: 1000, y: 500, },
-                {sump: 111, m: 1000, y: 500, },
-                {sump: 222, m: 1000, y: 500, },
-                {sump: 333, m: 1000, y: 500, },
-                {sump: 444, m: 1000, y: 500, },
+                {sump: 0, m: 1000, y: 500,},
+                {sump: 111, m: 1000, y: 500,},
+                {sump: 222, m: 1000, y: 500,},
+                {sump: 333, m: 1000, y: 500,},
+                {sump: 444, m: 1000, y: 500,},
 
             ],
             direction: 'horizontal',
@@ -262,14 +279,27 @@ export default {
                 })
         },
         downloadBotStatistic() {
-            this.$botNotification.notification("Внимание!", "Начался формироваться документ статистики!");
+            this.$notify({
+                title: "Внимание!",
+                text: "Начался формироваться документ статистики!",
+            });
+
             this.$store.dispatch("downloadBotStatistic").then((resp) => {
                 // saveAs(resp.data, 'result.xlsx');
 
-                this.$botNotification.success("Отлично!", "Документ успешно сформирован");
-
+                this.$notify({
+                    title: "Отлично!",
+                    text: "Документ успешно сформирован",
+                    type: "success"
+                });
             }).catch(() => {
-                this.$botNotification.warning("Упс...", "Что-то пошло не так...");
+
+                this.$notify({
+                    title: "Упс!",
+                    text: "Что-то пошло не так...",
+                    type: "error"
+                });
+
             })
         },
 

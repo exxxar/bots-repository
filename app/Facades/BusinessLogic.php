@@ -21,6 +21,7 @@ use App\Http\BusinessLogic\Methods\AmoLogicFactory as AmoLogic;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory as AppointmentLogic;
 use App\Http\BusinessLogic\Methods\QuizLogicFactory as QuizLogic;
 use App\Http\BusinessLogic\Methods\ReviewLogicFactory as ReviewLogic;
+use App\Http\BusinessLogic\Methods\StatisticLogicFactory as StatisticLogic;
 use App\Http\BusinessLogic\Methods\YClientLogicFactory as YClientsLogic;
 use App\Http\BusinessLogic\Methods\BotUserLogicFactory as BotUserLogic;
 use App\Http\BusinessLogic\Methods\KeyboardLogicFactory as KeyboardLogic;
@@ -58,6 +59,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static ReviewLogic review()
  * @method static IIKOLogic iiko()
  * @method static CollectionLogic collection()
+ * @method static StatisticLogic stat()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade
