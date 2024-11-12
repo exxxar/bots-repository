@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bot_pages', function (Blueprint $table) {
-            //
+            $table->double("cashback")->nullable();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bot_pages', function (Blueprint $table) {
-            //
+            $table->dropColumn("cashback");
         });
     }
 };
