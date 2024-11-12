@@ -609,7 +609,10 @@ class BotManager extends BotCore
                     ->first();
 
 
-                if (!is_null($adminBotUser))
+                if (!is_null($adminBotUser)) {
+                    $action->data["cashback_at"] = Carbon::now();
+                    $action->save();
+
                     event(new CashBackEvent(
                         (int)$bot->id,
                         (int)$botUser->user_id,
@@ -620,8 +623,8 @@ class BotManager extends BotCore
                         100,
                         false
                     ));
+                }
 
-                return;
             }
 
         }
