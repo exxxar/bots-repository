@@ -616,7 +616,9 @@ class BotManager extends BotCore
                         (int)$adminBotUser->user_id,
                         ((float)$tmpTotalAmount ?? 0),
                         "Начисление бонусов за переход",
-                        CashBackDirectionEnum::Crediting
+                        CashBackDirectionEnum::Crediting,
+                        100,
+                        false
                     ));
 
                 return;
