@@ -289,37 +289,39 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                         <div
                             v-if="need_product_charts"
                             class="d-flex">
-                            <Chart
-                                direction="circular"
-                                :size="{ width:300, height: 400 }"
-                                :data="products"
-                                :margin="{
+                            <div class="w-100 overflow-x-scroll">
+                                <Chart
+                                    direction="circular"
+                                    :size="{ width:600, height: 400 }"
+                                    :data="products"
+                                    :margin="{
                                               left: 0,
                                               top: 50,
                                               right: 0,
                                               bottom: 0
                                             }"
-                                :axis="axis"
-                                :config="{ controlHover: false }"
-                            >
-                                <template #layers>
-                                    <Pie
-                                        :dataKeys="['title', 'count','price']"
-                                        :pie-style="{ innerRadius: 10, padAngle: 0.05 }"/>
-                                </template>
-                                <template #widgets>
-                                    <Tooltip
-                                        :config="{
+                                    :axis="axis"
+                                    :config="{ controlHover: false }"
+                                >
+                                    <template #layers>
+                                        <Pie
+                                            :dataKeys="['title', 'count','price']"
+                                            :pie-style="{ innerRadius: 10, padAngle: 0.05 }"/>
+                                    </template>
+                                    <template #widgets>
+                                        <Tooltip
+                                            :config="{
                                                   title: {  label: 'Название'},
                                                   price: {  label: 'Выручено средств'},
                                                   count: {  label: 'Кол-во' },
                                                    volume_count_ratio: { hide: true},
                                                    volume_price_ratio: { hide: true},
                                                 }"
-                                        hideLine
-                                    />
-                                </template>
-                            </Chart>
+                                            hideLine
+                                        />
+                                    </template>
+                                </Chart>
+                            </div>
                         </div>
 
 
@@ -462,6 +464,8 @@ export default {
             loading: false,
             tooltipConfig: {
                 sump: {label: 'Сумма продаж', color: '#5d1010'},
+                sum: {label: 'Сумма', color: '#5d1010'},
+                count: {label: 'Кол-во', color: '#5d1010'},
                 m: {label: 'Месяц', color: '#54a375'},
                 y: {label: 'Год', color: '#0ea9cb'},
 
