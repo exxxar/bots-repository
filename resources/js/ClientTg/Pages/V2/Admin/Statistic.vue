@@ -3,7 +3,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
 </script>
 <template>
     <div class="container">
-        <div class="row my-3" style="position: sticky;top: 10px;">
+        <div class="row my-3" style="position: sticky;top: 10px;z-index:100;">
             <div class="col-md-4" v-if="need_date_range">
                 <VueDatePicker v-model="date" locale="ru" range></VueDatePicker>
 
@@ -289,41 +289,37 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                         <div
                             v-if="need_product_charts"
                             class="d-flex">
-                            <Responsive class="w-full">
-                                <template #main="{ width }">
-                                    <Chart
-                                        direction="circular"
-                                        :size="{ width, height: 400 }"
-                                        :data="products"
-                                        :margin="{
-                                              left: Math.round((width - 360)/2),
+                            <Chart
+                                direction="circular"
+                                :size="{ width:300, height: 400 }"
+                                :data="products"
+                                :margin="{
+                                              left: 0,
                                               top: 50,
                                               right: 0,
                                               bottom: 0
                                             }"
-                                        :axis="axis"
-                                        :config="{ controlHover: false }"
-                                    >
-                                        <template #layers>
-                                            <Pie
-                                                :dataKeys="['title', 'count','price']"
-                                                :pie-style="{ innerRadius: 100, padAngle: 0.05 }"/>
-                                        </template>
-                                        <template #widgets>
-                                            <Tooltip
-                                                :config="{
+                                :axis="axis"
+                                :config="{ controlHover: false }"
+                            >
+                                <template #layers>
+                                    <Pie
+                                        :dataKeys="['title', 'count','price']"
+                                        :pie-style="{ innerRadius: 10, padAngle: 0.05 }"/>
+                                </template>
+                                <template #widgets>
+                                    <Tooltip
+                                        :config="{
                                                   title: {  label: 'Название'},
                                                   price: {  label: 'Выручено средств'},
                                                   count: {  label: 'Кол-во' },
                                                    volume_count_ratio: { hide: true},
                                                    volume_price_ratio: { hide: true},
                                                 }"
-                                                hideLine
-                                            />
-                                        </template>
-                                    </Chart>
+                                        hideLine
+                                    />
                                 </template>
-                            </Responsive>
+                            </Chart>
                         </div>
 
 
