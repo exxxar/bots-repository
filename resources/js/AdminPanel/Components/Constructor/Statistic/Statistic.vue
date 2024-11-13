@@ -21,7 +21,7 @@
         </div>
 
 
-        <div class="row" >
+        <div class="row">
             <div class="col-6">
                 <h6 class="my-3 fw-bold">Основная статистика</h6>
                 <p class="fst-italic">
@@ -57,7 +57,9 @@
                         <th scope="row">Всего кэшбэка на счету у пользователей, руб</th>
                         <td class="font-weight-bold">{{ (statistic.summary_cashback || 0).toFixed(2) }}
                             <strong
-                                v-if="statistic.summary_cashback_people_count">({{ statistic.summary_cashback_people_count }}
+                                v-if="statistic.summary_cashback_people_count">({{
+                                    statistic.summary_cashback_people_count
+                                }}
                                 чел)</strong>
                         </td>
                     </tr>
@@ -66,7 +68,9 @@
                         <th scope="row">Всего кэшбэка начислено пользователям, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_summary_up || 0).toFixed(2) }}
                             <strong
-                                v-if="statistic.cashback_summary_up_people_count">({{ statistic.cashback_summary_up_people_count }}
+                                v-if="statistic.cashback_summary_up_people_count">({{
+                                    statistic.cashback_summary_up_people_count
+                                }}
                                 чел)</strong>
                         </td>
                     </tr>
@@ -75,7 +79,9 @@
                         <th scope="row">Всего кэшбэка списано у пользователей, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_summary_down || 0).toFixed(2) }}
                             <strong
-                                v-if="statistic.cashback_summary_down_people_count">({{ statistic.cashback_summary_down_people_count }}
+                                v-if="statistic.cashback_summary_down_people_count">({{
+                                    statistic.cashback_summary_down_people_count
+                                }}
                                 чел)</strong>
                         </td>
                     </tr>
@@ -84,7 +90,9 @@
                         <th scope="row">Всего начислено кэшбэка первого уровня, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_up_level_1 || 0).toFixed(2) }}
                             <strong
-                                v-if="statistic.cashback_up_level_1_people_count">({{ statistic.cashback_up_level_1_people_count }}
+                                v-if="statistic.cashback_up_level_1_people_count">({{
+                                    statistic.cashback_up_level_1_people_count
+                                }}
                                 чел)</strong>
                         </td>
 
@@ -94,7 +102,9 @@
                         <th scope="row">Всего начислено кэшбэка второго уровня, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_up_level_2 || 0).toFixed(2) }}
                             <strong
-                                v-if="statistic.cashback_up_level_2_people_count">({{ statistic.cashback_up_level_2_people_count }}
+                                v-if="statistic.cashback_up_level_2_people_count">({{
+                                    statistic.cashback_up_level_2_people_count
+                                }}
                                 чел)</strong>
                         </td>
                     </tr>
@@ -103,14 +113,15 @@
                         <th scope="row">Всего начислено кэшбэка третьего уровня, руб</th>
                         <td class="font-weight-bold">{{ (statistic.cashback_up_level_3 || 0).toFixed(2) }}
                             <strong
-                                v-if="statistic.cashback_up_level_3_people_count">({{ statistic.cashback_up_level_3_people_count }}
+                                v-if="statistic.cashback_up_level_3_people_count">({{
+                                    statistic.cashback_up_level_3_people_count
+                                }}
                                 чел)</strong>
                         </td>
                     </tr>
 
                     </tbody>
                 </table>
-
 
 
                 <a href="javascript:void(0)"
@@ -176,7 +187,7 @@
                     </div>
                     <div class="col-12" v-if="tab===1">
                         <h6 class="my-2">Начисления</h6>
-                        <div class="d-flex justify-content-center mb-3" >
+                        <div class="d-flex justify-content-center mb-3">
 
                             <Chart
                                 v-if="loadedChart&&(cashback_up||[]).length>0"
@@ -235,7 +246,10 @@
                         </div>
                     </div>
                     <div class="col-12" v-if="tab===2">
-                        <div class="d-flex justify-content-center mb-3">
+
+                        <div
+                            v-if="need_product_charts"
+                            class="d-flex justify-content-center mb-3">
                             <Chart
                                 v-if="loadedChart&&(orders||[]).length>0"
                                 :size="{ width: 500, height: 320 }"
@@ -263,6 +277,143 @@
                             <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
                         </div>
 
+                        <div
+                            v-if="need_product_charts"
+                            class="d-flex">
+                            <Responsive class="w-full">
+                                <template #main="{ width }">
+                                    <Chart
+                                        direction="circular"
+                                        :size="{ width, height: 400 }"
+                                        :data="products"
+                                        :margin="{
+                                              left: Math.round((width - 360)/2),
+                                              top: 50,
+                                              right: 0,
+                                              bottom: 0
+                                            }"
+                                        :axis="axis"
+                                        :config="{ controlHover: false }"
+                                    >
+                                        <template #layers>
+                                            <Pie
+                                                :dataKeys="['title', 'count','price']"
+                                                :pie-style="{ innerRadius: 100, padAngle: 0.05 }"/>
+                                        </template>
+                                        <template #widgets>
+                                            <Tooltip
+                                                :config="{
+                                                  title: {  label: 'Название'},
+                                                  price: {  label: 'Выручено средств'},
+                                                  count: {  label: 'Кол-во' },
+                                                   volume_count_ratio: { hide: true},
+                                                   volume_price_ratio: { hide: true},
+                                                }"
+                                                hideLine
+                                            />
+                                        </template>
+                                    </Chart>
+                                </template>
+                            </Responsive>
+                        </div>
+
+
+                        <div class="form-check form-switch my-3">
+                            <input class="form-check-input"
+                                   v-model="need_product_charts"
+                                   type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Отобразить графики</label>
+                        </div>
+
+
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">
+                                    <a href="javascript:void(0)"
+                                       @click="changeSort('title')">
+                                        <template v-if="sort.key==='title'">
+                                            <i v-if="sort.direction==='asc'"
+                                               class="fa-solid fa-arrow-up-wide-short"></i>
+                                            <i
+                                                v-else
+                                                class="fa-solid fa-arrow-up-short-wide"></i>
+                                        </template>
+                                        Название
+                                    </a>
+                                </th>
+                                <th scope="col">
+                                    <a href="javascript:void(0)"
+                                       @click="changeSort('price')">
+                                        <template v-if="sort.key==='price'">
+                                            <i v-if="sort.direction==='asc'"
+                                               class="fa-solid fa-arrow-up-wide-short"></i>
+                                            <i
+                                                v-else
+                                                class="fa-solid fa-arrow-up-short-wide"></i>
+                                        </template>
+                                        Объем продаж
+                                    </a>
+
+                                </th>
+                                <th scope="col">
+                                    <a href="javascript:void(0)"
+                                       @click="changeSort('count')">
+                                        <template v-if="sort.key==='count'">
+                                            <i v-if="sort.direction==='asc'"
+                                               class="fa-solid fa-arrow-up-wide-short"></i>
+                                            <i
+                                                v-else
+                                                class="fa-solid fa-arrow-up-short-wide"></i>
+                                        </template>
+                                        Продано ед.
+                                    </a>
+
+                                </th>
+                                <th scope="col">
+                                    <a href="javascript:void(0)"
+                                       @click="changeSort('volume_count_ratio')">
+                                        <template v-if="sort.key==='volume_count_ratio'">
+                                            <i v-if="sort.direction==='asc'"
+                                               class="fa-solid fa-arrow-up-wide-short"></i>
+                                            <i
+                                                v-else
+                                                class="fa-solid fa-arrow-up-short-wide"></i>
+                                        </template>
+                                        % от объема
+                                    </a>
+
+                                </th>
+                                <th scope="col">
+                                    <a href="javascript:void(0)"
+                                       @click="changeSort('volume_price_ratio')">
+                                        <template v-if="sort.key==='volume_price_ratio'">
+                                            <i v-if="sort.direction==='asc'"
+                                               class="fa-solid fa-arrow-up-wide-short"></i>
+                                            <i
+                                                v-else
+                                                class="fa-solid fa-arrow-up-short-wide"></i>
+                                        </template>
+                                        % от числа
+                                    </a>
+
+
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item, index) in products">
+                                <th scope="row">{{ index + 1 }}</th>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.price }}</td>
+                                <td>{{ item.count }}</td>
+                                <td>{{ item.volume_count_ratio }}</td>
+                                <td>{{ item.volume_price_ratio }}</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -276,13 +427,18 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {mapGetters} from "vuex";
 import {saveAs} from 'file-saver';
-import {Chart, Grid, Line, Bar, Tooltip} from 'vue3-charts'
+import {Chart, Grid, Line, Bar, Tooltip, Pie, Responsive} from 'vue3-charts'
 
 export default {
     props: ["bot"],
-    components: {Chart, Grid, Line, Bar, Tooltip, VueDatePicker},
+    components: {Chart, Grid, Line, Bar, Tooltip, Responsive, Pie, VueDatePicker},
     data() {
         return {
+            sort: {
+                key: 'price',
+                direction: 'asc'
+            },
+            need_product_charts: false,
             need_date_range: false,
             date: null,
             tab: 0,
@@ -296,6 +452,13 @@ export default {
                 y: {label: 'Год', color: '#0ea9cb'},
 
             },
+            products: [
+                {title: '1', count: 1, price: 2020,},
+                {title: '2', count: 2, price: 2020,},
+                {title: '3', count: 3, price: 2020,},
+                {title: '4', count: 4, price: 2020,},
+                {title: '5', count: 5, price: 2020,},
+            ],
             orders: [
                 {sump: 0, m: 1, y: 2020,},
                 {sump: 111, m: 2, y: 2020,},
@@ -353,6 +516,12 @@ export default {
     },
     computed: {},
     watch: {
+        'sort': {
+            handler: function (newValue) {
+                this.prepareStatistic()
+            },
+            deep: true
+        },
         'need_date_range': function () {
             this.prepareStatistic()
         },
@@ -369,16 +538,22 @@ export default {
         this.prepareStatistic()
     },
     methods: {
+        changeSort(param) {
+            this.sort.key = param
+            this.sort.direction = this.sort.direction === 'asc' ? 'desc' : 'asc'
+        },
         prepareStatistic() {
             this.loadedChart = false
             return this.$store.dispatch("statisticLoad", {
                 bot_id: this.bot.id,
                 date: this.date,
-                need_all: !this.need_date_range
+                need_all: !this.need_date_range,
+                sort: this.sort
             })
                 .then((response) => {
                     this.statistic = response.statistic
                     this.orders = this.statistic.orders.sum
+                    this.products = this.statistic.orders.products
                     this.users = this.statistic.users.sum
                     this.cashback_up = this.statistic.cashback_up.sum
                     this.cashback_down = this.statistic.cashback_down.sum

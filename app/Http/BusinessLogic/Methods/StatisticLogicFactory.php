@@ -10,6 +10,7 @@ use App\Models\CashBack;
 use App\Models\CashBackHistory;
 use App\Models\Order;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -65,7 +66,7 @@ class StatisticLogicFactory
     /**
      * @throws HttpException
      */
-    public function base($startAt, $endAt, $needAll = false): array
+    public function base($startAt, $endAt, $needAll = false, $direction = 'asc', $sortBy = 'price'): array
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(403, "Не выполнены условия функции");
@@ -84,6 +85,76 @@ class StatisticLogicFactory
             ->format("Y-m-d H:i:s");
 
         $botId = $this->bot->id;
+
+        $orders = Order::query()
+            ->where("bot_id", $botId)
+            ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
+            ->orderBy("created_at", "desc")
+            ->get();
+
+        $tmp = [];
+
+        $tmpSummaryCount = 0;
+        $tmpSummaryPrice = 0;
+
+        foreach ($orders as $order) {
+            $details = $order->product_details ?? [];
+
+            if (count($details) == 0)
+                continue;
+
+            $products = $details[0]["products"] ?? null;
+
+            if (is_null($products))
+                continue;
+
+            if (is_array($products))
+                foreach ($products as $product) {
+                    $product = (object)$product;
+                    if (!is_null($product->title ?? null)) {
+                        $tmp[$product->title] = !isset($tmp[$product->title]) ?
+                            (object)[
+                                "count" => $product->count ?? 1,
+                                "price" => $product->price ?? 0,
+                            ] :
+                            (object)[
+                                "count" => $tmp[$product->title]->count + ($product->count ?? 1),
+                                "price" => $tmp[$product->title]->price + ($product->price ?? 0),
+                            ];
+
+                        $tmpSummaryCount += $product->count ?? 0;
+                        $tmpSummaryPrice += $product->price ?? 0;
+                    }
+
+                }
+        }
+
+        $tmpConvertedOrders = [];
+
+        foreach ($tmp as $key => $item) {
+            $tmpConvertedOrders[] = (object)[
+                "title" => $key,
+                "count" => $item->count ?? 0,
+                "price" => $item->price ?? 0,
+                "volume_count_ratio" => round(($item->count / $tmpSummaryCount) * 100, 2),
+                "volume_price_ratio" => round(($item->price / $tmpSummaryPrice) * 100, 2),
+            ];
+
+        }
+
+        $tmpConvertedOrders = Collection::make($tmpConvertedOrders);
+
+        if ($direction == 'desc')
+            $tmpConvertedOrders = $tmpConvertedOrders
+                ->sortByDesc($sortBy);
+        if ($direction == 'asc')
+            $tmpConvertedOrders = $tmpConvertedOrders
+                ->sortBy($sortBy);
+
+        $tmpConvertedOrders = $tmpConvertedOrders
+            ->values()->all();
+
+
         $sumOrders = DB::query()
             ->select(DB::raw("SUM(`summary_price`) as sump,MONTH(`created_at`) as m, YEAR(`created_at`) as y FROM `orders` WHERE `bot_id`=$botId
             and `created_at` BETWEEN '$startOfMonth' AND '$endOfMonth'
@@ -119,6 +190,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                 ->count(),
             'orders' => (object)[
                 "sum" => $sumOrders,
+                "products" => $tmpConvertedOrders,
                 "count_products" => Order::query()
                     //  ->where("bot_id")
                     ->whereBetween("created_at", [$startOfMonth, $endOfMonth])

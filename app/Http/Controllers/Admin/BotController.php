@@ -36,12 +36,17 @@ class BotController extends Controller
 
         $botUser = $request->botUser ?? null;
 
+        $sort = $request->sort;
+
+
         $statistics = BusinessLogic::stat()
             ->setBot($bot ?? null)
             ->setBotUser($botUser)
             ->base($request->date[0] ?? null,
                 $request->date[1] ?? null,
-                $request->need_all ?? false);
+                $request->need_all ?? false,
+                $sort["direction"] ?? 'asc',
+                $sort['key'] ?? 'price');
 
         return response()->json([
             'statistic' => $statistics
