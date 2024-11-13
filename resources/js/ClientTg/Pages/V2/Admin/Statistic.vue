@@ -3,7 +3,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
 </script>
 <template>
     <div class="container">
-        <div class="row my-3">
+        <div class="row my-3" style="position: sticky;top: 10px;">
             <div class="col-md-4" v-if="need_date_range">
                 <VueDatePicker v-model="date" locale="ru" range></VueDatePicker>
 
@@ -169,7 +169,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                         <div class="d-flex justify-content-center mb-3">
                             <Chart
                                 v-if="loadedChart&&(users||[]).length>0"
-                                :size="{ width: 350, height: 320 }"
+                                :size="{ width: 300, height: 320 }"
                                 :data="users"
                                 :margin="margin"
                                 :direction="direction"
@@ -200,7 +200,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
 
                             <Chart
                                 v-if="loadedChart&&(cashback_up||[]).length>0"
-                                :size="{ width: 350, height: 320 }"
+                                :size="{ width: 300, height: 320 }"
                                 :data="cashback_up"
                                 :margin="margin"
                                 :direction="direction"
@@ -229,7 +229,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
 
                             <Chart
                                 v-if="loadedChart&&(cashback_down||[]).length>0"
-                                :size="{ width: 350, height: 320 }"
+                                :size="{ width: 300, height: 320 }"
                                 :data="cashback_down"
                                 :margin="margin"
                                 :direction="direction"
@@ -261,7 +261,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                             class="d-flex justify-content-center mb-3">
                             <Chart
                                 v-if="loadedChart&&(orders||[]).length>0"
-                                :size="{ width: 350, height: 320 }"
+                                :size="{ width: 300, height: 320 }"
                                 :data="orders"
                                 :margin="margin"
                                 :direction="direction"
