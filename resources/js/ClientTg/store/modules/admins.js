@@ -156,7 +156,7 @@ const actions = {
     },
     async trafficLoad(context, payload = {bot_id:null}) {
 
-        let link = `${BASE_BOTS_LINK}/load-traffic-statistic`
+        let link = `${BASE_ADMINS_LINK}/load-traffic-statistic`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload)
 
@@ -167,11 +167,11 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async statisticLoad(context) {
+    async statisticLoad(context, payload) {
 
         let link = `${BASE_ADMINS_LINK}/load-statistic`
 
-        let _axios = util.makeAxiosFactory(link, 'POST')
+        let _axios = util.makeAxiosFactory(link, 'POST',payload)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
