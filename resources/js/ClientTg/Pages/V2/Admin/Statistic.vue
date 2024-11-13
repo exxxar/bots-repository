@@ -169,7 +169,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                         <div class="d-flex justify-content-center mb-3">
                             <Chart
                                 v-if="loadedChart&&(users||[]).length>0"
-                                :size="{ width: 500, height: 320 }"
+                                :size="{ width: 350, height: 320 }"
                                 :data="users"
                                 :margin="margin"
                                 :direction="direction"
@@ -200,7 +200,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
 
                             <Chart
                                 v-if="loadedChart&&(cashback_up||[]).length>0"
-                                :size="{ width: 500, height: 320 }"
+                                :size="{ width: 350, height: 320 }"
                                 :data="cashback_up"
                                 :margin="margin"
                                 :direction="direction"
@@ -229,7 +229,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
 
                             <Chart
                                 v-if="loadedChart&&(cashback_down||[]).length>0"
-                                :size="{ width: 500, height: 320 }"
+                                :size="{ width: 350, height: 320 }"
                                 :data="cashback_down"
                                 :margin="margin"
                                 :direction="direction"
@@ -261,7 +261,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                             class="d-flex justify-content-center mb-3">
                             <Chart
                                 v-if="loadedChart&&(orders||[]).length>0"
-                                :size="{ width: 500, height: 320 }"
+                                :size="{ width: 350, height: 320 }"
                                 :data="orders"
                                 :margin="margin"
                                 :direction="direction"
@@ -335,99 +335,104 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                         </div>
 
 
-                        <table class="table" v-if="(products||[]).length>0">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">
-                                    <a href="javascript:void(0)"
-                                       @click="changeSort('title')">
-                                        <template v-if="sort.key==='title'">
-                                            <i v-if="sort.direction==='asc'"
-                                               class="fa-solid fa-arrow-up-wide-short"></i>
-                                            <i
-                                                v-else
-                                                class="fa-solid fa-arrow-up-short-wide"></i>
-                                        </template>
-                                        Название
-                                    </a>
-                                </th>
-                                <th scope="col">
-                                    <a href="javascript:void(0)"
-                                       @click="changeSort('price')">
-                                        <template v-if="sort.key==='price'">
-                                            <i v-if="sort.direction==='asc'"
-                                               class="fa-solid fa-arrow-up-wide-short"></i>
-                                            <i
-                                                v-else
-                                                class="fa-solid fa-arrow-up-short-wide"></i>
-                                        </template>
-                                        Объем продаж
-                                    </a>
+                        <div class="w-100 overflow-x-scroll">
+                            <table class="table" v-if="(products||[]).length>0">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">
+                                        <a href="javascript:void(0)"
+                                           @click="changeSort('title')">
+                                            <template v-if="sort.key==='title'">
+                                                <i v-if="sort.direction==='asc'"
+                                                   class="fa-solid fa-arrow-up-wide-short"></i>
+                                                <i
+                                                    v-else
+                                                    class="fa-solid fa-arrow-up-short-wide"></i>
+                                            </template>
+                                            Название
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="javascript:void(0)"
+                                           @click="changeSort('price')">
+                                            <template v-if="sort.key==='price'">
+                                                <i v-if="sort.direction==='asc'"
+                                                   class="fa-solid fa-arrow-up-wide-short"></i>
+                                                <i
+                                                    v-else
+                                                    class="fa-solid fa-arrow-up-short-wide"></i>
+                                            </template>
+                                            Объем продаж
+                                        </a>
 
-                                </th>
-                                <th scope="col">
-                                    <a href="javascript:void(0)"
-                                       @click="changeSort('count')">
-                                        <template v-if="sort.key==='count'">
-                                            <i v-if="sort.direction==='asc'"
-                                               class="fa-solid fa-arrow-up-wide-short"></i>
-                                            <i
-                                                v-else
-                                                class="fa-solid fa-arrow-up-short-wide"></i>
-                                        </template>
-                                        Продано ед.
-                                    </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="javascript:void(0)"
+                                           @click="changeSort('count')">
+                                            <template v-if="sort.key==='count'">
+                                                <i v-if="sort.direction==='asc'"
+                                                   class="fa-solid fa-arrow-up-wide-short"></i>
+                                                <i
+                                                    v-else
+                                                    class="fa-solid fa-arrow-up-short-wide"></i>
+                                            </template>
+                                            Продано ед.
+                                        </a>
 
-                                </th>
-                                <th scope="col">
-                                    <a href="javascript:void(0)"
-                                       @click="changeSort('volume_count_ratio')">
-                                        <template v-if="sort.key==='volume_count_ratio'">
-                                            <i v-if="sort.direction==='asc'"
-                                               class="fa-solid fa-arrow-up-wide-short"></i>
-                                            <i
-                                                v-else
-                                                class="fa-solid fa-arrow-up-short-wide"></i>
-                                        </template>
-                                        % от объема
-                                    </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="javascript:void(0)"
+                                           @click="changeSort('volume_count_ratio')">
+                                            <template v-if="sort.key==='volume_count_ratio'">
+                                                <i v-if="sort.direction==='asc'"
+                                                   class="fa-solid fa-arrow-up-wide-short"></i>
+                                                <i
+                                                    v-else
+                                                    class="fa-solid fa-arrow-up-short-wide"></i>
+                                            </template>
+                                            % от объема
+                                        </a>
 
-                                </th>
-                                <th scope="col">
-                                    <a href="javascript:void(0)"
-                                       @click="changeSort('volume_price_ratio')">
-                                        <template v-if="sort.key==='volume_price_ratio'">
-                                            <i v-if="sort.direction==='asc'"
-                                               class="fa-solid fa-arrow-up-wide-short"></i>
-                                            <i
-                                                v-else
-                                                class="fa-solid fa-arrow-up-short-wide"></i>
-                                        </template>
-                                        % от числа
-                                    </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="javascript:void(0)"
+                                           @click="changeSort('volume_price_ratio')">
+                                            <template v-if="sort.key==='volume_price_ratio'">
+                                                <i v-if="sort.direction==='asc'"
+                                                   class="fa-solid fa-arrow-up-wide-short"></i>
+                                                <i
+                                                    v-else
+                                                    class="fa-solid fa-arrow-up-short-wide"></i>
+                                            </template>
+                                            % от числа
+                                        </a>
 
 
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(item, index) in products">
-                                <th scope="row">{{ index + 1 }}</th>
-                                <td>{{ item.title }}</td>
-                                <td>{{ item.price }}</td>
-                                <td>{{ item.count }}</td>
-                                <td>{{ item.volume_count_ratio }}</td>
-                                <td>{{ item.volume_price_ratio }}</td>
-                            </tr>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(item, index) in products">
+                                    <th scope="row">{{ index + 1 }}</th>
+                                    <td>{{ item.title }}</td>
+                                    <td>{{ item.price }}</td>
+                                    <td>{{ item.count }}</td>
+                                    <td>{{ item.volume_count_ratio }}</td>
+                                    <td>{{ item.volume_price_ratio }}</td>
+                                </tr>
 
-                            </tbody>
-                        </table>
-                        <p class="text-danger my-3" v-else>Нет данных по продажам за выбранный период:(</p>
+                                </tbody>
+                            </table>
+                            <p class="text-danger my-3" v-else>Нет данных по продажам за выбранный период:(</p>
+                        </div>
+
                     </div>
                     <div class="col-12" v-if="tab===3">
-                        <TrafficStatistic
-                            :date="date"></TrafficStatistic>
+                        <div class="w-100 overflow-x-scroll">
+                            <TrafficStatistic
+                                :date="date"></TrafficStatistic>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -566,7 +571,6 @@ export default {
 
             this.$router.back()
         })
-
 
 
     },
