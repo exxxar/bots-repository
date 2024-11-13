@@ -3,12 +3,14 @@
 namespace App\Http\BusinessLogic\Methods;
 
 use App\Http\Resources\AmoCrmResource;
+use App\Http\Resources\TrafficSourceCollection;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\BotUser;
 use App\Models\CashBack;
 use App\Models\CashBackHistory;
 use App\Models\Order;
+use App\Models\TrafficSource;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -191,6 +193,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             'orders' => (object)[
                 "sum" => $sumOrders,
                 "products" => $tmpConvertedOrders,
+
                 "count_products" => Order::query()
                     //  ->where("bot_id")
                     ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
@@ -293,6 +296,55 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                 ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
                 ->count()
         ];
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function traffic($startAt, $endAt, $needAll = false, $direction = 'desc', $sortBy = 'created_at'): object
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        if (!$this->botUser->is_admin)
+            throw new HttpException(403, "Пользователь не является администратором");
+
+
+        $startOfMonth = ($needAll ?
+            Carbon::now()->startOfMillennium() :
+            Carbon::parse($startAt))
+            ->format("Y-m-d H:i:s");
+        $endOfMonth = ($needAll ?
+            Carbon::now()->endOfMillennium() :
+            Carbon::parse($endAt))
+            ->format("Y-m-d H:i:s");
+
+        $botId = $this->bot->id;
+
+        /*     $traffics = TrafficSource::query()
+                 ->where("bot_id", $botId)
+                 ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
+                 ->orderBy($sortBy, $direction)
+                 ->get();*/
+
+
+        $result = DB::query()
+            ->select(DB::raw("COUNT(`id`) as count, `source` FROM `traffic_sources` WHERE `bot_id`=$botId
+            and `created_at` BETWEEN '$startOfMonth' AND '$endOfMonth'
+GROUP BY `source`
+ORDER  BY `created_at` ASC"))->get();
+
+        $result = Collection::make($result);
+
+        if ($direction == 'desc')
+            $result = $result
+                ->sortByDesc($sortBy);
+        if ($direction == 'asc')
+            $result = $result
+                ->sortBy($sortBy);
+
+        return $result
+            ->values()->all();
     }
 
 }

@@ -370,6 +370,10 @@ Route::prefix("bot-client")
 
                 Route::post('/load-statistic', "statistic")
                     ->middleware(["tgAuth.admin"]);
+
+                Route::post('/load-traffic-statistic', "trafficStatistic")
+                    ->middleware(["tgAuth.admin"]);
+
                 Route::post('/download-bot-statistic', "exportBotStatistic")
                     ->middleware(["tgAuth.admin"]);
                 Route::post('/download-bot-users', "exportBotUsers")

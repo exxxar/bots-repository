@@ -34,12 +34,49 @@ use Telegram\Bot\FileUpload\InputFile;
 class AdminBotController extends Controller
 {
 
+    public function trafficStatistic(Request $request)
+    {
+
+        $request->validate([
+            "date" => "required"
+        ]);
+
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->bot_id)
+            ->first();
+
+        $botUser = $request->botUser ?? null;
+
+
+        $traffics = BusinessLogic::stat()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser)
+            ->traffic(
+                $request->date[0] ?? null,
+                $request->date[1] ?? null,
+                $request->need_all ?? false,
+                $sort["direction"] ?? 'asc',
+                $sort['key'] ?? 'created_at');
+
+        return response()->json([
+            "traffics" => $traffics
+        ]);
+    }
+
     public function statistic(Request $request): \Illuminate\Http\JsonResponse
     {
-        $statistics = BusinessLogic::administrative()
+
+        $sort = $request->sort;
+
+        $statistics = BusinessLogic::stat()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->statistic();
+            ->base($request->date[0] ?? null,
+                $request->date[1] ?? null,
+                $request->need_all ?? false,
+                $sort["direction"] ?? 'asc',
+                $sort['key'] ?? 'price');
 
         return response()->json([
             'statistic' => $statistics
@@ -89,7 +126,8 @@ class AdminBotController extends Controller
 
     }
 
-    protected function requestUserReview(Request $request){
+    protected function requestUserReview(Request $request)
+    {
         $request->validate([
             "telegram_chat_id" => "required",
         ]);
@@ -102,6 +140,7 @@ class AdminBotController extends Controller
 
         return response()->noContent();
     }
+
     /**
      * @throws ValidationException
      */

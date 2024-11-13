@@ -154,6 +154,19 @@ const actions = {
             return Promise.reject(err);
         })
     },
+    async trafficLoad(context, payload = {bot_id:null}) {
+
+        let link = `${BASE_BOTS_LINK}/load-traffic-statistic`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async statisticLoad(context) {
 
         let link = `${BASE_ADMINS_LINK}/load-statistic`

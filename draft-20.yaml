@@ -1,0 +1,18 @@
+models:
+  TrafficSource:
+    bot_id: id foreign:bots nullable
+    bot_user_id: foreign:bot_users nullable
+    comment: string:255 nullable
+    source: string:255 nullable
+    relationships:
+      belongsTo: Bot, BotUser
+
+
+seeders:    TrafficSource
+
+controllers:
+  TrafficSource:
+    resource: api
+
+
+

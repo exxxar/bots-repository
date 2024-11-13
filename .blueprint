@@ -1,15 +1,14 @@
 created:
-    - app/Http/Controllers/ProductCollectionController.php
-    - database/factories/ProductCollectionFactory.php
-    - database/migrations/2024_08_31_201637_create_product_collections_table.php
-    - database/migrations/2024_08_31_201638_create_product_product_collection_table.php
-    - app/Models/ProductCollection.php
-    - database/seeders/ProductCollectionSeeder.php
-    - tests/Feature/Http/Controllers/ProductCollectionControllerTest.php
-    - app/Http/Requests/ProductCollectionStoreRequest.php
-    - app/Http/Requests/ProductCollectionUpdateRequest.php
-    - app/Http/Resources/ProductCollectionCollection.php
-    - app/Http/Resources/ProductCollectionResource.php
+    - app/Http/Controllers/TrafficSourceController.php
+    - database/factories/TrafficSourceFactory.php
+    - database/migrations/2024_11_13_193830_create_traffic_sources_table.php
+    - app/Models/TrafficSource.php
+    - database/seeders/TrafficSourceSeeder.php
+    - tests/Feature/Http/Controllers/TrafficSourceControllerTest.php
+    - app/Http/Requests/TrafficSourceStoreRequest.php
+    - app/Http/Requests/TrafficSourceUpdateRequest.php
+    - app/Http/Resources/TrafficSourceCollection.php
+    - app/Http/Resources/TrafficSourceResource.php
 updated:
     - routes/api.php
 models:
@@ -78,3 +77,4 @@ models:
     Iiko: { bot_id: 'id foreign:bots nullable', api_login: 'string:255 nullable', organization_id: 'string:255 nullable', terminal_group_id: 'string:255 nullable', relationships: { belongsTo: Bot } }
     Shop: { bot_id: 'id foreign:bots nullable', title: 'string:255 nullable', image: 'string:255 nullable', key: "string:255 nullable comment:'для распределения товаров'", is_default: 'boolean default:false', config: 'json nullable', relationships: { belongsTo: Bot } }
     ProductCollection: { bot_id: 'id foreign:bots nullable', owner_id: 'foreign:bot_users nullable', title: 'string:255 nullable', image: 'string:255 nullable', description: 'longtext nullable', is_public: 'boolean default:false', is_active: 'boolean default:false', discount: "integer default:0 comment:'скидка на набор в %'", order_position: 'integer default:0', config: 'json nullable', relationships: { belongsTo: 'Bot, BotUser', belongsToMany: Product } }
+    TrafficSource: { bot_id: 'id foreign:bots nullable', bot_user_id: 'foreign:bot_users nullable', comment: 'string:255 nullable', source: 'string:255 nullable', relationships: { belongsTo: 'Bot, BotUser' } }

@@ -23,6 +23,36 @@ use Illuminate\Validation\ValidationException;
 class BotController extends Controller
 {
 
+    public function trafficStatistic(Request $request)
+    {
+
+        $request->validate([
+            "date" => "required"
+        ]);
+
+        $bot = Bot::query()
+            ->with(["company"])
+            ->where("id", $request->bot_id)
+            ->first();
+
+        $botUser = $request->botUser ?? null;
+
+
+        $traffics = BusinessLogic::stat()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser)
+            ->traffic(
+                $request->date[0] ?? null,
+                $request->date[1] ?? null,
+                $request->need_all ?? false,
+                $sort["direction"] ?? 'asc',
+                $sort['key'] ?? 'created_at');
+
+        return response()->json([
+           "traffics" => $traffics
+        ]);
+    }
+
     public function statistic(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([

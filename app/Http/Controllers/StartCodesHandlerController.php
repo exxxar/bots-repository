@@ -10,6 +10,7 @@ use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\Order;
 use App\Models\ReferralHistory;
+use App\Models\TrafficSource;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -182,6 +183,13 @@ class StartCodesHandlerController extends Controller
         $channel = $bot->order_channel ??
             null;
 
+        TrafficSource::query()->updateOrCreate([
+            'bot_id'=>$bot->id,
+            'bot_user_id'=>$botUser->id,
+            'comment'=>"ссылка с меткой",
+            'source'=>$utm
+        ]);
+
         if (!is_null($channel))
             BotMethods::bot()
                 ->whereBot($bot)
@@ -203,6 +211,8 @@ class StartCodesHandlerController extends Controller
 
         $code = $data[1] ?? null;
         $request_id = $data[2] ?? null;
+
+
 
         $message = $bot->welcome_message ?? null;
 
@@ -352,6 +362,13 @@ class StartCodesHandlerController extends Controller
             $botUser->parent_id = $userBotUser->id;
             $botUser->save();
 
+            TrafficSource::query()->updateOrCreate([
+                'bot_id'=>$bot->id,
+                'bot_user_id'=>$botUser->id,
+                'comment'=>"реферальная программа",
+                'source'=>"$request_id"
+            ]);
+
             BotMethods::bot()
                 ->whereId($botUser->bot_id)
                 ->sendMessage(
@@ -386,8 +403,7 @@ class StartCodesHandlerController extends Controller
 
     }
 
-    private
-    function userOrder($telegramChatId, $orderId)
+    private function userOrder($telegramChatId, $orderId)
     {
 
         $bot = BotManager::bot()->getSelf();

@@ -1,3 +1,6 @@
+<script setup>
+import TrafficStatistic from "@/AdminPanel/Components/Constructor/Statistic/TrafficStatistic.vue";
+</script>
 <template>
     <div class="container">
         <div class="row my-3">
@@ -151,6 +154,12 @@
                                    @click="tab=2"
                                    v-bind:class="{'active':tab===2}"
                                    aria-current="page" href="#">Продажи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   @click="tab=3"
+                                   v-bind:class="{'active':tab===3}"
+                                   aria-current="page" href="#">Переходы</a>
                             </li>
 
                         </ul>
@@ -326,7 +335,7 @@
                         </div>
 
 
-                        <table class="table">
+                        <table class="table" v-if="(products||[]).length>0">
                             <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -414,6 +423,12 @@
 
                             </tbody>
                         </table>
+                        <p class="text-danger my-3" v-else>Нет данных по продажам за выбранный период:(</p>
+                    </div>
+                    <div class="col-12" v-if="tab===3">
+                        <TrafficStatistic
+                            :date="date"
+                            :bot="bot"></TrafficStatistic>
                     </div>
                 </div>
             </div>

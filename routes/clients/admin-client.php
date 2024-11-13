@@ -120,6 +120,7 @@ Route::prefix("admin")
                 Route::post("/save-front-pad", [\App\Http\Controllers\FrontPadController::class, "saveFrontPad"]);
                 Route::post("/bot-update", "updateBot");
                 Route::post('/load-statistic', "statistic");
+                Route::post('/load-traffic-statistic', "trafficStatistic");
                 Route::post("/bot-webhook-update", "updateWebhook");
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");

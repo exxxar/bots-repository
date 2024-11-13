@@ -183,3 +183,6 @@ Route::apiResource('iikos', \App\Http\Controllers\Bots\Web\IikoController::class
 
 
 Route::apiResource('product-collections', \App\Http\Controllers\Bots\Web\ProductCollectionController::class);
+
+
+Route::apiResource('traffic-sources', App\Http\Controllers\TrafficSourceController::class);
