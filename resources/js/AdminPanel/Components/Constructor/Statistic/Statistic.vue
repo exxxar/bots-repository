@@ -134,6 +134,13 @@ import TrafficStatistic from "@/AdminPanel/Components/Constructor/Statistic/Traf
                 </a>
             </div>
             <div class="col-6">
+                <div class="form-check form-switch my-3">
+                    <input class="form-check-input"
+                           v-model="need_charts"
+                           type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Отобразить графики</label>
+                </div>
+
                 <div class="row my-3 sticky-charts ">
                     <div class="col-12">
                         <ul class="nav nav-tabs">
@@ -166,7 +173,7 @@ import TrafficStatistic from "@/AdminPanel/Components/Constructor/Statistic/Traf
                     </div>
 
                     <div class="col-12" v-if="tab===0">
-                        <div class="d-flex justify-content-center mb-3">
+                        <div class="d-flex justify-content-center mb-3" v-if="need_charts">
                             <Chart
                                 v-if="loadedChart&&(users||[]).length>0"
                                 :size="{ width: 500, height: 320 }"
@@ -193,8 +200,32 @@ import TrafficStatistic from "@/AdminPanel/Components/Constructor/Statistic/Traf
                             </Chart>
                             <p class="text-danger my-2" v-else>Статистика еще не загружена или её нет</p>
                         </div>
+                        <div class="w-100 overflow-x-scroll"
+                             v-if="(users||[]).length>0">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Год</th>
+                                    <th scope="col">Месяц</th>
+                                    <th scope="col">Число пользователей</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(item, index) in users">
+                                    <th scope="row">{{ index + 1 }}</th>
+                                    <td>{{ item.y }}</td>
+                                    <td>{{ item.m }}</td>
+                                    <td>{{ item.count }}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                     <div class="col-12" v-if="tab===1">
+                        <template v-if="need_charts">
                         <h6 class="my-2">Начисления</h6>
                         <div class="d-flex justify-content-center mb-3">
 
@@ -253,11 +284,37 @@ import TrafficStatistic from "@/AdminPanel/Components/Constructor/Statistic/Traf
                             </Chart>
                             <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
                         </div>
+                        </template>
+
+                        <div class="w-100 overflow-x-scroll"
+                             v-if="(preparedCashback||[]).length>0">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Год</th>
+                                    <th scope="col">Месяц</th>
+                                    <th scope="col">Начислено</th>
+                                    <th scope="col">Списано</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(item, index) in preparedCashback">
+                                    <th scope="row">{{ index + 1 }}</th>
+                                    <td>{{ item.y }}</td>
+                                    <td>{{ item.m }}</td>
+                                    <td>{{ item.up }}</td>
+                                    <td>{{ item.down }}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-12" v-if="tab===2">
 
                         <div
-                            v-if="need_product_charts"
+                            v-if="need_charts"
                             class="d-flex justify-content-center mb-3">
                             <Chart
                                 v-if="loadedChart&&(orders||[]).length>0"
@@ -286,8 +343,8 @@ import TrafficStatistic from "@/AdminPanel/Components/Constructor/Statistic/Traf
                             <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
                         </div>
 
-                        <div
-                            v-if="need_product_charts"
+                        <divs
+                            v-if="need_charts"
                             class="d-flex">
                             <Responsive class="w-full">
                                 <template #main="{ width }">
@@ -324,15 +381,7 @@ import TrafficStatistic from "@/AdminPanel/Components/Constructor/Statistic/Traf
                                     </Chart>
                                 </template>
                             </Responsive>
-                        </div>
-
-
-                        <div class="form-check form-switch my-3">
-                            <input class="form-check-input"
-                                   v-model="need_product_charts"
-                                   type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                            <label class="form-check-label" for="flexSwitchCheckDefault">Отобразить графики</label>
-                        </div>
+                        </divs>
 
 
                         <table class="table" v-if="(products||[]).length>0">
@@ -453,7 +502,7 @@ export default {
                 key: 'price',
                 direction: 'asc'
             },
-            need_product_charts: false,
+            need_charts: false,
             need_date_range: false,
             date: null,
             tab: 0,
@@ -529,7 +578,36 @@ export default {
             }
         }
     },
-    computed: {},
+    computed: {
+        preparedCashback() {
+
+            if (this.cashback_up.length === 0 && this.cashback_down.length === 0)
+                return []
+            let tmp = []
+            for (let i = 0; i < this.cashback_up.length; i++) {
+                let tmpCashBackDown = null;
+                for (let j = 0; j < this.cashback_down.length; j++) {
+                    let down = this.cashback_down[j];
+                    let up = this.cashback_up[i];
+                    if (up.m === down.m && up.y === down.y) {
+                        tmpCashBackDown = this.cashback_down[j]
+                        break;
+                    }
+
+                }
+
+                tmp.push({
+                    y: this.cashback_up[i].y || 0,
+                    m: this.cashback_up[i].m || 0,
+                    up: this.cashback_up[i].sum || 0,
+                    down: tmpCashBackDown === null ? 0 : tmpCashBackDown.sum,
+                })
+            }
+
+
+            return tmp
+        },
+    },
     watch: {
         'sort': {
             handler: function (newValue) {
