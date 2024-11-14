@@ -24,6 +24,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
         </div>
 
 
+
         <div class="row">
             <div class="col-12">
                 <h6 class="my-3 fw-bold">Основная статистика</h6>
@@ -134,6 +135,13 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                 </a>
             </div>
             <div class="col-12">
+                <div class="form-check form-switch my-3">
+                    <input class="form-check-input"
+                           v-model="need_charts"
+                           type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Отобразить графики</label>
+                </div>
+
                 <div class="row my-3 sticky-charts ">
                     <div class="col-12">
                         <ul class="nav nav-tabs">
@@ -166,7 +174,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                     </div>
 
                     <div class="col-12" v-if="tab===0">
-                        <div class="d-flex justify-content-center mb-3">
+                        <div class="d-flex justify-content-center mb-3" v-if="need_charts">
                             <Chart
                                 v-if="loadedChart&&(users||[]).length>0"
                                 :size="{ width: 300, height: 320 }"
@@ -193,71 +201,123 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                             </Chart>
                             <p class="text-danger my-2" v-else>Статистика еще не загружена или её нет</p>
                         </div>
+                        <div class="w-100 overflow-x-scroll"
+                             v-if="(users||[]).length>0">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Год</th>
+                                    <th scope="col">Месяц</th>
+                                    <th scope="col">Число пользователей</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(item, index) in users">
+                                    <th scope="row">{{ index + 1 }}</th>
+                                    <td>{{ item.y }}</td>
+                                    <td>{{ item.m }}</td>
+                                    <td>{{ item.count }}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-12" v-if="tab===1">
-                        <h6 class="my-2">Начисления</h6>
-                        <div class="d-flex justify-content-center mb-3">
+                        <template v-if="need_charts">
+                            <h6 class="my-2">Начисления</h6>
+                            <div class="d-flex justify-content-center mb-3">
 
-                            <Chart
-                                v-if="loadedChart&&(cashback_up||[]).length>0"
-                                :size="{ width: 300, height: 320 }"
-                                :data="cashback_up"
-                                :margin="margin"
-                                :direction="direction"
-                                :axis="axis">
+                                <Chart
+                                    v-if="loadedChart&&(cashback_up||[]).length>0"
+                                    :size="{ width: 300, height: 320 }"
+                                    :data="cashback_up"
+                                    :margin="margin"
+                                    :direction="direction"
+                                    :axis="axis">
 
-                                <template #layers>
+                                    <template #layers>
 
-                                    <Grid strokeDasharray="2,2"/>
-                                    <Bar :dataKeys="['m','sum']" :barStyle="{ fill: '#ffe775' }"/>
-                                    <Marker :value="1000" label="Avg." color="#e76f51" strokeWidth="2"
-                                            strokeDasharray="6 6"/>
-                                </template>
+                                        <Grid strokeDasharray="2,2"/>
+                                        <Bar :dataKeys="['m','sum']" :barStyle="{ fill: '#ffe775' }"/>
+                                        <Marker :value="1000" label="Avg." color="#e76f51" strokeWidth="2"
+                                                strokeDasharray="6 6"/>
+                                    </template>
 
-                                <template #widgets>
-                                    <Tooltip
-                                        borderColor="#48CAE4"
-                                        :config="tooltipConfig"
-                                    />
-                                </template>
+                                    <template #widgets>
+                                        <Tooltip
+                                            borderColor="#48CAE4"
+                                            :config="tooltipConfig"
+                                        />
+                                    </template>
 
-                            </Chart>
-                            <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
-                        </div>
-                        <h6 class="my-2">Списания</h6>
-                        <div class="d-flex justify-content-center mb-3">
+                                </Chart>
+                                <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
 
-                            <Chart
-                                v-if="loadedChart&&(cashback_down||[]).length>0"
-                                :size="{ width: 300, height: 320 }"
-                                :data="cashback_down"
-                                :margin="margin"
-                                :direction="direction"
-                                :axis="axis">
 
-                                <template #layers>
 
-                                    <Grid strokeDasharray="2,2"/>
-                                    <Bar :dataKeys="['m','sum']" :barStyle="{ fill: '#ffe775' }"/>
-                                    <Marker :value="1000" label="Avg." color="#e76f51" strokeWidth="2"
-                                            strokeDasharray="6 6"/>
-                                </template>
+                            </div>
+                            <h6 class="my-2">Списания</h6>
+                            <div class="d-flex justify-content-center mb-3">
+                                <Chart
+                                    v-if="loadedChart&&(cashback_down||[]).length>0"
+                                    :size="{ width: 300, height: 320 }"
+                                    :data="cashback_down"
+                                    :margin="margin"
+                                    :direction="direction"
+                                    :axis="axis">
 
-                                <template #widgets>
-                                    <Tooltip
-                                        borderColor="#48CAE4"
-                                        :config="tooltipConfig"
-                                    />
-                                </template>
+                                    <template #layers>
 
-                            </Chart>
-                            <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
+                                        <Grid strokeDasharray="2,2"/>
+                                        <Bar :dataKeys="['m','sum']" :barStyle="{ fill: '#ffe775' }"/>
+                                        <Marker :value="1000" label="Avg." color="#e76f51" strokeWidth="2"
+                                                strokeDasharray="6 6"/>
+                                    </template>
+
+                                    <template #widgets>
+                                        <Tooltip
+                                            borderColor="#48CAE4"
+                                            :config="tooltipConfig"
+                                        />
+                                    </template>
+
+                                </Chart>
+                                <p class="text-danger my-3" v-else>Статистика еще не загружена или её нет</p>
+                            </div>
+                        </template>
+
+
+                        <div class="w-100 overflow-x-scroll"
+                             v-if="(preparedCashback||[]).length>0">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Год</th>
+                                    <th scope="col">Месяц</th>
+                                    <th scope="col">Начислено</th>
+                                    <th scope="col">Списано</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(item, index) in preparedCashback">
+                                    <th scope="row">{{ index + 1 }}</th>
+                                    <td>{{ item.y }}</td>
+                                    <td>{{ item.m }}</td>
+                                    <td>{{ item.up }}</td>
+                                    <td>{{ item.down }}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <div class="col-12" v-if="tab===2">
 
                         <div
-                            v-if="need_product_charts"
+                            v-if="need_charts"
                             class="d-flex justify-content-center mb-3">
                             <Chart
                                 v-if="loadedChart&&(orders||[]).length>0"
@@ -287,7 +347,7 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                         </div>
 
                         <div
-                            v-if="need_product_charts"
+                            v-if="need_charts"
                             class="d-flex">
                             <div class="w-100 overflow-x-scroll">
                                 <Chart
@@ -323,15 +383,6 @@ import TrafficStatistic from "@/ClientTg/Components/V2/Admin/Statistic/TrafficSt
                                 </Chart>
                             </div>
                         </div>
-
-
-                        <div class="form-check form-switch my-3">
-                            <input class="form-check-input"
-                                   v-model="need_product_charts"
-                                   type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                            <label class="form-check-label" for="flexSwitchCheckDefault">Отобразить графики</label>
-                        </div>
-
 
                         <div class="w-100 overflow-x-scroll">
                             <table class="table" v-if="(products||[]).length>0">
@@ -454,7 +505,7 @@ export default {
                 key: 'price',
                 direction: 'asc'
             },
-            need_product_charts: false,
+            need_charts: false,
             need_date_range: false,
             date: null,
             tab: 0,
@@ -536,6 +587,34 @@ export default {
         ...mapGetters(['getSelf']),
         tg() {
             return window.Telegram.WebApp;
+        },
+        preparedCashback() {
+
+            if (this.cashback_up.length === 0 && this.cashback_down.length === 0)
+                return []
+            let tmp = []
+            for (let i = 0; i < this.cashback_up.length; i++) {
+                let tmpCashBackDown = null;
+                for (let j = 0; j < this.cashback_down.length; j++) {
+                    let down = this.cashback_down[j];
+                    let up = this.cashback_up[i];
+                    if (up.m === down.m && up.y === down.y) {
+                        tmpCashBackDown = this.cashback_down[j]
+                        break;
+                    }
+
+                }
+
+                tmp.push({
+                    y: this.cashback_up[i].y || 0,
+                    m: this.cashback_up[i].m || 0,
+                    up: this.cashback_up[i].sum || 0,
+                    down: tmpCashBackDown === null ? 0 : tmpCashBackDown.sum,
+                })
+            }
+
+
+            return tmp
         },
     },
     watch: {
