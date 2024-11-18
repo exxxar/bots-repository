@@ -8,7 +8,7 @@
                 <form
                     v-on:submit.prevent="submit" class="row mb-0">
 
-                    <div class="col-12">
+                    <div class="col-12 mb-2">
                         <div class="form-floating">
                             <input type="text" class="form-control text-center"
                                    placeholder="Петров Петр Семенович"

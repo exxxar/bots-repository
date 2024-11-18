@@ -155,14 +155,14 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async saveSimpleProfileFormData(context, payload) {
+    async saveSimpleProfileFormData(context, payload = {dataObject: null}) {
         let data = {
             ...payload
         }
 
         let link = `${BASE_CASHBACK_LINK}/profile-form-data`
 
-        let _axios = util.makeAxiosFactory(link, 'POST', data)
+        let _axios = util.makeAxiosFactory(link, 'POST', data.dataObject)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
