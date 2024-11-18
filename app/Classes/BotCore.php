@@ -936,7 +936,8 @@ abstract class BotCore
                                     false
                                 ));
 
-                                $this->runPage($page->id);
+                                BotManager::bot()
+                                    ->runPage($page->id, $this->getSelf(), $this->currentBotUser());
                                 break;
                             }
                         }

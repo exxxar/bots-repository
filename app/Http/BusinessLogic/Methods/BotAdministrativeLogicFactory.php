@@ -958,7 +958,6 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                 $tmpData = (array)$action->data;
                 $success = array_key_exists("cashback_at",$tmpData) && is_null($tmpData["cashback_at"] ?? null);
 
-
                 if ($success) {
                     $page = BotPage::query()
                         ->where("bot_id", $action->bot_id)
@@ -993,8 +992,6 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                         break;
                     }
                 }
-
-
             }
         }
 
