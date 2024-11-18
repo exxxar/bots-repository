@@ -951,11 +951,14 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             ->orderBy("created_at", "desc")
             ->get();
 
+        Log::info("actions=>" . (print_r($actions->toArray(),true)));
+        Log::info("count > 0=>" . (count($actions ?? []) > 0));
         if (count($actions ?? []) > 0) {
             foreach ($actions as $action) {
                 $tmpData = (array)$action->data;
                 $success = isset($tmpData["cashback_at"]) && is_null($tmpData["cashback_at"] ?? null);
 
+                Log::info("success=>" . ($success ? "1" : "0"));
                 if ($success) {
                     $page = BotPage::query()
                         ->where("bot_id", $action->bot_id)
@@ -963,12 +966,12 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                         ->first();
 
                     $cashback = !is_null($page) ? $page->cashback ?? 0 : 0;
-
+                    Log::info("cashback=> $cashback");
                     $adminBotUser = BotUser::query()
                         ->where("bot_id", $action->bot_id)
                         ->where("is_admin", true)
                         ->first();
-
+                    Log::info("admin=> " . (!is_null($adminBotUser)));
                     if (!is_null($adminBotUser)) {
                         $action->data = (object)[
                             "cashback_at" => Carbon::now(),
@@ -994,12 +997,12 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
         }
 
 
-      /*  BotMethods::bot()
-            ->whereBot($this->bot)
-            ->sendMessage(
-                $this->botUser->telegram_chat_id,
-                $customMessage ?? "Вы стали нашим <b>V.I.P.</b> пользователем! Поздравляем!"
-            );*/
+        /*  BotMethods::bot()
+              ->whereBot($this->bot)
+              ->sendMessage(
+                  $this->botUser->telegram_chat_id,
+                  $customMessage ?? "Вы стали нашим <b>V.I.P.</b> пользователем! Поздравляем!"
+              );*/
     }
 
     /**
