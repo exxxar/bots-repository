@@ -601,11 +601,11 @@ class BotManager extends BotCore
 
             if (is_null($isCreditedCashback)) {
 
-                $cashbackConfig = $page->cashback_config ?? (object)[
+                $cashbackConfig = (object)($page->cashback_config ?? [
                     "need_request_user_data" => true,
                     "simple_form" => true,
                     "description" => null,
-                ];
+                ]);
 
                 if ($cashbackConfig->need_request_user_data) {
 
