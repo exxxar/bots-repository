@@ -14,7 +14,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
             <a class="nav-link "
                v-bind:class="{'active fw-bold':tab===1}"
                @click="tab=1"
-               href="javascript:void(0)">CashBack</a>
+               href="javascript:void(0)">Баллы</a>
         </li>
         <li class="nav-item">
             <a class="nav-link "
@@ -163,7 +163,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
         v-if="tab===1"
         v-on:submit.prevent="submitBotForm">
         <div class="alert alert-light mb-2">
-            Максимальное значение CashBack, которое пользователь может списать во время покупки в магазине, в % от цены
+            Максимальное значение баллов, которое пользователь может списать во время покупки в магазине, в % от цены
             заказа.
         </div>
         <div class="form-floating mb-2">
@@ -178,7 +178,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
         </div>
 
         <div class="alert alert-light mb-2">
-            Уровни автоматического начисления CashBack по реферальной программе, в %.
+            Уровни автоматического начисления баллов по реферальной программе, в %.
         </div>
         <div class="form-floating mb-2">
             <input type="number"
@@ -220,16 +220,16 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                        type="checkbox"
                        id="need-cashback-config">
                 <label class="form-check-label" for="need-cashback-config">
-                    Необходимо настроить CashBack по категориям
+                    Необходимо настроить баллы по категориям
                 </label>
             </div>
 
         </div>
         <div class="mb-2" v-if="need_cashback_config">
-            <h6 class="opacity-75 my-2">Настройка категорий CashBack-а</h6>
+            <h6 class="opacity-75 my-2">Настройка категорий баллов</h6>
 
             <div class="alert alert-light" role="alert">
-                Категории CashBack - это возможность разделить накопления и траты CashBack пользователями бота на
+                Категории баллов - это возможность разделить накопления и траты баллов пользователями бота на
                 указанные цели, например, кофейня может создать категории: на кофе, на десерты - и начислять баллы
                 за купленный кофе отдельно от баллов за купленный десерт
             </div>

@@ -17,7 +17,7 @@ const actions = {
     async loadCashBackModuleData(context) {
 
 
-        let link = `${ BASE_CASHBACK_LINK}/load-data`
+        let link = `${BASE_CASHBACK_LINK}/load-data`
 
         let _axios = util.makeAxiosFactory(link, 'POST')
 
@@ -28,7 +28,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadReceiverUserData(context, payload = { dataObject:{ user_telegram_chat_id:null } }) {
+    async loadReceiverUserData(context, payload = {dataObject: {user_telegram_chat_id: null}}) {
 
 
         let link = `${BASE_CASHBACK_LINK}/receiver`
@@ -43,7 +43,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadCashBack(context, payload = { dataObject:{ user_telegram_chat_id:null } ,page: 0, size: 12}) {
+    async loadCashBack(context, payload = {dataObject: {user_telegram_chat_id: null}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12
 
@@ -116,7 +116,6 @@ const actions = {
         let link = `${BASE_CASHBACK_LINK}/request-refresh-menu`
 
 
-
         let _axios = util.makeAxiosFactory(link, 'POST', {
 
             ...payload.dataObject
@@ -148,6 +147,22 @@ const actions = {
         let link = `${BASE_CASHBACK_LINK}/deliveryman`
 
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async saveSimpleProfileFormData(context, payload) {
+        let data = {
+            ...payload
+        }
+
+        let link = `${BASE_CASHBACK_LINK}/profile-form-data`
+
+        let _axios = util.makeAxiosFactory(link, 'POST', data)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);

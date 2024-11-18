@@ -409,6 +409,25 @@ class AdminBotController extends Controller
     /**
      * @throws ValidationException
      */
+    public function storeProfileForm(Request $request): \Illuminate\Http\Response
+    {
+        $request->validate([
+            "name" => "required",
+            "phone" => "required",
+            "page_id" => "required",
+
+        ]);
+
+        BusinessLogic::administrative()
+            ->setBotUser($request->botUser ?? null)
+            ->setBot($request->bot ?? null)
+            ->storeProfile($request->all());
+
+        return response()->noContent();
+    }
+    /**
+     * @throws ValidationException
+     */
     public function vipStore(Request $request): \Illuminate\Http\Response
     {
 

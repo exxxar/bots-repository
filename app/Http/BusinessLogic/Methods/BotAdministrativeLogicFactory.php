@@ -113,18 +113,18 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                 ->where("bot_id", $this->bot->id)
                 ->count(),
             'orders' => (object)[
-                "start_at"=>$startOfMonth,
-                "end_at"=>$endOfMonth,
+                "start_at" => $startOfMonth,
+                "end_at" => $endOfMonth,
                 "sum" => $sum,/*Order::query()
                    // ->where("bot_id")
                     ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
                     ->sum("summary_price"),*/
                 "count_products" => Order::query()
-                  //  ->where("bot_id")
+                    //  ->where("bot_id")
                     ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
                     ->sum("product_count"),
                 "count_orders" => Order::query()
-                  //  ->where("bot_id")
+                    //  ->where("bot_id")
                     ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
                     ->count(),
             ],
@@ -915,6 +915,92 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
 
     }
 
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
+    public function storeProfile(array $data): void
+    {
+
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "name" => "required",
+            "phone" => "required",
+            "page_id" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $vowels = ["(", ")", "-"];
+        $filteredPhone = str_replace($vowels, "", $data["phone"] ?? '');
+
+        $form = [
+            "name" => $data["name"] ?? null,
+            "phone" => $filteredPhone,
+            "is_vip" => true,
+        ];
+
+        $this->botUser->update($form);
+
+        $actions = ActionStatus::query()
+            ->where("user_id", $this->botUser->user_id)
+            ->where("bot_id", $this->bot->id)
+            ->orderBy("created_at", "desc")
+            ->get();
+
+        if (count($actions ?? []) > 0) {
+            foreach ($actions as $action) {
+                $data = (array)$action->data;
+                $success = isset($data["cashback_at"]) && is_null($data["cashback_at"] ?? null);
+
+                if ($success) {
+                    $page = BotPage::query()
+                        ->where("bot_id", $action->bot_id)
+                        ->where("bot_menu_slug_id", $action->slug_id)
+                        ->first();
+
+                    $cashback = !is_null($page) ? $page->cashback ?? 0 : 0;
+
+                    $adminBotUser = BotUser::query()
+                        ->where("bot_id", $action->bot_id)
+                        ->where("is_admin", true)
+                        ->first();
+
+                    if (!is_null($adminBotUser)) {
+                        $action->data = (object)[
+                            "cashback_at" => Carbon::now(),
+                        ];
+                        $action->save();
+
+                        event(new CashBackEvent(
+                            (int)$action->bot_id,
+                            (int)$this->botUser->user_id,
+                            (int)$adminBotUser->user_id,
+                            $cashback,
+                            "Начисление бонусов за переход",
+                            CashBackDirectionEnum::Crediting,
+                            100,
+                            false
+                        ));
+                        break;
+                    }
+                }
+
+
+            }
+        }
+
+
+      /*  BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->botUser->telegram_chat_id,
+                $customMessage ?? "Вы стали нашим <b>V.I.P.</b> пользователем! Поздравляем!"
+            );*/
+    }
 
     /**
      * @throws ValidationException

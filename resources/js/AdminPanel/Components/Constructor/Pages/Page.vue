@@ -1273,19 +1273,94 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
 
                         <h1 class="text-body-emphasis">Начисление бонусов</h1>
                         <p class="col-lg-8 mx-auto fs-5 text-muted">
-                        При переходе на данную страницу пользователь разово может получить указанную сумму бонусов! Начисление произойдет перед выводом контента страницы.
+                            При переходе на данную страницу пользователь разово может получить указанную сумму бонусов!
+                            Начисление произойдет перед выводом контента страницы.
                         </p>
-                        <div class="row d-flex justify-content-center my-5" v-if="need_cashback_page">
-                           <div class="col-md-4">
-                               <div class="form-floating mb-2 w-100">
-                                   <input type="number"
-                                          min="0"
-                                          v-model="pageForm.cashback"
-                                          class="form-control w-100" id="page-price" placeholder="Бонусы" required>
-                                   <label for="page-price">Сумма начисления бонусов, руб</label>
-                               </div>
-                           </div>
-                        </div>
+
+                        <template v-if="need_cashback_page">
+                            <div class="row d-flex justify-content-center my-2" >
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-2 w-100">
+                                        <input type="number"
+                                               min="0"
+                                               v-model="pageForm.cashback"
+                                               class="form-control w-100" id="page-price" placeholder="Бонусы" required>
+                                        <label for="page-price">Сумма начисления бонусов, руб</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-12 my-3">
+                                    <h6>Нужно ли запрашивать какие-то данные у пользователя?</h6>
+                                    <div class="d-flex d-flex justify-content-center">
+                                        <button
+                                            @click="pageForm.cashback_config.need_request_user_data=!pageForm.cashback_config.need_request_user_data"
+                                            v-bind:class="{
+                                                'btn-primary': pageForm.cashback_config.need_request_user_data ,
+                                                'btn-outline-primary': !pageForm.cashback_config.need_request_user_data
+                                            }"
+                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill mr-2" type="button">
+                                                Да
+                                        </button>
+                                        <button
+                                            @click="pageForm.cashback_config.need_request_user_data=!pageForm.cashback_config.need_request_user_data"
+                                            v-bind:class="{
+                                                'btn-primary': !pageForm.cashback_config.need_request_user_data ,
+                                                'btn-outline-primary': pageForm.cashback_config.need_request_user_data
+                                            }"
+                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                            Нет
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="row justify-content-center" v-if="pageForm.cashback_config.need_request_user_data">
+                                <div class="col-md-12 my-3">
+                                    <h6>Упрощенный вариант сбора данных?</h6>
+                                    <p class="fst-italic">Упрощенный вариант подразумевает получение только номера телефона!</p>
+                                    <div class="d-flex d-flex justify-content-center">
+                                        <button
+                                            @click="pageForm.cashback_config.simple_form=!pageForm.cashback_config.simple_form"
+                                            v-bind:class="{
+                                                'btn-primary': pageForm.cashback_config.simple_form ,
+                                                'btn-outline-primary': !pageForm.cashback_config.simple_form
+                                            }"
+                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill mr-2" type="button">
+                                            Да
+                                        </button>
+                                        <button
+                                            @click="pageForm.cashback_config.simple_form=!pageForm.cashback_config.simple_form"
+                                            v-bind:class="{
+                                                'btn-primary': !pageForm.cashback_config.simple_form ,
+                                                'btn-outline-primary': pageForm.cashback_config.simple_form
+                                            }"
+                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                            Нет
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 my-5">
+                                    <div class="form-floating">
+                                        <textarea class="form-control"
+                                                  maxlength="255"
+                                                  v-model="pageForm.cashback_config.description"
+                                                  placeholder="Leave a comment here" id="floatingTextarea2"
+                                                  style="height: 100px"></textarea>
+                                        <label for="floatingTextarea2">
+                                            Пояснение для пользователя
+
+                                            <span v-if="(pageForm.cashback_config.description||'').length>0">{{pageForm.cashback_config.description.length}} / 255</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
                         <div class="d-inline-flex gap-2 mb-5">
                             <button
                                 @click="need_cashback_page=!need_cashback_page"
@@ -1502,7 +1577,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                        v-model="pageForm.need_log_user_action"
                                        type="checkbox" id="need_log_user_action">
                                 <label class="form-check-label" for="need_log_user_action">
-                                    Логгировать действия пользователя в канал при переходе
+                                    Логировать действия пользователя в канал при переходе
                                 </label>
                             </div>
                         </div>
@@ -1653,6 +1728,11 @@ export default {
 
                 price: null,
                 cashback: null,
+                cashback_config: {
+                    need_request_user_data: false,
+                    simple_form: true,
+                    description: null,
+                },
                 price_description: null,
 
                 videos: [],
@@ -2053,6 +2133,13 @@ export default {
                 this.pageForm.password_description = page.password_description || null
                 this.pageForm.price = page.price || null
                 this.pageForm.cashback = page.cashback || null
+                if (page.cashback_config)
+                    this.pageForm.cashback_config = {
+                        need_request_user_data: page.cashback_config.need_request_user_data || false,
+                        simple_form: page.cashback_config.simple_form || true,
+                        description: page.cashback_config.description || null,
+                    }
+
                 this.pageForm.price_description = page.price_description || null
                 this.pageForm.command = page.slug ? page.slug.command : null
                 this.pageForm.slug = page.slug ? page.slug.slug : null
@@ -2155,6 +2242,11 @@ export default {
                 password_description: null,
                 price: null,
                 cashback: null,
+                cashback_config: {
+                    need_request_user_data: false,
+                    simple_form: true,
+                    description: null,
+                },
                 price_description: null,
                 images: [],
                 reply_keyboard: null,

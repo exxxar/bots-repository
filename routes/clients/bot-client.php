@@ -431,6 +431,8 @@ Route::prefix("bot-client")
                     ->middleware(["tgAuth.admin"]);
                 Route::post('/vip', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "vipStore"])
                     ->middleware(["slug"]);
+                Route::post('/profile-form-data', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "storeProfileForm"]);
+
                 Route::post('/user-message', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "messageToUser"])
                     ->middleware(["tgAuth.admin"]);
                 Route::post('/request-user-data', [\App\Http\Controllers\Bots\Web\AdminBotController::class, "requestUserData"])

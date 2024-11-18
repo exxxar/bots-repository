@@ -129,7 +129,7 @@ import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
     <a href="javascript:void(0)"
        @click="downloadCashBackHistory"
        class="btn btn-outline-info w-100 p-3 mb-2">
-        <i class="fa-regular fa-file-excel mr-2"></i> Скачать историю CashBack
+        <i class="fa-regular fa-file-excel mr-2"></i> Скачать историю начисления
     </a>
 </template>
 <script>

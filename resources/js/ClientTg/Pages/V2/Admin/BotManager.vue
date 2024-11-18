@@ -612,23 +612,23 @@
                             <div class="form-floating mb-2">
                                 <input type="number" class="form-control"
                                        placeholder="%"
-                                       aria-label="уровень CashBack"
+                                       aria-label="уровень баллов"
                                        v-model="botForm.level_1"
                                        min="0"
                                        aria-describedby="bot-level-1" required>
                                 <label id="bot-level-1">
-                                    Уровень 1 CashBack, %
+                                    Уровень баллов #1 , %
                                 </label>
                             </div>
 
                             <div class="form-floating mb-2">
                                 <input type="number" class="form-control"
                                        placeholder="%"
-                                       aria-label="уровень CashBack"
+                                       aria-label="уровень баллов"
                                        v-model="botForm.level_2"
                                        min="0"
                                        aria-describedby="bot-level-2">
-                                <label id="bot-level-2">Уровень 2 CashBack, %</label>
+                                <label id="bot-level-2">Уровень баллов #2, %</label>
                             </div>
 
                             <div class="form-floating mb-2">
@@ -639,7 +639,7 @@
                                        min="0"
                                        aria-describedby="bot-level-3">
 
-                                <label id="bot-level-3">Уровень 3 CashBack, %</label>
+                                <label id="bot-level-3">Уровень баллов #3, %</label>
                             </div>
 
                             <div class="form-floating mb-2">
@@ -650,17 +650,17 @@
                                     </option>
                                 </select>
                                 <label id="cashback-fired-period">Период сгорания
-                                    CashBack</label>
+                                    баллов</label>
                             </div>
                             <div class="form-floating mb-2" v-if="botForm.cashback_fire_period>0">
                                 <input type="number" class="form-control"
                                        placeholder="%"
-                                       aria-label="уровень сгорания CashBack"
+                                       aria-label="уровень сгорания баллов"
                                        v-model="botForm.cashback_fire_percent"
                                        min="0"
                                        max="100"
                                        aria-describedby="cashback-fired-level">
-                                <label id="cashback-fired-level">Уровень сгорания CashBack, %</label>
+                                <label id="cashback-fired-level">Уровень сгорания баллов, %</label>
                             </div>
 
 
@@ -670,13 +670,13 @@
                                        type="checkbox"
                                        id="need-cashback-config">
                                 <label class="form-check-label" for="need-cashback-config">
-                                    Необходимо настроить CashBack по категориям
+                                    Необходимо настроить баллы по категориям
                                 </label>
                             </div>
 
 
                             <div class="mb-2" v-if="need_cashback_config">
-                                <h6>Настройка категорий CashBack-а</h6>
+                                <h6>Настройка категорий баллов</h6>
 
 
                                 <template :key="'social-link'+index"

@@ -367,6 +367,7 @@ class BotPageLogicFactory
         $tmp->inline_keyboard_id = null;
         $tmp->videos = isset($pageData["videos"]) ? json_decode($pageData["videos"] ?? '[]') : null;
         $tmp->audios = isset($pageData["audios"]) ? json_decode($pageData["audios"] ?? '[]') : null;
+        $tmp->cashback_config = isset($pageData["cashback_config"]) ? json_decode($pageData["cashback_config"] ?? '[]') : null;
         $tmp->documents = isset($pageData["documents"]) ? json_decode($pageData["documents"] ?? '[]') : null;
 
         $tmp->content = $tmp->content ?? "";
@@ -510,6 +511,7 @@ class BotPageLogicFactory
         $tmp->videos = isset($pageData["videos"]) ? json_decode($pageData["videos"] ?? '[]') : null;
         $tmp->documents = isset($pageData["documents"]) ? json_decode($pageData["documents"] ?? '[]') : null;
         $tmp->audios = isset($pageData["audios"]) ? json_decode($pageData["audios"] ?? '[]') : null;
+        $tmp->cashback_config = isset($pageData["cashback_config"]) ? json_decode($pageData["cashback_config"] ?? '[]') : null;
         $tmp->is_external = (bool)($tmp->is_external ?? false);
         $tmp->need_log_user_action = (bool)($tmp->need_log_user_action ?? false);
         $tmp->content = $tmp->content ?? "";

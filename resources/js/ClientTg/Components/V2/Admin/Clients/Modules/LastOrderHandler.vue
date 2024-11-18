@@ -416,14 +416,14 @@ export default {
                 this.order.is_cashback_crediting = true
                 this.$notify({
                     title: "Отзывы",
-                    text: "Вы успешно начислили CashBack пользователю",
+                    text: "Вы успешно начислили баллы пользователю",
                     type: "success"
                 })
             }).catch(() => {
                 this.order.is_cashback_crediting = false
                 this.$notify({
                     title: "Отзывы",
-                    text: "Ошибка начисления CashBack",
+                    text: "Ошибка начисления баллов",
                     type: "error"
                 })
             })

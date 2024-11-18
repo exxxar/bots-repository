@@ -63,7 +63,7 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
                    min="1"
                    v-model="promoCodeForm.cashback_amount"
                    class="form-control" id="floatingInput" placeholder="name@example.com" required>
-            <label for="floatingInput"> Величина скидки \ CashBack, руб</label>
+            <label for="floatingInput"> Величина скидки \ баллов, руб</label>
         </div>
 
         <div
@@ -75,7 +75,7 @@ import GlobalSlugList from "@/AdminPanel/Components/Constructor/Slugs/GlobalSlug
                    max="100"
                    v-model="promoCodeForm.cashback_amount"
                    class="form-control" id="floatingInput" placeholder="name@example.com" required>
-            <label for="floatingInput"> Величина скидки \ CashBack, %</label>
+            <label for="floatingInput"> Величина скидки \ баллов, %</label>
         </div>
 
         <div class="form-floating mb-2">

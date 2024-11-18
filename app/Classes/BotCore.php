@@ -656,7 +656,7 @@ abstract class BotCore
                     (int)$userId,
                     (int)$adminBotUser->user_id,
                     ((float)$tmpTotalAmount ?? 0),
-                    "Автоматическое начисление CashBack",
+                    "Автоматическое начисление баллов",
                     CashBackDirectionEnum::Crediting
                 ));
         }
@@ -881,7 +881,6 @@ abstract class BotCore
         }
 
 
-
         try {
 
 
@@ -894,9 +893,57 @@ abstract class BotCore
                 $botUser->phone = $item->message->contact->phone_number ?? $botUser->phone ?? null;
                 $botUser->save();
 
+                $actions = ActionStatus::query()
+                    ->where("user_id", $this->currentBotUser()->user_id)
+                    ->where("bot_id", $this->getSelf()->id)
+                    ->orderBy("created_at", "desc")
+                    ->get();
+
+                if (count($actions ?? []) > 0) {
+                    foreach ($actions as $action) {
+                        $data = (array)$action->data;
+                        $success = isset($data["cashback_at"]) && is_null($data["cashback_at"] ?? null);
+
+                        if ($success) {
+                            $page = BotPage::query()
+                                ->where("bot_id", $action->bot_id)
+                                ->where("bot_menu_slug_id", $action->slug_id)
+                                ->first();
+
+                            $cashback = !is_null($page) ? $page->cashback ?? 0 : 0;
+
+                            $adminBotUser = BotUser::query()
+                                ->where("bot_id", $action->bot_id)
+                                ->where("is_admin", true)
+                                ->first();
+
+                            if (!is_null($adminBotUser)) {
+                                $action->data = (object)[
+                                    "cashback_at" => Carbon::now(),
+                                ];
+                                $action->save();
+
+                                event(new CashBackEvent(
+                                    (int)$action->bot_id,
+                                    (int)$this->currentBotUser()->user_id,
+                                    (int)$adminBotUser->user_id,
+                                    $cashback,
+                                    "Начисление бонусов за переход",
+                                    CashBackDirectionEnum::Crediting,
+                                    100,
+                                    false
+                                ));
+                                break;
+                            }
+                        }
+
+
+                    }
+                }
+
                 BusinessLogic::bitrix()
-                    ->setBotUser($this->getSelf())
-                    ->setBot($this->currentBotUser())
+                    ->setBot($this->getSelf())
+                    ->setBotUser($this->currentBotUser())
                     ->addLead("Отправил свой номер в бот");
             }
 

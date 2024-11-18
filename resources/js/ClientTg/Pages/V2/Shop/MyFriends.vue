@@ -15,7 +15,7 @@ import Pagination from '@/ClientTg/Components/V1/Pagination.vue'
                     <li
                         class="list-group-item d-flex justify-content-between p-3"
                         aria-current="true">
-                        <span>Получено CashBack</span>
+                        <span>Получено баллов</span>
                         <span class="text-primary fw-bold">{{ self.cashBack.amount || 0 }} ₽</span>
                     </li>
                 </ul>
@@ -75,7 +75,7 @@ import Pagination from '@/ClientTg/Components/V1/Pagination.vue'
 
                                 </tr>
                                 <tr>
-                                    <th scope="row">Сумма CashBack, руб</th>
+                                    <th scope="row">Сумма баллов, руб</th>
                                     <td class="fw-bold text-primary">{{item.amount || 0}}</td>
 
                                 </tr>
@@ -130,7 +130,7 @@ import Pagination from '@/ClientTg/Components/V1/Pagination.vue'
                     <div class="d-flex justify-content-center flex-column align-items-center">
                         <i class="fa-brands fa-bitcoin mb-3" style="font-size:36px;"></i>
 
-                        <p>Операция с CashBack-ом еще нет:(</p>
+                        <p>Операций с баллами еще нет:(</p>
                     </div>
                 </div>
                 <Pagination

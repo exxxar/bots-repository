@@ -298,8 +298,8 @@ class WheelOfFortuneCustomScriptController extends SlugController
         }
 
         BusinessLogic::bitrix()
-            ->setBotUser($bot)
-            ->setBot($botUser)
+            ->setBotUser($botUser)
+            ->setBot($bot)
             ->addLead("Участие в колесе фортуны");
 
         return response()->noContent();

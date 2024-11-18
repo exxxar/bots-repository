@@ -5,7 +5,7 @@
             type="button"
             data-bs-toggle="modal" data-bs-target="#add-cashback-to-user"
             class="btn btn-outline-light text-primary w-100 p-3">Начислить
-            CashBack</button>
+            Баллы</button>
 
 
         <!-- Modal -->

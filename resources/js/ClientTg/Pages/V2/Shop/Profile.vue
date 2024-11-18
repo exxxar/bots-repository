@@ -85,7 +85,7 @@
                 @click="goToCashback"
                 class="list-group-item d-flex justify-content-between cursor-pointer"
                 aria-current="true">
-                <span>Получено CashBack</span>
+                <span>Получено баллов</span>
                 <span class="text-primary fw-bold">{{ self.cashBack.amount || 0 }} ₽</span>
             </li>
         </ul>

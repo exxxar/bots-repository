@@ -179,7 +179,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                 <div
                     class="card-body">
                     <p class="d-flex justify-content-between mb-0">
-                        <span> Списать CashBack</span>
+                        <span> Списать баллы</span>
                         <strong>{{ cashbackLimit }}₽</strong>
                     </p>
                 </div>

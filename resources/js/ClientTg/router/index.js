@@ -486,6 +486,7 @@ import InstaQuestV2 from "@/ClientTg/Pages/V2/Shop/InstaQuest.vue";
 import FriendsGameV2 from "@/ClientTg/Pages/V2/Shop/FriendsGame.vue";
 import PromoCodeFormV2 from "@/ClientTg/Pages/V2/Shop/PromoCode.vue";
 import VipProfileV2_1 from "@/ClientTg/Pages/V2/Shop/VipProfileV1.vue";
+import SimpleProfileV2_1 from "@/ClientTg/Pages/V2/Shop/SimpleProfileV1.vue";
 import VipProfileV2_2 from "@/ClientTg/Pages/V2/Shop/VipProfileV2.vue";
 import WheelCustomV2 from "@/ClientTg/Pages/V2/Games/WheelCustom.vue";
 import AdminMenuV2 from "@/ClientTg/Pages/V2/Admin/AdminMenu.vue";
@@ -692,6 +693,13 @@ export const simpleRoutes = [
         name: 'VipProfileV2_2',
         path: simplePrefix + '/new-profile-form',
         component: VipProfileV2_2,
+        meta: {title: 'Анкета пользователя',  hide_menu: true}
+    },
+
+    {
+        name: 'SimpleProfileV2_1',
+        path: simplePrefix + '/simple-profile-form',
+        component: SimpleProfileV2_1,
         meta: {title: 'Анкета пользователя',  hide_menu: true}
     },
 

@@ -32,7 +32,7 @@
 
                 </tr>
                 <tr>
-                    <th scope="row">Сумма CashBack, руб</th>
+                    <th scope="row">Сумма баллов, руб</th>
                     <td class="fw-bold text-primary">{{item.amount || 0}}</td>
 
                 </tr>
