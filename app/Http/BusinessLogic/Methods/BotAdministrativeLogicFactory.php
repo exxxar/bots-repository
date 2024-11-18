@@ -959,7 +959,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                 $tmpData = (array)$action->data;
                 $success = array_key_exists("cashback_at",$tmpData) && is_null($tmpData["cashback_at"] ?? null);
 
-                Log::info("success=>" . print_r($success, true)."<====>".print_r($tmpData, true));
+                Log::info("success=>" . print_r($success ? "True":"False", true)."<====>".print_r($tmpData, true));
                 if ($success) {
 
 
