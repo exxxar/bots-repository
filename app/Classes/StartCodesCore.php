@@ -104,11 +104,12 @@ class StartCodesCore
 
             if (preg_match_all($pattern, $string, $matches)) {
 
+                Log::info("preg=>$pattern, $string matched=>".print_r($matches, true));
                 foreach ($matches as $match)
                     $arguments[] = $match[0];
 
                 $find = $this->tryCall($item, ...$arguments);
-                break;
+                //break;
             }
 
         }
