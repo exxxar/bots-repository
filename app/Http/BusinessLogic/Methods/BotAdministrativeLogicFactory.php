@@ -956,13 +956,13 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
         if (count($actions ?? []) > 0) {
             foreach ($actions as $action) {
                 Log::info("action id=".$action->id);
-                $tmpData = (object)$action->data;
-                $success = hasKey($tmpData->cashback_at);
+                $tmpData = (array)$action->data;
+                $success = array_key_exists("cashback_at",$tmpData);
 
                 Log::info("success=>" . print_r($success, true)."<====>".print_r($tmpData, true));
                 if ($success) {
 
-                    if (!is_null($tmpData->cashback_at))
+                    if (!is_null($tmpData["cashback_at"] ?? null))
                         continue;
 
                     $page = BotPage::query()
