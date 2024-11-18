@@ -985,7 +985,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                             100,
                             false
                         ));
-                        break;
+
                     }
                 }
 
