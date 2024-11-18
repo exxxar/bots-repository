@@ -329,12 +329,10 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
 
 
         $result = DB::query()
-            ->select(DB::raw("COUNT(DISTINCT `source`) as count, `source`"))
+            ->select(DB::raw("COUNT(DISTINCT source) as count"))
             ->from('traffic_sources')
-            ->where('bot_id', '=', $botId)
+            ->where('bot_id', $botId)
             ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-            ->groupBy('source')
-            ->orderBy('source', 'asc')
             ->get();
 
         $result = Collection::make($result);
