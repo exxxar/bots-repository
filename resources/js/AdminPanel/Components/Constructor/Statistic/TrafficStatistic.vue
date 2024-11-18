@@ -48,12 +48,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="source in traffics">
-            <th scope="row">{{ source.id }}</th>
+        <tr v-for="(source, index) in traffics">
+            <th scope="row">{{ index + 1 }}</th>
             <td>{{ source.source }}</td>
             <td>{{ source.count }}</td>
-
-
         </tr>
 
         </tbody>
