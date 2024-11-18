@@ -180,6 +180,8 @@ class StartCodesHandlerController extends Controller
         $request_id = $data[2] ?? null;
         $utm = $data[3] ?? null;
 
+        Log::info("utm=>". print_r($data, true));
+
         $channel = $bot->order_channel ??
             null;
 
