@@ -79,11 +79,11 @@ class StatisticLogicFactory
         $orders = Order::query()
             ->where("bot_id", $botId)
             ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-            ->orderBy("created_at", "desc")
+            ->orderBy($sortBy, $direction)
             ->get();
 
         // Обработка заказов
-        $productsData = $this->processOrders($orders, $sortBy);
+        $productsData = $this->processOrders($orders);
 
         // Суммарные запросы
         $summaryData = $this->getSummaryData($botId, $startOfMonth, $endOfMonth);
@@ -114,7 +114,7 @@ class StatisticLogicFactory
         ];
     }
 
-    private function processOrders($orders, $sortBy): array
+    private function processOrders($orders): array
     {
         $products = [];
         $totalCount = 0;
@@ -160,7 +160,7 @@ class StatisticLogicFactory
 
         return [
             'orders' => [
-                'products' => $productsCollection->sortBy($sortBy)->values()->all(),
+                'products' => $productsCollection->values()->all(),
                 'total_count' => $totalCount,
                 'total_price' => $totalPrice,
             ]
