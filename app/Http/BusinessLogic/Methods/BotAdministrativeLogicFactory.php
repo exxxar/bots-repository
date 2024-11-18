@@ -988,7 +988,8 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                             false
                         ));
 
-                        BotManager::bot()->runPage($page->id);
+                        BotManager::bot()
+                            ->runPage($page->id, $this->bot, $this->botUser);
                         break;
                     }
                 }
