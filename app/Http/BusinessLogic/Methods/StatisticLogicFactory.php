@@ -301,7 +301,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
     /**
      * @throws HttpException
      */
-    public function traffic($startAt, $endAt, $needAll = false, $direction = 'desc', $sortBy = 'created_at'): object
+    public function traffic($startAt, $endAt, $needAll = false, $direction = 'desc', $sortBy = 'created_at'): array
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(403, "Не выполнены условия функции");
@@ -344,7 +344,8 @@ ORDER  BY `created_at` ASC"))->get();
                 ->sortBy($sortBy);
 
         return $result
-            ->values()->all();
+            ->values()
+            ->all();
     }
 
 }
