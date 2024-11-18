@@ -630,7 +630,7 @@ class BotManager extends BotCore
                         ]);
                     }
 
-
+                    return;
                 } else {
                     $tmpTotalAmount = $page->cashback;
 

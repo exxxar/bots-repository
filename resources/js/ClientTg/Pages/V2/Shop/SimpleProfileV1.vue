@@ -4,7 +4,7 @@
         v-if="botUser"><!---->
 
         <div class="row">
-            <div class="col-12" v-if="!botUser.is_vip">
+            <div class="col-12">
                 <form
                     v-on:submit.prevent="submit" class="row mb-0">
 
@@ -56,14 +56,6 @@
                     </div>
                 </form>
 
-            </div>
-
-            <div class="col-12" v-if="botUser.is_vip">
-                <div class="alert alert-light">
-                    <h6 class="text-primary text-center fw-bold">Ваши данные:</h6>
-                    <p class="mb-2 d-flex justify-content-between">Имя: <span class="fw-bold text-primary">{{ botUser.name || 'Не указано' }}</span></p>
-                    <p class="mb-2 d-flex justify-content-between" >Телефон: <span class="fw-bold text-primary">{{ botUser.phone || 'Не указано' }}</span></p>
-                </div>
             </div>
         </div>
 
