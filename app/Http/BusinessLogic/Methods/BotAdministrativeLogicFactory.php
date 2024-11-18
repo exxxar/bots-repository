@@ -953,8 +953,8 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
 
         if (count($actions ?? []) > 0) {
             foreach ($actions as $action) {
-                $data = (array)$action->data;
-                $success = isset($data["cashback_at"]) && is_null($data["cashback_at"] ?? null);
+                $tmpData = (array)$action->data;
+                $success = isset($tmpData["cashback_at"]) && is_null($tmpData["cashback_at"] ?? null);
 
                 if ($success) {
                     $page = BotPage::query()
