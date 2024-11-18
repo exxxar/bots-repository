@@ -956,7 +956,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
         if (count($actions ?? []) > 0) {
             foreach ($actions as $action) {
                 Log::info("action id=".$action->id);
-                $tmpData =$action->data;
+                $tmpData = (object)$action->data;
                 $success = isset($tmpData->cashback_at); //&& strlen(trim($tmpData["cashback_at"] ?? ''))==0;
 
                 Log::info("success=>" . print_r($success, true)."<====>".print_r($tmpData, true));
