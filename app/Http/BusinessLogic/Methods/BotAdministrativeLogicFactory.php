@@ -951,10 +951,11 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             ->orderBy("created_at", "desc")
             ->get();
 
-        Log::info("actions=>" . (print_r($actions->toArray(),true)));
+        //Log::info("actions=>" . (print_r($actions->toArray(),true)));
         Log::info("count > 0=>" . (count($actions ?? []) > 0));
         if (count($actions ?? []) > 0) {
             foreach ($actions as $action) {
+                Log::info("action id=".$action->id);
                 $tmpData = (array)$action->data;
                 $success = isset($tmpData["cashback_at"]) && is_null($tmpData["cashback_at"] ?? null);
 
