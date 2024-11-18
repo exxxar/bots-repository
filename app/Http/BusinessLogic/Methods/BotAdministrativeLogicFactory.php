@@ -957,10 +957,14 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             foreach ($actions as $action) {
                 Log::info("action id=".$action->id);
                 $tmpData = (object)$action->data;
-                $success = isset($tmpData->cashback_at); //&& strlen(trim($tmpData["cashback_at"] ?? ''))==0;
+                $success = hasKey($tmpData->cashback_at);
 
                 Log::info("success=>" . print_r($success, true)."<====>".print_r($tmpData, true));
                 if ($success) {
+
+                    if (!is_null($tmpData->cashback_at))
+                        continue;
+
                     $page = BotPage::query()
                         ->where("bot_id", $action->bot_id)
                         ->where("bot_menu_slug_id", $action->slug_id)
