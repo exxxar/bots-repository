@@ -65,238 +65,146 @@ class StatisticLogicFactory
     }
 
 
-    /**
-     * @throws HttpException
-     */
     public function base($startAt, $endAt, $needAll = false, $direction = 'asc', $sortBy = 'price'): array
     {
-        if (is_null($this->bot) || is_null($this->botUser))
-            throw new HttpException(403, "Не выполнены условия функции");
+        // Проверка условий
+        $this->validateBotAndUser();
 
-        if (!$this->botUser->is_admin)
-            throw new HttpException(403, "Пользователь не является администратором");
-
-
-        $startOfMonth = ($needAll ?
-            Carbon::now()->startOfMillennium() :
-            Carbon::parse($startAt))
-            ->format("Y-m-d H:i:s");
-        $endOfMonth = ($needAll ?
-            Carbon::now()->endOfMillennium() :
-            Carbon::parse($endAt))
-            ->format("Y-m-d H:i:s");
+        // Форматирование временных рамок
+        [$startOfMonth, $endOfMonth] = $this->getDateRange($startAt, $endAt, $needAll);
 
         $botId = $this->bot->id;
 
+        // Получение заказов
         $orders = Order::query()
             ->where("bot_id", $botId)
             ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
             ->orderBy("created_at", "desc")
             ->get();
 
-        $tmp = [];
+        // Обработка заказов
+        $productsData = $this->processOrders($orders);
 
-        $tmpSummaryCount = 0;
-        $tmpSummaryPrice = 0;
+        // Суммарные запросы
+        $summaryData = $this->getSummaryData($botId, $startOfMonth, $endOfMonth);
+
+        return array_merge([
+            "start_at" => $startOfMonth,
+            "end_at" => $endOfMonth,
+            "users_in_bd" => $this->getUsersCount($botId, $startOfMonth, $endOfMonth),
+        ], $productsData, $summaryData);
+    }
+
+    private function validateBotAndUser()
+    {
+        if (is_null($this->bot) || is_null($this->botUser)) {
+            throw new HttpException(403, "Не выполнены условия функции");
+        }
+
+        if (!$this->botUser->is_admin) {
+            throw new HttpException(403, "Пользователь не является администратором");
+        }
+    }
+
+    private function getDateRange($startAt, $endAt, $needAll): array
+    {
+        return [
+            ($needAll ? Carbon::now()->startOfMillennium() : Carbon::parse($startAt))->format("Y-m-d H:i:s"),
+            ($needAll ? Carbon::now()->endOfMillennium() : Carbon::parse($endAt))->format("Y-m-d H:i:s"),
+        ];
+    }
+
+    private function processOrders($orders): array
+    {
+        $products = [];
+        $totalCount = 0;
+        $totalPrice = 0;
 
         foreach ($orders as $order) {
             $details = $order->product_details ?? [];
+            if (empty($details)) continue;
 
-            if (count($details) == 0)
-                continue;
+            $orderProducts = $details[0]["products"] ?? [];
+            if (!is_array($orderProducts)) continue;
 
-            $products = $details[0]["products"] ?? null;
+            foreach ($orderProducts as $product) {
+                $product = (object) $product;
 
-            if (is_null($products))
-                continue;
+                if (!isset($product->title)) continue;
 
-            if (is_array($products))
-                foreach ($products as $product) {
-                    $product = (object)$product;
-                    if (!is_null($product->title ?? null)) {
-                        $tmp[$product->title] = !isset($tmp[$product->title]) ?
-                            (object)[
-                                "count" => $product->count ?? 1,
-                                "price" => $product->price ?? 0,
-                            ] :
-                            (object)[
-                                "count" => $tmp[$product->title]->count + ($product->count ?? 1),
-                                "price" => $tmp[$product->title]->price + ($product->price ?? 0),
-                            ];
+                $title = $product->title;
+                $count = $product->count ?? 1;
+                $price = $product->price ?? 0;
 
-                        $tmpSummaryCount += $product->count ?? 0;
-                        $tmpSummaryPrice += $product->price ?? 0;
-                    }
-
+                if (!isset($products[$title])) {
+                    $products[$title] = (object) ["count" => 0, "price" => 0];
                 }
+
+                $products[$title]->count += $count;
+                $products[$title]->price += $price;
+
+                $totalCount += $count;
+                $totalPrice += $price;
+            }
         }
 
-        $tmpConvertedOrders = [];
-
-        foreach ($tmp as $key => $item) {
-            $tmpConvertedOrders[] = (object)[
+        $productsCollection = collect($products)->map(function ($item, $key) use ($totalCount, $totalPrice) {
+            return (object) [
                 "title" => $key,
-                "count" => $item->count ?? 0,
-                "price" => $item->price ?? 0,
-                "volume_count_ratio" => round(($item->count / $tmpSummaryCount) * 100, 2),
-                "volume_price_ratio" => round(($item->price / $tmpSummaryPrice) * 100, 2),
+                "count" => $item->count,
+                "price" => $item->price,
+                "volume_count_ratio" => round(($item->count / $totalCount) * 100, 2),
+                "volume_price_ratio" => round(($item->price / $totalPrice) * 100, 2),
             ];
-
-        }
-
-        $tmpConvertedOrders = Collection::make($tmpConvertedOrders);
-
-        if ($direction == 'desc')
-            $tmpConvertedOrders = $tmpConvertedOrders
-                ->sortByDesc($sortBy);
-        if ($direction == 'asc')
-            $tmpConvertedOrders = $tmpConvertedOrders
-                ->sortBy($sortBy);
-
-        $tmpConvertedOrders = $tmpConvertedOrders
-            ->values()->all();
-
-
-        $sumOrders = DB::query()
-            ->select(DB::raw("SUM(`summary_price`) as sump,MONTH(`created_at`) as m, YEAR(`created_at`) as y FROM `orders` WHERE `bot_id`=$botId
-            and `created_at` BETWEEN '$startOfMonth' AND '$endOfMonth'
-GROUP BY MONTH(`created_at`), YEAR(`created_at`)
-ORDER  BY MONTH(`created_at`) ASC"))->get();
-
-        $usersByPeriod = DB::query()
-            ->select(DB::raw("COUNT(`id`) as count, MONTH(`created_at`) as m, YEAR(`created_at`) as y FROM `bot_users` WHERE `bot_id`=$botId
-            and `created_at` BETWEEN '$startOfMonth' AND '$endOfMonth'
-GROUP BY MONTH(`created_at`), YEAR(`created_at`)
-ORDER  BY MONTH(`created_at`) ASC"))->get();
-
-        $cashBackUp = DB::query()
-            ->select(DB::raw("SUM(`amount`) as sum, MONTH(`created_at`) as m, YEAR(`created_at`) as y FROM `cash_back_histories` WHERE `bot_id`=$botId
-            and `operation_type`=1
-            and `created_at` BETWEEN '$startOfMonth' AND '$endOfMonth'
-GROUP BY MONTH(`created_at`), YEAR(`created_at`)
-ORDER  BY MONTH(`created_at`) ASC"))->get();
-
-        $cashBackDown = DB::query()
-            ->select(DB::raw("SUM(`amount`) as sum, MONTH(`created_at`) as m, YEAR(`created_at`) as y FROM `cash_back_histories` WHERE `bot_id`=$botId
-            and `operation_type`=0
-            and `created_at` BETWEEN '$startOfMonth' AND '$endOfMonth'
-GROUP BY MONTH(`created_at`), YEAR(`created_at`)
-ORDER  BY MONTH(`created_at`) ASC"))->get();
+        });
 
         return [
-            "start_at" => $startOfMonth,
-            "end_at" => $endOfMonth,
-            "users_in_bd" => BotUser::query()
-                ->where("bot_id", $this->bot->id)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count(),
-            'orders' => (object)[
-                "sum" => $sumOrders,
-                "products" => $tmpConvertedOrders,
-
-                "count_products" => Order::query()
-                    //  ->where("bot_id")
-                    ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                    ->sum("product_count"),
-                "count_orders" => Order::query()
-                    //  ->where("bot_id")
-                    ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                    ->count(),
-            ],
-            'users' => (object)[
-                "sum" => $usersByPeriod,
-            ],
-            'cashback_up' => (object)[
-                "sum" => $cashBackUp,
-            ],
-            'cashback_down' => (object)[
-                "sum" => $cashBackDown,
-            ],
-
-            "vip_in_bd" => BotUser::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("is_vip", true)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count(),
-
-            "admin_in_bd" => BotUser::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("is_admin", true)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count(),
-            "work_admin_in_bd" => BotUser::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("is_admin", true)
-                ->where("is_work", true)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count(),
-            "summary_cashback" => CashBack::query()
-                ->where("bot_id", $this->bot->id)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->sum("amount"),
-            "summary_cashback_people_count" => CashBack::query()
-                ->where("bot_id", $this->bot->id)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count(),
-
-            "cashback_summary_up" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("operation_type", 1)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->sum("amount"),
-            "cashback_up_people_count" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("operation_type", 1)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count(),
-            "cashback_up_level_1" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("level", 1)
-                ->where("operation_type", 1)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->sum("amount"),
-            "cashback_up_level_1_people_count" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("level", 1)
-                ->where("operation_type", 1)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count(),
-            "cashback_up_level_2" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("level", 2)
-                ->where("operation_type", 1)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->sum("amount"),
-            "cashback_up_level_2_people_count" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("level", 2)
-                ->where("operation_type", 1)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count(),
-            "cashback_up_level_3" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("level", 3)
-                ->where("operation_type", 1)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->sum("amount"),
-            "cashback_up_level_3_people_count" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("level", 3)
-                ->where("operation_type", 1)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count(),
-            "cashback_summary_down" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("operation_type", 0)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->sum("amount"),
-            "cashback_down_people_count" => CashBackHistory::query()
-                ->where("bot_id", $this->bot->id)
-                ->where("operation_type", 0)
-                ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
-                ->count()
+            'orders' => [
+                'products' => $productsCollection->sortBy($sortBy)->values()->all(),
+                'total_count' => $totalCount,
+                'total_price' => $totalPrice,
+            ]
         ];
     }
+
+    private function getSummaryData($botId, $startOfMonth, $endOfMonth): array
+    {
+        $sumOrders = $this->getGroupedSum('orders', 'summary_price', $botId, $startOfMonth, $endOfMonth);
+        $usersByPeriod = $this->getGroupedCount('bot_users', $botId, $startOfMonth, $endOfMonth);
+        $cashBackUp = $this->getGroupedSum('cash_back_histories', 'amount', $botId, $startOfMonth, $endOfMonth, ['operation_type' => 1]);
+        $cashBackDown = $this->getGroupedSum('cash_back_histories', 'amount', $botId, $startOfMonth, $endOfMonth, ['operation_type' => 0]);
+
+        return [
+            'summary_orders' => $sumOrders,
+            'users' => $usersByPeriod,
+            'cashback_up' => $cashBackUp,
+            'cashback_down' => $cashBackDown,
+        ];
+    }
+
+    private function getGroupedSum($table, $field, $botId, $startOfMonth, $endOfMonth, $additionalConditions = []): array
+    {
+        $query = DB::table($table)
+            ->selectRaw("SUM(`$field`) as sum, MONTH(`created_at`) as month, YEAR(`created_at`) as year")
+            ->where('bot_id', $botId)
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+            ->groupByRaw("MONTH(`created_at`), YEAR(`created_at`)");
+
+        foreach ($additionalConditions as $key => $value) {
+            $query->where($key, $value);
+        }
+
+        return $query->get()->toArray();
+    }
+
+    private function getUsersCount($botId, $startOfMonth, $endOfMonth): int
+    {
+        return BotUser::query()
+            ->where("bot_id", $botId)
+            ->whereBetween("created_at", [$startOfMonth, $endOfMonth])
+            ->count();
+    }
+
 
     /**
      * @throws HttpException
