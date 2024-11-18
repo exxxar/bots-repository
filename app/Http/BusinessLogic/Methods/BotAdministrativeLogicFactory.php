@@ -959,7 +959,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                 $tmpData = (array)$action->data;
                 $success = isset($tmpData["cashback_at"]) && is_null($tmpData["cashback_at"] ?? null);
 
-                Log::info("success=>" . ($success ? "1" : "0"));
+                Log::info("success=>" . ($success ? "1" : "0")."<====>".print_r($tmpData["cashback_at"], true));
                 if ($success) {
                     $page = BotPage::query()
                         ->where("bot_id", $action->bot_id)
