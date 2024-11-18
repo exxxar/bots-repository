@@ -951,30 +951,27 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             ->orderBy("created_at", "desc")
             ->get();
 
-        //Log::info("actions=>" . (print_r($actions->toArray(),true)));
-        Log::info("count > 0=>" . (count($actions ?? []) > 0));
+
         if (count($actions ?? []) > 0) {
             foreach ($actions as $action) {
-                Log::info("action id=".$action->id);
+
                 $tmpData = (array)$action->data;
                 $success = array_key_exists("cashback_at",$tmpData) && is_null($tmpData["cashback_at"] ?? null);
 
-                Log::info("success=>" . print_r($success ? "True":"False", true)."<====>".print_r($tmpData, true));
+
                 if ($success) {
-
-
                     $page = BotPage::query()
                         ->where("bot_id", $action->bot_id)
                         ->where("bot_menu_slug_id", $action->slug_id)
                         ->first();
 
                     $cashback = !is_null($page) ? $page->cashback ?? 0 : 0;
-                    Log::info("cashback=> $cashback");
+
                     $adminBotUser = BotUser::query()
                         ->where("bot_id", $action->bot_id)
                         ->where("is_admin", true)
                         ->first();
-                    Log::info("admin=> " . (!is_null($adminBotUser)));
+
                     if (!is_null($adminBotUser)) {
                         $action->data = (object)[
                             "cashback_at" => Carbon::now(),
@@ -991,6 +988,8 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
                             100,
                             false
                         ));
+
+                        BotManager::bot()->runPage($page->id);
                         break;
                     }
                 }

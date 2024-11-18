@@ -901,8 +901,10 @@ abstract class BotCore
 
                 if (count($actions ?? []) > 0) {
                     foreach ($actions as $action) {
-                        $data = (array)$action->data;
-                        $success = isset($data["cashback_at"]) && is_null($data["cashback_at"] ?? null);
+
+                        $tmpData = (array)$action->data;
+                        $success = array_key_exists("cashback_at",$tmpData) && is_null($tmpData["cashback_at"] ?? null);
+
 
                         if ($success) {
                             $page = BotPage::query()
@@ -933,6 +935,8 @@ abstract class BotCore
                                     100,
                                     false
                                 ));
+
+                                $this->runPage($page->id);
                                 break;
                             }
                         }
