@@ -83,7 +83,7 @@ class StatisticLogicFactory
             ->get();
 
         // Обработка заказов
-        $productsData = $this->processOrders($orders);
+        $productsData = $this->processOrders($orders, $sortBy);
 
         // Суммарные запросы
         $summaryData = $this->getSummaryData($botId, $startOfMonth, $endOfMonth);
@@ -114,7 +114,7 @@ class StatisticLogicFactory
         ];
     }
 
-    private function processOrders($orders): array
+    private function processOrders($orders, $sortBy): array
     {
         $products = [];
         $totalCount = 0;
