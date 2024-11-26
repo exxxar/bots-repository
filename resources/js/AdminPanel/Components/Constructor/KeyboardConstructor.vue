@@ -453,7 +453,10 @@ export default {
     watch: {
         settings: {
             handler: function (newValue) {
-                this.$emit("save-settings", this.settings)
+                this.$emit("update:modelValue", {
+                    menu: this.keyboard,
+                    settings: this.settings,
+                })
             },
             deep: true
         },
@@ -474,7 +477,10 @@ export default {
         keyboard: {
             handler: function (newValue) {
                 this.save()
-                this.$emit("update:modelValue", this.keyboard)
+                this.$emit("update:modelValue", {
+                    menu: this.keyboard,
+                    settings: this.settings,
+                })
             },
             deep: true
         }

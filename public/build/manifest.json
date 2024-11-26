@@ -44,8 +44,8 @@
     "src": "TelegramChannelHelper.css"
   },
   "V1Layout.css": {
-    "file": "assets/V1Layout-5ac8cdc0.css",
-    "src": "resources/js/ClientTg/Pages/MainV2.css"
+    "file": "assets/MainV2-5ac8cdc0.css",
+    "src": "V1Layout.css"
   },
   "_BotForm-32b5fd44.js": {
     "css": [
@@ -58,13 +58,13 @@
       "_TelegramChannelHelper-2f9bd8d0.js"
     ]
   },
-  "_BotList-eacbe52e.js": {
+  "_BotList-7bc90f87.js": {
     "css": [
       "assets/BotList-ff787f35.css"
     ],
-    "file": "assets/BotList-eacbe52e.js",
+    "file": "assets/BotList-7bc90f87.js",
     "imports": [
-      "_MailingTable-d1d45b51.js",
+      "_MailingTable-51b593a7.js",
       "_index.es-eef44641.js",
       "_SlugForm-30aab417.js",
       "_TelegramChannelHelper-2f9bd8d0.js",
@@ -117,11 +117,11 @@
       "_Pagination-b98a644c.js"
     ]
   },
-  "_MailingTable-d1d45b51.js": {
+  "_MailingTable-51b593a7.js": {
     "css": [
       "assets/MailingTable-98e4b43a.css"
     ],
-    "file": "assets/MailingTable-d1d45b51.js",
+    "file": "assets/MailingTable-51b593a7.js",
     "imports": [
       "_index.es-eef44641.js",
       "_TelegramChannelHelper-2f9bd8d0.js",
@@ -193,11 +193,11 @@
       "_index.es-eef44641.js"
     ]
   },
-  "_V1Layout-5114e379.js": {
+  "_V1Layout-d20bffeb.js": {
     "css": [
-      "assets/V1Layout-5ac8cdc0.css"
+      "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-5114e379.js",
+    "file": "assets/V1Layout-d20bffeb.js",
     "imports": [
       "_index.es-eef44641.js",
       "resources/js/ClientTg/app.js"
@@ -276,17 +276,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-f0a5deb6.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-f0a5deb6.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-f0a5deb6.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/ClientTg/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-fe518ac3.js",
@@ -362,16 +362,16 @@
       "assets/BotPage-c29596a0.css",
       "assets/ChatMini-5a929b50.css"
     ],
-    "file": "assets/BotPage-a6f22473.js",
+    "file": "assets/BotPage-b4d1afb9.js",
     "imports": [
       "_MainAdminLayout-ae6d5516.js",
-      "_BotList-eacbe52e.js",
+      "_BotList-7bc90f87.js",
       "_CompanyList-f2dea43e.js",
       "_BotForm-32b5fd44.js",
       "_index.es-eef44641.js",
       "_carousel.es-b2cc3a36.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_MailingTable-d1d45b51.js",
+      "_MailingTable-51b593a7.js",
       "_TelegramChannelHelper-2f9bd8d0.js",
       "_Pagination-b98a644c.js",
       "_v4-4a60fe23.js",
@@ -438,11 +438,11 @@
     "css": [
       "assets/Dashboard-db3e581c.css"
     ],
-    "file": "assets/Dashboard-0721c5b9.js",
+    "file": "assets/Dashboard-90bfe2d8.js",
     "imports": [
       "_CompanyList-f2dea43e.js",
-      "_BotList-eacbe52e.js",
-      "_MailingTable-d1d45b51.js",
+      "_BotList-7bc90f87.js",
+      "_MailingTable-51b593a7.js",
       "_vue3-charts.esm-246c76d8.js",
       "_BotForm-32b5fd44.js",
       "_index.es-eef44641.js",
@@ -462,11 +462,11 @@
     "css": [
       "assets/ChatMini-5a929b50.css"
     ],
-    "file": "assets/MailPage-37c1fee7.js",
+    "file": "assets/MailPage-deb90291.js",
     "imports": [
       "_MainAdminLayout-ae6d5516.js",
       "_CompanyList-f2dea43e.js",
-      "_MailingTable-d1d45b51.js",
+      "_MailingTable-51b593a7.js",
       "_index.es-eef44641.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_Pagination-b98a644c.js",
@@ -601,7 +601,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-049d1968.js",
+    "file": "assets/app-7a5d5eae.js",
     "imports": [
       "_index.es-eef44641.js",
       "_index-c2623864.js"
@@ -617,11 +617,11 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-4ce1d9f2.js",
+    "file": "assets/MainV1-7e1d9c86.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-eef44641.js",
-      "_V1Layout-5114e379.js",
+      "_V1Layout-d20bffeb.js",
       "resources/js/ClientTg/app.js",
       "_BotMediaList-1f0d9b99.js",
       "_Pagination-b98a644c.js",
@@ -638,14 +638,14 @@
     "src": "resources/js/ClientTg/Pages/MainV1.vue"
   },
   "resources/js/ClientTg/Pages/MainV2.css": {
-    "file": "assets/V1Layout-5ac8cdc0.css",
-    "src": "resources/js/ClientTg/Pages/MainV2.css"
+    "file": "assets/MainV2-5ac8cdc0.css",
+    "src": "V1Layout.css"
   },
   "resources/js/ClientTg/Pages/MainV2.vue": {
     "css": [
-      "assets/V1Layout-5ac8cdc0.css"
+      "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/MainV2-b0757887.js",
+    "file": "assets/MainV2-edd7157d.js",
     "imports": [
       "_index.es-eef44641.js",
       "resources/js/ClientTg/app.js",
@@ -674,9 +674,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Error.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-63d7f364.js",
+    "file": "assets/Result-cb72c1e9.js",
     "imports": [
-      "_V1Layout-5114e379.js",
+      "_V1Layout-d20bffeb.js",
       "resources/js/ClientTg/app.js",
       "_index.es-eef44641.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -719,7 +719,7 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/CashReceipt.vue"
   },
   "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue": {
-    "file": "assets/CashBack-d683f2de.js",
+    "file": "assets/CashBack-04bc8b77.js",
     "imports": [
       "resources/js/ClientTg/app.js",
       "_index.es-eef44641.js",
@@ -739,9 +739,9 @@
     "src": "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-20fb1d52.js",
+    "file": "assets/Result-7c8cc793.js",
     "imports": [
-      "_V1Layout-5114e379.js",
+      "_V1Layout-d20bffeb.js",
       "_index.es-eef44641.js",
       "resources/js/ClientTg/app.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -777,7 +777,7 @@
       "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-58ff78e2.js",
+    "file": "assets/app-f32ec64e.js",
     "imports": [
       "_index.es-eef44641.js",
       "__plugin-vue_export-helper-c27b6911.js",

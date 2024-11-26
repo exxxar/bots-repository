@@ -360,7 +360,7 @@ class BotPageLogicFactory
         $tmp->images = count($photos) == 0 ? null : $photos;
 
         $replyKeyboard = $tmp->reply_keyboard ?? null;
-        $replyKeyboardSettings = $tmp->reply_keyboard_settings ?? null;
+
         $inlineKeyboard = $tmp->inline_keyboard ?? null;
 
         $tmp->reply_keyboard_id = null;
@@ -377,7 +377,11 @@ class BotPageLogicFactory
 
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($tmp->reply_keyboard);
-            $replyKeyboardSettings = is_null($replyKeyboardSettings) ? null : json_decode($replyKeyboardSettings ?? '[]');
+
+            $replyKeyboardSettings = $keyboard->settings ?? null;
+            $replyKeyboardMenu =  $keyboard->menu ?? null;
+
+            $keyboard = $this->recursiveMenuFix($replyKeyboardMenu);
 
             $replyKeyboardSettings = (array)[
                 "resize_keyboard" => ($replyKeyboardSettings->resize_keyboard ?? "true") == "true",
@@ -386,7 +390,6 @@ class BotPageLogicFactory
                 "is_persistent" => ($replyKeyboardSettings->is_persistent ?? "true") == "true",
             ];
 
-            $keyboard = $this->recursiveMenuFix($keyboard);
 
             unset($tmp->reply_keyboard);
 
@@ -464,9 +467,6 @@ class BotPageLogicFactory
         $this->bot->updated_at = Carbon::now();
         $this->bot->save();
 
-
-        $page = BotPage::query()->find($page->id);
-
         return new BotPageResource($page);
     }
 
@@ -533,13 +533,16 @@ class BotPageLogicFactory
 
         $replyKeyboard = $tmp->reply_keyboard ?? null;
         $inlineKeyboard = $tmp->inline_keyboard ?? null;
-        $replyKeyboardSettings = $tmp->reply_keyboard_settings ?? null;
+
 
         if (!is_null($replyKeyboard)) {
             $keyboard = json_decode($tmp->reply_keyboard);
-            $replyKeyboardSettings = is_null($replyKeyboardSettings) ? null : json_decode($replyKeyboardSettings ?? '[]');
 
-            $keyboard = $this->recursiveMenuFix($keyboard);
+            $replyKeyboardSettings = $keyboard->settings ?? null;
+            $replyKeyboardMenu =  $keyboard->menu ?? null;
+
+
+            $keyboard = $this->recursiveMenuFix($replyKeyboardMenu);
 
             unset($tmp->reply_keyboard);
 
@@ -555,6 +558,7 @@ class BotPageLogicFactory
                 "input_field_placeholder" => $replyKeyboardSettings->input_field_placeholder ?? null,
                 "is_persistent" => ($replyKeyboardSettings->is_persistent ?? "true") == "true",
             ];
+
 
 
             if (!is_null($menu))
@@ -641,6 +645,8 @@ class BotPageLogicFactory
 
         $this->bot->updated_at = Carbon::now();
         $this->bot->save();
+
+        $page->refresh();
 
         return new BotPageResource($page);
     }

@@ -410,12 +410,11 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                 v-on:select="selectReplyKeyboard"
                                 :select-mode="true"/>
 
+
                             <BotMenuConstructor
                                 v-else
                                 :type="'reply'"
-                                :save-settings="saveSettings"
                                 v-model="pageForm.reply_keyboard"/>
-
 
                             <div class="form-check form-switch">
                                 <input class="form-check-input"
@@ -1750,7 +1749,7 @@ export default {
                 sticker: null,
                 reply_keyboard_title: null,
                 reply_keyboard: null,
-                reply_keyboard_settings: null,
+
                 inline_keyboard: null,
                 is_external: false,
                 need_log_user_action: false,
@@ -2279,7 +2278,7 @@ export default {
                 documents: [],
                 reply_keyboard_title: null,
                 reply_keyboard_id: null,
-                reply_keyboard_settings: null,
+
                 inline_keyboard_id: null,
 
                 next_page_id: null,
@@ -2417,9 +2416,16 @@ export default {
         saveInlineKeyboard(keyboard) {
             this.pageForm.inline_keyboard = keyboard
         },
-        saveSettings(e) {
-            this.pageForm.reply_keyboard_settings = e
-            // console.log("settings", e)
+        saveSettings(settings) {
+
+            console.log("settings save", settings)
+            this.pageForm.reply_keyboard_settings = {
+                resize_keyboard: settings.resize_keyboard || true,
+                one_time_keyboard: settings.one_time_keyboard || false,
+                input_field_placeholder: settings.input_field_placeholder || null,
+                is_persistent: settings.is_persistent || false,
+            }
+
         },
         selectReplyKeyboard(keyboard) {
             this.pageForm.reply_keyboard = keyboard
