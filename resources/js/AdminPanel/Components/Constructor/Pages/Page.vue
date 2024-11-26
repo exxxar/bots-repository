@@ -413,6 +413,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                             <BotMenuConstructor
                                 v-else
                                 :type="'reply'"
+                                :save-settings="saveSettings"
                                 v-model="pageForm.reply_keyboard"/>
 
 
@@ -2394,6 +2395,10 @@ export default {
         },
         saveInlineKeyboard(keyboard) {
             this.pageForm.inline_keyboard = keyboard
+        },
+        saveSettings(e){
+            this.pageForm.reply_keyboard_settings = e
+            // console.log("settings", e)
         },
         selectReplyKeyboard(keyboard) {
             this.pageForm.reply_keyboard = keyboard

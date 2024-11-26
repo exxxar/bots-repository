@@ -511,6 +511,7 @@ export default {
         this.pageModal = new bootstrap.Modal(document.getElementById('page-list-in-keyboard-' + this.uuid), {})
         this.inlineQueryModal = new bootstrap.Modal(document.getElementById('inline-query-list-in-keyboard-' + this.uuid), {})
 
+        console.log("settings", this.modelValue?.settings)
 
         this.$nextTick(() => {
             this.keyboard = this.modelValue?.menu || []
