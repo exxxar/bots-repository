@@ -1279,7 +1279,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                         </p>
 
                         <template v-if="need_cashback_page">
-                            <div class="row d-flex justify-content-center my-2" >
+                            <div class="row d-flex justify-content-center my-2">
                                 <div class="col-md-4">
                                     <div class="form-floating mb-2 w-100">
                                         <input type="number"
@@ -1301,8 +1301,9 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                                 'btn-primary': pageForm.cashback_config.need_request_user_data ,
                                                 'btn-outline-primary': !pageForm.cashback_config.need_request_user_data
                                             }"
-                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill mr-2" type="button">
-                                                Да
+                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill mr-2"
+                                            type="button">
+                                            Да
                                         </button>
                                         <button
                                             @click="pageForm.cashback_config.need_request_user_data=!pageForm.cashback_config.need_request_user_data"
@@ -1310,7 +1311,8 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                                 'btn-primary': !pageForm.cashback_config.need_request_user_data ,
                                                 'btn-outline-primary': pageForm.cashback_config.need_request_user_data
                                             }"
-                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill"
+                                            type="button">
                                             Нет
                                         </button>
                                     </div>
@@ -1319,10 +1321,12 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
 
                             </div>
 
-                            <div class="row justify-content-center" v-if="pageForm.cashback_config.need_request_user_data">
+                            <div class="row justify-content-center"
+                                 v-if="pageForm.cashback_config.need_request_user_data">
                                 <div class="col-md-12 my-3">
                                     <h6>Упрощенный вариант сбора данных?</h6>
-                                    <p class="fst-italic">Упрощенный вариант подразумевает получение только номера телефона!</p>
+                                    <p class="fst-italic">Упрощенный вариант подразумевает получение только номера
+                                        телефона!</p>
                                     <div class="d-flex d-flex justify-content-center">
                                         <button
                                             @click="pageForm.cashback_config.simple_form=!pageForm.cashback_config.simple_form"
@@ -1330,7 +1334,8 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                                 'btn-primary': pageForm.cashback_config.simple_form ,
                                                 'btn-outline-primary': !pageForm.cashback_config.simple_form
                                             }"
-                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill mr-2" type="button">
+                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill mr-2"
+                                            type="button">
                                             Да
                                         </button>
                                         <button
@@ -1339,7 +1344,8 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                                 'btn-primary': !pageForm.cashback_config.simple_form ,
                                                 'btn-outline-primary': pageForm.cashback_config.simple_form
                                             }"
-                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill" type="button">
+                                            class="d-inline-flex align-items-center btn btn-lg px-4 rounded-pill"
+                                            type="button">
                                             Нет
                                         </button>
                                     </div>
@@ -1355,7 +1361,8 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                         <label for="floatingTextarea2">
                                             Пояснение для пользователя
 
-                                            <span v-if="(pageForm.cashback_config.description||'').length>0">{{pageForm.cashback_config.description.length}} / 255</span>
+                                            <span
+                                                v-if="(pageForm.cashback_config.description||'').length>0">{{ pageForm.cashback_config.description.length }} / 255</span>
                                         </label>
                                     </div>
                                 </div>
@@ -2148,9 +2155,22 @@ export default {
                 this.pageForm.images = page.images || []
                 this.pageForm.sticker = page.sticker || null
                 this.pageForm.reply_keyboard_title = page.reply_keyboard_title || null
+
                 this.pageForm.reply_keyboard_id = page.reply_keyboard_id || null
                 this.pageForm.inline_keyboard_id = page.inline_keyboard_id || null
                 this.pageForm.reply_keyboard = page.replyKeyboard || null
+
+                if (this.pageForm.reply_keyboard != null) {
+                    let settings = page.reply_keyboard?.settings || null
+                    if (settings != null)
+                        this.pageForm.reply_keyboard_settings = {
+                            resize_keyboard: settings.resize_keyboard || true,
+                            one_time_keyboard: settings.one_time_keyboard || false,
+                            input_field_placeholder: settings.input_field_placeholder || null,
+                            is_persistent: settings.is_persistent || false,
+                        }
+                }
+
                 this.pageForm.inline_keyboard = page.inlineKeyboard || null
                 this.pageForm.next_page_id = page.next_page_id || null
                 this.pageForm.next_bot_dialog_command_id = page.next_bot_dialog_command_id || null
@@ -2259,6 +2279,7 @@ export default {
                 documents: [],
                 reply_keyboard_title: null,
                 reply_keyboard_id: null,
+                reply_keyboard_settings: null,
                 inline_keyboard_id: null,
 
                 next_page_id: null,
@@ -2396,7 +2417,7 @@ export default {
         saveInlineKeyboard(keyboard) {
             this.pageForm.inline_keyboard = keyboard
         },
-        saveSettings(e){
+        saveSettings(e) {
             this.pageForm.reply_keyboard_settings = e
             // console.log("settings", e)
         },
