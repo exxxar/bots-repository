@@ -279,7 +279,7 @@ export default {
     margin: 0;
     //height: 400px;
     min-width: 300px;
-
+    height: 100vh;
     box-sizing: border-box;
 
     .ps-container {

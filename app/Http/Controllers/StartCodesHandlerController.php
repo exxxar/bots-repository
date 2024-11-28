@@ -184,11 +184,17 @@ class StartCodesHandlerController extends Controller
             null;
 
         TrafficSource::query()->updateOrCreate([
-            'bot_id'=>$bot->id,
-            'bot_user_id'=>$botUser->id,
-            'comment'=>"ссылка с меткой",
-            'source'=>$utm
+            'bot_id' => $bot->id,
+            'bot_user_id' => $botUser->id,
+            'comment' => "ссылка с меткой",
+            'source' => $utm
         ]);
+
+
+        $this->testReferrals($bot, $request_id);
+
+        if ($botUser->is_admin)
+            $this->adminLogic($bot, $request_id, $code);
 
         if (!is_null($channel))
             BotMethods::bot()
@@ -198,6 +204,124 @@ class StartCodesHandlerController extends Controller
         if ($code == "004")
             BotManager::bot()->runPage($request_id);
 
+    }
+
+    protected function adminLogic($bot, $id, $code)
+    {
+        $requestBotUser = BotUser::query()
+            ->where("bot_id", $bot->id)
+            ->where("telegram_chat_id", $id ?? null)
+            ->first();
+
+        $tmpOrderURIId = "";
+
+        if (!is_null($requestBotUser)) {
+            $order = Order::query()
+                ->where("bot_id", $bot->id)
+                ->where("customer_id", $requestBotUser->id)
+                ->orderBy("created_at", "DESC")
+                ->first();
+
+
+            if (!is_null($order))
+                $tmpOrderURIId = "&order_id=$order->id";
+        }
+
+        if ($code == "001" || $code == "003") {
+            $text = "Админ панель";
+            $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$id&hide_menu$tmpOrderURIId#/s/admin/clients";
+
+            $requestKeyboard = [
+                [
+                    ["text" => "\xF0\x9F\x8E\xB0Управление клиентом",
+                        "web_app" => [
+                            "url" => $path
+                        ]
+                    ],
+
+                ],
+
+            ];
+
+            BotManager::bot()->replyInlineKeyboard(
+                $text,
+                $requestKeyboard
+            );
+        }
+
+    }
+
+    protected function testReferrals($bot, $id)
+    {
+
+        $botUser = BotManager::bot()->currentBotUser();
+        if ($botUser->telegram_chat_id == $id) {
+            BotManager::bot()
+                ->reply(
+                    "Вы перешли по своей собственной ссылке... вы, конечно, себе друг, но CashBack достанется кому-то одному..."
+                );
+
+            BotManager::bot()
+                ->setBot($bot)
+                ->pushCommand("/start");
+            return;
+
+        }
+
+        $userBotUser = BotUser::query()
+            ->where("telegram_chat_id", $id)
+            ->where("bot_id", BotManager::bot()->getSelf()->id)
+            ->first();
+
+        $ref = ReferralHistory::query()
+            ->where("user_sender_id", $userBotUser->user_id ?? null)
+            ->where("user_recipient_id", $botUser->user_id ?? null)
+            ->where("bot_id", $bot->bot_id)
+            ->first();
+
+        if (!is_null($ref))
+            return;
+
+        ReferralHistory::query()->create([
+            'user_sender_id' => $userBotUser->user_id,
+            'user_recipient_id' => $botUser->user_id,
+            'bot_id' => $bot->id,
+            'activated' => true,
+        ]);
+
+        $userName1 = BotMethods::prepareUserName($botUser);
+        $userName2 = BotMethods::prepareUserName($userBotUser);
+
+        $botUser->parent_id = $userBotUser->id;
+        $botUser->save();
+
+        TrafficSource::query()->updateOrCreate([
+            'bot_id' => $bot->id,
+            'bot_user_id' => $botUser->id,
+            'comment' => "реферальная программа",
+            'source' => "$id"
+        ]);
+
+        BotMethods::bot()
+            ->whereId($botUser->bot_id)
+            ->sendMessage(
+                $userBotUser->telegram_chat_id,
+                "По вашей ссылке перешел пользователь $userName1"
+            )
+            ->sendMessage(
+                $botUser->telegram_chat_id,
+                "Вас и вашего друга $userName2 теперь обьеденяет еще и CashBack;)"
+            );
+
+
+        /*        if (is_null($userBotUser)) {
+                    BotManager::bot()->reply("Данный код не корректный!");
+
+                    BotManager::bot()
+                        ->setBot($bot)
+                        ->pushCommand("/start");
+                    return;
+                }*/
     }
 
     public function referralAction(...$data)
@@ -212,101 +336,17 @@ class StartCodesHandlerController extends Controller
         $code = $data[1] ?? null;
         $request_id = $data[2] ?? null;
 
-
-
         $message = $bot->welcome_message ?? null;
 
-        $attachedKeyboard = [];
-        if ($botUser->is_admin) {
+        $this->testReferrals($bot, $request_id);
 
-
-            $requestBotUser = BotUser::query()
-                ->where("bot_id", $bot->id)
-                ->where("telegram_chat_id", $request_id ?? null)
-                ->first();
-
-            $tmpOrderURIId = "";
-
-            if (!is_null($requestBotUser))
-            {
-                $order = Order::query()
-                    ->where("bot_id", $bot->id)
-                    ->where("customer_id", $requestBotUser->id)
-                    ->orderBy("created_at", "DESC")
-                    ->first();
-
-
-                if (!is_null($order))
-                    $tmpOrderURIId = "&order_id=$order->id";
-            }
-
-            switch ($code) {
-                default:
-                case "001":
-                    $text = "Админ панель";
-                    $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu$tmpOrderURIId#/s/admin/clients";
-                    break;
-
-                case "003":
-                    $text = "Обратная связь";
-                    $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&user=$request_id&hide_menu$tmpOrderURIId#/s/admin/clients";
-                    break;
-
-
-            }
-
-
-            $requestKeyboard = [
-                [
-                    ["text" => "\xF0\x9F\x8E\xB0Управление клиентом",
-                        "web_app" => [
-                            "url" => $path
-                        ]
-                    ],
-
-                ],
-
-            ];
-
-
-            /*    $order = Order::query()
-                    ->where("bot_id", $bot->id)
-                    ->where("customer_id", $requestBotUser->id)
-                    ->orderBy("created_at", "DESC")
-                    ->first();
-
-                if (!is_null($order)) {
-                    if (!($order->is_cashback_crediting ?? true)) {
-                        $requestKeyboard[] = [
-                            ["text" => "💸Начислить пользователю CashBack",
-                                "callback_data" => "/auto_send_cashback $request_id"],
-                        ];
-                    }
-
-                    if ($order->status == OrderStatusEnum::NewOrder->value) {
-                        $requestKeyboard[] = [
-                            ["text" => "🚛Передать на доставку",
-                                "callback_data" => "/send_to_delivery $request_id"],
-                        ];
-
-                        $requestKeyboard[] = [
-                            ["text" => "✅Ваш заказ уже готов",
-                                "callback_data" => "/success_complete_order $request_id"],
-                        ];
-                    }
-                }*/
-
-
-            BotManager::bot()->replyInlineKeyboard(
-                $text,
-                $requestKeyboard
-            );
-
-
-        }
+        if ($botUser->is_admin)
+            $this->adminLogic($bot, $request_id, $code);
 
         if ($code == "004") {
-            BotManager::bot()->runPage($request_id);
+            BotManager::bot()
+                ->setBot($bot)
+                ->runPage($request_id);
             return;
         }
 
@@ -317,89 +357,17 @@ class StartCodesHandlerController extends Controller
             return;
         }
 
-
-        if ($code != "011") {
-            BotManager::bot()->reply($message);
-            return;
-        }
-
-        if (BotManager::bot()->currentBotUser()->telegram_chat_id == $request_id) {
-            BotManager::bot()
-                ->reply(
-                    "Вы перешли по своей собственной ссылке... вы, конечно, себе друг, но CashBack достанется кому-то одному..."
-                );
-
-            BotManager::bot()
-                ->setBot($bot)
-                ->pushCommand("/start");
-            return;
-
-        }
-
-        $userBotUser = BotUser::query()
-            ->where("telegram_chat_id", $request_id)
-            ->where("bot_id", BotManager::bot()->getSelf()->id)
-            ->first();
-
-
-        $ref = ReferralHistory::query()
-            ->where("user_sender_id", $userBotUser->user_id ?? null)
-            ->where("user_recipient_id", $botUser->user_id ?? null)
-            ->where("bot_id", $botUser->bot_id)
-            ->first();
-
-        if (is_null($ref)) {
-            ReferralHistory::query()->create([
-                'user_sender_id' => $userBotUser->user_id,
-                'user_recipient_id' => $botUser->user_id,
-                'bot_id' => $botUser->bot_id,
-                'activated' => true,
-            ]);
-
-            $userName1 = BotMethods::prepareUserName($botUser);
-            $userName2 = BotMethods::prepareUserName($userBotUser);
-
-            $botUser->parent_id = $userBotUser->id;
-            $botUser->save();
-
-            TrafficSource::query()->updateOrCreate([
-                'bot_id'=>$bot->id,
-                'bot_user_id'=>$botUser->id,
-                'comment'=>"реферальная программа",
-                'source'=>"$request_id"
-            ]);
-
-            BotMethods::bot()
-                ->whereId($botUser->bot_id)
-                ->sendMessage(
-                    $userBotUser->telegram_chat_id,
-                    "По вашей ссылке перешел пользователь $userName1"
-                )
-                ->sendMessage(
-                    $botUser->telegram_chat_id,
-                    "Вас и вашего друга $userName2 теперь обьеденяет еще и CashBack;)"
-                );
-        }
-
-
-        if (is_null($userBotUser)) {
-            BotManager::bot()->reply("Данный код не корректный!");
-
-            BotManager::bot()
-                ->setBot($bot)
-                ->pushCommand("/start");
-            return;
-        }
-
-        $userBotUser->user_in_location = true;
-        $userBotUser->save();
+        /*      if ($code != "011") {
+                  BotManager::bot()->reply($message);
+                  return;
+              }
+      */
 
         BotManager::bot()->reply($message);
 
         BotManager::bot()
             ->setBot($bot)
             ->pushCommand("/start");
-
 
     }
 

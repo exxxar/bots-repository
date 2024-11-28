@@ -11,6 +11,7 @@ import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
 import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.vue";
 import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm.vue";
+import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
 </script>
 <template>
 
@@ -1361,7 +1362,9 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                             Пояснение для пользователя
 
                                             <span
-                                                v-if="(pageForm.cashback_config.description||'').length>0">{{ pageForm.cashback_config.description.length }} / 255</span>
+                                                v-if="(pageForm.cashback_config.description||'').length>0">{{
+                                                    pageForm.cashback_config.description.length
+                                                }} / 255</span>
                                         </label>
                                     </div>
                                 </div>
@@ -1407,6 +1410,8 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
         </div>
     </div>
 
+
+
     <!-- Modal -->
     <div class="modal fade" id="fast-pages-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -1437,7 +1442,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <div class="row" v-if="bot">
                         <div class="col-12 mb-2 ">
                             <h6 class="d-flex justify-between">
@@ -1607,7 +1611,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                             </button>
                         </div>
                     </form>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Не сохранять</button>
@@ -1634,29 +1637,12 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
         </div>
     </div>
 
-
-    <div class="modal fade" id="page-preview-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <div class="modal-body">
-                    <PagePreview
-                        v-if="page"
-                        :page="page"></PagePreview>
-                    <p v-else>Сперва сохраните страницу</p>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
     <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas"
          data-bs-keyboard="true"
          data-bs-scroll="true"
          data-bs-backdrop="true">
         <div class="offcanvas-header">
-            <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Ваши страницы (кнопки)</h6>
+            <h6 class="offcanvas-title d-none d-sm-block">Ваши страницы (кнопки)</h6>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
@@ -1670,6 +1656,27 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="page-preview"
+         data-bs-keyboard="true"
+         data-bs-scroll="true"
+         data-bs-backdrop="true">
+        <div class="offcanvas-header">
+            <h6 class="offcanvas-title d-none d-sm-block">Демонстрация страницы</h6>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+
+            <PagePreview
+                v-if="page"
+                :page="page"></PagePreview>
+            <p v-else>Сперва сохраните страницу</p>
+
+<!--            <template v-if="bot">
+                <ChatDialog :domain="bot.bot_domain"></ChatDialog>
+            </template>-->
         </div>
     </div>
 
@@ -1687,6 +1694,7 @@ export default {
             need_page_create_from_keyboard: false,
 
             tab: 0,
+
             links: [],
             saveModal: null,
             pageModal: null,
@@ -1971,8 +1979,9 @@ export default {
             scroll: true,
         })
 
-        this.pagePreviewModal = new bootstrap.Modal(document.getElementById('page-preview-modal'), {})
-
+        this.pagePreviewModal = new bootstrap.Offcanvas(document.getElementById('page-preview'), {
+            scroll: true,
+        })
         window.addEventListener("keydown", (e) => {
 
             if (e.ctrlKey && e.keyCode == 8) {
