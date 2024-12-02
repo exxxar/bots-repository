@@ -64,6 +64,7 @@ class ShopScriptController extends SlugController
         ]);
 
         $scriptId = $request->slug;
+        
 
         $bot = \App\Models\Bot::query()
             ->with(["company", "imageMenus"])
@@ -87,7 +88,7 @@ class ShopScriptController extends SlugController
             ->where("id", $scriptId)
             ->where("bot_id", $bot->id)
             ->first();
-
+        
         if (is_null($slug))
             $slug = BotMenuSlug::query()
                 ->where("parent_slug_id", $scriptId)

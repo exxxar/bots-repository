@@ -108,10 +108,15 @@ class BotAdministrativeLogicFactory
 GROUP BY MONTH(`created_at`), YEAR(`created_at`)
 ORDER  BY MONTH(`created_at`) ASC"))->get();
 
+// $o =  BotUser::query()
+//                 ->where("bot_id", $this->bot->id)
+//                 ->where("is_admin", true)
+//                 ->count();
+//                 dd($o);
         return [
             "users_in_bd" => BotUser::query()
                 ->where("bot_id", $this->bot->id)
-                ->count(),
+                ->count(),//+
             'orders' => (object)[
                 "start_at" => $startOfMonth,
                 "end_at" => $endOfMonth,
@@ -267,24 +272,26 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
     public function exportBotStatistic(): void
     {
         $statistics = $this->statistic();
-
+        dd($statistics);
+       
         $name = Str::uuid();
 
         $date = Carbon::now()->format("Y-m-d H-i-s");
 
         Excel::store(new BotStatisticExport($statistics), "$name.xls", "public", \Maatwebsite\Excel\Excel::XLSX);
+////////////////////////////////////////////
+        // BotMethods::bot()
+        //     ->whereBot($this->bot)
+        //     ->sendDocument($this->botUser->telegram_chat_id,
+        //         "Общая статистика бота",
+        //         InputFile::create(
+        //             storage_path("app/public") . "/$name.xls",
+        //             "statistic-$date.xls"
+        //         )
+        //     );
 
-        BotMethods::bot()
-            ->whereBot($this->bot)
-            ->sendDocument($this->botUser->telegram_chat_id,
-                "Общая статистика бота",
-                InputFile::create(
-                    storage_path("app/public") . "/$name.xls",
-                    "statistic-$date.xls"
-                )
-            );
-
-        unlink(storage_path("app/public") . "/$name.xls");
+        // unlink(storage_path("app/public") . "/$name.xls"); 
+        ///////////////////////////////////////////////////////////////
     }
 
 
