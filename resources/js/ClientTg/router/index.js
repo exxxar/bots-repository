@@ -492,9 +492,11 @@ import WheelCustomV2 from "@/ClientTg/Pages/V2/Games/WheelCustom.vue";
 import AdminMenuV2 from "@/ClientTg/Pages/V2/Admin/AdminMenu.vue";
 import BotManagerV2 from "@/ClientTg/Pages/V2/Admin/BotManager.vue";
 import PageManagerV2 from "@/ClientTg/Pages/V2/Admin/Pages.vue";
+import LinkManagerV2 from "@/ClientTg/Pages/V2/Admin/Links.vue";
 import IntegrationsV2 from "@/ClientTg/Pages/V2/Admin/IntegrationMenu.vue";
 
 import AmoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Amo.vue";
+import CdekV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Cdek.vue";
 import DialogsV2 from "@/ClientTg/Pages/V2/Admin/Dialogs.vue";
 import SlugsV2 from "@/ClientTg/Pages/V2/Admin/Slugs.vue";
 import YClientsV2 from "@/ClientTg/Pages/V2/Admin/Integrations/YClients.vue";
@@ -634,7 +636,12 @@ export const simpleRoutes = [
         component: AdminOrdersV2,
         meta: {title: 'Заказы'}
     },
-
+    {
+        name: 'LinkManagerV2',
+        path: simplePrefix + '/admin/links',
+        component: LinkManagerV2,
+        meta: {title: 'UTM-метки'}
+    },
     {
         name: 'StatisticV2',
         path: simplePrefix + '/admin/statistic',
@@ -666,48 +673,48 @@ export const simpleRoutes = [
         name: 'InstaQuestV2',
         path: simplePrefix + '/new-insta-quest',
         component: InstaQuestV2,
-        meta: {title: 'Квест',  hide_menu: true}
+        meta: {title: 'Квест', hide_menu: true}
     },
 
     {
         name: 'FriendsGameV2',
         path: simplePrefix + '/new-friends-game',
         component: FriendsGameV2,
-        meta: {title: 'Квест',  hide_menu: true}
+        meta: {title: 'Квест', hide_menu: true}
     },
 
     {
         name: 'PromoCodeFormV2',
         path: simplePrefix + '/new-promo-code',
         component: PromoCodeFormV2,
-        meta: {title: 'Промокоды',  hide_menu: true}
+        meta: {title: 'Промокоды', hide_menu: true}
     },
     {
         name: 'VipProfileV2_1',
         path: simplePrefix + '/new-vip',
         component: VipProfileV2_1,
-        meta: {title: 'Анкета пользователя',  hide_menu: true}
+        meta: {title: 'Анкета пользователя', hide_menu: true}
     },
 
     {
         name: 'VipProfileV2_2',
         path: simplePrefix + '/new-profile-form',
         component: VipProfileV2_2,
-        meta: {title: 'Анкета пользователя',  hide_menu: true}
+        meta: {title: 'Анкета пользователя', hide_menu: true}
     },
 
     {
         name: 'SimpleProfileV2_1',
         path: simplePrefix + '/simple-profile-form',
         component: SimpleProfileV2_1,
-        meta: {title: 'Анкета пользователя',  hide_menu: true}
+        meta: {title: 'Анкета пользователя', hide_menu: true}
     },
 
     {
         name: 'WheelCustomV2',
         path: simplePrefix + '/wheel-of-fortune-custom',
         component: WheelCustomV2,
-        meta: {title: 'Колесо фортуны',  hide_menu: true}
+        meta: {title: 'Колесо фортуны', hide_menu: true}
     },
     {
         name: 'BotManagerV2',
@@ -733,6 +740,12 @@ export const simpleRoutes = [
         path: simplePrefix + '/admin/amo',
         component: AmoV2,
         meta: {title: 'AMO'}
+    },
+    {
+        name: 'CdekV2',
+        path: simplePrefix + '/admin/cdek',
+        component: CdekV2,
+        meta: {title: 'CDEK'}
     },
     {
         name: 'BitrixV2',

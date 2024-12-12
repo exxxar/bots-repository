@@ -3,6 +3,7 @@
 namespace App\Facades;
 
 
+use App\Http\BusinessLogic\Methods\CDEKLogicFactory as CDEKLogic;
 use App\Http\BusinessLogic\Methods\BotMediaLogicFactory as MediaLogic;
 use App\Http\BusinessLogic\Methods\ProductCollectionLogicFactory as CollectionLogic;
 use App\Http\BusinessLogic\Methods\IIKOLogicFactory as IIKOLogic;
@@ -60,6 +61,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static IIKOLogic iiko()
  * @method static CollectionLogic collection()
  * @method static StatisticLogic stat()
+ * @method static CDEKLogic cdek()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

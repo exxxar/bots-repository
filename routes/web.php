@@ -5,6 +5,7 @@ use App\Facades\BotManager;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Admin\TelegramController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Jobs\SendMessageJob;
 use App\Models\Bot;
 use App\Models\BotUser;
 use App\Models\CashBack;
@@ -43,31 +44,36 @@ use Yclients\YclientsApi;
 |
 */
 
-Route::get("/pdf-menu", function () {
-    $mpdf = new Mpdf();
-    $current_date = Carbon::now("+3:00")->format("Y-m-d H:i:s");
+Route::get("/redis", function () {
+    SendMessageJob::dispatch(
+        botId: 21,
+        chatId: "484698703",
+        message: "test",
+        replyKeyboard:null,
+        inlineKeyboard:null,
+        messageThreadId:null,
+        keyboardSettings:null,
+    )
+        ->delay(now()
+            ->addSeconds(3));
 
-    $number = Str::uuid();
-
-    $stylesheet = file_get_contents('https://getbootstrap.com/docs/5.3/dist/css/bootstrap.min.css'); // external css
-
-    $mpdf->WriteHTML(view("pdf.menu", [
-        "style"=>$stylesheet
-    ]));
-
-    $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::DOWNLOAD);
-
+    SendMessageJob::dispatch(
+        botId: 21,
+        chatId: "484698703",
+        message: "test 2",
+        replyKeyboard:[
+            [
+                ["text"=>"Главное меню"]
+            ]
+        ],
+        inlineKeyboard:null,
+        messageThreadId:null,
+        keyboardSettings:null,
+    )
+        ->delay(now()
+            ->addSeconds(5));
 });
 
-Route::get("/test-bitrix", function (Request $request) {
-    $bot = Bot::query()->where("bot_domain", "isushibot")
-        ->first();
-
-    $dd = BusinessLogic::bitrix()
-        ->setBot($bot)
-        ->statusList("https://nextit.bitrix24.ru/rest/1/o517zr44r0vbz2yn/");
-    dd($dd);
-});
 
 Route::view("/page-not-found", "error-node")->name("error-node");
 

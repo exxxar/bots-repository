@@ -108,6 +108,13 @@ Route::prefix("bot-client")
             });
 
         Route::prefix("friends")
+            ->controller(\App\Http\Controllers\Bots\Web\BotUsersController::class)
+            ->middleware(["tgAuth.any"])
+            ->group(function () {
+                Route::post('/', "loadFriendList");
+            });
+
+        Route::prefix("friends-script")
             ->controller(\App\Http\Controllers\Globals\FriendsScriptController::class)
             ->middleware(["tgAuth.any"])
             ->group(function () {
@@ -336,6 +343,19 @@ Route::prefix("bot-client")
                 Route::post('/check', "check");
             });
 
+        Route::prefix("cdek")
+            ->controller(\App\Http\Controllers\Bots\Web\CdekController::class)
+            ->middleware(["tgAuth.admin"])
+            ->group(function(){
+                Route::post('/store', "store");
+                Route::post('/make-order', "makeOrder");
+                Route::post('/get-cities', "getCities");
+                Route::post('/get-regions', "getRegions");
+                Route::post('/get-offices', "getOffices");
+                Route::post('/calc-tariff', "calcTariff");
+                Route::post('/calc-tariff-by-code/{code}', "calcTariffByCode");
+            });
+
         Route::prefix("admins")
             ->controller(AdminBotController::class)
             ->group(function () {
@@ -486,6 +506,7 @@ Route::prefix("bot-client")
                 Route::post("/sync-amo", [AmoCrmController::class, "syncAmoCrm"]);
                 Route::post("/bot-update", "updateBot");
                 Route::post("/bot-params-update", "updateBotParams");
+                Route::post("/bot-icons-update", "updateBotIcons");
                 Route::post("/user-status", "changeUserStatus");
                 Route::post("/users", "loadBotUsers");
                 Route::post("/image-menu", "loadImageMenu");

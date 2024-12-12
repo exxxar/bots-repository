@@ -15,6 +15,16 @@ use Illuminate\Validation\ValidationException;
 
 class BotUsersController extends Controller
 {
+
+    public function loadFriendList(Request $request): BotUserCollection
+    {
+        return BusinessLogic::botUsers()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->friends($request->search ?? null,
+                $request->get("size") ?? config('app.results_per_page'));
+    }
+
     public function loadBotUsers(Request $request): BotUserCollection
     {
         return BusinessLogic::botUsers()

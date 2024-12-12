@@ -4,9 +4,9 @@
             <div class="col">
                 <button type="button"
                         @click="goTo('IikoV2')"
-                        style="min-height:250px;"
+                        style="min-height:250px;height:100%;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body w-100 d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2-2/iiko.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление IIKO</p>
@@ -17,10 +17,26 @@
 
             <div class="col">
                 <button type="button"
-                        @click="goTo('AmoV2')"
-                        style="min-height:250px;"
+                        @click="goTo('CdekV2')"
+                        style="min-height:250px;height:100%;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body w-100 d-flex justify-content-center align-items-center flex-column">
+                        <img
+                            style="object-fit:cover;"
+                            v-lazy="'/images/shop-v2-2/CDEK.png'" class="img-fluid" alt="">
+
+                        <p class="my-2">Управление CDEK</p>
+                    </div>
+
+                </button>
+            </div>
+
+            <div class="col">
+                <button type="button"
+                        @click="goTo('AmoV2')"
+                        style="min-height:250px;height:100%;"
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                    <div class="card-body w-100 d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2-2/amo.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление AMO</p>
@@ -32,9 +48,9 @@
             <div class="col">
                 <button type="button"
                         @click="goTo('BitrixV2')"
-                        style="min-height:250px;"
+                        style="min-height:250px;height:100%;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body w-100 d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2-2/bitrix.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление Bitrix24</p>
@@ -46,9 +62,9 @@
             <div class="col">
                 <button type="button"
                         @click="goTo('YClientsV2')"
-                        style="min-height:250px;"
+                        style="min-height:250px;height:100%;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body w-100 d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2-2/yclients.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление yClients</p>
@@ -60,9 +76,9 @@
             <div class="col">
                 <button type="button"
                         @click="goTo('FrontPadV2')"
-                        style="min-height:250px;"
+                        style="min-height:250px;height:100%;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column">
+                    <div class="card-body w-100 d-flex justify-content-center align-items-center flex-column">
                         <img v-lazy="'/images/shop-v2-2/promo.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление FrontPad</p>

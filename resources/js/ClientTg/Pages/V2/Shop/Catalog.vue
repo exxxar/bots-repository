@@ -1,9 +1,12 @@
 <script setup>
 import ShopProductCatalog from "@/ClientTg/Components/V2/Shop/ShopProductCatalog.vue";
+
 </script>
 <template>
 
-    <ShopProductCatalog :settings="settings"/>
+    <ShopProductCatalog
+        :settings="settings"/>
+
 
     <nav
 
@@ -36,18 +39,7 @@ import {mapGetters} from "vuex";
 export default {
     data() {
         return {
-            settings: {
-                is_disabled: false,
-                can_buy_after_closing: false,
-                disabled_text: null,
-                can_use_cash: true,
-                delivery_price_text: null,
-                min_price: 0,
-                min_price_for_cashback: 0,
-                menu_list_type: 0,
-                need_category_by_page: false,
-                need_pay_after_call: false,
-            },
+            settings: null
         }
     },
     computed: {
@@ -74,15 +66,29 @@ export default {
     },
     methods: {
         goToCart() {
-            this.$router.push({name: 'ShopCartV2'})
+            let shopType = this.settings.shop_display_type
+
+            switch (shopType) {
+                default:
+                case 0:
+                    this.$router.push({name: 'ShopCartV2'});
+                    break;
+                case 1:
+                    this.$router.push({name: 'ShopCartV2'});
+                    break;
+            }
         },
         loadShopModuleData() {
             return this.$store.dispatch("loadShopModuleData").then((resp) => {
                 this.$nextTick(() => {
+                    if (!this.settings)
+                        this.settings = {}
+
                     Object.keys(resp).forEach(item => {
                         this.settings[item] = resp[item]
-                        console.log("settings", this.settings[item], item)
                     })
+
+                    this.settings_loaded = true
                 })
             })
         },

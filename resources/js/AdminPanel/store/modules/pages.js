@@ -4,18 +4,39 @@ const BASE_PAGES_LINK = '/admin/pages'
 
 let state = {
     pages: [],
+    page_folders: [],
     pages_paginate_object: null,
+    page_folders_paginate_object: null,
 }
 
 const getters = {
     getPages: state => state.pages || [],
-    getPageById: (state) => (id) => {
-        return state.pages.find(item => item.id === id)
-    },
+    getPageFolders: state => state.page_folders || [],
     getPagesPaginateObject: state => state.pages_paginate_object || null,
+    getPageFoldersPaginateObject: state => state.page_folders_paginate_object || null,
 }
 
 const actions = {
+
+    async loadPageFolders(context, payload = {dataObject: {botId: null, search: null}, page: 0, size: 12}) {
+
+        let link = `${BASE_PAGES_LINK}/load-folders`
+        let method = 'POST'
+        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            context.commit("setPageFolders", dataObject.data)
+            delete dataObject.data
+            context.commit('setPageFoldersPaginateObject', dataObject)
+            return Promise.resolve();
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadPageChains(context, payload = {dataObject: {start_page_id: null}}) {
 
         let link = `${BASE_PAGES_LINK}/load-chains`
@@ -32,7 +53,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async loadPages(context, payload = {dataObject: {botId: null, search:null}, page: 0, size: 12}) {
+    async loadPages(context, payload = {dataObject: {botId: null, search: null}, page: 0, size: 12}) {
         let page = payload.page || 0
         let size = 12
 
@@ -53,7 +74,32 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async storePageChains(context, payload= {dataObject:{start_page_id:null, links: []}}){
+    async loadPagesInFolder(context, payload = {
+        dataObject: {botId: null, folderId: null, search: null},
+        page: 0,
+        size: 12
+    }) {
+        let page = payload.page || 0
+        let size = 12
+
+        let link = `${BASE_PAGES_LINK}/folder?page=${page}&size=${size}`
+        let method = 'POST'
+        let data = payload.dataObject
+
+        let _axios = util.makeAxiosFactory(link, method, data)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            context.commit("setPages", dataObject.data)
+            delete dataObject.data
+            context.commit('setPagesPaginateObject', dataObject)
+            return Promise.resolve();
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
+    async storePageChains(context, payload = {dataObject: {start_page_id: null, links: []}}) {
         let link = `${BASE_PAGES_LINK}/update-chains`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.dataObject)
         return _axios.then((response) => {
@@ -64,7 +110,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async updatePage(context, payload= {pageForm: null}){
+    async updatePage(context, payload = {pageForm: null}) {
         let link = `${BASE_PAGES_LINK}/page-update`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.pageForm)
         return _axios.then((response) => {
@@ -75,7 +121,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async duplicatePage(context, payload= {dataObject: {pageId: null}}){
+    async duplicatePage(context, payload = {dataObject: {pageId: null}}) {
         let link = `${BASE_PAGES_LINK}/duplicate/${payload.dataObject.pageId}`
         let _axios = util.makeAxiosFactory(link, 'POST')
         return _axios.then((response) => {
@@ -86,7 +132,7 @@ const actions = {
         })
     },
 
-    async removePage(context, payload= {dataObject: {pageId: null}}){
+    async removePage(context, payload = {dataObject: {pageId: null}}) {
         let link = `${BASE_PAGES_LINK}/${payload.dataObject.pageId}`
         let _axios = util.makeAxiosFactory(link, 'DELETE')
         return _axios.then((response) => {
@@ -96,7 +142,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async forceRemovePage(context, payload= {dataObject: {pageId: null}}){
+    async forceRemovePage(context, payload = {dataObject: {pageId: null}}) {
         let link = `${BASE_PAGES_LINK}/force/${payload.dataObject.pageId}`
         let _axios = util.makeAxiosFactory(link, 'DELETE')
         return _axios.then((response) => {
@@ -106,7 +152,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    async restorePage(context, payload= {dataObject: {pageId: null}}){
+    async restorePage(context, payload = {dataObject: {pageId: null}}) {
         let link = `${BASE_PAGES_LINK}/restore/${payload.dataObject.pageId}`
         let _axios = util.makeAxiosFactory(link, 'GET')
         return _axios.then((response) => {
@@ -120,7 +166,7 @@ const actions = {
     async addMultiPagesByKeyboard(context, payload = {pages: null}) {
         let link = `${BASE_PAGES_LINK}/add-pages-by-keyboard`
 
-        let _axios = util.makeAxiosFactory(link,"POST", payload)
+        let _axios = util.makeAxiosFactory(link, "POST", payload)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -132,7 +178,7 @@ const actions = {
     async addMultiPages(context, payload = {pages: null}) {
         let link = `${BASE_PAGES_LINK}/add-pages`
 
-        let _axios = util.makeAxiosFactory(link,"POST", payload)
+        let _axios = util.makeAxiosFactory(link, "POST", payload)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -144,7 +190,7 @@ const actions = {
     async createPage(context, payload = {pageForm: null}) {
         let link = `${BASE_PAGES_LINK}/page`
 
-        let _axios = util.makeAxiosFactory(link,"POST", payload.pageForm)
+        let _axios = util.makeAxiosFactory(link, "POST", payload.pageForm)
 
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -162,6 +208,14 @@ const mutations = {
     setPagesPaginateObject(state, payload) {
         state.pages_paginate_object = payload || [];
         localStorage.setItem('cashman_pages_paginate_object', JSON.stringify(payload));
+    },
+    setPageFolders(state, payload) {
+        state.pages = payload || [];
+        localStorage.setItem('cashman_page_folders', JSON.stringify(payload));
+    },
+    setPageFoldersPaginateObject(state, payload) {
+        state.pages_paginate_object = payload || [];
+        localStorage.setItem('cashman_page_folders_paginate_object', JSON.stringify(payload));
     }
 }
 

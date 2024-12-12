@@ -20,7 +20,13 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
             <a class="nav-link "
                v-bind:class="{'active fw-bold':tab===2}"
                @click="tab=2"
-               href="javascript:void(0)">Мои друзья</a>
+               href="javascript:void(0)">Друзья</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link "
+               v-bind:class="{'active fw-bold':tab===3}"
+               @click="tab=3"
+               href="javascript:void(0)">Иконки</a>
         </li>
     </ul>
     <form
@@ -356,13 +362,88 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                   v-if="load_script"/>
     </template>
 
+    <template v-if="tab===3">
+        <div class="divider w-100 my-3">Пункты меню</div>
+        <div class="row row-cols-1">
+            <div class="col mb-2" v-for="(item, index) in  iconForm.items.length">
+                <button
+                    type="button"
+                    v-bind:class="{
+                        'btn-primary text-white':index===selected_menu_item_index,
+                        'btn-outline-primary': index!==selected_menu_item_index
+                     }"
+                    @click="selectMenuItem(index)"
+                    class="mb-0 btn w-100">{{ iconForm.items[index].title }}
+                </button>
+            </div>
+        </div>
+        <div class="divider w-100 my-3">Редактор</div>
+
+        <div class="form-check form-switch">
+            <input class="form-check-input"
+                   v-model="iconForm.items[selected_menu_item_index].is_visible"
+                   type="checkbox" role="switch" id="iconForm-is_visible">
+            <label class="form-check-label" for="iconForm-is_visible">
+                Виден пользователям:
+                <span
+                    v-bind:class="{'fw-bold text-primary':iconForm.items[selected_menu_item_index].is_visible}">виден</span>
+                /
+                <span v-bind:class="{'fw-bold text-primary':!iconForm.items[selected_menu_item_index].is_visible}">не виден</span>
+            </label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="text"
+                   v-model="iconForm.items[selected_menu_item_index].title"
+                   required
+                   class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Название меню</label>
+        </div>
+
+        <div v-if="iconForm.items[selected_menu_item_index].image_url &&
+        !photos_for_upload[iconForm.items[selected_menu_item_index].slug] ">
+            <img
+                v-lazy="'/images/shop-v2-2/'+iconForm.items[selected_menu_item_index].image_url"
+                class="img-thumbnail w-100" alt="...">
+        </div>
+        <div v-else>
+            <img
+                class="img-thumbnail w-100"
+                v-lazy="getPhoto(photos_for_upload[iconForm.items[selected_menu_item_index].slug]).imageUrl">
+        </div>
+
+        <p
+            class="mb-0 w-100 text-center bg-success text-white rounded-2 my-2 p-3"
+            v-if="photos_for_upload[iconForm.items[selected_menu_item_index].slug]">Фото добавлено в очередь,
+            <a
+                class="text-white"
+                @click="delete photos_for_upload[iconForm.items[selected_menu_item_index].slug]"
+                href="javascript:void(0)">отменить?</a>
+        </p>
+        <div class="form-floating my-2">
+            <input type="file" :id="'menu-photos-'+selected_menu_item_index" accept="image/*"
+                   required
+                   class="form-control"
+                   @change="onChangePhotos($event, selected_menu_item_index)"
+            />
+            <label for="floatingInput">Изображение</label>
+        </div>
+
+        <button
+            @click="storeMenu"
+            style="z-index: 100;"
+            type="button" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
+        </button>
+
+    </template>
 
 </template>
 <script>
 export default {
     data() {
         return {
+            selected_menu_item_index: 0,
             scripts: [],
+            photos_for_upload: [],
             selected_script: null,
             load_script: true,
             tab: 0,
@@ -431,6 +512,57 @@ export default {
                 level_3: 0,
                 max_cashback_use_percent: 0,
                 cashback_config: []
+            },
+            iconForm: {
+                items: [
+                    {
+                        slug: 'profile',
+                        title: 'Профиль',
+                        image_url: 'profile.png',
+
+
+                        is_visible: true,
+                    },
+                    {
+                        slug: 'shop',
+                        title: 'Магазин',
+                        image_url: 'shop.png',
+
+
+                        is_visible: true,
+                    },
+                    {
+                        slug: 'basket',
+                        title: 'Корзина',
+                        image_url: 'basket.png',
+
+
+                        is_visible: true,
+                    },
+                    {
+                        slug: 'history',
+                        title: 'История заказов',
+                        image_url: 'history.png',
+
+
+                        is_visible: true,
+                    },
+                    {
+                        slug: 'events',
+                        title: 'Розыгрыши',
+                        image_url: 'events.png',
+
+
+                        is_visible: true,
+                    },
+                    {
+                        slug: 'about',
+                        title: 'О Нас & Контакты',
+                        image_url: 'contacts.png',
+
+                        is_visible: true,
+                    }
+                ]
             },
             companyForm: {
                 id: null,
@@ -523,6 +655,9 @@ export default {
         }
     },
     mounted() {
+
+        if ((this.currentBot.config["icons"] || null) != null)
+            this.iconForm.items = this.currentBot.config["icons"]
         const company = this.currentBot.company
 
         this.companyForm.id = company.id || null
@@ -583,6 +718,55 @@ export default {
         this.companyForm.schedule = isCorrectSchedule(company.schedule) ? company.schedule : this.companyForm.schedule
     },
     methods: {
+        getPhoto(imgObject) {
+            return {imageUrl: URL.createObjectURL(imgObject)}
+        },
+        selectMenuItem(index) {
+            let img = document.querySelector("#menu-photos-" + this.selected_menu_item_index)
+            img.value = null
+
+            this.selected_menu_item_index = index
+        },
+        onChangePhotos(e, index) {
+            const files = e.target.files
+            const slug = this.iconForm.items[index].slug
+            this.photos_for_upload[slug] = files[0]
+
+        },
+        storeMenu() {
+            let data = new FormData();
+            Object.keys(this.iconForm)
+                .forEach(key => {
+                    const item = this.iconForm[key] || ''
+                    if (typeof item === 'object')
+                        data.append(key, JSON.stringify(item))
+                    else
+                        data.append(key, item)
+                });
+
+            Object.keys(this.photos_for_upload).forEach(item => {
+                data.append(item + '[]', this.photos_for_upload[item])
+            })
+
+            this.$store.dispatch("updateBotMenuItems", {
+                iconForm: data
+            }).then((response) => {
+                this.$notify({
+                    title: "Иконки",
+                    text: "Иконки меню успешно обновлены!",
+                    type: "success"
+                })
+                this.$emit("callback", response.data)
+
+                window.location.reload()
+            }).catch(err => {
+                this.$notify({
+                    title: "Иконки",
+                    text: "Ошибка обновления информации",
+                    type: "error"
+                })
+            })
+        },
         submitBotForm() {
             let data = new FormData();
             Object.keys(this.botForm)

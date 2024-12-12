@@ -1,25 +1,30 @@
 models:
-  ProductCollection:
+  Cdek:
     bot_id: id foreign:bots nullable
-    owner_id: foreign:bot_users nullable
-    title: string:255 nullable
-    image: string:255 nullable
-    description: longtext nullable
-    is_public: boolean default:false
-    is_active: boolean default:false
-    discount: integer default:0 comment:'скидка на набор в %'
-    order_position: integer default:0
+    account: string:255 nullable
+    secure_password: string:255 nullable
+    is_active: boolean default:true
     config: json nullable
     relationships:
-      belongsTo: Bot, BotUser
-      belongsToMany: Product
+      belongsTo: Bot
+  Folder:
+    bot_id: id foreign:bots nullable
+    title: string:255 nullable
+    type: enum:page
+    description: longtext nullable
+    is_active: boolean default:true
+    config: json nullable
+    relationships:
+      belongsTo: Bot
+      hasMany: BotPage
 
 
-seeders:  ProductCollection
+seeders:  Cdek,   Folder
 
 controllers:
-  ProductCollection:
+  Cdek:
     resource: api
-
+  Folder:
+    resource: api
 
 

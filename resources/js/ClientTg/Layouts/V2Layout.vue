@@ -100,25 +100,25 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                     @click="goTo('ProfileV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                > Профиль</a></li>
+                > {{preparedMenuItem['profile']?.title || 'Профиль'}} </a></li>
                 <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='CatalogV2'}"
                     @click="goTo('CatalogV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                > Каталог товаров</a></li>
+                > {{preparedMenuItem['shop']?.title || 'Магазин'}} </a></li>
                 <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='ShopCartV2'}"
                     @click="goTo('ShopCartV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                > Корзина <span class="fw-bold" v-if="cartTotalCount>0">({{ cartTotalCount }})</span></a></li>
+                > {{preparedMenuItem['basket']?.title || 'Корзина'}} <span class="fw-bold" v-if="cartTotalCount>0">({{ cartTotalCount }})</span></a></li>
                 <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='OrdersV2'}"
                     @click="goTo('OrdersV2')"
                     href="javascript:void(0)"
                     class="text-decoration-none fw-normal"
-                > История заказов</a></li>
+                > {{preparedMenuItem['history']?.title || 'История заказов'}} </a></li>
                 <li class="p-1"><a
                     v-bind:class="{'fw-bold':$route.name==='CashBackV2'}"
                     @click="goTo('CashBackV2')"
@@ -211,6 +211,7 @@ import CompanyInfo from "@/ClientTg/Components/V2/Admin/CompanyInfo.vue";
                 </div>
                 <div class="modal-body">
                     <CompanyInfo></CompanyInfo>
+
                 </div>
             </div>
         </div>
@@ -362,6 +363,17 @@ export default {
         },
         bot() {
             return window.currentBot
+        },
+        preparedMenuItem() {
+            let data = this.bot.config["icons"] || []
+
+            let arr = [];
+            data.forEach(item => {
+                arr[item.slug] = item
+            })
+
+
+            return arr
         },
         needHideMenu(){
             let urlParams = new URLSearchParams(window.location.search);

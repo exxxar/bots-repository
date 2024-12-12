@@ -49,7 +49,7 @@ export default {
             this.$store.dispatch("loadBotAdminConfig").then((resp) => {
                 this.bot = resp.data
 
-                this.amo = this.bot.amo
+                this.amo = this.bot.amo || null
 
 
             })

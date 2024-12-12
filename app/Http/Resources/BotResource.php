@@ -58,6 +58,7 @@ class BotResource extends JsonResource
             'payment_provider_token' => $this->payment_provider_token ?? null,
             'amo' => new AmoCrmResource($this->whenLoaded("amo")),
             'frontPad' => new FrontPadResource($this->whenLoaded("frontPad")),
+            'cdek' => new CdekResource($this->whenLoaded("cdek")),
             'y_clients' => new YClientResource($this->whenLoaded("YClients")),
             'iiko' => new IikoResource($this->whenLoaded("iiko")),
             'blocked_at' => $this->blocked_at,

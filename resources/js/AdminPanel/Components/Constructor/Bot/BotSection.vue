@@ -10,6 +10,7 @@ import Page from "@/AdminPanel/Components/Constructor/Pages/Page.vue"
 import BotDialogGroupList from "@/AdminPanel/Components/Constructor/Dialogs/BotDialogGroupList.vue";
 import Shop from "@/AdminPanel/Components/Constructor/Shop/Shop.vue";
 import AmoForm from "@/AdminPanel/Components/Constructor/Amo/AmoForm.vue";
+import CdekForm from "@/AdminPanel/Components/Constructor/Cdek/CdekForm.vue";
 import YClientsForm from "@/AdminPanel/Components/Constructor/YClients/YClientsForm.vue";
 import Mail from "@/AdminPanel/Components/Constructor/Mail/Mail.vue";
 import BotFields from "@/AdminPanel/Components/Constructor/Bot/BotFields.vue";
@@ -102,7 +103,12 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
 
     </div>
 
-
+    <div v-if="step===19" class="pb-5 mb-5">
+        <CdekForm
+            :data="bot.cdek||null"
+            v-if="!load"
+        />
+    </div>
     <div v-if="step===18" class="pb-5 mb-5">
         <Statistic :bot="bot"
                     v-if="!load">
@@ -263,8 +269,11 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
                 <li><a class="list-group-item list-group-item-action" href="#bot-users" @click="setStep(3)"><i
                     class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
 
+                <li></li>
                 <li><a class="list-group-item list-group-item-action" href="#bot-amo" @click="setStep(7)"><i
                     class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
+                <li><a class="list-group-item list-group-item-action" href="#bot-cdek" @click="setStep(19)"><i
+                    class="fa-solid fa-list-check mr-2"></i> CDEK</a></li>
                 <li><a class="list-group-item list-group-item-action" href="#bot-front-pad" @click="setStep(17)"><i
                     class="fa-solid fa-list-check mr-2"></i> FrontPad</a></li>
                 <li><a class="list-group-item list-group-item-action" href="#bot-y-clients" @click="setStep(12)"><i

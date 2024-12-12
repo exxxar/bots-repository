@@ -40,7 +40,7 @@ class BotController extends Controller
     {
 
         $request->validate([
-           "page"=>"required"
+            "page" => "required"
         ]);
 
         $pageName = $request->page ?? null;
@@ -49,7 +49,7 @@ class BotController extends Controller
 
         $slug = BotMenuSlug::query()
             ->where("bot_id", $bot->id)
-            ->where(function ($q) use ($pageName){
+            ->where(function ($q) use ($pageName) {
                 $q->where("command", ".*$pageName")
                     ->orWhere("command", "/$pageName");
             })->first();
@@ -199,7 +199,7 @@ class BotController extends Controller
 
         BusinessLogic::bots()
             ->setBot($bot)
-            ->sendToQueue($request->all());
+            ->sendToRedisQueue($request->all());
 
         return response()->noContent();
 
@@ -286,19 +286,22 @@ class BotController extends Controller
 
     public function getSelf(Request $request): BotUserResource
     {
-        $botUser = BotUser::query()->find($request->botUser->id);
+        $botUser = BotUser::query()
+            ->find($request->botUser->id);
 
         $orders = Order::query()
             ->where("bot_id", $request->bot->id)
             ->where("customer_id", $request->botUser->id)
             ->count();
 
-        $refCount = ReferralHistory::query()
-            ->where("user_sender_id", $botUser->user_id)
+        $refCount = BotUser::query()
+            ->where("parent_id", $botUser->id)
             ->count() ?? 0;
 
         $botUser->order_count = $orders;
         $botUser->friends_count = $refCount;
+        $botUser->parent_friend = BotUser::query()
+            ->find($botUser->parent_id) ?? null;
 
         return new BotUserResource($botUser);
     }
@@ -921,6 +924,21 @@ class BotController extends Controller
             ->update(
                 $request->all(),
                 $request->hasFile('images') ? $request->file('images') : null
+            );
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function updateBotIcons(Request $request): BotResource
+    {
+
+        return BusinessLogic::bots()
+            ->setBot($request->bot ?? null)
+            ->setBotUser($request->botUser ?? null)
+            ->updatMenuIcons(
+                $request->all(),
+                $request->files
             );
     }
 

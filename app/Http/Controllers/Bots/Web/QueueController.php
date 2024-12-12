@@ -37,7 +37,7 @@ class QueueController extends Controller
     /**
      * @throws ValidationException
      */
-    public function store(Request $request): \App\Http\Resources\QueueResource
+    public function store(Request $request)
     {
         $request->validate([
             "message" => "required",
@@ -46,10 +46,11 @@ class QueueController extends Controller
 
         $bot = $request->bot ?? null;
 
-       return BusinessLogic::bots()
+        BusinessLogic::bots()
             ->setBot($bot)
-            ->sendToQueue($request->all());
+            ->sendToRedisQueue($request->all());
 
+        return response()->noContent();
     }
 
     public function remove(Request $request, $queueId): \App\Http\Resources\QueueResource

@@ -144,7 +144,7 @@ class BotController extends Controller
 
         BusinessLogic::bots()
             ->setBot($bot)
-            ->sendToQueue($request->all());
+            ->sendToRedisQueue($request->all());
 
         return response()->noContent();
 

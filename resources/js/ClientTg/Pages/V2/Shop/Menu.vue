@@ -1,5 +1,6 @@
 <script setup>
 import ScheduleList from "@/ClientTg/Components/V2/Shop/ScheduleList.vue";
+import MainMenuItem from "@/ClientTg/Components/V2/Shop/MainMenuItem.vue";
 import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/ShopScriptEditor.vue";
 </script>
 <template>
@@ -30,136 +31,60 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
         </div>
         <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2">
             <div class="col">
-                <button type="button"
-                        @click="goTo('ProfileV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/profile.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">Профиль</p>
-                    </div>
-
-                </button>
+                <MainMenuItem
+                    :route="'ProfileV2'"
+                    :default-image="'profile.png'"
+                    :default-text="'Профиль'"
+                    :item="preparedMenuItem['profile']||null"/>
             </div>
 
             <div class="col">
-                <button type="button"
-                        @click="goTo('CatalogV2')"
-                        style="min-height:250px;"
-                        :disabled="script_data.is_disabled"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/shop.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">Магазин</p>
-                        <span style="font-size:12px;" v-if="script_data.is_disabled"><i class="fa-solid fa-lock"></i> закрыто</span>
-                    </div>
-
-                </button>
+                <MainMenuItem
+                    :disabled="script_data.is_disabled"
+                    :route="'CatalogV2'"
+                    :default-image="'shop.png'"
+                    :default-text="'Магазин'"
+                    :item="preparedMenuItem['shop']||null"/>
             </div>
 
             <div class="col">
-
-                <button type="button"
-                        @click="goTo('ShopCartV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/basket.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">Корзина
-                            <span class="badge bg-primary" v-if="cartTotalCount>0   ">{{ cartTotalCount }}</span>
-                        </p>
-                    </div>
-
-                </button>
-
+                <MainMenuItem
+                    :route="'ShopCartV2'"
+                    :default-image="'basket.png'"
+                    :default-text="'Корзина'"
+                    :item="preparedMenuItem['basket']||null">
+                    <template #post-text>
+                        <span class="badge bg-primary" v-if="cartTotalCount>0">{{ cartTotalCount }}</span>
+                    </template>
+                </MainMenuItem>
             </div>
 
+
             <div class="col">
-
-                <button type="button"
-                        @click="goTo('OrdersV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/history.png'" class="img-fluid" alt="">
-
-                        <p class="my-2"> История заказов</p>
-                    </div>
-
-                </button>
-
+                <MainMenuItem
+                    :route="'OrdersV2'"
+                    :default-image="'history.png'"
+                    :default-text="'История заказов'"
+                    :item="preparedMenuItem['history']||null"/>
             </div>
 
             <div class="col" v-if="script_data.wheel_of_fortune">
-
-                <button type="button"
-                        :disabled="!script_data.wheel_of_fortune.can_play||!loadScriptData"
-                        @click="goTo('WheelOfFortuneV2')"
-                        style="min-height:250px;"
-
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/events.png'" class="img-fluid" alt="">
-
-                        <p class="my-2"> Розыгрыши</p>
-                        <span style="font-size:12px;" v-if="!script_data.wheel_of_fortune.can_play||!loadScriptData"><i
-                            class="fa-solid fa-lock"></i> закрыто</span>
-                    </div>
-
-                </button>
+                <MainMenuItem
+                    :disabled="!script_data.wheel_of_fortune.can_play"
+                    :route="'WheelOfFortuneV2'"
+                    :default-image="'events.png'"
+                    :default-text="'Розыгрыши'"
+                    :item="preparedMenuItem['events']||null"/>
 
             </div>
 
-            <!--            <div class="col" v-if="getSelf.is_admin">
-                            <button type="button"
-                                    @click="goTo('AdminV2')"
-                                    style="min-height:250px;"
-                                    class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
-                                <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                                    <img v-lazy="'/images/shop-v2/home.png'" class="img-fluid" alt="">
-
-                                    <p class="my-2">Админ.панель</p>
-                                </div>
-
-                            </button>
-
-                        </div>-->
-
-            <!--            <div class="col">
-
-                            <button type="button"
-
-                                    @click="goTo('WheelOfFortuneV2')"
-                                    style="min-height:250px;"
-                                    class="btn shadow-sm btn-outline-primary w-100  mb-2 card">
-                                <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                                    <img v-lazy="'/images/shop-v2/gift.png'" class="img-fluid" alt="">
-
-                                    <p class="my-2"> Колесо фортуны</p>
-                                </div>
-
-                            </button>
-
-
-                        </div>-->
 
             <div class="col">
-
-                <button type="button"
-                        @click="goTo('ContactsV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm btn-outline-primary w-100 border-0 mb-2 card">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/contacts.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">О Нас & Контакты</p>
-                    </div>
-
-                </button>
-
+                <MainMenuItem
+                    :route="'ContactsV2'"
+                    :default-image="'contacts.png'"
+                    :default-text="'О Нас & Контакты'"
+                    :item="preparedMenuItem['about']||null"/>
             </div>
         </div>
 
@@ -193,6 +118,20 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         <img v-lazy="'/images/shop-v2-2/clients.png'" class="img-fluid" alt="">
 
                         <p class="my-2">Управление клиентами</p>
+                    </div>
+
+                </button>
+            </div>
+
+            <div class="col">
+                <button type="button"
+                        @click="goTo('LinkManagerV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                        <img v-lazy="'/images/shop-v2-2/utm.png'" class="img-fluid" alt="">
+
+                        <p class="my-2">UTM-метки</p>
                     </div>
 
                 </button>
@@ -364,7 +303,17 @@ export default {
     },
     computed: {
         ...mapGetters(['getSelf', 'cartTotalCount']),
+        preparedMenuItem() {
+            let data = this.bot.config["icons"] || []
 
+            let arr = [];
+            data.forEach(item => {
+                arr[item.slug] = item
+            })
+
+
+            return arr
+        },
         isWork() {
             if (!window.isCorrectSchedule(this.bot.company.schedule))
                 return true
@@ -381,6 +330,8 @@ export default {
     mounted() {
         this.tg.BackButton.show()
 
+        console.log(this.bot)
+
         this.loadScriptModuleData()
 
         this.tg.BackButton.onClick(() => {
@@ -393,6 +344,9 @@ export default {
         })
     },
     methods: {
+        goTo(name) {
+            this.$router.push({name: name})
+        },
         switchToPage(page) {
             this.$store.dispatch("switchToPage", {
                 page: page
@@ -412,9 +366,7 @@ export default {
 
 
         },
-        goTo(name) {
-            this.$router.push({name: name})
-        },
+
         loadScriptModuleData() {
             this.loadScriptData = false
             return this.$store.dispatch("loadShopModuleData").then((resp) => {

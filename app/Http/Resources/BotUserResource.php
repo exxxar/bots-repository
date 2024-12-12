@@ -55,6 +55,7 @@ class BotUserResource extends JsonResource
             'telegram_chat_id' => $this->telegram_chat_id,
 
             'parent_id' => $this->parent_id ?? null,
+            'parent_friend' => new BotUserResource($this->parent_friend) ,
             'is_vip' => $this->is_vip ?? false,
             'is_admin' => $this->is_admin ?? false,
             'is_work' => $this->is_work ?? false,

@@ -1,14 +1,24 @@
 created:
-    - app/Http/Controllers/TrafficSourceController.php
-    - database/factories/TrafficSourceFactory.php
-    - database/migrations/2024_11_13_193830_create_traffic_sources_table.php
-    - app/Models/TrafficSource.php
-    - database/seeders/TrafficSourceSeeder.php
-    - tests/Feature/Http/Controllers/TrafficSourceControllerTest.php
-    - app/Http/Requests/TrafficSourceStoreRequest.php
-    - app/Http/Requests/TrafficSourceUpdateRequest.php
-    - app/Http/Resources/TrafficSourceCollection.php
-    - app/Http/Resources/TrafficSourceResource.php
+    - app/Http/Controllers/CdekController.php
+    - app/Http/Controllers/FolderController.php
+    - database/factories/CdekFactory.php
+    - database/factories/FolderFactory.php
+    - database/migrations/2024_12_08_092911_create_cdeks_table.php
+    - database/migrations/2024_12_08_092912_create_folders_table.php
+    - app/Models/Cdek.php
+    - app/Models/Folder.php
+    - database/seeders/CdekSeeder.php
+    - database/seeders/FolderSeeder.php
+    - tests/Feature/Http/Controllers/CdekControllerTest.php
+    - tests/Feature/Http/Controllers/FolderControllerTest.php
+    - app/Http/Requests/CdekStoreRequest.php
+    - app/Http/Requests/CdekUpdateRequest.php
+    - app/Http/Requests/FolderStoreRequest.php
+    - app/Http/Requests/FolderUpdateRequest.php
+    - app/Http/Resources/CdekCollection.php
+    - app/Http/Resources/CdekResource.php
+    - app/Http/Resources/FolderCollection.php
+    - app/Http/Resources/FolderResource.php
 updated:
     - routes/api.php
 models:
@@ -78,3 +88,5 @@ models:
     Shop: { bot_id: 'id foreign:bots nullable', title: 'string:255 nullable', image: 'string:255 nullable', key: "string:255 nullable comment:'для распределения товаров'", is_default: 'boolean default:false', config: 'json nullable', relationships: { belongsTo: Bot } }
     ProductCollection: { bot_id: 'id foreign:bots nullable', owner_id: 'foreign:bot_users nullable', title: 'string:255 nullable', image: 'string:255 nullable', description: 'longtext nullable', is_public: 'boolean default:false', is_active: 'boolean default:false', discount: "integer default:0 comment:'скидка на набор в %'", order_position: 'integer default:0', config: 'json nullable', relationships: { belongsTo: 'Bot, BotUser', belongsToMany: Product } }
     TrafficSource: { bot_id: 'id foreign:bots nullable', bot_user_id: 'foreign:bot_users nullable', comment: 'string:255 nullable', source: 'string:255 nullable', relationships: { belongsTo: 'Bot, BotUser' } }
+    Cdek: { bot_id: 'id foreign:bots nullable', account: 'string:255 nullable', secure_password: 'string:255 nullable', is_active: 'boolean default:true', config: 'json nullable', relationships: { belongsTo: Bot } }
+    Folder: { bot_id: 'id foreign:bots nullable', title: 'string:255 nullable', type: 'enum:page', description: 'longtext nullable', is_active: 'boolean default:true', config: 'json nullable', relationships: { belongsTo: Bot, hasMany: BotPage } }

@@ -70,7 +70,9 @@
                 </span>
             </li>
 
-            <li class="list-group-item d-flex justify-content-between cursor-pointer"
+            <li
+                @click="goToFriends"
+                class="list-group-item d-flex justify-content-between cursor-pointer"
                 aria-current="true">
                 <span>Приглашено друзей</span>
                 <span class="text-primary fw-bold">{{ self.friends_count || 0 }}</span>
@@ -329,6 +331,9 @@ export default {
                     type: "error"
                 })
             })
+        },
+        goToFriends() {
+            this.$router.push({name: 'FriendsV2'})
         },
         goToCashback() {
             this.$router.push({name: 'CashBackV2'})

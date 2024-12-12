@@ -10,6 +10,28 @@
                 v-bind:class="{'text-primary fw-bold':!form.is_disabled}">вкл</span> \ <span
                 v-bind:class="{'text-primary fw-bold':form.is_disabled}">выкл</span></label>
         </div>
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.is_product_list"
+                   role="switch" id="script-settings-is_product_list">
+            <label class="form-check-label" for="script-settings-is_product_list">Отображение товаров: <span
+                v-bind:class="{'text-primary fw-bold':!form.is_product_list}">плитка</span> \ <span
+                v-bind:class="{'text-primary fw-bold':form.is_product_list}">список</span></label>
+        </div>
+        <p class="alert alert-light mb-2">
+            Тип магазина влияет на отображение самого магазина и на корзину.
+        </p>
+        <div class="form-floating mb-2">
+            <select class="form-select"
+                    v-model="form.shop_display_type"
+                    id="floatingSelect" aria-label="Floating label select example">
+                <option :value="0">Продовольственный</option>
+                <option :value="1">Бытовые товары</option>
+                <option :value="2">Электронные товары</option>
+            </select>
+            <label for="floatingSelect">Тип магазина</label>
+        </div>
 
         <p class="alert alert-light mb-2">Вы можете разрешить или запретить клиентам оставлять заказы вне рабочего времени вашего сервиса.
             Если переключатель выключен, то покупки будут доступны <span v-bind:class="{'text-primary fw-bold':!form.can_buy_after_closing}">согласно графика</span>
@@ -161,6 +183,9 @@ export default {
                 can_use_card: true,
                 need_pay_after_call: false,
                 disabled_text: null,
+
+                shop_display_type:0,
+                is_product_list:false,
             },
         }
     },

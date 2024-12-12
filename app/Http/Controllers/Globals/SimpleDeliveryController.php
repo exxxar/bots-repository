@@ -306,7 +306,9 @@ class SimpleDeliveryController extends SlugController
             "menu_list_type" => 0,
             "need_category_by_page" => true,
             "need_pay_after_call" => true,
+            "is_product_list" => false,
             "free_shipping_starts_from" => 0,
+            "shop_display_type" => 0,
             "payment_info" => "Текст не найден",
             "wheel_of_fortune" => (object)[
                 "rules" => "Правила колеса фортуны",

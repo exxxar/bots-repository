@@ -1,7 +1,7 @@
 import util from '../utilites';
 import axios from "axios";
 
-const BASE_FRIENDS_LINK = '/bot-client/friends'
+const BASE_FRIENDS_LINK = '/bot-client/friends-script'
 
 let state = {}
 

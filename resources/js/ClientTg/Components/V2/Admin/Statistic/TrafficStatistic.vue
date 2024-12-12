@@ -58,7 +58,7 @@
 
         </tbody>
     </table>
-    <p class="text-danger my-3" v-else>Нет данных по продажам за выбранный период:(</p>
+    <p class="text-danger my-3 text-center" v-else>Нет данных по переходам:(</p>
 </template>
 <script>
 export default {

@@ -1,32 +1,24 @@
 <script setup>
 import ProductCategories from "@/ClientTg/Components/V2/Shop/ProductCategories.vue";
 import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
+import ProductListItem from "@/ClientTg/Components/V2/Shop/ProductListItem.vue";
 import Pagination from "@/ClientTg/Components/V1/Pagination.vue";
 import CategoryList from "@/ClientTg/Components/V2/Shop/CategoryList.vue";
 import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
+import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 </script>
 <template>
     <div v-touch:swipe.left="doSwipeLeft"
          v-touch:swipe.right="doSwipeRight" class="d-flex flex-column">
 
-        <div class="p-2" v-if="settings.is_disabled">
-            <div class="alert alert-danger mb-0">
-                <p class="mb-0" v-html="settings.disabled_text"></p>
-            </div>
-        </div>
-
-        <div class="p-2">
-            <div class="input-group">
-                <div class="form-floating">
-                    <input type="search"
-                           v-model="search"
-                           class="form-control border-light" id="search-product" placeholder="name@example.com">
-                    <label for="search-product">Поиск по товарам</label>
+        <template v-if="settings">
+            <div class="p-2" v-if="settings.is_disabled">
+                <div class="alert alert-danger mb-0">
+                    <p class="mb-0" v-html="settings.disabled_text"></p>
                 </div>
-                <button class="btn btn-outline-light " type="button" id="button-addon2"><i
-                    class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
             </div>
-        </div>
+        </template>
+
 
         <menu
             v-bind:style="colorTheme"
@@ -54,160 +46,154 @@ import CollectionCard from "@/ClientTg/Components/V2/Shop/CollectionCard.vue";
         <div
             v-show="tab===0"
             class="album" style="min-height:100vh;">
-            <div class="container g-2">
-                <div class="list-group" v-if="filteredCategories.length>0">
-                    <a
-                        href="javascript:void(0)"
-                        @click="selectCategory(null)"
-                        style="font-weight:bold;"
-                        class="list-group-item list-group-item-action d-flex justify-content-between p-3"
-                        aria-current="true">
-                        Все категории товаров
-                    </a>
-                    <a
-                        v-if="collections.length>0"
-                        href="javascript:void(0)"
-                        @click="selectCategory({id:'combo'})"
-                        style="font-weight:bold;"
-                        class="list-group-item list-group-item-action d-flex justify-content-between p-3"
-                        aria-current="true">
-                        Комбо-меню<span class="badge text-bg-primary">{{ collections.length || 0 }}</span>
-                    </a>
+            <template v-if="settings">
+                <div class="container g-2">
 
-                    <a
-                        href="javascript:void(0)"
-                        @click="selectCategory(item)"
-                        v-for="item in filteredCategories"
-                        style="font-weight:bold;"
-                        class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center"
-                        aria-current="true">
-                        {{ item.title || 'Не указано' }}<span class="badge text-bg-primary">{{ item.count || 0 }}</span>
-                    </a>
-
+                    <!--        <div class="p-2">
+            <div class="input-group">
+                <div class="form-floating">
+                    <input type="search"
+                           v-model="search"
+                           class="form-control border-light" id="search-product" placeholder="name@example.com">
+                    <label for="search-product">Поиск по товарам</label>
                 </div>
-                <div v-else
-                     class="alert alert-light text-primary d-flex flex-column justify-content-center align-items-center"
-                     role="alert">
-                    По данному запросу нет ничего:(
-
-                    <button
-                        @click="search=null"
-                        class="btn btn-outline-primary my-3">Сбросить поиск
-                    </button>
-                </div>
-                <!--                <CategoryList
-                                    :selected="categories"
-                                    v-on:select="selectCategory"/>-->
+                <button class="btn btn-outline-light " type="button" id="button-addon2"><i
+                    class="fa-solid fa-magnifying-glass-arrow-right"></i></button>
             </div>
+        </div>-->
+                    <div class="list-group" v-if="filteredCategories.length>0">
+                        <a
+                            href="javascript:void(0)"
+                            @click="selectCategory(null)"
+                            style="font-weight:bold;"
+                            class="list-group-item list-group-item-action d-flex justify-content-between p-3"
+                            aria-current="true">
+                            Все категории товаров
+                        </a>
+                        <a
+                            v-if="collections.length>0"
+                            href="javascript:void(0)"
+                            @click="selectCategory({id:'combo'})"
+                            style="font-weight:bold;"
+                            class="list-group-item list-group-item-action d-flex justify-content-between p-3"
+                            aria-current="true">
+                            Комбо-меню<span class="badge text-bg-primary">{{ collections.length || 0 }}</span>
+                        </a>
+
+                        <a
+                            href="javascript:void(0)"
+                            @click="selectCategory(item)"
+                            v-for="item in filteredCategories"
+                            style="font-weight:bold;"
+                            class="list-group-item list-group-item-action d-flex justify-content-between p-3 align-items-center"
+                            aria-current="true">
+                            {{ item.title || 'Не указано' }}<span class="badge text-bg-primary">{{
+                                item.count || 0
+                            }}</span>
+                        </a>
+
+                    </div>
+
+                    <!--                <CategoryList
+                                        :selected="categories"
+                                        v-on:select="selectCategory"/>-->
+                </div>
+            </template>
+            <PreloaderV1 v-else/>
         </div>
 
         <div
             v-if="tab===1"
             style="min-height:100vh;"
             class="album">
-            <div class="container g-2">
+            <template v-if="settings">
+                <div class="container g-2">
+                    <template
+                        v-if="collections.length>0">
+                        <h5 class="my-4 divider" id="cat-combo">Комбо меню</h5>
+                        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
+                            <div class="col"
+                                 v-for="(collection, index) in collections">
 
-                <div
-                    v-if="load_collection"
-                    class="d-flex flex-column align-items-center py-5">
-                    <div class="spinner-grow bg-primary" style="width: 3rem; height: 3rem;" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="py-2">Загружаем комбо-меню...</p>
-                </div>
+                                <CollectionCard
+                                    v-if="!collection.need_refresh"
+                                    :item="collection"
+                                />
+                                <div
+                                    v-if="inCart(collection.id)"
+                                    class="px-2">
+                                    <button
+                                        class="btn btn-success btn-sm w-100"
+                                        @click="duplicateForUsers(collection, index)"
+                                        type="button">Новый вариант
+                                    </button>
+                                </div>
 
+                            </div>
+                        </div>
+                        <div
+                            v-if="collections_paginate?.meta.last_page > 1"
+                            class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                            <div class="col">
+                                <Pagination
+                                    :simple="true"
+                                    v-on:pagination_page="nextCollections"
+                                    v-if="collections_paginate"
+                                    :pagination="collections_paginate"/>
+                            </div>
+                        </div>
+                    </template>
 
-                <template
-                    v-if="collections.length>0">
-                    <h5 class="my-4 divider" id="cat-combo">Комбо меню</h5>
-                    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
-                        <div class="col"
-                             v-for="(collection, index) in collections">
+                    <template
+                        v-if="filteredCategories.length>0"
+                        v-for="cat in filteredCategories">
+                        <h5 class="my-4 divider" :id="'cat-'+cat.id">{{ cat.title || '-' }}</h5>
 
-                            <CollectionCard
-                                v-if="!collection.need_refresh"
-                                :item="collection"
-                            />
-                            <div
-                                v-if="inCart(collection.id)"
-                                class="px-2">
-                                <button
-                                    class="btn btn-success btn-sm w-100"
-                                    @click="duplicateForUsers(collection, index)"
-                                    type="button">Новый вариант
-                                </button>
+                        <div
+                            v-if="!settings.is_product_list"
+                            class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
+                            <div class="col"
+                                 v-for="(product, index) in cat.products">
+
+                                <ProductCard
+
+                                    :item="product"
+                                />
                             </div>
 
                         </div>
-                    </div>
-                    <div
-                        v-if="collections_paginate?.meta.last_page > 1"
-                        class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+                        <ol
+                            v-else
+                            class="list-group list-group-numbered">
+                            <template v-for="(product, index) in cat.products">
+                                <ProductListItem
+                                    :item="product"
+                                />
+                            </template>
+
+                        </ol>
+
+
+                    </template>
+                    <PreloaderV1 v-else/>
+                </div>
+                <div class="container">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                         <div class="col">
                             <Pagination
                                 :simple="true"
-                                v-on:pagination_page="nextCollections"
-                                v-if="collections_paginate"
-                                :pagination="collections_paginate"/>
+                                v-on:pagination_page="nextProducts"
+                                v-if="paginate"
+                                :pagination="paginate"/>
                         </div>
                     </div>
-                </template>
-
-
-                <template
-                    v-if="filteredCategories.length>0"
-                    v-for="cat in filteredCategories">
-                    <h5 class="my-4 divider" :id="'cat-'+cat.id">{{ cat.title || '-' }}</h5>
-
-                    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2">
-                        <div class="col"
-                             v-for="(product, index) in cat.products">
-
-                            <ProductCard
-
-                                :item="product"
-                            />
-                        </div>
-
-                    </div>
-                </template>
-                <div v-else
-                     class="alert alert-light text-primary d-flex flex-column justify-content-center align-items-center"
-                     role="alert">
-                    По данному запросу нет ничего:(
-
-                    <button
-                        @click="search=null"
-                        class="btn btn-outline-primary my-3">Сбросить поиск
-                    </button>
                 </div>
-
-
-            </div>
-            <div class="container">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                    <div class="col">
-                        <Pagination
-                            :simple="true"
-                            v-on:pagination_page="nextProducts"
-                            v-if="paginate"
-                            :pagination="paginate"/>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-
-    </div>
-    <div class="catalog-preloader" v-if="load_content">
-        <div class="d-flex flex-column align-items-center">
-            <div class="spinner-grow bg-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="py-2">Загружаем...</p>
+            </template>
+            <PreloaderV1 v-else/>
         </div>
     </div>
+
 </template>
 <script>
 
@@ -215,7 +201,7 @@ import {mapGetters} from "vuex";
 import {v4 as uuidv4} from "uuid";
 
 export default {
-    props:["settings"],
+    props: ["settings"],
     data() {
         return {
             tab: 1,
@@ -327,7 +313,6 @@ export default {
 
     mounted() {
         //this.clearCart();
-
         this.loadProducts()
         this.loadCollections()
 
@@ -471,7 +456,7 @@ export default {
             c.current_price = 0
             this.collections.push(c)
             this.collections[index].need_refresh = true
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.collections[index].need_refresh = false
             })
 
@@ -598,8 +583,8 @@ export default {
 
 .catalog-tabs {
     .nav-item {
-      //  position: relative;
-      //  bottom: -1px;
+        //  position: relative;
+        //  bottom: -1px;
     }
 }
 
@@ -644,5 +629,6 @@ export default {
     font-weight: bold;
     box-shadow: 1px 1px 7px 0px #00000045;
 }
+
 
 </style>

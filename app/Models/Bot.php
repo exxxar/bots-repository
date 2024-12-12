@@ -96,7 +96,7 @@ class Bot extends Model
     ];
 
     protected $with = ["company", "amo", "warnings", "fieldSettings",
-        'YClients', 'frontPad','iiko', ];
+        'YClients', 'frontPad','iiko', 'cdek' ];
     protected $appends = ['topics'];
 
     public function getTopicsAttribute()
@@ -208,5 +208,12 @@ class Bot extends Model
     {
         return $this->hasOne(Iiko::class);
     }
+
+
+    public function cdek(): HasOne
+    {
+        return $this->hasOne(Cdek::class);
+    }
+
 
 }

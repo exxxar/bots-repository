@@ -186,3 +186,8 @@ Route::apiResource('product-collections', \App\Http\Controllers\Bots\Web\Product
 
 
 Route::apiResource('traffic-sources', App\Http\Controllers\TrafficSourceController::class);
+
+
+Route::apiResource('cdeks', App\Http\Controllers\CdekController::class);
+
+Route::apiResource('folders', App\Http\Controllers\FolderController::class);

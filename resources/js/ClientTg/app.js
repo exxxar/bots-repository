@@ -18,6 +18,8 @@ import moment from 'moment'
 
 import VueTheMask from 'vue-the-mask'
 import VueSocialSharing from 'vue-social-sharing'
+import SimpleTypeahead from 'vue3-simple-typeahead';
+import 'vue3-simple-typeahead/dist/vue3-simple-typeahead.css'; //Optional default CSS
 
 import PerfectScrollbar from 'vue3-perfect-scrollbar'
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
@@ -72,6 +74,7 @@ createInertiaApp({
             .use(router)
             .use(VueSocialSharing)
             .use(PerfectScrollbar)
+            .use(SimpleTypeahead)
             .use(Vue3TouchEvents)
             .use(ZiggyVue, Ziggy)
             .use(VueLazyLoad,

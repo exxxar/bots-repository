@@ -5,6 +5,7 @@ namespace App\Http\BusinessLogic;
 use App\Http\BusinessLogic\Methods\AmoLogicFactory;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory;
 use App\Http\BusinessLogic\Methods\BitrixLogicFactory;
+use App\Http\BusinessLogic\Methods\CDEKLogicFactory;
 use App\Http\BusinessLogic\Methods\FrontPadLogicFactory;
 use App\Http\BusinessLogic\Methods\IIKOLogicFactory;
 use App\Http\BusinessLogic\Methods\InlineQueryLogicFactory;
@@ -60,6 +61,7 @@ class BusinessLogic
     protected ReviewLogicFactory $review;
     protected IIKOLogicFactory $iiko;
     protected StatisticLogicFactory $stat;
+    protected CDEKLogicFactory $cdek;
 
     public function __construct()
     {
@@ -90,6 +92,12 @@ class BusinessLogic
         $this->iiko = new IIKOLogicFactory();
         $this->collection = new ProductCollectionLogicFactory();
         $this->stat = new StatisticLogicFactory();
+        $this->cdek = new CDEKLogicFactory();
+    }
+
+    public function cdek(): CDEKLogicFactory
+    {
+        return $this->cdek;
     }
 
     public function bots(): BotLogicFactory

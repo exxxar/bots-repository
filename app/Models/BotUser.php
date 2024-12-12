@@ -80,10 +80,13 @@ class BotUser extends Model
         return $this->hasMany(CustomField::class);
     }
 
+
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);
     }
+
+
 
     public function user(): BelongsTo
     {

@@ -2,6 +2,7 @@
 
 namespace App\Classes;
 
+use App\Jobs\SendMessageJob;
 use App\Models\Bot;
 use App\Models\BotMenuTemplate;
 use danog\Decoder\FileId;
@@ -96,7 +97,7 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendMessage($chatId, $message, $messageThreadId = null)
+    public function sendMessage($chatId, $message, $messageThreadId = null, $delay = 0)
     {
         if (mb_strlen($message ?? '') == 0)
             return $this;
@@ -109,7 +110,7 @@ trait BotBaseMethodsTrait
             "parse_mode" => "HTML"
         ];
 
-        return $this->extractedMessage($message, $tmp, $chatId, $messageThreadId);
+        return $this->extractedMessage($message, $tmp, $chatId, $messageThreadId, $delay);
     }
 
     public function sendSticker($chatId, $sticker, $messageThreadId = null)
@@ -838,6 +839,7 @@ trait BotBaseMethodsTrait
 
             $tmp["caption"] = "$subMessage...";
 
+            sleep(1);
             $data = $this->bot->sendPhoto($tmp);
 
             return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
@@ -852,7 +854,7 @@ trait BotBaseMethodsTrait
         try {
             $data = $this->bot->sendPhoto($tmp);
         } catch (\Exception $e) {
-            Log::info("error in sendPhoto ".$e->getMessage());
+            Log::info("error in sendPhoto " . $e->getMessage());
             empty($keyboard ?? []) ?
                 $this->sendMessage($chatId, $caption ?? 'Ошибочка...', $messageThreadId) :
                 $this->sendInlineKeyboard($chatId, $caption ?? 'Ошибочка...', $keyboard, $messageThreadId);
@@ -945,7 +947,7 @@ trait BotBaseMethodsTrait
 
     }
 
-    public function sendMediaGroup($chatId, $media )
+    public function sendMediaGroup($chatId, $media)
     {
 
         $tmp = [
@@ -962,7 +964,7 @@ trait BotBaseMethodsTrait
         try {
             $this->bot->sendMediaGroup($tmp);
         } catch (\Exception $e) {
-            Log::error( $e);
+            Log::error($e);
         }
 
         return $this;
@@ -1028,7 +1030,7 @@ trait BotBaseMethodsTrait
      * @param mixed $messageThreadId
      * @return $this|BotManager|BotMethods
      */
-    private function extractedMessage($message, array $tmp, $chatId, mixed $messageThreadId = null): BotBaseMethodsTrait|BotMethods|BotManager
+    private function extractedMessage($message, array $tmp, $chatId, mixed $messageThreadId = null, $delay = 0): BotBaseMethodsTrait|BotMethods|BotManager
     {
         if (mb_strlen($message ?? '') >= 4000) {
             $subMessage = mb_substr($message, 0, 4000);
@@ -1036,9 +1038,19 @@ trait BotBaseMethodsTrait
 
             $tmp["text"] = "$subMessage...";
 
+            sleep(1);
             $data = $this->bot->sendMessage($tmp);
 
-            return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
+            /*SendMessageJob::dispatch(
+                botId: $this->getSelf()->id,
+                chatId: $chatId,
+                message: $subMessage,
+                messageThreadId: $messageThreadId,
+            )
+                ->delay(now()
+                    ->addSeconds($delay ?? 2));*/
+
+            return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId, $delay+2);
 
         }
 
@@ -1050,6 +1062,7 @@ trait BotBaseMethodsTrait
 
         try {
             $data = $this->bot->sendMessage($tmp);
+            sleep(1);
         } catch (\Exception $e) {
             Log::info("error in extractedMessage" . $e);
             //$this->sendMessageOnCrash($tmp, "sendMessage");

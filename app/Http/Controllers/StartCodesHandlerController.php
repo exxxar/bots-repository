@@ -270,8 +270,16 @@ class StartCodesHandlerController extends Controller
 
         $userBotUser = BotUser::query()
             ->where("telegram_chat_id", $id)
-            ->where("bot_id", BotManager::bot()->getSelf()->id)
+            ->where("bot_id", $bot->id)
             ->first();
+
+        if (is_null($userBotUser) || is_null($botUser))
+        {
+            BotManager::bot()
+                ->setBot($bot)
+                ->pushCommand("/start");
+            return;
+        }
 
         $ref = ReferralHistory::query()
             ->where("user_sender_id", $userBotUser->user_id ?? null)

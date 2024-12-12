@@ -19,6 +19,7 @@ class BotPage extends Model
      */
     protected $fillable = [
         'bot_menu_slug_id',
+        'folder_id',
         'content',
         'password',
         'password_description',
@@ -55,6 +56,7 @@ class BotPage extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_menu_slug_id' => 'integer',
+        'folder_id' => 'integer',
         'images' => 'array',
         'videos' => 'array',
         'audios' => 'array',

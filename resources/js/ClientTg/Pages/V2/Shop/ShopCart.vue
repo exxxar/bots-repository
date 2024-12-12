@@ -634,6 +634,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
             <p>Корзина пустая:(</p>
         </div>
     </div>
+
     <nav
         v-if="canBy"
         class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"

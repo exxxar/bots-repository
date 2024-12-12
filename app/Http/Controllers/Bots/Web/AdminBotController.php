@@ -41,10 +41,7 @@ class AdminBotController extends Controller
             "date" => "required"
         ]);
 
-        $bot = Bot::query()
-            ->with(["company"])
-            ->where("id", $request->bot_id)
-            ->first();
+        $bot = $request->bot ?? null;
 
         $botUser = $request->botUser ?? null;
 

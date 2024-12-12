@@ -38,7 +38,9 @@ import reviews from "./modules/shop/reviews"
 import mailing from "./modules/mailing"
 import iiko from "./modules/iiko"
 import bitrix from "./modules/bitrix"
+import cdek from "./modules/cdek"
 import collections from "./modules/collections"
+import myFriends from "./modules/friends"
 
 import util from "./modules/utilites";
 
@@ -183,7 +185,10 @@ export default createStore({
         mailing,
         iiko,
         friends,
+        myFriends,
         reviews,
-        bitrix
+        bitrix,
+        cdek,
+
     }
 })

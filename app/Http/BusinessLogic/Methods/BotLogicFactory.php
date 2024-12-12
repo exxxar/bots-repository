@@ -24,6 +24,9 @@ use App\Http\Resources\ImageMenuCollection;
 use App\Http\Resources\ImageMenuResource;
 use App\Http\Resources\LocationResource;
 use App\Http\Resources\QueueResource;
+use App\Jobs\SendMediaJob;
+use App\Jobs\SendMessageJob;
+use App\Jobs\SendPhotoJob;
 use App\Models\AmoCrm;
 use App\Models\Bot;
 use App\Models\BotCustomFieldSetting;
@@ -1608,6 +1611,44 @@ class BotLogicFactory
     }
 
 
+    public function updatMenuIcons(array $data, $files = [])
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Условия функции не выполнены!");
+
+        $data = json_decode($data["items"] ?? '[]');
+
+        $config = $this->bot->config ?? [];
+
+        if (count($files ?? []) > 0) {
+
+            foreach ($files as $key => $value) {
+                $file = $value[0];
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('images/shop-v2-2/' . $this->bot->bot_domain), $filename);
+
+                for ($i = 0; $i < count($data ?? []); $i++) {
+                    if ($data[$i]->slug == $key) {
+                        $oldPath = public_path('images/shop-v2-2/' . $this->bot->bot_domain . "/" . $data[$i]->image_url);
+                        if (file_exists($oldPath))
+                            unlink($oldPath);
+                        $data[$i]->image_url = $this->bot->bot_domain . "/" . $filename;
+                    }
+
+                }
+
+
+            }
+
+            $config["icons"] = $data;
+        }
+
+        $this->bot->config = $config;
+        $this->bot->save();
+
+        return new BotResource($this->bot);
+    }
+
     /**
      * @throws HttpException
      * @throws ValidationException
@@ -2422,7 +2463,7 @@ class BotLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
-    public function sendToQueue(array $data): QueueResource
+    public function sendToCroneQueue(array $data): QueueResource
     {
 
         if (is_null($this->bot))
@@ -2462,6 +2503,97 @@ class BotLogicFactory
         }
 
         return new QueueResource($queue);
+
+    }
+
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function sendToRedisQueue(array $data): void
+    {
+
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $validator = Validator::make($data, [
+            "message" => "required",
+            "inline_keyboard" => "",
+            "images" => "",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $images = json_decode($data["images"] ?? '[]');/*   $tmp = [
+            "images" => ,
+            "videos" => $data["videos"] ?? null,
+            "audios" => $data["audios"] ?? null,
+
+        ]*/;
+
+        $botUsers = BotUser::query()
+            ->where("bot_id", $this->bot->id)
+            ->get();
+
+        $delay = 0;
+        foreach ($botUsers as $botUser) {
+            if (count($images ?? []) == 0)
+                $this->getPendingDispatch($botUser, $data, $delay);
+
+            if (count($images ?? []) == 1)
+                SendPhotoJob::dispatch(
+                    botId: $this->bot->id,
+                    chatId: $botUser->telegram_chat_id,
+                    caption: $data["message"] ?? 'Текст сообщения',
+                    photo: $images[0],
+                    replyKeyboard: $data["reply_keyboard"] ?? null,
+                    inlineKeyboard: $data["inline_keyboard"] ?? null,
+                    messageThreadId: null,
+                    keyboardSettings: $data["settings"] ?? null,
+                )
+                    ->delay((is_null($data["cron_time"] ?? null) ?
+                        Carbon::now() :
+                        Carbon::parse($data["cron_time"]))
+                        ->setTimezone("+0:00")
+                        ->subHours(3)
+                        ->addSeconds($delay + 1)
+                    );
+
+            if (count($images ?? []) > 1) {
+
+                $media = [];
+                foreach ($images as $image) {
+                    $media[] = [
+                        "media" => $image,
+                        "type" => "photo",
+                        "caption" => "$image"
+                    ];
+                }
+
+                SendMediaJob::dispatch(
+                    botId: $this->bot->id,
+                    chatId: $botUser->telegram_chat_id,
+                    meida: json_encode($media),
+                    messageThreadId: null,
+                )
+                    ->delay((is_null($data["cron_time"] ?? null) ?
+                        Carbon::now() :
+                        Carbon::parse($data["cron_time"]))
+                        ->setTimezone("+0:00")
+                        ->subHours(3)
+                        ->addSeconds($delay + 1)
+                    );
+
+                $this->getPendingDispatch($botUser, $data, $delay);
+            }
+
+
+            $delay += 2;
+        }
+
 
     }
 
@@ -2555,5 +2687,31 @@ class BotLogicFactory
             );
 
         unlink(storage_path("app/public") . "/$name.xls");
+    }
+
+    /**
+     * @param mixed $botUser
+     * @param array $data
+     * @param int $delay
+     * @return void
+     */
+    private function getPendingDispatch(mixed $botUser, array $data, int $delay): void
+    {
+        SendMessageJob::dispatch(
+            botId: $this->bot->id,
+            chatId: $botUser->telegram_chat_id,
+            message: $data["message"] ?? 'Текст сообщения',
+            replyKeyboard: $data["reply_keyboard"] ?? null,
+            inlineKeyboard: $data["inline_keyboard"] ?? null,
+            messageThreadId: null,
+            keyboardSettings: $data["settings"] ?? null,
+        )
+            ->delay((is_null($data["cron_time"] ?? null) ?
+                Carbon::now() :
+                Carbon::parse($data["cron_time"]))
+                ->setTimezone("+0:00")
+                ->subHours(3)
+                ->addSeconds($delay)
+            );
     }
 }

@@ -132,6 +132,30 @@ class BotUserLogicFactory
         unlink(storage_path("app/public") . "/$name.xls");
     }
 
+    /**
+     * @throws HttpException
+     */
+    public function friends($search = null, $size = null): BotUserCollection
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Не все условия функции выполнены!");
+
+
+        $size = $size ?? config('app.results_per_page');
+
+        $userIds = ReferralHistory::query()
+            ->where("user_sender_id", $this->botUser->user_id)
+            ->where("bot_id", $this->bot->id)
+            ->pluck("user_recipient_id");
+
+        $friends = BotUser::query()
+            ->whereIn("user_id", $userIds)
+            ->where("bot_id", $this->bot->id)
+            ->orderBy("created_at","desc")
+            ->paginate($size);
+
+        return new BotUserCollection($friends);
+    }
 
     /**
      * @throws HttpException

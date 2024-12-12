@@ -44,6 +44,7 @@ class BotSecurityResource extends JsonResource
             'company' => new CompanySecurityResource($this->whenLoaded('company')),
             'field_settings' => !isset($this->fieldSettings) ? null : BotCustomFieldSettingResource::collection($this->whenLoaded('fieldSettings')),
             'iiko' => new IikoResource($this->whenLoaded("iiko")),
+            'frontPad' => new FrontPadResource($this->whenLoaded("frontPad")),
            // 'bitrix' => !isset($this->bitrix) ? [] : BitrixResource::collection($this->whenLoaded('bitrix')),
 
             //'imageMenus' => ImageMenuResource::collection($this->whenLoaded('imageMenus')),
