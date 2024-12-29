@@ -1,3 +1,7 @@
+<script setup>
+import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
+</script>
+
 <template>
 
     <div v-if="loaded_params">
@@ -33,9 +37,12 @@
             <label for="floatingSelect">Тип магазина</label>
         </div>
 
-        <p class="alert alert-light mb-2">Вы можете разрешить или запретить клиентам оставлять заказы вне рабочего времени вашего сервиса.
-            Если переключатель выключен, то покупки будут доступны <span v-bind:class="{'text-primary fw-bold':!form.can_buy_after_closing}">согласно графика</span>
-            работы вашего заведения, а если включен - <span v-bind:class="{'text-primary fw-bold':form.can_buy_after_closing}">всегда</span>.</p>
+        <p class="alert alert-light mb-2">Вы можете разрешить или запретить клиентам оставлять заказы вне рабочего
+            времени вашего сервиса.
+            Если переключатель выключен, то покупки будут доступны <span
+                v-bind:class="{'text-primary fw-bold':!form.can_buy_after_closing}">согласно графика</span>
+            работы вашего заведения, а если включен - <span
+                v-bind:class="{'text-primary fw-bold':form.can_buy_after_closing}">всегда</span>.</p>
         <div class="form-check form-switch mb-2">
             <input class="form-check-input"
                    type="checkbox"
@@ -147,6 +154,8 @@
                 v-bind:class="{'text-primary fw-bold':form.can_use_cash}">вкл</span> \ <span
                 v-bind:class="{'text-primary fw-bold':!form.can_use_cash}">выкл</span></label>
         </div>
+
+
         <p class="alert alert-light mb-2">Оплата картой подразумевает использование платежного агрегатора и требует
             ввода тоукена платежной системы. Оплата через агрегатора облагается налогом.</p>
         <div class="form-check form-switch mb-2">
@@ -158,6 +167,177 @@
                 v-bind:class="{'text-primary fw-bold':form.can_use_card}">вкл</span> \ <span
                 v-bind:class="{'text-primary fw-bold':!form.can_use_card}">выкл</span></label>
         </div>
+
+
+        <div class="divider my-3">Секции</div>
+        <p class="alert alert-light">
+            Данный блок переключателей включает \ выключает отображение соответствующих секций в корзине.
+        </p>
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.need_promo_code"
+                   role="switch" id="script-settings-need_promo_code">
+            <label class="form-check-label" for="script-settings-need_promo_code">Промокод: <span
+                v-bind:class="{'text-primary fw-bold':form.need_promo_code}">вкл</span> \ <span
+                v-bind:class="{'text-primary fw-bold':!form.need_promo_code}">выкл</span></label>
+        </div>
+
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.need_bonuses_section"
+                   role="switch" id="script-settings-need_bonuses_section">
+            <label class="form-check-label" for="script-settings-need_bonuses_section">Оплата бонусами: <span
+                v-bind:class="{'text-primary fw-bold':form.need_bonuses_section}">вкл</span> \ <span
+                v-bind:class="{'text-primary fw-bold':!form.need_bonuses_section}">выкл</span></label>
+        </div>
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.need_prizes_from_wheel_of_fortune"
+                   role="switch" id="script-settings-need_prizes_from_wheel_of_fortune">
+            <label class="form-check-label" for="script-settings-need_prizes_from_wheel_of_fortune">Призы колеса
+                фортуны: <span
+                    v-bind:class="{'text-primary fw-bold':form.need_prizes_from_wheel_of_fortune}">вкл</span> \ <span
+                    v-bind:class="{'text-primary fw-bold':!form.need_prizes_from_wheel_of_fortune}">выкл</span></label>
+        </div>
+
+
+        <template v-if="form.shop_display_type === 0">
+            <div class="form-check form-switch mb-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       v-model="form.need_person_counter"
+                       role="switch" id="script-settings-need_person_counter">
+                <label class="form-check-label" for="script-settings-need_person_counter">Число персон: <span
+                    v-bind:class="{'text-primary fw-bold':form.need_person_counter}">вкл</span> \ <span
+                    v-bind:class="{'text-primary fw-bold':!form.need_person_counter}">выкл</span></label>
+            </div>
+
+            <div class="form-check form-switch mb-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       v-model="form.need_health_restrictions"
+                       role="switch" id="script-settings-need_health_restrictions">
+                <label class="form-check-label" for="script-settings-need_health_restrictions">Ограничения по здоровью:
+                    <span
+                        v-bind:class="{'text-primary fw-bold':form.need_health_restrictions}">вкл</span> \ <span
+                        v-bind:class="{'text-primary fw-bold':!form.need_health_restrictions}">выкл</span></label>
+            </div>
+
+            <div class="form-check form-switch mb-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       v-model="form.need_table_list"
+                       role="switch" id="script-settings-need_table_list">
+                <label class="form-check-label" for="script-settings-need_table_list">Столики в заведении: <span
+                    v-bind:class="{'text-primary fw-bold':form.need_table_list}">вкл</span> \ <span
+                    v-bind:class="{'text-primary fw-bold':!form.need_table_list}">выкл</span></label>
+            </div>
+
+            <template v-if="form.need_table_list">
+                <p class="alert alert-light mb-2">
+                    Укажите максимальное число столиков в заведении
+                </p>
+                <div
+                    class="form-floating mb-3">
+                    <input type="number"
+                           min="0"
+                           max="200"
+                           v-model="form.max_tables"
+                           class="form-control" id="modelValue-table-number"
+                           placeholder="Номер столика">
+                    <label for="modelValue-table-number">Число столиков</label>
+                </div>
+            </template>
+
+        </template>
+
+        <div class="divider my-3">Настройка СБП</div>
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   v-model="form.can_use_sbp"
+                   role="switch" id="script-settings-need_use_sbp">
+            <label class="form-check-label" for="script-settings-need_use_sbp">Использовать СБП для оплат: <span
+                v-bind:class="{'text-primary fw-bold':form.can_use_sbp}">вкл</span> \ <span
+                v-bind:class="{'text-primary fw-bold':!form.can_use_sbp}">выкл</span></label>
+        </div>
+
+        <template v-if="form.can_use_sbp&&form.sbp">
+            <p class="mb-2 alert alert-light">Внимание! На текущий момент для СБП используется только
+                <a href="https://telegra.ph/Nastrojka-SBP-v-T-bank-12-28" target="_blank" class="text-primary fw-bold">Т-Банк</a>
+            </p>
+            <div
+                class="form-floating mb-2">
+                <input type="text"
+                       required
+                       v-model="form.sbp.tinkoff.terminal_key"
+                       class="form-control" id="modelValue-tinkoff-terminal-key"
+                       placeholder="Ключ терминала">
+                <label for="modelValue-tinkoff-terminal-key">Ключ терминала</label>
+            </div>
+
+            <div
+                class="form-floating mb-2">
+                <input type="text"
+                       required
+                       v-model="form.sbp.tinkoff.terminal_password"
+                       class="form-control" id="modelValue-tinkoff-terminal-password"
+                       placeholder="Пароль терминала">
+                <label for="modelValue-tinkoff-terminal-password">Пароль терминала</label>
+            </div>
+
+            <div class="form-floating mb-2">
+                <select class="form-select"
+                        required
+                        v-model="form.sbp.tinkoff.tax"
+                        id="floatingSelect" aria-label="Floating label select example">
+                    <option :value="tax.tax" v-for="(tax, taxIndex) in tax_variants">{{tax.title}}</option>
+                </select>
+                <label for="floatingSelect">Схема налогооблажения</label>
+            </div>
+
+            <div class="form-floating mb-2">
+                <select class="form-select"
+                        required
+                        v-model="form.sbp.tinkoff.vat"
+                        id="floatingSelect" aria-label="Floating label select example">
+                    <option :value="vat.value" v-for="(vat, vatIndex) in vat_variants">{{vat.title}}</option>
+                </select>
+                <label for="floatingSelect">% НДС</label>
+            </div>
+
+        </template>
+
+
+        <div class="divider my-3">Настройка призов из розыгрыша</div>
+
+
+        <p class="alert alert-light mb-2">
+            Вам нужно выбрать скрипт колеса, призы которого будут автоматически вносится в заказ пользователем.
+        </p>
+        <h6>Доступные для выбора скрипты</h6>
+        <ul class="list-group mb-2" v-if="(scripts||[]).length>0">
+            <li
+                @click="selectScript(null)"
+                v-bind:class="{'bg-primary text-white':(form.selected_script_id||null)==null}"
+                class="list-group-item d-flex justify-content-between">Не выбрано
+            </li>
+            <li
+                @click="selectScript(item)"
+                v-for="item in scripts"
+                v-bind:class="{'bg-primary text-white':(form.selected_script_id||null)==item.id}"
+                class="list-group-item d-flex justify-content-between">{{ item.command || '-' }} <small class="fw-bold">#{{
+                    item.id
+                }}</small>
+            </li>
+
+        </ul>
+
     </div>
 
 </template>
@@ -167,6 +347,62 @@ export default {
     data() {
         return {
             loaded_params: false,
+
+            scripts: [],
+
+            vat_variants:[
+
+                {
+                    value:'none',
+                    title:'Нет',
+                },
+                {
+                    value:'vat0',
+                    title:'0%',
+                },
+                {
+                    value:'vat10',
+                    title:'10%',
+                },
+                {
+                    value:'vat18',
+                    title:'18%',
+                },
+                {
+                    value:'vat20',
+                    title:'20%',
+                },
+            ],
+            tax_variants:[
+                {
+                    tax:'osn',
+                    title:'общая',
+                },
+                {
+                    tax:'usn_income',
+                    title:'упрощенная (доходы)',
+                },
+                {
+                    tax:'usn_income_outcome',
+                    title:'упрощенная (доходы минус расходы)',
+                },
+                {
+                    tax:'patent',
+                    title:'патентная',
+                },
+                {
+                    tax:'envd',
+                    title:'единый налог на вмененный доход',
+                },
+                {
+                    tax:'esn',
+                    title:'единый сельскохозяйственный налог',
+                },
+                {
+                    tax:'self',
+                    title:'НПД',
+                }
+            ],
             form: {
                 shop_coords: null,
                 yandex_geocoder: null,
@@ -184,8 +420,33 @@ export default {
                 need_pay_after_call: false,
                 disabled_text: null,
 
-                shop_display_type:0,
-                is_product_list:false,
+                shop_display_type: 0,
+                is_product_list: false,
+
+                can_use_sbp: false,
+
+
+                sbp: {
+                    selected_sbp_bank:'tinkoff',
+                    tinkoff: {
+                        terminal_key: null,
+                        terminal_password: null,
+                        tax:null,
+                        vat:null,
+                    },
+                    sber: {}
+                },
+
+                max_tables: 0,
+                need_table_list: false,
+
+                need_promo_code: true,
+
+                need_person_counter: true,
+                need_bonuses_section: true,
+                need_health_restrictions: true,
+                need_prizes_from_wheel_of_fortune: true,
+                selected_script_id: null,
             },
         }
     },
@@ -198,11 +459,40 @@ export default {
         },
     },
     mounted() {
+
+        this.loadWheelScriptVariants()
+
         this.loaded_params = false
         this.$nextTick(() => {
             this.form = this.modelValue
             this.loaded_params = true
         })
+    },
+    methods: {
+        selectScript(item) {
+
+            if (item == null) {
+                this.form.selected_script_id = null
+                return;
+            }
+
+            this.form.selected_script_id = null
+
+            this.$nextTick(() => {
+                this.form.selected_script_id = item.id
+            })
+        },
+
+        loadWheelScriptVariants() {
+
+            this.$store.dispatch("wheelOfFortuneLoadScriptVariants")
+                .then((response) => {
+                    this.scripts = response || []
+                })
+                .catch(err => {
+                })
+        },
+
     }
 }
 </script>

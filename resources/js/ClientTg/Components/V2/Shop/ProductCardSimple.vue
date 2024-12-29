@@ -3,15 +3,17 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 </script>
 <template>
 
-    <div class="card border-0">
+    <div class="card border-0" v-if="item">
         <div class="card-body p-1">
             <div class="d-flex">
                 <div class="mr-auto"
                      @click="addToCart"
                      style="max-height: 100px;">
-                    <img v-lazy="item.images[0]"
-                         style="object-fit: cover;height: 100%;"
-                         class="rounded-2" width="110">
+
+                    <img
+                        v-lazy="item.images[0]"
+                        style="object-fit: cover;height: 100%;"
+                        class="rounded-2" width="110">
                 </div>
                 <div class="w-100 px-2 d-flex flex-column justify-content-between">
                     <h6 class="pb-0 mb-0 fw-bold" style="font-size:14px;">{{ item.title || 'не указано' }}</h6>
@@ -78,28 +80,42 @@ export default {
             this.$cart.add(this.item)
         },
         incProductCart() {
-            if (this.checkInCart === 0)
-                this.$store.dispatch("addProductToCart", this.item)
-            else
+            let incResult = this.checkInCart === 0 ?
+                this.$store.dispatch("addProductToCart", this.item) :
                 this.$store.dispatch("incQuantity", this.item.id)
 
-            this.$notify({
-                title: "Добавление товара",
-                text: 'Товар успешно добавлен',
-                type: 'success'
+            incResult.then(() => {
+                this.$notify({
+                    title: "Добавление товара",
+                    text: 'Товар успешно добавлен',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.$notify({
+                    title: "Добавление товара",
+                    text: 'Ошибка добавления товара!',
+                    type: 'error'
+                })
             })
         },
         decProductCart() {
 
-            if (this.checkInCart <= 1)
-                this.$store.dispatch("removeProduct", this.item.id)
-            else
+            let decResult = this.checkInCart <= 1 ?
+                this.$store.dispatch("removeProduct", this.item.id) :
                 this.$store.dispatch("decQuantity", this.item.id)
 
-            this.$notify({
-                title: "Добавление товара",
-                text: 'Товар успешно удален',
-                type: 'success'
+            decResult.then(() => {
+                this.$notify({
+                    title: "Удаление товара",
+                    text: 'Товар успешно удален',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.$notify({
+                    title: "Удаление товара",
+                    text: 'Ошибка удаления товара!',
+                    type: 'error'
+                })
             })
         }
     }

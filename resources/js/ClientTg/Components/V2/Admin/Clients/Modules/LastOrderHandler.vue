@@ -90,7 +90,7 @@ import OrderItem from "@/ClientTg/Components/V2/Admin/Orders/OrderItem.vue";
                     class="btn btn-outline-primary p-3">
                 <span
                     v-if="spent_time_counter<=0"
-                    class="color-white">Начислить CashBack</span>
+                    class="color-white">Начислить баллы</span>
                 <span
                     v-else
                     class="color-white">Осталось ждать {{ spent_time_counter || 0 }} сек.</span>

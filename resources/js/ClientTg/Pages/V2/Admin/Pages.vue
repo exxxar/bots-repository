@@ -26,7 +26,7 @@ import Page from "@/ClientTg/Components/V2/Admin/Pages/Page.vue"
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Редактор</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body mb-5">
                     <Page
                         v-if="!loadPage"
                         :page="page"

@@ -18,27 +18,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 
-class BotPageLogicFactory
+class BotPageLogicFactory extends BaseLogicFactory
 {
-
     use LogicUtilities;
-
-    protected $bot;
-
-    public function __construct()
-    {
-        $this->bot = null;
-
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
 
     /**
      * @throws HttpException

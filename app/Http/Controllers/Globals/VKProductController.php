@@ -182,38 +182,13 @@ class VKProductController extends Controller
                 continue;
             };
 
+            $dimension = [];
 
             $vkDimensions = $vkProduct->dimensions ?? null;
 
             if (!is_null($vkDimensions)) {
-                $titles = [
-                    "width" => "Ширина, мм",
-                    "height" => "Высота, мм",
-                    "length" => "Длина, мм",
-                ];
-
                 foreach ($vkDimensions as $key => $value) {
-
-                    if ($value == 0)
-                        continue;
-
-                    $option = ProductOption::query()
-                        ->where("key", $key)
-                        ->where("product_id", $product->id)
-                        ->first();
-
-                    if (is_null($option))
-                        ProductOption::query()->create([
-                            'key' => $key,
-                            'title' => $titles[$key],
-                            'value' => $value,
-                            'section' => "Габариты",
-                            'product_id' => $product->id,
-                        ]);
-                    else {
-                        $option->value = $value;
-                        $option->save();
-                    }
+                    $dimension[$key] = $value || 0;
                 }
 
             }
@@ -221,25 +196,11 @@ class VKProductController extends Controller
             $vkWeight = $vkProduct->weight ?? null;
 
             if (!is_null($vkWeight)) {
-
-                $option = ProductOption::query()
-                    ->where("key", "weight")
-                    ->where("product_id", $product->id)
-                    ->first();
-
-                if (is_null($option))
-                    ProductOption::query()->create([
-                        'key' => "weight",
-                        'title' => "Вес, грамм",
-                        'value' => $vkWeight,
-                        'section' => "Вес",
-                        'product_id' => $product->id,
-                    ]);
-                else {
-                    $option->value = $vkWeight;
-                    $option->save();
-                }
+                $dimension["weight"] = $vkWeight;
             }
+
+            $product->dimension = $dimension;
+            $product->save();
 
             $vkPhotos = $vkProduct->photos ?? null;
 
@@ -312,7 +273,7 @@ class VKProductController extends Controller
             ->get();
 
         foreach ($products as $product) {
-            Log::info("ПРОДУКТ => ".$product->id." ".$product->title ." ".$product->bot_id);
+            Log::info("ПРОДУКТ => " . $product->id . " " . $product->title . " " . $product->bot_id);
             $product->in_stop_list_at = Carbon::now();
             $product->deleted_at = Carbon::now();
             $product->save();
@@ -469,152 +430,152 @@ class VKProductController extends Controller
         if ($data->type != "group" && $data->type != "page")
             return response()->noContent(400);
 
-/*
+        /*
 
 
-            Schema::disableForeignKeyConstraints();
-            MenuCategory::truncate();
-            RestoranInCategory::truncate();
-            RestMenu::truncate();
-            Schema::enableForeignKeyConstraints();
+                    Schema::disableForeignKeyConstraints();
+                    MenuCategory::truncate();
+                    RestoranInCategory::truncate();
+                    RestMenu::truncate();
+                    Schema::enableForeignKeyConstraints();
 
 
-            $token = $auth->getToken($request->get('code'));
+                    $token = $auth->getToken($request->get('code'));
 
-            $api = new Client('5.131');
-            $api->setDefaultToken($token);
+                    $api = new Client('5.131');
+                    $api->setDefaultToken($token);
 
-            $tmp_ids = [["id" => "-136275935", "base" => true]];
-            $restorans = Restoran::select(["vk_group_id"])->whereNotNull("vk_group_id")->get();
+                    $tmp_ids = [["id" => "-136275935", "base" => true]];
+                    $restorans = Restoran::select(["vk_group_id"])->whereNotNull("vk_group_id")->get();
 
-            if (count($restorans) > 0)
-                foreach ($restorans as $rest)
-                    array_push($tmp_ids, ["id" => $rest->vk_group_id, "base" => false]
-                    );
+                    if (count($restorans) > 0)
+                        foreach ($restorans as $rest)
+                            array_push($tmp_ids, ["id" => $rest->vk_group_id, "base" => false]
+                            );
 
-            foreach ($tmp_ids as $tmp_id) {
-                $response = $api->request('market.getAlbums', [
-                    'owner_id' => $tmp_id["id"],
-                    'count' => 50
-                ]);
-
-
-                foreach ($response["response"]["items"] as $item) {
-                    //echo $item["id"].$item["title"]." ".$item["photo"]["photo_807"]."<br>";
-
-                    $response2 = $api->request('market.get', [
-                        'owner_id' => $tmp_id["id"],
-                        'album_id' => $item["id"],
-                        'count' => 200,
-                    ]);
-
-
-                    foreach ($response2["response"]["items"] as $item2) {
-                        //echo $item2["description"]." ".$item2["price"]["text"]." ".$item2["thumb_photo"]." ".$item2["title"]."<br>";
-
-
-                        //preg_match_all('|\d+|', $item2["description"], $matches);
-                        preg_match_all('/(#\w+)/u', $item2["description"], $matches);
-
-                        // $count = $matches[0][0] ?? 0;
-                        //dd($matches);
-
-
-                        $cat = count($matches[0]) > 0 ? $matches[0][0] : "#безкатегории";
-
-
-                        $category = MenuCategory::where("name", $cat)->first();
-                        if (is_null($category)) {
-                            $category = MenuCategory::create([
-                                "name" => $cat
-                            ]);
-                        }
-
-
-                        //preg_match_all('|\d+|', $item2["price"]["text"], $matches);
-
-                        $price = intval($item2["price"]["amount"]) / 100;//$matches[0][0] ?? 0;
-                        $tmp_old_price = isset($item2["price"]["old_amount"]) ? intval($item2["price"]["old_amount"]) / 100 : 0;
-
-                        $rest = Restoran::with(["categories"])
-                            ->where("name", $item["title"])->distinct('parent_id')->first();
-
-                        if (is_null($rest))
-                            continue;
-
-
-                        $description = $item2["description"];
-
-                        preg_match_all('/([0-9]+).грамм/i', $description, $media);
-
-                        $weight = count($matches) >= 2 ? ($media[1][0] ?? 0) : 0;
-
-                        $food_status = [
-                            "Акция!" => FoodStatusEnum::Promotion,
-                            "Скидка!" => FoodStatusEnum::Promotion,
-                            "Топ!" => FoodStatusEnum::InTheTop,
-                            "Хит продаж!" => FoodStatusEnum::BestSeller,
-                            "Новинка!" => FoodStatusEnum::NewFood,
-                            "На вес!" => FoodStatusEnum::WeightFood,
-                        ];
-
-                        $food_status_index = null;
-
-                        foreach ($food_status as $key => $status)
-                            if (mb_strpos(mb_strtolower($description), mb_strtolower($key)))
-                                $food_status_index = $key;
-
-                        $product = RestMenu::create([
-                            'food_name' => $item2["title"],
-                            'food_remark' => $description,
-                            'food_ext' => $weight ?? 0,
-                            'food_sub' => $this->prepareSub($description),
-                            'food_price' => $price,
-                            'food_discount_price' => $tmp_old_price,
-                            'food_status' => is_null($food_status_index) ? FoodStatusEnum::Unset : $food_status[$food_status_index],
-                            'rest_id' => $rest->id,
-                            'food_category_id' => $category->id,
-                            'food_img' => $item2["thumb_photo"],
-                            'stop_list' => false,
+                    foreach ($tmp_ids as $tmp_id) {
+                        $response = $api->request('market.getAlbums', [
+                            'owner_id' => $tmp_id["id"],
+                            'count' => 50
                         ]);
 
-                        if (!is_null($food_status_index))
-                            if ($food_status[$food_status_index] === FoodStatusEnum::Promotion) {
-                                $promotion = Promotion::where('product->food_name', $product->food_name)
-                                    ->where('product->rest_id', $product->rest_id)
-                                    ->first();
 
-                                if (is_null($promotion))
-                                    Promotion::create([
-                                        'product' => $product
+                        foreach ($response["response"]["items"] as $item) {
+                            //echo $item["id"].$item["title"]." ".$item["photo"]["photo_807"]."<br>";
+
+                            $response2 = $api->request('market.get', [
+                                'owner_id' => $tmp_id["id"],
+                                'album_id' => $item["id"],
+                                'count' => 200,
+                            ]);
+
+
+                            foreach ($response2["response"]["items"] as $item2) {
+                                //echo $item2["description"]." ".$item2["price"]["text"]." ".$item2["thumb_photo"]." ".$item2["title"]."<br>";
+
+
+                                //preg_match_all('|\d+|', $item2["description"], $matches);
+                                preg_match_all('/(#\w+)/u', $item2["description"], $matches);
+
+                                // $count = $matches[0][0] ?? 0;
+                                //dd($matches);
+
+
+                                $cat = count($matches[0]) > 0 ? $matches[0][0] : "#безкатегории";
+
+
+                                $category = MenuCategory::where("name", $cat)->first();
+                                if (is_null($category)) {
+                                    $category = MenuCategory::create([
+                                        "name" => $cat
                                     ]);
+                                }
+
+
+                                //preg_match_all('|\d+|', $item2["price"]["text"], $matches);
+
+                                $price = intval($item2["price"]["amount"]) / 100;//$matches[0][0] ?? 0;
+                                $tmp_old_price = isset($item2["price"]["old_amount"]) ? intval($item2["price"]["old_amount"]) / 100 : 0;
+
+                                $rest = Restoran::with(["categories"])
+                                    ->where("name", $item["title"])->distinct('parent_id')->first();
+
+                                if (is_null($rest))
+                                    continue;
+
+
+                                $description = $item2["description"];
+
+                                preg_match_all('/([0-9]+).грамм/i', $description, $media);
+
+                                $weight = count($matches) >= 2 ? ($media[1][0] ?? 0) : 0;
+
+                                $food_status = [
+                                    "Акция!" => FoodStatusEnum::Promotion,
+                                    "Скидка!" => FoodStatusEnum::Promotion,
+                                    "Топ!" => FoodStatusEnum::InTheTop,
+                                    "Хит продаж!" => FoodStatusEnum::BestSeller,
+                                    "Новинка!" => FoodStatusEnum::NewFood,
+                                    "На вес!" => FoodStatusEnum::WeightFood,
+                                ];
+
+                                $food_status_index = null;
+
+                                foreach ($food_status as $key => $status)
+                                    if (mb_strpos(mb_strtolower($description), mb_strtolower($key)))
+                                        $food_status_index = $key;
+
+                                $product = RestMenu::create([
+                                    'food_name' => $item2["title"],
+                                    'food_remark' => $description,
+                                    'food_ext' => $weight ?? 0,
+                                    'food_sub' => $this->prepareSub($description),
+                                    'food_price' => $price,
+                                    'food_discount_price' => $tmp_old_price,
+                                    'food_status' => is_null($food_status_index) ? FoodStatusEnum::Unset : $food_status[$food_status_index],
+                                    'rest_id' => $rest->id,
+                                    'food_category_id' => $category->id,
+                                    'food_img' => $item2["thumb_photo"],
+                                    'stop_list' => false,
+                                ]);
+
+                                if (!is_null($food_status_index))
+                                    if ($food_status[$food_status_index] === FoodStatusEnum::Promotion) {
+                                        $promotion = Promotion::where('product->food_name', $product->food_name)
+                                            ->where('product->rest_id', $product->rest_id)
+                                            ->first();
+
+                                        if (is_null($promotion))
+                                            Promotion::create([
+                                                'product' => $product
+                                            ]);
+                                    }
+
+
+                                if (is_null($rest->categories()->find($category->id)))
+                                    RestoranInCategory::create([
+                                        'category_id' => $category->id,
+                                        'restoran_id' => $rest->id
+                                    ]);
+
+
+                                $rate = Rating::create([
+                                    'content_type' => \App\Enums\ContentTypeEnum::Menu,
+                                    'content_id' => $product->id,
+                                ]);
+
+                                $product->rating_id = $rate->id;
+                                $product->save();
                             }
 
 
-                        if (is_null($rest->categories()->find($category->id)))
-                            RestoranInCategory::create([
-                                'category_id' => $category->id,
-                                'restoran_id' => $rest->id
-                            ]);
+                            sleep(2);
 
-
-                        $rate = Rating::create([
-                            'content_type' => \App\Enums\ContentTypeEnum::Menu,
-                            'content_id' => $product->id,
-                        ]);
-
-                        $product->rating_id = $rate->id;
-                        $product->save();
+                        }
                     }
+                    //dd($response["items"]);
 
-
-                    sleep(2);
-
-                }
-            }
-            //dd($response["items"]);
-
-        */
+                */
 
     }
 
@@ -628,7 +589,7 @@ class VKProductController extends Controller
         $code = $request->code ?? null;
         $state = $request->state ?? null; //bot domain
 
-        if (is_null($code)||is_null($state))
+        if (is_null($code) || is_null($state))
             return response()->noContent(404);
 
         $bot = Bot::query()
@@ -636,7 +597,7 @@ class VKProductController extends Controller
             ->where("bot_domain", $state)
             ->first();
 
-      //  $shopMode = $bot->shop_mode ?? 0;
+        //  $shopMode = $bot->shop_mode ?? 0;
 
         if (is_null($bot))
             return response()->noContent(404);
@@ -644,11 +605,11 @@ class VKProductController extends Controller
         if (is_null($bot->vk_shop_link))
             return response()->noContent(404);
 
-    //    if ($shopMode == 0)
-            return $this->shopMode($bot, $code);
-/*
-        if ($shopMode == 1)
-            return $this->marketplaceMode($bot, $code);*/
+        //    if ($shopMode == 0)
+        return $this->shopMode($bot, $code);
+        /*
+                if ($shopMode == 1)
+                    return $this->marketplaceMode($bot, $code);*/
 
 
         // dd($response);

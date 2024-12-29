@@ -163,25 +163,50 @@ export default {
     },
     methods: {
         downloadBotUsers() {
-            this.$botNotification.notification("Внимание!", "Начался формироваться документ статистики!");
+            this.$notify({
+                title:'Внимание!',
+                text:'Начался формироваться документ статистики!'
+            });
             this.$store.dispatch("downloadBotUsers").then((resp) => {
                 //saveAs(resp.data, 'users.xlsx');
 
-                this.$botNotification.success("Отлично!", "Документ успешно сформирован");
+                this.$notify({
+                    title:'Отлично!',
+                    text:'Документ успешно сформирован!',
+                    type:'success'
+                });
+
 
             }).catch(() => {
-                this.$botNotification.warning("Упс...", "Что-то пошло не так...");
+
+                this.$notify({
+                    title:'Упс...!',
+                    text:'Что-то пошло не так...!',
+                    type:'error'
+                });
             })
         },
         downloadCashBackHistory() {
-            this.$botNotification.notification("Внимание!", "Начался формироваться документ статистики!");
+            this.$notify({
+                title:'Внимание!',
+                text:'Начался формироваться документ статистики!'
+            });
+
             this.$store.dispatch("downloadCashBackHistory").then((resp) => {
                 //  saveAs(resp.data, 'cashback.xlsx');
 
-                this.$botNotification.success("Отлично!", "Документ успешно сформирован");
+                this.$notify({
+                    title:'Отлично!',
+                    text:'Документ успешно сформирован!',
+                    type:'success'
+                });
 
             }).catch(() => {
-                this.$botNotification.warning("Упс...", "Что-то пошло не так...");
+                this.$notify({
+                    title:'Упс...!',
+                    text:'Что-то пошло не так...!',
+                    type:'error'
+                });
             })
         },
         nextUsers(index) {

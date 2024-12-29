@@ -15,24 +15,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class IIKOLogicFactory
+class IIKOLogicFactory extends BaseLogicFactory
 {
-    protected $bot;
 
-    public function __construct()
-    {
-        $this->bot = null;
-
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
 
     /**
      * @throws HttpException

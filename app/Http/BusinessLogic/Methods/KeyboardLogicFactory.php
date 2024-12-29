@@ -14,26 +14,8 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class KeyboardLogicFactory
+class KeyboardLogicFactory extends BaseLogicFactory
 {
-    protected $bot;
-
-    public function __construct()
-    {
-        $this->bot = null;
-
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
-
-
 
     /**
      * @throws HttpException

@@ -16,35 +16,8 @@ use Yandex\Geo\Exception;
 use Yandex\Geo\Exception\CurlError;
 use Yandex\Geo\Exception\ServerError;
 
-class GeoLogicFactory
+class GeoLogicFactory extends BaseLogicFactory
 {
-    protected $bot;
-
-    protected $slug;
-
-    public function __construct()
-    {
-        $this->bot = null;
-        $this->slug = null;
-    }
-
-    public function setSlug($slug): static
-    {
-        if (is_null($slug))
-            throw new HttpException(400, "Команда не задана!");
-
-        $this->slug = $slug;
-        return $this;
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
 
     /**
      * @throws ValidationException

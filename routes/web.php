@@ -3,6 +3,7 @@
 use App\Events\CashBackEvent;
 use App\Facades\BotManager;
 use App\Facades\BusinessLogic;
+use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
 use App\Http\Controllers\Admin\TelegramController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Jobs\SendMessageJob;
@@ -44,8 +45,207 @@ use Yclients\YclientsApi;
 |
 */
 
-Route::get("/redis", function () {
-    SendMessageJob::dispatch(
+Route::get("/test2", function (){
+    $api_url    = 'https://securepay.tinkoff.ru/v2/';
+    $terminal   = '1708340156876';
+    $secret_key = '679vo0qxmz7j5wob';
+
+    $tinkoff = new Tinkoff($api_url, $terminal, $secret_key);
+
+    $payment = [
+        'OrderId'       => '123457',        //Ваш идентификатор платежа
+        'Amount'        => '1244',           //сумма всего платежа в рублях
+        'Language'      => 'ru',            //язык - используется для локализации страницы оплаты
+        'Description'   => 'Some buying',   //описание платежа
+        'Email'         => 'user@email.com',//email покупателя
+        'Phone'         => '89099998877',   //телефон покупателя
+        'Name'          => 'Customer name', //Имя покупателя
+        'Taxation'      => 'usn_income'     //Налогооблажение
+    ];
+
+
+
+//подготовка массива с покупками
+    $items[] = [
+        'Name'  => 'Название товара 1234',
+        'Quantity'  => 1,
+        'Price' => '1244',    //цена товара в рублях
+        'NDS'   => 'vat20',  //НДС //tax
+    ];
+
+//Получение url для оплаты
+    $paymentURL = $tinkoff->paymentURL($payment, $items);
+
+    //dd($paymentURL);
+//Контроль ошибок
+    if(!$paymentURL){
+        echo($tinkoff->error);
+    } else {
+        $payment_id = $tinkoff->payment_id;
+        dd($payment_id);
+    }
+});
+
+Route::get('/test-token', function (){
+    function generateToken($requestData, $password) {
+        // Извлекаем только параметры корневого объекта
+        $tokenData = [];
+        foreach ($requestData as $key => $value) {
+            if (!is_array($value) && !is_object($value)) {
+                $tokenData[$key] = $value;
+            }
+        }
+
+        // Добавляем параметр Password
+        $tokenData['Password'] = $password;
+
+        // Сортируем массив по ключу в алфавитном порядке
+        ksort($tokenData);
+
+        // Конкатенируем значения в одну строку
+        $concatenatedString = implode('', $tokenData);
+
+        // Применяем хеш-функцию SHA-256
+        $token = hash('sha256', $concatenatedString);
+
+        return $token;
+    }
+
+    function sendPaymentRequest($formData) {
+        $url = 'https://securepay.tinkoff.ru/v2/InitPayments';
+
+        $jsonData = json_encode($formData);
+
+        // Инициализация cURL
+        $ch = curl_init($url);
+
+        // Настройка параметров cURL
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($jsonData)
+        ]);
+
+        // Выполнение запроса
+        $response = curl_exec($ch);
+
+        // Обработка ошибок
+        if (curl_errno($ch)) {
+            throw new Exception('Ошибка cURL: ' . curl_error($ch));
+        }
+
+        // Получение HTTP-кода ответа
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        // Проверка успешности запроса
+        if ($httpCode !== 200) {
+            throw new Exception("Ошибка сервера: HTTP код $httpCode");
+        }
+
+        return $response;
+    }
+
+// Получаем данные из формы
+    $requestData = [
+        "TerminalKey" => "1708340156876DEMO",
+        "Amount" => 19200,
+        "OrderId" => "21090",
+        "Description" => "Подарочная карта на 1000 рублей",
+        "DATA" => [
+            "Phone" => "+71234567890",
+            "Email" => "a@test.com"
+        ],
+        "Receipt" => [
+            "Email" => "a@test.ru",
+            "Phone" => "+79031234567",
+            "Taxation" => "osn",
+            "Items" => [
+                [
+                    "Name" => "Наименование товара 1",
+                    "Price" => 10000,
+                    "Quantity" => 1,
+                    "Amount" => 10000,
+                    "Tax" => "vat10",
+                    "Ean13" => "303130323930303030630333435"
+                ],
+                [
+                    "Name" => "Наименование товара 2",
+                    "Price" => 20000,
+                    "Quantity" => 2,
+                    "Amount" => 40000,
+                    "Tax" => "vat20"
+                ],
+                [
+                    "Name" => "Наименование товара 3",
+                    "Price" => 30000,
+                    "Quantity" => 3,
+                    "Amount" => 90000,
+                    "Tax" => "vat10"
+                ]
+            ]
+        ]
+    ];
+
+    $password = "vmjexnzunuvm0507";
+    $token = generateToken($requestData, $password);
+
+// Добавляем токен в данные запроса
+    $requestData['Token'] = $token;
+
+
+// Вывод результата
+    echo "Сгенерированный токен: " . $token . PHP_EOL;
+    echo "Обновленные данные запроса:" . PHP_EOL;
+
+    try {
+        // Отправка запроса
+        $response = sendPaymentRequest($requestData);
+
+        // Обработка ответа
+        echo "Ответ сервера: " . $response;
+    } catch (Exception $e) {
+        echo "Ошибка: " . $e->getMessage();
+    }
+});
+
+Route::get("/crc", function () {
+
+    function calculateCRC16($input) {
+        $polynomial = 0x1021; // Полином CRC-16-CCITT
+        $crc = 0xFFFF;       // Начальное значение
+
+        // Преобразование строки в массив байтов
+        $bytes = unpack('C*', $input);
+
+        foreach ($bytes as $byte) {
+            $crc ^= ($byte << 8); // XOR старших 8 бит CRC с текущим байтом
+
+            for ($i = 0; $i < 8; $i++) {
+                if ($crc & 0x8000) { // Проверка старшего бита
+                    $crc = ($crc << 1) ^ $polynomial;
+                } else {
+                    $crc = $crc << 1;
+                }
+            }
+
+            $crc &= 0xFFFF; // Ограничиваем 16 битами
+        }
+
+        return strtoupper(dechex($crc));
+    }
+
+// Пример строки
+    $url = "https://qr.nspk.ru/BS1A003M3CFQC2HF97NBLS9CAPH3ABCF?type=02&bank=000000000001&sum=10605&cur=RUB";
+
+// Убедитесь, что передаете строку точно до параметра crc
+    $crc = calculateCRC16($url);
+
+    echo "CRC-16: $url&crc=$crc\n";
+   /* SendMessageJob::dispatch(
         botId: 21,
         chatId: "484698703",
         message: "test",
@@ -71,7 +271,7 @@ Route::get("/redis", function () {
         keyboardSettings:null,
     )
         ->delay(now()
-            ->addSeconds(5));
+            ->addSeconds(5));*/
 });
 
 

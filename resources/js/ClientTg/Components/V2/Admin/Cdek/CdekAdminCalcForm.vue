@@ -1,6 +1,7 @@
 <script setup>
 import SelectOffice from "@/ClientTg/Components/V2/Admin/Cdek/SelectOffice.vue";
 import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue";
+import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
 </script>
 <template>
 
@@ -12,7 +13,15 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
     <h6>Офис получения</h6>
     <SelectOffice v-on:callback="selectOffice($event, 1)"/>
 
+    <div class="form-check form-switch mt-3 mb-2">
+        <input class="form-check-input"
+               v-model="calcTariffForm.is_shop_mode"
+               type="checkbox" role="switch" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Режим интернет-магазина</label>
+    </div>
+
     <SelectBoxSize
+        :shop-mode="calcTariffForm.is_shop_mode"
         v-on:callback="selectSize"/>
 
     <template v-if="calcTariffForm.packages.length>0">
@@ -37,7 +46,15 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
         Тариф еще не выбран!
     </div>
     <div class="alert alert-light" v-else>
-        <div class="fw-bold">{{ calcTariffForm.tariff.tariff_name }} <span class="badge bg-primary">#{{ calcTariffForm.tariff.tariff_code }}</span></div>
+        <div class="d-flex justify-content-between">
+
+            <p class="fw-bold "> {{ calcTariffForm.tariff.tariff_name }} <span
+                class="badge bg-primary">#{{ calcTariffForm.tariff.tariff_code }}</span></p>
+
+            <span
+                @click="calcTariffForm.tariff = null"
+                class="text-danger"><i class="fa-regular fa-trash-can"></i></span>
+        </div>
 
         <p class="mb-0">Доставка от <span
             class="fw-bold text-primary">{{ calcTariffForm.tariff.period_min }}</span> до <span
@@ -61,7 +78,7 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
             v-if="calcTariffForm.tariff!=null"
             :disabled="!canCalcTariff"
             style="box-shadow: 1px 1px 6px 0px #0000004a;"
-            @click="submitCdek"
+            @click="openOrderModal"
             class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center ">
             Оформить заказ
         </button>
@@ -152,46 +169,103 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
 
                     </ol>
                 </div>
-
+                <div class="modal-body" v-else>
+                    <PreloaderV1/>
+                </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="у" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="make-order-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
+            <form class="modal-content" v-on:submit.prevent="submitCdek">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Выбор тарифа</h1>
+                    <h1 class="modal-title fs-5"
+                        id="exampleModalLabel">Оформление заказа</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" v-if="tariffs.length>0">
-                    <ol class="list-group list-group-numbered">
-                        <li
-                            v-for="item in tariffs"
-                            class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">{{ item.tariff_name }}</div>
+                <div class="modal-body">
+                    <div class="divider my-3">Данные отправителя</div>
+                    <div class="form-floating mb-2">
+                        <input type="text"
+                               v-model="calcTariffForm.sender_name"
+                               class="form-control" id="floatingInput" placeholder="name@example.com" required>
+                        <label for="floatingInput">Ф.И.О. отправителя</label>
+                    </div>
 
-                                <p class="mb-0">Доставка от <span
-                                    class="fw-bold text-primary">{{ item.period_min }}</span> до <span
-                                    class="fw-bold text-primary">{{ item.period_max }}</span> рабочих дней</p>
-                                <p class="mb-0">Стоимость доставки <span
-                                    class="fw-bold text-primary">{{ item.delivery_sum }}</span> руб.</p>
+                    <template v-for="(item, index) in calcTariffForm.sender_phones">
 
-                                <button
-                                    type="button"
-                                    class="btn btn-primary w-100 mt-3"
-                                    @click="selectTariff(item)">Выбрать тариф
-                                </button>
+                        <div class="input-group mb-2">
+                            <div class="form-floating">
+                                <input type="text"
+                                       v-mask="'+7(###)###-##-##'"
+                                       v-model="calcTariffForm.sender_phones[index]"
+                                       class="form-control" id="floatingInput"
+                                       required
+                                       placeholder="name@example.com">
+                                <label for="floatingInput">+7(000)000-00-00</label>
                             </div>
-                            <span class="badge text-bg-primary rounded-pill">#{{ item.tariff_code }}</span>
+                            <span
+                                @click="removeSenderPhone(index)"
+                                class="input-group-text" id="basic-addon1"><i class="fas fa-trash"></i></span>
+                        </div>
 
-                        </li>
 
-                    </ol>
+
+                    </template>
+                    <a
+                        @click="addSenderPhone"
+                        href="javascript:void(0)">+ Ещё номер телефона</a>
+
+                    <div class="divider my-3">Данные получателя</div>
+                    <div class="form-floating mb-2">
+                        <input type="text"
+                               v-model="calcTariffForm.recipient_name"
+                               class="form-control" id="floatingInput" placeholder="name@example.com" required>
+                        <label for="floatingInput">Ф.И.О. получателя</label>
+                    </div>
+
+                    <template v-for="(item, index) in calcTariffForm.recipient_phones">
+
+                        <div class="input-group mb-2">
+                            <div class="form-floating">
+                                <input type="text"
+                                       v-mask="'+7(###)###-##-##'"
+                                       v-model="calcTariffForm.recipient_phones[index]"
+                                       class="form-control" id="floatingInput" placeholder="name@example.com" required>
+                                <label for="floatingInput">+7(000)000-00-00</label>
+                            </div>
+                            <span
+                                v-if="calcTariffForm.recipient_phones.length>1"
+                                @click="removeRecipientPhone(index)"
+                                class="input-group-text" id="basic-addon1"><i class="fas fa-trash"></i></span>
+                        </div>
+
+
+
+                    </template>
+                    <a
+                        @click="addRecipientPhone"
+                        href="javascript:void(0)">+ Ещё номер телефона</a>
+
+                    <div class="form-floating my-2">
+                        <input type="text"
+                               v-model="calcTariffForm.to.address"
+                               class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Адрес получателя</label>
+                    </div>
+                    <div class="divider my-3">Комментарий к заказу</div>
+                    <div class="form-floating">
+                        <textarea
+                            v-model="calcTariffForm.comment"
+                            class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                        <label for="floatingTextarea2">Комментарий к заказу</label>
+                    </div>
                 </div>
-
-            </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary w-100 p-3">Зарегистрировать заказ</button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
@@ -205,20 +279,37 @@ export default {
         return {
             tariffs: [],
             chooseTariffModal: null,
+            makeOrderModal: null,
             calcTariffForm: {
+                is_shop_mode: true,
+                comment: null,
                 tariff: null,
                 from: {
                     region: null,
                     city: null,
                     office: null,
+                    address: null,
                 },
                 to: {
                     region: null,
                     city: null,
                     office: null,
+                    address: null,
                 },
-                packages: []
+                packages: [],
+                sender_name:null,
+                sender_phones:[],
+                recipient_name:null,
+                recipient_phones:[""],
             }
+        }
+    },
+    watch: {
+        'calcTariffForm.packages': {
+            handler: function (newValue) {
+                this.calcTariffForm.tariff = null
+            },
+            deep: true
         }
     },
     computed: {
@@ -227,19 +318,52 @@ export default {
                 (
                     this.calcTariffForm.from.region != null &&
                     this.calcTariffForm.from.city != null// &&
-                  //  this.calcTariffForm.from.office != null
+                    //  this.calcTariffForm.from.office != null
                 ) &&
                 (
                     this.calcTariffForm.to.region != null &&
                     this.calcTariffForm.to.city != null //&&
-                   // this.calcTariffForm.to.office != null
+                    // this.calcTariffForm.to.office != null
                 )
         }
     },
     mounted() {
         this.chooseTariffModal = new bootstrap.Modal(document.getElementById('choose-tariff-modal'), {})
+        this.makeOrderModal = new bootstrap.Modal(document.getElementById('make-order-modal'), {})
+
+        if (localStorage.getItem("cashman_calc-tariff-form-from") != null) {
+            let from = JSON.parse(localStorage.getItem("cashman_calc-tariff-form-from"))
+
+            this.calcTariffForm.to.region = from?.region || null
+            this.calcTariffForm.to.city = from?.city || null
+            this.calcTariffForm.to.office = from?.office || null
+        }
+
+        if (localStorage.getItem("cashman_calc-tariff-form-to") != null) {
+            let to = JSON.parse(localStorage.getItem("cashman_calc-tariff-form-to"))
+
+            this.calcTariffForm.to.region = to?.region || null
+            this.calcTariffForm.to.city = to?.city || null
+            this.calcTariffForm.to.office = to?.office || null
+        }
+
     },
     methods: {
+        addSenderPhone(){
+            this.calcTariffForm.sender_phones.push("")
+        },
+        addRecipientPhone(){
+            this.calcTariffForm.recipient_phones.push("")
+        },
+        removeRecipientPhone(index){
+            this.calcTariffForm.recipient_phones.splice(index, 1)
+        },
+        removeSenderPhone(index){
+            this.calcTariffForm.sender_phones.splice(index, 1)
+        },
+        openOrderModal() {
+            this.makeOrderModal.toggle()
+        },
         selectTariff(item) {
             this.calcTariffForm.tariff = item
             this.chooseTariffModal.hide()
@@ -258,7 +382,8 @@ export default {
                 width: event.width || 0,
                 height: event.height || 0,
                 length: event.length || 0,
-                weight: event.weight || 0
+                weight: event.weight || 0,
+                items: event.items || []
             })
         },
         removeItem(index) {
@@ -280,8 +405,9 @@ export default {
             this.$store.dispatch("storeCdekOrder", {
                 cdekForm: data
             }).then((response) => {
-
-                console.log(response);
+                localStorage.setItem("cashman_calc-tariff-form-tariff", JSON.stringify(this.calcTariffForm.tariff))
+                localStorage.setItem("cashman_calc-tariff-form-from", JSON.stringify(this.calcTariffForm.from))
+                localStorage.setItem("cashman_calc-tariff-form-to", JSON.stringify(this.calcTariffForm.to))
 
                 this.$notify({
                     title: "Работа с CDEK",
@@ -299,7 +425,8 @@ export default {
 
         },
         submitTariffCalcCdek() {
-
+            this.chooseTariffModal.show();
+            this.tariffs = []
             let data = new FormData();
             Object.keys(this.calcTariffForm)
                 .forEach(key => {
@@ -316,7 +443,7 @@ export default {
             }).then((response) => {
 
                 this.tariffs = response
-                this.chooseTariffModal.show();
+
                 this.$notify({
                     title: "Работа с CDEK",
                     text: "Данные успешно сохранены",

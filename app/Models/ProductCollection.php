@@ -45,6 +45,8 @@ class ProductCollection extends Model
         'bot_user_id' => 'integer',
     ];
 
+    protected $with = ["products"];
+
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);

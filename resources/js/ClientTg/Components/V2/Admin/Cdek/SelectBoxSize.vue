@@ -1,6 +1,7 @@
 <template>
 
     <button
+        type="button"
         @click="openCalcSizeModal"
         class="btn btn-light w-100 p-3 my-2">
         <span v-if="emptyCalc"><i class="fa-solid fa-dolly text-primary"></i> Размер посылки</span>
@@ -22,12 +23,7 @@
                             data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input"
-                               v-model="formSize.is_shop_mode"
-                               type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Режим интернет-магазина</label>
-                    </div>
+
 
                     <div class="divider my-3">Габариты</div>
                     <div class="form-floating mb-3">
@@ -55,7 +51,7 @@
                         <label for="floatingInput">Длина, см</label>
                     </div>
                     <div class="form-floating mb-3"
-                         v-if="!formSize.is_shop_mode">
+                         v-if="!shopMode">
                         <input type="number"
                                min="0"
 
@@ -69,7 +65,7 @@
                         {{ summaryWeight }}, кг
                     </div>
 
-                    <template v-if="formSize.is_shop_mode">
+                    <template v-if="shopMode">
                         <div class="divider my-3">Товары в упаковке</div>
 
                         <div class="row row-cols-4 mb-3">
@@ -81,7 +77,7 @@
                                         v-bind:class="{'btn-primary': selectedIndex===index,
                                         'btn-light': selectedIndex!==index}"
                                         @click="selectProduct(index)"
-                                        class="btn mr-2 w-100">{{ index+1 }}
+                                        class="btn mr-2 w-100">{{ index + 1 }}
                                     </button>
                                 </div>
                             </template>
@@ -155,7 +151,7 @@
                         <span v-else>
                             {{ formSize.width || 0 }}x{{ formSize.height || 0 }}x{{
                                 formSize.length || 0
-                            }} см, до {{ formSize.weight || 0 }}кг
+                            }} см, до {{ formSize.weight || summaryWeight || 0 }}кг
                         </span>
                     </button>
                 </div>
@@ -167,13 +163,13 @@
 
 <script>
 export default {
+    props:["shopMode"],
     data() {
         return {
             selectedIndex: 0,
-            loaded:true,
+            loaded: true,
             calcSizeModal: null,
             formSize: {
-                is_shop_mode: false,
                 width: null,
                 height: null,
                 weight: null,
@@ -208,17 +204,17 @@ export default {
         this.calcSizeModal = new bootstrap.Modal(document.getElementById('calc-size-modal'), {})
     },
     methods: {
-        selectProduct(index){
-          this.selectedIndex = index
-          this.loaded = false
-          this.$nextTick(()=>{
-              this.loaded = true
-          })
+        selectProduct(index) {
+            this.selectedIndex = index
+            this.loaded = false
+            this.$nextTick(() => {
+                this.loaded = true
+            })
         },
         openCalcSizeModal() {
             this.calcSizeModal.show();
         },
-        removeProduct(index){
+        removeProduct(index) {
             this.formSize.items.splice(index, 1)
             this.selectedIndex = 0
         },
@@ -231,10 +227,11 @@ export default {
                 weight: 0,
             })
 
-            this.selectProduct(this.formSize.items.length-1)
+            this.selectProduct(this.formSize.items.length - 1)
         },
         submitSizeForm() {
-           // this.formSize.weight = this.summaryWeight
+            if (this.shopMode)
+                this.formSize.weight = this.summaryWeight
             this.$emit("callback", this.formSize)
             this.calcSizeModal.toggle();
 

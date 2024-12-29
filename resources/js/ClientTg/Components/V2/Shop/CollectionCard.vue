@@ -2,6 +2,7 @@
 import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 import ProductCollectionView from "@/ClientTg/Components/V2/Shop/ProductCollectionView.vue";
+import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSimple.vue";
 </script>
 <template v-if="item">
 
@@ -18,7 +19,7 @@ import ProductCollectionView from "@/ClientTg/Components/V2/Shop/ProductCollecti
                 <div class="top d-flex justify-content-end w-100 align-items-center">
                     <div class="product-count w-100 p-2">
                         <span class="text-white fw-bold">
-                            <i class="fa-solid fa-layer-group mr-1"></i> {{ (item.products||[]).length}}</span>
+                            <i class="fa-solid fa-layer-group mr-1"></i> {{ (item.products || []).length }}</span>
                     </div>
                     <span
                         v-if="item.discount>0"
@@ -33,43 +34,75 @@ import ProductCollectionView from "@/ClientTg/Components/V2/Shop/ProductCollecti
                 v-if="item.title.length>50">...</span></p>
 
 
-                <div
-                    class="d-flex justify-content-between align-items-center px-2">
+            <div
+                class="d-flex justify-content-between align-items-center px-2">
 
+                <button type="button"
+                        v-if="checkInCart===0"
+                        @click="incCollectionCart"
+                        style="font-size:12px;"
+                        class="btn btn-md btn-light w-100 rounded-3">
+                    <template v-if="item.discount>0">
+                        {{ discountPrice }}₽ <span style="text-decoration:line-through;">{{ currentPrice }}₽</span>
+                    </template>
+                    <template v-else>
+                        {{ currentPrice }}₽
+                    </template>
+                </button>
+
+                <button type="button"
+                        v-else
+                        @click="openVariantList"
+                        style="font-size:12px;"
+                        class="btn btn-md btn-success w-100 rounded-3">
+                    Все варианты <span class="badge bg-primary">{{cartCollections.length}}</span>
+                </button>
+
+<!--                <div class="btn-group w-100 rounded-3" v-if="checkInCart>0">
                     <button type="button"
-                            v-if="inCart(item.id)===0"
-                            @click="incCollectionCart"
-                            style="font-size:12px;"
-                            class="btn btn-md btn-light w-100 rounded-3">
-                        <template v-if="item.discount>0">
-                            {{ discountPrice }}₽ <span style="text-decoration:line-through;">{{ summaryPrice }}₽</span>
-                        </template>
-                        <template v-else>
-                            {{ summaryPrice }}₽
-                        </template>
+                            @click="decCollectionCart"
+                            style="border-radius:6px 0px 0px 6px;"
+                            class="btn btn-sm btn-primary">-
                     </button>
-
-                    <div class="btn-group w-100 rounded-3" v-if="inCart(item.id)>0">
-                        <button type="button"
-                                :disabled="item.in_stop_list_at"
-                                @click="decCollectionCart"
-                                style="border-radius:6px 0px 0px 6px;"
-                                class="btn btn-sm btn-primary">-
-                        </button>
-                        <button type="button" class="btn btn-sm btn-primary ">{{ checkInCart }}</button>
-                        <button type="button"
-                                :disabled="item.in_stop_list_at"
-                                @click="incCollectionCart"
-                                style="border-radius:0px 6px 6px 0px;"
-                                class="btn btn-sm btn-primary">+
-                        </button>
-                    </div>
-                </div>
+                    <button type="button" class="btn btn-sm btn-primary ">{{ checkInCart }}</button>
+                    <button type="button"
+                            @click="incCollectionCart"
+                            style="border-radius:0px 6px 6px 0px;"
+                            class="btn btn-sm btn-primary">+
+                    </button>
+                </div>-->
+            </div>
 
 
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" :id="'collection-variant-modal-'+item.id" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Варианты в корзине</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="row" v-if="cartCollections.length>0">
+                        <div class="col-12" v-for="(item, index) in cartCollections">
+                            <CollectionCardSimple
+                                :params="item.params"
+                                :item="item.collection"/>
+                        </div>
+                    </div>
+                    <p v-else class="alert alert-light">
+                        Ни одной коллекции не было добавлено в корзину!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" :id="'collection-modal-info'+item.id" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -81,7 +114,7 @@ import ProductCollectionView from "@/ClientTg/Components/V2/Shop/ProductCollecti
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body mb-5 pb-5">
-                   <ProductCollectionView
+                    <ProductCollectionView
                         v-if="item"
                         :item="item"></ProductCollectionView>
                 </div>
@@ -107,39 +140,39 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['inCart']),
+        ...mapGetters(['inCollectionCart','cartCollections']),
         uuid() {
             const data = uuidv4();
             return data
         },
         discountPrice() {
-            return Math.round(this.summaryPrice * (1 - ((this.item.discount === 0 ? 1 : this.item.discount) / 100)))
+            return Math.round(this.currentPrice * (1 - ((this.item.discount === 0 ? 1 : this.item.discount) / 100)))
         },
         bot() {
             return window.currentBot
         },
-        summaryPrice() {
-            let sum = 0
-            this.item.products.forEach(product => {
-                if (product.is_checked)
-                    sum += product.current_price || 0
+        checkInCart() {
+            return this.inCollectionCart(this.item.id, null)
+        },
+        currentPrice() {
+            let price = 0
+
+            this.item.products.forEach(item => {
+                if (item.is_checked)
+                    price += item.current_price || 0
             })
 
-            return sum
+            return price
         },
-        checkInCart() {
-            return this.inCart(this.item.id)
-        },
-
     },
     mounted() {
-        this.item.collection_id = this.item.id
-        this.item.id = this.uuid
-
         this.selected_image = (this.item.images || []).length > 0 ? this.item.images[0] : null
     },
     methods: {
-
+        openVariantList(){
+            const myModal = new bootstrap.Modal(document.getElementById('collection-variant-modal-' + this.item.id), {})
+            myModal.show()
+        },
         showCollectionDetails() {
             const myModal = new bootstrap.Modal(document.getElementById('collection-modal-info' + this.item.id), {})
             myModal.show()

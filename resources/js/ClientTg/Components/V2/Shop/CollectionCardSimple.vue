@@ -4,11 +4,12 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 <template>
 
     <div
+        v-if="item"
         class="card border-0">
         <div class="card-body p-1">
+
             <div class="d-flex">
                 <div class="mr-auto"
-                     @click="addToCart"
                      style="max-height: 100px;">
                     <img
                         class="rounded-2" width="110"
@@ -20,23 +21,24 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                     <h6 class="pb-0 mb-0 fw-bold" style="font-size:14px;">
                         {{ item.title || 'не указано' }}
                         <small
-                            class="fw-bold">  ({{ (item.products||[]).length }} ед.)</small>
+                            class="fw-bold"> ({{ (item.products || []).length }} ед.)</small>
                     </h6>
 
+                    <p class="fst-italic mb-2 " style="font-size:10px;">{{ description }}</p>
                     <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">
-                        <span>{{ item.current_price || 0 }}₽</span>
-                        <span>={{ item.current_price * inCart(item.id) }}₽</span>
+                        <span>{{ currentPrice || 0 }}₽</span>
+                        <span>={{ currentPrice * checkInCart }}₽</span>
                     </h6>
                     <div class="d-flex w-100">
 
                         <button type="button"
-                                v-if="inCart(item.id)===0"
+                                v-if="checkInCart===0"
                                 @click="incProductCart"
-                                class="btn btn-sm btn-primary w-100 rounded-3">{{ item.current_price || 0 }}<sup
+                                class="btn btn-sm btn-primary w-100 rounded-3">{{ currentPrice || 0 }}<sup
                             class="font-10 opacity-50">.00</sup>₽
                         </button>
 
-                        <div class="btn-group w-100" v-if="inCart(item.id)>0">
+                        <div class="btn-group w-100" v-if="checkInCart>0">
                             <button type="button"
                                     :disabled="item.in_stop_list_at"
                                     @click="decProductCart"
@@ -62,19 +64,40 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["item"],
+    props: ["item", "params"],
     data() {
         return {
             showCart: false
         }
     },
     computed: {
-        ...mapGetters(['inCart']),
+        ...mapGetters(['inCollectionCart']),
         checkInCart() {
-            return this.inCart(this.item.id)
+            return this.inCollectionCart(this.item.id, this.params?.variant_id || null)
+        },
+        description() {
+            let titles = ""
+
+            let ids = this.params.ids || []
+
+            this.item.products.forEach(item => {
+                titles += (ids.indexOf(item.id) !== -1 ? item.title + ", " : "")
+            })
+
+
+            return titles
         },
         currentPrice() {
-            return this.item.current_price / 100
+            let price = 0
+
+            let ids = this.params.ids || []
+
+            this.item.products.forEach(item => {
+                price += ids.indexOf(item.id) !== -1 ? item.current_price || 0 : 0
+            })
+
+
+            return price
         },
         oldPrice() {
             return 0//this.item.old_price / 100
@@ -84,34 +107,63 @@ export default {
         },
 
     },
-    methods: {
-        addToCart() {
-            this.$cart.add(this.item)
-        },
-        incProductCart() {
-            if (this.checkInCart === 0)
-                this.$store.dispatch("addCollectionToCart", this.item)
-            else
-                this.$store.dispatch("incQuantity", this.item.id)
+    mounted() {
 
-            this.$notify({
-                title: "Добавление товара",
-                text: 'Товар успешно добавлен',
-                type: 'success'
+    },
+    methods: {
+
+        incProductCart() {
+            let incResult = this.checkInCart === 0 ?
+                this.$store.dispatch("addCollectionToCart", this.item) :
+                this.$store.dispatch("incCollectionQuantity", {
+                    product_collection_id: this.item.id,
+                    variant_id: this.params.variant_id
+                })
+
+
+            incResult.then(() => {
+                this.$notify({
+                    title: "Добавление товара",
+                    text: 'Товар успешно добавлен',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.$notify({
+                    title: "Добавление товара",
+                    text: 'Ошибка добавления товара!',
+                    type: 'error'
+                })
             })
+
+
         },
         decProductCart() {
 
-            if (this.checkInCart <= 1)
-                this.$store.dispatch("removeCollectionFromCart", this.item.id)
-            else
-                this.$store.dispatch("decQuantity", this.item.id)
+            let decResult = this.checkInCart <= 1 ?
+                this.$store.dispatch("removeCollectionFromCart", {
+                    product_collection_id: this.item.id,
+                    variant_id: this.params.variant_id
+                }) :
+                this.$store.dispatch("decCollectionQuantity", {
+                    product_collection_id: this.item.id,
+                    variant_id: this.params.variant_id
+                })
 
-            this.$notify({
-                title: "Добавление товара",
-                text: 'Товар успешно удален',
-                type: 'success'
+            decResult.then(() => {
+                this.$notify({
+                    title: "Удаление товара",
+                    text: 'Товар успешно удален',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.$notify({
+                    title: "Удаление товара",
+                    text: 'Ошибка удаления товара!',
+                    type: 'error'
+                })
             })
+
+
         }
     }
 }

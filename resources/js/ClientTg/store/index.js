@@ -16,7 +16,7 @@ import bonusProduct from "./modules/globals/bonusProduct";
 import instagramQuest from "./modules/globals/instagramQuest";
 import schedule from "./modules/globals/schedule";
 import cashOut from "./modules/globals/cashOut";
-import cart from "./modules/shop/cart";
+import cart from "./modules/shop/basket";
 import self from "./modules/self";
 import favorites from "./modules/shop/favorites";
 import shopAdmin from "./modules/shop/admin";

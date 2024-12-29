@@ -147,7 +147,7 @@
                             использования и дайте свое согласие на их принятие.</em></p>
 
                         <p>Перед отправкой данных нужно ознакомиться с <a
-                            href="#">политикой конфиденциальности</a>.</p>
+                            href="https://telegra.ph/Politika-konfidencialnosti-12-29-5" target="_blank">политикой конфиденциальности</a>.</p>
 
                         <div class="d-flex mb-3">
                             <div class="form-check form-switch">

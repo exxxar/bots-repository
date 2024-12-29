@@ -32,8 +32,12 @@ class Product extends Model
         'current_price',
         'variants',
         'in_stop_list_at',
+        'not_for_delivery',
+        'dimension',
         'bot_id',
         'deleted_at',
+
+
     ];
 
     /**
@@ -48,6 +52,8 @@ class Product extends Model
         'current_price' => 'double',
         'variants' => 'array',
         'rating' => 'double',
+        'not_for_delivery'=>"boolean",
+        'dimension'=> 'array',
         'in_stop_list_at' => 'datetime:Y-m-d H:i:s',
         'bot_id' => 'integer',
     ];

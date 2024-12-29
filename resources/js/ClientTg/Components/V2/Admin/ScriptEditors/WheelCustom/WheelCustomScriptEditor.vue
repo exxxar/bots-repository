@@ -1,6 +1,7 @@
 <script setup>
 import WheelOfFortuneShopVariant from "@/ClientTg/Components/V2/Games/WheelOfFortuneShopVariant.vue";
 import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/ParametrizedTextArea.vue";
+import SimpleProductList from "@/ClientTg/Components/V2/Admin/Shop/SimpleProductList.vue";
 </script>
 <template>
     <form v-on:submit.prevent="submit" v-if="loaded_params">
@@ -97,12 +98,14 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
 
             <div class="input-group mb-2 align-items-start">
                 <div class="form-floating">
-                <textarea class="form-control border-light"
-                          v-model="form.wheels[index].value"
-                          maxlength="4000"
-                          style="min-height:100px;"
-                          placeholder="Leave a comment here"
-                          id="script-settings-wheel-of-fortune-can_play" required></textarea>
+                    <textarea class="form-control border-light"
+                              v-model="form.wheels[index].value"
+                              maxlength="4000"
+                              style="min-height:100px;"
+                              placeholder="Leave a comment here"
+                              id="script-settings-wheel-of-fortune-can_play" required>
+
+                    </textarea>
                     <label for="script-settings-disabled_text">#{{ index + 1 }} - описание приза
                         <span
                             v-if="(form.wheels[index].value||'').length>0">{{
@@ -117,8 +120,35 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
                         class="ml-2 btn dropdown-toggle btn-outline-light" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                     </button>
+
                     <div class="dropdown-menu" style="min-width:300px;">
                         <div class="dropdown-item">
+                            <div class="form-floating">
+                                <select class="form-select"
+                                        id="floatingSelect"
+                                        @change="selectProduct(null, index)"
+                                        v-model="form.wheels[index].type"
+                                        required
+                                        aria-label="Floating label select example">
+                                    <option
+                                        :value="prizeType.key"
+                                        v-for="prizeType in wheel_types">{{ prizeType.title || '-' }}
+                                    </option>
+                                </select>
+                                <label for="floatingSelect">Тип приза</label>
+                            </div>
+                        </div>
+                        <div class="dropdown-item" v-if="form.wheels[index].type!=='text'">
+                            <div class="form-floating mb-3">
+                                <input type="number"
+                                       min="0"
+                                       v-model="form.wheels[index].effect_value"
+                                       class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <label for="floatingInput">Значение эффекта</label>
+                            </div>
+                        </div>
+                        <div class="dropdown-item">
+
                             <input type="color"
                                    @change="changeWheelColor(index)"
                                    v-model="form.wheels[index].bg_color"
@@ -152,6 +182,7 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
 
 
                     </div>
+
                 </div>
 
                 <!--                <div class="d-flex flex-column px-2">
@@ -162,6 +193,28 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
 
             </div>
 
+            <template v-if="form.wheels[index].type==='effect_product'">
+                <div class="dropdown">
+                    <button
+                        class="w-100 btn dropdown-toggle mb-2 btn-outline-light text-primary" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                     <span v-if="!form.wheels[index].effect_product">Выбрать товар</span>
+                     <span v-else>{{form.wheels[index].effect_product?.title||'Без названия'}}</span>
+                    </button>
+
+                    <div class="dropdown-menu" style="min-width:300px;">
+                        <div
+                            style="max-height: 300px;overflow-y: auto;"
+                            class="w-100 px-2">
+                                <SimpleProductList
+                                    :selected="[form.wheels[index].effect_product?.id]"
+                                    v-on:select="selectProduct($event, index)"
+                                />
+                        </div>
+
+                    </div>
+                </div>
+            </template>
 
         </template>
 
@@ -177,6 +230,7 @@ import ParametrizedTextArea from "@/ClientTg/Components/V2/Admin/Other/Parametri
             type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
         </button>
     </form>
+
 </template>
 <script>
 export default {
@@ -187,6 +241,29 @@ export default {
                 "🤖", "🎲", "🎯", "😊", "😎", "🌻", "👽", "💌", "📚", "🐶", "👻", "🏀", "👓", "🎓",
                 "1️⃣", "2️⃣", '3️⃣', "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟", "💡", "🚀", "⭐", "💎", "☘", "🏆", "🎁"],
             loaded_params: false,
+            wheel_types: [
+                {
+                    key: "text",
+                    title: "Приз выдается во время заказа"
+                },
+
+                {
+                    key: "product_discount",
+                    title: "Скидка на товары, %"
+                },
+                {
+                    key: "delivery_discount",
+                    title: "Скидка на доставку, %"
+                },
+                {
+                    key: "cashback",
+                    title: "Начисление кэшбэка, руб"
+                },
+                {
+                    key: "effect_product",
+                    title: "Скидка на конкретный товар, %"
+                }
+            ],
             form: {
                 can_play: true,
                 rules_text: null,
@@ -205,7 +282,8 @@ export default {
                 this.$emit("updated:modelValue", this.form)
             },
             deep: true
-        }
+        },
+
     },
     mounted() {
         this.loaded_params = false
@@ -216,6 +294,9 @@ export default {
 
     },
     methods: {
+        selectProduct(item, index){
+            this.form.wheels[index].effect_product = item
+        },
         changeWheelColor(index) {
             console.log(this.form.wheels[index])
         },
@@ -238,6 +319,8 @@ export default {
                     key: "wheel_text",
                     type: "text",
                     value: null,
+                    effect_value:0,
+                    effect_product: null, //объект скидки: товар
                 })
 
                 this.$notify({
@@ -288,9 +371,7 @@ export default {
                 })
             })
         },
-        loadScriptParams() {
 
-        }
     }
 }
 </script>

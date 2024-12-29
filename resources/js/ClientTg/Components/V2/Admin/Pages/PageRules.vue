@@ -252,9 +252,8 @@ import PagesList from "@/ClientTg/Components/V2/Admin/Pages/PageList.vue";
         v-on:callback="attachPageToRule"
         :editor="false"/>
 
-    <div
-        v-if="rulesForm.rules_if"
-        class="py-2">
+    <template
+        v-if="rulesForm.rules_if">
 
         <div class="alert-light alert mb-2" id="bot-domain">
             Напишите текст, который будет отображен пользователю вместе с основным контентом в случае если
@@ -273,7 +272,7 @@ import PagesList from "@/ClientTg/Components/V2/Admin/Pages/PageList.vue";
             <label for="rules-else-message">Текст сообщения</label>
         </div>
 
-    </div>
+    </template>
 
 </template>
 <script>

@@ -32,39 +32,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
 
-class BotUserLogicFactory
+class BotUserLogicFactory extends BaseLogicFactory
 {
-    protected $bot;
-    protected $botUser;
-
-    public function __construct()
-    {
-        $this->bot = null;
-        $this->botUser = null;
-
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
-
-    /**
-     * @throws HttpException
-     */
-    public function setBotUser($botUser = null): static
-    {
-        if (is_null($botUser))
-            throw new HttpException(400, "Пользователь бота не задан!");
-
-        $this->botUser = $botUser;
-        return $this;
-    }
-
     public function getUserProfilePhotos(): mixed
     {
         if (is_null($this->bot) || is_null($this->botUser))

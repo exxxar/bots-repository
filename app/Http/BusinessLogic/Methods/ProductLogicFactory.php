@@ -33,59 +33,10 @@ use Mpdf\Mpdf;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
 
-class ProductLogicFactory
+class ProductLogicFactory extends BaseLogicFactory
 {
     use LogicUtilities;
 
-
-    protected $bot;
-
-    protected $botUser;
-
-    protected $slug;
-
-    public function __construct()
-    {
-        $this->bot = null;
-        $this->botUser = null;
-        $this->slug = null;
-    }
-
-    /**
-     * @throws HttpException
-     */
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
-
-    /**
-     * @throws HttpException
-     */
-    public function setSlug($slug): static
-    {
-        if (is_null($slug))
-            throw new HttpException(400, "Команда не задана!");
-
-        $this->slug = $slug;
-        return $this;
-    }
-
-    /**
-     * @throws HttpException
-     */
-    public function setBotUser($botUser): static
-    {
-        if (is_null($botUser))
-            throw new HttpException(400, "Пользователь бота не задан!");
-
-        $this->botUser = $botUser;
-        return $this;
-    }
 
     public function byIds(array $ids = []): ProductCollection
     {
@@ -308,7 +259,10 @@ class ProductLogicFactory
             'current_price' => $data["current_price"] ?? 0,
             'variants' => $variants,
             'in_stop_list_at' => ($data["in_stop_list_at"] ?? false) == "true" ? Carbon::now() : null,
+            'not_for_delivery' => ($data["not_for_delivery"] ?? false) == "true" ? Carbon::now() : null,
             'bot_id' => $data["bot_id"] ?? null,
+            'dimension' => is_null($data["dimension"] ?? null) ?
+                null : json_decode($data["dimension"] ?? '[]'),
         ];
 
         if (!is_null($productId)) {

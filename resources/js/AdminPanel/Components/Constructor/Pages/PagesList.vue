@@ -58,7 +58,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 >
                     <div class=" d-flex justify-content-between ">
 
-                        <strong
+                        <div
                             @click="selectPage(page)">#{{ page.id || 'Не указано' }}
                             <span v-if="page.slug">{{ page.slug.command || 'Не указано' }}</span>
                             <span v-else>Не привязано к команде</span>
@@ -66,7 +66,10 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                   title="Вы не можете выбрать данную страницу">
                             <i class="fa-solid fa-check-double text-danger ml-2"></i>
                             </span>
-                        </strong>
+                            <span v-if="page.folder">
+                                {{page.folder || '-'}}
+                            </span>
+                        </div>
 
 
                         <div v-if="editor">
@@ -77,6 +80,9 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <ul class="dropdown-menu">
+<!--                                    <li><a class="dropdown-item"
+                                           @click="addToFolder(page.id)"><i
+                                        class="fa-solid fa-trash mr-1"></i>Добавить в папку</a></li>-->
                                     <li v-if="page.deleted_at != null"><a class="dropdown-item"
                                                                           @click="restorePage(page.id)"><i
                                         class="fa-solid fa-copy mr-1"></i>Восстановить</a></li>
@@ -260,6 +266,9 @@ export default {
             }).catch(() => {
                 this.loading = false
             })
+        },
+        addToFolder(id){
+
         },
         restorePage(id) {
             this.loading = true

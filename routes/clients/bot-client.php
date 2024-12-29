@@ -94,8 +94,30 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post('/prepare', "formWheelOfFortunePrepare");
                 Route::post('/load-data', "loadData");
+                Route::post('/load-prizes-variants', "loadPrizesVariants");
+                Route::post('/load-script-variants', "loadScriptVariants");
                 Route::post('/store-params', "storeParams")->middleware(["tgAuth.admin"]);
                 Route::post('/callback', "formWheelOfFortuneCallback");
+            });
+
+
+        Route::prefix("basket")
+            ->controller(\App\Http\Controllers\Bots\Web\BasketController::class)
+            ->middleware(["tgAuth.any"])
+            ->group(function () {
+                Route::post('/', "loadProductsInBasket");
+                Route::post('/checkout', "checkout")
+                    ->middleware(["slug"]);
+                Route::post('/checkout-link', "checkoutLink");
+                Route::post('/increment/{id}', "incrementItem");
+                Route::post('/decrement/{id}', "decrementItem");
+                Route::post('/inc-product', "incProductInBasket");
+                Route::post('/dec-product', "decProductInBasket");
+                Route::post('/inc-collection', "incCollectionInBasket");
+                Route::post('/dec-collection', "decCollectionInBasket");
+                Route::delete('/clear', "clearBasket");
+                Route::delete('/remove/{id}', "removeBasketItem");
+
             });
 
         Route::prefix("friends-game")
@@ -348,6 +370,7 @@ Route::prefix("bot-client")
             ->middleware(["tgAuth.admin"])
             ->group(function(){
                 Route::post('/store', "store");
+                Route::post('/calc-basket-tariff', "calcBasketTariff");
                 Route::post('/make-order', "makeOrder");
                 Route::post('/get-cities', "getCities");
                 Route::post('/get-regions', "getRegions");

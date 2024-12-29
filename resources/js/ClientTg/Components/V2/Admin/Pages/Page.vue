@@ -397,17 +397,17 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
             </div>
 
         </template>
-        <div class="mb-2" v-if="need_rules">
+        <template v-if="need_rules">
             <PageRules
                 :bot="bot"
                 :rules-form="pageForm"
             />
-        </div>
+        </template>
 
 
         <button
             style="z-index: 100;"
-            type="submit" class="btn btn-primary w-100 p-3 mb-3 position-sticky bottom-0">Сохранить изменения
+            type="submit" class="btn btn-success w-100 p-3 mb-3">Сохранить изменения
         </button>
 
     </form>

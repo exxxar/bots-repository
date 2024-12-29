@@ -13,26 +13,9 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Yclients\YclientsApi;
 
-class YClientLogicFactory
+class YClientLogicFactory extends BaseLogicFactory
 {
-    protected $bot;
-
     const URL = "https://api.yclients.com/api/v1";
-
-    public function __construct()
-    {
-        $this->bot = null;
-
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
 
     private function auth($yClient): ?string
     {

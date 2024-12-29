@@ -147,6 +147,37 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 
                     </div>
 
+                    <div
+                        v-if="item.dimension"
+                        class="p-2">
+                        <p class="mb-0">Параметры товара</p>
+                        <table class="table">
+                            <thead>
+                            <th>Параметр</th>
+                            <th>Значение</th>
+                            </thead>
+                            <tbody>
+                            <tr v-if="item.dimension.width > 0">
+                                <td>Ширина</td>
+                                <td>{{ item.dimension.width || 0 }} см</td>
+                            </tr>
+                            <tr v-if="item.dimension.height > 0">
+                                <td>Высота</td>
+                                <td>{{ item.dimension.height || 0 }} см</td>
+                            </tr>
+                            <tr v-if="item.dimension.length > 0">
+                                <td>Длина</td>
+                                <td>{{ item.dimension.length || 0 }} см</td>
+                            </tr>
+
+                            <tr v-if="item.dimension.weight > 0">
+                                <td>Вес</td>
+                                <td>{{ item.dimension.weight || 0 }} кг</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
 
                     <ul class="nav nav-tabs justify-content-center">
                         <li class="nav-item">
@@ -166,7 +197,10 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                     </ul>
 
                     <div v-if="tab===0">
-                        <p class="text-justify py-2 fst-italic">{{ item.description || '-' }}</p>
+                        <p v-if="item.description" v-html="item.description"
+                            class="text-justify py-2 fst-italic"></p>
+                        <p v-else
+                           class="text-justify py-2 fst-italic">Нет описания</p>
                     </div>
 
                     <div v-if="tab===1">
@@ -318,29 +352,41 @@ export default {
             this.$router.push({name: 'ProductV2', params: {productId: this.item.id}})
         },
         incProductCart() {
-
-            if (this.checkInCart === 0)
-                this.$store.dispatch("addProductToCart", this.item)
-            else
+            let incResult = this.checkInCart === 0 ?
+                this.$store.dispatch("addProductToCart", this.item) :
                 this.$store.dispatch("incQuantity", this.item.id)
 
-            this.$notify({
-                title: "Добавление товара",
-                text: 'Товар успешно добавлен',
-                type: 'success'
+            incResult.then(() => {
+                this.$notify({
+                    title: "Добавление товара",
+                    text: 'Товар успешно добавлен',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.$notify({
+                    title: "Добавление товара",
+                    text: 'Ошибка добавления товара!',
+                    type: 'error'
+                })
             })
         },
         decProductCart() {
-
-            if (this.checkInCart <= 1)
-                this.$store.dispatch("removeProduct", this.item.id)
-            else
+            let decResult = this.checkInCart <= 1 ?
+                this.$store.dispatch("removeProduct", this.item.id) :
                 this.$store.dispatch("decQuantity", this.item.id)
 
-            this.$notify({
-                title: "Добавление товара",
-                text: 'Товар успешно удален',
-                type: 'success'
+            decResult.then(() => {
+                this.$notify({
+                    title: "Удаление товара",
+                    text: 'Товар успешно удален',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.$notify({
+                    title: "Удаление товара",
+                    text: 'Ошибка удаления товара!',
+                    type: 'error'
+                })
             })
         },
         selectInCollection(product) {

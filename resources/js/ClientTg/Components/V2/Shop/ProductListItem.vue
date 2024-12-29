@@ -13,7 +13,9 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                 {{ item.title.slice(0, 50) }} <span
                     v-if="item.title.length>50">...</span></div>
 
-            <Rating :rating="item.rating"></Rating>
+<!--            <Rating :rating="item.rating"></Rating>-->
+
+            <p class="mb-2 fst-italic">{{item.description||'нет описания'}}</p>
 
             <template v-if="collectionMode">
                 <div

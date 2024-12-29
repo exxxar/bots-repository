@@ -3,17 +3,25 @@ import axios from "axios";
 
 const BASE_CDEK_LINK = '/bot-client/cdek'
 
-let state = {
+let state = {}
 
-}
-
-const getters = {
-
-}
+const getters = {}
 
 const actions = {
+
+
+    async calcCdekTariffFromCart(context, payload) {
+        let link = `${BASE_CDEK_LINK}/calc-basket-tariff`
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadCdekOffices(context, payload) {
-        let link = `${ BASE_CDEK_LINK}/get-offices`
+        let link = `${BASE_CDEK_LINK}/get-offices`
         let _axios = util.makeAxiosFactory(link, 'POST', payload)
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -23,7 +31,7 @@ const actions = {
         })
     },
     async loadCdekCities(context, payload) {
-        let link = `${ BASE_CDEK_LINK}/get-cities`
+        let link = `${BASE_CDEK_LINK}/get-cities`
         let _axios = util.makeAxiosFactory(link, 'POST', payload)
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -33,7 +41,7 @@ const actions = {
         })
     },
     async loadCdekRegions(context, payload) {
-        let link = `${ BASE_CDEK_LINK}/get-regions`
+        let link = `${BASE_CDEK_LINK}/get-regions`
         let _axios = util.makeAxiosFactory(link, 'POST', payload)
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -44,7 +52,7 @@ const actions = {
     },
 
     async storeCdekOrder(context, payload) {
-        let link = `${ BASE_CDEK_LINK}/make-order`
+        let link = `${BASE_CDEK_LINK}/make-order`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.cdekForm)
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -54,7 +62,7 @@ const actions = {
         })
     },
     async calcCdekTariff(context, payload) {
-        let link = `${ BASE_CDEK_LINK}/calc-tariff`
+        let link = `${BASE_CDEK_LINK}/calc-tariff`
         let _axios = util.makeAxiosFactory(link, 'POST', payload.cdekForm)
         return _axios.then((response) => {
             return Promise.resolve(response.data);
@@ -87,9 +95,7 @@ const actions = {
     },
 
 }
-const mutations = {
-
-}
+const mutations = {}
 
 const cdekModule = {
     state,

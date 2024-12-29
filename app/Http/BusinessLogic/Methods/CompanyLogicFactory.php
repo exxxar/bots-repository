@@ -18,28 +18,10 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class CompanyLogicFactory
+class CompanyLogicFactory extends BaseLogicFactory
 {
     use LogicUtilities;
 
-    protected $botUser;
-
-    public function __construct()
-    {
-        $this->botUser = null;
-    }
-
-    /**
-     * @throws HttpException
-     */
-    public function setBotUser($botUser = null): static
-    {
-        if (is_null($botUser))
-            throw new HttpException(400, "Пользователь бота не задан!");
-
-        $this->botUser = $botUser;
-        return $this;
-    }
 
     public function get($companyId): CompanyResource
     {

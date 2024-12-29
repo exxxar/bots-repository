@@ -304,9 +304,29 @@ class SimpleDeliveryController extends SlugController
             "can_use_card" => false,
             "can_use_cash" => true,
             "menu_list_type" => 0,
+            "max_tables" => 0,
+            "need_table_list" => false,
             "need_category_by_page" => true,
             "need_pay_after_call" => true,
             "is_product_list" => false,
+            "need_promo_code" => true,
+            "need_person_counter" => true,
+            "need_bonuses_section" => true,
+            "need_health_restrictions" => true,
+            "need_prizes_from_wheel_of_fortune" => true,
+            "selected_script_id" => null,
+
+            "can_use_sbp" => false,
+            "sbp" => (object)[
+                "selected_sbp_bank" => "tinkoff",
+                "tinkoff" => (object)[
+                    "terminal_key" => null,
+                    "terminal_password" => null,
+                    "tax" => null,
+                    "vat" => null,
+                ],
+                "sber" => null
+            ],
             "free_shipping_starts_from" => 0,
             "shop_display_type" => 0,
             "payment_info" => "Текст не найден",
@@ -573,18 +593,15 @@ class SimpleDeliveryController extends SlugController
 
         if (is_null($action))
 
-                $action = ActionStatus::query()
-                    ->create([
-                        'user_id' => $botUser->user_id,
-                        'bot_id' => $bot->id,
-                        'slug_id' => $slug->id,
-                        'max_attempts' => $maxAttempts,
-                        'current_attempts' => 0,
-                        'bot_user_id' => $botUser->id
-                    ]);
-
-
-
+            $action = ActionStatus::query()
+                ->create([
+                    'user_id' => $botUser->user_id,
+                    'bot_id' => $bot->id,
+                    'slug_id' => $slug->id,
+                    'max_attempts' => $maxAttempts,
+                    'current_attempts' => 0,
+                    'bot_user_id' => $botUser->id
+                ]);
 
 
         $action->max_attempts = $maxAttempts;

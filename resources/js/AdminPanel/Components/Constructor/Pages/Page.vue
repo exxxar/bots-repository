@@ -9,6 +9,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
+import FolderList from "@/AdminPanel/Components/Constructor/Pages/FolderList.vue";
 import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.vue";
 import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm.vue";
 import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
@@ -156,10 +157,17 @@ import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
                             class="btn btn-outline-primary min-menu-btn">
                         <i class="fa-solid fa-xmark text-danger"></i>
                     </button>
+<!--                    <button type="button"
+                            title="Страницы и папки"
+                            data-bs-toggle="modal" data-bs-target="#folder-modal"
+                            class="btn btn-outline-primary  min-menu-btn">
+                        <i class="fa-solid fa-folder"></i>
+
+                    </button>-->
                     <button type="button"
                             title="Список страниц"
                             data-bs-toggle="offcanvas" data-bs-target="#offcanvas"
-                            class="btn btn-outline-primary text-primary  min-menu-btn">
+                            class="btn btn-outline-primary   min-menu-btn">
                         <i class="fa-solid fa-list-ol"></i>
                     </button>
                 </div>
@@ -1627,6 +1635,26 @@ import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
 
                 <div class="modal-body">
                     <PagesList
+                        :current="pageForm.id"
+                        :selected="selectedLinkIds"
+                        v-on:callback="attachPage"
+                        :editor="false"/>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="folder-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Работа с папками и страницами</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <FolderList
                         :current="pageForm.id"
                         :selected="selectedLinkIds"
                         v-on:callback="attachPage"

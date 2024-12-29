@@ -51,6 +51,20 @@
                 <a href="#" class="btn btn-link" @click="clearForm">Новый товар</a>
             </div>
 
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           v-model="productForm.not_for_delivery"
+                           type="checkbox"
+                           value="false" id="not_for_delivery">
+                    <label class="form-check-label" for="not_for_delivery">
+                        Не для доставки
+                    </label>
+                </div>
+            </div>
+
+
+
             <div class="col-md-12 mb-3">
                 <span class="badge bg-info mr-1 mb-1 cursor-pointer" v-for="(cat, index) in productCategories"
                       @click="removeProductCategory(index)">{{ prepareCategoryName(cat) }}</span>
@@ -169,6 +183,50 @@
                            v-model="productForm.old_price"
                            class="form-control" id="old-price" placeholder="name@example.com">
                     <label for="old-price">Старая цена</label>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           v-model="productForm.dimension.height"
+                           class="form-control" id="vk-product-id"
+                           placeholder="Идентификатор">
+                    <label for="vk-product-id">Высота</label>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           v-model="productForm.dimension.width"
+                           class="form-control" id="vk-product-id"
+                           placeholder="Идентификатор">
+                    <label for="vk-product-id">Ширина</label>
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           v-model="productForm.dimension.length"
+                           class="form-control" id="vk-product-id"
+                           placeholder="Идентификатор">
+                    <label for="vk-product-id">Длина</label>
+                </div>
+
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           v-model="productForm.dimension.weight"
+                           class="form-control" id="vk-product-id"
+                           placeholder="Идентификатор">
+                    <label for="vk-product-id">Вес</label>
                 </div>
             </div>
 
@@ -388,7 +446,7 @@ export default {
                 frontpad_article: null,
                 iiko_article: null,
 
-            title: null,
+                title: null,
                 description: null,
                 images: [],
                 type: 1,
@@ -400,6 +458,13 @@ export default {
                 options: [],
                 reviews: [],
                 categories: [],
+                not_for_delivery:false,
+                dimension: {
+                    width: 0,
+                    height: 0,
+                    length: 0,
+                    weight: 0
+                },
             }
         }
     },
@@ -434,6 +499,13 @@ export default {
                     bot_id: this.item.bot_id || null,
                     options: this.item.options || null,
                     reviews: this.item.reviews || null,
+                    not_for_delivery: this.item.not_for_delivery || false,
+                    dimension: {
+                        width: this.item.dimension.width || 0,
+                        height: this.item.dimension.height || 0,
+                        length: this.item.dimension.length || 0,
+                        weight: this.item.dimension.weight || 0,
+                    },
                     // categories: this.item.categories || null,
                 }
 
@@ -592,6 +664,13 @@ export default {
                 options: [],
                 reviews: [],
                 categories: [],
+                not_for_delivery:false,
+                dimension: {
+                    width: 0,
+                    height: 0,
+                    length: 0,
+                    weight: 0
+                },
             }
             this.photos = []
             this.removed_options = []

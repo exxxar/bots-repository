@@ -35,6 +35,7 @@
             class="btn btn-outline-light text-primary" style="min-width:110px;font-size:12px;">
             <i class="fa-solid fa-tags"></i> Активировать
         </button>
+
         <span
             v-if="discount>0"
             style="min-width:110px;font-size:12px;"

@@ -103,7 +103,6 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
 
                 <button type="button"
                         :disabled="summaryPrice===0"
-                        v-if="inCart(product.id)===0"
                         @click="addCollectionToCart"
                         class="btn btn-sm btn-primary w-100 rounded-3 p-3">
                     Добавить
@@ -113,23 +112,8 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
                     <template v-else>
                         {{ summaryPrice }}₽
                     </template>
+                    <span class="badge bg-success ml-2" v-if="cartCollections.length>0">{{cartCollections.length}}</span>
                 </button>
-
-                <div class="btn-group w-100" v-if="inCart(product.id)>0">
-                    <button type="button"
-                            :disabled="product.in_stop_list_at"
-                            @click="decCollectionCart"
-                            style="border-radius:8px 0 0 8px;"
-                            class="btn btn-sm btn-primary p-3">-
-                    </button>
-                    <button type="button" class="btn btn-sm btn-primary">{{ checkInCart }}</button>
-                    <button type="button"
-                            :disabled="product.in_stop_list_at"
-                            @click="incCollectionCart"
-                            style="border-radius:0 8px 8px 0;"
-                            class="btn btn-sm  btn-primary p-3">+
-                    </button>
-                </div>
             </div>
         </nav>
     </template>
@@ -147,13 +131,13 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['inCart']),
+        ...mapGetters(['inCollectionCart','cartCollections']),
         uuid() {
             const data = uuidv4();
             return data
         },
         checkInCart() {
-            return this.inCart(this.product.id)
+            return this.inCollectionCart(this.item.id, null)
         },
         bot() {
             return window.currentBot
@@ -223,10 +207,9 @@ export default {
     mounted() {
 
         this.$nextTick(()=>{
-            const tmp = JSON.parse(JSON.stringify(this.item))
-            this.product = tmp
-            this.product.collection_id = tmp.id
-            this.product.id = this.uuid
+            this.product = this.item
+            //this.product.collection_id = tmp.id
+           // this.product.id = this.uuid
         })
 
     },
@@ -259,7 +242,7 @@ export default {
         addCollectionToCart() {
 
 
-            this.$store.dispatch("addCollectionToCart", this.item).then(() => {
+            this.$store.dispatch("addCollectionToCart", this.product).then(() => {
                 this.$notify({
                     title: "Добавление товара",
                     text: 'Товар успешно добавлен',
@@ -280,8 +263,8 @@ export default {
                 }
             })
 
-            if (this.checkInCart > 0)
-                this.$store.dispatch("removeCollectionFromCart", this.product.id)
+          /*  if (this.checkInCart > 0)
+                this.$store.dispatch("removeCollectionFromCart", this.product.id)*/
 
             this.$notify({
                 title: "Подборки товара",
@@ -290,20 +273,21 @@ export default {
             })
         },
         selectSubProduct(product) {
-            let currentIndex = this.product.products.findIndex(item => product.id === product.id)
+            console.log("product", product)
+            let currentIndex = this.product.products.findIndex(item => item.id === product.id)
             let currentCategoryId = product.categories[0].id
 
             this.product.products.forEach(product => {
                 if (product.categories[0].id === currentCategoryId) {
                     product.is_checked = false
-                    this.$store.dispatch("removeProduct", product.id)
+                   // this.$store.dispatch("removeProduct", product.id)
                 }
             })
 
             this.product.products[currentIndex].is_checked = true
 
-            if (this.checkInCart > 0)
-                this.$store.dispatch("removeCollectionFromCart", this.product.id)
+         /*   if (this.checkInCart > 0)
+                this.$store.dispatch("removeCollectionFromCart", this.product.id)*/
         }
     },
 

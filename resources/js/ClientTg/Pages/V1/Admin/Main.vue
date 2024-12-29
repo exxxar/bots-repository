@@ -517,6 +517,13 @@ export default {
             this.loadCashBack()
 
         },
+        'cashbackForm.need_custom_percents': function () {
+            if (!this.cashbackForm.need_custom_percents)
+            {
+                this.cashbackForm.percent = null
+                this.cashbackForm.amount = null
+            }
+        },
         'tab': function () {
             if (this.tab === 1)
                 this.loadCashBack()

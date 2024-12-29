@@ -63,6 +63,7 @@ export default {
     },
     mounted() {
         this.loadShopModuleData()
+        this.loadBasketData()
     },
     methods: {
         goToCart() {
@@ -77,6 +78,9 @@ export default {
                     this.$router.push({name: 'ShopCartV2'});
                     break;
             }
+        },
+        loadBasketData() {
+            return this.$store.dispatch("loadProductsInBasket")
         },
         loadShopModuleData() {
             return this.$store.dispatch("loadShopModuleData").then((resp) => {

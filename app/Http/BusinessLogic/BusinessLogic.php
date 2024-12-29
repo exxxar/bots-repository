@@ -4,6 +4,7 @@ namespace App\Http\BusinessLogic;
 
 use App\Http\BusinessLogic\Methods\AmoLogicFactory;
 use App\Http\BusinessLogic\Methods\AppointmentLogicFactory;
+use App\Http\BusinessLogic\Methods\BasketLogicFactory;
 use App\Http\BusinessLogic\Methods\BitrixLogicFactory;
 use App\Http\BusinessLogic\Methods\CDEKLogicFactory;
 use App\Http\BusinessLogic\Methods\FrontPadLogicFactory;
@@ -62,6 +63,7 @@ class BusinessLogic
     protected IIKOLogicFactory $iiko;
     protected StatisticLogicFactory $stat;
     protected CDEKLogicFactory $cdek;
+    protected BasketLogicFactory $basket;
 
     public function __construct()
     {
@@ -93,6 +95,12 @@ class BusinessLogic
         $this->collection = new ProductCollectionLogicFactory();
         $this->stat = new StatisticLogicFactory();
         $this->cdek = new CDEKLogicFactory();
+        $this->basket = new BasketLogicFactory();
+    }
+
+    public function basket(): BasketLogicFactory
+    {
+        return $this->basket;
     }
 
     public function cdek(): CDEKLogicFactory

@@ -15,7 +15,11 @@ class BasketResource extends JsonResource
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
+            'product' => $this->whenLoaded('product') ?? null,
+            'product_collection_id' => $this->product_collection_id,
+            'collection' => $this->whenLoaded('collection') ?? null,
             'count' => $this->count,
+            'params' => $this->params ?? null,
             'bot_user_id' => $this->bot_user_id,
             'bot_id' => $this->bot_id,
             'ordered_at' => $this->ordered_at,

@@ -13,16 +13,24 @@
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#shop-product-item">
                         <div class="accordion-body px-0">
-                            <div class="d-flex justify-content-between flex-wrap">
-                                <div class="form-check">
-                                    <input class="form-check-input"
-                                           v-model="productForm.in_stop_list_at"
-                                           type="checkbox"
-                                           value="false" id="in-stop-list">
-                                    <label class="form-check-label" for="in-stop-list">
-                                        Товар находится в стоп-листе
-                                    </label>
-                                </div>
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="productForm.in_stop_list_at"
+                                       type="checkbox"
+                                       value="false" id="in-stop-list">
+                                <label class="form-check-label" for="in-stop-list">
+                                    Товар находится в стоп-листе
+                                </label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="productForm.not_for_delivery"
+                                       type="checkbox"
+                                       value="false" id="not_for_delivery">
+                                <label class="form-check-label" for="not_for_delivery">
+                                    Не для доставки
+                                </label>
                             </div>
 
                             <div class="form-floating mb-2">
@@ -85,6 +93,52 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse-dimension" aria-expanded="false" aria-controls="collapseFive">
+                            Параметры
+                        </button>
+                    </h2>
+                    <div id="collapse-dimension" class="accordion-collapse collapse"
+                         data-bs-parent="#shop-product-item">
+                        <div class="accordion-body px-0">
+                            <div class="form-floating mb-2">
+                                <input type="text"
+                                       v-model="productForm.dimension.height"
+                                       class="form-control" id="vk-product-id"
+                                       placeholder="Идентификатор">
+                                <label for="vk-product-id">Высота</label>
+                            </div>
+
+                            <div class="form-floating mb-2">
+                                <input type="text"
+                                       v-model="productForm.dimension.width"
+                                       class="form-control" id="vk-product-id"
+                                       placeholder="Идентификатор">
+                                <label for="vk-product-id">Ширина</label>
+                            </div>
+
+                            <div class="form-floating mb-2">
+                                <input type="text"
+                                       v-model="productForm.dimension.length"
+                                       class="form-control" id="vk-product-id"
+                                       placeholder="Идентификатор">
+                                <label for="vk-product-id">Длина</label>
+                            </div>
+
+                            <div class="form-floating mb-2">
+                                <input type="text"
+                                       v-model="productForm.dimension.weight"
+                                       class="form-control" id="vk-product-id"
+                                       placeholder="Идентификатор">
+                                <label for="vk-product-id">Вес</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="accordion-item border-0">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -339,8 +393,6 @@
     </div>
 
 
-
-
 </template>
 <script>
 import {mapGetters} from "vuex";
@@ -390,6 +442,13 @@ export default {
                 bot_id: null,
                 options: [],
                 reviews: [],
+                not_for_delivery:false,
+                dimension: {
+                    width: 0,
+                    height: 0,
+                    length: 0,
+                    weight: 0
+                },
                 categories: [],
             }
         }
@@ -420,6 +479,13 @@ export default {
                     bot_id: this.item.bot_id || null,
                     options: this.item.options || null,
                     reviews: this.item.reviews || null,
+                    not_for_delivery:this.item.not_for_delivery || false,
+                    dimension: {
+                        width: this.item.dimension.width || 0,
+                        height: this.item.dimension.height || 0,
+                        length: this.item.dimension.length || 0,
+                        weight: this.item.dimension.weight || 0,
+                    },
                     // categories: this.item.categories || null,
                 }
 
@@ -432,11 +498,11 @@ export default {
         }
     },
     methods: {
-        openInvalidTab(tab){
-            let item = document.querySelector(`.accordion-button:nth-child(${tab+1})`)
+        openInvalidTab(tab) {
+            let item = document.querySelector(`.accordion-button:nth-child(${tab + 1})`)
             item.classList = "accordion-button";
 
-            let content = document.querySelector(`.accordion-collapse:nth-of-type(${tab+1})`)
+            let content = document.querySelector(`.accordion-collapse:nth-of-type(${tab + 1})`)
             content.classList = "accordion-collapse collapse show";
         },
         prepareCategoryName(category) {
@@ -444,7 +510,7 @@ export default {
             return cat ? cat.label : category
         },
         removeProduct() {
-          this.$emit("remove-product")
+            this.$emit("remove-product")
         },
         removeCategory(id) {
             let index = this.categories.findIndex(item => item.id === id) || null
@@ -607,6 +673,13 @@ export default {
                 options: [],
                 reviews: [],
                 categories: [],
+                not_for_delivery:false,
+                dimension: {
+                    width: 0,
+                    height:  0,
+                    length:  0,
+                    weight: 0,
+                },
             }
             this.photos = []
             this.removed_options = []

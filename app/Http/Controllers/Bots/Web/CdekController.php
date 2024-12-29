@@ -35,14 +35,37 @@ class CdekController extends Controller
         ]);
 
 
-        return BusinessLogic::cdek()
+        $res = BusinessLogic::cdek()
             ->setBot($request->bot ?? null)
             ->createOrder(
                 $request->all()
             );
 
+        return response()->json([
+            "uuid" => $res->uuid ?? null
+        ]);
+
 
     }
+
+
+    public function calcBasketTariff(Request $request)
+    {
+        $request->validate([
+            "to" => "required",
+        ]);
+
+
+        return response()->json([
+            "tariff" => BusinessLogic::cdek()
+                ->setBot($request->bot ?? null)
+                ->setBotUser($request->botUser ?? null)
+                ->calcBasketTariff(
+                    $request->all()
+                )
+        ]);
+    }
+
     /**
      * @throws RequestException
      */
@@ -146,14 +169,14 @@ class CdekController extends Controller
     public function getCities(Request $request)
     {
         $request->validate([
-            "region_code"=>"required"
+            "region_code" => "required"
         ]);
 
         return BusinessLogic::cdek()
             ->setBot($request->bot ?? null)
             ->getCities(
                 $request->country_code ?? 'ru',
-                    $request->region_code ?? null,
+                $request->region_code ?? null,
                 $request->city ?? null
             );
     }
@@ -173,7 +196,7 @@ class CdekController extends Controller
             ->setBot($request->bot ?? null)
             ->store($request->all());
 
-        return \response()->noContent();
+
     }
 
     public function show(Request $request, Cdek $cdek): Response

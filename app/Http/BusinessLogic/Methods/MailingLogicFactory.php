@@ -16,60 +16,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class MailingLogicFactory
+class MailingLogicFactory extends BaseLogicFactory
 {
     use LogicUtilities;
 
-
-    protected $bot;
-
-    protected $botUser;
-
-    protected $slug;
-
-    public function __construct()
-    {
-        $this->bot = null;
-        $this->botUser = null;
-        $this->slug = null;
-    }
-
-    /**
-     * @throws HttpException
-     */
-    public function setBot($bot = null): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
-
-    /**
-     * @throws HttpException
-     */
-    public function setSlug($slug = null): static
-    {
-        if (is_null($slug))
-            throw new HttpException(400, "Команда не задана!");
-
-        $this->slug = $slug;
-        return $this;
-    }
-
-
-    /**
-     * @throws HttpException
-     */
-    public function setBotUser($botUser = null): static
-    {
-        if (is_null($botUser))
-            throw new HttpException(400, "Пользователь бота не задан!");
-
-        $this->botUser = $botUser;
-        return $this;
-    }
 
     /**
      * @throws HttpException

@@ -17,7 +17,9 @@ class Basket extends Model
      */
     protected $fillable = [
         'product_id',
+        'product_collection_id',
         'count',
+        'params',
         'bot_user_id',
         'bot_id',
         'ordered_at',
@@ -31,12 +33,14 @@ class Basket extends Model
     protected $casts = [
         'id' => 'integer',
         'product_id' => 'integer',
+        'product_collection_id' => 'integer',
         'bot_user_id' => 'integer',
         'bot_id' => 'integer',
+        'params' => 'array',
         'ordered_at' => 'timestamp',
     ];
 
-    protected $with = ["product"];
+    protected $with = ["product","collection"];
 
     public function bot(): BelongsTo
     {
@@ -53,5 +57,9 @@ class Basket extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function collection(): BelongsTo
+    {
+        return $this->belongsTo(ProductCollection::class,"product_collection_id","id");
+    }
 
 }

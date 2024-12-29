@@ -22,27 +22,10 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class BotDialogsLogicFactory
+class BotDialogsLogicFactory extends BaseLogicFactory
 {
     use LogicUtilities;
 
-
-    protected $bot;
-
-    public function __construct()
-    {
-        $this->bot = null;
-
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
 
     public function variablesList(): array
     {

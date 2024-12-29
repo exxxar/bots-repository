@@ -45,6 +45,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
+        sleep(1);
         return $this;
     }
 
@@ -137,6 +138,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
+        sleep(1);
         return $this;
     }
 
@@ -164,6 +166,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
+        sleep(1);
         return $this;
 
     }
@@ -194,6 +197,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
+        sleep(1);
         return $this;
 
     }
@@ -225,6 +229,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
+        sleep(1);
         return $this;
 
     }
@@ -251,6 +256,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
+        sleep(1);
         return $this;
     }
 
@@ -279,6 +285,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
+        sleep(1);
         return $this;
 
     }
@@ -314,6 +321,7 @@ trait BotBaseMethodsTrait
                 $e->getLine());
         }
 
+        sleep(1);
         return $this;
 
     }
@@ -341,7 +349,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
 
     }
@@ -372,7 +380,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
 
     }
@@ -531,7 +539,7 @@ trait BotBaseMethodsTrait
 
             Log::info("Ошибка конфигурации платежной системы:" . $e->getMessage());
         }
-
+        sleep(1);
         return $this;
 
     }
@@ -566,7 +574,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
     }
 
@@ -599,7 +607,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
     }
 
@@ -633,7 +641,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
     }
 
@@ -667,7 +675,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
     }
 
@@ -716,7 +724,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
     }
 
@@ -792,7 +800,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
 
     }
@@ -859,7 +867,7 @@ trait BotBaseMethodsTrait
                 $this->sendMessage($chatId, $caption ?? 'Ошибочка...', $messageThreadId) :
                 $this->sendInlineKeyboard($chatId, $caption ?? 'Ошибочка...', $keyboard, $messageThreadId);
         }
-
+        sleep(1);
         return $this;
 
     }
@@ -897,7 +905,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
 
     }
@@ -918,7 +926,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
 
     }
@@ -942,7 +950,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
 
     }
@@ -966,7 +974,7 @@ trait BotBaseMethodsTrait
         } catch (\Exception $e) {
             Log::error($e);
         }
-
+        sleep(1);
         return $this;
 
     }
@@ -988,7 +996,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-
+        sleep(1);
         return $this;
 
     }

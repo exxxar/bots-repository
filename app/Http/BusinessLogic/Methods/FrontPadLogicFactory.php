@@ -15,38 +15,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class FrontPadLogicFactory
+class FrontPadLogicFactory extends BaseLogicFactory
 {
-    protected $bot;
-    protected $botUser;
 
-
-    public function __construct()
-    {
-        $this->bot = null;
-        $this->botUser = null;
-    }
-
-    /**
-     * @throws HttpException
-     */
-    public function setBotUser($botUser): static
-    {
-        if (is_null($botUser))
-            throw new HttpException(400, "Пользователь бота не задан!");
-
-        $this->botUser = $botUser;
-        return $this;
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
 
     /**
      * @throws HttpException

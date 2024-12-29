@@ -5,28 +5,13 @@ namespace App\Http\BusinessLogic\Methods;
 use App\Http\Resources\AmoCrmResource;
 use App\Models\AmoCrm;
 use App\Models\Bot;
+use Faker\Provider\Base;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class AmoLogicFactory
+class AmoLogicFactory extends BaseLogicFactory
 {
-    protected $bot;
-
-    public function __construct()
-    {
-        $this->bot = null;
-
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
 
     /**
      * @throws ValidationException

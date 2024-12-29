@@ -15,52 +15,8 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class BotSlugLogicFactory
+class BotSlugLogicFactory extends BaseLogicFactory
 {
-
-    protected $bot;
-    protected $botUser;
-    protected $slug;
-
-    public function __construct()
-    {
-        $this->bot = null;
-        $this->botUser = null;
-        $this->slug = null;
-
-
-    }
-
-    public function setBot($bot): static
-    {
-        if (is_null($bot))
-            throw new HttpException(400, "Бот не задан!");
-
-        $this->bot = $bot;
-        return $this;
-    }
-
-    /**
-     * @throws HttpException
-     */
-    public function setSlug($slug = null): static
-    {
-        if (is_null($slug))
-            throw new HttpException(400, "Команда не задана!");
-
-        $this->slug = $slug;
-        return $this;
-    }
-
-
-    public function setBotUser($botUser): static
-    {
-        if (is_null($botUser))
-            throw new HttpException(400, "Пользователь бота не задан!");
-
-        $this->botUser = $botUser;
-        return $this;
-    }
 
     public function globals(): BotMenuSlugCollection
     {
@@ -366,6 +322,7 @@ class BotSlugLogicFactory
 
         $data["can_use_cash"] = (($data["can_use_cash"] ?? false) == "true");
         $data["can_use_card"] = (($data["can_use_card"] ?? false) == "true");
+        $data["can_use_sbp"] = (($data["can_use_sbp"] ?? false) == "true");
         $data["is_disabled"] = (($data["is_disabled"] ?? false) == "true");
         $data["can_buy_after_closing"] = (($data["can_buy_after_closing"] ?? false) == "true");
         $data["need_pay_after_call"] = (($data["need_pay_after_call"] ?? false) == "true");
@@ -374,6 +331,7 @@ class BotSlugLogicFactory
         $data["free_shipping_starts_from"] =  (int)($data["free_shipping_starts_from"] ?? 0);
         $data["min_base_delivery_price"] = (int)($data["min_base_delivery_price"] ?? 0);
         $data["wheel_of_fortune"] = json_decode($data["wheel_of_fortune"] ?? '[]');
+        $data["sbp"] = json_decode($data["sbp"] ?? '[]');
 
         $config = Collection::make($slug->config ?? []);
 

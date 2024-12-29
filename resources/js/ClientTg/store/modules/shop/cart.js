@@ -150,10 +150,7 @@ const actions = {
             return Promise.reject(err);
         })
     },
-    getProductList({state, commit}) {
-        state.items = localStorage.getItem('vuejs__store') == null ? [] : JSON.parse(localStorage.getItem('vuejs__store'))
-        return state.items
-    },
+
     addCollectionToCart({state, commit}, collection) {
         commit('pushCollectionToCart', collection);
     },

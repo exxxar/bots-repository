@@ -178,6 +178,9 @@ export default {
             const winResult = this.winForm.win || null
 
             data.append("description", this.items[winResult].text || 'Без описания')
+            data.append("type", this.items[winResult].type || 'text')
+            data.append("effect_value", this.items[winResult].effect_value || 0)
+            data.append("effect_product", this.items[winResult].effect_product || null)
 
             this.$store.dispatch("wheelOfFortuneCustomWin", {
                 winForm: data

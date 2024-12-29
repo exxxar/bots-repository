@@ -31,6 +31,7 @@ use App\Http\BusinessLogic\Methods\DeliveryLogicFactory as DeliveryLogic;
 use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory as PromoCodesLogic;
 use App\Http\BusinessLogic\Methods\MailingLogicFactory as QueueLogic;
 use App\Http\BusinessLogic\Methods\BitrixLogicFactory as BitrixLogic;
+use App\Http\BusinessLogic\Methods\BasketLogicFactory as BasketLogic;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -62,6 +63,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static CollectionLogic collection()
  * @method static StatisticLogic stat()
  * @method static CDEKLogic cdek()
+ * @method static BasketLogic basket()
  * @see \Illuminate\Log\Logger
  */
 class BusinessLogic extends Facade

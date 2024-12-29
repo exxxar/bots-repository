@@ -2,6 +2,11 @@ import axios from "axios";
 
 export default {
     async makeAxiosFactory(link, method = 'GET', data = null, config = null) {
+
+        if (!navigator.onLine){
+            return Promise.reject("Вы не в сети!");
+        }
+
         let result;
 
         let tgData = window.Telegram ? (window.Telegram.WebApp.initData || null ) : null

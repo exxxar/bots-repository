@@ -51,7 +51,7 @@
                 </label>
             </div>
 
-            <h6 class="my-3 text-center fw-bold">Прикрепить фотографию
+            <h6 class="my-3 text-center fw-bold">Прикрепить фотографию (до 10МБ)
                 <span class="text-danger">*</span>
             </h6>
             <div class="photo-preview d-flex justify-content-center flex-wrap w-100 my-3">
@@ -139,7 +139,8 @@ export default {
         onChangePhotos(e) {
             const files = e.target.files
             for (let i = 0; i < files.length; i++)
-                this.callbackForm.images.push(files[i])
+                if (files[i].size <= 10485760)
+                    this.callbackForm.images.push(files[i])
         },
         getPhoto(imgObject) {
             return {imageUrl: URL.createObjectURL(imgObject)}

@@ -116,18 +116,9 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                                  v-for="(collection, index) in collections">
 
                                 <CollectionCard
-                                    v-if="!collection.need_refresh"
                                     :item="collection"
                                 />
-                                <div
-                                    v-if="inCart(collection.id)"
-                                    class="px-2">
-                                    <button
-                                        class="btn btn-success btn-sm w-100"
-                                        @click="duplicateForUsers(collection, index)"
-                                        type="button">Новый вариант
-                                    </button>
-                                </div>
+
 
                             </div>
                         </div>
@@ -251,6 +242,8 @@ export default {
     computed: {
         ...mapGetters([
             'inCart',
+            'inCollectionCart',
+
             'getCollections',
             'getCollectionsPaginateObject',
             'getProducts',
@@ -316,8 +309,8 @@ export default {
         this.loadProducts()
         this.loadCollections()
 
-        if (this.cartProducts.length > 0)
-            this.loadActualProducts()
+      /*  if (this.cartProducts.length > 0)
+            this.loadActualProducts()*/
 
 
         this.tg.BackButton.show()
@@ -330,6 +323,9 @@ export default {
         })
     },
     methods: {
+     /*   checkCollectionInCart(item){
+            return this.inCollectionCart(item.id, null) > 0
+        },*/
         scroll(id) {
             // document.getElementById(id).scrollIntoView();
             var element = document.getElementById(id);
@@ -451,16 +447,6 @@ export default {
                 })
             })
         },
-        duplicateForUsers(collection, index) {
-            const c = JSON.parse(JSON.stringify(collection));
-            c.current_price = 0
-            this.collections.push(c)
-            this.collections[index].need_refresh = true
-            this.$nextTick(() => {
-                this.collections[index].need_refresh = false
-            })
-
-        },
         loadProducts(page = 0) {
             this.tab = 1
             this.load_content = true
@@ -560,9 +546,7 @@ export default {
             this.startTimer();
             this.is_requested = true
         },
-        loadActualProducts() {
-            this.$store.dispatch("loadActualPriceInCart")
-        },
+
         removeCategory(index) {
             this.categories.splice(index, 1)
         },

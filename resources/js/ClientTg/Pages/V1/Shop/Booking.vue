@@ -23,7 +23,7 @@ import ReturnToBot from "@/ClientTg/Components/V1/Shop/Helpers/ReturnToBot.vue";
                         class="btn btn-border btn-m btn-full  rounded-sm text-uppercase font-900 w-100"
                         v-bind:class="{'bg-highlight':type===0,'border-highlight color-highlight bg-theme':type!==0}"
                     >
-                        Начислить CashBack
+                        Начислить баллы
                     </button>
                 </div>
                 <div class="col-6 p-1">

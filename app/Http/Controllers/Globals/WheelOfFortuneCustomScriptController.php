@@ -179,6 +179,50 @@ class WheelOfFortuneCustomScriptController extends SlugController
     /**
      * @throws HttpException
      */
+    public function loadPrizesVariants(Request $request)
+    {
+        $bot = $request->bot ?? null;
+        $botUser = $request->botUser ?? null;
+
+        $slugId = $request->slug_id ?? null;
+
+        $slug = BotMenuSlug::query()
+            ->find($slugId);
+
+        return $this->extractedPreparedPrizes($bot, $botUser, $slug);
+
+
+    }
+
+    public function loadScriptVariants(Request $request)
+    {
+
+        $bot = $request->bot ?? null;
+
+        //SELECT * FROM `bot_menu_slugs` WHERE (`slug`="global_friends_main" AND `bot_id`=21) OR `parent_slug_id`=1531 OR `parent_slug_id`=1574
+        $globalScripts = BotMenuSlug::query()
+            ->where("slug", "global_wheel_of_fortune_custom")
+            //->where("bot_id",$bot->id)
+            ->get();
+
+        $ids = $globalScripts->pluck("id");
+
+        $parentScripts = BotMenuSlug::query()
+            ->where("bot_id", $bot->id)
+            ->whereIn("parent_slug_id", $ids)
+            ->get();
+
+        $baseScripts = BotMenuSlug::query()
+            ->where("slug", "global_wheel_of_fortune_custom")
+            ->where("bot_id", $bot->id)
+            ->get();
+
+        return [...$baseScripts->toArray(), ...$parentScripts->toArray()];
+    }
+
+    /**
+     * @throws HttpException
+     */
     public function formWheelOfFortuneCallback(Request $request): \Illuminate\Http\Response
     {
         $request->validate([
@@ -227,6 +271,10 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $winnerName = $botUser->name ?? 'Имя не указано';
         $winnerPhone = $botUser->phone ?? 'Телефон не указан';
         $winnerDescription = $request->description ?? 'Без описания';
+        $winPrizeType = $request->type ?? "text";
+        $winPrizeEffectValue = $request->effect_value ?? 0;
+        $winPrizeEffectProduct = $request->effect_product ?? null;
+
 
         $username = $botUser->username ?? null;
 
@@ -245,6 +293,9 @@ class WheelOfFortuneCustomScriptController extends SlugController
             "name" => $winnerName,
             "win" => $winNumber,
             "description" => $winnerDescription,
+            "type" => $winPrizeType,
+            "effect_value" => $winPrizeEffectValue,
+            "effect_product" => $winPrizeEffectProduct,
             "phone" => $winnerPhone,
             "played_at" => Carbon::now(),
             "answered_at" => null,
@@ -315,40 +366,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $botUser = $request->botUser ?? null;
         $slug = $request->slug ?? null;
 
-        if (is_null($bot) || is_null($botUser) || is_null($slug))
-            throw new HttpException("Не заданы необходимые параметры функции", 400);
-
-        $maxAttempts = (Collection::make($slug->config ?? [])
-            ->where("key", "max_attempts")
-            ->first())["value"] ?? 1;
-
-        $action = ActionStatus::query()
-            ->where("user_id", $botUser->user_id)
-            ->where("bot_id", $bot->id)
-            ->where("slug_id", $slug->id)
-            ->first();
-
-        if (is_null($action))
-            $action = ActionStatus::query()
-                ->create([
-                    'user_id' => $botUser->user_id,
-                    'bot_id' => $bot->id,
-                    'slug_id' => $slug->id,
-                    'max_attempts' => $maxAttempts,
-                    'current_attempts' => 0,
-                    'bot_user_id' => $botUser->id
-                ]);
-
-        $action->max_attempts = $maxAttempts;
-
-        if (is_null($action->data))
-            $action->current_attempts = 0;
-
-        $action->save();
-
-        return response()->json([
-            "action" => new ActionStatusResource($action),
-        ]);
+        return $this->extractedPreparedPrizes($bot, $botUser, $slug);
     }
 
     /**
@@ -573,5 +591,50 @@ class WheelOfFortuneCustomScriptController extends SlugController
                 $keyboard);
 
 
+    }
+
+    /**
+     * @param mixed $bot
+     * @param mixed $botUser
+     * @param \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null $slug
+     * @return \Illuminate\Http\JsonResponse
+     * @throws HttpException
+     */
+    protected function extractedPreparedPrizes(mixed $bot, mixed $botUser, \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null $slug): \Illuminate\Http\JsonResponse
+    {
+        if (is_null($bot) || is_null($botUser) || is_null($slug))
+            throw new HttpException("Не заданы необходимые параметры функции", 400);
+
+        $maxAttempts = (Collection::make($slug->config ?? [])
+            ->where("key", "max_attempts")
+            ->first())["value"] ?? 1;
+
+        $action = ActionStatus::query()
+            ->where("user_id", $botUser->user_id)
+            ->where("bot_id", $bot->id)
+            ->where("slug_id", $slug->id)
+            ->first();
+
+        if (is_null($action))
+            $action = ActionStatus::query()
+                ->create([
+                    'user_id' => $botUser->user_id,
+                    'bot_id' => $bot->id,
+                    'slug_id' => $slug->id,
+                    'max_attempts' => $maxAttempts,
+                    'current_attempts' => 0,
+                    'bot_user_id' => $botUser->id
+                ]);
+
+        $action->max_attempts = $maxAttempts;
+
+        if (is_null($action->data))
+            $action->current_attempts = 0;
+
+        $action->save();
+
+        return response()->json([
+            "action" => new ActionStatusResource($action),
+        ]);
     }
 }
