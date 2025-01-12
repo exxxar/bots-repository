@@ -280,7 +280,7 @@ const mutations = {
     },
     setBasket(state, payload) {
         state.basket_items = payload || [];
-        console.log(payload)
+
         localStorage.setItem('cashman_basket_items', JSON.stringify(payload));
     },
     setBasketPaginateObject(state, payload) {

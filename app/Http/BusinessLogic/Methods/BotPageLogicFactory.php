@@ -167,13 +167,17 @@ class BotPageLogicFactory extends BaseLogicFactory
         if (is_null($company))
             throw new HttpException(404, "Компания (клиент) не найдена!");
 
-        $keyboard = $pageData["keyboard"];
+        $keyboard = $pageData["keyboard"]["menu"] ?? $pageData["keyboard"] ?? null;
+
+        if (is_null($keyboard))
+            throw new HttpException(404, "Клавиатура не найдена!");
 
         $pages = [];
         foreach ($keyboard as $row) {
             foreach ($row as $col) {
                 $col = (array)$col;
-                $pages[] = $col["text"] ?? $col;
+                if (!is_null($col["text"] ?? null))
+                    $pages[] = $col["text"];
             }
 
         }
@@ -188,7 +192,6 @@ class BotPageLogicFactory extends BaseLogicFactory
         ]);
 
         foreach ($pages as $pageName) {
-
             $findPage = !is_null(BotMenuSlug::query()
                 ->where("bot_id", $this->bot->id)
                 ->where("command", "$pageName")
@@ -361,7 +364,7 @@ class BotPageLogicFactory extends BaseLogicFactory
             $keyboard = json_decode($tmp->reply_keyboard);
 
             $replyKeyboardSettings = $keyboard->settings ?? null;
-            $replyKeyboardMenu =  $keyboard->menu ?? null;
+            $replyKeyboardMenu = $keyboard->menu ?? null;
 
             $keyboard = $this->recursiveMenuFix($replyKeyboardMenu);
 
@@ -521,7 +524,7 @@ class BotPageLogicFactory extends BaseLogicFactory
             $keyboard = json_decode($tmp->reply_keyboard);
 
             $replyKeyboardSettings = $keyboard->settings ?? null;
-            $replyKeyboardMenu =  $keyboard->menu ?? null;
+            $replyKeyboardMenu = $keyboard->menu ?? null;
 
 
             $keyboard = $this->recursiveMenuFix($replyKeyboardMenu);
@@ -540,7 +543,6 @@ class BotPageLogicFactory extends BaseLogicFactory
                 "input_field_placeholder" => $replyKeyboardSettings->input_field_placeholder ?? null,
                 "is_persistent" => ($replyKeyboardSettings->is_persistent ?? "true") == "true",
             ];
-
 
 
             if (!is_null($menu))

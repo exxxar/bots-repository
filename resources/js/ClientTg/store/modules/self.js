@@ -95,7 +95,6 @@ const actions = {
     },
     async loadBotManagerConfig(context, payload = {botId: null}) {
 
-console.log("payload", payload)
         let link = `${BASE_SELF_LINK}/manage-bot`
         let method = 'POST'
         let _axios = util.makeAxiosFactory(link, method, payload)

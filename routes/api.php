@@ -191,3 +191,6 @@ Route::apiResource('traffic-sources', App\Http\Controllers\TrafficSourceControll
 Route::apiResource('cdeks', App\Http\Controllers\CdekController::class);
 
 Route::apiResource('folders', App\Http\Controllers\FolderController::class);
+
+
+Route::apiResource('tables', App\Http\Controllers\TableController::class);

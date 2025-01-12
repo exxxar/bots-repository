@@ -214,9 +214,9 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                         style="min-height:250px;"
                         class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                     <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
+                        <img v-lazy="'/images/shop-v2-2/shop-config.png'" class="img-fluid" alt="">
 
-                        <p class="my-2">Настройка скрипта</p>
+                        <p class="my-2">Настройка магазина</p>
                     </div>
 
                 </button>
@@ -304,6 +304,9 @@ export default {
     computed: {
         ...mapGetters(['getSelf', 'cartTotalCount']),
         preparedMenuItem() {
+            if (!this.bot.config)
+                return []
+
             let data = this.bot.config["icons"] || []
 
             let arr = [];
@@ -329,8 +332,6 @@ export default {
     },
     mounted() {
         this.tg.BackButton.show()
-
-        console.log(this.bot)
 
         this.loadScriptModuleData()
 
@@ -370,11 +371,12 @@ export default {
         loadScriptModuleData() {
             this.loadScriptData = false
             return this.$store.dispatch("loadShopModuleData").then((resp) => {
+                let data = resp.data
                 this.script_data = []
 
                 this.$nextTick(() => {
-                    Object.keys(resp).forEach(item => {
-                        this.script_data[item] = resp[item]
+                    Object.keys(data).forEach(item => {
+                        this.script_data[item] = data[item]
                     })
 
                     this.loadScriptData = true

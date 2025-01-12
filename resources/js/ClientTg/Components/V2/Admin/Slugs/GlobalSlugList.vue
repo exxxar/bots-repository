@@ -135,11 +135,11 @@ export default {
                 }
             }).then((response) => {
 
-                this.$botNotification.notification(
-                    "Команды",
-                    "Команда успешно удалена",
-                );
-
+                this.$notify({
+                    title:'Конструктор команд',
+                    text: "Команда успешно удалена!",
+                    type:'success'
+                })
 
                 this.loadAllSlugs()
 
@@ -197,11 +197,11 @@ export default {
                 }
             ).then((response) => {
 
-                this.$botNotification.notification(
-                     "Конструктор команд",
-                     "Команда успешно обновлена",
-                );
-
+                this.$notify({
+                    title:'Конструктор команд',
+                    text: "Команда успешно обновлена!",
+                    type:'success'
+                })
 
                 this.slugForm.id = null
                 this.slugForm.command = null

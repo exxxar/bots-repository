@@ -1,7 +1,6 @@
 <script setup>
 import ProductCardSimple from "@/ClientTg/Components/V2/Shop/ProductCardSimple.vue";
 import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSimple.vue";
-import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
 
 
 </script>
@@ -9,13 +8,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
     <div class="container py-3">
         <div class="row">
             <div class="col-12">
-                <h4>Итого</h4>
-                <p>
-                    Ниже приведена итоговая цена заказа без учета стоимости доставки. Цена доставки
-                    рассчитывается отдельно
-                    и
-                    зависит от расстояния.
-                </p>
+                <slot name="upper-text"></slot>
             </div>
         </div>
         <div class="row">
@@ -30,24 +23,6 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                     :item="item.collection"/>
             </div>
         </div>
-
-
-        <template  v-if="settings.need_promo_code || false">
-            <div class="form-check form-switch my-3">
-                <input class="form-check-input"
-                       type="checkbox"
-                       v-model="display_promo_code"
-                       role="switch" id="script-settings-display_promo_code">
-                <label class="form-check-label" for="script-settings-display_promo_code">
-                    У меня есть промокод
-                </label>
-            </div>
-
-            <PromoCodeForm
-                v-if="display_promo_code"
-                v-on:callback="activateDiscount"></PromoCodeForm>
-        </template>
-
 
         <template
             v-if="settings.need_prizes_from_wheel_of_fortune && filteredActionData.length>0">
@@ -83,71 +58,30 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
             </Carousel>
         </template>
 
-
-        <template v-if="(settings.need_person_counter || false) && (settings.shop_display_type === 0)">
-            <h6 class="opacity-75 mb-3 mt-2">Число персон</h6>
-            <div class="card mb-3">
+        <template v-if="!simpleMode">
+            <div class="card my-2">
                 <div class="card-body">
+                    <h6 class="mb-2">Товаров в корзине <strong class="fw-bold">{{ cartTotalCount }} ед.</strong></h6>
+                    <h6 class="mb-0">Общая цена товаров <strong class="fw-bold">{{
+                            cartTotalPrice - formData.promo.discount
+                        }}₽</strong>
+                        <strong
+                            v-if="(formData.promo.discount||0)>0"
+                            class="text-success fw-bold"> (-{{ formData.promo.discount }}
+                            <span v-if="formData.promo.discount_in_percent">%</span>
+                            <span v-else>₽</span>
+                            )</strong>
+                    </h6>
 
-                    <div class="row text-center">
-
-                        <div class="col-4">
-                            <button
-                                @click="decPersons"
-                                type="button" class="btn p-2 w-100 btn-light text-dark"><i
-                                class="fa-solid fa-minus font-22"></i></button>
-                        </div>
-
-                        <div class="col-4 d-flex justify-content-center align-items-center">
-                            <strong
-                                class="fw-bold"
-                                style="font-size:16px;">{{ formData.persons }}</strong>
-                        </div>
-
-                        <div class="col-4">
-                            <button type="button"
-                                    @click="incPersons"
-                                    class="btn p-2 w-100 btn-light text-dark"><i
-                                class="fa-solid fa-plus font-22"></i></button>
-                        </div>
-
-                    </div>
                 </div>
             </div>
+            <button
+                v-if="cartTotalCount>0"
+                @click="clearCart"
+                class="btn btn-outline-primary p-3 w-100">
+                <i class="fa-solid  fa-trash-can mr-2"></i><span class="color-white">Очистить корзину</span>
+            </button>
         </template>
-
-        <div class="card my-3">
-            <div class="card-body">
-                <h6>Товаров в корзине <strong class="fw-bold">{{ cartTotalCount }} ед.</strong></h6>
-                <h6>Общая цена товаров <strong class="fw-bold">{{
-                        cartTotalPrice - formData.promo.discount
-                    }}₽</strong>
-                    <strong
-                        v-if="(formData.promo.discount||0)>0"
-                        class="text-success fw-bold"> (-{{ formData.promo.discount }}₽)</strong>
-                </h6>
-
-                <template v-if="(settings.need_person_counter || false) && (settings.shop_display_type === 0)">
-                    <h6>Приборы на <strong class="fw-bold">{{ formData.persons }} чел.</strong></h6>
-                </template>
-
-                <p class="fst-italic">
-                    <span class="fw-bold text-primary">Внимание!</span> Скидка за промокод доступна только если
-                    сумма заказа больше чем
-                    <span class="fw-bold text-primary">{{ formData.promo.activate_price }}₽</span>
-                </p>
-                <h6 v-if="formData.promo.discount>0">Скидка за промокод <strong
-                    class="fw-bold">{{ formData.promo.discount }} ₽</strong>
-
-                </h6>
-            </div>
-        </div>
-        <button
-            v-if="cartTotalCount>0"
-            @click="clearCart"
-            class="btn btn-outline-primary p-3 w-100">
-            <i class="fa-solid  fa-trash-can mr-2"></i><span class="color-white">Очистить корзину</span>
-        </button>
 
     </div>
 </template>
@@ -157,7 +91,7 @@ import 'vue3-carousel/dist/carousel.css'
 import {Carousel, Slide, Pagination, Navigation} from 'vue3-carousel'
 
 export default {
-    props: ["settings", "formData"],
+    props: ["settings", "formData", "simpleMode"],
     components: {
         Carousel, Slide, Pagination, Navigation
     },
@@ -174,7 +108,7 @@ export default {
             config: {
                 itemsToShow: 1.5
             },
-            display_promo_code:false,
+            display_promo_code: false,
             action: null
         }
     },
@@ -204,15 +138,8 @@ export default {
             })
 
         },
-        activateDiscount(item) {
-            this.$emit("discount", item)
-        },
-        decPersons() {
-            this.$emit("person-dec")
-        },
-        incPersons() {
-            this.$emit("person-inc")
-        },
+
+
         clearCart() {
             this.$emit("change-tab", 1)
             this.$store.dispatch("clearCart").then(() => {

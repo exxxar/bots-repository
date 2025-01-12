@@ -2,7 +2,8 @@
 
 namespace App\Http\BusinessLogic\Methods\Classes;
 
-class Tinkoff {
+class Tinkoff
+{
     private $acquiring_url;
     private $terminal_id;
     private $secret_key;
@@ -19,6 +20,11 @@ class Tinkoff {
     protected $payment_url;
     protected $payment_status;
 
+    public function getResponse()
+    {
+        return json_decode($this->response ?? '[]');
+    }
+
     /**
      * Inicialize Tinkoff class
      *
@@ -26,10 +32,11 @@ class Tinkoff {
      * @param [string] $terminal_id   - acquiring terminal number
      * @param [string] $secret_key    - acquiring terminal password
      */
-    public function __construct($acquiring_url, $terminal_id, $secret_key) {
-        $this->acquiring_url  = $acquiring_url;
-        $this->terminal_id    = $terminal_id;
-        $this->secret_key     = $secret_key;
+    public function __construct($acquiring_url, $terminal_id, $secret_key)
+    {
+        $this->acquiring_url = $acquiring_url;
+        $this->terminal_id = $terminal_id;
+        $this->secret_key = $secret_key;
         $this->setupUrls();
     }
 
@@ -44,12 +51,13 @@ class Tinkoff {
      * Tinkoff does not accept a Item name longer than $item_name_max_lenght
      * $amount_multiplicator - need for convert price to cents
      *
-     * @param  array  $payment array of payment data
-     * @param  array  $items   array of items
+     * @param array $payment array of payment data
+     * @param array $items array of items
      * @return mixed - return payment url if has no errors
      */
-    public function paymentURL(array $payment, array $items){
-        if ( !$this->paymentArrayChecked($payment) ) {
+    public function paymentURL(array $payment, array $items)
+    {
+        if (!$this->paymentArrayChecked($payment)) {
             $this->error = 'Incomplete payment data';
             return FALSE;
         }
@@ -61,41 +69,41 @@ class Tinkoff {
          * Generate items array for Receipt
          */
         foreach ($items as $item) {
-            if ( !$this->itemsArrayChecked($item) ) {
+            if (!$this->itemsArrayChecked($item)) {
                 $this->error = 'Incomplete items data';
                 return FALSE;
             }
 
             $payment['Items'][] = [
-                'Name'      => mb_strimwidth($item['Name'], 0, $item_name_max_lenght - 1, ''),
-                'Price'     => round($item['Price'] * $amount_multiplicator),
-                'Quantity'  => $item['Quantity'] ?? 1,
-                'Amount'    => round($item['Price'] * $item['Quantity'] * $amount_multiplicator),
-                'Tax'       => $item['NDS'] ?? $item["Tax"] ?? 'none',
+                'Name' => mb_strimwidth($item['Name'], 0, $item_name_max_lenght - 1, ''),
+                'Price' => round($item['Price'] * $amount_multiplicator),
+                'Quantity' => $item['Quantity'] ?? 1,
+                'Amount' => round($item['Price'] * $item['Quantity'] * $amount_multiplicator),
+                'Tax' => $item['NDS'] ?? $item["Tax"] ?? 'none',
             ];
         }
 
 
         $params = array(
-            'OrderId'       => $payment['OrderId'],
-            'Amount'        => round($payment['Amount'] * $amount_multiplicator),
-            'Language'      => $payment['Language'],
-            'Description'   => $payment['Description'],
+            'OrderId' => $payment['OrderId'],
+            'Amount' => round($payment['Amount'] * $amount_multiplicator),
+            'Language' => $payment['Language'],
+            'Description' => $payment['Description'],
             'DATA' => [
-                'Email'     => $payment['Email'],
-                'Phone'     => $payment['Phone'],
-                'Name'      => $payment['Name'],
+                'Email' => $payment['Email'],
+                'Phone' => $payment['Phone'],
+                'Name' => $payment['Name'],
             ],
             'Receipt' => [
-                'Email'     => $payment['Email'],
-                'Phone'     => $payment['Phone'],
-                'Taxation'  => $payment['Taxation'],
-                'Items'     => $payment['Items'],
+                'Email' => $payment['Email'],
+                'Phone' => $payment['Phone'],
+                'Taxation' => $payment['Taxation'],
+                'Items' => $payment['Items'],
             ],
         );
 
 
-        if( $this->sendRequest($this->url_init, $params) ){
+        if ($this->sendRequest($this->url_init, $params)) {
             return $this->payment_url;
         }
 
@@ -108,10 +116,11 @@ class Tinkoff {
      * @param  [string] Tinkoff payment id
      * @return [mixed] status of payment or false
      */
-    public function getState($payment_id){
-        $params = [ 'PaymentId' => $payment_id ];
-
-        if( $this->sendRequest($this->url_get_state, $params) ){
+    public function getState($payment_id)
+    {
+        $params = ['PaymentId' => $payment_id];
+        $request = $this->sendRequest($this->url_get_state, $params);
+        if ($request) {
             return $this->payment_status;
         }
 
@@ -124,10 +133,11 @@ class Tinkoff {
      * @param  [string] Tinkoff payment id
      * @return [mixed] status of payment or false
      */
-    public function confirmPayment($payment_id){
-        $params = [ 'PaymentId' => $payment_id ];
+    public function confirmPayment($payment_id)
+    {
+        $params = ['PaymentId' => $payment_id];
 
-        if( $this->sendRequest($this->url_confirm, $params) ){
+        if ($this->sendRequest($this->url_confirm, $params)) {
             return $this->payment_status;
         }
 
@@ -140,10 +150,12 @@ class Tinkoff {
      * @param  [string] Tinkoff payment id
      * @return [mixed] status of payment or false
      */
-    public function cencelPayment($payment_id){
-        $params = [ 'PaymentId' => $payment_id ];
+    public function cencelPayment($payment_id)
+    {
+        $params = ['PaymentId' => $payment_id];
 
-        if( $this->sendRequest($this->url_cancel, $params) ){
+
+        if ($this->sendRequest($this->url_cancel, $params)) {
             return $this->payment_status;
         }
 
@@ -157,12 +169,13 @@ class Tinkoff {
      * @param  [array]  $args data
      * @return [json]   json decoded data
      */
-    private function sendRequest($path,  array $args) {
+    private function sendRequest($path, array $args)
+    {
         $args['TerminalKey'] = $this->terminal_id;
-        $args['Token']       = $this->generateToken($args);
+        $args['Token'] = $this->generateToken($args);
         $args = json_encode($args);
 
-        if($curl = curl_init()) {
+        if ($curl = curl_init()) {
             curl_setopt($curl, CURLOPT_URL, $path);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -179,15 +192,16 @@ class Tinkoff {
             $this->response = $response;
             $json = json_decode($response);
 
-            if($json) {
 
-                if ( $this->errorsFound() ) {
+            if ($json) {
+
+                if ($this->errorsFound()) {
                     return FALSE;
 
                 } else {
-                    $this->payment_id       = @$json->PaymentId;
-                    $this->payment_url      = @$json->PaymentURL;
-                    $this->payment_status   = @$json->Status;
+                    $this->payment_id = @$json->PaymentId;
+                    $this->payment_url = @$json->PaymentURL;
+                    $this->payment_status = @$json->Status;
 
                     return TRUE;
                 }
@@ -206,11 +220,12 @@ class Tinkoff {
      * Finding all possible errors
      * @return bool
      */
-    private function errorsFound():bool {
+    private function errorsFound(): bool
+    {
         $response = json_decode($this->response, TRUE);
 
         if (isset($response['ErrorCode'])) {
-            $error_code = (int) $response['ErrorCode'];
+            $error_code = (int)$response['ErrorCode'];
         } else {
             $error_code = 0;
         }
@@ -228,8 +243,8 @@ class Tinkoff {
         }
 
 
-        if($error_code !== 0){
-            $this->error = 'Error code: '. $error_code .
+        if ($error_code !== 0) {
+            $this->error = 'Error code: ' . $error_code .
                 ' | Msg: ' . $error_msg .
                 ' | Message: ' . $error_message;
             return TRUE;
@@ -240,12 +255,13 @@ class Tinkoff {
     /**
      * Generate sha256 token for bank API
      *
-     * @param  array of args
+     * @param array of args
      * @return sha256 token
      */
-    private function generateToken(array $args) {
+    private function generateToken(array $args)
+    {
         $token = '';
-        $args['Password']    = $this->secret_key;
+        $args['Password'] = $this->secret_key;
         $args['TerminalKey'] = $this->terminal_id;
         ksort($args);
 
@@ -263,7 +279,8 @@ class Tinkoff {
      *
      * @return void
      */
-    private function setupUrls(){
+    private function setupUrls()
+    {
         $this->acquiring_url = $this->checkSlashOnUrlEnd($this->acquiring_url);
         $this->url_init = $this->acquiring_url . 'Init/';
         $this->url_cancel = $this->acquiring_url . 'Cancel/';
@@ -276,8 +293,9 @@ class Tinkoff {
      *
      * @return url string
      */
-    private function checkSlashOnUrlEnd($url) {
-        if ( $url[strlen($url) - 1] !== '/'){
+    private function checkSlashOnUrlEnd($url)
+    {
+        if ($url[strlen($url) - 1] !== '/') {
             $url .= '/';
         }
         return $url;
@@ -286,10 +304,11 @@ class Tinkoff {
     /**
      * Check payment array for all keys is isset
      *
-     * @param  array for checking
+     * @param array for checking
      * @return [bool]
      */
-    private function paymentArrayChecked(array $array_for_check){
+    private function paymentArrayChecked(array $array_for_check)
+    {
         $keys = ['OrderId', 'Amount', 'Language',
             'Description', 'Email', 'Phone',
             'Name', 'Taxation'];
@@ -299,10 +318,11 @@ class Tinkoff {
     /**
      * Check items array for all keys is isset
      *
-     * @param  array for checking
+     * @param array for checking
      * @return [bool]
      */
-    private function itemsArrayChecked(array $array_for_check){
+    private function itemsArrayChecked(array $array_for_check)
+    {
         $keys = ['Name', 'Price', 'NDS', 'Quantity'];
         return $this->allKeysIsExistInArray($keys, $array_for_check);
     }
@@ -310,12 +330,13 @@ class Tinkoff {
     /**
      * Checking for existing all $keys in $arr
      *
-     * @param  array $keys - array of keys
-     * @param  array $arr - checked array
+     * @param array $keys - array of keys
+     * @param array $arr - checked array
      * @return [bool]
      */
-    private function allKeysIsExistInArray(array $keys, array $arr){
-        return (bool) !array_diff_key(array_flip($keys), $arr);
+    private function allKeysIsExistInArray(array $keys, array $arr)
+    {
+        return (bool)!array_diff_key(array_flip($keys), $arr);
     }
 
     /**
@@ -323,7 +344,8 @@ class Tinkoff {
      * @param  [mixed] $property name
      * @return [mixed]           value
      */
-    public function __get($property){
+    public function __get($property)
+    {
         if (property_exists($this, $property)) {
             return $this->$property;
         }

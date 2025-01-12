@@ -8,6 +8,7 @@ use App\Enums\OrderStatusEnum;
 use App\Facades\BotManager;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ActionStatusResource;
+use App\Http\Resources\ShopConfigPublicResource;
 use App\Models\ActionStatus;
 use App\Models\Basket;
 use App\Models\Bot;
@@ -284,7 +285,7 @@ class SimpleDeliveryController extends SlugController
 
     }
 
-    public function loadData(Request $request): \Illuminate\Http\JsonResponse
+    public function loadData(Request $request): mixed
     {
         $bot = $request->bot ?? null;
         $botUser = $request->botUser ?? null;
@@ -303,6 +304,7 @@ class SimpleDeliveryController extends SlugController
             "is_disabled" => false,
             "can_use_card" => false,
             "can_use_cash" => true,
+            "can_buy_after_closing" => true,
             "menu_list_type" => 0,
             "max_tables" => 0,
             "need_table_list" => false,
@@ -310,11 +312,13 @@ class SimpleDeliveryController extends SlugController
             "need_pay_after_call" => true,
             "is_product_list" => false,
             "need_promo_code" => true,
+            "need_automatic_delivery_request" => true,
             "need_person_counter" => true,
             "need_bonuses_section" => true,
             "need_health_restrictions" => true,
             "need_prizes_from_wheel_of_fortune" => true,
             "selected_script_id" => null,
+            "payment_token" => null,
 
             "can_use_sbp" => false,
             "sbp" => (object)[
@@ -353,7 +357,7 @@ class SimpleDeliveryController extends SlugController
             }
 
 
-            return response()->json($tmp);
+            return new ShopConfigPublicResource((object)$tmp);
         }
         return response()->json($dictionary);
     }

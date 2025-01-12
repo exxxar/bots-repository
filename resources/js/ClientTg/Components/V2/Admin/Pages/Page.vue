@@ -646,16 +646,19 @@ export default {
     methods: {
         copyToClipBoard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                console.log("copy", text)
-                this.$botNotification.notification(
-                    "Конструктор страниц",
-                    "Ссылка скопирована в буфер",
-                );
+
+                this.$notify({
+                    title: "Конструктор страниц",
+                    text: "Ссылка скопирована в буфер",
+                    type: 'success'
+                })
             }).catch((err) => {
-                this.$botNotification.warning(
-                    "Копирование",
-                    "Ошибка копирования",
-                );
+
+                this.$notify({
+                    title: "Конструктор страниц",
+                    text: "Ошибка копирования",
+                    type: 'error'
+                })
             })
         },
         loadBot() {
@@ -675,10 +678,12 @@ export default {
             if (item.id != this.pageForm.id)
                 this.pageForm.next_page_id = item.id
             else
-                this.$botNotification.warning(
-                    "Конструктор страниц",
-                    "Вы не можете связать данную страницу с собой",
-                );
+                this.$notify({
+                    title: "Конструктор страниц",
+                    text: "Вы не можете связать данную страницу с собой",
+                    type: 'error'
+                })
+
         },
         injectContent(data) {
             if (this.pageForm.content)
@@ -772,10 +777,12 @@ export default {
 
                 this.$emit("callback", response.data)
 
-                this.$botNotification.success(
-                    "Конструктор страниц",
-                    (this.pageForm.id == null ? "Страница успешно создана!" : "Страница успешно обновлена!"),
-                );
+                this.$notify({
+                    title: "Конструктор страниц",
+                    text:  (this.pageForm.id == null ? "Страница успешно создана!" : "Страница успешно обновлена!"),
+                    type: 'success'
+                })
+
 
             }).catch(err => {
 

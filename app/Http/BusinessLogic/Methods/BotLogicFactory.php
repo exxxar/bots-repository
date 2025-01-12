@@ -57,7 +57,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Image\Image;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -997,16 +999,25 @@ class BotLogicFactory extends BaseLogicFactory
 
                     $imageName = Str::uuid() . "." . $ext;
 
-                    $photo->storeAs("/public/companies/" . $this->bot->company->slug . "/$imageName");
+                    $divider = env("APP_DEBUG")?"\\":"/";
+
+                    $path = public_path('uploads').$divider."$imageName";
+
+                    $photo->move(public_path('uploads'), $imageName);
+
+                    Image::load($path)
+                        ->width(800) // Установить ширину
+                        ->optimize() // Оптимизация для снижения размера файла
+                        ->save();
+
 
                     $media[] = [
-                        "media" => env("APP_URL") . "/images/" . $this->bot->company->slug . "/" . $imageName,
+                        "media" => env("APP_URL") . "/uploads/" . $imageName,
                         "type" => "photo",
                         "caption" => "$imageName"
                     ];
 
                 }
-
 
                 BotMethods::bot()
                     ->whereBot($this->bot)
@@ -1019,7 +1030,16 @@ class BotLogicFactory extends BaseLogicFactory
 
                 $imageName = Str::uuid() . "." . $ext;
 
-                $uploadedPhotos[0]->storeAs("$imageName");
+                $divider = env("APP_DEBUG")?"\\":"/";
+
+                $path = public_path('uploads').$divider."$imageName";
+
+                $uploadedPhotos[0]->move(public_path('uploads'), $imageName);
+
+                Image::load($path)
+                    ->width(800) // Установить ширину
+                    ->optimize() // Оптимизация для снижения размера файла
+                    ->save();
 
                 BotMethods::bot()
                     ->whereBot($this->bot)
@@ -1028,7 +1048,7 @@ class BotLogicFactory extends BaseLogicFactory
                         sprintf($feedbackMessage,
                             $data["message"] ?? '-'
                         ),
-                        InputFile::create(storage_path() . "/app/$imageName")
+                        InputFile::create(env("APP_URL") . "/uploads/" . $imageName)
                     );
             }
 

@@ -102,7 +102,12 @@ export default {
 
             })
 
-            this.$botNotification.notification("Скрипты","Вы выбрали скрипт из списка!");
+            this.$notify({
+                title:'Скрипты',
+                text: "Вы выбрали скрипт из списка",
+
+            })
+
         },
         loadSlugs(index) {
             this.$store.dispatch("loadSlugs", {

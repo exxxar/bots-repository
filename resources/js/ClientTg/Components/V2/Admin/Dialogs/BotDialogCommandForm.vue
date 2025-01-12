@@ -458,10 +458,12 @@ export default {
             }).then((response) => {
                 this.loading = false
 
-                this.$botNotification.success(
-                    "Команды",
-                    "Диалоговая команда успешно продублирована!",
-                );
+                this.$notify({
+                    title: 'Команды',
+                    text: "Диалоговая команда успешно продублирована!",
+                    type: 'success'
+                })
+
 
                 this.$emit("callback")
             }).catch(err => {
@@ -478,11 +480,11 @@ export default {
             }).then((response) => {
                 this.loading = false
 
-                this.$botNotification.success(
-                    "Команды",
-                    "Диалоговая команда успешно удалена!",
-                );
-
+                this.$notify({
+                    title: 'Команды',
+                    text: "Диалоговая команда успешно удалена!",
+                    type: 'success'
+                })
 
                 this.$emit("callback")
             }).catch(err => {
@@ -536,10 +538,13 @@ export default {
 
                 this.loading = false
 
-                this.$botNotification.success(
-                    "Команды",
-                    "Успешная обработка диалоговой команды!",
-                );
+                this.$notify({
+                    title: 'Команды',
+                    text: "Успешная обработка диалоговой команды!",
+                    type: 'success'
+                })
+
+
 
                 if (this.commandForm.id == null) {
                     this.commandForm = {

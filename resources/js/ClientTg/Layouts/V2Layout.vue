@@ -365,6 +365,9 @@ export default {
             return window.currentBot
         },
         preparedMenuItem() {
+            if (!this.bot.config)
+                return []
+
             let data = this.bot.config["icons"] || []
 
             let arr = [];

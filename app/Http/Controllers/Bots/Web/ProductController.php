@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Bots\Web;
 
+use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
 use App\Http\Controllers\Controller;
@@ -19,9 +20,70 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Mpdf\Mpdf;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ProductController extends Controller
 {
+
+    public function generateTablesQR(Request $request, $domain)
+    {
+
+        $bot = Bot::query()
+            ->where("bot_domain", $domain)
+            ->first();
+
+        if (is_null($bot))
+            throw new HttpException(404, "Неверно указан домен бота!");
+
+        $botDomain = $bot->bot_domain;
+
+        $countTables = $request->get("count") ?? 30;
+        $scriptId = $request->get("script-id") ?? null;
+        $test = $request->get("test") ?? null;
+
+        if (is_null($scriptId))
+            throw new HttpException(404, "Скрипт магазина не найдена!");
+
+        $mpdf = new Mpdf();
+
+        $number = Str::uuid();
+
+        $tables = [];
+        $row = [];
+        for ($i = 0; $i < $countTables; $i++) {
+
+            $qrLink = "https://t.me/$botDomain?start=" .
+                base64_encode("777slug" . $scriptId . "table" . $i);
+
+            $qr = (object)[
+                "id" => $i + 1,
+                "qr" => "https://api.qrserver.com/v1/create-qr-code/?size=450x450&qzone=2&data=$qrLink"
+            ];
+
+            if ($i % 2 != 0)
+                $row[] = $qr;
+            else {
+                $tables[] = $row;
+                $row = [
+                    $qr
+                ];
+            }
+        }
+
+        $tables[] = $row;
+
+        if (!is_null($test))
+            return response()
+                ->json($tables);
+
+        ini_set('max_execution_time', 30000);
+        $mpdf->WriteHTML(view("pdf.tables-qr", [
+            "tables" => $tables
+        ]));
+
+        return $mpdf->Output("tables-$number.pdf", \Mpdf\Output\Destination::DOWNLOAD);
+    }
 
     public function changeStatusOrder(Request $request): \Illuminate\Http\Response
     {
@@ -47,6 +109,10 @@ class ProductController extends Controller
      */
     public function getDeliveryPrice(Request $request): \Illuminate\Http\JsonResponse
     {
+
+        if (is_null($request->bot ?? null) || is_null($request->slug ?? null))
+            throw new HttpException(404, "Не все параметры функции заданы!");
+
         $request->validate([
             "city" => "required",
             "street" => "required",
@@ -62,11 +128,11 @@ class ProductController extends Controller
             ]);
 
         $price_per_km = (Collection::make($slug->config)
-            ->where("key", "price_per_km ")
+            ->where("key", "price_per_km")
             ->first())["value"] ?? 80;
 
         $min_base_delivery_price = (Collection::make($slug->config)
-            ->where("key", "min_base_delivery_price ")
+            ->where("key", "min_base_delivery_price")
             ->first())["value"] ?? 100;
 
 
@@ -74,19 +140,27 @@ class ProductController extends Controller
             ->setBot($request->bot ?? null)
             ->setSlug($request->slug ?? null)
             ->getCoords([
-                "address" => (($request->city ?? "") . "," . ($request->street ?? "") . "," . ($request->building ?? ""))
+                "address" => (($request->city ?? "") . ", " . ($request->street ?? "") . ", " . ($request->building ?? ""))
             ]);
 
-        $tmpDistance = BusinessLogic::geo()
-            ->setBot($request->bot ?? null)
-            ->setSlug($request->slug ?? null)
-            ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
+        if (($geo->lat ?? 0) > 0 && ($geo->lon ?? 0) > 0) {
+            $tmpDistance = BusinessLogic::geo()
+                ->setBot($request->bot ?? null)
+                ->setSlug($request->slug ?? null)
+                ->getDistance($geo->lat ?? 0, $geo->lon ?? 0);
 
-        $distance = $tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0;
+            $distance = $tmpDistance > 0 ? round($tmpDistance / 1000 ?? 0, 2) : 0;
+            return response()->json([
+                "distance" => $distance,
+                "price" => round($min_base_delivery_price + $distance * $price_per_km, 2)
+            ]);
+        }
+
+
         return response()->json([
-            "distance" => $distance,
-            "price" => round($min_base_delivery_price + $distance * $price_per_km, 2)
-        ]);
+            "distance" => 0,
+            "price" => 0
+        ], 400);
     }
 
 

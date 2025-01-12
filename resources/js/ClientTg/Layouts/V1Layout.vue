@@ -192,7 +192,7 @@ export default {
         },
     },
     mounted() {
-        console.log(window.currentBot)
+
     },
     methods: {
         openLink(url) {

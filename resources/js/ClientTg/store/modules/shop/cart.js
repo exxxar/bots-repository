@@ -162,7 +162,7 @@ const actions = {
         commit('setItemQuantity', prod);
     },
     incQuantity({state, commit}, id) {
-        console.log("incQuantity", id)
+
         commit('incrementItemQuantity', id);
     },
     decQuantity({state, commit}, id) {
@@ -217,7 +217,7 @@ const mutations = {
 
 
     incrementItemQuantity(state, id) {
-        console.log("increment", id)
+
         const cartItem = state.items.find(item => item.product.id === id)
         cartItem.quantity++
 

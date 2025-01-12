@@ -1,24 +1,15 @@
 created:
-    - app/Http/Controllers/CdekController.php
-    - app/Http/Controllers/FolderController.php
-    - database/factories/CdekFactory.php
-    - database/factories/FolderFactory.php
-    - database/migrations/2024_12_08_092911_create_cdeks_table.php
-    - database/migrations/2024_12_08_092912_create_folders_table.php
-    - app/Models/Cdek.php
-    - app/Models/Folder.php
-    - database/seeders/CdekSeeder.php
-    - database/seeders/FolderSeeder.php
-    - tests/Feature/Http/Controllers/CdekControllerTest.php
-    - tests/Feature/Http/Controllers/FolderControllerTest.php
-    - app/Http/Requests/CdekStoreRequest.php
-    - app/Http/Requests/CdekUpdateRequest.php
-    - app/Http/Requests/FolderStoreRequest.php
-    - app/Http/Requests/FolderUpdateRequest.php
-    - app/Http/Resources/CdekCollection.php
-    - app/Http/Resources/CdekResource.php
-    - app/Http/Resources/FolderCollection.php
-    - app/Http/Resources/FolderResource.php
+    - app/Http/Controllers/TableController.php
+    - database/factories/TableFactory.php
+    - database/migrations/2025_01_03_010438_create_tables_table.php
+    - database/migrations/2025_01_03_010439_create_bot_user_table_table.php
+    - app/Models/Table.php
+    - database/seeders/TableSeeder.php
+    - tests/Feature/Http/Controllers/TableControllerTest.php
+    - app/Http/Requests/TableStoreRequest.php
+    - app/Http/Requests/TableUpdateRequest.php
+    - app/Http/Resources/TableCollection.php
+    - app/Http/Resources/TableResource.php
 updated:
     - routes/api.php
 models:
@@ -90,3 +81,4 @@ models:
     TrafficSource: { bot_id: 'id foreign:bots nullable', bot_user_id: 'foreign:bot_users nullable', comment: 'string:255 nullable', source: 'string:255 nullable', relationships: { belongsTo: 'Bot, BotUser' } }
     Cdek: { bot_id: 'id foreign:bots nullable', account: 'string:255 nullable', secure_password: 'string:255 nullable', is_active: 'boolean default:true', config: 'json nullable', relationships: { belongsTo: Bot } }
     Folder: { bot_id: 'id foreign:bots nullable', title: 'string:255 nullable', type: 'enum:page', description: 'longtext nullable', is_active: 'boolean default:true', config: 'json nullable', relationships: { belongsTo: Bot, hasMany: BotPage } }
+    Table: { bot_id: 'id foreign:bots nullable', creator_id: 'id foreign:bot_users nullable', officiant_id: 'id foreign:bot_users nullable', number: 'string:255 nullable', closed_at: 'timestamp nullable', config: 'json nullable', relationships: { belongsTo: BotUser, belongsToMany: BotUser } }

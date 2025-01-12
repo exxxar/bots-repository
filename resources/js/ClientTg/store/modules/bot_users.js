@@ -17,9 +17,9 @@ const getters = {
 
 const actions = {
 
-    async getUserProfilePhotos(context){
+    async getUserProfilePhotos(context, payload = null){
         let link = `${BASE_BOT_USERS_LINK}/get-user-profile-photos`
-        let _axios = util.makeAxiosFactory(link, 'POST')
+        let _axios = util.makeAxiosFactory(link, 'POST', payload)
         return _axios.then((response) => {
             return Promise.resolve(response.data);
         }).catch(err => {

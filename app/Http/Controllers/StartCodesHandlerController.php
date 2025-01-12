@@ -10,15 +10,130 @@ use App\Models\BotPage;
 use App\Models\BotUser;
 use App\Models\Order;
 use App\Models\ReferralHistory;
+use App\Models\Table;
 use App\Models\TrafficSource;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use PhpOffice\PhpWord\Style\Tab;
 
 class StartCodesHandlerController extends Controller
 {
+
+    public function openTableMenu(...$data)
+    {
+        $bot = BotManager::bot()
+            ->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $slugId = $data[2] ?? null;
+        $tableNumber = $data[3] ?? null;
+
+        if (is_null($slugId) || is_null($tableNumber)) {
+            BotManager::bot()
+                ->reply("Упс.. сервис временно недоступен!");
+            return;
+        }
+
+        $path = env("APP_URL") . "/bot-client/simple/%s?slug=%s&hide_menu#/s/table-menu";
+
+
+        $table = Table::query()
+            ->where("bot_id", $bot->id)
+            ->where("number", $tableNumber)
+            ->whereNull("closed_at")
+            ->first();
+
+        if (is_null($table)) {
+            $table = Table::query()
+                ->create([
+                    'bot_id' => $bot->id,
+                    'creator_id' => $botUser->id,
+                    'officiant_id' => null,
+                    'number' => $tableNumber,
+                    'closed_at' => null,
+                    'additional_services' => null,
+                    'config' => null,
+                ]);
+
+            $table->clients()->sync($botUser->id);
+
+            $thread = $bot->topics["orders"] ?? null;
+
+            $adminPath = env("APP_URL") . "/bot-client/simple/%s?slug=%s#/s/admin/tables-manager/%s";
+
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendInlineKeyboard(
+                    $bot->order_channel,
+                    "Столик №$tableNumber занял новый клиент! Подойдите к нему!",
+                    [
+                        [
+                            ["text" => "🛎️Работа со столиком",
+                                "web_app" => [
+                                    "url" => sprintf(
+                                        $adminPath,
+                                        $bot->bot_domain,
+                                        $slugId,
+                                        $table->id
+                                    )
+                                ]
+                            ],
+                        ]
+                    ],
+                    $thread
+                );
+        } else {
+
+            $tableWithClient = Table::query()
+                ->where("bot_id", $bot->id)
+                ->where("number", $tableNumber)
+                ->whereNull("closed_at")
+                ->whereHas('clients', function ($query) use ($botUser) {
+                    $query->where('id', $botUser->id);
+                })->first();
+
+            if (is_null($tableWithClient)) {
+                BotMethods::bot()
+                    ->whereBot($bot)
+                    ->sendInlineKeyboard(
+                        $botUser->telegram_chat_id,
+                        "Вы хотите присоединиться за столик №$tableNumber. За этим столиком уже сидят, запросить разрешение?",
+                        [
+                            [
+                                ["text" => "🛎️Запросить", "callback_data" => "/request_table_join $tableNumber $slugId"],
+                            ]
+                        ]
+                    );
+                return;
+            }
+
+        }
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendInlineKeyboard(
+                $botUser->telegram_chat_id,
+                "Добро пожаловать за столик №$tableNumber",
+                [
+                    [
+                        ["text" => "🛎️Открыть меню",
+                            "web_app" => [
+                                "url" => sprintf(
+                                    $path,
+                                    $bot->bot_domain,
+                                    $slugId
+                                )
+                            ]
+                        ],
+                    ]
+                ]
+            );
+
+    }
+
     public function paymentAction(...$data)
     {
         $bot = BotManager::bot()
@@ -273,8 +388,7 @@ class StartCodesHandlerController extends Controller
             ->where("bot_id", $bot->id)
             ->first();
 
-        if (is_null($userBotUser) || is_null($botUser))
-        {
+        if (is_null($userBotUser) || is_null($botUser)) {
             BotManager::bot()
                 ->setBot($bot)
                 ->pushCommand("/start");
@@ -310,15 +424,44 @@ class StartCodesHandlerController extends Controller
             'source' => "$id"
         ]);
 
+        $path = env("APP_URL") . "/bot-client/simple/%s?slug=route&hide_menu&friend=%s#/s/referral";
+
         BotMethods::bot()
             ->whereId($botUser->bot_id)
-            ->sendMessage(
+            ->sendInlineKeyboard(
                 $userBotUser->telegram_chat_id,
-                "По вашей ссылке перешел пользователь $userName1"
+                "По вашей ссылке перешел пользователь <b>$userName1</b>",
+                [
+                    [
+                        ["text" => "👨‍👨Узнать о вашем друге",
+                            "web_app" => [
+                                "url" => sprintf(
+                                    $path,
+                                    $bot->bot_domain,
+                                    $botUser->id,
+                                )
+                            ]
+                        ],
+                    ]
+                ]
+
             )
-            ->sendMessage(
+            ->sendInlineKeyboard(
                 $botUser->telegram_chat_id,
-                "Вас и вашего друга $userName2 теперь обьеденяет еще и CashBack;)"
+                "Вас и вашего друга <b>$userName2</b> теперь объединяет еще и бонусная система;)",
+                [
+                    [
+                        ["text" => "👨‍👨Узнать о вашем друге",
+                            "web_app" => [
+                                "url" => sprintf(
+                                    $path,
+                                    $bot->bot_domain,
+                                    $userBotUser->id,
+                                )
+                            ]
+                        ],
+                    ]
+                ]
             );
 
 

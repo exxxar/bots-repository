@@ -34,18 +34,45 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class BotUserLogicFactory extends BaseLogicFactory
 {
-    public function getUserProfilePhotos(): mixed
+    public function getUserProfilePhotos($botUserId = null): mixed
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(404, "Параметры не заданы!");
 
+        $botUser = $this->botUser;
+        if (!is_null($botUserId)) {
+            $botUser = BotUser::query()
+                ->where("id", $botUserId)
+                ->where("bot_id", $this->bot->id)
+                ->first();
+
+            if (is_null($botUser))
+                throw new HttpException(404, "Пользователь не найден!");
+        }
+
         try {
             $client = Http::post("https://api.telegram.org/bot" . $this->bot->bot_token . "/getUserProfilePhotos", [
-                "user_id" => $this->botUser->telegram_chat_id
+                "user_id" => $botUser->telegram_chat_id
             ]);
 
+            $orders = Order::query()
+                ->where("bot_id", $this->bot->id)
+                ->where("customer_id",$botUser->id)
+                ->count();
 
-            return $client->json();
+            $refCount = BotUser::query()
+                ->where("parent_id", $botUser->id)
+                ->count() ?? 0;
+
+            $botUser->order_count = $orders;
+            $botUser->friends_count = $refCount;
+            $botUser->parent_friend = BotUser::query()
+                ->find($botUser->parent_id) ?? null;
+
+            return (object)[
+                "photos"=>$client->json(),
+                "profile"=>new BotUserResource($botUser)
+            ];
 
         } catch (\Exception $e) {
 
@@ -120,7 +147,7 @@ class BotUserLogicFactory extends BaseLogicFactory
         $friends = BotUser::query()
             ->whereIn("user_id", $userIds)
             ->where("bot_id", $this->bot->id)
-            ->orderBy("created_at","desc")
+            ->orderBy("created_at", "desc")
             ->paginate($size);
 
         return new BotUserCollection($friends);

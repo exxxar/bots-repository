@@ -49,7 +49,7 @@ class BotUsersController extends Controller
         return BusinessLogic::botUsers()
             ->setBot($request->bot ?? null)
             ->setBotUser($request->botUser ?? null)
-            ->getUserProfilePhotos();
+            ->getUserProfilePhotos($request->bot_user_id ?? null);
     }
 
     /**

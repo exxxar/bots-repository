@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use TypeError;
 use Yandex\Geo\Exception;
 use Yandex\Geo\Exception\CurlError;
 use Yandex\Geo\Exception\ServerError;
@@ -30,6 +31,7 @@ class GeoLogicFactory extends BaseLogicFactory
         $validator = Validator::make($data, [
             "address" => "required",
         ]);
+
 
         if ($validator->fails())
             throw new ValidationException($validator);
@@ -53,15 +55,16 @@ class GeoLogicFactory extends BaseLogicFactory
                 ->setLimit(1)
                 ->setLang(\Yandex\Geo\Api::LANG_RU)
                 ->load();
-        } catch (Exception $e) {
+        } catch (TypeError|ServerError|CurlError|Exception $e) {
             return (object)[
                 "lat" => 0,
-                "lon" =>  0
+                "lon" => 0
             ];
         }
 
-
         $response = $api->getResponse();
+
+
         //  $response->getFoundCount(); // кол-во найденных адресов
         //  $response->getQuery(); // исходный запрос
         // $response->getLatitude(); // широта для исходного запроса
@@ -76,9 +79,9 @@ class GeoLogicFactory extends BaseLogicFactory
                     $item->getData(); // необработанные данные*/
 
 
-        $obj =  $response->getList()[0]->getData();
+        $obj = $response->getList()[0]->getData();
         return (object)[
-            "lat" =>$obj["Latitude"] ?? 0,
+            "lat" => $obj["Latitude"] ?? 0,
             "lon" => $obj["Longitude"] ?? 0
         ];
 

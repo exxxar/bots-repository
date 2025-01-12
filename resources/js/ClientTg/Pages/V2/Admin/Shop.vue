@@ -163,7 +163,13 @@ export default {
             }).then((resp) => {
                 this.load = false
                 this.updateProducts()
-                this.$botNotification.notification("Менеджер магазина", "Ссылка на источник в ВК обновлена");
+
+                this.$notify({
+                    title:'Менеджер магазина',
+                    text: "Ссылка на источник в ВК обновлена",
+                    type:'success'
+                })
+
             }).catch(() => {
                 this.load = false
             })
@@ -179,7 +185,13 @@ export default {
             this.load = true
             this.$store.dispatch("removeAllProducts").then((resp) => {
                 this.load = false
-                this.$botNotification.notification("Менеджер магазина", "Все продукты удалены");
+
+                this.$notify({
+                    title:'Менеджер магазина',
+                    text: "Все продукты удалены",
+                    type:'success'
+                })
+
             }).catch(() => {
                 this.load = false
             })

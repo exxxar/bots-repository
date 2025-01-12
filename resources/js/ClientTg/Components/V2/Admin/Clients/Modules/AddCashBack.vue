@@ -150,7 +150,12 @@ export default {
     methods: {
         addCashBack() {
             if (!this.botUser.telegram_chat_id) {
-                this.$botNotification.warning("Упс!", "Вы должны выбрать пользователя!")
+                this.$notify({
+                    title: 'Упс',
+                    text: "Вы должны выбрать пользователя!",
+                    type: 'error'
+                })
+
                 return
             }
             this.loading = true;

@@ -1,110 +1,16 @@
+<script setup>
+import ProfileCard from "@/ClientTg/Components/V2/Shop/ProfileCard.vue";
+</script>
+
 <template>
     <div class="container py-3" v-if="self">
-        <div class="d-flex justify-content-center align-items-center" style="min-height:350px;">
-            <div
-                v-if="(photos||[]).length>0"
-                style="width:200px;height:200px;border-radius:50%;overflow:hidden;">
-                <img
-                    class="w-100 object-fit-cover"
-                    v-lazy="'/file-by-file-id-and-bot-domain/'+photos[0][0].file_id+'/'+currentBot.bot_domain"
-                />
-            </div>
-            <div v-else
-                 style="width:200px;height:200px;">
-                <img
-                    class="w-100 object-fit-cover"
-                    v-lazy="'/images/shop-v2/profile.png'"
-                />
-            </div>
-        </div>
 
-        <h6 class="opacity-75 mb-3 d-flex justify-content-between align-items-center">Информация о профиле
-            <button
-                type="button"
-                data-bs-toggle="modal" data-bs-target="#edit-profile"
-                class="btn btn-link"><i class="fa-solid fa-pen-to-square mr-1"></i></button>
-        </h6>
-        <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between"
-                aria-current="true">
-                <span>Имя</span>
-                <span
-                    style="font-size:12px;"
-                    class="text-primary fw-bold"> {{ self.fio_from_telegram || 'не указано' }}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between"
-                aria-current="true">
-                <span>ID</span>
-                <span class="text-primary fw-bold">{{ self.telegram_chat_id || '-' }}</span>
-            </li>
-            <li
-                v-if="load_self"
-                class="list-group-item d-flex justify-content-between"
-                aria-current="true">
-                <span>Телефон</span>
-                <span
-                    @click="sendMyNumber"
-                    class="text-primary fw-bold cursor-pointer">
-                    {{ self.phone || 'отправить мой номер' }}
-                </span>
-            </li>
+        <ProfileCard :data="self"/>
 
-            <li
-                class="list-group-item d-flex justify-content-between"
-                aria-current="true">
-                <span>Город</span>
-                <span
-                    class="text-primary fw-bold">
-                    {{ self.city || 'не указан' }}
-                </span>
-            </li>
-
-            <li
-
-                class="list-group-item d-flex justify-content-between"
-                aria-current="true">
-                <span>День рождения</span>
-                <span
-                    class="text-primary fw-bold">
-                    {{ self.birthday || '-' }}
-                </span>
-            </li>
-
-            <li
-                @click="goToFriends"
-                class="list-group-item d-flex justify-content-between cursor-pointer"
-                aria-current="true">
-                <span>Приглашено друзей</span>
-                <span class="text-primary fw-bold">{{ self.friends_count || 0 }}</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between cursor-pointer"
-                @click="goToOrders"
-                aria-current="true">
-                <span>Количество заказов</span>
-                <span class="text-primary fw-bold">{{ self.order_count || 0 }}</span>
-            </li>
-            <li
-                @click="goToCashback"
-                class="list-group-item d-flex justify-content-between cursor-pointer"
-                aria-current="true">
-                <span>Получено баллов</span>
-                <span class="text-primary fw-bold">{{ self.cashBack.amount || 0 }} ₽</span>
-            </li>
-        </ul>
-
-        <template v-if="self.cashBack">
-            <h6 class="opacity-75 my-3" v-if="(self.cashBack.subs||[]).length>0">Специальные начисления</h6>
-
-            <ul class="list-group" v-if="(self.cashBack.subs||[]).length>0">
-                <li class="list-group-item d-flex justify-content-between"
-                    v-for="sub in self.cashBack.subs"
-                    aria-current="true">
-                    <span>{{ sub.title || '-' }}</span>
-                    <span class="text-primary fw-bold">{{ sub.amount || 0 }} ₽</span>
-                </li>
-            </ul>
-        </template>
-
+        <button
+            type="button"
+            data-bs-toggle="modal" data-bs-target="#edit-profile"
+            class="btn btn-link w-100 py-3"><i class="fa-solid fa-pen-to-square mr-1"></i> Редактировать</button>
 
         <h6 class="opacity-75 my-3">Ваш QR-код</h6>
 
@@ -112,7 +18,8 @@
 
         <button type="button"
                 @click="copyToClipboard"
-                class="btn btn-outline-primary mt-2 w-100"><i class="fa-solid fa-link mr-2"></i>Ваша реферальная ссылка</button>
+                class="btn btn-outline-primary mt-2 w-100"><i class="fa-solid fa-link mr-2"></i>Ваша реферальная ссылка
+        </button>
 
         <!-- Modal -->
         <div class="modal fade" id="edit-profile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -307,7 +214,7 @@ export default {
 
     },
     methods: {
-        copyToClipboard(){
+        copyToClipboard() {
             navigator.clipboard.writeText(this.link)
             this.$notify({
                 title: "Реферальная ссылка",
@@ -343,8 +250,7 @@ export default {
         },
         loadUserPhotos() {
             this.$store.dispatch("getUserProfilePhotos").then(resp => {
-                console.log(resp)
-                this.photos = resp.result.photos || null
+                this.photos = resp.photos.result.photos || null
 
             })
         },

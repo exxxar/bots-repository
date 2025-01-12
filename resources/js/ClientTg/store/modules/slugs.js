@@ -82,7 +82,7 @@ const actions = {
 
             context.commit("setSlugs", dataObject.data)
             delete dataObject.data
-            console.log("dataObject")
+
             context.commit('setSlugsPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {

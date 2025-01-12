@@ -22,6 +22,8 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class Basket
 {
+    use FoodBasket, GoodsBasket;
+
     private array $data;
 
     private Bot $bot;
@@ -30,7 +32,7 @@ class Basket
 
     private mixed $uploadedImage;
 
-    private const PAYMENT_TYPES = ["Онлайн в боте", "Картой в заведении", "Переводом", "Наличными","СБП"];
+    private const PAYMENT_TYPES = ["Онлайн в боте", "Картой в заведении", "Переводом", "Наличными", "СБП"];
 
     public function __construct(array $data, $bot, $botUser, $slug, $uploadedImage = null)
     {
@@ -83,34 +85,8 @@ class Basket
 
     }
 
-    private function prepareDisabilities(): string
-    {
-
-        $hasDisability = ($this->data["has_disability"] ?? "false") == "true";
-
-        $disabilities = json_decode($this->data["disabilities"] ?? '[]');
-        $allergy = $this->data["allergy"] ?? 'не указана';
-
-        $tmpMessage = "";
-        if ($hasDisability) {
-
-            $disabilitiesText = "<b>Внимание!</b> у клиента присутствуют ограничения по здоровью!\n";
-
-            foreach ($disabilities as $disability)
-                $disabilitiesText .= $disability == "пищевая аллергия" ? "-<em>$disability на: $allergy</em>\n" : "-<em>$disability</em>\n";
-
-            $tmpMessage .= $disabilitiesText . "\n";
-
-
-        }
-
-        return $tmpMessage;
-    }
-
     private function prepareDiscount($summaryPrice): mixed
     {
-
-
         $promo = isset($this->data["promo"]) ? json_decode($this->data["promo"]) : null;
         $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
 
@@ -135,56 +111,8 @@ class Basket
         ];
     }
 
-    private function prepareUserInfo($order, $discount)
-    {
-
-
-        $time = $this->data["time"] ?? null;
-        $persons = $this->data["persons"] ?? 1;
-
-        $cash = self::PAYMENT_TYPES[$this->data["payment_type"] ?? 0];
-        $whenReady = ($this->data["when_ready"] ?? "false") == "true";
-        $needPickup = ($this->data["need_pickup"] ?? "false") == "true";
-        $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
-        $address = (($this->data["city"] ?? "") . "," . ($this->data["street"] ?? "") . "," . ($this->data["building"] ?? ""));
-
-
-        return !$needPickup ?
-            sprintf(($whenReady ? "🟢" : "🟡") . "Заказ №: %s\nИдентификатор клиента: %s\nДанные для доставки:\nФ.И.О.: %s\nНомер телефона: %s\nАдрес: %s\nЦена доставки(тест): %s \nДистанция(тест): %s \nНомер подъезда: %s\nНомер этажа: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nДоставить ко времени:%s\nЧисло персон: %s\n",
-                $order->id ?? '-',
-                $this->botUser->telegram_chat_id ?? '-',
-                $this->data["name"] ?? 'Не указано',
-                $this->data["phone"] ?? 'Не указано',
-                $address . "," . ($this->data["flat_number"] ?? ""),
-                $deliveryPrice ?? 0, //$distance
-                $distance ?? 0, //$distance
-                $this->data["entrance_number"] ?? 'Не указано',
-                $this->data["floor_number"] ?? 'Не указано',
-                $cash,
-                $this->data["money"] ?? 'Не указано',
-                $this->data["info"] ?? 'Не указано',
-                $useCashback ? $discount : "нет",
-                ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')),
-                $persons
-            ) :
-            sprintf(($whenReady ? "🟢" : "🟡") . "Заказ №: %s\nИдентификатор: %s\nДанные для самовывоза:\nФ.И.О.: %s\nНомер телефона: %s\nТип оплаты: %s\nСдача с: %s руб.\nДоп.инфо: %s\nИспользован кэшбэк: %s\nЗаберу в:%s\nЧисло персон: %s\n",
-                $order->id ?? '-',
-                $this->botUser->telegram_chat_id,
-                $this->data["name"] ?? 'Не указано',
-                $this->data["phone"] ?? 'Не указано',
-                $cash,
-                $this->data["money"] ?? 'Не указано',
-                $this->data["info"] ?? 'Не указано',
-                $useCashback ? $discount : "нет",
-                ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')),
-                $persons
-            );
-    }
-
     private function checkWheelOfFortuneAction(): string
     {
-
-
         $actionPrize = !is_null($this->data["action_prize"] ?? null) ? json_decode($this->data["action_prize"]) : null;
 
         if (is_null($actionPrize))
@@ -285,173 +213,6 @@ class Basket
         return $prizeText;
     }
 
-    private function sendResult($message)
-    {
-        $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
-
-        $paymentInfo = sprintf((Collection::make($this->slug->config)
-            ->where("key", "payment_info")
-            ->first())["value"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
-            $userId);
-
-        $botDomain = $this->bot->bot_domain;
-        $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $this->botUser->telegram_chat_id);
-
-        $keyboard = [
-            [
-                ["text" => "✉Работа с заказом пользователя", "url" => $link]
-            ]
-        ];
-
-
-        $thread = $this->bot->topics["delivery"] ?? null;
-
-        BotMethods::bot()
-            ->whereBot($this->bot)
-            ->sendInlineKeyboard(
-                $this->bot->order_channel ?? null,
-                "$message\n",
-                $keyboard,
-                $thread
-            )
-            ->sendInlineKeyboard(
-                $this->botUser->telegram_chat_id,
-                ("Спасибо, ваш заказ появился в нашей системе:\n\n<em>$message</em>\n\n$paymentInfo" ?? "Данные не найдены") .
-                "\nВы можете оставить отзыв с фото и получить от нас дополнительный КэшБэк!",
-                [
-                    [
-                        ["text" => "📢Написать отзыв с фото", "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/simple/" . $this->bot->bot_domain . "?slug=route&hide_menu#/s/feedback"
-                        ]],
-                    ],
-                ]
-            );
-    }
-
-    private function prepareAddress(): string
-    {
-
-
-        return (($this->data["city"] ?? "") . "," . ($this->data["street"] ?? "") . "," . ($this->data["building"] ?? ""));
-    }
-
-    private function printPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discount)
-    {
-
-
-        $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
-        $cash =  self::PAYMENT_TYPES[$this->data["payment_type"] ?? 0];
-
-        $address = $this->prepareAddress();
-
-        $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
-
-        $paymentInfo = sprintf((Collection::make($this->slug->config)
-            ->where("key", "payment_info")
-            ->first())["value"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
-            $userId);
-
-        $mpdf = new Mpdf();
-        $current_date = Carbon::now("+3:00")->format("Y-m-d H:i:s");
-
-        $number = Str::uuid();
-
-
-        $mpdf->WriteHTML(view("pdf.order", [
-            "title" => $this->bot->title ?? $this->bot->bot_domain ?? 'CashMan',
-            "uniqNumber" => $number,
-            "orderId" => $order->id,
-            "name" => $order->receiver_name,
-            "phone" => $order->receiver_phone,
-            "address" => $address . "," . ($this->data["flat_number"] ?? ""),
-            "message" => ($this->data["info"] ?? 'Не указано'),
-            "entranceNumber" => ($this->data["entrance_number"] ?? 'Не указано'),
-            "floorNumber" => ($this->data["floor_number"] ?? 'Не указано'),
-            "cashType" => $cash,
-            "money" => ($this->data["money"] ?? 'Не указано'),
-            "disabilitiesText" => ($disabilitiesText ?? 'не указаны'),
-            "totalPrice" => $summaryPrice,
-            "discount" => $useCashback ? $discount : 0,
-            "totalCount" => $summaryCount,
-            "distance" => $distance ?? 0, //$distance
-            "deliveryPrice" => $deliveryPrice ?? 0, //цена доставки
-            "currentDate" => $current_date,
-            "code" => "Без промокода",
-            "promoCount" => "0",
-            "paymentInfo" => $paymentInfo,
-            "products" => $tmpOrderProductInfo,
-            "info" => $this->data["info"] ?? 'Не указано',
-        ]));
-
-        $file = $mpdf->Output("order-$number.pdf", \Mpdf\Output\Destination::STRING_RETURN);
-
-
-        BotMethods::bot()
-            ->whereBot($this->bot)
-            ->sendDocument(
-                $this->botUser->telegram_chat_id,
-                "Информация о заказе #" . ($order->id ?? 'не указан'),
-                InputFile::createFromContents($file, "invoice.pdf")
-            );
-    }
-
-    private function prepareFrontPad($order, $tmpOrderProductInfo)
-    {
-
-        if (is_null($this->bot->frontPad ?? null))
-            return;
-
-        $persons = $this->data["persons"] ?? 1;
-        $whenReady = ($this->data["when_ready"] ?? "false") == "true";
-        $time = $this->data["time"] ?? null;
-        $cash =  self::PAYMENT_TYPES[$this->data["payment_type"] ?? 0];
-
-        BusinessLogic::frontPad()
-            ->setBot($this->bot)
-            ->setBotUser($this->botUser)
-            ->newOrder([
-                "products" => $tmpOrderProductInfo,
-                "phone" => $order->receiver_phone,
-                "descr" => $this->data["info"] ?? 'Не указано',
-                "name" => $order->receiver_name,
-                "home" => ($this->data["building"] ?? ""),
-                "street" => ($this->data["street"] ?? ""),
-                'pod' => ($this->data["entrance_number"] ?? 'Не указано'),
-                'et' => ($this->data["floor_number"] ?? 'Не указано'),
-                'apart' => ($this->data["flat_number"] ?? ""),
-                'person' => $persons,
-                'datetime' => ($whenReady ? null
-                    : Carbon::parse($time)->format('Y-m-d H:i:s')),
-                'cash' => $cash
-            ]);
-    }
-
-    private function prepareDeliveryNote(): string
-    {
-
-
-        $disabilitiesText = $this->prepareDisabilities();
-
-        $persons = $this->data["persons"] ?? 1;
-        $whenReady = ($this->data["when_ready"] ?? "false") == "true";
-        $cash =  self::PAYMENT_TYPES[$this->data["payment_type"] ?? 0];
-
-        $time = $this->data["time"] ?? null;
-
-        $this->botUser->city = $this->data["city"] ?? $this->botUser->city ?? null;
-        $this->botUser->address = ($this->data["street"] ?? "") . "," . ($this->data["building"] ?? "");
-        $this->botUser->save();
-
-        return ($this->data["info"] ?? 'Не указано') . "\n"
-            . (is_null($this->data["entrance_number"] ?? null) ? "Номер подъезда: " . $this->data["entrance_number"] . "\n" : "")
-            . (is_null($this->data["floor_number"] ?? null) ? "Номер этажа: " . $this->data["floor_number"] . "\n" : "")
-            . "Тип оплаты: " . $cash . "\n"
-            . (is_null($this->data["money"] ?? null) ? "Сдача с: " . $this->data["money"] . "\n" : "")
-            . "Время доставки:" . ($whenReady ? "По готовности" : Carbon::parse($time)->format('Y-m-d H:i')) . "\n"
-            . "Число персон:" . $persons . "\n"
-            . "Ограничения:\n" . ($disabilitiesText ?? 'не указаны');
-    }
-
     private function sendPaidReceiptToChannel($order)
     {
         $uploadedPhoto = $this->uploadedImage;
@@ -499,20 +260,15 @@ class Basket
 
     }
 
-    /**
-     * @throws ValidationException
-     */
-    public function handler()
+    private function foodShopCheckout()
     {
-
-
         $needPickup = ($this->data["need_pickup"] ?? "false") == "true";
         $deliveryPrice = $this->data["delivery_price"] ?? 0;
         $paymentType = $this->data["payment_type"] ?? 4;
 
-        $message = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
-        $message .= $this->checkWheelOfFortuneAction();
-        $message .= $this->prepareDisabilities();
+        $productMessage = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
+        $productMessage .= $this->checkWheelOfFortuneAction();
+        $productMessage .= $this->fsPrepareDisabilities();
 
         $basket = \App\Models\Basket::query()
             ->where("bot_id", $this->bot->id)
@@ -537,7 +293,7 @@ class Basket
 
             if (!is_null($product)) {
                 $price = ($product->current_price ?? 0) * $item->count;
-                $message .= sprintf("💎%s x%s=%s руб.\n",
+                $productMessage .= sprintf("💎%s x%s=%s руб.\n",
                     $product->title,
                     $item->count,
                     $price
@@ -594,7 +350,7 @@ class Basket
                 }
 
                 $price = $price * $item->count;
-                $message .= sprintf("💎Коллекция `%s` x%s=%s руб.:\n%s\n",
+                $productMessage .= sprintf("💎Коллекция `%s` x%s=%s руб.:\n%s\n",
                     ($collection->title),
                     $item->count,
                     $price,
@@ -606,9 +362,13 @@ class Basket
 
             $summaryCount += $item->count;
             $summaryPrice += $price;
+
+            //   $item->ordered_at = Carbon::now();
+            //  $item->save();
         }
 
-        $deliveryNote = $this->prepareDeliveryNote();
+
+        $deliveryNote = $this->fsPrepareDeliveryNote();
 
         $discountItem = $this->prepareDiscount($summaryPrice);
 
@@ -636,7 +396,7 @@ class Basket
             'delivery_note' => $deliveryNote,
             'receiver_name' => $this->data["name"] ?? 'Нет имени',
             'receiver_phone' => $this->data["phone"] ?? 'Нет телефона',
-            'address' => $this->prepareAddress() . "," . ($this->data["flat_number"] ?? ""),
+            'address' => $this->fsPrepareAddress() . "," . ($this->data["flat_number"] ?? ""),
             'receiver_latitude' => $geo->latitude ?? 0,
             'receiver_longitude' => $geo->longitude ?? 0,
 
@@ -645,7 +405,7 @@ class Basket
             'payed_at' => Carbon::now(),
         ]);
 
-        $this->prepareFrontPad($order, $tmpOrderProductInfo);
+        $this->fsPrepareFrontPad($order, $tmpOrderProductInfo);
 
         BusinessLogic::review()
             ->setBotUser($this->botUser)
@@ -653,11 +413,9 @@ class Basket
             ->prepareReviews($order->id, $ids);
 
 
-        $message .= $discountItem->message ?? '';
+        $productMessage .= $discountItem->message ?? '';
 
-        $message .= "Итого: $summaryPrice руб. за $summaryCount ед. \n\n";
-
-        $message .= $this->prepareUserInfo($order, $discountItem->discount ?? 0);
+        $productMessage .= "\nИтого: <b>$summaryPrice руб.</b> за <b>$summaryCount ед.</b> \n\n";
 
 
         $needBill = false;
@@ -683,12 +441,15 @@ class Basket
                     ->setBot($this->bot)
                     ->setBotUser($this->botUser)
                     ->setSlug($this->slug)
-                    ->sbp($order);
-                break;
+                    ->sbp($order, $productMessage);
+                return;
 
         }
+
+        $productMessage .= $this->fsPrepareUserInfo($order, $discountItem->discount ?? 0);
+
         if ($needBill)
-            $this->printPDFInfo(
+            $this->fsPrintPDFInfo(
                 order: $order,
                 summaryPrice: $summaryPrice,
                 summaryCount: $summaryCount,
@@ -696,7 +457,256 @@ class Basket
                 discount: $discountItem->discount
             );
 
-        $this->sendResult($message);
+        $this->fsSendResult($productMessage);
         $this->sendPaidReceiptToChannel($order);
+    }
+
+    private function goodsShopCheckout()
+    {
+
+        dd($this->gsPrepareFromAddress());
+
+        $paymentType = $this->data["payment_type"] ?? 4;
+        $cdek = json_decode($this->data["cdek"]);
+
+        $productMessage = "#заказдоставка\n\n";
+        $productMessage .= $this->checkWheelOfFortuneAction();
+
+        $basket = \App\Models\Basket::query()
+            ->where("bot_id", $this->bot->id)
+            ->where("bot_user_id", $this->botUser->id)
+            ->whereNull("ordered_at")
+            ->get();
+
+        $summaryPrice = 0;
+        $summaryCount = 0;
+
+        $package = [];
+
+        $ids = [];
+
+        foreach ($basket as $item) {
+
+
+            $product = $item->product ?? null;
+            $collection = $item->collection ?? null;
+
+            $price = 0;
+
+            if (!is_null($product)) {
+                $price = ($product->current_price ?? 0) * $item->count;
+
+                $dimension = $product->dimension ?? null;
+
+                $productMessage .= sprintf("💎%s x%s=%s руб. (%s x %s x %s, %s грамм)\n",
+                    $product->title,
+                    $item->count,
+                    $price,
+                    $dimension->width ?? 0,
+                    $dimension->height ?? 0,
+                    $dimension->length ?? 0,
+                    $dimension->weight ?? 0,
+                );
+
+                $package[] = (object)[
+                    "title" => $product->title,
+                    "count" => $item->count,
+                    "price" => $price,
+                    "width" => $dimension->width ?? 0,
+                    "height" => $dimension->height ?? 0,
+                    "length" => $dimension->length ?? 0,
+                    "weight" => $dimension->weight ?? 0,
+                ];
+
+
+                if (!in_array($product->id, $ids)) {
+                    $ids[] = $product->id;
+                }
+
+            }
+
+            if (!is_null($collection)) {
+                $collectionTitles = "";
+
+                /*
+                * 'params' => (object)[
+               "variant_id" => Str::uuid(),
+               "ids" => $ids->toArray()
+           ],
+                */
+
+                $params = is_null($item->params ?? null) ? null : (object)$item->params;
+
+                foreach (($collection->products ?? []) as $product) {
+
+                    if (!in_array($product->id, $params->ids ?? []))
+                        continue;
+
+                    $collectionTitles .= "-" . $product->title . "\n";
+
+                    $tmpOrderProductInfo[] = (object)[
+                        "title" => "Коллекция `" . ($collection->title) . "`: " . $product->title,
+                        "count" => 1,
+                        "price" => $product->current_price ?? 0,
+                        'frontpad_article' => $product->frontpad_article ?? null,
+                        'iiko_article' => $product->iiko_article ?? null,
+                    ];
+
+                    $price += $product->current_price ?? 0;
+
+                    if (!in_array($product->id, $ids)) {
+                        $ids[] = $product->id;
+                    }
+
+                }
+
+                $price = $price * $item->count;
+                $productMessage .= sprintf("💎Коллекция `%s` x%s=%s руб.:\n%s\n",
+                    ($collection->title),
+                    $item->count,
+                    $price,
+                    $collectionTitles,
+                );
+
+
+            }
+
+            $summaryCount += $item->count;
+            $summaryPrice += $price;
+
+            //   $item->ordered_at = Carbon::now();
+            //  $item->save();
+        }
+
+
+        $discountItem = $this->prepareDiscount($summaryPrice);
+
+        $this->useCashBackForPayment($discountItem->discount ?? 0);
+
+
+        $order = Order::query()->create([
+            'bot_id' => $this->bot->id,
+            'deliveryman_id' => null,
+            'customer_id' => $this->botUser->id,
+            'delivery_service_info' => null,//информация о сервисе доставки
+            'deliveryman_info' => null,//информация о доставщике
+            'product_details' => [
+                (object)[
+                    "from" => $this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
+                    "products" => $tmpOrderProductInfo
+                ]
+            ],//информация о продуктах и заведении, из которого сделан заказ
+            'product_count' => $summaryCount,
+            'summary_price' => $summaryPrice,
+            'delivery_price' => $deliveryPrice,
+            'delivery_range' => $distance ?? 0,
+            'deliveryman_latitude' => 0,
+            'deliveryman_longitude' => 0,
+            'delivery_note' => $deliveryNote,
+            'receiver_name' => $this->data["name"] ?? 'Нет имени',
+            'receiver_phone' => $this->data["phone"] ?? 'Нет телефона',
+            'address' => $this->gsPrepareAddress() . "," . ($this->data["flat_number"] ?? ""),
+            'receiver_latitude' => $geo->latitude ?? 0,
+            'receiver_longitude' => $geo->longitude ?? 0,
+
+            'status' => OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
+            'order_type' => OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора
+            'payed_at' => Carbon::now(),
+        ]);
+
+
+        $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object)$this->bot->cdek->config ?? null : null;
+
+
+        BusinessLogic::cdek()
+            ->setBot($this->bot)
+            ->createOrder([
+                "tariff" => $cdek->tariff,
+                "sender_name" => $this->bot->company->title ??
+                        $this->bot->bot_domain ??
+                        'Отправитель',
+                "recipient_name" => $this->data["name"] ??
+                        $this->botUser->fio_from_telegram ??
+                        $this->botUser->telegram_chat_id ?? null,
+                "recipient_phones" => "required",
+                "to" => $cdek->to,
+                "from" => (object)[
+                    "region" => $cdekSettings->region,
+                    "city" => $cdekSettings->city,
+                    "office" => $cdekSettings->office,
+
+                ],
+                "packages" => $package,
+            ]);
+
+        BusinessLogic::review()
+            ->setBotUser($this->botUser)
+            ->setBot($this->bot)
+            ->prepareReviews($order->id, $ids);
+
+
+        $productMessage .= $discountItem->message ?? '';
+
+        $productMessage .= "\nИтого: <b>$summaryPrice руб.</b> за <b>$summaryCount ед.</b> \n\n";
+
+        switch ($paymentType) {
+            case 0:
+                BusinessLogic::payment()
+                    ->setBot($this->bot)
+                    ->setBotUser($this->botUser)
+                    ->setSlug($this->slug)
+                    ->checkout();
+                //ссылка
+                break;
+            case 1:
+                //картой в заведении
+            case 2:
+                //переводом
+            case 3:
+                //наличными
+                break;
+            case 4:
+                BusinessLogic::payment()
+                    ->setBot($this->bot)
+                    ->setBotUser($this->botUser)
+                    ->setSlug($this->slug)
+                    ->sbp($order, $productMessage);
+                return;
+
+        }
+
+        $productMessage .= $this->gsPrepareUserInfo($order, $discountItem->discount ?? 0);
+
+
+        $this->gsPrintPDFInfo(
+            order: $order,
+            summaryPrice: $summaryPrice,
+            summaryCount: $summaryCount,
+            tmpOrderProductInfo: $tmpOrderProductInfo,
+            discount: $discountItem->discount
+        );
+
+        $this->gsSendResult($productMessage);
+        $this->sendPaidReceiptToChannel($order);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function handler(): void
+    {
+
+        $displayType = $this->data["display_type"] ?? 0;
+
+        switch ($displayType) {
+            default:
+            case 0:
+                $this->foodShopCheckout();
+                break;
+            case 1:
+                $this->goodsShopCheckout();
+                break;
+        }
+
     }
 }

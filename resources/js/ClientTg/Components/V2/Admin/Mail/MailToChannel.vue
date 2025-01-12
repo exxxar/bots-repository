@@ -27,7 +27,6 @@ import KeyboardList from "@/ClientTg/Components/V1/Admin/Keyboards/KeyboardList.
         </div>
 
 
-
         <div class="form-floating mb-3">
             <input
                 maxlength="255"
@@ -215,15 +214,20 @@ export default {
                     channel: null,
                     inline_keyboard: null
                 }
-                this.$botNotification.success(
-                    "Отлично!",
-                    "Сообщение успешно отправлено в канал!"
-                );
+
+                this.$notify({
+                    title: 'Отлично',
+                    text: "Сообщение успешно отправлено в канал!",
+                    type: 'success'
+                })
+
+
             }).catch(err => {
-                this.$botNotification.warning(
-                    "Упс...",
-                    "Ошибка отправки сообщения в канал"
-                );
+                this.$notify({
+                    title: 'Упс...',
+                    text: "Ошибка отправки сообщения в канал!",
+                    type: 'error'
+                })
             })
 
         },
@@ -275,9 +279,17 @@ export default {
 
 
                 if (resp.ok)
-                    this.$botNotification.success("Отлично", "Канал успешно найден!")
+                    this.$notify({
+                        title: 'Отлично',
+                        text: "Канал успешно найден!",
+                        type: 'success'
+                    })
                 if (!resp.ok) {
-                    this.$botNotification.warning("Ошибочка!", "Неверно указанный канал")
+                    this.$notify({
+                        title: 'Ошибочка',
+                        text: "Неверно указанный канал!",
+                        type: 'error'
+                    })
                     this.mailForm.channel = null
                 }
             }).catch(() => {

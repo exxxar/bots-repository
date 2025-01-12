@@ -132,12 +132,26 @@
     </form>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     props: ["settings", "modelValue"],
     data() {
         return {
             spent_time_counter: 0,
         }
+    },
+    computed: {
+        ...mapGetters(['cartProducts', 'cartProducts', 'cartTotalCount', 'cartTotalPrice', 'getSelf']),
+        finallyPrice() {
+            return !this.modelValue.use_cashback ?
+                Math.max(1, (this.cartTotalPrice -
+                    (this.cartTotalPrice >= this.modelValue.promo.activate_price ?
+                        this.modelValue.promo.discount : 0))) + this.modelValue.delivery_price :
+                Math.max(1, (this.cartTotalPrice - this.cashbackLimit -
+                    (this.cartTotalPrice >= this.modelValue.promo.activate_price ?
+                        this.modelValue.promo.discount : 0))) + this.modelValue.delivery_price
+        },
     },
     watch: {
 
@@ -148,12 +162,17 @@ export default {
             deep: true
         },
 
+
     },
     mounted() {
 
     },
     methods: {
         startCheckout() {
+            if (this.spent_time_counter > 0)
+                return;
+
+            this.startTimer(10);
             this.$emit("submit")
         },
         onChangePhotos(e) {
@@ -177,7 +196,6 @@ export default {
                         this.spent_time_counter--
                     else {
                         clearInterval(counterId)
-                        this.is_requested = false
                         this.spent_time_counter = null
                     }
                     localStorage.setItem("cashman_self_product_delivery_counter", this.spent_time_counter)

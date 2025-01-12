@@ -198,7 +198,6 @@ return [
         \App\Providers\BotManagerServiceProvider::class,
         \App\Providers\BusinessLogicServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-
     ],
 
     /*

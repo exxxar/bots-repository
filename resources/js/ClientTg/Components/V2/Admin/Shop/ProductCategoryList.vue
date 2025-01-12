@@ -221,7 +221,6 @@ export default {
             this.loadProductCategories(0)
         },
         updateCategory(item) {
-            console.log("update", item)
 
             this.$store.dispatch("storeProductCategory", {
                 category: item,

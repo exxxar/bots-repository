@@ -401,7 +401,12 @@ export default {
         clearCart() {
             this.tab = 1
             this.$store.dispatch("clearCart").then(() => {
-                this.$botNotification.success("Корзина", "Корзина успешно очищена")
+                this.$notify({
+                    title:'Корзина',
+                    text: "Корзина успешно очищена!",
+                    type:'success'
+                })
+
             })
 
         },
@@ -602,7 +607,7 @@ export default {
 .sup-badge {
     position: absolute;
     top: -7px;
-    left: 12px;
+    right: -17px;
     display: flex;
     justify-content: center;
     align-items: center;

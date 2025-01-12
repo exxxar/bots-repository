@@ -1,5 +1,6 @@
 <script setup>
 import OneArmedBandit from "@/ClientTg/Components/V1/Other/OneArmedBandit.vue";
+import CardGame from "@/ClientTg/Components/V2/Games/CardGame.vue";
 </script>
 <template>
 
@@ -25,7 +26,8 @@ import OneArmedBandit from "@/ClientTg/Components/V1/Other/OneArmedBandit.vue";
 
 
 
-        <OneArmedBandit></OneArmedBandit>
+<!--        <OneArmedBandit></OneArmedBandit>-->
+        <CardGame></CardGame>
     </div>
 
 

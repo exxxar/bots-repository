@@ -21,6 +21,7 @@ class Order extends Model
         'bot_id',
         'deliveryman_id',
         'customer_id',
+        'table_id',
         'delivery_service_info',
         'deliveryman_info',
         'product_details',
@@ -52,6 +53,7 @@ class Order extends Model
     protected $casts = [
         'id' => 'integer',
         'bot_id' => 'integer',
+        'table_id' => 'integer',
         'deliveryman_id' => 'integer',
         'status' => 'integer',
         'customer_id' => 'integer',

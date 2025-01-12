@@ -504,6 +504,11 @@ import IikoV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Iiko.vue";
 import BitrixV2 from "@/ClientTg/Pages/V2/Admin/Integrations/Bitrix.vue";
 import FrontPadV2 from "@/ClientTg/Pages/V2/Admin/Integrations/FrontPad.vue";
 import UploadV2 from "@/ClientTg/Pages/V2/Other/FileUpload.vue";
+import ReferralV2 from "@/ClientTg/Pages/V2/Shop/Referral.vue";
+import TableMenuV2 from "@/ClientTg/Pages/V2/Shop/Tables/TableMenu.vue";
+import TableCartV2 from "@/ClientTg/Pages/V2/Shop/Tables/TableCart.vue";
+import TablesManagerV2 from "@/ClientTg/Pages/V2/Admin/Tables/TablesManager.vue";
+import TableV2 from "@/ClientTg/Pages/V2/Admin/Tables/Table.vue";
 
 
 const simplePrefix = "/s"
@@ -514,6 +519,13 @@ export const simpleRoutes = [
         path: simplePrefix + '/upload',
         component: UploadV2,
         meta: {title: 'Загрузка файлов'}
+    },
+
+    {
+        name: 'ReferralV2',
+        path: simplePrefix + '/referral',
+        component: ReferralV2,
+        meta: {title: 'Информация о друге'}
     },
     {
         name: 'CatalogV2',
@@ -581,7 +593,18 @@ export const simpleRoutes = [
         component: MenuV2,
         meta: {title: 'Меню системы'}
     },
-
+    {
+        name: 'TableMenuV2',
+        path: simplePrefix + '/table-menu',
+        component: TableMenuV2,
+        meta: {title: 'Столик'}
+    },
+    {
+        name: 'TableCartV2',
+        path: simplePrefix + '/table-cart',
+        component: TableCartV2,
+        meta: {title: 'Корзина'}
+    },
     {
         name: 'OneArmedBanditV2',
         path: simplePrefix + '/bandit',
@@ -616,7 +639,18 @@ export const simpleRoutes = [
         component: MailingV2,
         meta: {title: 'Рассылка'}
     },
-
+    {
+        name: 'TablesManagerV2',
+        path: simplePrefix + '/admin/tables-manager',
+        component: TablesManagerV2,
+        meta: {title: 'Управление столиками'}
+    },
+    {
+        name: 'TableV2',
+        path: simplePrefix + '/admin/tables-manager/:tableId',
+        component: TableV2,
+        meta: {title: 'Столик'}
+    },
     {
         name: 'ClientsV2',
         path: simplePrefix + '/admin/clients',

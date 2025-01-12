@@ -8,7 +8,6 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
     <h6>Офис получения</h6>
     <SelectOffice v-on:callback="selectOffice"/>
 
-
     <div class="alert alert-light" v-if="calcTariffForm.tariff">
         <div class="fw-bold">{{ calcTariffForm.tariff.tariff_name }} <span
             class="badge bg-primary">#{{ calcTariffForm.tariff.tariff_code }}</span></div>
@@ -31,7 +30,6 @@ export default {
 
     data() {
         return {
-
             calcTariffForm: {
                 tariff: null,
                 to: {
@@ -79,7 +77,10 @@ export default {
             //this.loadCdekOffices(direction)
         },
         loadTariffForCdek() {
-            this.$store.dispatch("calcCdekTariffFromCart", this.calcTariffForm)
+            this.$store.dispatch("calcCdekTariffFromCart", this.calcTariffForm).then(resp=>{
+                this.calcTariffForm.tariff = resp.tariff
+                this.$emit("calc",  this.calcTariffForm)
+            })
         }
 
     },

@@ -656,8 +656,10 @@ export default {
     },
     mounted() {
 
-        if ((this.currentBot.config["icons"] || null) != null)
-            this.iconForm.items = this.currentBot.config["icons"]
+        if (this.currentBot.config)
+            if ((this.currentBot.config["icons"] || null) != null)
+                this.iconForm.items = this.currentBot.config["icons"]
+
         const company = this.currentBot.company
 
         this.companyForm.id = company.id || null

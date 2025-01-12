@@ -13,11 +13,19 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                 v-if="loaded_settings"
                 v-on:select-prize="selectPrize"
                 v-on:change-tab="changeTab"
-                v-on:person-inc="incPersons"
-                v-on:person-dec="decPersons"
-                v-on:discount="activatePromo"
+
                 :form-data="deliveryForm"
-                :settings="settings"></CartProductList>
+                :settings="settings">
+                <template #upper-text>
+                    <h4>Итого</h4>
+                    <p>
+                        Ниже приведена итоговая цена заказа без учета стоимости доставки. Цена доставки
+                        рассчитывается отдельно
+                        и
+                        зависит от расстояния.
+                    </p>
+                </template>
+            </CartProductList>
             <PreloaderV1 v-else/>
         </template>
 
@@ -138,6 +146,7 @@ export default {
                 shop_display_type: 0,
                 is_product_list: false,
 
+                need_automatic_delivery_request: true,
                 need_promo_code: true,
                 need_person_counter: true,
                 need_bonuses_section: true,
@@ -152,11 +161,20 @@ export default {
                 phone: null,
                 address: null,
                 promo: {
+                    discount_in_percent:false,
                     discount: 0,
                     activate_price: 0,
                     code: null,
                 },
-
+                cdek:{
+                    tariff:null,
+                    to: {
+                        region: null,
+                        city: null,
+                        office: null,
+                        address: null,
+                    },
+                },
                 city: null,
                 street: null,
                 building: null,
@@ -172,7 +190,7 @@ export default {
                 disabilities: [],
                 money: null,
                 cash: true,
-                payment_type: 2,
+                payment_type: 4,
                 persons: 1,
                 time: null,
                 when_ready: true,// по готовности
@@ -243,7 +261,6 @@ export default {
         this.tg.BackButton.show()
 
         this.tg.BackButton.onClick(() => {
-            console.log("cart BackButton")
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(item => item.click())
 
             this.$router.back()
@@ -265,21 +282,7 @@ export default {
         changeTab(index) {
             this.tab = index
         },
-        decPersons() {
-            this.deliveryForm.persons = this.deliveryForm.persons > 1 ? this.deliveryForm.persons - 1 : this.deliveryForm.persons;
-        },
-        incPersons() {
-            this.deliveryForm.persons = this.deliveryForm.persons < 100 ? this.deliveryForm.persons + 1 : this.deliveryForm.persons;
-        },
-        activatePromo(item) {
-            if (item.discount_in_percent)
-                this.deliveryForm.promo.discount = (this.cartTotalPrice * item.discount) / 100
-            else
-                this.deliveryForm.promo.discount = item.discount || 0
 
-            this.deliveryForm.promo.activate_price = item.activate_price || 0
-            this.deliveryForm.promo.code = item.code || null
-        },
         goToCatalog() {
             this.$router.push({name: 'CatalogV2'})
         },
@@ -290,8 +293,9 @@ export default {
             this.loaded_settings = false
             return this.$store.dispatch("loadShopModuleData").then((resp) => {
                 this.$nextTick(() => {
-                    Object.keys(resp).forEach(item => {
-                        this.settings[item] = resp[item]
+                    let data = resp.data
+                    Object.keys(data).forEach(item => {
+                        this.settings[item] = data[item]
                     })
 
                     this.loaded_settings = true
@@ -318,7 +322,7 @@ export default {
                 localStorage.removeItem("cashman_self_product_delivery_form_entrance_disabilities");
 
 
-            if (this.is_requested) {
+         /*   if (this.spent_time_counter>0) {
                 this.$notify({
                     title: 'Упс!',
                     text: "Сделать повторный заказ можно через "+this.spent_time_counter+" сек.",
@@ -327,10 +331,11 @@ export default {
 
                 return;
             }
-
+*/
             let data = new FormData();
 
             //data.append("need_payment_link", this.deliveryForm.payment_type === 0)
+            data.append("display_type", this.settings.shop_display_type)
 
             Object.keys(this.deliveryForm)
                 .forEach(key => {
@@ -396,8 +401,7 @@ export default {
                 })
             })
 
-            this.startTimer();
-            this.is_requested = true
+            this.startTimer(10);
         },
         startTimer(time) {
             this.spent_time_counter = parseInt(time) != null ? Math.min(parseInt(time), 10) : 10;
@@ -407,7 +411,6 @@ export default {
                         this.spent_time_counter--
                     else {
                         clearInterval(counterId)
-                        this.is_requested = false
                         this.spent_time_counter = null
                     }
                     localStorage.setItem("cashman_self_product_delivery_counter", this.spent_time_counter)

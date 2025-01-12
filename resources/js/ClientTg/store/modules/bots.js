@@ -64,7 +64,7 @@ const actions = {
         let _axios = util.makeAxiosFactory(link,"POST", payload.botForm)
 
         return _axios.then((response) => {
-            console.log("response from state=>", response)
+
             return Promise.resolve(response.data);
         }).catch(err => {
             context.commit("setErrors", err.response.data.errors || [])

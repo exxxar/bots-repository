@@ -15,6 +15,20 @@
                 </button>
             </div>
 
+            <div class="col">
+                <button type="button"
+                        @click="goTo('TablesManagerV2')"
+                        style="min-height:250px;"
+                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                        <img v-lazy="'/images/shop-v2-2/clients.png'" class="menu-item-img img-fluid" alt="">
+
+                        <p class="my-2">Управление столиками</p>
+                    </div>
+
+                </button>
+            </div>
+
 
             <div class="col">
                 <button type="button"

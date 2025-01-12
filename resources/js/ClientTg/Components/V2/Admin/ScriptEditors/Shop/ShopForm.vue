@@ -72,31 +72,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                    class="form-control" id="floatingInput" placeholder="name@example.com">
             <label for="floatingInput">Минимальная сумма заказа</label>
         </div>
-        <p class="alert alert-light mb-2">Далее настройка параметров доставки: базовая цена для расчёта стоимости
-            доставки. Расчёт доставки идет по прямой от точки А к точке Б. Формула: базовая цена + N км * цена за
-            км</p>
-        <div class="form-floating mb-2">
-            <input type="number"
-                   min="0"
-                   v-model="form.min_base_delivery_price"
-                   class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Базовая цена доставки</label>
-        </div>
-        <p class="alert alert-light mb-2">Цена доставки за 1км пути</p>
-        <div class="form-floating mb-2">
-            <input type="number"
-                   min="0"
-                   v-model="form.price_per_km"
-                   class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Цена за км пути</label>
-        </div>
-        <div class="form-floating mb-2">
-            <input type="number"
-                   min="0"
-                   v-model="form.free_shipping_starts_from"
-                   class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Бесплатная доставка от</label>
-        </div>
+
         <p class="alert alert-light mb-2">Описание процесса доставки \ оплаты доставки. Текст размещен в корзине
             перед нажатием кнопки оформления заказа.</p>
         <div class="form-floating mb-2">
@@ -109,20 +85,74 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
             <label for="script-settings-disabled_text">Текст доставки</label>
         </div>
 
-        <p class="alert alert-light mb-2">Расчет цены доставки происходит на основе координат. Укажите координаты
-            вашего заведения из
-            <a class="text-primary fw-bold" href="https://yandex.ru/maps/" target="_blank">Яндекс.Карты</a> -
-            скопируйте и вставьте <span class="fw-bold text-primary">00.000000</span>, <span
-                class="fw-bold text-primary">00.000000</span> координаты в это поле.
-        </p>
-        <div class="form-floating mb-2">
-            <input type="search"
-                   min="0"
-                   v-mask="['##.######, ##.######']"
-                   v-model="form.shop_coords"
-                   class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Координаты заведения</label>
-        </div>
+        <template v-if="form.shop_display_type===0">
+            <div class="form-check form-switch mb-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       v-model="form.need_automatic_delivery_request"
+                       role="switch" id="script-settings-need_automatic_delivery_request">
+                <label class="form-check-label" for="script-settings-need_automatic_delivery_request">Автоматический расчет
+                    цены доставки: <span
+                        v-bind:class="{'text-primary fw-bold':form.need_automatic_delivery_request}">вкл</span> \ <span
+                        v-bind:class="{'text-primary fw-bold':!form.need_automatic_delivery_request}">выкл</span></label>
+            </div>
+
+            <template v-if="form.need_automatic_delivery_request">
+
+                <p class="alert alert-light mb-2">Далее настройка параметров доставки: базовая цена для расчёта стоимости
+                    доставки. Расчёт доставки идет по прямой от точки А к точке Б. Формула: базовая цена + N км * цена за
+                    км</p>
+                <div class="form-floating mb-2">
+                    <input type="number"
+                           min="0"
+                           v-model="form.min_base_delivery_price"
+                           class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Базовая цена доставки</label>
+                </div>
+                <p class="alert alert-light mb-2">Цена доставки за 1км пути</p>
+                <div class="form-floating mb-2">
+                    <input type="number"
+                           min="0"
+                           v-model="form.price_per_km"
+                           class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Цена за км пути</label>
+                </div>
+                <div class="form-floating mb-2">
+                    <input type="number"
+                           min="0"
+                           v-model="form.free_shipping_starts_from"
+                           class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Бесплатная доставка от</label>
+                </div>
+
+                <p class="alert alert-light mb-2">Расчет цены доставки происходит на основе координат. Укажите координаты
+                    вашего заведения из
+                    <a class="text-primary fw-bold" href="https://yandex.ru/maps/" target="_blank">Яндекс.Карты</a> -
+                    скопируйте и вставьте <span class="fw-bold text-primary">00.000000</span>, <span
+                        class="fw-bold text-primary">00.000000</span> координаты в это поле. Для работы
+                    <a class="text-primary fw-bold" href="https://yandex.ru/maps-api/products/geocoder-api" target="_blank">Яндекс.Геокодер</a>
+                    необходимо настроить ключ.
+                </p>
+
+                <div class="form-floating mb-2">
+                    <input type="text"
+                           v-model="form.yandex_geocoder"
+                           required
+                           class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Токен от Яндекс.Геокодер</label>
+                </div>
+
+                <div class="form-floating mb-2">
+                    <input type="text"
+                           v-mask="['##.######, ##.######']"
+                           v-model="form.shop_coords"
+                           required
+                           class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Координаты заведения</label>
+                </div>
+
+            </template>
+        </template>
 
         <p class="alert alert-light mb-2">Платежная информация: как оплатить и дальнейшие инструкции</p>
         <div class="form-floating mb-2">
@@ -168,6 +198,14 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                 v-bind:class="{'text-primary fw-bold':!form.can_use_card}">выкл</span></label>
         </div>
 
+        <div class="form-floating mb-2" v-if="form.can_use_card">
+            <input type="text"
+                   v-model="form.payment_token"
+                   class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Тоукен платежной системы</label>
+        </div>
+
+
 
         <div class="divider my-3">Секции</div>
         <p class="alert alert-light">
@@ -182,7 +220,6 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                 v-bind:class="{'text-primary fw-bold':form.need_promo_code}">вкл</span> \ <span
                 v-bind:class="{'text-primary fw-bold':!form.need_promo_code}">выкл</span></label>
         </div>
-
 
         <div class="form-check form-switch mb-2">
             <input class="form-check-input"
@@ -204,7 +241,6 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                     v-bind:class="{'text-primary fw-bold':form.need_prizes_from_wheel_of_fortune}">вкл</span> \ <span
                     v-bind:class="{'text-primary fw-bold':!form.need_prizes_from_wheel_of_fortune}">выкл</span></label>
         </div>
-
 
         <template v-if="form.shop_display_type === 0">
             <div class="form-check form-switch mb-2">
@@ -243,7 +279,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                     Укажите максимальное число столиков в заведении
                 </p>
                 <div
-                    class="form-floating mb-3">
+                    class="form-floating mb-2">
                     <input type="number"
                            min="0"
                            max="200"
@@ -252,6 +288,12 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                            placeholder="Номер столика">
                     <label for="modelValue-table-number">Число столиков</label>
                 </div>
+
+                <a
+                    :href="'/bot-client/'+bot.bot_domain+'/tables-qr?count='+form.max_tables+'&script-id='+scriptId"
+                    target="_blank"
+                    class="btn btn-info w-100"
+                ><i class="fa-solid fa-qrcode"></i> Скачать QR-коды для столиков</a>
             </template>
 
         </template>
@@ -296,7 +338,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                         required
                         v-model="form.sbp.tinkoff.tax"
                         id="floatingSelect" aria-label="Floating label select example">
-                    <option :value="tax.tax" v-for="(tax, taxIndex) in tax_variants">{{tax.title}}</option>
+                    <option :value="tax.tax" v-for="(tax, taxIndex) in tax_variants">{{ tax.title }}</option>
                 </select>
                 <label for="floatingSelect">Схема налогооблажения</label>
             </div>
@@ -306,7 +348,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                         required
                         v-model="form.sbp.tinkoff.vat"
                         id="floatingSelect" aria-label="Floating label select example">
-                    <option :value="vat.value" v-for="(vat, vatIndex) in vat_variants">{{vat.title}}</option>
+                    <option :value="vat.value" v-for="(vat, vatIndex) in vat_variants">{{ vat.title }}</option>
                 </select>
                 <label for="floatingSelect">% НДС</label>
             </div>
@@ -350,57 +392,57 @@ export default {
 
             scripts: [],
 
-            vat_variants:[
+            vat_variants: [
 
                 {
-                    value:'none',
-                    title:'Нет',
+                    value: 'none',
+                    title: 'Нет',
                 },
                 {
-                    value:'vat0',
-                    title:'0%',
+                    value: 'vat0',
+                    title: '0%',
                 },
                 {
-                    value:'vat10',
-                    title:'10%',
+                    value: 'vat10',
+                    title: '10%',
                 },
                 {
-                    value:'vat18',
-                    title:'18%',
+                    value: 'vat18',
+                    title: '18%',
                 },
                 {
-                    value:'vat20',
-                    title:'20%',
+                    value: 'vat20',
+                    title: '20%',
                 },
             ],
-            tax_variants:[
+            tax_variants: [
                 {
-                    tax:'osn',
-                    title:'общая',
+                    tax: 'osn',
+                    title: 'общая',
                 },
                 {
-                    tax:'usn_income',
-                    title:'упрощенная (доходы)',
+                    tax: 'usn_income',
+                    title: 'упрощенная (доходы)',
                 },
                 {
-                    tax:'usn_income_outcome',
-                    title:'упрощенная (доходы минус расходы)',
+                    tax: 'usn_income_outcome',
+                    title: 'упрощенная (доходы минус расходы)',
                 },
                 {
-                    tax:'patent',
-                    title:'патентная',
+                    tax: 'patent',
+                    title: 'патентная',
                 },
                 {
-                    tax:'envd',
-                    title:'единый налог на вмененный доход',
+                    tax: 'envd',
+                    title: 'единый налог на вмененный доход',
                 },
                 {
-                    tax:'esn',
-                    title:'единый сельскохозяйственный налог',
+                    tax: 'esn',
+                    title: 'единый сельскохозяйственный налог',
                 },
                 {
-                    tax:'self',
-                    title:'НПД',
+                    tax: 'self',
+                    title: 'НПД',
                 }
             ],
             form: {
@@ -417,6 +459,7 @@ export default {
                 can_buy_after_closing: false,
                 can_use_cash: true,
                 can_use_card: true,
+                payment_token:null,
                 need_pay_after_call: false,
                 disabled_text: null,
 
@@ -427,12 +470,12 @@ export default {
 
 
                 sbp: {
-                    selected_sbp_bank:'tinkoff',
+                    selected_sbp_bank: 'tinkoff',
                     tinkoff: {
                         terminal_key: null,
                         terminal_password: null,
-                        tax:null,
-                        vat:null,
+                        tax: null,
+                        vat: null,
                     },
                     sber: {}
                 },
@@ -442,12 +485,21 @@ export default {
 
                 need_promo_code: true,
 
+                need_automatic_delivery_request: true,
                 need_person_counter: true,
                 need_bonuses_section: true,
                 need_health_restrictions: true,
                 need_prizes_from_wheel_of_fortune: true,
                 selected_script_id: null,
             },
+        }
+    },
+    computed: {
+        bot() {
+            return window.currentBot
+        },
+        scriptId(){
+            return window.currentScript || null
         }
     },
     watch: {

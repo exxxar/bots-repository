@@ -69,7 +69,7 @@ export default {
             this.loadOrders(0)
         },
         selectProduct(product) {
-            console.log("product", product)
+
             this.$emit("select", product)
         },
         nextProducts(index) {

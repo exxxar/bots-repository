@@ -67,17 +67,7 @@ export default {
     },
     methods: {
         goToCart() {
-            let shopType = this.settings.shop_display_type
-
-            switch (shopType) {
-                default:
-                case 0:
-                    this.$router.push({name: 'ShopCartV2'});
-                    break;
-                case 1:
-                    this.$router.push({name: 'ShopCartV2'});
-                    break;
-            }
+            this.$router.push({name: 'ShopCartV2'});
         },
         loadBasketData() {
             return this.$store.dispatch("loadProductsInBasket")
@@ -88,8 +78,9 @@ export default {
                     if (!this.settings)
                         this.settings = {}
 
-                    Object.keys(resp).forEach(item => {
-                        this.settings[item] = resp[item]
+                    let data = resp.data
+                    Object.keys(data).forEach(item => {
+                        this.settings[item] = data[item]
                     })
 
                     this.settings_loaded = true

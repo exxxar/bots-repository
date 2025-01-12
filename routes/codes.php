@@ -8,6 +8,7 @@ StartCodesService::bot()
     ->regular("/\b([0-9]{3})([0-9]{8,10})S([0-9]+)\b/", "slugAction")
     ->regular("/\b([0-9]{3})([0-9]{8,10})O([0-9]+)\b/", "orderAction")
     ->regular("/\b([0-9]{3})([0-9]+)\b/", "referralAction")
+    ->regular("/\b([0-9]{3})slug([0-9]+)table([0-9]{1,2})\b/", "openTableMenu")
     ->regular("/\b([0-9]{3})([0-9]+)utm([a-zA-Z0-9]+)\b/", "runPageAction");
 
 

@@ -171,9 +171,6 @@ export default {
             this.summary_weight = this.weight * this.summary_count
         },
         fillings: function (val) {
-            console.log(this.fillings.length)
-
-
 
         }
         ,

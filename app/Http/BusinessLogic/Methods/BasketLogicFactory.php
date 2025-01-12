@@ -18,6 +18,7 @@ use App\Models\BotUser;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCollection;
+use App\Models\Table;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -76,6 +77,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->with(["collection"])
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
+            ->whereNull("table_approved_at")
             ->whereNull("ordered_at")
             ->get();
 
@@ -119,12 +121,20 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->get();
-
 
         $ids = Collection::make($productCollection->products)
             ->where("is_checked", true)
             ->pluck("id");
+
+        $tableWithClient = Table::query()
+            ->where("bot_id", $this->bot->id)
+            ->whereNull("closed_at")
+            ->whereHas('clients', function ($query) {
+                $query->where('id', $this->botUser->id);
+            })->first();
+
 
         $tmp = [
             'product_collection_id' => $collection->id,
@@ -132,6 +142,7 @@ class BasketLogicFactory extends BaseLogicFactory
             'bot_user_id' => $this->botUser->id,
             'bot_id' => $this->bot->id,
             'ordered_at' => null,
+            'table_id' => $tableWithClient->id ?? null,
             'params' => (object)[
                 "variant_id" => Str::uuid(),
                 "ids" => $ids->toArray()
@@ -204,6 +215,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->get();
 
 
@@ -226,6 +238,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->get();
 
         return new BasketCollection($allProductsInBasket);
@@ -247,6 +260,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->first();
 
         if (is_null($productInBasket))
@@ -277,6 +291,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->first();
 
         if (is_null($productInBasket))
@@ -321,15 +336,27 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->first();
+
+
+        $tableWithClient = Table::query()
+            ->where("bot_id", $this->bot->id)
+            ->whereNull("closed_at")
+            ->whereHas('clients', function ($query) {
+                $query->where('id', $this->botUser->id);
+            })->first();
+
 
         if (is_null($productInBasket)) {
             $productInBasket = Basket::query()->create([
                 'product_id' => $product->id,
                 'count' => $productCount,
                 'bot_user_id' => $this->botUser->id,
+                'table_id' => $tableWithClient->id ?? null,
                 'bot_id' => $this->bot->id,
                 'ordered_at' => null,
+                'table_approved_at' => null,
             ]);
 
         } else {
@@ -342,6 +369,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->get();
 
         return new BasketCollection($allProductsInBasket);
@@ -360,6 +388,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->get();
 
         foreach ($baskets as $basket) {
@@ -386,6 +415,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->first();
 
         if (is_null($basket))
@@ -431,6 +461,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->get();
 
 
@@ -455,6 +486,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->get();
 
         return new BasketCollection($allProductsInBasket);
@@ -475,6 +507,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->first();
 
         if (is_null($productInBasket))
@@ -491,6 +524,7 @@ class BasketLogicFactory extends BaseLogicFactory
             ->where("bot_user_id", $this->botUser->id)
             ->where("bot_id", $this->bot->id)
             ->whereNull("ordered_at")
+            ->whereNull("table_approved_at")
             ->first();
 
         return new BasketCollection($allProductsInBasket);

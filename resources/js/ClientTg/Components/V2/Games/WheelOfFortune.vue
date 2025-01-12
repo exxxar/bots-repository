@@ -99,7 +99,11 @@ export default {
     ,
     methods: {
         lose() {
-            this.$botNotification.warning("Упс!", "Вы израсходовали все попытки!")
+            this.$notify({
+                title:'Упс!',
+                text: "Вы израсходовали все попытки!",
+                type:'error'
+            })
         },
         prepareUserData() {
             return this.$store.dispatch("wheelOfFortuneCustomPrepare").then((response) => {
@@ -197,7 +201,12 @@ export default {
             })
 
 
-            this.$botNotification.success("Вы выиграли!", "Вы выиграли приз " + (winResult ? this.items[winResult].text : 'Что-то интересное...'))
+            this.$notify({
+                title:'Вы выиграли!',
+                text: "Вы выиграли приз " + (winResult ? this.items[winResult].text : 'Что-то интересное...'),
+                type:'success'
+            })
+
         },
 
 
@@ -209,7 +218,7 @@ export default {
         },
         wheelEndedCallback(evt) {
             this.wheelDataLoaded = false
-            console.log("game event", evt)
+
 
             const win = evt
 

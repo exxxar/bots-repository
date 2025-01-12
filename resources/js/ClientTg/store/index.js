@@ -8,6 +8,7 @@ import friends from './modules/globals/friends';
 import ingredients from './modules/ingrediens';
 
 import wheelOfFortune from "./modules/globals/wheelOfFortune";
+import tables from "./modules/tables";
 import chatHistory from "./modules/chat_history";
 import wheelOfFortuneCustom from "./modules/globals/wheelOfFortuneCustom";
 import wheelOfFortuneV3 from "./modules/globals/wheelOfFortuneV3";
@@ -189,6 +190,6 @@ export default createStore({
         reviews,
         bitrix,
         cdek,
-
+        tables
     }
 })

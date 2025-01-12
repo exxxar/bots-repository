@@ -235,7 +235,12 @@ export default {
             else
                 this.$store.dispatch("incQuantity", this.product.id)
 
-            this.$botNotification.notification("Добавление товара", "Успешно добавлено в корзину!")
+            this.$notify({
+                title:'Добавление товара',
+                text:'Успешно добавлено в корзину!',
+            })
+
+
         },
         decProductCart() {
 
@@ -244,7 +249,11 @@ export default {
             else
                 this.$store.dispatch("decQuantity", this.product.id)
 
-            this.$botNotification.notification("Добавление товара", "Товар удален!")
+            this.$notify({
+                title:'Добавление товара',
+                text:'Товар удален!',
+            })
+
         },
         loadProduct() {
             let productId = this.$route.params.productId

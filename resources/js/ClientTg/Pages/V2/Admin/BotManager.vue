@@ -1174,9 +1174,13 @@ export default {
         },
         switchStatus() {
             this.$store.dispatch("switchBotStatus").then(() => {
-                this.$botNotification.success(
-                    "Конструктор ботов", "Статус бота успешно изменен!"
-                );
+
+                this.$notify({
+                    title:'Конструктор ботов',
+                    text:'Статус бота успешно изменен!',
+                    type:'success'
+                })
+
             })
         },
         addBot() {
@@ -1206,10 +1210,12 @@ export default {
 
                 this.$emit("callback", response.data)
 
-                this.$botNotification.success(
-                    "Конструктор ботов",
-                    (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!")
-                );
+                this.$notify({
+                    title:'Конструктор ботов',
+                    text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
+                    type:'success'
+                })
+
 
                 if (this.bot == null)
                     this.botForm = {

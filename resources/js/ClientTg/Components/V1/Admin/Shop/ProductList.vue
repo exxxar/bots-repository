@@ -68,7 +68,6 @@ export default {
     },
     methods: {
         selectProduct(product) {
-            console.log("product", product)
             this.$emit("select", product)
         },
         nextProducts(index) {

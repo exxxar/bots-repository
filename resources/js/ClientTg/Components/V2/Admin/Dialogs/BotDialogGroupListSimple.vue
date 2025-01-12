@@ -52,7 +52,12 @@ export default {
         selectDialog(command){
             this.$emit("select-dialog", command)
 
-            this.$botNotification.notification("Диалоги","Вы выбрали диалог из списка!");
+            this.$notify({
+                title: 'Диалоги',
+                text: "Вы выбрали диалог из списка!",
+                type: 'success'
+            })
+
         },
         nextDialogs(index) {
             this.loadDialogs(index)

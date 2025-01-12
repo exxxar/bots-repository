@@ -298,7 +298,7 @@ export default {
             this.form.wheels[index].effect_product = item
         },
         changeWheelColor(index) {
-            console.log(this.form.wheels[index])
+
         },
         removeWheel(index) {
             this.form.wheels.splice(index, 1)

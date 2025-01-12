@@ -1,5 +1,6 @@
 <script setup>
 import CdekCalcForm from "@/ClientTg/Components/V2/Shop/Cart/CdekCalcForm.vue";
+import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
 </script>
 <template>
     <form
@@ -9,10 +10,26 @@ import CdekCalcForm from "@/ClientTg/Components/V2/Shop/Cart/CdekCalcForm.vue";
 
         <h6 class="opacity-75">Способы оплаты</h6>
 
+
         <div class="list-group my-3">
+
+            <a href="javascript:void(0)"
+               v-bind:class="{'active':modelValue.payment_type === 4}"
+               @click="modelValue.payment_type = 4"
+               v-if="settings.can_use_sbp"
+               class="list-group-item list-group-item-action p-3 d-flex"><i
+                class="fa-solid fa-file-invoice mr-2"></i>
+                <span class="d-inline-flex justify-content-between w-100">
+                Оплата по СБП
+                <img
+                    style="width:45px;"
+                    v-lazy="'/images/СБП_логотип.svg'" alt="">
+                </span>
+            </a>
+
             <a href="javascript:void(0)"
                @click="modelValue.payment_type = 0"
-               v-if="settings.can_use_card"
+               v-if="settings.can_use_card&&settings.payment_token!=null"
                v-bind:class="{'active':modelValue.payment_type === 0}"
                class="list-group-item list-group-item-action p-3" aria-current="true">
                 <i class="fa-solid fa-earth-americas mr-2"></i> Онлайн через бота
@@ -54,7 +71,7 @@ import CdekCalcForm from "@/ClientTg/Components/V2/Shop/Cart/CdekCalcForm.vue";
         </template>
 
         <h6 class="opacity-75 my-3">Расчёт цены доставки CDEK</h6>
-        <CdekCalcForm></CdekCalcForm>
+        <CdekCalcForm v-on:calc="calcTariff"></CdekCalcForm>
 
         <h6 class="opacity-75 my-3">Общая информация</h6>
 
@@ -78,112 +95,46 @@ import CdekCalcForm from "@/ClientTg/Components/V2/Shop/Cart/CdekCalcForm.vue";
 
         <h6 class="opacity-75 my-3">Сводка</h6>
 
-        <div class="card my-3 ">
-            <div class="card-body p-2">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <p class="mb-0 d-flex justify-content-between">Суммарно, ед. <strong>{{ cartTotalCount }}
-                            шт.</strong></p>
-                    </li>
-                    <li class="list-group-item">
-                        <p class="mb-0 d-flex justify-content-between">Цена <strong>{{ cartTotalPrice }}
-                            <sup>.00</sup>₽</strong>
-                        </p>
-                    </li>
-                    <li class="list-group-item">
-                        <p class="mb-0 d-flex justify-content-between">Оплата бонусами
-                            <strong v-if="modelValue.use_cashback">{{ cashbackLimit }} ₽</strong>
-                            <strong v-else>-</strong>
-                        </p>
-                    </li>
+        <Summary :data="modelValue"
+                 :settings="settings">
+        </Summary>
 
-                    <li class="list-group-item" v-if="modelValue.promo.discount>0">
-                        <p class="mb-2 text-justify"><strong class="fw-bold">Внимание!</strong> Не распространяется
-                            на цену доставки!</p>
-                        <p class="mb-0 d-flex justify-content-between">Промокод
-                            <strong>{{ modelValue.promo.discount }} ₽</strong>
-                        </p>
-                    </li>
+        <template v-if="modelValue.cdek.tariff!=null">
+            <button
+                v-if="settings.need_pay_after_call || modelValue.payment_type === 3"
+                type="button"
+                @click="startCheckout"
+                :disabled="!canSubmitForm"
 
-                    <li class="list-group-item" v-if="!modelValue.need_pickup">
-                        <p class="mb-0 d-flex justify-content-between">Цена доставки
-                            <strong v-if="modelValue.delivery_price>0">{{ modelValue.delivery_price }}
-                                <sup>.00</sup>₽</strong>
-                            <strong v-else>не рассчитана</strong>
-                        </p>
-                    </li>
+                class="btn btn-primary p-3 w-100 mb-2">
 
+                <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
+                <i v-else class="fa-solid fa-hourglass  mr-2"></i>
 
-                    <li class="list-group-item">
-                        <p class="mb-0 d-flex justify-content-between">Итого, цена
-                            <strong>{{ finallyPrice }} ₽</strong>
-                        </p>
-                    </li>
-                </ul>
+                Оформить
+            </button>
 
-                <div v-if="modelValue.payment_type === 3&&settings.can_use_cash">
-                    <p class="my-3 text-center">Мы можем подготовить для вас сдачу с:</p>
-                    <div class="row row-cols-2 mb-0">
-                        <div class="col" v-for="money in moneyVariants">
-                            <button class="btn btn-outline-primary w-100 mb-2 rounded-5"
-                                    type="button"
-                                    @click="modelValue.money=money"
-                                    v-bind:class="{'btn-primary text-white':modelValue.money===money}">{{
-                                    money
-                                }}₽
-                            </button>
-                        </div>
+            <button
+                v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
+                type="button"
+                @click="startCheckout"
+                :disabled="!canSubmitForm"
+                class="btn btn-primary p-3 w-100">
+                <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
+            </button>
 
-                    </div>
-                    <p class="mb-2"><em>или введите другую сумму...</em></p>
-
-                    <div class="form-floating">
-                        <input type="number"
-                               min="0"
-                               v-model="modelValue.money"
-                               class="form-control" id="modelValue-money" placeholder="С какой суммы нужна сдача">
-                        <label for="modelValue-money">С какой суммы нужна сдача</label>
-                    </div>
-
-                </div>
-            </div>
+            <button
+                v-if="modelValue.payment_type===2&&!settings.need_pay_after_call"
+                type="button"
+                @click="nextStep"
+                :disabled="!canSubmitForm"
+                class="btn btn-primary p-3 w-100">
+                <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
+            </button>
+        </template>
+        <div v-else class="alert alert-info">
+            Для оформления выберите офис доставки СДЭК
         </div>
-
-        <p v-if="settings.delivery_price_text" v-html="settings.delivery_price_text"></p>
-        <p v-if="settings.min_price">Минимальная цена заказа {{ settings.min_price || 0 }} руб</p>
-
-        <button
-            @click="requestDeliveryPrice"
-            class="btn btn-outline-light text-primary p-3 w-100 mb-2"
-            :disabled="!canRequestDeliverPrice">
-            <i class="fa-solid fa-map-location-dot mr-2"></i> Рассчитать тариф доставки
-        </button>
-
-        <button
-            v-if="(modelValue.payment_type!==2||settings.need_pay_after_call)"
-            type="submit"
-            :disabled="spent_time_counter>0||(!modelValue.use_cashback?settings.min_price>cartTotalPrice:settings.min_price>cartTotalPrice-cashbackLimit) || modelValue.delivery_price==0"
-            class="btn btn-primary p-3 w-100 mb-2">
-
-            <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
-            <i v-else class="fa-solid fa-hourglass  mr-2"></i>
-
-            <span
-                v-if="spent_time_counter<=0"
-                class="color-white">Оформить</span>
-            <span
-                v-else
-                class="color-white">Осталось ждать {{ spent_time_counter }} сек.</span>
-        </button>
-
-        <button
-            v-if="modelValue.payment_type===2&&!settings.need_pay_after_call"
-            type="button"
-            @click="nextStep"
-            :disabled="!canSubmitForm"
-            class="btn btn-primary p-3 w-100">
-            <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
-        </button>
     </form>
 </template>
 <script>
@@ -234,15 +185,6 @@ export default {
             return this.need_request_delivery_price && this.modelValue.city != null && this.modelValue.street != null && this.modelValue.building != null;
         },
 
-        finallyPrice() {
-            return !this.modelValue.use_cashback ?
-                Math.max(1, (this.cartTotalPrice -
-                    (this.cartTotalPrice >= this.modelValue.promo.activate_price ?
-                        this.modelValue.promo.discount : 0))) + this.modelValue.delivery_price :
-                Math.max(1, (this.cartTotalPrice - this.cashbackLimit -
-                    (this.cartTotalPrice >= this.modelValue.promo.activate_price ?
-                        this.modelValue.promo.discount : 0))) + this.modelValue.delivery_price
-        },
         canSubmitForm() {
             return (this.spent_time_counter || 0) === 0
                 && (!this.modelValue.use_cashback ?
@@ -280,64 +222,15 @@ export default {
         this.modelValue.address = localStorage.getItem("cashman_self_product_delivery_form_address") != null ?
             localStorage.getItem("cashman_self_product_delivery_form_address") : null
 
-        this.modelValue.city = localStorage.getItem("cashman_self_product_delivery_form_city") != null ?
-            localStorage.getItem("cashman_self_product_delivery_form_city") : null
-
-        this.modelValue.street = localStorage.getItem("cashman_self_product_delivery_form_street") != null ?
-            localStorage.getItem("cashman_self_product_delivery_form_street") : null
-
-        this.modelValue.building = localStorage.getItem("cashman_self_product_delivery_form_building") != null ?
-            localStorage.getItem("cashman_self_product_delivery_form_building") : null
-
-        this.modelValue.flat_number = localStorage.getItem("cashman_self_product_delivery_form_flat_number") != null ?
-            localStorage.getItem("cashman_self_product_delivery_form_flat_number") : null
-
-        this.modelValue.entrance_number = localStorage.getItem("cashman_self_product_delivery_form_entrance_number") != null ?
-            localStorage.getItem("cashman_self_product_delivery_form_entrance_number") : null
-
-        this.modelValue.disabilities = localStorage.getItem("cashman_self_product_delivery_form_entrance_disabilities") != null ?
-            JSON.parse(localStorage.getItem("cashman_self_product_delivery_form_entrance_disabilities")) : []
-
-        if (this.modelValue.disabilities.length > 0)
-            this.modelValue.has_disability = true
-
     },
     methods: {
-        requestDeliveryPrice() {
-            this.need_request_delivery_price = false
 
-            this.$notify({
-                title: "Корзина",
-                text: "Мы начали процесс расчета цены доставки",
-            })
+        calcTariff(item){
+            this.modelValue.cdek.tariff = item.tariff || null
+            this.modelValue.cdek.to.region = item.to?.region || null
+            this.modelValue.cdek.to.city = item.to?.city || null
+            this.modelValue.cdek.to.office = item.to?.office || null
 
-            this.$store.dispatch("requestDeliveryPrice", {
-                city: this.modelValue.city,
-                street: this.modelValue.street,
-                building: this.modelValue.building,
-            }).then(resp => {
-
-                this.modelValue.delivery_price = resp.price || 0
-                this.modelValue.distance = resp.distance || 0
-
-                this.need_request_delivery_price = true
-
-                this.$notify({
-                    title: "Корзина",
-                    text: "Цена доставки успешно просчитана",
-                    type: "success"
-                })
-            }).catch(() => {
-                this.modelValue.delivery_price = 0
-                this.modelValue.distance = 0
-                this.need_request_delivery_price = true
-
-                this.$notify({
-                    title: "Корзина",
-                    text: "Ошибка расчёта цены доставки",
-                    type: "error"
-                })
-            })
         },
         startCheckout() {
             this.$emit("submit")

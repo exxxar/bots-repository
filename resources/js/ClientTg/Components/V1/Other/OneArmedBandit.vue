@@ -61,7 +61,7 @@ export default {
                         }
 
                     } else {
-                        console.log(typeof value);
+
                         throw new Error("Nieprawidłowa liczba.")
                     }
                 }
@@ -200,7 +200,7 @@ export default {
                 //we get result from static method
                 const result = Result.checkWinner(fruits);
 
-                console.log("result=>", result, fruits)
+
                 //another static method from Result class
                 const wonMoney = Result.moneyWinInGame(result, bid);
 

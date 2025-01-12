@@ -1788,13 +1788,9 @@ export default {
             }).then((response) => {
 
 
-                console.log("response", response)
                 this.form.botDomain = response.botDomain
 
                 this.load = true
-
-                console.log("this.form.botDomain", this.form.botDomain)
-                console.log("response.data.botDomain",response.botDomain)
 
                 this.$nextTick(()=>{
                     this.load = false

@@ -751,7 +751,6 @@ export default {
     methods: {
         copyToClipBoard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                console.log("copy", text)
                 this.$botNotification.notification(
                     "Конструктор страниц",
                     "Ссылка скопирована в буфер",

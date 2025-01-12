@@ -273,7 +273,7 @@ export default {
             })
         },
         selectSubProduct(product) {
-            console.log("product", product)
+
             let currentIndex = this.product.products.findIndex(item => item.id === product.id)
             let currentCategoryId = product.categories[0].id
 

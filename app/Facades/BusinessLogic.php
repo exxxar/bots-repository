@@ -32,10 +32,12 @@ use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory as PromoCodesLogic;
 use App\Http\BusinessLogic\Methods\MailingLogicFactory as QueueLogic;
 use App\Http\BusinessLogic\Methods\BitrixLogicFactory as BitrixLogic;
 use App\Http\BusinessLogic\Methods\BasketLogicFactory as BasketLogic;
+use App\Http\BusinessLogic\Methods\TableLogicFactory as TableLogic;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static BotLogic bots()
+ * @method static TableLogic table()
  * @method static BitrixLogic bitrix()
  * @method static PageLogic pages()
  * @method static SlugLogic slugs()

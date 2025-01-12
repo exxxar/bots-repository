@@ -197,10 +197,11 @@ export default {
             }).then((response) => {
 
 
-                this.$botNotification.success(
-                    "Конструктор команд",
-                    "Команда успешно продублирована",
-                );
+                this.$notify({
+                    title:'Конструктор команд',
+                    text: "Команда успешно продублирована!",
+                    type:'success'
+                })
 
                 this.$nextTick(() => {
                     this.load = false
@@ -229,10 +230,11 @@ export default {
                 }
             }).then((response) => {
 
-                this.$botNotification.success(
-                    "Конструктор команд",
-                    "Команда успешно удалена",
-                );
+                this.$notify({
+                    title:'Конструктор команд',
+                    text: "Команда успешно удалена!",
+                    type:'success'
+                })
 
                 this.$emit("callback")
 

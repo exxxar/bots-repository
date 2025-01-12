@@ -22,6 +22,8 @@ class BasketResource extends JsonResource
             'params' => $this->params ?? null,
             'bot_user_id' => $this->bot_user_id,
             'bot_id' => $this->bot_id,
+            'table_id' => $this->table_id,
+            'table_approved_at' => $this->table_approved_at,
             'ordered_at' => $this->ordered_at,
         ];
     }

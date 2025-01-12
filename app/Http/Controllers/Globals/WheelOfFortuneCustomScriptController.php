@@ -320,12 +320,33 @@ class WheelOfFortuneCustomScriptController extends SlugController
         $winMessage = str_replace(["{{prize}}"], $winnerDescription ?? 'описание приза не указано', $winMessage);
         $winMessage = str_replace(["{{username}}"], "@" . ($username ?? 'имя не указано'), $winMessage);
 
+        $messageToAdmin = "🎡<b>Колесо фортуны</b>\n\n" .
+            "📋<b>Информация об участнике:</b>\n" .
+            "Номер телефона: " . ($filteredPhone ?? 'не указан') . "\n" .
+            "Введенное имя пользователя: " . ($winnerName ?? 'не указано') . "\n" .
+            "Имя из телеграм: " . ($botUser->fio_from_telegram ?? 'не указано') . "\n" .
+            "Телеграм id: " . ($botUser->telegram_chat_id ?? 'не указано') . "\n" .
+            "Домен: " . ($username ? "@$username" : 'Домен не указан') . "\n";
+
+        if (!is_null($botUser->email ?? null))
+            $messageToAdmin .= "Почта: " . ($botUser->email ?? 'не указано') . "\n";
+        if (!is_null($botUser->city ?? null))
+            $messageToAdmin .= "Город: " . ($botUser->city ?? 'не указано') . "\n";
+        if (!is_null($botUser->birthday ?? null))
+            $messageToAdmin .= "День рождения: " . ($botUser->birthday ?? 'не указано') . "\n";
+        if (!is_null($botUser->sex ?? null))
+            $messageToAdmin .= "Пол: " . ($botUser->sex ?? 'не указано') . "\n";
+
+        $messageToAdmin .= "\n<b>Информация о призе:</b>\n" .
+            "Описание приза: " . ($winnerDescription ?? 'не указано');
+
+
         BotMethods::bot()
             ->whereDomain($bot->bot_domain)
             ->sendMessage($botUser
                 ->telegram_chat_id, $winMessage)
             ->sendInlineKeyboard($callbackChannel,
-                "Участник $filteredPhone ($winnerName " . ($username ? "@$username" : 'Домен не указан') . ") принял участие в розыгрыше и выиграл приз  $winnerDescription - свяжитесь с ним для дальнейших указаний", [
+                $messageToAdmin, [
                     [
                         ["text" => "Написать пользователю ответ", "url" => $link]
                     ]

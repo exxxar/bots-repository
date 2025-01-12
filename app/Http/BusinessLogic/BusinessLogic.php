@@ -17,6 +17,7 @@ use App\Http\BusinessLogic\Methods\PromoCodesLogicFactory;
 use App\Http\BusinessLogic\Methods\QuizLogicFactory;
 use App\Http\BusinessLogic\Methods\ReviewLogicFactory;
 use App\Http\BusinessLogic\Methods\StatisticLogicFactory;
+use App\Http\BusinessLogic\Methods\TableLogicFactory;
 use App\Http\BusinessLogic\Methods\YClientLogicFactory;
 use App\Http\BusinessLogic\Methods\BotAdministrativeLogicFactory;
 use App\Http\BusinessLogic\Methods\BotDialogsLogicFactory;
@@ -37,6 +38,7 @@ class BusinessLogic
 {
     protected AmoLogicFactory $amo;
     protected ProductCollectionLogicFactory $collection;
+    protected TableLogicFactory $table;
     protected BitrixLogicFactory $bitrix;
     protected PaymentLogicFactory $payment;
     protected QuizLogicFactory $quiz;
@@ -96,6 +98,12 @@ class BusinessLogic
         $this->stat = new StatisticLogicFactory();
         $this->cdek = new CDEKLogicFactory();
         $this->basket = new BasketLogicFactory();
+        $this->table = new TableLogicFactory();
+    }
+
+    public function table(): TableLogicFactory
+    {
+        return $this->table;
     }
 
     public function basket(): BasketLogicFactory

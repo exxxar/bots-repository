@@ -17,10 +17,12 @@ use CdekSDK2\Constraints\Currencies;
 use CdekSDK2\Exceptions\AuthException;
 use CdekSDK2\Exceptions\RequestException;
 use GuzzleHttp\Client;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use CdekSDK2\BaseTypes;
 
@@ -261,11 +263,13 @@ class CDEKLogicFactory extends BaseLogicFactory
             "region" => $cdekSettings->region,
             "city" => $cdekSettings->city,
             "office" => $cdekSettings->office,
-        ]);
 
+        ]);
 
         $to = $this->getLocation((object)$data["to"]);
 
+        // $to["address"]="test";
+        //$from["address"]="test";
 
         $packages = [];
 
@@ -282,6 +286,7 @@ class CDEKLogicFactory extends BaseLogicFactory
 
             if (!is_null($dimension))
                 $packages[] = Package::create([
+                    'number' => $item->id,
                     'weight' => $item->weight,
                     'length' => $item->length,
                     'width' => $item->width,
@@ -291,29 +296,33 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         //todo: удалить
         $packages[] = Package::create([
+            'number' => 1,
             'weight' => 5000,
-            'length' => 20,
-            'width' => 20,
-            'height' => 20,
+            'length' => 40,
+            'width' => 40,
+            'height' => 40,
+
         ]);
 
-        $tariff = Tariff::create([]);
+
+        $tariff = Tarifflist::create([]);
         $tariff->date = (new \DateTime())->format(\DateTime::ISO8601);
-        $tariff->type = Tarifflist::TYPE_ECOMMERCE;
+        $tariff->type = 1;
         $tariff->currecy = Currencies::RUBLE;
-        $tariff->lang = Tarifflist::LANG_RUS;
+        $tariff->lang = 'rus';
 //Номера тарифов есть в документации к API: https://api-docs.cdek.ru/63345430.html
-        $tariff->tariff_code = $tariffCode;
         $tariff->from_location = Location::create($from);
         $tariff->to_location = Location::create($to);
         $tariff->packages = $packages;
 
-        $result = $cdek->calculator()
+        $result = $cdek
+            ->calculator()
             ->add($tariff);
 
+        return $result->isOk() ? Collection::make(json_decode($result->getBody())->tariff_codes)
+            ->where("tariff_code", $tariffCode)
+            ->first() : null;
 
-        return $result->isOk() ?
-            $cdek->formatBaseResponse($result, \CdekSDK2\Dto\Tariff::class) : null;
     }
 
     /**
@@ -350,7 +359,7 @@ class CDEKLogicFactory extends BaseLogicFactory
         foreach ($data["packages"] as $item) {
             $item = (object)$item;
             $packages[] = Package::create([
-                'weight' => $item->weight*1000,
+                'weight' => $item->weight * 1000,
                 'length' => $item->length,
                 'width' => $item->width,
                 'height' => $item->height,
@@ -452,7 +461,7 @@ class CDEKLogicFactory extends BaseLogicFactory
                 }
             $tmpPackages[] = Package::create([
                 "number" => Str::uuid(),
-                'weight' => $weight*1000,
+                'weight' => $weight * 1000,
                 'length' => $package->length ?? 0,
                 'width' => $package->width ?? 0,
                 'height' => $package->height ?? 0,
@@ -600,8 +609,9 @@ class CDEKLogicFactory extends BaseLogicFactory
     protected function getLocation($data): array
     {
 
-        $cityCode = $data->city["code"] ?? null;
+        $city = (array)$data->city;
 
+        $cityCode = $city["code"] ?? null;
 
         $address = $data->address ?? null;
         $from = ['country_code' => 'RU'];

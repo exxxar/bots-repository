@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("bot-client")
     ->group(function () {
 
+        Route::get("/{domain}/tables-qr", [ProductController::class, "generateTablesQR"]);
+
         Route::post("/vk-auth-link", [\App\Http\Controllers\Globals\VKProductController::class, "getVKAuthLink"])
             ->middleware(["tgAuth.admin"]);
 
@@ -77,6 +79,26 @@ Route::prefix("bot-client")
                 Route::post('/prepare', "formWheelOfFortunePrepare");
                 Route::post('/load-data', "loadData");
                 Route::post('/callback', "formWheelOfFortuneCallback");
+            });
+
+        Route::prefix("tables")
+            ->controller(\App\Http\Controllers\Bots\Web\TableController::class)
+            ->middleware(["tgAuth.any", "slug"])
+            ->group(function () {
+                Route::post('/current', "currentTable");
+                Route::post('/table-data', "loadTableData");
+                Route::post('/waiter-tables', "waiterTableList");
+                Route::post('/close-table', "closeTable");
+                Route::post('/table-pay', "tablePay");
+                Route::post('/send-order-to-my-chat', "sendOrderToMyChat");
+                Route::post('/change-table-waiter', "changeTableWaiter");
+                Route::post('/accept-table-order', "changeBasketStatus");
+                Route::post('/request-approve-table', "requestApproveTable");
+                Route::post('/store-additional-service', "storeAdditionalService");
+                Route::post('/self-checkout', "selfCheckout");
+                Route::post('/approved-self-basket', "approvedSelfBasket");
+                Route::post('/call-waiter', "callWaiter");
+                Route::post('/all-orders', "getAllTableOrders");
             });
 
         Route::prefix("mailing")

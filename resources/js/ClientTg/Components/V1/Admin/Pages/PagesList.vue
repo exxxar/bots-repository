@@ -88,7 +88,6 @@ export default {
 
 
         window.addEventListener("reload-page-list", (e) => {
-            console.log("Test reload-page-list")
             this.loadPages();
         });
     },

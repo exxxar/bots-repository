@@ -2,6 +2,7 @@
 
 use App\Events\CashBackEvent;
 use App\Facades\BotManager;
+use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
 use App\Http\Controllers\Admin\TelegramController;
@@ -13,6 +14,7 @@ use App\Models\CashBack;
 use App\Models\Company;
 use App\Models\ReferralHistory;
 use App\Models\Role;
+use App\Models\Table;
 use App\Models\User;
 use Carbon\Carbon;
 use danog\Decoder\FileId;
@@ -45,32 +47,126 @@ use Yclients\YclientsApi;
 |
 */
 
-Route::get("/test2", function (){
-    $api_url    = 'https://securepay.tinkoff.ru/v2/';
-    $terminal   = '1708340156876';
+Route::get("/table", function (Request $request) {
+
+    $bot = Bot::query()
+        ->where("bot_domain", "nextitgroup_bot")
+        ->first();
+
+    $botUser =BotUser::query()
+        ->where("bot_id",$bot->id)
+        ->where("telegram_chat_id","484698703")
+        ->first();
+
+    $slugId = 2606;
+    $tableNumber = 3;
+
+
+    $path = env("APP_URL") . "/bot-client/simple/%s?slug=%s&hide_menu#/s/table-menu";
+
+
+    $table = Table::query()
+        ->where("bot_id", $bot->id)
+        ->where("number", $tableNumber)
+        ->whereNull("closed_at")
+        ->first();
+
+    if (is_null($table)) {
+        $table = Table::query()
+            ->create([
+                'bot_id' => $bot->id,
+                'creator_id' => $botUser->id,
+                'officiant_id' => null,
+                'number' => $tableNumber,
+                'closed_at' => null,
+                'additional_services' => null,
+                'config' => null,
+            ]);
+
+        $table->clients()->sync($botUser->id);
+
+    } else {
+
+        $tableWithClient = Table::query()
+            ->where("bot_id", $bot->id)
+            ->where("number", $tableNumber)
+            ->whereNull("closed_at")
+            ->whereHas('clients', function ($query) use ($botUser) {
+                $query->where('id', $botUser->id);
+            })->first();
+
+        if (is_null($tableWithClient)) {
+            BotMethods::bot()
+                ->whereBot($bot)
+                ->sendInlineKeyboard(
+                    $botUser->telegram_chat_id,
+                    "Вы хотите присоединиться за столик №$tableNumber. За этим столиком уже сидят, запросить разрешение?",
+                    [
+                        [
+                            ["text" => "🛎️Запросить", "callback_data" => "/request_table_join $tableNumber $slugId"],
+                        ]
+                    ]
+                );
+            return;
+        }
+
+    }
+
+    BotMethods::bot()
+        ->whereBot($bot)
+        ->sendInlineKeyboard(
+            $botUser->telegram_chat_id,
+            "Добро пожаловать за столик №$tableNumber",
+            [
+                [
+                    ["text" => "🛎️Открыть меню",
+                        "web_app" => [
+                            "url" => sprintf(
+                                $path,
+                                $bot->bot_domain,
+                                $slugId,
+                                $botUser->id,
+                            )
+                        ]
+                    ],
+                ]
+            ]
+        );
+
+    dd( sprintf(
+        $path,
+        $bot->bot_domain,
+        $slugId,
+        $botUser->id,
+    ));
+
+});
+
+Route::get("/test2", function () {
+    $api_url = 'https://securepay.tinkoff.ru/v2/';
+    $terminal = '1708340156876';
     $secret_key = '679vo0qxmz7j5wob';
 
     $tinkoff = new Tinkoff($api_url, $terminal, $secret_key);
 
     $payment = [
-        'OrderId'       => '123457',        //Ваш идентификатор платежа
-        'Amount'        => '1244',           //сумма всего платежа в рублях
-        'Language'      => 'ru',            //язык - используется для локализации страницы оплаты
-        'Description'   => 'Some buying',   //описание платежа
-        'Email'         => 'user@email.com',//email покупателя
-        'Phone'         => '89099998877',   //телефон покупателя
-        'Name'          => 'Customer name', //Имя покупателя
-        'Taxation'      => 'usn_income'     //Налогооблажение
+        'OrderId' => '123457',        //Ваш идентификатор платежа
+        'Amount' => '1244',           //сумма всего платежа в рублях
+        'Language' => 'ru',            //язык - используется для локализации страницы оплаты
+        'Description' => 'Some buying',   //описание платежа
+        'Email' => 'user@email.com',//email покупателя
+        'Phone' => '89099998877',   //телефон покупателя
+        'Name' => 'Customer name', //Имя покупателя
+        'Taxation' => 'usn_income'     //Налогооблажение
     ];
-
 
 
 //подготовка массива с покупками
     $items[] = [
-        'Name'  => 'Название товара 1234',
-        'Quantity'  => 1,
+        'Name' => 'Название товара 1234',
+        'Quantity' => 1,
         'Price' => '1244',    //цена товара в рублях
-        'NDS'   => 'vat20',  //НДС //tax
+        'NDS' => 'vat20',  //НДС //tax
     ];
 
 //Получение url для оплаты
@@ -78,7 +174,7 @@ Route::get("/test2", function (){
 
     //dd($paymentURL);
 //Контроль ошибок
-    if(!$paymentURL){
+    if (!$paymentURL) {
         echo($tinkoff->error);
     } else {
         $payment_id = $tinkoff->payment_id;
@@ -86,8 +182,9 @@ Route::get("/test2", function (){
     }
 });
 
-Route::get('/test-token', function (){
-    function generateToken($requestData, $password) {
+Route::get('/test-token', function () {
+    function generateToken($requestData, $password)
+    {
         // Извлекаем только параметры корневого объекта
         $tokenData = [];
         foreach ($requestData as $key => $value) {
@@ -111,7 +208,8 @@ Route::get('/test-token', function (){
         return $token;
     }
 
-    function sendPaymentRequest($formData) {
+    function sendPaymentRequest($formData)
+    {
         $url = 'https://securepay.tinkoff.ru/v2/InitPayments';
 
         $jsonData = json_encode($formData);
@@ -214,7 +312,8 @@ Route::get('/test-token', function (){
 
 Route::get("/crc", function () {
 
-    function calculateCRC16($input) {
+    function calculateCRC16($input)
+    {
         $polynomial = 0x1021; // Полином CRC-16-CCITT
         $crc = 0xFFFF;       // Начальное значение
 
@@ -245,33 +344,33 @@ Route::get("/crc", function () {
     $crc = calculateCRC16($url);
 
     echo "CRC-16: $url&crc=$crc\n";
-   /* SendMessageJob::dispatch(
-        botId: 21,
-        chatId: "484698703",
-        message: "test",
-        replyKeyboard:null,
-        inlineKeyboard:null,
-        messageThreadId:null,
-        keyboardSettings:null,
-    )
-        ->delay(now()
-            ->addSeconds(3));
+    /* SendMessageJob::dispatch(
+         botId: 21,
+         chatId: "484698703",
+         message: "test",
+         replyKeyboard:null,
+         inlineKeyboard:null,
+         messageThreadId:null,
+         keyboardSettings:null,
+     )
+         ->delay(now()
+             ->addSeconds(3));
 
-    SendMessageJob::dispatch(
-        botId: 21,
-        chatId: "484698703",
-        message: "test 2",
-        replyKeyboard:[
-            [
-                ["text"=>"Главное меню"]
-            ]
-        ],
-        inlineKeyboard:null,
-        messageThreadId:null,
-        keyboardSettings:null,
-    )
-        ->delay(now()
-            ->addSeconds(5));*/
+     SendMessageJob::dispatch(
+         botId: 21,
+         chatId: "484698703",
+         message: "test 2",
+         replyKeyboard:[
+             [
+                 ["text"=>"Главное меню"]
+             ]
+         ],
+         inlineKeyboard:null,
+         messageThreadId:null,
+         keyboardSettings:null,
+     )
+         ->delay(now()
+             ->addSeconds(5));*/
 });
 
 
