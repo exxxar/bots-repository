@@ -18,7 +18,7 @@ class CheckAppNode
     {
         $type = env("APP_NODE") ?? "child";
 
-        if ($type == "main")
+        if ($type == "main" || $type == "test")
             return $next($request);
         else
             return response()->redirectToRoute("error-node");
