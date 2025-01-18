@@ -33,13 +33,13 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
             <template v-if="loaded_settings">
                 <CheckoutProductForm
                     v-if="settings.shop_display_type === 0"
-                    v-on:submit="startCheckout"
+                    v-on:start-checkout="startCheckout"
                     v-on:change-tab="changeTab"
                     v-model="deliveryForm"
                     :settings="settings"></CheckoutProductForm>
                 <CheckoutNonFoodGoodsForm
                     v-else
-                    v-on:submit="startCheckout"
+                    v-on:start-checkout="startCheckout"
                     v-on:change-tab="changeTab"
                     v-model="deliveryForm"
                     :settings="settings"></CheckoutNonFoodGoodsForm>
@@ -164,7 +164,7 @@ export default {
                     discount_in_percent:false,
                     discount: 0,
                     activate_price: 0,
-                    code: null,
+                    code:null,
                 },
                 cdek:{
                     tariff:null,

@@ -57,6 +57,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                             v-if="inCart(item.id)===0"
                             @click="incProductCart"
                             style="font-size:12px;"
+                            v-bind:class="{'btn-secondary':!canProductAction}"
+                            :disabled="item.in_stop_list_at!=null|| !canProductAction"
                             class="btn btn-sm btn-light w-100 rounded-3">
                         {{ item.current_price || 0 }}₽
                         <span class="text-decoration-line-through" style="font-size:10px;"
@@ -65,14 +67,18 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 
                     <div class="btn-group w-100 rounded-3" v-if="inCart(item.id)>0">
                         <button type="button"
-                                :disabled="item.in_stop_list_at"
+                                :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                 style="border-radius:6px 0px 0px 6px;"
+                                v-bind:class="{'btn-secondary':!canProductAction}"
                                 @click="decProductCart"
                                 class="btn btn-sm btn-primary">-
                         </button>
-                        <button type="button" class="btn btn-sm btn-primary ">{{ checkInCart }}</button>
                         <button type="button"
-                                :disabled="item.in_stop_list_at"
+                                v-bind:class="{'btn-secondary':!canProductAction}"
+                                class="btn btn-sm btn-primary ">{{ checkInCart }}</button>
+                        <button type="button"
+                                v-bind:class="{'btn-secondary':!canProductAction}"
+                                :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                 @click="incProductCart"
                                 style="border-radius:0px 6px 6px 0px;"
                                 class="btn btn-sm btn-primary">+
@@ -249,6 +255,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                     <div class="d-flex justify-content-between align-items-center w-100 p-0">
                         <button type="button"
                                 v-if="inCart(item.id)===0"
+                                v-bind:class="{'btn-secondary':!canProductAction}"
+                                :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                 @click="incProductCart"
                                 class="btn btn-md btn-primary w-100 rounded-3 p-2">
                             {{ item.current_price || 0 }}₽
@@ -260,13 +268,17 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
 
                         <div class="btn-group w-100" v-if="inCart(item.id)>0">
                             <button type="button"
-                                    :disabled="item.in_stop_list_at!=null"
+                                    v-bind:class="{'btn-secondary':!canProductAction}"
+                                    :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                     @click="decProductCart"
                                     class="btn btn-md btn-primary p-2">-
                             </button>
-                            <button type="button" class="btn btn-md btn-primary">{{ checkInCart }}</button>
                             <button type="button"
-                                    :disabled="item.in_stop_list_at!=null"
+                                    v-bind:class="{'btn-secondary':!canProductAction}"
+                                    class="btn btn-md btn-primary">{{ checkInCart }}</button>
+                            <button type="button"
+                                    v-bind:class="{'btn-secondary':!canProductAction}"
+                                    :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                     @click="incProductCart"
                                     class="btn btn-md btn-primary p-2">+
                             </button>
@@ -292,12 +304,14 @@ export default {
     props: ["item", "displayType", "collectionMode", "canSelect"],
     data() {
         return {
+
             tab: 0,
             selected_image: null,
             loading_reviews: false,
-            showCart: false,
             reviews: [],
             paginate: null,
+            sending:false,
+            is_online:true,
         }
     },
     computed: {
@@ -316,11 +330,21 @@ export default {
         },
         uuid() {
             return uuidv4();
+        },
+        canProductAction(){
+            return this.is_online && !this.sending
         }
 
     },
     mounted() {
         this.selected_image = (this.item.images || []).length > 0 ? this.item.images[0] : null
+
+        window.addEventListener('online', () => {
+            this.is_online = true
+        });
+        window.addEventListener('offline', () => {
+            this.is_online = false
+        });
     },
     methods: {
         nextReviews(index) {
@@ -352,17 +376,20 @@ export default {
             this.$router.push({name: 'ProductV2', params: {productId: this.item.id}})
         },
         incProductCart() {
+            this.sending = true
             let incResult = this.checkInCart === 0 ?
                 this.$store.dispatch("addProductToCart", this.item) :
                 this.$store.dispatch("incQuantity", this.item.id)
 
             incResult.then(() => {
+                this.sending = false
                 this.$notify({
                     title: "Добавление товара",
                     text: 'Товар успешно добавлен',
                     type: 'success'
                 })
             }).catch(() => {
+                this.sending = false
                 this.$notify({
                     title: "Добавление товара",
                     text: 'Ошибка добавления товара!',
@@ -371,17 +398,20 @@ export default {
             })
         },
         decProductCart() {
+            this.sending = true
             let decResult = this.checkInCart <= 1 ?
                 this.$store.dispatch("removeProduct", this.item.id) :
                 this.$store.dispatch("decQuantity", this.item.id)
 
             decResult.then(() => {
+                this.sending = false
                 this.$notify({
                     title: "Удаление товара",
                     text: 'Товар успешно удален',
                     type: 'success'
                 })
             }).catch(() => {
+                this.sending = false
                 this.$notify({
                     title: "Удаление товара",
                     text: 'Ошибка удаления товара!',

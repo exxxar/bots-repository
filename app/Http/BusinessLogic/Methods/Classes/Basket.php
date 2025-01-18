@@ -96,18 +96,26 @@ class Basket
 
         if (is_null($promo))
             $promo = (object)[
+                "discount_in_percent" => false,
                 "activate_price" => 0,
                 "discount" => 0,
                 "code" => "не указан"
             ];
 
-        $discount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0) +
-            ($summaryPrice >= ($promo->activate_price ?? 0) ? ($promo->discount ?? 0) : 0);
+        $promoDiscount  = $promo->discount_in_percent ?
+            $summaryPrice*($promo->discount/100) : $promo->discount;
+
+        $cashbackDiscount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0);
+
+        $discount = $cashbackDiscount +
+            ($summaryPrice >= ($promo->activate_price ?? 0) ? $promoDiscount : 0);
+
 
         return (object)[
+            "cashback"=>$cashbackDiscount,
             "discount" => $discount,
             "message" => ($discount > 0 ? "Скидка: $discount руб." : "") .
-                (!is_null($promo->code ?? null) ? " скидка за промокод '$promo->code' составляет $promo->discount руб. (уже учтена)" : "")
+                (!is_null($promo->code ?? null) ? " скидка за промокод '$promo->code' составляет $promo->discount ".($promo->discount_in_percent ? "%":"руб")." (уже учтена)" : "")
         ];
     }
 
@@ -367,12 +375,11 @@ class Basket
             //  $item->save();
         }
 
-
         $deliveryNote = $this->fsPrepareDeliveryNote();
 
         $discountItem = $this->prepareDiscount($summaryPrice);
 
-        $this->useCashBackForPayment($discountItem->discount ?? 0);
+        $this->useCashBackForPayment($discountItem->cashback ?? 0);
 
 
         $order = Order::query()->create([
@@ -388,7 +395,7 @@ class Basket
                 ]
             ],//информация о продуктах и заведении, из которого сделан заказ
             'product_count' => $summaryCount,
-            'summary_price' => $summaryPrice,
+            'summary_price' => $summaryPrice-$discountItem->discount,
             'delivery_price' => $deliveryPrice,
             'delivery_range' => $distance ?? 0,
             'deliveryman_latitude' => 0,
@@ -415,7 +422,7 @@ class Basket
 
         $productMessage .= $discountItem->message ?? '';
 
-        $productMessage .= "\nИтого: <b>$summaryPrice руб.</b> за <b>$summaryCount ед.</b> \n\n";
+        $productMessage .= "\nИтого: <b>".($summaryPrice-$discountItem->discount)." руб.</b> за <b>$summaryCount ед.</b> \n\n";
 
 
         $needBill = false;
@@ -441,7 +448,7 @@ class Basket
                     ->setBot($this->bot)
                     ->setBotUser($this->botUser)
                     ->setSlug($this->slug)
-                    ->sbp($order, $productMessage);
+                    ->sbpForFood($order, $productMessage);
                 return;
 
         }

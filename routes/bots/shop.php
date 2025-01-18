@@ -23,3 +23,16 @@ BotManager::bot()
     ->route("/test_table_manual_payment ([0-9]+) ([0-9]{1})", "testTableManualPayment")
     ->route("/accept_table_join ([0-9]+) ([0-9]+) ([0-9]+)", "acceptTableJoin");
 
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Bots\Web\ProductController::class)
+    ->route("/test_invoice_sbp_tinkoff_automatic ([0-9]+) ([0-9]+)", "testSbpTinkoffAutomatic");
+
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Bots\FoodBasketController::class)
+    ->route("/test_foods_sbp_tinkoff_automatic ([0-9]+) ([0-9]+)", "testSbpTinkoffAutomatic")
+    ->route("/test_foods_manual_payment ([0-9]+) ([0-9]{1})", "testManualPayment");
+
+BotManager::bot()
+    ->controller(\App\Http\Controllers\Bots\GoodsBasketController::class)
+    ->route("/test_goods_sbp_tinkoff_automatic ([0-9]+) ([0-9]+)", "testSbpTinkoffAutomatic")
+    ->route("/test_goods_manual_payment ([0-9]+) ([0-9]{1})", "testManualPayment");

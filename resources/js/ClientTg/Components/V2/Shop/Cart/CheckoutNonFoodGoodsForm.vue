@@ -233,7 +233,7 @@ export default {
 
         },
         startCheckout() {
-            this.$emit("submit")
+            this.$emit("start-checkout")
         },
         startTimer(time) {
             this.spent_time_counter = parseInt(time) != null ? Math.min(parseInt(time), 10) : 10;

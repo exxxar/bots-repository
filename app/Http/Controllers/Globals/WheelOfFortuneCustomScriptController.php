@@ -621,7 +621,7 @@ class WheelOfFortuneCustomScriptController extends SlugController
      * @return \Illuminate\Http\JsonResponse
      * @throws HttpException
      */
-    protected function extractedPreparedPrizes(mixed $bot, mixed $botUser, \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null $slug): \Illuminate\Http\JsonResponse
+    protected function extractedPreparedPrizes(mixed $bot, mixed $botUser,mixed  $slug): \Illuminate\Http\JsonResponse
     {
         if (is_null($bot) || is_null($botUser) || is_null($slug))
             throw new HttpException("Не заданы необходимые параметры функции", 400);

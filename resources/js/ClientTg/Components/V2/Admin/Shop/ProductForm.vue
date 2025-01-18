@@ -398,7 +398,7 @@
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["bot", "item"],
+    props: ["bot", "modelValue"],
     data() {
         return {
             sectionForm: {
@@ -459,41 +459,38 @@ export default {
     mounted() {
         this.loadProductCategories();
 
-        if (this.item) {
-            this.$nextTick(() => {
-                this.productForm = {
-                    id: this.item.id || null,
-                    article: this.item.article || null,
-                    frontpad_article: this.item.frontpad_article || null,
-                    iiko_article: this.item.iiko_article || null,
-                    vk_product_id: this.item.vk_product_id || null,
-                    title: this.item.title || null,
-                    rating: this.item.rating || 5,
-                    description: this.item.description || null,
-                    images: this.item.images || null,
-                    type: this.item.type || 1,
-                    old_price: this.item.old_price || null,
-                    current_price: this.item.current_price || null,
-                    variants: this.item.variants || null,
-                    in_stop_list_at: this.item.in_stop_list_at || null,
-                    bot_id: this.item.bot_id || null,
-                    options: this.item.options || null,
-                    reviews: this.item.reviews || null,
-                    not_for_delivery:this.item.not_for_delivery || false,
-                    dimension: {
-                        width: this.item.dimension.width || 0,
-                        height: this.item.dimension.height || 0,
-                        length: this.item.dimension.length || 0,
-                        weight: this.item.dimension.weight || 0,
-                    },
-                    // categories: this.item.categories || null,
-                }
+        if (this.modelValue) {
+            this.productForm = {
+                id: this.modelValue.id || null,
+                article: this.modelValue.article || null,
+                frontpad_article: this.modelValue.frontpad_article || null,
+                iiko_article: this.modelValue.iiko_article || null,
+                vk_product_id: this.modelValue.vk_product_id || null,
+                title: this.modelValue.title || null,
+                rating: this.modelValue.rating || 5,
+                description: this.modelValue.description || null,
+                images: this.modelValue.images || null,
+                type: this.modelValue.type || 1,
+                old_price: this.modelValue.old_price || null,
+                current_price: this.modelValue.current_price || null,
+                variants: this.modelValue.variants || null,
+                in_stop_list_at: this.modelValue.in_stop_list_at || null,
+                bot_id: this.modelValue.bot_id || null,
+                options: this.modelValue.options || null,
+                reviews: this.modelValue.reviews || null,
+                not_for_delivery:this.modelValue.not_for_delivery || false,
+                dimension: {
+                    width: this.modelValue.dimension?.width || 0,
+                    height: this.modelValue.dimension?.height || 0,
+                    length: this.modelValue.dimension?.length || 0,
+                    weight: this.modelValue.dimension?.weight || 0,
+                },
+                // categories: this.modelValue.categories || null,
+            }
 
-                this.options = []
-                this.item.categories.forEach(category => {
-                    this.productCategories.push(category.id)
-                })
-
+            this.options = []
+            this.modelValue.categories.forEach(category => {
+                this.productCategories.push(category.id)
             })
         }
     },

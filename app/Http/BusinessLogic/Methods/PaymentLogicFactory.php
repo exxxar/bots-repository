@@ -78,19 +78,19 @@ class PaymentLogicFactory extends BaseLogicFactory
         $tax = $sbp["tinkoff"]["tax"] ?? "osn";
         $vat = $sbp["tinkoff"]["vat"] ?? "vat20";
 
-         $promo = isset($this->data["promo"]) ? json_decode($this->data["promo"]) : null;
-         $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
+        $promo = isset($this->data["promo"]) ? json_decode($this->data["promo"]) : null;
+        $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
 
-         $maxUserCashback = $this->botUser->cashback->amount ?? 0;
-         $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
-         $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
+        $maxUserCashback = $this->botUser->cashback->amount ?? 0;
+        $botCashbackPercent = $this->bot->max_cashback_use_percent ?? 0;
+        $cashBackAmount = ($summaryPrice * ($botCashbackPercent / 100));
 
-         if (is_null($promo))
-             $promo = (object)[
-                 "activate_price" => 0,
-                 "discount" => 0,
-                 "code" => "не указан"
-             ];
+        if (is_null($promo))
+            $promo = (object)[
+                "activate_price" => 0,
+                "discount" => 0,
+                "code" => "не указан"
+            ];
 
         foreach ($basket as $basketItem) {
             $product = $basketItem->product ?? null;
@@ -172,7 +172,7 @@ class PaymentLogicFactory extends BaseLogicFactory
         $discount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0) +
             ($summaryPrice >= ($promo->activate_price ?? 0) ? ($promo->discount ?? 0) : 0);
 
-        $priceWithDiscount = $summaryPrice-($summaryPrice*$discount);
+        $priceWithDiscount = $summaryPrice - ($summaryPrice * $discount);
         $items[] = [
             'Name' => "Оплата столика",
             'Quantity' => 1,
@@ -190,7 +190,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             'deliveryman_info' => null,//информация о доставщике
             'product_details' => [
                 (object)[
-                    "data"=>$data,
+                    "data" => $data,
                     "from" => $this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
                     "products" => $tmpOrderProductInfo
                 ]
@@ -274,6 +274,74 @@ class PaymentLogicFactory extends BaseLogicFactory
 
     }
 
+    public function invoiceLink(array $data, $needKeyboard = false)
+    {
+        if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
+            throw new HttpException(404, "Бот не найден!");
+
+        $bot = $this->bot;
+        $botUser = $this->botUser;
+        $slug = $this->slug;
+        $currency = "RUB";
+
+        $config = $slug->config ?? null;
+
+        if (is_null($config))
+            throw new HttpException(400, "Система не настроена!");
+
+        $sbp = Collection::make($config)
+            ->where("key", "sbp")
+            ->first()["value"] ?? null;
+
+        $terminalKey = $sbp["tinkoff"]["terminal_key"] ?? null;
+        $terminalPassword = $sbp["tinkoff"]["terminal_password"] ?? null;
+        $tax = $sbp["tinkoff"]["tax"] ?? "osn";
+        $vat = $sbp["tinkoff"]["vat"] ?? "vat20";
+
+        $items[] = [
+            'Name' => $data["description"],
+            'Quantity' => 1,
+            'Price' => $data["amount"],    //цена товара в рублях
+            'NDS' => $vat ?? 'vat20',  //НДС //tax
+        ];
+
+        $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
+
+        $payment = [
+            'OrderId' => $data["order_id"] ?? Str::uuid(),        //Ваш идентификатор платежа
+            'Amount' => $data["amount"],           //сумма всего платежа в рублях
+            'Language' => 'ru',            //язык - используется для локализации страницы оплаты
+            'Description' => $data["description"],   //описание платежа
+            'Email' =>$data["email"] ?? '',//email покупателя
+            'Phone' => $data["phone"] ?? '',   //телефон покупателя
+            'Name' => $data["name"] ?? '', //Имя покупателя
+            'Taxation' => $tax     //Налогооблажение
+        ];
+
+
+//Получение url для оплаты
+        $paymentURL = $tinkoff->paymentURL($payment, $items);
+
+        if (!$paymentURL)
+            throw new HttpException(400, "Ошибка формирования платежной ссылки!");
+
+        $payment_id = $tinkoff->payment_id ?? null;
+
+        $keyboard = [
+            [
+                ["text" => "Проверить оплату СБП", "callback_data" => "/test_invoice_sbp_tinkoff_automatic $payment_id $slug->id"]
+            ],
+        ];
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendInlineKeyboard(
+                $botUser->telegram_chat_id,
+                "<code>$paymentURL</code> - нажмите чтобы скопировать\n\nВам необходимо подтвердить факт платежа клиента <code>".($data["phone"]??'')."</code>. Сумма платежа " . $data["amount"] . " руб.",
+                $keyboard
+            );
+    }
+
     /**
      * @throws ValidationException
      */
@@ -285,19 +353,7 @@ class PaymentLogicFactory extends BaseLogicFactory
         $bot = $this->bot;
         $botUser = $this->botUser;
         $slug = $this->slug;
-
-        $basket = \App\Models\Basket::query()
-            ->where("bot_id", $this->bot->id)
-            ->where("bot_user_id", $this->botUser->id)
-            ->whereNull("ordered_at")
-            ->get();
-        $items = [];
-
         $currency = "RUB";
-
-        $summaryPrice = 0;
-        $summaryCount = 0;
-        $description = "";
 
         $config = $slug->config ?? null;
 
@@ -314,69 +370,21 @@ class PaymentLogicFactory extends BaseLogicFactory
         $vat = $sbp["tinkoff"]["vat"] ?? "vat20";
 
 
-        foreach ($basket as $basketItem) {
-            $product = $basketItem->product ?? null;
-            $collection = $basketItem->collection ?? null;
-            $count = $basketItem->count ?? 0;
-            $price = 0;
-
-            if (!is_null($product)) {
-                $price = $product->current_price ?? 0;//* $count;
-
-                $description .= "$product->title x$count = $price,\n";
-
-                $items[] = [
-                    'Name' => $product->title,
-                    'Quantity' => $count,
-                    'Price' => $price,    //цена товара в рублях
-                    'NDS' => $vat ?? 'vat20',  //НДС //tax
-                ];
-
-                $price = $price * $count;
-            }
-
-            if (!is_null($collection)) {
-                $collectionTitles = "";
-
-
-                $params = is_null($item->params ?? null) ? null : (object)$basketItem->params;
-
-
-                foreach (($collection->products ?? []) as $basketProduct) {
-
-
-                    if (!in_array($basketProduct->id, $params->ids ?? []))
-                        continue;
-
-                    $collectionTitles .= "-" . $basketProduct->title . "\n";
-                    $price += $product->current_price ?? 0;
-                }
-
-                $description .= "Коллекция $collection->title x$count = $price,\n";
-
-                $items[] = [
-                    'Name' => "Коллекция `" . ($collection->title) . "`: " . $collectionTitles,
-                    'Quantity' => $count,
-                    'Price' => $price,    //цена товара в рублях
-                    'NDS' => $vat ?? 'vat20',  //НДС //tax
-                ];
-
-                $price = $price * $basketItem->count;
-            }
-
-
-            $summaryCount += $count;
-            $summaryPrice += $price;
-        }
+        $items[] = [
+            'Name' => "Товар магазина",
+            'Quantity' => 1,
+            'Price' => $order->summary_price,    //цена товара в рублях
+            'NDS' => $vat ?? 'vat20',  //НДС //tax
+        ];
 
         $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
 
 
         $payment = [
             'OrderId' => $order->id,        //Ваш идентификатор платежа
-            'Amount' => $summaryPrice,           //сумма всего платежа в рублях
+            'Amount' => $order->summary_price,           //сумма всего платежа в рублях
             'Language' => 'ru',            //язык - используется для локализации страницы оплаты
-            'Description' => $description,   //описание платежа
+            'Description' => "Оплата заказа",   //описание платежа
             'Email' => $this->botUser->email ?? '',//email покупателя
             'Phone' => $order->receiver_phone,   //телефон покупателя
             'Name' => $order->receiver_name, //Имя покупателя
@@ -386,6 +394,7 @@ class PaymentLogicFactory extends BaseLogicFactory
 
 //Получение url для оплаты
         $paymentURL = $tinkoff->paymentURL($payment, $items);
+
 
         if (!$paymentURL) {
             \App\Facades\BotMethods::bot()
@@ -408,12 +417,12 @@ class PaymentLogicFactory extends BaseLogicFactory
             'bot_id' => $bot->id,
             'payload' => $payment_id,
             'currency' => $currency,
-            'total_amount' => $summaryPrice,
+            'total_amount' => $order->summary_price,
             'status' => 0,
             'products_info' => (object)[
+                "order_id" => $order->id,
                 "payment_id" => $payment_id,
-                "payload" => $tmpDescription ?? null,
-                "prices" => $items,
+                "payload" => $payment ?? null,
             ],
         ]);
 
@@ -433,6 +442,23 @@ class PaymentLogicFactory extends BaseLogicFactory
                 $keyboard
             );
 
+        $keyboard = [
+            [
+                ["text" => "Автоматическая проверка СБП", "callback_data" => "/test_foods_sbp_tinkoff_automatic $payment_id $order->id"]
+            ],
+            [
+                ["text" => "Клиент оплатил", "callback_data" => "/test_foods_manual_payment $botUser->id $order->id"]
+            ]
+        ];
+
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendInlineKeyboard(
+                $bot->order_channel,
+                "Вам необходимо подтвердить факт платежа клиента. Сумма платежа $order->summary_price руб. Это можно сделать несколькими способами:",
+                $keyboard
+            );
     }
 
     /**

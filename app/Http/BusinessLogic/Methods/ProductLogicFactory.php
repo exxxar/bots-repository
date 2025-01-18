@@ -259,7 +259,7 @@ class ProductLogicFactory extends BaseLogicFactory
             'current_price' => $data["current_price"] ?? 0,
             'variants' => $variants,
             'in_stop_list_at' => ($data["in_stop_list_at"] ?? false) == "true" ? Carbon::now() : null,
-            'not_for_delivery' => ($data["not_for_delivery"] ?? false) == "true" ? Carbon::now() : null,
+            'not_for_delivery' => ($data["not_for_delivery"] ?? false) == "true" ? Carbon::now() : false,
             'bot_id' => $data["bot_id"] ?? null,
             'dimension' => is_null($data["dimension"] ?? null) ?
                 null : json_decode($data["dimension"] ?? '[]'),

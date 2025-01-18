@@ -19,6 +19,20 @@ const getters = {
 }
 
 const actions = {
+
+
+    async sendSBPInvoice(context, payload = {dataObject: null}) {
+        let link = `${BASE_ORDERS_LINK}/send-sbp-invoice`
+
+        let _axios = util.makeAxiosFactory(link, "POST", payload.dataObject)
+
+        return _axios.then((response) => {
+            return Promise.resolve(response.data);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async declineOrder(context, payload = {dataObject: {order_id: null}}) {
         let link = `${BASE_ORDERS_LINK}/decline-order`
 

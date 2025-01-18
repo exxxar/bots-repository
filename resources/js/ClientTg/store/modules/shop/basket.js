@@ -1,12 +1,12 @@
 import util from '../utilites';
 import axios from "axios";
+import {forEach} from "vue-circular-count-down-timer";
 
 const BASE_BASKET_LINK = '/bot-client/basket'
 
 let state = {
     basket_items: [],
     basket_items_paginate_object: null,
-
 }
 
 const getters = {
@@ -48,9 +48,18 @@ const getters = {
 
         let sum = 0;
 
+        console.log(state.basket_items)
         state.basket_items.forEach((item) => {
             if (item.product)
                 sum += item.product.current_price * item.count
+            if (item.collection) {
+                let collectionPrice = 0;
+                let selected = item.params.ids || []
+                item.collection.products.forEach((sub) => {
+                    collectionPrice += selected.indexOf(sub.id)!==-1? sub.current_price : 0
+                })
+                sum += (collectionPrice - collectionPrice*(item.collection.discount/100))* item.count
+            }
         });
         return sum
     }
@@ -66,7 +75,7 @@ const actions = {
         return _axios.then((response) => {
             return Promise.resolve(response.data);
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -80,7 +89,7 @@ const actions = {
         return _axios.then((response) => {
             context.commit("setCartItems", [])
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -99,7 +108,7 @@ const actions = {
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -135,7 +144,7 @@ const actions = {
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -151,7 +160,7 @@ const actions = {
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -169,7 +178,7 @@ const actions = {
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -187,7 +196,7 @@ const actions = {
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -203,7 +212,7 @@ const actions = {
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -219,7 +228,7 @@ const actions = {
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -237,7 +246,7 @@ const actions = {
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     },
@@ -254,7 +263,7 @@ const actions = {
             context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
-            context.commit("setErrors",  err.response?.data?.errors || [])
+            context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
         })
     }

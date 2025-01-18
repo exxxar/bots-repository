@@ -5,15 +5,21 @@ namespace App\Http\Controllers\Bots\Web;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
+use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductCategoryCollection;
 use App\Http\Resources\ProductCategoryResource;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
+use App\Models\Basket;
 use App\Models\Bot;
+use App\Models\BotMenuSlug;
+use App\Models\BotUser;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductOption;
+use App\Models\Table;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,6 +31,19 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ProductController extends Controller
 {
+
+    public function sendSBPInvoice(Request $request){
+            $request->validate([
+                "amount"=>"required",
+                "description"=>"required"
+            ]);
+
+            BusinessLogic::payment()
+                ->setSlug($request->slug ?? null)
+                ->setBot($request->bot ?? null)
+                ->setBotUser($request->botUser ?? null)
+                ->invoiceLink($request->all());
+    }
 
     public function generateTablesQR(Request $request, $domain)
     {
@@ -83,6 +102,55 @@ class ProductController extends Controller
         ]));
 
         return $mpdf->Output("tables-$number.pdf", \Mpdf\Output\Destination::DOWNLOAD);
+    }
+
+    public function testSbpTinkoffAutomatic(...$data)
+    {
+        $bot = BotManager::bot()
+            ->getSelf();
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $paymentId = $data[2] ?? null;
+        $slugId = $data[3] ?? null;
+
+        $slug = BotMenuSlug::query()
+            ->find($slugId);
+
+        if (is_null($slug))
+            throw new HttpException(404, "Не найден скрипт настройки СБП!");
+
+        $config = $slug->config ?? null;
+
+        if (is_null($config))
+            throw new HttpException(400, "Система не настроена!");
+
+        $sbp = Collection::make($config)
+            ->where("key", "sbp")
+            ->first()["value"] ?? null;
+
+        $terminalKey = $sbp["tinkoff"]["terminal_key"] ?? null;
+        $terminalPassword = $sbp["tinkoff"]["terminal_password"] ?? null;
+        $tax = $sbp["tinkoff"]["tax"] ?? "osn";
+        $vat = $sbp["tinkoff"]["vat"] ?? "vat20";
+
+        $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
+
+        $state = $tinkoff->getState($paymentId);
+
+        if ($state != "CONFIRMED") {
+            BotManager::bot()
+                ->reply("Оплата еще не прошла, попробуйте через некоторое время!");
+            return;
+        }
+        $paymentData = $tinkoff->getResponse();
+
+        $paymentId = $paymentData->PaymentId;
+        $orderId = $paymentData->OrderId;
+        $amount = $paymentData->Amount;
+
+        BotManager::bot()
+            ->reply("Оплата клиента в размере $amount руб. прошла успешно!");
+
     }
 
     public function changeStatusOrder(Request $request): \Illuminate\Http\Response

@@ -102,7 +102,8 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
             <div class="d-flex w-100 flex-column">
 
                 <button type="button"
-                        :disabled="summaryPrice===0"
+                        :disabled="summaryPrice===0||item.in_stop_list_at!=null|| !canProductAction"
+                        v-bind:class="{'btn-secondary':!canProductAction}"
                         @click="addCollectionToCart"
                         class="btn btn-sm btn-primary w-100 rounded-3 p-3">
                     Добавить
@@ -112,7 +113,8 @@ import ProductCard from "@/ClientTg/Components/V2/Shop/ProductCard.vue";
                     <template v-else>
                         {{ summaryPrice }}₽
                     </template>
-                    <span class="badge bg-success ml-2" v-if="cartCollections.length>0">{{cartCollections.length}}</span>
+                    <span class="badge bg-success ml-2"
+                          v-if="cartCollections.length>0">{{ cartCollections.length }}</span>
                 </button>
             </div>
         </nav>
@@ -127,11 +129,16 @@ export default {
     props: ["item"],
     data() {
         return {
-            product:null,
+            product: null,
+            sending: false,
+            is_online: true,
         }
     },
     computed: {
-        ...mapGetters(['inCollectionCart','cartCollections']),
+        ...mapGetters(['inCollectionCart', 'cartCollections']),
+        canProductAction() {
+            return this.is_online && !this.sending
+        },
         uuid() {
             const data = uuidv4();
             return data
@@ -206,11 +213,18 @@ export default {
     },
     mounted() {
 
-        this.$nextTick(()=>{
+        this.$nextTick(() => {
             this.product = this.item
             //this.product.collection_id = tmp.id
-           // this.product.id = this.uuid
+            // this.product.id = this.uuid
         })
+
+        window.addEventListener('online', () => {
+            this.is_online = true
+        });
+        window.addEventListener('offline', () => {
+            this.is_online = false
+        });
 
     },
     methods: {
@@ -226,30 +240,24 @@ export default {
                 type: 'success'
             })
         },
-        decCollectionCart() {
-
-            if (this.checkInCart <= 1)
-                this.$store.dispatch("removeCollectionFromCart", this.product.id)
-            else
-                this.$store.dispatch("decQuantity", this.product.id)
-
-            this.$notify({
-                title: "Добавление товара",
-                text: 'Товар успешно удален',
-                type: 'success'
-            })
-        },
         addCollectionToCart() {
 
+            this.sending = true
 
             this.$store.dispatch("addCollectionToCart", this.product).then(() => {
+                this.sending = false
                 this.$notify({
                     title: "Добавление товара",
                     text: 'Товар успешно добавлен',
                     type: 'success'
                 })
             }).catch(() => {
-
+                this.sending = false
+                this.$notify({
+                    title: "Добавление товара",
+                    text: 'Ошибка добавления товара',
+                    type: 'error'
+                })
             })
         },
 
@@ -263,8 +271,8 @@ export default {
                 }
             })
 
-          /*  if (this.checkInCart > 0)
-                this.$store.dispatch("removeCollectionFromCart", this.product.id)*/
+            /*  if (this.checkInCart > 0)
+                  this.$store.dispatch("removeCollectionFromCart", this.product.id)*/
 
             this.$notify({
                 title: "Подборки товара",
@@ -280,14 +288,14 @@ export default {
             this.product.products.forEach(product => {
                 if (product.categories[0].id === currentCategoryId) {
                     product.is_checked = false
-                   // this.$store.dispatch("removeProduct", product.id)
+                    // this.$store.dispatch("removeProduct", product.id)
                 }
             })
 
             this.product.products[currentIndex].is_checked = true
 
-         /*   if (this.checkInCart > 0)
-                this.$store.dispatch("removeCollectionFromCart", this.product.id)*/
+            /*   if (this.checkInCart > 0)
+                   this.$store.dispatch("removeCollectionFromCart", this.product.id)*/
         }
     },
 

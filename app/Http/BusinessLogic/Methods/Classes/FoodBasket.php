@@ -227,7 +227,7 @@ trait FoodBasket
     {
 
 
-        $disabilitiesText = $this->prepareDisabilities();
+        $disabilitiesText = $this->fsPrepareDisabilities();
 
         $persons = $this->data["persons"] ?? 1;
         $whenReady = ($this->data["when_ready"] ?? "false") == "true";

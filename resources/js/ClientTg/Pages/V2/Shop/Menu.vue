@@ -105,123 +105,158 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
             <i class="fa fa-people-carry "></i> Пригласить друзей
         </button>
 
-        <h6 class="opacity-75 my-3 text-center" v-if="getSelf.is_admin"><i
-            class="fa-solid fa-house-lock mr-2 text-primary"></i>Административные сервисы</h6>
+        <template v-if="getSelf.is_admin">
+            <h6 class="opacity-75 my-3 text-center"><i
+                class="fa-solid fa-house-lock mr-2 text-primary"></i>Управление магазином</h6>
 
-        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4  g-2" v-if="getSelf.is_admin">
-            <div class="col">
-                <button type="button"
-                        @click="goTo('ClientsV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/clients.png'" class="img-fluid" alt="">
+            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4  g-2">
+                <div class="col">
+                    <button type="button"
+                            @click="goTo('SendInvoiceV2')"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/clients.png'" class="img-fluid" alt="">
 
-                        <p class="my-2">Управление клиентами</p>
-                    </div>
+                            <p class="my-2">Счет на оплату</p>
+                        </div>
 
-                </button>
+                    </button>
+                </div>
+                <div class="col">
+                    <button type="button"
+                            @click="goTo('ShopV2')"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/products.png'" class="img-fluid" alt="">
+
+                            <p class="my-2">Управление товарами</p>
+                        </div>
+
+                    </button>
+                </div>
+                <div class="col" v-if="script_data">
+                    <button type="button"
+                            data-bs-toggle="modal" data-bs-target="#script-setting-editor"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/shop-config.png'" class="img-fluid" alt="">
+
+                            <p class="my-2">Настройка магазина</p>
+                        </div>
+
+                    </button>
+                </div>
+            </div>
+            <h6 class="opacity-75 my-3 text-center"><i
+                class="fa-solid fa-house-lock mr-2 text-primary"></i>Другие админ сервисы</h6>
+
+
+
+            <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4  g-2" >
+                <div class="col">
+                    <button type="button"
+                            @click="goTo('ClientsV2')"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/clients.png'" class="img-fluid" alt="">
+
+                            <p class="my-2">Управление клиентами</p>
+                        </div>
+
+                    </button>
+                </div>
+
+
+
+                <div class="col">
+                    <button type="button"
+                            @click="goTo('LinkManagerV2')"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/utm.png'" class="img-fluid" alt="">
+
+                            <p class="my-2">UTM-метки</p>
+                        </div>
+
+                    </button>
+                </div>
+
+                <div class="col">
+                    <button type="button"
+                            @click="goTo('MailingV2')"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/mail.png'" class="img-fluid" alt="">
+
+                            <p class="my-2">Управление рассылками</p>
+                        </div>
+
+                    </button>
+                </div>
+
+
+
+                <div class="col">
+                    <button type="button"
+                            @click="goTo('AdminOrdersV2')"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/orders.png'" class="img-fluid" alt="">
+
+                            <p class="my-2">Управление заказами</p>
+                        </div>
+
+                    </button>
+                </div>
+
+                <div class="col">
+                    <button type="button"
+                            @click="goTo('PromoCodesV2')"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/promo.png'" class="img-fluid" alt="">
+
+                            <p class="my-2">Управление промокодами</p>
+                        </div>
+
+                    </button>
+                </div>
+
+
+                <div class="col">
+                    <button type="button"
+                            @click="goTo('StatisticV2')"
+                            style="min-height:250px;"
+                            class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
+                        <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
+                            <img v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
+
+                            <p class="my-2">Статистика</p>
+                        </div>
+
+                    </button>
+                </div>
+
+
             </div>
 
-            <div class="col">
-                <button type="button"
-                        @click="goTo('LinkManagerV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/utm.png'" class="img-fluid" alt="">
+            <button
+                style="box-shadow: 1px 1px 6px 0px #0000004a;"
+                @click="switchToPage('/adminmenu')"
+                class="btn  btn-outline-light text-primary mb-2 w-100 p-3 rounded-3 shadow-sm ">
 
-                        <p class="my-2">UTM-метки</p>
-                    </div>
+                <i class="fa fa-people-carry "></i> Основная админ. панель
+            </button>
+        </template>
 
-                </button>
-            </div>
-
-            <div class="col">
-                <button type="button"
-                        @click="goTo('MailingV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/mail.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">Управление рассылками</p>
-                    </div>
-
-                </button>
-            </div>
-
-            <div class="col">
-                <button type="button"
-                        @click="goTo('ShopV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/products.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">Управление товарами</p>
-                    </div>
-
-                </button>
-            </div>
-
-            <div class="col">
-                <button type="button"
-                        @click="goTo('AdminOrdersV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/orders.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">Управление заказами</p>
-                    </div>
-
-                </button>
-            </div>
-
-            <div class="col">
-                <button type="button"
-                        @click="goTo('PromoCodesV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/promo.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">Управление промокодами</p>
-                    </div>
-
-                </button>
-            </div>
-
-
-            <div class="col">
-                <button type="button"
-                        @click="goTo('StatisticV2')"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/statistic.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">Статистика</p>
-                    </div>
-
-                </button>
-            </div>
-
-            <div class="col" v-if="script_data">
-                <button type="button"
-                        data-bs-toggle="modal" data-bs-target="#script-setting-editor"
-                        style="min-height:250px;"
-                        class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
-                    <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                        <img v-lazy="'/images/shop-v2-2/shop-config.png'" class="img-fluid" alt="">
-
-                        <p class="my-2">Настройка магазина</p>
-                    </div>
-
-                </button>
-            </div>
-        </div>
     </div>
 
     <div class="menu-preloader" v-if="!loadScriptData">

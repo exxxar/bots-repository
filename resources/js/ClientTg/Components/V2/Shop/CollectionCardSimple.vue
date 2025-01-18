@@ -25,6 +25,7 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
                     </h6>
 
                     <p class="fst-italic mb-2 " style="font-size:10px;">{{ description }}</p>
+                    <p class="fst-italic mb-0 text-danger fw-bold" style="font-size:10px;" v-if="item.discount>0">Скидка {{item.discount}}%</p>
                     <h6 class="py-2 mb-0 d-flex justify-content-between" style="font-size:12px;">
                         <span>{{ currentPrice || 0 }}₽</span>
                         <span>={{ currentPrice * checkInCart }}₽</span>
@@ -33,6 +34,8 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 
                         <button type="button"
                                 v-if="checkInCart===0"
+                                v-bind:class="{'btn-secondary':!canProductAction}"
+                                :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                 @click="incProductCart"
                                 class="btn btn-sm btn-primary w-100 rounded-3">{{ currentPrice || 0 }}<sup
                             class="font-10 opacity-50">.00</sup>₽
@@ -40,13 +43,17 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 
                         <div class="btn-group w-100" v-if="checkInCart>0">
                             <button type="button"
-                                    :disabled="item.in_stop_list_at"
+                                    v-bind:class="{'btn-secondary':!canProductAction}"
+                                    :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                     @click="decProductCart"
                                     class="btn btn-sm btn-primary">-
                             </button>
-                            <button type="button" class="btn btn-sm ">{{ checkInCart }}</button>
                             <button type="button"
-                                    :disabled="item.in_stop_list_at"
+                                    v-bind:class="{'btn-secondary':!canProductAction}"
+                                    class="btn btn-sm ">{{ checkInCart }}</button>
+                            <button type="button"
+                                    v-bind:class="{'btn-secondary':!canProductAction}"
+                                    :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                     @click="incProductCart"
                                     class="btn btn-sm  btn-primary">+
                             </button>
@@ -67,11 +74,15 @@ export default {
     props: ["item", "params"],
     data() {
         return {
-            showCart: false
+            sending: false,
+            is_online: true,
         }
     },
     computed: {
         ...mapGetters(['inCollectionCart']),
+        canProductAction() {
+            return this.is_online && !this.sending
+        },
         checkInCart() {
             return this.inCollectionCart(this.item.id, this.params?.variant_id || null)
         },
@@ -108,11 +119,17 @@ export default {
 
     },
     mounted() {
-
+        window.addEventListener('online', () => {
+            this.is_online = true
+        });
+        window.addEventListener('offline', () => {
+            this.is_online = false
+        });
     },
     methods: {
 
         incProductCart() {
+            this.sending = true
             let incResult = this.checkInCart === 0 ?
                 this.$store.dispatch("addCollectionToCart", this.item) :
                 this.$store.dispatch("incCollectionQuantity", {
@@ -122,12 +139,14 @@ export default {
 
 
             incResult.then(() => {
+                this.sending = false
                 this.$notify({
                     title: "Добавление товара",
                     text: 'Товар успешно добавлен',
                     type: 'success'
                 })
             }).catch(() => {
+                this.sending = false
                 this.$notify({
                     title: "Добавление товара",
                     text: 'Ошибка добавления товара!',
@@ -138,7 +157,7 @@ export default {
 
         },
         decProductCart() {
-
+            this.sending = true
             let decResult = this.checkInCart <= 1 ?
                 this.$store.dispatch("removeCollectionFromCart", {
                     product_collection_id: this.item.id,
@@ -150,12 +169,14 @@ export default {
                 })
 
             decResult.then(() => {
+                this.sending = false
                 this.$notify({
                     title: "Удаление товара",
                     text: 'Товар успешно удален',
                     type: 'success'
                 })
             }).catch(() => {
+                this.sending = false
                 this.$notify({
                     title: "Удаление товара",
                     text: 'Ошибка удаления товара!',

@@ -16,7 +16,7 @@ import OneArmedBanditPage from '@/ClientTg/Pages/V1/OneArmedBanditPage.vue';
 
 
 import DeliveryMain from '@/ClientTg/Pages/V1/Delivery/Main.vue';
-import PaymentSBP from '@/ClientTg/Pages/V1/Shop/PaymentSBP.vue';
+
 import ClientPromocode from '@/ClientTg/Pages/V1/Shop/Promocode.vue';
 import FriendsGame from '@/ClientTg/Pages/V1/Shop/FriendsGame.vue';
 
@@ -96,12 +96,12 @@ export const routes = [
         meta: {title: 'Приведи друзей', hide_menu: true}
     },
 
-    {
+    /*{
         name: 'PaymentSBP',
         path: '/payment-sbp-main/:amount',
         component: PaymentSBP,
         meta: {title: 'Оплата по СБП', hide_menu: true}
-    },
+    },*/
     {
         name: 'ClientPromocode',
         path: '/promocode-main',
@@ -468,7 +468,7 @@ import OrdersV2 from '@/ClientTg/Pages/V2/Shop/MyOrders.vue';
 import ProfileV2 from '@/ClientTg/Pages/V2/Shop/Profile.vue';
 import ProductV2 from '@/ClientTg/Pages/V2/Shop/Product.vue';
 import ShopCartV2 from '@/ClientTg/Pages/V2/Shop/ShopCart.vue';
-import PaymentV2 from '@/ClientTg/Pages/V2/Shop/Payment.vue';
+
 import FeedBackV2 from "@/ClientTg/Pages/V2/Other/FeedBack.vue";
 import MenuV2 from "@/ClientTg/Pages/V2/Shop/Menu.vue";
 import OneArmedBanditV2 from '@/ClientTg/Components/V2/Games/OneArmedBanditPage.vue';
@@ -509,6 +509,7 @@ import TableMenuV2 from "@/ClientTg/Pages/V2/Shop/Tables/TableMenu.vue";
 import TableCartV2 from "@/ClientTg/Pages/V2/Shop/Tables/TableCart.vue";
 import TablesManagerV2 from "@/ClientTg/Pages/V2/Admin/Tables/TablesManager.vue";
 import TableV2 from "@/ClientTg/Pages/V2/Admin/Tables/Table.vue";
+import SendInvoiceV2 from "@/ClientTg/Pages/V2/Admin/Invoice.vue";
 
 
 const simplePrefix = "/s"
@@ -519,6 +520,12 @@ export const simpleRoutes = [
         path: simplePrefix + '/upload',
         component: UploadV2,
         meta: {title: 'Загрузка файлов'}
+    },
+    {
+        name: 'SendInvoiceV2',
+        path: simplePrefix + '/send-invoice',
+        component: SendInvoiceV2,
+        meta: {title: 'СБП'}
     },
 
     {
@@ -568,12 +575,12 @@ export const simpleRoutes = [
         component: ShopCartV2,
         meta: {title: 'Корзина'}
     },
-    {
+    /*{
         name: 'PaymentV2',
         path: simplePrefix + '/payment',
         component: PaymentV2,
         meta: {title: 'Оплата'}
-    },
+    },*/
     {
         name: 'ProfileV2',
         path: simplePrefix + '/profile',

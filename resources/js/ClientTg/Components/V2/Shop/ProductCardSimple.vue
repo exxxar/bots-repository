@@ -26,6 +26,8 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 
                         <button type="button"
                                 v-if="inCart(item.id)===0"
+                                v-bind:class="{'btn-secondary':!canProductAction}"
+                                :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                 @click="incProductCart"
                                 class="btn btn-sm btn-primary w-100 rounded-3">{{ item.current_price || 0 }}<sup
                             class="font-10 opacity-50">.00</sup>₽
@@ -33,13 +35,17 @@ import Rating from "@/ClientTg/Components/V1/Shop/Helpers/Rating.vue";
 
                         <div class="btn-group w-100" v-if="inCart(item.id)>0">
                             <button type="button"
-                                    :disabled="item.in_stop_list_at"
+                                    v-bind:class="{'btn-secondary':!canProductAction}"
+                                    :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                     @click="decProductCart"
                                     class="btn btn-sm btn-primary">-
                             </button>
-                            <button type="button" class="btn btn-sm ">{{ checkInCart }}</button>
                             <button type="button"
-                                    :disabled="item.in_stop_list_at"
+                                    v-bind:class="{'btn-secondary':!canProductAction}"
+                                    class="btn btn-sm ">{{ checkInCart }}</button>
+                            <button type="button"
+                                    v-bind:class="{'btn-secondary':!canProductAction}"
+                                    :disabled="item.in_stop_list_at!=null|| !canProductAction"
                                     @click="incProductCart"
                                     class="btn btn-sm  btn-primary">+
                             </button>
@@ -60,11 +66,15 @@ export default {
     props: ["item"],
     data() {
         return {
-            showCart: false
+            sending: false,
+            is_online: true,
         }
     },
     computed: {
         ...mapGetters(['inCart']),
+        canProductAction() {
+            return this.is_online && !this.sending
+        },
         checkInCart() {
             return this.inCart(this.item.id)
         },
@@ -75,22 +85,33 @@ export default {
             return this.item.old_price / 100
         }
     },
+    mounted() {
+        window.addEventListener('online', () => {
+            this.is_online = true
+        });
+        window.addEventListener('offline', () => {
+            this.is_online = false
+        });
+    },
     methods: {
         addToCart() {
             this.$cart.add(this.item)
         },
         incProductCart() {
+            this.sending = true
             let incResult = this.checkInCart === 0 ?
                 this.$store.dispatch("addProductToCart", this.item) :
                 this.$store.dispatch("incQuantity", this.item.id)
 
             incResult.then(() => {
+                this.sending = false
                 this.$notify({
                     title: "Добавление товара",
                     text: 'Товар успешно добавлен',
                     type: 'success'
                 })
             }).catch(() => {
+                this.sending = false
                 this.$notify({
                     title: "Добавление товара",
                     text: 'Ошибка добавления товара!',
@@ -99,18 +120,20 @@ export default {
             })
         },
         decProductCart() {
-
+            this.sending = true
             let decResult = this.checkInCart <= 1 ?
                 this.$store.dispatch("removeProduct", this.item.id) :
                 this.$store.dispatch("decQuantity", this.item.id)
 
             decResult.then(() => {
+                this.sending = false
                 this.$notify({
                     title: "Удаление товара",
                     text: 'Товар успешно удален',
                     type: 'success'
                 })
             }).catch(() => {
+                this.sending = false
                 this.$notify({
                     title: "Удаление товара",
                     text: 'Ошибка удаления товара!',

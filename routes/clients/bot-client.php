@@ -317,6 +317,8 @@ Route::prefix("bot-client")
                 Route::prefix("orders")
                     ->group(function () {
                         Route::post("/", [ProductController::class, "getOrders"]);
+                        Route::post("/send-sbp-invoice", [ProductController::class, "sendSBPInvoice"])
+                            ->middleware(["slug"]);
                         Route::post("/all", [ProductController::class, "getAllOrders"])->middleware(["tgAuth.admin"]);
                         Route::post("/repeat-order", [ProductController::class, "repeatOrder"]);
                         Route::post("/decline-order", [ProductController::class, "declineOrder"]);

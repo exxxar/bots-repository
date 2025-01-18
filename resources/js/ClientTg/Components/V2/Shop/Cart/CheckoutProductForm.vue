@@ -111,7 +111,6 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             </div>
         </template>
 
-
         <h6 class="opacity-75 mb-3">Информация</h6>
 
         <div class="form-floating mb-3">
@@ -130,7 +129,6 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                    placeholder="+7(000)000-00-00" required>
             <label for="modelValue-phone">Номер телефона <span class="fw-bold text-danger">*</span></label>
         </div>
-
 
         <template v-if="!modelValue.need_pickup">
             <div
@@ -223,7 +221,6 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                 <label for="modelValue-table-number">Номер столика</label>
             </div>
         </template>
-
 
         <div class="form-floating">
             <textarea class="form-control"
@@ -371,22 +368,15 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
 
             <button
                 v-if="settings.need_pay_after_call || modelValue.payment_type === 3"
-                type="button"
-                @click="startCheckout"
                 :disabled="!canSubmitForm"
-
                 class="btn btn-primary p-3 w-100 mb-2">
-
                 <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
                 <i v-else class="fa-solid fa-hourglass  mr-2"></i>
-
                 Оформить
             </button>
 
             <button
                 v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
-                type="button"
-                @click="startCheckout"
                 :disabled="!canSubmitForm"
                 class="btn btn-primary p-3 w-100">
                 <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
@@ -587,7 +577,8 @@ export default {
             if (this.spent_time_counter > 0)
                 return;
 
-            this.$emit("submit")
+            console.log("startCheckout")
+            this.$emit("start-checkout")
 
             this.startTimer(10);
         },
@@ -609,6 +600,31 @@ export default {
 
             if (this.spent_time_counter > 0)
                 return;
+
+            const form = document.getElementById('basket');
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+
+            const elementsArray = Array.from(requiredFields);
+
+            // Развернуть массив
+            const reversedArray = elementsArray.reverse();
+
+            reversedArray.forEach(field => {
+                if (!field.value.trim()) {
+                    field.focus()
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                this.$notify({
+                    title: "Корзина",
+                    text: "Пожалуйста, заполните все обязательные поля.",
+                    type: "error"
+                })
+                return;
+            }
 
             this.$emit("change-tab", 3)
 

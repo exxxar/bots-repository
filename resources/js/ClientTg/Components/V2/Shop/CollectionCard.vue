@@ -39,6 +39,8 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
 
                 <button type="button"
                         v-if="checkInCart===0"
+                        v-bind:class="{'btn-secondary':!canProductAction}"
+                        :disabled="item.in_stop_list_at!=null|| !canProductAction"
                         @click="incCollectionCart"
                         style="font-size:12px;"
                         class="btn btn-md btn-light w-100 rounded-3">
@@ -53,6 +55,7 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
                 <button type="button"
                         v-else
                         @click="openVariantList"
+                        v-bind:class="{'btn-secondary':!canProductAction}"
                         style="font-size:12px;"
                         class="btn btn-md btn-success w-100 rounded-3">
                     Все варианты <span class="badge bg-primary">{{cartCollections.length}}</span>
@@ -134,9 +137,10 @@ export default {
             tab: 0,
             selected_image: null,
             loading_reviews: false,
-            showCart: false,
             reviews: [],
             paginate: null,
+            sending:false,
+            is_online:true,
         }
     },
     computed: {
@@ -164,9 +168,19 @@ export default {
 
             return price
         },
+        canProductAction(){
+            return this.is_online && !this.sending
+        }
     },
     mounted() {
         this.selected_image = (this.item.images || []).length > 0 ? this.item.images[0] : null
+
+        window.addEventListener('online', () => {
+            this.is_online = true
+        });
+        window.addEventListener('offline', () => {
+            this.is_online = false
+        });
     },
     methods: {
         openVariantList(){
@@ -181,28 +195,47 @@ export default {
         incCollectionCart() {
             this.item.current_price = this.discountPrice
 
-            if (this.checkInCart === 0)
-                this.$store.dispatch("addCollectionToCart", this.item)
-            else
+            this.sending = true
+            let incResult = this.checkInCart === 0 ?
+                this.$store.dispatch("addCollectionToCart", this.item):
                 this.$store.dispatch("incQuantity", this.item.id)
 
-            this.$notify({
-                title: "Добавление товара",
-                text: 'Товар успешно добавлен',
-                type: 'success'
+            incResult.then(() => {
+                this.sending = false
+                this.$notify({
+                    title: "Добавление товара",
+                    text: 'Товар успешно добавлен',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.sending = false
+                this.$notify({
+                    title: "Добавление товара",
+                    text: 'Ошибка добавления товара!',
+                    type: 'error'
+                })
             })
         },
         decCollectionCart() {
-
-            if (this.checkInCart <= 1)
-                this.$store.dispatch("removeCollectionFromCart", this.item.id)
-            else
+            this.sending = true
+            let decResult = this.checkInCart <= 1 ?
+                this.$store.dispatch("removeCollectionFromCart", this.item.id):
                 this.$store.dispatch("decQuantity", this.item.id)
 
-            this.$notify({
-                title: "Добавление товара",
-                text: 'Товар успешно удален',
-                type: 'success'
+            decResult.then(() => {
+                this.sending = false
+                this.$notify({
+                    title: "Удаление товара",
+                    text: 'Товар успешно удален',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.sending = false
+                this.$notify({
+                    title: "Удаление товара",
+                    text: 'Ошибка удаления товара!',
+                    type: 'error'
+                })
             })
         },
 

@@ -224,8 +224,8 @@ import ReviewCard from "@/ClientTg/Components/V2/Shop/ReviewCard.vue";
                         <div v-show="tab===2">
                             <ProductForm
                                 v-on:remove-product="openRemoveModal"
-                                v-on:callback="loadProducts(0)"
-                                :item="selected_product"
+                                v-on:callback="loadProducts(null)"
+                                v-model="selected_product"
                             />
                         </div>
                     </template>
@@ -295,7 +295,11 @@ export default {
         },
     },
     mounted() {
-        this.loadProducts()
+
+        const page = localStorage.getItem("cashman_admin_product_list_page_index") != null ?
+            localStorage.getItem("cashman_admin_product_list_page_index") : 0
+
+        this.loadProducts(page)
         this.modal = new bootstrap.Modal(document.getElementById('product-modal-admin-info'), {})
         this.accept_remove_modal = new bootstrap.Modal(document.getElementById('remove-modal'), {})
     },
@@ -356,9 +360,16 @@ export default {
             // this.$emit("select", product)
         },
         nextProducts(index) {
+            localStorage.setItem("cashman_admin_product_list_page_index", index)
             this.loadProducts(index)
         },
         loadProducts(page = 0) {
+            if (page==null)
+            {
+                page = localStorage.getItem("cashman_admin_product_list_page_index") != null ?
+                    localStorage.getItem("cashman_admin_product_list_page_index") : 0
+            }
+
             return this.$store.dispatch("loadProducts", {
                 dataObject: {
                     search: this.search,
