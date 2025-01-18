@@ -16,7 +16,7 @@ class BotSecurityResource extends JsonResource
 
 
         return [
-            'id' => $this->id,
+            'id' => $this->id ?? null,
 
             'title' => $this->title ?? null,
             'short_description' => $this->short_description ?? null,
