@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::table('baskets', function (Blueprint $table) {
             $table->foreignId('product_id')->nullable()
                 ->change()
@@ -18,6 +19,7 @@ return new class extends Migration
             $table->foreignId('product_collection_id')->nullable()
                 ->constrained("product_collections");
         });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
