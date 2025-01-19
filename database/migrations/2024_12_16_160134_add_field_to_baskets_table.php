@@ -14,12 +14,10 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
         Schema::table('baskets', function (Blueprint $table) {
             $table->foreignId('product_id')->nullable()
-                ->change()
-                ->constrained("products");
+                ->change();
             $table->foreignId('product_collection_id')
                 ->nullable()
-                ->change()
-                ->constrained("product_collections");
+                ->change();
         });
         Schema::enableForeignKeyConstraints();
     }
