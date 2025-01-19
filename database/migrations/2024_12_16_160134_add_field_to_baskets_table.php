@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('product_id')->nullable()
                 ->change()
                 ->constrained("products");
-            $table->foreignId('product_collection_id')->nullable()
+            $table->foreignId('product_collection_id')
+                ->nullable()
+                ->change()
                 ->constrained("product_collections");
         });
         Schema::enableForeignKeyConstraints();
