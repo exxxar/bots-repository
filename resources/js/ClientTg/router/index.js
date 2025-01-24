@@ -510,6 +510,7 @@ import TableCartV2 from "@/ClientTg/Pages/V2/Shop/Tables/TableCart.vue";
 import TablesManagerV2 from "@/ClientTg/Pages/V2/Admin/Tables/TablesManager.vue";
 import TableV2 from "@/ClientTg/Pages/V2/Admin/Tables/Table.vue";
 import SendInvoiceV2 from "@/ClientTg/Pages/V2/Admin/Invoice.vue";
+import PageEditorV2 from "@/ClientTg/Pages/V2/Admin/PageEditor.vue";
 
 
 const simplePrefix = "/s"
@@ -657,6 +658,12 @@ export const simpleRoutes = [
         path: simplePrefix + '/admin/tables-manager/:tableId',
         component: TableV2,
         meta: {title: 'Столик'}
+    },
+    {
+        name: 'PageEditorV2',
+        path: simplePrefix + '/admin/page-editor/:pageId',
+        component: PageEditorV2,
+        meta: {title: 'Реактор страницы'}
     },
     {
         name: 'ClientsV2',

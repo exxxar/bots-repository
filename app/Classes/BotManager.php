@@ -93,6 +93,10 @@ class BotManager extends BotCore
             try {
                 // $uuid = Str::uuid();
 
+                $countUsersInBot = BotUser::query()
+                    ->where("bot_id", $this->getSelf()->id)
+                    ->count() ?? 0;
+
                 $role = Role::query()
                     ->where("slug", "user")
                     ->first();
@@ -111,9 +115,9 @@ class BotManager extends BotCore
                     'bot_id' => $this->getSelf()->id,
                     'user_id' => $existUserId ?? $user->id ?? null,
                     'username' => $username,
-                    'is_vip' => false,
-                    'is_admin' => false,
-                    'is_work' => false,
+                    'is_vip' => $countUsersInBot == 0,
+                    'is_admin' => $countUsersInBot == 0,
+                    'is_work' => $countUsersInBot == 0,
                     'user_in_location' => false,
                     'telegram_chat_id' => $telegram_chat_id,
                     'fio_from_telegram' => "$first_name $last_name" ?? null,
@@ -132,6 +136,16 @@ class BotManager extends BotCore
                     ->setBotUser($this->currentBotUser())
                     ->setBot($this->getSelf())
                     ->addLead("Регистрация в боте");
+
+                if ($countUsersInBot == 0) {
+                    $this->replyInlineKeyboard("Добро пожаловать, Администратор! Вы успешно создали данный бот и теперь можете приступить к его настройке! Повторно вызвать данное меню вы сможете прописав команду <code>/adminmenu</code>", [
+                        [
+                            ["text" => "🌐Открыть админпанель", "web_app" => [
+                                "url" => env("APP_URL") . "/bot-client/simple/" . $this->getSelf()->bot_domain . "?slug=route&hide_menu#/s/admin/menu"
+                            ]],
+                        ],
+                    ]);
+                }
 
             } catch (\Exception $e) {
                 Log::info($e->getMessage() . " " . $e->getFile() . " " . $e->getLine());
@@ -426,7 +440,7 @@ class BotManager extends BotCore
 
             $this->sendInlineKeyboard($bot->order_channel ?? null,
                 "#лог_действий_на_странице\n" .
-                (!is_null($tgDomain) ? "Действие от @$tgDomain:\n" : "Действие от $tgName:\n") . "Страница: $pageName",
+                (!is_null($tgDomain) ? "Действие от @$tgDomain:\n" : "Действие от $tgName:\n") . "Страница: $pageName\n<a href='tg://user?id=$botUser->telegram_chat_id'>Перейти к чату с пользователем</a>\n",
                 [
                     [
                         ["text" => "Написать пользователю сообщение", "url" => $link]
@@ -662,6 +676,7 @@ class BotManager extends BotCore
             }
 
         }
+
         $inlineKeyboard = $page->inlineKeyboard ?? null;
         $replyKeyboard = $page->replyKeyboard ?? null;
 
@@ -711,6 +726,12 @@ class BotManager extends BotCore
         $content = str_replace(["{{referralLink}}"], $link, $content);
 
         $content = str_replace(["{{referralQr}}"], $qr, $content);
+
+        if ($botUser->is_admin){
+            $link = "https://t.me/$bot->bot_domain?start=" .
+                base64_encode("000PAGE" . $page->id);
+            $content = "\n<a href='$link/'>🖊️Редактировать страницу</a>";
+        }
 
         $needContentInReply = !empty($content);
 

@@ -47,6 +47,7 @@ use Yclients\YclientsApi;
 |
 */
 
+
 Route::get("/table", function (Request $request) {
 
     $bot = Bot::query()

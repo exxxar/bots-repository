@@ -426,11 +426,15 @@ class StartCodesHandlerController extends Controller
 
         $path = env("APP_URL") . "/bot-client/simple/%s?slug=route&hide_menu&friend=%s#/s/referral";
 
+        $botUserTelegramChatId = $botUser->telegram_chat_id;
+
         BotMethods::bot()
             ->whereId($botUser->bot_id)
             ->sendInlineKeyboard(
                 $userBotUser->telegram_chat_id,
-                "По вашей ссылке перешел пользователь <b>$userName1</b>",
+                "По вашей ссылке перешел пользователь <b>$userName1</b>" .
+                "\n<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n"
+                ,
                 [
                     [
                         ["text" => "👨‍👨Узнать о вашем друге",
@@ -473,6 +477,41 @@ class StartCodesHandlerController extends Controller
                         ->pushCommand("/start");
                     return;
                 }*/
+    }
+
+    public function editPage(...$data)
+    {
+        $bot = BotManager::bot()
+            ->getSelf();
+
+        $botUser = BotManager::bot()
+            ->currentBotUser();
+
+        if (!$botUser->is_admin) {
+            BotManager::bot()
+                ->reply("Упс... Вы не администратор");
+            return;
+        }
+
+        $code = $data[1] ?? null;
+        $page_id = $data[2] ?? null;
+
+        $text = "Редактирование страницы";
+        $path = env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&hide_menu#/s/admin/page-editor/$page_id";
+
+        BotManager::bot()->replyInlineKeyboard(
+            $text,
+            [
+                [
+                    ["text" => "\xF0\x9F\x8E\xB0Открыть редактор",
+                        "web_app" => [
+                            "url" => $path
+                        ]
+                    ],
+                ]
+            ]
+        );
+
     }
 
     public function referralAction(...$data)

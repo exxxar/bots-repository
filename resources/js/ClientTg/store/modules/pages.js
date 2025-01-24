@@ -17,6 +17,21 @@ const getters = {
 }
 
 const actions = {
+    async loadPageById(context, payload = {dataObject:{page_id:null}}) {
+
+        let link = `${BASE_PAGES_LINK}/page-by-id/${payload.dataObject.page_id}`
+        let method = 'POST'
+
+        let _axios = util.makeAxiosFactory(link, method)
+
+        return _axios.then((response) => {
+            let dataObject = response.data
+            return Promise.resolve(dataObject);
+        }).catch(err => {
+            context.commit("setErrors", err.response.data.errors || [])
+            return Promise.reject(err);
+        })
+    },
     async loadPages(context, payload = {dataObject: { search:null}, page: 0, size: 12}) {
 
 

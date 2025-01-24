@@ -1090,11 +1090,12 @@ class ProductLogicFactory extends BaseLogicFactory
             $uploadedPhoto->storeAs("$imageName");
 
             $thread = $bot->topics["orders"] ?? null;
+            $botUserTelegramChatId = $this->botUser->telegram_chat_id;
 
             $historyLink = "https://t.me/" . ($this->bot->bot_domain) . "?start=" . (
                 !is_null($order) ?
-                    base64_encode("001" . ($this->botUser->telegram_chat_id) . "O" . $order->id) :
-                    base64_encode("001" . ($this->botUser->telegram_chat_id))
+                    base64_encode("001" . ($botUserTelegramChatId) . "O" . $order->id) :
+                    base64_encode("001" . ($botUserTelegramChatId))
                 );
 
             $channel = $this->bot->order_channel ?? $this->bot->main_channel ?? null;
@@ -1108,7 +1109,8 @@ class ProductLogicFactory extends BaseLogicFactory
                     "Идентификатор клиента: " . ($this->botUser->telegram_chat_id ?? '-') . "\n" .
                     "Пользователь: " . ($order->receiver_name ?? '-') . "\n" .
                     "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
-                    "Пояснение к оплате: " . ($data["image_info"] ?? 'не указано'),
+                    "Пояснение к оплате: " . ($data["image_info"] ?? 'не указано').
+                     "\n<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n",
                     InputFile::create(storage_path() . "/app/$imageName"), [
                     [
                         ["text" => "📜Заказ пользователя", "url" => $historyLink]

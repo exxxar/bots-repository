@@ -65,6 +65,11 @@ class BotPageController extends Controller
         return response()->noContent();
     }
 
+    public function loadPageById(Request $request, $pageId){
+        return BusinessLogic::pages()
+            ->setBot($request->bot ?? null)
+            ->getPage($pageId);
+    }
     /**
      * @throws \HttpException
      */

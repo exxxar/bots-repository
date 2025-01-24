@@ -85,6 +85,23 @@ class BotPageLogicFactory extends BaseLogicFactory
     /**
      * @throws HttpException
      */
+    public function getPage($pageId): BotPageResource
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+        $botPage = BotPage::query()->where("id", $pageId)
+            ->first();
+
+        if (is_null($botPage))
+            throw new HttpException(404, "Страница не найдена!");
+
+        return new BotPageResource($botPage);
+    }
+
+    /**
+     * @throws HttpException
+     */
     public function destroy($pageId, $force = false): BotPageResource
     {
 

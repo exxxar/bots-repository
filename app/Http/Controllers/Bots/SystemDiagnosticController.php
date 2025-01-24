@@ -100,11 +100,106 @@ class SystemDiagnosticController extends Controller
 
     }
 
+    public function generateOrderTopics(...$data){
+        $threads = [
+                [
+                    "title"=> 'Отзывы',
+                    "key"=> 'reviews',
+                ],
+                [
+                    "title"=> 'Начисление cashback',
+                    "key"=> 'cashback',
+
+                ],
+                [
+                    "title"=> 'Вопросы',
+                    "key"=> 'questions',
+
+                ],
+                [
+                    "title"=> 'Конкурсы',
+                    "key"=> 'actions',
+
+                ],
+                [
+                    "title"=> 'Заказы',
+                    "key"=> 'orders',
+
+                ],
+                [
+                    "title"=> 'Вывод средств',
+                    "key"=> 'ask-money',
+
+                ],
+                [
+                    "title"=> 'Доставка',
+                    "key"=> 'delivery',
+
+                ],
+                [
+                    "title"=> 'Ответы',
+                    "key"=> 'response',
+
+                ],
+                [
+                    "title"=> 'Обратная связь',
+                    "key"=> 'callback',
+
+                ]
+            ];
+
+        $bot = BotManager::bot()->getSelf();
+
+        return BusinessLogic::bots()
+            ->setBot($bot ?? null)
+            ->createBotTopics($threads);
+    }
+
+    public function saveAsOrderChannel(...$data){
+        $bot = BotManager::bot()->getSelf();
+
+        $bot->order_channel = $data[0]->chat->id;
+        $bot->save();
+
+        BotManager::bot()
+            ->replyInlineKeyboard("Идентификатор чата" . ($data[0]->chat->id ?? 'не указан') . "- успешно сохранен как канал для заказов. Теперь создайте топики если это необходимо!",
+                [
+                    [
+                        ["text" => "Сгенерировать топики","callback_data"=>"/generate_order_topics"]
+                    ],
+                ],
+                $data[0]->message_thread_id ?? null,
+            );
+
+
+    }
+
+    public function saveAsMainChannel(...$data){
+        $bot = BotManager::bot()->getSelf();
+
+        $bot->main_channel = $data[0]->chat->id;
+        $bot->save();
+
+        BotManager::bot()
+            ->reply("Идентификатор чата" . ($data[0]->chat->id ?? 'не указан') . "- успешно сохранен как публичный канал для новостей!",
+                $data[0]->message_thread_id ?? null);
+
+
+    }
+
     public function getMyId(...$data)
     {
         BotManager::bot()
-            ->reply("Ваш чат id: <pre><code>" . ($data[0]->chat->id ?? 'не указан') . "</code></pre>\nИдентификатор топика: " . ($data[0]->message_thread_id ?? 'Не указан'),
-                $data[0]->message_thread_id ?? null
+            ->replyInlineKeyboard("Ваш чат id: <pre><code>" . ($data[0]->chat->id ?? 'не указан') . "</code></pre>\nИдентификатор топика: " . ($data[0]->message_thread_id ?? 'Не указан'),
+                [
+                    [
+                        ["text" => "Сохранить как канал заказов","callback_data"=>"/save_as_order_channel"]
+                    ],
+                    [
+                        ["text" => "Сохранить как публичный канал","callback_data"=>"/save_as_main_channel"]
+                    ]
+                ],
+                $data[0]->message_thread_id ?? null,
             );
     }
 
