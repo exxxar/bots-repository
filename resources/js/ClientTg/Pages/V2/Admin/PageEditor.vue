@@ -48,7 +48,7 @@ export default {
                     page_id: pageId
                 }
             }).then(resp => {
-              this.page = resp
+              this.page = resp.data
             })
         }
     }
