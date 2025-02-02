@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Bots;
 
+use App\Enums\OrderStatusEnum;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
@@ -59,6 +60,7 @@ class GoodsBasketController extends Controller
 
         $paymentId = $paymentData->PaymentId;
         $orderId = $paymentData->OrderId;
+        $customerKey = $paymentData->CstomerKey;
 
         $order = Order::query()
             ->where("id", $orderId)
@@ -66,52 +68,8 @@ class GoodsBasketController extends Controller
             ->first();
 
         $order->payed_at = Carbon::now();
+        $order->status = OrderStatusEnum::Completed->value;
         $order->save();
-
-        if (!is_null($order->table_id)) {
-            $table = Table::query()
-                ->with(["creator"])
-                ->where("id", $order->table_id)
-                ->where("bot_id", $bot->id)
-                ->whereNotNull('closed_at')
-                ->first();
-
-            if (is_null($table)) {
-                BotManager::bot()
-                    ->reply("Данный столик уже закрыт!");
-                return;
-            }
-
-            $table->closed_at = Carbon::now();
-            $table->save();
-
-            $tableBaskets = Basket::query()
-                ->where("bot_id", $bot->id)
-                ->where("table_id", $table->id)
-                ->whereNull("ordered_at")
-                ->get();
-
-            foreach ($tableBaskets as $basket) {
-                $basket->ordered_at = Carbon::now();
-                $basket->save();
-            }
-
-            BotManager::bot()
-                ->reply("Столик $table->number закрыт, спасибо! Все заказы столика отмечены как оплаченные.");
-
-            return;
-        }
-
-        $baskets = Basket::query()
-            ->where("bot_id", $bot->id)
-            ->where("bot_user_id", $order->customer_id)
-            ->whereNull("ordered_at")
-            ->get();
-
-        foreach ($baskets as $basket) {
-            $basket->ordered_at = Carbon::now();
-            $basket->save();
-        }
 
         BotManager::bot()
             ->reply("Оплата клиента в размере $order->summary_price руб. прошла успешно!");
@@ -126,8 +84,6 @@ class GoodsBasketController extends Controller
                 $clientBotUser->telegram_chat_id,
                 "Ваша оплата в размере $order->summary_price руб. прошла успешно!"
             );
-
-
     }
 
     public function testManualPayment(...$data)

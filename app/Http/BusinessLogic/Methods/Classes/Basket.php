@@ -102,8 +102,8 @@ class Basket
                 "code" => "не указан"
             ];
 
-        $promoDiscount  = $promo->discount_in_percent ?
-            $summaryPrice*($promo->discount/100) : $promo->discount;
+        $promoDiscount = $promo->discount_in_percent ?
+            $summaryPrice * ($promo->discount / 100) : $promo->discount;
 
         $cashbackDiscount = ($useCashback ? min($cashBackAmount, $maxUserCashback) : 0);
 
@@ -112,10 +112,10 @@ class Basket
 
 
         return (object)[
-            "cashback"=>$cashbackDiscount,
+            "cashback" => $cashbackDiscount,
             "discount" => $discount,
             "message" => ($discount > 0 ? "Скидка: $discount руб." : "") .
-                (!is_null($promo->code ?? null) ? " скидка за промокод '$promo->code' составляет $promo->discount ".($promo->discount_in_percent ? "%":"руб")." (уже учтена)" : "")
+                (!is_null($promo->code ?? null) ? " скидка за промокод '$promo->code' составляет $promo->discount " . ($promo->discount_in_percent ? "%" : "руб") . " (уже учтена)" : "")
         ];
     }
 
@@ -257,14 +257,15 @@ class Basket
                 "Идентификатор клиента: " . ($botUserTelegramChatId ?? '-') . "\n" .
                 "Пользователь: " . ($order->receiver_name ?? '-') . "\n" .
                 "Телефон: " . ($order->receiver_phone ?? '-') . "\n\n" .
-                "Пояснение к оплате: " . ($this->data["image_info"] ?? 'не указано').
+                "Пояснение к оплате: " . ($this->data["image_info"] ?? 'не указано') .
                 "\n<a href='tg://user?id=$botUserTelegramChatId'>Перейти к чату с пользователем</a>\n",
-                InputFile::create(storage_path() . "/app/$imageName"), [
+                InputFile::create(storage_path() . "\\app\\$imageName"),
                 [
-                    ["text" => "📜Заказ пользователя", "url" => $historyLink]
-                ],
+                    [
+                        ["text" => "📜Заказ пользователя", "url" => $historyLink]
+                    ],
 
-            ],
+                ],
                 $thread
             );
 
@@ -274,7 +275,9 @@ class Basket
     {
         $needPickup = ($this->data["need_pickup"] ?? "false") == "true";
         $deliveryPrice = $this->data["delivery_price"] ?? 0;
+        $distance = $this->data["distance"] ?? 0;
         $paymentType = $this->data["payment_type"] ?? 4;
+
 
         $productMessage = (!$needPickup ? "#заказдоставка\n\n" : "#заказсамовывоз\n\n");
         $productMessage .= $this->checkWheelOfFortuneAction();
@@ -294,8 +297,6 @@ class Basket
         $ids = [];
 
         foreach ($basket as $item) {
-
-
             $product = $item->product ?? null;
             $collection = $item->collection ?? null;
 
@@ -373,8 +374,8 @@ class Basket
             $summaryCount += $item->count;
             $summaryPrice += $price;
 
-            //   $item->ordered_at = Carbon::now();
-            //  $item->save();
+            $item->ordered_at = Carbon::now();
+            $item->save();
         }
 
         $deliveryNote = $this->fsPrepareDeliveryNote();
@@ -397,7 +398,7 @@ class Basket
                 ]
             ],//информация о продуктах и заведении, из которого сделан заказ
             'product_count' => $summaryCount,
-            'summary_price' => $summaryPrice-$discountItem->discount,
+            'summary_price' => $summaryPrice - $discountItem->discount,
             'delivery_price' => $deliveryPrice,
             'delivery_range' => $distance ?? 0,
             'deliveryman_latitude' => 0,
@@ -424,8 +425,10 @@ class Basket
 
         $productMessage .= $discountItem->message ?? '';
 
-        $productMessage .= "\nИтого: <b>".($summaryPrice-$discountItem->discount)." руб.</b> за <b>$summaryCount ед.</b> \n\n";
+        $productMessage .= "\nИтого: <b>" . ($summaryPrice - $discountItem->discount) . " руб.</b> за <b>$summaryCount ед.</b>";
 
+
+        $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
 
         $needBill = false;
         switch ($paymentType) {
@@ -451,11 +454,37 @@ class Basket
                     ->setBotUser($this->botUser)
                     ->setSlug($this->slug)
                     ->sbpForFood($order, $productMessage);
+
+                $botDomain = $this->bot->bot_domain;
+                $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $userId);
+
+                $keyboard = [
+                    [
+                        ["text" => "✉Работа с заказом пользователя", "url" => $link]
+                    ]
+                ];
+
+                $thread = $this->bot->topics["delivery"] ?? null;
+
+                $productMessage .= $this->fsPrepareUserInfo($order, $discountItem->discount ?? 0);
+
+                if ($deliveryPrice > 0) {
+                    $productMessage .= "\nДоставка: <b>" . $deliveryPrice . " руб.</b> за $distance км";
+                    $productMessage .= "\nИтого c доставкой: <b>" . (($summaryPrice + $deliveryPrice) - $discountItem->discount) . " руб.</b>";
+                }
+
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendInlineKeyboard(
+                        $this->bot->order_channel ?? null,
+                        "$productMessage\n",
+                        $keyboard,
+                        $thread
+                    );
                 return;
 
         }
 
-        $productMessage .= $this->fsPrepareUserInfo($order, $discountItem->discount ?? 0);
 
         if ($needBill)
             $this->fsPrintPDFInfo(
@@ -465,6 +494,14 @@ class Basket
                 tmpOrderProductInfo: $tmpOrderProductInfo,
                 discount: $discountItem->discount
             );
+
+
+        $paymentInfo = sprintf((Collection::make($this->slug->config)
+            ->where("key", "payment_info")
+            ->first())["value"] ?? "Оплатите заказ по реквизитам:\nСбер XXXX-XXXX-XXXX-XXXX Иванов И.И. или переводом по номеру +7(000)000-00-00 - указав номер %s\nИ отправьте нам скриншот оплаты со словом <strong>оплата</strong>",
+            $userId);
+
+        $productMessage .= "\n\n$paymentInfo";
 
         $this->fsSendResult($productMessage);
         $this->sendPaidReceiptToChannel($order);

@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\SessionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -18,10 +19,17 @@ Route::prefix("auth")
         Route::get('register', [RegisteredUserController::class, 'create'])
             ->name('register');
 
+
+        Route::get('magic-login/{user}', [AuthenticatedSessionController::class, 'magicLogin'])->name('auth.magic');
+
         Route::post('register', [RegisteredUserController::class, 'store']);
 
         Route::get('login', [AuthenticatedSessionController::class, 'create'])
             ->name('login');
+
+        Route::view('manager-login','admin.login')
+            ->name('admin.login');
+
 
         Route::post('login', [AuthenticatedSessionController::class, 'store']);
 

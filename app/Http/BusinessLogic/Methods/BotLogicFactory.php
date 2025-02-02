@@ -930,6 +930,44 @@ class BotLogicFactory extends BaseLogicFactory
      * @throws ValidationException
      * @throws HttpException
      */
+    public function sendManagerFeedback(array $data): void
+    {
+        if (is_null($this->bot))
+            throw new HttpException(403, "Не выполнены условия функции");
+
+        $validator = Validator::make($data, [
+            "name" => "required",
+            "phone" => "required",
+            "message" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+        $callbackChannel = $this->bot->order_channel ?? $this->bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
+
+        $typeText = "#заявкаклиента";
+
+        $adminMessage = "$typeText\n -имя: %s \n -телефон: %s\n -почта: %s\nСообщение: %s\n";
+
+        $thread = $this->bot->topics["orders"] ?? null;
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage($callbackChannel,
+                sprintf($adminMessage,
+                    $data["name"] ?? '-',
+                    $data["phone"] ?? '-',
+                    $data["email"] ?? '-',
+                    $data["message"] ?? '-'
+                ), $thread);
+
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws HttpException
+     */
     public function sendLandingRequest(array $data): void
     {
         if (is_null($this->bot))
@@ -999,9 +1037,9 @@ class BotLogicFactory extends BaseLogicFactory
 
                     $imageName = Str::uuid() . "." . $ext;
 
-                    $divider = env("APP_DEBUG")?"\\":"/";
+                    $divider = env("APP_DEBUG") ? "\\" : "/";
 
-                    $path = public_path('uploads').$divider."$imageName";
+                    $path = public_path('uploads') . $divider . "$imageName";
 
                     $photo->move(public_path('uploads'), $imageName);
 
@@ -1030,9 +1068,9 @@ class BotLogicFactory extends BaseLogicFactory
 
                 $imageName = Str::uuid() . "." . $ext;
 
-                $divider = env("APP_DEBUG")?"\\":"/";
+                $divider = env("APP_DEBUG") ? "\\" : "/";
 
-                $path = public_path('uploads').$divider."$imageName";
+                $path = public_path('uploads') . $divider . "$imageName";
 
                 $uploadedPhotos[0]->move(public_path('uploads'), $imageName);
 
@@ -1503,6 +1541,12 @@ class BotLogicFactory extends BaseLogicFactory
 
         $tmp->creator_id = !$tmp->is_template ? $this->botUser->id : null;
 
+        if (!$this->botUser->is_admin) {
+            $tmp["balance"] = env("MIN_BOT_BALANCE_ON_CREATE") ?? 10;
+            $tmp["tax_per_day"] = env("BASE_TAX_PER_DAY_ON_CREATE") ?? 10;
+            $tmp["server"] = "main";
+        }
+
         $keyboards = null;
         if (isset($data["keyboards"])) {
             $keyboards = json_decode($data["keyboards"]);
@@ -1744,6 +1788,14 @@ class BotLogicFactory extends BaseLogicFactory
         $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
         $tmp->is_template = $data["is_template"] == "true";
 
+
+        if (!$this->botUser->is_admin) {
+            unset($tmp["balance"]);
+            unset($tmp["tax_per_day"]);
+            unset($tmp["server"]);
+        }
+
+
         $tmp->social_links = json_decode($tmp->social_links ?? '[]');
 
         //  $tmp->creator_id = $tmp->is_template ? null : ($tmp->creator_id ?? null);
@@ -1792,14 +1844,14 @@ class BotLogicFactory extends BaseLogicFactory
         return new BotResource($this->bot);
     }
 
-    public function updateWebHookAndConfig(): void
+    public function updateWebHookAndConfig($server = null): void
     {
 
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
         if (env("APP_DEBUG") === false) {
-            BotManager::bot()->setWebhooks();
+            BotManager::bot()->setWebhooks($this->bot->id, $server);
 
             $this->prepareBaseBotConfig();
         }

@@ -9,24 +9,13 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
 import BotMediaList from "@/AdminPanel/Components/Constructor/BotMediaList.vue";
 import PageRules from "@/AdminPanel/Components/Constructor/Pages/PageRules.vue";
 import PagesList from "@/AdminPanel/Components/Constructor/Pages/PagesList.vue";
-import FolderList from "@/AdminPanel/Components/Constructor/Pages/FolderList.vue";
+/*import FolderList from "@/AdminPanel/Components/Constructor/Pages/FolderList.vue";*/
 import PagePreview from "@/AdminPanel/Components/Constructor/Pages/PagePreview.vue";
 import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm.vue";
-import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
+
 </script>
 <template>
 
-    <div class="row mt-2">
-        <div class="col-12">
-            <div class="alert alert-light" role="alert">
-                <strong class="fw-bold">Внимание!</strong> Вы можете создать сразу все страницы через <a
-                href="javascript:void(0)"
-                class="text-primary fw-bold"
-                @click="fastCreate"><i class="fa-solid fa-bolt"></i> быстрое создание страниц</a>, а затем наполнить их
-                контентом!
-            </div>
-        </div>
-    </div>
 
     <div class="row" v-if="pageForm.id">
         <div class="col-12">
@@ -145,6 +134,14 @@ import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
                      style="background:white;"
                      role="group" aria-label="Basic example">
 
+                    <button type="button"
+                            title="Быстрое создание страниц"
+                            @click="fastCreate"
+                            class="btn btn-outline-primary  min-menu-btn">
+                        <i class="fa-solid fa-file-circle-plus"></i>
+
+                    </button>
+
                     <button type="submit" v-if="pageForm.id||need_clean"
                             title="Сохранить страницу"
                             id="save-page-btn"
@@ -164,6 +161,8 @@ import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
                         <i class="fa-solid fa-folder"></i>
 
                     </button>-->
+
+
                     <button type="button"
                             title="Список страниц"
                             data-bs-toggle="offcanvas" data-bs-target="#offcanvas"
@@ -1407,6 +1406,7 @@ import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
             <div class="alert alert-info" role="alert">
                 <h6>Страница поддерживает комбинации клавиш:</h6>
                 <ul class="mb-0 mr-0 p-0">
+                    <li class="underline cursor-pointer" @click="fastCreate"><strong>Ctrl+M</strong> - быстрое создание страниц!</li>
                     <li><strong>Ctrl+S</strong> - открыть\закрыть окно сохранения</li>
                     <li><strong>Ctrl+D</strong> - просмотр страницы (для сохраненных страниц)</li>
                     <li><strong>Ctrl+пробел</strong> - открыть\закрыть список страниц</li>
@@ -1645,7 +1645,7 @@ import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
         </div>
     </div>
 
-    <!-- Modal -->
+<!--    &lt;!&ndash; Modal &ndash;&gt;
     <div class="modal fade" id="folder-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -1663,7 +1663,7 @@ import ChatDialog from "@/AdminPanel/Components/Chat/ChatMini.vue";
 
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas"
          data-bs-keyboard="true"
@@ -1718,7 +1718,9 @@ import {Base64} from 'js-base64';
 export default {
     data() {
         return {
+            module_configs:{
 
+            },
             need_page_create_from_keyboard: false,
 
             tab: 0,
@@ -2007,6 +2009,8 @@ export default {
             scroll: true,
         })
 
+        this.fastPageModal = new bootstrap.Modal(document.getElementById('fast-pages-create'), {})
+
         this.pagePreviewModal = new bootstrap.Offcanvas(document.getElementById('page-preview'), {
             scroll: true,
         })
@@ -2016,6 +2020,11 @@ export default {
                 e.preventDefault();
 
                 this.clearForm()
+            }
+
+            if (e.ctrlKey && e.code == 'KeyM') {
+                e.preventDefault();
+                this.fastCreate()
             }
 
             if (e.ctrlKey && e.code == 'KeyD') {
@@ -2108,7 +2117,7 @@ export default {
             this.fastPageModal.hide()
         },
         fastCreate() {
-            this.fastPageModal = new bootstrap.Modal(document.getElementById('fast-pages-create'), {})
+
             this.fastPageModal.show()
         },
         chainCollapseTest(item) {

@@ -204,6 +204,7 @@ class ProductController extends Controller
             ->first())["value"] ?? 100;
 
 
+
         $geo = BusinessLogic::geo()
             ->setBot($request->bot ?? null)
             ->setSlug($request->slug ?? null)

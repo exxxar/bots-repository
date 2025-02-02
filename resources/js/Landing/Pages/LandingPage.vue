@@ -30,7 +30,7 @@ import 'vue3-audio-player/dist/style.css'
                                 через популярный мессенджер Telegram</p>
                             <div class="headerBlock__btn-wrap">
 
-                                <a class="headerBlock__btn btn btn-primary" href="#">Начать
+                                <a class="headerBlock__btn btn btn-primary" href="/dev">Начать
                                     использовать</a>
 
                                 <a class="headerBlock__btn btn btn-outline-secondary" target="_blank"

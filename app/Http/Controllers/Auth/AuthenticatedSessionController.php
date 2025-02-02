@@ -63,7 +63,7 @@ class AuthenticatedSessionController extends Controller
         }
 
 
-        if (!$botUser->is_admin&&!$botUser->is_manager) {
+        if (!$botUser->is_admin && !$botUser->is_manager) {
 
             BotMethods::bot()
                 ->whereBot($bot)
@@ -71,8 +71,8 @@ class AuthenticatedSessionController extends Controller
                     $tgId,
                     "Вы стали менеджером! Работаем дальше:)");
 
-           $botUser->is_manager = true;
-           $botUser->save();
+            $botUser->is_manager = true;
+            $botUser->save();
         }
 
         $user = $botUser->user;
@@ -83,7 +83,7 @@ class AuthenticatedSessionController extends Controller
         Auth::login($user);
 
         Session::put("bot_user", $botUser);
-              Session::put("bot", (new BotSecurityResource($bot))->toJson());
+        Session::put("bot", (new BotSecurityResource($bot))->toJson());
 
         $request->session()->regenerate();
 
@@ -98,11 +98,12 @@ class AuthenticatedSessionController extends Controller
 
     }
 
-    public function telegramLinkAuth(Request $request){
+    public function telegramLinkAuth(Request $request)
+    {
         $request->validate([
-           "id"=>"required",
-           "hash"=>"required",
-           "auth_date"=>"required",
+            "id" => "required",
+            "hash" => "required",
+            "auth_date" => "required",
         ]);
 
         Auth::logout();
@@ -148,7 +149,7 @@ class AuthenticatedSessionController extends Controller
         }
 
 
-        if (!$botUser->is_admin&&!$botUser->is_manager) {
+        if (!$botUser->is_admin && !$botUser->is_manager) {
             BotMethods::bot()
                 ->whereBot($bot)
                 ->sendMessage(
@@ -157,7 +158,7 @@ class AuthenticatedSessionController extends Controller
 
             $botUser->is_manager = true;
             $botUser->save();
-           // return response()->redirectToRoute("login");
+            // return response()->redirectToRoute("login");
         }
 
 
@@ -181,34 +182,63 @@ class AuthenticatedSessionController extends Controller
 
     }
 
+    public function magicLogin(Request $request)
+    {
+        // Проверяем, что ссылка подписана верно
+        if (!$request->hasValidSignature() || now()->timestamp > $request->expires) {
+            abort(403, 'Ссылка недействительна или истекла');
+        }
+
+        // Авторизуем пользователя
+        $user = User::findOrFail($request->user);
+        Auth::login($user);
+
+        $authBotDomain = $domain ?? env("AUTH_BOT_DOMAIN");
+
+        $bot = Bot::query()
+            ->where("bot_domain", $authBotDomain)
+            ->first();
+
+        $botUser = BotUser::query()
+            ->where("user_id", Auth::user()->id)
+            ->first();
+
+        if (is_null($botUser)) {
+            Auth::guard('web')->logout();
+
+            Session::remove("bot_user");
+            Session::remove("bot");
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route("login");
+        }
+
+        $request->session()->regenerate();
+
+
+        $request->session()->put("bot_user", $botUser);
+        $request->session()->put("bot", (new BotSecurityResource($bot))->toJson());
+
+        return redirect('/dev')
+            ->with([
+                "bot_user", $botUser,
+                "bot", $bot
+            ]);
+    }
+
+
     /**
      * Display the login view.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $debug = env("APP_DEBUG");
-        if ($debug) {
+        return Inertia::render('Auth/Login', [
+            'canResetPassword' => Route::has('password.request'),
+            'status' => session('status'),
+        ]);
 
-            $botUser = BotUser::query()
-                ->where("is_admin", true)
-                ->first();
-
-            Session::put("bot_user", $botUser);
-
-            $authBotDomain = $domain ?? env("AUTH_BOT_DOMAIN");
-
-            $bot = Bot::query()
-                ->where("bot_domain", $authBotDomain)
-                ->first();
-
-                  Session::put("bot", (new BotSecurityResource($bot))->toJson());
-
-            return Inertia::render('Auth/Login', [
-                'canResetPassword' => Route::has('password.request'),
-                'status' => session('status'),
-            ]);
-        } else
-            return view("admin.login");
     }
 
     /**
@@ -216,15 +246,34 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+        ]);
 
-        $request->authenticate();
 
-        if (env("app_debug")) {
-            $botUser = BotUser::query()
+        if (!Auth::attempt($credentials)) {
+            return back()->withErrors(['email' => 'Неверный email или пароль'])->withInput();
+        }
+
+
+        $authBotDomain = $domain ?? env("AUTH_BOT_DOMAIN");
+
+        $bot = Bot::query()
+            ->where("bot_domain", $authBotDomain)
+            ->first();
+
+        $botUser = BotUser::query()
+            ->where("user_id", Auth::user()->id)
+            ->first();
+
+        $debug = env("APP_DEBUG");
+        if ($debug) {
+            $botUser = $botUser ?? BotUser::query()
                 ->where("is_admin", true)
                 ->first();
 
-            Session::put("bot_user", $botUser);
+            $request->session()->regenerate();
 
             $authBotDomain = $domain ?? env("AUTH_BOT_DOMAIN");
 
@@ -232,13 +281,38 @@ class AuthenticatedSessionController extends Controller
                 ->where("bot_domain", $authBotDomain)
                 ->first();
 
-                  Session::put("bot", (new BotSecurityResource($bot))->toJson());
+            $request->session()->put("bot_user", $botUser);
+            $request->session()->put("bot", (new BotSecurityResource($bot))->toJson());
 
+            return redirect('/dev');
+        }
+
+        if (is_null($botUser)) {
+            Auth::guard('web')->logout();
+
+            Session::remove("bot_user");
+            Session::remove("bot");
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->back()
+                ->withErrors(['system' => 'Авторизация отклонена']) // Ошибка для конкретного поля
+                ->withInput(); // Возвращает введенные данные (кроме пароля)
         }
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $request->session()->put("bot_user", $botUser);
+        $request->session()->put("bot", (new BotSecurityResource($bot))->toJson());
+
+        return redirect()->intended(RouteServiceProvider::HOME)
+            ->with([
+                "bot_user", $botUser,
+                "bot", $bot
+            ]);
+
+
     }
 
     /**

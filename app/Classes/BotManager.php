@@ -232,7 +232,7 @@ class BotManager extends BotCore
         return $currentServer->url ?? null;
     }
 
-    public function setWebhooks($botId = null)
+    public function setWebhooks($botId = null, $server = null)
     {
         $bots = Bot::query()
             ->withTrashed();
@@ -246,7 +246,7 @@ class BotManager extends BotCore
         $result = [];
         foreach ($bots as $bot) {
 
-            $serverUrl = $this->prepareServerURL($bot->server ?? null);
+            $serverUrl = $this->prepareServerURL($server ?? $bot->server ?? null);
 
             $botUrl = ($serverUrl ?? env("APP_URL")) . "/bot/" . $bot->bot_domain;
 
@@ -727,7 +727,7 @@ class BotManager extends BotCore
 
         $content = str_replace(["{{referralQr}}"], $qr, $content);
 
-        if ($botUser->is_admin){
+        if ($botUser->is_admin) {
             $link = "https://t.me/$bot->bot_domain?start=" .
                 base64_encode("000PAGE" . $page->id);
             $content = "\n<a href='$link/'>🖊️Редактировать страницу</a>";

@@ -50,7 +50,7 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
         <template v-if="tab===3">
             <ScreenPaymentForm
                 v-if="loaded_settings"
-                v-on:submit="startCheckout"
+                v-on:start-checkout="startCheckout"
                 v-model="deliveryForm"
                 :settings="settings"></ScreenPaymentForm>
             <PreloaderV1 v-else/>

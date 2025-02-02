@@ -87,7 +87,8 @@ const actions = {
         let _axios = util.makeAxiosFactory(link, method, payload.deliveryForm)
 
         return _axios.then((response) => {
-            context.commit("setCartItems", [])
+            context.commit("setBasket", [])
+            context.commit('setBasketPaginateObject', null)
         }).catch(err => {
             context.commit("setErrors", err.response?.data?.errors || [])
             return Promise.reject(err);
@@ -254,13 +255,12 @@ const actions = {
     clearCart(context) {
         let link = `${BASE_BASKET_LINK}/clear`
 
+        context.commit("setBasket", [])
+        context.commit('setBasketPaginateObject', null)
+
         let _axios = util.makeAxiosFactory(link, "DELETE")
 
         return _axios.then((response) => {
-            let dataObject = response.data
-            context.commit("setBasket", dataObject.data)
-            delete dataObject.data
-            context.commit('setBasketPaginateObject', dataObject)
             return Promise.resolve();
         }).catch(err => {
             context.commit("setErrors", err.response?.data?.errors || [])

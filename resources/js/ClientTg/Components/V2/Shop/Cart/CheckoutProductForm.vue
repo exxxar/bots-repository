@@ -345,51 +345,56 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             v-on:person-inc="incPersons"
             v-on:person-dec="decPersons"
             v-on:discount="activatePromo"
+            v-on:calc-delivery-price="requestDeliveryPrice"
             :data="modelValue"
             :settings="settings">
         </Summary>
 
         <template v-if="spent_time_counter<=0">
             <template v-if="settings.need_automatic_delivery_request">
-
+<!-- v-if="cartTotalPrice <= settings.free_shipping_starts_from"-->
                 <button
-                    v-if="cartTotalPrice <= settings.free_shipping_starts_from"
+                    v-if="delivery_price_request_step===0"
                     @click="requestDeliveryPrice"
-                    class="btn btn-outline-light text-primary p-3 w-100 mb-2"
+                    class="btn btn-primary text-white p-3 w-100 mb-2"
                     :disabled="!canRequestDeliverPrice">
                     <i class="fa-solid fa-map-location-dot mr-2"></i> Узнать цену доставки
                 </button>
 
                 <p
-                    class="alert alert-warning mb-2"
+                    class="alert alert-danger fw-bold mb-2"
                     v-if="error_delivery_price_message">{{ error_delivery_price_message }}</p>
             </template>
 
 
-            <button
-                v-if="settings.need_pay_after_call || modelValue.payment_type === 3"
-                :disabled="!canSubmitForm"
-                class="btn btn-primary p-3 w-100 mb-2">
-                <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
-                <i v-else class="fa-solid fa-hourglass  mr-2"></i>
-                Оформить
-            </button>
+            <template v-if="delivery_price_request_step===1">
 
-            <button
-                v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
-                :disabled="!canSubmitForm"
-                class="btn btn-primary p-3 w-100">
-                <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
-            </button>
+                <button
+                    v-if="settings.need_pay_after_call || modelValue.payment_type === 3"
+                    :disabled="!canSubmitForm"
+                    class="btn btn-primary p-3 w-100 mb-2">
+                    <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
+                    <i v-else class="fa-solid fa-hourglass  mr-2"></i>
+                    Оформить
+                </button>
 
-            <button
-                v-if="modelValue.payment_type===2&&!settings.need_pay_after_call"
-                type="button"
-                @click="nextStep"
-                :disabled="!canSubmitForm"
-                class="btn btn-primary p-3 w-100">
-                <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
-            </button>
+                <button
+                    v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
+                    :disabled="!canSubmitForm"
+                    class="btn btn-primary p-3 w-100">
+                    <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
+                </button>
+
+                <button
+                    v-if="modelValue.payment_type===2&&!settings.need_pay_after_call"
+                    type="button"
+                    @click="nextStep"
+                    :disabled="!canSubmitForm"
+                    class="btn btn-primary p-3 w-100">
+                    <i class="fa-solid fa-receipt mr-2"></i> Оплатить переводом
+                </button>
+            </template>
+
         </template>
         <template v-else>
             <button type="button"
@@ -407,6 +412,7 @@ export default {
     props: ["settings", "modelValue"],
     data() {
         return {
+            delivery_price_request_step:0,
             spent_time_counter: 0,
             need_select_table_by_number: false,
             need_request_delivery_price: true,
@@ -429,6 +435,7 @@ export default {
             handler: function (newValue) {
                 if (this.settings.free_shipping_starts_from <= this.cartTotalPrice) {
                     this.modelValue.delivery_price = 0
+                    this.delivery_price_request_step = 1
                 }
             },
             deep: true
@@ -448,18 +455,11 @@ export default {
         },
 
         canSubmitForm() {
-            if (this.settings.need_pay_after_call || this.modelValue.payment_type === 3)
-                return this.spent_time_counter > 0 ||
-                    (!this.modelValue.use_cashback ?
-                            this.settings.min_price > this.cartTotalPrice :
-                            this.settings.min_price > this.cartTotalPrice - this.cashbackLimit
-                    )
+            let sumIsValid = !this.modelValue.use_cashback ?
+                this.cartTotalPrice >= this.settings.min_price :
+                this.cartTotalPrice - this.cashbackLimit > this.settings.min_price
 
-            return (this.spent_time_counter || 0) === 0
-                && (!this.modelValue.use_cashback ?
-                    this.cartTotalPrice >= this.settings.min_price :
-                    this.cartTotalPrice - this.cashbackLimit > this.settings.min_price)
-
+            return sumIsValid  && (this.spent_time_counter || 0) === 0
         },
 
         cashbackLimit() {
@@ -554,7 +554,7 @@ export default {
                 this.modelValue.distance = resp.distance || 0
 
                 this.need_request_delivery_price = true
-
+                this.delivery_price_request_step = 1
                 this.$notify({
                     title: "Корзина",
                     text: "Цена доставки успешно просчитана",
@@ -564,8 +564,8 @@ export default {
                 this.modelValue.delivery_price = 0
                 this.modelValue.distance = 0
                 this.need_request_delivery_price = true
-
-                this.error_delivery_price_message = "Упс! Ошибка расчета! Цена будет рассчитана курьером в момент доставки!"
+                this.delivery_price_request_step = 1
+                this.error_delivery_price_message = "Цена будет рассчитана курьером в момент доставки!"
                 this.$notify({
                     title: "Корзина",
                     text: "Ошибка расчёта цены доставки",

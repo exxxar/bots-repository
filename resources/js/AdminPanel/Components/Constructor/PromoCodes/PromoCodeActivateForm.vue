@@ -39,7 +39,6 @@ export default {
             load: false,
             slots: 0,
             promoCodeForm: {
-
                 code: null,
             }
         }
@@ -66,7 +65,7 @@ export default {
                         data.append(key, item)
                 });
 
-            data.append('bot_id', this.bot.id);
+            //data.append('bot_id', this.bot.id);
 
             this.$store.dispatch("promoCodeActivate",
                 {

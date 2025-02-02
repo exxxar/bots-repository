@@ -131,6 +131,9 @@ export default {
             })
         },
         loadClientNotUsedPrizes() {
+            if (!this.settings.selected_script_id)
+                return
+
             this.$store.dispatch("getClientNotUsedPrizesFromWheelOfFortune", {
                 slug_id: this.settings.selected_script_id
             }).then((resp) => {

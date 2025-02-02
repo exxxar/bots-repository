@@ -44,23 +44,29 @@ class PromoCodeController extends Controller
     public function activate(Request $request): object
     {
         $request->validate([
-           // "bot_id" => "required",
+            // "bot_id" => "required",
             "code" => "required",
         ]);
 
-        $botUser =  Session::get("bot_user");
+        $botUser = Session::get("bot_user");
 
         $bot = Bot::query()
             ->where("id", $botUser->bot_id)
             ->first();
 
+        if (is_null($bot))
+            $bot = Bot::query()
+                ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
+                ->first();
+
         return BusinessLogic::promoCodes()
             ->setBot($bot ?? null)
             ->setBotUser($botUser ?? $request->botUser ?? null)
             ->activatePromoCode(
-               $request->all()
+                $request->all()
             );
     }
+
     /**
      * @throws ValidationException
      */

@@ -257,12 +257,8 @@ class CashBackListener
                     "Вам начислили <b>$tmpAmount руб.</b> CashBack $levelIndex уровня",
                 )
                 ->sendMessage(
-                    $adminBotUser->telegram_chat_id,
-                    "Вы начислили <b>$tmpAmount руб.</b> CashBack пользователю $name $levelIndex уровня",
-                )
-                ->sendMessage(
                     $channel,
-                    "Администратор $tmpAdmin успешно начислил <b>  $tmpAmount руб.</b> CashBaсk пользователю $name", $thread
+                    "Администратор $tmpAdmin успешно начислил <b>  $tmpAmount руб.</b> ($levelIndex уровня) CashBaсk пользователю $name", $thread
                 );
 
     }

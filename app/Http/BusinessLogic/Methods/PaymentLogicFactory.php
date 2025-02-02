@@ -9,9 +9,13 @@ use App\Facades\BotMethods;
 use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
 use App\Http\Resources\AmoCrmResource;
 use App\Models\AmoCrm;
+use App\Models\Basket;
 use App\Models\Bot;
+use App\Models\BotMenuSlug;
+use App\Models\BotUser;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Table;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -24,6 +28,56 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class PaymentLogicFactory extends BaseLogicFactory
 {
 
+
+    public function sbpNotificationProductsPayment($data)
+    {
+        if (is_null($this->bot))
+            throw new HttpException(404, "Бот не найден!");
+
+
+        if (!isset($data['Success']) || !isset($data['Status']) || $data['Status'] != 'CONFIRMED') {
+            throw new HttpException(400, "Ошибка обработки данных!");
+        }
+
+        $orderId = $data['OrderId'];  // ID заказа в вашей системе
+        $amount = $data['Amount'] / 100;  // Конвертируем сумму из копеек в рубли
+        $customerKey = $data['CustomerKey'] ?? null;  // Ключ клиента, если передавался
+
+
+        $order = Order::query()
+            ->where("id", $orderId)
+            ->whereNotNull("payed_at")
+            ->first();
+
+        $order->payed_at = Carbon::now();
+        $order->status = OrderStatusEnum::Completed->value;
+        $order->save();
+
+        $callbackChannel = $this->bot->order_channel ?? $this->bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
+
+        $thread = $this->bot->topics["orders"] ?? null;
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $callbackChannel,
+                "Оплата клиента по заказу #$order->id в размере  $amount (в заказе $order->summary_price) руб. прошла успешно!",
+                $thread
+            );
+
+        $clientBotUser = BotUser::query()
+            ->where("id", $customerKey)
+            ->first();
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $clientBotUser->telegram_chat_id,
+                "Ваша оплата в размере $amount руб. прошла успешно!"
+            );
+
+
+    }
 
     /**
      * @throws ValidationException
@@ -274,6 +328,50 @@ class PaymentLogicFactory extends BaseLogicFactory
 
     }
 
+    public function invoiceServiceLink(array $data): object
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(404, "Бот не найден!");
+
+        $terminalKey = env("TINKOFF_TERMINAL_KEY");
+        $terminalPassword = env("TINKOFF_TERMINAL_PASSWORD");
+        $tax = env("TINKOFF_PAYMENT_TAX");
+        $vat = env("TINKOFF_PAYMENT_VAT");
+
+        $items[] = [
+            'Name' => "Оплата услуг сервиса",
+            'Quantity' => 1,
+            'Price' => $data["amount"],    //цена товара в рублях
+            'NDS' => $vat ?? 'vat20',  //НДС //tax
+        ];
+
+        $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
+
+        $payment = [
+            'OrderId' => $data["order_id"] ?? Str::uuid(),        //Ваш идентификатор платежа
+            'Amount' => $data["amount"],           //сумма всего платежа в рублях
+            'Language' => 'ru',            //язык - используется для локализации страницы оплаты
+            'Description' => "Оплата услуг сервиса",   //описание платежа
+            'Email' => $this->botUser->email ?? env("TINKOFF_INVOICE_ERROR_EMAIL") ?? '',//email покупателя
+            'Phone' => $this->botUser->phone ?? env("TINKOFF_INVOICE_ERROR_PHONE") ?? '',   //телефон покупателя
+            'Name' => $this->botUser->fio_from_telegram ?? $this->botUser->username ?? '', //Имя покупателя
+            'Taxation' => $tax,     //Налогооблажение
+            'CustomerKey' => $this->botUser->id
+        ];
+
+
+//Получение url для оплаты
+        $paymentURL = $tinkoff->paymentURL($payment, $items);
+
+        if (!$paymentURL)
+            throw new HttpException(400, "Ошибка формирования платежной ссылки!");
+
+        return (object)[
+            "url" => $paymentURL
+        ];
+
+    }
+
     public function invoiceLink(array $data, $needKeyboard = false)
     {
         if (is_null($this->bot) || is_null($this->botUser) || is_null($this->slug))
@@ -312,7 +410,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             'Amount' => $data["amount"],           //сумма всего платежа в рублях
             'Language' => 'ru',            //язык - используется для локализации страницы оплаты
             'Description' => $data["description"],   //описание платежа
-            'Email' =>$data["email"] ?? '',//email покупателя
+            'Email' => $data["email"] ?? '',//email покупателя
             'Phone' => $data["phone"] ?? '',   //телефон покупателя
             'Name' => $data["name"] ?? '', //Имя покупателя
             'Taxation' => $tax     //Налогооблажение
@@ -337,7 +435,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
                 $botUser->telegram_chat_id,
-                "<code>$paymentURL</code> - нажмите чтобы скопировать\n\nВам необходимо подтвердить факт платежа клиента <code>".($data["phone"]??'')."</code>. Сумма платежа " . $data["amount"] . " руб.",
+                "<code>$paymentURL</code> - нажмите чтобы скопировать\n\nВам необходимо подтвердить факт платежа клиента <code>" . ($data["phone"] ?? '') . "</code>. Сумма платежа " . $data["amount"] . " руб.",
                 $keyboard
             );
     }
@@ -369,7 +467,6 @@ class PaymentLogicFactory extends BaseLogicFactory
         $tax = $sbp["tinkoff"]["tax"] ?? "osn";
         $vat = $sbp["tinkoff"]["vat"] ?? "vat20";
 
-
         $items[] = [
             'Name' => "Товар магазина",
             'Quantity' => 1,
@@ -377,18 +474,34 @@ class PaymentLogicFactory extends BaseLogicFactory
             'NDS' => $vat ?? 'vat20',  //НДС //tax
         ];
 
+        $deliveryPrice = $order->delivery_price ?? 0;
+
+        if ($deliveryPrice > 0) {
+            $items[] = [
+                'Name' => "Доставка",
+                'Quantity' => 1,
+                'Price' => $order->delivery_price,    //цена товара в рублях
+                'NDS' => $vat ?? 'vat20',  //НДС //tax
+            ];
+
+            $message .= "\nЦена доставки: <b>$deliveryPrice</b> руб.";
+            $message .= "\nИтого с доставкой: <b>" . ($order->summary_price + $deliveryPrice) . "</b> руб.";
+
+        }
+
         $tinkoff = new Tinkoff(config('sbp.payments.tinkoff.url'), $terminalKey, $terminalPassword);
 
 
         $payment = [
             'OrderId' => $order->id,        //Ваш идентификатор платежа
-            'Amount' => $order->summary_price,           //сумма всего платежа в рублях
+            'Amount' => $order->summary_price + $deliveryPrice,           //сумма всего платежа в рублях
             'Language' => 'ru',            //язык - используется для локализации страницы оплаты
-            'Description' => "Оплата заказа",   //описание платежа
+            'Description' => "Оплата заказа " . ($deliveryPrice > 0 ? "и доставки" : ""),   //описание платежа
             'Email' => $this->botUser->email ?? '',//email покупателя
             'Phone' => $order->receiver_phone,   //телефон покупателя
             'Name' => $order->receiver_name, //Имя покупателя
-            'Taxation' => $tax     //Налогооблажение
+            'Taxation' => $tax,    //Налогооблажение
+            'CustomerKey' => $botUser->id,    //покупатель
         ];
 
 
@@ -447,7 +560,7 @@ class PaymentLogicFactory extends BaseLogicFactory
                 ["text" => "Автоматическая проверка СБП", "callback_data" => "/test_foods_sbp_tinkoff_automatic $payment_id $order->id"]
             ],
             [
-                ["text" => "Клиент оплатил", "callback_data" => "/test_foods_manual_payment $botUser->id $order->id"]
+                ["text" => "Клиент оплатил (прислали скриншот)", "callback_data" => "/test_foods_manual_payment $botUser->id $order->id"]
             ]
         ];
 
@@ -456,7 +569,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             ->whereBot($this->bot)
             ->sendInlineKeyboard(
                 $bot->order_channel,
-                "Вам необходимо подтвердить факт платежа клиента. Сумма платежа $order->summary_price руб. Это можно сделать несколькими способами:",
+                "<b>Внимание! № заказа: $order->id\nЕсли информация по оплате не поступит в ближашие 5 минут, то...</b>\nВам необходимо подтвердить факт платежа клиента. Сумма платежа <b>" . ($order->summary_price + $deliveryPrice) . " руб. ($order->summary_price руб - цена заказа и $deliveryPrice руб - цена доставки)</b>. Это можно сделать несколькими способами:",
                 $keyboard
             );
     }

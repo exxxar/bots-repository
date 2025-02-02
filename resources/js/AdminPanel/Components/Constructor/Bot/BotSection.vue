@@ -24,84 +24,19 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
 </script>
 <template>
 
-    <div class="d-flex custom-dropdown justify-content-between align-items-center">
-        <div class="btn-group">
-            <button type="button" class="btn btn-primary text-primary"
-                    v-bind:class="{'bg-primary text-white':step===0}"
-                    @click="setStep(0)"><i class="fa-solid fa-info mr-2"></i>Информация о боте
-            </button>
-            <button type="button" class="btn btn-primary text-primary"
-                    v-bind:class="{'bg-primary text-white':step===4}"
-                    @click="setStep(4)"><i class="fa-solid fa-file mr-2"></i>Страницы (кнопки бота)
-            </button>
-            <button type="button" class="btn btn-primary text-primary"
-                    v-bind:class="{'bg-primary text-white':step===18}"
-                    @click="setStep(18)"><i class="fa-solid fa-chart-column mr-2"></i>Статистика
-            </button>
-        </div>
+<!--    <div class="d-flex justify-content-center">
 
-        <button class="btn btn-primary"
+
+        <button
+            class="centered-top-menu btn btn-link"
                 v-if="hasRole('admin')"
                 type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#bot-section-menu" aria-controls="staticBackdrop">
-            <i class="fa-solid fa-screwdriver-wrench p-2 text-primary"></i>
+            Управление ботом <i class="fa-solid fa-screwdriver-wrench p-2 text-primary"></i>
         </button>
 
 
-<!--        <div class="dropdown" v-if="hasRole('admin')">
-            <button
-                type="button"
-                class="btn btn-primary dropdown-toggle text-primary p-2" href="#" role="button"
-                id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa-solid fa-screwdriver-wrench mr-2"></i>
-            </button>
-
-
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-
-                &lt;!&ndash;                <li><a class="list-group-item list-group-item-action" href="#bot-info" @click="setStep(0)">
-                                    <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
-
-                                <li><a class="list-group-item list-group-item-action" href="#bot-pages" @click="setStep(4)">
-                                    <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>&ndash;&gt;
-                <li><a class="list-group-item list-group-item-action" href="#bot-news" @click="setStep(9)"><i
-                    class="fa-regular fa-newspaper mr-2"></i> Рассылки</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-appointments" @click="setStep(13)">
-                    <i class="fa-regular fa-calendar-days  mr-2"></i>Запись на событие (прием)</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-quizzes" @click="setStep(14)">
-                    <i class="fa-solid fa-q mr-2"></i>Квизы</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-promo-codes" @click="setStep(16)">
-                    <i class="fa-solid fa-q mr-2"></i>Промокоды</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-inline-queries" @click="setStep(15)">
-                    <i class="fa-solid fa-clipboard-list mr-2"></i>Встраиваемые запросы</a></li>
-
-                <li><a class="list-group-item list-group-item-action" href="#bot-custom-fields" @click="setStep(10)">
-                    <i class="fa-solid fa-code mr-2"></i>Настраиваемые поля</a></li>
-
-                <li><a class="list-group-item list-group-item-action" href="#bot-menu-template" @click="setStep(1)"><i
-                    class="fa-solid fa-keyboard mr-2"></i>Все клавиатуры в боте</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-slugs" @click="setStep(2)"><i
-                    class="fa-solid fa-scroll mr-2"></i>Все скрипты в боте</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-dialogs" @click="setStep(6)"><i
-                    class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-users" @click="setStep(3)"><i
-                    class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
-
-                <li><a class="list-group-item list-group-item-action" href="#bot-amo" @click="setStep(7)"><i
-                    class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-front-pad" @click="setStep(17)"><i
-                    class="fa-solid fa-list-check mr-2"></i> FrontPad</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-y-clients" @click="setStep(12)"><i
-                    class="fa-solid fa-list-check mr-2"></i> YClients</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-shop" @click="setStep(8)"><i
-                    class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-media" @click="setStep(11)"><i
-                    class="fa-brands fa-shopify mr-2"></i> Медиа файлы бота</a></li>
-            </ul>
-        </div>-->
-
-
-    </div>
+    </div>-->
 
     <div v-if="step===19" class="pb-5 mb-5">
         <CdekForm
@@ -111,7 +46,7 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
     </div>
     <div v-if="step===18" class="pb-5 mb-5">
         <Statistic :bot="bot"
-                    v-if="!load">
+                   v-if="!load">
         </Statistic>
     </div>
 
@@ -159,7 +94,7 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
     </div>
 
     <div v-if="step===17" class="pb-5 mb-5">
-       <FrontPadForm
+        <FrontPadForm
             :data="bot.frontPad"
             v-if="!load"
         />
@@ -231,7 +166,6 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
     </div>
 
 
-
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false"
          tabindex="-1" id="bot-section-menu" aria-labelledby="staticBackdropLabel">
         <div class="offcanvas-header">
@@ -239,48 +173,89 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <ul class="list-group list-group-flush bot-section-menu-group" >
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a
+                        v-bind:class="{'active':tab===0}"
+                        @click="tab=0"
+                        class="nav-link" aria-current="page" href="javascript:void(0)">Информация о боте</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       v-bind:class="{'active':tab===1}"
+                       @click="tab=1"
+                       href="javascript:void(0)">Управление ботом</a>
+                </li>
 
-                <!--                <li><a class="list-group-item list-group-item-action" href="#bot-info" @click="setStep(0)">
-                                    <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
+            </ul>
+            <ul class="list-group list-group-flush" v-if="tab===0">
+                <li class="list-group-item"><strong>ID:</strong> {{bot.id}}</li>
+                <li class="list-group-item"><strong>Краткое описание:</strong> {{bot.short_description}}</li>
+                <li class="list-group-item"><strong>Описание:</strong> {{bot.description}}</li>
+                <li class="list-group-item"><strong>Домен бота:</strong> {{bot.bot_domain}}</li>
+                <li class="list-group-item"><strong>Приветственное сообщение:</strong> {{bot.welcome_message}}</li>
+                <li class="list-group-item"><strong>Основной канал:</strong> {{bot.main_channel}}</li>
+                <li class="list-group-item"><strong>Канал заказов:</strong> {{bot.order_channel}}</li>
+                <li class="list-group-item"><strong>Тип бота:</strong> {{bot.bot_type_id}}</li>
+                <li class="list-group-item"><strong>Уровень 1:</strong> {{bot.level_1}}</li>
+                <li class="list-group-item"><strong>Уровень 2:</strong> {{bot.level_2}}</li>
+                <li class="list-group-item"><strong>Уровень 3:</strong> {{bot.level_3}}</li>
+                <li class="list-group-item"><strong>Автокешбэк:</strong> {{bot.auto_cashback_on_payments ? 'Да' : 'Нет'}}</li>
+                <li class="list-group-item"><strong>Компания:</strong> {{bot.company.title}}</li>
+                <li class="list-group-item"><strong>Адрес компании:</strong> {{bot.company.address}}</li>
+                <li class="list-group-item"><strong>Телефоны компании:</strong> {{(bot.company.phones||[]).join(', ')}}</li>
+            </ul>
+            <ul class="list-group list-group-flush bot-section-menu-group py-3" v-if="tab===1">
+                <h6>Основная информация</h6>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(0)">
+                    <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(4)">
+                    <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(18)">
+                    <i class="fa-solid fa-file mr-2"></i>Статистика</a></li>
 
-                                <li><a class="list-group-item list-group-item-action" href="#bot-pages" @click="setStep(4)">
-                                    <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>-->
-                <li><a class="list-group-item list-group-item-action" href="#bot-news" @click="setStep(9)"><i
+                <h6>Рассылки и события</h6>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(9)"><i
                     class="fa-regular fa-newspaper mr-2"></i> Рассылки</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-appointments" @click="setStep(13)">
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(13)">
                     <i class="fa-regular fa-calendar-days  mr-2"></i>Запись на событие (прием)</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-quizzes" @click="setStep(14)">
-                    <i class="fa-solid fa-q mr-2"></i>Квизы</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-promo-codes" @click="setStep(16)">
-                    <i class="fa-solid fa-q mr-2"></i>Промокоды</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-inline-queries" @click="setStep(15)">
-                    <i class="fa-solid fa-clipboard-list mr-2"></i>Встраиваемые запросы</a></li>
 
-                <li><a class="list-group-item list-group-item-action" href="#bot-custom-fields" @click="setStep(10)">
+                <h6>Квизы и промокоды</h6>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(14)">
+                    <i class="fa-solid fa-q mr-2"></i>Квизы</a></li>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(16)">
+                    <i class="fa-solid fa-q mr-2"></i>Промокоды</a></li>
+
+                <h6>Настройки и запросы</h6>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(15)">
+                    <i class="fa-solid fa-clipboard-list mr-2"></i>Встраиваемые запросы</a></li>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(10)">
                     <i class="fa-solid fa-code mr-2"></i>Настраиваемые поля</a></li>
 
-                <li><a class="list-group-item list-group-item-action" href="#bot-menu-template" @click="setStep(1)"><i
+                <h6>Элементы бота</h6>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(1)"><i
                     class="fa-solid fa-keyboard mr-2"></i>Все клавиатуры в боте</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-slugs" @click="setStep(2)"><i
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(2)"><i
                     class="fa-solid fa-scroll mr-2"></i>Все скрипты в боте</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-dialogs" @click="setStep(6)"><i
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(6)"><i
                     class="fa-solid fa-comment-dots mr-2"></i>Все диалоги в боте</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-users" @click="setStep(3)"><i
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(3)"><i
                     class="fa-solid fa-users mr-2"></i>Все пользователи в боте</a></li>
 
-                <li></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-amo" @click="setStep(7)"><i
+                <h6>Интеграции</h6>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(7)"><i
                     class="fa-solid fa-list-check mr-2"></i> AMO CRM</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-cdek" @click="setStep(19)"><i
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(19)"><i
                     class="fa-solid fa-list-check mr-2"></i> CDEK</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-front-pad" @click="setStep(17)"><i
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(17)"><i
                     class="fa-solid fa-list-check mr-2"></i> FrontPad</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-y-clients" @click="setStep(12)"><i
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(12)"><i
                     class="fa-solid fa-list-check mr-2"></i> YClients</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-shop" @click="setStep(8)"><i
+
+                <h6>Магазин и медиа</h6>
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(8)"><i
                     class="fa-brands fa-shopify mr-2"></i> Магазин</a></li>
-                <li><a class="list-group-item list-group-item-action" href="#bot-media" @click="setStep(11)"><i
+                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(11)"><i
                     class="fa-brands fa-shopify mr-2"></i> Медиа файлы бота</a></li>
             </ul>
         </div>
@@ -295,7 +270,8 @@ export default {
     data() {
         return {
             page: null,
-            step: 0,
+            step: -1,
+            tab:1,
             load: false,
             loadPage: false,
         }
@@ -329,10 +305,10 @@ export default {
 
             });
         },
-        botSettingsCallback(){
+        botSettingsCallback() {
             this.step = 0
             document.documentElement.scrollTop = 200;
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 window.dispatchEvent(new CustomEvent('add-payment-system-event'));
 
             })
@@ -377,7 +353,14 @@ export default {
 
 .bot-section-menu-group {
     .list-group-item {
-        border:none;
+        border: none;
     }
+}
+
+.centered-top-menu {
+    display: inline-block;
+    position: fixed !important;
+    top:0px;
+    z-index: 1000;
 }
 </style>

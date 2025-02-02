@@ -349,6 +349,7 @@ class BotSlugLogicFactory extends BaseLogicFactory
             $tmp[$key] = $configItem;
         }
 
+
         foreach (array_keys($data) as $key) {
 
             $configItem = $config->where("key", $key)->first() ?? null;

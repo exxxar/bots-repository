@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -16,6 +17,8 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
+
+
     /**
      * Display the registration view.
      */
@@ -29,24 +32,35 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $role = Role::query()
+            ->where("slug","owner")
+            ->first();
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'role_id'=>$role->id,
             'password' => Hash::make($request->password),
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+        $botDomain = env("AUTH_BOT_DOMAIN");
+        $link = "https://t.me/$botDomain?start=" . base64_encode("777register" .$user->id);
 
-        return redirect(RouteServiceProvider::HOME);
+        return Inertia::render('Auth/RegisterStep2',[
+            "link"=>$link
+        ]);
+
     }
+
 }

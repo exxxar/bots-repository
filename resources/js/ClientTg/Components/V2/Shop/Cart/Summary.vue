@@ -45,16 +45,17 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                         <p
                             data-bs-toggle="modal" data-bs-target="#person-modal"
                             class="mb-0 d-flex justify-content-between">Число гостей <strong
-                            class="fw-bold text-primary"><i class="fa-solid fa-people-group mr-2"></i>{{ data.persons }} чел.</strong>
+                            class="fw-bold text-primary"><i class="fa-solid fa-people-group mr-2"></i>{{ data.persons }}
+                            чел.</strong>
                         </p>
                     </li>
 
                     <li class="list-group-item" v-if="!data.need_pickup">
                         <p class="mb-0 d-flex justify-content-between">Цена доставки
                             <template v-if="settings.need_automatic_delivery_request">
-                                <strong v-if="data.delivery_price>0">{{ data.delivery_price }}
-                                    <sup>.00</sup>₽</strong>
-                                <strong v-else>не рассчитана</strong>
+                                <span v-if="data.delivery_price>0">{{ data.delivery_price }}
+                                    <sup>.00</sup>₽ <span class="text-primary underline fw-bold cursor-pointer" @click="recalcDeliveryPrice">(пересчитать)</span></span>
+                                <span v-else>не рассчитана</span>
                             </template>
                             <span v-else>Рассчитывается курьером</span>
                         </p>
@@ -91,14 +92,14 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                     <li class="list-group-item">
                         <p
                             class="mb-0 d-flex justify-content-between">Тариф <strong
-                            class="fw-bold">{{ data.cdek.tariff.tariff_name}} </strong>
+                            class="fw-bold">{{ data.cdek.tariff.tariff_name }} </strong>
                         </p>
                     </li>
                     <li class="list-group-item">
                         <p
                             class="mb-0 d-flex justify-content-between">Время доставки займет от
                             <strong
-                            class="fw-bold text-primary">{{ data.cdek.tariff.calendar_min}} </strong>
+                                class="fw-bold text-primary">{{ data.cdek.tariff.calendar_min }} </strong>
                             до
                             <strong
                                 class="fw-bold text-primary">{{ data.cdek.tariff.calendar_max }} </strong>
@@ -238,17 +239,17 @@ export default {
 
         finallyPrice() {
             let isPercentDiscount = this.data.promo.discount_in_percent || false
-            let discountValue =   this.data.promo.discount || 0
+            let discountValue = this.data.promo.discount || 0
             let activationDiscountPrice = this.data.promo.activate_price || 1
 
             let price = !this.data.use_cashback ?
-                Math.max(activationDiscountPrice, this.cartTotalPrice)  :
+                Math.max(activationDiscountPrice, this.cartTotalPrice) :
                 Math.max(activationDiscountPrice, this.cartTotalPrice - this.cashbackLimit)
 
-            let computedPriceWithDiscount = isPercentDiscount ? price * ((100 - discountValue)/100) : price - discountValue;
+            let computedPriceWithDiscount = isPercentDiscount ? price * ((100 - discountValue) / 100) : price - discountValue;
 
             return (computedPriceWithDiscount >= activationDiscountPrice ?
-                computedPriceWithDiscount : price ) + (this.data.cdek.tariff?.delivery_sum || 0)
+                computedPriceWithDiscount : price) + (this.data.cdek.tariff?.delivery_sum || 0) + (this.data.delivery_price || 0)
         },
         canSubmitForm() {
             return (this.spent_time_counter || 0) === 0
@@ -277,6 +278,9 @@ export default {
     },
 
     methods: {
+        recalcDeliveryPrice(){
+            this.$emit("calc-delivery-price")
+        },
         activateDiscount(item) {
             this.$emit("discount", item)
         },

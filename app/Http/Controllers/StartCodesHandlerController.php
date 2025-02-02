@@ -5,22 +5,91 @@ namespace App\Http\Controllers;
 use App\Enums\OrderStatusEnum;
 use App\Facades\BotManager;
 use App\Facades\BotMethods;
+use App\Facades\BusinessLogic;
 use App\Models\Bot;
 use App\Models\BotPage;
 use App\Models\BotUser;
+use App\Models\ManagerProfile;
 use App\Models\Order;
 use App\Models\ReferralHistory;
 use App\Models\Table;
 use App\Models\TrafficSource;
 use App\Models\Transaction;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use PhpOffice\PhpWord\Style\Tab;
 
 class StartCodesHandlerController extends Controller
 {
+
+    public function confirmRegistrationAndLogin(...$data)
+    {
+
+        $bot = BotManager::bot()
+            ->getSelf();
+
+        $botUser = BotManager::bot()->currentBotUser();
+
+        $userId = $data[2] ?? null;
+
+        if (is_null($userId)) {
+            BotManager::bot()
+                ->reply("Упс.. сервис временно недоступен!");
+            return;
+        }
+
+        $user = User::findOrFail($userId);
+        $botUser->user_id = $user->id;
+        $botUser->is_manager = true;
+        $botUser->save();
+
+        $managerForm = [
+            'bot_user_id' => $botUser->id,
+            'info' =>null,
+            'referral' => null,
+            'strengths' => [],
+            'weaknesses' => [],
+            'educations' => [],
+            'social_links' => [],
+            'skills' => [],
+            'stable_personal_discount' => 0,
+            'permanent_personal_discount' => 0,
+            'max_company_slot_count' => 1,
+            'max_bot_slot_count' => 10,
+            'balance' => 3000,
+            'verified_at' => null
+        ];
+
+        $manager = ManagerProfile::query()->create($managerForm);
+
+
+        $url = URL::signedRoute('auth.magic', [
+            'user' => $user->id,
+            'expires' => Carbon::now()->addMinutes(30)->timestamp,
+        ]);
+
+        BotMethods::bot()
+            ->whereBot($bot)
+            ->sendInlineKeyboard(
+                $botUser->telegram_chat_id,
+                "Поздравляем! Вы зарегистрировались и теперь вам доступно создание ботов!\n".
+                "<b>Сводка</b>:\n".
+                "Стартовый баланс: $manager->balance руб. - вы можете распределить его между ботами\n".
+                "Персональная скидка: $manager->stable_personal_discount %.\n".
+                "Вы можете создать ботов: $manager->max_bot_slot_count\n"
+                ,
+                [
+                    [
+                        ["text" => "Панель управления", "url" => $url],
+                    ]
+                ]
+            );
+
+    }
 
     public function openTableMenu(...$data)
     {

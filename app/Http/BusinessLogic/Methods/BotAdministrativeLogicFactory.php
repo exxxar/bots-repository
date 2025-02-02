@@ -556,6 +556,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
 
     }
 
+
     /**
      * @throws ValidationException
      * @throws HttpException
@@ -1152,7 +1153,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             ->whereBot($this->bot)
             ->sendMessage(
                 $userBotUser->telegram_chat_id,
-                "Вам прислали сообщение:\n$info\n<em>Для ответа адиминистратору наберите текст от 10 символов и больше и отравьте.</em>"
+                "Вам прислали сообщение:\n$info\n<em>Для ответа адиминистратору наберите текст от 10 символов и больше и отправьте .</em>"
             )
             ->sendMessage(
                 $adminBotUser->telegram_chat_id,

@@ -123,7 +123,7 @@ import KeyboardList from "@/ClientTg/Components/V1/Admin/Keyboards/KeyboardList.
                 :type="'inline'"
                 v-else
                 v-on:save="saveInlineKeyboard"
-                :edited-keyboard="mailForm.inline_keyboard"/>
+                v-model="mailForm.inline_keyboard"/>
 
 
         </div>

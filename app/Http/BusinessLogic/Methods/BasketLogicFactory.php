@@ -60,7 +60,6 @@ class BasketLogicFactory extends BaseLogicFactory
         );
 
         $basket->handler();
-        dd("test");
     }
 
 

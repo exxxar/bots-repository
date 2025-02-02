@@ -13,15 +13,138 @@ use App\Http\Resources\ImageMenuResource;
 use App\Http\Resources\LocationResource;
 use App\Models\Bot;
 use App\Models\BotType;
+use App\Models\BotUser;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\File;
 
 class BotController extends Controller
 {
+
+    public function getActualTariffs(Request $request)
+    {
+        // Загружаем тарифы из JSON-файла
+        $tariffs = json_decode(File::get(base_path() . '/tariffs.json'), true)['tariffs'];
+
+        // Сортируем тарифы по возрастанию цены
+        usort($tariffs, fn($a, $b) => $a['price'] <=> $b['price']);
+
+        return \response()
+            ->json($tariffs);
+    }
+
+    public function tinkoffInvoiceProductsServiceCallback(Request $request, $domain)
+    {
+
+        $bot = Bot::query()
+            ->where("bot_domain", $domain)
+            ->first();
+
+        if (is_null($bot))
+            return response()->json(['message' => 'Error processing payment'], 400);
+
+        BusinessLogic::payment()
+            ->setBot($bot)
+            ->sbpNotificationProductsPayment($request->all());
+
+        return ['message' => 'OK'];
+    }
+
+
+    public function tinkoffInvoiceServiceCallback(Request $request)
+    {
+        // Получаем данные из запроса
+        $data = $request->all();
+
+        // Проверяем, что платеж успешно завершен
+        if (isset($data['Success']) && $data['Success'] == true && isset($data['Status']) && $data['Status'] === 'CONFIRMED') {
+            $orderId = $data['OrderId'];  // ID заказа в вашей системе
+            $paymentId = $data['PaymentId'];  // ID платежа в Тинькофф
+            $amount = $data['Amount'] / 100;  // Конвертируем сумму из копеек в рубли
+            $customerKey = $data['CustomerKey'] ?? null;  // Ключ клиента, если передавался
+
+            $bot = Bot::query()
+                ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
+                ->first();
+
+            $botUser = BotUser::query()
+                ->with(["manager"])
+                ->where("id", $customerKey)
+                ->where("bot_id", $bot->id)
+                ->first();
+
+            $manager = $botUser->manager;
+            $manager->balabce += $amount;
+
+
+            // Загружаем тарифы из JSON-файла
+            $tariffs = json_decode(File::get(base_path() . '/tariffs.json'), true)['tariffs'];
+
+            // Сортируем тарифы по возрастанию цены
+            usort($tariffs, fn($a, $b) => $a['price'] <=> $b['price']);
+
+            // Поиск тарифа
+            $selectedTariff = $tariffs[0]; // По умолчанию самый дешевый
+
+            foreach ($tariffs as $tariff) {
+                if ($amount >= $tariff['price']) {
+                    $selectedTariff = $tariff;
+                } else {
+                    break;
+                }
+            }
+
+            $manager->max_company_slot_count += $selectedTariff['slots'] ?? 0;
+            $manager->max_bot_slot_count += $selectedTariff['slots'] ?? 0;
+            $manager->permanent_personal_discount = max($selectedTariff['discount'] ?? 0, $manager->permanent_personal_discount);
+            $manager->save();
+
+            // Здесь можно обновить статус заказа в БД
+            // Например, если у вас есть модель Order:
+            // $order = Order::where('order_id', $orderId)->first();
+            // if ($order) {
+            //     $order->update(['status' => 'paid']);
+            // }
+
+            // Отвечаем Тинькофф, что callback обработан успешно
+            return response()->json(['message' => 'OK'], 200);
+        }
+
+        // Если что-то пошло не так, логируем и возвращаем ошибку
+        Log::error('Tinkoff Callback Error:', $data);
+        return response()->json(['message' => 'Error processing payment'], 400);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function sendInvoice(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            "amount" => "required|integer",
+        ]);
+
+        $bot = Bot::query()
+            ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
+            ->first();
+
+        $botUser = BotUser::query()
+            // ->where("user_id", Auth::user()->id)
+            ->where("bot_id", $bot->id)
+            ->first();
+
+        $result = BusinessLogic::payment()
+            ->setBot($bot ?? null)
+            ->setBotUser($botUser ?? null)
+            ->invoiceServiceLink($request->all());
+
+        return response()->json($result);
+    }
 
     public function trafficStatistic(Request $request)
     {
@@ -49,7 +172,7 @@ class BotController extends Controller
                 $sort['key'] ?? 'created_at');
 
         return response()->json([
-           "traffics" => $traffics
+            "traffics" => $traffics
         ]);
     }
 
@@ -99,6 +222,31 @@ class BotController extends Controller
             ->getMe($request->bot_token ?? null);
 
         return response()->json($result);
+    }
+
+
+    /**
+     * @throws ValidationException
+     */
+    public function sendFeedback(Request $request): Response
+    {
+        $request->validate([
+            "name" => "required",
+            "phone" => "required",
+            "message" => "required",
+        ]);
+
+
+        $bot = Bot::query()
+            ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
+            ->first();
+
+        BusinessLogic::bots()
+            ->setBot($bot)
+            ->sendManagerFeedback($request->all());
+
+        return response()->noContent();
+
     }
 
     /**
@@ -759,7 +907,7 @@ class BotController extends Controller
 
         BusinessLogic::bots()
             ->setBot($bot)
-            ->updateWebHookAndConfig();
+            ->updateWebHookAndConfig($request->server ?? null);
     }
 
     /**

@@ -1,5 +1,5 @@
 <script setup>
-
+import Checkbox from '@/AdminPanel/Components/Constructor/Deprecated/Start/Checkbox.vue';
 import GuestLayout from '@/AdminPanel/Layouts/GuestLayout.vue';
 import InputError from '@/AdminPanel/Components/Constructor/Deprecated/Start/InputError.vue';
 import InputLabel from '@/AdminPanel/Components/Constructor/Deprecated/Start/InputLabel.vue';
@@ -7,12 +7,22 @@ import PrimaryButton from '@/AdminPanel/Components/Constructor/Deprecated/Start/
 import TextInput from '@/AdminPanel/Components/Constructor/Deprecated/Start/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
+defineProps({
+    canResetPassword: {
+        type: Boolean,
+    },
+    status: {
+        type: String,
+    },
+});
+
 const form = useForm({
     name: '',
+    phone: '',
     email: '',
     password: '',
     password_confirmation: '',
-    terms: false,
+    remember: false,
 });
 
 const submit = () => {
@@ -24,171 +34,150 @@ const submit = () => {
 
 <template>
     <GuestLayout>
+        <section class="h-100 gradient-form" style="background-color: #eee;">
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-xl-10">
+                        <div class="card rounded-3 text-black">
+                            <div class="row g-0">
+                                <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                                    <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                                        <h4 class="mb-4">Добро пожаловать в систему управления Telegram-ботами!</h4>
+                                        <p class="small mb-0">
+                                            Здесь вы можете легко управлять своими Telegram-ботами: создавать новых, настраивать команды, анализировать статистику и многое другое. Войдите в систему, чтобы получить доступ ко всем возможностям платформы. Если у вас ещё нет аккаунта, зарегистрируйтесь — это займёт всего несколько минут.
 
-<!--        <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%); height:100vh;">
-            <div class="container">
-                <div class="row gx-lg-5 align-items-center">
-                    <div class="col-lg-6 mb-5 mb-lg-0">
-                        <h1 class="my-5 display-3 fw-bold ls-tight">
-                            The best offer <br />
-                            <span class="text-primary">for your business</span>
-                        </h1>
-                        <p style="color: hsl(217, 10%, 50.8%)">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Eveniet, itaque accusantium odio, soluta, corrupti aliquam
-                            quibusdam tempora at cupiditate quis eum maiores libero
-                            veritatis? Dicta facilis sint aliquid ipsum atque?
-                        </p>
-                    </div>
-
-                    <div class="col-lg-6 mb-5 mb-lg-0">
-                        <div class="card">
-                            <div class="card-body py-5 px-md-5">
-                                <form>
-                                    &lt;!&ndash; 2 column grid layout with text inputs for the first and last names &ndash;&gt;
-                                    <div class="row">
-                                        <div class="col-md-6 mb-4">
-                                            <div data-mdb-input-init class="form-outline">
-                                                <input type="text" id="form3Example1" class="form-control" />
-                                                <label class="form-label" for="form3Example1">First name</label>
-                                            </div>
+                                            Начните прямо сейчас и сделайте своих ботов ещё умнее и полезнее! 🚀
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="card-body p-md-5 mx-md-4">
+                                        <div class="text-center">
+                                            <div class="logo">NextIT</div>
+                                            <h4 class="mt-1 mb-5 pb-1">Современные решения для бизнеса</h4>
                                         </div>
-                                        <div class="col-md-6 mb-4">
-                                            <div data-mdb-input-init class="form-outline">
-                                                <input type="text" id="form3Example2" class="form-control" />
-                                                <label class="form-label" for="form3Example2">Last name</label>
+
+                                        <form @submit.prevent="submit">
+                                            <p>Регистрация аккаунта</p>
+
+                                            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+                                                {{ status }}
                                             </div>
-                                        </div>
+
+                                            <!-- Поле Ф.И.О. -->
+                                            <div class="form-floating mb-3">
+                                                <input
+                                                    id="name"
+                                                    name="name"
+                                                    type="text"
+                                                    v-model="form.name"
+                                                    required
+                                                    autofocus
+                                                    class="form-control"
+                                                    placeholder="Ф.И.О."
+                                                />
+                                                <label for="name">Ф.И.О.</label>
+                                            </div>
+                                            <InputError class="mt-2" :message="form.errors.full_name" />
+
+                                            <!-- Поле номера телефона -->
+                                            <div class="form-floating mb-3">
+                                                <input
+                                                    id="phone"
+                                                    name="phone"
+                                                    type="tel"
+                                                    v-mask="'+7(###) ###-##-##'"
+                                                    v-model="form.phone"
+                                                    required
+                                                    class="form-control"
+                                                    placeholder="Номер телефона"
+                                                />
+                                                <label for="phone">Номер телефона</label>
+                                            </div>
+                                            <InputError class="mt-2" :message="form.errors.phone" />
+
+                                            <!-- Поле почты -->
+                                            <div class="form-floating mb-3">
+                                                <input
+                                                    id="email"
+                                                    type="email"
+                                                    name="email"
+                                                    v-model="form.email"
+                                                    required
+                                                    class="form-control"
+                                                    placeholder="Почта"
+                                                />
+                                                <label for="email">Почта</label>
+                                            </div>
+                                            <InputError class="mt-2" :message="form.errors.email" />
+
+                                            <!-- Поле пароля -->
+                                            <div class="form-floating mb-3">
+                                                <input
+                                                    id="password"
+                                                    name="password"
+                                                    type="password"
+                                                    v-model="form.password"
+                                                    required
+                                                    class="form-control"
+                                                    placeholder="Пароль"
+                                                />
+                                                <label for="password">Пароль</label>
+                                            </div>
+                                            <InputError class="mt-2" :message="form.errors.password" />
+
+                                            <!-- Поле подтверждения пароля -->
+                                            <div class="form-floating mb-3">
+                                                <input
+                                                    id="password_confirmation"
+                                                    type="password"
+                                                    name="password_confirmation"
+                                                    v-model="form.password_confirmation"
+                                                    required
+                                                    class="form-control"
+                                                    placeholder="Подтверждение пароля"
+                                                />
+                                                <label for="password_confirmation">Подтверждение пароля</label>
+                                            </div>
+                                            <InputError class="mt-2" :message="form.errors.password_confirmation" />
+
+                                            <!-- Кнопка регистрации -->
+                                            <div class="text-center pt-1 mb-5 pb-1">
+                                                <PrimaryButton class="ml-4 gradient-custom-2" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                                    Зарегистрироваться
+                                                </PrimaryButton>
+                                            </div>
+
+                                            <!-- Ссылка на вход -->
+                                            <div class="d-flex align-items-center justify-content-center pb-4">
+                                                <p class="mb-0 me-2">Уже есть аккаунт?</p>
+                                                <Link :href="route('login')" class="btn btn-outline-danger ml-2">Войти</Link>
+                                            </div>
+                                        </form>
                                     </div>
-
-                                    &lt;!&ndash; Email input &ndash;&gt;
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="email" id="form3Example3" class="form-control" />
-                                        <label class="form-label" for="form3Example3">Email address</label>
-                                    </div>
-
-                                    &lt;!&ndash; Password input &ndash;&gt;
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="password" id="form3Example4" class="form-control" />
-                                        <label class="form-label" for="form3Example4">Password</label>
-                                    </div>
-
-                                    &lt;!&ndash; Checkbox &ndash;&gt;
-                                    <div class="form-check d-flex justify-content-center mb-4">
-                                        <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
-                                        <label class="form-check-label" for="form2Example33">
-                                            Subscribe to our newsletter
-                                        </label>
-                                    </div>
-
-                                    &lt;!&ndash; Submit button &ndash;&gt;
-                                    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
-                                        Sign up
-                                    </button>
-
-                                    &lt;!&ndash; Register buttons &ndash;&gt;
-                                    <div class="text-center">
-                                        <p>or sign up with:</p>
-                                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                            <i class="fab fa-facebook-f"></i>
-                                        </button>
-
-                                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                            <i class="fab fa-google"></i>
-                                        </button>
-
-                                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                            <i class="fab fa-twitter"></i>
-                                        </button>
-
-                                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                            <i class="fab fa-github"></i>
-                                        </button>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>-->
-
-        <Head title="Register" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    :href="route('login')"
-                    class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
+        </section>
     </GuestLayout>
 </template>
+
+<style>
+.gradient-custom-2 {
+    background: #fccb90;
+    background: -webkit-linear-gradient(to right, #2489ee, #364cd8, #1a97c5, #1a1c9a);
+    background: linear-gradient(to right, #2489ee, #364cd8, #021f64, #1a1c9a);
+}
+
+.logo {
+    font-size: 64px;
+    font-weight: lighter;
+    background: linear-gradient(90deg, #007BFF, #00C6FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: Arial, sans-serif;
+}
+</style>

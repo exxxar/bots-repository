@@ -32,7 +32,7 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                     id="floatingSelect" aria-label="Floating label select example">
                 <option :value="0">Продовольственный</option>
                 <option :value="1">Бытовые товары</option>
-                <option :value="2">Электронные товары</option>
+<!--                <option :value="2">Электронные товары</option>-->
             </select>
             <label for="floatingSelect">Тип магазина</label>
         </div>
@@ -129,18 +129,15 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
                     вашего заведения из
                     <a class="text-primary fw-bold" href="https://yandex.ru/maps/" target="_blank">Яндекс.Карты</a> -
                     скопируйте и вставьте <span class="fw-bold text-primary">00.000000</span>, <span
-                        class="fw-bold text-primary">00.000000</span> координаты в это поле. Для работы
-                    <a class="text-primary fw-bold" href="https://yandex.ru/maps-api/products/geocoder-api" target="_blank">Яндекс.Геокодер</a>
-                    необходимо настроить ключ.
+                        class="fw-bold text-primary">00.000000</span> координаты в это поле.
                 </p>
-
-                <div class="form-floating mb-2">
+<!--                <div class="form-floating mb-2">
                     <input type="text"
                            v-model="form.yandex_geocoder"
                            required
                            class="form-control" id="floatingInput" placeholder="name@example.com">
                     <label for="floatingInput">Токен от Яндекс.Геокодер</label>
-                </div>
+                </div>-->
 
                 <div class="form-floating mb-2">
                     <input type="text"

@@ -22,6 +22,7 @@ class GeoLogicFactory extends BaseLogicFactory
 
     /**
      * @throws ValidationException
+     * @throws HttpException
      */
     public function getCoords(array $data): object
     {
@@ -38,52 +39,33 @@ class GeoLogicFactory extends BaseLogicFactory
 
         $address = $data["address"] ?? '';
 
-        $yandex_geocoder = (Collection::make($this->slug->config)
-            ->where("key", "yandex_geocoder")
-            ->first())["value"] ?? null;
+        $url = "https://nominatim.openstreetmap.org/search";
+        $params = [
+            'q' => $address,
+            'format' => 'json',
+            'limit' => 1
+        ];
+        $options = [
+            'http' => [
+                'header' => "User-Agent: CashMan/1.0\r\n"
+            ]
+        ];
+        $context = stream_context_create($options);
+        $response = file_get_contents($url . '?' . http_build_query($params), false, $context);
+        $data = json_decode($response, true);
 
-        if (is_null($yandex_geocoder))
-            throw new HttpException(403, "Не установлен токен гео-кодера");
-
-        $api = new \Yandex\Geo\Api();
-
-        $api->setToken(trim($yandex_geocoder));
-        $api->setQuery(trim($address));
-
-        try {
-            $api
-                ->setLimit(1)
-                ->setLang(\Yandex\Geo\Api::LANG_RU)
-                ->load();
-        } catch (TypeError|ServerError|CurlError|Exception $e) {
+        if (empty($data)) {
             return (object)[
-                "lat" => 0,
-                "lon" => 0
+                'lat' => 0,
+                'lon' => 0
             ];
         }
 
-        $response = $api->getResponse();
-
-
-        //  $response->getFoundCount(); // кол-во найденных адресов
-        //  $response->getQuery(); // исходный запрос
-        // $response->getLatitude(); // широта для исходного запроса
-        //$response->getLongitude(); // долгота для исходного запроса
-        /*
-        // Список найденных точек
-                $collection = $response->getList();
-                foreach ($collection as $item) {
-                    $item->getAddress(); // вернет адрес
-                    $item->getLatitude(); // широта
-                    $item->getLongitude(); // долгота
-                    $item->getData(); // необработанные данные*/
-
-
-        $obj = $response->getList()[0]->getData();
         return (object)[
-            "lat" => $obj["Latitude"] ?? 0,
-            "lon" => $obj["Longitude"] ?? 0
+            'lat' => (float)$data[0]['lat'],
+            'lon' => (float)$data[0]['lon']
         ];
+
 
     }
 
@@ -127,8 +109,7 @@ class GeoLogicFactory extends BaseLogicFactory
 
 //
         $ad = atan2($y, $x);
-        $dist = $ad * $earth_radius;
+        return $ad * $earth_radius;
 
-        return $dist;
     }
 }

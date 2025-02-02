@@ -191,7 +191,7 @@ import BotMenuConstructor from "@/ClientTg/Components/V2/Admin/Keyboard/Keyboard
 
             <BotMenuConstructor
                 v-on:save="saveInlineKeyboard"
-                :edited-keyboard="commandForm.inline_keyboard"/>
+                v-model="commandForm.inline_keyboard"/>
 
 
         </div>
@@ -203,7 +203,7 @@ import BotMenuConstructor from "@/ClientTg/Components/V2/Admin/Keyboard/Keyboard
 
             <BotMenuConstructor
                 v-on:save="saveReplyKeyboard"
-                :edited-keyboard="commandForm.reply_keyboard"/>
+                v-model="commandForm.reply_keyboard"/>
 
 
         </div>

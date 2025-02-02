@@ -385,7 +385,6 @@
 <!--            <p class="mb-0">Колл-во слотов под клиентов: <strong class="text-primary">{{ botUser.manager.max_company_slot_count || 0 }} ед.</strong></p>-->
             <p class="mb-3">Колл-во слотов под ботов у клиента: <strong class="text-primary">{{ botUser.manager.max_bot_slot_count || 0 }} ед.</strong></p>
 
-            <a href="/manager-page" class="btn btn-outline-primary w-100 mb-3">Перейти в ваш профиль</a>
             <h6 class="text-center my-3"> Ваши возможности</h6>
             <ol class="list-group list-group-numbered">
                 <li class="list-group-item">Регистрация клиента</li>

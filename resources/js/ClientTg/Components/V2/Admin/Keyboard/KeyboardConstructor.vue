@@ -162,7 +162,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                                         title="удаление крайней левой кнопки из строки либо самой строки"
                                         class="dropdown-item"
                                         v-if="selectedRow!=null"
-                                        @click="removeColFromRow()"><i class="fa-solid fa-minus"> </i> Удалить
+                                        @click="removeColFromRow(colIndex)"><i class="fa-solid fa-minus"> </i> Удалить
                                     </a>
                                 </li>
 
@@ -171,7 +171,7 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                                         href="javascript:void(0)"
                                         class="dropdown-item"
                                         v-if="selectedRow!=null"
-                                        @click="moveCol(0)"><i class="fa-solid fa-caret-left"> </i> Переместить
+                                        @click="moveCol(rowIndex,0)"><i class="fa-solid fa-caret-left"> </i> Переместить
                                     </a>
                                 </li>
 
@@ -181,10 +181,18 @@ import InlineQueryList from "@/AdminPanel/Components/Constructor/InlineQuery/Inl
                                         href="javascript:void(0)"
                                         class="dropdown-item"
                                         v-if="selectedRow!=null"
-                                        @click="moveCol(1)"><i class="fa-solid fa-caret-right"> </i> Переместить
+                                        @click="moveCol(rowIndex,1)"><i class="fa-solid fa-caret-right"> </i> Переместить
                                     </a>
                                 </li>
 
+                                <li @click="moveColVertical(rowIndex,0)"><a class="dropdown-item"
+                                                                            href="javascript:void(0)">
+                                    <i class="fa-solid fa-caret-up mr-2 "></i> переместить вверх
+                                </a></li>
+                                <li @click="moveColVertical(rowIndex,1)"><a class="dropdown-item"
+                                                                            href="javascript:void(0)">
+                                    <i class="fa-solid fa-caret-down mr-2"></i> переместить вниз
+                                </a></li>
                             </ul>
                         </div>
 
@@ -461,7 +469,7 @@ import {Vue3JsonEditor} from 'vue3-json-editor'
 import {v4 as uuidv4} from "uuid";
 
 export default {
-    props: ["editedKeyboard", "type"],
+    props: ["modelValue", "type"],
     components: {
         Vue3JsonEditor
     },
@@ -471,9 +479,36 @@ export default {
         }
     },
     watch: {
+        settings: {
+            handler: function (newValue) {
+                this.$emit("update:modelValue", {
+                    menu: this.keyboard,
+                    settings: this.settings,
+                })
+            },
+            deep: true
+        },
+        need_login_url: {
+            handler: function (newValue) {
+                if (this.need_login_url)
+                    this.keyboard[this.select.row][this.select.col].login_url = {
+                        url: null,
+                        forward_text: null,
+                        bot_username: null,
+                        request_write_access: true,
+                    }
+                else
+                    delete this.keyboard[this.select.row][this.select.col].login_url
+            },
+            deep: true
+        },
         keyboard: {
             handler: function (newValue) {
                 this.save()
+                this.$emit("update:modelValue", {
+                    menu: this.keyboard,
+                    settings: this.settings,
+                })
             },
             deep: true
         }
@@ -511,16 +546,16 @@ export default {
         this.inlineQueryModal = new bootstrap.Modal(document.getElementById('inline-query-list-in-keyboard-' + this.uuid), {})
 
 
-        if (this.editedKeyboard) {
+        if (this.modelValue) {
             this.$nextTick(() => {
-                this.keyboard = this.editedKeyboard.menu
+                this.keyboard = this.modelValue?.menu || []
 
-                if (this.editedKeyboard.settings) {
+                if (this.modelValue?.settings) {
                     this.settings = {
-                        resize_keyboard: this.editedKeyboard.settings.resize_keyboard || true,
-                        one_time_keyboard: this.editedKeyboard.settings.one_time_keyboard || false,
-                        input_field_placeholder: this.editedKeyboard.settings.input_field_placeholder || null,
-                        is_persistent: this.editedKeyboard.settings.is_persistent || false,
+                        resize_keyboard: this.modelValue?.settings.resize_keyboard || true,
+                        one_time_keyboard: this.modelValue?.settings.one_time_keyboard || false,
+                        input_field_placeholder: this.modelValue?.settings.input_field_placeholder || null,
+                        is_persistent: this.modelValue?.settings.is_persistent || false,
                     }
 
                     if (this.settings.input_field_placeholder != null)
@@ -548,6 +583,7 @@ export default {
         openPageModal() {
             this.pageModal.show()
         },
+
         attachPage(item) {
 
             let command = (item.slug.command || 'Нет команды').replace(".*", "")
@@ -594,14 +630,42 @@ export default {
                 })
 
         },
-        moveCol(direction = 0) {
+        moveColVertical(row, direction) {
+            /*     if (row !== this.select.row) {
+                     this.select.row = row
+                     this.select.col = 0
+                     this.select.text = this.keyboard[this.select.row][this.select.col].text
+                 }
+     */
+            let maxRows = this.keyboard.length
 
-            let row = this.selectedRow
+            let index = direction === 0 ?
+                this.select.row - 1 >= 0 ? this.select.row - 1 : maxRows - 1 :
+                this.select.row < maxRows - 1 ? this.select.row + 1 : 0
 
+            let tmpItem = this.keyboard[this.select.row][this.select.col]
+
+            this.keyboard[this.select.row].splice(this.select.col, 1)
+
+            console.log(this.keyboard[this.select.row].length, this.select.row)
+
+
+            this.keyboard[index].push(tmpItem)
+
+            if (this.keyboard[this.select.row].length === 0)
+                this.keyboard.splice(this.select.row, 1)
+
+            this.select.row = index
+            this.select.col = this.keyboard[index].length - 1
+            this.select.text = this.keyboard[index][0].text
+
+            this.selectedRow = index
+        },
+        moveCol(row, direction = 0) {
             if (row !== this.select.row) {
                 this.select.row = row
                 this.select.col = 0
-                this.select.text = this.keyboard[this.select.row][this.select.col].text
+                this.select.text = this.keyboard[this.select.row][this.select.col]
             }
 
             let rowIndex = this.select.row
@@ -637,23 +701,29 @@ export default {
             this.keyboard[this.selectedRow] = this.keyboard[index]
             this.keyboard[index] = tmpRow
 
+            this.select.row = index
+            this.select.col = 0
+            this.select.text = this.keyboard[index][0].text
+
             this.selectedRow = index
 
         },
+
         openKeyboardEditorMenu(rowIndex, colIndex) {
             this.mode = 1
         },
         save() {
             this.$emit("save", this.keyboard)
+            if (this.type === 'reply')
+                this.$emit("save-settings", this.settings)
         },
         onJsonChange(value) {
             this.keyboard = value
             this.save();
 
         },
-        removeColFromRow() {
+        removeColFromRow(index) {
 
-            let index = this.selectedRow
             if (this.keyboard[index].length > 1)
                 this.keyboard[index].splice(this.keyboard[index].length - 1, 1)
             else

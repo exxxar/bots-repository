@@ -26,6 +26,8 @@ class ShopConfigPublicResource extends JsonResource
                 ]
             ],
             "delivery_price_text" => $this->delivery_price_text ?? null,
+            "min_base_delivery_price" => $this->min_base_delivery_price ?? 0,
+            "shop_coords" => $this->shop_coords ?? "0,0",
             "disabled_text" => $this->disabled_text ?? null,
             "min_price" => $this->min_price ?? 100,
             "price_per_km" => $this->price_per_km ?? 100,

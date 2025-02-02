@@ -10,8 +10,8 @@
         "title": "Тестовый-1",
         "key": "test",
         "max_bot_limit": 100,
-        "disabled": true,
-        "url": "https://core.next-bots.ru"
+        "disabled": false,
+        "url": "https://test.next-bots.ru"
     },
     {
         "title": "Краснодар-1",

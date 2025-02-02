@@ -271,7 +271,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                     v-else
                     :type="'reply'"
                     v-on:save="saveReplyKeyboard"
-                    :edited-keyboard="pageForm.reply_keyboard"/>
+                    v-model="pageForm.reply_keyboard"/>
 
 
             </div>
@@ -307,7 +307,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
                     :type="'inline'"
                     v-else
                     v-on:save="saveInlineKeyboard"
-                    :edited-keyboard="pageForm.inline_keyboard"/>
+                    v-model="pageForm.inline_keyboard"/>
 
 
             </div>

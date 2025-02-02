@@ -68,6 +68,46 @@ export default createStore({
                 return Promise.reject(err);
             })
         },
+
+        async getActualTariffs(context) {
+
+            let link = `/get-actual-tariffs`
+
+            let _axios = util.makeAxiosFactory(link, 'POST')
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
+        async sendInvoice(context, payload = {paymentForm: null}) {
+
+            let link = `/send-invoice`
+
+            let _axios = util.makeAxiosFactory(link, 'POST', payload.paymentForm)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
+        async sendFeedback(context, payload = {mailForm: null}) {
+
+            let link = `/send-feedback`
+
+            let _axios = util.makeAxiosFactory(link, 'POST', payload.mailForm)
+
+            return _axios.then((response) => {
+                return Promise.resolve(response.data);
+            }).catch(err => {
+                context.commit("setErrors", err.response.data.errors || [])
+                return Promise.reject(err);
+            })
+        },
         async sendToChannel(context, payload = {mailForm: null}) {
 
             let link = `/send-to-channel`

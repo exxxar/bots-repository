@@ -173,7 +173,7 @@ export default {
                 return;
 
             this.startTimer(10);
-            this.$emit("submit")
+            this.$emit("startCheckout")
         },
         onChangePhotos(e) {
             const file = e.target.files[0]

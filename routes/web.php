@@ -5,6 +5,7 @@ use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Facades\BusinessLogic;
 use App\Http\BusinessLogic\Methods\Classes\Tinkoff;
+use App\Http\Controllers\Admin\BotController;
 use App\Http\Controllers\Admin\TelegramController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Jobs\SendMessageJob;
@@ -46,7 +47,8 @@ use Yclients\YclientsApi;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::any("/payment-service-notify/tinkoff", [BotController::class, "tinkoffInvoiceServiceCallback"]);
+Route::any("/payment-products-notify/tinkoff/{domain}", [BotController::class, "tinkoffInvoiceProductsServiceCallback"]);
 
 Route::get("/table", function (Request $request) {
 
@@ -54,9 +56,9 @@ Route::get("/table", function (Request $request) {
         ->where("bot_domain", "nextitgroup_bot")
         ->first();
 
-    $botUser =BotUser::query()
-        ->where("bot_id",$bot->id)
-        ->where("telegram_chat_id","484698703")
+    $botUser = BotUser::query()
+        ->where("bot_id", $bot->id)
+        ->where("telegram_chat_id", "484698703")
         ->first();
 
     $slugId = 2606;
@@ -134,7 +136,7 @@ Route::get("/table", function (Request $request) {
             ]
         );
 
-    dd( sprintf(
+    dd(sprintf(
         $path,
         $bot->bot_domain,
         $slugId,

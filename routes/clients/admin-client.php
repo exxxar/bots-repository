@@ -12,12 +12,20 @@ use Inertia\Inertia;
 Route::middleware(['auth', 'verified'])
     ->group(function () {
 
+        Route::post("/get-actual-tariffs", [\App\Http\Controllers\Admin\BotController::class, "getActualTariffs"]);
+        Route::post("/send-invoice", [\App\Http\Controllers\Admin\BotController::class, "sendInvoice"]);
+
+        Route::get('/dev', function () {
+            Inertia::setRootView("app");
+            return Inertia::render('DevPage',[
+                "botUser"=>json_decode(\Illuminate\Support\Facades\Session::get("bot_user")),
+            ]);
+        })->name('dev-page');
+
 
         Route::get('/dashboard', function () {
-            Inertia::setRootView("app");
-            return Inertia::render('ManagerPage');
-        })
-            ->name('dashboard');
+           return redirect()->route("dev-page");
+        })->name('dashboard');
 
         Route::get('/company-page', function () {
             Inertia::setRootView("app");
@@ -68,9 +76,7 @@ Route::middleware(['auth', 'verified'])
 
 
         Route::get('/bot-page', function () {
-            Inertia::setRootView("app");
-
-            return Inertia::render('BotPage');
+            return redirect()->route("dev-page");
         })->name('bot-page');
 
         Route::get('/script-page', function () {
@@ -86,7 +92,10 @@ Route::middleware(['auth', 'verified'])
 
     });
 
+
+
 Route::post("/send-to-channel", [\App\Http\Controllers\Admin\BotController::class, "sendToChannel"]);
+Route::post("/send-feedback", [\App\Http\Controllers\Admin\BotController::class, "sendFeedback"]);
 Route::post("/send-to-queue", [\App\Http\Controllers\Admin\BotController::class, "sendToQueue"]);
 
 
