@@ -248,6 +248,7 @@ class BotManager extends BotCore
 
             $serverUrl = $this->prepareServerURL($server ?? $bot->server ?? null);
 
+            Log::info("change webhook url $serverUrl");
             $botUrl = ($serverUrl ?? env("APP_URL")) . "/bot/" . $bot->bot_domain;
 
             $token = env("APP_DEBUG") ?
@@ -255,6 +256,7 @@ class BotManager extends BotCore
                 ($bot->bot_token ?? $bot->bot_token_dev ?? null);
 
             $telegramUrl = "https://api.telegram.org/bot$token/setWebhook?url=$botUrl";
+            Log::info("change webhook url telegram url=$telegramUrl");
 
             $response = Http::get($telegramUrl);
 
