@@ -222,10 +222,11 @@ class BotManager extends BotCore
         if (!file_exists(base_path() . "/servers.json"))
             return null;
 
+        Log::info("step 1:".base_path() . "/servers.json");
         $d = file_get_contents(base_path() . "/servers.json");
         $servers = \Illuminate\Support\Collection::make(json_decode($d));
         $currentServer = $servers->where("key", $serverKey)->first() ?? null;
-
+        Log::info("step 2:".print_r($currentServer, true));
         if (is_null($currentServer))
             return null;
 
@@ -732,7 +733,7 @@ class BotManager extends BotCore
         if ($botUser->is_admin||$botUser->is_manager) {
             $link = "https://t.me/$bot->bot_domain?start=" .
                 base64_encode("000PAGE" . $page->id);
-            $content .= "\n<a href='$link/'>🖊️Редактировать страницу</a>";
+            $content .= "\n<a href='$link'>🖊️Редактировать страницу</a>";
         }
 
         $needContentInReply = !empty($content);
