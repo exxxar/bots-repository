@@ -522,7 +522,7 @@ Route::prefix("bot-client")
             ->group(function () {
                 Route::post("/", "index") ->middleware(["tgAuth.admin"]);
                 Route::post("/page", "createPage") ->middleware(["tgAuth.admin"]);
-                Route::post("/page-by-id/{id]", "loadPageById") ->middleware(["tgAuth.admin"]);
+                Route::post("/page-by-id/{id}", "loadPageById") ->middleware(["tgAuth.admin"]);
                 Route::post("/page-update", "updatePage")->middleware(["tgAuth.admin"]);
                 Route::post("/activate-page-password", "activatePagePassword")
                     ->middleware(["tgAuth.any"]);
