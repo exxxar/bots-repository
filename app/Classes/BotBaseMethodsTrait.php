@@ -45,7 +45,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
     }
 
@@ -138,7 +138,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+        sleep(0.4);
         return $this;
     }
 
@@ -166,7 +166,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -197,7 +197,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -229,7 +229,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -256,7 +256,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
     }
 
@@ -285,7 +285,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -321,7 +321,7 @@ trait BotBaseMethodsTrait
                 $e->getLine());
         }
 
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -349,7 +349,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -380,7 +380,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -539,7 +539,7 @@ trait BotBaseMethodsTrait
 
             Log::info("Ошибка конфигурации платежной системы:" . $e->getMessage());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -574,7 +574,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
     }
 
@@ -607,7 +607,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
     }
 
@@ -641,7 +641,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
     }
 
@@ -675,7 +675,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
     }
 
@@ -724,7 +724,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
     }
 
@@ -800,7 +800,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -847,7 +847,7 @@ trait BotBaseMethodsTrait
 
             $tmp["caption"] = "$subMessage...";
 
-            sleep(1);
+         sleep(0.4);
             $data = $this->bot->sendPhoto($tmp);
 
             return $this->sendMessage($chatId, "...$elseMessage", $messageThreadId);
@@ -867,7 +867,7 @@ trait BotBaseMethodsTrait
                 $this->sendMessage($chatId, $caption ?? 'Ошибочка...', $messageThreadId) :
                 $this->sendInlineKeyboard($chatId, $caption ?? 'Ошибочка...', $keyboard, $messageThreadId);
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -905,7 +905,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -926,7 +926,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -950,7 +950,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -974,7 +974,7 @@ trait BotBaseMethodsTrait
         } catch (\Exception $e) {
             Log::error($e);
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -996,7 +996,7 @@ trait BotBaseMethodsTrait
                 $e->getFile() . " " .
                 $e->getLine());
         }
-        sleep(1);
+     sleep(0.4);
         return $this;
 
     }
@@ -1046,7 +1046,7 @@ trait BotBaseMethodsTrait
 
             $tmp["text"] = "$subMessage...";
 
-            sleep(1);
+            sleep(0.4);
             $data = $this->bot->sendMessage($tmp);
 
             /*SendMessageJob::dispatch(
@@ -1070,7 +1070,7 @@ trait BotBaseMethodsTrait
 
         try {
             $data = $this->bot->sendMessage($tmp);
-            sleep(1);
+            sleep(0.4);
         } catch (\Exception $e) {
             Log::info("error in extractedMessage" . $e);
             //$this->sendMessageOnCrash($tmp, "sendMessage");
