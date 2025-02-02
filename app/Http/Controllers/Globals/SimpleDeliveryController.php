@@ -361,7 +361,7 @@ class SimpleDeliveryController extends SlugController
 
             $tmp["is_admin"] = $botUser->is_admin || $botUser->is_manager;
 
-            return new ShopConfigPublicResource((object)$tmp);
+            return new ShopConfigPublicResource($tmp);
         }
         return response()->json($dictionary);
     }
