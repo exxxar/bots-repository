@@ -6,18 +6,25 @@ import Page from "@/ClientTg/Components/V2/Admin/Pages/Page.vue"
 
 </script>
 <template>
-    <Page
-        v-if="page"
-        :page="page"
-        />
-    <div
-        v-else
-        class="alert alert-light d-flex flex-column align-items-center justify-content-center">
-        Подготавливаем данные...
-        <div class="spinner-border text-primary my-3" role="status">
-            <span class="visually-hidden">Loading...</span>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <Page
+                    v-if="page"
+                    :page="page"
+                />
+                <div
+                    v-else
+                    class="alert alert-light d-flex flex-column align-items-center justify-content-center">
+                    Подготавливаем данные...
+                    <div class="spinner-border text-primary my-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
 </template>
 <script>
 export default {
