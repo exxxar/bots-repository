@@ -10,6 +10,7 @@ use App\Models\BotMenuSlug;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -312,13 +313,14 @@ class BotSlugLogicFactory extends BaseLogicFactory
         if (is_null($this->bot) || is_null($this->slug))
             throw new HttpException(404, "Не все параметры функции заданы!");
 
+        Log::info("store params step 1=>".$this->slug->id);
 
         $slug = BotMenuSlug::query()->find($this->slug->id);
 
 
         if (is_null($slug))
             throw new HttpException(404, "Команда не найдена!");
-
+        Log::info("store params step 2");
 
         $data["can_use_cash"] = (($data["can_use_cash"] ?? false) == "true");
         $data["need_automatic_delivery_request"] = (($data["need_automatic_delivery_request"] ?? false) == "true");
@@ -334,6 +336,7 @@ class BotSlugLogicFactory extends BaseLogicFactory
         $data["wheel_of_fortune"] = json_decode($data["wheel_of_fortune"] ?? '[]');
         $data["sbp"] = json_decode($data["sbp"] ?? '[]');
 
+        Log::info("store params step 3=>".print_r($data, true));
         if (!is_null($data["payment_token"] ?? null)) {
             $this->bot->payment_provider_token = $data["payment_token"] ?? null;
             $this->bot->save();
@@ -366,6 +369,9 @@ class BotSlugLogicFactory extends BaseLogicFactory
 
         $slug->config = $tmp;
         $slug->save();
+
+        Log::info("store params step 4=>".print_r($tmp, true));
+        Log::info("store params step 5=>".print_r($slug->toArray(), true));
 
         return new BotMenuSlugResource($slug);
     }
