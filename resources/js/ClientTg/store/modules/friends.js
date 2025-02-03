@@ -19,7 +19,7 @@ const actions = {
         let page = payload.page || 0
         let size = 12
 
-        let link = `${BASE_FRIENDS_LINK}/?page=${page}&size=${size}`
+        let link = `${BASE_FRIENDS_LINK}?page=${page}&size=${size}`
 
         let _axios = util.makeAxiosFactory(link, 'POST')
 

@@ -228,11 +228,11 @@
       "_index.es-560b785d.js"
     ]
   },
-  "_V1Layout-47f68249.js": {
+  "_V1Layout-929a0677.js": {
     "css": [
       "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/V1Layout-47f68249.js",
+    "file": "assets/V1Layout-929a0677.js",
     "imports": [
       "_index.es-560b785d.js",
       "resources/js/ClientTg/app.js"
@@ -315,17 +315,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/Landing/app.css"
+    "src": "resources/css/AdminPanel/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-f23e4de8.js",
@@ -341,14 +341,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css": {
-    "file": "assets/Login-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "file": "assets/RegisterStep2-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue": {
     "css": [
-      "assets/Login-1a8f864d.css"
+      "assets/RegisterStep2-1a8f864d.css"
     ],
-    "file": "assets/ForgotPassword-a7968d07.js",
+    "file": "assets/ForgotPassword-b0318fe5.js",
     "imports": [
       "_index.es-560b785d.js",
       "_GuestLayout-0787a47d.js",
@@ -360,14 +360,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.css": {
-    "file": "assets/Login-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "file": "assets/RegisterStep2-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.vue": {
     "css": [
-      "assets/Login-1a8f864d.css"
+      "assets/RegisterStep2-1a8f864d.css"
     ],
-    "file": "assets/Login-61966025.js",
+    "file": "assets/Login-15ad555a.js",
     "imports": [
       "_index.es-560b785d.js",
       "_GuestLayout-0787a47d.js",
@@ -379,14 +379,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/Login.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.css": {
-    "file": "assets/Login-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "file": "assets/RegisterStep2-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.vue": {
     "css": [
-      "assets/Login-1a8f864d.css"
+      "assets/RegisterStep2-1a8f864d.css"
     ],
-    "file": "assets/Register-22c732d2.js",
+    "file": "assets/Register-c1b26141.js",
     "imports": [
       "_index.es-560b785d.js",
       "_GuestLayout-0787a47d.js",
@@ -398,14 +398,14 @@
     "src": "resources/js/AdminPanel/Pages/Auth/Register.vue"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css": {
-    "file": "assets/Login-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css"
+    "file": "assets/RegisterStep2-1a8f864d.css",
+    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.vue": {
     "css": [
-      "assets/Login-1a8f864d.css"
+      "assets/RegisterStep2-1a8f864d.css"
     ],
-    "file": "assets/RegisterStep2-b1105e2d.js",
+    "file": "assets/RegisterStep2-9cc1f865.js",
     "imports": [
       "_GuestLayout-0787a47d.js",
       "_index.es-560b785d.js"
@@ -730,7 +730,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-bc9abd21.js",
+    "file": "assets/app-85d47722.js",
     "imports": [
       "_index.es-560b785d.js",
       "_index-9040ac03.js"
@@ -746,11 +746,11 @@
     "css": [
       "assets/MainV1-57dd244b.css"
     ],
-    "file": "assets/MainV1-d88edd8b.js",
+    "file": "assets/MainV1-45ecf658.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "_index.es-560b785d.js",
-      "_V1Layout-47f68249.js",
+      "_V1Layout-929a0677.js",
       "resources/js/ClientTg/app.js",
       "_BotMediaList-8b27d960.js",
       "_Pagination-87b6f08b.js",
@@ -774,7 +774,7 @@
     "css": [
       "assets/MainV2-5ac8cdc0.css"
     ],
-    "file": "assets/MainV2-00c3965f.js",
+    "file": "assets/MainV2-80146380.js",
     "imports": [
       "_index.es-560b785d.js",
       "resources/js/ClientTg/app.js",
@@ -803,9 +803,9 @@
     "src": "resources/js/ClientTg/Pages/V1/Error.vue"
   },
   "resources/js/ClientTg/Pages/V1/Result.vue": {
-    "file": "assets/Result-9cac2ad1.js",
+    "file": "assets/Result-ce1d49b4.js",
     "imports": [
-      "_V1Layout-47f68249.js",
+      "_V1Layout-929a0677.js",
       "resources/js/ClientTg/app.js",
       "_index.es-560b785d.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -864,7 +864,7 @@
     "src": "resources/js/ClientTg/Pages/V1/Shop/PaymentSBP.vue"
   },
   "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue": {
-    "file": "assets/CashBack-23d2f4f6.js",
+    "file": "assets/CashBack-bcecbd08.js",
     "imports": [
       "resources/js/ClientTg/app.js",
       "_index.es-560b785d.js",
@@ -884,9 +884,9 @@
     "src": "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue"
   },
   "resources/js/ClientTg/Pages/V2/Result.vue": {
-    "file": "assets/Result-9b70cb29.js",
+    "file": "assets/Result-7e988fac.js",
     "imports": [
-      "_V1Layout-47f68249.js",
+      "_V1Layout-929a0677.js",
       "_index.es-560b785d.js",
       "resources/js/ClientTg/app.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -923,7 +923,7 @@
       "resources/js/ClientTg/Pages/V2/Admin/CashBack.vue",
       "resources/js/ClientTg/Pages/V2/Result.vue"
     ],
-    "file": "assets/app-e3a9f793.js",
+    "file": "assets/app-fbd8318d.js",
     "imports": [
       "_index.es-560b785d.js",
       "__plugin-vue_export-helper-c27b6911.js",
