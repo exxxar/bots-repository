@@ -100,7 +100,11 @@ export default {
         filteredActionData() {
             if (!this.action)
                 return []
-            return this.action?.data.filter(item => !item.taked_at)||[]
+
+            if (!this.action.data)
+                return []
+
+            return this.action.data.filter(item => !item.taked_at)
         }
     },
     data() {

@@ -138,7 +138,9 @@ import Pagination from '@/ClientTg/Components/V1/Pagination.vue';
         Созданных страниц не найдено!
     </div>
 
-    <nav class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+    <nav
+        v-if="editor"
+        class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
          style="border-radius:10px 10px 0px 0px;">
         <button
             @click="selectPage(null)"
