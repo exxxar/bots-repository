@@ -253,11 +253,14 @@ class AuthenticatedSessionController extends Controller
 
 
         if (!Auth::attempt($credentials)) {
+            Log::info("Неверный логин или пароль для входа");
             return back()->withErrors(['email' => 'Неверный email или пароль'])->withInput();
         }
 
 
-        $authBotDomain = $domain ?? env("AUTH_BOT_DOMAIN");
+        $authBotDomain = env("AUTH_BOT_DOMAIN");
+
+        Log::info("домен для бота входа $authBotDomain");
 
         $bot = Bot::query()
             ->where("bot_domain", $authBotDomain)
