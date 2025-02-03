@@ -731,9 +731,15 @@ class BotManager extends BotCore
         $content = str_replace(["{{referralQr}}"], $qr, $content);
 
         if ($botUser->is_admin||$botUser->is_manager) {
-            $link = "https://t.me/$bot->bot_domain?start=" .
-                base64_encode("000PAGE" . $page->id);
+            Log::info("test page template start");
+            $link = "https://t.me/$bot->bot_domain?start=" .base64_encode("000PAGE" . $page->id);
+
+
+            Log::info("test page template=>$bot->bot_domain $link");
+
             $content .= "\n<a href='$link'>Редактировать</a>";
+
+            Log::info("test page template end");
         }
 
         $needContentInReply = !empty($content);
