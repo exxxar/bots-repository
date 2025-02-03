@@ -401,6 +401,10 @@ import SlugForm from "@/ClientTg/Components/V2/Admin/Slugs/SlugForm.vue";
 
         <div v-if="iconForm.items[selected_menu_item_index].image_url &&
         !photos_for_upload[iconForm.items[selected_menu_item_index].slug] ">
+            <a
+                class="w-100 text-center mb-2"
+                @click="delete photos_for_upload[iconForm.items[selected_menu_item_index].slug]"
+                href="javascript:void(0)">Вернуть стандартное фото</a>
             <img
                 v-lazy="'/images/shop-v2-2/'+iconForm.items[selected_menu_item_index].image_url"
                 class="img-thumbnail w-100" alt="...">
