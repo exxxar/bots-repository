@@ -13,11 +13,12 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
         v-if="bot"
         v-on:submit.prevent="submitPage">
 
-
-        <a href="javascript:void(0)"
-           class="w-100 btn text-center btn mb-2"
-           v-if="pageForm.id||need_clean"
-           @click="clearForm"><i class="fa-solid fa-xmark mr-1"></i> Очистить форму</a>
+        <template v-if="!onlyEdit">
+            <a href="javascript:void(0)"
+               class="w-100 btn text-center btn mb-2"
+               v-if="pageForm.id||need_clean"
+               @click="clearForm"><i class="fa-solid fa-xmark mr-1"></i> Очистить форму</a>
+        </template>
 
         <div class="form-check form-switch mb-2" v-if="pageForm.id">
             <input class="form-check-input"
@@ -417,7 +418,7 @@ import InlineInjectionsHelper from "@/AdminPanel/Components/Constructor/Helpers/
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["page"],
+    props: ["page","onlyEdit"],
     data() {
         return {
             need_show_qr_and_link: false,

@@ -11,6 +11,7 @@ import Page from "@/ClientTg/Components/V2/Admin/Pages/Page.vue"
             <div class="col-12">
                 <Page
                     v-if="page"
+                    :only-edit="true"
                     :page="page"
                 />
                 <div

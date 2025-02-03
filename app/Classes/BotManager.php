@@ -252,9 +252,7 @@ class BotManager extends BotCore
             Log::info("change webhook url $serverUrl");
             $botUrl = ($serverUrl ?? env("APP_URL")) . "/bot/" . $bot->bot_domain;
 
-            $token = env("APP_DEBUG") ?
-                ($bot->bot_token_dev ?? null) :
-                ($bot->bot_token ?? $bot->bot_token_dev ?? null);
+            $token =  $bot->bot_token ;
 
             $telegramUrl = "https://api.telegram.org/bot$token/setWebhook?url=$botUrl";
             Log::info("change webhook url telegram url=$telegramUrl");
@@ -729,17 +727,10 @@ class BotManager extends BotCore
         $content = str_replace(["{{referralLink}}"], $link, $content);
 
         $content = str_replace(["{{referralQr}}"], $qr, $content);
-        Log::info("test page template before test");
+
         if ($botUser->is_admin||$botUser->is_manager) {
-            Log::info("test page template start");
             $link = "https://t.me/$bot->bot_domain?start=" .base64_encode("000PAGE" . $page->id);
-
-
-            Log::info("test page template=>$bot->bot_domain $link");
-
-            $content .= "\n<a href='$link'>Редактировать</a>";
-
-            Log::info("test page template end");
+            $content .= "\n\n<a href='$link'>Редактировать</a>";
         }
 
         $needContentInReply = !empty($content);

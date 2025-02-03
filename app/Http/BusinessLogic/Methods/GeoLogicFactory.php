@@ -43,6 +43,7 @@ class GeoLogicFactory extends BaseLogicFactory
         $address = $data["address"] ?? '';
 
         $url = "https://nominatim.openstreetmap.org/search";
+
         $params = [
             'q' => $address,
             'format' => 'json',
