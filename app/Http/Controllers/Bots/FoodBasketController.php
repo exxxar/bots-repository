@@ -14,6 +14,7 @@ use App\Models\Order;
 use App\Models\Table;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class FoodBasketController extends Controller
@@ -26,6 +27,8 @@ class FoodBasketController extends Controller
 
         $paymentId = $data[2] ?? null;
         $slugId = $data[3] ?? null;
+
+        Log::info("FoodBasketController testSbpTinkoffAutomatic ".print_r($data,true));
 
         $slug = BotMenuSlug::query()
             ->find($slugId);

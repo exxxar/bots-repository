@@ -248,13 +248,13 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
 
             </div>
 
-            <button
+<!--            <button
                 style="box-shadow: 1px 1px 6px 0px #0000004a;"
                 @click="switchToPage('/adminmenu')"
                 class="btn  btn-outline-light text-primary mb-2 w-100 p-3 rounded-3 shadow-sm ">
 
                 <i class="fa fa-people-carry "></i> Основная админ. панель
-            </button>
+            </button>-->
         </template>
 
     </div>

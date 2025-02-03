@@ -25,7 +25,7 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
         </div>
 
         <template
-            v-if="settings.need_prizes_from_wheel_of_fortune && filteredActionData.length>0">
+            v-if="settings.need_prizes_from_wheel_of_fortune && (filteredActionData||[]).length>0">
             <h6 class="opacity-75 mb-2 mt-2 ">Выбор приза Колеса фортуны</h6>
             <Carousel v-bind="config">
                 <Slide :key="'empty-prize'">
@@ -100,7 +100,7 @@ export default {
         filteredActionData() {
             if (!this.action)
                 return []
-            return this.action?.data.filter(item => !item.taked_at)
+            return this.action?.data.filter(item => !item.taked_at)||[]
         }
     },
     data() {

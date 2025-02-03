@@ -26,6 +26,7 @@ class GeoLogicFactory extends BaseLogicFactory
      */
     public function getCoords(array $data): object
     {
+        Log::info("getCoords step 1");
         if (is_null($this->bot) || is_null($this->slug))
             throw new HttpException(403, "Не выполнены условия функции");
 
@@ -36,6 +37,8 @@ class GeoLogicFactory extends BaseLogicFactory
 
         if ($validator->fails())
             throw new ValidationException($validator);
+
+        Log::info("getCoords step 2 ".$data["address"]);
 
         $address = $data["address"] ?? '';
 
@@ -53,7 +56,7 @@ class GeoLogicFactory extends BaseLogicFactory
         $context = stream_context_create($options);
         $response = file_get_contents($url . '?' . http_build_query($params), false, $context);
         $data = json_decode($response, true);
-
+        Log::info("getCoords step 3 ".print_r($data, true));
         if (empty($data)) {
             return (object)[
                 'lat' => 0,

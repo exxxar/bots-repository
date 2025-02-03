@@ -733,7 +733,7 @@ class BotManager extends BotCore
         if ($botUser->is_admin||$botUser->is_manager) {
             $link = "https://t.me/$bot->bot_domain?start=" .
                 base64_encode("000PAGE" . $page->id);
-            $content .= "\n<a href='$link'>🖊️Редактировать страницу</a>";
+            $content .= "\n\n<a href='$link'>Редактировать</a>";
         }
 
         $needContentInReply = !empty($content);
