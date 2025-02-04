@@ -907,7 +907,7 @@ class BotController extends Controller
 
         BusinessLogic::bots()
             ->setBot($bot)
-            ->updateWebHookAndConfig($request->server ?? null);
+            ->updateWebHookAndConfig($request->bot_server ?? null);
     }
 
     /**

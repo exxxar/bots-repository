@@ -51,11 +51,11 @@
     "file": "assets/MainV2-5ac8cdc0.css",
     "src": "V1Layout.css"
   },
-  "_BotForm-ae903391.js": {
+  "_BotForm-b5aab9b7.js": {
     "css": [
       "assets/BotForm-aa2046fe.css"
     ],
-    "file": "assets/BotForm-ae903391.js",
+    "file": "assets/BotForm-b5aab9b7.js",
     "imports": [
       "_index.es-560b785d.js",
       "_CompanyList-97b5025e.js",
@@ -75,11 +75,11 @@
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_BotSection-288918d9.js": {
+  "_BotSection-f0127309.js": {
     "css": [
       "assets/BotSection-ff5fe070.css"
     ],
-    "file": "assets/BotSection-288918d9.js",
+    "file": "assets/BotSection-f0127309.js",
     "imports": [
       "_MailingTable-2fb19a92.js",
       "_index.es-560b785d.js",
@@ -89,7 +89,7 @@
       "_Pagination-87b6f08b.js",
       "_GlobalSlugList-599dfb36.js",
       "_base64-d7b54761.js",
-      "_BotForm-ae903391.js",
+      "_BotForm-b5aab9b7.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_main-7389a3e5.js",
       "_v4-4a60fe23.js"
@@ -315,17 +315,17 @@
   "resources/css/AdminPanel/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/ClientTg/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/css/Landing/app.css": {
     "file": "assets/app-6071e8d8.css",
     "isEntry": true,
-    "src": "resources/css/AdminPanel/app.css"
+    "src": "resources/css/Landing/app.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ConfirmPassword.vue": {
     "file": "assets/ConfirmPassword-f23e4de8.js",
@@ -342,7 +342,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Login.css"
   },
   "resources/js/AdminPanel/Pages/Auth/ForgotPassword.vue": {
     "css": [
@@ -361,7 +361,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/Login.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Login.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Login.vue": {
     "css": [
@@ -380,7 +380,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/Register.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Login.css"
   },
   "resources/js/AdminPanel/Pages/Auth/Register.vue": {
     "css": [
@@ -399,7 +399,7 @@
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.css": {
     "file": "assets/RegisterStep2-1a8f864d.css",
-    "src": "resources/js/AdminPanel/Pages/Auth/Register.css"
+    "src": "resources/js/AdminPanel/Pages/Auth/Login.css"
   },
   "resources/js/AdminPanel/Pages/Auth/RegisterStep2.vue": {
     "css": [
@@ -446,12 +446,12 @@
       "assets/BotPage-c29596a0.css",
       "assets/ChatMini-c2fc192f.css"
     ],
-    "file": "assets/BotPage-a678c322.js",
+    "file": "assets/BotPage-b714ab59.js",
     "imports": [
       "_MainAdminLayout-65ef51fd.js",
-      "_BotSection-288918d9.js",
+      "_BotSection-f0127309.js",
       "_CompanyList-97b5025e.js",
-      "_BotForm-ae903391.js",
+      "_BotForm-b5aab9b7.js",
       "_index.es-560b785d.js",
       "_carousel.es-c0740b66.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -525,12 +525,12 @@
     "css": [
       "assets/Dashboard-db3e581c.css"
     ],
-    "file": "assets/Dashboard-9dde19f1.js",
+    "file": "assets/Dashboard-1dff22d0.js",
     "imports": [
       "_CompanyList-97b5025e.js",
-      "_BotForm-ae903391.js",
+      "_BotForm-b5aab9b7.js",
       "_MailingTable-2fb19a92.js",
-      "_BotSection-288918d9.js",
+      "_BotSection-f0127309.js",
       "_base64-d7b54761.js",
       "_index.es-560b785d.js",
       "_BotMediaList-8b27d960.js",
@@ -554,13 +554,13 @@
       "assets/DevPage-b787d46b.css",
       "assets/ChatMini-c2fc192f.css"
     ],
-    "file": "assets/DevPage-0e033a0f.js",
+    "file": "assets/DevPage-b10bb814.js",
     "imports": [
       "_index.es-560b785d.js",
       "_ManagerProfile-326b536e.js",
-      "_BotForm-ae903391.js",
+      "_BotForm-b5aab9b7.js",
       "_PromoCodeActivateForm-d4d42431.js",
-      "_BotSection-288918d9.js",
+      "_BotSection-f0127309.js",
       "_CompanyList-97b5025e.js",
       "_carousel.es-c0740b66.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -618,11 +618,11 @@
     "css": [
       "assets/ChatMini-c2fc192f.css"
     ],
-    "file": "assets/ManagerPage-e5e41ff4.js",
+    "file": "assets/ManagerPage-154e5b24.js",
     "imports": [
       "_MainAdminLayout-65ef51fd.js",
       "_index.es-560b785d.js",
-      "_BotForm-ae903391.js",
+      "_BotForm-b5aab9b7.js",
       "_ManagerPrfileForm.vue_vue_type_style_index_0_scoped_5b8b41af_lang-aeceb252.js",
       "__plugin-vue_export-helper-c27b6911.js",
       "_PromoCodeActivateForm-d4d42431.js",
@@ -657,10 +657,10 @@
       "assets/PaymentPage-fa49efcf.css",
       "assets/ChatMini-c2fc192f.css"
     ],
-    "file": "assets/PaymentPage-f6081f19.js",
+    "file": "assets/PaymentPage-36990f56.js",
     "imports": [
       "_MainAdminLayout-65ef51fd.js",
-      "_BotForm-ae903391.js",
+      "_BotForm-b5aab9b7.js",
       "_ManagerPrfileForm.vue_vue_type_style_index_0_scoped_5b8b41af_lang-aeceb252.js",
       "_index.es-560b785d.js",
       "__plugin-vue_export-helper-c27b6911.js",
@@ -730,7 +730,7 @@
       "resources/js/AdminPanel/Pages/ScriptPage.vue",
       "resources/js/AdminPanel/Pages/UserPage.vue"
     ],
-    "file": "assets/app-2a44275e.js",
+    "file": "assets/app-7f49aa9e.js",
     "imports": [
       "_index.es-560b785d.js",
       "_index-9040ac03.js"

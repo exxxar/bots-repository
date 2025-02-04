@@ -354,6 +354,7 @@ class StartCodesHandlerController extends Controller
 
     public function runPageAction(...$data)
     {
+        Log::info("UTM SOURCE runPageAction".print_r($data, true));
         $bot = BotManager::bot()
             ->getSelf();
 

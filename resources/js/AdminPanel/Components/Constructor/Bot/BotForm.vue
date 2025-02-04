@@ -1917,7 +1917,7 @@ export default {
             this.$store.dispatch("updateBotWebhook", {
                 dataObject: {
                     bot_id: this.bot.id,
-                    server: this.botForm.server
+                    bot_server: this.botForm.server || null
                 }
             }).catch(error => {
                 this.alert(error.response.data.message)
