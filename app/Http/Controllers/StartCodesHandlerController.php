@@ -587,6 +587,7 @@ class StartCodesHandlerController extends Controller
     public function referralAction(...$data)
     {
 
+        Log::info("отработала referralAction");
         $bot = BotManager::bot()
             ->getSelf();
 
