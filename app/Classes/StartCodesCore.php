@@ -104,6 +104,7 @@ class StartCodesCore
 
             if (preg_match_all($pattern, $string, $matches)) {
 
+                Log::info("pattern $pattern $string");
                 foreach ($matches as $match)
                     $arguments[] = $match[0];
 
