@@ -1850,11 +1850,11 @@ class BotLogicFactory extends BaseLogicFactory
         if (is_null($this->bot))
             throw new HttpException(404, "Бот не найден!");
 
-        if (env("APP_DEBUG") === false) {
-            BotManager::bot()->setWebhooks($this->bot->id, $server);
 
-            $this->prepareBaseBotConfig();
-        }
+        BotManager::bot()->setWebhooks($this->bot->id, $server);
+
+        $this->prepareBaseBotConfig();
+
     }
 
     /**
