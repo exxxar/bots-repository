@@ -43,25 +43,26 @@ class SystemDiagnosticController extends Controller
             ->replyDice();
     }
 
-    public function uploadFilesToBot(...$data){
+    public function uploadFilesToBot(...$data)
+    {
 
         $bot = BotManager::bot()->getSelf();
         $botUser = BotManager::bot()->currentBotUser();
 
         BotManager::bot()
-           ->sendInlineKeyboard($botUser->telegram_chat_id ?? null,
-            "🗃️Менеджер файлов",
-            [
+            ->sendInlineKeyboard($botUser->telegram_chat_id ?? null,
+                "🗃️Менеджер файлов",
                 [
                     [
-                        "text" => "📂Открыть",
-                        "web_app" => [
-                            "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&hide_menu#/s/upload"
-                        ]
+                        [
+                            "text" => "📂Открыть",
+                            "web_app" => [
+                                "url" => env("APP_URL") . "/bot-client/simple/$bot->bot_domain?slug=route&hide_menu#/s/upload"
+                            ]
+                        ],
                     ],
-                ],
 
-            ]);
+                ]);
     }
 
     public function uploadAnyKindOfMedia(...$data)
@@ -100,53 +101,54 @@ class SystemDiagnosticController extends Controller
 
     }
 
-    public function generateOrderTopics(...$data){
+    public function generateOrderTopics(...$data)
+    {
         $threads = [
-                [
-                    "title"=> 'Отзывы',
-                    "key"=> 'reviews',
-                ],
-                [
-                    "title"=> 'Начисление cashback',
-                    "key"=> 'cashback',
+            [
+                "title" => 'Отзывы',
+                "key" => 'reviews',
+            ],
+            [
+                "title" => 'Начисление cashback',
+                "key" => 'cashback',
 
-                ],
-                [
-                    "title"=> 'Вопросы',
-                    "key"=> 'questions',
+            ],
+            [
+                "title" => 'Вопросы',
+                "key" => 'questions',
 
-                ],
-                [
-                    "title"=> 'Конкурсы',
-                    "key"=> 'actions',
+            ],
+            [
+                "title" => 'Конкурсы',
+                "key" => 'actions',
 
-                ],
-                [
-                    "title"=> 'Заказы',
-                    "key"=> 'orders',
+            ],
+            [
+                "title" => 'Заказы',
+                "key" => 'orders',
 
-                ],
-                [
-                    "title"=> 'Вывод средств',
-                    "key"=> 'ask-money',
+            ],
+            [
+                "title" => 'Вывод средств',
+                "key" => 'ask-money',
 
-                ],
-                [
-                    "title"=> 'Доставка',
-                    "key"=> 'delivery',
+            ],
+            [
+                "title" => 'Доставка',
+                "key" => 'delivery',
 
-                ],
-                [
-                    "title"=> 'Ответы',
-                    "key"=> 'response',
+            ],
+            [
+                "title" => 'Ответы',
+                "key" => 'response',
 
-                ],
-                [
-                    "title"=> 'Обратная связь',
-                    "key"=> 'callback',
+            ],
+            [
+                "title" => 'Обратная связь',
+                "key" => 'callback',
 
-                ]
-            ];
+            ]
+        ];
 
         $bot = BotManager::bot()->getSelf();
 
@@ -155,7 +157,8 @@ class SystemDiagnosticController extends Controller
             ->createBotTopics($threads);
     }
 
-    public function saveAsOrderChannel(...$data){
+    public function saveAsOrderChannel(...$data)
+    {
         $bot = BotManager::bot()->getSelf();
 
         $bot->order_channel = $data[0]->chat->id;
@@ -165,7 +168,7 @@ class SystemDiagnosticController extends Controller
             ->replyInlineKeyboard("Идентификатор чата" . ($data[0]->chat->id ?? 'не указан') . "- успешно сохранен как канал для заказов. Теперь создайте топики если это необходимо!",
                 [
                     [
-                        ["text" => "Сгенерировать топики","callback_data"=>"/generate_order_topics"]
+                        ["text" => "Сгенерировать топики", "callback_data" => "/generate_order_topics"]
                     ],
                 ],
                 $data[0]->message_thread_id ?? null,
@@ -174,7 +177,8 @@ class SystemDiagnosticController extends Controller
 
     }
 
-    public function saveAsMainChannel(...$data){
+    public function saveAsMainChannel(...$data)
+    {
         $bot = BotManager::bot()->getSelf();
 
         $bot->main_channel = $data[0]->chat->id;
@@ -189,17 +193,39 @@ class SystemDiagnosticController extends Controller
 
     public function getMyId(...$data)
     {
-        Log::info("my id info:".print_r($data, true));
+        $chatType = $data[0]->chat->type ?? null;
+
+        $message = "Ваш чат id: <pre><code>" . ($data[0]->chat->id ?? 'не указан') . "</code></pre>\nИдентификатор топика: " . ($data[0]->message_thread_id ?? 'Не указан');
+
+        $keyboard = [
+            [
+                ["text" => "Сохранить как канал заказов", "callback_data" => "/save_as_order_channel"]
+            ],
+            [
+                ["text" => "Сохранить как публичный канал", "callback_data" => "/save_as_main_channel"]
+            ]
+        ];
+
+        switch ($chatType) {
+            case "channel":
+                $message .= "\n\n<b>Внимание!</b> В каналах не поддерживается создание топиков!";
+                break;
+            case "group":
+                $message .= "\n\n<b>Внимание!</b> В данном чате нельзя автоматически создать топики. Включите в настройках 'Темы'!";
+                break;
+            case "supergroup":
+                $message .= "\n\n<b>Внимание!</b> Вы можете автоматически создать топики в данной группе!";
+
+                $keyboard[] = [
+                    ["text" => "Создать топики", "callback_data" => "/create_topics_in_channel"]
+                ];
+                break;
+            default:
+        }
+
         BotManager::bot()
-            ->replyInlineKeyboard("Ваш чат id: <pre><code>" . ($data[0]->chat->id ?? 'не указан') . "</code></pre>\nИдентификатор топика: " . ($data[0]->message_thread_id ?? 'Не указан'),
-                [
-                    [
-                        ["text" => "Сохранить как канал заказов","callback_data"=>"/save_as_order_channel"]
-                    ],
-                    [
-                        ["text" => "Сохранить как публичный канал","callback_data"=>"/save_as_main_channel"]
-                    ]
-                ],
+            ->replyInlineKeyboard($message,
+                $keyboard,
                 $data[0]->message_thread_id ?? null,
             );
     }
@@ -754,7 +780,8 @@ class SystemDiagnosticController extends Controller
         $value = $data[3] ?? 0;
     }
 
-    public function successCompleteOrder(...$data){
+    public function successCompleteOrder(...$data)
+    {
         $bot = BotManager::bot()->getSelf();
 
         $botUser = BotUser::query()
@@ -780,7 +807,7 @@ class SystemDiagnosticController extends Controller
             return;
         }
 
-        if ($order->status != OrderStatusEnum::NewOrder->value){
+        if ($order->status != OrderStatusEnum::NewOrder->value) {
             BotManager::bot()
                 ->reply("❗Данный заказ уже готов к выдаче❗");
             return;
@@ -814,18 +841,18 @@ class SystemDiagnosticController extends Controller
         $text = "<em>$products</em>\nДата заказа: " . Carbon::parse($order->created_at)
                 ->format("Y-m-d H:i:s");
 
-      /*  if (!is_null($channel)) {
-            BotMethods::bot()
-                ->whereBot($bot)
-                ->sendMessage(
-                    $channel,
-                    "✅Заказ <b>№$order->id</b> готов к выдаче:\n\n$text"
-                );
+        /*  if (!is_null($channel)) {
+              BotMethods::bot()
+                  ->whereBot($bot)
+                  ->sendMessage(
+                      $channel,
+                      "✅Заказ <b>№$order->id</b> готов к выдаче:\n\n$text"
+                  );
 
-            BotManager::bot()
-                ->reply("Операция выполнена успешно!");
+              BotManager::bot()
+                  ->reply("Операция выполнена успешно!");
 
-        }*/
+          }*/
 
         $botUser = BotUser::query()
             ->find($order->customer_id);
@@ -844,7 +871,8 @@ class SystemDiagnosticController extends Controller
 
     }
 
-    public function sendToDelivery(...$data){
+    public function sendToDelivery(...$data)
+    {
         $bot = BotManager::bot()->getSelf();
 
         $botUser = BotUser::query()
@@ -870,7 +898,7 @@ class SystemDiagnosticController extends Controller
             return;
         }
 
-        if ($order->status != OrderStatusEnum::NewOrder->value){
+        if ($order->status != OrderStatusEnum::NewOrder->value) {
             BotManager::bot()
                 ->reply("❗Данный заказ уже передан на доставку❗");
             return;
@@ -904,18 +932,18 @@ class SystemDiagnosticController extends Controller
         $text = "<em>$products</em>\nДата заказа: " . Carbon::parse($order->created_at)
                 ->format("Y-m-d H:i:s");
 
-     /*   if (!is_null($channel)) {
-            BotMethods::bot()
-                ->whereBot($bot)
-                ->sendMessage(
-                    $channel,
-                    "✅Заказ <b>№$order->id</b> доставляется клиенту:\n\n$text"
-                );
+        /*   if (!is_null($channel)) {
+               BotMethods::bot()
+                   ->whereBot($bot)
+                   ->sendMessage(
+                       $channel,
+                       "✅Заказ <b>№$order->id</b> доставляется клиенту:\n\n$text"
+                   );
 
-            BotManager::bot()
-                ->reply("Операция выполнена успешно!");
+               BotManager::bot()
+                   ->reply("Операция выполнена успешно!");
 
-        }*/
+           }*/
 
         $botUser = BotUser::query()
             ->find($order->customer_id);
@@ -933,6 +961,7 @@ class SystemDiagnosticController extends Controller
             );
 
     }
+
     /**
      * @throws ValidationException
      */
@@ -964,7 +993,7 @@ class SystemDiagnosticController extends Controller
             return;
         }
 
-        if (($order->is_cashback_crediting ?? true) === true){
+        if (($order->is_cashback_crediting ?? true) === true) {
             BotManager::bot()
                 ->reply("❗По данному заказу уже был начислен автоматический CashBack❗");
             return;
@@ -979,10 +1008,10 @@ class SystemDiagnosticController extends Controller
             ->setBot($bot)
             ->setBotUser($admin)
             ->addCashBack([
-                "user_telegram_chat_id" =>$botUser->telegram_chat_id,
+                "user_telegram_chat_id" => $botUser->telegram_chat_id,
                 "amount" => $order->summary_price,
                 "info" => "Автоматическое начисление CashBack после заказа",
-                "need_user_review"=>true
+                "need_user_review" => true
             ]);
 
         BotManager::bot()
