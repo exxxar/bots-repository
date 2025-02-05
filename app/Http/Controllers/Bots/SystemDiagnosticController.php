@@ -101,61 +101,6 @@ class SystemDiagnosticController extends Controller
 
     }
 
-    public function generateOrderTopics(...$data)
-    {
-        $threads = [
-            [
-                "title" => 'Отзывы',
-                "key" => 'reviews',
-            ],
-            [
-                "title" => 'Начисление cashback',
-                "key" => 'cashback',
-
-            ],
-            [
-                "title" => 'Вопросы',
-                "key" => 'questions',
-
-            ],
-            [
-                "title" => 'Конкурсы',
-                "key" => 'actions',
-
-            ],
-            [
-                "title" => 'Заказы',
-                "key" => 'orders',
-
-            ],
-            [
-                "title" => 'Вывод средств',
-                "key" => 'ask-money',
-
-            ],
-            [
-                "title" => 'Доставка',
-                "key" => 'delivery',
-
-            ],
-            [
-                "title" => 'Ответы',
-                "key" => 'response',
-
-            ],
-            [
-                "title" => 'Обратная связь',
-                "key" => 'callback',
-
-            ]
-        ];
-
-        $bot = BotManager::bot()->getSelf();
-
-        return BusinessLogic::bots()
-            ->setBot($bot ?? null)
-            ->createBotTopics($threads);
-    }
 
     public function saveAsOrderChannel(...$data)
     {
@@ -168,7 +113,7 @@ class SystemDiagnosticController extends Controller
             ->replyInlineKeyboard("Идентификатор чата" . ($data[0]->chat->id ?? 'не указан') . "- успешно сохранен как канал для заказов. Теперь создайте топики если это необходимо!",
                 [
                     [
-                        ["text" => "Сгенерировать топики", "callback_data" => "/generate_order_topics"]
+                        ["text" => "Сгенерировать топики", "callback_data" => "/create_topics_in_channel"]
                     ],
                 ],
                 $data[0]->message_thread_id ?? null,
@@ -189,6 +134,69 @@ class SystemDiagnosticController extends Controller
                 $data[0]->message_thread_id ?? null);
 
 
+    }
+
+    public function createTopics(...$data){
+        $bot = BotManager::bot()->getSelf();
+
+        if (is_null($bot->order_channel))
+        {
+            BotManager::bot()
+                ->reply("Топики создаются в канале с заказами, вы должны сперва установить id канал заказов, нажав кнопку <b>Сохранить как канал заказов</b>!");
+            return;
+        }
+
+        $threads = [
+            [
+                "title" => "Отзывы",
+                "key" => "reviews",
+                "value" => null,
+            ],
+            [
+                "title" => "Начисление cashback",
+                "key" => "cashback",
+                "value" => null,
+            ],
+            [
+                "title" => "Вопросы",
+                "key" => "questions",
+                "value" => null,
+            ],
+            [
+                "title" => "Конкурсы",
+                "key" => "actions",
+                "value" => null,
+            ],
+            [
+                "title" => "Заказы",
+                "key" => "orders",
+                "value" => null,
+            ],
+            [
+                "title" => "Вывод средств",
+                "key" => "ask-money",
+                "value" => null,
+            ],
+            [
+                "title" => "Доставка",
+                "key" => "delivery",
+                "value" => null,
+            ],
+            [
+                "title" => "Ответы",
+                "key" => "response",
+                "value" => null,
+            ],
+            [
+                "title" => "Обратная связь",
+                "key" => "callback",
+                "value" => null,
+            ],
+        ];
+
+         BusinessLogic::bots()
+            ->setBot($bot)
+            ->createBotTopics($threads);
     }
 
     public function getMyId(...$data)

@@ -19,7 +19,7 @@ include_once "bots/global.php";
 BotManager::bot()
     ->controller(\App\Http\Controllers\Bots\SystemDiagnosticController::class)
     ->route("/.*Мой id|.*мой id", "getMyId")
-    ->route("/generate_order_topics", "generateOrderTopics")
+    ->route("/create_topics_in_channel", "createTopics")
     ->route("/save_as_main_channel", "saveAsMainChannel")
     ->route("/save_as_order_channel", "saveAsOrderChannel")
     ->route("/about", "aboutBot")

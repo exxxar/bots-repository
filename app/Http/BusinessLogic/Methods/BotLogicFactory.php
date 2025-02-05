@@ -435,7 +435,7 @@ class BotLogicFactory extends BaseLogicFactory
      * @throws HttpException
      * @throws ValidationException
      */
-    public function createBotTopics(array $data): mixed
+    public function createBotTopics(array $data, $thread = null): mixed
     {
         if (is_null($this->bot))
             throw new HttpException(400, "Не выполнено условие функции");
@@ -468,25 +468,13 @@ class BotLogicFactory extends BaseLogicFactory
 
             if (!$result->object()->ok) {
 
-                $adminBot = Bot::query()
-                    ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
-                    ->first();
-
-                if (!is_null($adminBot)) {
-                    $adminBotUser = BotUser::query()
-                        ->where("bot_id", $adminBot->id)
-                        ->where("user_id", Auth::user()->id)
-                        ->first();
-
-                    if (!is_null($adminBotUser)) {
-                        BotMethods::bot()
-                            ->whereBot($adminBot)
-                            ->sendMessage(
-                                $adminBotUser->telegram_chat_id,
-                                "Ошибка создания топиков в группе: " . ($result->object()->description ?? 'Ошибка')
-                            );
-                    }
-                }
+                BotMethods::bot()
+                    ->whereBot($this->bot)
+                    ->sendMessage(
+                        $this->bot->main_channel,
+                        "Ошибка создания топиков в группе: " . ($result->object()->description ?? 'Ошибка'),
+                        $thread
+                    );
 
                 throw new HttpException(400, $result->object()->description ?? 'Ошибка');
             }
@@ -497,6 +485,14 @@ class BotLogicFactory extends BaseLogicFactory
 
         $this->bot->message_threads = $topics;
         $this->bot->save();
+
+        BotMethods::bot()
+            ->whereBot($this->bot)
+            ->sendMessage(
+                $this->bot->main_channel,
+                "Топики успешно созданы!",
+                $thread
+            );
 
         return $topics;
     }
