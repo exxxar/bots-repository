@@ -189,6 +189,7 @@ class SystemDiagnosticController extends Controller
 
     public function getMyId(...$data)
     {
+        Log::info("my id info:".print_r($data, true));
         BotManager::bot()
             ->replyInlineKeyboard("Ваш чат id: <pre><code>" . ($data[0]->chat->id ?? 'не указан') . "</code></pre>\nИдентификатор топика: " . ($data[0]->message_thread_id ?? 'Не указан'),
                 [
