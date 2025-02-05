@@ -113,7 +113,7 @@ class SystemDiagnosticController extends Controller
             ->replyInlineKeyboard("Идентификатор чата" . ($data[0]->chat->id ?? 'не указан') . "- успешно сохранен как канал для заказов. Теперь создайте топики если это необходимо!",
                 [
                     [
-                        ["text" => "Сгенерировать топики", "callback_data" => "/create_topics_in_channel"]
+                        ["text" => "Создать топики", "callback_data" => "/create_topics_in_channel"]
                     ],
                 ],
                 $data[0]->message_thread_id ?? null,
@@ -130,7 +130,7 @@ class SystemDiagnosticController extends Controller
         $bot->save();
 
         BotManager::bot()
-            ->reply("Идентификатор чата" . ($data[0]->chat->id ?? 'не указан') . "- успешно сохранен как публичный канал для новостей!",
+            ->reply("Идентификатор чата <b>" . ($data[0]->chat->id ?? 'не указан') . "</b> успешно сохранен как публичный канал для новостей!",
                 $data[0]->message_thread_id ?? null);
 
 
