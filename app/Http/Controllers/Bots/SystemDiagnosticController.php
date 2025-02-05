@@ -139,6 +139,15 @@ class SystemDiagnosticController extends Controller
     public function createTopics(...$data){
         $bot = BotManager::bot()->getSelf();
 
+        $chatType = $data[0]->chat->type ?? null;
+
+        if ($chatType!="supergroup")
+        {
+            BotManager::bot()
+                ->reply("Топики возможно создать только в группах с включенным разделом <b>Темы</b>!");
+            return;
+        }
+
         if (is_null($bot->order_channel))
         {
             BotManager::bot()
