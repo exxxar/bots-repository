@@ -25,6 +25,10 @@ class TelegramController extends Controller
     public function handler(Request $request, $domain)
     {
         BotManager::bot()->handler($domain);
+
+        return response()->json([
+            "message" => "Ok"
+        ]);
     }
 
     public function webInterface(Request $request, $domain)
