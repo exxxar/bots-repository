@@ -66,11 +66,12 @@ class StartCodesHandlerController extends Controller
 
         $manager = ManagerProfile::query()->create($managerForm);
 
-
         $url = URL::signedRoute('auth.magic', [
             'user' => $user->id,
-            'expires' => Carbon::now()->addMinutes(30)->timestamp,
+            'expires' => Carbon::now()->addMinutes(3000)->timestamp,
         ]);
+
+        Log::info("signedRoute $url");
 
         BotMethods::bot()
             ->whereBot($bot)
