@@ -184,6 +184,9 @@ class AuthenticatedSessionController extends Controller
 
     public function magicLogin(Request $request)
     {
+        Log::info("user=>".print_r($request->user, true));
+        Log::info("hasValidSignature ".($request->hasValidSignature()?"true":"false"));
+        Log::info("expire ".(now()->timestamp > $request->expires ? "true":"false")."| now ".now()->timestamp." expire=".$request->expires);
         // Проверяем, что ссылка подписана верно
         if (!$request->hasValidSignature() || now()->timestamp > $request->expires) {
             abort(403, 'Ссылка недействительна или истекла');
