@@ -69,7 +69,8 @@ class StartCodesHandlerController extends Controller
         Log::info("pre signer rooute $user->id");
 
         $url = URL::signedRoute('auth.magic', [
-            'user' => $user->id
+            'user' => $user->id,
+            'expire_at' => Carbon::now()->addMinutes(30)->timestamp,
         ]);
 
         Log::info("signedRoute $url");
