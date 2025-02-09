@@ -251,6 +251,10 @@ class AuthenticatedSessionController extends Controller
             'password' => 'required|min:6',
         ]);
 
+        if (!Auth::attempt($credentials)) {
+            Log::info("Неверный логин или пароль для входа");
+            return back()->withErrors(['email' => 'Неверный email или пароль'])->withInput();
+        }
 
         $authBotDomain = env("AUTH_BOT_DOMAIN");
 
@@ -287,7 +291,10 @@ class AuthenticatedSessionController extends Controller
         if (is_null($botUser)) {
 
             $botDomain = env("AUTH_BOT_DOMAIN");
-            $link = "https://t.me/$botDomain?start=" . base64_encode("777register" .$user->id);
+            $link = "https://t.me/$botDomain?start=" . base64_encode("777register" . Auth::user()->id);
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
             return Inertia::render('Auth/RegisterStep2',[
                 "link"=>$link
@@ -305,10 +312,6 @@ class AuthenticatedSessionController extends Controller
                   ->withInput(); // Возвращает введенные данные (кроме пароля)*/
         }
 
-        if (!Auth::attempt($credentials)) {
-            Log::info("Неверный логин или пароль для входа");
-            return back()->withErrors(['email' => 'Неверный email или пароль'])->withInput();
-        }
 
         $request->session()->regenerate();
 
