@@ -47,9 +47,10 @@ class StartCodesHandlerController extends Controller
         $botUser->is_manager = true;
         $botUser->save();
 
+        Log::info("Входим через регистрацию в телеге:".print_r($botUser->toArray(),true));
         $managerForm = [
             'bot_user_id' => $botUser->id,
-            'info' =>null,
+            'info' => null,
             'referral' => null,
             'strengths' => [],
             'weaknesses' => [],
@@ -64,9 +65,23 @@ class StartCodesHandlerController extends Controller
             'verified_at' => null
         ];
 
-        $manager = ManagerProfile::query()->create($managerForm);
+        $userName = BotMethods::prepareUserName($botUser);
 
-        Log::info("pre signer rooute $user->id");
+        $manager = ManagerProfile::query()->where("bot_user_id", $botUser->id)->first();
+
+        $message = "Добро пожаловать, $userName! Нажмите на кнопку для перехода в панель администратора!";
+        if (is_null($manager)) {
+            $manager = ManagerProfile::query()
+                ->create($managerForm);
+
+            $message = "Добро пожаловать, $userName! Вы зарегистрировались и теперь вам доступно создание ботов!\n" .
+                "<b>Сводка</b>:\n" .
+                "Стартовый баланс: $manager->balance руб. - вы можете распределить его между ботами\n" .
+                "Персональная скидка: $manager->stable_personal_discount %.\n" .
+                "Вы можете создать ботов: $manager->max_bot_slot_count\n";
+
+        }
+
 
         $url = URL::signedRoute('auth.magic', [
             'user' => $user->id,
@@ -75,15 +90,12 @@ class StartCodesHandlerController extends Controller
 
         Log::info("signedRoute $url");
 
+
         BotMethods::bot()
             ->whereBot($bot)
             ->sendInlineKeyboard(
                 $botUser->telegram_chat_id,
-                "Поздравляем! Вы зарегистрировались и теперь вам доступно создание ботов!\n".
-                "<b>Сводка</b>:\n".
-                "Стартовый баланс: $manager->balance руб. - вы можете распределить его между ботами\n".
-                "Персональная скидка: $manager->stable_personal_discount %.\n".
-                "Вы можете создать ботов: $manager->max_bot_slot_count\n"
+                $message
                 ,
                 [
                     [
@@ -357,7 +369,7 @@ class StartCodesHandlerController extends Controller
 
     public function runPageAction(...$data)
     {
-        Log::info("UTM SOURCE runPageAction".print_r($data, true));
+        Log::info("UTM SOURCE runPageAction" . print_r($data, true));
         $bot = BotManager::bot()
             ->getSelf();
 

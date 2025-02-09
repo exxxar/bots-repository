@@ -184,15 +184,12 @@ class AuthenticatedSessionController extends Controller
 
     public function magicLogin(Request $request)
     {
-        Log::info("user=>".print_r($request->user, true));
-        Log::info("hasValidSignature ".($request->hasValidSignature()?"true":"false"));
-        Log::info("expire ".(now()->timestamp > $request->expire_at ? "true":"false")."| now ".now()->timestamp." expire=".$request->expire_at);
-        // Проверяем, что ссылка подписана верно
+
         if (!$request->hasValidSignature() || now()->timestamp > $request->expire_at) {
             return redirect()->route("login");
         }
 
-        // Авторизуем пользователя
+
         $user = User::findOrFail($request->user);
         Auth::login($user);
 
@@ -203,7 +200,7 @@ class AuthenticatedSessionController extends Controller
             ->first();
 
         $botUser = BotUser::query()
-            ->where("user_id", Auth::user()->id)
+            ->where("user_id", $user->id)
             ->first();
 
         if (is_null($botUser)) {
