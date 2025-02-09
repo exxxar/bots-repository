@@ -347,6 +347,8 @@ export default {
             this.$store.dispatch("resetCurrentBot").then(() => {
 
             })
+
+            this.searchModal.hide()
         },
         hasRole(role) {
             return window.hasRole(role) || false
