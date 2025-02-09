@@ -189,7 +189,7 @@ class AuthenticatedSessionController extends Controller
         Log::info("expire ".(now()->timestamp > $request->expire_at ? "true":"false")."| now ".now()->timestamp." expire=".$request->expire_at);
         // Проверяем, что ссылка подписана верно
         if (!$request->hasValidSignature() || now()->timestamp > $request->expire_at) {
-            abort(403, 'Ссылка недействительна или истекла');
+            return redirect()->route("login");
         }
 
         // Авторизуем пользователя
