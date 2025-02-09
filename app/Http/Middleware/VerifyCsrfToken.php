@@ -15,6 +15,8 @@ class VerifyCsrfToken extends Middleware
         '/bot/*',
         '/bot/*/*',
         '/sanctum/token',
-        '/integrations/1c/callback'
+        '/integrations/1c/callback',
+        '/payment-service-notify/tinkoff',
+        '/payment-products-notify/tinkoff/*'
     ];
 }

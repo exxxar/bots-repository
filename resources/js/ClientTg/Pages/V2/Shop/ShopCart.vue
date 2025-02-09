@@ -77,13 +77,13 @@ import PreloaderV1 from "@/ClientTg/Components/V2/Shop/Other/PreloaderV1.vue";
                     class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">
                 Оформление заказа
             </button>
-            <button type="button"
+<!--            <button type="button"
                     v-if="tab>=1"
                     @click="tab=0"
                     style="box-shadow: 1px 1px 6px 0px #0000004a;"
                     class="btn btn-primary w-100 p-3 rounded-3 shadow-lg d-flex justify-content-center">
                 Корзина с товаром
-            </button>
+            </button>-->
         </div>
         <div v-else class="w-100">
             <button type="button"
@@ -275,7 +275,13 @@ export default {
             });
         });
 
+        document.addEventListener('switch-to-cart', () => {
+           this.changeTab(0)
 
+            document.querySelector("#basket").scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
 
     },
     methods: {

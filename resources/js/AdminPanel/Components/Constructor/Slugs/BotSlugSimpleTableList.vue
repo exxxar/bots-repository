@@ -132,6 +132,9 @@ export default {
             this.loadSlugs(index)
         },
         loadSlugs(page = 0) {
+            if (!this.bot)
+                return
+
             return this.$store.dispatch("loadSlugs", {
                 dataObject: {
                     botId: this.bot.id,

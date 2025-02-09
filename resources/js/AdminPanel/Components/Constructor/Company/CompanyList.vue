@@ -1,23 +1,10 @@
 <script setup>
-import Pagination from '@/AdminPanel/Components/Pagination.vue';
+import Pagination from '@/AdminPanel/Components/SimplePagination.vue';
 import CompanyForm from "@/AdminPanel/Components/Constructor/Company/CompanyForm.vue";
 </script>
 <template>
 
-    <!--    <div class="row mb-2">
-            <div class="col-md-2 col-12">
-                <button type="button"
-                        @click="show=!show"
-                        class="btn btn-outline-success p-3 w-100">
-                    <span v-if="!show"><i class="fa-regular fa-building"></i></span>
-                    <span v-else><i class="fa-regular fa-square-minus"></i> </span>
-                </button>
-            </div>
-        </div>-->
-
-    <div v-if="show">
-        <div class="row">
-
+    <template v-if="show">
             <div class="d-flex">
                 <div class="dropdown mr-2">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1"
@@ -47,7 +34,6 @@ import CompanyForm from "@/AdminPanel/Components/Constructor/Company/CompanyForm
                     </button>
                 </div>
             </div>
-
             <p v-if="selectedFilters.length>0" class="mt-2">
                     <span class="badge bg-info mr-1" v-for="filter in selectedFilters">{{ filter.name || 'не указан' }}
                      <a
@@ -55,17 +41,17 @@ import CompanyForm from "@/AdminPanel/Components/Constructor/Company/CompanyForm
                          class="ml-1 text-white" href="#filter"><i class="fa-solid fa-xmark"></i></a>
                     </span>
             </p>
-        </div>
-        <div class="row" v-if="companies.length>0">
-            <div class="col-12 mb-3">
-                <ul class="list-group w-100">
-                    <li class="list-group-item btn  mb-1 d-flex justify-between"
-                        v-bind:class="{'btn-outline-info':company.deleted_at==null,
+
+        <template v-if="companies.length>0">
+            <ul class="list-group w-100 p-0 m-0">
+                <li class="list-group-item cursor-pointer"
+                    v-bind:class="{'btn-outline-info':company.deleted_at==null,
                         'btn-outline-danger border-danger':company.deleted_at!=null,
-                        'bg-success':selected==company.id
+                        'bg-success':selected==company.id,
+                        'btn d-flex justify-between':!isSimple
                         }"
-                        v-for="(company, index) in filteredCompanies"
-                      >
+                    v-for="(company, index) in filteredCompanies"
+                >
 
 
                         <span
@@ -77,38 +63,33 @@ import CompanyForm from "@/AdminPanel/Components/Constructor/Company/CompanyForm
 
                         </span>
 
-                        <div>
-                            <button class="btn btn-info mr-1"
-                                    type="button"
-                                    @click="editClient(company)"
-                                    title="В архив"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button class="btn btn-outline-info"
-                                    type="button"
-                                    @click="addToArchive(company.id)"
-                                    title="В архив" v-if="company.deleted_at==null"><i
-                                class="fa-solid fa-boxes-packing"></i></button>
-                            <button class="btn btn-outline-info"
-                                    type="button"
-                                    @click="extractFromArchive(company.id)"
-                                    title="Из архива" v-if="company.deleted_at!=null"><i
-                                class="fa-solid fa-box-open"></i></button>
-                        </div>
+                    <div v-if="!isSimple">
+                        <button class="btn btn-info mr-1"
+                                type="button"
+                                @click="editClient(company)"
+                                title="В архив"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="btn btn-outline-info"
+                                type="button"
+                                @click="addToArchive(company.id)"
+                                title="В архив" v-if="company.deleted_at==null"><i
+                            class="fa-solid fa-boxes-packing"></i></button>
+                        <button class="btn btn-outline-info"
+                                type="button"
+                                @click="extractFromArchive(company.id)"
+                                title="Из архива" v-if="company.deleted_at!=null"><i
+                            class="fa-solid fa-box-open"></i></button>
+                    </div>
 
-                    </li>
-                </ul>
+                </li>
+            </ul>
 
-            </div>
+            <Pagination
+                v-on:pagination_page="nextCompanies"
+                v-if="companies_paginate_object"
+                :pagination="companies_paginate_object"/>
+        </template>
 
-            <div class="col-12">
-                <Pagination
-
-                    v-on:pagination_page="nextCompanies"
-                    v-if="companies_paginate_object"
-                    :pagination="companies_paginate_object"/>
-            </div>
-
-        </div>
-    </div>
+    </template>
 
 
     <!-- Modal -->
@@ -144,7 +125,7 @@ import CompanyForm from "@/AdminPanel/Components/Constructor/Company/CompanyForm
 import {mapGetters} from "vuex";
 
 export default {
-    props:['selected'],
+    props:['selected','isSimple'],
     data() {
         return {
             show: true,

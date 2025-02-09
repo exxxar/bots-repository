@@ -5,32 +5,47 @@ import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
 </script>
 <template>
 
-    <div class="dropdown">
-        <button
-            :class="customClass"
-            type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <template v-if="!bot">
-                Бот не выбран
-            </template>
-            <template v-else>
-                {{ bot.bot_domain || 'Без имени' }}
-            </template>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="javascript:void(0)" @click="openModal"><i
-                class="fa-regular fa-hand-pointer mr-2"></i> Выбрать бота</a></li>
+    <div class="d-flex align-items-center">
+        <img
+            v-if="bot"
+            style="width:40px;height:40px;border-radius:50%;"
+            class="object-fit-cover mr-2"
+            v-lazy="'/images/companies/'+bot.bot_domain+'/logo.jpg'" alt="">
 
-            <template v-if="bot">
-                <li><a :href="'https://t.me/'+(bot.bot_domain||'botfather')"
-                       class="dropdown-item"
-                       target="_blank"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Перейти в бот</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0)"
-                       @click="resetBot"><i class="fa-solid fa-power-off mr-2"></i> Завершить работу с ботом</a></li>
-            </template>
+        <div class="dropdown">
+            <button
+                :class="customClass"
+                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <template v-if="!bot">
+                    Бот не выбран
+                </template>
+                <template v-else>
 
-        </ul>
+
+                    {{ bot.bot_domain || 'Без имени' }}
+                </template>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="javascript:void(0)" @click="openModal"><i
+                    class="fa-regular fa-hand-pointer mr-2"></i> Выбрать бота</a></li>
+
+                <template v-if="bot">
+                    <li><a :href="'https://t.me/'+(bot.bot_domain||'botfather')"
+                           class="dropdown-item"
+                           target="_blank"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Перейти в бот</a>
+                    </li>
+                    <li><a href="javascript:void(0)"
+                           @click="openBotParams"
+                           class="dropdown-item"><i class="fa-solid fa-gears mr-2"></i> Базовые параметры бота</a>
+                    </li>
+                    <li><a class="dropdown-item" href="javascript:void(0)"
+                           @click="resetBot"><i class="fa-solid fa-power-off mr-2"></i> Завершить работу с ботом</a>
+                    </li>
+                </template>
+
+            </ul>
+        </div>
     </div>
-
 
     <!-- Modal -->
     <div class="modal fade" :id="'bot-search-modal-'+(id||'local')" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -69,7 +84,7 @@ import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
 
                                 <div class="row d-flex justify-content-center">
                                     <div class="col-md-6 col-12">
-                                        <div class="input-group mb-3">
+                                        <div class="input-group my-3">
                                             <input type="search" class="form-control "
                                                    placeholder="Поиск бота"
                                                    aria-label="Поиск бота"
@@ -141,8 +156,6 @@ import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
                             </div>
 
                             <div class="container pb-5" v-if="bots.length>0">
-                                <h6>Ваши созданные боты <a href="/bot-page" v-if="(profile?.is_admin||false)">перейти в
-                                    раздел</a></h6>
                                 <div class="row row-cols-1 row-cols-lg-4 row-cols-md-1 g-4">
                                     <div class="col" v-for="bot in bots">
 
@@ -150,7 +163,7 @@ import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
                                             <img
                                                 class="card-img-top w-100 object-fit-cover"
                                                 style="max-height:150px;"
-                                                v-lazy="'/images-by-bot-id/'+bot.id+'/'+bot.image">
+                                                v-lazy="'/images/companies/'+bot.bot_domain+'/logo.jpg'">
 
                                             <div class="card-body">
                                                 <h6 class="card-title text-center">#{{ bot.id }}</h6>
@@ -253,12 +266,12 @@ export default {
         }
     },
     watch: {
-    /*    selectedFilters: {
-            handler: function (newValue) {
-                this.loadBots();
-            },
-            deep: true
-        }*/
+        /*    selectedFilters: {
+                handler: function (newValue) {
+                    this.loadBots();
+                },
+                deep: true
+            }*/
     },
     computed: {
         ...mapGetters(['getBots', 'getBotsPaginateObject', 'getCurrentCompany', 'getCurrentBot']),
@@ -319,6 +332,10 @@ export default {
         this.selectFilter('active')
     },
     methods: {
+        openBotParams(){
+           console.log("open BOT PARAMS")
+            window.dispatchEvent(new CustomEvent('open-base-bot-params-event'));
+        },
         gotoBot(bot) {
             this.selectBot(bot)
         },

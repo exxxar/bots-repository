@@ -87,18 +87,6 @@ class BotLogicFactory extends BaseLogicFactory
         return $servers;
     }
 
-    /**
-     * @throws HttpException
-     */
-    public function setBotUser($botUser = null): static
-    {
-        if (is_null($botUser))
-            throw new HttpException(400, "Пользователь бота не задан!");
-
-        $this->botUser = $botUser;
-        return $this;
-    }
-
     public function listByIds(array $ids): BotCollection
     {
         $bots = Bot::query()
@@ -351,7 +339,6 @@ class BotLogicFactory extends BaseLogicFactory
 
             }
 
-
         $keyboards = BotMenuTemplate::query()
             ->where("bot_id", $this->bot->id)
             ->get();
@@ -381,7 +368,6 @@ class BotLogicFactory extends BaseLogicFactory
         $dialogs = BotDialogCommand::query()
             ->where("bot_id", $this->bot->id)
             ->get();
-
 
         if (!empty($dialogs))
             foreach ($dialogs as $dialog) {
@@ -423,10 +409,8 @@ class BotLogicFactory extends BaseLogicFactory
 
             }
 
-
         $newBot = $newBot->fresh();
 
-        Log::info("creator_id2=>" . print_r($newBot->creator_id, true) . " - " . print_r($this->botUser->id, true));
 
         return new BotResource($newBot);
     }
@@ -497,7 +481,6 @@ class BotLogicFactory extends BaseLogicFactory
         return $topics;
     }
 
-
     /**
      * @throws HttpException
      */
@@ -508,10 +491,43 @@ class BotLogicFactory extends BaseLogicFactory
 
         $website = "https://api.telegram.org/bot" . $botToken;
 
-
         $result = Http::post("$website/getMe");
 
-        return $result->object()->ok ? $result->object()->result : null;
+        $responseData = $result->object()->ok ? $result->object()->result : null;
+
+        if (is_null($responseData))
+            return null;
+
+        $serviceBotId = $responseData->id ?? null;
+        $serviceBotDomain = $responseData->username;
+
+        $response = file_get_contents("https://api.telegram.org/bot$botToken/getUserProfilePhotos?user_id=$serviceBotId");
+
+        $data = json_decode($response, true);
+
+        if ($data["ok"] && $data["result"]["total_count"] > 0) {
+            // Берем первую фотографию (наибольшего размера)
+            $photo = end($data["result"]["photos"][0]);
+            $file_id = $photo["file_id"];
+
+            // 2. Получаем путь к файлу
+            $file_response = file_get_contents("https://api.telegram.org/bot$botToken/getFile?file_id=$file_id");
+            $file_data = json_decode($file_response, true);
+
+            if ($file_data["ok"]) {
+                $file_path = $file_data["result"]["file_path"];
+                $file_url = "https://api.telegram.org/file/bot$botToken/$file_path";
+
+                $dir = public_path() . "/images/companies/$serviceBotDomain"; // Название директории
+
+                if (!is_dir($dir)) { // Проверяем, существует ли папка
+                    mkdir($dir, 0777, true); // Создаём с правами 0777 и вложенными папками (true)
+                }
+                file_put_contents("$dir/logo.jpg", file_get_contents($file_url));
+            }
+        }
+
+        return $responseData;
 
     }
 
@@ -1286,10 +1302,8 @@ class BotLogicFactory extends BaseLogicFactory
             ->select("title", "description", "bot_domain", "id", "template_description")
             ->get();
 
-
         return $bots->toArray();
     }
-
 
     /**
      * @throws HttpException
@@ -1306,148 +1320,6 @@ class BotLogicFactory extends BaseLogicFactory
         return new ImageMenuCollection($menus);
     }
 
-    public function createBotLazy(Request $request)
-    {
-
-        $services = [
-            "investors" => [""],
-            "franchise" => [""],
-            "cashback" => ["", "", ""],
-            "agent-cabinet" => [""],
-            "referral-bonus" => [""],
-            "event-form" => [""],
-            "attached-documents" => [""],
-            "lead-magnet" => [""],
-            "sales-funnel" => [""],
-            "reviews" => [""],
-            "ask-a-question" => [""],
-            "online-consultation" => [""],
-            "location" => [""],
-            "promotions" => [""],
-            "our-clients" => [""],
-            "cost-of-services" => [""],
-            "custom-shop" => [""],
-            "buy-or-try" => [""],
-            "delivery" => [""],
-            "booking" => [""],
-            "atmosphere" => [""],
-            "courses" => [""],
-            "individual-button" => [""],
-        ];
-
-        $name = $request->name;
-        $token = $request->token ?? null;
-        $botDomain = $request->botDomain;
-
-        $greeting = json_decode($request->greeting);
-        $contacts = json_decode($request->contacts);
-        $selfInfo = json_decode($request->selfInfo);
-        $businessInfo = json_decode($request->businessInfo);
-        $functions = json_decode($request->functions ?? '[]');
-
-        $tmpLinks = Collection::make($contacts->links)
-            ->where("slug", "social-link")
-            ->all();
-
-        $links = [];
-
-        foreach ($tmpLinks as $link)
-            $links[] = (object)[
-                "title" => $link->description,
-                "url" => $link->value,
-            ];
-
-        $phones = Collection::make($contacts->links)
-            ->where("slug", "phone-number")
-            ->pluck("value")
-            ->all();
-
-        $email = Collection::make($contacts->links)
-            ->where("slug", "email")
-            ->first();
-
-        $address = Collection::make($contacts->links)
-            ->where("slug", "address")
-            ->first();
-
-        $photos = [];
-
-
-        dd($phones);
-
-        $company = Company::query()->create([
-            'title' => $businessInfo->name,
-            'slug' => $botDomain,
-            'description' => $businessInfo->text,
-            'image' => null,
-            'address' => $address->value,
-            'phones' => $phones,
-            'links' => $links,
-            'email' => $email->value ?? null,
-            'schedule' => [],
-            'manager' => $selfInfo->name,
-            'is_active' => true,
-            'creator_id' => null,
-            'owner_id' => null,
-            'blocked_message' => null,
-            'blocked_at' => null,
-        ]);
-
-
-        $greeting_image_avatar = $greeting->need_photo ?
-            $this->file($request, $company->slug, "greeting_image_avatar") :
-            ($greeting->avatar ?? null);
-
-        $greeting_image_profile = $greeting->need_photo ?
-            $this->file($request, $company->slug, "greeting_image_profile") :
-            ($greeting->profile ?? null);
-
-        $company->image = $greeting_image_profile;
-        $company->save();
-
-        $contacts_image = $contacts->need_photo ?
-            $this->file($request, $company->slug, "contacts_image") :
-            ($contacts->image ?? null);
-
-        $self_info_image = $selfInfo->need_photo ?
-            $this->file($request, $company->slug, "self_info_image") :
-            ($selfInfo->image ?? null);
-
-        $business_info_image = $businessInfo->need_photo ?
-            $this->file($request, $company->slug, "business_info_image") :
-            ($businessInfo->image ?? null);
-
-        $botType = BotType::query()->where("slug", "business_card")->first();
-
-        $bot = Bot::query()->create([
-            'company_id' => $company->id,
-            'welcome_message' => $greeting->text,
-            'bot_domain' => $botDomain,
-            'bot_token' => $token ?? "test_replacement_token",
-            'bot_token_dev' => $token ?? "test_replacement_token",
-            'order_channel' => -1,
-            'main_channel' => -1,
-            'balance' => 3000,
-            'tax_per_day' => 10,
-            'image' => $greeting_image_avatar,
-            'description' => $businessInfo->text,
-            'info_link' => null,
-            'social_links' => $links,
-            'is_active' => true,
-            'maintenance_message' => "Техническое обслуживание",
-            'bot_type_id' => $botType->id,
-            'level_1' => 7,
-            'level_2' => 3,
-            'level_3' => 1,
-            'is_template' => false,
-            'template_description' => "Не является шаблоном",
-        ]);
-
-        if (!is_null($token))
-            BotManager::bot()->setWebhooks();
-
-        return new BotResource($bot);
-    }
 
     /**
      * @throws ValidationException
@@ -1461,24 +1333,15 @@ class BotLogicFactory extends BaseLogicFactory
         $validator = Validator::make($data, [
             "bot_domain" => "required|unique:bots,bot_domain",
             "bot_token" => "required",
-
             "balance" => "required",
             "tax_per_day" => "required",
-            //"description" => "required",
-
+            "bot_type" => "required",
             "maintenance_message" => "required",
-            // "welcome_message" => "required",
             "level_1" => "required",
-            // "selected_bot_template_id" => "required",
-            //"slugs" => "required",
-            //"pages" => "required",
-            //"keyboards" => "required",
-            //"company_id" => "required",
         ]);
 
         if ($validator->fails())
             throw new ValidationException($validator);
-
 
         $findBot = Bot::query()
             ->withTrashed()
@@ -1506,14 +1369,10 @@ class BotLogicFactory extends BaseLogicFactory
         if (is_null($company))
             throw new HttpException(403, "Ошибка автоматического создания клиента");
 
-
-        $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
-
         $botType = BotType::query()->where("slug", "cashback")->first();
 
         $tmp = (object)$data;
 
-        $tmp->image = is_null($photos) ? null : ($photos[0] ?? null);
         $tmp->level_2 = $request->level_2 ?? 0;
         $tmp->level_3 = $request->level_3 ?? 0;
         $tmp->server = $request->server ?? null;
@@ -1543,25 +1402,6 @@ class BotLogicFactory extends BaseLogicFactory
             $tmp["server"] = "main";
         }
 
-        $keyboards = null;
-        if (isset($data["keyboards"])) {
-            $keyboards = json_decode($data["keyboards"]);
-            unset($tmp->keyboards);
-        }
-        $slugs = null;
-
-        if (isset($data["slugs"])) {
-            $slugs = json_decode($data["slugs"]);
-            unset($tmp->slugs);
-        }
-
-        $pages = null;
-
-        if (isset($data["pages"])) {
-            $pages = json_decode($data["pages"]);
-            unset($tmp->pages);
-        }
-
         $warnings = null;
         if (isset($data["warnings"])) {
             $warnings = json_decode($data["warnings"]);
@@ -1571,52 +1411,7 @@ class BotLogicFactory extends BaseLogicFactory
         if (!is_null($tmp->selected_bot_template_id))
             unset($tmp->selected_bot_template_id);
 
-
         $bot = Bot::query()->create((array)$tmp);
-
-        if (!is_null($pages))
-            if (isset($pages->data))
-                foreach ($pages->data as $page) {
-                    $page = (object)$page;
-
-                    $tmpSlug = BotMenuSlug::query()->find($page->bot_menu_slug_id);
-
-                    if (!is_null($tmpSlug)) {
-                        $tmpSlug = $tmpSlug->replicate();
-                        $tmpSlug->bot_id = $bot->id;
-                        $tmpSlug->save();
-
-                        BotPage::query()->create([
-                            'bot_menu_slug_id' => $tmpSlug->id,
-                            'content' => $page->content,
-                            'images' => $page->images,
-                            'reply_keyboard_id' => $page->reply_keyboard_id,
-                            'inline_keyboard_id' => $page->inline_keyboard_id,
-                            'bot_id' => $bot->id,
-                        ]);
-                    }
-                }
-
-
-        if (!is_null($slugs))
-            foreach ($slugs as $slug)
-                BotMenuSlug::query()->create([
-                    'bot_id' => $bot->id,
-                    'command' => $slug->command,
-                    'comment' => $slug->comment,
-                    'slug' => $slug->slug,
-                    'is_global' => $slug->is_global ?? false,
-                    'config' => $slug->config ?? null,
-                ]);
-
-        if (!is_null($keyboards))
-            foreach ($keyboards as $keyboard)
-                BotMenuTemplate::query()->create([
-                    'bot_id' => $bot->id,
-                    'type' => $keyboard->type,
-                    'slug' => $keyboard->slug,
-                    'menu' => $keyboard->menu,
-                ]);
 
         if (!is_null($warnings))
             foreach ($warnings as $warn)
@@ -1629,10 +1424,104 @@ class BotLogicFactory extends BaseLogicFactory
 
         $bot = $bot->fresh();
 
-
         return new BotResource($bot);
     }
 
+
+    /**
+     * @throws HttpException
+     * @throws ValidationException
+     */
+    public function update(array $data, array $uploadedPhotos = null): BotResource
+    {
+        if (is_null($this->bot) || is_null($this->botUser))
+            throw new HttpException(403, "Условия функции не выполнены!");
+
+        $validator = Validator::make($data, [
+            "bot_domain" => "required",
+            "bot_token" => "required",
+
+            "balance" => "required",
+            "tax_per_day" => "required",
+            "description" => "required",
+
+            "social_links" => "required",
+            "maintenance_message" => "required",
+            "welcome_message" => "required",
+            "level_1" => "required",
+        ]);
+
+        if ($validator->fails())
+            throw new ValidationException($validator);
+
+
+        $company = Company::query()->where("id", $this->bot->company_id)
+            ->first();
+
+        if (is_null($company))
+            throw new HttpException(404, "Компания не найдена");
+
+        $tmp = (object)$data;
+        $tmp->level_2 = $data["level_2"] ?? 0;
+        $tmp->level_3 = $data["level_3"] ?? 0;
+        $tmp->server = $data["server"] ?? null;
+        $tmp->cashback_fire_percent = $data["cashback_fire_percent"] ?? 0;
+        $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
+        $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
+        $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
+        $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
+        $tmp->config = isset($data["config"]) ? json_decode($data["config"] ?? '[]') : null;
+        $tmp->menu = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
+        $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
+        $tmp->is_active = true;
+        $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
+        $tmp->is_template = $data["is_template"] == "true";
+
+        if (!$this->botUser->is_admin) {
+            unset($tmp["balance"]);
+            unset($tmp["tax_per_day"]);
+            unset($tmp["server"]);
+        }
+
+        $tmp->social_links = json_decode($tmp->social_links ?? '[]');
+
+        //  $tmp->creator_id = $tmp->is_template ? null : ($tmp->creator_id ?? null);
+
+        $warnings = null;
+        if (isset($data["warnings"])) {
+            $warnings = json_decode($data["warnings"]);
+            unset($tmp->warnings);
+        }
+
+        unset($tmp->selected_bot_template_id);
+
+        $this->bot->update((array)$tmp);
+
+        if (!is_null($warnings))
+            foreach ($warnings as $warn) {
+
+                $tmpWarn = BotWarning::query()
+                    ->where("rule_key", $warn->rule_key)
+                    ->where("bot_id", $this->bot->id)
+                    ->first();
+
+                if (!is_null($tmpWarn))
+                    $tmpWarn->update([
+                        'rule_key' => $warn->rule_key ?? null,
+                        'rule_value' => $warn->rule_value ?? null,
+                        'is_active' => $warn->is_active ?? false,
+                    ]);
+                else
+                    $rez = BotWarning::query()->create([
+                        'bot_id' => $this->bot->id,
+                        'rule_key' => $warn->rule_key ?? null,
+                        'rule_value' => $warn->rule_value ?? null,
+                        'is_active' => $warn->is_active ?? false,
+                    ]);
+            }
+
+        return new BotResource($this->bot);
+    }
 
     public function updatMenuIcons(array $data, $files = [])
     {
@@ -1728,117 +1617,6 @@ class BotLogicFactory extends BaseLogicFactory
     }
 
 
-    /**
-     * @throws HttpException
-     * @throws ValidationException
-     */
-    public function update(array $data, array $uploadedPhotos = null): BotResource
-    {
-        if (is_null($this->bot) || is_null($this->botUser))
-            throw new HttpException(403, "Условия функции не выполнены!");
-
-        $validator = Validator::make($data, [
-            "bot_domain" => "required",
-            "bot_token" => "required",
-
-            "balance" => "required",
-            "tax_per_day" => "required",
-            "description" => "required",
-
-            "social_links" => "required",
-            "maintenance_message" => "required",
-            "welcome_message" => "required",
-            "level_1" => "required",
-        ]);
-
-        if ($validator->fails())
-            throw new ValidationException($validator);
-
-
-        $company = Company::query()->where("id", $this->bot->company_id)
-            ->first();
-
-        if (is_null($company))
-            throw new HttpException(404, "Компания не найдена");
-
-        $photos = $this->uploadPhotos("/public/companies/$company->slug", $uploadedPhotos);
-
-
-        $tmp = (object)$data;
-
-        if (is_null($tmp->image))
-            $tmp->image = is_null($photos) ? null : ($photos[0] ?? null);
-
-        $tmp->level_2 = $data["level_2"] ?? 0;
-        $tmp->level_3 = $data["level_3"] ?? 0;
-        $tmp->server = $data["server"] ?? null;
-        $tmp->cashback_fire_percent = $data["cashback_fire_percent"] ?? 0;
-        $tmp->cashback_fire_period = $data["cashback_fire_period"] ?? 0;
-        $tmp->max_cashback_use_percent = $data["max_cashback_use_percent"] ?? 0;
-        $tmp->message_threads = isset($data["message_threads"]) ? json_decode($data["message_threads"] ?? '[]') : null;
-        $tmp->cashback_config = isset($data["cashback_config"]) ? json_decode($data["cashback_config"] ?? '[]') : null;
-        $tmp->config = isset($data["config"]) ? json_decode($data["config"] ?? '[]') : null;
-        $tmp->menu = isset($data["menu"]) ? json_decode($data["menu"] ?? '[]') : null;
-        $tmp->commands = isset($data["commands"]) ? json_decode($data["commands"] ?? '[]') : null;
-        $tmp->is_active = true;
-        $tmp->auto_cashback_on_payments = $data["auto_cashback_on_payments"] == "true";
-        $tmp->is_template = $data["is_template"] == "true";
-
-
-        if (!$this->botUser->is_admin) {
-            unset($tmp["balance"]);
-            unset($tmp["tax_per_day"]);
-            unset($tmp["server"]);
-        }
-
-
-        $tmp->social_links = json_decode($tmp->social_links ?? '[]');
-
-        //  $tmp->creator_id = $tmp->is_template ? null : ($tmp->creator_id ?? null);
-
-        if (isset($data["keyboards"])) {
-            unset($tmp->keyboards);
-        }
-
-        if (isset($data["slugs"])) {
-            unset($tmp->slugs);
-        }
-
-        $warnings = null;
-        if (isset($data["warnings"])) {
-            $warnings = json_decode($data["warnings"]);
-            unset($tmp->warnings);
-        }
-
-        unset($tmp->selected_bot_template_id);
-
-        $this->bot->update((array)$tmp);
-
-        if (!is_null($warnings))
-            foreach ($warnings as $warn) {
-
-                $tmpWarn = BotWarning::query()
-                    ->where("rule_key", $warn->rule_key)
-                    ->where("bot_id", $this->bot->id)
-                    ->first();
-
-                if (!is_null($tmpWarn))
-                    $tmpWarn->update([
-                        'rule_key' => $warn->rule_key ?? null,
-                        'rule_value' => $warn->rule_value ?? null,
-                        'is_active' => $warn->is_active ?? false,
-                    ]);
-                else
-                    $rez = BotWarning::query()->create([
-                        'bot_id' => $this->bot->id,
-                        'rule_key' => $warn->rule_key ?? null,
-                        'rule_value' => $warn->rule_value ?? null,
-                        'is_active' => $warn->is_active ?? false,
-                    ]);
-            }
-
-        return new BotResource($this->bot);
-    }
 
     public function updateWebHookAndConfig($server = null): void
     {

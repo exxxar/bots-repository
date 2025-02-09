@@ -18,6 +18,8 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
 
     <nav class="navbar navbar-expand-lg sticky-top bg-primary ">
         <div class="container">
+
+
             <BotSearchModal
                 :id="'global-bot-search'"
                 :custom-class="'dropdown-toggle my-2 text-white'"
@@ -25,7 +27,9 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                 v-on:select-bot="botSectionCallback"
                 :bot="bot"></BotSearchModal>
 
-            <div class="btn-group">
+
+
+
                 <button
                     class="btn text-white p-2 btn-outline-light"
                     style="font-size:12px;"
@@ -35,17 +39,18 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                     <span class="fw-bold text-white">0</span> руб, <span
                     class="fw-bold text-white">{{ slotsCount }}</span> свободных слотов
                 </button>
-                <button
-                    v-if="bot"
-                    class="btn btn-outline-light text-white p-2 "
-                    style="font-size:12px;"
-                    type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#bot-section-menu" aria-controls="staticBackdrop">
-                    <i class="fa-solid fa-screwdriver-wrench text-white"></i> Управление ботом
-                </button>
-            </div>
 
 
+
+            <div class="d-flex">
+            <button
+                v-if="bot"
+                class="btn text-white p-2 px-3 border-light mr-2 "
+                style="font-size:12px;"
+                type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#bot-section-menu" aria-controls="staticBackdrop">
+                <i class="fa-solid fa-screwdriver-wrench text-white"></i>
+            </button>
             <div class="dropdown">
                 <button
                     style="font-size:12px;"
@@ -81,7 +86,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
                     <li><a class="dropdown-item" href="/logout">Выход</a></li>
                 </ul>
             </div>
-
+            </div>
         </div>
     </nav>
 
@@ -391,9 +396,7 @@ import PromoCodeActivateForm from "@/AdminPanel/Components/Constructor/PromoCode
         </div>
         <div class="offcanvas-body">
             <div>
-                <ManagerProfile
-                    v-if="bot"
-                    :bot="bot"></ManagerProfile>
+                <ManagerProfile/>
             </div>
         </div>
     </div>

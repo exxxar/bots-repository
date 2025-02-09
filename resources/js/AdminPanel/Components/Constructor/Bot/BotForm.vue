@@ -3,6 +3,8 @@ import CompanyList from "@/AdminPanel/Components/Constructor/Company/CompanyList
 /*import TextHelper from "@/AdminPanel/Components/Constructor/Helpers/TextHelper.vue";*/
 import TelegramChannelHelper from "@/AdminPanel/Components/Constructor/Helpers/TelegramChannelHelper.vue";
 import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchModal.vue";
+import BotSlugList from "@/AdminPanel/Components/Constructor/Slugs/BotSlugSimpleTableList.vue";
+
 </script>
 <template>
     <form
@@ -23,7 +25,7 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                             <img v-lazy="'../images/icon.png'" alt="" width="100" height="100">
                                         </div>
 
-                                        <h4 class="mb-4">Добро пожваловать в раздел создания бота!</h4>
+                                        <h4 class="mb-4">Добро пожаловать в раздел создания бота!</h4>
                                         <p class="small mb-2">
                                             Здесь вы можете легко управлять своими Telegram-ботами: создавать новых,
                                             настраивать команды, анализировать статистику и многое другое. Войдите в
@@ -68,7 +70,8 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                              v-if="!isValidTelegramToken && botForm.bot_token?.length>0">
                                             Токен не действительный!
                                         </div>
-                                        <p class="mb-2">Вы сразу можете выбрать один из доступных типов бота
+                                        <p class="mb-2">Перед добавлением токена выберите <span
+                                            class="fw-bold text-primary">тип бота</span>
                                         </p>
 
                                         <div class="row">
@@ -177,152 +180,74 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
 
         <template v-if="isValidTelegramToken">
             <div class="row">
-                <div class="col-md-6 col-12">
-                    <div class="card mb-3 border-primary">
-                        <div class="card-body">
-
-                            <label class="form-label" id="bot-token">
-                                Токен бота
-                            </label>
-                            <input type="text" class="form-control"
-                                   placeholder="Токен"
-                                   aria-label="Токен"
-                                   v-model="botForm.bot_token"
-                                   maxlength="255"
-                                   minlength="40"
-                                   @invalid="alert('Вы не ввели токен бота!')"
-                                   aria-describedby="bot-token" required>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-12" v-if="profile.is_admin||false">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-7 col-12">
-                                    <div class="form-floating mb-2">
-                                        <select class="form-select"
-                                                required
-                                                :disabled="servers.length===0"
-                                                v-model="botForm.server"
-                                                id="floatingSelect" aria-label="Floating label select example">
-                                            <option
-                                                :disabled="server.disabled"
-                                                :value="server.key" v-for="server in servers">
-                                                {{ server.title || 'без названия' }}
-                                                ({{ server.current_count || 0 }} из {{ server.max_bot_limit || 0 }})
-                                            </option>
-                                        </select>
-                                        <label for="floatingSelect">Выбор сервера размещения</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-5 col-12">
-                                    <button type="button"
-                                            @click="updateWebHook"
-                                            :disabled="bot==null"
-                                            class="btn btn-outline-danger p-3 w-100">Сменить сервер вручную
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row"
-                 style="position:sticky;top:60px;z-index:100;">
-                <div
-
-                    class="col-12 col-md-12 d-flex justify-content-end">
-                    <button type="submit"
-                            id="save-bot-btn"
-                            @click="messages = []"
-                            :disabled="!botForm.bot_token||!can_create"
-                            title="Сохранение бота"
-                            class="btn btn-primary min-menu-btn">
-                        <span v-if="!bot">Добавить бота</span>
-                        <span v-else><i class="fa-regular fa-floppy-disk"></i> Обновить бота</span>
-                        <span class="ml-2" v-if="!can_create">{{ spent_time_counter }} сек.</span>
-                    </button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <ul class="nav nav-tabs justify-content-center">
-                        <li class="nav-item" @click="tab=0">
-                            <a class="nav-link"
-                               v-bind:class="{'active':tab===0}"
-                               href="javascript:void(0)">Базовые настройки</a>
-                        </li>
-                        <li class="nav-item" @click="tab=1">
-                            <a class="nav-link"
-                               v-bind:class="{'active':tab===1}"
-                               href="javascript:void(0)">Кэшбэк&Финансы</a>
-                        </li>
-                        <li class="nav-item" v-if="botForm.id!=null" @click="tab=2">
-                            <a class="nav-link"
-                               v-bind:class="{'active':tab===2}"
-                               href="javascript:void(0)">Обратная связь</a>
-                        </li>
-                        <li class="nav-item" v-if="botForm.id==null">
-                            <a class="nav-link text-secondary"
-                               href="javascript:void(0)"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Обратная
-                                связь</a>
-                        </li>
-                        <li class="nav-item" @click="tab=3">
-                            <a class="nav-link"
-                               v-bind:class="{'active':tab===3}"
-                               href="javascript:void(0)">Сообщения</a>
-                        </li>
-                        <li class="nav-item" @click="tab=4">
-                            <a class="nav-link"
-                               v-bind:class="{'active':tab===4}"
-                               href="javascript:void(0)">Другие настройки</a>
-                        </li>
-                        <li class="nav-item" @click="tab=5">
-                            <a class="nav-link text-danger"
-                               v-bind:class="{'active':tab===5}"
-                               href="javascript:void(0)"><i class="fa-solid fa-skull-crossbones mr-1"></i> Устаревшие
-                                настройки</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row py-3" v-show="tab===0">
-
-                <div class="col-8">
+                <div class="col-md-8 order-2 mb-2 order-md-1 col-12">
                     <div class="row">
+                        <div class="col-12">
+                            <ul class="nav nav-tabs justify-content-center">
+                                <li class="nav-item" @click="tab=0">
+                                    <a class="nav-link"
+                                       v-bind:class="{'active':tab===0}"
+                                       href="javascript:void(0)">Базовые настройки</a>
+                                </li>
+                                <li class="nav-item" @click="tab=1">
+                                    <a class="nav-link"
+                                       v-bind:class="{'active':tab===1}"
+                                       href="javascript:void(0)">Кэшбэк&Финансы</a>
+                                </li>
+                                <li class="nav-item" v-if="botForm.id!=null" @click="tab=2">
+                                    <a class="nav-link"
+                                       v-bind:class="{'active':tab===2}"
+                                       href="javascript:void(0)">Обратная связь</a>
+                                </li>
+                                <li class="nav-item" v-if="botForm.id==null">
+                                    <a class="nav-link text-secondary"
+                                       href="javascript:void(0)"><i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                                        Обратная
+                                        связь</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row py-3" v-show="tab===0">
+
                         <div class="col-md-12 col-12">
 
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox"
-                                       :value="need_company_select"
-                                       v-model="need_company_select" id="bot-select-company">
-                                <label class="form-check-label" for="bot-select-company">
-                                    Выбрать клиента из списка
-                                </label>
+                            <div class="input-group mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control"
+                                           placeholder="Имя бота"
+                                           aria-label="Имя бота"
+                                           :disabled="true"
+                                           name='bot_domain'
+                                           @invalid="alert('Вы не ввели доменное имя бота!', 0)"
+                                           v-model="botForm.bot_domain"
+                                           maxlength="255"
+                                           aria-describedby="bot-domain" required>
+                                    <label class="form-label" id="bot-domain">
+                                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span> Доменное имя
+                                        бота
+                                        (загружается автоматически)
+                                    </label>
+                                </div>
+                                <span class="input-group-text">
+                                    <img
+                                        v-if="load_photo"
+                                        style="width:40px;"
+                                        class="object-fit-cover"
+                                        v-lazy="'/images/companies/'+botForm.bot_domain+'/logo.jpg'" alt="">
+                                    <img
+                                        v-else
+                                        style="width:40px;"
+                                        class="object-fit-cover"
+                                        v-lazy="'/images/icon.png'" alt="">
+                                </span>
                             </div>
-                            <p class="alert alert-danger"
-                               @click="need_company_select=true"
-                               v-if="botForm.company_id==null">Внимание! Вы не выбрали клиента!</p>
-                            <p class="card alert alert-success cursor-pointer"
-                               @click="need_company_select=true"
-                               v-else>
-                                Выбран клиент <span v-if="company" class="font-bold">#{{ company.id }} {{
-                                    company.title
-                                }}</span>
-                            </p>
-                        </div>
-                        <div class="col-md-12 col-12" v-if="need_company_select">
 
-                            <CompanyList
-                                v-if="!load"
-                                :selected="botForm.company_id"
-                                v-on:callback="companyListCallback"/>
 
                         </div>
-                        <div class="col-md-12 col-12">
+
+
+                        <div class="col-md-12 col-12" v-if="profile.is_admin||false">
                             <div class="form-check mb-3">
                                 <input class="form-check-input" type="checkbox"
                                        :value="botForm.is_template||false"
@@ -333,20 +258,11 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                             </div>
 
                         </div>
+
                         <div class="col-md-12 col-12"
                              v-if="botForm.is_template">
-                            <div class="mb-3">
-                                <label class="form-label" id="bot-template-description">
-                                    <Popper>
-                                        <i class="fa-regular fa-circle-question mr-1"></i>
-                                        <template #content>
-                                            <div>Если Вы создаете шаблон, а не реального бота
-                                            </div>
-                                        </template>
-                                    </Popper>
-                                    Название шаблона бота
-                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                                </label>
+                            <div class="form-floating mb-3">
+
                                 <input type="text" class="form-control"
                                        placeholder="Название \ описание шаблона"
                                        aria-label="Описание шаблона"
@@ -354,38 +270,29 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                        maxlength="255"
                                        @invalid="alert('Вы не ввели название шаблона!')"
                                        aria-describedby="bot-template-description" required>
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-12">
-                            <div class="mb-3">
-                                <label class="form-label" id="bot-domain">
-                                    <Popper>
-                                        <i class="fa-regular fa-circle-question mr-1"></i>
-                                        <template #content>
-                                            <div>Строго взять из BotFather! ТО что при создании с окончанием на "bot"</div>
-                                        </template>
-                                    </Popper>
-                                    Доменное имя бота (загружается автоматически)
-                                </label>
-                                <input type="text" class="form-control"
-                                       placeholder="Имя бота"
-                                       aria-label="Имя бота"
-                                       :disabled="true"
-                                       name='bot_domain'
-                                       @invalid="alert('Вы не ввели доменное имя бота!', 0)"
-                                       v-model="botForm.bot_domain"
-                                       maxlength="255"
-                                       aria-describedby="bot-domain" required>
 
+                                <label class="form-label" id="bot-template-description">
+                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span> Название шаблона
+                                    бота
+                                </label>
                             </div>
                         </div>
+
                         <div class="col-md-12 col-12">
                             <div class="card">
                                 <div class="card-body">
                                     <h6>Настройка параметров бота в BotFather</h6>
 
 
-                                    <div class="mb-3">
+                                    <div class="form-floating mb-3">
+
+                                        <input type="text" class="form-control"
+                                               placeholder="Текст названия"
+                                               aria-label="Текст названия"
+                                               v-model="botForm.title"
+                                               maxlength="64"
+                                               aria-describedby="bot-title">
+
                                         <label class="form-label d-flex justify-content-between align-items-center"
                                                id="bot-title">
                                               <span v-if="botForm.title">
@@ -398,16 +305,27 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                             <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                                         </label>
 
-                                        <input type="text" class="form-control"
-                                               placeholder="Текст названия"
-                                               aria-label="Текст названия"
-                                               v-model="botForm.title"
-                                               maxlength="64"
-                                               aria-describedby="bot-title">
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label d-flex justify-content-between align-items-center"
+
+                                    <div class="alert alert-info" role="alert">
+                                        Данное описание видно в момент, когда пользователь делится ссылкой на бота, а
+                                        также
+                                        при
+                                        нажатии на иконку бота.
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control"
+                                                  placeholder="Описание в шапке бота"
+                                                  aria-label="Описание в шапке бота"
+                                                  v-model="botForm.short_description"
+                                                  maxlength="105"
+                                                  style="min-height:100px;"
+                                                  aria-describedby="bot-short-description">
+                                        </textarea>
+
+                                        <label class="form-label"
                                                id="bot-short-description">
                                               <span>
                                                   Описание в шапке бота
@@ -416,27 +334,32 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                                           botForm.short_description.length
                                                       }}/105</small>
                                               </span>
-
-                                            <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                                         </label>
-
-                                        <div class="alert alert-info" role="alert">
-                                            Данное описание видно в момент, когда пользователь делится ссылкой на бота, а также
-                                            при
-                                            нажатии на иконку бота.
-                                        </div>
-
-                                        <textarea class="form-control"
-                                                  placeholder="Описание в шапке бота"
-                                                  aria-label="Описание в шапке бота"
-                                                  v-model="botForm.short_description"
-                                                  maxlength="105"
-                                                  aria-describedby="bot-short-description">
-                                </textarea>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label d-flex justify-content-between align-items-center"
+                                    <div class="alert alert-info" role="alert">
+                                        Данное описание видно при первом запуске бота, оно должно содержать информацию о
+                                        возможностях бота:
+                                        <ul class="m-0 pl-2">
+                                            <li>- система лояльности</li>
+                                            <li>- колесо фортуны</li>
+                                            <li>- интернет-магазин</li>
+                                            <li>- реферальная система</li>
+                                        </ul>
+                                        и т.д.
+                                    </div>
+
+                                    <div class="mb-3 form-floating">
+
+                                        <textarea class="form-control"
+                                                  placeholder="Описание возможностей бота"
+                                                  aria-label="Описание возможностей бота"
+                                                  v-model="botForm.long_description"
+                                                  maxlength="505"
+                                                  style="min-height:200px;"
+                                                  aria-describedby="bot-long-description"></textarea>
+
+                                        <label class="form-label"
                                                id="bot-long-description">
                                               <span>
                                                  Описание возможностей бота
@@ -445,89 +368,124 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                                           botForm.long_description.length
                                                       }}/505</small>
                                               </span>
-
-                                            <!--                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>-->
                                         </label>
-
-                                        <div class="alert alert-info" role="alert">
-                                            Данное описание видно при первом запуске бота, оно должно содержать информацию о
-                                            возможностях бота:
-                                            <ul class="m-0 pl-2">
-                                                <li>- система лояльности</li>
-                                                <li>- колесо фортуны</li>
-                                                <li>- интернет-магазин</li>
-                                                <li>- реферальная система</li>
-                                            </ul>
-                                            и т.д.
-                                        </div>
-
-                                        <textarea class="form-control"
-                                                  placeholder="Описание возможностей бота"
-                                                  aria-label="Описание возможностей бота"
-                                                  v-model="botForm.long_description"
-                                                  maxlength="505"
-                                                  aria-describedby="bot-long-description">
-                                </textarea>
                                     </div>
 
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input"
+                                                       type="checkbox"
+                                                       v-model="needMenuBtn" id="needMenuBtn">
+                                                <label class="form-check-label" for="needMenuBtn">
+                                                    Нужна кнопка меню
+                                                </label>
+                                            </div>
+                                        </div>
 
+
+                                        <template v-if="needMenuBtn">
+
+                                            <div class="col-12">
+
+                                                <div class="input-group mb-3">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control"
+                                                               placeholder="Текст кнопки меню"
+                                                               aria-label="Текст кнопки меню"
+                                                               maxlength="255"
+                                                               @invalid="alert('Текст кнопки меню!', 0)"
+                                                               v-model="botForm.menu.text"
+                                                               required>
+                                                        <label for="">Текст кнопки меню</label>
+                                                    </div>
+                                                    <div class="form-floating">
+                                                        <input type="url" class="form-control"
+                                                               placeholder="Адрес перехода URL"
+                                                               aria-label="Адрес перехода URL"
+                                                               maxlength="255"
+                                                               @invalid="alert('Вы не ввели адрес меню!', 0)"
+                                                               v-model="botForm.menu.url"
+                                                               required>
+                                                        <label for="">URL-адрес перехода</label>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        @click="openSelectScriptModal"
+                                                        class="input-group-text px-2 text-primary" id="basic-addon1">
+                                                        <i class="fa-solid fa-link"></i>
+                                                    </button>
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </template>
+
+                                    </div>
+
+                                    <h6 class="fw-bold mb-2">Пользовательские команды </h6>
                                     <div class="row"
                                          :key="'commands-'+index"
                                          v-for="(item, index) in botForm.commands">
                                         <div class="col-12" v-if="botForm.commands[index].command==='/adminmenu'">
                                             <div class="alert alert-primary" role="alert">
                                                 <strong>Внимание!</strong> Отображать пользователю команду <strong
-                                                class="text-danger">/adminmenu</strong> плохая идея. Команда доступна только
-                                                администраторам системы, а обычный пользователь будет видеть ошибку. Это создаст
+                                                class="text-danger">/adminmenu</strong> плохая идея. Команда доступна
+                                                только
+                                                администраторам системы, а обычный пользователь будет видеть ошибку. Это
+                                                создаст
                                                 негативное восприятие от работы сервиса.
                                             </div>
                                         </div>
-                                        <div class="col-5">
-                                            <div class="mb-3">
-                                                <input type="text" class="form-control"
-                                                       placeholder="Название команды"
-                                                       aria-label="Название команды"
-                                                       maxlength="255"
-                                                       @invalid="alert('Вы не ввели название команды',0)"
-                                                       v-model="botForm.commands[index].command"
-                                                       :aria-describedby="'bot-command-'+index" required>
+                                        <div class="col-12">
+
+                                            <div class="input-group mb-3">
+
+                                                <div class="form-floating">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Название команды"
+                                                           aria-label="Название команды"
+                                                           maxlength="255"
+                                                           @invalid="alert('Вы не ввели название команды',0)"
+                                                           v-model="botForm.commands[index].command"
+                                                           :aria-describedby="'bot-command-'+index" required>
+                                                    <label for="">Команда</label>
+                                                </div>
+
+                                                <div class="form-floating">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Описание команды"
+                                                           aria-label="Описание команды"
+                                                           maxlength="255"
+                                                           @invalid="alert('Вы не ввели описание команды!', 0)"
+                                                           v-model="botForm.commands[index].description"
+                                                           :aria-describedby="'bot-command-description-'+index"
+                                                           required>
+                                                    <label for="">Описание команды</label>
+                                                </div>
+                                                <button class="input-group-text text-danger"
+                                                        @click="removeCommands(index)"><i
+                                                    class="fa-regular fa-trash-can"></i>
+                                                </button>
                                             </div>
+
+
                                         </div>
-                                        <div class="col-5">
-                                            <div class="mb-3">
-                                                <input type="text" class="form-control"
-                                                       placeholder="Описание команды"
-                                                       aria-label="Описание команды"
-                                                       maxlength="255"
-                                                       @invalid="alert('Вы не ввели описание команды!', 0)"
-                                                       v-model="botForm.commands[index].description"
-                                                       :aria-describedby="'bot-command-description-'+index" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <button
-                                                type="button"
-                                                @click="removeCommands(index)"
-                                                class="btn btn-outline-danger w-100"><i class="fa-regular fa-trash-can"></i>
-                                            </button>
-                                        </div>
+
                                     </div>
                                     <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-6">
                                             <button
                                                 type="button"
                                                 @click="addCommands()"
-                                                class="btn btn-outline-success w-100">
-                                                <span v-if="(botForm.commands||[]).length>0"> Добавить еще команду</span>
-                                                <span v-else> Добавить системное меню</span>
-
+                                                class="btn btn-link  text-primary text-decoration-none p-0">
+                                                <i class="fa-regular fa-square-plus"></i>
+                                                Добавить еще команду
                                             </button>
                                         </div>
-                                    </div>
-
-                                    <div class="row"
-                                    >
-                                        <div class="col-12 my-2">
+                                        <div class="col-6 d-flex justify-content-end">
                                             <div class="form-check">
                                                 <input class="form-check-input"
                                                        type="checkbox"
@@ -537,6 +495,9 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                                 </label>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-12 mb-3" v-if="showCode">
                                             <label class="form-label" id="bot-domain">JSON-код клавиатуры</label>
                                             <Vue3JsonEditor
@@ -550,84 +511,554 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <p class="mb-2">Кнопка меню</p>
-                                            <div class="form-check">
-                                                <input class="form-check-input"
-                                                       type="checkbox"
-                                                       v-model="needMenuBtn" id="needMenuBtn">
-                                                <label class="form-check-label" for="needMenuBtn">
-                                                    Нужна кнопка меню
-                                                </label>
-                                            </div>
-                                        </div>
 
-                                        <template v-if="needMenuBtn">
-                                            <div class="col-12" >
-                                <span
-                                    v-for="item in menu_variants"
-                                    @click="selectVariant(item)"
-                                    class="badge bg-primary mb-2 btn">
-                                    {{ item.title || 'Выбрать' }}
-                                </span>
-                                            </div>
-                                            <div class="col-6" >
-                                                <input type="text" class="form-control"
-                                                       placeholder="Текст кнопки меню"
-                                                       aria-label="Текст кнопки меню"
-                                                       maxlength="255"
-                                                       @invalid="alert('Текст кнопки меню!', 0)"
-                                                       v-model="botForm.menu.text"
-                                                       required>
-                                            </div>
-
-                                            <div class="col-6">
-                                                <input type="url" class="form-control"
-                                                       placeholder="Адрес перехода URL"
-                                                       aria-label="Адрес перехода URL"
-                                                       maxlength="255"
-                                                       @invalid="alert('Вы не ввели адрес меню!', 0)"
-                                                       v-model="botForm.menu.url"
-                                                       required>
-                                            </div>
-                                        </template>
-
-                                    </div>
                                 </div>
                             </div>
                         </div>
 
 
                     </div>
-                </div>
+                    <div class="row py-3" v-show="tab===1">
 
-                <div class="col-4">
-                    <div class="card">
+                        <div class="col-md-4 col-12">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control"
+                                       placeholder="%"
+                                       aria-label="уровень CashBack"
+                                       v-model="botForm.level_1"
+                                       min="0"
+                                       @invalid="alert('Вы не ввели значение кэшбэка 1 уровня бота!', 1)"
+                                       aria-describedby="bot-level-1" required>
+                                <label class="form-label" id="bot-level-1">
+                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span> Уровень 1 CashBack,
+                                    %
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control"
+                                       placeholder="%"
+                                       aria-label="уровень CashBack"
+                                       v-model="botForm.level_2"
+                                       min="0"
+                                       aria-describedby="bot-level-2">
+                                <label class="form-label" id="bot-level-2">Уровень 2 CashBack, %</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-floating mb-3">
+
+                                <input type="number" class="form-control"
+                                       placeholder="%"
+                                       aria-label="уровень CashBack"
+                                       v-model="botForm.level_3"
+                                       min="0"
+                                       aria-describedby="bot-level-3">
+                                <label class="form-label" id="bot-level-3">Уровень 3 CashBack, %</label>
+                            </div>
+                        </div>
+
+
+                        <div class="mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="need_cashback_fired"
+                                       type="checkbox"
+                                       id="need-cashback-fired">
+                                <label class="form-check-label" for="need-cashback-fired">
+                                    Необходимо настроить период сгорания CashBack
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12 col-12" v-if="need_cashback_fired">
+                            <div class="form-floating mb-3">
+
+                                <select class="form-control" v-model="botForm.cashback_fire_period"
+                                        id="cashback-fired-period">
+                                    <option :value="item.value" v-for="item in cashback_fire_periods">
+                                        {{ item.title || 'Не указано' }}
+                                    </option>
+                                </select>
+                                <label class="form-label" id="cashback-fired-period">Период сгорания CashBack</label>
+                            </div>
+                            <div class="mb-3" v-if="botForm.cashback_fire_period>0">
+                                <label class="form-label" id="cashback-fired-level">Уровень сгорания CashBack, %</label>
+                                <input type="number" class="form-control"
+                                       placeholder="%"
+                                       aria-label="уровень сгорания CashBack"
+                                       v-model="botForm.cashback_fire_percent"
+                                       min="0"
+                                       max="100"
+                                       aria-describedby="cashback-fired-level">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-12">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control"
+                                       placeholder="%"
+                                       aria-label="процент для списания CashBack при покупке"
+                                       v-model="botForm.max_cashback_use_percent"
+                                       min="0"
+                                       max="100"
+                                       aria-describedby="cashback-max_cashback_use_percent">
+                                <label class="form-label" id="cashback-max_cashback_use_percent">
+                                    Автоматическое списание CashBack при покупке, % от цены товара</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="need_payments"
+                                       type="checkbox"
+                                       id="need-payments">
+                                <label class="form-check-label" for="need-payments">
+                                    Необходимо подключить платежную систему
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12 col-12" v-if="need_payments">
+                            <div class="form-check mb-3 ml-3">
+                                <input class="form-check-input" type="checkbox"
+                                       :value="botForm.auto_cashback_on_payments"
+                                       v-model="botForm.auto_cashback_on_payments"
+                                       id="bot-auto-cashback-on-payments">
+                                <label class="form-check-label" for="bot-auto-cashback-on-payments">
+                                    Начислять CashBack автоматически после успешной оплаты
+                                </label>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="form-floating">
+
+                                    <input type="text" class="form-control"
+                                           id="payment_provider_token-input"
+                                           placeholder="Токен"
+                                           aria-label="Токен"
+                                           v-model="botForm.payment_provider_token"
+                                           aria-describedby="payment_provider_token">
+                                    <label class="form-label" id="payment_provider_token">Токен платежной
+                                        системы</label>
+
+                                </div>
+                                <a class="input-group-text" href="https://t.me/botfather" target="_blank">Подключить</a>
+                            </div>
+
+
+                        </div>
+                        <div class="col-12 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="need_shop"
+                                       type="checkbox"
+                                       id="need-shop">
+                                <label class="form-check-label" for="need-shop">
+                                    Необходимо интегрировать магазин в бота
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12 col-12" v-if="need_shop">
+
+                            <div class="input-group mb-3">
+                                <div class="form-floating">
+                                    <input type="url" class="form-control"
+                                           placeholder="Ссылка на группу ВК"
+                                           aria-label="ссылка на группу ВК"
+                                           v-model="botForm.vk_shop_link"
+                                           aria-describedby="vk_shop_link">
+                                    <label class="form-label" id="bot-vk_shop_link">Ссылка на группу ВК с
+                                        товарами</label>
+
+                                </div>
+                                <a class="input-group-text" href="https://vk.com/groups?w=groups_create"
+                                   target="_blank">Создать</a>
+                            </div>
+
+                        </div>
+
+                        <div class="mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="need_cashback_config"
+                                       type="checkbox"
+                                       id="need-cashback-config">
+                                <label class="form-check-label" for="need-cashback-config">
+                                    Необходимо настроить CashBack по категориям
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="mb-2" v-if="need_cashback_config">
+                            <h6>Настройка категорий CashBack-а</h6>
+                            <div class="alert alert-light" role="alert">
+                                Категории CashBack - это возможность разделить накопления и траты CashBack
+                                пользователями бота
+                                на
+                                указанные цели, например, кофейня может создать категории: на кофе, на десерты - и
+                                начислять
+                                баллы
+                                за купленный кофе отдельно от баллов за купленный десерт
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-2 flex-wrap"
+                                 :key="'social-link'+index"
+                                 v-for="(item, index) in botForm.cashback_config">
+
+
+                                <div class="input-group mb-2 w-100">
+                                    <div class="form-floating ">
+                                        <input type="text" class="form-control "
+                                               placeholder="Название категории"
+                                               aria-label="Название категории"
+                                               maxlength="255"
+                                               @invalid="alert('Вы не ввели название категории!', 1)"
+                                               v-model="botForm.cashback_config[index].title"
+                                               :aria-describedby="'bot-cashback-config-'+index" required>
+                                        <label for="">Название категории</label>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        @click="removeCashBackConfig(index)"
+                                        class="input-group-text text-danger"
+                                    ><i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+
+
+                            </div>
+
+                            <button
+                                type="button"
+                                @click="addCashBackConfig()"
+                                class="btn mb-2 rounded-sm btn-outline-primary p-3 w-100">
+                                Добавить категорию
+                            </button>
+                            <div class="divider divider-small my-3 bg-highlight "></div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="need_cashback_rules"
+                                       type="checkbox"
+                                       id="need-cashback-rules">
+                                <label class="form-check-label" for="need-cashback-rules">
+                                    Необходимо настроить оповещения под CashBack
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12 col-12 mb-2" v-if="need_cashback_rules">
+                            <div class="form-floating mb-2">
+
+                                <select class="form-control"
+                                        v-model="selected_warning"
+                                        @change="addWarning"
+                                        id="warning-rules">
+                                    <option :value="null">Не выбрано</option>
+                                    <option :value="item" v-for="item in filteredWarnings">
+                                        {{ item.title }}
+                                    </option>
+                                </select>
+                                <label class="form-check-label" for="warning-rules">
+                                    <i class="fa-solid fa-triangle-exclamation text-danger"></i> Правила критических
+                                    оповещений
+                                </label>
+                            </div>
+
+                            <template v-for="(warn, index) in botForm.warnings">
+
+
+                                <div class="input-group mb-2">
+                                    <div class="input-group-text">
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   v-model="botForm.warnings[index].is_active"
+                                                   type="checkbox"
+                                                   :id="'warning-is-active-'+index">
+                                            <label class="form-check-label"
+                                                   style="font-size:12px;"
+                                                   :for="'warning-is-active-'+index">
+                                                <span v-if="botForm.warnings[index].is_active">Включено</span>
+                                                <span v-else>Выключено</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating">
+                                        <input type="number" class="form-control"
+                                               placeholder="Значение"
+                                               v-model="botForm.warnings[index].rule_value"
+                                               min="0"
+                                               aria-describedby="bot-level-3">
+                                        <label for="">{{ getWarning(warn.rule_key).title || 'Не найдено' }}</label>
+                                    </div>
+                                    <button
+                                        @click="removeWarning(index)"
+                                        type="button"
+                                        class="input-group-text text-danger">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+
+                            </template>
+                        </div>
+                    </div>
+                    <div class="row py-3" v-show="tab===2">
+                        <div class="col-12">
+                            <div class="alert alert-light" role="alert">
+                                <strong>Внимание!</strong> Пропишите сообщение "Мой id" в группе и выполните указания
+                                бота
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="form-floating mb-3">
+
+                                <input type="text" class="form-control"
+                                       placeholder="id канала"
+                                       aria-label="id канала"
+                                       disabled="true"
+                                       v-model="botForm.order_channel"
+                                       maxlength="255"
+                                       aria-describedby="bot-order-channel">
+                                <label class="form-label" id="bot-order-channel">
+                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                    Канал для заказов (id)
+                                </label>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control"
+                                       placeholder="id канала"
+                                       aria-label="id канала"
+                                       v-model="botForm.main_channel"
+                                       maxlength="255"
+                                       disabled="true"
+                                       aria-describedby="bot-main-channel">
+                                <label class="form-label" id="bot-main-channel">Канал для постов (id,рекламный)</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-2" v-if="botForm.order_channel">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       v-model="need_threads"
+                                       type="checkbox"
+                                       id="need-topics-mailing">
+                                <label class="form-check-label" for="need-topics-mailing">
+                                    Необходимо добавить рассылку по топикам для канала заказов (он же системный канал)
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="col-12 mb-2" v-if="need_threads && botForm.order_channel">
+
+                            <div class="alert alert-light">
+                                Для автоматического создания топиков и заполнения информации по ним выполните следующие
+                                действий:
+                                <ul class="m-0 p-0">
+                                    <li>1.Создайте группу</li>
+                                    <li>2.Добавьте в группу вашего бота</li>
+                                    <li>3.Выдайте все административные права боту</li>
+                                    <li>4.Переведите группу в режим работы с темами в настройках группы (<strong
+                                        class="fw-bold text-primary">переключатель "Темы"</strong>)
+                                    </li>
+                                    <li>5.Пропишите сообщение <strong class="fw-bold text-primary">"Мой id"</strong> в
+                                        группе и выполните указания бота
+                                    </li>
+                                </ul>
+
+
+                            </div>
+                            <!--
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
+
+                                                            <button class="btn btn-outline-info"
+                                                                    @click="createBotTopics"
+                                                                    :disabled="!can_create_topics"
+                                                                    type="button">
+                                                                <i class="fa-solid fa-paperclip mr-2"></i>Создать топики автоматически
+                                                            </button>
+                                                        </div>
+                            -->
+
+
+                            <div class="row row-cols-3">
+                                <div class="col" v-for="(thread, index) in botForm.message_threads">
+                                    <div class="form-floating mb-2">
+                                        <input type="number" class="form-control"
+                                               min="0"
+                                               max="10000"
+                                               placeholder="Идентификатор топика"
+                                               v-model="botForm.message_threads[index].value">
+                                        <label for="">{{ thread.title }} ({{ thread.key }})</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="mb-2 mt-3">Сообщения</h6>
+                            <div class="mb-3 form-floating">
+                                <textarea type="text" class="form-control"
+                                          placeholder="Текстовое сообщение"
+                                          aria-label="Текстовое сообщение"
+                                          v-model="botForm.maintenance_message"
+                                          maxlength="255"
+                                          style="min-height:200px;"
+                                          @invalid="alert('Вы не ввели сообщение для технических работ бота!', 3)"
+                                          aria-describedby="bot-maintenance-message" required></textarea>
+
+                                <label class="form-label" id="bot-maintenance-message">
+                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span> Сообщение для
+                                    режима тех.работ
+                                    <small class="text-gray-400 ml-3" style="font-size:10px;"
+                                           v-if="botForm.maintenance_message">
+                                        Длина текста {{ botForm.maintenance_message.length }}</small>
+                                </label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row py-3" v-show="tab===4">
+                        <div class="col-12">
+                            <div class="alert alert-primary" role="alert">
+                                Внешний сервис находится в эксперементальном режиме. Он нужен для связывания команд
+                                (страниц)
+                                бота с
+                                программой Клиента (если есть такая необходимость).
+                                Если на странице бота выбрано "внешнее управление", то все запросы будут переадесрованы
+                                на
+                                указанную
+                                ниже ссылку.
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-12">
+                            <div class="form-floating mb-3">
+
+
+                                <input type="url" class="form-control"
+                                       placeholder="Ссылка на внешний сервис"
+                                       aria-label="ссылка на внешний сервис"
+                                       v-model="botForm.callback_link"
+                                       aria-describedby="callback_link">
+                                <label class="form-label" id="callback_link">Ссылка на внешний сервис обработки данных
+                                </label>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 order-1 mb-2 order-md-2 col-12">
+
+                    <div class="card mb-2 border-light">
+                        <div class="card-body">
+
+                            <div class="form-floating mb-2">
+
+                                <input type="text" class="form-control"
+                                       placeholder="Токен"
+                                       aria-label="Токен"
+                                       v-model="botForm.bot_token"
+                                       maxlength="255"
+                                       minlength="40"
+                                       @invalid="alert('Вы не ввели токен бота!')"
+                                       aria-describedby="bot-token" required>
+                                <label class="form-label" id="bot-token">
+                                    Токен бота
+                                </label>
+                            </div>
+
+                            <button type="submit"
+                                    id="save-bot-btn"
+                                    @click="messages = []"
+                                    :disabled="!botForm.bot_token||spent_time_counter>0"
+                                    title="Сохранение бота"
+                                    class="btn btn-primary min-menu-btn w-100">
+                                <template v-if="spent_time_counter>0">
+                                    Осталось подождать {{ spent_time_counter }} сек.
+                                </template>
+                                <template v-else>
+                                    <span v-if="!bot">Добавить бота</span>
+                                    <span v-else><i class="fa-regular fa-floppy-disk"></i> Сохранить изменения</span>
+                                </template>
+                            </button>
+                        </div>
+
+
+                    </div>
+
+                    <template v-if="profile.is_admin||false">
+
+
+                        <div class="input-group mb-2">
+                            <div class="form-floating">
+                                <select class="form-select"
+                                        required
+                                        :disabled="servers.length===0"
+                                        v-model="botForm.server"
+                                        id="floatingSelect" aria-label="Floating label select example">
+                                    <option
+                                        :disabled="server.disabled"
+                                        :value="server.key" v-for="server in servers">
+                                        {{ server.title || 'без названия' }}
+                                        ({{ server.current_count || 0 }} из {{ server.max_bot_limit || 0 }})
+                                    </option>
+                                </select>
+                                <label for="floatingSelect"> <span
+                                    class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                    Выбор сервера размещения</label>
+                            </div>
+                            <button
+                                @click="updateWebHook"
+                                :disabled="bot==null"
+                                class="input-group-text text-danger">
+                                <i class="fa-solid fa-right-left"></i>
+                            </button>
+                        </div>
+
+
+                    </template>
+                    <div class="card border-light mb-2">
                         <div class="card-body">
                             <p v-if="botForm.bot_domain">Проверить работу бота</p>
 
                             <a
                                 class="btn btn-success w-100 p-3 mb-3"
                                 :href="'https://t.me/'+botForm.bot_domain"
-                               target="_blank">@{{
+                                target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> {{
                                     botForm.bot_domain
                                 }}</a>
 
-                            <button class="btn btn-primary p-3 w-100 mb-3">Пополнить баланс бота</button>
+                            <button
+                                type="button"
+                                v-if="profile.is_manager"
+                                class="btn btn-primary p-3 w-100 mb-3">Пополнить баланс бота
+                            </button>
 
                             <template v-if="profile.is_admin">
                                 <div class="col-12">
                                     <div class="alert alert-primary" role="alert">
-                                        <strong>Внимание!</strong> Внесите сумму, которую вам дал Клиент! Эта сумма будет балансом
+                                        <strong>Внимание!</strong> Внесите сумму, которую вам дал Клиент! Эта сумма
+                                        будет балансом
                                         Клиента
-                                        для работы бота! Укажите тариф бота - это сумма, которую система будет списывать с клиента
+                                        для работы бота! Укажите тариф бота - это сумма, которую система будет списывать
+                                        с клиента
                                         каждый
                                         день пока баланс бота не будет равен 0.
                                         <br>
-                                        <strong>Внимание!</strong> Вы можете начислить какую-то небольшую сумму для того чтобы
+                                        <strong>Внимание!</strong> Вы можете начислить какую-то небольшую сумму для того
+                                        чтобы
                                         клиент
-                                        протестировал работу бота. При достижении нулевого баланса клиент будет оповещен об этом и
+                                        протестировал работу бота. При достижении нулевого баланса клиент будет оповещен
+                                        об этом и
                                         должен
                                         будет пополнить счёт бота!
                                     </div>
@@ -642,14 +1073,8 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                                @invalid="alert('Вы не ввели сумму баланса бота!', 1)"
                                                aria-describedby="bot-balance" required>
                                         <label class="form-label" id="bot-balance">
-                                            <Popper>
-                                                <i class="fa-regular fa-circle-question mr-1"></i>
-                                                <template #content>
-                                                    <div>Начальная сумма денег на счету у конкретного бота</div>
-                                                </template>
-                                            </Popper>
-                                            Баланс бота, руб
-                                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span> Баланс
+                                            бота, руб
                                         </label>
                                     </div>
                                 </div>
@@ -664,14 +1089,8 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                                                @invalid="alert('Вы не ввели сумму списания бота!', 1)"
                                                aria-describedby="bot-tax-per-day" required>
                                         <label class="form-label" id="bot-tax-per-day">
-                                            <Popper>
-                                                <i class="fa-regular fa-circle-question mr-1"></i>
-                                                <template #content>
-                                                    <div>Сумма списания денег за сутки работы бота (тариф)</div>
-                                                </template>
-                                            </Popper>
-                                            Списание за сутки, руб
-                                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span> Списание за
+                                            сутки, руб
                                         </label>
                                     </div>
                                 </div>
@@ -679,297 +1098,39 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                         </div>
                     </div>
 
-                </div>
-
-            </div>
-            <div class="row py-3" v-show="tab===1">
-
-                <div class="col-md-6 col-12">
-                    <div class="mb-3">
-                        <label class="form-label" id="bot-level-1">
-                            Уровень 1 CashBack, %
-                            <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                        </label>
-                        <input type="number" class="form-control"
-                               placeholder="%"
-                               aria-label="уровень CashBack"
-                               v-model="botForm.level_1"
-                               min="0"
-                               @invalid="alert('Вы не ввели значение кэшбэка 1 уровня бота!', 1)"
-                               aria-describedby="bot-level-1" required>
-                    </div>
-                </div>
-                <div class="col-md-6 col-12">
-                    <div class="mb-3">
-                        <label class="form-label" id="bot-level-2">Уровень 2 CashBack, %</label>
-                        <input type="number" class="form-control"
-                               placeholder="%"
-                               aria-label="уровень CashBack"
-                               v-model="botForm.level_2"
-                               min="0"
-                               aria-describedby="bot-level-2">
-                    </div>
-                </div>
-                <div class="col-md-6 col-12">
-                    <div class="mb-3">
-                        <label class="form-label" id="bot-level-3">Уровень 3 CashBack, %</label>
-                        <input type="number" class="form-control"
-                               placeholder="%"
-                               aria-label="уровень CashBack"
-                               v-model="botForm.level_3"
-                               min="0"
-                               aria-describedby="bot-level-3">
-                    </div>
-                </div>
-
-
-                <div class="mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               v-model="need_cashback_fired"
-                               type="checkbox"
-                               id="need-cashback-fired">
-                        <label class="form-check-label" for="need-cashback-fired">
-                            Необходимо настроить период сгорания CashBack
-                        </label>
-                    </div>
-
-                </div>
-                <div class="col-md-12 col-12" v-if="need_cashback_fired">
-                    <div class="mb-3">
-                        <label class="form-label" id="cashback-fired-period">Период сгорания CashBack</label>
-                        <select class="form-control" v-model="botForm.cashback_fire_period" id="cashback-fired-period">
-                            <option :value="item.value" v-for="item in cashback_fire_periods">
-                                {{ item.title || 'Не указано' }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="mb-3" v-if="botForm.cashback_fire_period>0">
-                        <label class="form-label" id="cashback-fired-level">Уровень сгорания CashBack, %</label>
-                        <input type="number" class="form-control"
-                               placeholder="%"
-                               aria-label="уровень сгорания CashBack"
-                               v-model="botForm.cashback_fire_percent"
-                               min="0"
-                               max="100"
-                               aria-describedby="cashback-fired-level">
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-12">
-                    <div class="mb-3">
-                        <label class="form-label" id="cashback-max_cashback_use_percent">
-                            Автоматическое списание CashBack при покупке, % от цены товара</label>
-                        <input type="number" class="form-control"
-                               placeholder="%"
-                               aria-label="процент для списания CashBack при покупке"
-                               v-model="botForm.max_cashback_use_percent"
-                               min="0"
-                               max="100"
-                               aria-describedby="cashback-max_cashback_use_percent">
-                    </div>
-                </div>
-
-                <div class="col-12 mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               v-model="need_payments"
-                               type="checkbox"
-                               id="need-payments">
-                        <label class="form-check-label" for="need-payments">
-                            Необходимо подключить платежную систему
-                        </label>
-                    </div>
-
-                </div>
-                <div class="col-md-12 col-12" v-if="need_payments">
-                    <div class="form-check mb-3 ml-3">
-                        <input class="form-check-input" type="checkbox"
-                               :value="botForm.auto_cashback_on_payments"
-                               v-model="botForm.auto_cashback_on_payments"
-                               id="bot-auto-cashback-on-payments">
-                        <label class="form-check-label" for="bot-auto-cashback-on-payments">
-                            Начислять CashBack автоматически после успешной оплаты
-                        </label>
-                    </div>
-
-                    <div class="mb-3">
-                        <Popper>
-                            <i class="fa-regular fa-circle-question mr-1"></i>
-                            <template #content>
-                                <div>Если в боте планируется оплата, то необходимо через BotFather привязать нужную
-                                    платежную систему и указать в данном поле полученный токен
-                                </div>
-                            </template>
-                        </Popper>
-                        <label class="form-label" id="payment_provider_token">Токен платежной системы
-                            <a href="https://t.me/botfather" target="_blank">Подключить</a>
-                        </label>
-
-
-                        <input type="text" class="form-control"
-                               id="payment_provider_token-input"
-                               placeholder="Токен"
-                               aria-label="Токен"
-                               v-model="botForm.payment_provider_token"
-                               aria-describedby="payment_provider_token">
-                    </div>
-
-
-                </div>
-                <div class="col-12 mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               v-model="need_shop"
-                               type="checkbox"
-                               id="need-shop">
-                        <label class="form-check-label" for="need-shop">
-                            Необходимо интегрировать магазин в бота
-                        </label>
-                    </div>
-
-                </div>
-                <div class="col-md-12 col-12" v-if="need_shop">
-                    <div class="mb-3">
-                        <Popper>
-                            <i class="fa-regular fa-circle-question mr-1"></i>
-                            <template #content>
-                                <div>Ссылка на страницу ВК с товарами для вашего магазина в боте
-                                </div>
-                            </template>
-                        </Popper>
-                        <label class="form-label" id="bot-vk_shop_link">Ссылка на группу ВК с товарами
-                            <a href="https://vk.com/groups?w=groups_create" target="_blank">Создать</a>
-                        </label>
-
-
-                        <input type="url" class="form-control"
-                               placeholder="Ссылка на группу ВК"
-                               aria-label="ссылка на группу ВК"
-                               v-model="botForm.vk_shop_link"
-                               aria-describedby="vk_shop_link">
-                    </div>
-                </div>
-
-                <div class="mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               v-model="need_cashback_config"
-                               type="checkbox"
-                               id="need-cashback-config">
-                        <label class="form-check-label" for="need-cashback-config">
-                            Необходимо настроить CashBack по категориям
-                        </label>
-                    </div>
-
-                </div>
-                <div class="mb-2" v-if="need_cashback_config">
-                    <h6>Настройка категорий CashBack-а</h6>
-
-
-                    <div class="d-flex justify-content-between mb-2 flex-wrap"
-                         :key="'social-link'+index"
-                         v-for="(item, index) in botForm.cashback_config">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                            <small>Название категории</small>
-
-                            <button
-                                type="button"
-                                @click="removeCashBackConfig(index)"
-                                class="btn btn-link text-danger"><i class="fa-regular fa-trash-can"></i>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control mb-2 w-100"
-                               placeholder="Название категории"
-                               aria-label="Название категории"
-                               maxlength="255"
-                               @invalid="alert('Вы не ввели название категории!', 1)"
-                               v-model="botForm.cashback_config[index].title"
-                               :aria-describedby="'bot-cashback-config-'+index" required>
-
-
-                    </div>
-                    <div class="alert alert-primary" role="alert">
-                        Категории CashBack - это возможность разделить накопления и траты CashBack пользователями бота
-                        на
-                        указанные цели, например, кофейня может создать категории: на кофе, на десерты - и начислять
-                        баллы
-                        за купленный кофе отдельно от баллов за купленный десерт
-                    </div>
-                    <button
-                        type="button"
-                        @click="addCashBackConfig()"
-                        class="btn mb-2 rounded-sm btn-outline-info w-100">
-                        Добавить категорию
-                    </button>
-                    <div class="divider divider-small my-3 bg-highlight "></div>
-                </div>
-                <div class="mb-2">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               v-model="need_cashback_rules"
-                               type="checkbox"
-                               id="need-cashback-rules">
-                        <label class="form-check-label" for="need-cashback-rules">
-                            Необходимо настроить оповещения под CashBack
-                        </label>
-                    </div>
-
-                </div>
-                <div class="col-md-12 col-12 mb-2" v-if="need_cashback_rules">
-                    <div class="card border-warning">
+                    <div class="card border-light">
                         <div class="card-body">
-                            <div class="form-group">
-                                <label class="form-check-label" for="warning-rules">
-                                    <i class="fa-solid fa-triangle-exclamation text-danger"></i> Правила критических
-                                    оповещений
-                                </label>
-                                <select class="form-control"
-                                        v-model="selected_warning"
-                                        @change="addWarning"
-                                        id="warning-rules">
-                                    <option :value="null">Не выбрано</option>
-                                    <option :value="item" v-for="item in filteredWarnings">
-                                        {{ item.title }}
-                                    </option>
-                                </select>
+                            <div class="col-md-12 col-12">
 
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox"
+                                           :value="need_company_select"
+                                           v-model="need_company_select" id="bot-select-company">
+                                    <label class="form-check-label" for="bot-select-company">
+                                        Выбрать клиента из списка
+                                    </label>
+                                </div>
+                                <p class="alert alert-danger"
+                                   @click="need_company_select=true"
+                                   v-if="botForm.company_id==null">Внимание! Вы не выбрали клиента!</p>
+                                <p class="card alert alert-success cursor-pointer"
+                                   @click="need_company_select=true"
+                                   v-else>
+                                    Выбран клиент <span v-if="company" class="font-bold">#{{ company.id }} {{
+                                        company.title
+                                    }}</span>
+                                </p>
                             </div>
+                            <div class="col-md-12 col-12" v-if="need_company_select">s
 
-                            <div class="card my-2 p-2" v-for="(warn, index) in botForm.warnings">
-
-                                <div class="row">
-                                    <div class="col-md-4 d-flex align-items-center">
-                                        <p class="m-0">{{ getWarning(warn.rule_key).title || 'Не найдено' }}</p>
-                                    </div>
-                                    <div class="col-md-2">
-
-                                        <div class="form-check">
-                                            <input class="form-check-input"
-                                                   v-model="botForm.warnings[index].is_active"
-                                                   type="checkbox"
-                                                   :id="'warning-is-active-'+index">
-                                            <label class="form-check-label" :for="'warning-is-active-'+index">
-                                                <span v-if="botForm.warnings[index].is_active">Вкл</span>
-                                                <span v-else>Выкл</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-
-                                        <input type="number" class="form-control"
-                                               placeholder="Значение"
-                                               v-model="botForm.warnings[index].rule_value"
-                                               min="0"
-                                               aria-describedby="bot-level-3">
-                                    </div>
-                                    <div class="col-md-1 d-flex justify-content-center">
-                                        <button
-                                            @click="removeWarning(index)"
-                                            type="button" class="btn btn-outline-danger"><i
-                                            class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </div>
+                                <div
+                                    class="w-100 p-2"
+                                    style="overflow-y:scroll;max-height:300px;">
+                                    <CompanyList
+                                        v-if="!load"
+                                        :is-simple="true"
+                                        :selected="botForm.company_id"
+                                        v-on:callback="companyListCallback"/>
                                 </div>
 
 
@@ -978,387 +1139,7 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
                     </div>
                 </div>
             </div>
-            <div class="row py-3" v-show="tab===2">
-                <div class="col-12">
-                    <div class="alert alert-primary" role="alert">
-                        <strong>Внимание!</strong> Для того чтобы узнать ID канала сперва создайте Канал или Группу в
-                        телеграм, добавьте в него вашего <strong>сохраненного бота</strong>,
-                        назначьте бота администратором Канала или Группы, а только после этого впишите команду "Мой id"
-                        в
-                        бота.
-                    </div>
-                </div>
-                <div class="col-md-6 col-12">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label class="form-label d-flex justify-content-between" id="bot-order-channel">
-                                <div>
-                                    <Popper>
-                                        <i class="fa-regular fa-circle-question mr-1"></i>
-                                        <template #content>
-                                            <div>Ввести адрес ссылки на канал в форму после добавления тоукена
-                                            </div>
-                                        </template>
-                                    </Popper>
-                                    Канал для заказов (id)
-                                    <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                                </div>
-                            </label>
 
-                            <TelegramChannelHelper
-                                :token="botForm.bot_token"
-                                :param="'order_channel'"
-                                v-on:callback="addTextTo"
-                            />
-                        </div>
-                        <input type="text" class="form-control"
-                               placeholder="id канала"
-                               aria-label="id канала"
-                               v-model="botForm.order_channel"
-                               maxlength="255"
-                               aria-describedby="bot-order-channel">
-                        <small><a
-                            @click="getChatLink(botForm.order_channel)"
-                            href="javascript:void(0)">Узнать ссылку</a>(будет отправлена в бота)</small>
-                    </div>
-
-
-                </div>
-                <div class="col-md-6 col-12">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <label class="form-label" id="bot-main-channel">Канал для постов (id,рекламный)</label>
-
-                            <TelegramChannelHelper
-                                :token="botForm.bot_token"
-                                :param="'main_channel'"
-                                v-on:callback="addTextTo"
-                            />
-                        </div>
-                        <input type="text" class="form-control"
-                               placeholder="id канала"
-                               aria-label="id канала"
-                               v-model="botForm.main_channel"
-                               maxlength="255"
-                               aria-describedby="bot-main-channel">
-                        <small><a
-                            @click="getChatLink(botForm.main_channel)"
-                            href="javascript:void(0)">Узнать ссылку</a>(будет отправлена в бота)</small>
-                    </div>
-                </div>
-                <div class="col-12" v-if="botForm.order_channel">
-                    <div class="alert alert-primary" role="alert">
-                        <strong>Внимание!</strong> Топики работают только в Группах телеграм с включенным режимом
-                        "Топики" в
-                        настройках Группы! В каналах топиков нет.
-                    </div>
-                </div>
-                <div class="col-12 mb-2" v-if="botForm.order_channel">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               v-model="need_threads"
-                               type="checkbox"
-                               id="need-topics-mailing">
-                        <label class="form-check-label" for="need-topics-mailing">
-                            Необходимо добавить рассылку по топикам для канала заказов (он же системный канал)
-                        </label>
-                    </div>
-
-                </div>
-                <div class="col-12 mb-2" v-if="need_threads && botForm.order_channel">
-
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <p>Для того, чтоб узнать идентификатор топика в группе впишите в чат "Мой id"</p>
-
-                        <button class="btn btn-outline-info"
-                                @click="createBotTopics"
-                                :disabled="!can_create_topics"
-                                type="button">
-                            <i class="fa-solid fa-paperclip mr-2"></i>Создать топики автоматически
-                        </button>
-                    </div>
-
-                    <ul class="list-group">
-                        <li v-for="(thread, index) in botForm.message_threads" class="list-group-item">
-                            <p class="mb-0">{{ thread.title }} ({{ thread.key }})</p>
-                            <input type="number" class="form-control"
-                                   min="0"
-                                   max="10000"
-                                   placeholder="Идентификатор топика"
-                                   v-model="botForm.message_threads[index].value">
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-            <div class="row py-3" v-show="tab===3">
-
-                <div class="col-12">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <label class="form-label" id="bot-maintenance-message">Сообщение для режима тех.
-                                работ
-                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-
-                                <small class="text-gray-400 ml-3" style="font-size:10px;"
-                                       v-if="botForm.maintenance_message">
-                                    Длина текста {{ botForm.maintenance_message.length }}</small>
-                            </label>
-                            <!--                        <TextHelper
-                                                        :param="'maintenance_message'"
-                                                        v-on:callback="addTextTo"
-                                                    />-->
-                        </div>
-                        <textarea type="text" class="form-control"
-                                  placeholder="Текстовое сообщение"
-                                  aria-label="Текстовое сообщение"
-                                  v-model="botForm.maintenance_message"
-                                  maxlength="255"
-                                  @invalid="alert('Вы не ввели сообщение для технических работ бота!', 3)"
-                                  aria-describedby="bot-maintenance-message" required>
-                    </textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="row py-3" v-show="tab===4">
-                <div class="col-12">
-                    <div class="alert alert-primary" role="alert">
-                        Системная иконка нужна только для красивого отображения и узнаваемости бота на Landing-е
-                        системы.
-                    </div>
-                </div>
-                <div class="col-12 mb-3">
-                    <h6>Системная иконка бота
-                        <span class="badge rounded-pill text-bg-warning m-0">желательно</span>
-                    </h6>
-
-                    <div class="photo-preview d-flex justify-content-center flex-wrap w-100">
-                        <label for="bot-photos" style="margin-right: 10px;"
-                               class="photo-loader ml-2 bg-primary text-white shadow-md" v-if="botForm.photos">
-                            <span>+</span>
-                            <input type="file" id="bot-photos" accept="image/*"
-                                   @change="onChangePhotos"
-                                   style="display:none;"/>
-
-                        </label>
-
-                        <div class="mb-2 img-preview" style="margin-right: 10px;"
-                             v-for="(img, index) in botForm.photos"
-                             v-if="botForm.photos">
-                            <img v-lazy="getPhoto(img).imageUrl">
-                            <div class="remove">
-                                <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
-                            </div>
-                        </div>
-
-                        <div class="mb-2 img-preview" style="margin-right: 10px;"
-                             v-else>
-                            <img v-lazy="'/images-by-bot-id/'+bot.id+'/'+botForm.image">
-                            <div class="remove">
-                                <a @click="removePhoto()"><i class="fa-regular fa-trash-can"></i></a>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-                <div class="col-12">
-                    <div class="alert alert-primary" role="alert">
-                        Внешний сервис находится в эксперементальном режиме. Он нужен для связывания команд (страниц)
-                        бота с
-                        программой Клиента (если есть такая необходимость).
-                        Если на странице бота выбрано "внешнее управление", то все запросы будут переадесрованы на
-                        указанную
-                        ниже ссылку.
-                    </div>
-                </div>
-                <div class="col-md-12 col-12">
-                    <div class="mb-3">
-                        <Popper>
-                            <i class="fa-regular fa-circle-question mr-1"></i>
-                            <template #content>
-                                <div>Ссылка на внешний сервис обработки данных
-                                </div>
-                            </template>
-                        </Popper>
-                        <label class="form-label" id="callback_link">Ссылка на внешний сервис обработки данных
-                        </label>
-
-
-                        <input type="url" class="form-control"
-                               placeholder="Ссылка на внешний сервис"
-                               aria-label="ссылка на внешний сервис"
-                               v-model="botForm.callback_link"
-                               aria-describedby="callback_link">
-                    </div>
-                </div>
-
-            </div>
-            <div class="row py-3" v-show="tab===5">
-
-                <div class="col-12">
-                    <div class="alert alert-danger" role="alert">
-                        Внимание! Данный блок настроек больше не поддерживается и со временем эти настройки будут
-                        удалены из
-                        системы.
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <label class="form-label" id="bot-description">
-                                <Popper>
-                                    <i class="fa-regular fa-circle-question mr-1"></i>
-                                    <template #content>
-                                        <div>Отобразится пользователю при первом запуске</div>
-                                    </template>
-                                </Popper>
-                                Приветственное сообщение
-                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-
-
-                                <small class="text-gray-400 ml-3" style="font-size:10px;"
-                                       v-if="botForm.welcome_message">
-                                    Длина текста {{ botForm.welcome_message.length }}</small>
-                            </label>
-
-                            <!--                        <TextHelper
-                                                        :param="'welcome_message'"
-                                                        v-on:callback="addTextTo"
-                                                    />-->
-                        </div>
-                        <textarea type="text" class="form-control"
-                                  style="min-height:400px;"
-                                  placeholder="Текстовое приветствие при запуске бота"
-                                  aria-label="Текстовое приветствие при запуске бота"
-                                  v-model="botForm.welcome_message"
-                                  @invalid="alert('Вы не ввели приветственное сообщение!', 3)"
-                                  aria-describedby="bot-description" required>
-                    </textarea>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <label class="form-label" id="bot-description">
-                                <Popper>
-                                    <i class="fa-regular fa-circle-question mr-1"></i>
-                                    <template #content>
-                                        <div>Для меню "О Боте"</div>
-                                    </template>
-                                </Popper>
-                                Описание бота
-                                <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-
-                                <small class="text-gray-400 ml-3" style="font-size:10px;" v-if="botForm.description">
-                                    Длина текста {{ botForm.description.length }}</small>
-                            </label>
-
-                            <!--                        <TextHelper
-                                                        :param="'description'"
-                                                        v-on:callback="addTextTo"
-                                                    />-->
-                        </div>
-
-                        <textarea type="text" class="form-control"
-                                  placeholder="Текстовое описание бота"
-                                  aria-label="Текстовое описание бота"
-                                  v-model="botForm.description"
-                                  @invalid="alert('Вы не ввели описание бота!',3)"
-                                  aria-describedby="bot-description" required>
-                    </textarea>
-                    </div>
-                </div>
-
-                <div class="col-12 ">
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h6>Информационная ссылка: создайте контент в <a target="_blank" href="https://telegra.ph">https://telegra.ph</a>
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h6>Ссылка</h6>
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="mb-3">
-                                        <input type="text" class="form-control"
-                                               placeholder="Ссылка ресурс telegraph"
-                                               aria-label="Ссылка ресурс telegraph"
-                                               maxlength="255"
-                                               v-model="botForm.info_link"
-                                               :aria-describedby="'bot-info-link'">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 ">
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h6>Ссылки на соц. сети</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h6>Ссылка</h6>
-                                </div>
-
-                            </div>
-                            <div class="row"
-                                 :key="'social-link'+index"
-                                 v-for="(item, index) in botForm.social_links">
-                                <div class="col-5">
-                                    <div class="mb-3">
-                                        <input type="text" class="form-control"
-                                               placeholder="Название ссылки"
-                                               aria-label="Название ссылки"
-                                               maxlength="255"
-                                               @invalid="alert('Вы не ввели название ссылки на соц. сеть!',4)"
-                                               v-model="botForm.social_links[index].title"
-                                               :aria-describedby="'bot-social-link-'+index" required>
-                                    </div>
-                                </div>
-                                <div class="col-5">
-                                    <div class="mb-3">
-                                        <input type="text" class="form-control"
-                                               placeholder="Ссылка на соц.сеть"
-                                               aria-label="Ссылка на соц.сеть"
-                                               maxlength="255"
-                                               @invalid="alert('Вы не ввели ссылку на соц. сеть!',4)"
-                                               v-model="botForm.social_links[index].url"
-                                               :aria-describedby="'bot-social-link-'+index" required>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <button
-                                        type="button"
-                                        @click="removeItem('social_links', index)"
-                                        class="btn btn-outline-danger w-100"><i class="fa-regular fa-trash-can"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <button
-                                        type="button"
-                                        @click="addSocialLinks()"
-                                        class="btn btn-outline-success w-100">Добавить еще ссылку
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
             <div class="row">
                 <div class="col-12">
 
@@ -1379,6 +1160,45 @@ import BotSearchModal from "@/AdminPanel/Components/Constructor/Bot/BotSearchMod
         </template>
 
     </form>
+
+    <div class="modal fade" id="select-script-for-menu" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Выбор скрипта</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <template v-if="select_script_step===0">
+                        <BotSlugList v-on:select="selectVariant($event)"/>
+                    </template>
+
+                    <template v-if="select_script_step===1">
+                        <div class="alert alert-light">
+                            Внимание! Необходимо выбрать тип скрипта в меню
+                        </div>
+                        <div class="row row-cols-3">
+                            <div
+                                v-for="item in script_types"
+                                class="col mb-2">
+                                <div class="card" @click="selectVariantStep2(item)">
+                                    <div class="card-body text-center cursor-pointer text-primary fw-bold">
+                                        {{ item.title }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </template>
 <script>
 
@@ -1392,13 +1212,43 @@ export default {
     props: ["bot"],
     data() {
         return {
+            load_photo: true,
             loadCommandEditor: true,
-
-            menu_variants: [
+            select_script_modal: null,
+            select_script_step: 0,
+            script_types: [
                 {
-                    title: 'Открыть меню',
-                    url: '/bot-client/simple/{0}?slug={скрипт_id}#/s/menu'
-                }
+                    title: "Магазин",
+                    uri: '/shop',
+                },
+                {
+                    title: "Отзывы",
+                    uri: '/feedback',
+                },
+                {
+                    title: "Колесо фортуны",
+                    uri: '/wheel',
+                },
+                {
+                    title: "Профиль",
+                    uri: '/profile',
+                },
+                {
+                    title: "Заказы",
+                    uri: '/orders',
+                },
+                {
+                    title: "Ввод промокода",
+                    uri: '/new-promo-code',
+                },
+                {
+                    title: "Контакты",
+                    uri: '/contacts',
+                },
+                {
+                    title: "Корзина",
+                    uri: '/cart',
+                },
             ],
             showCode: false,
             tab: 0,
@@ -1512,10 +1362,9 @@ export default {
                 level_1: 10,
                 level_2: 0,
                 level_3: 0,
-                photos: [],
                 commands: null,
                 menu: {
-                    text: null,
+                    text: "Меню",
                     url: null
                 },
                 selected_bot_template_id: null,
@@ -1633,10 +1482,9 @@ export default {
     },
     mounted() {
 
-
+        this.select_script_modal = new bootstrap.Modal('#select-script-for-menu', {})
         //this.loadCurrentCompany()
         if (localStorage.getItem("cashman_admin_bot_creator_counter") != null) {
-            this.can_create = false;
             let time = localStorage.getItem("cashman_admin_bot_creator_counter")
             this.startTimer(time === "null" || time == null ? 0 : time)
         }
@@ -1644,6 +1492,8 @@ export default {
         window.addEventListener('store_current_company-change-event', (event) => {
             this.company = this.getCurrentCompany
         });
+
+
 
         window.addEventListener('add-payment-system-event', (event) => {
             this.tab = 1
@@ -1707,12 +1557,11 @@ export default {
                     level_3: this.bot.level_3,
                     company_id: this.bot.company_id,
                     commands: this.bot.commands || null,
-                    photos: this.bot.photos || [],
                     warnings: this.bot.warnings || [],
 
                     amo: this.bot.amo || null,
                     menu: {
-                        text: null,
+                        text: "Меню",
                         url: null
                     },
                 }
@@ -1721,7 +1570,7 @@ export default {
                     this.botForm.commands = []
 
                 this.botForm.menu = this.bot.menu || {
-                    text: null,
+                    text: "Меню",
                     url: null
                 }
 
@@ -1758,6 +1607,10 @@ export default {
 
     },
     methods: {
+        openSelectScriptModal() {
+            this.select_script_step = 0
+            this.select_script_modal.show()
+        },
         selectBot(bot) {
             this.$emit("callback")
         },
@@ -1791,7 +1644,6 @@ export default {
                         this.spent_time_counter--
                     else {
                         clearInterval(counterId)
-                        this.can_create = true
                         this.spent_time_counter = null
                     }
                     localStorage.setItem("cashman_admin_bot_creator_counter", this.spent_time_counter)
@@ -1845,6 +1697,11 @@ export default {
                     this.botForm.bot_domain = username
                 if (title)
                     this.botForm.title = title
+
+                this.load_photo = false
+                this.$nextTick(() => {
+                    this.load_photo = true
+                })
             })
         },
         getChatLink(chatId) {
@@ -1887,16 +1744,6 @@ export default {
                 this.servers = resp
             })
         },
-        getPhoto(img) {
-            return {imageUrl: URL.createObjectURL(img)}
-        },
-        onChangePhotos(e) {
-            const files = e.target.files
-
-            this.botForm.image = null
-            for (let i = 0; i < files.length; i++)
-                this.botForm.photos = [files[i]]
-        },
         addItem(name) {
             this.botForm[name].push("")
         },
@@ -1909,10 +1756,6 @@ export default {
         removeItem(name, index) {
             this.botForm[name].splice(index, 1)
         },
-        removePhoto() {
-            this.botForm.photos = []
-            this.botForm.image = null
-        },
         updateWebHook() {
             this.$store.dispatch("updateBotWebhook", {
                 dataObject: {
@@ -1924,6 +1767,8 @@ export default {
             })
         },
         addBot() {
+
+            this.startTimer();
 
             let data = new FormData();
 
@@ -1943,10 +1788,6 @@ export default {
                  this.alert('Вы не выбрали клиента', 0)
              }*/
 
-            for (let i = 0; i < this.botForm.photos.length; i++)
-                data.append('images[]', this.botForm.photos[i]);
-
-            data.delete("photos")
 
             this.$store.dispatch((this.bot == null ? "createBot" : "updateBot"), {
                 botForm: data
@@ -1963,9 +1804,6 @@ export default {
                         text: (this.bot == null ? "Бот успешно создан!" : "Бот успешно обновлен!"),
                         type: 'success'
                     });
-
-                    this.startTimer();
-                    this.can_create = false
 
                     this.$store.dispatch("updateBotWebhook", {
                         dataObject: {
@@ -2011,7 +1849,7 @@ export default {
                             level_2: 0,
                             level_3: 0,
 
-                            photos: [],
+
                             warnings: [],
 
                             selected_bot_template_id: null,
@@ -2079,17 +1917,22 @@ export default {
 
         },
         selectVariant(item) {
-            String.format = function () {
-                let s = arguments[0];
-                for (let i = 0; i < arguments.length - 1; i++) {
-                    let reg = new RegExp("\\{" + i + "\\}", "gm");
-                    s = s.replace(reg, arguments[i + 1]);
-                }
-                return s;
-            }
-
+            this.select_script_step++
             this.botForm.menu.text = item.title || 'Меню'
-            this.botForm.menu.url = (import.meta.env.VITE_ASSET_URL || '') + String.format(item.url, this.bot.bot_domain || 'домен_бота');
+            this.botForm.menu.url = (import.meta.env.VITE_ASSET_URL || '')
+                + '/bot-client/simple/' + this.bot.bot_domain + '?slug=' + item.id + '#/s'
+
+
+        },
+        selectVariantStep2(item) {
+            this.botForm.menu.url += item.uri
+            this.select_script_modal.hide()
+            this.select_script_step = 0
+            this.$notify({
+                title: "Конструктор ботов",
+                text: "Скрипт успешно выбран",
+                type: 'success'
+            });
         },
         addWarning() {
 

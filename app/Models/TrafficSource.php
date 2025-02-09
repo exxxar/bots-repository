@@ -20,6 +20,7 @@ class TrafficSource extends Model
         'bot_user_id',
         'comment',
         'source',
+        'is_individual',
     ];
 
     /**
@@ -31,6 +32,7 @@ class TrafficSource extends Model
         'id' => 'integer',
         'bot_id' => 'integer',
         'bot_user_id' => 'integer',
+        'is_individual' => 'boolean',
     ];
 
     public function bot(): BelongsTo

@@ -258,7 +258,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
     /**
      * @throws HttpException
      */
-    public function traffic($startAt, $endAt, $needAll = false, $direction = 'desc', $sortBy = 'created_at'): array
+    public function traffic($startAt, $endAt, $needAll = false, $sort = null): array
     {
         if (is_null($this->bot) || is_null($this->botUser))
             throw new HttpException(403, "Не выполнены условия функции");
@@ -266,6 +266,15 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
         if (!$this->botUser->is_admin)
             throw new HttpException(403, "Пользователь не является администратором");
 
+        $direction = 'desc';
+        $isIndividual = false;
+        $sortBy = 'created_at';
+
+        if (!is_null($sort)) {
+            $direction = $sort["direction"] ?? 'desc';
+            $isIndividual = $sort["is_individual"] ?? false;
+            $sortBy = $sort["key"] ?? 'created_at';
+        }
 
         $startOfMonth = ($needAll ?
             Carbon::now()->startOfMillennium() :
@@ -289,6 +298,7 @@ ORDER  BY MONTH(`created_at`) ASC"))->get();
             ->select(DB::raw("source, COUNT(*) as count"))
             ->from('traffic_sources')
             ->where('bot_id', $botId)
+            ->where('is_individual', $isIndividual)
             ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
             ->groupBy('source')
             ->orderBy('source', 'ASC')

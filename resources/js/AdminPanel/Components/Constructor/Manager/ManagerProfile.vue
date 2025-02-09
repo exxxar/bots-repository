@@ -750,7 +750,6 @@
 import {mapGetters} from "vuex";
 
 export default {
-    props: ["bot"],
     data() {
         return {
             isEdit: false,
@@ -962,7 +961,6 @@ export default {
                 });
 
             data.set('image', this.managerForm.image);
-            data.append('bot_id', this.bot.id);
             data.append('bot_user_id', this.botUser.id);
 
             this.$store.dispatch("saveManager",

@@ -109,25 +109,34 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-12 mb-2">
-                <div class="d-flex justify-content-between">
-                    <label class="form-label" id="bot-domain">
-                        Команда
-                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
-                    </label>
+            <div class="col-md-4 col-12 mb-2">
 
+                <div class="input-group">
+                <div class="form-floating">
+                    <input type="text" class="form-control"
+                           placeholder="Команда"
+                           aria-label="Команда"
+                           v-model="pageForm.command"
+                           maxlength="255"
+                           aria-describedby="bot-domain" required>
+                    <label class="form-label" id="bot-domain">
+                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+
+                        Название страницы
+
+                        <span v-if="(pageForm.command||'').length>0">{{ pageForm.command.length }}/255</span>
+                    </label>
+                </div>
+                    <a
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Обучение работе с системой"
+                        href="https://telegra.ph/Sozdanie-stranic-bota-02-07"
+                       target="_blank" class="input-group-text px-3 text-primary"><i class="fa-solid fa-graduation-cap"></i></a>
                 </div>
 
-
-                <input type="text" class="form-control"
-                       placeholder="Команда"
-                       aria-label="Команда"
-                       v-model="pageForm.command"
-                       maxlength="255"
-                       aria-describedby="bot-domain" required>
             </div>
 
-            <div class="col-md-4 col-12 mb-2 d-flex justify-content-end align-items-end">
+            <div class="col-md-8 col-12 mb-2 d-flex justify-content-end align-items-end">
 
 
                 <div class="btn-group"
@@ -137,37 +146,47 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                     <button type="button"
                             title="Быстрое создание страниц"
                             @click="fastCreate"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="Быстрое создание страниц"
                             class="btn btn-outline-primary  min-menu-btn">
                         <i class="fa-solid fa-file-circle-plus"></i>
 
                     </button>
 
-                    <button type="submit" v-if="pageForm.id||need_clean"
+                    <button type="submit" v-show="pageForm.id||need_clean"
                             title="Сохранить страницу"
                             id="save-page-btn"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="Сохранить страницу"
                             class="btn btn-primary min-menu-btn">
                         <i class="fa-regular fa-floppy-disk"></i>
                     </button>
                     <button type="button" @click="clearForm"
                             title="Очистить \ Новая страница"
-                            v-if="pageForm.id||need_clean"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="Очистить \ Новая страница"
+                            v-show="pageForm.id||need_clean"
                             class="btn btn-outline-primary min-menu-btn">
                         <i class="fa-solid fa-xmark text-danger"></i>
                     </button>
-<!--                    <button type="button"
-                            title="Страницы и папки"
-                            data-bs-toggle="modal" data-bs-target="#folder-modal"
-                            class="btn btn-outline-primary  min-menu-btn">
-                        <i class="fa-solid fa-folder"></i>
+                    <!--                    <button type="button"
+                                                title="Страницы и папки"
+                                                data-bs-toggle="modal" data-bs-target="#folder-modal"
+                                                class="btn btn-outline-primary  min-menu-btn">
+                                            <i class="fa-solid fa-folder"></i>
 
-                    </button>-->
+                                        </button>-->
 
 
                     <button type="button"
                             title="Список страниц"
-                            data-bs-toggle="offcanvas" data-bs-target="#offcanvas"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="Список страниц"
+                            @click="openSideBarPageList"
                             class="btn btn-outline-primary   min-menu-btn">
-                        <i class="fa-solid fa-list-ol"></i>
+                        <i
+
+                            class="fa-solid fa-list-ol"></i>
                     </button>
                 </div>
             </div>
@@ -180,10 +199,10 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
 
 
             <div class="col-12 mb-2">
-                <div class="d-flex justify-content-between">
-                    <label class="form-label  mb-0" id="bot-domain">
-                        Текстовое содержимое страницы
-                        <span class="badge rounded-pill text-bg-danger m-0">Нужно</span>
+                <div class="d-flex justify-content-between align-items-center">
+                    <label class="form-label mb-0" id="bot-domain">
+                        <span class="badge rounded-pill text-bg-warning m-0">Желательно</span> Текст на
+                        странице
                     </label>
                     <InlineInjectionsHelper
                         v-model="pageForm.content"
@@ -199,7 +218,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                                           maxlength="4096"
                                           placeholder="Введите текст"
                                           id="main-text-field" style="min-height: 150px"></textarea>
-                    <label for="main-text-field">Содержимое страницы <span
+                    <label for="main-text-field">Текст <span
                         v-if="pageForm.content">{{ pageForm.content.length }}/4096 </span></label>
                 </div>
 
@@ -1406,7 +1425,9 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
             <div class="alert alert-info" role="alert">
                 <h6>Страница поддерживает комбинации клавиш:</h6>
                 <ul class="mb-0 mr-0 p-0">
-                    <li class="underline cursor-pointer" @click="fastCreate"><strong>Ctrl+M</strong> - быстрое создание страниц!</li>
+                    <li class="underline cursor-pointer" @click="fastCreate"><strong>Ctrl+M</strong> - быстрое создание
+                        страниц!
+                    </li>
                     <li><strong>Ctrl+S</strong> - открыть\закрыть окно сохранения</li>
                     <li><strong>Ctrl+D</strong> - просмотр страницы (для сохраненных страниц)</li>
                     <li><strong>Ctrl+пробел</strong> - открыть\закрыть список страниц</li>
@@ -1417,7 +1438,6 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
             </div>
         </div>
     </div>
-
 
 
     <!-- Modal -->
@@ -1569,6 +1589,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
             </textarea>
                         </div>
 
+<!--
                         <div class="col-12">
                             <div class="form-check">
                                 <input class="form-check-input"
@@ -1589,6 +1610,7 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                             </div>
 
                         </div>
+-->
 
                         <div class="col-12">
                             <div class="form-check">
@@ -1645,25 +1667,25 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
         </div>
     </div>
 
-<!--    &lt;!&ndash; Modal &ndash;&gt;
-    <div class="modal fade" id="folder-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Работа с папками и страницами</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <FolderList
-                        :current="pageForm.id"
-                        :selected="selectedLinkIds"
-                        v-on:callback="attachPage"
-                        :editor="false"/>
-                </div>
+    <!--    &lt;!&ndash; Modal &ndash;&gt;
+        <div class="modal fade" id="folder-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Работа с папками и страницами</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <FolderList
+                            :current="pageForm.id"
+                            :selected="selectedLinkIds"
+                            v-on:callback="attachPage"
+                            :editor="false"/>
+                    </div>
 
+                </div>
             </div>
-        </div>
-    </div>-->
+        </div>-->
 
     <div class="offcanvas offcanvas-end w-25" tabindex="-1" id="offcanvas"
          data-bs-keyboard="true"
@@ -1702,9 +1724,9 @@ import FastPageForm from "@/AdminPanel/Components/Constructor/Pages/FastPageForm
                 :page="page"></PagePreview>
             <p v-else>Сперва сохраните страницу</p>
 
-<!--            <template v-if="bot">
-                <ChatDialog :domain="bot.bot_domain"></ChatDialog>
-            </template>-->
+            <!--            <template v-if="bot">
+                            <ChatDialog :domain="bot.bot_domain"></ChatDialog>
+                        </template>-->
         </div>
     </div>
 
@@ -1718,9 +1740,7 @@ import {Base64} from 'js-base64';
 export default {
     data() {
         return {
-            module_configs:{
-
-            },
+            module_configs: {},
             need_page_create_from_keyboard: false,
 
             tab: 0,
@@ -1995,6 +2015,11 @@ export default {
         }
     },
     mounted() {
+
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+
         if (this.page) {
             this.preparePageForm(this.page)
         } else
@@ -2133,6 +2158,11 @@ export default {
             }).then((response) => {
                 this.links = response.data
             })
+        },
+        openSideBarPageList(){
+            const offcanvasElement= document.querySelector('#offcanvas')
+            const element = new bootstrap.Offcanvas(offcanvasElement)
+            element.show()
         },
         renewPassword() {
 

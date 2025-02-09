@@ -163,19 +163,25 @@ class Basket
         $prizeText = "🎡Выигрыш в колесе фортуны:\n";
         if (!is_null($action)) {
             $tmpData = $action->data ?? [];
+            $processedPrizes = [];
+
             foreach ($tmpData as $index => $item) {
                 $item = (object)$item;
-
                 $itemPrizeWinId = (!is_null($item->win ?? null) ? json_decode($item->win) : null)->id ?? null;
+
                 if ($item->description == $selectedPrizeDescription &&
                     $itemPrizeWinId == $selectedPrizeWinId &&
                     !is_null($selectedPrizeWinId)) {
 
+                    // Проверяем, не был ли этот приз уже обработан
+                    $prizeKey = $selectedPrizeDescription . '_' . $selectedPrizeWinId;
+                    if (in_array($prizeKey, $processedPrizes)) {
+                        continue; // Если приз уже есть, пропускаем
+                    }
+                    $processedPrizes[] = $prizeKey; // Добавляем в обработанные
+
                     $tmpData[$index]["taked_at"] = Carbon::now();
-
                     $itemPrizeType = $tmpData[$index]["type"] ?? "text";
-
-
                     $itemPrizeEffectedValue = $tmpData[$index]["effect_value"] ?? 0;
                     $itemPrizeEffectedProduct = $tmpData[$index]["effect_product"] ?? null;
 
@@ -184,14 +190,12 @@ class Basket
                         case "text":
                             $prizeText .= "<em><b>" . ($item->description ?? '-') . "</b></em> - ручной режим выдачи\n\n";
                             break;
-
                         case "effect_product":
                         case "delivery_discount":
                         case "product_discount":
                             $prizeText .= "<em><b>" . ($item->description ?? '-') . "</b></em> - уже учтено (автоматически)\n\n";
                             break;
                         case "cashback":
-
                             $adminBotUser = BotUser::query()
                                 ->where("bot_id", $this->bot->id)
                                 ->where("is_admin", true)
@@ -209,11 +213,10 @@ class Basket
                                     CashBackDirectionEnum::Crediting
                                 ));
                             break;
-
-
                     }
                 }
             }
+
             $action->data = $tmpData;
             $action->save();
         }
@@ -407,8 +410,8 @@ class Basket
             'receiver_name' => $this->data["name"] ?? 'Нет имени',
             'receiver_phone' => $this->data["phone"] ?? 'Нет телефона',
             'address' => $this->fsPrepareAddress() . "," . ($this->data["flat_number"] ?? ""),
-            'receiver_latitude' => $geo->latitude ?? 0,
-            'receiver_longitude' => $geo->longitude ?? 0,
+            'receiver_latitude' => 0,
+            'receiver_longitude' => 0,
 
             'status' => OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
             'order_type' => OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора
@@ -453,7 +456,7 @@ class Basket
                     ->setBot($this->bot)
                     ->setBotUser($this->botUser)
                     ->setSlug($this->slug)
-                    ->sbpForFood($order, $productMessage);
+                    ->sbpForShop($order, $productMessage);
 
                 $botDomain = $this->bot->bot_domain;
                 $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $userId);
@@ -651,9 +654,9 @@ class Basket
             'delivery_note' => $deliveryNote,
             'receiver_name' => $this->data["name"] ?? 'Нет имени',
             'receiver_phone' => $this->data["phone"] ?? 'Нет телефона',
-            'address' => $this->gsPrepareAddress() . "," . ($this->data["flat_number"] ?? ""),
-            'receiver_latitude' => $geo->latitude ?? 0,
-            'receiver_longitude' => $geo->longitude ?? 0,
+            'address' => $this->gsPrepareFromAddress(),
+            'receiver_latitude' => 0,
+            'receiver_longitude' => 0,
 
             'status' => OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
             'order_type' => OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора
@@ -716,7 +719,7 @@ class Basket
                     ->setBot($this->bot)
                     ->setBotUser($this->botUser)
                     ->setSlug($this->slug)
-                    ->sbp($order, $productMessage);
+                    ->sbpForShop($order, $productMessage);
                 return;
 
         }

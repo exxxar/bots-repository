@@ -9,8 +9,6 @@
         <div class="progress-bar progress-bar-striped bg-success"
              v-bind:style="{'width': slotsPercent+'%'}"></div>
     </div>
-
-    <a href="#" >Пополнить слоты</a>
 </template>
 <script>
 export default {

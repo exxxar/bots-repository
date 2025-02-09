@@ -372,7 +372,8 @@ class StartCodesHandlerController extends Controller
             'bot_id' => $bot->id,
             'bot_user_id' => $botUser->id,
             'comment' => "ссылка с меткой",
-            'source' => $utm
+            'source' => $utm,
+            'is_individual' => false
         ]);
 
 
@@ -491,7 +492,8 @@ class StartCodesHandlerController extends Controller
             'bot_id' => $bot->id,
             'bot_user_id' => $botUser->id,
             'comment' => "реферальная программа",
-            'source' => "$id"
+            'source' => "$id",
+            'is_individual' => true
         ]);
 
         $path = env("APP_URL") . "/bot-client/simple/%s?slug=route&hide_menu&friend=%s#/s/referral";

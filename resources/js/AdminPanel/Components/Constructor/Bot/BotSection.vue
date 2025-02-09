@@ -207,8 +207,8 @@ import Statistic from "@/AdminPanel/Components/Constructor/Statistic/Statistic.v
             </ul>
             <ul class="list-group list-group-flush bot-section-menu-group py-3" v-if="tab===1">
                 <h6>Основная информация</h6>
-                <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(0)">
-                    <i class="fa-solid fa-info mr-2"></i>Информация о боте</a></li>
+                <li><a class="bg-primary text-white list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(0)">
+                    <i class="fa-solid fa-info mr-2"></i>Базовые настройки бота</a></li>
                 <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(4)">
                     <i class="fa-solid fa-file mr-2"></i>Страницы</a></li>
                 <li><a class="list-group-item list-group-item-action" href="javascript:void(0)" @click="setStep(18)">
@@ -280,6 +280,14 @@ export default {
 
     mounted() {
         this.setStep(localStorage.getItem("cashman_set_botform_step_index") || 0)
+
+
+        window.addEventListener('open-base-bot-params-event', (event) => {
+            this.$nextTick(() => {
+                this.setStep(0)
+            })
+
+        });
     },
     methods: {
         botCallbackUpdate(bot) {

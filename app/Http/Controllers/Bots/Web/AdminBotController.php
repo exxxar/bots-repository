@@ -53,8 +53,7 @@ class AdminBotController extends Controller
                 $request->date[0] ?? null,
                 $request->date[1] ?? null,
                 $request->need_all ?? false,
-                $sort["direction"] ?? 'asc',
-                $sort['key'] ?? 'created_at');
+                $request->sort ?? null);
 
         return response()->json([
             "traffics" => $traffics

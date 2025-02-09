@@ -62,15 +62,34 @@ class BotController extends Controller
         $data = $request->all();
 
         // Проверяем, что платеж успешно завершен
-        if (isset($data['Success']) && $data['Success'] == true && isset($data['Status']) && $data['Status'] === 'CONFIRMED') {
-            $orderId = $data['OrderId'];  // ID заказа в вашей системе
-            $paymentId = $data['PaymentId'];  // ID платежа в Тинькофф
-            $amount = $data['Amount'] / 100;  // Конвертируем сумму из копеек в рубли
-            $customerKey = $data['CustomerKey'] ?? null;  // Ключ клиента, если передавался
+        if (isset($data['Success']) && $data['Success'] === true && isset($data['Status']) && $data['Status'] === 'CONFIRMED') {
+
+            $requiredFields = ['OrderId', 'PaymentId', 'Amount'];
+            foreach ($requiredFields as $field) {
+                if (!isset($data[$field])) {
+                    Log::error("Missing required field: $field", $data);
+                    return response()->json(['message' => "Missing required field: $field"], 400);
+                }
+            }
+
+            $orderId = $data['OrderId'];
+            $paymentId = $data['PaymentId'];
+            $amount = $data['Amount'] / 100;
+            $customerKey = $data['CustomerKey'] ?? null;
+
+            if ($amount <= 0) {
+                Log::error("Invalid payment amount: {$amount}");
+                return response()->json(['message' => 'Invalid payment amount'], 400);
+            }
 
             $bot = Bot::query()
                 ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
                 ->first();
+
+            if (!$bot) {
+                Log::error("Bot with domain " . env("AUTH_BOT_DOMAIN") . " not found.");
+                return response()->json(['message' => 'Bot not found'], 400);
+            }
 
             $botUser = BotUser::query()
                 ->with(["manager"])
@@ -78,19 +97,34 @@ class BotController extends Controller
                 ->where("bot_id", $bot->id)
                 ->first();
 
+            if (!$botUser || !$botUser->manager) {
+                Log::error("Manager not found for customerKey: {$customerKey}");
+                return response()->json(['message' => 'Manager not found'], 400);
+            }
+
             $manager = $botUser->manager;
-            $manager->balabce += $amount;
+            $manager->balance += $amount;
 
+            // Загружаем тарифы
+            $tariffsFile = base_path() . '/tariffs.json';
+            if (!File::exists($tariffsFile)) {
+                Log::error("Tariffs file not found: " . $tariffsFile);
+                return response()->json(['message' => 'Tariffs file not found'], 500);
+            }
 
-            // Загружаем тарифы из JSON-файла
-            $tariffs = json_decode(File::get(base_path() . '/tariffs.json'), true)['tariffs'];
+            $tariffsData = json_decode(File::get($tariffsFile), true);
+            if (!isset($tariffsData['tariffs']) || !is_array($tariffsData['tariffs'])) {
+                Log::error("Invalid tariffs file format.");
+                return response()->json(['message' => 'Invalid tariffs file format'], 500);
+            }
 
-            // Сортируем тарифы по возрастанию цены
+            $tariffs = $tariffsData['tariffs'];
+
+            // Сортируем тарифы
             usort($tariffs, fn($a, $b) => $a['price'] <=> $b['price']);
 
-            // Поиск тарифа
-            $selectedTariff = $tariffs[0]; // По умолчанию самый дешевый
-
+            // Поиск подходящего тарифа
+            $selectedTariff = $tariffs[0];
             foreach ($tariffs as $tariff) {
                 if ($amount >= $tariff['price']) {
                     $selectedTariff = $tariff;
@@ -104,18 +138,9 @@ class BotController extends Controller
             $manager->permanent_personal_discount = max($selectedTariff['discount'] ?? 0, $manager->permanent_personal_discount);
             $manager->save();
 
-            // Здесь можно обновить статус заказа в БД
-            // Например, если у вас есть модель Order:
-            // $order = Order::where('order_id', $orderId)->first();
-            // if ($order) {
-            //     $order->update(['status' => 'paid']);
-            // }
-
-            // Отвечаем Тинькофф, что callback обработан успешно
             return response()->json(['message' => 'OK'], 200);
         }
 
-        // Если что-то пошло не так, логируем и возвращаем ошибку
         Log::error('Tinkoff Callback Error:', $data);
         return response()->json(['message' => 'Error processing payment'], 400);
     }

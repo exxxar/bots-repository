@@ -1,0 +1,278 @@
+[
+    {
+        "id": 1,
+        "title": "Бот для кафетериев и ресторанного дела",
+        "menu": {
+            "title": "Меню",
+            "url": "/bot-client/simple/{bot_domain}?slug={script_id}#/s/menu"
+        },
+        "commands": [
+            {
+                "command": "/start",
+                "description": "начни с этой команды"
+            },
+            {
+                "command": "/admins",
+                "description": "доступные администраторы в системе"
+            },
+            {
+                "command": "/adminmenu",
+                "description": "административное меню"
+            }
+        ],
+        "scripts": [
+            {
+                "key": "global_friends_main",
+                "config": []
+            },
+            {
+                "key": "global_cashback_main",
+                "config": []
+            },
+            {
+                "key": "global_simple_delivery_main",
+                "config": []
+            },
+            {
+                "key": "global_profile_form_main",
+                "linked": {
+                    "next_script_id": "global_wheel_of_fortune_custom"
+                },
+                "config": [
+                    {
+                        "type": "text",
+                        "key": "first_cashback_granted",
+                        "description": "Начислить разово сумму кэшбэка после заполнения формы",
+                        "value": 500
+                    },
+                    {
+                        "type": "script",
+                        "key": "next_script_id",
+                        "description": "Вызов следующего скрипта после этого (id скрипта)",
+                        "value": null
+                    },
+                    {
+                        "type": "boolean",
+                        "key": "set_vip",
+                        "description": "Устанавливает флаг Вип по окончанию анкеты",
+                        "value": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Устанавливает флаг Менеджер по окончанию анкеты",
+                        "key": "set_manager",
+                        "value": false
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Устанавливает флаг Доставщик по окончанию анкеты",
+                        "key": "set_deliveryman",
+                        "value": false
+                    },
+                    {
+                        "type": "boolean",
+                        "key": "need_birthday",
+                        "value": false
+                    },
+                    {
+                        "type": "boolean",
+                        "key": "need_email",
+                        "value": true
+                    },
+                    {
+                        "type": "boolean",
+                        "key": "need_city",
+                        "value": false
+                    },
+                    {
+                        "type": "boolean",
+                        "key": "need_sex",
+                        "value": false
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Скрывает изображение в форме анкеты (лого сверху)",
+                        "key": "need_profile_form_image",
+                        "value": false
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Скрывает изображение в скрипте",
+                        "key": "need_script_image",
+                        "value": false
+                    }
+
+
+                ]
+
+            },
+            {
+                "key": "global_wheel_of_fortune_custom",
+                "linked": {
+                    "profile_id": "global_profile_form_main"
+                },
+                "config": [
+                    {
+                        "type": "text",
+                        "key": "max_attempts",
+                        "value": 2
+                    },
+                    {
+                        "type": "script",
+                        "key": "profile_id",
+                        "value": null
+                    },
+
+                    {
+                        "key": "wheel_text",
+                        "type": "cashback",
+                        "value": "300₽ CashBack",
+                        "smile":"\uD83D\uDC9A",
+                        "effect_value":500,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "text",
+                        "value": "-35% на бургер",
+                        "smile":"\uD83D\uDC99",
+                        "effect_value":0,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "text",
+                        "value": "-25% на пиццу",
+                        "smile":"\uD83D\uDC9C",
+                        "effect_value":0,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "text",
+                        "value": "-35% на Пиццу",
+                        "smile":"\uD83D\uDC51",
+                        "effect_value":0,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "cashback",
+                        "value": "200₽ CashBack",
+                        "smile":"\uD83D\uDE80",
+                        "effect_value":200,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "text",
+                        "value": "-35% на Пиццу",
+                        "smile":"\uD83D\uDC51",
+                        "effect_value":0,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "text",
+                        "value": "-35% на Пиццу",
+                        "smile":"\uD83D\uDC51",
+                        "effect_value":0,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "text",
+                        "value": "-35% на Пиццу",
+                        "smile":"\uD83D\uDC51",
+                        "effect_value":0,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "text",
+                        "value": "-35% на Пиццу",
+                        "smile":"\uD83D\uDC51",
+                        "effect_value":0,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "text",
+                        "value": "-50% на Пиццу",
+                        "smile":"⭐",
+                        "effect_value":0,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "cashback",
+                        "value": "100₽ CashBack",
+                        "smile":"\uD83D\uDC8E",
+                        "effect_value":100,
+                        "effect_product": null
+                    },
+                    {
+                        "key": "wheel_text",
+                        "type": "text",
+                        "value": "-50% на бургер",
+                        "smile":"\uD83D\uDCB0",
+                        "effect_value":0,
+                        "effect_product": null
+                    }
+                ]
+            }
+        ],
+        "pages": [
+            {
+                "title": ".*Главное меню|.*start",
+                "content": "Добро пожаловать,{{userName}}!",
+                "reply_keyboard": {
+                    "menu":  [
+                        [
+                            {
+                                "text": "\uD83C\uDFA1Колесо фортуны"
+                            }
+                        ],
+                        [
+                            {
+                                "text": "\uD83D\uDED2Магазин"
+                            }
+                        ],
+                        [
+                            {
+                                "text": "\uD83C\uDF81Бонусная система"
+                            }
+                        ],
+                        [
+                            {
+                                "text": "\uD83E\uDD1DПригласить друзей"
+                            }
+                        ]
+                    ]
+                }
+            },
+            {
+                "title": ".*Колесо фортуны",
+                "content": "Колесо Фортуны крутиться один раз! !\n\nПриз можно получить в течении месяца после выигрыша!\n\nВсем Удачи!",
+                "need_log_user_action": true,
+                "next_bot_menu_slug_id": "global_wheel_of_fortune_custom"
+            },
+            {
+                "title": ".*Магазин",
+                "content": "",
+                "next_bot_menu_slug_id": "global_simple_delivery_main"
+
+            },
+            {
+                "title": ".*Бонусная систем",
+                "content": "Теперь ты можешь получать 7% Бонусов от всех твоих покупок\n- 3% от покупок друзей!!\n- 1% от друзей друзей!!!\nДля этого подключи друзей к системе с помощью кнопки «пригласить друзей» в нашем меню.",
+                "next_bot_menu_slug_id": "global_cashback_main"
+            },
+            {
+                "title": ".*Пригласить друзей",
+                "content": "",
+                "next_bot_menu_slug_id": "global_friends_main"
+            }
+        ]
+    }
+]

@@ -594,7 +594,7 @@ import 'vue3-audio-player/dist/style.css'
                                                 <div class="card-body">
                                                     <img
                                                         v-if="bot.image"
-                                                        v-lazy="'/images-by-bot-id/'+bot.id+'/'+bot.image">
+                                                        v-lazy="'/images/companies/'+bot.bot_domain+'/logo.jpg'">
                                                     <i v-else class="fa-solid fa-robot"></i>
                                                     <p class="mb-0"> {{ bot.bot_domain }}</p>
                                                 </div>

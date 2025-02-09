@@ -103,7 +103,7 @@ import Pagination from '@/AdminPanel/Components/Pagination.vue';
                 <div class="card h-100">
                     <img
                         class="card-img-top"
-                        v-lazy="'/images-by-bot-id/'+bot.id+'/'+bot.image">
+                        v-lazy="'/images/companies/'+bot.bot_domain+'/logo.jpg'">
 
                     <div class="card-body">
                         <h6 class="card-title text-center">#{{  bot.id }}</h6>

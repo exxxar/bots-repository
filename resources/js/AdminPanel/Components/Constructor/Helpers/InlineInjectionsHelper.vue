@@ -3,61 +3,64 @@
     <div class="d-inline-flex">
 
 
-<!--        <button type="button"
-                @click="openReLinkModal"
-                data-bs-toggle="tooltip"
-                data-bs-title="Добавить кнопку с пересылкой ссылки друзьям"
-                class="btn btn-link"><i class="fa-solid fa-sack-dollar"></i></button>-->
+        <!--        <button type="button"
+                        @click="openReLinkModal"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Добавить кнопку с пересылкой ссылки друзьям"
+                        class="btn btn-link"><i class="fa-solid fa-sack-dollar"></i></button>-->
         <button type="button"
                 @click="openReLinkModal"
                 data-bs-toggle="tooltip"
                 data-bs-title="Добавить кнопку с пересылкой ссылки друзьям"
-                class="btn btn-link">      <i class="fa-solid fa-arrow-up-right-from-square"></i></button>
-        <button type="button"
-                @click="openFontModal"
-                data-bs-toggle="tooltip"
-                data-bs-title="Настройка шрифта"
-                class="btn btn-link">   <i class="fa-solid fa-font"></i></button>
-        <button type="button"
-                @click="boldTag"
-                data-bs-toggle="tooltip"
-                data-bs-title="Жирный текст"
-                class="btn btn-link"><i class="fa-solid fa-bold"></i></button>
-        <button type="button"
-                @click="italic"
-                data-bs-toggle="tooltip"
-                data-bs-title="Курсив"
-                class="btn btn-link"><i class="fa-solid fa-italic"></i></button>
-        <button type="button"
-                @click="underline"
-                data-bs-toggle="tooltip"
-                data-bs-title="Подчеркнутый текст"
-                class="btn btn-link"><i class="fa-solid fa-underline"></i></button>
-        <button type="button"
-                @click="spoiler"
-                data-bs-toggle="tooltip"
-                data-bs-title="Скрытый текст"
-                class="btn btn-link"><i class="fa-solid fa-hand-dots"></i></button>
-        <button type="button"
-                @click="strike"
-                data-bs-toggle="tooltip"
-                data-bs-title="Зачеркнутый текст"
-                class="btn btn-link"><i class="fa-solid fa-strikethrough"></i></button>
-        <button type="button"
-                @click="code"
-                data-bs-toggle="tooltip"
-                data-bs-title="Фрагмент кода"
-                class="btn btn-link"><i class="fa-solid fa-code"></i></button>
-        <button type="button"
-                @click="blockquote"
-                data-bs-toggle="tooltip"
-                data-bs-title="Цитата"
-                class="btn btn-link"><i class="fa-solid fa-quote-left"></i></button>
-        <button type="button"
-                @click="openLinkModal"
-                data-bs-toggle="tooltip"
-                data-bs-title="Ссылка"
-                class="btn btn-link"><i class="fa-solid fa-link"></i></button>
+                class="btn btn-link"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+
+            <button type="button"
+                    @click="openFontModal"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Настройка шрифта"
+                    class="btn btn-link"><i class="fa-solid fa-font"></i></button>
+        <div v-show="need_text_menu">
+            <button type="button"
+                    @click="boldTag"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Жирный текст"
+                    class="btn btn-link"><i class="fa-solid fa-bold"></i></button>
+            <button type="button"
+                    @click="italic"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Курсив"
+                    class="btn btn-link"><i class="fa-solid fa-italic"></i></button>
+            <button type="button"
+                    @click="underline"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Подчеркнутый текст"
+                    class="btn btn-link"><i class="fa-solid fa-underline"></i></button>
+            <button type="button"
+                    @click="spoiler"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Скрытый текст"
+                    class="btn btn-link"><i class="fa-solid fa-hand-dots"></i></button>
+            <button type="button"
+                    @click="strike"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Зачеркнутый текст"
+                    class="btn btn-link"><i class="fa-solid fa-strikethrough"></i></button>
+            <button type="button"
+                    @click="code"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Фрагмент кода"
+                    class="btn btn-link"><i class="fa-solid fa-code"></i></button>
+            <button type="button"
+                    @click="blockquote"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Цитата"
+                    class="btn btn-link"><i class="fa-solid fa-quote-left"></i></button>
+            <button type="button"
+                    @click="openLinkModal"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Ссылка"
+                    class="btn btn-link"><i class="fa-solid fa-link"></i></button>
+        </div>
         <div class="dropdown">
             <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
@@ -68,7 +71,8 @@
                 class="dropdown-menu item-with-text cursor-pointer text-muted p-2">
 
                 <li @click="expressionsSelect(item)"
-                    v-for="item in expressions"><a class="dropdown-item" href="javascript:void(0)" v-html="item.description"></a>
+                    v-for="item in expressions"><a class="dropdown-item" href="javascript:void(0)"
+                                                   v-html="item.description"></a>
 
 
                 </li>
@@ -84,8 +88,11 @@
             <div class="modal-content">
 
                 <div class="modal-body">
-                   <h6 class="fw-bold"><strong class="text-primary">Внимание!</strong> Откройте ссылку с генератором шрифтов, выберите шрифт, введите текст, а затем скопируйте полученный результат в поле ниже - текст с этим шрифтом будет отображен пользователю!</h6>
-                    <a href="https://textgenerator.ru/" class="btn btn-link w-100 text-center" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Открыть генератор шрифтов</a>
+                    <h6 class="fw-bold"><strong class="text-primary">Внимание!</strong> Откройте ссылку с генератором
+                        шрифтов, выберите шрифт, введите текст, а затем скопируйте полученный результат в поле ниже -
+                        текст с этим шрифтом будет отображен пользователю!</h6>
+                    <a href="https://textgenerator.ru/" class="btn btn-link w-100 text-center" target="_blank"><i
+                        class="fa-solid fa-arrow-up-right-from-square"></i> Открыть генератор шрифтов</a>
                 </div>
 
             </div>
@@ -99,7 +106,8 @@
 
                 <div class="modal-body">
                     <div class="alert alert-light mb-2">
-                        <strong class="fw-bold">Внимание!</strong> Добавьте ссылку, на которую должен перейти пользователь!
+                        <strong class="fw-bold">Внимание!</strong> Добавьте ссылку, на которую должен перейти
+                        пользователь!
                     </div>
                     <div class="form-floating mb-2">
                         <input type="text"
@@ -133,7 +141,8 @@
 
                 <div class="modal-body">
                     <div class="alert alert-light mb-2">
-                        <strong class="fw-bold">Внимание!</strong> Вы создаете кнопку к тексту, по которой пользователь сможет поделиться ссылкой и текстом к ней!
+                        <strong class="fw-bold">Внимание!</strong> Вы создаете кнопку к тексту, по которой пользователь
+                        сможет поделиться ссылкой и текстом к ней!
                     </div>
                     <div class="form-floating mb-2">
                         <input type="url"
@@ -145,7 +154,8 @@
                     <div class="form-floating">
                         <textarea class="form-control"
                                   v-model="reLinkForm.text"
-                                  placeholder="Leave a comment here" id="floatingTextarea2" style="min-height: 100px" required></textarea>
+                                  placeholder="Leave a comment here" id="floatingTextarea2" style="min-height: 100px"
+                                  required></textarea>
                         <label for="floatingTextarea2">Текст к ссылке</label>
                     </div>
 
@@ -173,13 +183,14 @@ export default {
     props: ["modelValue", "fieldId"],
     data() {
         return {
+            need_text_menu: false,
             link: null,
             linkModal: null,
             fontModal: null,
             relinkModal: null,
-            reLinkForm:{
-              url:null,
-              text:null,
+            reLinkForm: {
+                url: null,
+                text: null,
             },
             expressions: [
                 {
@@ -260,7 +271,21 @@ export default {
             ]
         }
     },
+
+
     mounted() {
+
+        let field = document.querySelector(this.fieldId)
+        field.addEventListener("selectionchange", () => {
+            let select = this.getFieldSelection()
+            if (select.end - select.start > 0)
+                this.need_text_menu = true
+
+            if (select.end - select.start === 0)
+                this.need_text_menu = false
+        });
+
+
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
@@ -269,25 +294,38 @@ export default {
         this.relinkModal = new bootstrap.Modal(document.getElementById('relink-modal'), {})
     },
     methods: {
-        openReLinkModal(){
-            this.relinkModal.show();
-        },
-        openFontModal(){
-          this.fontModal.show();
-        },
-        reLinkSubmit(){
-            this.$emit("submit-relink",this.reLinkForm)
-            this.relinkModal.hide()
-        },
         getFieldSelection() {
-            let start = document.querySelector(this.fieldId).selectionStart || 0;
-            let end = document.querySelector(this.fieldId).selectionEnd || 0;
+            let start = document.querySelector(this.fieldId)
+            let end = document.querySelector(this.fieldId)
 
+            if (!this.fieldId) {
+
+
+                return {
+                    start: 0,
+                    end: 0,
+                }
+            }
+
+            start = start.selectionStart || 0;
+            end = end.selectionEnd || 0;
+            console.log(start)
             return {
                 start: start,
                 end: end,
             }
         },
+        openReLinkModal() {
+            this.relinkModal.show();
+        },
+        openFontModal() {
+            this.fontModal.show();
+        },
+        reLinkSubmit() {
+            this.$emit("submit-relink", this.reLinkForm)
+            this.relinkModal.hide()
+        },
+
         useTemplate(startTemplate, endTemplate) {
 
             let range = this.getFieldSelection()

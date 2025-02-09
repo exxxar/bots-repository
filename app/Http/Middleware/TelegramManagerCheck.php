@@ -32,6 +32,7 @@ class TelegramManagerCheck
             $botDomain = base64_decode($headerBotDomainEncrypted);
 
         $isDebug = env("APP_DEBUG");
+        $debugBotUser = env("DEBUG_BOT_USER") ?? null;
 
         if ($isDebug) {
             $bot = Bot::query()
@@ -42,7 +43,7 @@ class TelegramManagerCheck
 
             $botUser = BotUser::query()
                 ->where("bot_id", $bot->id)
-                ->where("telegram_chat_id", "484698703")
+                ->where("telegram_chat_id", $debugBotUser)
                 ->first();
 
             $request->botUser = $botUser;

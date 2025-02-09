@@ -350,20 +350,36 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
             :settings="settings">
         </Summary>
 
+        <p
+            class="alert alert-danger fw-bold mb-2"
+            v-if="error_delivery_price_message">{{ error_delivery_price_message }}</p>
+
+        <button type="button"
+                @click="goToProductCart"
+                class="btn btn-primary w-100 p-3">
+            <i class="fa-solid fa-cart-shopping"></i> Корзина с товаром
+        </button>
+
+        <nav
+            class="navbar navbar-expand-sm fixed-bottom p-3 bg-transparent border-0"
+            style="border-radius:10px 10px 0px 0px;">
+
         <template v-if="spent_time_counter<=0">
             <template v-if="settings.need_automatic_delivery_request">
 <!-- v-if="cartTotalPrice <= settings.free_shipping_starts_from"-->
                 <button
                     v-if="delivery_price_request_step===0"
                     @click="requestDeliveryPrice"
-                    class="btn btn-primary text-white p-3 w-100 mb-2"
+                    class="btn btn-primary text-white p-3 w-100 mb-2 d-flex align-items-center justify-content-center"
                     :disabled="!canRequestDeliverPrice">
-                    <i class="fa-solid fa-map-location-dot mr-2"></i> Узнать цену доставки
+                    <i class="fa-solid fa-map-location-dot mr-2"></i> Рассчитать цену доставки
+                    <div
+                        v-if="!canRequestDeliverPrice"
+                        class="spinner-border ml-2 spinner-border-sm"
+                        role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </button>
-
-                <p
-                    class="alert alert-danger fw-bold mb-2"
-                    v-if="error_delivery_price_message">{{ error_delivery_price_message }}</p>
             </template>
 
 
@@ -376,13 +392,15 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                     <i v-if="spent_time_counter<=0" class="fa-solid fa-file-invoice mr-2"></i>
                     <i v-else class="fa-solid fa-hourglass  mr-2"></i>
                     Оформить
+
                 </button>
 
                 <button
                     v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
                     :disabled="!canSubmitForm"
-                    class="btn btn-primary p-3 w-100">
+                    class="btn btn-primary p-3 w-100 ">
                     <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
+
                 </button>
 
                 <button
@@ -398,10 +416,18 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
         </template>
         <template v-else>
             <button type="button"
-                    class="btn btn-primary p-3 w-100">
-                Осталось ждать {{ spent_time_counter }} сек.
+                    class="btn btn-primary p-3 w-100 d-flex align-items-center justify-content-center">
+                Осталось ждать {{ spent_time_counter || 0 }} сек.
+                <div
+                    v-if="!canSubmitForm"
+                    class="spinner-border ml-2 spinner-border-sm"
+                    role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+
             </button>
         </template>
+        </nav>
     </form>
 </template>
 <script>
@@ -513,7 +539,9 @@ export default {
 
     },
     methods: {
-
+        goToProductCart(){
+            document.dispatchEvent(new Event('switch-to-cart'));
+        },
         decPersons() {
             this.modelValue.persons = this.modelValue.persons > 1 ? this.modelValue.persons - 1 : this.modelValue.persons;
         },

@@ -41,7 +41,9 @@ class ManagerProfileController extends Controller
         $bot = Bot::query()
             ->where("bot_domain", env("AUTH_BOT_DOMAIN"))
             ->first();
-        $botUser = BotUser::query()->find($request->bot_user_id);
+
+        $botUser = BotUser::query()
+            ->find($request->bot_user_id);
 
 
         BusinessLogic::manager()
