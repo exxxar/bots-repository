@@ -244,18 +244,12 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
-
-
-        if (!Auth::attempt($credentials)) {
-            Log::info("Неверный логин или пароль для входа");
-            return back()->withErrors(['email' => 'Неверный email или пароль'])->withInput();
-        }
 
 
         $authBotDomain = env("AUTH_BOT_DOMAIN");
@@ -291,17 +285,29 @@ class AuthenticatedSessionController extends Controller
         }
 
         if (is_null($botUser)) {
-            Auth::guard('web')->logout();
 
-            Session::remove("bot_user");
-            Session::remove("bot");
+            $botDomain = env("AUTH_BOT_DOMAIN");
+            $link = "https://t.me/$botDomain?start=" . base64_encode("777register" .$user->id);
 
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+            return Inertia::render('Auth/RegisterStep2',[
+                "link"=>$link
+            ]);
+            /*  Auth::guard('web')->logout();
 
-            return redirect()->back()
-                ->withErrors(['system' => 'Авторизация отклонена']) // Ошибка для конкретного поля
-                ->withInput(); // Возвращает введенные данные (кроме пароля)
+              Session::remove("bot_user");
+              Session::remove("bot");
+
+              $request->session()->invalidate();
+              $request->session()->regenerateToken();
+
+              return redirect()->back()
+                  ->withErrors(['system' => 'Авторизация отклонена']) // Ошибка для конкретного поля
+                  ->withInput(); // Возвращает введенные данные (кроме пароля)*/
+        }
+
+        if (!Auth::attempt($credentials)) {
+            Log::info("Неверный логин или пароль для входа");
+            return back()->withErrors(['email' => 'Неверный email или пароль'])->withInput();
         }
 
         $request->session()->regenerate();
