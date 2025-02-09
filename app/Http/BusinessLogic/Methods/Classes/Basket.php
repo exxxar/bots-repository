@@ -512,11 +512,8 @@ class Basket
 
     private function goodsShopCheckout()
     {
-
-        dd($this->gsPrepareFromAddress());
-
         $paymentType = $this->data["payment_type"] ?? 4;
-        $cdek = json_decode($this->data["cdek"]);
+        $cdek = json_decode($this->data["cdek"] ?? '{}');
 
         $productMessage = "#заказдоставка\n\n";
         $productMessage .= $this->checkWheelOfFortuneAction();
@@ -529,35 +526,31 @@ class Basket
 
         $summaryPrice = 0;
         $summaryCount = 0;
-
         $package = [];
-
         $ids = [];
+        $tmpOrderProductInfo = [];
 
         foreach ($basket as $item) {
-
-
             $product = $item->product ?? null;
             $collection = $item->collection ?? null;
-
             $price = 0;
 
             if (!is_null($product)) {
                 $price = ($product->current_price ?? 0) * $item->count;
+                $dimension = $product->dimension ?? (object)[];
 
-                $dimension = $product->dimension ?? null;
-
-                $productMessage .= sprintf("💎%s x%s=%s руб. (%s x %s x %s, %s грамм)\n",
+                $productMessage .= sprintf(
+                    "\uD83D\uDC8E%s x%s=%s руб. (%s x %s x %s, %s грамм)\n",
                     $product->title,
                     $item->count,
                     $price,
                     $dimension->width ?? 0,
                     $dimension->height ?? 0,
                     $dimension->length ?? 0,
-                    $dimension->weight ?? 0,
+                    $dimension->weight ?? 0
                 );
 
-                $package[] = (object)[
+                $package[] = (object) [
                     "title" => $product->title,
                     "count" => $item->count,
                     "price" => $price,
@@ -567,123 +560,80 @@ class Basket
                     "weight" => $dimension->weight ?? 0,
                 ];
 
-
-                if (!in_array($product->id, $ids)) {
-                    $ids[] = $product->id;
-                }
-
+                $ids[] = $product->id;
             }
 
             if (!is_null($collection)) {
                 $collectionTitles = "";
-
-                /*
-                * 'params' => (object)[
-               "variant_id" => Str::uuid(),
-               "ids" => $ids->toArray()
-           ],
-                */
-
-                $params = is_null($item->params ?? null) ? null : (object)$item->params;
+                $params = $item->params ? (object) $item->params : null;
 
                 foreach (($collection->products ?? []) as $product) {
-
-                    if (!in_array($product->id, $params->ids ?? []))
-                        continue;
+                    if (!in_array($product->id, $params->ids ?? [])) continue;
 
                     $collectionTitles .= "-" . $product->title . "\n";
-
-                    $tmpOrderProductInfo[] = (object)[
-                        "title" => "Коллекция `" . ($collection->title) . "`: " . $product->title,
+                    $tmpOrderProductInfo[] = (object) [
+                        "title" => "Коллекция `" . $collection->title . "`: " . $product->title,
                         "count" => 1,
                         "price" => $product->current_price ?? 0,
                         'frontpad_article' => $product->frontpad_article ?? null,
                         'iiko_article' => $product->iiko_article ?? null,
                     ];
-
                     $price += $product->current_price ?? 0;
-
-                    if (!in_array($product->id, $ids)) {
-                        $ids[] = $product->id;
-                    }
-
+                    $ids[] = $product->id;
                 }
 
-                $price = $price * $item->count;
-                $productMessage .= sprintf("💎Коллекция `%s` x%s=%s руб.:\n%s\n",
-                    ($collection->title),
+                $price *= $item->count;
+                $productMessage .= sprintf(
+                    "\uD83D\uDC8EКоллекция `%s` x%s=%s руб.:\n%s\n",
+                    $collection->title,
                     $item->count,
                     $price,
-                    $collectionTitles,
+                    $collectionTitles
                 );
-
-
             }
 
             $summaryCount += $item->count;
             $summaryPrice += $price;
-
-            //   $item->ordered_at = Carbon::now();
-            //  $item->save();
         }
 
-
         $discountItem = $this->prepareDiscount($summaryPrice);
-
         $this->useCashBackForPayment($discountItem->discount ?? 0);
-
 
         $order = Order::query()->create([
             'bot_id' => $this->bot->id,
-            'deliveryman_id' => null,
             'customer_id' => $this->botUser->id,
-            'delivery_service_info' => null,//информация о сервисе доставки
-            'deliveryman_info' => null,//информация о доставщике
             'product_details' => [
-                (object)[
+                (object) [
                     "from" => $this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
                     "products" => $tmpOrderProductInfo
                 ]
-            ],//информация о продуктах и заведении, из которого сделан заказ
+            ],
             'product_count' => $summaryCount,
             'summary_price' => $summaryPrice,
-            'delivery_price' => $deliveryPrice,
+            'delivery_price' => $deliveryPrice ?? 0,
             'delivery_range' => $distance ?? 0,
-            'deliveryman_latitude' => 0,
-            'deliveryman_longitude' => 0,
-            'delivery_note' => $deliveryNote,
             'receiver_name' => $this->data["name"] ?? 'Нет имени',
             'receiver_phone' => $this->data["phone"] ?? 'Нет телефона',
             'address' => $this->gsPrepareFromAddress(),
-            'receiver_latitude' => 0,
-            'receiver_longitude' => 0,
-
-            'status' => OrderStatusEnum::NewOrder->value,//новый заказ, взят доставщиком, доставлен, не доставлен, отменен
-            'order_type' => OrderTypeEnum::InternalStore->value,//тип заказа: на продукт из магазина, на продукт конструктора
+            'status' => OrderStatusEnum::NewOrder->value,
+            'order_type' => OrderTypeEnum::InternalStore->value,
             'payed_at' => Carbon::now(),
         ]);
 
-
-        $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object)$this->bot->cdek->config ?? null : null;
-
+        $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object) $this->bot->cdek->config : null;
 
         BusinessLogic::cdek()
             ->setBot($this->bot)
             ->createOrder([
-                "tariff" => $cdek->tariff,
-                "sender_name" => $this->bot->company->title ??
-                        $this->bot->bot_domain ??
-                        'Отправитель',
-                "recipient_name" => $this->data["name"] ??
-                        $this->botUser->fio_from_telegram ??
-                        $this->botUser->telegram_chat_id ?? null,
-                "recipient_phones" => "required",
-                "to" => $cdek->to,
-                "from" => (object)[
-                    "region" => $cdekSettings->region,
-                    "city" => $cdekSettings->city,
-                    "office" => $cdekSettings->office,
-
+                "tariff" => $cdek->tariff ?? null,
+                "sender_name" => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Отправитель',
+                "recipient_name" => $this->data["name"] ?? $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id ?? null,
+                "recipient_phones" => $this->data["phone"] ?? 'Не указан',
+                "to" => $cdek->to ?? null,
+                "from" => (object) [
+                    "region" => $cdekSettings->region ?? null,
+                    "city" => $cdekSettings->city ?? null,
+                    "office" => $cdekSettings->office ?? null,
                 ],
                 "packages" => $package,
             ]);
@@ -693,51 +643,25 @@ class Basket
             ->setBot($this->bot)
             ->prepareReviews($order->id, $ids);
 
-
         $productMessage .= $discountItem->message ?? '';
-
         $productMessage .= "\nИтого: <b>$summaryPrice руб.</b> за <b>$summaryCount ед.</b> \n\n";
 
-        switch ($paymentType) {
-            case 0:
-                BusinessLogic::payment()
-                    ->setBot($this->bot)
-                    ->setBotUser($this->botUser)
-                    ->setSlug($this->slug)
-                    ->checkout();
-                //ссылка
-                break;
-            case 1:
-                //картой в заведении
-            case 2:
-                //переводом
-            case 3:
-                //наличными
-                break;
-            case 4:
-                BusinessLogic::payment()
-                    ->setBot($this->bot)
-                    ->setBotUser($this->botUser)
-                    ->setSlug($this->slug)
-                    ->sbpForShop($order, $productMessage);
-                return;
-
+        if ($paymentType == 0 || $paymentType == 4) {
+            BusinessLogic::payment()
+                ->setBot($this->bot)
+                ->setBotUser($this->botUser)
+                ->setSlug($this->slug)
+                ->sbpForShop($order, $productMessage);
+            return;
         }
 
-        $productMessage .= $this->gsPrepareUserInfo($order, $discountItem->discount ?? 0);
+        $productMessage .= $this->gsPrepareFromInfo($order, $discountItem->discount ?? 0);
 
-
-        $this->gsPrintPDFInfo(
-            order: $order,
-            summaryPrice: $summaryPrice,
-            summaryCount: $summaryCount,
-            tmpOrderProductInfo: $tmpOrderProductInfo,
-            discount: $discountItem->discount
-        );
-
+        $this->gsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discountItem->discount ?? 0);
         $this->gsSendResult($productMessage);
         $this->sendPaidReceiptToChannel($order);
     }
+
 
     /**
      * @throws ValidationException
