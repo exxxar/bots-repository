@@ -12,7 +12,7 @@ import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
             class="object-fit-cover mr-2"
             v-lazy="'/images/companies/'+bot.bot_domain+'/logo.jpg'" alt="">
 
-        <div class="dropdown">
+        <div class="dropdown w-100">
             <button
                 :class="customClass"
                 type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -213,7 +213,7 @@ import BotList from "@/AdminPanel/Components/Constructor/Bot/BotList.vue";
                                 </div>
 
                                 <div class="d-flex justify-content-center">
-                                    <button class="btn btn-primary" @click="callback(0)">Поехали создавать</button>
+                                    <button class="btn btn-primary" @click="resetBot">Поехали создавать</button>
                                 </div>
                             </div>
                         </div>
@@ -333,7 +333,6 @@ export default {
     },
     methods: {
         openBotParams(){
-           console.log("open BOT PARAMS")
             window.dispatchEvent(new CustomEvent('open-base-bot-params-event'));
         },
         gotoBot(bot) {
