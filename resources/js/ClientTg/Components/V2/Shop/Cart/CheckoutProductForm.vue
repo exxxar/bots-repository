@@ -399,7 +399,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                     v-if="modelValue.payment_type===4&&!settings.need_pay_after_call"
                     :disabled="!canSubmitForm"
                     class="btn btn-primary p-3 w-100 ">
-                    <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить через СБП
+                    <i class="fa-solid fa-receipt mr-2"></i> Оформить и оплатить
 
                 </button>
 

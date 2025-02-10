@@ -3,6 +3,7 @@
             v-if="item?.is_visible || true"
             @click="goTo(route)"
             style="min-height:250px;"
+            :disabled="disabled||false"
             class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
         <div class="card-body d-flex justify-content-center align-items-center flex-column w-100">
             <img v-lazy="'/images/shop-v2-2/'+(item?.image_url||defaultImage)" class="img-fluid menu-item-img" alt="">

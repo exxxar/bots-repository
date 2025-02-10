@@ -6,6 +6,20 @@
             "title": "Меню",
             "url": "/bot-client/simple/{bot_domain}?slug={script_id}#/s/menu"
         },
+        "warnings": [
+            {
+                "rule_key": "bill_sum_more_then",
+                "rule_value": 1000
+            },
+            {
+                "rule_key": "cashback_up_sum_more_then",
+                "rule_value": 1000
+            },
+            {
+                "rule_key": "cashback_up_sum_more_then",
+                "rule_value": 1000
+            }
+        ],
         "commands": [
             {
                 "command": "/start",
@@ -101,10 +115,7 @@
                         "key": "need_script_image",
                         "value": false
                     }
-
-
                 ]
-
             },
             {
                 "key": "global_wheel_of_fortune_custom",
@@ -122,101 +133,100 @@
                         "key": "profile_id",
                         "value": null
                     },
-
                     {
                         "key": "wheel_text",
                         "type": "cashback",
                         "value": "300₽ CashBack",
-                        "smile":"\uD83D\uDC9A",
-                        "effect_value":500,
+                        "smile": "\uD83D\uDC9A",
+                        "effect_value": 500,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "text",
                         "value": "-35% на бургер",
-                        "smile":"\uD83D\uDC99",
-                        "effect_value":0,
+                        "smile": "\uD83D\uDC99",
+                        "effect_value": 0,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "text",
                         "value": "-25% на пиццу",
-                        "smile":"\uD83D\uDC9C",
-                        "effect_value":0,
+                        "smile": "\uD83D\uDC9C",
+                        "effect_value": 0,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "text",
                         "value": "-35% на Пиццу",
-                        "smile":"\uD83D\uDC51",
-                        "effect_value":0,
+                        "smile": "\uD83D\uDC51",
+                        "effect_value": 0,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "cashback",
                         "value": "200₽ CashBack",
-                        "smile":"\uD83D\uDE80",
-                        "effect_value":200,
+                        "smile": "\uD83D\uDE80",
+                        "effect_value": 200,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "text",
                         "value": "-35% на Пиццу",
-                        "smile":"\uD83D\uDC51",
-                        "effect_value":0,
+                        "smile": "\uD83D\uDC51",
+                        "effect_value": 0,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "text",
                         "value": "-35% на Пиццу",
-                        "smile":"\uD83D\uDC51",
-                        "effect_value":0,
+                        "smile": "\uD83D\uDC51",
+                        "effect_value": 0,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "text",
                         "value": "-35% на Пиццу",
-                        "smile":"\uD83D\uDC51",
-                        "effect_value":0,
+                        "smile": "\uD83D\uDC51",
+                        "effect_value": 0,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "text",
                         "value": "-35% на Пиццу",
-                        "smile":"\uD83D\uDC51",
-                        "effect_value":0,
+                        "smile": "\uD83D\uDC51",
+                        "effect_value": 0,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "text",
                         "value": "-50% на Пиццу",
-                        "smile":"⭐",
-                        "effect_value":0,
+                        "smile": "⭐",
+                        "effect_value": 0,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "cashback",
                         "value": "100₽ CashBack",
-                        "smile":"\uD83D\uDC8E",
-                        "effect_value":100,
+                        "smile": "\uD83D\uDC8E",
+                        "effect_value": 100,
                         "effect_product": null
                     },
                     {
                         "key": "wheel_text",
                         "type": "text",
                         "value": "-50% на бургер",
-                        "smile":"\uD83D\uDCB0",
-                        "effect_value":0,
+                        "smile": "\uD83D\uDCB0",
+                        "effect_value": 0,
                         "effect_product": null
                     }
                 ]
@@ -227,7 +237,7 @@
                 "title": ".*Главное меню|.*start",
                 "content": "Добро пожаловать,{{userName}}!",
                 "reply_keyboard": {
-                    "menu":  [
+                    "menu": [
                         [
                             {
                                 "text": "\uD83C\uDFA1Колесо фортуны"
@@ -261,7 +271,6 @@
                 "title": ".*Магазин",
                 "content": "",
                 "next_bot_menu_slug_id": "global_simple_delivery_main"
-
             },
             {
                 "title": ".*Бонусная систем",

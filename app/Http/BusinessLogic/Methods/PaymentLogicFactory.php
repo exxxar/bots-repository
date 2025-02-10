@@ -89,6 +89,8 @@ class PaymentLogicFactory extends BaseLogicFactory
                     );
             }
         }
+
+        return response()->json(['message' => 'OK'], 200);
     }
 
     /**

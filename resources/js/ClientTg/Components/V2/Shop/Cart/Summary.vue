@@ -53,7 +53,9 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
                     <li class="list-group-item" v-if="!data.need_pickup">
                         <p class="mb-0 d-flex justify-content-between">Цена доставки
                             <template v-if="settings.need_automatic_delivery_request">
-                                <span v-if="data.delivery_price>0">{{ data.delivery_price }}
+                                <span
+                                    class="d-flex justify-content-end"
+                                    v-if="data.delivery_price>0">{{ data.delivery_price }}
                                     <sup>.00</sup>₽ <span class="text-primary underline fw-bold cursor-pointer" @click="recalcDeliveryPrice">(пересчитать)</span></span>
                                 <span v-else>не рассчитана</span>
                             </template>
@@ -127,7 +129,7 @@ import PromoCodeForm from "@/ClientTg/Components/V2/Shop/PromoCodeForm.vue";
     </div>
 
     <p v-if="settings.delivery_price_text" v-html="settings.delivery_price_text"></p>
-    <p v-if="settings.min_price">Минимальная цена заказа {{ settings.min_price || 0 }} руб</p>
+    <p v-if="settings.min_price">Минимальная цена заказа <strong class="fw-bold">{{ settings.min_price || 0 }} руб</strong></p>
 
     <!-- Modal -->
     <div class="modal fade" id="promocode-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
