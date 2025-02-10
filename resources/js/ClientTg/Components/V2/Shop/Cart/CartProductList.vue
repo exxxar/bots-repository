@@ -32,7 +32,7 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
                     <div
                         @click="selectPrize(null)"
                         v-bind:class="{'border-primary':formData.action_prize==null}"
-                        class="card mx-1 p-3 align-items-center" style="height:170px;border-color:#e9ecef;">
+                        class="card mx-1 p-3 align-items-center" style="height:150px;border-color:#e9ecef;">
                         <img v-lazy="'/images/chest.png'" class="card-img-top  object-fit-cover w-100" alt="...">
                         <div class="card-body">
                             <p class="card-text text-primary">Приз не выбран</p>
@@ -43,7 +43,7 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
                     <div
                         @click="selectPrize(slide)"
                         v-bind:class="{'border-primary':(formData.action_prize?.prize||{description:null}).description == slide.description}"
-                        class="card  mx-1 p-3 align-items-center" style="height:170px;border-color:#e9ecef;">
+                        class="card  mx-1 p-3 align-items-center" style="height:150px;border-color:#e9ecef;">
                         <img v-lazy="'/images/wheel.png'"
                              class="card-img-top object-fit-cover w-100" alt="...">
                         <div class="card-body">
@@ -110,7 +110,7 @@ export default {
     data() {
         return {
             config: {
-                itemsToShow: 1.5
+                itemsToShow: 2.5
             },
             display_promo_code: false,
             action: null
