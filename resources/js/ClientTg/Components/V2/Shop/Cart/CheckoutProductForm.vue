@@ -374,7 +374,7 @@ import Summary from "@/ClientTg/Components/V2/Shop/Cart/Summary.vue";
                     :disabled="!canRequestDeliverPrice">
                     <i class="fa-solid fa-map-location-dot mr-2"></i> Рассчитать цену доставки
                     <div
-                        v-if="!canRequestDeliverPrice"
+                        v-if="!need_request_delivery_price"
                         class="spinner-border ml-2 spinner-border-sm"
                         role="status">
                         <span class="visually-hidden">Loading...</span>

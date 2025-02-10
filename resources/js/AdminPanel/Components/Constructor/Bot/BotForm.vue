@@ -1219,7 +1219,7 @@ export default {
             script_types: [
                 {
                     title: "Магазин",
-                    uri: '/shop',
+                    uri: '/menu',
                 },
                 {
                     title: "Отзывы",

@@ -52,8 +52,8 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
             .use(VueLazyLoad,
             {
-                loading: '/images/cashman.jpg',
-                error: '/images/error.png'
+                loading: '/icon.png',
+                error: '/icon.png'
             })
             .mount(el);
 

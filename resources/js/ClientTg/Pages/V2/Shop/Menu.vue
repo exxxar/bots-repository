@@ -142,7 +142,7 @@ import ShopScriptEditor from "@/ClientTg/Components/V2/Admin/ScriptEditors/Shop/
                             style="min-height:250px;"
                             class="btn shadow-sm border-0 btn-outline-primary w-100  mb-2 card ">
                         <div class="card-body  d-flex justify-content-center align-items-center flex-column w-100">
-                            <img v-lazy="'/images/shop-v2-2/shop-config.png'" class="img-fluid" alt="">
+                            <img v-lazy="'/images/shop-v2-2/orders.png'" class="img-fluid" alt="">
 
                             <p class="my-2">Настройка магазина</p>
                         </div>
