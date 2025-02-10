@@ -35,7 +35,7 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
                         class="card mx-1 p-3 align-items-center" style="height:150px;border-color:#e9ecef;">
                         <img v-lazy="'/images/chest.png'" class="card-img-top  object-fit-cover w-100" alt="...">
                         <div class="card-body">
-                            <p class="card-text text-primary">Приз не выбран</p>
+                            <p class="card-text text-primary" style="font-size:12px;">Приз не выбран</p>
                         </div>
                     </div>
                 </Slide>
@@ -47,7 +47,7 @@ import CollectionCardSimple from "@/ClientTg/Components/V2/Shop/CollectionCardSi
                         <img v-lazy="'/images/wheel.png'"
                              class="card-img-top object-fit-cover w-100" alt="...">
                         <div class="card-body">
-                            <p class="card-text text-primary">{{ slide.description || '-' }}</p>
+                            <p class="card-text text-primary" style="font-size:12px;">{{ slide.description || '-' }}</p>
                         </div>
                     </div>
                 </Slide>
