@@ -171,6 +171,9 @@ export default {
 
     mounted() {
         if (this.bot.cdek)
+        {
+            console.log("cdek", this.bot.cdek)
+            console.log("1cdekForm",  this.cdekForm)
             this.$nextTick(() => {
                 this.load = false
                 this.cdekForm.account = this.bot.cdek.account || null
@@ -185,7 +188,11 @@ export default {
                     this.cdekForm.config.office = this.bot.cdek.config.office || null
                 }
                 this.load = true
+
+                console.log("2cdekForm",  this.cdekForm)
             })
+        }
+
 
 
     },
