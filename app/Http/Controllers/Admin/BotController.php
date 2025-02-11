@@ -141,7 +141,7 @@ class BotController extends Controller
             return response()->json(['message' => 'OK'], 200);
         }
 
-        Log::error('Tinkoff Callback Error:', $data);
+
         return response()->json(['message' => 'Error processing payment'], 400);
     }
 

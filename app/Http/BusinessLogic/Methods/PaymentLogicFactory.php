@@ -62,7 +62,7 @@ class PaymentLogicFactory extends BaseLogicFactory
         $callbackChannel = $this->bot->order_channel ?? $this->bot->main_channel ?? env("BASE_ADMIN_CHANNEL");
 
         if (!$callbackChannel) {
-            throw new HttpException(500, "Не задан канал для отправки уведомлений!");
+            return response()->json(['message' => 'Error processing payment'], 400);
         }
 
         $thread = $this->bot->topics["orders"] ?? null;
@@ -75,12 +75,12 @@ class PaymentLogicFactory extends BaseLogicFactory
                 $thread
             );
 
-        if ($customerKey) {
+        if (!is_null($customerKey)) {
             $clientBotUser = BotUser::query()
                 ->where("id", $customerKey)
                 ->first();
 
-            if ($clientBotUser && $clientBotUser->telegram_chat_id) {
+            if (!is_null($clientBotUser)) {
                 BotMethods::bot()
                     ->whereBot($this->bot)
                     ->sendMessage(
@@ -90,7 +90,7 @@ class PaymentLogicFactory extends BaseLogicFactory
             }
         }
 
-        return response()->json(['message' => 'OK'], 200);
+        return response()->json(['message' => 'OK']);
     }
 
     /**
