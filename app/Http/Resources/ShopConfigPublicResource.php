@@ -13,17 +13,20 @@ class ShopConfigPublicResource extends JsonResource
     public function toArray(Request $request): array
     {
         $isAdmin = $this->is_admin ?? false;
-        if (!is_null($this->sbp ?? null))
+        if (!is_null($this->sbp ?? null)) {
+            $tmpSbp = (array)$this->sbp;
             $sbp = (object)[
-                "selected_sbp_bank" => $this->sbp["selected_sbp_bank"] ?? "tinkoff",
+                "selected_sbp_bank" => $tmpSbp["selected_sbp_bank"] ?? "tinkoff",
                 "tinkoff" => (object)[
-                    "terminal_key" => $isAdmin ? $this->sbp["tinkoff"]["terminal_key"] : null,
-                    "terminal_password" => $isAdmin ? $this->sbp["tinkoff"]["terminal_password"] : null,
-                    "tax" => $this->sbp["tinkoff"]["tax"] ?? null,
-                    "vat" => $this->sbp["tinkoff"]["vat"] ?? null,
+                    "terminal_key" => $isAdmin ? $tmpSbp["tinkoff"]["terminal_key"] : null,
+                    "terminal_password" => $isAdmin ? $tmpSbp["tinkoff"]["terminal_password"] : null,
+                    "tax" => $tmpSbp["tinkoff"]["tax"] ?? null,
+                    "vat" =>$tmpSbp["tinkoff"]["vat"] ?? null,
 
                 ]
             ];
+        }
+
 
         return [
             "sbp" => $sbp ?? (object)[
