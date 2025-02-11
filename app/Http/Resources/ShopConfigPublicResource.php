@@ -14,14 +14,14 @@ class ShopConfigPublicResource extends JsonResource
     {
         $isAdmin = $this->is_admin ?? false;
         if (!is_null($this->sbp ?? null)) {
-            $tmpSbp = (array)$this->sbp;
+            $tmpSbp = json_decode(json_encode($this->sbp));
             $sbp = (object)[
-                "selected_sbp_bank" => $tmpSbp["selected_sbp_bank"] ?? "tinkoff",
+                "selected_sbp_bank" => $tmpSbp->selected_sbp_bank ?? "tinkoff",
                 "tinkoff" => (object)[
-                    "terminal_key" => $isAdmin ? $tmpSbp["tinkoff"]["terminal_key"] : null,
-                    "terminal_password" => $isAdmin ? $tmpSbp["tinkoff"]["terminal_password"] : null,
-                    "tax" => $tmpSbp["tinkoff"]["tax"] ?? null,
-                    "vat" =>$tmpSbp["tinkoff"]["vat"] ?? null,
+                    "terminal_key" => $isAdmin ? $tmpSbp->tinkoff->terminal_key : null,
+                    "terminal_password" => $isAdmin ? $tmpSbp->tinkoff->terminal_password : null,
+                    "tax" => $tmpSbp->tinkoff->tax ?? null,
+                    "vat" =>$tmpSbp->tinkoff->vat ?? null,
 
                 ]
             ];
