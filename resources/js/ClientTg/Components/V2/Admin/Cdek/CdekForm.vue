@@ -60,7 +60,7 @@ import SelectBoxSize from "@/ClientTg/Components/V2/Admin/Cdek/SelectBoxSize.vue
                     <li
                         v-for="(item, index) in services"><a
                         @click="toggleService(index)"
-                        v-bind:class="{'bg-primary':this.cdekForm.config.services.indexOf(item.code)!==-1}"
+                        v-bind:class="{'bg-primary':cdekForm.config.services.indexOf(item.code)!==-1}"
                         class="dropdown-item" href="javascript:void(0)">{{ item.title || '-' }}</a></li>
                 </ul>
             </div>
@@ -172,8 +172,8 @@ export default {
     mounted() {
         if (this.bot.cdek)
         {
-            console.log("cdek", this.bot.cdek)
-            console.log("1cdekForm",  this.cdekForm)
+
+
             this.$nextTick(() => {
                 this.load = false
                 this.cdekForm.account = this.bot.cdek.account || null
@@ -189,7 +189,7 @@ export default {
                 }
                 this.load = true
 
-                console.log("2cdekForm",  this.cdekForm)
+
             })
         }
 
