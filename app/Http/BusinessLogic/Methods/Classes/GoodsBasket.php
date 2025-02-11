@@ -162,7 +162,7 @@ trait GoodsBasket
         $useCashback = ($this->data["use_cashback"] ?? "false") == "true";
         $cash =  self::PAYMENT_TYPES[$this->data["payment_type"] ?? 0];
 
-        $address = $this->prepareAddress();
+       // $address = $this->gs();
 
         $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
 

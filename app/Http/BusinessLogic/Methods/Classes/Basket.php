@@ -685,7 +685,7 @@ class Basket
 
         $productMessage .= $this->gsPrepareFromInfo($order, $discountItem->discount ?? 0);
 
-        $this->gsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discountItem->discount ?? 0);
+      //  $this->gsPrintPDFInfo($order, $summaryPrice, $summaryCount, $tmpOrderProductInfo, $discountItem->discount ?? 0);
         $this->gsSendResult($productMessage);
         $this->sendPaidReceiptToChannel($order);
     }
