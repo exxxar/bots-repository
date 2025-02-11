@@ -528,6 +528,7 @@ class Basket
         $summaryCount = 0;
         $package = [];
         $ids = [];
+        $deliverySum = $cdek->tariff->delivery_sum ?? 0;
         $tmpOrderProductInfo = [];
 
         foreach ($basket as $item) {
@@ -540,7 +541,7 @@ class Basket
                 $dimension = $product->dimension ?? (object)[];
 
                 $productMessage .= sprintf(
-                    "\uD83D\uDC8E%s x%s=%s руб. (%s x %s x %s, %s грамм)\n",
+                    "%s x%s=%s руб. (%s x %s x %s, %s грамм)\n",
                     $product->title,
                     $item->count,
                     $price,
@@ -550,7 +551,7 @@ class Basket
                     $dimension->weight ?? 0
                 );
 
-                $package[] = (object) [
+                $package[] = (object)[
                     "title" => $product->title,
                     "count" => $item->count,
                     "price" => $price,
@@ -565,13 +566,13 @@ class Basket
 
             if (!is_null($collection)) {
                 $collectionTitles = "";
-                $params = $item->params ? (object) $item->params : null;
+                $params = $item->params ? (object)$item->params : null;
 
                 foreach (($collection->products ?? []) as $product) {
                     if (!in_array($product->id, $params->ids ?? [])) continue;
 
                     $collectionTitles .= "-" . $product->title . "\n";
-                    $tmpOrderProductInfo[] = (object) [
+                    $tmpOrderProductInfo[] = (object)[
                         "title" => "Коллекция `" . $collection->title . "`: " . $product->title,
                         "count" => 1,
                         "price" => $product->current_price ?? 0,
@@ -584,7 +585,7 @@ class Basket
 
                 $price *= $item->count;
                 $productMessage .= sprintf(
-                    "\uD83D\uDC8EКоллекция `%s` x%s=%s руб.:\n%s\n",
+                    "Коллекция `%s` x%s=%s руб.:\n%s\n",
                     $collection->title,
                     $item->count,
                     $price,
@@ -603,15 +604,15 @@ class Basket
             'bot_id' => $this->bot->id,
             'customer_id' => $this->botUser->id,
             'product_details' => [
-                (object) [
+                (object)[
                     "from" => $this->bot->title ?? $this->bot->bot_domain ?? $this->bot->id,
                     "products" => $tmpOrderProductInfo
                 ]
             ],
             'product_count' => $summaryCount,
             'summary_price' => $summaryPrice,
-            'delivery_price' => $deliveryPrice ?? 0,
-            'delivery_range' => $distance ?? 0,
+            'delivery_price' => $deliverySum ?? 0,
+            'delivery_range' => 0,
             'receiver_name' => $this->data["name"] ?? 'Нет имени',
             'receiver_phone' => $this->data["phone"] ?? 'Нет телефона',
             'address' => $this->gsPrepareFromAddress(),
@@ -620,17 +621,17 @@ class Basket
             'payed_at' => Carbon::now(),
         ]);
 
-        $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object) $this->bot->cdek->config : null;
+        $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object)$this->bot->cdek->config : null;
 
-        BusinessLogic::cdek()
+        $result = BusinessLogic::cdek()
             ->setBot($this->bot)
             ->createOrder([
                 "tariff" => $cdek->tariff ?? null,
                 "sender_name" => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Отправитель',
                 "recipient_name" => $this->data["name"] ?? $this->botUser->fio_from_telegram ?? $this->botUser->telegram_chat_id ?? null,
-                "recipient_phones" => $this->data["phone"] ?? 'Не указан',
+                "recipient_phones" => [$this->data["phone"] ?? null],
                 "to" => $cdek->to ?? null,
-                "from" => (object) [
+                "from" => (object)[
                     "region" => $cdekSettings->region ?? null,
                     "city" => $cdekSettings->city ?? null,
                     "office" => $cdekSettings->office ?? null,
@@ -644,7 +645,11 @@ class Basket
             ->prepareReviews($order->id, $ids);
 
         $productMessage .= $discountItem->message ?? '';
-        $productMessage .= "\nИтого: <b>$summaryPrice руб.</b> за <b>$summaryCount ед.</b> \n\n";
+        $productMessage .= "\n\nТовар можно забрать в: <b>".$cdek->to->office->location->address_full."</b> (ваш тариф: ".$cdek->tariff->tariff_name.")\n" ;
+        $productMessage .= "График работы: <b>".$cdek->to->office->work_time."</b>\n" ;
+        $productMessage .= "Срок доставки от <b>".$cdek->tariff->calendar_min. "</b> до <b>".$cdek->tariff->calendar_max."</b> дней\n";
+
+        $userId = $this->botUser->telegram_chat_id ?? 'Не указан';
 
         if ($paymentType == 0 || $paymentType == 4) {
             BusinessLogic::payment()
@@ -652,6 +657,29 @@ class Basket
                 ->setBotUser($this->botUser)
                 ->setSlug($this->slug)
                 ->sbpForShop($order, $productMessage);
+
+            $botDomain = $this->bot->bot_domain;
+            $link = "https://t.me/$botDomain?start=" . base64_encode("003" . $userId);
+
+            $keyboard = [
+                [
+                    ["text" => "✉Работа с заказом пользователя", "url" => $link]
+                ]
+            ];
+
+            $thread = $this->bot->topics["delivery"] ?? null;
+
+          //  $productMessage .= $this->gsPrepareUserInfo();
+
+            BotMethods::bot()
+                ->whereBot($this->bot)
+                ->sendInlineKeyboard(
+                    $this->bot->order_channel ?? null,
+                    "$productMessage\n",
+                    $keyboard,
+                    $thread
+                );
+
             return;
         }
 

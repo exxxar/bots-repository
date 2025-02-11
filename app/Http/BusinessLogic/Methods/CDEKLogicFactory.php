@@ -259,17 +259,22 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         $tariffCode = $cdekSettings->tariff_code ?? null;
 
-        $from = $this->getLocation((object)[
-            "region" => $cdekSettings->region,
-            "city" => $cdekSettings->city,
-            "office" => $cdekSettings->office,
+        $tmpFrom = (object)($cdekSettings->office["location"]);
+        $from = [
+            "country_code" => "RU",
+            "code" => $cdekSettings->city["code"],
+            "address" => $tmpFrom->address,
+        ];
 
-        ]);
 
-        $to = $this->getLocation((object)$data["to"]);
+        $tmpTo = (object)($data["to"]);
 
-        // $to["address"]="test";
-        //$from["address"]="test";
+        $to = [
+            "country_code" => "RU",
+            "code" => $tmpTo->city["code"],
+            "address" => $tmpTo->office["location"]["address"],
+        ];
+
 
         $packages = [];
 
@@ -281,28 +286,28 @@ class CDEKLogicFactory extends BaseLogicFactory
 
         foreach ($basket as $item) {
             $item = $item->product;
+
             $dimension = !is_null($item->dimension ?? null) ?
                 (object)$item->dimension ?? null : null;
 
-            if (!is_null($dimension))
-                $packages[] = Package::create([
-                    'number' => $item->id,
-                    'weight' => $item->weight,
-                    'length' => $item->length,
-                    'width' => $item->width,
-                    'height' => $item->height,
-                ]);
+            $packages[] = Package::create([
+                'number' => $item->id,
+                'weight' => $dimension->weight ?? 0,
+                'length' => $dimension->length ?? 0,
+                'width' => $dimension->width ?? 0,
+                'height' => $dimension->height ?? 0,
+            ]);
         }
 
-        //todo: удалить
-        $packages[] = Package::create([
-            'number' => 1,
-            'weight' => 5000,
-            'length' => 40,
-            'width' => 40,
-            'height' => 40,
+        /*  //todo: удалить
+          $packages[] = Package::create([
+              'number' => 1,
+              'weight' => 5000,
+              'length' => 40,
+              'width' => 40,
+              'height' => 40,
 
-        ]);
+          ]);*/
 
 
         $tariff = Tarifflist::create([]);
@@ -408,11 +413,12 @@ class CDEKLogicFactory extends BaseLogicFactory
             "packages" => "required",
         ]);
 
-        $type = ($data["is_shop_mode"] ?? false) == "true";
-        $tariff = json_decode($data["tariff"] ?? '[]');
-        $from = json_decode($data["from"] ?? '[]');
-        $to = json_decode($data["to"] ?? '[]');
-        $packages = json_decode($data["packages"] ?? '[]');
+
+        $type = ($data["is_shop_mode"] ?? false) == "true" ? 1 : 2;
+        $tariff = $data["tariff"];
+        $from = $data["from"];
+        $to = $data["to"];
+        $packages = $data["packages"];
 
         $tariffCode = $tariff->tariff_code ?? 1;
 
@@ -423,19 +429,20 @@ class CDEKLogicFactory extends BaseLogicFactory
         $s_phones = [];
 
 
-        foreach (json_decode($data["sender_phones"] ?? '[]') as $item) {
+        foreach (($data["sender_phones"] ?? $this->bot->company->phones ?? []) as $item) {
             $s_phones[] = BaseTypes\Phone::create(['number' => $item]);
         }
 
         $r_phones = [];
 
-        foreach (json_decode($data["recipient_phones"] ?? '[]') as $item) {
+        foreach (($data["recipient_phones"] ?? []) as $item) {
             $r_phones[] = BaseTypes\Phone::create(['number' => $item]);
         }
 
+        // dd($from);
+
         $from = $this->getLocation($from);
         $to = $this->getLocation($to);
-
 
         $tmpPackages = [];
 
@@ -444,11 +451,11 @@ class CDEKLogicFactory extends BaseLogicFactory
 
             $weight = $package->weight == 0 ? 0 : $package->weight;
             $packageItems = [];
+
             if (count($package->items ?? []) > 0)
                 foreach ($package->items as $packageItem) {
                     $packageItem = (object)$packageItem;
                     $packageItems[] = BaseTypes\Item::create([
-
                         'name' => $packageItem->name ?? 'Товар', //описание товара
                         'ware_key' => $packageItem->ware_key ?? '', //артикул товара
                         'payment' => BaseTypes\Money::create(['value' => $packageItem->payment ?? 0]),
@@ -459,15 +466,31 @@ class CDEKLogicFactory extends BaseLogicFactory
 
                     $weight += $packageItem->weight ?? 0;
                 }
+            else {
+                $packageItems[] = BaseTypes\Item::create([
+                    'name' => $package->title ?? 'Товар', //описание товара
+                    'ware_key' => $package->ware_key ?? Str::uuid(), //артикул товара
+                    'payment' => BaseTypes\Money::create(['value' => $package->payment ?? 0]),
+                    'cost' => $package->price ?? 0, //объявленная стоимость (ценность)
+                    'weight' => $package->weight ?? 0, //вес
+                    'amount' => $package->count ?? 1, //кол-во
+                ]);
+
+                $weight += $packageItem->weight ?? 0;
+            }
+
+
             $tmpPackages[] = Package::create([
                 "number" => Str::uuid(),
                 'weight' => $weight * 1000,
                 'length' => $package->length ?? 0,
                 'width' => $package->width ?? 0,
                 'height' => $package->height ?? 0,
-                'items' => $packageItems
+                'items' => $packageItems,
+                'comment' => '-'
             ]);
         }
+
 
         $order = BaseTypes\Order::create([
             //  'number' => $data["id"] ?? null,
@@ -476,6 +499,7 @@ class CDEKLogicFactory extends BaseLogicFactory
             'tariff_code' => $tariffCode ?? '1',
             "comment" => $data["comment"] ?? '-',
             'sender' => BaseTypes\Contact::create([
+                'company' => $this->bot->company->title ?? $this->bot->bot_domain ?? 'Интернет-магазин',
                 'name' => $data["sender_name"] ?? 'CashMan',
                 'phones' => $s_phones,
             ]),
@@ -487,8 +511,8 @@ class CDEKLogicFactory extends BaseLogicFactory
                 "passport_date_of_issue" => "",
                 "passport_organization" => "",
             ]),
-            'from_location' => BaseTypes\Location::create($from),
-            'to_location' => BaseTypes\Location::create($to),
+            'from_location' => BaseTypes\Location::create((array)$from),
+            'to_location' => BaseTypes\Location::create((array)$to),
             'packages' => $tmpPackages
         ]);
 
@@ -609,20 +633,15 @@ class CDEKLogicFactory extends BaseLogicFactory
     protected function getLocation($data): array
     {
 
-        $city = (array)$data->city;
-
-        $cityCode = $city["code"] ?? null;
-
-        $address = $data->address ?? null;
+        $code = $data->office->code ?? null;
+        $address = $data->office->location->address_full ?? null;
         $from = ['country_code' => 'RU'];
 
         /* if (!is_null($from1["address"]))
              $from["address"] = $from1["address"];*/
-        if (!is_null($cityCode))
-            $from["code"] = $cityCode;
 
-        if (!is_null($address))
-            $from["address"] = $address;
+        $from["code"] = $code;
+        $from["address"] = $address;
 
         return $from;
     }

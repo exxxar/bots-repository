@@ -13,6 +13,10 @@ use Telegram\Bot\FileUpload\InputFile;
 trait GoodsBasket
 {
 
+    private $from = null;
+
+    private $tariffCode = null;
+
     private function gsPrepareFromInfo($order, $discount)
     {
 
@@ -133,21 +137,20 @@ trait GoodsBasket
             "Телефон: $phones\n";
     }
 
-    private function gsPrepareFromAddress(): string
+    private function gsPrepareFromAddress()
     {
 
         $cdekSettings = !is_null($this->bot->cdek->config ?? null) ? (object)$this->bot->cdek->config ?? null : null;
 
-        $tariffCode = $cdekSettings->tariff_code ?? null;
+        $this->tariffCode = $cdekSettings->tariff_code ?? null;
 
-        $from = (object)[
+        $this->from = (object)[
             "region" => $cdekSettings->region,
             "city" => $cdekSettings->city,
             "office" => $cdekSettings->office,
 
         ];
 
-        dd($cdekSettings);
 
         return (($this->data["city"] ?? "") . "," . ($this->data["street"] ?? "") . "," . ($this->data["building"] ?? ""));
     }
